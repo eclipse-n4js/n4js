@@ -1,0 +1,86 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {FIXME2Mock} from "org/eclipse/n4js/mangelhaft/test/helper/FIXMEMock"
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
+import {N4Injector} from "n4js/lang/N4Injector"
+import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent"
+
+
+@Bind(IFIXME2, FIXME2Mock)
+@Binder
+class TestBinder {}
+
+@GenerateInjector
+@WithParentInjector(TestDIComponent)
+@UseBinder(TestBinder)
+class TestSubject {
+    @Inject
+    fix: IFIXME;
+    @Inject
+    fix2: IFIXME2;
+
+}
+@GenerateInjector
+@WithParentInjector(TestDIComponent)
+class TestSubjectNoBind {
+    @Inject
+    fix: IFIXME;
+    @Inject
+    fix2: IFIXME2;
+
+}
+
+export public class InjectionTest {
+    private subject: TestSubject;
+    private subjectNoBind: TestSubjectNoBind;
+    @Inject private parentInjector: N4Injector;
+
+    @BeforeAll
+    preconditionCheck() {
+        try {
+            N4Injector.of(TestSubject, this.parentInjector);
+        } catch (ex) {
+            Precondition.fail("Tests should not run if parent bindings have not been set")
+        }
+
+    }
+    @Before
+    setupPlain() {
+        this.subjectNoBind = N4Injector.of(TestSubjectNoBind, this.parentInjector).create(TestSubjectNoBind)
+    }
+    @Before
+    setupMock() {
+        this.subject = N4Injector.of(TestSubject, this.parentInjector, new TestBinder()).create(TestSubject);
+    }
+
+    @Test
+    fromMangelhaft(){
+        Assert.equal(this.subject.fix.logStr, "FIXME joe from Mangelhaft", "should be from Mangelhaft");
+    }
+    @Test
+    fromMock(){
+        Assert.equal(this.subject.fix2.logStr, "FIXME joe from Test", "should be from Mock");
+    }
+    @Test
+    fromMangelhaftNoBind(){
+        Assert.equal(this.subjectNoBind.fix.logStr, "FIXME joe from Mangelhaft", "shoudl be from Mangelhaft");
+    }
+    @Test
+    fromMockNoBind(){
+        Assert.equal(this.subjectNoBind.fix2.logStr, "FIXME joe from Mangelhaft", "should be from Mangelhaft");
+    }
+}
+/*
+-*- mode: typescript;-*-
+*/

@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+export public interface ITires {
+
+}
+export public class Fuel {
+
+}
+export public class AviationFuel extends Fuel {
+
+}
+export public class StandardDiesel extends Fuel {
+
+}
+export public class Gasoline extends Fuel {
+
+}
+
+export public class Air{
+
+}
+export public class SolidRubber{
+
+}
+export public class RadialPly implements ITires{
+    @Inject
+    public filling: Air;
+}
+
+export public class BiasPly implements ITires {
+    @Inject
+    public filling: Air;
+}
+
+export public class Solid implements ITires {
+    @Inject
+    public filling: SolidRubber;
+}
+
+
+
+export public class Vehicle {
+    @Inject
+    public tires: ITires;
+
+    @Inject
+    public fuel: Fuel;
+}
+@Binder
+@Bind(ITires, BiasPly)
+@Bind(Fuel, Gasoline)
+export public class OldificationBinder {
+
+}
+
+@Binder
+@Bind(ITires, RadialPly)
+@Bind(Fuel, StandardDiesel)
+export public class NewificationBinder {
+
+}

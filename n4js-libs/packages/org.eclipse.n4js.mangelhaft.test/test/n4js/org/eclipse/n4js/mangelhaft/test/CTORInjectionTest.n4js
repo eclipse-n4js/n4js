@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {Thingy} from "org/eclipse/n4js/mangelhaft/test/helper/Thingy"
+import {N4Injector} from "n4js/lang/N4Injector"
+
+@GenerateInjector
+class TestSubject {
+    @Inject
+    thingy: Thingy;
+}
+
+export public class CTORInjectionTest{
+    public subject: TestSubject;
+    @Test
+    testSimpleDi() {
+        Assert.doesNotThrow(function() {
+            N4Injector.of(TestSubject);
+        }, null, "Injection should not throw when using constructor injection");
+        //Assert.isTrue(subject.thingy.thingIt(), "party");
+    }
+}

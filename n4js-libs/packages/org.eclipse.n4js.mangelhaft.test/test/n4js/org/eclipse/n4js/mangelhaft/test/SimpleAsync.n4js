@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {async} from "org/eclipse/n4js/mangelhaft/Test"
+
+export public class SimpleAsync {
+    @BeforeAll
+    @Description("set up tests")
+    public beforeAll1() {
+        /*console.info("    before all");*/
+    }
+    @BeforeAll
+    @Description("set up tests 2")
+    public beforeAll2() {
+        /*console.info("    before all 2");*/
+    }
+    @BeforeAll
+    @Description("set up tests3 ")
+    public beforeAll3() {
+        /*console.info("    before all 3s");*/
+    }
+    @BeforeAll
+    @Description("long async beforeall")
+    @Timeout(100)
+    public beforeAll4() {
+        return new Promise<string,any>(
+        function(resolve: {function(string)},reject)  {
+            setTimeout.call(this,
+            async (function() {
+                resolve("hey bro");
+            }, reject )
+            ,50);
+        });
+    }
+
+    @AfterAll
+    @Description("cleanup tests")
+    public afterAll1() {
+        /*console.info("    doing something after all");*/
+    }
+    @Before
+    @Description("setup every test")
+    public before1() {
+        /*console.info("    doing something before test");*/
+    }
+    @After
+    @Description("cleanup every test")
+    public after1() {
+        /*console.info("    doing something after test");*/
+    }
+    @Test
+    @Description("do some stuff")
+    public test1() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 500);
+        })
+    }
+    @Test
+    @Description("synchronous non assert exception")
+    public test3() {
+        const breakpointHere = 4;
+    }
+    @Test
+    @Description("asynchronous non assert exception")
+    public test4() {
+        return new Promise<string,any>(
+        function(resolve: {function(string)},reject)  {
+            setTimeout.call(this,
+            async (function() {
+                resolve("test js error");
+            }, reject )
+            , 700);
+        }
+        );
+    }
+}

@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {TestError} from "org/eclipse/n4js/mangelhaft/types/TestError"
+
+export public class TestErrorTest {
+    @Test
+    throw__throw_throws_exception__basic() {
+        Assert.throws(() => {
+            TestError.throw("party super hard");
+        }, null, "TestError.throw should throw")
+    }
+    @Test
+    throw__throw_throws_exception__typeTestError() {
+        let err = Assert.throws(() => {
+            TestError.throw("party super hard");
+        })
+        Assert.isInstanceOf(err, TestError, "thrown error should be a TestError");
+    }
+    @Test
+    throw__throw_throws_exception__message() {
+        let err = Assert.throws(() => {
+            TestError.throw("party super hard");
+        })
+        Assert.strictEqual((err as TestError).message, "party super hard"
+            , "error message should be set");
+    }
+   @Test
+    throw__throw_throws_exception__nomessage() {
+        let err = Assert.throws(() => {
+            TestError.throw();
+        })
+        Assert.equal((err as TestError).message, ""
+            , "error message should not be set");
+    }
+}

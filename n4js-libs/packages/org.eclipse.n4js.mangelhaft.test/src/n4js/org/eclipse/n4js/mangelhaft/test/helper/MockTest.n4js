@@ -1,0 +1,82 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+export public class MockTest  {
+    public static beforeAllCount = 0;
+    public static beforeCount = 0;
+    public static afterAllCount = 0;
+    public static afterCount = 0;
+    public static testCount = 0;
+    public static called: Array<string> = [];
+    public static reset() {
+        MockTest.beforeAllCount = MockTest.beforeCount = MockTest.afterAllCount = MockTest.afterCount = MockTest.testCount = 0;
+        MockTest.called = []
+    }
+    @BeforeAll
+    public beforeAll1() {
+        MockTest.beforeAllCount += 1;
+        MockTest.called.push("beforeAll1");
+        //console.log("beforeAll1");
+    }
+    @BeforeAll
+    public beforeAll2() {
+        MockTest.beforeAllCount += 1;
+        MockTest.called.push("beforeAll2");
+        //console.log("beforeAll2");
+    }
+    @Before
+    public before1() {
+        MockTest.beforeCount += 1;
+        MockTest.called.push("before1");
+        //console.log("before1");
+    }
+    @Before
+    public before2() {
+        MockTest.beforeCount += 1;
+        MockTest.called.push("before2");
+        //console.log("before2");
+    }
+    @Test
+    public test1() {
+        MockTest.testCount += 1;
+        MockTest.called.push("test1");
+        //console.log("test1");
+    }
+    @Test
+    public test2() {
+        MockTest.testCount += 1;
+        MockTest.called.push("test2");
+        //console.log("test2");
+    }
+    @After
+    public after1() {
+        MockTest.afterCount += 1;
+        MockTest.called.push("after1");
+        //console.log("after1");
+    }
+    @After
+    public after2() {
+        MockTest.afterCount += 1;
+        MockTest.called.push("after2");
+        //console.log("after2");
+    }
+    @AfterAll
+    public afterAll1() {
+        MockTest.afterCount += 1;
+        MockTest.called.push("afterAll1");
+        //console.log("afterAll1");
+    }
+    @AfterAll
+    public afterAll2() {
+        MockTest.afterCount += 1;
+        MockTest.called.push("afterAll2");
+        //console.log("afterAll2");
+    }
+}

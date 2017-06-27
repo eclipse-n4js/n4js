@@ -1,0 +1,258 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import {InstrumentedTest} from "org/eclipse/n4js/mangelhaft/InstrumentedTest"
+import {TestExecutor} from "org/eclipse/n4js/mangelhaft/TestExecutor"
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups"
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
+import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus"
+import { MockTest } from "org/eclipse/n4js/mangelhaft/test/helper/MockTest"
+import { BeforeAllErrorMockTest } from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers"
+import { ChildOfMock } from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers"
+import { PreconditionTests } from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers"
+import {N4Injector} from "n4js/lang/N4Injector"
+class SubTestSpy extends TestSpy {}
+
+@Binder
+@Bind(TestSpy, SubTestSpy)
+class TestBinder {}
+
+@GenerateInjector
+@UseBinder(TestBinder)
+class TestSubject {
+    @Inject
+    executor: TestExecutor;
+}
+
+
+export public class TestExecutorTests {
+    private subject: TestSubject;
+    private parentInjector: N4Injector;
+
+    constructor (parentInjector: N4Injector) {
+        this.parentInjector = parentInjector;
+    }
+
+    @Before
+    setupMock() {
+        let injector = N4Injector.of(TestSubject, this.parentInjector, new TestBinder());
+        this.subject = injector.create(TestSubject);
+    }
+    @After
+    resetMock() {
+        MockTest.reset();
+    }
+
+    @Test
+    async testBeforeAll() {
+        await this.subject.executor.runTestAsync(new InstrumentedTest().load(MockTest).setTestObject(new MockTest()))
+        Assert.equal(MockTest.beforeAllCount, 2, "two beforeAlls each called once");
+    }
+    @Test
+    async testBefore() {
+        await this.subject.executor.runTestAsync(new InstrumentedTest().load(MockTest).setTestObject(new MockTest()))
+        Assert.equal(MockTest.beforeCount, 4, "2 befores each called before each test")
+    }
+    @Test
+    async testTest() {
+        await this.subject.executor.runTestAsync(new InstrumentedTest().load(MockTest).setTestObject(new MockTest()))
+        Assert.equal(MockTest.testCount, 2, "2 tests each called once");
+    }
+    @Test
+    async testAfter() {
+        await this.subject.executor.runTestAsync(new InstrumentedTest().load(MockTest).setTestObject(new MockTest()))
+        Assert.equal(MockTest.beforeCount, 4, "2 afters each called after each test")
+    }
+    @Test
+    async testAfterAll() {
+        await this.subject.executor.runTestAsync(new InstrumentedTest().load(MockTest).setTestObject(new MockTest()))
+        Assert.equal(MockTest.beforeAllCount, 2, "two afterAlls each called once");
+    }
+    @Test
+    async testExecutionOrder() {
+        let methods = [
+            "beforeAll1"
+            ,"beforeAll2"
+            ,"before1"
+            ,"before2"
+            ,"test1"
+            ,"after1"
+            ,"after2"
+            ,"before1"
+            ,"before2"
+            ,"test2"
+            ,"after1"
+            ,"after2"
+            ,"afterAll1"
+            ,"afterAll2"
+            ]
+           ,positions = [
+               [0,1]
+               ,[0,1]
+               ,[2,3]
+               ,[2,3]
+               ,[4,9]
+               ,[5,6]
+               ,[5,6]
+               ,[7,8]
+               ,[7,8]
+               ,[4,9]
+               ,[10,11]
+               ,[10,11]
+               ,[12,13]
+               ,[12,13]
+           ]
+           ,called = MockTest.called
+        ;
+        await this.subject.executor.runTestAsync(new InstrumentedTest().load(MockTest).setTestObject(new MockTest()))
+        Assert.strictEqual(called.length, methods.length, "Number of methods called");
+        //call order tests don't ensure all tests are called.
+        Assert.notEqual(called.indexOf("test1"), -1, "test1 called");
+        Assert.notEqual(called.indexOf("test1"), -1, "test2 called");
+        methods.forEach(function(method, index) {
+            let actualIndex: number
+                ,found: boolean = false
+                ,actualMethods: Array<string> = []
+            ;
+
+            for (actualIndex of positions[index] ) {
+                actualMethods.push(called[actualIndex])
+                if (called[actualIndex] === method) {
+                    found = true;
+                    break;
+                }
+            }
+
+            Assert.isTrue(found,
+                ["method "
+                    , method
+                    , "should be one of the valid positions ("
+                    , positions[index].toString()
+                    , ")"
+                    , "instead those positions contained"
+                    , actualMethods.toString()
+                ].join(" ")
+            )
+        })
+    }
+
+    @Test
+    async testExecutionOrderSubclass() {
+        MockTest.reset();
+        let tests: Array<InstrumentedTest> = []
+            , val: ResultGroups
+            , methods = [
+            "beforeAll1"
+            ,"beforeAll2"
+            ,"before1"
+            ,"before2"
+            ,"childSmallDelayTest"
+            ,"after1"
+            ,"after2"
+            ,"before1"
+            ,"before2"
+            ,"test1"
+            ,"after1"
+            ,"after2"
+            ,"before1"
+            ,"before2"
+            ,"test2"
+            ,"after1"
+            ,"after2"
+            ,"afterAll1"
+            ,"afterAll2"
+            ]
+           ,positions = [
+               [0,1]
+               ,[0,1]
+               ,[2,3]
+               ,[2,3]
+               ,[4,9, 14]
+               ,[5,6]
+               ,[5,6]
+               ,[2,3]
+               ,[2,3]
+               ,[4,9, 14]
+               ,[5,6]
+               ,[5,6]
+               ,[7,8]
+               ,[7,8]
+               ,[4,9, 14]
+               ,[15,16]
+               ,[15,16]
+               ,[17,18]
+               ,[17,18]
+           ]
+           ,called: Array<string>
+        ;
+        tests.push(new InstrumentedTest().load(ChildOfMock)
+                                         .setTestObject(new  ChildOfMock()));
+        val =  await this.subject.executor.runTestsAsync(tests);
+        called = MockTest.called
+        Assert.strictEqual(positions.length, methods.length, "Sanity check. positions and methods parallel arrays same size");
+        Assert.strictEqual(called.length, methods.length, "Number of methods called \n" + called.join("\n"));
+        //call order tests don't ensure all tests are called.
+        Assert.notEqual(called.indexOf("test1"), -1, "test1 called");
+        Assert.notEqual(called.indexOf("test1"), -1, "test2 called");
+        methods.forEach(function(method, index) {
+            let actualIndex: number
+                ,found: boolean = false
+                ,actualMethods: Array<string> = []
+            ;
+
+            for (actualIndex of positions[index] ) {
+                actualMethods.push(called[actualIndex])
+                if (called[actualIndex] === method) {
+                    found = true;
+                    break;
+                }
+            }
+
+            Assert.isTrue(found,
+                ["method "
+                    , method
+                    , "should be one of the valid positions ("
+                    , positions[index].toString()
+                    , ")"
+                    , "instead those positions contained"
+                    , actualMethods.toString()
+                ].join(" ")
+            )
+        })
+    }
+    @Test 
+    async testBeforeAllErrors() {
+        let  tests: Array<InstrumentedTest> = []
+            , val: ResultGroups
+        ;
+        tests.push(new InstrumentedTest().load(BeforeAllErrorMockTest)
+                                         .setTestObject(new  BeforeAllErrorMockTest()));
+        val =  await this.subject.executor.runTestsAsync(tests);
+        Assert.equal(val.failures, 2, "all tests should fail");
+        return true;
+    }
+
+    @Test 
+    async preconditionBasicFail() {
+        let tests: Array<InstrumentedTest> = []
+        , val: ResultGroups
+        ;
+        tests.push(new InstrumentedTest().load(PreconditionTests).setTestObject(new  PreconditionTests()));
+        val =  await this.subject.executor.runTestsAsync(tests);
+        Assert.equal(val.results[0].testResults[0].testStatus, TestStatus.skipped_precondition);
+    }
+}
+
+/*
+-*- mode: typescript;-*-
+*/
+

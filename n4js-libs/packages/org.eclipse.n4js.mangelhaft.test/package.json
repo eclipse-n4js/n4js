@@ -1,0 +1,16 @@
+{
+  "name": "org.eclipse.n4js.mangelhaft.test",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "private": true,
+  "repository": "https://github.com/NumberFour/n4js",
+  "description": "Mangelhaft framework tests.",
+  "keywords": [
+    "n4js",
+    "testing",
+    "mangelhaft"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

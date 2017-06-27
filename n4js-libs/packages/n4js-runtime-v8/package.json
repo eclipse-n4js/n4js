@@ -1,0 +1,14 @@
+{
+  "name": "n4js-runtime-v8",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/NumberFour/n4js-libs",
+  "description": "N4JS Runtime Library for the V8 engine.",
+  "keywords": [
+    "n4js",
+    "v8"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

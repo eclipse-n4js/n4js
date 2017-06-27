@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {TestController} from "org/eclipse/n4js/mangelhaft/TestController"
+import {TestInfos} from "org/eclipse/n4js/mangelhaft/types/TestInfos"
+import {IDEReporter} from "org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter"
+import {N4Injector} from "n4js/lang/N4Injector"
+import {FIXME1} from "org/eclipse/n4js/mangelhaft/Test"
+import {FIXME2} from "org/eclipse/n4js/mangelhaft/Test"
+import {IFIXME} from "org/eclipse/n4js/mangelhaft/Test"
+import {IFIXME2} from "org/eclipse/n4js/mangelhaft/Test"
+import {TestDIComponent} from "org/eclipse/n4js/mangelhaft/types/TestDIComponent"
+
+class IDENodeTestRunner  {
+    @Inject
+    protected controller: TestController;
+    @Inject
+    protected reporter: IDEReporter;
+
+    @Final protected async run(): void {
+
+        try {
+            let testCatalog: TestInfos,
+                catalogDef = n4.runtimeOptions["test-catalog"];
+
+            if (typeof catalogDef === "string") {
+                let req = await fetch(catalogDef as string, {
+                    headers: {
+                        "Content-Type": "application/vnd.n4js.assemble_test_catalog_req.tm+json"
+                    }
+                });
+                testCatalog = (await req.json()) as TestInfos;
+            } else {
+                testCatalog = catalogDef as TestInfos;
+            }
+            this.reporter.endpoint = testCatalog.endpoint;
+            this.controller.reporters = [this.reporter];
+            await this.controller.runGroups(testCatalog, 100);
+        } catch (err) {
+            let errObj: Object+ = err as Object;
+            console.error(err + "\nstack: " + errObj.stack.replace(/^Error:?\s*/, ""));
+            throw err;
+        }
+    }
+}
+@Bind(IFIXME, FIXME1)
+@Bind(IFIXME2, FIXME2)
+@Binder
+class TestBinder {}
+
+@GenerateInjector
+@WithParentInjector(TestDIComponent)
+@UseBinder(TestBinder)
+class Root {
+    @Inject
+    runner: IDENodeTestRunner;
+}
+
+const parentinj = N4Injector.of(TestDIComponent);
+const root = N4Injector.of(Root, parentinj).create(Root);
+
+export default public const main = root.runner;
