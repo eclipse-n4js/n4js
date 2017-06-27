@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+@N4JS
+export external public interface I {
+	// XPECT noerrors --> "This is the correct application." at "foo"
+	@ProvidesInitializer foo;
+}
+
+@N4JS
+export external public class C {
+	// XPECT noerrors --> "This is the correct application." at "foo"
+	@ProvidesInitializer foo;
+}
+
+
+export external public interface K {
+	// XPECT errors --> "@ProvidesInitializer must only be used in classifiers annotated with @N4JS." at "foo"
+	@ProvidesInitializer foo;
+}

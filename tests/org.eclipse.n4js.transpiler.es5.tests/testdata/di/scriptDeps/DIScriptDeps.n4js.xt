@@ -1,0 +1,156 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "ScriptDeps.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+/* XPECT output ---
+<==
+stdout:
+stderr:
+==>
+--- */
+
+
+import { A , B , C , D , E , F, G, H, I, J, K, L, M, N, O, P } from
+"di/scriptDeps/ScriptDeps"
+
+//=============================================================================
+// Test Data
+//=============================================================================
+
+export public class Injected extends P {
+    @Inject fieldA : A;
+    @Inject fieldPB : N4Provider<B>;
+    @Inject fieldPPC : N4Provider<N4Provider<C>>;
+
+    @Inject
+    constructor(ctorD : D, ctorPE : N4Provider<E>, ctorPPF : N4Provider<N4Provider<F>>){}
+}
+
+@Binder
+@Bind(~G,H)
+export public class Binder{
+    @Provides
+    pm(paramJ : J, paramPK : N4Provider<K>, paramPPL : N4Provider<N4Provider<L>>) : ~I{
+        return new M();
+    }
+}
+
+
+@GenerateInjector
+@UseBinder(N)
+@WithParentInjector(O)
+export public class DIC{}
+
+function strictEqual(a : any, b : any, msg : string){
+	if(a!==b){
+		console.error(msg);
+	}
+}
+
+//==================================================================
+//======= helper types copied from injector implementation =========
+//==================================================================
+//note those are simplified, we use them to make testing easier (less type casting)
+
+interface InjectedTypeMeta{
+    type : constructor{N4Object};
+    typeVar? : InjectedTypeMeta;
+}
+
+interface InjectedClassMeta{
+    superType? : constructor{N4Object};
+    injectCtorParams? : Array<InjectedTypeMeta>;
+    fieldsInjectedTypes? : Array<InjectedTypeMeta>;
+}
+
+interface BindingInfo{
+    from : constructor{N4Object};
+    to : constructor{N4Object};
+}
+
+interface ProvideMethodInfo{
+    to : constructor{N4Object};
+    args : Array<InjectedTypeMeta>;
+}
+
+interface BinderMeta extends InjectedClassMeta{
+    bindings? : Array<BindingInfo>;
+    methodBindings? : Array<ProvideMethodInfo>;
+}
+
+interface DIComponentMeta extends InjectedClassMeta{
+    parent? : constructor{N4Object};
+    binders : Array<constructor{N4Object}>;
+}
+
+function getInjectedClassMeta(type : any): InjectedClassMeta?{
+    return (type as Object)['$di'] as InjectedClassMeta;
+}
+
+function getBinderMeta(type : any): BinderMeta?{
+    return (type as Object)['$di'] as BinderMeta;
+}
+
+function getDIComponentMeta(type : any): DIComponentMeta?{
+    return (type as Object)['$di'] as DIComponentMeta;
+}
+
+
+//=============================================================================
+// Tests
+//=============================================================================
+/**
+ * Compiler by default is removing "unused" imported types.
+ * Check if compiler is not removing references to types that need to be loaded for
+ * the DI mechanisms.
+ */
+
+(function checkInjectedClassDeps(){
+	var meta = getInjectedClassMeta(Injected);
+
+    strictEqual(meta.superType.n4type.name, 'P', "Injected class super type not present");
+
+    strictEqual(meta.fieldsInjectedTypes[0].type.n4type.name, 'A', "injected field type not present");
+    strictEqual(meta.fieldsInjectedTypes[1].typeVar.type.n4type.name, 'B', "injected provided type not present");
+    strictEqual(meta.fieldsInjectedTypes[2].typeVar.typeVar.type.n4type.name, 'C', "injected nested provider not present");
+
+    strictEqual(meta.injectCtorParams[0].type.n4type.name, 'D', "inejcted ctor param type not present");
+    strictEqual(meta.injectCtorParams[1].typeVar.type.n4type.name, 'E', "injected ctor provided param type not present");
+    strictEqual(meta.injectCtorParams[2].typeVar.typeVar.type.n4type.name, 'F', "injected ctor nested provided type not present");
+}());
+
+(function checkBinderDeps(){
+    var meta = getBinderMeta(Binder);
+
+    strictEqual(meta.bindings[0].from.n4type.name, 'G', "binding key type not present");
+    strictEqual(meta.bindings[0].to.n4type.name, 'H', "binding target type not present");
+
+    strictEqual(meta.methodBindings[0].to.n4type.name, 'I', "provide method target type not present");
+    strictEqual(meta.methodBindings[0].args[0].type.n4type.name, 'J', "provide method param type not present");
+    strictEqual(meta.methodBindings[0].args[1].typeVar.type.n4type.name, 'K', "provide method provided param type not present");
+    strictEqual(meta.methodBindings[0].args[2].typeVar.typeVar.type.n4type.name, 'L', "provide method neted provided type not present");
+}());
+
+(function checkDiComponentDeps(){
+        var meta = getDIComponentMeta(DIC);
+
+        strictEqual(meta.parent.n4type.name, 'O', "di component parent type not present");
+        strictEqual(meta.binders[0].n4type.name, 'N', "di component binder type not present");
+}());

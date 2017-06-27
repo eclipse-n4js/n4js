@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Cls1.n4js" {}
+		File "Cls2.n4js" {}
+	}
+
+	END_SETUP
+*/
+
+
+//
+// combining default import with named import
+//
+import MyDef1, {A as MyA1, C as MyC1} from "importexport/default_combined/Cls1"
+
+//
+// combining default import with namespace import
+//
+import MyDef2, * as NS from "importexport/default_combined/Cls2"
+
+
+console.log('running in Cls_main.n4js:');
+
+var a1: MyA1 = new MyA1();
+var def1: MyDef1 = new MyDef1();
+var c1: MyC1 = new MyC1();
+a1.m();
+def1.m();
+c1.m();
+
+console.log('======')
+
+var a2: NS.A = new NS.A();
+var def2: MyDef2 = new MyDef2();
+var c2: NS.C = new NS.C();
+a2.m();
+def2.m();
+c2.m();
+
+
+
+
+/* XPECT output ---
+<==
+stdout:
+running in Cls1.n4js:
+hello from method A.m!
+hello from method B.m!
+hello from method C.m!
+running in Cls2.n4js:
+hello from method A.m!
+hello from method B.m!
+hello from method C.m!
+running in Cls_main.n4js:
+hello from method A.m!
+hello from method B.m!
+hello from method C.m!
+======
+hello from method A.m!
+hello from method B.m!
+hello from method C.m!
+stderr:
+==>
+--- */

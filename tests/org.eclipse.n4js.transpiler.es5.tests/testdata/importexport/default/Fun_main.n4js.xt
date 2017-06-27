@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "Fun.n4js" {}
+	}
+
+	END_SETUP
+*/
+
+
+import myF from "importexport/default/Fun"
+
+
+console.log('running in Fun_main.n4js:');
+myF();
+
+
+
+/* XPECT output ---
+<==
+stdout:
+running in Fun.n4js:
+hello from function f!
+running in Fun_main.n4js:
+hello from function f!
+stderr:
+==>
+--- */

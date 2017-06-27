@@ -1,0 +1,162 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.tests.autoedit
+
+import com.google.common.base.Charsets
+import org.eclipse.n4js.ui.internal.N4JSActivator
+import org.eclipse.core.resources.IEncodedStorage
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.core.runtime.Path
+import org.eclipse.core.runtime.PlatformObject
+import org.eclipse.ui.PlatformUI
+import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.junit4.ui.AbstractCStyleLanguageAutoEditTest
+import org.eclipse.xtext.ui.editor.XtextEditor
+import org.eclipse.xtext.ui.editor.utils.EditorUtils
+import org.eclipse.xtext.util.StringInputStream
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+
+/**
+ */
+class AutoEditPluginUITest extends AbstractCStyleLanguageAutoEditTest {
+
+	private static final String LINE_SEPARATOR = System.lineSeparator;
+
+	@FinalFieldsConstructor
+	static class StringBasedStorage extends PlatformObject implements IEncodedStorage {
+		val String content
+		val String fileName
+
+		override getCharset() throws CoreException {
+			return Charsets.UTF_8.name
+		}
+
+		override getContents() throws CoreException {
+			new StringInputStream(content, charset)
+		}
+
+		override getFullPath() {
+			return new Path('/doesNotExist/' + fileName)
+		}
+
+		override getName() {
+			return fileName
+		}
+
+		override isReadOnly() {
+			return false
+		}
+
+	}
+
+	@Before
+	override void setUp() throws Exception {
+		closeWelcomePage();
+		closeEditors();
+	}
+
+	@After
+	override void tearDown() throws Exception {
+		closeEditors();
+	}
+
+	override protected String getEditorId() {
+		return N4JSActivator.ORG_ECLIPSE_N4JS_N4JS
+	}
+
+	override protected String getFileExtension() {
+		throw new UnsupportedOperationException
+	}
+
+	override protected XtextEditor openEditor(String stringRaw) throws Exception {
+		val string = stringRaw.replace("\n", LINE_SEPARATOR); // support for windows, etc.
+		val storage = new StringBasedStorage(string.replace("|", ""), 'TestMe.n4js')
+		val editorInput = EditorUtils.createEditorInput(storage)
+		val editor = PlatformUI.workbench.activeWorkbenchWindow.activePage.openEditor(editorInput, editorId) as XtextEditor
+		var int cursor = string.indexOf('|')
+		editor.getInternalSourceViewer().setSelectedRange(cursor, 0)
+		editor.getInternalSourceViewer().getTextWidget().setFocus()
+		return editor
+	}
+
+	override protected pasteText(XtextEditor editor, String text) throws Exception {
+		super.pasteText(editor, text.replace("\n", LINE_SEPARATOR)) // support for windows, etc.
+	}
+
+	override protected assertState(String string, XtextEditor editor) {
+		super.assertState(string.replace("\n", LINE_SEPARATOR), editor) // support for windows, etc.
+	}
+
+	@Test def void testBug335634_08() throws Exception {
+		val editor = openEditor(" // /*|\n");
+		pressKey(editor, '\n');
+		assertState(" // /*\n |\n", editor);
+	}
+
+	@Test def void testBug335634_09() throws Exception {
+		val editor = openEditor("// /*|\n");
+		pressKey(editor, '\n');
+		assertState("// /*\n|\n", editor);
+	}
+
+	@Test def void testAsteriskAfterRegEx_01() throws Exception {
+		val editor = openEditor("val x = /a/|\n");
+		pressKey(editor, '*');
+		assertState("val x = /a/*|\n", editor);
+	}
+
+	@Test def void testAsteriskAfterRegEx_02() throws Exception {
+		val editor = openEditor("val x = /a/*|\n");
+		pressKey(editor, '\n');
+		assertState("val x = /a/*\n|\n", editor);
+	}
+
+	@Test def void testMLComments_18() throws Exception {
+		val editor = openEditor("   | ");
+		pressKey(editor, '/');
+		pressKey(editor, '*');
+		assertState("   /*| */ ", editor);
+	}
+
+	@Test def void testMLComments_19() throws Exception {
+		val editor = openEditor("   |\n");
+		pressKey(editor, '/');
+		pressKey(editor, '*');
+		assertState("   /*| */\n", editor);
+	}
+
+	@Test def void testMLComments_20() throws Exception {
+		val editor = openEditor("   /*|\n");
+		pressKey(editor, '\n');
+		assertState("   /*\n    * |\n    */\n", editor);
+	}
+
+	@Test def void testMLComments_21() throws Exception {
+		val editor = openEditor("   /* |\n");
+		pressKey(editor, '\n');
+		assertState("   /* \n    * |\n    */\n", editor);
+	}
+
+	/**  IDEBUG-390 */
+	@Test def void testBug368519() throws Exception {
+
+		// Do the Action under test
+		val editor = openEditor("|x('')");
+		val toggleAction = editor.getAction("ToggleComment")
+		toggleAction.run();
+
+		// assure behaviour
+		assertState("|//x('')", editor);
+	}
+
+}

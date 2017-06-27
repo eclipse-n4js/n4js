@@ -1,0 +1,1 @@
+//see org.eclipse.n4js.spec.tests/xpect-tests/Ch05_02_02_01__DefaultCtorAndSpecParameter/ThisParameter_WrongCall.n4js.xt

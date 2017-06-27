@@ -1,0 +1,41 @@
+        finally {
+        }
+        return current;
+    }
+    public final EObject rulePrimaryExpression() throws RecognitionException {
+        EObject current = null;
+
+        EObject this_ThisLiteral_0 = null;
+
+        EObject this_SuperLiteral_1 = null;
+
+        EObject this_IdentifierRef_2 = null;
+
+        EObject this_ParameterizedCallExpression_3 = null;
+
+        EObject this_Literal_4 = null;
+
+        EObject this_ArrayLiteral_5 = null;
+
+        EObject this_ObjectLiteral_6 = null;
+
+        EObject this_ParenExpression_7 = null;
+
+        EObject this_AnnotatedExpression_8 = null;
+
+        EObject this_FunctionExpression_9 = null;
+
+        EObject this_AsyncFunctionExpression_10 = null;
+
+        EObject this_N4ClassExpression_11 = null;
+
+        EObject this_TemplateLiteral_12 = null;
+         enterRule();
+        try {
+        	{
+            int alt240=13;
+            // REPLACEMENT rulePrimaryExpression.java.replacement START
+            try {
+                alt240 = dfa240.predict(input);
+            } catch (NoViableAltException re) {
+            	int as = input.LA(1);

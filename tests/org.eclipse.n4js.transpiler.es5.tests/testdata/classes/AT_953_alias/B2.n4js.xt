@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "A.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+// found during IDE-1852: XPECT FIXME nowarnings
+/* XPECT output ---
+<==
+stdout:
+
+e.f: test
+e.field: test
+e.field2: 5
+e.localField: undefined
+e.localField2: 7
+
+f.f: test
+f.field: test
+f.field2: 5
+f.localField: undefined
+f.localField2: 7
+stderr:
+==>
+--- */
+
+import { A as C, R as S} from "classes/AT_953_alias/A"
+
+interface R {
+	localField : string;
+	localField2 : number = 7;
+}
+
+class E implements R, S {
+
+}
+
+interface T extends R, S {
+
+}
+
+class F implements T {
+
+}
+
+var e = new E()
+var f = new F()
+
+e.f = "test"
+console.log("\ne.f: " + e.f)
+console.log("e.field: " + e.field)
+console.log("e.field2: " + e.field2)
+console.log("e.localField: " + e.localField)
+console.log("e.localField2: " + e.localField2)
+
+f.f = "test"
+console.log("\nf.f: " + f.f)
+console.log("f.field: " + f.field)
+console.log("f.field2: " + f.field2)
+console.log("f.localField: " + f.localField)
+console.log("f.localField2: " + f.localField2)

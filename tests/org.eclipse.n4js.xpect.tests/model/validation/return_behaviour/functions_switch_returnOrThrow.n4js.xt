@@ -1,0 +1,449 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP  org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+
+
+// test containsReturnOrThrow with:
+// e.g.,  X-PECT:
+//   X-PECT returnOrThrow --> returnsMode
+//   X-PECT returnOrThrow --> throwsMode
+//   X-PECT returnOrThrow --> breakOrContinue labels ...
+//   X-PECT returnOrThrow --> noReturnsMode
+// example see: org.eclipse.n4js.xpect.N4JSTypeSystemXpectTest
+
+
+///////////////////
+// Standard expressions in functions
+///////////////////
+function a() : number { return 77 ; }
+function b() : string { return "b"; }
+
+function c() {
+	console.log("a");
+	b();
+	var d = "hallo"
+}
+
+///////// Simple Switch statements
+// XPECT noerrors -->
+// XPECT returnOrThrow at '|function' --> returnsMode
+function f0(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f1"
+// XPECT returnOrThrow --> noReturnsMode
+function f1(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: return 2;
+		case 6: ;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f2"
+// XPECT returnOrThrow --> noReturnsMode
+function f2(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: break;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f3"
+// XPECT returnOrThrow --> noReturnsMode
+function f3(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		// no default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f4(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			var z : number = 1;
+			return 1;
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f5"
+// XPECT returnOrThrow --> noReturnsMode
+function f5(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			var z : number = 1;
+			break;
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT noerrors -->
+// XPECT returnOrThrow --> throwsMode
+function f6(a : number) : number {
+    // XPECT returnOrThrow --> throwsMode
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: throw 'e';
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+//// labeled breaks
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f10(a : number) : number {
+	l1: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f11"
+// XPECT returnOrThrow --> noReturnsMode
+function f11(a : number) : number {
+	l2: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: break l2;
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f12(a : number) : number {
+	l2: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			// XPECT returnOrThrow --> noReturnsMode
+			l3: {
+				// XPECT returnOrThrow --> breakOrContinue labels l3
+				break l3;
+			}
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f13"
+// XPECT returnOrThrow --> noReturnsMode
+function f13(a : number) : number {
+	l2: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: {
+			// XPECT returnOrThrow --> breakOrContinue labels l2
+			l3: {
+				// XPECT returnOrThrow --> breakOrContinue labels l2
+				break l2;
+			}
+		}
+		default : ;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f14"
+// XPECT returnOrThrow --> noReturnsMode
+function f14(a : number) : number {
+	l1: {
+		// XPECT returnOrThrow --> breakOrContinue labels l1
+		l2: switch(a) {
+			case 1: ;
+			case 2: ;
+			case 3: {
+				// XPECT returnOrThrow --> breakOrContinue labels l1
+				l3: {
+					// XPECT returnOrThrow --> breakOrContinue labels l1
+					break l1;
+				}
+			}
+			default : ;
+			case 4: ;
+			case 5: ;
+			case 6: return 2;
+		}
+	}
+}
+
+////// subswitch statements:
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f20(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: ;
+				case 16: return 12;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f21(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> noReturnsMode
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: return 12;
+				case 16: ;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f22"
+// XPECT returnOrThrow --> noReturnsMode
+function f22(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> noReturnsMode
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: return 12;
+				case 16: ;
+			};
+			break;
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+// XPECT noerrors -->
+// X-PECT returnOrThrow --> throwsMode
+// Sloppy Situation, it really should be throwsMode.
+// XPECT returnOrThrow --> returnsMode
+function f23(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> noReturnsMode
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: throw 12;
+				case 16: ;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT noerrors -->
+// XPECT returnOrThrow --> throwsMode
+function f24(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> throwsMode
+			switch(a) {
+				case 11: ;
+				case 12: ;
+				case 13: ;
+				default :
+				case 14: ;
+				case 15: throw 12;
+				case 16: return 13;
+			}
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+
+////// try-catch in subswitch
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f25(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> noReturnsMode
+		    try {
+			    // XPECT returnOrThrow --> throwsMode
+				switch(a) {
+					case 11: ;
+					case 12: ;
+					case 13: ;
+					default :
+					case 14: ;
+					case 15: throw 12;
+					case 16: return 13;
+				}
+
+			} catch( r ) {  }
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT noerrors -->
+// XPECT returnOrThrow --> returnsMode
+function f26(a : number) : number {
+	switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> noReturnsMode
+		    try {
+			    // XPECT returnOrThrow --> noReturnsMode
+				switch(a) {
+					case 11: ;
+					case 12: ;
+					case 13: ;
+					default :
+					case 14: ;
+					case 15: throw 12;
+					case 16: ;
+				}
+
+			} catch( r ) { return 13; }
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}
+
+
+// XPECT errors --> "Missing return or throw statement (all control flows must terminate with an return value or be aborted)." at "f27"
+// XPECT returnOrThrow --> noReturnsMode
+function f27(a : number) : number {
+	l1: switch(a) {
+		case 1: ;
+		case 2: ;
+		case 3: ;
+		default :
+		    // XPECT returnOrThrow --> breakOrContinue labels l1
+		    try {
+			    // XPECT returnOrThrow --> breakOrContinue labels l1
+				l2: switch(a) {
+					case 11: ;
+					case 12: ;
+					case 13: ;
+					default :
+					case 14: ;
+					case 15: throw 12;
+					case 16: break l1;
+				}
+
+			} catch( r ) { return 13; }
+		case 4: ;
+		case 5: ;
+		case 6: return 2;
+	}
+}

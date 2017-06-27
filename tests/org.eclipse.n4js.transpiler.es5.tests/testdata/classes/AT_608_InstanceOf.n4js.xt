@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+a instanceof A
+b instanceof A
+b instanceof B
+c instanceof C
+stderr:
+==>
+--- */
+class A{}
+class B extends A {}
+class C {}
+
+var  a : A = new A();
+var  b : B = new B();
+var  c : C = new C();
+
+if (a instanceof A) { console.log('a instanceof A') }
+if (a instanceof B) { console.log('a instanceof B') }
+if (a instanceof C) { console.log('a instanceof C') }
+if (b instanceof A) { console.log('b instanceof A') }
+if (b instanceof B) { console.log('b instanceof B') }
+if (b instanceof C) { console.log('b instanceof C') }
+if (c instanceof A) { console.log('c instanceof A') }
+if (c instanceof B) { console.log('c instanceof B') }
+if (c instanceof C) { console.log('c instanceof C') }

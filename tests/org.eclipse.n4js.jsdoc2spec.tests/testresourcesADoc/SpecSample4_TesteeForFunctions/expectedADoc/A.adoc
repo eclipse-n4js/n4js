@@ -1,0 +1,67 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+include::{find}config.adoc[]
+:docinfodir: ../../../../../headers/apiModules
+:linkattrs:
+:toc:
+
+= Module A
+
+== Variables
+
+
+[[gsec:spec_A.bar2var]]
+[role=memberdoc]
+=== ++Variable bar2var++
+
+==== Signature
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:bar2var++[``++bar2var: string++``]
+
+==== Description
+
+Spec for Var bar2var
+
+
+
+[[gsec:spec_A.barvar]]
+[role=memberdoc]
+=== ++Variable barvar++
+
+==== Signature
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:barvar++[``++barvar: string++``]
+
+==== Description
+
+Spec for Var barvar
+
+==== Semantics
+
+++Bar basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testBarBasics++[Test]
+
+
+== Functions
+
+
+[[gsec:spec_A.foofunc]]
+[role=memberdoc]
+=== ++Function foofunc++
+
+==== Signature
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:foofunc++[``++function foofunc(): void++``]
+
+==== Description
+
+Spec for Function foofunc
+
+==== Semantics
+
+++Func basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testFuncBasics++[Test]

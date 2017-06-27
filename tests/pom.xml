@@ -1,0 +1,711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>org.eclipse.n4js.tests</artifactId>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.eclipse.n4js</groupId>
+		<artifactId>org.eclipse.n4js.distribution</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<modules>
+		<!-- ************************************** JUnit Tests -->
+
+        <!-- Test to ensure that shipped code is up-to-date (see /plugins/org.eclipse.n4js.external.libraries/shipped-code). -->
+		<module>org.eclipse.n4js.external.libraries.update.tests</module>
+
+        <!-- Release Engineering Tools Tests -->
+		<module>org.eclipse.n4js.releng.utils.tests</module>
+
+		<!-- JSDoc tests -->
+		<module>org.eclipse.n4js.jsdoc2spec.tests</module>
+		
+		<!-- Type system tests -->
+		<module>org.eclipse.n4js.ts.model.tests</module>
+		<module>org.eclipse.n4js.ts.tests</module>
+		<module>org.eclipse.n4js.ts.xpect.tests</module>
+		
+		<!-- Tester tests -->
+		<module>org.eclipse.n4js.tester.tests</module>
+
+		<!-- Regex tests -->
+		<module>org.eclipse.n4js.regex.tests</module>
+		
+		<!-- JS tests -->
+		<module>org.eclipse.n4js.lang.tests</module>
+		<module>org.eclipse.n4js.spec.tests</module>
+		<module>org.eclipse.n4js.tests.ecmatestsuite</module>
+		<module>org.eclipse.n4js.xpect.tests</module>
+
+		<!-- Xsemantics tests -->
+		<module>org.eclipse.n4js.xsemantics.tests</module>
+		
+		<!-- transpiler tests -->
+		<module>org.eclipse.n4js.transpiler.es5.tests</module>
+		<module>org.eclipse.n4js.transpiler.es.tests</module>
+		<module>org.eclipse.n4js.generator.headless.tests</module>
+
+		<!-- Manifest tests -->
+		<module>org.eclipse.n4js.n4mf.tests</module>
+		<module>org.eclipse.n4js.n4mf.xpect.tests</module>
+		
+		<!-- access control tests -->
+		<module>org.eclipse.n4js.accesscontrol.tests</module>
+
+		<!-- ************************************** JUnit Plugin Tests -->
+
+		<!-- JS tests -->
+		<!-- 
+			This e.n.i.n4js.ui.tests execution intentionally happens after the SWTBot one.
+			Jenkins jobs on Windows cannot run git checkout shell scripts, so git repositories are managed and checked out from Java code.
+			The low memory plug-in UI tests run with lower memory settings, so those cannot check out git repositories via Java (test) code.
+			SWTBot tests can run with the common heap size settings and can check out the required git repositories that is why they 
+			should run earlier than plug-in UI tests.
+		 -->
+		<module>org.eclipse.n4js.ui.tests</module>
+		<module>org.eclipse.n4js.xpect.ui.tests</module>
+		<module>org.eclipse.n4js.n4ide.spec.tests</module> 
+
+		<!-- Manifest tests -->
+		<module>org.eclipse.n4js.n4mf.xpect.ui.tests</module>
+		<!-- Runner tests -->
+		<module>org.eclipse.n4js.runner.ui.tests</module>
+
+		<!--  **************************************Other tests -->
+
+		<!-- Smoke tests -->
+		<module>org.eclipse.n4js.smoke.tests</module>
+		<module>org.eclipse.n4js.jsdoc.tests</module>
+		<!-- utils -->
+		<module>org.eclipse.n4js.utils.tests</module>
+		<!-- Expect Matrix test -->
+		<module>org.eclipse.n4js.expectmatrix.tests</module>
+		<!-- Bug reports -->
+		<module>org.eclipse.n4js.bugreports.tests</module>
+		<!-- Spec Examples test -->
+		<module>org.eclipse.n4js.spec.examples.xpect.tests</module>
+
+		<!-- *************************************** Tests testing the test helpers -->
+		<module>org.eclipse.n4js.test.helpers.tests</module>
+
+		<!-- *************************************** Headless Tools Tests -->
+		<module>org.eclipse.n4js.hlc.tests</module>
+
+		<!-- *************************************** n4jsx Tests -->
+		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
+		<module>org.eclipse.n4js.n4jsx.spec.tests</module>
+		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
+
+	</modules>
+
+
+	<properties>
+		<!-- jacoco (ECLEmma), code coverage -->
+		<jacoco-maven-plugin.version>0.7.1.201405082137</jacoco-maven-plugin.version>
+		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
+		<ant-contrib.version>1.0b3</ant-contrib.version>
+		<ant-nodeps.version>1.8.1</ant-nodeps.version>
+
+		<!-- commands and command lines for code coverage, empty by default and
+			set by profiles -->
+		
+		<!-- use "-Dlog4j.debug -Dorg.apache.logging.log4j.simplelog.StatusLogger.level=TRACE" to get debug messages from the logger -->
+		<loggingArgs>-Dlog4j.configuration="file:${basedir}/../../plugins/org.eclipse.n4js.utils.logging/log4j_tests.xml"</loggingArgs>
+
+		<junit-version>4.12</junit-version>
+		<ts-version>[0.0.1,0.1.0)</ts-version>
+		<n4js-version>[0.0.1,0.1.0)</n4js-version>
+		<n4mf-version>[0.0.1,0.1.0)</n4mf-version>
+
+		<!--
+		Property defines behaviour of <tycho-surefire-plugin> plugin
+		Default behaviour would be that a module
+		configured with packaging eclipse-test-plugin would fail if
+		there are (in an execution) no tests executed. As there are
+		multiple executions defined that only applied when matching
+		certain name pattern, it is ok, when some executions find no
+		test classes. So this property is set to false here.
+
+		Each profile can override this setting.
+		-->
+		<tycho-surefire-plugin.failIfNoTests>false</tycho-surefire-plugin.failIfNoTests>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version><!--$NO-MVN-MAN-VER$-->
+				<!-- Comment above is to prevent a warning. Due to using variables this warning is obsolete
+					See: https://bugs.eclipse.org/bugs/show_bug.cgi?id=346725
+				-->
+				<executions>
+					<execution>
+						<id>antrun-setCoverageAgent</id>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<taskdef resource="net/sf/antcontrib/antcontrib.properties"
+									classpathref="maven.plugin.classpath" />
+								<if>
+									<isset property="coverageAgent"/>
+									<then>
+									</then>
+									<else>
+										<property name="coverageAgent" value=""/>
+									</else>
+								</if>
+							</target>
+							<exportAntProperties>true</exportAntProperties>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>ant-contrib</groupId>
+						<artifactId>ant-contrib</artifactId>
+						<version>${ant-contrib.version}</version>
+						<exclusions>
+							<exclusion>
+								<groupId>ant</groupId>
+								<artifactId>ant</artifactId>
+							</exclusion>
+						</exclusions>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.ant</groupId>
+						<artifactId>ant-nodeps</artifactId>
+						<version>${ant-nodeps.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<!-- IDE-1392, upgrade to tycho 0.22: A reactor-built feature named 'org.eclipse.n4js.sdk' was not resolved in tycho-surefire-test,
+				comment on http://eclipse.org/tycho/sitedocs/tycho-surefire/tycho-surefire-plugin/test-mojo.html#dependencies
+				suggests to modify the target-platform instead (quote about tycho-surefire dependency-configuration:
+				 "This parameter has only limited support for dependencies to artifacts within the reactor. 
+				  Therefore it is recommended to specify extraRequirements on the target-platform-configuration plugin instead."):
+			-->
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>target-platform-configuration</artifactId>
+				<version>${tycho.version}</version>
+				<configuration>
+					<dependency-resolution>
+						<extraRequirements>
+							<requirement>
+								<type>eclipse-feature</type>
+								<id>org.eclipse.n4js.sdk</id>
+								<versionRange>0.0.0</versionRange>
+							</requirement>
+						</extraRequirements>
+					</dependency-resolution>
+				</configuration>
+			</plugin>  
+		</plugins>
+
+		<!-- Management of plugins which can be activated by children. -->
+		<pluginManagement>
+			<plugins>
+				<!-- Unpacking of js.engine for test-execution (output-tests) 
+				     + Unpacking of jshint.js for linter test-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>${maven-dependency-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>copy-n4-cli-jar</id>
+							<!-- disabled by default -->
+							<phase />
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>org.eclipse.n4js</groupId>
+										<artifactId>org.eclipse.n4js.hlc</artifactId>
+										<classifier>jar-with-dependencies</classifier>
+										<type>jar</type>
+										<overWrite>true</overWrite>
+										<outputDirectory>${project.build.directory}/</outputDirectory>
+										<destFileName>${hlc.jar-shortname}</destFileName>
+									</artifactItem>
+								</artifactItems>
+								<overWriteReleases>true</overWriteReleases>
+								<overWriteSnapshots>true</overWriteSnapshots>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<!--
+					There are different executions (configurations) defined, that are run one after the other (when they
+					are bound to the same Maven lifecycle phase).
+					Note that special sets of tests are triggered by proper maven profiles (indirectly by property set by profile)
+					-->
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-surefire-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<systemProperties>
+							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+						</systemProperties>
+						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
+					</configuration>
+					<executions>
+						<execution>
+							<!--
+							This the configuration here is used to disable
+							the default execution of the Tycho surefire mojo, so that only
+							the executions are used that are explicitly specified here.
+							This is done by a "hack": the default execution is bound to a
+							non existing Maven lifecycle phase "none".
+							-->
+							<id>default-test</id>
+							<!-- can be seen in log: tycho-surefire-plugin:0.18.0:test
+								(default-test) -->
+							<phase>none</phase>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+						<execution>
+							<!--
+							This configures the execution of
+							Tycho surefire tests, that should run headless with no UI (but
+							in OSGi context), only test classes that matches the name
+							pattern "*PluginTest.java" will be run by this execution. Note
+							also the ui.test.vmargs property that is set by the macos
+							resp. the other-os profile. 
+							
+							If the ${tycho.surefire.skipPluginTest}
+							property will be set to true then the test are not carried out but 
+							the expensive startup of the eclipse-test-environemnt ist still carried out.
+							-->
+							<id>TychoSurefirePluginTest</id>
+							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
+							<phase />
+							<configuration>
+								<!-- 15 Minutes timeout -->
+								<forkedProcessTimeoutInSeconds>900</forkedProcessTimeoutInSeconds>
+								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
+								<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
+								<!-- different for mac/not mac -->
+								<skip>${tycho.surefire.skipPluginTest}</skip>
+								<useUIHarness>false</useUIHarness>
+								<useUIThread>false</useUIThread>
+								<includes>
+									<include>**/*PluginTest.java</include>
+								</includes>
+								<excludes>
+									<exclude>**/*PluginUITest.java</exclude>
+								</excludes>
+								<systemProperties>
+									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+								</systemProperties>
+							</configuration>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+						<execution>
+							<!--
+							This configures the execution
+							of Tycho surefire tests, that should run UI, only test classes
+							that matches the name pattern "*PluginUITest.java" will be run
+							by this execution. Note also the ui.test.vmargs property that
+							is set by the macos resp. the other-os profile. 
+							-->
+							<id>TychoSurefirePluginUITest</id>
+							<!-- IDE-1435 unbound by default, rebind in profile to phase "integration-test" -->
+							<phase />
+							<configuration>
+								<systemProperties>
+									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+								</systemProperties>
+								<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
+								<!-- 10 Minutes timeout -->
+								<forkedProcessTimeoutInSeconds>601</forkedProcessTimeoutInSeconds>
+								<!-- useUIHarness=true ensures the workbench is started before the
+									tests are run. -->
+								<useUIHarness>true</useUIHarness>
+								<useUIThread>true</useUIThread>
+								<!-- argLine needs to be one line, if you atoformat line break will break tests -->
+								<!-- -Dosgi.debug requires a .options file, looks in the module-root for it -->
+								<!-- Debug options to halt on each (!) call to PluginUI test and wait for "telnet localhost 1975" 
+									 where you can enter "exit" to continue: 
+									 -Dosgi.noShutdown=true -Dosgi.console=1975 -->
+								<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
+								<!-- Debugging the instance under test with remote eclipse
+								<debugPort>9000</debugPort>
+								<product>org.eclipse.e4.ide.application.product</product>
+								<application>org.eclipse.ui.ide.workbench</application>
+								-->
+								<product>org.eclipse.n4js.product.product</product>
+								<application>org.eclipse.n4js.product.application</application>
+								<showEclipseLog>true</showEclipseLog>
+								<dependencies>
+									<!-- since Eclipse 4.4 and Tycho 0.20.0 PluginUI tests were not starting,
+									platform dependency was workaround advised for tycho issue with optional dependencies,
+									see: https://bugs.eclipse.org/bugs/show_bug.cgi?id=419147#c8 -->
+									<dependency>
+										<type>eclipse-feature</type>
+										<artifactId>org.eclipse.platform</artifactId>
+										<version>0.0.0</version>
+									</dependency>
+									<dependency>
+										<type>eclipse-feature</type>
+										<artifactId>org.eclipse.n4js.sdk</artifactId>
+										<version>0.0.0</version>
+									</dependency>
+									</dependencies>
+								<includes>
+									<include>**/*PluginUITest.java</include>
+								</includes>
+							</configuration>
+							<goals>
+								<goal>test</goal>
+							</goals>
+						</execution>
+
+					</executions>
+				</plugin>
+				<plugin>
+					<!--
+					Is configured to ignore tests that follows the name patterns used in the Tycho surefire mojo.
+					So all tests that do not follow these patterns (but the common test class name
+					patterns of **/Test*.java **/*Test.java **/*TestCase.java) are expected to be 
+					runnable as pure JUnit tests and will be executed by this mojo.
+					-->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+					<configuration>
+						<!-- argLine needs to be one line, if you auto-format line break will break tests -->
+						<argLine>${memoryArgs} ${encodingArgs} ${coverageAgent} ${loggingArgs}</argLine>
+						<!-- XXX remote debug -->
+	<!-- 					<argLine>${memoryArgs} ${encodingArgs} ${coverageAgent} ${loggingArgs} -Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=y</argLine> -->
+						<!-- XXX remote debug -->
+						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
+						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
+						<systemProperties>
+							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+						</systemProperties>
+						<excludes>
+							<exclude>**/*PluginTest.java</exclude>
+							<exclude>**/*PluginUITest.java</exclude>
+							<exclude>**/*PerformanceTest.java</exclude>
+							<exclude>**/*SmokeTest.java</exclude>
+							<exclude>**/*SwtBotTest.java</exclude>
+							<exclude>**/*SwtBotPerfTest.java</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>run-pojo-surefire-tests</id>
+							<goals>
+								<goal>test</goal>
+							</goals>
+							<phase>test</phase>
+							<configuration>
+								<systemProperties>
+									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+								</systemProperties>
+								<additionalClasspathElements>
+									<additionalClasspathElement>${cu_org.eclipse.n4js.runner}</additionalClasspathElement>
+								</additionalClasspathElements>
+							</configuration>
+						</execution>
+					</executions>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit47</artifactId>
+							<version>${maven-surefire-plugin.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<!--
+					Is configured similarly to maven surefire plugin. A bit simpler config, as there are different defaults for this plugin.
+					Default includes: 
+						**/IT*.java 
+						**/*IT.java 
+						**/*ITCase.java
+					-->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${maven-failsafe-plugin.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<systemProperties>
+									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+								</systemProperties>
+							</configuration>
+						</execution>
+	
+					</executions>
+					<configuration>
+						<!-- argLine needs to be one line, if you atoformat line break will break tests -->
+						<argLine>${memoryArgs} ${encodingArgs} ${coverageAgent} ${loggingArgs}</argLine>
+						<testSourceDirectory>${project.basedir}/src</testSourceDirectory>
+						<testClassesDirectory>${project.build.outputDirectory}</testClassesDirectory>
+						<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
+						<systemProperties>
+							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+						</systemProperties>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit47</artifactId>
+							<version>${maven-surefire-plugin.version}</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<profiles>
+		<!-- Platform related profiles -->
+		<profile>
+			<id>macosx</id>
+			<activation>
+				<os>
+					<name>mac os x</name>
+					<family>mac</family>
+				</os>
+			</activation>
+			<properties>
+				<ui.test.vmargs>-XstartOnFirstThread</ui.test.vmargs>
+			</properties>
+		</profile>
+		<profile>
+			<id>other-os</id>
+			<activation>
+				<os>
+					<family>!mac</family>
+				</os>
+			</activation>
+			<properties>
+				<ui.test.vmargs/>
+			</properties>
+		</profile>
+		<!-- Profile workspace-to-userhome is automatically activated if the property WORKSPACE is not set.
+			 As a fall-back it sets it to ${user.home}  -->
+		<profile>
+			<id>workspace-to-userhome</id>
+			<activation>
+				<property>
+					<name>!WORKSPACE</name>
+				</property>
+			</activation>
+			<properties>
+				<WORKSPACE>${user.home}</WORKSPACE>
+			</properties>
+		</profile>		
+
+		<profile>
+			<id>execute-smoke-tests</id>
+			<!--  -->
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.eclipse.tycho</groupId>
+							<artifactId>tycho-surefire-plugin</artifactId>
+							<configuration>
+								<systemProperties>
+									<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+								</systemProperties>
+							</configuration>
+							<executions>
+								<execution>
+									<!--
+									This configures the
+									execution of Tycho surefire tests, that should run tests
+									marked as performance tests, only test classes that matches
+									the name pattern "*SmokeTest.java" will be run by this
+									execution. The configuration of this execution is is the same
+									as for plug-in tests as these tests can be executed headlessly
+									as well. Only difference is that here the project plug-ins
+									have to specified as dependency.
+									-->
+									<id>TychoSurefireSmokeTest</id>
+									<!-- for submodules providing smoke-tests bing to phase integration-test -->
+									<phase />
+									<configuration>
+										<!-- 100 Minutes timeout -->
+										<forkedProcessTimeoutInSeconds>6000</forkedProcessTimeoutInSeconds>
+										<argLine>${encodingArgs} ${memoryArgs} ${ui.test.vmargs} ${coverageAgent} ${loggingArgs}</argLine>
+										<!-- different for mac/not mac -->
+										<useUIHarness>false</useUIHarness>
+										<useUIThread>false</useUIThread>
+										<dependencies>
+											<dependency>
+												<type>eclipse-feature</type>
+												<artifactId>org.eclipse.platform</artifactId>
+												<version>0.0.0</version>
+											</dependency>
+											<dependency>
+												<type>eclipse-feature</type>
+												<artifactId>org.eclipse.n4js.sdk</artifactId>
+												<version>0.0.0</version>
+											</dependency>
+										</dependencies>
+										<includes>
+											<include>**/*SmokeTest.java</include>
+										</includes>
+									</configuration>
+									<goals>
+										<goal>test</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+
+		<!-- Code coverage -->
+		<profile>
+			<id>codeCoverage</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<version>${jacoco-maven-plugin.version}</version>
+						<configuration>
+							<!-- TODO excludes: maybe exclude tests classes themselves from analysis -->
+							<excludes>
+								<exclude>**/src-gen/**/*.java</exclude>
+								<exclude>**/org/eclipse/**/*.java</exclude>
+								<exclude>**.antlr**</exclude>
+								<exclude>**.parseTree**</exclude>
+								<exclude>**Abstract*RuntimeModule.java</exclude>
+								<exclude>**/*SetupGenerated*.java</exclude>
+								<exclude>**/Abstract*Validator.java</exclude>
+								<exclude>**/Abstract*Validator.java</exclude>
+								<exclude>**/*GrammarAccess.java</exclude>
+								<exclude>**/Abstract*UiModule.java</exclude>
+								<exclude>**/Abstract*ProposalProvider.java</exclude>
+							</excludes>
+						</configuration>
+						<executions>
+							<execution>
+								<id>pre-unit-test</id>
+								<goals>
+									<goal>prepare-agent</goal>
+								</goals>
+								<configuration>
+									<append>true</append>
+									<destFile>${project.build.directory}/jacoco/jacoco-ut.exec</destFile>
+									<propertyName>coverageAgent</propertyName>
+								</configuration>
+							</execution>
+							<execution>
+								<id>pre-integration-test</id>
+								<goals>
+									<goal>prepare-agent-integration</goal>
+								</goals>
+								<configuration>
+									<it.destFile>${project.build.directory}/jacoco/jacoco-it.exec</it.destFile>
+									<propertyName>coverageAgent</propertyName>
+								</configuration>
+							</execution>
+							<execution>
+								<id>post-unit-test</id>
+								<goals>
+									<goal>report</goal>
+								</goals>
+								<configuration>
+									<dataFile>${project.build.directory}/jacoco/jacoco-ut.exec</dataFile>
+									<outputDirectory>${project.build.directory}/jacoco/jacoco-ut</outputDirectory>
+								</configuration>
+							</execution>
+							<execution>
+								<id>post-integration-test</id>
+								<goals>
+									<goal>report-integration</goal>
+								</goals>
+								<configuration>
+									<dataFile>${project.build.directory}/jacoco/jacoco-it.exec</dataFile>
+									<outputDirectory>${project.build.directory}/jacoco/jacoco-it</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit-version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.xtend</groupId>
+				<artifactId>org.eclipse.xtend.lib</artifactId>
+				<version>${xtend-library.version}</version>
+				<type>pom</type>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>

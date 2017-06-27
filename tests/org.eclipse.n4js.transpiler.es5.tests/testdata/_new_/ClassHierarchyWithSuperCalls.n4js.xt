@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+#### constructor
+S#ctor msg: hello up there!
+A#ctor
+#### method (non-static)
+S#m() msg: hello up there!
+A#m()
+#### method (static)
+S#ms() msg: hello up there!
+A#ms()
+========================================
+stderr:
+==>
+--- */
+
+
+class S {
+	constructor(msg) {
+		super();
+		console.log('S#ctor msg:', msg);
+	}
+
+	m(msg) {
+		console.log('S#m() msg:', msg);
+	}
+
+	static ms(msg) {
+		console.log('S#ms() msg:', msg);
+	}
+}
+
+class I extends S {}
+
+class A extends I {
+	constructor() {
+		super('hello up there!');
+		console.log('A#ctor');
+	}
+
+	@Override
+	m() {
+		super.m('hello up there!');
+		console.log('A#m()');
+	}
+
+	@Override
+	static ms() {
+		super.ms('hello up there!');
+		console.log('A#ms()');
+	}
+}
+
+console.log('========================================')
+console.log('#### constructor');
+var a = new A();
+console.log('#### method (non-static)');
+a.m();
+console.log('#### method (static)')
+A.ms();
+console.log('========================================')

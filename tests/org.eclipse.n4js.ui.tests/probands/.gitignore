@@ -1,0 +1,7 @@
+**/src-gen
+
+#include generated source for external, we need them for the runtime
+!IDE_1977_ExternalLibs/**/src-gen/
+
+#ignore .project files for IDE-1977
+IDE_1977_ExternalLibs/**/.project

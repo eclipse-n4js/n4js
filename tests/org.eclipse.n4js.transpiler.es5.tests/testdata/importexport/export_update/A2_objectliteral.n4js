@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+export public var v1 = { one: 1 };
+export public var v2 = { second_one : v1.one++ }; // v2.sencond_one == 1 , v1.one == 2
+
+export function do_post_increment_v1_and_assign_old_value_to_v2(){
+	v2.second_one = v1.one++;   /// should reexport v2 and v1
+} 
+
+
+

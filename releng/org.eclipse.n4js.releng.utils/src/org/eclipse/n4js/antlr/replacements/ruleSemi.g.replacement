@@ -1,0 +1,44 @@
+// Rule Semi
+ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	kw=Semicolon
+	{
+		$current.merge(kw);
+		newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword());
+	}
+;
+_________________________________REPLACE_WITH_________________________________
+// REPLACEMENT ruleSemi.g.replacement START
+// Rule Semi
+ruleSemi returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken()] 
+    @init { enterRule();
+		// injected by AutomaticSemicolonInjector
+		int marker = input.mark();
+		// Promote EOL if appropriate	
+		promoteEOL();    }
+    @after { leaveRule(); }:
+
+	kw=Semicolon
+    {
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
+    }
+	|
+	kw=(
+		  EOF
+		| RULE_EOL
+		| RULE_ML_COMMENT
+   )
+    {
+        addASIMessage();
+        $current.merge(kw);
+        newLeafNode(kw, grammarAccess.getSemiAccess().getSemicolonKeyword()); 
+    }
+    | RightCurlyBracket { forcedRewind(marker) }?
+    ;
+// REPLACEMENT ruleSemi.g.replacement END

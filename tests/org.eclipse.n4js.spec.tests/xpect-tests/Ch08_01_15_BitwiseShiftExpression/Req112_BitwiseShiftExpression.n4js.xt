@@ -1,0 +1,132 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+/////////////////
+// Bitwise Sift Expression
+// '>>' - SHR
+// '>>>' - USHR
+// '<<' - SHL
+// Constraint 74
+////////
+class A {
+	public num : number = 2;
+}
+
+class B extends A {
+	s : string = "a";
+	b : boolean = true;
+	m() : void { return;  }
+}
+
+var erg = new Array<number>();
+
+//////////////
+// SHR
+//////////////
+
+// OK
+erg[0] = 1 << 2;
+
+// ACTIVATE: X-PECT errors --> "null is not a number." at "null"
+erg[1] = null << 2;
+// ACTIVATE: X-PECT --> "null is not a number." at "null"
+erg[2] = 1 << null;
+// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
+erg[3] = undefined << 2;
+// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
+erg[4] = 1 << undefined;
+
+// XPECT errors --> "string is not a subtype of number." at ""1""
+erg[5] = "1" << 2;
+// XPECT errors --> "string is not a subtype of number." at ""2""
+erg[6] = 1 << "2";
+// XPECT errors --> "boolean is not a subtype of number." at "false"
+erg[7] = false << 2;
+// XPECT errors --> "boolean is not a subtype of number." at "true"
+erg[8] = 1 << true;
+// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
+erg[9] = 3 << /ab+c/;
+// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
+erg[10] = /ab+c/ << 3 ;
+// XPECT errors --> "void is not a subtype of number." at "new B().m()"
+erg[11] = new B().m() << 3 ;
+// XPECT errors --> "void is not a subtype of number." at "new B().m()"
+erg[12] = 1 << new B().m() ;
+
+
+//////////////
+// SHL
+//////////////
+
+// OK
+erg[0] = 1 >> 2;
+
+// ACTIVATE: X-PECT errors --> "null is not a number." at "null"
+erg[1] = null >> 2;
+// ACTIVATE: X-PECT --> "null is not a number." at "null"
+erg[2] = 1 >> null;
+// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
+erg[3] = undefined >> 2;
+// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
+erg[4] = 1 >> undefined;
+
+// XPECT errors --> "string is not a subtype of number." at ""1""
+erg[5] = "1" >> 2;
+// XPECT errors --> "string is not a subtype of number." at ""2""
+erg[6] = 1 >> "2";
+// XPECT errors --> "boolean is not a subtype of number." at "false"
+erg[7] = false >> 2;
+// XPECT errors --> "boolean is not a subtype of number." at "true"
+erg[8] = 1 >> true;
+// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
+erg[9] = 3 >> /ab+c/;
+// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
+erg[10] = /ab+c/ >> 3 ;
+// XPECT errors --> "void is not a subtype of number." at "new B().m()"
+erg[11] = new B().m() >> 3 ;
+// XPECT errors --> "void is not a subtype of number." at "new B().m()"
+erg[12] = 1 >> new B().m() ;
+
+
+//////////////
+// USHR
+//////////////
+
+// OK
+erg[0] = 1 >>> 2;
+
+// ACTIVATE: X-PECT errors --> "null is not a number." at "null"
+erg[1] = null >>> 2;
+// ACTIVATE: X-PECT --> "null is not a number." at "null"
+erg[2] = 1 >>> null;
+// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
+erg[3] = undefined >>> 2;
+// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
+erg[4] = 1 >>> undefined;
+
+// XPECT errors --> "string is not a subtype of number." at ""1""
+erg[5] = "1" >>> 2;
+// XPECT errors --> "string is not a subtype of number." at ""2""
+erg[6] = 1 >>> "2";
+// XPECT errors --> "boolean is not a subtype of number." at "false"
+erg[7] = false >>> 2;
+// XPECT errors --> "boolean is not a subtype of number." at "true"
+erg[8] = 1 >>> true;
+// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
+erg[9] = 3 >>> /ab+c/;
+// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
+erg[10] = /ab+c/ >>> 3 ;
+// XPECT errors --> "void is not a subtype of number." at "new B().m()"
+erg[11] = new B().m() >>> 3 ;
+// XPECT errors --> "void is not a subtype of number." at "new B().m()"
+erg[12] = 1 >>> new B().m() ;

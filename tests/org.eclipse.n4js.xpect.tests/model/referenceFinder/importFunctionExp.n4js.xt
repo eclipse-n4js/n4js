@@ -1,0 +1,24 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
+   ResourceSet {
+   	ThisFile {}
+   	Resource "importFunctionImp.n4js" {}
+   }
+END_SETUP
+ */
+
+// Bug of x-pect. Ask Moritz, he knows. (Regarding 'function' as Offset indicator)
+// IDE-1662, IDE-1699 XPECT FIXME findReferences at function --> zzz - 13, zzz - 16, zzz - 18
+export function zzz() {}
+
+zzz();

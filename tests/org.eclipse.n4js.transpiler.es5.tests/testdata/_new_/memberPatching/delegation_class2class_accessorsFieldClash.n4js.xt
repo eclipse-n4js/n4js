@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+// Some tests in this folder were remove as part of IDE-2228.
+// See 192980b3133a5a7fce70630c70d577a8fd410002, c74c82650408278a26d1d3433b780122e7a63ce5, 9732be951c73ac638d7a12c5d6767fb5e5d4f7cd, cd24fa1498702f9a6fd731916b3caa413f0fabc6.
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+========================================
+stderr:
+==>
+--- */
+
+
+// case #1: field is overridden by a getter and/or setter
+
+// overriding a field with only either a getter XOR setter is a validation error
+// overriding a field with a getter/setter pair does not require any special handling (delegation)
+// --> this entire case #1 need not be handled in the transpiler
+
+
+// case #2: getter and/or setter is overridden by a field
+
+// special handling in old transpiler (field will be added in $makeClass call as property)
+// HOWEVER:
+// in new transpiler we add *ALL* fields in $makeClass as properties
+// --> no special handling is required anymore for case #2!
+
+
+// to double check that case #2 is supported properly, here is a test:
+
+class A {
+	get acc() { console.log('THIS SHOULD NOT SHOW UP!'); return null; }
+	set acc(p) { console.log('THIS SHOULD NOT SHOW UP!'); }
+}
+class B extends A {}
+class C extends B {
+	@Override
+	acc; // note: overriding the accessor pair with a field
+}
+
+
+var c : C = new C();
+
+
+console.log('========================================');
+c.acc;
+c.acc = null;
+console.log('========================================');

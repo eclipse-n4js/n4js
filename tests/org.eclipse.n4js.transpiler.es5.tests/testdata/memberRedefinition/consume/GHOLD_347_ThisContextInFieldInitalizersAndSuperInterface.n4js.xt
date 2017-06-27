@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+// cf. https://github.com/NumberFour/n4js/issues/347
+
+ /* XPECT output ---
+<==
+stdout:
+5
+4
+stderr:
+==>
+--- */
+
+interface J {
+	numJ = 4;
+}
+
+interface I extends J {
+    num = 5;
+}
+
+class C implements I {
+    fn1 = () => console.log(this.num);
+    fn2 = () => console.log(this.numJ);
+}
+
+(new C).fn1();
+(new C).fn2();

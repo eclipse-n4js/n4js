@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+error when running logFactors(-100) : ReferenceError: logFactors is not defined
+error when running logFactors(-10) : ReferenceError: logFactors is not defined
+error when running logFactors(-1) : ReferenceError: logFactors is not defined
+error when running logFactors(0) : ReferenceError: logFactors is not defined
+error when running logFactors(1) : ReferenceError: logFactors is not defined
+error when running logFactors(10) : ReferenceError: logFactors is not defined
+error when running logFactors(100) : ReferenceError: logFactors is not defined
+stderr:
+==>
+--- */
+
+function safeEval(dyn){
+	try{
+		eval(dyn)
+	} catch(e){
+		console.log('error when running ' + dyn + ' : ' + e);
+	}
+}
+
+(function(){
+	safeEval('logFactors(-100)');
+	safeEval('logFactors(-10)');
+	safeEval('logFactors(-1)');
+	safeEval('logFactors(0)');
+	safeEval('logFactors(1)');
+	safeEval('logFactors(10)');
+	safeEval('logFactors(100)');
+})();

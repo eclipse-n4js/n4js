@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<?eclipse version="3.4"?>
+<plugin>
+   <!-- Register file extensions for n4jsx language -->
+    <extension
+      point="org.eclipse.n4js.utils.fileExtensions">
+	     <transpilableFileExtensions extensions="n4jsx, jsx"/>
+	     <runnableFileExtensions extensions="n4jsx, jsx"/>
+	     <testFileExtensions extensions="n4jsx"/>
+	     <typableFileExtensions extensions="n4jsx, jsx"/>
+	     <rawFileExtensions extensions="jsx"/>
+   </extension>
+</plugin>

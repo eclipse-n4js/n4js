@@ -1,0 +1,84 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+
+function fun(n: number) {
+	return `and hello again ${n} times !`;
+}
+
+
+var sEmpty = ``;
+
+
+var sPlain = `just a string`;
+
+
+var sNewline = `line 1
+  line 2
+  and line 3!`;
+
+
+var sNewlineOnly = `
+`;
+
+
+var sSegmented = `hello1
+hello2
+
+${fun(42)+` `+fun(7)}
+
+`;
+
+
+
+console.log('===================');
+console.log('"' + sEmpty + '"');
+console.log('===================');
+console.log('"' + sPlain + '"');
+console.log('===================');
+console.log('"' + sNewline + '"');
+console.log('===================');
+console.log('"' + sNewlineOnly + '"');
+console.log('===================');
+console.log('"' + sSegmented + '"');
+console.log('===================');
+
+
+
+
+/* XPECT output ---
+<==
+stdout:
+===================
+""
+===================
+"just a string"
+===================
+"line 1
+  line 2
+  and line 3!"
+===================
+"
+"
+===================
+"hello1
+hello2
+
+and hello again 42 times ! and hello again 7 times !
+
+"
+===================
+stderr:
+==>
+--- */

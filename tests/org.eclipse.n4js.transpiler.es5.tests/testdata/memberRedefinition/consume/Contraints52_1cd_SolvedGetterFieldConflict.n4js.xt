@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+C1.x get
+C1._x
+C1.x set: newvalue
+C1.x get
+newvalue
+stderr:
+==>
+--- */
+
+interface R1 {
+	x : string = "R1.x";
+}
+interface R2 {
+	set x(s : string) { console.log("R2.x set: " + s) }
+}
+
+
+class C1 implements R1, R2 {
+	_x : string = "C1._x";
+	@Override set x(s : string) { console.log("C1.x set: " + s); this._x = s}
+	@Override get x() : string { console.log("C1.x get"); return this._x}
+}
+
+var c = new C1();
+console.log(c.x)
+c.x = "newvalue";
+console.log(c.x)

@@ -1,0 +1,48 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+// IDE-561
+
+/* XPECT output ---
+<==
+stdout:
+N4Object.n4type.fqn:      N4BuiltInClasses.N4Object
+N4Class.n4type.fqn:       N4BuiltInClasses.N4Class
+A.n4type.fqn:             Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.A
+A.n4type.n4superType.fqn: N4BuiltInClasses.N4Object
+C.n4type.fqn:             Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.C
+C.n4type.n4superTyp.fqn:  N4BuiltInClasses.N4Object
+D.n4type.fqn:             Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.D
+D.n4type.n4superType.fqn: Ch07_04_Reflection_Meta_Information.Example58_ReflectionWithBuiltInTypes.A
+stderr:
+==>
+--- */
+
+console.log('N4Object.n4type.fqn:      ' + N4Object.n4type.fqn)
+console.log('N4Class.n4type.fqn:       ' + N4Class.n4type.fqn)
+
+class A {}
+console.log('A.n4type.fqn:             ' + A.n4type.fqn)
+console.log('A.n4type.n4superType.fqn: ' + A.n4type.n4superType.fqn)
+
+//will not work
+//class B extends Object {}
+//console.log('B.n4type.fqn:             ' + B.n4type.fqn)
+//console.log('B.n4type.n4superType:     ' + B.n4type.n4superType)
+
+class C extends N4Object {}
+console.log('C.n4type.fqn:             ' + C.n4type.fqn)
+console.log('C.n4type.n4superTyp.fqn:  ' + C.n4type.n4superType.fqn)
+
+class D extends A {}
+console.log('D.n4type.fqn:             ' + D.n4type.fqn)
+console.log('D.n4type.n4superType.fqn: ' + D.n4type.n4superType.fqn)

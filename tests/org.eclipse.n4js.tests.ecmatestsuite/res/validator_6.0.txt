@@ -1,0 +1,44 @@
+#
+# The following tests need the validator to find errors.
+# Note that it might be possible that the validator find wrong errors, 
+# making the test to pass successfully while it is wrong instead.
+# We expect no parse errors for these tests.
+#
+
+# exponent part is incorrect
+# these tests make no sense to me
+# e.g. the input sequence
+# e1
+# will never be consumed as a DecimalLiteral but as
+# an identifier instead
+
+
+
+
+
+# void IdentifierRef may not be used with an undefined identifier ref
+# 'If GetBase(x) is null, throw ReferenceError'
+
+
+
+# Erroneous arguments for #call or #hasProperty etc
+
+
+
+# @negative TypeError - maybe not all of these can be validated
+# Some of these certainly require flow analysis, e.g.
+#var o = { 
+#    get gNonStrict() {
+#        var tmp = Object.getOwnPropertyDescriptor(o, "gNonStrict").get;
+#        return tmp.caller || tmp.caller.throwTypeError;
+#    }
+#};
+#
+#
+#function f() {
+#    "use strict";
+#    return o.gNonStrict;
+#    // exception above since the caller from a strict environment is censored
+#}
+#f();
+

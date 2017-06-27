@@ -1,0 +1,45 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginUITest
+   Workspace {
+   	 Project "IDEBUG-323" {
+   	 	Folder "src" { File "IDEBUG_0261_Imported.n4js" {} }
+   	 	File "manifest.n4mf" { from="manifest_A.n4mf" }
+   	 }
+   	 Project "IDEBUG-323_B" {
+   	 	Folder "src" { ThisFile {} }
+
+   	 	File "manifest.n4mf" { from="manifest_B.n4mf" }
+   	 }
+   }
+   END_SETUP
+*/
+
+import { A } from "IDEBUG_0261_Imported"
+class B extends A {
+	@Override
+	protected foo() {
+		// XPECT noerrors --> "The method foo is not visible." at "foo"
+		super.foo();
+	}
+
+	protected bar() {
+		// XPECT noerrors --> "The method foo is not visible." at "foo"
+		this.foo2nd();
+	}
+
+	private fighter() {
+		// XPECT noerrors --> "The method foo is not visible." at "foo"
+		super.foo2nd();
+	}
+
+}

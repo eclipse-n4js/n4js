@@ -1,0 +1,54 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/utils/Validation")
+@GenModel(
+	modelDirectory="/org.eclipse.n4js.utils/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	literalsInterface="true",
+	loadInitialization="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.utils.validation
+
+import org.eclipse.emf.ecore.EResource
+
+/**
+ * Base class for pseduo-elements used by {@link org.eclipse.n4js.utils.validation.PrePostDiagnostician}.
+ */
+abstract class ValidationMarker {
+	transient EResource delegateResource
+
+	/**
+	 * Overrides original {@link org.eclipse.emf.ecore.EObject#eResource()} method delegating to
+	 * the resource currently validated.
+	 */
+	op EResource eResource() {
+		return delegateResource;
+	}
+}
+
+/**
+ * Marker class for declarative validators, an object of this type is injected into the stream of
+ * validated objects at first position.
+ */
+class PreValidation extends ValidationMarker {
+}
+
+/**
+ * Marker class for declarative validators, an object of this type is injected into the stream of
+ * validated objects at last position.
+ */
+class PostValidation extends ValidationMarker {
+}

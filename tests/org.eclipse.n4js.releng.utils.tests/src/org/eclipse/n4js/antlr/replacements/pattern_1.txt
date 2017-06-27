@@ -1,0 +1,5 @@
+int ##(?<alt>\w+)##=2;
+int ##(?<LA>\w+)## = input.LA(1);
+if ( (##\k<LA>##==RULE_NO_LINE_TERMINATOR) ) {
+##\k<alt>##=1;
+}

@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+
+export class A {
+	public m() {
+		console.log('hello from method A.m!');
+	}
+}
+export default class B {
+	public m() {
+		console.log('hello from method B.m!');
+	}
+}
+export class C {
+	public m() {
+		console.log('hello from method C.m!');
+	}
+}
+
+console.log('running in Cls2.n4js:');
+var a: A = new A();
+var b: B = new B();
+var c: C = new C();
+a.m();
+b.m();
+c.m();
+

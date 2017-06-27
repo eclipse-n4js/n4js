@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
+
+	Workspace {
+		JavaProject "N4JSXPECTTests" {
+			Folder "model" {
+				Folder "resourcedescriptions" {
+					ThisFile {}
+				}
+				Folder "jsxbackend" {
+					File "react.n4jsd" { from = "../../reactFiles/react.n4jsd" }
+				}
+			}
+			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+	}
+
+   END_SETUP
+ */
+
+
+import * as React from "jsxbackend/react"
+
+
+class ~Props {
+	public myProp: string;
+}
+
+	/* XPECT scope at 'React.|Element'  ---
+Array, Boolean, Component, ComponentProps, Date, Element, Error, EvalError,
+Function, Generator, Iterable, Iterable2, Iterable3, Iterable4, Iterable5, Iterable6,
+Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON, Math, N4Accessor,
+N4Annotation, N4ApiNotImplementedError, N4Class, N4Classifier, N4DataField, N4Element,
+N4Enum, N4EnumType, N4Field, N4Interface, N4Member, N4Method, N4NamedElement, N4Object,
+N4Provider, N4Role, N4StringBasedEnum, N4StringBasedEnumType, N4Type, NamedFnComponent,
+Number, Object, Promise, PropConstraint, PropType, PropTypes, Props, PureComponent,
+RangeError, React, React.Component, React.ComponentProps, React.Element,
+React.PropConstraint, React.PropType, React.PropTypes, React.PureComponent, React.cloneElement,
+React.createElement, React.isValidElement, React.renderToStaticMarkup, React.renderToString,
+ReferenceError, RegExp, String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError,
+URIError, any, boolean, cloneElement, console, createElement, i18nKey, int,
+isValidElement, jsxbackend.react.Component, jsxbackend.react.ComponentProps,
+jsxbackend.react.Element, jsxbackend.react.PropConstraint, jsxbackend.react.PropType,
+jsxbackend.react.PropTypes, jsxbackend.react.PureComponent, jsxbackend.react.cloneElement,
+jsxbackend.react.createElement, jsxbackend.react.isValidElement, jsxbackend.react.renderToStaticMarkup,
+jsxbackend.react.renderToString, number, pathSelector, renderToStaticMarkup, renderToString,
+resourcedescriptions.FunctionComponentDescriptions.NamedFnComponent, resourcedescriptions.FunctionComponentDescriptions.Props, string, symbol,
+typeName, void
+--- */
+export public function NamedFnComponent(props: Props): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+
+
+export public const AnonymusFnComponent = (props: ~Props): React.Element =>  {
+	return (
+		<div>{props.myProp}</div>
+	);
+}

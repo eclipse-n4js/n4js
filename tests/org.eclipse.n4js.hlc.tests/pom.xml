@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.eclipse.n4js</groupId>
+		<artifactId>org.eclipse.n4js.tests</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>org.eclipse.n4js.hlc.tests</artifactId>
+	<name>org.eclipse.n4js.hlc.tests</name>
+	<description>Test the headless N4js compiler bundled into one jar.</description>
+
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<plugins>
+			<!-- copy the executable jar to this run -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${maven-dependency-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eclipse.n4js</groupId>
+									<artifactId>org.eclipse.n4js.hlc</artifactId>
+									<classifier>jar-with-dependencies</classifier>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/</outputDirectory>
+									<destFileName>${hlc.jar-shortname}</destFileName>
+								</artifactItem>
+							</artifactItems>
+							<outputDirectory>${project.build.directory}/tools</outputDirectory>
+							<overWriteReleases>true</overWriteReleases>
+							<overWriteSnapshots>true</overWriteSnapshots>
+							<localRepositoryDirectory>${project.build.directory}/localyDownloadedMvnRepo</localRepositoryDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<!-- Executing the build as part of the integration test in a separate 
+					vm. -->
+				<!-- config-HELP with:: mvn exec:help -Ddetail=true -Dgoal=exec -->
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>${codehaus-exec-maven-plugin.version}</version>
+				<configuration>
+					<systemProperties>
+						<WORKSPACE>${WORKSPACE}</WORKSPACE>
+						<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+						<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+					</systemProperties>
+					<executable>java</executable>
+					<arguments>
+						<argument>-jar</argument>
+						<argument>${project.build.directory}/${hlc.jar-shortname}</argument>
+						<argument>--help</argument><!-- this will show helpl only -->
+						<!-- <argument>-projectroot</argument> <argument>${project.build.directory}/test</argument> 
+							<argument>a/b/c/A.n4js</argument> <argument>-version</argument> -->
+					</arguments>
+					<!-- optional -->
+					<!-- <workingDirectory>/tmp</workingDirectory> -->
+					<!-- successCodes>0</successCodes -->
+				</configuration>
+				<executions>
+					<execution>
+						<id>it-of-n4js-compiler-command</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<systemProperties>
+								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+							</systemProperties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${jdk-version}</source>
+					<target>${jdk-version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-verifier-plugin</artifactId>
+				<version>${maven-verifier-plugin.version}</version>
+				<configuration>
+					<verificationFile>src/test/verifier/verifications-test.xml</verificationFile>
+				</configuration>
+				<executions>
+					<execution>
+						<id>main</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<systemProperties>
+								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+							</systemProperties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin> <!-- TK, Copy from parent to override config. -->
+				<!-- Is configured similarly to maven surefire plugin. A bit simpler 
+					config, as there are different defaults for this plugin. -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>${maven-failsafe-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+						<configuration>
+							<systemProperties>
+								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+							</systemProperties>
+						</configuration>
+					</execution>
+
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<configuration>
+							<systemProperties>
+								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+							</systemProperties>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<!-- M2E specific lifecycle configruation to suppress the warning: "maven-enforcer-plugin 
+						(goal "enforce") is ignored by m2e." source: http://stackoverflow.com/a/13043842 -->
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>${m2e-lifecycle-mapping.version}</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>[1.0.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+								<!-- ignore copy-goal of maven-dependency [background: 
+									- the *.hlc-tests pom.xml pulls the n4jsc.jar from the build of *.hlc
+									- pulling takes place as pre-step 
+									- m2e complains that copy should only take place after packaging 
+									- this requires the reverse approach of pushing artefacts - which seems strange.] -->
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.09.0,)</versionRange>
+										<goals>
+											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.eclipse.n4js</groupId>
+			<artifactId>org.eclipse.n4js.hlc</artifactId>
+			<classifier>jar-with-dependencies</classifier>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.n4js</groupId>
+			<artifactId>org.eclipse.n4js.hlc.base</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency> <!-- additional dependency to shared test-code  -->
+			<groupId>org.eclipse.n4js</groupId>
+			<artifactId>org.eclipse.n4js.hlc</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<type>test-jar</type>
+  			<scope>test</scope>
+  		</dependency>
+		<dependency>
+			<artifactId>org.eclipse.n4js.utils</artifactId>
+			<groupId>org.eclipse.n4js</groupId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		
+		
+		
+		<!--  
+		TODO IDE-2231:	Additionally introduced dependencies, since automatic resolution failed to correctly 
+		distinguish between SNAPSHOT and released version for Xtext 2.10.0-SNAPSHOT -->
+		<dependency>
+			<artifactId>org.eclipse.xtext</artifactId>
+			<groupId>org.eclipse.xtext</groupId>
+			<version>${xtext.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>org.eclipse.xtext.common.types</artifactId>
+			<groupId>org.eclipse.xtext</groupId>
+			<version>${xtext.version}</version>
+		</dependency>
+		<dependency>
+			<artifactId>org.eclipse.xtext.xbase.lib</artifactId>
+			<groupId>org.eclipse.xtext</groupId>
+			<version>${xtext.version}</version>
+		</dependency>
+		<!-- END OF IDE-2231 additions. -->
+		
+		
+		
+		<!-- Fixed version of guava -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>[15.0.0]</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	
+	
+	<profiles>
+		<!--
+			Extra profile activated in case a property for local deploys is set.
+			
+			Local repo format:
+			
+				local-build-repo::default::file:${local-snapshot-deploy-folder}
+			-->
+		<profile>
+			<id>local-snapshot-deploy-folder</id>
+			<activation>
+				<property>
+					<name>local-snapshot-deploy-folder</name>
+				</property>
+			</activation>
+
+			<!-- repositories for created artifacts -->
+			<repositories>
+				<repository>
+					<id>local-build-repo</id>
+					<url>file://${local-snapshot-deploy-folder}</url>
+					<layout>default</layout>
+					<releases>
+			           <enabled>true</enabled>
+			        </releases>
+			        <snapshots>
+			          <enabled>true</enabled>
+			        </snapshots>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+</project>

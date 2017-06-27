@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+args total 0
+data 1
+args total 1
+data 2
+args total 2
+data 3
+stderr:
+==>
+--- */
+
+
+class C {
+
+	private _data : number = -1;
+
+	argsTotal : number = 0;
+
+	public get data() {
+  		if (this._data==-1) {
+  			(() => { this._data = 1; })()
+		}
+		(()=>{ this.argsTotal += arguments.length })()
+		return this._data;
+	}
+
+	public set data(data : number) {
+		(() => { this._data = data; })();
+		(()=>{ this.argsTotal += arguments.length })()
+		this.notifyListeners();
+	}
+
+	notifyListeners() : void {
+	}
+
+}
+
+var c = new C
+console.log("args total " + c.argsTotal)
+console.log("data " + c.data)
+c.data = 2
+console.log("args total " + c.argsTotal)
+console.log("data " + c.data)
+c.data = 3
+console.log("args total " + c.argsTotal)
+console.log("data " + c.data)

@@ -1,0 +1,149 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+
+:experimental:
+
+[discrete]
+=== Quick Setup & Commands
+
+Prerequisites: ::
+**http://asciidoctor.org/[AsciiDoctor]** RubyGem can be installed with the following command:
++
+[source,bash]
+----
+gem install asciidoctor
+----
+
+Generate Eclipse Help::
++
+[source,bash]
+----
+cd docs/org.eclipse.n4js.doc
+mvn -Dtycho.mode=maven verify
+----
+
+HTML for Web: ::
+(Requires **http://asciidoctor.org/[AsciiDoctor]** RubyGem)
++
+[source,bash,subs=quotes]
+----
+cd docs/org.eclipse.n4js.doc/src
+./build.sh
+
+# Running the script with the `-p` flag opens the pages in a browser:
+./build.sh -p
+----
+
+Language Specification: ::
+(Requires *https://github.com/NumberFour/asciispec[AsciiSpec]* custom tool)
++
+[source,bash,subs=quotes]
+----
+cd docs/org.eclipse.n4js.spec
+./build.sh
+
+# Running the script with the `-p` flag opens the pages in a browser:
+./build.sh -p
+----
+
+= N4JS IDE Documentation
+
+Contributions to the source code and documentation of N4JS are highly encouraged.
+Updating, maintaining and improving documentation can be done by experts or complete beginners alike.
+Bring your experience or fresh perspectives to enrich help resources that assist N4JS developers everywhere.
+
+== How to Contribute
+
+To contribute or improve N4JS help, https://help.github.com/articles/fork-a-repo/[fork the N4JS repo], create a pull request with edited or new AsciiDoc files in the source folder and your contribution will be reviewed for inclusion.
+
+All documentation for N4JS is written in AsciiDoc (`.adoc` format) and is deployed using a single-source toolchain described below.
+The source documentation is located in the N4JS repository at:
+
+`https://github.com/NumberFour/n4js/tree/master/docs[n4js/docs]`
+
+The IDE is built using https://maven.apache.org/[Apache Maven] and running `mvn verify` builds the N4JS IDE including documentation at the following directory: `n4js/docs/org.eclipse.n4js.doc/target`.
+
+The documentation plugin can be run as a standalone module by navigating to `n4js/docs/org.eclipse.n4js.doc` and running
+
+`mvn -Dtycho.mode=maven verify`
+
+== Documentation Plugin Details
+
+The N4JS documentation plugin at `n4js/docs/org.eclipse.n4js.doc` contains user guides, tutorials and feature articles.
+These files are used for the public N4JS http://numberfour.github.io/[project pages] and the bundled Eclipse help.
+
+A brief overview of the docs plugin looks like the following:
+
+[source]
+n4js/docs/org.eclipse.n4js.doc/
+├── help-pages.txt
+├── pom.xml
+├── plugin.xml
+├── src
+│   ├── docs
+│   │   ├── documentation
+│   │   │   └── tutorial.adoc
+│   │   ├── features
+│   │   │   └── testing.adoc
+│   │   └── releases
+│   │       └── reporting-bugs.adoc
+│   └── styles
+│       └── n4js-adoc.css
+└── toc.xml
+
+
+* **pom.xml** - Describes the build of the `org.eclipse.n4js.doc` plugin.
+* **plugin.xml** - Describes how the plugin extends the platform and implements functionality.
+* **help-pages.txt** - A list containing the paths of the **target** HTML files. This is used to generate the **toc.xml**.
+* **toc.xml** - Table Of Contents; contains a structured index of the help pages so they may be registered online or within the N4JS IDE
+
+=== Generating N4JS IDE Help
+
+The Eclipse Help bundled with the N4JS IDE is a collection of HTML files accompanied by a `toc.xml` that lists their hierarchy.
+In the Maven build, the POM at `n4js/docs/org.eclipse.n4js.doc/pom.xml` is configured to execute these plugins in the following order:
+
+. The `asciidoctor-maven-plugin` converts source AsciiDoc files (`src` folder) to HTML (`target` folder).
+. An `antrun-plugin` creates a .txt file containing the paths to the generated HTML pages called `help-pages.txt`.
+. The `geneclipsetoc-maven-plugin` searches for headings in the generated HTML in the `target` folder and creates a structured `toc.xml` based on this hierarchy that the N4JS IDE can index.
+
+
+For generating PDF and EPUB from the source AsciiDoc files, the addition of the following dependencies are required in the `asciidoctor-maven-plugin`:
+
+[source,xml]
+----
+<dependency>
+	<groupId>org.asciidoctor</groupId>
+	<artifactId>asciidoctorj-pdf</artifactId>
+	<version>${asciidoctorj.pdf.version}</version>
+</dependency>
+<dependency>
+	<groupId>org.asciidoctor</groupId>
+	<artifactId>asciidoctorj-epub3</artifactId>
+	<version>${asciidoctor-epub3.version}</version>
+</dependency>
+----
+
+== About AsciiDoc & AsciiDoctor
+
+http://asciidoctor.org/docs/what-is-asciidoc/#what-is-asciidoc[**AsciiDoc**] is a syntax and file format (`.adoc`).
+
+http://asciidoctor.org/[**AsciiDoc__tor__**] is the associated toolchain for converting and processing AsciiDoc files.
+It is written in Ruby and is published to https://rubygems.org/gems/asciidoctor[RubyGems.org].
+
+Resources: ::
+
+AsciiDoc files can be written in any text editor and should (for our documentation) be saved with the `.adoc` extension.
+The following are two useful guides for writing AsciiDoc:
++
+http://asciidoctor.org/docs/asciidoc-syntax-quick-reference/[AsciiDoc Syntax Quick Reference]
++
+http://asciidoctor.org/docs/user-manual/[AsciiDoctor User Manual]

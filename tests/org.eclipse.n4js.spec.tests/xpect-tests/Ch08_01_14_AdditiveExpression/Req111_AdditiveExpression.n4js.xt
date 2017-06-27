@@ -1,0 +1,120 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+/////////////////
+// Additive Expression '+' oder '-'
+//
+// Constraint 73
+////////
+class A {
+	public num : number = 2;
+}
+
+class B extends A {
+	s : string = "a";
+	b : boolean = true;
+}
+
+
+//////////////////////////////////////
+// ADD : return type string expected:
+
+var ergS =  new Array<string>();
+// XPECT errors --> "number is not a subtype of string." at "1+2"
+ergS[1] =  1+2;
+ergS[2] =  "1"+"2";
+ergS[3] =  "1"+2;
+// XPECT errors --> "number is not a subtype of string." at "1+true"
+ergS[4] =  1+true;
+// XPECT errors --> "number is not a subtype of string." at "false+1"
+ergS[5] =  false+1;
+ergS[6] =  "1"+true;
+ergS[7] =  "1"+null;
+// XPECT errors --> "number is not a subtype of string." at "1+null"
+ergS[8] =  1+null;
+// XPECT errors --> "number is not a subtype of string." at "1+undefined"
+ergS[9] =  1+undefined;
+ergS[10] =  "1"+undefined; // string "1undefined"
+// XPECT errors --> "number is not a subtype of string." at "true + true"
+ergS[11] =  true + true
+
+
+//////////////////////////////////////
+// ADD : return type number expected:
+
+var erg =  new Array<number>();
+erg[1] =  1+2;
+// XPECT errors --> "string is not a subtype of number."  at ""1"+"2""
+erg[2] =  "1"+"2";
+// XPECT errors --> "string is not a subtype of number."  at ""1"+2"
+erg[3] =  "1"+2;
+erg[4] =  1+true;
+erg[5] =  false+1;
+// XPECT errors --> "string is not a subtype of number." at ""1"+true"
+erg[6] =  "1"+true;
+// XPECT errors --> "string is not a subtype of number." at ""1"+null"
+erg[7] =  "1"+null;
+erg[8] =  1+null;
+erg[9] =  1+undefined;
+// XPECT errors --> "string is not a subtype of number."  at ""1"+undefined"
+erg[10] =  "1"+undefined; // string "1undefined"
+erg[11] =  true + true
+erg[12] = new B().b + new A().num
+
+//////////////////////////////////////
+// SUB : return type number expected:
+
+var erg2 =  new Array<number>();
+erg2[1] =  1-2;
+// XPECT errors ---
+//  "string is not a subtype of number."  at ""1""
+//  "string is not a subtype of number."  at ""2""
+// ---
+erg2[2] =  "1"-"2";
+// XPECT errors --> "string is not a subtype of number."  at ""1""
+erg2[3] =  "1"-2;
+// XPECT errors --> "boolean is not a subtype of number." at "true"
+erg2[4] =  1-true;
+// XPECT errors --> "boolean is not a subtype of number." at "false"
+erg2[5] =  false-1;
+// XPECT errors ---
+// "boolean is not a subtype of number." at "true"
+// "string is not a subtype of number." at ""1""
+// ---
+erg2[6] =  "1"-true;
+// XPECT errors ---
+//"null is not a valid number." at "null"
+//"string is not a subtype of number." at ""1""
+//---
+erg2[7] =  "1"-null;
+
+
+// XPECT errors --> "null is not a valid number." at "null"
+erg2[8] =  1-null;
+// XPECT errors --> "undefined is not a valid number." at "undefined"
+erg2[9] =  1-undefined;
+
+// XPECT errors ---
+//"string is not a subtype of number." at ""1""
+//"undefined is not a valid number." at "undefined"
+//---
+erg2[10] =  "1"-undefined; // string "1undefined"
+// XPECT errors ---
+// "boolean is not a subtype of number." at "true"
+// "boolean is not a subtype of number." at "true"
+// ---
+erg2[11] =  true - true
+
+erg2[12] =
+// XPECT errors --> "boolean is not a subtype of number." at "new B().b"
+new B().b - new A().num

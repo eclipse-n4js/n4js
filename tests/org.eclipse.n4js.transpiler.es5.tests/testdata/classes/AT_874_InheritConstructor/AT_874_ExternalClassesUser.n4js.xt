@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+    ResourceSet {
+		ThisFile {}
+		File "AT_874_ExternalClasses.n4jsd" {}
+	}
+
+   END_SETUP
+ */
+
+/* XPECT output ---
+<==
+stdout:
+{"stuff":"stuff","myField":2}
+stderr:
+==>
+--- */
+import { MyExternalClass } from "classes/AT_874_InheritConstructor/AT_874_ExternalClasses"
+
+class A extends MyExternalClass {
+	public myField : number = 6;
+}
+
+var a : A = new A(1, {stuff: "stuff", myField: 2}, "end");
+console.log(JSON.stringify(a, null, null));

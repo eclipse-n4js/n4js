@@ -1,0 +1,85 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+:doctype: book
+
+.Releases
+= Releases
+
+[discrete]
+== Current N4JS Release
+
+The current release of N4JS, version 0.3, is a "public alpha".
+What that implies:
+
+* There are some known issues.
+* There are probably a greater number of unknown issues.
+* There will be more features in future releases.
+* There may be incompatible changes in future releases.
+
+"Alpha" does not mean unstable. In fact, N4JS has been in development for three years.
+There is already an extensive test suite with more that 70.000 tests including the
+https://github.com/tc39/test262[ECMAScript test suites]. It has been in
+use internally in production mode for more than a year, handling a code base with more
+than 3.000 modules and many thousands of tests.
+
+N4JS has successfully passed its
+internal beta phase: it's working for us and, furthermore, we're confident it will work
+for you. Since every programmer has their own style, you may find issues we didn't. We
+may add new features or make changes in order to solve these particular issues. That's
+why we call it a "public alpha".
+
+== Known Issues
+
+Since we are using N4JS and the N4JS IDE internally for quite a while, we have found some
+issues. There are still a lot of bugs open and we have plenty of ideas for new features.
+We used an non-public bug tracking system to manage bugs internally. We will review and migrate
+them to https://github.com/eclipse/n4js/issues[GitHub issues] as soon as possible.
+
+== Unknown Issues
+
+**We embrace bug reports and feature requests.**
+
+For the moment we use https://github.com/eclipse/n4js/issues[GitHub issues]
+to manage issues found by public users. When we move to a different bug tracking system,
+these issues shall be migrated.
+
+
+The N4JS IDE comes with special tool support for <<reporting-bugs#reporting_bugs,writing
+bug reports>>.
+
+== New Features
+
+In the future, the following topics are expected to be addressed:
+
+* Improved UI experience with a focus on customized content assist and quick-fixes.
+* Improved ECMAScript 2015 support.
+* Improved type inference and add type guards.
+* Improved refactoring capabilities.
+* Improved Node.js developer experience.
+* Support for browser-based projects.
+
+There may be other topics raised by users. Separating these topics into individual
+features and prioritizing them will **highly depend on your feedback**.
+
+== Incompatible Changes in Future Releases
+
+Yes, this may happen. It's quite possible that the language or APIs must be changed in
+future releases, which could break existing code. This is no cause for concern, however.
+As mentioned before, we have a substantial internal code base, so if incompatible changes
+are introduced, we will provide tools to migrate your code automatically unless the changes
+are easier to solve manually.
+
+To give you an idea of how this can happen: In earlier versions we used a Java-like syntax
+for type annotations. Since this did not work well together with features such as async/await,
+we changed the syntax to ECMAScript 4 colon style. This required our entire code base to be
+reworked. Fortunately this was simple as we provided a quick-fix, enabling almost all problems
+stemming from that change to be corrected with a single key stroke!

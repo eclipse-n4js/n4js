@@ -1,0 +1,8 @@
+# Missing strict mode validation that require binding resolution
+
+# duplicate names are not validated during parsing / structure validation
+test/language/statements/function/13.1-5gs.js
+test/language/statements/function/13.1-8gs.js
+
+# delete of var which is a primitive
+test/language/expressions/delete/11.4.1-5-a-5gs.js

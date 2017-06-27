@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+
+/* TODO IDE-1763 re-enable this test once class expression support is done XPECT ! output ~~~
+<==
+stdout:
+[Function: C2]
+stderr:
+==>
+~~~ */
+
+
+interface I0{}
+interface I1<A extends Object,B,C> extends I0{}
+
+interface R0{}
+interface R1<A extends Object,B,C> extends R0, I0{}
+
+
+class C0{}
+class C1<A extends Object,B,C> extends C0{}
+
+//TODO IDEBUG-85 changes FD to FE, uncomment annotation after merging IDE-802
+// XPECT errors --> "Unsupported feature: class expressions." at "C2"
+console.log( @Observable class C2
+		extends C1<Object, number, undefined>
+		implements 	R1<Object, number, undefined>,
+					R0, I1<Object, number, undefined>,
+					I0{}
+);

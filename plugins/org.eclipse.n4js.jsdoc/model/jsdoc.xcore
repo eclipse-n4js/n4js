@@ -1,0 +1,221 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsPrefix="org.eclipse.n4js.jsdoc.dom", nsURI="http:///org.eclipse.n4js/jsdoc.ecore")
+@GenModel(modelName="Jsdoc",
+// As with IDE-1456 removing the modelPluginID to avoid IOE with 'The path' ... 'is unmapped.' in
+// the maven plugin: "xtext-maven-plugin:2.8.2:generate":
+//	modelPluginID="org.eclipse.n4js.jsdoc",
+	modelDirectory="/org.eclipse.n4js.jsdoc/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.jsdoc.dom
+
+import org.eclipse.n4js.jsdoc.ITagDefinition
+import org.eclipse.n4js.jsdoc.JSDocSerializer
+import org.eclipse.emf.ecore.EObject
+
+class Doclet extends Composite {
+	contains LineTag[] lineTags opposite doclet
+	op boolean hasLineTag(String title) {
+		return lineTags.findFirst[it.title.title == title] !== null;
+	}
+	op LineTag[] lineTags(String title) {
+		return lineTags.filter[it.title.title == title].toEList;
+	}
+}
+
+abstract class DocletElement {
+	int begin
+	int end
+	op void setRange(int begin, int end) {
+		this.begin = begin;
+		this.end = end;
+	}
+	op boolean covers(int offset) {
+		return begin <= offset && end > offset;
+	}
+}
+
+abstract class Composite extends JSDocNode {
+	contains ContentNode[] contents opposite owner
+}
+
+abstract class JSDocNode extends DocletElement {
+	/**
+	 * Markers, should not be accessed directly, instead, getMarkerValue and setMarker should be used.
+	 */
+	contains Marker[] markers
+	/**
+	 * Returns the value of the first marker with the given key, or null, if no such marker is found.
+	 */
+	op String getMarkerValue(String theKey) {
+		return markers.findFirst[key == theKey]?.value;
+	}
+	/**
+	 * Sets the value of the marker with given key, if no such marker has been defined, it is added.
+	 */
+	op void setMarker(String theKey, String value) {
+		var Marker marker = markers.findFirst[key == key];
+		if (marker == null) {
+			marker = DomFactory.eINSTANCE.createMarker();
+			marker.key = theKey;
+			markers.add(marker);
+		}
+		marker.value = value;
+	}
+	/**
+	 * Returns true if node contains given marker with the given value
+	 */
+	op boolean isMarkedAs(String theKey, String theValue) {
+		return markers.findFirst[key == theKey && value == theValue] !== null;
+	}
+	op String toString() {
+		JSDocSerializer.toJSDocString(this);
+	}
+}
+
+abstract class ContentNode extends JSDocNode {
+	container Composite owner opposite contents
+}
+
+type TagDefinition wraps ITagDefinition
+
+abstract class Tag extends DocletElement {
+	contains TagTitle title opposite tag
+	contains TagValue[] values
+	transient TagDefinition tagDefinition
+	/**
+	 * Convenience method, returns first TagValue with given key or null, if no such key is found.
+	 */
+	op TagValue getValueByKey(String theKey) {
+		values.findFirst[key == theKey];
+	}
+	op String toString() {
+		JSDocSerializer.toJSDocString(this);
+	}
+}
+
+class TagValue extends Composite {
+	String key
+}
+
+class TagTitle extends JSDocNode {
+	container Tag tag opposite title
+	String title
+	String actualTitle
+}
+
+class LineTag extends Tag {
+	container Doclet doclet opposite lineTags
+}
+
+class InlineTag extends ContentNode , Tag {
+}
+
+class Text extends ContentNode {
+	String text
+}
+
+class SimpleTypeReference extends JSDocNode , ContentNode {
+	String typeName
+	op boolean typeNameSet() {
+		return typeName !== null && ! typeName.empty
+	}
+	op String toString() {
+		return typeName;
+	}
+}
+
+class FullTypeReference extends SimpleTypeReference {
+	String moduleName
+	op boolean moduleNameSet() {
+		return moduleName !== null && ! moduleName.empty
+	}
+	op String toString() {
+		var strb = new StringBuilder();
+		if (moduleNameSet()) {
+			strb.append(moduleName);
+		}
+		if (typeNameSet()) {
+			if (strb.length > 0) {
+				strb.append(".");
+			}
+			strb.append(typeName);
+		}
+		return strb.toString();
+	}
+
+	op String fullTypeName() {
+		var strb = new StringBuilder();
+		if (moduleNameSet()) {
+			strb.append(moduleName);
+		}
+		if (typeNameSet()) {
+			strb.append(".");
+			strb.append(typeName);
+		}
+		return strb.toString();
+	}
+}
+
+/**
+ * Full reference to a member.
+ */
+class FullMemberReference extends FullTypeReference {
+	String memberName
+	boolean staticMember
+	op boolean memberNameSet() {
+		return memberName !== null && ! memberName.empty
+	}
+	op String toString() {
+		var strb = new StringBuilder(super.toString());
+		if (memberNameSet) {
+			if (strb.length > 0) {
+				if (staticMember) {
+					strb.append("#");
+				} else {
+					strb.append(".");
+				}
+			}
+			strb.append(memberName);
+		}
+		return strb.toString();
+	}
+}
+
+class VariableReference extends ContentNode {
+	String variableName
+}
+
+class GenericReference {
+}
+
+class Literal extends ContentNode {
+	String value
+	String name
+}
+
+class Marker {
+	String key
+	String value
+}
+
+class ComposedContent extends Composite , ContentNode {
+}
+
+class StructuredText extends Text {
+	contains EObject rootElement
+}

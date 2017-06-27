@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+foo.arguments.length: 1
+first arg: 1
+f.arguments.length: 2
+bar.arguments.length: 2
+stderr:
+==>
+--- */
+
+
+class C {
+	foo(... args : any) {
+		console.log("foo.arguments.length: " + arguments.length)
+		var a = arguments[0];
+		console.log("first arg: " + a)
+		var f = function(... arg : any) {
+			console.log("f.arguments.length: " + arguments.length)
+		}
+		f(1,2);
+		this.bar("a", "b")
+	}
+
+	bar(a, b) {
+		console.log("bar.arguments.length: " + arguments.length)
+	}
+}
+
+new C().foo(1);

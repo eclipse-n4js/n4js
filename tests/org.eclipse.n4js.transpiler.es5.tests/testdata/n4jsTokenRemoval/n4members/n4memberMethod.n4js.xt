@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+
+/* XPECT output ~~~
+<==
+stdout:
+[Function: mLen___n4] 123
+stderr:
+==>
+~~~ */
+
+
+
+class C{
+
+	// XPECT warnings --> "Final type string should not be used as upper bound of type parameter S. Final types cannot be extended." at "string"
+	public static <S extends string, T, P> mLen(s : S, t : T,p : P, a, n : number=undefined, ... vas : string) : number  {
+		return (s+t+p+a+n+vas).length
+	}
+}
+
+// XPECT warnings --> "A reference to method mLen is created detached from a (correct) this-instance." at "mLen"
+console.log(C.mLen, C.mLen('some data', Object, Error, Function, 3,'1','3','3','7'))

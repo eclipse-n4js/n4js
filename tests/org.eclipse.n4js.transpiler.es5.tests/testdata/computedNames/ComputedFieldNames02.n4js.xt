@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+// IDE-1824 wrong transpilation for member declaration, computed-name-style, giving identifier as name
+
+/* XPECT output ---
+<==
+stdout:
+0
+1
+2
+3
+4
+stderr:
+==>
+--- */
+
+
+class A {
+
+	@Final ['dd0'] = 0;
+	@Final public ['dd1'] = 1;
+	["dd2"] = 2;
+	const ["dd3"] = 3;
+	["dd4"] : number;
+
+	constructor() {
+		this.dd4 = 4;
+	}
+
+}
+
+var a = new A
+
+console.log(a.dd0)
+console.log(a.dd1)
+console.log(a.dd2)
+console.log(A.dd3)
+console.log(a.dd4)

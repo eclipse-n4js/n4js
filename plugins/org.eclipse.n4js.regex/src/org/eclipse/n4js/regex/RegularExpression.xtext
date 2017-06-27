@@ -1,0 +1,222 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+// Regex literal grammar
+// based on
+//
+//- ECMAScript Language Specification. International Standard ECMA-262, 5.1 Edition, ISO/IEC,
+//  Geneva, Switzerland, June 2011.
+//  http://www.ecma-international.org/publications/standards/Ecma-262.htm
+//  A.7 Regular Expressions
+grammar org.eclipse.n4js.regex.RegularExpression with org.eclipse.n4js.common.unicode.Unicode
+
+generate regularExpression "http://www.eclipse.org/n4js/regex/RegularExpression"
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+RegularExpressionLiteral:
+	'/' body = RegularExpressionBody '/' flags=RegularExpressionFlags
+;
+
+RegularExpressionBody:
+	pattern = Disjunction
+;
+
+Disjunction returns Pattern:
+	  Alternative ({Disjunction.elements+=current} ('|' elements+=Alternative?)+)?
+	| {Disjunction} ('|' elements+=Alternative?)*
+;
+
+Alternative returns Pattern:
+	Term ({Sequence.elements+=current} (elements+=Term)+)?
+;
+
+Term returns Pattern:
+	Assertion | Atom =>quantifier=Quantifier?
+;
+
+Assertion:
+	LineStart | LineEnd | WordBoundary | LookAhead
+;
+
+LineStart:
+	{LineStart} '^'
+;
+
+LineEnd:
+	{LineEnd} '$'
+;
+
+WordBoundary:
+	{WordBoundary} (WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY)
+;
+
+LookAhead:
+	{LookAhead} '(' '?' ('=' | not?='!') pattern=Disjunction ')'
+;
+
+Atom returns Pattern:
+	PatternCharacter | Wildcard | AtomEscape | CharacterClass | Group
+;
+
+PatternCharacter:
+	value=(
+		PATTERN_CHARACTER_NO_DASH |
+		UNICODE_LETTER |
+		UNICODE_DIGIT |
+		'-' |
+		',' | '=' | ':' | '!' | '{' | '}' | ']'
+	)
+;
+
+Wildcard:
+	{Wildcard} '.'
+;
+
+AtomEscape:
+	DecimalEscapeSequence |
+	CharacterEscapeSequence |
+	ControlLetterEscapeSequence |
+	HexEscapeSequence |
+	UnicodeEscapeSequence |
+	IdentityEscapeSequence |
+	CharacterClassEscapeSequence
+;
+
+CharacterClassEscapeSequence:
+	sequence=CHARACTER_CLASS_ESCAPE
+;
+
+CharacterEscapeSequence:
+	sequence=CONTROL_ESCAPE
+;
+
+ControlLetterEscapeSequence:
+	sequence=CONTROL_LETTER_ESCAPE
+;
+
+HexEscapeSequence:
+	sequence=HEX_ESCAPE
+;
+
+UnicodeEscapeSequence:
+	sequence=UNICODE_ESCAPE
+;
+
+IdentityEscapeSequence:
+	sequence=IDENTITY_ESCAPE
+;
+
+DecimalEscapeSequence:
+	sequence=DECIMAL_ESCAPE
+;
+
+CharacterClass:
+	{CharacterClass} '[' =>(negated?='^')?
+		elements+=CharacterClassElement*
+	']'
+;
+
+CharacterClassElement:
+	CharacterClassAtom (=>({CharacterClassRange.left=current} '-' right=CharacterClassAtom))?
+;
+
+CharacterClassAtom:
+	EscapedCharacterClassAtom |
+	character=(
+		',' | '=' | ':' | '!' |
+		'-' | '^' |'$' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | '{' | '}' | '|' | '/' |
+		PATTERN_CHARACTER_NO_DASH |
+		UNICODE_LETTER |
+		UNICODE_DIGIT
+	)
+;
+
+EscapedCharacterClassAtom:
+	  DecimalEscapeSequence
+	| Backspace
+	| CharacterEscapeSequence
+	| ControlLetterEscapeSequence
+	| HexEscapeSequence
+	| UnicodeEscapeSequence
+	| IdentityEscapeSequence
+	| CharacterClassEscapeSequence
+;
+
+Backspace:
+	{Backspace} WORD_BOUNDARY
+;
+
+Group:
+	{Group} '(' (nonCapturing?='?' ':')? pattern=Disjunction ')'
+;
+
+Quantifier:
+	SimpleQuantifier | ExactQuantifier
+;
+
+SimpleQuantifier:
+	quantifier=('+' | '*' | '?') nonGreedy?='?'?
+;
+
+ExactQuantifier:
+	{ExactQuantifier} '{' min=INT (',' max=INT | unboundedMax?=',')? '}' nonGreedy?='?'?
+;
+
+RegularExpressionFlags:
+	{RegularExpressionFlags}
+	flags += (UNICODE_LETTER | UNICODE_ESCAPE)*
+;
+
+INT returns ecore::EInt: // TODO validate only valid ints
+	UNICODE_DIGIT+
+;
+terminal WORD_BOUNDARY:
+	'\\' 'b'
+;
+
+terminal NOT_WORD_BOUNDARY:
+	'\\' 'B'
+;
+
+terminal CHARACTER_CLASS_ESCAPE:
+	'\\' ('d'|'D'|'s'|'S'|'w'|'W')
+;
+
+terminal CONTROL_ESCAPE:
+	'\\' ('f'|'n'|'r'|'t'|'v')
+;
+
+terminal CONTROL_LETTER_ESCAPE:
+	'\\' 'c' ('a'..'z' | 'A'..'Z')?
+;
+
+terminal HEX_ESCAPE:
+	'\\' 'x' (HEX_DIGIT HEX_DIGIT?)?
+;
+terminal UNICODE_ESCAPE:
+	'\\' ('u' (
+		HEX_DIGIT (HEX_DIGIT (HEX_DIGIT HEX_DIGIT?)?)?
+	  | '{' HEX_DIGIT* '}'?
+	)?)?
+;
+terminal DECIMAL_ESCAPE:
+	'\\' DECIMAL_INTEGER_LITERAL_FRAGMENT
+;
+terminal IDENTITY_ESCAPE:
+	'\\' .
+;
+terminal UNICODE_DIGIT:
+	UNICODE_DIGIT_FRAGMENT
+;
+terminal UNICODE_LETTER:
+	UNICODE_LETTER_FRAGMENT
+;
+terminal PATTERN_CHARACTER_NO_DASH: !('^' |'$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}' | '|' | '-');

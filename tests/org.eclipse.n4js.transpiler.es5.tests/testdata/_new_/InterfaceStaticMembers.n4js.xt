@@ -1,0 +1,88 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+========================================
+hello from static getter!
+hello from static setter; msg: hello setter!
+hello from static accessor pair (getter)!
+hello from static accessor pair (setter); value: hello acc!
+hello from static method; param:  hello m!
+========================================
+field == 42
+field == 43
+accField == 43
+accField == 44
+========================================
+stderr:
+==>
+--- */
+
+
+
+interface I {
+
+	static field : any = 42;
+
+	static get getter() {
+		return "hello from static getter!";
+	}
+
+	static set setter(value) {
+		console.log("hello from static setter; msg:", value);
+	}
+
+	static get acc() {
+		return "hello from static accessor pair (getter)!";
+	}
+	static set acc(value) {
+		console.log("hello from static accessor pair (setter); value:", value);
+	}
+
+	static m(param) {
+		console.log("hello from static method; param: ", param)
+	}
+
+	static get accField() {
+		return I.field;
+	}
+	static set accField(value) {
+		I.field = value;
+	}
+}
+
+
+console.log('========================================')
+
+console.log(I.getter);
+I.setter = "hello setter!";
+
+console.log(I.acc);
+I.acc = "hello acc!";
+
+I.m("hello m!");
+
+console.log('========================================')
+
+console.log('field ==', I.field);
+I.field = 43;
+console.log('field ==', I.field);
+
+console.log('accField ==', I.accField);
+I.accField = 44;
+console.log('accField ==', I.accField);
+
+console.log('========================================')
