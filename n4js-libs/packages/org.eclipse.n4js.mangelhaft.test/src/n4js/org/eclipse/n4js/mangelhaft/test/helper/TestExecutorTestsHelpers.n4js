@@ -1,0 +1,213 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+import {async} from "org/eclipse/n4js/mangelhaft/Test"
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
+import { MockTest } from "org/eclipse/n4js/mangelhaft/test/helper/MockTest"
+export public class BeforeAllErrorMockTest  {
+    @BeforeAll
+    throwing() {
+        Assert.equal(true, false, "failed assert in beforeAll")
+    }
+    @Test
+    noOpTest() {
+
+    }
+    @Test
+    noOpTest2() {
+
+    }
+}
+
+export public class BeforeErrorMockTest  {
+    @Before
+    throwing() {
+        Assert.equal(true, false, "failed assert in before")
+    }
+    @Test
+    noOpTest() {
+
+    }
+    @Test
+    noOpTest2() {
+
+    }
+}
+export public class AfterErrorMockTest  {
+    @After
+    throwing() {
+        Assert.equal(true, false, "failed assert in after")
+    }
+    @Test
+    noOpTest() {
+
+    }
+    @Test
+    noOpTest2() {
+
+    }
+}
+export public class AfterAllErrorMockTest  {
+    @AfterAll
+    throwing() {
+        Assert.equal(true, false, "failed assert in afterAll")
+    }
+    @Test
+    noOpTest() {
+
+    }
+    @Test
+    noOpTest2() {
+
+    }
+}
+
+export public class OneTest {
+    @Test
+    smallDelayTest() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+    }
+}
+export public class OneTestBeforeAllAfterAll {
+    @BeforeAll
+    setup() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+
+    }
+    @Test
+    smallDelayTest() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+    }
+
+    @AfterAll
+    desetup() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+    }
+
+}
+export public class OneTestOneWithEverything {
+
+
+    @Before
+    testSetup() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+    }
+
+
+    @After
+    testDeSetup() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 200);
+        })
+    }
+
+    @BeforeAll
+    setup() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+
+    }
+    @Test
+    smallDelayTest() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+    }
+
+    @AfterAll
+    desetup() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+                resolve("party promise resolved");
+            }, reject ), 100);
+        })
+    }
+
+}
+
+export public class ChildOfMock extends MockTest {
+    @Test
+    childSmallDelayTest() {
+        return new Promise<string,any>(function(resolve: {function(string)},reject) {
+            setTimeout.call(this, async(function() {
+            MockTest.testCount += 1;
+            MockTest.called.push("childSmallDelayTest");
+
+                resolve("party promise resolved");
+            }, reject ), 20);
+        })
+    }
+}
+
+export public class PreconditionTests {
+    @Test
+    basicPreconditionFailure() {
+        Precondition.equal(1,2, "one and two should be equal for some reason")
+    }
+}
+
+export public class MixedBag {
+    @Test
+    success() {
+        Assert.isTrue(true);
+    }
+    @Test
+    notASuccess() {
+        Assert.isTrue(false);
+    }
+    @Test
+    reggoError() {
+        throw new Error("My hamster ate all of my gruel!");
+    }
+    @Test
+    @Fixme("test fixme")
+    fixThis() {
+        Assert.fail("fixme test")
+    }
+    @Test
+    notImpled() {
+        throw new N4ApiNotImplementedError("test");
+    }
+    @Test
+    pnm() {
+        Precondition.fail("precondition test");
+    }
+    
+}

@@ -1,0 +1,14 @@
+{
+  "name": "n4js-runtime-n4",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/NumberFour/n4js-libs",
+  "description": "N4JS Runtime Library for additional global symbols provided by N4JS.",
+  "keywords": [
+    "n4js",
+    "n4"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

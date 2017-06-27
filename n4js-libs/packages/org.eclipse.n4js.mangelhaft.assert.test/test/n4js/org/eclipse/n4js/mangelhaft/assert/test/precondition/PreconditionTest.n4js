@@ -1,0 +1,142 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {Precondition} from "org/eclipse/n4js/mangelhaft/precondition/Precondition"
+import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
+import { PlatformId } from "n4/RuntimeInfo"
+
+export public class PreconditionTest {
+
+    constructor() {
+        Precondition.equal(1,1,"never skipped");
+    }
+
+    @Test
+    preconditionEqual() {
+        Assert.doesNotThrow(function() {
+            Precondition.equal(1, 1, "1 and 1 are truthy");
+        }, PreconditionNotMet, "1 and 1 are truthy");
+    }
+    @Test
+    preconditionEqualTruthy() {
+        Assert.doesNotThrow(function() {
+            Precondition.equal(1, "1", "1 and '1' are truthily equal");
+        }, null, "1 and '1' are truthy");
+    }
+    @Test
+    preconditionEqualFailing() {
+        Assert.throws(function() {
+            Precondition.equal(1, "2", "1 and '2' are not equal even truthily")
+        }, PreconditionNotMet, "Should throw PreconditionNotMet");
+    }
+        @Test
+    preconditionNotEqual() {
+        Assert.doesNotThrow(function() {
+            Precondition.notEqual(1, 2, "1 and 2 not equal");
+        }, PreconditionNotMet, "should not throw since 1 and 2 are not equal");
+    }
+    @Test
+    preconditionNotEqualTruthy() {
+        Assert.doesNotThrow(function() {
+            Precondition.notEqual(1, "2", "1 and '2' are truthily not equal");
+        }, null, "precondition should pass");
+    }
+    @Test
+    preconditionNotEqualFailing() {
+        Assert.throws(function() {
+            Precondition.notEqual(1, "1", "1 and '1' are truthily equal")
+        }, PreconditionNotMet, "Should throw PreconditionNotMet");
+    }
+
+    @Test
+    preconditionStrictEqual() {
+        Assert.doesNotThrow(function() {
+            Precondition.equal(1, 1, "");
+        }, null, "1 and 1 are equal");
+    }
+    @Test
+    preconditionStrictEqualTruthy() {
+        Assert.throws(function() {
+            Precondition.strictEqual(1, "1", "");
+        }, PreconditionNotMet, "1 and '1' are truthy but not equal");
+    }
+    @Test
+    preconditionStrictEqualFailing() {
+        Assert.throws(function() {
+            Precondition.strictEqual(1, "2", "1 and '2' are not equal even truthily")
+        }, PreconditionNotMet, "Should throw PreconditionNotMet");
+    }
+    @Test
+    preconditionStrictNotEqual() {
+        //Precondition.equal(1,2, "dunno what happened here");
+        Assert.doesNotThrow(function() {
+            Precondition.notEqual(1, 2, "");
+        }, null, "1 and 2 are not equal");
+    }
+    @Test
+    preconditionNotStrictEqualTruthyFailing() {
+        Assert.doesNotThrow(function() {
+            Precondition.notStrictEqual(1, "1", "");
+        }, PreconditionNotMet, "1 and '1' are truthy but not equal");
+    }
+    @Test
+    preconditionNotStrictEqualFailing() {
+        Assert.throws(function() {
+            Precondition.notStrictEqual(1, 1, "1 and 1 are not not equal even truthily")
+        }, PreconditionNotMet, "Should throw PreconditionNotMet");
+    }
+    @Test
+    skippedTestInNode() {
+        Precondition.notEqual(n4.runtimeInfo.platformId, PlatformId.NODEJS, "check for node.js");
+    }
+    @Test
+    skippedTestInBrowser() {
+        Precondition.notEqual(n4.runtimeInfo.platformId, PlatformId.WEB, "check web");
+    }
+    /**
+     * these tests do not use Assert.throws like in the rest of the tests
+     * because it is testing Assert.throws.
+     */
+    @Test
+    preconditionThrows() {
+        try {
+            Precondition.throws(function() {
+                throw new Error("Oops");
+            }, Error)
+        } catch (e) {
+            Assert.fail("Assert.throws should not throw iff callback does throw with correct type");
+        }
+    }
+    @Test
+    preconditionThrowsWithWrongError() {
+        let error = null;
+        try {
+            Precondition.throws(function() {
+                throw "oops";
+            }, Error)
+        } catch (e) {
+            error = e
+        }
+        Assert.isTrue(error !== null && error instanceof PreconditionNotMet, "throws should throw if wrong error type")
+    }
+    @Test
+    preconditionDoesNotThrow() {
+        let error = null;
+        try {
+            Precondition.doesNotThrow(function() {
+                throw "oops";
+            }, Error)
+        } catch (e) {
+            error = e
+        }
+        Assert.isTrue(error !== null, "doesNotThrow should throw if callback throws")
+    }
+}

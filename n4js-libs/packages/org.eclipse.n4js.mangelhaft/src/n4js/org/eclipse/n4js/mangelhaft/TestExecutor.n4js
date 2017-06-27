@@ -1,0 +1,289 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {InstrumentedTest} from "org/eclipse/n4js/mangelhaft/InstrumentedTest"
+import {AssertionError} from "org/eclipse/n4js/mangelhaft/assert/AssertionError"
+import {IInstrumentedTest} from "org/eclipse/n4js/mangelhaft/types/IInstrumentedTest"
+import {ResultGroup} from "org/eclipse/n4js/mangelhaft/types/ResultGroup"
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups"
+import {TestMethodDescriptor} from "org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor"
+import {TestResult} from "org/eclipse/n4js/mangelhaft/types/TestResult"
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
+import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus"
+import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet"
+
+
+export public class TestExecutor {
+    @Inject
+    public spy: TestSpy;
+    public constructor (spy: TestSpy) {
+        this.spy = spy;
+    }
+    private static getStringFromAbiguous(thing: any+): string {
+        let str: string;
+        if (thing === null) {
+            str = "null"
+        } else if (typeof thing === "object") {
+            str = Object.prototype.hasOwnProperty.call(thing, "toString") ? "" + thing: "prototypeless object";
+        } else {
+            str = "" + thing;
+        }
+        return str;
+    }
+
+    public static generateFailureTestResult(ex: any, description: string): TestResult {
+        if (!ex) {
+            ex = new Error("Unknown error: " + description);
+        } else if (typeof ex === "string") {
+            ex = new Error(ex as string);
+        }
+        let e: Object+ = ex instanceof AssertionError ? ex as AssertionError: ex as Object
+          , reason = e.toString()
+          , tr: TestResult
+          , status: TestStatus
+          , trace: Array<string>
+        ;
+        if (reason.charAt(0) === "[") {
+            reason = e.name? `${e.name} : ${description}`: description;
+        }
+        if (ex instanceof AssertionError) {
+            status = TestStatus.failed;
+        } else if (ex instanceof PreconditionNotMet) {
+            status = TestStatus.skipped_precondition;
+        } else if (ex instanceof N4ApiNotImplementedError) {
+            status = TestStatus.skipped_not_implemented;
+        } else {
+            status = TestStatus.error;
+        }
+
+        if (e.message) {
+            reason = String(e);
+        }
+        if (e.stack) {
+            if (typeof e.stack === "string") {
+                trace = (e.stack as string).split("\n");
+            } else if (Array.isArray(e.stack)) {
+                trace = e.stack as Array<string>;
+            } else {
+                trace = [(e.stack as Object).toString()]
+            }
+            trace = trace.map(function(line) {
+                 return line.trim();
+            })
+        }
+        tr = new TestResult({
+            testStatus: status
+            , message: reason
+            , Array<string>trace: trace
+            , description: description
+            , string expected: e.hasOwnProperty("expected") ? this.getStringFromAbiguous(e.expected): undefined
+            , actual: e.hasOwnProperty("actual") ? this.getStringFromAbiguous(e.actual): undefined
+        });
+        return tr;
+    }
+
+    private handleFixme(testObject: TestMethodDescriptor, testRes: TestResult): TestResult {
+        if (testObject.fixme) {
+            if (testRes.testStatus === TestStatus.passed) {
+                testRes.testStatus = TestStatus.failed;
+                testRes.message = "Test marked with @Fixme annotation but was successful. Issue blocking test has probably been fixed. Try removing annotation.";
+                if (testObject.fixmeReason != null) {
+                     testRes.message += " (reason was '"+ testObject.fixmeReason +"')";
+                }
+                testRes.trace = [String(testRes)];
+            } else if (testRes.testStatus === TestStatus.failed || testRes.testStatus === TestStatus.error ) {
+                testRes.testStatus = TestStatus.skipped_fixme;
+                testRes.message = testObject.fixmeReason;
+                testRes.actual = testRes.expected = testRes.trace = null;
+            }
+        }
+
+        return testRes;
+    }
+
+    private async callAll(instrumentedTest: IInstrumentedTest, 
+        testMethodDescriptors: Array<? extends TestMethodDescriptor>
+    ): Array<TestResult> {
+        let results: Array<TestResult> = [];
+        async function runTest(testMethodDescriptor: TestMethodDescriptor):TestResult {
+            let timeoutId: number, testResult: TestResult;
+            async function doPromise (resolve: {function(TestResult)}, reject: {function(any)}) {
+                let res;
+                timeoutId = setTimeout(function() {
+                    reject(new Error("Test object "
+                        + testMethodDescriptor.name
+                        + " timed out after "
+                        + testMethodDescriptor.timeout
+                        + " milliseconds"
+                     ))
+                }, testMethodDescriptor.timeout);
+                try {
+                    res = await Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
+                } catch (error) {
+                    reject(error);
+                } finally {
+                    clearTimeout(timeoutId);
+                }
+                resolve(res as TestResult);
+            }
+            testResult = await new Promise<TestResult, any>(doPromise);
+            return testResult;
+        }
+        if (testMethodDescriptors) {
+             results = (await Promise.all(testMethodDescriptors.<any,Array<TestMethodDescriptor>>map(runTest))) as Array<TestResult>;
+        }
+        return results;
+    }
+
+    private getAncestorTestMethods(iTest: IInstrumentedTest, testMethodName): Array<TestMethodDescriptor> {
+        let testMethods: Array<TestMethodDescriptor> = []
+          , nodeTestMethods: Array<TestMethodDescriptor>
+          , node: IInstrumentedTest = iTest
+        ;
+        // get head node
+        while (node.parent) {
+            node = node.parent;
+        }
+        // get all of the methods top down.
+        do {
+            let nodeObj: Object = node;
+            nodeTestMethods = nodeObj[testMethodName] as Array<TestMethodDescriptor>
+            if (nodeTestMethods && nodeTestMethods.length) {
+                testMethods = testMethods.concat( nodeTestMethods);
+            }
+
+        } while (node = node.child)
+        return testMethods;
+    }
+
+    public async runTestAsync(instrumentedTest: InstrumentedTest): ResultGroups {
+        return await this.runTestsAsync([instrumentedTest]);
+    }
+    private async runGroup(iTest: IInstrumentedTest): ResultGroup {
+        let rg: ResultGroup
+          , testObject: TestMethodDescriptor
+          , testRes: TestResult
+          , testResults: Array<TestResult> = []
+          , beforeAlls: Array<TestMethodDescriptor> = this.getAncestorTestMethods(iTest, "beforeAlls")
+          , befores: Array<TestMethodDescriptor> = this.getAncestorTestMethods(iTest, "befores")
+          , afters: Array<TestMethodDescriptor> = this.getAncestorTestMethods(iTest, "afters").reverse()
+          , afterAlls: Array<TestMethodDescriptor> = this.getAncestorTestMethods(iTest, "afterAlls").reverse()
+          , numTests: number, ii: number
+          , start: number, end: number
+        ;
+        await this.spy.groupStarted.dispatch([iTest]);
+        if (iTest.error) {
+            testResults = await this.errorTests(iTest, iTest.error);
+        } else {
+            try {
+                await this.callAll(iTest, beforeAlls);
+                numTests = iTest.tests.length;
+                for (ii = 0; ii < numTests; ++ii) {
+                    testObject = iTest.tests[ii];
+                    try {
+                        await this.spy.testStarted.dispatch([iTest, testObject]);
+                        start = new Date().getTime();
+                        if (testObject.ignore) {
+                            testRes = new TestResult({
+                                testStatus: TestStatus.skipped_ignore
+                                , message: testObject.ignoreReason
+                                , description: testObject.name
+                            });
+                        } else {
+                            await this.callAll(iTest, befores);
+                            await this.callAll(iTest, [testObject]);
+    
+                            testRes = new TestResult({testStatus: TestStatus.passed
+                                , description: testObject.name
+                            });
+                            await this.callAll(iTest, afters);
+                        }
+                        end = new Date().getTime();
+                    } catch (er) {
+                        let err: any = er;
+                        end = new Date().getTime();
+    
+                        testRes = TestExecutor.generateFailureTestResult(
+                            err,
+                            testObject.name
+                        );
+                    }
+                    testRes.elapsedTime = end - start;
+                    testRes = this.handleFixme(testObject, testRes);
+                    await this.spy.testFinished.dispatch(
+                        [iTest, testObject, testRes,  async ()=>{
+                            let allTests = iTest.tests
+                            ;
+                            iTest.tests = [testObject];
+                            try {
+                                await this.runTestsAsync([iTest]);
+                            } finally {
+                                iTest.tests = allTests;
+                            }
+                        }]
+                    );
+                    testResults.push(testRes);
+                }
+                await this.callAll(iTest, afterAlls);
+            } catch (error) {
+                let results = await this.errorTests(iTest, error);
+                testResults = testResults.concat(results);
+            }
+        }
+    
+        rg = new ResultGroup(testResults, `${iTest.name}`);
+        await this.spy.groupFinished.dispatch([iTest, rg]);
+        return rg;
+        
+    }
+    public async runTestsAsync(instrumentedTests: Array<? extends IInstrumentedTest>): ResultGroups {
+        let results: Array<ResultGroup> = [];
+
+        for (let test of instrumentedTests) {
+            if (test) {
+                if (test.hasParameterizedTests) {
+                    let pResults: Array<ResultGroup> = [];
+                    await this.spy.parameterizedGroupsStarted.dispatch([test]);
+                    for (let ptest of test.parameterizedTests) {
+                        let testRes = await this.runGroup(ptest);
+                        pResults.push(testRes);
+                        results.push(testRes);
+                    }
+                    await this.spy.parameterizedGroupsFinished.dispatch([new ResultGroups(pResults)]);
+                } else {
+                    let testRes = await this.runGroup(test);
+                    results.push(testRes);
+                }
+            }
+        }
+        let resultGroups = new ResultGroups(results);
+        return resultGroups;
+    }
+    public async errorTests(instrumentedTest: IInstrumentedTest, error: any): Array<TestResult> {
+        let len = instrumentedTest.tests.length
+          , testResult: TestResult
+          , testResults: Array<TestResult> = []
+          , test: TestMethodDescriptor
+          , ii: number
+        ;
+        for (ii = 0; ii < len; ++ii) {
+            test = instrumentedTest.tests[ii];
+            await this.spy.testStarted.dispatch([instrumentedTest, test]);
+            testResult = TestExecutor.generateFailureTestResult(error, test.name);
+            testResult.elapsedTime = 0;
+            await this.spy.testFinished.dispatch([instrumentedTest, test, testResult]);
+            testResults.push(testResult)
+        }
+        return testResults;
+    }
+}
+/*
+-*- mode: typescript;-*-
+*/

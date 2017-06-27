@@ -1,0 +1,214 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {DispatchQueue} from "org/eclipse/n4js/mangelhaft/types/DispatchQueue";
+
+interface ICreature {}
+
+class Beast implements ICreature {}
+class Dog extends Beast {}
+
+export public class DispatchQueueTest {
+    @Test
+    dispatch_queue_number_listeners_priority_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        if (dispatchQueue.getNumListeners() != 0) {
+            throw "Expected: 0, actual: " + dispatchQueue.getNumListeners(); 
+        }
+        
+        const prio1 = function prio1() { }
+        const prio2 = function prio2() { }
+        const listeners = [prio1, prio2];
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.add(prio2, "context for prio2", 2);
+        Assert.equal(listeners.length, dispatchQueue.getNumListeners());
+    }
+    
+    @Test
+    dispatch_queue_add_different_priority_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        const prio1 = function prio1() { }
+        const prio2 = function prio2() { }
+        const prio3 = function prio3() { }
+        const prio4 = function prio4() { }
+        dispatchQueue.add(prio4, "context for prio4", 4);
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.add(prio3, "context for prio3", 3);
+        dispatchQueue.add(prio2, "context for prio2", 2);
+        const actualListeners = dispatchQueue.getListOfListeners();
+        
+        const expectedListeners = new Array<Function>();
+        expectedListeners.push(prio4);
+        expectedListeners.push(prio3);
+        expectedListeners.push(prio2);
+        expectedListeners.push(prio1);
+        
+        const assertResult = (actualListeners.length == expectedListeners.length) && 
+                            actualListeners.every((elem,i: int) => {
+                                return (elem.listener === expectedListeners[i]);
+                            });
+        Assert.isTrue(assertResult);
+    }
+    
+    @Test
+    dispatch_queue_add_same_priority_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        const prio1 = function prio1() { }
+        const prio2 = function prio2() { }
+        const prio3 = function prio3() { }
+        const prio4 = function prio4() { }
+        dispatchQueue.add(prio4, "context for prio4", 1);
+        dispatchQueue.add(prio3, "context for prio3", 1);
+        dispatchQueue.add(prio2, "context for prio2", 1);
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        const actualListeners = dispatchQueue.getListOfListeners();
+        
+        const expectedListeners = new Array<Function>();
+        expectedListeners.push(prio4);
+        expectedListeners.push(prio3);
+        expectedListeners.push(prio2);
+        expectedListeners.push(prio1);
+        
+        const assertResult = (actualListeners.length == expectedListeners.length) && 
+                            actualListeners.every((elem,i) => {
+                                return (elem.listener === expectedListeners[i]);
+                            });
+        Assert.isTrue(assertResult);
+    }
+   
+    
+    @Test
+    dispatch_queue_correct_restore_listeners_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        const prio1 = function prio1() { }
+        const prio2 = function prio2() { }
+        const prio3 = function prio3() { }
+        const prio4 = function prio4() { }
+        dispatchQueue.add(prio4, "context for prio4", 4);
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.add(prio3, "context for prio3", 3);
+        dispatchQueue.add(prio2, "context for prio2", 2);
+        
+        dispatchQueue.getListOfListeners();
+        const actualListeners2 = dispatchQueue.getListOfListeners();
+        
+        const expectedListeners = new Array<Function>();
+        expectedListeners.push(prio4);
+        expectedListeners.push(prio3);
+        expectedListeners.push(prio2);
+        expectedListeners.push(prio1);
+        
+        const assertResult = (actualListeners2.length == expectedListeners.length) && 
+                           (dispatchQueue.getNumListeners() == expectedListeners.length) && 
+                            actualListeners2.every((elem,i) => {
+                                return (elem.listener === expectedListeners[i]);
+                            });
+        Assert.isTrue(assertResult);
+    }
+    
+    @Test
+    dispatch_queue_remove_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        const prio1 = function prio1() { }
+        const prio2 = function prio2() { }
+        const prio3 = function prio3() { }
+        const prio4 = function prio4() { }
+        dispatchQueue.add(prio4, "context for prio4", 4);
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.add(prio3, "context for prio3", 3);
+        dispatchQueue.add(prio2, "context for prio2", 2);
+        
+        // Remove root
+        dispatchQueue.remove(prio4, "context for prio4");
+        const actualListeners = dispatchQueue.getListOfListeners();
+        
+        const expectedListeners = new Array<Function>();
+        expectedListeners.push(prio3);
+        expectedListeners.push(prio2);
+        expectedListeners.push(prio1);
+        
+        var assertResult = (actualListeners.length == expectedListeners.length) && 
+                            actualListeners.every((elem,i) => {
+                                return (elem.listener === expectedListeners[i]);
+                            });
+        Assert.isTrue(assertResult);
+
+        dispatchQueue.removeAll();
+        var actualListenersAfterRemoveAll = dispatchQueue.getListOfListeners();
+        assertResult = (actualListenersAfterRemoveAll.length == 0) && (dispatchQueue.getNumListeners() == 0);
+        Assert.isTrue(assertResult);
+    }
+    
+     @Test
+    async dispatch_queue_dispatch_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        var count = 0;
+        const prio1 = function prio1() { 
+            count++;
+        }
+        const prio2 = function prio2() { 
+            count++;
+        }
+        const prio3 = function prio3() {
+            count++;
+            dispatchQueue.halt(); // Do not execute following listeners
+        }
+        const prio4 = function prio4() { 
+            count++;
+        }
+        dispatchQueue.add(prio4, "context for prio4", 4);
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.add(prio3, "context for prio3", 3);
+        dispatchQueue.add(prio2, "context for prio2", 2);
+
+        await dispatchQueue.dispatch([]);
+        // Only two listeners should have been executed since the other two have been aborted
+        Assert.equal(2, count);
+    }
+     
+     @Test
+    async dispatch_queue_add_once_dispatch_test() {
+        const dispatchQueue = new DispatchQueue<Function>();
+        const prio1 = function prio1() { }
+        const prio2 = function prio2() { }
+        const prio3 = function prio3() { }
+        const prio4 = function prio4() { }
+        dispatchQueue.add(prio4, "context for prio4", 4);
+        dispatchQueue.add(prio1, "context for prio1", 1);
+        dispatchQueue.addOnce(prio3, "context for prio3", 3);
+        dispatchQueue.add(prio2, "context for prio2", 2);
+
+        await dispatchQueue.dispatch([]);
+        const actualListeners = dispatchQueue.getListOfListeners();
+        // Expect that prio3 has been removed after dispatch
+        const expectedListeners = new Array<Function>();
+        expectedListeners.push(prio4);
+        expectedListeners.push(prio2);
+        expectedListeners.push(prio1);
+        const assertResult = (actualListeners.length == expectedListeners.length) && 
+                                actualListeners.every((elem,i) => {
+                                    return (elem.listener === expectedListeners[i]);
+                                });
+        Assert.isTrue(assertResult);
+    }
+    
+    @Test
+    async dispatch_queue_dispatch_async_listener_test() {
+            const dispatchQueue = new DispatchQueue<Function>();
+            var count = 0;
+            const prio1 = async function prio1() {
+            count++;
+            }
+            dispatchQueue.add(prio1);
+            await dispatchQueue.dispatch([]);
+            Assert.equal(1, count);
+    }
+}
