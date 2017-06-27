@@ -1,0 +1,32 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+empty constructor
+HI
+3
+stderr:
+==>
+--- */
+class Base {
+	public foo : string = 'Foo';
+	public bar : number = 0;
+	constructor(@Spec spec : ~i~this) {
+		console.log('empty constructor');
+	}
+}
+var b = new Base({foo :'HI', bar : 3});
+console.log(b.foo)
+console.log(b.bar)

@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "reactFiles/react.n4jsd" { from = "reactFiles/react.n4jsd"}
+	}
+
+	END_SETUP
+*/
+
+import * as React from "reactFiles/react"
+
+function myReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+//XPECT errors --> "React functional component myReactFuncComponent cannot start with lower case." at "myReactFuncComponent"
+<myReactFuncComponent myProp="My prop"/>
+
+
+//XPECT warnings --> "Class names should start with upper case letter." at "c"
+class c extends React.Component<~React.ComponentProps with {prop: int}, Object> {
+	@Override
+	public render(): React.Element {
+		return <button/>
+	}
+}
+
+//XPECT errors --> "React class component c cannot start with lower case." at "c"
+var a = <c prop={5}/>;

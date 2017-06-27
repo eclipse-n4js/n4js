@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.n4js.utils" xmlns="http://www.w3.org/2001/XMLSchema">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.n4js.utils" id="injectorSupplier" name="Injector Supplier"/>
+      </appInfo>
+      <documentation>
+         Extension point for providing &lt;code&gt;Injector&lt;/code&gt; instances between plug-ins without having any declared dependencies among each others.
+Clients may contribute their own injector supplier implementations by implementing &lt;code&gt;InjectorSupplier&lt;/code&gt; interface and registering the concrete implementations to the &lt;code&gt;plugin.xml&lt;/code&gt;. Later all contributed injector instances could be acquired by their unqieu identifiers via the &lt;code&gt;InjectorBroker&lt;/code&gt; singleton.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <annotation>
+         <appInfo>
+            <meta.element />
+         </appInfo>
+      </annotation>
+      <complexType>
+         <sequence>
+            <element ref="supplier" minOccurs="1" maxOccurs="unbounded"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="supplier">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The concrete implementation of the &lt;code&gt;InjectorSupplier&lt;/code&gt;.
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.n4js.utils.injector.InjectorSupplier"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         [Enter the first release in which this extension point appears.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         #Java
+&lt;pre&gt;
+package mypackage;
+
+public class MyInjectorSupplier implements InjectorSupplier {
+
+	@Override
+	public Injector get() {
+		return myInjectorInstance;
+	}
+
+	@Override
+	public String getInjectorId() {
+		return &quot;TheUniqueIdOfMyInjector&quot;
+	}
+
+}
+&lt;/pre&gt;
+
+#plugin.xml
+&lt;pre&gt;
+&amp;lt;extension
+	point=&quot;org.eclipse.n4js.utils.injectorSupplier&quot;&amp;gt;
+	&amp;lt;supplier
+		class=&quot;mypackage.MyInjectorSupplier&quot;&amp;gt;
+	&amp;lt;/supplier&amp;gt;
+&amp;lt;/extension&amp;gt;
+&lt;pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiinfo"/>
+      </appInfo>
+      <documentation>
+         [Enter API information here.]
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         [Enter information about supplied implementation of this extension point.]
+      </documentation>
+   </annotation>
+
+
+</schema>

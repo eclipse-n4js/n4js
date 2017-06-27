@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?>
+<target name="Generated target-platform N4JS:N4JS_Neon.2" sequenceNumber="114">
+  <locations>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
+      <unit id="org.eclipse.jdt" version="3.12.2.v20161124-1400"/>
+      <unit id="org.eclipse.jdt.junit4.runtime" version="1.1.600.v20160505-0715"/>
+      <unit id="org.eclipse.pde.ui" version="3.9.100.v20161102-0517"/>
+      <unit id="org.eclipse.platform.feature.group" version="4.6.2.v20161124-1529"/>
+      <unit id="org.objectweb.asm" version="5.0.1.v201404251740"/>
+      <repository location="http://download.eclipse.org/eclipse/updates/4.6/R-4.6.2-201611241400"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.egit.feature.group" version="4.6.0.201612231935-r"/>
+      <unit id="org.kohsuke.args4j" version="2.0.21.v201301150030"/>
+      <repository location="http://download.eclipse.org/egit/updates-4.6"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.jetty.servlets" version="9.2.13.v20150730"/>
+      <unit id="org.eclipse.jetty.util.ajax" version="9.2.13.v20150730"/>
+      <repository location="http://download.eclipse.org/jetty/updates/jetty-bundles-9.x/9.2.13.v20150730"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.emf.ecore.editor" version="2.12.0.v20160526-0356"/>
+      <unit id="org.eclipse.emf.ecore.xcore" version="1.4.0.v20160526-0606"/>
+      <unit id="org.eclipse.xsd.edit" version="2.8.0.v20160526-0356"/>
+      <repository location="http://download.eclipse.org/modeling/emf/emf/updates/2.12"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.emf.mwe2.language.ui" version="2.9.0.v201605261103"/>
+      <unit id="org.eclipse.emf.mwe2.launch.ui" version="2.9.0.v201605261103"/>
+      <unit id="org.eclipse.emf.mwe2.lib" version="2.9.0.v201605261103"/>
+      <repository location="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.xpand" version="2.1.0.v201505260349"/>
+      <unit id="org.eclipse.xtend.typesystem.emf" version="2.1.0.v201505260349"/>
+      <repository location="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201505260349"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.xtext.junit4" version="2.10.0.v201605250459"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.10.0.v201605250459"/>
+      <unit id="org.eclipse.xtext.xtext.ui" version="2.10.0.v201605250459"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.10.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.swtbot.go" version="2.4.0.201604200752"/>
+      <repository location="http://download.eclipse.org/technology/swtbot/releases/2.4.0"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
+      <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.5.0.v201504151636"/>
+      <unit id="com.google.inject" version="3.0.0.v201605172100"/>
+      <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="it.xsemantics.runtime" version="1.10.2.v20170211-0945"/>
+      <repository location="https://dl.bintray.com/lorenzobettini/xsemantics/updates/1.10"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.jdt.junit.runners" version="0.1.0.201411181552"/>
+      <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.xpect.xtext.lib" version="0.1.0.201611181623"/>
+      <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>
+      <repository location="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.wst.common.project.facet.ui" version="1.4.600.v201505072140"/>
+      <unit id="org.eclipse.wst.html.ui" version="1.0.1101.v201608060430"/>
+      <unit id="org.eclipse.wst.html.ui.infopop" version="1.0.201.v201409111852"/>
+      <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.8.0.v201608061842"/>
+      <repository location="http://download.eclipse.org/webtools/downloads/drops/R3.8.1/R-3.8.1-20160912100321/repository"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.rse.files.ui" version="3.2.200.201502052140"/>
+      <unit id="org.eclipse.rse.subsystems.files.local" version="2.1.300.201403251512"/>
+      <repository location="http://download.eclipse.org/tm/updates/4.0/GA"/>
+    </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
+      <unit id="org.eclipse.gef" version="3.11.0.201606061308"/>
+      <repository location="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
+    </location>
+  </locations>
+</target>

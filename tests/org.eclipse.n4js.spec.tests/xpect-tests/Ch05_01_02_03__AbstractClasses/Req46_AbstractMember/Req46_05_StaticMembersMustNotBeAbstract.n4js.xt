@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+// TODO
+// this is currently enforced by the grammar and therefore multiple
+// error messages with unrelated text are produced in each line
+// ==> not checked here, because pointless
+
+
+/*
+abstract class A {
+
+	// --------------------------------------------------------------------------
+	// static method must not be abstract
+
+	// XPECT !errors -->
+	public abstract static string m();
+
+
+	// --------------------------------------------------------------------------
+	// static getter must not be abstract
+
+	// XPECT !errors -->
+	public abstract static string get g();
+
+
+	// --------------------------------------------------------------------------
+	// static setter must not be abstract
+
+	// XPECT !errors -->
+	public abstract static set s(number i);
+
+
+	// --------------------------------------------------------------------------
+	// static field must not be abstract
+
+	// XPECT !errors -->
+	public abstract static string f;
+
+}
+*/
+
+
+// note: does not apply to interfaces, because they are not allowed to have static members

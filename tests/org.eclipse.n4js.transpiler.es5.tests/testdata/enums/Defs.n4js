@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export public enum X{
+	X1 : "x one",
+	X2 ,
+	X3 : "x three"
+}
+
+@StringBased
+export public enum Y{
+	Y1 : "y one",
+	Y2 ,
+	Y3 : "y three"
+}
+
+

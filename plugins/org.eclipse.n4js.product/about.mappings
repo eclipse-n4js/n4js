@@ -1,0 +1,2 @@
+0=${buildTime}
+1=${gitSha1}

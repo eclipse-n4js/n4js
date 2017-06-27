@@ -1,0 +1,74 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+C1 initializes C1._f with _f_C1
+C1 :: field : _f_C1
+C0 initializes C0.field with fC0
+C2 initializes C2._f with _f_C2
+C2 :: f : _f_C2
+SC0 initializes SC0._sf with _sf_SC0
+SC1 initializes SC1._f with _f_SC1
+SC1 :: field : _f_SC1
+stderr:
+==>
+--- */
+
+function verboseInit(target, prop, val){console.log(target, "initializes" , target +"."+ prop, "with", val); return val;}
+function valCheck(instance, prop, val, expected){console.log(instance, "::", prop, ":", val); if(val != expected){console.error("expected instance of",instance, "to have property", prop, "equal", expected, "but it was", val)};}
+
+interface R1C1{ field : any = verboseInit("R1C1","field", "fR1C1");}
+class C1 implements R1C1{
+	_f : any = verboseInit("C1","_f", "_f_C1");
+	@Override
+	set field (v : any){this._f = v}
+	@Override
+	get field() : any{return this._f}
+}
+valCheck("C1", "field", (new C1()).field, "_f_C1")
+
+
+
+class C0{
+	 field : any = verboseInit("C0","field","fC0");
+}
+
+class C2 extends C0{
+	_f : any = verboseInit("C2", "_f", "_f_C2");
+	@Override
+	set field (v : any){ this._f = v}
+	@Override
+	get field() : any{return this._f}
+}
+valCheck("C2", "f", (new C2()).field, "_f_C2")
+
+
+
+interface SR1{ field : any = verboseInit("SR1","field", "fSR1");}
+class SC0{
+	_sf : any = verboseInit("SC0", "_sf", "_sf_SC0");
+	set field (v : any){ this._sf = v}
+	get field() : any{return this._sf}
+
+}
+class SC1 extends SC0 implements SR1{
+	_f : any = verboseInit("SC1", "_f", "_f_SC1");
+	@Override
+	set field (v : any){ this._f = v}
+	@Override
+	get field() : any{return this._f}
+}
+valCheck("SC1", "field", (new SC1()).field, "_f_SC1")

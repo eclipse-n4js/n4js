@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+- A: fixed, optional, variadic -
+Fixed: s1
+Optional: undefined
+Variadic length: 0
+Fixed: s1
+Optional: s2
+Variadic length: 0
+Fixed: s1
+Optional: s2
+Variadic length: 1
+Variadic: s3
+- subclass of A -
+Fixed: s1
+Optional: undefined
+Variadic length: 0
+Fixed: s1
+Optional: s2
+Variadic length: 0
+Fixed: s1
+Optional: s2
+Variadic length: 1
+Variadic: s3
+stderr:
+==>
+--- */
+class A {
+	constructor(fixed : string, start : string=undefined, ... s : string) {
+		console.log("Fixed: " + fixed)
+		console.log("Optional: " + start)
+		console.log("Variadic length: " + s.length)
+		for(var i=0, l = s.length; i < l; i++){
+			console.log("Variadic: " + s[i])
+		}
+	}
+}
+class B extends A {}
+
+console.log("- A: fixed, optional, variadic -")
+new A("s1")
+new A("s1", "s2")
+new A("s1", "s2", "s3")
+console.log("- subclass of A -")
+new B("s1")
+new B("s1", "s2")
+new B("s1", "s2", "s3")

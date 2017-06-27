@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+1, {"stuff":"stuff","end":"bEnd"}, end
+2, {"stuff":"stuff"}, theRealEnd
+stderr:
+==>
+--- */
+class A {
+    public stuff : string;
+    public constructor (start : number, @Spec spec : ~i~this, end : string) {
+    	console.log(start + ", " + JSON.stringify(spec, null, null) + ", " + end)
+    }
+}
+
+class B extends A {
+    public end : string;
+    public constructor (init : ~B, spec : number, end : string) {
+    	super(spec, init, end);
+    }
+}
+
+var b1 = new B({stuff: "stuff", end: "bEnd"}, 1, "end");
+new B(b1, 2, "theRealEnd");

@@ -1,0 +1,207 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+class A {}
+class B extends A {}
+class C extends B {}
+
+var a : A;
+var b : B;
+var c : C;
+
+
+class ClsField {
+	public field : B;
+	constructor(param : ~~this) {}
+}
+class ClsGetter {
+	public get g() : B {return null;}
+	constructor(param : ~~this) {}
+}
+class ClsSetter {
+	public set s(value : B) {}
+	constructor(param : ~~this) {}
+}
+class ClsPair {
+	public get p() : B {return null;}
+	public set p(value : B) {}
+	constructor(param : ~~this) {}
+}
+class ~ClsFieldStruct {
+	public field : B;
+}
+class ~ClsGetterStruct {
+	public get g() : B {return null;}
+}
+class ~ClsSetterStruct {
+	public set s(value : B) {}
+}
+class ~ClsPairStruct {
+	public get p() : B {return null;}
+	public set p(value : B) {}
+}
+
+
+// ################################################################################################################
+// expectation comes from a use-site structural type
+
+
+// with field from use-site structural class
+
+// XPECT noerrors -->
+var ol01 : ~ClsField = { field: c };
+// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~ClsField: field failed: A is not equal to B." at "{ field: a }"
+var ol02 : ~ClsField = { field: a };
+
+
+// with getter from use-site structural class
+
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+var ol03 : ~ClsGetter = { g: c };
+// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~ClsGetter: g failed: A is not a subtype of B." at "{ g: a }"
+var ol04 : ~ClsGetter = { g: a };
+
+
+// with setter from use-site structural class
+
+// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT noerrors -->
+var ol05 : ~ClsSetter = { s: c };
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+var ol06 : ~ClsSetter = { s: a };
+
+
+// with getter+setter pair from use-site structural class
+
+// XPECT noerrors -->
+var ol07 : ~ClsPair = { p: c };
+// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~ClsPair: p failed: A is not a subtype of B." at "{ p: a }"
+var ol08 : ~ClsPair = { p: a };
+
+
+
+
+// ################################################################################################################
+// expectation comes from a def-site structural type
+
+
+// with field from def-site structural class
+
+// XPECT noerrors -->
+var ol11 : ClsFieldStruct = { field: c };
+// XPECT errors --> "~Object with { field: A } is not a structural subtype of ClsFieldStruct: field failed: A is not equal to B." at "{ field: a }"
+var ol12 : ClsFieldStruct = { field: a };
+
+
+// with getter from def-site structural class
+
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+var ol13 : ClsGetterStruct = { g: c };
+// XPECT errors --> "~Object with { g: A } is not a structural subtype of ClsGetterStruct: g failed: A is not a subtype of B." at "{ g: a }"
+var ol14 : ClsGetterStruct = { g: a };
+
+
+// with setter from def-site structural class
+
+// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT noerrors -->
+var ol15 : ClsSetterStruct = { s: c };
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+var ol16 : ClsSetterStruct = { s: a };
+
+
+// with getter+setter pair from def-site structural class
+
+// XPECT noerrors -->
+var ol17 : ClsPairStruct = { p: c };
+// XPECT errors --> "~Object with { p: A } is not a structural subtype of ClsPairStruct: p failed: A is not a subtype of B." at "{ p: a }"
+var ol18 : ClsPairStruct = { p: a };
+
+
+
+
+// ################################################################################################################
+// expectation comes from a def-site structural type
+
+
+// with property from "with"-clause
+
+// XPECT noerrors -->
+var ol21 : ~Object with { prop : B; } = { prop: c };
+// XPECT errors --> "~Object with { prop: A } is not a structural subtype of ~Object with { prop: B }: prop failed: A is not equal to B." at "{ prop: a }"
+var ol22 : ~Object with { prop : B; } = { prop: a };
+
+
+// with getter from "with"-clause
+
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+var ol23 : ~Object with { get g() : B } = { g: c };
+// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~Object with { get g(): B }: g failed: A is not a subtype of B." at "{ g: a }"
+var ol24 : ~Object with { get g() : B } = { g: a };
+
+
+// with setter from "with"-clause
+
+// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT noerrors -->
+var ol25 : ~Object with { set s(value : B) } = { s: c };
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+var ol26 : ~Object with { set s(value : B) } = { s: a };
+
+
+// with getter+setter pair from "with"-clause
+
+// XPECT noerrors -->
+var ol27 : ~Object with { get p() : B  set p(value : B) } = { p: c };
+// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~Object with { get p(): B; set p(value: B) }: p failed: A is not a subtype of B." at "{ p: a }"
+var ol28 : ~Object with { get p() : B  set p(value : B) } = { p: a };
+
+
+
+
+// ################################################################################################################
+// expectation comes from ~~this constructor
+
+
+// with field via ~~this constructor
+
+// XPECT noerrors -->
+new ClsField({ field: c });
+// XPECT errors --> "~Object with { field: A } is not a structural subtype of ~~ClsField: field failed: A is not equal to B." at "{ field: a }"
+new ClsField({ field: a });
+
+
+// with getter via ~~this constructor
+
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+new ClsGetter({ g: c });
+// XPECT errors --> "~Object with { g: A } is not a structural subtype of ~~ClsGetter: g failed: A is not a subtype of B." at "{ g: a }"
+new ClsGetter({ g: a });
+
+
+// with setter via ~~this constructor
+
+// XPECT type of '{ s: c }' --> ~Object with { s: union{B,C} }
+// XPECT noerrors -->
+new ClsSetter({ s: c });
+// XPECT noerrors --> "note: this case is working even without taking into account the expected type, because if there's only a getter, then a subtype field is accepted anyway"
+new ClsSetter({ s: a });
+
+
+// with getter+setter pair via ~~this constructor
+
+// XPECT noerrors -->
+new ClsPair({ p: c });
+// XPECT errors --> "~Object with { p: A } is not a structural subtype of ~~ClsPair: p failed: A is not a subtype of B." at "{ p: a }"
+new ClsPair({ p: a });

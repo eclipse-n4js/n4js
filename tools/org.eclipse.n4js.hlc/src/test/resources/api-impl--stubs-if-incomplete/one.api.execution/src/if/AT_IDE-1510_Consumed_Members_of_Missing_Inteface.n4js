@@ -1,0 +1,260 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { Ifc , Ifb, Ifa } from "p/IF"
+//import * from "p/A"
+import { Assert } from "direct/MiniAssertions"
+//import { X } from "p/B"
+
+// There are several ways to support this:
+
+class A_with_Ifa  implements Ifa {  }
+class A_with_Ifb  implements Ifb {  }
+class A_with_Ifc  implements Ifc {  }
+class A_with_Ifc_Ifb  implements Ifc, Ifb {  }
+class A_with_Ifc_Ifa  implements Ifc, Ifa {  }
+class A_with_Ifb_Ifc  implements Ifb, Ifc {  }
+class A_with_Ifb_Ifa  implements Ifb, Ifa {  }
+class A_with_Ifa_Ifb  implements Ifa, Ifb {  }
+class A_with_Ifa_Ifc  implements Ifa, Ifc {  }
+class A_with_Ifc_Ifb_Ifa  implements Ifc, Ifb, Ifa {  }
+class A_with_Ifc_Ifa_Ifb  implements Ifc, Ifa, Ifb {  }
+class A_with_Ifb_Ifa_Ifc  implements Ifb, Ifa, Ifc {  }
+class A_with_Ifb_Ifc_Ifa  implements Ifb, Ifc, Ifa {  }
+class A_with_Ifa_Ifc_Ifb  implements Ifa, Ifc, Ifb {  }
+class A_with_Ifa_Ifb_Ifc  implements Ifa, Ifb, Ifc {  }
+
+
+export public class AT_IDE_1510_Consumed_Members_of_Missing_Interface {
+	
+	xA : Ifa = new A_with_Ifa();
+	xB : Ifb = new A_with_Ifb();
+	xC : Ifc = new A_with_Ifc();
+	xCB : Ifc = new A_with_Ifc_Ifb();  
+	xCA : Ifc = new A_with_Ifc_Ifa();  
+	xBC : Ifc = new A_with_Ifb_Ifc();  
+	xBA : Ifb = new A_with_Ifb_Ifa();  
+	xAB : Ifb = new A_with_Ifa_Ifb();  
+	xAC : Ifc = new A_with_Ifa_Ifc();  
+	
+    xCBA : Ifc = new A_with_Ifc_Ifb_Ifa();
+    xCAB : Ifc = new A_with_Ifc_Ifa_Ifb();
+    xBAC : Ifc = new A_with_Ifb_Ifa_Ifc();
+    xBCA : Ifc = new A_with_Ifb_Ifc_Ifa();
+    xACB : Ifc = new A_with_Ifa_Ifc_Ifb();
+    xABC : Ifc = new A_with_Ifa_Ifb_Ifc();
+	
+		
+	/**  */
+	@Test
+	public test_Ifa() : void {
+		Assert.throws( ()=>{  			this.xA.m1(); 		console.log("X_1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xA.fa; 		console.log("X_2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xA.fb="s1"; 	console.log("X_3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xA.fc; 		console.log("X_4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xA.fc="s2"; 	console.log("X_5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xA.f; 			console.log("X_6"+l)	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xA.f="s3"; 	console.log("X_7"+this.xA.f)	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}	
+	
+	/**  */
+	@Test
+	public test_Ifb() : void {
+		Assert.throws( ()=>{  			this.xB.m1(); 		console.log(".xB._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xB.fa; 		console.log(".xB._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xB.fb="s1"; 	console.log(".xB._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xB.fc; 		console.log(".xB._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xB.fc="s2"; 	console.log(".xB._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xB.f; 			console.log(".xB._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xB.f="s3"; 	console.log(".xB._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+
+	/**  */
+	@Test
+	public test_Ifc() : void {
+		Assert.throws( ()=>{  			this.xC.m1(); 		console.log(".xC._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xC.fa; 		console.log(".xC._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xC.fb="s1"; 	console.log(".xC._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xC.fc; 		console.log(".xC._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xC.fc="s2"; 	console.log(".xC._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xC.f; 			console.log(".xC._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xC.f="s3"; 	console.log(".xC._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifa_Ifb() : void {
+		Assert.throws( ()=>{  			this.xAB.m1(); 		console.log(".xAB._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xAB.fa; 		console.log(".xAB._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xAB.fb="s1"; 	console.log(".xAB._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xAB.fc; 		console.log(".xAB._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xAB.fc="s2"; 	console.log(".xAB._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xAB.f; 			console.log(".xAB._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xAB.f="s3"; 	console.log(".xAB._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifa_Ifc() : void {
+		Assert.throws( ()=>{  			this.xAC.m1(); 		console.log(".xAC._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xAC.fa; 		console.log(".xAC._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xAC.fb="s1"; 	console.log(".xAC._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xAC.fc; 		console.log(".xAC._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xAC.fc="s2"; 	console.log(".xAC._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xAC.f; 			console.log(".xAC._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xAC.f="s3"; 	console.log(".xAC._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifb_Ifc() : void {
+		Assert.throws( ()=>{  			this.xBC.m1(); 		console.log(".xBC._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xBC.fa; 		console.log(".xBC._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xBC.fb="s1"; 	console.log(".xBC._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xBC.fc; 		console.log(".xBC._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xBC.fc="s2"; 	console.log(".xBC._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xBC.f; 			console.log(".xBC._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xBC.f="s3"; 	console.log(".xBC._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifb_Ifa() : void {
+		Assert.throws( ()=>{  			this.xBA.m1(); 		console.log(".xBA._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xBA.fa; 		console.log(".xBA._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xBA.fb="s1"; 	console.log(".xBA._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xBA.fc; 		console.log(".xBA._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xBA.fc="s2"; 	console.log(".xBA._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xBA.f; 			console.log(".xBA._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xBA.f="s3"; 	console.log(".xBA._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifc_Ifb() : void {
+		Assert.throws( ()=>{  			this.xCB.m1(); 		console.log(".xCB._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCB.fa; 		console.log(".xCB._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCB.fb="s1"; 	console.log(".xCB._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCB.fc; 		console.log(".xCB._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCB.fc="s2"; 	console.log(".xCB._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xCB.f; 			console.log(".xCB._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xCB.f="s3"; 	console.log(".xCB._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifc_Ifa() : void {
+		Assert.throws( ()=>{  			this.xCA.m1(); 		console.log(".xCA._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCA.fa; 		console.log(".xCA._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCA.fb="s1"; 	console.log(".xCA._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCA.fc; 		console.log(".xCA._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCA.fc="s2"; 	console.log(".xCA._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xCA.f; 			console.log(".xCA._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xCA.f="s3"; 	console.log(".xCA._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	/**  */
+	@Test
+	public test_Ifa_Ifb_Ifc() : void {
+		Assert.throws( ()=>{  			this.xABC.m1(); 		console.log(".xABC._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xABC.fa; 		console.log(".xABC._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xABC.fb="s1"; 	console.log(".xABC._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xABC.fc; 		console.log(".xABC._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xABC.fc="s2"; 	console.log(".xABC._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xABC.f; 			console.log(".xABC._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xABC.f="s3"; 	console.log(".xABC._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	/**  */
+	@Test
+	public test_Ifa_Ifc_Ifb() : void {
+		Assert.throws( ()=>{  			this.xACB.m1(); 		console.log(".xACB._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xACB.fa; 		console.log(".xACB._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xACB.fb="s1"; 	console.log(".xACB._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xACB.fc; 		console.log(".xACB._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xACB.fc="s2"; 	console.log(".xACB._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xACB.f; 			console.log(".xACB._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xACB.f="s3"; 	console.log(".xACB._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	/**  */
+	@Test
+	public test_Ifb_Ifa_Ifc() : void {
+		Assert.throws( ()=>{  			this.xBAC.m1(); 		console.log(".xB._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xB.fa; 		console.log(".xB._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xB.fb="s1"; 	console.log(".xB._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xB.fc; 		console.log(".xB._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xB.fc="s2"; 	console.log(".xB._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xB.f; 			console.log(".xB._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xB.f="s3"; 	console.log(".xB._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	/**  */
+	@Test
+	public test_Ifb_Ifc_Ifa() : void {
+		Assert.throws( ()=>{  			this.xBCA.m1(); 		console.log(".xBCA._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xBCA.fa; 		console.log(".xBCA._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xBCA.fb="s1"; 	console.log(".xBCA._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xBCA.fc; 		console.log(".xBCA._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xBCA.fc="s2"; 	console.log(".xBCA._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xBCA.f; 			console.log(".xBCA._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xBCA.f="s3"; 	console.log(".xBCA._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	/**  */
+	@Test
+	public test_Ifc_Ifa_Ifb() : void {
+		Assert.throws( ()=>{  			this.xCAB.m1(); 		console.log(".xCAB._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCAB.fa; 		console.log(".xCAB._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCAB.fb="s1"; 	console.log(".xCAB._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCAB.fc; 		console.log(".xCAB._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCAB.fc="s2"; 	console.log(".xCAB._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xCAB.f; 			console.log(".xCAB._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xCAB.f="s3"; 	console.log(".xCAB._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	/**  */
+	@Test
+	public test_Ifc_Ifb_Ifa() : void {
+		Assert.throws( ()=>{  			this.xCBA.m1(); 		console.log(".xCBA._1")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCBA.fa; 		console.log(".xCBA._2")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCBA.fb="s1"; 	console.log(".xCBA._3")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  var l = 	this.xCBA.fc; 		console.log(".xCBA._4")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+		Assert.throws( ()=>{  			this.xCBA.fc="s2"; 	console.log(".xCBA._5")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  var l = 	this.xCBA.f; 			console.log(".xCBA._6")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+//		Assert.throws( ()=>{  			this.xCBA.f="s3"; 	console.log(".xCBA._7")	},  N4ApiNotImplementedError, "Missing NoImpl-Error." );
+	}
+	
+	
+	
+	
+	
+	
+//	/** . */
+//	@Test
+//	public void test_() {
+//		var N4Class result;
+//		Assert.doesNotThrow( function(){
+////			result = IA.someStaticProvidesDefaultIA();
+//		} );
+//		Assert.isNotUndefined ( result );
+//	}	
+//}
+//}
+//}
+}

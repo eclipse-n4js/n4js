@@ -1,0 +1,107 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+export public  class Assert {
+	
+	public static isNotUndefined( e, message : string = ) : void {
+		if( e == undefined ) console.log("undefined : "+message)
+		else ( console.log("OK: holds not undefined") )
+	}
+	public static throws (testFunction : {function()}, error : any =, message : string =) : any {
+        var actual : any+;
+        try {
+            testFunction();
+        } catch (e) {
+            actual = e; 
+        }
+    	return this.thrownCheck(true, actual, error, message);	
+    }
+    
+    private static thrownCheck(shouldThrow : boolean, actual : any+, expected : any, message : string = ) : any {
+
+        message = (expected && (expected as Error).name ? ' (' + (expected as Error).name + ').' : '.') +
+        (message ? ' ' + message : '.');
+
+        if (shouldThrow && !actual) {
+            this.fail(actual, expected, 'Missing expected exception' + message);
+        }
+
+        if (!shouldThrow && expectedException(actual, expected)) {
+            this.fail(actual, expected, 'Got unwanted exception' + message);
+        }
+
+        if ((shouldThrow && actual && expected && !expectedException(actual, expected)) || (!shouldThrow && actual)) {
+            this.fail(actual.toString(), expected, "thrown error of wrong type " + message);
+        }
+        return actual;
+    }
+
+    
+    public static fail(actual : any
+                        , expected : any
+                        , message : string =
+    ) {
+        var out : string = "was: '"+actual+"'  expected: '"+expected+"'";
+        if( message ) { out=""+message+" :: "+out;   }
+        console.log( out )
+    }
+    
+    
+    public static equal (actual : any, expected : any, message : string =) {
+        if (actual != expected) {
+            this.fail(actual, expected, message);
+        }
+        return true;
+    }
+  
+    /**
+     * ensures provided function does not throw only async
+     * @param  testFunction function to test. should be callable without arguments
+     * @param  error        optional error if provided will ensure the thrown error is of the same type.
+     * @param  message      optional message describing what was tested
+     */
+    public static async doesNotThrowAsync(testFunction : {function()}, error : any =, message : string =) {
+        var actual : any+;
+        try {
+            await testFunction();
+        } catch (e) {
+            actual = e;
+        }
+        return this.thrownCheck(false, actual, error, message);
+    }    
+    
+    public static doesNotThrow(testFunction : {function()}, error : any =, message : string =) {
+        var actual : any+;
+        try {
+            testFunction();
+        } catch (e) {
+            actual = e;
+        }
+        return this.thrownCheck(false, actual, error, message);
+    }
+
+}
+
+@IDEBUG(201, "any is not a subtype of union{Function,type{Object},type{N4Enum}}.")
+function expectedException(actual : any, expected : any) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (Object.getPrototypeOf({}).toString.call(expected) == '[object RegExp]') {
+    return (expected as RegExp).test((actual as Object).toString());
+  } else if (actual instanceof expected) {
+    return true;
+  } else if (typeof expected === "function" && (expected as Function).call({}, actual) === true) {
+    return true;
+  }
+  return false;
+}

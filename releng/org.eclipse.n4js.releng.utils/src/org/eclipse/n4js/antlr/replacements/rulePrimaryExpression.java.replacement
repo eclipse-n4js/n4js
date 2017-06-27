@@ -1,0 +1,31 @@
+    public final EObject rulePrimaryExpression() throws RecognitionException {
+        EObject current = null;
+
+        ##(?<eobjects>\s*(?:EObject\s+this_\w+\s+=\s+null;\s*)+)##
+        	enterRule();
+
+        try {
+            {
+            int ##(?<alt>\w+)##=##(?<val>\d+)##;
+            ##\k<alt>## = ##(?<dfa>\w+)##.predict(input);
+            switch (##\k<alt>##) {
+                case 1 :
+_________________________________REPLACE_WITH_________________________________
+    public final EObject rulePrimaryExpression() throws RecognitionException {
+        EObject current = null;
+        ##${eobjects}##
+        enterRule();
+        try { 
+        	{
+            int ##${alt}##=##${val}##;
+            // REPLACEMENT rulePrimaryExpression.java.replacement START
+            try {
+                ##${alt}## = ##${dfa}##.predict(input);
+            } catch (NoViableAltException re) {
+            	int as = input.LA(1);
+            	if (as==Async) { ##${alt}##=3; }
+            	else throw re;
+            }
+            // REPLACEMENT rulePrimaryExpression.java.replacement END
+            switch (##${alt}##) {
+                case 1 : 

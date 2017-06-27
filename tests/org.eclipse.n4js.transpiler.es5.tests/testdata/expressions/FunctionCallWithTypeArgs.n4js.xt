@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+func called
+smethod called
+ctor called
+method called
+stderr:
+==>
+--- */
+// XPECT warnings --> "Type variable U not used in parameters or return type." at "U"
+function <T,U> func(p1 : T, p2 : T): void {
+	console.log(p1, p2)
+}
+
+class A<X,Y> {
+	constructor(p1 : any, p2 : any) {
+		console.log(p1, p2)
+	}
+	// XPECT warnings --> "Type variable U not used in parameters or return type." at "U"
+	static <T,U> smethod(p1 : T, p2 : T) : void {
+		console.log(p1, p2)
+	}
+	// XPECT warnings --> "Type variable U not used in parameters or return type." at "U"
+	<T,U> method(p1 : T, p2 : T) : void {
+		console.log(p1, p2)
+	}
+}
+
+/* --------------------------------  */
+<string,number>func('func', 'called');
+A.<string,number>smethod('smethod', 'called');
+var a = new A<string,number>('ctor', 'called')
+a.<string,number>method('method', 'called');
+
+/* --------------------------------  */

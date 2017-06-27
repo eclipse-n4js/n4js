@@ -1,0 +1,118 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+when needed DI data is there
+{
+	"parent": "DIC",
+	"binders": [
+		"B1",
+		"B2"
+	],
+	"injectCtorParams": [
+		{
+			"name": "ctorFoo",
+			"type": "Foo"
+		},
+		{
+			"name": "ctorPB",
+			"type": "N4Provider",
+			"typeVar": {
+				"type": "Bar"
+			}
+		},
+		{
+			"name": "ctorPPB",
+			"type": "N4Provider",
+			"typeVar": {
+				"type": "N4Provider",
+				"typeVar": {
+					"type": "Baz"
+				}
+			}
+		}
+	],
+	"fieldsInjectedTypes": [
+		{
+			"name": "fieldFoo",
+			"type": "Foo"
+		},
+		{
+			"name": "fieldPB",
+			"type": "N4Provider",
+			"typeVar": {
+				"type": "Bar"
+			}
+		},
+		{
+			"name": "fieldPPB",
+			"type": "N4Provider",
+			"typeVar": {
+				"type": "N4Provider",
+				"typeVar": {
+					"type": "Baz"
+				}
+			}
+		}
+	]
+}
+stderr:
+==>
+--- */
+
+//=============================================================================
+// Test Data
+//=============================================================================
+
+@GenerateInjector
+class DIC{}
+
+@Binder
+class B1{}
+@Binder
+class B2{}
+
+class Foo{}
+class Bar{}
+class Baz{}
+
+@GenerateInjector
+@WithParentInjector(DIC)
+@UseBinder(B1)
+@UseBinder(B2)
+class C{
+    @Inject fieldFoo : Foo;
+    @Inject fieldPB : N4Provider<Bar>;
+    @Inject fieldPPB : N4Provider<N4Provider<Baz>>;
+
+    @Inject
+    constructor(ctorFoo : Foo, ctorPB : N4Provider<Bar>, ctorPPB : N4Provider<N4Provider<Baz>>){}
+}
+
+//=============================================================================
+// Test
+//=============================================================================
+
+var tC: Object = C;//just to suppress validation of index access
+function replacer(key, value){
+    var hasN4Type = (value as Object)['n4type'];
+    if(hasN4Type){
+        return (hasN4Type as Object)['name'];
+    }
+    return value;
+}
+var diData = JSON.stringify(tC['$di'], replacer, '\t')
+console.log('when needed DI data is there');
+console.log(diData);

@@ -1,0 +1,93 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { IA } from "p/A"
+import { A } from "p/A"
+import { Assert } from "direct/MiniAssertions"
+    
+
+export class AT_IDE_1510_Missing_Members {
+
+
+	/** Access to implemented members */
+	@Test
+	public test_implemented_members() : void {
+		var a : A = new A();
+		a.s = "x"
+		Assert.equal( a.s, "x") 
+
+		Assert.isNotUndefined( a.n() ,"Number expected.");
+		
+		Assert.isNotUndefined( a.someIA() ,"null or object expected.");
+		
+		Assert.doesNotThrow( function(){ var ia : IA = a.pureGet; });
+
+		Assert.doesNotThrow( function(){  a.pureSet = a; });
+		
+	}
+
+	
+	
+	/** Access to NOT-existing field */
+	@Test
+	public test_missing_field_in_class() : void {
+		
+		var a : A = new A();
+		Assert.throws( function() {
+			a.missing_s = "y";
+			console.log("grrrrrrr1")
+		}, N4ApiNotImplementedError, "Illegal Access to missing field in class. Expected the N4ApiNotImplementedError");
+	}
+
+	/** Access to NOT-existing method */
+	@Test
+	public test_missing_method_in_class() : void {
+		
+		var a : A = new A();
+		Assert.throws( function() {
+			var nN : number = a.missing_n();
+			console.log("grrrrrrr2")
+		}, N4ApiNotImplementedError, "Illegal Access to missing method in class. Expected the N4ApiNotImplementedError");
+	}
+	/** Access to NOT-existing method */
+	@Test
+	public test_missing_method2_in_class() : void {
+		
+		var a : A = new A();
+		Assert.throws( function() {
+			a.missing_someIA();
+			console.log("grrrrrrr2b")
+		}, N4ApiNotImplementedError, "Illegal Access to missing method in class. Expected the N4ApiNotImplementedError");
+	}
+	/** Access to NOT-existing getter */
+	@Test
+	public test_missing_getter_in_class() : void {
+		
+		var a : A = new A();
+		Assert.throws( function() {
+			var ia : IA = a.missing_pureGet;
+			console.log("grrrrrrr3")
+		}, N4ApiNotImplementedError, "Illegal Access to missing getter in class. Expected the N4ApiNotImplementedError");
+	}
+	/** Access to NOT-existing setter */
+	@Test
+	public test_missing_setter_in_class() : void {
+		
+		var a : A = new A();
+		Assert.throws( function() {
+			a.missing_pureSet = a;
+			console.log("grrrrrrr4")
+		}, N4ApiNotImplementedError, "Illegal Access to missing setter in class. Expected the N4ApiNotImplementedError");
+	}
+
+
+
+}

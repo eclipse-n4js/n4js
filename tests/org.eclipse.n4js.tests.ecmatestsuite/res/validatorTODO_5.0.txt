@@ -1,0 +1,16 @@
+#
+# The following tests are ignored by the pure parser test, 
+# as they need the validator to check for some constraints not 
+# modeled in the grammar. The validation is not completely implemented, though. Thus,
+# these tests are ignored at the moment similar to other blacklist entries.
+#
+
+# Math object is NOT constructor
+test262/suite/ch08/8.6/8.6.2/S8.6.2_A7.js
+
+# The global object does not have a Construct property
+test262/suite/ch15/15.1/S15.1_A1_T1.js
+test262/suite/ch15/15.1/S15.1_A1_T2.js
+
+# The global object does not have a Call property
+test262/suite/ch15/15.1/S15.1_A2_T1.js

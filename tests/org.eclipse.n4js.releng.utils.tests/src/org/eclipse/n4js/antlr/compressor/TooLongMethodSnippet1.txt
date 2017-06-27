@@ -1,0 +1,99 @@
+     public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
+            TokenStream input = (TokenStream)_input;
+        	int _s = s;
+            switch ( s ) {
+                    case 0 :
+                        int LA450_383 = input.LA(1);
+
+
+                        int index450_383 = input.index();
+                        input.rewind();
+                        s = -1;
+                        if ( (LA450_383==RightSquareBracket) ) {s = 273;}
+
+                        else if ( (LA450_383==LeftParenthesis) && (synpred265_InternalN4JSParser())) {s = 277;}
+
+                        else if ( (LA450_383==PlusSignPlusSign) && (synpred265_InternalN4JSParser())) {s = 278;}
+
+                        else if ( (LA450_383==HyphenMinusHyphenMinus) && (synpred265_InternalN4JSParser())) {s = 279;}
+
+                        else if ( (LA450_383==As) && (synpred265_InternalN4JSParser())) {s = 280;}
+
+                        else if ( (LA450_383==Asterisk) && (synpred265_InternalN4JSParser())) {s = 281;}
+
+                        else if ( (LA450_383==Solidus) && (synpred265_InternalN4JSParser())) {s = 282;}
+
+                        else if ( (LA450_383==PercentSign) && (synpred265_InternalN4JSParser())) {s = 283;}
+
+                        else if ( (LA450_383==PlusSign) && (synpred265_InternalN4JSParser())) {s = 284;}
+
+                        else if ( (LA450_383==HyphenMinus) && (synpred265_InternalN4JSParser())) {s = 285;}
+
+                        else if ( (LA450_383==GreaterThanSign) && (synpred265_InternalN4JSParser())) {s = 286;}
+
+                        else if ( (LA450_383==LessThanSignLessThanSign) && (synpred265_InternalN4JSParser())) {s = 287;}
+
+                        else if ( (LA450_383==LessThanSign) && (synpred265_InternalN4JSParser())) {s = 288;}
+
+                        else if ( (LA450_383==LessThanSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 289;}
+
+                        else if ( (LA450_383==GreaterThanSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 290;}
+
+                        else if ( (LA450_383==Instanceof) && (synpred265_InternalN4JSParser())) {s = 291;}
+
+                        else if ( (LA450_383==In) && (synpred265_InternalN4JSParser())) {s = 292;}
+
+                        else if ( (LA450_383==EqualsSignEqualsSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 293;}
+
+                        else if ( (LA450_383==ExclamationMarkEqualsSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 294;}
+
+                        else if ( (LA450_383==EqualsSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 295;}
+
+                        else if ( (LA450_383==ExclamationMarkEqualsSign) && (synpred265_InternalN4JSParser())) {s = 296;}
+
+                        else if ( (LA450_383==Ampersand) && (synpred265_InternalN4JSParser())) {s = 297;}
+
+                        else if ( (LA450_383==CircumflexAccent) && (synpred265_InternalN4JSParser())) {s = 298;}
+
+                        else if ( (LA450_383==VerticalLine) && (synpred265_InternalN4JSParser())) {s = 299;}
+
+                        else if ( (LA450_383==AmpersandAmpersand) && (synpred265_InternalN4JSParser())) {s = 300;}
+
+                        else if ( (LA450_383==VerticalLineVerticalLine) && (synpred265_InternalN4JSParser())) {s = 301;}
+
+                        else if ( (LA450_383==QuestionMark) && (synpred265_InternalN4JSParser())) {s = 302;}
+
+                        else if ( (LA450_383==EqualsSign) && (synpred265_InternalN4JSParser())) {s = 303;}
+
+                        else if ( (LA450_383==AsteriskEqualsSign) && (synpred265_InternalN4JSParser())) {s = 304;}
+
+                        else if ( (LA450_383==SolidusEqualsSign) && (synpred265_InternalN4JSParser())) {s = 305;}
+
+                        else if ( (LA450_383==PercentSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 306;}
+
+                        else if ( (LA450_383==PlusSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 307;}
+
+                        else if ( (LA450_383==HyphenMinusEqualsSign) && (synpred265_InternalN4JSParser())) {s = 308;}
+
+                        else if ( (LA450_383==LessThanSignLessThanSignEqualsSign) && (synpred265_InternalN4JSParser())) {s = 309;}
+
+                        else if ( (LA450_383==AmpersandEqualsSign) && (synpred265_InternalN4JSParser())) {s = 310;}
+
+                        else if ( (LA450_383==CircumflexAccentEqualsSign) && (synpred265_InternalN4JSParser())) {s = 311;}
+
+                        else if ( (LA450_383==VerticalLineEqualsSign) && (synpred265_InternalN4JSParser())) {s = 312;}
+
+                        else if ( (LA450_383==LeftSquareBracket) && (synpred265_InternalN4JSParser())) {s = 274;}
+
+                        else if ( (LA450_383==FullStop) && (synpred265_InternalN4JSParser())) {s = 375;}
+
+                        else if ( (LA450_383==RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL) && (synpred265_InternalN4JSParser())) {s = 275;}
+
+                        else if ( (LA450_383==RULE_TEMPLATE_HEAD) && (synpred265_InternalN4JSParser())) {s = 276;}
+
+
+                        input.seek(index450_383);
+                        if ( s>=0 ) return s;
+                        break;
+                     }
+}

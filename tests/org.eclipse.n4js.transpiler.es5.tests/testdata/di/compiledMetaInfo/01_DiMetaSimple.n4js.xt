@@ -1,0 +1,70 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output --- 
+<==
+stdout:
+when needed DI data is there
+{
+	"fieldsInjectedTypes": [
+		{
+			"name": "fieldFoo",
+			"type": "Foo"
+		}
+	]
+}
+fTypeVal N4Class {
+  origin: 'org.eclipse.n4js.transpiler.es5.tests',
+  annotations: [],
+  name: 'Foo',
+  fqn: 'di.compiledMetaInfo.01_DiMetaSimple.Foo',
+  n4superType: 
+   N4Class {
+     origin: 'n4js-es5',
+     annotations: [],
+     name: 'N4Object',
+     fqn: 'N4BuiltInClasses.N4Object',
+     n4superType: undefined,
+     allImplementedInterfaces: [],
+     ownedMembers: [],
+     consumedMembers: [] },
+  allImplementedInterfaces: [],
+  ownedMembers: [],
+  consumedMembers: [] }
+stderr:
+==>
+--- */
+
+class Foo{}
+
+class A{ 
+    @Inject fieldFoo : Foo;
+}
+
+var tA: Object = A;//just to supress validation of index access
+function replacer(key, value){
+    var hasN4Type = (value as Object)['n4type'];
+    if(hasN4Type){
+        return (hasN4Type as Object)['name'];
+    }
+    return value;
+}
+var diData = JSON.stringify(tA['$di'], replacer, '\t')
+console.log('when needed DI data is there');
+console.log(diData);
+//note types are not strings 
+var iFields = (tA['$di'] as Object)['fieldsInjectedTypes'];
+var field = (iFields as Array<Object>)[0];
+var fType = field['type'];
+var fTypeVal = (fType as Object)['n4type'];
+console.log('fTypeVal', fTypeVal);

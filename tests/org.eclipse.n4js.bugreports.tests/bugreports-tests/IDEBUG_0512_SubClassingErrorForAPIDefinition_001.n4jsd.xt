@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
+
+@N4JS
+// XPECT noerrors --> "Direct subtype of Error."
+export external class SubError extends Error { }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error."
+export external class SubEvalError extends EvalError { }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error."
+export external class SubRangeError extends RangeError { }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error."
+export external class SubReferenceError extends ReferenceError { }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error."
+export external class SubSyntaxError extends SyntaxError{ }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error."
+export external class SubTypeError extends TypeError { }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error."
+export external class SubURIError extends URIError { }
+
+
+
+// Intentionally does not have @N4JS annotation
+export external class MyError extends Error { }
+
+@N4JS
+// XPECT errors --> "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "MySubError"
+export external class MySubError extends MyError { }
+
+
+
+@N4JS // Unlike in the previos test case we do have the @N4JS annotation at the custom error class level.
+export external class MyError2 extends Error { }
+
+@N4JS
+// XPECT noerrors --> "Indirect subtype of Error"
+export external class MySubError2 extends MyError2 { }
+
+
+
+// Intentionally does not have @N4JS
+export external class SuperClass { }
+
+@N4JS
+// XPECT errors --> "External classes annotated with @N4JS aren't allowed to extend a class without such annotation." at "SubClass"
+export external class SubClass extends SuperClass {
+
+}

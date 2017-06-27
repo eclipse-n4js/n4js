@@ -1,0 +1,73 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/**
+ * @psec a simple interface
+ */
+export public interface IA {
+	public field : IA;
+	public field2 : IA;
+	
+	public someIA() : IA;
+	
+	public providesDefaultIA() : IA { return new A(); }
+	
+	public get pureGet()  : IA;
+	
+	public set pureSet(i : IA) ;
+		
+	public get providesDefaultGet() : IA { return new A(); }
+	public get not_providesDefaultGet()  : IA;
+	
+		
+	public set providesDefaultSet(i : IA) {   }
+	public set not_providesDefaultSet(i : IA) ;
+		
+	public static fieldStatic : IA = null; // = new A(); leads to Error.
+	
+	public static someStaticProvidesDefaultIA() : IA	{	return new A();	}
+} 
+
+/**                                
+ * @spec a simple class  
+ */ 
+export public class A implements IA {
+	@Override 	public get field2() : IA { return new A(); }
+	@Override	public set field2(a : IA) { }
+	public s : string;
+	public get a () : string{ return "x"; }
+	public get a2 () : string{ return "x"; }
+	public set a2 (s : string){  }
+	public n() : number{ return 42;}
+	@Override	public someIA() : IA { return new A(); } 
+	
+	@Override public get pureGet() : IA { return new A(); }
+	
+	@Override public set pureSet(i : IA) { }
+	@Override public get not_providesDefaultGet() : IA { return new A(); /* cannot be left out 
+	 since the compiler detects the missing default-implementation and forces this class to be abstract.
+	 */ }
+	@Override public set not_providesDefaultSet(i : IA) { /* cannot be left out 
+	 since the compiler detects the missing default-implementation and forces this class to be abstract.
+	 */ }
+	
+	
+	// Static cases below
+	public static fieldStatic : IA;
+	public static someStaticProvidesDefaultIA() : IA { return new A(); }			
+}
+ 
+export public enum E { a:" ", b, c  }; 
+ 
+@StringBased export public enum ES { a :" ", b, c };
+
+
+console.log("Loaded Implementation one.x.impl::p.A.n4js");

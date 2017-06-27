@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-Vendor: %providerName
+Bundle-Version: 0.0.1.qualifier
+Bundle-SymbolicName: org.eclipse.n4js.external.libraries.update.tests;singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.eclipse.n4js,
+ org.eclipse.n4js.external.libraries,
+ org.eclipse.n4js.external.libraries.update,
+ org.eclipse.n4js.utils
+Import-Package: org.junit;version="4.5.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8

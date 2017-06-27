@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "A5_unaryInc.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+/* XPECT output ---
+<==
+stdout:
+v1 =  2
+v2 =  2
+After do_increment:
+v1 =  3
+v2 =  3
+stderr:
+==>
+--- */
+
+import {v1,v2, do_post_increment_v1_and_assign_old_value_to_v2} from "importexport/export_update/A5_unaryInc"
+
+console.log( "v1 = ", v1 );  // v1 == 2 --> after increment in init of v2
+console.log( "v2 = ", v2 );  // v2 == 2 --> first value of v1 after increment
+do_post_increment_v1_and_assign_old_value_to_v2();
+console.log("After do_increment:")
+console.log( "v1 = ", v1 );
+console.log( "v2 = ", v2 );

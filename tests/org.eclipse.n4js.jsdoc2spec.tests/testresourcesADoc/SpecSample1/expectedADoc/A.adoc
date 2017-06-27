@@ -1,0 +1,102 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+include::{find}config.adoc[]
+:docinfodir: ../../../../../headers/apiModules
+:linkattrs:
+:toc:
+
+= Module A
+
+== Class A
+
+
+
+[[gsec:spec_A.A.bar]]
+[role=memberdoc]
+=== ++Method bar++
+
+==== Signature
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#bar++[``++project bar(n: number): string++``]
+
+==== Description
+
+spec for method A.bar from source code
+
+==== Semantics
+
+++Bar basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[Test]
+
+
+
+[[gsec:spec_A.A.baz]]
+[role=memberdoc]
+=== ++Method baz++
+
+==== Signature
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#baz++[``++project baz(): string++``]
+
+==== Description
+
+spec for method A.baz from source code
+
+
+==== Semantics
+[.todo, label="test ++A.baz++"]
+--
+Add tests specifying semantics for ``++baz(): string++``
+--
+
+== Class B
+
+
+
+[[gsec:spec_A.B.foo]]
+[role=memberdoc]
+=== ++Method foo++
+
+==== Signature
+srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:B#foo++[``++project foo(s: string): void++``]
+
+
+==== Semantics
+[.todo, label="test ++B.foo++"]
+--
+Add tests specifying semantics for ``++foo(s: string): void++``
+--
+
+== Class D
+
+
+[[gsec:spec_D.A.bar]]
+[role=memberdoc]
+=== ++Method bar++
+
+Inherited from
+++class A++
+
+==== Semantics
+
+++Bar again++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[Test]
+
+
+[[gsec:spec_D.A.baz]]
+[role=memberdoc]
+=== ++Method baz++
+
+Inherited from
+++class A++
+
+==== Semantics
+
+++Baz again++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]
+
+Baz is supposed to do nothing.

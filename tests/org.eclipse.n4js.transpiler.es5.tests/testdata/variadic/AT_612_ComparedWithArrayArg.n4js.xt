@@ -1,0 +1,75 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ~~~
+<==
+stdout:
+--------f_array:
+Hello, l=1
+World, l=2
+out of range, l=2
+--------f_variadic:
+out of range, l=-1
+Hello, l=1
+World, l=2
+out of range, l=2
+--------f_opt_variadic:
+Hello, l=1
+World, l=2
+out of range, l=2
+stderr:
+==>
+~~~
+*/
+
+
+function f_array(i : number, names : Array<string>) {
+	var name = ((i>=0) && ( (names && (names[i] || 'out of range')) || 'no names')) || 'no args';
+	console.log(name + ', l='+ (names && names.length || '-1'))
+}
+
+function f_variadic(i : number, ... names : string) {
+	var name = ((i>=0) && ( (names && (names[i] || 'out of range')) || 'no names')) || 'no args';
+	console.log(name + ', l='+ (names && names.length || '-1'))
+}
+
+function f_opt_variadic(i : number=undefined, ... names : string) {
+	var name = ((i>=0) && ( (names && (names[i] || 'out of range')) || 'no names')) || 'no args';
+	console.log(name + ', l='+ (names && names.length || '-1'))
+}
+
+console.log('--------f_array:')
+// not possible anymore
+//f_array(); // no args
+//not possible anymore
+//f_array(0); // no names
+f_array(0, ['Hello']); // 'Hello'
+f_array(1, ['Hello', 'World']); // 'World'
+f_array(2, ['Hello', 'World']); // out of range
+
+console.log('--------f_variadic:')
+//not possible anymore
+//f_variadic(); // no args
+f_variadic(0); // out of range -- empty array
+f_variadic(0, 'Hello'); // 'Hello''
+f_variadic(1, 'Hello', 'World'); // 'World'
+f_variadic(2, 'Hello', 'World'); // out of range
+
+console.log('--------f_opt_variadic:')
+//not possible anymore
+//f_opt_variadic(); // no args
+//not possible anymore
+//f_opt_variadic(0); // out of range -- empty array
+f_opt_variadic(0, 'Hello'); // 'Hello'
+f_opt_variadic(1, 'Hello', 'World'); // 'World'
+f_opt_variadic(2, 'Hello', 'World'); // out of range

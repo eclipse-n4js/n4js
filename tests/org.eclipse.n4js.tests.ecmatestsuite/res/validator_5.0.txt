@@ -1,0 +1,112 @@
+#
+# The following tests need the validator to find errors.
+# Note that it might be possible that the validator find wrong errors, 
+# making the test to pass successfully while it is wrong instead.
+# We expect no parse errors for these tests.
+#
+
+# exponent part is incorrect
+# these tests make no sense to me
+# e.g. the input sequence
+# e1
+# will never be consumed as a DecimalLiteral but as
+# an identifier instead
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T1.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T2.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T3.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T4.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T5.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T6.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T7.js
+test262/suite/ch07/7.8/7.8.3/S7.8.3_A4.1_T8.js
+
+
+
+
+# void IdentifierRef may not be used with an undefined identifier ref
+# 'If GetBase(x) is null, throw ReferenceError'
+test262/suite/ch11/11.4/11.4.2/S11.4.2_A2_T2.js
+
+# Erroneous arguments for #call or #hasProperty etc
+test262/suite/ch15/15.2/15.2.4/15.2.4.3/S15.2.4.3_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.3/S15.2.4.3_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A14.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.4/S15.2.4.4_A15.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.5/S15.2.4.5_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.5/S15.2.4.5_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.6/S15.2.4.6_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.6/S15.2.4.6_A13.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.7/S15.2.4.7_A12.js
+test262/suite/ch15/15.2/15.2.4/15.2.4.7/S15.2.4.7_A13.js
+
+# @negative TypeError - maybe not all of these can be validated
+# Some of these certainly require flow analysis, e.g.
+#var o = { 
+#    get gNonStrict() {
+#        var tmp = Object.getOwnPropertyDescriptor(o, "gNonStrict").get;
+#        return tmp.caller || tmp.caller.throwTypeError;
+#    }
+#};
+#
+#
+#function f() {
+#    "use strict";
+#    return o.gNonStrict;
+#    // exception above since the caller from a strict environment is censored
+#}
+#f();
+test262/suite/ch15/15.3/15.3.4/15.3.4.5/S15.3.4.5_A1.js
+
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-10gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-16gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-18gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-20gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-2gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-30gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-31gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-32gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-33gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-34gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-35gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-36gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-37gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-38gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-39gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-40gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-41gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-42gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-43gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-44gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-45gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-46gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-47gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-49gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-4gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-51gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-56gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-57gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-58gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-59gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-60gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-61gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-62gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-63gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-64gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-65gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-66gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-67gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-68gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-69gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-6gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-70gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-71gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-72gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-73gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-74gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-8gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-94gs.js
+
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-96gs.js
+test262/suite/ch15/15.3/15.3.5/15.3.5.4/15.3.5.4_2-97gs.js

@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportPendingTest END_SETUP  */
+
+interface I<T> {}
+class G<T> implements I<T> {}
+
+function <T> foo(i : I<T>, cb : {function(T)}) { }
+
+var g : G<?>;
+
+// XPECT errors --> "G<?> is not a subtype of I<any>." at "g"
+foo(g, function(x){})
+// the error message is a bit misleading, but having an error here should definitely be correct
+// (because we have to pick a concrete type for the fpar in the function expression that is the
+// same as the unkonwn type of G<?>, which is impossible)
+
+
+// compare with this similar but simpler case:
+
+function <T> foo2(p1 : G<T>, p2 : G<T>) {}
+
+var g1 : G<?>;
+var g2 : G<?>;
+// XPECT errors ---
+// "G<?> is not a subtype of G<any>." at "g1"
+// "G<?> is not a subtype of G<any>." at "g2"
+// ---
+foo2(g1,g2);

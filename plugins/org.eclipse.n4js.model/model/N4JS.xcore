@@ -1,0 +1,2119 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+@Ecore(nsURI="http://www.eclipse.org/n4js/n4js/N4JS")
+@GenModel(fileExtensions="n4js",
+//	modelPluginID="org.eclipse.n4js.model",
+	rootExtendsClass="org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl",
+	modelDirectory="/org.eclipse.n4js.model/emf-gen",
+	forceOverwrite="true",
+	updateClasspath="false",
+	literalsInterface="true",
+	loadInitialization="false",
+	complianceLevel="8.0",
+	copyrightFields="false",
+	copyrightText="Copyright (c) 2016 NumberFour AG.\nAll rights reserved. This program and the accompanying materials\nare made available under the terms of the Eclipse Public License v1.0\nwhich accompanies this distribution, and is available at\nhttp://www.eclipse.org/legal/epl-v10.html\n\nContributors:\n  NumberFour AG - Initial API and implementation",
+	language="")
+
+package org.eclipse.n4js.n4JS
+
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
+import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TEnumLiteral
+import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.TField
+import org.eclipse.n4js.ts.types.TFormalParameter
+import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TSetter
+import org.eclipse.n4js.ts.types.TStructField
+import org.eclipse.n4js.ts.types.TStructGetter
+import org.eclipse.n4js.ts.types.TStructMember
+import org.eclipse.n4js.ts.types.TStructMethod
+import org.eclipse.n4js.ts.types.TStructSetter
+import org.eclipse.n4js.ts.types.TVariable
+import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.TypingStrategy
+import org.eclipse.n4js.utils.EcoreUtilN4
+import java.util.Collections
+import java.util.Iterator
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.ecore.EObject
+
+type IteratorOfExpression wraps Iterator<Expression>
+type IteratorOfYieldExpression wraps Iterator<YieldExpression>
+type IteratorOfStatement wraps Iterator<Statement>
+type IteratorOfReturnStatement wraps Iterator<ReturnStatement>
+
+/**
+ * Common interface for all AST elements providing a name.
+ * Note that this is different from the types base class IdentifiableElement on purpose, in order
+ * to help distinguishing between AST and types model.
+ *
+ * Could be modeled as abstract super class, but we do not want to run into problems with Xcore and
+ * operation overriding.
+ */
+interface NamedElement {
+	op String getName()
+}
+
+// ****************************************************************************************************
+// Root element is a script,
+// cf. http://wiki.ecmascript.org/doku.php?id=harmony:modules
+// ****************************************************************************************************
+
+
+/*
+ * Root element
+ */
+class Script extends VariableEnvironmentElement, AnnotableElement {
+	contains Annotation[] annotations
+	contains ScriptElement[] scriptElements
+	refers transient TModule module
+	/**
+	 * Flag set after linking-phase is closed. Model is in it's final state and computation
+	 * of element-usage is sealed.
+	 */
+	transient boolean flaggedUsageMarkingFinished
+}
+
+abstract class ScriptElement {
+}
+
+// ****************************************************************************************************
+// Export and Import
+// ****************************************************************************************************
+class ExportDeclaration extends AnnotableScriptElement {
+	contains ExportableElement exportedElement
+	contains Expression defaultExportedExpression
+	contains ExportSpecifier[] namedExports
+	boolean wildcardExport
+	boolean defaultExport
+	refers TModule reexportedFrom
+}
+
+class ExportSpecifier {
+	contains IdentifierRef element
+	String alias
+}
+
+/*
+ * TODO add support for separated export statements, i.e. code like this:
+ * <pre>
+ * class C {}
+ * export {C as X}
+ * </pre>
+ */
+abstract class ExportableElement {
+	op boolean isExported() {
+		return this.eContainer instanceof ExportDeclaration;
+	}
+	op boolean isExportedAsDefault() {
+		return isExported() && (this.eContainer as ExportDeclaration).isDefaultExport;
+	}
+	op String getExportedName() {
+		if(isExported) {
+			val exportDecl = this.eContainer as ExportDeclaration;
+			if(exportDecl.defaultExport) {
+				// note: using name "default" below seems like a dirty hack, but this is actually consistent with how
+				// ES6 default import/export is defined ("The default export is actually just a named export with the
+				// special name default.", A. Rauschmayer in "Exploring ES6", Section 16.4.5.2).
+				// For example, the following two lines are equivalent in ES6:
+				//     import myFoo from "Other"
+				//     import {default as myFoo} from "Other"
+				return "default";
+			}
+			val me = this;
+			return switch(me) {
+				NamedElement: me.name
+				IdentifiableElement: me.name
+			};
+		}
+		return null;
+	}
+	/**
+	 * Returns true if element is a top-level declaration in the script, this is also true if element is actually exported
+	 * (and is a child of an export statements). This should be true for most declarations, however some (as function declaration) may be nested (and
+	 * transpiled to expressions later).
+	 */
+	op boolean isToplevel() {
+		if (eContainer instanceof ExportDeclaration) {
+			return eContainer.eContainer instanceof Script
+		}
+		return eContainer instanceof Script;
+	}
+}
+
+class ImportDeclaration extends AnnotableScriptElement {
+	contains ImportSpecifier[] importSpecifiers
+	boolean importFrom
+	refers TModule module
+}
+
+abstract class ImportSpecifier {
+	/** Transient flag to keep track of actual usage during scoping.
+	 * See {@code org.eclipse.n4js.scoping.imports.OriginAwareScope}
+	 */
+	transient boolean flaggedUsedInCode
+}
+
+class NamedImportSpecifier extends ImportSpecifier {
+	refers TExportableElement importedElement
+	transient String importedElementAsText
+
+	String alias
+
+	op boolean isDefaultImport() {
+		false
+	}
+}
+
+class DefaultImportSpecifier extends NamedImportSpecifier {
+
+	op String getAlias() {
+		return importedElementAsText;
+	}
+
+	op boolean isDefaultImport() {
+		true
+	}
+}
+
+class NamespaceImportSpecifier extends ImportSpecifier, TypeDefiningElement {
+	boolean declaredDynamic
+	String alias
+}
+
+// ****************************************************************************************************
+// Abstract Base Elements
+// ****************************************************************************************************
+/*
+ * Element which may contain a declared type, typically a typed element.
+ * Some rare elements have a declared type contained in some child element, e.g. getters.
+ */
+interface TypeProvidingElement {
+	op TypeRef getDeclaredTypeRef()
+}
+
+/* A typed element, such as Variable, a Member or a NameValuePair, may provide a declared type.
+ * Note firstly that the declared type may be empty, and secondly that the declared type is different from the
+ * inferred type. The latter means that it is of course possible to infer the type of non-typed elements,
+ * such as expressions!
+ * Note that a function definition is not a typed element, as it is a type definition rather than a type reference.
+ * This is indicated by possibly unbound type parameters!
+ */
+// TODO reconsider the approach on how to handle inferred types, accessors on the model etc
+abstract class TypedElement extends TypeProvidingElement {
+	contains TypeRef declaredTypeRef
+	contains TypeRef bogusTypeRef
+}
+
+// TODO jvp: check ECMAScript spec and probably update this environment things with function and classes
+/* Element to which a lexical environment (containing a dictionary of variables, the variable environment) may be
+ * associated with
+ * (cf. ECMAScript Language Specification. International Standard ECMA-262, 5.1 Edition, paragraph 10.2).
+ * This is true for Script, FunctionDefintion, WithStatement, and CatchBlock.
+ * Note that this is not true for classes (or object literals in general),
+ * as members are only accessed via "this" (which is not modeled as a variable, but as an expression
+ * allowing access to properties of the current context).
+ */
+abstract class VariableEnvironmentElement {
+	/**
+	 * Tells if this variable environment element applies only to block scoped elements, i.e. let & const.
+	 * Returns <code>true</code> for {@link Block} and {@link ForStatement}, <code>false</code> otherwise.
+	 */
+	op boolean appliesOnlyToBlockScopedElements() {
+		false // overridden by Block, ForStatement, and SwitchStatment to return true
+	}
+}
+
+/* Possible target to which a this expression may be bound. This is used in the type inferrer.
+ * Note that this is not bound by local scoping, as \'this\' is not a variable (or cross reference)!
+ */
+abstract class ThisTarget {
+}
+
+/*
+ * Depending on the mode the this keyword may be bound to the thisArg, implicitly
+ * set in case of function calls. Thus, a "ThisArgProvider" may be a function,
+ * which could also be a getter or setter (which are not defined as function definitions).
+ * (cf ECMAScript 10.4.3 Entering Function Code)
+ * Note that this is not bound by local scoping, as \'this\' is not a variable (or cross reference)!
+ */
+abstract class ThisArgProvider {
+}
+
+/* Abstract super type of declared variables (VariableDeclaration), formal parameters (FormalParameter),
+ * and variables declared in catch clause (CatchVariable). Variables may be used on the left-hand side
+ * of assignments. Note that variables are also named (NamedElement) and typed (TypedElement).
+ */
+abstract class Variable extends TypedElement, IdentifiableElement, NamedElement {
+	/**
+	 * Returns true if variable is defined as const. This is only true for variables declared in const statement.
+	 */
+	op boolean isConst() {
+		return false;
+	}
+}
+
+// ****************************************************************************************************
+// N4 Annotations
+// ****************************************************************************************************
+/*
+ * Abstract base class or all elements which can be annotated.
+ * The associated annotations are obtained via {@link #getAnnotations()}.
+ * Concrete annotable elements may use an {@link AbstractAnnotationList} or a containment
+ * reference to hold the annotations.
+ *
+ * Annotations are best retrieved via AnnotationDefinition.hasAnnotation(), as this takes transitivity into account as well.
+ */
+abstract class AnnotableElement {
+	/**
+	 * Returns the owned annotations of the AST element; however it is recommended to access
+	 * annotations only via AnnotationDefinition and use type model annotation (or fields) if ever possible.
+	 */
+	op Annotation[] getAnnotations()
+}
+
+abstract class AnnotableScriptElement extends AnnotableElement, ScriptElement {
+	contains AnnotationList annotationList
+	op Annotation[] getAnnotations() {
+		annotationList?.annotations ?: emptyEList
+	}
+}
+
+abstract class AnnotableExpression extends AnnotableElement, Expression {
+	contains ExpressionAnnotationList annotationList
+	op Annotation[] getAnnotations() {
+		annotationList?.annotations ?: emptyEList
+	}
+}
+
+/*
+ * A simple container for a bunch of annotations.
+ */
+abstract class AbstractAnnotationList {
+	/**
+	 * AST Annotations, it is recommended to use
+	 * TAnnotations or corresponding fields defined in the types model.
+	 */
+	contains Annotation[] annotations
+}
+
+/*
+ * An {@link AnnotationList} holds annotations and can be directly contained
+ * in a script, block or may be a placeholder for exported elements.
+ * This allows to handle syntax errors in the input file gracefully while
+ * being able to left factor the grammar to make it parseable.
+ */
+class AnnotationList extends AbstractAnnotationList, ScriptElement, Statement, ExportableElement {
+}
+
+/*
+ * An {@link ExpressionAnnotationList} holds annotations and can be a placeholder
+ * where an {@link Expression} is expected.
+ * This allows to handle syntax errors in the input file gracefully while
+ * being able to left factor the grammar to make it parseable.
+ */
+class ExpressionAnnotationList extends AbstractAnnotationList, Expression {
+}
+
+/**
+ * AST Annotation element. Most information defined in annotations is either
+ * available via fields or corresponding annotations in the type model. It
+ * is recommended to use the information found in the type model (see
+ * TAnnotation) instead of recurring to the AST annotations.
+ */
+class Annotation extends NamedElement {
+	String name
+	contains AnnotationArgument[] args
+	/**
+	 * Returns the annotated element. This is usually an AnnotableElement, but in some cases
+	 * annotations are hold in an annotation list. In the later case, the container of the list
+	 * is returned.
+	 */
+	op EObject getAnnotatedElement() {
+		if (eContainer instanceof AbstractAnnotationList) {
+			return eContainer.eContainer;
+		}
+		return eContainer
+	}
+}
+
+abstract class AnnotationArgument {
+	/** Convenience method, returns the literal or type reference */
+	op EObject value()
+	/**
+	  * Convenience method, returns the value of the argument as string, or null, if no such value is present.
+	  */
+	op String getValueAsString() {
+		val value = value();
+		if (value == null) {
+			return null;
+		}
+		return switch (value) {
+			Literal: value.getValueAsString()
+			TypeRef: value.typeRefAsString
+			default: value.toString()
+		}
+	}
+}
+
+/**
+ * AST Annotation Argument with a literal, it is recommended to use
+ * TAnnotationStringArgument or corresponding type model related field
+ * to access this information.
+ */
+class LiteralAnnotationArgument extends AnnotationArgument {
+	contains Literal literal
+	op Literal value() {
+		return literal;
+	}
+}
+
+/**
+ * AST Annotation Argument with a type reference, it is recommended to use
+ * TAnnotationTypeRefArgument or corresponding type model related field
+ * to access this information.
+ */
+class TypeRefAnnotationArgument extends AnnotationArgument {
+	contains TypeRef typeRef
+	op TypeRef value() {
+		return typeRef;
+	}
+}
+
+// ****************************************************************************************************
+// ECMAScript Elements
+// ****************************************************************************************************
+/*
+ * Base class for functions or getter/setter.
+ */
+abstract class FunctionOrFieldAccessor extends AnnotableElement, VariableEnvironmentElement, ThisArgProvider, TypableElement {
+	contains Block body
+	op String getName()
+	/** Transient local arguments variable. Access through #getLocalArgumentsVariable()  */
+	contains transient LocalArgumentsVariable _lok
+	/** Lazy initialized reference to transient localArgurmentsVariable */
+	op LocalArgumentsVariable getLocalArgumentsVariable() {
+		if (_lok === null) {
+			val newLok = N4JSFactory::eINSTANCE.createLocalArgumentsVariable;
+			newLok.name = "arguments";
+			EcoreUtilN4.doWithDeliver(false,
+				[|
+					_lok = newLok;
+				], this);
+		}
+		return _lok;
+	}
+
+	op boolean isReturnValueOptional() {
+		return false;
+	}
+
+	/**
+	 * Default implementation, always returns false (since accessors cannot be async), overridden in FunctionDefinition
+	 */
+	op boolean isAsync() {
+		return false;
+	}
+
+	op IdentifiableElement getDefinedFunctionOrAccessor() {
+		val _this = this;
+		return switch(_this) {
+			FunctionDefinition: _this.definedType
+			FieldAccessor: _this.definedAccessor
+		};
+	}
+}
+
+
+
+/* A function definition is either a FunctionDeclaration, a FunctionExpression or a MethodDeclaration.
+ * Note that, since an anonymous function expression has no name, the function definition is not a named element.
+ */
+abstract class FunctionDefinition extends FunctionOrFieldAccessor, TypeDefiningElement {
+	contains FormalParameter[] fpars
+	/*
+	 * Tells if the return value is optional.
+	 */
+	op boolean isReturnValueOptional() {
+		return (definedFunction!==null && definedFunction.returnValueOptional) // see (*) below
+			|| (returnTypeRef!==null && returnTypeRef.followedByQuestionMark);
+		// regarding (*) above: in case of arrow functions, the optionality of the return value can be "inferred" from a
+		// type expectation and in this case the 'returnValueOptional' flag will be true only in the defined function in
+		// the TModule; hence, it is important to check for an existing defined function here.
+	}
+	/*
+	 * Developer-provided hint for the return type of this FunctionDefinition.
+	 * In case it's not provided, this reference remains null.
+	 * In contrast, reference definedType contains a TFunction whose returnTypeRef is always non-null irrespective of whether the hint was provided or not.
+	 */
+	contains TypeRef returnTypeRef
+
+	/*
+	 * Whether the function is a generator
+	 */
+	boolean generator
+
+	/**
+	 * Whether the function has been defined with the async keyword. In order to query if a function definition is
+	 * async, use isAsync as this is maybe derived from other fields.
+	 */
+	boolean declaredAsync
+
+	/**
+	 * Default implementation just returns declaredAsync value, also overrides default implementation in FunctionOrFieldAcccessor
+	 */
+	op boolean isAsync() {
+		return declaredAsync;
+	}
+
+	/* Convenience method returning the 'definedType' if it is a TFunction, otherwise <code>null</code>. */
+	op TFunction getDefinedFunction() {
+		val defType = definedType;
+		return if(defType instanceof TFunction) { defType };
+	}
+}
+
+/*
+ * Base class for getters and setter, of either object literals (PropertyG/SetterDeclaration) or classes (N4G/SetterDeclaration).
+ */
+abstract class FieldAccessor extends FunctionOrFieldAccessor, TypeProvidingElement, PropertyNameOwner { // note: super-class is TypableElement
+
+	boolean declaredOptional
+
+	/*
+     * The declared type of the field accessor, which is either the return type of the getter or the type of the formal parameter in case of a setter
+     */
+	op TypeRef getDeclaredTypeRef() {
+		return null;
+	}
+	/*
+	 * Returns the defined FieldAccessor in the TModule, either a TGetter or a TSetter.
+	 */
+	op org.eclipse.n4js.ts.types.FieldAccessor getDefinedAccessor()
+
+	op boolean isOptional() {
+		return declaredOptional;
+	}
+}
+
+// TODO jvp: probably need operation getTypeRef(), should be similarly handled as variables
+/**
+ * Function declarations should only be contained in the script or functions, that is, they should not be nested in blocks.
+ * This is ensured by the ASTStructureValidator.
+ */
+class FunctionDeclaration extends AnnotableScriptElement, ModifiableElement, Statement, FunctionDefinition , GenericDeclaration, ExportableElement, NamedElement {
+	/*
+	 * Function declarations are not treated as identifiable elements, as the binding should
+	 * refer to the inferred TFunction rather than this declaration. The name is mandatory.
+	 */
+	String name
+	/**
+	 * Returns true if type is declared as external.
+	 */
+	op boolean isExternal() {
+		declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+}
+
+class FunctionExpression extends FunctionDefinition, AnnotableExpression, GenericDeclaration, NamedElement {
+	/*
+	 * Function expression are not treated as identifiable elements, as the binding should
+	 * refer to the inferred TFunction rather than this declaration. The name is optional.
+	 */
+	String name
+	/**
+	 * Whether this function expression was defined as an arrow function or not.
+	 * Overridden in subclass ArrowFunction.
+	 */
+	op boolean isArrowFunction() { false }
+
+//	/*
+//	 * Convenience method,  returns true if the function is a property's value of
+//	 * an ObjectLiteral or if it is a method.
+//	 */
+//	op boolean isPropertyOrMethod() {
+//		return eContainer!=null && eContainer.eContainer instanceof ObjectLiteral;
+//	}
+
+}
+
+class ArrowFunction extends FunctionExpression {
+
+	/**
+	 * Whether this arrow function has braces around its (single or multiple statements) body.
+	 */
+	boolean hasBracesAroundBody
+
+	op boolean isArrowFunction() { true }
+
+	/**
+	 * This method reports whether the body of the lambda consists of a single expression not enclosed in braces.
+	 *
+	 * The presence of enclosing braces implies block semantics for the lambda's body,
+	 * ie a block encloses statements (even if only one, an expression statement).
+	 * As usual, the block can be void-typed or some-value-typed;
+	 * the latter case requires the presence of explicit return-some-value statements.
+	 *
+	 * An arrow function lacking braces and having a body consisting of just:
+	 *   - return-some-value --- is malformed (syntax error)
+	 *   - return;           --- is malformed (syntax error)
+	 *   - expr              --- is ok, where expr instanceof ExpressionStatement;
+	 *                           otherwise malformed and caught by the grammar.
+	 *
+	 * This method returns true only for the last case above.
+	 * Please notice that isSingleExprImplicitReturn() === true doesn't allow drawing conclusion on the type of the lambda body,
+	 * i.e. it could be either void-typed (eg, expr denotes the invocation of a void method)
+	 * or some-value-typed. An implicit return is warranted only in the latter sub-case.
+	 */
+	op boolean isSingleExprImplicitReturn() {
+		arrowFunction &&
+		!hasBracesAroundBody &&
+		(body != null) &&
+		!body.statements.isEmpty &&
+		(body.statements.get(0) instanceof ExpressionStatement)
+	}
+
+	/**
+	 * The lambda's implicit return expression (precondition: isSingleExprImplicitReturn).
+	 */
+	op Expression implicitReturnExpr() {
+		if (isSingleExprImplicitReturn) {
+			// the expression below never throws because the condition above guards against that
+			(body.statements.get(0) as ExpressionStatement).expression
+		} else {
+			null
+		}
+	}
+
+}
+
+/**  Implicit variable in function and method bodies referencing all passed in argument values. */
+class LocalArgumentsVariable extends Variable {
+	op String getName() {
+		return "arguments"
+	}
+}
+
+class FormalParameter extends AnnotableElement, Variable {
+	contains Annotation[] annotations
+	boolean variadic
+	refers transient TFormalParameter definedTypeElement
+	/* A formal parameter with a default value in a function 'foo' can look like this:
+	 * foo(defParam = undefined){}, with 'undefined' as the initializing expression, which can be omitted.
+	 * When the initializer is omitted, it evaluates to 'undefined'. To know whether a parameter is a
+	 * default parameter, we need to know about the existence of the initializer assignment sign '='.
+	 * Hence, the following boolean property exists. */
+	boolean hasInitializerAssignment
+	/* The initializer can be null despite being a default parameter. */
+	contains Expression initializer
+	contains BindingPattern bindingPattern
+}
+
+class Block extends Statement, VariableEnvironmentElement {
+	contains Statement[] statements
+
+	/** See {@link VariableEnvironmentElement#appliesOnlyToBlockScopedElements()}. */
+	op boolean appliesOnlyToBlockScopedElements() {
+		true
+	}
+
+	/*
+	 * Returns all return expressions contained in this block, including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfExpression getAllExpressions() {
+		EcoreUtilN4.getAllContentsFiltered(this, [!(it instanceof FunctionDefinition)]).filter(Expression)
+	}
+	/*
+	 * Returns all return yield expressions contained in this block, including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfYieldExpression getAllYieldExpressions() {
+		getAllExpressions().filter(YieldExpression)
+	}
+	/*
+	 * Returns all return yield expressions contained in this block that dont't return any value, including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfYieldExpression getAllVoidYieldExpressions() {
+		getAllYieldExpressions().filter([it.expression == null])
+	}
+	/*
+	 * Returns all return yield expressions contained in this block that return some value, including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfYieldExpression getAllNonVoidYieldExpressions() {
+		getAllYieldExpressions().filter([it.expression != null])
+	}
+	/*
+	 * True iff one or more yield expressions exist in this block that return some value.
+	 */
+	op boolean hasNonVoidYield() {
+		!(allNonVoidYieldExpressions.isEmpty)
+	}
+
+	/*
+	 * Returns all statements that belong to this block. This includes statements of nested blocks
+	 * but excludes statements in nested classes, nested functions, etc.
+	 */
+	op IteratorOfStatement getAllStatements() {
+		EcoreUtilN4.getAllContentsFiltered(this, [!(it instanceof Expression || it instanceof FunctionDefinition)]).
+			filter(Statement)
+	}
+	/*
+	 * Returns all return statements contained in this block (whether they return a value or not), including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfReturnStatement getAllReturnStatements() {
+		getAllStatements.filter(ReturnStatement)
+	}
+	/*
+	 * Returns all return statements contained in this block that return some value, including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfReturnStatement getAllNonVoidReturnStatements() {
+		getAllReturnStatements.filter([it.expression != null])
+	}
+	/*
+	 * Returns all return statements contained in this block that don't return any value, including those in nested blocks
+	 * but without delving into nested classes, or into nested expressions including functions.
+	 */
+	op IteratorOfReturnStatement getAllVoidReturnStatements() {
+		getAllReturnStatements.filter([it.expression == null])
+	}
+	/*
+	 * True iff one or more return statements exist in this block that return some value.
+	 */
+	op boolean hasNonVoidReturn() {
+		!(allNonVoidReturnStatements.isEmpty)
+	}
+}
+
+class Statement extends ScriptElement {
+}
+
+enum VariableStatementKeyword {
+	^var
+	, const
+	, let
+}
+
+/**
+ * Base class for elements containing variable declarations.
+ * <p>
+ * IMPORTANT: the variable declarations need not be <em>directly</em> contained! In order to support destructuring, a
+ * {@link VariableBinding} and other destructuring-related nodes might appear in between. To get from a
+ * {@link VariableDeclaration} to its <code>VariableDeclarationContainer</code> use method
+ * {@link org.eclipse.n4js.n4JS.N4JSASTUtils#getVariableDeclarationContainer(VariableDeclaration)}.
+ */
+abstract class VariableDeclarationContainer {
+	contains VariableDeclarationOrBinding[] varDeclsOrBindings
+	VariableStatementKeyword varStmtKeyword
+
+	op VariableDeclaration[] getVarDecl() {
+		varDeclsOrBindings.map[it.getVariableDeclarations()].flatten.toEList
+	}
+	op boolean isBlockScoped() {
+		switch(varStmtKeyword) {
+			case LET: true
+			case CONST: true
+			case VAR: false
+			default: throw new UnsupportedOperationException("unsupported enum literal: " + varStmtKeyword)
+		}
+	}
+}
+
+class VariableStatement extends Statement, VariableDeclarationContainer {
+}
+
+class ExportedVariableStatement extends VariableStatement, ExportableElement, AnnotableScriptElement, ModifiableElement {
+	/**
+	 * Returns true if type is declared as external.
+	 */
+	op boolean isExternal() {
+		declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+}
+
+abstract class VariableDeclarationOrBinding {
+
+	op VariableDeclaration[] getVariableDeclarations() {
+		switch(this) {
+		VariableDeclaration: #[this as VariableDeclaration].toEList
+		VariableBinding: eAllContents.filter(VariableDeclaration).toEList
+		default: #[].toEList
+		}
+	}
+}
+
+class VariableBinding extends VariableDeclarationOrBinding {
+	contains BindingPattern pattern
+	contains Expression expression
+}
+
+class ExportedVariableBinding extends VariableBinding {
+	/*
+	 * Link to variable information stored in the Xtext index.
+	 */
+	refers transient TVariable definedVariable
+}
+
+class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable {
+	contains Annotation[] annotations
+	contains Expression expression
+	/**
+	 * Returns true if variable is declared as const.
+	 */
+	op boolean isConst() {
+		if (eContainer instanceof VariableStatement) {
+			return (eContainer as VariableStatement).varStmtKeyword === VariableStatementKeyword.CONST
+		}
+		if (eContainer instanceof ForStatement) {
+			return (eContainer as ForStatement).varStmtKeyword === VariableStatementKeyword.CONST
+		}
+		return false;
+	}
+}
+
+class ExportedVariableDeclaration extends VariableDeclaration {
+	/*
+	 * Link to variable information stored in the Xtext index.
+	 */
+	refers transient TVariable definedVariable
+}
+
+class EmptyStatement extends Statement {
+}
+
+class ExpressionStatement extends Statement {
+	contains Expression expression
+}
+
+class IfStatement extends Statement {
+	contains Expression expression
+	contains Statement ifStmt
+	contains Statement elseStmt
+}
+
+class IterationStatement extends Statement {
+	contains Statement statement
+	contains Expression expression
+}
+
+class DoStatement extends IterationStatement {
+}
+
+class WhileStatement extends IterationStatement {
+}
+
+class ForStatement extends VariableDeclarationContainer, IterationStatement, VariableEnvironmentElement {
+	contains Expression initExpr
+	contains Expression updateExpr
+	boolean forIn
+	boolean forOf
+	op boolean isForPlain() {
+		return !forIn && !forOf;
+	}
+	/** See {@link VariableEnvironmentElement#appliesOnlyToBlockScopedElements()}. */
+	op boolean appliesOnlyToBlockScopedElements() {
+		true
+	}
+}
+
+class ContinueStatement extends Statement {
+	refers LabelledStatement label
+}
+
+class BreakStatement extends Statement {
+	refers LabelledStatement label
+}
+
+class ReturnStatement extends Statement {
+	contains Expression expression
+}
+
+class WithStatement extends Statement, VariableEnvironmentElement {
+	contains Expression expression
+	contains Statement statement
+}
+
+// bug in XCore maven plugin:
+// [ERROR] 0    [main] ERROR org.eclipse.xtext.generator.LanguageConfig  - Error loading 'classpath:/org.eclipse.n4js/N4JS.xcore': [XtextLinkingDiagnostic: null:254 Couldn't resolve reference to JvmType 'CaseClause'.
+// type CaseClauseIterable wraps Iterable<CaseClause>
+class SwitchStatement extends Statement, VariableEnvironmentElement {
+	/*
+	 * The discriminant of the switch statement.
+	 */
+	contains Expression expression
+	/*
+	 * All cases of the switch statement, i.e. all CaseClauses and not more than one DefaultClause.
+	 */
+	contains AbstractCaseClause[] cases
+
+	/** See {@link VariableEnvironmentElement#appliesOnlyToBlockScopedElements()}. */
+	op boolean appliesOnlyToBlockScopedElements() {
+		true
+	}
+	/*
+	 * Convenience method returns default clause if switch statement defines such as clause or null.
+	 */
+	op DefaultClause getDefaultClause() {
+		cases.findFirst[it instanceof DefaultClause] as DefaultClause
+	}
+	/*
+	 * Convenience method filters all CaseClauses from clauses.
+	 */
+	op CaseClause[] getCaseClauses() {
+
+		// TODO change to Iterable
+		cases.filter(CaseClause).toEList
+	}
+}
+
+abstract class AbstractCaseClause {
+	/*
+	 * The consequent of the clause.
+	 */
+	contains Statement[] statements
+}
+
+class CaseClause extends AbstractCaseClause {
+	/*
+	 * The test of the case clause.
+	 */
+	contains Expression expression
+}
+
+class DefaultClause extends AbstractCaseClause {
+}
+
+/*
+ * Statement with a label, which can be referred to by a break or continue statement.
+ * <p><small>"labelled" or "labeled" -- this is a different question, only comparable to
+ * "modelling" vs. "modeling". The ECMAScript spec uses the british version: labelled.</small>
+ */
+class LabelledStatement extends Statement, NamedElement {
+	String name
+	contains Statement statement
+}
+
+class ThrowStatement extends Statement {
+	/*
+	 * The argument to be thrown.
+	 */
+	contains Expression expression
+}
+
+class TryStatement extends Statement {
+	contains Block block
+	contains CatchBlock ^catch
+	contains FinallyBlock ^finally
+}
+
+abstract class AbstractCatchBlock {
+	contains Block block
+}
+
+class CatchBlock extends AbstractCatchBlock, VariableEnvironmentElement {
+	contains CatchVariable catchVariable
+}
+
+class CatchVariable extends Variable {
+	contains BindingPattern bindingPattern
+}
+
+class FinallyBlock extends AbstractCatchBlock {
+}
+
+class DebuggerStatement extends Statement {
+}
+
+// TODO (sz): What's the purpose of a type PrimaryExpression?
+class PrimaryExpression extends Expression {
+}
+
+class ParenExpression extends PrimaryExpression {
+	contains Expression expression
+	/**
+	 * Return IsValidSimpleAssignmentTarget of expression.
+	 */
+	op boolean isValidSimpleAssignmentTarget() {
+		if (expression !== null)
+			return expression.isValidSimpleAssignmentTarget
+		// avoid follow up problem
+		return true
+	}
+}
+
+class IdentifierRef extends PrimaryExpression, StrictModeRelevant, org.eclipse.n4js.ts.typeRefs.Versionable {
+	refers IdentifiableElement ^id
+	transient String idAsText
+	/**
+	 * IdentifierReference : Identifier
+	 * 1. If this IdentifierReference is contained in strict mode code and StringValue of Identifier is "eval" or "arguments", return false.
+	 * 2. Return true.
+	 * IdentifierReference : yield
+	 * 1. Return true.
+	 */
+	op boolean isValidSimpleAssignmentTarget() {
+		if (strictMode) {
+			return idAsText !== null && 'arguments' != idAsText && 'eval' != idAsText
+		}
+		return true
+	}
+}
+
+abstract class StrictModeRelevant {
+	derived transient boolean strictMode
+}
+
+class SuperLiteral extends PrimaryExpression {
+	/**
+  	 * Convenience method, returns true if super literal is directly contained in a call expression.
+  	 * This is a call to the super constructor of a class, which is only allowed in a constructor of a subclass.
+  	 */
+	op boolean isSuperConstructorAccess() {
+		eContainer instanceof ParameterizedCallExpression
+	}
+	/**
+  	 * Convenience method, returns true if super literal is directly contained in a property or index access expression.
+	 * This is a call to a super's member, e.g., via "super.foo()".
+  	 */
+	op boolean isSuperMemberAccess() {
+		eContainer instanceof ParameterizedPropertyAccessExpression || eContainer instanceof IndexedAccessExpression
+	}
+}
+
+class ThisLiteral extends PrimaryExpression, StrictModeRelevant {
+}
+
+class ArrayLiteral extends PrimaryExpression {
+	contains ArrayElement[] elements
+	boolean trailingComma
+}
+
+class ArrayElement extends TypableElement {
+	boolean spread
+	contains Expression expression
+}
+
+class ArrayPadding extends ArrayElement {
+}
+
+class ObjectLiteral extends PrimaryExpression, ThisTarget, TypeDefiningElement {
+	contains PropertyAssignment[] propertyAssignments
+}
+
+/*
+ * A PropertyAssignment is either a simple {@link PropertyNameValuePair},
+ * or a property accessor, that is a {@link PropertyGetterDeclaration} or
+ * {@link PropertySetterDeclaration}.
+ */
+abstract class PropertyAssignment extends AnnotableElement, VariableEnvironmentElement, PropertyNameOwner, TypableElement {
+	op TStructMember getDefinedMember()
+	/**
+	 * Properties may not be called 'prototype' or 'constructor' (except for computed names).
+	 */
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		if ('constructor' == name && declaredName?.kind !== PropertyNameKind.COMPUTED) {
+			return false
+		}
+		return true
+	}
+}
+
+/*
+ * Base for all entities that can have a literal or computed property name (see grammar rule
+ * LiteralOrComputedPropertyName).
+ */
+abstract class PropertyNameOwner extends NamedElement {
+	contains LiteralOrComputedPropertyName declaredName
+	/* Convenience method; same as {@link LiteralOrComputedPropertyName#getName()}. */
+	op String getName() {
+		return declaredName?.name;
+	}
+	/* Convenience method; same as {@link LiteralOrComputedPropertyName#hasComputedPropertyName()}. */
+	op boolean hasComputedPropertyName() {
+		val declName = declaredName;
+		return declName!==null && declName.hasComputedPropertyName;
+	}
+	/**
+	 * Used to detect early errors according the the ES6 spec.
+	 */
+	op boolean isValidName()
+}
+
+class LiteralOrComputedPropertyName {
+	/* This is set by the IAstFactory while parsing a property assignment. */
+	transient PropertyNameKind kind
+	/* The literal name given in the source code or <code>null</code> if this is a computed property name. */
+	String literalName
+	/*
+	 * Iff this is a computed property name and the expression is one of the special cases that can be evaluated at
+	 * compile time, then during post-processing this will be set to the value of the expression, i.e. the computed name.
+	 * @see ComputedNameProcessor
+	 */
+	transient String computedName
+	/* The expression provided in the source code for computing the property name, or <code>null</code>. */
+	contains Expression expression
+
+	/* Tells if this element has a name computed from an expression instead of a literal name given in the source code. */
+	op boolean hasComputedPropertyName() {
+		return kind===PropertyNameKind.COMPUTED && expression!==null;
+	}
+
+	/*
+	 * Returns either the literal name given in the source code or the computed name.
+	 * In case of computed names, this method will return <code>null</code> if the expression is invalid (e.g.
+	 * not a constant expression) or if it has not yet been evaluated (this happens during post-processing).
+	 */
+	op String getName() {
+		return literalName ?: computedName;
+	}
+}
+
+abstract class AnnotablePropertyAssignment extends PropertyAssignment {
+	contains PropertyAssignmentAnnotationList annotationList
+	op Annotation[] getAnnotations() {
+		annotationList?.annotations ?: emptyEList
+	}
+}
+
+/*
+ * A {@link PropertyAssignmentAnnotationList} holds annotations and can be a placeholder
+ * where a {@link PropertyAssignment} is expected.
+ * This allows to handle syntax errors in the input file gracefully while
+ * being able to left factor the grammar to make it parseable.
+ */
+class PropertyAssignmentAnnotationList extends AbstractAnnotationList, PropertyAssignment {
+	op TStructMember getDefinedMember() {
+		val c = eContainer
+		if (c instanceof PropertyAssignment) {
+			return c.getDefinedMember();
+		}
+		return null
+	}
+}
+
+enum PropertyNameKind {
+	/*
+	 * The name is assigned from a object literal property with
+	 * an identifier as the concrete syntax for the name.
+	 */
+	identifier
+	,
+	/*
+	 * The name is assigned from a object literal property with
+	 * a string literal as the concrete syntax for the name. This variant is discouraged.
+	 */
+	string
+	,
+	/*
+	 * The name is assigned from a object literal property with
+	 * a number as the concrete syntax for the name. This variant is discouraged.
+	 */
+	number
+	,
+	/*
+	 * The name is assigned from a object literal property with
+	 * a computed property name expression as the concrete syntax for the name. This variant is discouraged.
+	 */
+	computed
+}
+
+class PropertyNameValuePair extends AnnotablePropertyAssignment, TypedElement, TypableElement {
+	refers transient TStructField definedField
+	boolean declaredOptional
+	/*
+	 * The (initial) value of the property.
+	 */
+	contains Expression expression
+	op TStructField getDefinedMember() {
+		definedField
+	}
+	/**
+	 * Methods in object literals may not be called 'prototype'.
+	 */
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		return true
+	}
+}
+
+class PropertyNameValuePairSingleName extends PropertyNameValuePair {
+	contains IdentifierRef identifierRef
+	/*
+	 * Note: if this AST node was created by the parser, then super.getName() will always be null and we get
+	 * the name from the parse tree; if this AST node is created programmatically (e.g. refactoring), then
+	 * the name has to be set explicitly!
+	 */
+	op String getName() {
+		super.getName() ?: identifierRef?.idAsText
+	}
+}
+
+class PropertyMethodDeclaration extends AnnotablePropertyAssignment, MethodDeclaration, TypeProvidingElement  {
+	// IMPORTANT: don't introduce a property 'definedMethod' here, because PropertyMethodDeclaration inherits from
+	// TypeDefiningElement (via FunctionDefinition) and that class already has a property 'definedType' for this
+	// purpose; if we were using a separate property, it would break code that handles instances of
+	// PropertyMethodDeclaration as instances of TypeDefiningElement or FunctionDefinition!
+
+	op TStructMethod getDefinedMember() {
+		definedType as TStructMethod
+	}
+}
+
+/*
+ * Base class for getters, of either object literals (PropertyGetterDeclaration) or classes (N4GetterDeclaration).
+ */
+abstract class GetterDeclaration extends FieldAccessor, TypedElement {
+	refers transient TGetter definedGetter
+
+	op TGetter getDefinedAccessor() {
+		return definedGetter;
+	}
+}
+
+/*
+ * Base class for setters, of either object literals (PropertySetterDeclaration) or classes (N4SetterDeclaration).
+ */
+abstract class SetterDeclaration extends FieldAccessor {
+	refers transient TSetter definedSetter
+	contains FormalParameter fpar
+	op TSetter getDefinedAccessor() {
+		return definedSetter;
+	}
+	/*
+	 * Returns the declared type of the formal parameter
+	 */
+	op TypeRef getDeclaredTypeRef() {
+		return fpar?.declaredTypeRef;
+	}
+}
+
+class PropertyGetterDeclaration extends GetterDeclaration, AnnotablePropertyAssignment {
+	op TStructGetter getDefinedGetter() {
+		super.getDefinedGetter() as TStructGetter
+	}
+	op TStructGetter getDefinedMember() {
+		definedGetter
+	}
+	/**
+	 * Getters in object literals may not be named 'prototype'.
+	 */
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		return true
+	}
+}
+
+class PropertySetterDeclaration extends SetterDeclaration, AnnotablePropertyAssignment {
+	op TStructSetter getDefinedSetter() {
+		super.getDefinedSetter() as TStructSetter
+	}
+	op TStructSetter getDefinedMember() {
+		definedSetter
+	}
+	/**
+	 * Setters in object literals may not be named 'prototype'.
+	 */
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		return true
+	}
+}
+
+enum PostfixOperator {
+	inc as "++"
+	dec as "--" = 1
+}
+
+enum UnaryOperator {
+	delete
+	^void = 1
+	^typeof = 2
+	inc as "++" = 3
+	dec as "--" = 4
+	pos as "+" = 5
+	neg as "-" = 6
+	inv as "~" = 7
+	not as "!" = 8
+}
+
+enum MultiplicativeOperator {
+	times as "*"
+	div as "/" = 1
+	mod as "%" = 2
+}
+
+enum AdditiveOperator {
+	add as "+"
+	sub as "-" = 1
+}
+
+enum RelationalOperator {
+	lt as "<"
+	gt as ">" = 1
+	lte as "<=" = 2
+	gte as ">=" = 3
+	^instanceof = 4
+	in = 5
+}
+
+enum EqualityOperator {
+	same as "==="
+	nsame as "!==" = 1
+	eq as "==" = 2
+	neq as "!=" = 3
+}
+
+enum BinaryBitwiseOperator {
+	and as "&"
+	or as "|" = 1
+	xor as "^" = 2
+}
+
+enum BinaryLogicalOperator {
+	and as "&&"
+	or as "||" = 1
+}
+
+/**
+ * Also see utility methods in N4JSASTUtils
+ */
+abstract class Expression extends TypableElement {
+	/**
+	 * Implements the method #isValidSimpleAssignmentTarget from ES6 spec.
+	 * Returns false by default.
+	 *
+	 * See chapters 12.1.3, 12.2.1.5, 12.2.10.3, 12.3.1.5, 12.4.3, 12.5.3, 12.6.2,
+	 * 12.7.2, 12.8.2, 12.9.2, 12.10.2, 12.11.2, 12.12.2, 12.13.2, 12.14.3, 12.15.2.
+	 */
+	op boolean isValidSimpleAssignmentTarget() {
+		return false
+	}
+}
+
+// see http://www.ecma-international.org/ecma-262/6.0/index.html#sec-left-hand-side-expressions
+class NewTarget extends Expression {
+}
+
+class NewExpression extends Expression, ParameterizedAccess {
+	contains Expression callee
+	contains Argument[] arguments
+	boolean withArgs
+}
+
+abstract class ParameterizedAccess {
+	contains TypeRef[] typeArgs
+	/**
+	 * Returns <code>true<code> if the expression has type arguments.
+	 */
+	op boolean isParameterized() {
+		return !typeArgs.isEmpty
+	}
+}
+
+class ParameterizedCallExpression extends Expression, ParameterizedAccess {
+	/*
+	 * The callee or target of the call, e.g. the name of the called function. This is not the receiver (which may be null).
+	 */
+	contains Expression target
+	contains Argument[] arguments
+	/*
+	 * Convenience method returning the receiver expression or null, if call has no receiver.
+	 */
+	op Expression getReceiver() {
+		if (target instanceof ParameterizedPropertyAccessExpression) {
+			(target as ParameterizedPropertyAccessExpression).target
+		} else {
+			null;
+		}
+	}
+}
+
+/* Argument in a new or call expression. */
+class Argument extends TypableElement {
+	boolean spread
+	contains Expression expression
+}
+
+class IndexedAccessExpression extends Expression {
+	contains Expression target
+	contains Expression index
+	/**
+	 * Returns true.
+	 */
+	op boolean isValidSimpleAssignmentTarget() {
+		return true
+	}
+}
+
+/**
+ * An invocation of the form
+ * {@code method `template`}
+ */
+class TaggedTemplateString extends Expression {
+	contains Expression target
+	contains TemplateLiteral template
+}
+
+class ParameterizedPropertyAccessExpression extends Expression, ParameterizedAccess {
+	/**
+	 * Target (aka receiver)
+	 */
+	contains Expression target
+	refers IdentifiableElement property
+	transient String propertyAsText
+	/**
+	 * Returns true.
+	 */
+	op boolean isValidSimpleAssignmentTarget() {
+		return true
+	}
+}
+
+class AwaitExpression extends Expression {
+	contains Expression expression
+}
+
+class PromisifyExpression extends Expression {
+	contains Expression expression
+}
+
+class YieldExpression extends Expression {
+	contains Expression expression
+	boolean many
+}
+
+class Literal extends PrimaryExpression {
+	/**
+	 * Convenience method, returns the actual value of the literal as string. To be overridden by subclasses.
+	 */
+	op String getValueAsString() {
+		return null
+	}
+}
+
+// TODO (ß): There is NullLiteral->Literal->PrimaryExpression->Expression - looks overly complex to me
+// What's the purpose of Literal and PrimaryExpression?
+class NullLiteral extends Literal {
+	op String getValueAsString() {
+		return "null"
+	}
+}
+
+class BooleanLiteral extends Literal {
+	boolean ^true
+	op String getValueAsString() {
+		return Boolean.toString(^true);
+	}
+}
+
+class StringLiteral extends Literal {
+	String value
+	/**
+	 * The value as it was read from the model. Not updated on modifications via #setValue(String)
+	 */
+	transient String rawValue
+	op String getValueAsString() {
+		return value
+	}
+}
+
+/**
+ * A template expression as defined for ECMA6
+ * http://people.mozilla.org/~jorendorff/es6-draft.html#sec-template-literals
+ */
+class TemplateLiteral extends PrimaryExpression {
+	contains Expression[] segments
+	op String getValueAsString() {
+		val result = new StringBuilder('`')
+		val appender = [ Expression expr |
+			switch (expr) {
+				Literal: result.append(valueAsString)
+				default: result.append('<<').append(eClass.name).append('>>')
+			}
+		]
+		segments.fold(true) [ isRaw, expression |
+			if (!isRaw) {
+				result.append('${')
+				appender.apply(expression)
+				result.append('}')
+			} else {
+				appender.apply(expression)
+			}
+			return !isRaw
+		]
+		result.append('`')
+		return result.toString
+	}
+}
+
+/**
+ * A template segment is a string literal that occurs in
+ * template literals between interpolated expressions.
+ * It has a dedicated type to allow to distinguish between
+ * string literals that are interpolated expressions and the
+ * raw value in a template literal.
+ */
+class TemplateSegment extends Literal {
+	/**
+	 * The raw value of the template segment
+	 */
+	String rawValue
+	/**
+	 * Returns the rawValue of the template segment as defined in
+	 * the ECMA spec 11.8.6.1 Static Semantics: TV’s and TRV’s
+	 */
+	op String getValueAsString() {
+		return rawValue
+	}
+}
+
+class NumericLiteral extends Literal {
+	BigDecimal value
+	op String getValueAsString() {
+		if(value === null) return null;
+		return value.toString();
+	}
+}
+
+class DoubleLiteral extends NumericLiteral {
+	op double toDouble() {
+		value.doubleValue
+	}
+	op String getValueAsString() {
+		if(value === null) return null;
+		return value.toString();
+	}
+}
+
+class AbstractIntLiteral extends NumericLiteral {
+	op int toInt() {
+		value.intValue
+	}
+	op long toLong() {
+		value.longValue
+	}
+	op BigInteger toBigInteger() {
+		value.toBigInteger
+	}
+}
+
+/**
+ * Concrete implementation of an {@link AbstractIntLiteral}
+ * which allows to keep track of the syntactic representation of the value.
+ */
+class IntLiteral extends AbstractIntLiteral {
+}
+
+/**
+ * Concrete implementation of an {@link AbstractIntLiteral}
+ * which allows to keep track of the syntactic representation of the value.
+ */
+class BinaryIntLiteral extends AbstractIntLiteral {
+}
+
+/**
+ * Concrete implementation of an {@link AbstractIntLiteral}
+ * which allows to keep track of the syntactic representation of the value.
+ */
+class OctalIntLiteral extends AbstractIntLiteral {
+}
+
+/**
+ * Concrete implementation of an {@link AbstractIntLiteral}
+ * which allows to keep track of the syntactic representation of the value.
+ *
+ * @see http://www.ecma-international.org/ecma-262/6.0/index.html#sec-additional-syntax-numeric-literals
+ */
+class LegacyOctalIntLiteral extends AbstractIntLiteral {
+}
+
+/**
+ * Concrete implementation of an {@link AbstractIntLiteral}
+ * which allows to keep track of the syntactic representation of the value.
+ */
+class HexIntLiteral extends AbstractIntLiteral {
+}
+
+/**
+ * Concrete implementation of an {@link AbstractIntLiteral}
+ * which allows to keep track of the syntactic representation of the value.
+ */
+class ScientificIntLiteral extends AbstractIntLiteral {
+}
+
+class RegularExpressionLiteral extends Literal {
+	String value
+	op String getValueAsString() {
+		return value
+	}
+}
+
+class PostfixExpression extends Expression {
+	contains Expression expression
+	PostfixOperator ^op
+}
+
+class UnaryExpression extends Expression {
+	UnaryOperator ^op
+	contains Expression expression
+}
+
+/**
+ * Type cast expression "as".
+ * See 5.5.1 and 6.2.3 for details.
+ */
+class CastExpression extends Expression {
+	contains Expression expression
+	contains TypeRef targetTypeRef
+}
+
+class MultiplicativeExpression extends Expression {
+	contains Expression lhs
+	MultiplicativeOperator ^op
+	contains Expression rhs
+}
+
+class AdditiveExpression extends Expression {
+	contains Expression lhs
+	AdditiveOperator ^op
+	contains Expression rhs
+}
+
+enum ShiftOperator {
+	shl as "<<"
+	shr as ">>" = 1
+	ushr as ">>>" = 2
+}
+
+class ShiftExpression extends Expression {
+	contains Expression lhs
+	ShiftOperator ^op
+	contains Expression rhs
+}
+
+class RelationalExpression extends Expression {
+	contains Expression lhs
+	RelationalOperator ^op
+	contains Expression rhs
+}
+
+class EqualityExpression extends Expression {
+	contains Expression lhs
+	EqualityOperator ^op
+	contains Expression rhs
+}
+
+class BinaryBitwiseExpression extends Expression {
+	contains Expression lhs
+	BinaryBitwiseOperator ^op
+	contains Expression rhs
+}
+
+class BinaryLogicalExpression extends Expression {
+	contains Expression lhs
+	BinaryLogicalOperator ^op
+	contains Expression rhs
+}
+
+class ConditionalExpression extends Expression {
+	contains Expression expression
+	contains Expression trueExpression
+	contains Expression falseExpression
+}
+
+enum AssignmentOperator {
+	assign as '='
+	mulAssign as '*=' = 1
+	divAssign as '/=' = 2
+	modAssign as '%=' = 3
+	addAssign as '+=' = 4
+	subAssign as '-=' = 5
+	shlAssign as '<<=' = 6
+	shrAssign as '>>=' = 7
+	ushrAssign as '>>>=' = 8
+	andAssign as '&='  = 9
+	xorAssign as '^=' = 10
+	orAssign as '|=' = 11
+}
+
+class AssignmentExpression extends Expression {
+	contains Expression lhs
+	AssignmentOperator ^op
+	contains Expression rhs
+}
+
+class CommaExpression extends Expression {
+	contains Expression[] exprs
+}
+
+// ****************************************************************************************************
+// N4 Meta Types
+// ****************************************************************************************************
+/*
+ * Elements such as type or functions definitions defining a {@link  org.eclipse.n4js.ts.model.Type}.
+ */
+abstract class TypeDefiningElement extends TypableElement {
+	refers transient Type definedType
+}
+
+/**
+ * Abstract base class for generic type declarations, that is declarations possibly containing
+ * type parameters. This is true for function and method declarations and N4 classifier declarations.
+ * Do not use this method in the context of binding: instead, refer to the defined type (of the type model) and
+ * query its type variables.
+ */
+abstract class GenericDeclaration extends TypeDefiningElement {
+	/*
+	 * Type variables as declared by the declaration of the AST. These type variables are copied to the type model,
+	 * so in most cases, the type model type variables are to be used.
+	 */
+	contains TypeVariable[] typeVars
+}
+
+/*
+ * Base class for N4 type declarations and expression. This is a general pattern we use here:
+ * definition = declaration | expression.
+ */
+abstract class N4TypeDefinition extends AnnotableElement, TypeDefiningElement {
+	/**
+	 * Returns true if the classifier is only a declaration of an external implementation.
+	 */
+	op boolean isExternal() {
+		return false;
+	}
+}
+
+// TODO jvp: probably need operation getTypeRef(), should be similarly handled as variables
+/*
+ * Abstract base class for N4 specific type declarations. These declarations contain an
+ * type access modifier.
+ */
+abstract class N4TypeDeclaration extends N4TypeDefinition, AnnotableScriptElement, ModifiableElement, ExportableElement, NamedElement {
+	String name
+	/**
+	 * Returns true if type is declared as external.
+	 */
+	op boolean isExternal() {
+		declaredModifiers.contains(N4Modifier.EXTERNAL)
+	}
+}
+
+abstract class N4ClassifierDeclaration extends N4TypeDeclaration, N4ClassifierDefinition , GenericDeclaration, ThisTarget {
+	TypingStrategy typingStrategy
+}
+
+/*
+ * Abstract base class for n4 classifiers, that is types containing members such as fields or methods.
+ * Note that not all types can contain any members, e.g., interfaces must not contain fields.
+ */
+abstract class N4ClassifierDefinition extends N4TypeDefinition {
+	/**
+	 * Members directly defined in this classifier, i.e. w/o inherited members.
+	 */
+	contains N4MemberDeclaration[] ownedMembersRaw opposite owner
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-methods.
+ 	 */
+	op N4MemberDeclaration[] getOwnedMembers() {
+		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor] // FIXME consider filtering out constructors as well!
+		return new BasicEList(methods.toList)
+	}
+	/**
+	 * Returns explicitly defined constructor of receiving class or <code>null</code> if none was defined.
+ 	 */
+	op N4MethodDeclaration getOwnedCtor() {
+		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isConstructor]
+	}
+	/**
+	 * Returns explicitly defined callable constructor of receiving class or <code>null</code> if none was defined.
+	 * This is *not* the actual constructor but instead the function used for direct invocations in call expressions.
+ 	 */
+	op N4MethodDeclaration getOwnedCallableCtor() {
+		return ownedMembersRaw.filter(N4MethodDeclaration).findFirst[isCallableConstructor]
+	}
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-methods.
+ 	 */
+	op N4MethodDeclaration[] getOwnedMethods() {
+		val methods = ownedMembersRaw.filter(N4MethodDeclaration).filter[!isConstructor && !isCallableConstructor]
+		return new BasicEList(methods.toList)
+	}
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-fields.
+	 */
+	op N4FieldDeclaration[] getOwnedFields() {
+		val fields = ownedMembersRaw.filter(N4FieldDeclaration)
+		return new BasicEList(fields.toList)
+	}
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-getters.
+	 */
+	op N4GetterDeclaration[] getOwnedGetters() {
+		val getters = ownedMembersRaw.filter(N4GetterDeclaration)
+		return new BasicEList(getters.toList)
+	}
+	/**
+	 * Returns a view on ownedMembersRaw filtering out non-setters.
+	 */
+	op N4SetterDeclaration[] getOwnedSetters() {
+		val setters = ownedMembersRaw.filter(N4SetterDeclaration)
+		return new BasicEList(setters.toList)
+	}
+	/**
+	 * Derived, returns extended class (if any) and implemented or extended interfaces.
+	 */
+	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+		return Collections.emptyList;
+	}
+	/**
+	 * Derived, returns implemented or extended interfaces.
+	 */
+	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+		return Collections.emptyList;
+	}
+}
+
+/**
+ * Base class for {@link N4ClassDeclaration} and {@link N4ClassExpression}
+ */
+abstract class N4ClassDefinition extends N4ClassifierDefinition, ThisTarget {
+	contains ParameterizedTypeRef superClassRef
+	contains Expression superClassExpression
+	contains ParameterizedTypeRef[] implementedInterfaceRefs
+	/*
+	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TClass}.
+	 */
+	op TClass getDefinedTypeAsClass() {
+		return definedType as TClass;
+	}
+	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+		return #[superClassRef] + implementedInterfaceRefs;
+	}
+	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+		return implementedInterfaceRefs;
+	}
+}
+
+class N4ClassDeclaration extends N4ClassDefinition, N4ClassifierDeclaration {
+	/**
+	 * Returns true if the class is declared as abstract.
+	 */
+	op boolean isAbstract() {
+		declaredModifiers.contains(N4Modifier.ABSTRACT)
+	}
+}
+
+class N4ClassExpression extends N4ClassDefinition, PrimaryExpression, AnnotableExpression, NamedElement {
+	/*
+	 * The optional name of the class expression.
+	 */
+	String name
+}
+
+class N4InterfaceDeclaration extends N4ClassifierDeclaration {
+	contains ParameterizedTypeRef[] superInterfaceRefs
+	/*
+	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TInterface}.
+	 */
+	op TInterface getDefinedTypeAsInterface() {
+		return definedType as TInterface;
+	}
+	op ParameterizedTypeRefIterable getSuperClassifierRefs() {
+		return superInterfaceRefs;
+	}
+	op ParameterizedTypeRefIterable getImplementedOrExtendedInterfaceRefs() {
+		return superInterfaceRefs;
+	}
+}
+
+class N4EnumDeclaration extends N4TypeDeclaration {
+	contains N4EnumLiteral[] literals
+	/*
+	 * Convenience method, returns {@link #getDefinedType()} casted to {@link TEnum}.
+	 */
+	op TEnum getDefinedTypeAsEnum() {
+		return definedType as TEnum;
+	}
+}
+
+class N4EnumLiteral extends NamedElement, TypableElement {
+	String name
+	String value
+	refers transient TEnumLiteral definedLiteral
+}
+
+/*
+ * On AST side, all modifiers are included in this enumeration. In the types model, however,
+ * the individual modifiers are mapped to two different enumerations of <em>access</em> modifiers
+ * (namely TypeAccessModifier and MemberAccessModifier) and boolean properties (in case of
+ * non-access modifiers such as 'abstract' or 'static'). This mapping is done by the types
+ * builder, mostly by calling method in ModifierUtils.
+ * <p>
+ * Rules where a certain modifier may appear in the AST are implemented in method
+ * {@code ModifierUtils#isValid(EClass,N4Modifier)} and checked in {@code N4JSSyntaxValidator}.
+ * <p>
+ * See {@link ModifierUtils} for some utility methods for dealing with modifiers.
+ */
+enum N4Modifier {
+	// the order defined by the literals' values is important and defines in which order
+	// the modifiers have to appear in code! (see ModifierUtils#getSortedModifiers())
+	undefined = 0
+	external = 01
+	private = 11
+	project = 12
+	protected = 13
+	public = 14
+	^abstract = 21
+	^static = 22
+	const = 23
+}
+
+/*
+ * Abstract base class for elements that may have declared modifiers.
+ * See {@link N4Modifier}.
+ */
+abstract class ModifiableElement {
+	N4Modifier[] declaredModifiers
+}
+
+abstract class N4MemberDeclaration extends AnnotableElement, ModifiableElement, TypeProvidingElement, TypableElement, NamedElement {
+	/**
+	 * The classifier owning this member.
+	 */
+	container N4ClassifierDefinition owner opposite ownedMembersRaw
+	op TMember getDefinedTypeElement()
+	/**
+	 * Returns true if the member is declared as static.
+	 */
+	op boolean isDeclaredStatic() {
+		declaredModifiers.contains(N4Modifier.STATIC)
+	}
+	op boolean isStatic() {
+		declaredStatic
+	}
+	/**
+	 * Returns true if the member is declared as static.
+	 */
+	op boolean isDeclaredFinal() {
+		annotations.exists[it.name == "Final"]
+	} // cannot access AnnotationDefinition :(
+	op boolean isFinal() {
+		declaredFinal
+	}
+	op boolean isConstructor() {
+		false // will be overridden below in N4MethodDeclaration
+	}
+	op boolean isCallableConstructor() {
+		false // will be overridden below in N4MethodDeclaration
+	}
+}
+
+abstract class AnnotableN4MemberDeclaration extends N4MemberDeclaration {
+	contains N4MemberAnnotationList annotationList
+	op Annotation[] getAnnotations() {
+		annotationList?.annotations ?: emptyEList
+	}
+}
+
+/*
+ * A {@link N4MemberAnnotationList} holds annotations and can be a placeholder
+ * where a {@link N4MemberDeclaration} is expected.
+ * This allows to handle syntax errors in the input file gracefully while
+ * being able to left factor the grammar to make it parseable.
+ */
+class N4MemberAnnotationList extends AbstractAnnotationList, N4MemberDeclaration {
+	op TMember getDefinedTypeElement() {
+		val c = eContainer
+		if (c instanceof N4MemberDeclaration) {
+			return c.getDefinedTypeElement();
+		}
+		return null
+	}
+	op TypeRef getDeclaredTypeRef() {
+		val c = eContainer
+		if (c instanceof N4MemberDeclaration) {
+			return c.getDeclaredTypeRef();
+		}
+		return null
+	}
+	op String getName() {
+		return null
+	}
+
+}
+
+class N4FieldDeclaration extends AnnotableN4MemberDeclaration, TypedElement, ThisArgProvider, PropertyNameOwner {
+	refers transient TField definedField
+	boolean declaredOptional
+	/*
+	 * Initializer expression.
+	 */
+	contains Expression expression
+	op TMember getDefinedTypeElement() {
+		return definedField;
+	}
+	/**
+	 * Returns true if the field is declared as const.
+	 */
+	op boolean isConst() {
+		declaredModifiers.contains(N4Modifier.CONST)
+	}
+	op boolean isStatic() {
+		declaredStatic || const
+	}
+	op boolean isValid() {
+		if ('prototype' == name) {
+			return false
+		}
+		return true
+	}
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		// TODO double check the logic here
+		return true
+	}
+}
+
+abstract class MethodDeclaration extends FunctionDefinition, GenericDeclaration, TypedElement, PropertyNameOwner {
+	/**
+	 * Convenience method, returns true if an explicit call to the super constructor is found.
+	 * Of course, this is only allowed in constructors. Note that this method searches for ALL
+	 * statements in the body, not only the first one (which is the only valid place).
+	 */
+	op boolean existsExplicitSuperCall() {
+		val existsSuperCall = EcoreUtilN4.getAllDirectlyFoundContentsOfType(body, Statement).filter(ExpressionStatement).
+			map[expression].filter(ParameterizedCallExpression).exists[target instanceof SuperLiteral]
+		return existsSuperCall;
+	}
+	op TMember getDefinedTypeElement() {
+		return if(definedType === null) /*wrong parsed*/ null else if(definedType instanceof TMember) definedType as TMember else throw new IllegalArgumentException(
+			"");
+	}
+	op boolean isStatic() {
+		return false
+	}
+}
+
+class N4MethodDeclaration extends AnnotableN4MemberDeclaration, MethodDeclaration {
+	op boolean isAbstract() {
+		return (eContainer instanceof N4InterfaceDeclaration && body === null &&
+			! annotations.exists[name == "ProvidesDefaultImplementation"]
+		) || declaredModifiers.contains(N4Modifier.ABSTRACT)
+	}
+	op boolean isConstructor() {
+		return name == 'constructor' && !isStatic
+	}
+	op boolean isCallableConstructor() {
+		return declaredName === null;
+	}
+	op boolean isStatic() {
+		return declaredModifiers.contains(N4Modifier.STATIC)
+	}
+	/**
+	 * Methods in classes may not be called 'prototype'.
+	 * Generators may not be called 'constructor' either (except for computed names).
+	 */
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		if ('constructor' == name && isGenerator && declaredName?.kind !== PropertyNameKind.COMPUTED) {
+			return false
+		}
+		return true
+	}
+}
+
+abstract class N4FieldAccessor extends AnnotableN4MemberDeclaration, FieldAccessor {
+	op boolean isAbstract() {
+		return (eContainer instanceof N4InterfaceDeclaration && body === null &&
+			! annotations.exists[name == "ProvidesDefaultImplementation"]) ||
+			declaredModifiers.contains(N4Modifier.ABSTRACT)
+	}
+	/**
+	 * Field accessors in classes may not be called 'prototype' or 'constructor' (except for computed names).
+	 */
+	op boolean isValidName() {
+		if ('prototype' == name) {
+			return false
+		}
+		if ('constructor' == name && declaredName?.kind !== PropertyNameKind.COMPUTED) {
+			return false
+		}
+		return true
+	}
+}
+
+class N4GetterDeclaration extends GetterDeclaration, N4FieldAccessor {
+	op TMember getDefinedTypeElement() {
+		return definedGetter;
+	}
+}
+
+class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
+	op TMember getDefinedTypeElement() {
+		return definedSetter;
+	}
+}
+
+class BindingPattern {
+	contains BindingProperty[] properties
+	contains BindingElement[] elements
+}
+
+class ObjectBindingPattern extends BindingPattern {}
+
+class ArrayBindingPattern extends BindingPattern {}
+
+class BindingProperty extends PropertyNameOwner {
+	contains BindingElement value
+	contains VariableDeclaration varDecl // for single name binding (no declaredName in this case)
+	op String getName() {
+		super.getName() ?: value?.varDecl?.name
+	}
+	op boolean isValidName() {
+		true
+	}
+}
+
+class BindingElement {
+	/* Corresponds to spread in ArrayLiterals (but called 'rest' in ES6 specification within array binding patterns). */
+	boolean rest
+	contains VariableDeclaration varDecl
+	contains BindingPattern nestedPattern
+	contains Expression expression
+}

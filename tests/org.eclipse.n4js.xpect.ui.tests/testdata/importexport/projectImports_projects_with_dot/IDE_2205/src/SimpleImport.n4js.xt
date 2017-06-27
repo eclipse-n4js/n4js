@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
+
+	Workspace {
+		Project "IDE_2205" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "manifest.n4mf" { from="../manifest.n4mf"}
+		}
+		Project "foo.bar" {
+			Folder "src" {
+				Folder "some" {
+					Folder "deep" {
+						Folder "path" {
+							File "baz.n4js" { from="../../foo.bar/src/some/deep/path/baz.n4js" }
+						}
+					}
+				}
+			}
+			File "manifest.n4mf" { from="../../foo.bar/manifest.n4mf"}
+		}
+	}
+
+	END_SETUP
+*/
+
+
+import * as bazSimpleImport from "some/deep/path/baz"
+
+
+console.log("simple import is correct :", bazSimpleImport.myVar === "my var val")
+
+
+/* XPECT output ---
+<==
+stdout:
+simple import is correct : true
+stderr:
+==>
+--- */

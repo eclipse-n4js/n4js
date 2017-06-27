@@ -1,0 +1,52 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+f( x , undefined , [] )
+f( x , 42 , [] )
+f( x , 42 , [ 1 ] )
+f( x , 42 , [ 1, 2 ] )
+f( x , 42 , [ 1, 2, 3, 4, 5 ] )
+a.f( x undefined [] )
+a.f( x 42 [] )
+a.f( x 42 [ 1 ] )
+a.f( x 42 [ 1, 2 ] )
+a.f( x 42 [ 1, 2, 3, 4, 5 ] )
+stderr:
+==>
+--- */
+
+function f(s : string, n : number=undefined, ... args : number) {
+	console.log("f(", s, ",", n, ",", args, ")");
+}
+
+class A {
+	f(s : string, n : number=undefined, ... args : number) {
+		console.log("a.f(", s, n, args, ")");
+	}
+}
+
+f("x")
+f("x", 42)
+f("x", 42, 1)
+f("x", 42, 1, 2)
+f("x", 42, 1, 2, 3, 4, 5)
+
+var a = new A();
+a.f("x")
+a.f("x", 42)
+a.f("x", 42, 1)
+a.f("x", 42, 1, 2)
+a.f("x", 42, 1, 2, 3, 4, 5)

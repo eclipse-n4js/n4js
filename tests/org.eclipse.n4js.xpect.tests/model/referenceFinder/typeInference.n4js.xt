@@ -1,0 +1,49 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+
+
+var two : MyClassTwo;
+
+class MyClassOne  {
+     myMethodOne() : void {
+        two.myMethodTwo().getElement().myMethodFour();
+        two.myAttributeTwo("test").myMethodFour();
+    }
+}
+
+class MyClassTwo {
+// IDE-1662, IDE-373 XPECT FIXME findReferences at myAttributeTwo --> two.myAttributeTwo - 9
+    myAttributeTwo : {function (param:string) : MyInterfaceFour};
+
+// IDE-1662, IDE-373 XPECT FIXME findReferences at myMethodTwo --> two.myMethodTwo - 8
+    myMethodTwo() : MyRoleLikeInterface<MyInterfaceFour> {
+        return null;
+    }
+}
+
+interface MyRoleLikeInterface<T extends MyInterfaceFour> {
+    element : T;
+
+// IDE-1662, IDE-373 XPECT FIXME findReferences at getElement --> two.myMethodTwo().getElement - 8
+    getElement() : T {
+        return this.element;
+    }
+}
+
+interface MyInterfaceFour {
+/* IDE-1662, IDE-373 XPECT FIXME findReferences at myMethodFour ---
+ two.myAttributeTwo("test").myMethodFour - 9,
+ two.myMethodTwo().getElement().myMethodFour - 8
+--- */
+	myMethodFour() : void
+}

@@ -1,0 +1,17 @@
+        finally {
+        }
+        return current;
+    }
+    public final EObject rulePrimaryExpression() throws RecognitionException {
+        EObject current = null;
+
+        ##(?<eobjects>\s*(?:EObject\s+this_\w+\s+=\s+null;\s*)+)##
+         enterRule();
+        try {
+        	{
+            int alt240=13;
+            // REPLACEMENT rulePrimaryExpression.java.replacement START
+            try {
+                alt240 = dfa240.predict(input);
+            } catch (NoViableAltException re) {
+            	int as = input.LA(1);

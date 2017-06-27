@@ -1,0 +1,35 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+import { AT_IDEBUG_505_field_vs_getset } from "fields/AT_IDEBUG-505_field_vs_getset"
+
+
+var ex : AT_IDEBUG_505_field_vs_getset = new AT_IDEBUG_505_field_vs_getset();
+
+ex.test_constructor_works();
+
+ex.test_getsetY1_impl_inSuper();
+ex.test_getsetY1_impl_inSuper2();
+
+ex.test_getsetY2_impl_byField_inSuper();
+ex.test_getsetY2_impl_byField_inSuper2();
+
+ex.test_memberX1_impl_byField();
+ex.test_memberX1_impl_byField2();
+
+ex.test_memberX2_impl_byGetSet();
+ex.test_memberX2_impl_byGetSet2();
+
+ex.test_memberX3_impl_byGetOnly();
+ex.test_memberX3_impl_byGetOnly2();
+
+ex.test_memberX4_impl_bySetOnly();
+ex.test_memberX4_impl_bySetOnly2();

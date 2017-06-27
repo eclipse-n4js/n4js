@@ -1,0 +1,34 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+D.s
+newValue0
+stderr:
+==>
+--- */
+
+interface R {
+	public get s() : string { console.log("R.s get"); return "R.s"}
+}
+
+class D implements R {
+	@Override public s : string = "D.s";
+}
+
+var d : D = new D();
+console.log(d.s);
+d.s = "newValue0";
+console.log(d.s);

@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
+
+	Workspace {
+		Project "N4JSXXpectTests" {
+			Folder "model" {
+				Folder "linking" {
+					ThisFile {}
+				}
+				Folder "jsxbackend" {
+					File "react.n4jsd" { from = "../../reactFiles/react.n4jsd" }
+				}
+			}
+			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+	}
+
+	END_SETUP
+ */
+
+
+import * as React from "jsxbackend/react"
+
+class ~Props {
+	public myProp: string;
+}
+
+// XPECT linkedFragment at 'React.|Element' --> ../jsxbackend/react.n4jsd#/1/@topLevelTypes.0
+function PureFnComponent(props: Props): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+
+
+class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
+	@Override
+	public render() : React.Element{
+		// XPECT linkedFragment at 'this.props.|whatTextShouldIShow' --> /1/@exposedInternalTypes.0/@ownedMembers.0
+		return (<div>{this.props.whatTextShouldIShow}</div>);
+	}
+}
+
+class MyComponent extends
+	React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render() : React.Element{
+		const constText = "some text";
+		// XPECT linkedFragment at '<LowerComponent| whatTextShouldIShow' --> /1/@exposedInternalTypes.0/@ownedMembers.0
+		return (<LowerComponent whatTextShouldIShow ="Hallo">{constText}</LowerComponent>
+		);
+	}
+}

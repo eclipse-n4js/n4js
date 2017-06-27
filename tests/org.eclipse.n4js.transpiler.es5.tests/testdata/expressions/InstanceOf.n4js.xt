@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+
+/* XPECT output ---
+<==
+stdout:
+false
+false
+false
+false
+true
+true
+true
+true
+stderr:
+==>
+--- */
+
+
+interface Interface{}
+
+class D {
+
+	isCompatible_MinimumWhitespace(other : any) : boolean{
+	    return other instanceof Interface;
+	}
+
+	isCompatible(other : any) : boolean{
+	    return /* comment before */ other instanceof Interface /* comment after */;
+	}
+
+	isCompatible_UsingWorkaround(other : any) : boolean{
+	    return (other instanceof Interface);
+	}
+
+	isCompatible_LineBreak(other : any) : boolean{
+	    return (// opening parens needed, Return statement must have an expression of type boolean
+	    	// line comments
+	    	// before the actual expression
+	        other instanceof Interface)
+		//trailing comment instead of semicolon
+	}
+
+}
+
+var d = new D
+console.log(d.isCompatible_MinimumWhitespace(d))
+console.log(d.isCompatible(d))
+console.log(d.isCompatible_UsingWorkaround(d))
+console.log(d.isCompatible_LineBreak(d))
+
+class I implements Interface {}
+var i = new I
+
+console.log(d.isCompatible_MinimumWhitespace(i))
+console.log(d.isCompatible(i))
+console.log(d.isCompatible_UsingWorkaround(i))
+console.log(d.isCompatible_LineBreak(i))

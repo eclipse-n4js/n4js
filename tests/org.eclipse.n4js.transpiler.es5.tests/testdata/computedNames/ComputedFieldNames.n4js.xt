@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+// IDE-1805  transpiler changes for computed-names of string-literal form in member declarations
+
+/* XPECT output ---
+<==
+stdout:
+C1 {
+  'm@12@': '1',
+  '@abc': '3',
+  '@abc1': '4',
+  '@abc2': '5',
+  '@abc3': '6' }
+stderr:
+==>
+--- */
+
+class C1 {
+
+	['m@12@'] : string = "1";
+
+	["@abc"] : string = "3";
+	[    '@abc1'    ] : string = "4";
+	[ /*comment*/ '@abc2'] : string = "5";
+	['@abc3'  /*comment*/ ] : string = "6";
+
+}
+
+var c = new C1
+
+console.log(c)

@@ -1,0 +1,10 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": [".settings", "bin", "generated-docs", "META-INF", "headers", "images", "scripts", "styles"],
+			"file_include_patterns": ["*.adoc", "*.bib"]
+		}
+	]
+}

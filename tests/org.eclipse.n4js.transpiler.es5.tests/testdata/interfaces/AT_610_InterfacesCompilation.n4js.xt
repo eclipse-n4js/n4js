@@ -1,0 +1,119 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest  END_SETUP */
+
+ /* XPECT output ---
+<==
+stdout:
+name within interface S called from C: Jim
+count within interface S called from C: 1
+name within interface R called from C.S: Jim
+name2 within interface R called from C.S: Struppi
+name within class C: Jim
+name2 within class C: Struppi
+count within class C: 1
+name within interface R called from C: Jim
+name2 within interface R called from C: Struppi
+
+
+name within class D: Jim
+name2 within class D: Jules
+name within interface R called from D: Jim
+name2 within interface R called from D: Jules
+
+
+name within class E: Jim
+name2 within class E: Jules
+count within class E: 1
+name within interface R called from E: Jim
+name2 within interface R called from E: Jules
+
+
+name within class F: Jim
+name2 within class F: Jules
+count within class F: 1
+name within interface R called from F: Jim
+name2 within interface R called from F: Jules
+stderr:
+==>
+--- */
+
+interface R {
+	name : string = 'Jim';
+	name2 : string = 'Jules';
+
+	foo(calledFrom : string) : void {
+		console.log('name within interface R called from ' + calledFrom + ': ' + this.name)
+		console.log('name2 within interface R called from ' + calledFrom + ': ' + this.name2)
+	}
+}
+
+interface S extends R {
+	count : number = 1;
+
+	bar(calledFrom : string) : void {
+		console.log('name within interface S called from ' + calledFrom + ': ' + this.name)
+		console.log('count within interface S called from ' + calledFrom + ': ' + this.count)
+		this.foo(calledFrom + '.S');
+	}
+}
+class C implements S {
+	@Override
+	name2 : string = 'Struppi';
+
+	execute() {
+		this.bar('C');
+		console.log('name within class C: ' + this.name)
+		console.log('name2 within class C: ' + this.name2)
+		console.log('count within class C: ' + this.count)
+		this.foo('C');
+	}
+}
+class D implements R {
+
+	execute() {
+		console.log('name within class D: ' + this.name)
+		console.log('name2 within class D: ' + this.name2)
+		this.foo('D');
+	}
+}
+class E implements S {
+
+	execute() {
+		console.log('name within class '  + this.getClassName() +': ' + this.name)
+		console.log('name2 within class ' + this.getClassName() +': ' + this.name2)
+		console.log('count within class ' + this.getClassName() +': ' + this.count)
+		this.foo(this.getClassName());
+	}
+
+	getClassName() : string {
+		return 'E';
+	}
+}
+class F extends E {
+
+	@Override
+	getClassName() : string {
+		return 'F';
+	}
+}
+var c = new C();
+c.execute();
+console.log('\n');
+var d = new D();
+d.execute();
+console.log('\n');
+var e = new E();
+e.execute();
+console.log('\n');
+var f = new F();
+f.execute();

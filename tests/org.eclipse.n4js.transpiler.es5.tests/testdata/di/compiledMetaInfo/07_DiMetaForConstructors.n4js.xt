@@ -1,0 +1,76 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+classNoConstructor has ctor di meta undefiend true
+classNotInjectedConstructor has meta undefiend true
+classInjectedConstructorNoParams has ctor di meta not undefiend true
+classInjectedConstructorNoParams has ctor di meta of length 0 true
+classInjectedConstructorWith2Params has ctor di meta not undefiend true
+classInjectedConstructorWith2Params has ctor di meta of length 2 true
+classInheritedInejctedCtor has di meta true
+classInheritedInejctedCtor has di meta for ctor undefiend true
+stderr:
+==>
+--- */
+
+class A{}
+class B{
+    constructor(a : A, b : B){}
+}
+class C{
+    @Inject
+    constructor(){}
+}
+class D{
+    @Inject
+    constructor(a : A, b : B){}
+}
+class E extends D{}
+
+//==================================================================
+//======= helper types copied from injector implementation =========
+//==================================================================
+interface InjectedClassMeta{
+    /** present if type has own injected constructor, can be empty (if annotated ctor has no params) */
+    injectCtorParams? : Array<any>;
+
+}
+
+function getInjectedClassMeta(type : Object): InjectedClassMeta?{
+    return type['$di'] as InjectedClassMeta;
+}
+//==================================================================
+//=============================== tests ============================
+//==================================================================
+
+
+var metaA : InjectedClassMeta = getInjectedClassMeta(A);
+console.log('classNoConstructor has ctor di meta undefiend', typeof metaA === 'undefined')
+
+var metaB : InjectedClassMeta = getInjectedClassMeta(B);
+console.log('classNotInjectedConstructor has meta undefiend', typeof metaB === 'undefined')
+
+var metaC : InjectedClassMeta = getInjectedClassMeta(C);
+console.log('classInjectedConstructorNoParams has ctor di meta not undefiend', typeof metaC !== 'undefined')
+console.log('classInjectedConstructorNoParams has ctor di meta of length 0', metaC.injectCtorParams.length === 0)
+
+var metaD : InjectedClassMeta = getInjectedClassMeta(D);
+console.log('classInjectedConstructorWith2Params has ctor di meta not undefiend', typeof metaD !== 'undefined')
+console.log('classInjectedConstructorWith2Params has ctor di meta of length 2', metaD.injectCtorParams.length === 2)
+
+var metaE : InjectedClassMeta = getInjectedClassMeta(E);
+console.log('classInheritedInejctedCtor has di meta', typeof metaE !== 'undefined')
+console.log('classInheritedInejctedCtor has di meta for ctor undefiend', typeof metaE.injectCtorParams === 'undefined')

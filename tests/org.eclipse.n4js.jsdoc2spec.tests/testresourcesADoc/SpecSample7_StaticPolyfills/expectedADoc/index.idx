@@ -1,0 +1,22 @@
+#
+# Copyright (c) 2016 NumberFour AG.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#   NumberFour AG - Initial API and implementation
+#
+
+n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
+	SpecSample7_StaticPolyfills#src.n4js-gen
+		NO_PACKAGE
+			A.n4js
+				A::13::22::23
+				A#base::14::41::56
+	SpecSample7_StaticPolyfills#src.n4js
+		NO_PACKAGE
+			A.n4js
+				A#bar::17::24::40::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample7_StaticPolyfills:testresources
+				A#foo::15::57::73::n4js:tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc:SpecSample7_StaticPolyfills:testresources

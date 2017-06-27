@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* XPECT output ---
+<==
+stdout:
+R.m get
+S.m get
+R.m set
+S.m set
+R.m meth
+S.m meth
+R.m fld
+S.m fld
+stderr:
+==>
+--- */
+
+
+// getter
+interface RG { get m() : string { console.log("R.m get"); return null; } }
+class SG { get m() : string { console.log("S.m get"); return null; } }
+
+class C1 implements RG {}
+new C1().m;
+class C2 extends SG implements RG {}
+new C2().m;
+
+// setter
+interface RS { set m(s : string) { console.log("R.m set") } }
+class SS { set m(s : string) { console.log("S.m set") } }
+class C3 implements RS {}
+new C3().m = "";
+class C4 extends SS implements RS {}
+new C4().m = "";
+
+// method
+interface RM { m() { console.log("R.m meth") } }
+class SM { m() { console.log("S.m meth") } }
+class C5 implements RM {}
+new C5().m();
+class C6 extends SM implements RM {}
+new C6().m();
+
+// field initializer
+interface RF { m = "R.m fld";}
+class SF { m = "S.m fld";}
+class C7 implements RF {}
+console.log(new C7().m);
+class C8 extends SF implements RF {}
+console.log(new C8().m);

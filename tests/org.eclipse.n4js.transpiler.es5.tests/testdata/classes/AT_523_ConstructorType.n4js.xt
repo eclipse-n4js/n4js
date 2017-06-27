@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest END_SETUP */
+
+/* There has been an error in test AT_523_ReferenceCtorViaPropertyAccessTest.xtend,
+   this runtime tests validates the actual behavior.
+ */
+
+/* XPECT output ---
+<==
+stdout:
+C.f
+stderr:
+==>
+--- */
+class C {
+	f() { console.log("C.f")}
+}
+var ctor = C;				// static reference
+var resultCtor : constructor{C} = ctor;
+var resultNewInstance : C = new ctor();
+resultNewInstance.f();

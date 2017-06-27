@@ -1,0 +1,9 @@
+#
+# The following tests are ignored by the pure parser test, 
+# as they are expected to fail during execution only.
+#
+# That is, these tests fail if not run with an execution engine
+# as they do not fail (as expected): They are syntactically correct.
+# E.g., some files contain illegal code in eval functions, which is
+# interpreted as string by the parser.
+#

@@ -1,0 +1,86 @@
+////
+Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation
+////
+
+:find:
+include::{find}config.adoc[]
+
+mathinclude::{find}commands.tex[]
+
+= N4JS Language Specification
+{docdatetime}
+
+[.n4jslogo]
+image::{find}images/n4jslogo.png[400,400,align="center"]
+
+[.center]
+*Last Updated: {docdate}*
+
+[.center]
+*Authors:* +
+Jens von Pilgrim, Jakub Siberski, Mark-Oliver Reiser, +
+Torsten Krämer, Ákos Kitta, Sebastian Zarnekow, Lorenzo Bettini, Jörg Reichert
+
+<<<
+
+:leveloffset: +1
+
+include::{find}abstract.adoc[]
+
+include::{find}chapters/00a_revisionhistory/revisionhistory.adoc[]
+
+ifdef::backend-docbook5[<<<]
+
+include::{find}chapters/00b_license/license.adoc[]
+
+include::{find}chapters/01_introduction/introduction.adoc[]
+
+include::{find}chapters/02_grammar/grammar.adoc[]
+
+include::{find}chapters/03_names/names.adoc[]
+
+include::{find}chapters/04_types/types.adoc[]
+
+include::{find}chapters/05_classifiers/classifiers.adoc[]
+
+include::{find}chapters/06_functions/functions.adoc[]
+
+include::{find}chapters/07_conversions/conversions.adoc[]
+
+include::{find}chapters/08_expressions/expressions.adoc[]
+
+include::{find}chapters/09_statements/statements.adoc[]
+
+include::{find}chapters/10_annotations/annotations.adoc[]
+
+include::{find}chapters/11_extFeatures/extFeatures.adoc[]
+
+include::{find}chapters/12_components/components.adoc[]
+
+include::{find}chapters/13_plainJS/plainJS.adoc[]
+
+include::{find}chapters/15_jsdoc/jsdoc.adoc[]
+
+include::{find}chapters/16_jsx/jsx.adoc[]
+
+include::{find}chapters/a01_grammars/grammars.adoc[]
+
+include::{find}chapters/a02_jsobjects/jsobjects.adoc[]
+
+include::{find}chapters/a03_n4jsobjects/n4jsobjects.adoc[]
+
+include::{find}acronyms.adoc[]
+
+:leveloffset: -1
+
+[appendix]
+== Bibliography
+
+bibliography::[]

@@ -1,0 +1,16 @@
+public final EObject ruleNoLineTerminator(EObject in_current) throws RecognitionException {
+EObject current = in_current;
+Token this_NO_LINE_TERMINATOR_0=null;
+enterRule();
+try {
+{
+int alt407=2;
+int LA407_0 = input.LA(1);
+if ( (LA407_0==RULE_NO_LINE_TERMINATOR) ) {
+alt407=1;
+}
+switch (alt407) {
+case 1 :
+{
+this_NO_LINE_TERMINATOR_0=(Token)match(input,RULE_NO_LINE_TERMINATOR,FOLLOW_2); if (state.failed) return current;
+if ( state.backtracking==0 ) {

@@ -1,0 +1,74 @@
+# wsp1/A/src/packA/A.n4js
+// Comment to the TESTER (YOU!): This File (scenario01.txt) assembles the content of many files
+// The File are separated by a single HASH character. So this Character is off limits to use otherwise
+// After the Hashmark up to the end of the line is the relative path of the file to create.
+// all other characters till the next HASH are the content of this file.
+export public class A {
+	constructor() {
+		console.log(" in class "+A)
+	}
+}
+
+# wsp1/A/manifest.n4mf
+ProjectId: A
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# wsp1/notAproject
+# nest/wsp2/B/src/packB/B.n4js
+export public class B {
+	constructor() {
+		console.log(" in class "+B)
+	}
+}
+
+# nest/wsp2/B/manifest.n4mf
+ProjectId: B
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}
+
+# nest/wsp2/D/src/packD/D.n4js
+import { A } from "packA/A"
+export public class D extends A {
+	constructor() {
+		console.log(" in class "+D)
+	}
+}
+
+# nest/wsp2/D/src/packD/D2.n4js
+import { B } from "packB/B"
+export public class D2 extends B {
+	constructor() {
+		console.log(" in class "+D2)
+	}
+}
+
+# nest/wsp2/D/manifest.n4mf
+ProjectId: D
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+ProjectDependencies { A,B }
+Output: "src-gen"
+Sources {
+	source { 
+		"src"
+	}
+}

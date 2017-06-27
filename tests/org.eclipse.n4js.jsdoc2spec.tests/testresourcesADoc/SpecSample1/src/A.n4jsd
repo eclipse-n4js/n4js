@@ -1,0 +1,37 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/**
+ * @Spec spec for class A from source code
+ */
+export external public class A {
+
+	/**
+	 * @spec spec for method A.bar from source code
+	 */
+	bar(n: number): string;
+
+	/**
+	 * @return some return descr.
+	 *
+	 * @spec spec for method A.baz from source code
+	 */
+	baz(): string;
+}
+
+export external public class B {
+	foo(s: string);
+}
+
+// C only in latex
+
+export external public class D extends A {
+}

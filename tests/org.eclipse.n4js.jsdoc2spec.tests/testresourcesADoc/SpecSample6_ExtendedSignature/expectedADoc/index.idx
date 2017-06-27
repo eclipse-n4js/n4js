@@ -1,0 +1,22 @@
+#
+# Copyright (c) 2016 NumberFour AG.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v1.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v10.html
+#
+# Contributors:
+#   NumberFour AG - Initial API and implementation
+#
+
+n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
+	SpecSample6_ExtendedSignature#src
+		NO_PACKAGE
+			A.n4jsd
+				A::14::41::42
+				A#bar::17::59::74
+				A#baz::18::75::90
+				A#constructor::15::43::58
+				A#foo::16::91::106
+				A@xgreet::19::107::122
+				func::12::22::37

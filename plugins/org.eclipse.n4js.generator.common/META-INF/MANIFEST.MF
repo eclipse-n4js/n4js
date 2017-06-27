@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.eclipse.n4js.generator.common
+Bundle-Version: 0.0.1.qualifier
+Bundle-Vendor: %providerName
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.xtext,
+ org.eclipse.xtend.lib,
+ org.eclipse.n4js,
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.n4mf.model,
+ org.eclipse.n4js.ts.model
+Export-Package: org.eclipse.n4js.generator.common

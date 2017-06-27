@@ -1,0 +1,60 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest
+	ResourceSet {
+		ThisFile {}
+		File "../reactFiles/react.n4jsd" { from = "../reactFiles/react.n4jsd" }
+		File "../reactFiles/react.js" { from = "../reactFiles/react.js" }
+		File "../reactFiles/replacer.n4js" { from = "../reactFiles/replacer.n4js" }
+	}
+	END_SETUP
+ */
+
+/* XPECT output ---
+<==
+stdout:
+{
+    "type": "function",
+    "props": {
+        "a": 1,
+        "x": 2,
+        "y": "Hi"
+    },
+    "children": []
+}
+stderr:
+==>
+--- */
+
+import * as React from "reactFiles/react"
+import { replacer } from "reactFiles/replacer";
+
+class MyProps implements React.ComponentProps  {
+	public a: int;
+	public x: int;
+	public y: string;
+	private z: string;
+}
+
+const MyReactFuncComponent = (props: ~MyProps): React.Element =>  {
+	return (
+		<div>{props.x}</div>,
+		<div>{props.y}</div>
+	);
+}
+
+var obj = {
+	a: 1,
+	x: 2,
+	y: "Hi"
+}
+console.log(JSON.stringify(<MyReactFuncComponent {...obj}/>, replacer, 4));
