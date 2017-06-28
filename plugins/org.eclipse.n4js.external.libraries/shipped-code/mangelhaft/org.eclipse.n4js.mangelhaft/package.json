@@ -1,0 +1,14 @@
+{
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/NumberFour/n4js",
+  "description": "An xUnit Testing Framework for N4JS.",
+  "keywords": [
+    "n4js",
+    "testing",
+    "mangelhaft"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}
