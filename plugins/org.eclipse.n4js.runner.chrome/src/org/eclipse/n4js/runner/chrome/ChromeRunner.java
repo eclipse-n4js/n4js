@@ -72,7 +72,7 @@ public class ChromeRunner implements IRunner {
 			final List<String> paths = new ArrayList<>();
 
 			runOptions.addInitModules(runConfig.getInitModules());
-			if (runConfig.isUseDefaultBootstrap()) {
+			if (runConfig.isUseCustomBootstrap()) {
 				throw new UnsupportedOperationException("Using default bootstrap is not supported for Chrome.");
 			}
 

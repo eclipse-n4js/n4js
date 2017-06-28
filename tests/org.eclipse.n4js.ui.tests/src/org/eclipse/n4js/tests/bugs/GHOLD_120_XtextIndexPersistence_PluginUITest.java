@@ -17,18 +17,14 @@ import static com.google.common.collect.Sets.difference;
 import static org.eclipse.n4js.resource.UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
@@ -41,7 +37,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.BiMap;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -86,19 +81,14 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	private ContributingResourceDescriptionPersister persister;
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	/**
 	 * Initializes the N4JS built-in libraries. Does not matter before or after the test project import.
 	 */
 	@Before
 	public void loadBuiltIns() {
-		final BiMap<URI, String> locations = ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get();
-		for (final URI location : locations.keySet()) {
-			externalLibraryPreferenceStore.add(location);
-		}
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		shippedCodeInitializeTestHelper.setupBuiltIns();
 		waitForAutoBuild();
 	}
 
@@ -113,12 +103,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	}
 
 	private void unLoadBuiltIns() {
-		final BiMap<URI, String> locations = ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get();
-		for (final URI location : locations.keySet()) {
-			externalLibraryPreferenceStore.remove(location);
-		}
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		shippedCodeInitializeTestHelper.teardowneBuiltIns();
 		waitForAutoBuild();
 	}
 

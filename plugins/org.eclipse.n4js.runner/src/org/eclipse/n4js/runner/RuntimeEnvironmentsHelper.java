@@ -26,10 +26,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -39,6 +35,9 @@ import org.eclipse.n4js.runner.exceptions.DependencyCycleDetectedException;
 import org.eclipse.n4js.runner.exceptions.InsolvableRuntimeEnvironmentException;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.validation.helper.SoureContainerAwareDependencyTraverser;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
 /**
  * Helper that resolves Runtime Environments required to execute given {@link IN4JSProject}.
@@ -54,7 +53,15 @@ public class RuntimeEnvironmentsHelper {
 	 * Returns the project in the current workspace for the given runtime environment ID.
 	 */
 	public Optional<IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment) {
-		return from(getAllProjects())
+		return findRuntimeEnvironmentProject(runtimeEnvironment, getAllProjects());
+	}
+
+	/**
+	 * Returns the project from the provided iterable of projects for the given runtime environment ID.
+	 */
+	public Optional<IN4JSProject> findRuntimeEnvironmentProject(RuntimeEnvironment runtimeEnvironment,
+			Iterable<IN4JSProject> projects) {
+		return from(projects)
 				.filter(p -> isRuntimeEnvironemnt(p))
 				.filter(p -> runtimeEnvironment.getProjectId().equals(p.getProjectId()))
 				.first();

@@ -19,8 +19,9 @@ import java.io.InputStream;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.StringJoiner;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -32,42 +33,65 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 import com.google.common.base.StandardSystemProperty;
 
 /**
- * Provides access to the bootstrap code for setups that don't work with proper workspace, e.g. unit tests for the
+ * Provides access to the shipped code for setups that don't work with proper workspace, e.g. unit tests for the
  * compiler.
  *
  * Normally access to the bootstrap code is resolved through the workspace (via N4JSCore and other interfaces), but in
  * some cases workspace is not possible to setup, or avoided on purpose. Most common examples are output unit tests or,
- * in general, setups not based on eclipse platform.
- *
+ * setups not based on eclipse platform.
  */
-public class BootstrapCodeAccess {
-
-	/** Folder name, from which bootstrap code is loaded. */
-	protected static final String RUNTIME_ROOT = "runtime";
+public class ShippedCodeAccess {
 
 	/**
-	 * Returns with the path for the default Node.js environment location as a string.
-	 *
-	 * @return the path pointing to the default Node.js environment.
+	 * Returns with the iterable paths for the shipped code locations as a string.
 	 */
-	public static final String getDefaultNodeEnvPath() {
+	public static final Iterable<String> getAllShippedPaths() {
+		List<String> paths = new ArrayList<>();
+		ExternalLibrariesActivator.SHIPPED_ROOTS_FOLDER_NAMES
+				.forEach(root -> paths.add(getShippedRuntimeCodePath(root)));
+		return paths;
+	}
+
+	/**
+	 * Returns path for the shipped code from the provided location. If location is plain file returns its absolute path
+	 * as string. If location is inside jar file, unpacks desired resource to the temporal location and returns path to
+	 * that location.
+	 *
+	 * @param rootName
+	 *            name of shipped root to be located
+	 * @return the path pointing to the shipped code
+	 */
+	protected static String getShippedRuntimeCodePath(String rootName) {
 		try {
-			URL resourceUrl = getResource(RUNTIME_ROOT);
+			URL resourceUrl = getResource(rootName);
 
 			final URLConnection connection = resourceUrl.openConnection();
 			if (connection instanceof JarURLConnection) {
-				return recursivelyCopyContent((JarURLConnection) connection);
+				return recursivelyCopyContent((JarURLConnection) connection, rootName);
 			}
 
 			return new File(resourceUrl.toURI()).getCanonicalFile().getAbsolutePath().replace("\\", "\\\\");
 		} catch (final Exception e) {
-			throw new RuntimeException("Error while getting NODE_PATH.", e);
+			throw new RuntimeException("Error while getting shipped code path.", e);
 		}
 	}
 
-	private static String recursivelyCopyContent(JarURLConnection connection) throws IOException {
-		final File tempFolder = getTempFolder().toFile();
-		final File rootFolder = new File(tempFolder, RUNTIME_ROOT);
+	/**
+	 * Unpacks desired folder structure from the JAR file into temporal location and returns that location absolute path
+	 * as string.
+	 *
+	 * @param connection
+	 *            connection to the JAR file
+	 * @param rootName
+	 *            name of the folder to be unpacked
+	 * @return absolute path to the temporarily unpacked folder
+	 * @throws IOException
+	 *             for IO operations
+	 */
+	protected static String recursivelyCopyContent(JarURLConnection connection, String rootName) throws IOException {
+		final File tempFolder = getTempFolder();
+		tempFolder.deleteOnExit();
+		final File rootFolder = new File(tempFolder, rootName);
 		if (rootFolder.exists()) {
 			FileDeleter.delete(rootFolder.toPath());
 		}
@@ -78,8 +102,8 @@ public class BootstrapCodeAccess {
 		try (final JarFile jarFile = connection.getJarFile()) {
 			for (final Enumeration<JarEntry> em = jarFile.entries(); em.hasMoreElements(); /**/) {
 				final JarEntry entry = em.nextElement();
-				// Do not process anything which is not under the runtime environment folder
-				if (!entry.getName().startsWith(RUNTIME_ROOT)) {
+				// Do not process anything which is not under desired root
+				if (!entry.getName().startsWith(rootName)) {
 					continue;
 				}
 				final String fileName = entry.getName();// .substring(connection.getEntryName().length());
@@ -100,13 +124,13 @@ public class BootstrapCodeAccess {
 		return rootFolder.getCanonicalFile().getAbsolutePath().replace("\\", "\\\\");
 	}
 
-	private static Path getTempFolder() {
+	private static File getTempFolder() {
 		final String tempFolder = StandardSystemProperty.JAVA_IO_TMPDIR.value();
 		final File file = new File(tempFolder);
 		if (!file.exists() || !file.canWrite()) {
 			throw new RuntimeException("Cannot access temporary directory under: " + tempFolder);
 		}
-		return file.toPath();
+		return file;
 	}
 
 	/**
@@ -116,7 +140,7 @@ public class BootstrapCodeAccess {
 	 *            the name of the resource.
 	 * @return the URL referencing to the resource given with its resource name.
 	 */
-	private static URL getResource(final String resourceName) {
+	protected static URL getResource(final String resourceName) {
 		if (resourceName == null) {
 			throw new RuntimeException("Resource name cannot be null.");
 		}
@@ -126,7 +150,7 @@ public class BootstrapCodeAccess {
 		}
 
 		final String locator = "/" + resourceName;
-		final URL resourceUrl = BootstrapCodeAccess.class.getResource(locator);
+		final URL resourceUrl = ShippedCodeAccess.class.getResource(locator);
 		if (resourceUrl == null) {
 			throw new RuntimeException("Obtaining resource with locator <" + locator + "> returned null.");
 		}

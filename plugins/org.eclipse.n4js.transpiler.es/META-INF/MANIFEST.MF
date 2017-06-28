@@ -17,5 +17,6 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.releng.utils;bundle-version="0.0.1",
  it.xsemantics.runtime,
  com.google.guava,
- org.eclipse.n4js.n4jsx.model
+ org.eclipse.n4js.n4jsx.model,
+ org.junit
 Export-Package: org.eclipse.n4js.transpiler.es

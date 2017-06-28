@@ -14,11 +14,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -27,6 +22,10 @@ import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.internal.DefaultTestTreeTransformer;
 import org.eclipse.n4js.tester.internal.TesterActivator;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  */
@@ -123,7 +122,7 @@ public class TesterFrontEnd {
 	 */
 	public void computeDerivedValues(TestConfiguration config) {
 		// A) compute derived values for the run(!) configuration (will delegate to runner)
-		runnerFrontEnd.computeDerivedValues(config);
+		runnerFrontEnd.computeDerivedValues(config, false);
 
 		// B) compute derived values for the test configuration
 

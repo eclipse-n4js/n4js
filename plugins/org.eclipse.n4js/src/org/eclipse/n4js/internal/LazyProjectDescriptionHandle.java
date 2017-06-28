@@ -16,29 +16,27 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.ArchiveURIUtil;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.common.base.Joiner;
 import com.google.inject.Provider;
 
-import org.eclipse.n4js.ArchiveURIUtil;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-
 /**
  * Lazy handle that is registered as a proxy at runtime.
  */
-class LazyProjectDescriptionHandle {
+@SuppressWarnings("javadoc")
+public class LazyProjectDescriptionHandle {
 
 	private final URI location;
 	private final boolean archive;
 	private final Provider<XtextResourceSet> resourceSetProvider;
 	private ProjectDescription resolved;
 
-	/**
-	 * Creates a new lazy handle.
-	 */
-	LazyProjectDescriptionHandle(URI location, boolean archive, Provider<XtextResourceSet> resourceSetProvider) {
+	protected LazyProjectDescriptionHandle(URI location, boolean archive,
+			Provider<XtextResourceSet> resourceSetProvider) {
 		this.location = location;
 		this.archive = archive;
 		this.resourceSetProvider = resourceSetProvider;
@@ -68,7 +66,7 @@ class LazyProjectDescriptionHandle {
 		}
 	}
 
-	ProjectDescription loadManifest(URI manifest) {
+	protected ProjectDescription loadManifest(URI manifest) {
 		ResourceSet resourceSet = resourceSetProvider.get();
 		Resource resource = resourceSet.getResource(manifest, true);
 		List<EObject> contents = resource.getContents();

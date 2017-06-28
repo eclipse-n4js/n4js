@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.n4jsx.tests.helper;
 
+import org.eclipse.n4js.ExceptionAwareDiagnosticConverter;
+import org.eclipse.n4js.N4JSInjectorProvider;
+import org.eclipse.n4js.N4JSParseHelper;
+import org.eclipse.n4js.SmokeTestWriter;
+import org.eclipse.n4js.n4jsx.N4JSXRuntimeModule;
+import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
 import org.eclipse.xtext.junit4.util.ResourceHelper;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
 import org.eclipse.xtext.service.SingletonBinding;
@@ -18,13 +24,6 @@ import org.eclipse.xtext.validation.IDiagnosticConverter;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-
-import org.eclipse.n4js.ExceptionAwareDiagnosticConverter;
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.N4JSParseHelper;
-import org.eclipse.n4js.SmokeTestWriter;
-import org.eclipse.n4js.n4jsx.N4JSXRuntimeModule;
-import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
 
 /**
  * Replaces N4JSRuntimeModele with N4JSXRuntimeVersion in constructor
@@ -79,10 +78,14 @@ public class N4JSXInjectorProvider extends N4JSInjectorProvider {
 			return ResourceHelper.class;
 		}
 
-		// /** */
-		// public Class<? extends ParseHelper<Script>> bindParseHelperScript() {
-		// return SmokeTestWriter.class;
-		// }
+		/**
+		 * IMPORTANT, this re-binding is required since we are not in the same
+		 * bundle as our base class.
+		 */
+		@Override
+		public ClassLoader bindClassLoaderToInstance() {
+			return getClass().getClassLoader();
+		}
 
 	}
 

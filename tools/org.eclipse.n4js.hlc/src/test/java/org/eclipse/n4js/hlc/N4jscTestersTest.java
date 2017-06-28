@@ -72,7 +72,38 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 		String[] args = { "-pl", proot,
 				"-t", "allprojects",
-				"-tw", "nodejs",
+				"-tw", "nodejs_mangelhaft",
+				"--test", fileFooTest,
+				"-v"
+		};
+
+		new N4jsc().doMain(args);
+
+		// TODO add proper assertion that test was actually executed properly!!!
+	}
+
+	/**
+	 * Simple test of compiling a project and launching <u>a single test file</u>.
+	 *
+	 * @throws ExitCodeException
+	 *             in error cases ( not expected )
+	 */
+	@Test
+	public void testCompile_And_LaunchSingleTestFile2() throws ExitCodeException {
+		System.out.println(logMethodname());
+
+		String proot = TARGET + "/" + WSP;
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+
+		// absolute src filename
+		String fileFooTest = pathToDemoTest + "/test/BarTest.n4js";
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
 				"--test", fileFooTest,
 				"-v"
 		};

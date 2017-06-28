@@ -16,7 +16,7 @@ Contributors:
       <tester
             class="org.eclipse.n4js.tester.nodejs.NodeTester"
             environment="n4js-node-mangelhaft"
-            id="org.eclipse.n4js.tester.nodejs"
+            id="org.eclipse.n4js.tester.nodejs.NODEJS_MANGELHAFT"
             name="Node.js Tester">
       </tester>
    </extension>

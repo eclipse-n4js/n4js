@@ -138,6 +138,50 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		parseSuccessfully("{ 1 }");
 	}
 
+	/*
+	 * http://lucumr.pocoo.org/2011/2/6/automatic-semicolon-insertion/
+	 *
+	 * Excerpt regarding testBlogExample_01-03:
+	 *
+	 * Like Python, JavaScript has array literals ([1, 2, 3, 4]) and uses a very similar syntax to access items
+	 * of objects and arrays (foo[index]). Unfortunately that particular little pseudo-ambiguity becomes a problem
+	 * when you forget to place semicolons. Take the following piece of JavaScript code as example:
+	 *
+	 *     var name = "World"
+	 *     ["Hello", "Goodbye"].forEach(function(value) {
+	 *       document.write(value + " " + name + "<br>")
+	 *     })
+	 *
+	 * That is not a syntax error, but it will fail with an odd error. Why is that? The problem is that JavaScript
+	 * will insert semicolons after the document.write() call and after the .forEach() call, but not before the array
+	 * literal. In fact, it will attempt to use the array literal as indexer operator to the string from the line before.
+	 *
+	 * (c) Copyright 2014 by Armin Ronacher.
+	 */
+	@Test
+	def void testBlogExample_01() {
+		val parseResult = parseSuccessfully("var name = \"World\"\n" +
+				"[\"Hello\", \"Goodbye\"].forEach(function(value) {\n" +
+				"  document.write(value + \" \" + name + \"<br>\")\n" +
+				"})");
+		parseResult.hasChildren(1)
+	}
+	@Test
+	def void testBlogExample_02() {
+		val parseResult = parseSuccessfully("var name = \"World\";\n" +
+				"[\"Hello\", \"Goodbye\"].forEach(function(value) {\n" +
+				"  document.write(value + \" \" + name + \"<br>\")\n" +
+				"})");
+		parseResult.hasChildren(2)
+	}
+	@Test
+	def void testBlogExample_03() {
+		parseSuccessfully("var name = \"World\";/*\n*/" +
+				"[\"Hello\", \"Goodbye\"].forEach(function(value) {\n" +
+				"  document.write(value + \" \" + name + \"<br>\")\n" +
+				"})");
+	}
+
 	@Test
 	def void testBlogExample_04() {
 		parseSuccessfully("namespace.makeCounter = function() {\n" +

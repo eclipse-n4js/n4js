@@ -27,12 +27,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
-import com.google.common.base.Strings;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
@@ -48,6 +42,11 @@ import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
+import com.google.inject.Inject;
 
 /**
  * Central processing of project-related computation working on our IN4JS abstractions.
@@ -162,8 +161,8 @@ public class RunnerHelper {
 					ProjectType pt = p.getProjectType();
 					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
 				})
-				.flatMap(p -> projectUtils.getInitModulesAsURIs(p).stream())
-				.map(bmURI -> compilerUtils.getTargetFileName(bmURI, N4JSGlobals.JS_FILE_EXTENSION))
+				.flatMap(p -> projectUtils.getInitModulesAsURIs(p).stream()
+						.map(bmURI -> compilerUtils.getTargetFileName(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
 				.collect(Collectors.toList());
 	}
 
@@ -173,9 +172,14 @@ public class RunnerHelper {
 	public Optional<String> getExecModuleURI(List<IN4JSProject> extendedDeps) {
 		List<String> execModules = extendedDeps.stream()
 				.filter(p -> ProjectType.RUNTIME_ENVIRONMENT.equals(p.getProjectType()))
-				.map(re -> projectUtils.getExecModuleAsURI(re))
-				.filter(oEM -> oEM.isPresent())
-				.map(emURI -> compilerUtils.getTargetFileName(emURI.get(), null))
+				.map(re -> {
+					Optional<URI> execModuleAsURI = projectUtils.getExecModuleAsURI(re);
+					if (!execModuleAsURI.isPresent()) {
+						return null;
+					}
+					return compilerUtils.getTargetFileName(re, execModuleAsURI.get(), null);
+				})
+				.filter(s -> !Strings.isNullOrEmpty(s))
 				.collect(Collectors.toList());
 
 		if (execModules.size() >= 1)
@@ -215,8 +219,18 @@ public class RunnerHelper {
 	 *
 	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
 	 */
-	private void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
+	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
 			Collection<IN4JSProject> addHere) {
+		recursiveExtendedREsCollector(sourceContainer, addHere, n4jsCore.findAllProjects());
+	}
+
+	/**
+	 * Collects transitive collection of project extended RuntimeEnvironemnts
+	 *
+	 * @see RuntimeEnvironmentsHelper#recursiveDependencyCollector
+	 */
+	public void recursiveExtendedREsCollector(IN4JSSourceContainerAware sourceContainer,
+			Collection<IN4JSProject> addHere, Iterable<IN4JSProject> projects) {
 		final IN4JSProject project = extractProject(sourceContainer);
 
 		if (project.getProjectType().equals(ProjectType.RUNTIME_ENVIRONMENT)) {
@@ -229,11 +243,11 @@ public class RunnerHelper {
 			Optional<String> ep = project.getExtendedRuntimeEnvironmentId();
 			Optional<IN4JSProject> extendedRE = Optional.absent();
 			if (ep.isPresent()) {
-				extendedRE = findRuntimeEnvironemtnWithName(ep.get());
+				extendedRE = findRuntimeEnvironemtnWithName(ep.get(), projects);
 			}
 			if (extendedRE.isPresent()) {
 				IN4JSProject e = extendedRE.get();
-				recursiveExtendedREsCollector(e, addHere);
+				recursiveExtendedREsCollector(e, addHere, projects);
 			}
 		}
 	}
@@ -299,14 +313,26 @@ public class RunnerHelper {
 	 *            of the project that servers as the desired environment.
 	 * @return optional with project if found, empty optional otherwise.
 	 */
-	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId) {
-		for (IN4JSProject project : n4jsCore.findAllProjects()) {
+	public Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId,
+			Iterable<IN4JSProject> projects) {
+		for (IN4JSProject project : projects) {
 			if (project.getProjectType() == ProjectType.RUNTIME_ENVIRONMENT
 					&& project.getProjectId().equals(projectId)) {
 				return Optional.of(project);
 			}
 		}
 		return Optional.absent();
+	}
+
+	/**
+	 * Looks up all runtime environment with provided name.
+	 *
+	 * @param projectId
+	 *            of the project that servers as the desired environment.
+	 * @return optional with project if found, empty optional otherwise.
+	 */
+	private Optional<IN4JSProject> findRuntimeEnvironemtnWithName(final String projectId) {
+		return findRuntimeEnvironemtnWithName(projectId, n4jsCore.findAllProjects());
 	}
 
 	/**

@@ -10,7 +10,10 @@
  */
 package org.eclipse.n4js.utils
 
+import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.common.unicode.CharTypes
 import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.conversion.IdentifierValueConverter
@@ -47,6 +50,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -65,6 +69,7 @@ import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
@@ -81,8 +86,6 @@ import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import it.xsemantics.runtime.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -823,5 +826,22 @@ class N4JSLanguageUtils {
 		}
 
 		return false;
+	}
+	
+	/**
+	 * Check if the interface is built-in or an external without N4JS annotation.
+	 *
+	 * @param tinf
+	 *            The interface.
+	 * @return true if the interface is either built-in, provided by runtime or an external interface without N4JS annotation. Return false
+	 *         otherwise.
+	 */
+	def static boolean builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation(TInterface tinf) {
+		val hasN4JSAnnotation = tinf.annotations.exists[AnnotationDefinition.N4JS.name == name];
+		val ts = tinf.typingStrategy;
+		val isDefStructural = ts != TypingStrategy.NOMINAL && ts != TypingStrategy.DEFAULT;
+		val fileExtensionCalculator = new XpectAwareFileExtensionCalculator;
+		val fileExt = fileExtensionCalculator.getXpectAwareFileExtension(tinf);
+		return TypeUtils.isBuiltIn(tinf) || tinf.providedByRuntime || (tinf.isExternal() && !hasN4JSAnnotation) || (isDefStructural && (fileExt == N4JSGlobals.N4JSD_FILE_EXTENSION));
 	}
 }

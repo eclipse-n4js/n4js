@@ -38,11 +38,11 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TObjectPrototype
-import org.eclipse.n4js.ts.utils.TypeUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
  * Create the constructor function for classes (as a function declaration).
@@ -301,9 +301,8 @@ class ClassConstructorAssistant extends TransformationAssistant {
 		val $fieldInitSTE =  steFor_$fieldInit;
 		val implementedIfcSTEs = typeAssistant.getSuperInterfacesSTEs(classDecl).filter [
 			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
-			// GHOLD-388: Generate $fieldInit call only if the interface is not provided by runtime.
-			val tinf = originalTarget as TInterface
-			!tinf.providedByRuntime && !TypeUtils.isBuiltIn(tinf)
+			// GHOLD-388: Generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
+			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
 		];
 
 		val LinkedHashSet<String> ownedInstanceDataFieldsSupressMixin = newLinkedHashSet

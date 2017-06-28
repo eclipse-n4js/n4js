@@ -16,6 +16,7 @@ import java.util.Random;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.n4mf.DeclaredVersion;
 import org.eclipse.n4js.n4mf.ProjectDependency;
+import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.parser.antlr.N4MFParser;
 import org.eclipse.n4js.n4mf.utils.N4MFConstants;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
@@ -33,8 +34,15 @@ import org.eclipse.xtext.parser.ParseException;
  */
 public class ManifestValuesParsingUtil {
 
-	private static final String DECLARED_VERSION = "DeclaredVersion";
-	private static final String PROJECT_DEPENDENCY = "ProjectDependency";
+	/**
+	 * Creates instance of {@link ProjectDescription} from provided value or null if it cannot be created.
+	 *
+	 * @throws ParseException
+	 *             when provided data has parse error
+	 */
+	public static ParserResults<ProjectDescription> parseProjectDescription(String projectDependency) throws Exception {
+		return parse(ProjectDescription.class.getSimpleName(), projectDependency);
+	}
 
 	/**
 	 * Creates instance of {@link ProjectDependency} from provided value or null if it cannot be created.
@@ -43,14 +51,14 @@ public class ManifestValuesParsingUtil {
 	 *             when provided data has parse error
 	 */
 	public static ParserResults<ProjectDependency> parseDependency(String projectDependency) throws Exception {
-		return parse(PROJECT_DEPENDENCY, projectDependency);
+		return parse(ProjectDependency.class.getSimpleName(), projectDependency);
 	}
 
 	/**
 	 * Creates instance of {@link DeclaredVersion} from provided value or null if it cannot be created.
 	 */
 	public static ParserResults<DeclaredVersion> parseDeclaredVersion(String declaredVersion) {
-		return parse(DECLARED_VERSION, declaredVersion);
+		return parse(DeclaredVersion.class.getSimpleName(), declaredVersion);
 	}
 
 	@SuppressWarnings("unchecked")

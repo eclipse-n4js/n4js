@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.bugreports.tests;
 
+import org.eclipse.n4js.N4JSStandaloneTestsModule;
+import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
+import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
+import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
+import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.junit.runner.RunWith;
 import org.xpect.XpectImport;
 import org.xpect.runner.XpectRunner;
@@ -19,11 +24,6 @@ import org.xpect.runner.XpectTestFiles.FileRoot;
 import org.xpect.xtext.lib.tests.LinkingTest;
 import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.xpect.xtext.lib.tests.ValidationTest;
-
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
-import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
-import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
-import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 
 /**
  * Test setup targeting the bugreports-pending folder.
@@ -37,7 +37,7 @@ import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "bugreports-pending", fileExtensions = { "xt" })
-@XpectImport(SuppressIssuesSetup.class)
+@XpectImport({ N4JSStandaloneTestsModule.class, SuppressIssuesSetup.class })
 public class N4JSBugreportPendingTest {
 	//
 }

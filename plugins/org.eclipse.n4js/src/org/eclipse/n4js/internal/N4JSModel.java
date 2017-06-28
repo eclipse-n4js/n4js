@@ -16,10 +16,10 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Collections.emptyList;
 import static org.eclipse.n4js.internal.N4JSSourceContainerType.ARCHIVE;
 import static org.eclipse.n4js.internal.N4JSSourceContainerType.PROJECT;
 import static org.eclipse.n4js.n4mf.ProjectType.TEST;
-import static java.util.Collections.emptyList;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -32,15 +32,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.naming.QualifiedName;
-
-import com.google.common.base.Objects;
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableList.Builder;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment;
@@ -57,6 +48,14 @@ import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.xtext.naming.QualifiedName;
+
+import com.google.common.base.Objects;
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  */
@@ -90,6 +89,11 @@ public class N4JSModel {
 	@Inject
 	public N4JSModel(InternalN4JSWorkspace workspace) {
 		this.workspace = workspace;
+	}
+
+	public N4JSModel(InternalN4JSWorkspace workspace, TargetPlatformInstallLocationProvider installLocationProvider) {
+		this.workspace = workspace;
+		this.installLocationProvider = installLocationProvider;
 	}
 
 	public N4JSProject getN4JSProject(URI location) {
@@ -136,13 +140,7 @@ public class N4JSModel {
 		Optional<? extends IN4JSSourceContainer> foundN4JSSourceContainer = Optional.absent();
 		if (!nestedLocation.isArchive()) {
 			N4JSProject project = findProjectWith(nestedLocation);
-			if (project != null) {
-				for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
-					if (matchPaths(nestedLocation, n4jsSourceContainer)) {
-						return Optional.of(n4jsSourceContainer);
-					}
-				}
-			}
+			foundN4JSSourceContainer = findN4JSSourceContainerInProject(project, nestedLocation);
 		} else {
 			String pathToArchive = nestedLocation.authority();
 			URI archiveURI = URI.createURI(pathToArchive.substring(0, pathToArchive.length() - 1));
@@ -155,10 +153,17 @@ public class N4JSModel {
 
 	public Optional<? extends IN4JSSourceContainer> findN4JSExternalSourceContainer(IN4JSProject extPackage,
 			URI nestedLocation) {
+		return findN4JSSourceContainerInProject(extPackage, nestedLocation);
+	}
+
+	protected Optional<? extends IN4JSSourceContainer> findN4JSSourceContainerInProject(IN4JSProject project,
+			URI nestedLocation) {
 		Optional<? extends IN4JSSourceContainer> foundN4JSSourceContainer = Optional.absent();
-		for (IN4JSSourceContainer n4jsSourceContainer : extPackage.getSourceContainers()) {
-			if (matchPaths(nestedLocation, n4jsSourceContainer)) {
-				return Optional.of(n4jsSourceContainer);
+		if (project != null) {
+			for (IN4JSSourceContainer n4jsSourceContainer : project.getSourceContainers()) {
+				if (matchPaths(nestedLocation, n4jsSourceContainer)) {
+					return Optional.of(n4jsSourceContainer);
+				}
 			}
 		}
 		return foundN4JSSourceContainer;

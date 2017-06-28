@@ -56,6 +56,8 @@ import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 import static org.eclipse.n4js.validation.validators.StaticPolyfillValidatorExtension.*
 
+import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+
 /**
  * superfluous properties in {@code @Spec} constructor.
  */
@@ -174,7 +176,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 		];
 
 		checkSuperfluousPropertiesForSpecConstructor(publicWritableFieldsAndSetters, objectLiteral);
-		checkFieldInitializationOfBuiltinOrProvidedByRuntimeInterface(publicWritableFieldsAndSetters, objectLiteral);
+		checkFieldInitializationOfImplementedInterface(publicWritableFieldsAndSetters, objectLiteral);
 	}
 
 	/**
@@ -196,7 +198,7 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 	 * Check if an object literal in {@code @Spec} constructor provide a property that comes from a built-in/provided by runtime interface.
 	 * IDE-2747.
 	 */
-	def private void checkFieldInitializationOfBuiltinOrProvidedByRuntimeInterface(Map<String, TMember> publicWritableFieldsMap, ObjectLiteral objectLiteral) {
+	def private void checkFieldInitializationOfImplementedInterface(Map<String, TMember> publicWritableFieldsMap, ObjectLiteral objectLiteral) {
 		// For each property of object literal, check if it comes from a built-in/provided by runtime interface.
 		val properties = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
 		properties.forEach[ property |
@@ -205,9 +207,9 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			if (field !== null) {
 				val containingClassifier = field.containingType;
 				if (containingClassifier instanceof TInterface) {
-					if (containingClassifier.providedByRuntime || TypeUtils.isBuiltIn(containingClassifier)) {
-						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_INTERFACE_PROPERTIES(field.name, containingClassifier.name);
-						addIssue(message, property.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_INTERFACE_PROPERTIES);
+					if (containingClassifier.builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation) {
+						val message = getMessageForCLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION(field.name, containingClassifier.name);
+						addIssue(message, property.astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_SPEC_BUILT_IN_OR_PROVIDED_BY_RUNTIME_OR_EXTENAL_WITHOUT_N4JS_ANNOTATION);
 					}
 				}
 			}

@@ -13,25 +13,20 @@ package org.eclipse.n4js.tests.externalPackages;
 import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
 
 import java.io.File;
-import java.net.URI;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.WorkManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.external.ExternalLibrariesReloadHelper;
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.junit.After;
 import org.junit.Test;
 
-import com.google.common.collect.BiMap;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.external.ExternalLibrariesReloadHelper;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
 
 /**
  * Test for checking whether the external workspace build jobs will not cause a deadlock in the {@link WorkManager} due
@@ -53,17 +48,14 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	private ExternalLibrariesReloadHelper reloadHelper;
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
 	 */
 	public void setupWorkspace() throws Exception {
-		final BiMap<URI, String> locations = ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get();
-		final URI location = locations.inverse().get(ExternalLibrariesActivator.MANGELHAFT_CATEGORY);
-		externalLibraryPreferenceStore.add(location);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		super.setUp();
+		shippedCodeInitializeTestHelper.setupBuiltIns();
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
 		ProjectUtils.importProject(projectsRoot, PROJECT);
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
@@ -78,11 +70,8 @@ public class IDEBUG_856_PluginUITest extends AbstractBuilderParticipantTest {
 	public void tearDown() throws Exception {
 		cleanWorkspace();
 		waitForAutoBuild();
-		final BiMap<URI, String> locations = ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get();
-		final URI location = locations.inverse().get(ExternalLibrariesActivator.MANGELHAFT_CATEGORY);
-		externalLibraryPreferenceStore.remove(location);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		shippedCodeInitializeTestHelper.teardowneBuiltIns();
+		waitForAutoBuild();
 		super.tearDown();
 	}
 

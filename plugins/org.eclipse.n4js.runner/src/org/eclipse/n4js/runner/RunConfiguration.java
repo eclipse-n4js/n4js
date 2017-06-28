@@ -22,13 +22,12 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jetty.util.ajax.JSON;
-
-import com.google.common.base.CharMatcher;
-
 import org.eclipse.n4js.generator.common.CompilerUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+
+import com.google.common.base.CharMatcher;
 
 /**
  * Container for all configuration attributes required for a single execution of some N4JS code.
@@ -123,7 +122,7 @@ public class RunConfiguration {
 
 	private final List<String> initModules = new ArrayList<>();
 
-	private boolean useDefaultBootstrap;
+	private boolean useCustomBootstrap;
 
 	private String execModule;
 
@@ -353,9 +352,19 @@ public class RunConfiguration {
 		return Collections.unmodifiableList(coreProjectPaths);
 	}
 
-	/** @see #getCoreProjectPaths() */
+	/**
+	 * Adds entries to the {@link #getCoreProjectPaths() core project paths}. All previously stored values are removed,
+	 * and all provided values are stored.
+	 */
 	public void setCoreProjectPaths(Collection<String> paths) {
 		this.coreProjectPaths.clear();
+		this.coreProjectPaths.addAll(paths);
+	}
+
+	/**
+	 * Unlike {@link #setCoreProjectPaths(Collection)} this method adds new entries without removing previous values.
+	 */
+	public void addCoreProjectPaths(Collection<String> paths) {
 		this.coreProjectPaths.addAll(paths);
 	}
 
@@ -374,15 +383,15 @@ public class RunConfiguration {
 	}
 
 	/**
-	 * Tells if default bootstrap code is to be used.
+	 * Flag indicates if custom bootstrap code should be used.
 	 */
-	public boolean isUseDefaultBootstrap() {
-		return useDefaultBootstrap;
+	public boolean isUseCustomBootstrap() {
+		return useCustomBootstrap;
 	}
 
-	/** @see #isUseDefaultBootstrap() */
-	public void setUseDefaultBootstrap(boolean useDefaultBootstrap) {
-		this.useDefaultBootstrap = useDefaultBootstrap;
+	/** @see #isUseCustomBootstrap() */
+	public void setUseCustomBootstrap(boolean useCustomBootstrap) {
+		this.useCustomBootstrap = useCustomBootstrap;
 	}
 
 	/**

@@ -11,11 +11,10 @@
 package org.eclipse.n4js;
 
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
 import org.eclipse.xtext.validation.Issue;
-
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 /**
  * An injector provider which binds a custom {@link IDiagnosticConverter} which filters the diagnosed issues.
@@ -31,7 +30,8 @@ public class N4JSInjectorProviderWithIssueSuppression extends N4JSInjectorProvid
 	}
 
 	/** */
-	public static class IssueSuppressionModule extends DefaultTestModule {
+	public static class IssueSuppressionModule extends N4JSStandaloneTestsModule {
+
 		/** */
 		@Override
 		public Class<? extends IDiagnosticConverter> bindDiagnosticConverter() {

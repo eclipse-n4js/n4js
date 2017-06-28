@@ -29,6 +29,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.IExecutor;
 import org.eclipse.n4js.runner.IRunner;
 import org.eclipse.n4js.runner.RunConfiguration;
+import org.eclipse.n4js.runner.RunnerFileBasedShippedCodeConfigurationHelper;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerDescriptorImpl;
@@ -50,6 +51,9 @@ public class NodeRunner implements IRunner {
 
 	private static final org.apache.log4j.Logger LOGGER = getLogger(NodeRunner.class);
 
+	/** ID of the Node.js runner as defined in the plugin.xml. */
+	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
+
 	/**
 	 * Class for providing descriptors for the Node.js runner with the same information as defined in the plugin.xml
 	 * (used only by N4jsc). Supports instance supplying with injection.
@@ -66,9 +70,6 @@ public class NodeRunner implements IRunner {
 
 	}
 
-	/** ID of the Node.js runner as defined in the plugin.xml. */
-	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";
-
 	/**
 	 * Descriptor for the Node.js runner with the same information as defined in the plugin.xml (used only by N4jsc).
 	 */
@@ -81,6 +82,9 @@ public class NodeRunner implements IRunner {
 	@Inject
 	private Provider<NodeJsBinary> nodeJsBinaryProvider;
 
+	@Inject
+	private RunnerFileBasedShippedCodeConfigurationHelper shippedCodeConfigurationHelper;
+
 	@Override
 	public RunConfiguration createConfiguration() {
 		return new RunConfiguration();
@@ -88,7 +92,9 @@ public class NodeRunner implements IRunner {
 
 	@Override
 	public void prepareConfiguration(RunConfiguration config) {
-		// no special values to be prepared here
+		if (config.isUseCustomBootstrap()) {
+			shippedCodeConfigurationHelper.configureFromFileSystem(config);
+		}
 	}
 
 	@Override
@@ -106,6 +112,7 @@ public class NodeRunner implements IRunner {
 			NodeRunOptions runOptions = new NodeRunOptions();
 
 			runOptions.setExecModule(runConfig.getExecModule());
+			runOptions.addInitModules(runConfig.getInitModules());
 			runOptions.setCoreProjectPaths(on(NODE_PATH_SEP).join(runConfig.getCoreProjectPaths()));
 			runOptions.setEngineOptions(runConfig.getEngineOptions());
 			runOptions.setCustomEnginePath(runConfig.getCustomEnginePath());
@@ -116,11 +123,6 @@ public class NodeRunner implements IRunner {
 			// Add custom node paths
 			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
 					.split(runConfig.getCustomEnginePath())));
-
-			runOptions.addInitModules(runConfig.getInitModules());
-			if (runConfig.isUseDefaultBootstrap()) {
-				paths.addAll(NodeEngineDefaultBootstrap.DEFAULT_BOOTSTRAP_PATHS);
-			}
 
 			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
 			cmds = cb.createCmds(runOptions);
