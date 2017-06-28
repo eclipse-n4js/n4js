@@ -1,0 +1,15 @@
+{
+  "name": "n4js-runtime-esnext",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/NumberFour/n4js-libs",
+  "description": "N4JS Runtime Library for ES.next.",
+  "keywords": [
+    "n4js",
+    "esnext",
+    "es.next"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

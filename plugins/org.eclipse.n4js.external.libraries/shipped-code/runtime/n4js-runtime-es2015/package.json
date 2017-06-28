@@ -1,0 +1,15 @@
+{
+  "name": "n4js-runtime-es2015",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/NumberFour/n4js-libs",
+  "description": "N4JS Runtime Library for ES2015.",
+  "keywords": [
+    "n4js",
+    "es2015",
+    "es6"
+  ],
+  "engines": {
+    "node": ">= 5.0.0"
+  }
+}

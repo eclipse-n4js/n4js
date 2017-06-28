@@ -1,0 +1,191 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
+import {AssertionError} from "org/eclipse/n4js/mangelhaft/assert/AssertionError"
+
+interface ICreature {}
+
+interface I { p ? : int; }
+
+class Beast implements ICreature {}
+class Dog extends Beast {}
+
+export public class DeepEqualsTest {
+
+    @Test
+    deep_equal_prototype_test() {
+        const a = new Dog();
+        const b = {};
+        // Ignore prototype
+        Assert.deepEqual(a, b, "Two objects of different prototype");
+        // Do NOT ignore prototype
+          Assert.throws(() => {
+            Assert.deepEqual(a, b, "are not deep equal", false)
+        }, AssertionError, "Prototypes are different");
+    }
+    
+    @Test
+    deep_equal_self_reference_test() {
+    		const actual: Object+ = {};
+    		Assert.throws(() => {
+        		Assert.deepEqual(actual, { p : 5} )
+        }, AssertionError, "Object literals are not equal");
+    }
+    
+    @Test
+    deep_equal_diamond_vs_open_graph() {
+        let objA1: Object = {};
+        let objA2: Object = {};
+        let objA3: Object = {};
+        let objAX: Object = {
+            name: 'Fritz'
+        };
+        objA1['prop1to2'] = objA2;
+        objA1['prop1to3'] = objA3;
+        objA2['prop2toX'] = objAX; // in graph A paths meet in a single object X at the end
+        objA3['prop3toX'] = objAX;
+        let objB1: Object = {};
+        let objB2: Object = {};
+        let objB3: Object = {};
+        let objBXa: Object = {
+            name: 'Fritz'
+        };
+        let objBXb: Object = {
+            name: 'Fritz'
+        };
+        objB1['prop1to2'] = objB2;
+        objB1['prop1to3'] = objB3;
+        objB2['prop2toX'] = objBXa; // in graph B paths do not meet, but end in two equal yet distinct objects Xa and Xb
+        objB3['prop3toX'] = objBXb;
+        Assert.deepEqual(objA1, objB1);
+    }
+    @Test
+    deep_equal_cycle() {
+        let objA1: Object = {
+            name: 'Alice'
+        };
+        let objA2: Object = {
+            name: 'Bob'
+        };
+        objA1['prop1to2'] = objA2;
+        objA2['prop2to1'] = objA1;
+        let objB1: Object = {
+            name: 'Alice'
+        };
+        let objB2: Object = {
+            name: 'Bob'
+        };
+        objB1['prop1to2'] = objB2;
+        objB2['prop2to1'] = objB1;
+        Assert.deepEqual(objA1, objB1);
+    }
+
+    @Test
+    deep_equal_object_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields() {
+        let objA = {
+            a: {}
+           ,b: {}
+           ,Object c: null
+        };
+        let objB = {
+            a: {}
+           ,b: {}
+           ,Object c: null
+        };
+        objA.c = objA.a;
+        objB.c = objB.a;
+
+        Assert.deepEqual(objA, objB);
+    }
+    
+    @Test
+    deep_equal_object_cycle_SLBUG_40___equal_cyclic_refs_to_different_fields() {
+        let objA = {
+            a: {}
+           ,b: {}
+           ,Object c: null
+        };
+        let objB = {
+            a: {}
+           ,b: {}
+           ,Object c: null
+        };
+        objA.c = objA.a;
+        objB.c = objB.b;
+        
+        Assert.deepEqual(objA, objB);
+    }
+    @Test
+    deep_equal_object_cycle_SLBUG_40___not_equal_refs_same_refs_different_values() {
+        let objA = {
+            a: {jim:"crow"}
+           ,b: {}
+           ,Object c: null
+        };
+        let objB = {
+            a: {}
+           ,b: {}
+           ,Object c: null
+        };
+        objA.c = objA.a;
+        objB.c = objB.a;
+
+
+        Assert.throws(() => {
+            Assert.deepEqual(objA, objB);
+        }, AssertionError, "objects should not be equal here");
+    }
+
+    @Test
+    deep_equal_array_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields() {
+        let arrA: Array<Array<?>> = [];
+        let arrB: Array<Array<?>> = [];
+        arrA.push([]);
+        arrA.push(arrA);
+        arrB.push([]);
+        arrB.push(arrB);
+        Assert.deepEqual(arrA,arrB);
+    }
+    @Test
+    deep_equal_array_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields_val_change() {
+        let arrA: Array<Array<?>> = [];
+        let arrB: Array<Array<?>> = [];
+        arrA.push([[]]);
+        arrA.push(arrA);
+        arrB.push([]);
+        arrB.push(arrB);
+       Assert.throws(() => {
+            Assert.deepEqual(arrA,arrB);
+        }, AssertionError);
+
+    }
+    @Test
+    deep_equal_array_cycle_SLBUG_40___equal_cyclic_refs_to_same_fields_out_of_order() {
+        let arrA: Array<Array<?>> = [];
+        let arrB: Array<Array<?>> = [];
+        arrA.push([]);
+        arrA.push(arrA);
+        arrB.push(arrB);
+        arrB.push([]);
+        Assert.throws(() => {
+            Assert.deepEqual(arrA,arrB);
+        }, AssertionError);
+    }
+    
+    @Test
+    deep_equal_missing_vs_undefined() {
+        let i1 : ~I = {};
+        let i2 : ~I = {p : undefined};
+        Assert.throws(() => {
+            Assert.deepEqual(i1,i2);
+        }, AssertionError);
+    }
+}
