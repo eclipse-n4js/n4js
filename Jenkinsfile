@@ -65,7 +65,6 @@ timestamps {
 
                     String snapshotRepo = "${workspace}/${N4JS_SNAPSHOT_MAVEN_REPO_FOLDER_WSREL}"
                     String snapshotProperty = "-Dlocal-snapshot-deploy-folder=${snapshotRepo}"
-                    String siblingRepoProperty = "-DsiblingMavenRepo=file://${snapshotRepo}"
                     String targetPomFile = "--file ${workspace}/${n4jsDir}//pom.xml"
                     String commonOptions = "-Dmaven.test.failure.ignore -X -e"
 
@@ -90,21 +89,13 @@ timestamps {
                                        echo "==================================="
                                   """
 
-                                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean deploy ${targetPomFile} ${commonProfiles} ${siblingRepoProperty} ${snapshotProperty} ${commonOptions}"""
+                                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean deploy ${targetPomFile} ${commonProfiles} ${snapshotProperty} ${commonOptions}"""
                             }
                         }
                     }
                 }
 
                 stage('PostBuild') {
-                    if (isMaster()) {
-                        rsync("$workspace/n4js/releng/org.eclipse.n4js.targetplatform/N4JS.setup", 'devtools/setup/enfore/n4js')
-                    }
-
-                    if (isNightly()) {
-                        //TODO nightly post builds steps not yet supported
-                        echo "TODO nightly post builds steps not yet supported"
-                    }
                 }
                 sendEmail("${env.JOB_NAME} (${env.BUILD_NUMBER}) succeeded", "${env.BUILD_URL} succeeded - ${env.JOB_NAME} (#${env.BUILD_NUMBER}).")
             } catch (exc) {
@@ -148,25 +139,13 @@ boolean isNightly() { return env.NIGTHLY_BUILD == "true" }
 
 /**
  * Sends email notification about job status based on the provided data.
- * When running on {@code master} it sends email to {@code staff-devtools@numberfour.eu}, otherwise
- * to the developers involved in current custom branch.
  * @param subject the subject of the email
  * @param body the body of the email
  */
 @NonCPS
 void sendEmail(String subject, String body) {
-    String robot = 'robot@numberfour.eu'
-    if (isMaster()) {
         emailext subject: subject,
                 body: body,
-                replyTo: robot,
-                from: robot,
-                to: 'staff-devtools@numberfour.eu'
-    } else {
-        emailext subject: subject,
-                body: body,
-                replyTo: robot,
-                from: robot,
                 recipientProviders: [
                         [$class: 'CulpritsRecipientProvider'],
                         [$class: 'UpstreamComitterRecipientProvider'],
@@ -174,7 +153,6 @@ void sendEmail(String subject, String body) {
                         [$class: 'FailingTestSuspectsRecipientProvider'],
                         [$class: 'FirstFailingBuildSuspectsRecipientProvider'],
                         [$class: 'RequesterRecipientProvider']]
-    }
 }
 
 /**
@@ -196,66 +174,5 @@ def gitCheckout(String checkoutDir, Object gitRemote, Object branch, String refC
                                 , extensions                       : [ [$class: 'RelativeTargetDirectory', relativeTargetDir: checkoutDir],
                                                                        [$class: 'CloneOption', depth: 0, noTags: false, reference: refCache, shallow: true]]
                                 , userRemoteConfigs                : gitRemote]
-}
-
-/**
- * Helper function that performs rsync.
- *
- * @param absolute path to location used as source parameter of rsync call
- * @param relative path to location to used as destination or rsync call
- * @param base used to resolve destination or rsync call, by default {@code 'storage.corp.numberfour.eu'}
- */
-@NonCPS
-def rsync(String fromLocation, String toLocation, String rsyncBase = 'storage.corp.numberfour.eu') {
-    String dest = "$rsyncBase/$toLocation"
-    echo "-------------------------------------------------------------------------"
-    echo "rsync"
-    echo "     from $fromLocation"
-    echo "     to   http://$dest"
-    echo "-------------------------------------------------------------------------"
-    sh "rsync -av $fromLocation rsync://$dest"
-}
-
-//============== NOT WORKING ====================
-
-/**
- * Analyzes logs for downloads from external sources. When found and job is successfull, job is changed to unstable.
- *
- * Note, this requires special permisions in Jenkins configured otherwise throws
- * {@code org.jenkinsci.plugins.scriptsecurity.sandbox.RejectedAccessException: Scripts not permitted to use method org.jvnet.hudson.plugins.groovypostbuild.GroovyPostbuildRecorder$BadgeManager getBuild}
- */
-@NonCPS
-def checkLogsForDownloads() {
-    // old jobs had special check performing following steps:
-    //    # get all log-lines starting with "Downloading
-    //    # then remove all "Downloading npm dependencies..."
-    //    # then remove all "repository.corp.numberfour.eu"
-    //    # then remove all "Downloding: file:/"
-    //    # and assert that NOTHING is left! (empty log-lines)
-
-    //now we go with regex to
-
-
-    pattern = ~/(.*Downloading)(?!(: http:\/\/repository.corp.numberfour.eu|: file:\/| npm dependencies)).*/
-    def list = []
-    manager.build.logFile.eachLine { line ->
-        matcher = pattern.matcher(line)
-        if (matcher.matches()) {
-            ownClass = matcher.group(1).replaceAll("/", ".")
-            sunClass = matcher.group(2)
-            list.add(line)
-        }
-    }
-    if (list.size() > 0) {
-        def summary = manager.createSummary("warning.gif")
-        summary.appendText("Found downlaods from external sources:<ul>", false)
-        list.each {
-            summary.appendText("<li><b>$it</b>", false)
-        }
-        summary.appendText("</ul>", false)
-        if (manager.getResult() == 'SUCCESS') {
-            manager.buildUnstable()
-        }
-    }
 }
 
