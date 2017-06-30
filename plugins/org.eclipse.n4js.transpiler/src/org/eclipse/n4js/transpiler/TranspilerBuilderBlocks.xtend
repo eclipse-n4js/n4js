@@ -452,6 +452,10 @@ public class TranspilerBuilderBlocks
 		return _FunExpr(async, name, #[], statements);
 	}
 
+	public static def FunctionExpression _FunExpr(boolean async, String name, FormalParameter... formalParams) {
+		return _FunExpr(async, name, formalParams, #[]);
+	}
+
 	public static def FunctionExpression _FunExpr(boolean async, String name, FormalParameter[] fpars, Statement... statements) {
 		if(statements !== null && statements.length===1 && statements.get(0) instanceof Block) {
 			// safe guard: in case complex EMF inheritance hierarchy causes wrong overload to be invoked
@@ -464,6 +468,13 @@ public class TranspilerBuilderBlocks
 		result.body = _Block(statements);
 		return result;
 	}
+	
+	public static def FormalParameter _FormalParameter(String name) {
+		val result = N4JSFactory.eINSTANCE.createFormalParameter;
+		result.name = name;
+		return result;
+	}
+
 	public static def FunctionExpression _FunExpr(boolean async, String name, FormalParameter[] fpars, Block block) {
 		return _FunExprWithBlock(async, name, fpars, block);
 	}

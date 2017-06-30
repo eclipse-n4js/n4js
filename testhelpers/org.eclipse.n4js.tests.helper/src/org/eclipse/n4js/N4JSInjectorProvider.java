@@ -16,22 +16,21 @@ import org.eclipse.xtext.junit4.GlobalRegistries;
 import org.eclipse.xtext.junit4.GlobalRegistries.GlobalStateMemento;
 import org.eclipse.xtext.junit4.IInjectorProvider;
 import org.eclipse.xtext.junit4.IRegistryConfigurator;
-import org.eclipse.xtext.junit4.util.ParseHelper;
-import org.eclipse.xtext.junit4.util.ResourceHelper;
+import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
-import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
-import org.eclipse.xtext.validation.IDiagnosticConverter;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.util.Modules;
 
-import org.eclipse.n4js.n4JS.Script;
-
-/***/
+/**
+ * An injector provider for standalone JUnit tests. See {@link InjectWith}
+ *
+ * Do not use this for Plugin tests. Plugin tests have a dedicated injector provider.
+ */
 public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigurator {
 
 	/***/
@@ -53,7 +52,7 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 
 	/** Default constructor */
 	public N4JSInjectorProvider() {
-		this(new DefaultTestModule());
+		this(new N4JSStandaloneTestsModule());
 	}
 
 	/**
@@ -135,6 +134,9 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 	/**
 	 * Common Guice module for overriding bindings of the N4JSRuntimeModule. Most importantly this class re-binds the
 	 * ClassLoader to the one of this package.
+	 *
+	 * Note that when sub-classing this class in a different bundle, it is essential to re-bind
+	 * {@link #bindClassLoaderToInstance()}.
 	 */
 	public static class BaseTestModule extends AbstractGenericModule {
 		/**
@@ -145,30 +147,4 @@ public class N4JSInjectorProvider implements IInjectorProvider, IRegistryConfigu
 			return getClass().getClassLoader();
 		}
 	}
-
-	/** */
-	public static class DefaultTestModule extends BaseTestModule {
-		/** */
-		public Class<? extends IDiagnosticConverter> bindDiagnosticConverter() {
-			return ExceptionAwareDiagnosticConverter.class;
-		}
-
-		/** */
-		public Class<? extends N4JSParseHelper> bindN4JSParseHelper() {
-			return SmokeTestWriter.class;
-		}
-
-		/** */
-		@SingletonBinding
-		public Class<? extends ResourceHelper> bindResourceHelper() {
-			return ResourceHelper.class;
-		}
-
-		/** */
-		public Class<? extends ParseHelper<Script>> bindParseHelperScript() {
-			return SmokeTestWriter.class;
-		}
-
-	}
-
 }

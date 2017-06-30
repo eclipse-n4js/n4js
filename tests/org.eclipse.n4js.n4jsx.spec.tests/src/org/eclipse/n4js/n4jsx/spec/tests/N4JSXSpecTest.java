@@ -19,7 +19,7 @@ import org.xpect.runner.XpectTestFiles.FileRoot;
 import org.xpect.xtext.lib.tests.LinkingTest;
 import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
 import org.xpect.xtext.lib.tests.ValidationTest;
-
+import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
@@ -49,7 +49,7 @@ import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpectTests")
-@XpectImport(SuppressIssuesSetup.class)
+@XpectImport({N4JSStandaloneTestsModule.class, SuppressIssuesSetup.class})
 public class N4JSXSpecTest {
 	//
 }

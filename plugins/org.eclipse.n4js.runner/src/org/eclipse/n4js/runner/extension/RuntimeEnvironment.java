@@ -36,10 +36,13 @@ public enum RuntimeEnvironment {
 	/** IOJS */
 	IOJS("RE_IOJS");
 
-	/*
-	 * @see http://stackoverflow.com/a/27703839
+	/**
+	 * We wrap map in the class to have it initialized before enum instances are initialized.
+	 *
+	 * @see <a href="http://stackoverflow.com/a/27703839">http://stackoverflow.com/a/27703839</a>
+	 * @see <a href="https://en.wikipedia.org/wiki/Initialization-on-demand_holder_idiom">Initialization on demand
+	 *      holder idiom</a>
 	 */
-
 	private static class DataMap {
 		static Map<String, RuntimeEnvironment> data = new HashMap<>();
 	}

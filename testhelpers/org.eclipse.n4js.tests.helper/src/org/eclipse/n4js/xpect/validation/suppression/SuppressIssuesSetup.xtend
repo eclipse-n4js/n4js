@@ -12,9 +12,9 @@ package org.eclipse.n4js.xpect.validation.suppression
 
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import java.util.ArrayList
 import java.util.Collection
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.CheckMode

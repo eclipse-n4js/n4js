@@ -22,12 +22,12 @@ import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.assistants.BootstrapCallAssistant
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TInterface
-import org.eclipse.n4js.ts.utils.TypeUtils
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
  */
@@ -158,9 +158,9 @@ class InterfaceDeclarationTransformation extends Transformation {
 		val result = newArrayList;
 		val $fieldInitSTE = steFor_$fieldInit;
 		val superIfcSTEs = typeAssistant.getSuperInterfacesSTEs(ifcDecl).filter [
-			// GHOLD-388: Generate $fieldInit call only if the interface is not provided by runtime.
-			val tinf = originalTarget as TInterface
-			!tinf.providedByRuntime && !TypeUtils.isBuiltIn(tinf)
+			// regarding the cast to TInterface: see preconditions of ClassDeclarationTransformation
+			// GHOLD-388: Generate $fieldInit call only if the interface is neither built-in nor provided by runtime nor external without @N4JS
+			!(originalTarget as TInterface).builtInOrProvidedByRuntimeOrExternalWithoutN4JSAnnotation;
 		];
 
 		for(superIfcSTE : superIfcSTEs) {

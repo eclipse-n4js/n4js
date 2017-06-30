@@ -10,6 +10,7 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.equinox.common,
  org.eclipse.emf.ecore,
  org.eclipse.n4js,
- org.eclipse.n4js.external.libraries
+ org.eclipse.n4js.external.libraries,
+ org.eclipse.n4js.n4mf
 Export-Package: org.eclipse.n4js.runner.nodejs
 Import-Package: org.apache.log4j

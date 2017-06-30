@@ -17,6 +17,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.projectModel.IN4JSProject
 
 /**
  */
@@ -47,6 +48,30 @@ public class CompilerUtils {
 
 		val String targetFilePath = try {
 			projectUtils.generateFileDescriptor(n4jsSourceURI, extStr)
+		} catch (Throwable t) {
+
+			//TODO a bit generic error handling
+			handleError(t.message, t)
+			null
+		}
+
+		return targetFilePath;
+	}
+	
+		/**
+	 * Returns the name of the target file (without path) to which the source is to be compiled to.
+	 * Default implementation returns a configured project Name with version + file name + extension.
+	 * E.g., "proj/p/A.js" for a file A in proj and a compiledFileExtension of "js".
+	 * <p>
+	 * The compiledFileExtension should not include the separator dot; it may be <code>null</code>
+	 * and then no extension is appended.
+	 */
+	def String getTargetFileName(IN4JSProject project, URI n4jsSourceURI, String compiledFileExtension) {
+
+		val extStr = if(compiledFileExtension!==null && compiledFileExtension.length>0) "." + compiledFileExtension else "";
+
+		val String targetFilePath = try {
+			projectUtils.generateFileDescriptor(project,n4jsSourceURI, extStr)
 		} catch (Throwable t) {
 
 			//TODO a bit generic error handling

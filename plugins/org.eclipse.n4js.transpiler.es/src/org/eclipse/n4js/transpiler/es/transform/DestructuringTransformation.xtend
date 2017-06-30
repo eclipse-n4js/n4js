@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import java.util.ArrayList
+import java.util.List
+import java.util.Map
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.misc.DestructNode
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
@@ -18,6 +23,7 @@ import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.EqualityOperator
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
+import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -29,23 +35,18 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import java.util.ArrayList
-import java.util.List
-import java.util.Map
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.VariableStatementKeyword
 
 /**
  * Transforms ES6 destructuring patterns into equivalent ES5 code. If the target engine supports ES6 destructuring
@@ -101,14 +102,19 @@ class DestructuringTransformation extends Transformation {
 	 * Transforms (a single) destructuring assignment.
 	 */
 	def public void transformDestructuringAssignment(AssignmentExpression expr) {
-		val helperFun = _FunExpr(false);
+		// We pass the value of the expression to the function call. GHOLD-407
+		var String fparName;
+		var FunctionExpression helperFun;
+
+		fparName = "$destruct" + "Param0";
+		val fpar = _FormalParameter(fparName);
+		helperFun = _FunExpr(false, null, fpar);
+
 		val helperFunContents = helperFun.body.statements;
-
 		val rootNode = DestructNode.unify(expr);
-
 		val helperVars = <VariableDeclaration>newArrayList;
 		val simpleAssignments = <Pair<SymbolTableEntry,? extends Expression>>newArrayList;
-		traverse(helperVars, simpleAssignments, rootNode, expr.rhs);
+		traverse(helperVars, simpleAssignments, rootNode, expr.rhs, fparName);
 
 		helperFunContents += helperVars.map[_VariableStatement(it)];
 		helperFunContents += simpleAssignments.map[
@@ -122,8 +128,9 @@ class DestructuringTransformation extends Transformation {
 		// the assignment expression 'expr' (without evaluating rhs again!)
 		val firstHelperVarSTE = findSymbolTableEntryForElement(helperVars.get(0), false);
 		helperFunContents += _ReturnStmnt(_IdentRef(firstHelperVarSTE));
-
-		replace(expr, _CallExpr(_Parenthesis(helperFun))); // parentheses required because the expression might appear as a statement (to disambiguate from function declaration)
+		
+		val callExpr = _CallExpr(_Parenthesis(helperFun), expr.rhs) // parentheses required because the expression might appear as a statement (to disambiguate from function declaration)
+		replace(expr, callExpr);
 	}
 
 	def private void transformForStatementWithDestructuring(ForStatement stmnt) {
@@ -164,7 +171,7 @@ class DestructuringTransformation extends Transformation {
 					stmnt.varDeclsOrBindings.size===1 && stmnt.varDeclsOrBindings.get(0) instanceof VariableBinding);
 
 				val rootNode = DestructNode.unify(stmnt.varDeclsOrBindings.head as VariableBinding);
-				traverse(helperVars, simpleAssignments, rootNode, _IdentRef(iterVarSTE));
+				traverse(helperVars, simpleAssignments, rootNode, _IdentRef(iterVarSTE), null);  // fparname = null since we do not generate any function.
 				needDeclarations = true;
 				varStmtKeyword = stmnt.varStmtKeyword;
 
@@ -172,7 +179,7 @@ class DestructuringTransformation extends Transformation {
 				// something like: for( [a,b] of [ [1,2], [3,4] ] ) {}
 
 				val rootNode = DestructNode.unify(stmnt);
-				traverse(helperVars, simpleAssignments, rootNode, _IdentRef(iterVarSTE));
+				traverse(helperVars, simpleAssignments, rootNode, _IdentRef(iterVarSTE), null); // fparname = null since we do not generate any function.
 				needDeclarations = false;
 
 			} else {
@@ -223,7 +230,7 @@ class DestructuringTransformation extends Transformation {
 				val rootNode = DestructNode.unify(vdeclOrBinding);
 				val helperVars = <VariableDeclaration>newArrayList;
 				val simpleAssignments = <Pair<SymbolTableEntry,? extends Expression>>newArrayList;
-				traverse(helperVars, simpleAssignments, rootNode, vdeclOrBinding.expression);
+				traverse(helperVars, simpleAssignments, rootNode, vdeclOrBinding.expression, null); // fparname = null since we do not generate any function.
 				result += simpleAssignments.map[
 					var varDecl = key.getVariableDeclarationFromSTE;
 					varDecl.expression = value;
@@ -234,18 +241,19 @@ class DestructuringTransformation extends Transformation {
 		return result;
 	}
 	def private void traverse(List<VariableDeclaration> helperVars, List<Pair<SymbolTableEntry,? extends Expression>> simpleAssignments,
-			DestructNode rootNode, Expression value) {
+			DestructNode rootNode, Expression value, String fparName) {
 		val scope = N4JSASTUtils.getScope(rootNode.astElement, false) ?: state.im;
 		val n = destructsPerScope.merge(scope, 1, [i,j|i+j]) - 1;
-		traverse(helperVars, simpleAssignments, rootNode.nestedNodes, value, Integer.toString(n));
+		traverse(helperVars, simpleAssignments, rootNode.nestedNodes, value, fparName, Integer.toString(n));
 	}
 	/**
 	 * Breaks down the destructuring pattern, represented by the given {@link DestructNode}s, into a number of simple
 	 * assignments (without destructuring) that will be added to argument 'simpleAssignments'. The order of those simple
 	 * assignments matters. Nested patterns as returned by {@link DestructNode#getNestedNodes()} are also broken down.
+	 * fparName, if not null, is the parameter name of the enclosing function.
 	 */
 	def private void traverse(List<VariableDeclaration> helperVars, List<Pair<SymbolTableEntry,? extends Expression>> simpleAssignments,
-			DestructNode[] nodes, Expression value, String helperVarSuffix) {
+			DestructNode[] nodes, Expression value, String fparName, String helperVarSuffix) {
 		val len = nodes.length;
 		val isPositionalPattern = nodes.exists[positional];
 		val isRest = isPositionalPattern && !nodes.empty && nodes.last.rest;
@@ -268,20 +276,27 @@ class DestructuringTransformation extends Transformation {
 				_Snippet("function(arr){return Array.isArray(arr) ? arr : Array.from(arr);}"),
 				value
 			);
-		} else if(isPositionalPattern) {
-			//result.add(currHelperVar+" = $sliceToArrayForDestruct(("+value+"), "+len+")");
-			simpleAssignments += currHelperVarSTE -> _CallExpr(
-				_IdentRef($sliceToArrayForDestructSTE),
-				_Parenthesis(
-					value
-				),
-				_NumericLiteral(len)
-			);
 		} else {
-			//result.add(currHelperVar+" = ("+value+")");
-			simpleAssignments += currHelperVarSTE -> _Parenthesis(
+			val passValue = if (fparName.isNullOrEmpty) {
 				value
-			);
+			} else {
+				// If the fparName is not empty, the generated function for destructuring has a parameter and we should use that parameter instead. GHOLD-407
+				val fparSTE = getSymbolTableEntryInternal(fparName, true);
+				_IdentRef(fparSTE)
+			}
+			if(isPositionalPattern) {
+				//result.add(currHelperVar+" = $sliceToArrayForDestruct(("+value+"), "+len+")");
+				simpleAssignments += currHelperVarSTE -> _CallExpr(
+					_IdentRef($sliceToArrayForDestructSTE),
+					_Parenthesis(passValue),
+					_NumericLiteral(len)
+				);
+			} else {
+				//result.add(currHelperVar+" = ("+value+")");
+				simpleAssignments += currHelperVarSTE -> _Parenthesis(
+					passValue
+				);
+			}
 		}
 
 		// STEP 2: create code to perform the actual destructuring
@@ -336,7 +351,8 @@ class DestructuringTransformation extends Transformation {
 				// nested destructuring
 				// (assigning the current value in 'currValue' to the nested destructuring pattern)
 				nestedPatternsCounter++;
-				traverse(helperVars, simpleAssignments, currNode.nestedNodes, currValue, helperVarSuffix+"$"+nestedPatternsCounter);
+				// fparname = null since we do not generate any function
+				traverse(helperVars, simpleAssignments, currNode.nestedNodes, currValue, null, helperVarSuffix+"$"+nestedPatternsCounter);
 			}
 			else {
 				// padding entry (from elision)

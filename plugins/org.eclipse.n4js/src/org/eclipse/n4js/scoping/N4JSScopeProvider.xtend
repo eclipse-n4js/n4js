@@ -44,7 +44,6 @@ import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
-import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
@@ -319,11 +318,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		collectLexialEnvironmentsScopeLists(vee, scopeLists);
 		val Script script = EcoreUtil.getRootContainer(vee) as Script;
 
-		// Filter primitive types here. Normally,
-		// the script base scope does not include them, however, in the case of
-		// tests with synthesized test environment it does, due to an issue
-		// which still has to be investigated. (See GHOLD-390)
-		val IScope baseScope = new NoPrimitiveTypesScope(script.getScriptBaseScope(context, reference));
+		val IScope baseScope = script.getScriptBaseScope(context, reference);
 
 		// imported variables (added as second step to enable shadowing of imported elements)
 		var IScope scope = getImportedIdentifiables(baseScope, script);

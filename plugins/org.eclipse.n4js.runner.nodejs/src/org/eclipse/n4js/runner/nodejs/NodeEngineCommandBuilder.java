@@ -24,6 +24,7 @@ import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -48,11 +49,6 @@ public class NodeEngineCommandBuilder {
 		final ArrayList<String> commands = new ArrayList<>();
 
 		commands.add(nodeJsBinary.get().getBinaryAbsolutePath());
-
-		// brute force harmony
-		// DISABLED, because 1) it is no longer required, and 2) it caused problems in nodejs 6.5.0
-		// for our async/await due to a bug in v8, see https://bugs.chromium.org/p/v8/issues/detail?id=5322
-		// commands.add("--harmony");
 
 		// allow user flags
 		final String nodeOptions = nodeRunOptions.getEngineOptions();
@@ -110,10 +106,16 @@ public class NodeEngineCommandBuilder {
 		return "global.$executionData = " + data + ";";
 	}
 
+	/**
+	 * Sets native load for execution module (e.g. entry point to the bootstrap code).
+	 *
+	 * @param moduleName
+	 *            value for native load pointing to the bootstrap code entry point
+	 * @return native code
+	 */
 	private String generateNativeLoad(String moduleName) {
-		if (null == moduleName) {
-			moduleName = NodeEngineDefaultBootstrap.DEFAULT_BOOTSTRAP_ENTRY_POINT;
-		}
+		if (Strings.isNullOrEmpty(moduleName))
+			throw new RuntimeException("Execution module not provided.");
 		return "require('" + moduleName + "');";
 	}
 

@@ -249,8 +249,8 @@ public class N4jscBase {
 	@Option(name = "--test", /* aliases = "-t", */metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
 	File testThisLocation = null;
 
-	@Option(name = "--testWith", aliases = "-tw", metaVar = "testerId", usage = "ID of tester to use, last segment is sufficient, e.g. nodejs")
-	String tester = "nodejs";
+	@Option(name = "--testWith", aliases = "-tw", metaVar = "testerId", usage = "ID of tester to use, last segment is sufficient, e.g. nodejs_mangelhaft")
+	String tester = "nodejs_mangelhaft";
 
 	@Option(name = "--list-testers", aliases = "-lt", usage = "show list of available testers")
 	boolean listTesters = false;
@@ -520,7 +520,7 @@ public class N4jscBase {
 				compileAndExecute();
 			}
 		} catch (ExitCodeException e) {
-			e.printStackTrace();
+			dumpThrowable(e);
 			throw e;
 		} finally {
 			targetPlatformFile = null;
@@ -617,7 +617,7 @@ public class N4jscBase {
 		if (!status.isOK()) {
 			System.out.println(status.getMessage());
 			if (null != status.getException()) {
-				status.getException().printStackTrace();
+				dumpThrowable(status.getException());
 			}
 			throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(), status.getException());
 		}
@@ -626,7 +626,7 @@ public class N4jscBase {
 			if (!status.isOK()) {
 				System.out.println(status.getMessage());
 				if (null != status.getException()) {
-					status.getException().printStackTrace();
+					dumpThrowable(status.getException());
 				}
 				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(), status.getException());
 			}
@@ -1037,7 +1037,7 @@ public class N4jscBase {
 			}
 
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			dumpThrowable(e1);
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
 					"The spawned runner exited by throwing an exception", e1);
 		}
@@ -1075,7 +1075,7 @@ public class N4jscBase {
 			}
 
 		} catch (Exception e1) {
-			e1.printStackTrace();
+			dumpThrowable(e1);
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
 					"The spawned tester exited by throwing an exception", e1);
 		} finally {
@@ -1105,7 +1105,7 @@ public class N4jscBase {
 			return matchingRunnerDescs.get(0);
 		} catch (IllegalArgumentException e) {
 			// internally the registry throws IllegalArgumentExceptions if an runnerId is invalid.
-			e.printStackTrace(); // dump problem, to help localize it. (it is really a rare case not expected to
+			dumpThrowable(e); // dump problem, to help localize it. (it is really a rare case not expected to
 			// happen.)
 			throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no runner found for id: " + runner
 					+ " Root cause is " + e.getMessage());
@@ -1126,7 +1126,7 @@ public class N4jscBase {
 			return matchingTesterDescs.get(0);
 		} catch (IllegalArgumentException e) {
 			// internally the registry throws IllegalArgumentExceptions if an testerId is invalid.
-			e.printStackTrace(); // dump problem, to help localize it. (it is really a rare case not expected to
+			dumpThrowable(e); // dump problem, to help localize it. (it is really a rare case not expected to
 			// happen.)
 			throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no tester found for id: " + tester
 					+ " Root cause is " + e.getMessage());
@@ -1511,4 +1511,11 @@ public class N4jscBase {
 		String description = "";
 	}
 
+	/**
+	 * Captures all info from throwable into string and then prints it into {@link System#err} - decreases interleaving
+	 * of different writes.
+	 */
+	private void dumpThrowable(Throwable throwable) {
+		System.err.println(Throwables.getStackTraceAsString(throwable));
+	}
 }

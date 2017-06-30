@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js;
 
+import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression.IssueSuppressionModule;
+import org.eclipse.n4js.N4JSInjectorProviderWithMockProject.MockProjectModule;
+
 /**
  * An injector provider which combines {@link N4JSInjectorProviderWithMockProject} and
  * {@link N4JSInjectorProviderWithIssueSuppression}
@@ -17,7 +20,6 @@ package org.eclipse.n4js;
 public class N4JSInjectorProviderMockProjectSuppressedValidator extends N4JSInjectorProvider {
 	/** */
 	public N4JSInjectorProviderMockProjectSuppressedValidator() {
-		super(new N4JSInjectorProviderWithMockProject.MockProjectModule(),
-				new N4JSInjectorProviderWithIssueSuppression.IssueSuppressionModule());
+		super(new MockProjectModule(), new IssueSuppressionModule());
 	}
 }

@@ -1327,5 +1327,4 @@ public class TypeUtils {
 		}
 		return typeRef;
 	}
-
 }

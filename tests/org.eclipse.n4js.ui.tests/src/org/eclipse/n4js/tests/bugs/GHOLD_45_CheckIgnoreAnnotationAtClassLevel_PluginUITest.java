@@ -13,7 +13,6 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.collect.Lists.newArrayList;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -21,18 +20,15 @@ import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
 import org.eclipse.debug.ui.ILaunchShortcut;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.nodejs.ui.NodejsTesterLaunchShortcut;
 import org.eclipse.n4js.tester.ui.N4TesterUiModule;
+import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.internal.console.ConsoleView;
@@ -41,7 +37,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.common.collect.BiMap;
 import com.google.common.collect.Iterables;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -61,7 +56,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	private static final String[] EMPTY_ARRAY = new String[0];
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
+	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
 	/**
 	 * Initializes the N4JS built-in libraries. Does not matter before or after the test project import.
@@ -69,12 +64,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	@Before
 	@Override
 	public void setUp() throws Exception {
-		final BiMap<URI, String> locations = ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get();
-		for (final URI location : locations.keySet()) {
-			externalLibraryPreferenceStore.add(location);
-		}
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		shippedCodeInitializeTestHelper.setupBuiltIns();
 		waitForAutoBuild();
 	}
 
@@ -84,12 +74,7 @@ public class GHOLD_45_CheckIgnoreAnnotationAtClassLevel_PluginUITest extends Abs
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		final BiMap<URI, String> locations = ExternalLibrariesActivator.EXTERNAL_LIBRARIES_SUPPLIER.get();
-		for (final URI location : locations.keySet()) {
-			externalLibraryPreferenceStore.remove(location);
-		}
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		shippedCodeInitializeTestHelper.teardowneBuiltIns();
 		waitForAutoBuild();
 		super.tearDown();
 	}

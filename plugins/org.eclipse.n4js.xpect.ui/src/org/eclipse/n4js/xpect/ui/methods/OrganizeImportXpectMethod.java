@@ -34,10 +34,10 @@ import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.ConsumedIssues;
 import com.google.inject.Inject;
 
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.ui.organize.imports.BreakException;
 import org.eclipse.n4js.ui.organize.imports.Interaction;
 import org.eclipse.n4js.ui.organize.imports.UnsafeImortsOrganizer;
-import org.eclipse.n4js.xpect.common.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilder;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;

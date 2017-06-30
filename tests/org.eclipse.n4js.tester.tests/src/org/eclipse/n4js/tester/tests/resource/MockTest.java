@@ -36,7 +36,6 @@ import static org.eclipse.n4js.tester.server.resources.HttpMethod.POST;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -69,9 +68,10 @@ import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
@@ -79,11 +79,13 @@ import com.google.inject.Inject;
 /**
  * Test for a mock test session.
  */
-@Ignore("IDE-2725")
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = {})
+@FixMethodOrder(MethodSorters.NAME_ASCENDING) // These test methods should never be executed in parallel. IDE-2725
 public class MockTest {
 
+	private static final long TIME_OUT = 5_000L;
+	private static final int HTTP_CODE_OK = 200;
 	private static final Logger LOGGER = getLogger(MockTest.class);
 	private static final boolean DEBUG = false;
 
@@ -131,7 +133,9 @@ public class MockTest {
 	 */
 	@Test
 	public void testParallelMock() {
+		log("begin of testParallelMock.");
 		testMock(true, PARALLEL_TEST_CASE_COUNT_FACTOR);
+		log("end of testParallelMock.");
 	}
 
 	/**
@@ -139,7 +143,9 @@ public class MockTest {
 	 */
 	@Test
 	public void testSerialMock() {
+		log("begin of testSerialMock.");
 		testMock(false, SERIAL_TEST_CASE_COUNT_FACTOR);
+		log("end of testSerialMock.");
 	}
 
 	private void testMock(final boolean parallel, int testCaseCountFactor) {
@@ -172,7 +178,7 @@ public class MockTest {
 
 		final String mode = parallel ? "parallel" : "synchronous";
 		log("Starting " + mode + " mock test session.");
-		server(URL() + sessionId + "/start/", START_SESSION, POST, null);
+		sendToServer(URL() + sessionId + "/start/", START_SESSION, POST, null);
 
 		final AtomicInteger i = new AtomicInteger();
 		final AtomicInteger percentage = new AtomicInteger();
@@ -194,17 +200,18 @@ public class MockTest {
 						}
 					}
 				}
-				server(URL() + sessionId + "/tests/" + testId + "/start/", START_TEST, POST, createTimeoutBody(5_000L));
+				sendToServer(URL() + sessionId + "/tests/" + testId + "/start/", START_TEST, POST,
+						createTimeoutBody(TIME_OUT));
 				final long timeout = getMockTestExecutionTime(i.get());
-				server(URL() + sessionId + "/tests/" + testId + "/ping/", PING_TEST, POST,
-						createTimeoutBody(timeout + 5_000L));
-				server(URL() + sessionId + "/tests/" + testId + "/end/", END_TEST, POST,
+				sendToServer(URL() + sessionId + "/tests/" + testId + "/ping/", PING_TEST, POST,
+						createTimeoutBody(timeout + TIME_OUT));
+				sendToServer(URL() + sessionId + "/tests/" + testId + "/end/", END_TEST, POST,
 						createTestResult(timeout, i.incrementAndGet()));
 			}
 		});
 
 		log("Ending " + mode + " mock test session.");
-		server(URL() + sessionId + "/end/", END_SESSION, POST, null);
+		sendToServer(URL() + sessionId + "/end/", END_SESSION, POST, null);
 	}
 
 	private void log(String msg) {
@@ -215,7 +222,8 @@ public class MockTest {
 		}
 	}
 
-	private void server(final String url, final ContentType contentType, final HttpMethod method, final Object body) {
+	private void sendToServer(final String url, final ContentType contentType, final HttpMethod method,
+			final Object body) {
 		HttpURLConnection req = null;
 		try {
 			req = (HttpURLConnection) new URL(url).openConnection();
@@ -225,6 +233,7 @@ public class MockTest {
 			req.setDoOutput(true);
 			req.setConnectTimeout(0);
 			req.setReadTimeout(0);
+
 			if (null != body) {
 				try (final OutputStream os = req.getOutputStream();
 						final OutputStreamWriter osw = new OutputStreamWriter(os)) {
@@ -232,72 +241,25 @@ public class MockTest {
 					osw.flush();
 				}
 			}
-			assertThat(url, getResponseCode(req), equalTo(200));
+
+			assertThat("URL = " + url + ", request = " + req + ", Content-Type = " + contentType + ", body = "
+					+ mapper.writeValueAsString(body), req.getResponseCode(), equalTo(HTTP_CODE_OK));
 		} catch (final Exception e) {
 			LOGGER.error("Error while performing HTTP " + method + " to " + url + ".", e);
 			throw new RuntimeException("Error while performing HTTP " + method + " to " + url + ".", e);
 		} finally {
 			if (null != req) {
-				req.disconnect();
-			}
-		}
-		req = null;
-	}
-
-	private int getResponseCode(final HttpURLConnection req) throws IOException {
-
-		/*
-		 * Ensure that we have connected to the server. Record exception as we need to re-throw it if there isn't a
-		 * status line.
-		 */
-		Exception exc = null;
-		try (InputStream is = req.getInputStream()) {
-			//
-		} catch (final Exception e) {
-			exc = e;
-		}
-
-		/*
-		 * If we can't a status-line then re-throw any exception that getInputStream threw.
-		 */
-		final String statusLine = req.getHeaderField(0);
-		if (statusLine == null) {
-			if (exc != null) {
-				if (exc instanceof RuntimeException)
-					throw (RuntimeException) exc;
-				else
-					throw (IOException) exc;
-			}
-			return -1;
-		}
-
-		/*
-		 * Examine the status-line - should be formatted as per section 6.1 of RFC 2616 :-
-		 *
-		 * Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase
-		 *
-		 * If status line can't be parsed return -1.
-		 */
-		if (statusLine.startsWith("HTTP/1.")) {
-			final int codePos = statusLine.indexOf(' ');
-			if (codePos > 0) {
-
-				int phrasePos = statusLine.indexOf(' ', codePos + 1);
-
-				// deviation from RFC 2616 - don't reject status line
-				// if SP Reason-Phrase is not included.
-				if (phrasePos < 0)
-					phrasePos = statusLine.length();
-
 				try {
-					final int responseCode = Integer.parseInt(statusLine.substring(codePos + 1, phrasePos));
-					return responseCode;
-				} catch (final NumberFormatException e) {
-					//
+					// Close input stream so that the HttpURLConnection instance is cleaned up and put into connection
+					// cache for reuse.
+					// https://mttkay.github.io/blog/2013/03/02/herding-http-requests-or-why-your-keep-alive-connection-may-be-dead/
+					// IDE-2725
+					req.getInputStream().close();
+				} catch (IOException e) {
+					// Do nothing
 				}
 			}
 		}
-		return -1;
 	}
 
 	private long getMockTestExecutionTime(final int i) {

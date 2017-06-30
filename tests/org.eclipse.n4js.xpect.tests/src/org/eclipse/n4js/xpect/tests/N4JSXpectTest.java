@@ -10,16 +10,7 @@
  */
 package org.eclipse.n4js.xpect.tests;
 
-import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.runner.XpectTestFiles;
-import org.xpect.runner.XpectTestFiles.FileRoot;
-import org.xpect.xtext.lib.tests.LinkingTest;
-import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
-import org.xpect.xtext.lib.tests.ValidationTest;
-
+import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
 import org.eclipse.n4js.xpect.methods.ElementKeywordXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
@@ -29,6 +20,15 @@ import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.junit.runner.RunWith;
+import org.xpect.XpectImport;
+import org.xpect.runner.XpectRunner;
+import org.xpect.runner.XpectSuiteClasses;
+import org.xpect.runner.XpectTestFiles;
+import org.xpect.runner.XpectTestFiles.FileRoot;
+import org.xpect.xtext.lib.tests.LinkingTest;
+import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
+import org.xpect.xtext.lib.tests.ValidationTest;
 
 /**
  * Xpect test class, also configured in fragment.xml, executes all Xpect tests found in model folder.
@@ -48,7 +48,7 @@ import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model", fileExtensions = { "xt" })
-@XpectImport(SuppressIssuesSetup.class)
+@XpectImport({ N4JSStandaloneTestsModule.class, SuppressIssuesSetup.class })
 public class N4JSXpectTest {
 	//
 }

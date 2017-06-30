@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.spec.examples.xpect.tests;
 
+import org.eclipse.n4js.N4JSStandaloneTestsModule;
+import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
+import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
+import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.junit.runner.RunWith;
 import org.xpect.XpectImport;
 import org.xpect.runner.XpectRunner;
@@ -17,10 +21,6 @@ import org.xpect.runner.XpectSuiteClasses;
 import org.xpect.runner.XpectTestFiles;
 import org.xpect.runner.XpectTestFiles.FileRoot;
 import org.xpect.xtext.lib.tests.ValidationTest;
-
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
-import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
-import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 
 /**
  */
@@ -31,7 +31,7 @@ import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 })
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata", fileExtensions = { "xt" })
 @RunWith(XpectRunner.class)
-@XpectImport(SuppressIssuesSetup.class)
+@XpectImport({ N4JSStandaloneTestsModule.class, SuppressIssuesSetup.class })
 public class SpecExamplesTest {
 	// nop
 }

@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.jsdoc2spec;
 
+import org.eclipse.n4js.N4JSStandaloneTestsModule;
+import org.eclipse.n4js.jsdoc2spec.xpect.SpecADocXpectMethod;
 import org.junit.runner.RunWith;
+import org.xpect.XpectImport;
 import org.xpect.runner.XpectRunner;
 import org.xpect.runner.XpectSuiteClasses;
 import org.xpect.runner.XpectTestFiles;
 import org.xpect.runner.XpectTestFiles.FileRoot;
-
-import org.eclipse.n4js.jsdoc2spec.xpect.SpecADocXpectMethod;
 
 /**
  * Test class for all Xpect tests in folder xpect-tests; this test class is also configured in the plugin.xml so that is
@@ -28,6 +29,7 @@ import org.eclipse.n4js.jsdoc2spec.xpect.SpecADocXpectMethod;
 
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-tests", fileExtensions = { "xt" })
+@XpectImport({ N4JSStandaloneTestsModule.class })
 public class JSDoc2SpecTest {
 	// nop
 }

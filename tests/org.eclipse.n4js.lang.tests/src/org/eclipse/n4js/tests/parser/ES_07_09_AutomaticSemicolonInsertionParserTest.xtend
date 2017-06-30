@@ -138,43 +138,59 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 		parseSuccessfully("{ 1 }");
 	}
 
+	/*
+	 * The following examples (testOneVsTwoStatements..) are similar to those described at 
+	 * http://lucumr.pocoo.org/2011/2/6/automatic-semicolon-insertion/
+	 * by Armin Ronacher. More information about the effects see blog entry.
+	 */
+	
 	@Test
-	def void testBlogExample_04() {
-		parseSuccessfully("namespace.makeCounter = function() {\n" +
-				"  var counter = 0\n" +
-				"  return function() {\n" +
-				"    return counter++\n" +
-				"  }\n" +
-				"}\n" +
-				"(function() {\n" +
-				"  namespace.exportedObject = function() {\n" +
-				"    1+2\n" +
-				"  }\n" +
-				"})()");
-	}
-	@Test
-	def void testBlogExample_05() {
-		val parseResult = parseSuccessfully("/* this works */\n" +
-				"var foo = 1 + 2\n" +
-				"something.method(foo) + 42");
-		parseResult.hasChildren(2)
-	}
-	@Test
-	def void testBlogExample_06() {
-		val parseResult = parseSuccessfully("/* this does not work, will try to call 2(...) */\n" +
-				"var foo = 1 + 2\n" +
-				"(something.method(foo) + 42).print()");
+	def void testOneVsTwoStatements_01_ASI() {
+		val parseResult = '''
+			let x = 1
+			[0];
+		'''.parseSuccessfully
 		parseResult.hasChildren(1)
 	}
 	@Test
-	def void testBlogExample_07() {
-		val parseResult = parseSuccessfully("var x=function(){}\n" +
-				"var y=function(){}");
+	def void testOneVsTwoStatements_01_WithSem() {
+		val parseResult = '''
+			let x = 1;
+			[0];
+		'''.parseSuccessfully
 		parseResult.hasChildren(2)
 	}
 	@Test
-	def void testBlogExample_08() {
-		parseWithError("var x=function(){}var y=function(){}");
+	def void testOneVsTwoStatements_02_ASI() {
+		val parseResult = '''
+			let f = function (){}
+			(1)		
+		'''.parseSuccessfully
+		parseResult.hasChildren(1)
+	}
+	@Test
+	def void testOneVsTwoStatements_02_WithSem() {
+		val parseResult = '''
+			let f = function (){};
+			(1)
+		'''.parseSuccessfully
+		parseResult.hasChildren(2)
+	}
+	@Test
+	def void testOneVsTwoStatements_03_ASI() {
+		val parseResult = '''
+			1
+			(1)
+		'''.parseSuccessfully
+		parseResult.hasChildren(1)
+	}
+	@Test
+	def void testOneVsTwoStatements_03_WithSem() {
+		val parseResult = '''
+			1;
+			(1)
+		'''.parseSuccessfully
+		parseResult.hasChildren(2)
 	}
 
 	@Test
@@ -627,3 +643,4 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 
 }
+
