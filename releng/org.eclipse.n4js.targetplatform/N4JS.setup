@@ -14,19 +14,17 @@
     name="n4js"
     label="N4JS">
 
-  <!-- TODO switch to the new branding
   <annotation
       source="http://www.eclipse.org/oomph/setup/BrandingInfo">
     <detail
         key="imageURI">
-      <value>http://numberfour.github.io/n4js/imgs/n4_logo_128.png</value>
+      <value>https://raw.githubusercontent.com/eclipse/n4js/master/plugins/org.eclipse.n4js.ui/icons/n4_logo_16.png</value>
     </detail>
     <detail
         key="siteURI">
-      <value>http://numberfour.github.io/n4js/</value>
+      <value>https://projects.eclipse.org/projects/technology.n4js/</value>
     </detail>
   </annotation>
-  -->
 
   <setupTask
       xsi:type="setup:CompoundTask"
@@ -293,7 +291,7 @@
     <repository
         url="http://download.eclipse.org/technology/m2e/releases"/>
   </setupTask>
-  <!-- TODO switch clone once moved to https://github.com/eclipse/n4js
+
   <setupTask
       xsi:type="git:GitCloneTask"
       id="git.clone.n4js"
@@ -321,64 +319,6 @@
     </configSections>
     <description>${scope.project.label}</description>
   </setupTask>
-  -->
-  <setupTask
-      xsi:type="setup:CompoundTask"
-      name="GitCloneTasks">
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="github.numberfour.eu.remoteURIs"
-        label="Enterprise Github Numberfour repository">
-      <choice
-          value="git@github.numberfour.eu:@{remoteURI}.git"
-          label="Git (read-write)"/>
-      <choice
-          value="https://${github.numberfour.eu.user.id|username}@github.numberfour.eu/@{remoteURI}.git"
-          label="HTTPS (read-write)">
-        <annotation
-            source="http://www.eclipse.org/oomph/setup/MatchChoice"/>
-      </choice>
-      <choice
-          value="https://github.numberfour.eu/@{remoteURI}.git"
-          label="HTTPS (read-only, anonymous)"/>
-      <description>Choose from the available Github URIs</description>
-    </setupTask>
-    <setupTask
-        xsi:type="setup:VariableTask"
-        name="github.numberfour.eu.user.id"
-        defaultValue="anonymous"
-        label="Enterprise Github NumberFour user ID">
-      <description>The user ID of the Enterprise Github NumberFour account</description>
-    </setupTask>
-    <setupTask
-        xsi:type="git:GitCloneTask"
-        id="git.clone.n4js"
-        remoteURI="NumberFour/n4js">
-      <annotation
-          source="http://www.eclipse.org/oomph/setup/InducedChoices">
-        <detail
-            key="inherit">
-          <value>github.numberfour.eu.remoteURIs</value>
-        </detail>
-        <detail
-            key="label">
-          <value>N4JS Enterprise Github NumberFour repository</value>
-        </detail>
-        <detail
-            key="target">
-          <value>remoteURI</value>
-        </detail>
-      </annotation>
-      <configSections
-          name="core">
-        <properties
-            key="autocrlf"
-            value="input"/>
-      </configSections>
-      <description>${scope.project.label} repo n4js</description>
-    </setupTask>
-  </setupTask>
-
 
   <setupTask
       xsi:type="setup.targlets:TargletTask"
