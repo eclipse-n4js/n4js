@@ -8,12 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package eu.numberfour.n4js.xpect.methods.scoping;
+package org.eclipse.n4js.xpect.methods.scoping;
 
 import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -27,10 +30,6 @@ import org.xpect.xtext.lib.tests.ScopingTest;
 import org.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
 
 import com.google.inject.Inject;
-
-import eu.numberfour.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import eu.numberfour.n4js.ts.types.IdentifiableElement;
-import eu.numberfour.n4js.ts.types.TMember;
 
 /**
  */
