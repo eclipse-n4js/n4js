@@ -14,13 +14,13 @@ import static com.google.common.collect.Sets.difference;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFileBasedShippedCodeConfigurationHelper;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -43,6 +43,7 @@ import com.google.inject.Inject;
  * using alternative access. Basically checks if derived values produced equivalent configuration in both cases.
  */
 public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderParticipantTest {
+
 	static {
 		EclipseGracefulUIShutdownEnabler.enableOnce();
 	}
@@ -57,8 +58,6 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 	private static final URI MODULE_TO_RUN_URI = URI.createPlatformResourceURI(
 			CLIENT + "/" + "src" + "/" + MODULE_TO_RUN + ".n4js", true);
 
-	private static final String SHIPPED_CODE_PATH_PREFIX = buildPattern();
-	private static final String EMPTY_STRING = "";
 	private static final String NL = "\n";
 
 	@Inject
@@ -127,6 +126,9 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		Set<String> corePaths1 = new HashSet<>(config.getCoreProjectPaths());
 		assertFalse("Expected core projects paths to contain more than project output", corePaths1.size() <= 1);
 
+		// clear project paths to ensure we only get paths newly computed in #configureFromFileSystem()
+		config.setCoreProjectPaths(Collections.emptyList());
+
 		// reconfigure config
 		shippedCodeConfigurationHelper.configureFromFileSystem(config);
 		String execModule2 = config.getExecModule();
@@ -143,9 +145,6 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		// compare if for every path in the first config
 		// there exists alternative path in the second config
 
-		// reconfiguration adds new paths, remove previously known to get only those added
-		corePaths2.removeAll(corePaths1);
-		//
 		Set<String> configuredCorePaths = processPaths(corePaths1);
 		Set<String> reconfiguredCorePaths = processPaths(corePaths2);
 
@@ -157,16 +156,12 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 	}
 
 	/**
-	 * remove from paths client project itself, then drop path prefix that changes, e.g.
-	 * {@code "/Users/me/repo/n4js/plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-node/src/js/index.js"}
-	 * becomes {@code "runtime/n4js-node/src/js/index.js"}
+	 * remove from paths client project itself.
 	 */
 	private Set<String> processPaths(Collection<String> paths) {
 		return paths.stream()
 				// filter project path itself
 				.filter(path -> !path.contains(CLIENT))
-				// strip path prefix
-				.map(path -> path.replaceFirst(SHIPPED_CODE_PATH_PREFIX, EMPTY_STRING))
 				.collect(Collectors.toSet());
 	}
 
@@ -176,24 +171,4 @@ public class ShippedCodeRunConfigurationPluginUITest extends AbstractBuilderPart
 		logs.add(suffix);
 		logs.add(NL);
 	}
-
-	/**
-	 * Depending on the resource loading context shipped paths will have different prefix. This pattern should handle
-	 * various forms of, e.g.
-	 *
-	 * <pre>
-	 * <ul>
-	 * <li>/jenkins_slave_home/workspace/job/n4js/tests/org.eclipse.n4js.runner.ui.tests/target/work/plugins/org.eclipse.n4js.external.libraries_0.0.1.201706161936/shipped-code/runtime/n4js-es5/src-gen/es
-	 * <li>/jenkins_slave_home/workspace/job/n4js/tests/org.eclipse.n4js.runner.ui.tests/target/work/plugins/org.eclipse.n4js.external.libraries_0.0.1.201706161936/runtime/n4js-es5/src-gen/es
-	 * <li>/Users/me/git/n4js/plugins/org.eclipse.n4js.external.libraries/bin/runtime/n4js-es5/src-gen/es
-	 * <li>/Users/me/git/n4js/plugins/org.eclipse.n4js.external.libraries/shipped-code/runtime/n4js-es5/src-gen/es
-	 * </ul>
-	 * </pre>
-	 */
-	private static String buildPattern() {
-		StringJoiner regex = new StringJoiner("|", ".*(\\\\|\\/)(", ")(\\\\|\\/)");
-		ExternalLibrariesActivator.EXTERNAL_LIBRARY_FOLDER_NAMES.forEach(regex::add);
-		return regex.toString();
-	}
-
 }

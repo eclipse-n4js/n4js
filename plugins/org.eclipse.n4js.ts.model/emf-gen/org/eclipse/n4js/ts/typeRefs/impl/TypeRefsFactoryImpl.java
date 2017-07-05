@@ -96,6 +96,8 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	@Override
 	public Object createFromString(EDataType eDataType, String initialValue) {
 		switch (eDataType.getClassifierID()) {
+			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
+				return createOptionalFieldStrategyFromString(eDataType, initialValue);
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return createParameterizedTypeRefIterableFromString(eDataType, initialValue);
 			default:
@@ -111,6 +113,8 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	@Override
 	public String convertToString(EDataType eDataType, Object instanceValue) {
 		switch (eDataType.getClassifierID()) {
+			case TypeRefsPackage.OPTIONAL_FIELD_STRATEGY:
+				return convertOptionalFieldStrategyToString(eDataType, instanceValue);
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_ITERABLE:
 				return convertParameterizedTypeRefIterableToString(eDataType, instanceValue);
 			default:
@@ -276,6 +280,26 @@ public class TypeRefsFactoryImpl extends EFactoryImpl implements TypeRefsFactory
 	public TypeVariableMapping createTypeVariableMapping() {
 		TypeVariableMappingImpl typeVariableMapping = new TypeVariableMappingImpl();
 		return typeVariableMapping;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public OptionalFieldStrategy createOptionalFieldStrategyFromString(EDataType eDataType, String initialValue) {
+		OptionalFieldStrategy result = OptionalFieldStrategy.get(initialValue);
+		if (result == null) throw new IllegalArgumentException("The value '" + initialValue + "' is not a valid enumerator of '" + eDataType.getName() + "'");
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String convertOptionalFieldStrategyToString(EDataType eDataType, Object instanceValue) {
+		return instanceValue == null ? null : instanceValue.toString();
 	}
 
 	/**

@@ -10,22 +10,24 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import java.util.ArrayList
+import java.util.List
+import java.util.stream.IntStream
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
-import org.eclipse.n4js.transpiler.Transformation
-import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute
 import org.eclipse.n4js.n4jsx.n4JSX.JSXChild
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
 import org.eclipse.n4js.n4jsx.n4JSX.JSXExpression
 import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute
 import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute
-import java.util.List
+import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
+import org.eclipse.n4js.transpiler.im.Script_IM
+import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.n4js.transpiler.im.Script_IM
 
 /**
  *
@@ -100,17 +102,53 @@ class JSXTransformation extends Transformation {
 		}
 	}
 
+	// Generate Object.assign({}, {foo, bar: "Hi"}, spr)
 	def private Expression convertJSXAttributes(List<JSXAttribute> attrs) {
 		if(attrs.isEmpty) {
 			_NULL
-		} else {
-			val propsSimple = _ObjLit(attrs.filter(JSXPropertyAttribute).map[convertJSXAttribute]);
-			val propsSpread = attrs.filter(JSXSpreadAttribute).map[expression].toList;
-			if(propsSpread.isEmpty) {
-				propsSimple
+		} else if (attrs.size == 1 && attrs.get(0) instanceof JSXSpreadAttribute) {
+			// Special case: if only a single spread operator is passed, we pass it directly, e.g. spr instead of cloning with Object.assign.
+			(attrs.get(0) as JSXSpreadAttribute).expression
+		}
+		else {
+			val spreadIndices = IntStream.range(0, attrs.size)
+							.filter[i | attrs.get(i) instanceof JSXSpreadAttribute].toArray;
+			// GHOLD-413: We have to make sure that the only properties locating next to each other are combined.
+			// Moreover, the order of properties as well as spread operators must be preserved!
+			val target = if (attrs.get(0) instanceof JSXSpreadAttribute) {
+				// The first attribute is a spread object, the target must be {}.
+				_ObjLit
 			} else {
-				_CallExpr(_PropertyAccessExpr(steFor_Object,steFor_assign), #[_ObjLit] + propsSpread + #[ propsSimple ])
+				// Otherwise, the target is of the form {foo: true, bar: "Hi"}
+				val firstSpreadIndex = if (!spreadIndices.empty) {
+					spreadIndices.get(0)
+				} else {
+					attrs.size
+				}
+				var firstProps = attrs.subList(0, firstSpreadIndex).map[it as JSXPropertyAttribute];
+				_ObjLit(firstProps.map[convertJSXAttribute])
 			}
+
+			var parameters = new ArrayList<Expression>();
+			parameters.add(target);
+
+			for (var i = 0; i < spreadIndices.length; i++) {
+				val curSpreadIdx = spreadIndices.get(i)
+				// Spread expression passed is used directly
+				parameters.add((attrs.get(curSpreadIdx) as JSXSpreadAttribute).expression);
+				// Combine properties between spread intervals
+				val nextSpreadIdx = if (i < spreadIndices.length-1) {
+					spreadIndices.get(i + 1);
+				} else {
+					attrs.length
+				}
+				val propsBetweenTwoSpreads = attrs.subList(curSpreadIdx + 1, nextSpreadIdx)
+				if (!propsBetweenTwoSpreads.empty) {
+					parameters.add(_ObjLit(propsBetweenTwoSpreads.map[(it as JSXPropertyAttribute).convertJSXAttribute]));
+				}
+			}
+
+			_CallExpr(_PropertyAccessExpr(steFor_Object,steFor_assign), parameters)
 		}
 	}
 

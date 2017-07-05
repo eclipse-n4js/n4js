@@ -69,6 +69,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -79,6 +80,7 @@ import com.google.inject.Inject;
 /**
  * Test for a mock test session.
  */
+@Ignore("IDE-2725")
 @RunWith(JUnitGuiceClassRunner.class)
 @InjectedModules(baseModules = { TesterModule.class }, overrides = {})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) // These test methods should never be executed in parallel. IDE-2725

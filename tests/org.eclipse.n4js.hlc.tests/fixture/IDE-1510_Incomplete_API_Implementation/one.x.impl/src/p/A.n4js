@@ -21,7 +21,7 @@ export public interface IA {
 /**                                
  * @spec a simple class  
  */ 
-@N4JS export public class A implements IA {
+export public class A implements IA {
 	@Override
 	public get field2() : IA { return null; }
 	@Override

@@ -36,8 +36,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy;
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDeclaredType <em>Declared Type</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getTypeArgs <em>Type Args</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isArrayTypeLiteral <em>Array Type Literal</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfObjectLiteral <em>Type Of Object Literal</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfNewExpressionOrFinalNominal <em>Type Of New Expression Or Final Nominal</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}</li>
  * </ul>
  *
@@ -116,54 +115,32 @@ public interface ParameterizedTypeRef extends BaseTypeRef {
 	void setArrayTypeLiteral(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Type Of Object Literal</b></em>' attribute.
+	 * Returns the value of the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
+	 * The literals are from the enumeration {@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 *  @see TypeRef#isTypeOfObjectLiteral()
+	 * *
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Type Of Object Literal</em>' attribute.
-	 * @see #setTypeOfObjectLiteral(boolean)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_TypeOfObjectLiteral()
+	 * @return the value of the '<em>AST Node Optional Field Strategy</em>' attribute.
+	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+	 * @see #setASTNodeOptionalFieldStrategy(OptionalFieldStrategy)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_ASTNodeOptionalFieldStrategy()
 	 * @model unique="false" transient="true"
 	 * @generated
 	 */
-	boolean isTypeOfObjectLiteral();
+	OptionalFieldStrategy getASTNodeOptionalFieldStrategy();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfObjectLiteral <em>Type Of Object Literal</em>}' attribute.
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type Of Object Literal</em>' attribute.
-	 * @see #isTypeOfObjectLiteral()
+	 * @param value the new value of the '<em>AST Node Optional Field Strategy</em>' attribute.
+	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+	 * @see #getASTNodeOptionalFieldStrategy()
 	 * @generated
 	 */
-	void setTypeOfObjectLiteral(boolean value);
-
-	/**
-	 * Returns the value of the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 *  @see TypeRef#isTypeOfNewExpressionOrFinalNominal()
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Type Of New Expression Or Final Nominal</em>' attribute.
-	 * @see #setTypeOfNewExpressionOrFinalNominal(boolean)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getParameterizedTypeRef_TypeOfNewExpressionOrFinalNominal()
-	 * @model unique="false" transient="true"
-	 * @generated
-	 */
-	boolean isTypeOfNewExpressionOrFinalNominal();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfNewExpressionOrFinalNominal <em>Type Of New Expression Or Final Nominal</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Type Of New Expression Or Final Nominal</em>' attribute.
-	 * @see #isTypeOfNewExpressionOrFinalNominal()
-	 * @generated
-	 */
-	void setTypeOfNewExpressionOrFinalNominal(boolean value);
+	void setASTNodeOptionalFieldStrategy(OptionalFieldStrategy value);
 
 	/**
 	 * Returns the value of the '<em><b>Defined Typing Strategy</b></em>' attribute.

@@ -51,9 +51,6 @@ Contributors:
 					<exclude>**/*.map</exclude>
 					<exclude>**/pom.xml</exclude>
 					<exclude>**/pom.properties</exclude>
-					<exclude>runtime/n4js*/**</exclude>
-					<exclude>mangelhaft/**</exclude>
-					<exclude>lang/n4js*/**</exclude>
 					<exclude>**/README</exclude>
 					<exclude>**/LICENSE*</exclude>
 					<exclude>**/Makefile*</exclude>					
