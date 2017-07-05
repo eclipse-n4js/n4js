@@ -31,13 +31,15 @@
  */
 
 /* XPECT organizeImports ---
-| [|import {Cls} from "linking]/[|ClassComponent";]
-+ import {Func} from "linking/FunctionComponent";
-| [|/]*
-   * Copyright (c) 2016 NumberFour AG.
-   * All rights reserved. This program and the accompanying materials
-   * are made available under the terms of the Eclipse Public License v1.0
 (...)
+   * Contributors:
+   *   NumberFour AG - Initial API and implementation
+   *\/
++ import {Cls} from "linking/ClassComponent";
++ import {Func} from "linking/FunctionComponent";
+  var fc = <Func myProp="My prop"/>;
+  var cc = <Cls prop={5}/>;
+  console.log(fc, cc);
 --- */
 
 

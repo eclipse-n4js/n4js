@@ -392,9 +392,7 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 		TypeRef _typeRef = this.getTypeRef();
 		boolean _tripleNotEquals = (_typeRef != null);
 		if (_tripleNotEquals) {
-			TypeRef _typeRef_1 = this.getTypeRef();
-			String _typeRefAsString = _typeRef_1.getTypeRefAsString();
-			strb.append(_typeRefAsString);
+			strb.append(this.getTypeRef().getTypeRefAsString());
 		}
 		else {
 			strb.append("null");
@@ -417,15 +415,11 @@ public class TFormalParameterImpl extends IdentifiableElementImpl implements TFo
 		if (_isVariadic) {
 			strb.append("...");
 		}
-		String _name = this.getName();
-		strb.append(_name);
+		strb.append(this.getName());
 		TypeRef _typeRef = this.getTypeRef();
 		boolean _tripleNotEquals = (_typeRef != null);
 		if (_tripleNotEquals) {
-			StringBuilder _append = strb.append(": ");
-			TypeRef _typeRef_1 = this.getTypeRef();
-			String _typeRefAsString = _typeRef_1.getTypeRefAsString();
-			_append.append(_typeRefAsString);
+			strb.append(": ").append(this.getTypeRef().getTypeRefAsString());
 		}
 		boolean _isHasInitializerAssignment = this.isHasInitializerAssignment();
 		if (_isHasInitializerAssignment) {

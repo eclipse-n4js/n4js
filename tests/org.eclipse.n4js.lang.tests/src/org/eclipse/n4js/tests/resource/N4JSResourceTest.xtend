@@ -25,8 +25,8 @@ import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescription
@@ -46,7 +46,7 @@ import org.eclipse.xtext.resource.OutdatedStateManager
 import org.eclipse.xtext.resource.IDerivedStateComputer
 import org.eclipse.xtext.resource.DerivedStateAwareResource
 import org.junit.Assert
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.UserdataMapper
 

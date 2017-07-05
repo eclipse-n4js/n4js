@@ -8,8 +8,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-
-
 package org.eclipse.n4js.xsemantics;
 
 import com.google.common.base.Objects;
@@ -24,13 +22,11 @@ import it.xsemantics.runtime.RuleEnvironment;
 import it.xsemantics.runtime.RuleFailedException;
 import it.xsemantics.runtime.XsemanticsRuntimeSystem;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.misc.DestructureHelper;
@@ -164,7 +160,6 @@ import org.eclipse.n4js.ts.utils.TypeExtensions;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesbuilder.N4JSFunctionDefinitionTypesBuilder;
-import org.eclipse.n4js.typesystem.PredefinedTypes;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.StructuralTypingResult;
 import org.eclipse.n4js.typesystem.TypeSystemErrorExtensions;
@@ -1093,8 +1088,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeTField(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TField tfield) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    TypeRef _typeRef = tfield.getTypeRef();
-    T = _typeRef;
+    T = tfield.getTypeRef();
     return new Result<TypeRef>(T);
   }
   
@@ -1185,8 +1179,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeTVariable(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TVariable tvariable) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    TypeRef _typeRef = tvariable.getTypeRef();
-    T = _typeRef;
+    T = tvariable.getTypeRef();
     return new Result<TypeRef>(T);
   }
   
@@ -1216,8 +1209,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   private TypeRef _applyRuleTypeTypeDefiningElement_1(final RuleEnvironment G, final TypeDefiningElement elem) throws RuleFailedException {
     TypeRef _elvis = null;
-    Type _definedType = elem.getDefinedType();
-    TypeRef _wrapTypeInTypeRef = TypeUtils.wrapTypeInTypeRef(_definedType);
+    TypeRef _wrapTypeInTypeRef = TypeUtils.wrapTypeInTypeRef(elem.getDefinedType());
     if (_wrapTypeInTypeRef != null) {
       _elvis = _wrapTypeInTypeRef;
     } else {
@@ -1249,8 +1241,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleTypeObjectLiteral(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ObjectLiteral ol) throws RuleFailedException {
     TypeRef T = null; // output parameter
     final ParameterizedTypeRefStructural ptr = TypeRefsFactory.eINSTANCE.createParameterizedTypeRefStructural();
-    TClassifier _objectType = RuleEnvironmentExtensions.objectType(G);
-    ptr.setDeclaredType(_objectType);
+    ptr.setDeclaredType(RuleEnvironmentExtensions.objectType(G));
     Type _definedType = ol.getDefinedType();
     ptr.setStructuralType(((TStructuralType) _definedType));
     ptr.setDefinedTypingStrategy(TypingStrategy.STRUCTURAL);
@@ -1285,10 +1276,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     checkAssignableTo(result.getFirst(), TypeRef.class);
     rawT = (TypeRef) result.getFirst();
     
-    TypeRef _resolveVersion = this.versionResolver.<TypeRef, TypeRef>resolveVersion(rawT, rawT);
-    rawT = _resolveVersion;
-    TypeRef _enforceNominalTyping = TypeUtils.enforceNominalTyping(rawT);
-    T = _enforceNominalTyping;
+    rawT = this.versionResolver.<TypeRef, TypeRef>resolveVersion(rawT, rawT);
+    T = TypeUtils.enforceNominalTyping(rawT);
     return new Result<TypeRef>(T);
   }
   
@@ -1313,25 +1302,22 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeSuperLiteral(final RuleEnvironment G, final RuleApplicationTrace _trace_, final SuperLiteral superLiteral) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    EObject _eContainer = superLiteral.eContainer();
-    final N4MemberDeclaration containingMemberDecl = EcoreUtil2.<N4MemberDeclaration>getContainerOfType(_eContainer, N4MemberDeclaration.class);
+    final N4MemberDeclaration containingMemberDecl = EcoreUtil2.<N4MemberDeclaration>getContainerOfType(superLiteral.eContainer(), N4MemberDeclaration.class);
     /* if (containingMemberDecl === null) { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } else { val containingClass = (containingMemberDecl.eContainer as N4ClassDeclaration).definedType as TClass; val superClass = G.getDeclaredOrImplicitSuperType(containingClass) var effectiveSuperClass = superClass if( containingClass.isStaticPolyfill ) { effectiveSuperClass = G.getDeclaredOrImplicitSuperType( superClass as TClass ) } { superLiteral.eContainer instanceof ParameterizedPropertyAccessExpression || superLiteral.eContainer instanceof IndexedAccessExpression if(containingMemberDecl.static) T = effectiveSuperClass?.createConstructorTypeRef else T = effectiveSuperClass?.createTypeRef if (T !== null) T = TypeUtils.enforceNominalTyping(T) } or { superLiteral.eContainer instanceof ParameterizedCallExpression if(containingMemberDecl instanceof N4MethodDeclaration && containingMemberDecl.name == 'constructor') { val ctor = containerTypesHelper.fromContext(superLiteral.eResource).findConstructor(effectiveSuperClass); T = ctor?.createTypeRef } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } or { superLiteral.eContainer instanceof NewExpression } } or { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } */
     {
       RuleFailedException previousFailure = null;
       try {
         if ((containingMemberDecl == null)) {
-          UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-          T = _createUnknownTypeRef;
+          T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
         } else {
-          EObject _eContainer_1 = containingMemberDecl.eContainer();
-          Type _definedType = ((N4ClassDeclaration) _eContainer_1).getDefinedType();
+          EObject _eContainer = containingMemberDecl.eContainer();
+          Type _definedType = ((N4ClassDeclaration) _eContainer).getDefinedType();
           final TClass containingClass = ((TClass) _definedType);
           final TClassifier superClass = RuleEnvironmentExtensions.getDeclaredOrImplicitSuperType(G, containingClass);
           TClassifier effectiveSuperClass = superClass;
           boolean _isStaticPolyfill = containingClass.isStaticPolyfill();
           if (_isStaticPolyfill) {
-            TClassifier _declaredOrImplicitSuperType = RuleEnvironmentExtensions.getDeclaredOrImplicitSuperType(G, ((TClass) superClass));
-            effectiveSuperClass = _declaredOrImplicitSuperType;
+            effectiveSuperClass = RuleEnvironmentExtensions.getDeclaredOrImplicitSuperType(G, ((TClass) superClass));
           }
           /* { superLiteral.eContainer instanceof ParameterizedPropertyAccessExpression || superLiteral.eContainer instanceof IndexedAccessExpression if(containingMemberDecl.static) T = effectiveSuperClass?.createConstructorTypeRef else T = effectiveSuperClass?.createTypeRef if (T !== null) T = TypeUtils.enforceNominalTyping(T) } or { superLiteral.eContainer instanceof ParameterizedCallExpression if(containingMemberDecl instanceof N4MethodDeclaration && containingMemberDecl.name == 'constructor') { val ctor = containerTypesHelper.fromContext(superLiteral.eResource).findConstructor(effectiveSuperClass); T = ctor?.createTypeRef } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } or { superLiteral.eContainer instanceof NewExpression } */
           {
@@ -1355,37 +1341,33 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 T = _createTypeRef;
               }
               if ((T != null)) {
-                TypeRef _enforceNominalTyping = TypeUtils.enforceNominalTyping(T);
-                T = _enforceNominalTyping;
+                T = TypeUtils.enforceNominalTyping(T);
               }
             } catch (Exception e) {
               previousFailure = extractRuleFailedException(e);
               /* { superLiteral.eContainer instanceof ParameterizedCallExpression if(containingMemberDecl instanceof N4MethodDeclaration && containingMemberDecl.name == 'constructor') { val ctor = containerTypesHelper.fromContext(superLiteral.eResource).findConstructor(effectiveSuperClass); T = ctor?.createTypeRef } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } or { superLiteral.eContainer instanceof NewExpression } */
               {
                 try {
-                  EObject _eContainer_2 = superLiteral.eContainer();
+                  EObject _eContainer_1 = superLiteral.eContainer();
                   /* superLiteral.eContainer instanceof ParameterizedCallExpression */
-                  if (!(_eContainer_2 instanceof ParameterizedCallExpression)) {
+                  if (!(_eContainer_1 instanceof ParameterizedCallExpression)) {
                     sneakyThrowRuleFailedException("superLiteral.eContainer instanceof ParameterizedCallExpression");
                   }
                   if (((containingMemberDecl instanceof N4MethodDeclaration) && Objects.equal(containingMemberDecl.getName(), "constructor"))) {
-                    Resource _eResource = superLiteral.eResource();
-                    ContainerTypesHelper.MemberCollector _fromContext = this.containerTypesHelper.fromContext(_eResource);
-                    final TMethod ctor = _fromContext.findConstructor(effectiveSuperClass);
+                    final TMethod ctor = this.containerTypesHelper.fromContext(superLiteral.eResource()).findConstructor(effectiveSuperClass);
                     ParameterizedTypeRef _createTypeRef_1 = null;
                     if (ctor!=null) {
                       _createTypeRef_1=TypeUtils.createTypeRef(ctor);
                     }
                     T = _createTypeRef_1;
                   } else {
-                    UnknownTypeRef _createUnknownTypeRef_1 = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-                    T = _createUnknownTypeRef_1;
+                    T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
                   }
                 } catch (Exception e_1) {
                   previousFailure = extractRuleFailedException(e_1);
-                  EObject _eContainer_3 = superLiteral.eContainer();
+                  EObject _eContainer_2 = superLiteral.eContainer();
                   /* superLiteral.eContainer instanceof NewExpression */
-                  if (!(_eContainer_3 instanceof NewExpression)) {
+                  if (!(_eContainer_2 instanceof NewExpression)) {
                     sneakyThrowRuleFailedException("superLiteral.eContainer instanceof NewExpression");
                   }
                 }
@@ -1395,8 +1377,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         }
       } catch (Exception e_2) {
         previousFailure = extractRuleFailedException(e_2);
-        UnknownTypeRef _createUnknownTypeRef_2 = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-        T = _createUnknownTypeRef_2;
+        T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
       }
     }
     return new Result<TypeRef>(T);
@@ -1429,13 +1410,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     checkAssignableTo(result.getFirst(), TypeRef.class);
     T = (TypeRef) result.getFirst();
     
-    TypeRef _resolveVersion = this.versionResolver.<TypeRef, IdentifierRef>resolveVersion(T, idref);
-    T = _resolveVersion;
+    T = this.versionResolver.<TypeRef, IdentifierRef>resolveVersion(T, idref);
     if (((idref.eContainer() instanceof ParameterizedCallExpression) && (idref.eContainmentFeature() == N4JSPackage.eINSTANCE.getParameterizedCallExpression_Target()))) {
       final TMethod callableCtorFunction = this.typeSystemHelper.getCallableClassConstructorFunction(G, T);
       if ((callableCtorFunction != null)) {
-        FunctionTypeRef _ref = TypeExtensions.ref(callableCtorFunction);
-        T = _ref;
+        T = TypeExtensions.ref(callableCtorFunction);
       }
     }
     return new Result<TypeRef>(T);
@@ -1701,8 +1680,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   }
   
   private TypeRef _applyRuleTypeN4EnumLiteral_1(final RuleEnvironment G, final N4EnumLiteral enumLiteral) throws RuleFailedException {
-    TEnumLiteral _definedLiteral = enumLiteral.getDefinedLiteral();
-    EObject _eContainer = _definedLiteral.eContainer();
+    EObject _eContainer = enumLiteral.getDefinedLiteral().eContainer();
     TypeRef _ref = TypeExtensions.ref(((TEnum) _eContainer));
     return _ref;
   }
@@ -1817,8 +1795,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef _declaredTypeRef = property.getDeclaredTypeRef();
     boolean _tripleNotEquals = (_declaredTypeRef != null);
     if (_tripleNotEquals) {
-      TypeRef _declaredTypeRef_1 = property.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+      T = property.getDeclaredTypeRef();
     } else {
       Expression _expression = property.getExpression();
       boolean _tripleNotEquals_1 = (_expression != null);
@@ -1836,14 +1813,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         E = (TypeRef) result_1.getFirst();
         
         if ((((E.getDeclaredType() == RuleEnvironmentExtensions.undefinedType(G)) || (E.getDeclaredType() == RuleEnvironmentExtensions.nullType(G))) || (E.getDeclaredType() == RuleEnvironmentExtensions.voidType(G)))) {
-          ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-          T = _anyTypeRef;
+          T = RuleEnvironmentExtensions.anyTypeRef(G);
         } else {
           T = E;
         }
       } else {
-        ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-        T = _anyTypeRef_1;
+        T = RuleEnvironmentExtensions.anyTypeRef(G);
       }
     }
     return new Result<TypeRef>(T);
@@ -1873,8 +1848,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef _declaredTypeRef = fieldDecl.getDeclaredTypeRef();
     boolean _tripleNotEquals = (_declaredTypeRef != null);
     if (_tripleNotEquals) {
-      TypeRef _declaredTypeRef_1 = fieldDecl.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+      T = fieldDecl.getDeclaredTypeRef();
     } else {
       Expression _expression = fieldDecl.getExpression();
       boolean _tripleNotEquals_1 = (_expression != null);
@@ -1892,14 +1866,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         E = (TypeRef) result_1.getFirst();
         
         if ((((E.getDeclaredType() == RuleEnvironmentExtensions.undefinedType(G)) || (E.getDeclaredType() == RuleEnvironmentExtensions.nullType(G))) || (E.getDeclaredType() == RuleEnvironmentExtensions.voidType(G)))) {
-          ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-          T = _anyTypeRef;
+          T = RuleEnvironmentExtensions.anyTypeRef(G);
         } else {
           T = E;
         }
       } else {
-        ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-        T = _anyTypeRef_1;
+        T = RuleEnvironmentExtensions.anyTypeRef(G);
       }
     }
     return new Result<TypeRef>(T);
@@ -1927,24 +1899,20 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleTypeGetterDeclaration(final RuleEnvironment G, final RuleApplicationTrace _trace_, final GetterDeclaration getter) throws RuleFailedException {
     TypeRef T = null; // output parameter
     TypeRef _declaredTypeRef = getter.getDeclaredTypeRef();
-    boolean _notEquals = (!Objects.equal(_declaredTypeRef, null));
-    if (_notEquals) {
-      TypeRef _declaredTypeRef_1 = getter.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+    boolean _tripleNotEquals = (_declaredTypeRef != null);
+    if (_tripleNotEquals) {
+      T = getter.getDeclaredTypeRef();
     } else {
       TGetter _definedGetter = getter.getDefinedGetter();
-      TypeRef _declaredTypeRef_2 = null;
+      TypeRef _declaredTypeRef_1 = null;
       if (_definedGetter!=null) {
-        _declaredTypeRef_2=_definedGetter.getDeclaredTypeRef();
+        _declaredTypeRef_1=_definedGetter.getDeclaredTypeRef();
       }
-      boolean _tripleNotEquals = (_declaredTypeRef_2 != null);
-      if (_tripleNotEquals) {
-        TGetter _definedGetter_1 = getter.getDefinedGetter();
-        TypeRef _declaredTypeRef_3 = _definedGetter_1.getDeclaredTypeRef();
-        T = _declaredTypeRef_3;
+      boolean _tripleNotEquals_1 = (_declaredTypeRef_1 != null);
+      if (_tripleNotEquals_1) {
+        T = getter.getDefinedGetter().getDeclaredTypeRef();
       } else {
-        ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-        T = _anyTypeRef;
+        T = RuleEnvironmentExtensions.anyTypeRef(G);
       }
     }
     return new Result<TypeRef>(T);
@@ -1972,14 +1940,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleTypeSetterDeclaration(final RuleEnvironment G, final RuleApplicationTrace _trace_, final SetterDeclaration setter) throws RuleFailedException {
     TypeRef T = null; // output parameter
     TypeRef _declaredTypeRef = setter.getDeclaredTypeRef();
-    boolean _notEquals = (!Objects.equal(_declaredTypeRef, null));
-    if (_notEquals) {
-      TypeRef _declaredTypeRef_1 = setter.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+    boolean _tripleNotEquals = (_declaredTypeRef != null);
+    if (_tripleNotEquals) {
+      T = setter.getDeclaredTypeRef();
     }
     if ((T == null)) {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -2045,34 +2011,27 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       checkAssignableTo(result.getFirst(), TypeRef.class);
       yieldValueTypeRef = (TypeRef) result.getFirst();
       
-      PredefinedTypes _predefinedTypes = RuleEnvironmentExtensions.getPredefinedTypes(G);
-      final BuiltInTypeScope scope = _predefinedTypes.builtInTypeScope;
+      final BuiltInTypeScope scope = RuleEnvironmentExtensions.getPredefinedTypes(G).builtInTypeScope;
       boolean _isGenerator = TypeUtils.isGenerator(yieldValueTypeRef, scope);
       if (_isGenerator) {
-        TypeRef _generatorTReturn = this.typeSystemHelper.getGeneratorTReturn(G, yieldValueTypeRef);
-        t = _generatorTReturn;
+        t = this.typeSystemHelper.getGeneratorTReturn(G, yieldValueTypeRef);
       } else {
-        Wildcard _createWildcard = TypeUtils.createWildcard();
-        final ParameterizedTypeRef itTypeRef = RuleEnvironmentExtensions.iterableTypeRef(G, _createWildcard);
+        final ParameterizedTypeRef itTypeRef = RuleEnvironmentExtensions.iterableTypeRef(G, TypeUtils.createWildcard());
         /* G |- yieldValueTypeRef <: itTypeRef */
         boolean _ruleinvocation = subtypeSucceeded(G, _trace_, yieldValueTypeRef, itTypeRef);
         final boolean isIterable = _ruleinvocation;
         if (isIterable) {
-          ParameterizedTypeRef _anyTypeRef = scope.getAnyTypeRef();
-          t = _anyTypeRef;
+          t = scope.getAnyTypeRef();
         }
       }
     } else {
       final TypeRef actualGenTypeRef = this.typeSystemHelper.getActualGeneratorReturnType(G, y);
       if ((actualGenTypeRef != null)) {
-        TypeRef _generatorTNext = this.typeSystemHelper.getGeneratorTNext(G, actualGenTypeRef);
-        t = _generatorTNext;
+        t = this.typeSystemHelper.getGeneratorTNext(G, actualGenTypeRef);
       }
     }
-    boolean _equals = Objects.equal(t, null);
-    if (_equals) {
-      ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-      t = _anyTypeRef_1;
+    if ((t == null)) {
+      t = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     T = t;
     return new Result<TypeRef>(T);
@@ -2111,25 +2070,21 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     boolean _tripleEquals = (_declaredType == _promiseType);
     if (_tripleEquals) {
       /* G |~ exprType.typeArgs.get(0) /\ T */
-      EList<TypeArgument> _typeArgs = exprType.getTypeArgs();
-      TypeArgument _get = _typeArgs.get(0);
+      TypeArgument _get = exprType.getTypeArgs().get(0);
       Result<TypeRef> result_1 = upperBoundInternal(G, _trace_, _get);
       checkAssignableTo(result_1.getFirst(), TypeRef.class);
       T = (TypeRef) result_1.getFirst();
       
     } else {
-      Expression _expression_1 = e.getExpression();
-      boolean _isPromisifiableExpression = this.promisifyHelper.isPromisifiableExpression(_expression_1);
+      boolean _isPromisifiableExpression = this.promisifyHelper.isPromisifiableExpression(e.getExpression());
       if (_isPromisifiableExpression) {
-        Expression _expression_2 = e.getExpression();
-        final TypeRef promisifiedReturnTypeRef = this.promisifyHelper.extractPromisifiedReturnType(_expression_2);
+        final TypeRef promisifiedReturnTypeRef = this.promisifyHelper.extractPromisifiedReturnType(e.getExpression());
         Type _declaredType_1 = promisifiedReturnTypeRef.getDeclaredType();
         TClass _promiseType_1 = RuleEnvironmentExtensions.promiseType(G);
         boolean _tripleEquals_1 = (_declaredType_1 == _promiseType_1);
         if (_tripleEquals_1) {
           /* G |~ promisifiedReturnTypeRef.typeArgs.get(0) /\ T */
-          EList<TypeArgument> _typeArgs_1 = promisifiedReturnTypeRef.getTypeArgs();
-          TypeArgument _get_1 = _typeArgs_1.get(0);
+          TypeArgument _get_1 = promisifiedReturnTypeRef.getTypeArgs().get(0);
           Result<TypeRef> result_2 = upperBoundInternal(G, _trace_, _get_1);
           checkAssignableTo(result_2.getFirst(), TypeRef.class);
           T = (TypeRef) result_2.getFirst();
@@ -2165,9 +2120,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypePromisifyExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final PromisifyExpression e) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    Expression _expression = e.getExpression();
-    TypeRef _extractPromisifiedReturnType = this.promisifyHelper.extractPromisifiedReturnType(_expression);
-    T = _extractPromisifiedReturnType;
+    T = this.promisifyHelper.extractPromisifiedReturnType(e.getExpression());
     return new Result<TypeRef>(T);
   }
   
@@ -2192,7 +2145,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeIndexedAccessExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IndexedAccessExpression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member != null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member !== null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -2200,11 +2153,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         if (!((expr.getTarget() == null) || (expr.getIndex() == null))) {
           sneakyThrowRuleFailedException("expr.target === null || expr.index === null");
         }
-        UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-        T = _createUnknownTypeRef;
+        T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member != null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member !== null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
         {
           try {
             Expression _target = expr.getTarget();
@@ -2212,8 +2164,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             if (!(_target instanceof SuperLiteral)) {
               sneakyThrowRuleFailedException("expr.target instanceof SuperLiteral");
             }
-            UnknownTypeRef _createUnknownTypeRef_1 = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-            T = _createUnknownTypeRef_1;
+            T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
           } catch (Exception e_1) {
             previousFailure = extractRuleFailedException(e_1);
             /* G |- expr.target : var TypeRef targetTypeRef */
@@ -2223,8 +2174,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             checkAssignableTo(result.getFirst(), TypeRef.class);
             targetTypeRef = (TypeRef) result.getFirst();
             
-            TypeRef _resolveType = this.typeSystemHelper.resolveType(G, targetTypeRef);
-            targetTypeRef = _resolveType;
+            targetTypeRef = this.typeSystemHelper.resolveType(G, targetTypeRef);
             /* G |- expr.index : var TypeRef indexTypeRef */
             Expression _index = expr.getIndex();
             TypeRef indexTypeRef = null;
@@ -2238,21 +2188,18 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
             boolean _ruleinvocation = subtypeSucceeded(G, _trace_, indexTypeRef, _numberTypeRef);
             final boolean indexIsNumeric = _ruleinvocation;
-            Expression _index_1 = expr.getIndex();
-            final CompileTimeValue indexValue = this.astMetaInfoCacheHelper.getCompileTimeValue(_index_1);
+            final CompileTimeValue indexValue = this.astMetaInfoCacheHelper.getCompileTimeValue(expr.getIndex());
             final String memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
             if ((indexIsNumeric && (targetTypeRef.isArrayLike() || targetIsLiteralOfStringBasedEnum))) {
               if ((targetDeclType.isGeneric() && targetTypeRef.getTypeArgs().isEmpty())) {
-                ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-                T = _anyTypeRef;
+                T = RuleEnvironmentExtensions.anyTypeRef(G);
               } else {
                 final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
                 this.typeSystemHelper.addSubstitutions(G2, targetTypeRef);
                 RuleEnvironmentExtensions.addThisType(G2, targetTypeRef);
                 TypeRef _xifexpression = null;
                 if (targetIsLiteralOfStringBasedEnum) {
-                  PrimitiveType _stringType = RuleEnvironmentExtensions.stringType(G);
-                  _xifexpression = _stringType.getElementType();
+                  _xifexpression = RuleEnvironmentExtensions.stringType(G).getElementType();
                 } else {
                   _xifexpression = targetDeclType.getElementType();
                 }
@@ -2269,8 +2216,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 final boolean checkVisibility = false;
                 final IScope scope = this.memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess);
                 final TMember member = this.memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess);
-                boolean _notEquals = (!Objects.equal(member, null));
-                if (_notEquals) {
+                if ((member != null)) {
                   /* G |- member : var TypeRef memberTypeRef */
                   TypeRef memberTypeRef = null;
                   Result<TypeRef> result_3 = typeInternal(G, _trace_, member);
@@ -2288,21 +2234,17 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 } else {
                   boolean _isDynamic = targetTypeRef.isDynamic();
                   if (_isDynamic) {
-                    ParameterizedTypeRef _anyTypeRefDynamic = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
-                    T = _anyTypeRefDynamic;
+                    T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
                   } else {
-                    UnknownTypeRef _createUnknownTypeRef_2 = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-                    T = _createUnknownTypeRef_2;
+                    T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
                   }
                 }
               } else {
                 boolean _isDynamic_1 = targetTypeRef.isDynamic();
                 if (_isDynamic_1) {
-                  ParameterizedTypeRef _anyTypeRefDynamic_1 = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
-                  T = _anyTypeRefDynamic_1;
+                  T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
                 } else {
-                  ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-                  T = _anyTypeRef_1;
+                  T = RuleEnvironmentExtensions.anyTypeRef(G);
                 }
               }
             }
@@ -2334,19 +2276,17 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypePropertyAccessExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ParameterizedPropertyAccessExpression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { T = env(G, GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION -> expr, TypeRef) } or { val G2 = G.wrap G2.add(GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION -> expr, G2.anyTypeRef) G2 |- expr.target : var TypeRef receiverTypeRef typeSystemHelper.addSubstitutions(G2,receiverTypeRef) G2.addThisType(receiverTypeRef) if (! (receiverTypeRef instanceof UnknownTypeRef) && (expr.target instanceof SuperLiteral || expr.target instanceof ThisLiteral) ) { var containingClass = EcoreUtil2.getContainerOfType(expr,N4ClassDeclaration)?.definedType; if (containingClass instanceof TClass) { if (containingClass.isStaticPolyfill) { containingClass = containingClass.superClassRef?.declaredType } if (containingClass instanceof TClass) { if (containingClass?.superClassRef!==null) { typeSystemHelper.addSubstitutions(G2, containingClass.superClassRef) } } } } val prop = expr.property; var TypeRef propTypeRef; if(prop instanceof TMethod && (prop as TMethod).isConstructor) { val TypeArgument ctorTypeArg = switch(receiverTypeRef) { TypeTypeRef: G.functionTypeRef ParameterizedTypeRef, BoundThisTypeRef: { val declType = if(receiverTypeRef instanceof BoundThisTypeRef) { receiverTypeRef.actualThisTypeRef?.declaredType } else { receiverTypeRef.declaredType }; val finalCtorSig = if(declType instanceof TClassifier) N4JSLanguageUtils.hasCovariantConstructor(declType); if(finalCtorSig) { declType.ref } else if(declType!==null) { TypeUtils.createWildcardExtends(declType.ref) } else { null } } }; propTypeRef = if(ctorTypeArg!==null) { TypeUtils.createTypeTypeRef(ctorTypeArg, true) } else { TypeRefsFactory.eINSTANCE.createUnknownTypeRef }; } else if(receiverTypeRef.dynamic && prop!==null && prop.eIsProxy) { propTypeRef = G.anyTypeRefDynamic; } else { G2.wrap |- prop : propTypeRef if(expr.parameterized) { typeSystemHelper.addSubstitutions(G2,expr); } } G2 |- propTypeRef ~> T T = versionResolver.resolveVersion(T, receiverTypeRef); if (expr.target instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef ) { val F = T as FunctionTypeExprOrRef; if ((T as FunctionTypeExprOrRef).returnTypeRef instanceof BoundThisTypeRef) { var TypeRef rawT; G |~ expr ~> rawT; val thisTypeRef = TypeUtils.enforceNominalTyping(rawT); if (T instanceof FunctionTypeExpression && T.eContainer==null) { val fte = T as FunctionTypeExpression fte.returnTypeRef = TypeUtils.copyIfContained(thisTypeRef); } else { T = TypeUtils.createFunctionTypeExpression(null, F.typeVars, F.fpars, thisTypeRef); } } } } */
+    /* { T = env(G, GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION -> expr, TypeRef) } or { val G2 = G.wrap G2.add(GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION -> expr, G2.anyTypeRef) G2 |- expr.target : var TypeRef receiverTypeRef typeSystemHelper.addSubstitutions(G2,receiverTypeRef) G2.addThisType(receiverTypeRef) if (! (receiverTypeRef instanceof UnknownTypeRef) && (expr.target instanceof SuperLiteral || expr.target instanceof ThisLiteral) ) { var containingClass = EcoreUtil2.getContainerOfType(expr,N4ClassDeclaration)?.definedType; if (containingClass instanceof TClass) { if (containingClass.isStaticPolyfill) { containingClass = containingClass.superClassRef?.declaredType } if (containingClass instanceof TClass) { if (containingClass?.superClassRef!==null) { typeSystemHelper.addSubstitutions(G2, containingClass.superClassRef) } } } } val prop = expr.property; var TypeRef propTypeRef; if(prop instanceof TMethod && (prop as TMethod).isConstructor) { val TypeArgument ctorTypeArg = switch(receiverTypeRef) { TypeTypeRef: G.functionTypeRef ParameterizedTypeRef, BoundThisTypeRef: { val declType = if(receiverTypeRef instanceof BoundThisTypeRef) { receiverTypeRef.actualThisTypeRef?.declaredType } else { receiverTypeRef.declaredType }; val finalCtorSig = if(declType instanceof TClassifier) N4JSLanguageUtils.hasCovariantConstructor(declType); if(finalCtorSig) { declType.ref } else if(declType!==null) { TypeUtils.createWildcardExtends(declType.ref) } else { null } } }; propTypeRef = if(ctorTypeArg!==null) { TypeUtils.createTypeTypeRef(ctorTypeArg, true) } else { TypeRefsFactory.eINSTANCE.createUnknownTypeRef }; } else if(receiverTypeRef.dynamic && prop!==null && prop.eIsProxy) { propTypeRef = G.anyTypeRefDynamic; } else { G2.wrap |- prop : propTypeRef if(expr.parameterized) { typeSystemHelper.addSubstitutions(G2,expr); } } G2 |- propTypeRef ~> T T = versionResolver.resolveVersion(T, receiverTypeRef); if (expr.target instanceof SuperLiteral && T instanceof FunctionTypeExprOrRef ) { val F = T as FunctionTypeExprOrRef; if ((T as FunctionTypeExprOrRef).returnTypeRef instanceof BoundThisTypeRef) { var TypeRef rawT; G |~ expr ~> rawT; val thisTypeRef = TypeUtils.enforceNominalTyping(rawT); if (T instanceof FunctionTypeExpression && T.eContainer===null) { val fte = T as FunctionTypeExpression fte.returnTypeRef = TypeUtils.copyIfContained(thisTypeRef); } else { T = TypeUtils.createFunctionTypeExpression(null, F.typeVars, F.fpars, thisTypeRef); } } } } */
     {
       RuleFailedException previousFailure = null;
       try {
         Pair<String, ParameterizedPropertyAccessExpression> _mappedTo = Pair.<String, ParameterizedPropertyAccessExpression>of(RuleEnvironmentExtensions.GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION, expr);
-        TypeRef _env = this.<TypeRef>env(G, _mappedTo, TypeRef.class);
-        T = _env;
+        T = this.<TypeRef>env(G, _mappedTo, TypeRef.class);
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
         final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
         Pair<String, ParameterizedPropertyAccessExpression> _mappedTo_1 = Pair.<String, ParameterizedPropertyAccessExpression>of(RuleEnvironmentExtensions.GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION, expr);
-        ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G2);
-        boolean _add = G2.add(_mappedTo_1, _anyTypeRef);
+        boolean _add = G2.add(_mappedTo_1, RuleEnvironmentExtensions.anyTypeRef(G2));
         /* G2.add(GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION -> expr, G2.anyTypeRef) */
         if (!_add) {
           sneakyThrowRuleFailedException("G2.add(GUARD_TYPE_PROPERTY_ACCESS_EXPRESSION -> expr, G2.anyTypeRef)");
@@ -2384,8 +2324,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
               }
               boolean _tripleNotEquals = (_superClassRef_1 != null);
               if (_tripleNotEquals) {
-                ParameterizedTypeRef _superClassRef_2 = ((TClass)containingClass).getSuperClassRef();
-                this.typeSystemHelper.addSubstitutions(G2, _superClassRef_2);
+                this.typeSystemHelper.addSubstitutions(G2, ((TClass)containingClass).getSuperClassRef());
               }
             }
           }
@@ -2434,8 +2373,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 } else {
                   Wildcard _xifexpression_3 = null;
                   if ((declType != null)) {
-                    TypeRef _ref = TypeExtensions.ref(declType);
-                    _xifexpression_3 = TypeUtils.createWildcardExtends(_ref);
+                    _xifexpression_3 = TypeUtils.createWildcardExtends(TypeExtensions.ref(declType));
                   } else {
                     _xifexpression_3 = null;
                   }
@@ -2456,8 +2394,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           propTypeRef = _xifexpression;
         } else {
           if (((receiverTypeRef.isDynamic() && (prop != null)) && prop.eIsProxy())) {
-            ParameterizedTypeRef _anyTypeRefDynamic = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
-            propTypeRef = _anyTypeRefDynamic;
+            propTypeRef = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
           } else {
             /* G2.wrap |- prop : propTypeRef */
             RuleEnvironment _wrap = RuleEnvironmentExtensions.wrap(G2);
@@ -2476,8 +2413,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         checkAssignableTo(result_2.getFirst(), TypeRef.class);
         T = (TypeRef) result_2.getFirst();
         
-        TypeRef _resolveVersion = this.versionResolver.<TypeRef, TypeRef>resolveVersion(T, receiverTypeRef);
-        T = _resolveVersion;
+        T = this.versionResolver.<TypeRef, TypeRef>resolveVersion(T, receiverTypeRef);
         if (((expr.getTarget() instanceof SuperLiteral) && (T instanceof FunctionTypeExprOrRef))) {
           final FunctionTypeExprOrRef F = ((FunctionTypeExprOrRef) T);
           TypeRef _returnTypeRef = ((FunctionTypeExprOrRef) T).getReturnTypeRef();
@@ -2489,15 +2425,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             rawT = (TypeRef) result_3.getFirst();
             
             final TypeRef thisTypeRef = TypeUtils.enforceNominalTyping(rawT);
-            if (((T instanceof FunctionTypeExpression) && Objects.equal(T.eContainer(), null))) {
+            if (((T instanceof FunctionTypeExpression) && (T.eContainer() == null))) {
               final FunctionTypeExpression fte = ((FunctionTypeExpression) T);
-              TypeRef _copyIfContained = TypeUtils.<TypeRef>copyIfContained(thisTypeRef);
-              fte.setReturnTypeRef(_copyIfContained);
+              fte.setReturnTypeRef(TypeUtils.<TypeRef>copyIfContained(thisTypeRef));
             } else {
-              EList<TypeVariable> _typeVars = F.getTypeVars();
-              EList<TFormalParameter> _fpars = F.getFpars();
-              FunctionTypeExpression _createFunctionTypeExpression = TypeUtils.createFunctionTypeExpression(null, _typeVars, _fpars, thisTypeRef);
-              T = _createFunctionTypeExpression;
+              T = TypeUtils.createFunctionTypeExpression(null, 
+                F.getTypeVars(), F.getFpars(), thisTypeRef);
             }
           }
         }
@@ -2534,9 +2467,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     T = (TypeRef) result.getFirst();
     
     if ((T instanceof TypeTypeRef)) {
-      EList<TypeRef> _typeArgs = e.getTypeArgs();
-      TypeRef _createTypeRefFromStaticType = this.typeSystemHelper.createTypeRefFromStaticType(G, ((TypeTypeRef)T), ((TypeArgument[])Conversions.unwrapArray(_typeArgs, TypeArgument.class)));
-      T = _createTypeRefFromStaticType;
+      T = this.typeSystemHelper.createTypeRefFromStaticType(G, ((TypeTypeRef)T), ((TypeArgument[])Conversions.unwrapArray(e.getTypeArgs(), TypeArgument.class)));
     }
     return new Result<TypeRef>(T);
   }
@@ -2562,8 +2493,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeNewTarget(final RuleEnvironment G, final RuleApplicationTrace _trace_, final NewTarget nt) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-    T = _createUnknownTypeRef;
+    T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
     return new Result<TypeRef>(T);
   }
   
@@ -2613,20 +2543,18 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           previousFailure = extractRuleFailedException(e);
           final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
           Pair<String, ParameterizedCallExpression> _mappedTo_1 = Pair.<String, ParameterizedCallExpression>of(RuleEnvironmentExtensions.GUARD_TYPE_CALL_EXPRESSION, expr);
-          TypeRef _returnTypeRef = F.getReturnTypeRef();
-          boolean _add = G2.add(_mappedTo_1, _returnTypeRef);
+          boolean _add = G2.add(_mappedTo_1, F.getReturnTypeRef());
           /* G2.add(GUARD_TYPE_CALL_EXPRESSION -> expr, F.returnTypeRef) */
           if (!_add) {
             sneakyThrowRuleFailedException("G2.add(GUARD_TYPE_CALL_EXPRESSION -> expr, F.returnTypeRef)");
           }
           if (((((expr.eContainer() instanceof AwaitExpression) && (expr.eContainmentFeature() == N4JSPackage.eINSTANCE.getAwaitExpression_Expression())) && (tFunction != null)) && AnnotationDefinition.PROMISIFIABLE.hasAnnotation(tFunction))) {
-            TypeRef _extractPromisifiedReturnType = this.promisifyHelper.extractPromisifiedReturnType(expr);
-            T = _extractPromisifiedReturnType;
+            T = this.promisifyHelper.extractPromisifiedReturnType(expr);
           } else {
             TypeRef _elvis = null;
-            TypeRef _returnTypeRef_1 = F.getReturnTypeRef();
-            if (_returnTypeRef_1 != null) {
-              _elvis = _returnTypeRef_1;
+            TypeRef _returnTypeRef = F.getReturnTypeRef();
+            if (_returnTypeRef != null) {
+              _elvis = _returnTypeRef;
             } else {
               ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
               _elvis = _anyTypeRef;
@@ -2639,8 +2567,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           checkAssignableTo(result_2.getFirst(), TypeRef.class);
           T = (TypeRef) result_2.getFirst();
           
-          TypeRef _resolveVersion = this.versionResolver.<TypeRef, FunctionTypeExprOrRef>resolveVersion(T, F);
-          T = _resolveVersion;
+          T = this.versionResolver.<TypeRef, FunctionTypeExprOrRef>resolveVersion(T, F);
           if (((T instanceof BoundThisTypeRef) && (!((expr.getReceiver() instanceof ThisLiteral) || (expr.getReceiver() instanceof SuperLiteral))))) {
             /* G2 |~ T /\ T */
             Result<TypeRef> result_3 = upperBoundInternal(G2, _trace_, T);
@@ -2658,16 +2585,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       TObjectPrototype _functionType = RuleEnvironmentExtensions.functionType(G);
       boolean _tripleEquals = (_declaredType == _functionType);
       if (_tripleEquals) {
-        ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-        T = _anyTypeRef_1;
+        T = RuleEnvironmentExtensions.anyTypeRef(G);
       } else {
         boolean _isDynamic = targetTypeRef.isDynamic();
         if (_isDynamic) {
-          ParameterizedTypeRef _anyTypeRefDynamic = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
-          T = _anyTypeRefDynamic;
+          T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
         } else {
-          UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-          T = _createUnknownTypeRef;
+          T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
         }
       }
     }
@@ -2766,29 +2690,23 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if (_op != null) {
         switch (_op) {
           case DELETE:
-            ParameterizedTypeRef _booleanTypeRef = RuleEnvironmentExtensions.booleanTypeRef(G);
-            T = _booleanTypeRef;
+            T = RuleEnvironmentExtensions.booleanTypeRef(G);
             break;
           case VOID:
-            ParameterizedTypeRef _undefinedTypeRef = RuleEnvironmentExtensions.undefinedTypeRef(G);
-            T = _undefinedTypeRef;
+            T = RuleEnvironmentExtensions.undefinedTypeRef(G);
             break;
           case TYPEOF:
-            ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-            T = _stringTypeRef;
+            T = RuleEnvironmentExtensions.stringTypeRef(G);
             break;
           case NOT:
-            ParameterizedTypeRef _booleanTypeRef_1 = RuleEnvironmentExtensions.booleanTypeRef(G);
-            T = _booleanTypeRef_1;
+            T = RuleEnvironmentExtensions.booleanTypeRef(G);
             break;
           default:
-            ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-            T = _numberTypeRef;
+            T = RuleEnvironmentExtensions.numberTypeRef(G);
             break;
         }
       } else {
-        ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-        T = _numberTypeRef;
+        T = RuleEnvironmentExtensions.numberTypeRef(G);
       }
     }
     return new Result<TypeRef>(T);
@@ -2870,8 +2788,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         final boolean rnum = (Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, r.getDeclaredType()));
         final boolean undef = (((Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G)) || Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.nullType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.nullType(G)));
         if (((lnum && rnum) || (undef && (lnum || rnum)))) {
-          ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-          T = _numberTypeRef;
+          T = RuleEnvironmentExtensions.numberTypeRef(G);
         } else {
           if (((lunknown || runknown) && ((lnum || rnum) || undef))) {
             TypeRef _xifexpression = null;
@@ -2882,14 +2799,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             }
             T = _xifexpression;
           } else {
-            ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-            T = _stringTypeRef;
+            T = RuleEnvironmentExtensions.stringTypeRef(G);
           }
         }
       }
     } else {
-      ParameterizedTypeRef _numberTypeRef_1 = RuleEnvironmentExtensions.numberTypeRef(G);
-      T = _numberTypeRef_1;
+      T = RuleEnvironmentExtensions.numberTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -3035,14 +2950,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     final Expression rhs = e.getRhs();
     boolean _xifexpression = false;
     if ((lhs instanceof ArrayLiteral)) {
-      EList<ArrayElement> _elements = ((ArrayLiteral)lhs).getElements();
-      _xifexpression = _elements.isEmpty();
+      _xifexpression = ((ArrayLiteral)lhs).getElements().isEmpty();
     }
     final boolean lhsIsEmptyArrayLiteral = _xifexpression;
     boolean _xifexpression_1 = false;
     if ((rhs instanceof ArrayLiteral)) {
-      EList<ArrayElement> _elements_1 = ((ArrayLiteral)rhs).getElements();
-      _xifexpression_1 = _elements_1.isEmpty();
+      _xifexpression_1 = ((ArrayLiteral)rhs).getElements().isEmpty();
     }
     final boolean rhsIsEmptyArrayLiteral = _xifexpression_1;
     /* G |- e.lhs : var TypeRef L */
@@ -3091,8 +3004,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if (_and_1) {
         T = L;
       } else {
-        TypeRef _createUnionType = this.typeSystemHelper.createUnionType(G, L, R);
-        T = _createUnionType;
+        T = this.typeSystemHelper.createUnionType(G, L, R);
       }
     }
     return new Result<TypeRef>(T);
@@ -3133,8 +3045,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     checkAssignableTo(result_1.getFirst(), TypeRef.class);
     right = (TypeRef) result_1.getFirst();
     
-    TypeRef _createUnionType = this.typeSystemHelper.createUnionType(G, left, right);
-    T = _createUnionType;
+    T = this.typeSystemHelper.createUnionType(G, left, right);
     return new Result<TypeRef>(T);
   }
   
@@ -3211,12 +3122,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             if (!(!(undef && (lnum || rnum)))) {
               sneakyThrowRuleFailedException("!(undef && (lnum || rnum))");
             }
-            ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-            T = _stringTypeRef;
+            T = RuleEnvironmentExtensions.stringTypeRef(G);
           } catch (Exception e_1) {
             previousFailure = extractRuleFailedException(e_1);
-            ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-            T = _numberTypeRef;
+            T = RuleEnvironmentExtensions.numberTypeRef(G);
           }
         }
       }
@@ -3246,8 +3155,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleTypeCommaExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final CommaExpression e) throws RuleFailedException {
     TypeRef T = null; // output parameter
     /* G |- e.exprs.last: T */
-    EList<Expression> _exprs = e.getExprs();
-    Expression _last = IterableExtensions.<Expression>last(_exprs);
+    Expression _last = IterableExtensions.<Expression>last(e.getExprs());
     Result<TypeRef> result = typeInternal(G, _trace_, _last);
     checkAssignableTo(result.getFirst(), TypeRef.class);
     T = (TypeRef) result.getFirst();
@@ -3276,8 +3184,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeCastExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final CastExpression e) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    TypeRef _targetTypeRef = e.getTargetTypeRef();
-    T = _targetTypeRef;
+    T = e.getTargetTypeRef();
     return new Result<TypeRef>(T);
   }
   
@@ -3302,9 +3209,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeN4ClassExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final N4ClassExpression e) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    Result<TypeRef> _applyRuleTypeTypeDefiningElement = this.applyRuleTypeTypeDefiningElement(G, _trace_, e);
-    TypeRef _value = _applyRuleTypeTypeDefiningElement.getValue();
-    T = _value;
+    T = this.applyRuleTypeTypeDefiningElement(G, _trace_, e).getValue();
     return new Result<TypeRef>(T);
   }
   
@@ -3329,9 +3234,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeFunctionExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionExpression e) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    Result<TypeRef> _applyRuleTypeTypeDefiningElement = this.applyRuleTypeTypeDefiningElement(G, _trace_, e);
-    TypeRef _value = _applyRuleTypeTypeDefiningElement.getValue();
-    T = _value;
+    T = this.applyRuleTypeTypeDefiningElement(G, _trace_, e).getValue();
     return new Result<TypeRef>(T);
   }
   
@@ -3356,8 +3259,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeUnsupportedExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final Expression e) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    TypeRef _typeExpression = this.expressionTypeHelper.typeExpression(e, G);
-    T = _typeExpression;
+    T = this.expressionTypeHelper.typeExpression(e, G);
     return new Result<TypeRef>(T);
   }
   
@@ -3385,8 +3287,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef _declaredTypeRef = vdecl.getDeclaredTypeRef();
     boolean _tripleNotEquals = (_declaredTypeRef != null);
     if (_tripleNotEquals) {
-      TypeRef _declaredTypeRef_1 = vdecl.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+      T = vdecl.getDeclaredTypeRef();
     } else {
       EObject _eContainer = vdecl.eContainer();
       if ((_eContainer instanceof BindingElement)) {
@@ -3413,8 +3314,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           }
           T = _elvis;
         } else {
-          ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-          T = _anyTypeRef_1;
+          T = RuleEnvironmentExtensions.anyTypeRef(G);
         }
       } else {
         if (((vdecl.eContainer() instanceof ForStatement) && ((ForStatement) vdecl.eContainer()).isForOf())) {
@@ -3456,18 +3356,15 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 
               } catch (Exception e) {
                 previousFailure = extractRuleFailedException(e);
-                UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-                T = _createUnknownTypeRef;
+                T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
               }
             }
           } else {
-            ParameterizedTypeRef _anyTypeRef_2 = RuleEnvironmentExtensions.anyTypeRef(G);
-            T = _anyTypeRef_2;
+            T = RuleEnvironmentExtensions.anyTypeRef(G);
           }
         } else {
           if (((vdecl.eContainer() instanceof ForStatement) && ((ForStatement) vdecl.eContainer()).isForIn())) {
-            ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-            T = _stringTypeRef;
+            T = RuleEnvironmentExtensions.stringTypeRef(G);
           } else {
             Expression _expression_3 = vdecl.getExpression();
             boolean _tripleNotEquals_1 = (_expression_3 != null);
@@ -3501,18 +3398,15 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                   
                 }
                 if ((((E.getDeclaredType() == RuleEnvironmentExtensions.undefinedType(G)) || (E.getDeclaredType() == RuleEnvironmentExtensions.nullType(G))) || (E.getDeclaredType() == RuleEnvironmentExtensions.voidType(G)))) {
-                  ParameterizedTypeRef _anyTypeRef_3 = RuleEnvironmentExtensions.anyTypeRef(G);
-                  T = _anyTypeRef_3;
+                  T = RuleEnvironmentExtensions.anyTypeRef(G);
                 } else {
                   T = E;
                 }
               } else {
-                ParameterizedTypeRef _anyTypeRef_4 = RuleEnvironmentExtensions.anyTypeRef(G);
-                T = _anyTypeRef_4;
+                T = RuleEnvironmentExtensions.anyTypeRef(G);
               }
             } else {
-              ParameterizedTypeRef _anyTypeRef_5 = RuleEnvironmentExtensions.anyTypeRef(G);
-              T = _anyTypeRef_5;
+              T = RuleEnvironmentExtensions.anyTypeRef(G);
             }
           }
         }
@@ -3520,8 +3414,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     }
     boolean _enforceDynamicTypes = this.jsVariantHelper.enforceDynamicTypes(vdecl);
     if (_enforceDynamicTypes) {
-      TypeRef _makeDynamic = this.typeSystemHelper.makeDynamic(T);
-      T = _makeDynamic;
+      T = this.typeSystemHelper.makeDynamic(T);
     }
     return new Result<TypeRef>(T);
   }
@@ -3553,8 +3446,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         TypeRef _typeRef = currFpar.getTypeRef();
         return Boolean.valueOf((_typeRef instanceof ThisTypeRef));
       }))))) {
-        TypeRef _bindAndSubstituteThisTypeRef = this.typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRef, fparTypeRef);
-        T = _bindAndSubstituteThisTypeRef;
+        T = this.typeSystemHelper.bindAndSubstituteThisTypeRef(G, fparTypeRef, fparTypeRef);
       } else {
         TypeRef _xifexpression = null;
         TFormalParameter _definedTypeElement = null;
@@ -3567,8 +3459,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         }
         boolean _tripleNotEquals = (_typeRef != null);
         if (_tripleNotEquals) {
-          TFormalParameter _definedTypeElement_1 = fpar.getDefinedTypeElement();
-          _xifexpression = _definedTypeElement_1.getTypeRef();
+          _xifexpression = fpar.getDefinedTypeElement().getTypeRef();
         } else {
           _xifexpression = fpar.getDeclaredTypeRef();
         }
@@ -3587,36 +3478,29 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           checkAssignableTo(result.getFirst(), TypeRef.class);
           E = (TypeRef) result.getFirst();
           
-          TypeRef _sanitizeTypeOfVariableFieldProperty = this.typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
-          T = _sanitizeTypeOfVariableFieldProperty;
+          T = this.typeSystemHelper.sanitizeTypeOfVariableFieldProperty(G, E);
         } else {
-          ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-          T = _anyTypeRef;
+          T = RuleEnvironmentExtensions.anyTypeRef(G);
         }
       } else {
         boolean _enforceDynamicTypes = this.jsVariantHelper.enforceDynamicTypes(fpar);
         if (_enforceDynamicTypes) {
-          ParameterizedTypeRef _anyTypeRefDynamic = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
-          T = _anyTypeRefDynamic;
+          T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
         } else {
           /* T = env(G, fpar, TypeRef) or T = G.anyTypeRef */
           {
             RuleFailedException previousFailure = null;
             try {
-              TypeRef _env = this.<TypeRef>env(G, fpar, TypeRef.class);
-              T = _env;
+              T = this.<TypeRef>env(G, fpar, TypeRef.class);
             } catch (Exception e) {
               previousFailure = extractRuleFailedException(e);
-              ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-              T = _anyTypeRef_1;
+              T = RuleEnvironmentExtensions.anyTypeRef(G);
             }
           }
         }
       }
     }
-    PredefinedTypes _predefinedTypes = RuleEnvironmentExtensions.getPredefinedTypes(G);
-    TypeRef _wrapIfVariadic = TypeUtils.wrapIfVariadic(_predefinedTypes.builtInTypeScope, T, fpar);
-    T = _wrapIfVariadic;
+    T = TypeUtils.wrapIfVariadic(RuleEnvironmentExtensions.getPredefinedTypes(G).builtInTypeScope, T, fpar);
     return new Result<TypeRef>(T);
   }
   
@@ -3705,8 +3589,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeModuleNamespace(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ModuleNamespaceVirtualType t) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    ParameterizedTypeRef _createTypeRef = TypeUtils.createTypeRef(t);
-    T = _createTypeRef;
+    T = TypeUtils.createTypeRef(t);
     return new Result<TypeRef>(T);
   }
   
@@ -3858,7 +3741,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     final TypeRef right = RuleEnvironmentExtensions.getReplacement(G, rightOriginal);
     final Type leftDeclType = left.getDeclaredType();
     final Type rightDeclType = right.getDeclaredType();
-    if ((Objects.equal(leftDeclType, null) || Objects.equal(rightDeclType, null))) {
+    if (((leftDeclType == null) || (rightDeclType == null))) {
       /* true */
       if (!true) {
         sneakyThrowRuleFailedException("true");
@@ -3975,8 +3858,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                                     throwForExplicitFail(error_1, new ErrorInformation(null, null, data_1));
                                   }
                                 }
-                                boolean _isValue_2 = result_1.isValue();
-                                structuralTyping = _isValue_2;
+                                structuralTyping = result_1.isValue();
                               }
                             }
                           }
@@ -4033,19 +3915,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                               boolean _equals_1 = Objects.equal(leftDeclType, rightDeclType);
                               if (_equals_1) {
                                 if (((left.getTypeArgs().size() > 0) && (left.getTypeArgs().size() <= right.getTypeArgs().size()))) {
-                                  EList<TypeArgument> _typeArgs = left.getTypeArgs();
-                                  int _size = _typeArgs.size();
-                                  EList<TypeArgument> _typeArgs_1 = right.getTypeArgs();
-                                  int _size_1 = _typeArgs_1.size();
-                                  int _min = Math.min(_size, _size_1);
-                                  EList<TypeVariable> _typeVars = rightDeclType.getTypeVars();
-                                  int _size_2 = _typeVars.size();
-                                  final int len = Math.min(_min, _size_2);
+                                  final int len = Math.min(Math.min(left.getTypeArgs().size(), right.getTypeArgs().size()), rightDeclType.getTypeVars().size());
                                   for (int i = 0; (i < len); i++) {
-                                    EList<TypeArgument> _typeArgs_2 = left.getTypeArgs();
-                                    final TypeArgument leftArg = _typeArgs_2.get(i);
-                                    EList<TypeArgument> _typeArgs_3 = right.getTypeArgs();
-                                    final TypeArgument rightArg = _typeArgs_3.get(i);
+                                    final TypeArgument leftArg = left.getTypeArgs().get(i);
+                                    final TypeArgument rightArg = right.getTypeArgs().get(i);
                                     final Variance variance = rightDeclType.getVarianceOfTypeVar(i);
                                     TypeRef leftArgUpper = null;
                                     /* G |~ leftArg /\ leftArgUpper */
@@ -4077,16 +3950,14 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                                       Object _get_1 = G.get(_mappedTo_4);
                                       final boolean isGuarded = (_get_1 != null);
                                       if ((!isGuarded)) {
-                                        RuleEnvironment _wrap_1 = RuleEnvironmentExtensions.wrap(G);
-                                        G2 = _wrap_1;
+                                        G2 = RuleEnvironmentExtensions.wrap(G);
                                         Pair<String, TypeArgument> _mappedTo_5 = Pair.<String, TypeArgument>of(RuleEnvironmentExtensions.GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS, rightArg);
                                         /* G2.add(GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS->(rightArg), Boolean.TRUE) */
                                         if (!G2.add(_mappedTo_5, Boolean.TRUE)) {
                                           sneakyThrowRuleFailedException("G2.add(GUARD_SUBTYPE_PARAMETERIZED_TYPE_REF__ARGS->(rightArg), Boolean.TRUE)");
                                         }
                                       } else {
-                                        ParameterizedTypeRef _pTypeRef = RuleEnvironmentExtensions.topTypeRef(G);
-                                        rightArgUpper = _pTypeRef;
+                                        rightArgUpper = RuleEnvironmentExtensions.topTypeRef(G);
                                         G2 = G;
                                       }
                                     } else {
@@ -4108,8 +3979,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                                         }
                                       } catch (Exception e) {
                                         previousFailure = extractRuleFailedException(e);
-                                        RuleFailedException _previousFailure = previousFailure;
-                                        boolean _isOrCausedByPriorityError = TypeSystemErrorExtensions.isOrCausedByPriorityError(_previousFailure);
+                                        boolean _isOrCausedByPriorityError = TypeSystemErrorExtensions.isOrCausedByPriorityError(previousFailure);
                                         if (_isOrCausedByPriorityError) {
                                           /* fail error stringRep(left) + " is not a subtype of " + stringRep(right) + " due to incompatible type arguments: " + previousFailure.compileMessage data PRIORITY_ERROR */
                                           String _stringRep = this.stringRep(left);
@@ -4117,8 +3987,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                                           String _stringRep_1 = this.stringRep(right);
                                           String _plus_4 = (_plus_3 + _stringRep_1);
                                           String _plus_5 = (_plus_4 + " due to incompatible type arguments: ");
-                                          RuleFailedException _previousFailure_1 = previousFailure;
-                                          String _compileMessage = TypeSystemErrorExtensions.compileMessage(_previousFailure_1);
+                                          String _compileMessage = TypeSystemErrorExtensions.compileMessage(previousFailure);
                                           String _plus_6 = (_plus_5 + _compileMessage);
                                           String error_3 = _plus_6;
                                           Object data_3 = TypeSystemErrorExtensions.PRIORITY_ERROR;
@@ -4149,12 +4018,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                                 if (_exists) {
                                   final RuleEnvironment localG_left = RuleEnvironmentExtensions.wrap(G);
                                   this.typeSystemHelper.addSubstitutions(localG_left, left);
-                                  EList<TypeVariable> _typeVars_1 = rightDeclType.getTypeVars();
                                   final Function1<TypeVariable, TypeRef> _function_1 = (TypeVariable it) -> {
                                     return TypeExtensions.ref(it);
                                   };
-                                  List<TypeRef> _map = ListExtensions.<TypeVariable, TypeRef>map(_typeVars_1, _function_1);
-                                  final TypeRef syntheticTypeRef = TypeExtensions.ref(rightDeclType, ((TypeArgument[])Conversions.unwrapArray(_map, TypeArgument.class)));
+                                  final TypeRef syntheticTypeRef = TypeExtensions.ref(rightDeclType, ((TypeArgument[])Conversions.unwrapArray(ListExtensions.<TypeVariable, TypeRef>map(rightDeclType.getTypeVars(), _function_1), TypeArgument.class)));
                                   /* localG_left |- syntheticTypeRef ~> var TypeRef effectiveSuperTypeRef */
                                   TypeRef effectiveSuperTypeRef = null;
                                   Result<TypeArgument> result_2 = substTypeVariablesInternal(localG_left, _trace_, syntheticTypeRef);
@@ -4206,14 +4073,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> applyRuleSubtypeUnion_Left(final RuleEnvironment G, final RuleApplicationTrace _trace_, final UnionTypeExpression U, final TypeRef S) throws RuleFailedException {
-    EList<TypeRef> _typeRefs = U.getTypeRefs();
     final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
       /* G |- T <: S */
       boolean _ruleinvocation = subtypeSucceeded(G, _trace_, T, S);
       return Boolean.valueOf(_ruleinvocation);
     };
     /* U.typeRefs.forall[T| G |- T <: S ] */
-    if (!IterableExtensions.<TypeRef>forall(_typeRefs, _function)) {
+    if (!IterableExtensions.<TypeRef>forall(U.getTypeRefs(), _function)) {
       sneakyThrowRuleFailedException("U.typeRefs.forall[T| G |- T <: S ]");
     }
     return new Result<Boolean>(true);
@@ -4239,14 +4105,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> applyRuleSubtypeUnion_Right(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef S, final UnionTypeExpression U) throws RuleFailedException {
-    EList<TypeRef> _typeRefs = U.getTypeRefs();
     final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
       /* G |- S <: T */
       boolean _ruleinvocation = subtypeSucceeded(G, _trace_, S, T);
       return Boolean.valueOf(_ruleinvocation);
     };
     /* U.typeRefs.exists[T| G |- S <: T ] */
-    if (!IterableExtensions.<TypeRef>exists(_typeRefs, _function)) {
+    if (!IterableExtensions.<TypeRef>exists(U.getTypeRefs(), _function)) {
       sneakyThrowRuleFailedException("U.typeRefs.exists[T| G |- S <: T ]");
     }
     return new Result<Boolean>(true);
@@ -4272,14 +4137,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> applyRuleSubtypeIntersection_LeftRight(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression S, final IntersectionTypeExpression I) throws RuleFailedException {
-    EList<TypeRef> _typeRefs = I.getTypeRefs();
     final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
       /* G |- S <: T */
       boolean _ruleinvocation = subtypeSucceeded(G, _trace_, S, T);
       return Boolean.valueOf(_ruleinvocation);
     };
     /* I.typeRefs.forall[T| G |- S <: T ] */
-    if (!IterableExtensions.<TypeRef>forall(_typeRefs, _function)) {
+    if (!IterableExtensions.<TypeRef>forall(I.getTypeRefs(), _function)) {
       sneakyThrowRuleFailedException("I.typeRefs.forall[T| G |- S <: T ]");
     }
     return new Result<Boolean>(true);
@@ -4305,14 +4169,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> applyRuleSubtypeIntersection_Left(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression I, final TypeRef S) throws RuleFailedException {
-    EList<TypeRef> _typeRefs = I.getTypeRefs();
     final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
       /* G |- T <: S */
       boolean _ruleinvocation = subtypeSucceeded(G, _trace_, T, S);
       return Boolean.valueOf(_ruleinvocation);
     };
     /* I.typeRefs.exists[T| G |- T <: S ] */
-    if (!IterableExtensions.<TypeRef>exists(_typeRefs, _function)) {
+    if (!IterableExtensions.<TypeRef>exists(I.getTypeRefs(), _function)) {
       sneakyThrowRuleFailedException("I.typeRefs.exists[T| G |- T <: S ]");
     }
     return new Result<Boolean>(true);
@@ -4338,14 +4201,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   }
   
   protected Result<Boolean> applyRuleSubtypeIntersection_Right(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef S, final IntersectionTypeExpression I) throws RuleFailedException {
-    EList<TypeRef> _typeRefs = I.getTypeRefs();
     final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
       /* G |- S <: T */
       boolean _ruleinvocation = subtypeSucceeded(G, _trace_, S, T);
       return Boolean.valueOf(_ruleinvocation);
     };
     /* I.typeRefs.forall[T| G |- S <: T ] */
-    if (!IterableExtensions.<TypeRef>forall(_typeRefs, _function)) {
+    if (!IterableExtensions.<TypeRef>forall(I.getTypeRefs(), _function)) {
       sneakyThrowRuleFailedException("I.typeRefs.forall[T| G |- S <: T ]");
     }
     return new Result<Boolean>(true);
@@ -4686,15 +4548,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
               sneakyThrowRuleFailedException("left_staticType === right_staticType");
             }
           } else {
-            Resource _contextResource = RuleEnvironmentExtensions.getContextResource(G);
-            ContainerTypesHelper.MemberCollector _fromContext = this.containerTypesHelper.fromContext(_contextResource);
-            final TMethod leftCtor = _fromContext.findConstructor(((ContainerType<?>) left_staticType));
-            Resource _contextResource_1 = RuleEnvironmentExtensions.getContextResource(G);
-            ContainerTypesHelper.MemberCollector _fromContext_1 = this.containerTypesHelper.fromContext(_contextResource_1);
-            final TMethod rightCtor = _fromContext_1.findConstructor(((ContainerType<?>) right_staticType));
-            /* leftCtor!=null && rightCtor!=null */
-            if (!((!Objects.equal(leftCtor, null)) && (!Objects.equal(rightCtor, null)))) {
-              sneakyThrowRuleFailedException("leftCtor!=null && rightCtor!=null");
+            final TMethod leftCtor = this.containerTypesHelper.fromContext(RuleEnvironmentExtensions.getContextResource(G)).findConstructor(((ContainerType<?>) left_staticType));
+            final TMethod rightCtor = this.containerTypesHelper.fromContext(RuleEnvironmentExtensions.getContextResource(G)).findConstructor(((ContainerType<?>) right_staticType));
+            /* leftCtor!==null && rightCtor!==null */
+            if (!((leftCtor != null) && (rightCtor != null))) {
+              sneakyThrowRuleFailedException("leftCtor!==null && rightCtor!==null");
             }
             /* G |- leftCtor : var TypeRef leftCtorRef */
             TypeRef leftCtorRef = null;
@@ -4710,14 +4568,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             
             final RuleEnvironment G_left = RuleEnvironmentExtensions.wrap(G);
             final RuleEnvironment G_right = RuleEnvironmentExtensions.wrap(G);
-            TypeRef _ref = TypeExtensions.ref(left_staticType);
-            this.typeSystemHelper.addSubstitutions(G_left, _ref);
-            TypeRef _ref_1 = TypeExtensions.ref(left_staticType);
-            RuleEnvironmentExtensions.addThisType(G_left, _ref_1);
-            TypeRef _ref_2 = TypeExtensions.ref(right_staticType);
-            this.typeSystemHelper.addSubstitutions(G_right, _ref_2);
-            TypeRef _ref_3 = TypeExtensions.ref(right_staticType);
-            RuleEnvironmentExtensions.addThisType(G_right, _ref_3);
+            this.typeSystemHelper.addSubstitutions(G_left, TypeExtensions.ref(left_staticType));
+            RuleEnvironmentExtensions.addThisType(G_left, TypeExtensions.ref(left_staticType));
+            this.typeSystemHelper.addSubstitutions(G_right, TypeExtensions.ref(right_staticType));
+            RuleEnvironmentExtensions.addThisType(G_right, TypeExtensions.ref(right_staticType));
             /* G_left |- leftCtorRef ~> var TypeRef leftCtorRefSubst */
             TypeRef leftCtorRefSubst = null;
             Result<TypeArgument> result_2 = substTypeVariablesInternal(G_left, _trace_, leftCtorRef);
@@ -4963,8 +4817,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef _declaredTypeRef = formalParam.getDeclaredTypeRef();
     boolean _tripleNotEquals = (_declaredTypeRef != null);
     if (_tripleNotEquals) {
-      TypeRef _declaredTypeRef_1 = formalParam.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+      T = formalParam.getDeclaredTypeRef();
     } else {
       TFormalParameter _definedTypeElement = formalParam.getDefinedTypeElement();
       TypeRef _typeRef = null;
@@ -4973,12 +4826,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       boolean _tripleNotEquals_1 = (_typeRef != null);
       if (_tripleNotEquals_1) {
-        TFormalParameter _definedTypeElement_1 = formalParam.getDefinedTypeElement();
-        TypeRef _typeRef_1 = _definedTypeElement_1.getTypeRef();
-        T = _typeRef_1;
+        T = formalParam.getDefinedTypeElement().getTypeRef();
       } else {
-        ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-        T = _anyTypeRef;
+        T = RuleEnvironmentExtensions.anyTypeRef(G);
       }
     }
     return new Result<TypeRef>(T);
@@ -5007,8 +4857,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     final EObject expr = argument.eContainer();
     if ((expr instanceof NewExpression)) {
-      EList<Argument> _arguments = ((NewExpression)expr).getArguments();
-      boolean _contains = _arguments.contains(argument);
+      boolean _contains = ((NewExpression)expr).getArguments().contains(argument);
       boolean _not = (!_contains);
       if (_not) {
       } else {
@@ -5019,33 +4868,24 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         checkAssignableTo(result.getFirst(), TypeTypeRef.class);
         ctorTypeRef = (TypeTypeRef) result.getFirst();
         
-        EList<TypeRef> _typeArgs = ((NewExpression)expr).getTypeArgs();
-        TypeRef typeRefOfInstanceToCreate = this.typeSystemHelper.createTypeRefFromStaticType(G, ctorTypeRef, ((TypeArgument[])Conversions.unwrapArray(_typeArgs, TypeArgument.class)));
+        TypeRef typeRefOfInstanceToCreate = this.typeSystemHelper.createTypeRefFromStaticType(G, ctorTypeRef, ((TypeArgument[])Conversions.unwrapArray(((NewExpression)expr).getTypeArgs(), TypeArgument.class)));
         Type _declaredType = typeRefOfInstanceToCreate.getDeclaredType();
         ContainerType<?> typeOfInstanceToCreate = ((ContainerType<?>) _declaredType);
         final RuleEnvironment G2 = RuleEnvironmentExtensions.wrap(G);
         this.typeSystemHelper.addSubstitutions(G2, typeRefOfInstanceToCreate);
         RuleEnvironmentExtensions.addThisType(G2, typeRefOfInstanceToCreate);
-        Resource _eResource = ((NewExpression)expr).eResource();
-        ContainerTypesHelper.MemberCollector _fromContext = this.containerTypesHelper.fromContext(_eResource);
-        TMethod ctor = _fromContext.findConstructor(typeOfInstanceToCreate);
+        TMethod ctor = this.containerTypesHelper.fromContext(((NewExpression)expr).eResource()).findConstructor(typeOfInstanceToCreate);
         TFormalParameter _fparForArgIdx = null;
         if (ctor!=null) {
-          EList<Argument> _arguments_1 = ((NewExpression)expr).getArguments();
-          int _indexOf = ECollections.indexOf(_arguments_1, argument, 0);
-          _fparForArgIdx=ctor.getFparForArgIdx(_indexOf);
+          _fparForArgIdx=ctor.getFparForArgIdx(ECollections.indexOf(((NewExpression)expr).getArguments(), argument, 0));
         }
         final TFormalParameter fpar = _fparForArgIdx;
-        boolean _equals = Objects.equal(fpar, null);
-        if (_equals) {
-          UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-          T = _createUnknownTypeRef;
+        if ((fpar == null)) {
+          T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
         } else {
           final TypeRef paramType = fpar.getTypeRef();
-          boolean _equals_1 = Objects.equal(paramType, null);
-          if (_equals_1) {
-            ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G2);
-            T = _anyTypeRef;
+          if ((paramType == null)) {
+            T = RuleEnvironmentExtensions.anyTypeRef(G2);
           } else {
             /* G2 |- paramType ~> T */
             Result<TypeArgument> result_1 = substTypeVariablesInternal(G2, _trace_, paramType);
@@ -5057,8 +4897,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
     } else {
       if ((expr instanceof ParameterizedCallExpression)) {
-        EList<Argument> _arguments_2 = ((ParameterizedCallExpression)expr).getArguments();
-        boolean _contains_1 = _arguments_2.contains(argument);
+        boolean _contains_1 = ((ParameterizedCallExpression)expr).getArguments().contains(argument);
         /* expr.arguments.contains(argument) */
         if (!_contains_1) {
           sneakyThrowRuleFailedException("expr.arguments.contains(argument)");
@@ -5072,19 +4911,14 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         
         if ((targetTypeRef instanceof FunctionTypeExprOrRef)) {
           final FunctionTypeExprOrRef F = ((FunctionTypeExprOrRef)targetTypeRef);
-          EList<Argument> _arguments_3 = ((ParameterizedCallExpression)expr).getArguments();
-          final int argIndex = ECollections.indexOf(_arguments_3, argument, 0);
+          final int argIndex = ECollections.indexOf(((ParameterizedCallExpression)expr).getArguments(), argument, 0);
           final TFormalParameter fpar_1 = F.getFparForArgIdx(argIndex);
-          boolean _equals_2 = Objects.equal(fpar_1, null);
-          if (_equals_2) {
-            UnknownTypeRef _createUnknownTypeRef_1 = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-            T = _createUnknownTypeRef_1;
+          if ((fpar_1 == null)) {
+            T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
           } else {
             final TypeRef paramType_1 = fpar_1.getTypeRef();
-            boolean _equals_3 = Objects.equal(paramType_1, null);
-            if (_equals_3) {
-              ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-              T = _anyTypeRef_1;
+            if ((paramType_1 == null)) {
+              T = RuleEnvironmentExtensions.anyTypeRef(G);
             } else {
               final RuleEnvironment G2_1 = RuleEnvironmentExtensions.wrap(G);
               this.typeSystemHelper.addSubstitutions(G2_1, ((ParameterizedCallExpression)expr), F);
@@ -5097,17 +4931,14 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 }
                 final Type containingClass = _definedType;
                 if ((containingClass instanceof TClass)) {
-                  TypeRef _ref = TypeExtensions.ref(containingClass);
-                  RuleEnvironmentExtensions.addThisType(G2_1, _ref);
+                  RuleEnvironmentExtensions.addThisType(G2_1, TypeExtensions.ref(containingClass));
                   ParameterizedTypeRef _superClassRef = ((TClass)containingClass).getSuperClassRef();
                   boolean _tripleNotEquals = (_superClassRef != null);
                   if (_tripleNotEquals) {
-                    ParameterizedTypeRef _superClassRef_1 = ((TClass)containingClass).getSuperClassRef();
-                    this.typeSystemHelper.addSubstitutions(G2_1, _superClassRef_1);
+                    this.typeSystemHelper.addSubstitutions(G2_1, ((TClass)containingClass).getSuperClassRef());
                   }
                   if ((paramType_1 instanceof ThisTypeRefStructural)) {
-                    ParameterizedTypeRef _superClassRef_2 = ((TClass)containingClass).getSuperClassRef();
-                    RuleEnvironmentExtensions.addThisType(G2_1, _superClassRef_2);
+                    RuleEnvironmentExtensions.addThisType(G2_1, ((TClass)containingClass).getSuperClassRef());
                   }
                 }
               }
@@ -5119,8 +4950,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             }
           }
         } else {
-          UnknownTypeRef _createUnknownTypeRef_2 = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-          T = _createUnknownTypeRef_2;
+          T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
         }
       }
     }
@@ -5150,11 +4980,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
     if (_isTypeAware) {
-      ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-      T = _numberTypeRef;
+      T = RuleEnvironmentExtensions.numberTypeRef(G);
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5188,19 +5016,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if (_op != null) {
         switch (_op) {
           case DELETE:
-            ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-            ParameterizedTypeRef _voidTypeRef = RuleEnvironmentExtensions.voidTypeRef(G);
-            _switchResult = TypeUtils.createNonSimplifiedUnionType(_anyTypeRef, _voidTypeRef);
+            _switchResult = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.anyTypeRef(G), RuleEnvironmentExtensions.voidTypeRef(G));
             break;
           case VOID:
-            ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-            ParameterizedTypeRef _voidTypeRef_1 = RuleEnvironmentExtensions.voidTypeRef(G);
-            _switchResult = TypeUtils.createNonSimplifiedUnionType(_anyTypeRef_1, _voidTypeRef_1);
+            _switchResult = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.anyTypeRef(G), RuleEnvironmentExtensions.voidTypeRef(G));
             break;
           case TYPEOF:
-            ParameterizedTypeRef _anyTypeRef_2 = RuleEnvironmentExtensions.anyTypeRef(G);
-            ParameterizedTypeRef _voidTypeRef_2 = RuleEnvironmentExtensions.voidTypeRef(G);
-            _switchResult = TypeUtils.createNonSimplifiedUnionType(_anyTypeRef_2, _voidTypeRef_2);
+            _switchResult = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.anyTypeRef(G), RuleEnvironmentExtensions.voidTypeRef(G));
             break;
           case INC:
             _switchResult = RuleEnvironmentExtensions.numberTypeRef(G);
@@ -5234,19 +5056,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if (_op_1 != null) {
         switch (_op_1) {
           case DELETE:
-            ParameterizedTypeRef _anyTypeRef_3 = RuleEnvironmentExtensions.anyTypeRef(G);
-            ParameterizedTypeRef _voidTypeRef_3 = RuleEnvironmentExtensions.voidTypeRef(G);
-            _switchResult_1 = TypeUtils.createNonSimplifiedUnionType(_anyTypeRef_3, _voidTypeRef_3);
+            _switchResult_1 = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.anyTypeRef(G), RuleEnvironmentExtensions.voidTypeRef(G));
             break;
           case VOID:
-            ParameterizedTypeRef _anyTypeRef_4 = RuleEnvironmentExtensions.anyTypeRef(G);
-            ParameterizedTypeRef _voidTypeRef_4 = RuleEnvironmentExtensions.voidTypeRef(G);
-            _switchResult_1 = TypeUtils.createNonSimplifiedUnionType(_anyTypeRef_4, _voidTypeRef_4);
+            _switchResult_1 = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.anyTypeRef(G), RuleEnvironmentExtensions.voidTypeRef(G));
             break;
           case TYPEOF:
-            ParameterizedTypeRef _anyTypeRef_5 = RuleEnvironmentExtensions.anyTypeRef(G);
-            ParameterizedTypeRef _voidTypeRef_5 = RuleEnvironmentExtensions.voidTypeRef(G);
-            _switchResult_1 = TypeUtils.createNonSimplifiedUnionType(_anyTypeRef_5, _voidTypeRef_5);
+            _switchResult_1 = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.anyTypeRef(G), RuleEnvironmentExtensions.voidTypeRef(G));
             break;
           default:
             _switchResult_1 = RuleEnvironmentExtensions.anyTypeRef(G);
@@ -5284,11 +5100,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
     if (_isTypeAware) {
-      ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-      T = _numberTypeRef;
+      T = RuleEnvironmentExtensions.numberTypeRef(G);
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5315,11 +5129,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleExpectedTypeInAdditiveExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final AdditiveExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
     if (((!Objects.equal(e.getOp(), AdditiveOperator.ADD)) && this.jsVariantHelper.isTypeAware(e))) {
-      ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-      T = _numberTypeRef;
+      T = RuleEnvironmentExtensions.numberTypeRef(G);
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5347,11 +5159,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
     if (_isTypeAware) {
-      ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-      T = _numberTypeRef;
+      T = RuleEnvironmentExtensions.numberTypeRef(G);
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5384,44 +5194,30 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           Expression _rhs = e.getRhs();
           boolean _tripleEquals = (expression == _rhs);
           if (_tripleEquals) {
-            ParameterizedTypeRef _functionTypeRef = RuleEnvironmentExtensions.functionTypeRef(G);
-            ParameterizedTypeRef _objectTypeRef = RuleEnvironmentExtensions.objectTypeRef(G);
-            TypeTypeRef _createTypeTypeRef = TypeUtils.createTypeTypeRef(_objectTypeRef, false);
-            ParameterizedTypeRef _n4EnumTypeRef = RuleEnvironmentExtensions.n4EnumTypeRef(G);
-            TypeTypeRef _createTypeTypeRef_1 = TypeUtils.createTypeTypeRef(_n4EnumTypeRef, false);
-            UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(_functionTypeRef, _createTypeTypeRef, _createTypeTypeRef_1);
-            T = _createNonSimplifiedUnionType;
+            T = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.functionTypeRef(G), 
+              TypeUtils.createTypeTypeRef(RuleEnvironmentExtensions.objectTypeRef(G), false), TypeUtils.createTypeTypeRef(RuleEnvironmentExtensions.n4EnumTypeRef(G), false));
           } else {
-            ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-            T = _anyTypeRef;
+            T = RuleEnvironmentExtensions.anyTypeRef(G);
           }
           break;
         case IN:
           Expression _rhs_1 = e.getRhs();
           boolean _tripleEquals_1 = (expression == _rhs_1);
           if (_tripleEquals_1) {
-            ParameterizedTypeRef _objectTypeRef_1 = RuleEnvironmentExtensions.objectTypeRef(G);
-            T = _objectTypeRef_1;
+            T = RuleEnvironmentExtensions.objectTypeRef(G);
           } else {
             boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
             if (_isTypeAware) {
-              ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-              ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-              UnionTypeExpression _createNonSimplifiedUnionType_1 = TypeUtils.createNonSimplifiedUnionType(_numberTypeRef, _stringTypeRef);
-              T = _createNonSimplifiedUnionType_1;
+              T = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
             } else {
-              ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-              T = _anyTypeRef_1;
+              T = RuleEnvironmentExtensions.anyTypeRef(G);
             }
           }
           break;
         default:
           boolean _isTypeAware_1 = this.jsVariantHelper.isTypeAware(e);
           if (_isTypeAware_1) {
-            ParameterizedTypeRef _numberTypeRef_1 = RuleEnvironmentExtensions.numberTypeRef(G);
-            ParameterizedTypeRef _stringTypeRef_1 = RuleEnvironmentExtensions.stringTypeRef(G);
-            ParameterizedTypeRef _booleanTypeRef = RuleEnvironmentExtensions.booleanTypeRef(G);
-            final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(_numberTypeRef_1, _stringTypeRef_1, _booleanTypeRef);
+            final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G), RuleEnvironmentExtensions.booleanTypeRef(G));
             Expression _xifexpression = null;
             Expression _lhs = e.getLhs();
             boolean _tripleEquals_2 = (expression == _lhs);
@@ -5455,18 +5251,14 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
               T = primsTR;
             }
           } else {
-            ParameterizedTypeRef _anyTypeRef_2 = RuleEnvironmentExtensions.anyTypeRef(G);
-            T = _anyTypeRef_2;
+            T = RuleEnvironmentExtensions.anyTypeRef(G);
           }
           break;
       }
     } else {
       boolean _isTypeAware_1 = this.jsVariantHelper.isTypeAware(e);
       if (_isTypeAware_1) {
-        ParameterizedTypeRef _numberTypeRef_1 = RuleEnvironmentExtensions.numberTypeRef(G);
-        ParameterizedTypeRef _stringTypeRef_1 = RuleEnvironmentExtensions.stringTypeRef(G);
-        ParameterizedTypeRef _booleanTypeRef = RuleEnvironmentExtensions.booleanTypeRef(G);
-        final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(_numberTypeRef_1, _stringTypeRef_1, _booleanTypeRef);
+        final UnionTypeExpression primsTR = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G), RuleEnvironmentExtensions.booleanTypeRef(G));
         Expression _xifexpression = null;
         Expression _lhs = e.getLhs();
         boolean _tripleEquals_2 = (expression == _lhs);
@@ -5500,8 +5292,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           T = primsTR;
         }
       } else {
-        ParameterizedTypeRef _anyTypeRef_2 = RuleEnvironmentExtensions.anyTypeRef(G);
-        T = _anyTypeRef_2;
+        T = RuleEnvironmentExtensions.anyTypeRef(G);
       }
     }
     return new Result<TypeRef>(T);
@@ -5559,11 +5350,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef T = null; // output parameter
     boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
     if (_isTypeAware) {
-      ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-      T = _numberTypeRef;
+      T = RuleEnvironmentExtensions.numberTypeRef(G);
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5631,11 +5420,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         Expression _lhs = expr.getLhs();
         boolean _tripleEquals = (operand == _lhs);
         if (_tripleEquals) {
-          ParameterizedTypeRef _bottomTypeRef = RuleEnvironmentExtensions.bottomTypeRef(G);
-          T = _bottomTypeRef;
+          T = RuleEnvironmentExtensions.bottomTypeRef(G);
         } else {
-          ParameterizedTypeRef _pTypeRef = RuleEnvironmentExtensions.topTypeRef(G);
-          T = _pTypeRef;
+          T = RuleEnvironmentExtensions.topTypeRef(G);
         }
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
@@ -5650,11 +5437,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             Expression _lhs_1 = expr.getLhs();
             boolean _tripleEquals_1 = (operand == _lhs_1);
             if (_tripleEquals_1) {
-              ParameterizedTypeRef _bottomTypeRef_1 = RuleEnvironmentExtensions.bottomTypeRef(G);
-              T = _bottomTypeRef_1;
+              T = RuleEnvironmentExtensions.bottomTypeRef(G);
             } else {
-              ParameterizedTypeRef _pTypeRef_1 = RuleEnvironmentExtensions.topTypeRef(G);
-              T = _pTypeRef_1;
+              T = RuleEnvironmentExtensions.topTypeRef(G);
             }
           } catch (Exception e_1) {
             previousFailure = extractRuleFailedException(e_1);
@@ -5670,8 +5455,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 Expression _lhs_2 = expr.getLhs();
                 boolean _tripleEquals_3 = (operand == _lhs_2);
                 if (_tripleEquals_3) {
-                  ParameterizedTypeRef _bottomTypeRef_2 = RuleEnvironmentExtensions.bottomTypeRef(G);
-                  T = _bottomTypeRef_2;
+                  T = RuleEnvironmentExtensions.bottomTypeRef(G);
                 } else {
                   /* G |- expr.lhs : T */
                   Expression _lhs_3 = expr.getLhs();
@@ -5694,10 +5478,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                     Expression _lhs_4 = expr.getLhs();
                     boolean _tripleEquals_5 = (operand == _lhs_4);
                     if (_tripleEquals_5) {
-                      ParameterizedTypeRef _numberTypeRef = RuleEnvironmentExtensions.numberTypeRef(G);
-                      ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-                      IntersectionTypeExpression _createNonSimplifiedIntersectionType = TypeUtils.createNonSimplifiedIntersectionType(_numberTypeRef, _stringTypeRef);
-                      T = _createNonSimplifiedIntersectionType;
+                      T = TypeUtils.createNonSimplifiedIntersectionType(RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
                     } else {
                       /* G |- expr.lhs : var ParameterizedTypeRef lhsTypeRef */
                       Expression _lhs_5 = expr.getLhs();
@@ -5710,24 +5491,19 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                       PrimitiveType _stringType = RuleEnvironmentExtensions.stringType(G);
                       boolean _tripleEquals_6 = (_declaredType == _stringType);
                       if (_tripleEquals_6) {
-                        ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-                        T = _anyTypeRef;
+                        T = RuleEnvironmentExtensions.anyTypeRef(G);
                       } else {
-                        Type _declaredType_1 = lhsTypeRef.getDeclaredType();
-                        boolean _isNumeric = RuleEnvironmentExtensions.isNumeric(G, _declaredType_1);
+                        boolean _isNumeric = RuleEnvironmentExtensions.isNumeric(G, lhsTypeRef.getDeclaredType());
                         if (_isNumeric) {
-                          ParameterizedTypeRef _numberTypeRef_1 = RuleEnvironmentExtensions.numberTypeRef(G);
-                          T = _numberTypeRef_1;
+                          T = RuleEnvironmentExtensions.numberTypeRef(G);
                         } else {
-                          ParameterizedTypeRef _anyTypeRef_1 = RuleEnvironmentExtensions.anyTypeRef(G);
-                          T = _anyTypeRef_1;
+                          T = RuleEnvironmentExtensions.anyTypeRef(G);
                         }
                       }
                     }
                   } catch (Exception e_3) {
                     previousFailure = extractRuleFailedException(e_3);
-                    ParameterizedTypeRef _numberTypeRef_2 = RuleEnvironmentExtensions.numberTypeRef(G);
-                    T = _numberTypeRef_2;
+                    T = RuleEnvironmentExtensions.numberTypeRef(G);
                   }
                 }
               }
@@ -5761,13 +5537,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleExpectedTypeOfRightSideInVariableDeclaration(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VariableDeclaration vdecl, final Expression rhs) throws RuleFailedException {
     TypeRef T = null; // output parameter
     TypeRef _declaredTypeRef = vdecl.getDeclaredTypeRef();
-    boolean _notEquals = (!Objects.equal(_declaredTypeRef, null));
-    if (_notEquals) {
-      TypeRef _declaredTypeRef_1 = vdecl.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+    boolean _tripleNotEquals = (_declaredTypeRef != null);
+    if (_tripleNotEquals) {
+      T = vdecl.getDeclaredTypeRef();
     } else {
-      ParameterizedTypeRef _pTypeRef = RuleEnvironmentExtensions.topTypeRef(G);
-      T = _pTypeRef;
+      T = RuleEnvironmentExtensions.topTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5793,8 +5567,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeOfRightSideInVariableBinding(final RuleEnvironment G, final RuleApplicationTrace _trace_, final VariableBinding binding, final Expression initExpr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    ParameterizedTypeRef _pTypeRef = RuleEnvironmentExtensions.topTypeRef(G);
-    T = _pTypeRef;
+    T = RuleEnvironmentExtensions.topTypeRef(G);
     return new Result<TypeRef>(T);
   }
   
@@ -5820,13 +5593,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleExpectedTypeOfRightSideInN4FieldDeclaration(final RuleEnvironment G, final RuleApplicationTrace _trace_, final N4FieldDeclaration fdecl, final Expression rhs) throws RuleFailedException {
     TypeRef T = null; // output parameter
     TypeRef _declaredTypeRef = fdecl.getDeclaredTypeRef();
-    boolean _notEquals = (!Objects.equal(_declaredTypeRef, null));
-    if (_notEquals) {
-      TypeRef _declaredTypeRef_1 = fdecl.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+    boolean _tripleNotEquals = (_declaredTypeRef != null);
+    if (_tripleNotEquals) {
+      T = fdecl.getDeclaredTypeRef();
     } else {
-      ParameterizedTypeRef _pTypeRef = RuleEnvironmentExtensions.topTypeRef(G);
-      T = _pTypeRef;
+      T = RuleEnvironmentExtensions.topTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5853,13 +5624,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleExpectedTypeOfRightSideInPropertyNameValuePair(final RuleEnvironment G, final RuleApplicationTrace _trace_, final PropertyNameValuePair pnvp, final Expression rhs) throws RuleFailedException {
     TypeRef T = null; // output parameter
     TypeRef _declaredTypeRef = pnvp.getDeclaredTypeRef();
-    boolean _notEquals = (!Objects.equal(_declaredTypeRef, null));
-    if (_notEquals) {
-      TypeRef _declaredTypeRef_1 = pnvp.getDeclaredTypeRef();
-      T = _declaredTypeRef_1;
+    boolean _tripleNotEquals = (_declaredTypeRef != null);
+    if (_tripleNotEquals) {
+      T = pnvp.getDeclaredTypeRef();
     } else {
-      ParameterizedTypeRef _pTypeRef = RuleEnvironmentExtensions.topTypeRef(G);
-      T = _pTypeRef;
+      T = RuleEnvironmentExtensions.topTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -5885,8 +5654,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInReturnStatement(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ReturnStatement stmt, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    TypeRef _expectedTypeOfReturnValueExpression = this.typeSystemHelper.getExpectedTypeOfReturnValueExpression(G, expression);
-    T = _expectedTypeOfReturnValueExpression;
+    T = this.typeSystemHelper.getExpectedTypeOfReturnValueExpression(G, expression);
     return new Result<TypeRef>(T);
   }
   
@@ -5917,8 +5685,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     checkAssignableTo(result.getFirst(), TypeRef.class);
     exprTypeRef = (TypeRef) result.getFirst();
     
-    TypeRef _expectedTypeOfYieldValueExpression = this.typeSystemHelper.getExpectedTypeOfYieldValueExpression(G, yieldExpr, exprTypeRef);
-    T = _expectedTypeOfYieldValueExpression;
+    T = this.typeSystemHelper.getExpectedTypeOfYieldValueExpression(G, yieldExpr, exprTypeRef);
     return new Result<TypeRef>(T);
   }
   
@@ -5946,8 +5713,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     ArrowFunction _containingSingleExpressionArrowFunction = N4JSASTUtils.getContainingSingleExpressionArrowFunction(expression);
     boolean _tripleNotEquals = (_containingSingleExpressionArrowFunction != null);
     if (_tripleNotEquals) {
-      TypeRef _expectedTypeOfReturnValueExpression = this.typeSystemHelper.getExpectedTypeOfReturnValueExpression(G, expression);
-      T = _expectedTypeOfReturnValueExpression;
+      T = this.typeSystemHelper.getExpectedTypeOfReturnValueExpression(G, expression);
     } else {
       T = null;
     }
@@ -5981,12 +5747,10 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if (_isDestructuringForStatement) {
       } else {
         VariableDeclaration _xifexpression = null;
-        EList<VariableDeclaration> _varDecl = forStmnt.getVarDecl();
-        boolean _isEmpty = _varDecl.isEmpty();
+        boolean _isEmpty = forStmnt.getVarDecl().isEmpty();
         boolean _not = (!_isEmpty);
         if (_not) {
-          EList<VariableDeclaration> _varDecl_1 = forStmnt.getVarDecl();
-          _xifexpression = _varDecl_1.get(0);
+          _xifexpression = forStmnt.getVarDecl().get(0);
         }
         final VariableDeclaration varDeclInFor = _xifexpression;
         VariableDeclaration _xifexpression_1 = null;
@@ -6001,8 +5765,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         if (varDeclInFor!=null) {
           _declaredTypeRef=varDeclInFor.getDeclaredTypeRef();
         }
-        boolean _notEquals = (!Objects.equal(_declaredTypeRef, null));
-        if (_notEquals) {
+        boolean _tripleNotEquals = (_declaredTypeRef != null);
+        if (_tripleNotEquals) {
           _or = true;
         } else {
           _or = (varDeclOutside != null);
@@ -6021,19 +5785,13 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           checkAssignableTo(result.getFirst(), TypeRef.class);
           varTypeRef = (TypeRef) result.getFirst();
           
-          TypeRef _copyIfContained = TypeUtils.<TypeRef>copyIfContained(varTypeRef);
-          wildThing.setDeclaredUpperBound(_copyIfContained);
+          wildThing.setDeclaredUpperBound(TypeUtils.<TypeRef>copyIfContained(varTypeRef));
         }
       }
-      ParameterizedTypeRef _iterableTypeRef = RuleEnvironmentExtensions.iterableTypeRef(G, wildThing);
-      T = _iterableTypeRef;
+      T = RuleEnvironmentExtensions.iterableTypeRef(G, wildThing);
     } else {
       if ((forStmnt.isForIn() && (expression == forStmnt.getExpression()))) {
-        ParameterizedTypeRef _objectTypeRef = RuleEnvironmentExtensions.objectTypeRef(G);
-        ParameterizedTypeRef _stringTypeRef = RuleEnvironmentExtensions.stringTypeRef(G);
-        ParameterizedTypeRef _argumentsTypeRef = RuleEnvironmentExtensions.argumentsTypeRef(G);
-        UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(_objectTypeRef, _stringTypeRef, _argumentsTypeRef);
-        T = _createNonSimplifiedUnionType;
+        T = TypeUtils.createNonSimplifiedUnionType(RuleEnvironmentExtensions.objectTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G), RuleEnvironmentExtensions.argumentsTypeRef(G));
       }
     }
     return new Result<TypeRef>(T);
@@ -6064,8 +5822,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     if (_isAutoPromisify) {
       T = null;
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -6091,8 +5848,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInUnsupportedContainer(final RuleEnvironment G, final RuleApplicationTrace _trace_, final EObject container, final Expression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    TypeRef _expectedExpressionTypeInEObject = this.expressionTypeHelper.expectedExpressionTypeInEObject(container, expr, G);
-    T = _expectedExpressionTypeInEObject;
+    T = this.expressionTypeHelper.expectedExpressionTypeInEObject(container, expr, G);
     return new Result<TypeRef>(T);
   }
   
@@ -6149,8 +5905,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     if ((ub != null)) {
       T = ub;
     } else {
-      ParameterizedTypeRef _anyTypeRef = RuleEnvironmentExtensions.anyTypeRef(G);
-      T = _anyTypeRef;
+      T = RuleEnvironmentExtensions.anyTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -6182,8 +5937,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     checkAssignableTo(result.getFirst(), TypeRef.class);
     T = (TypeRef) result.getFirst();
     
-    TypeRef _copy = TypeUtils.<TypeRef>copy(T);
-    T = _copy;
+    T = TypeUtils.<TypeRef>copy(T);
     TypeUtils.copyTypeModifiers(T, existentialTypeRef);
     return new Result<TypeRef>(T);
   }
@@ -6209,7 +5963,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleUpperBoundUnionTypeExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final UnionTypeExpression U) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    EList<TypeRef> _typeRefs = U.getTypeRefs();
     final Function1<TypeRef, TypeRef> _function = (TypeRef it) -> {
       TypeRef _xblockexpression = null;
       {
@@ -6223,8 +5976,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    List<TypeRef> _map = ListExtensions.<TypeRef, TypeRef>map(_typeRefs, _function);
-    UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(_map);
+    UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(
+      ListExtensions.<TypeRef, TypeRef>map(U.getTypeRefs(), _function));
     final Procedure1<UnionTypeExpression> _function_1 = (UnionTypeExpression it) -> {
       it.setOriginalComposedTypeRef(U);
     };
@@ -6255,7 +6008,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleUpperBoundIntersectionTypeExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression I) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    EList<TypeRef> _typeRefs = I.getTypeRefs();
     final Function1<TypeRef, TypeRef> _function = (TypeRef it) -> {
       TypeRef _xblockexpression = null;
       {
@@ -6269,8 +6021,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    List<TypeRef> _map = ListExtensions.<TypeRef, TypeRef>map(_typeRefs, _function);
-    IntersectionTypeExpression _createNonSimplifiedIntersectionType = TypeUtils.createNonSimplifiedIntersectionType(_map);
+    IntersectionTypeExpression _createNonSimplifiedIntersectionType = TypeUtils.createNonSimplifiedIntersectionType(
+      ListExtensions.<TypeRef, TypeRef>map(I.getTypeRefs(), _function));
     final Procedure1<IntersectionTypeExpression> _function_1 = (IntersectionTypeExpression it) -> {
       it.setOriginalComposedTypeRef(I);
     };
@@ -6331,9 +6083,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleUpperBoundFunctionTypeRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionTypeRef F) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    Result<TypeRef> _applyRuleUpperBoundFunctionTypeExprOrRef = this.applyRuleUpperBoundFunctionTypeExprOrRef(G, _trace_, F);
-    TypeRef _value = _applyRuleUpperBoundFunctionTypeExprOrRef.getValue();
-    T = _value;
+    T = this.applyRuleUpperBoundFunctionTypeExprOrRef(G, _trace_, F).getValue();
     return new Result<TypeRef>(T);
   }
   
@@ -6358,8 +6108,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleUpperBoundFunctionTypeExprOrRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionTypeExprOrRef F) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    FunctionTypeExpression _createUpperBoundOfFunctionTypeExprOrRef = this.typeSystemHelper.createUpperBoundOfFunctionTypeExprOrRef(G, F);
-    T = _createUpperBoundOfFunctionTypeExprOrRef;
+    T = this.typeSystemHelper.createUpperBoundOfFunctionTypeExprOrRef(G, F);
     return new Result<TypeRef>(T);
   }
   
@@ -6384,8 +6133,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleUpperBoundThisTypeRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final BoundThisTypeRef boundThisTypeRef) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    ParameterizedTypeRef _createResolvedThisTypeRef = TypeUtils.createResolvedThisTypeRef(boundThisTypeRef);
-    T = _createResolvedThisTypeRef;
+    T = TypeUtils.createResolvedThisTypeRef(boundThisTypeRef);
     TypeUtils.copyTypeModifiers(T, boundThisTypeRef);
     return new Result<TypeRef>(T);
   }
@@ -6414,9 +6162,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     final TypeArgument typeArg = ct.getTypeArg();
     if ((typeArg instanceof BoundThisTypeRef)) {
       final ParameterizedTypeRef typeArgNew = TypeUtils.createResolvedThisTypeRef(((BoundThisTypeRef)typeArg));
-      boolean _isConstructorRef = ct.isConstructorRef();
-      TypeTypeRef _createTypeTypeRef = TypeUtils.createTypeTypeRef(typeArgNew, _isConstructorRef);
-      T = _createTypeTypeRef;
+      T = TypeUtils.createTypeTypeRef(typeArgNew, ct.isConstructorRef());
     } else {
       T = ct;
     }
@@ -6475,11 +6221,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeRef _declaredLowerBound = wildcard.getDeclaredLowerBound();
     boolean _tripleNotEquals = (_declaredLowerBound != null);
     if (_tripleNotEquals) {
-      TypeRef _declaredLowerBound_1 = wildcard.getDeclaredLowerBound();
-      T = _declaredLowerBound_1;
+      T = wildcard.getDeclaredLowerBound();
     } else {
-      ParameterizedTypeRef _bottomTypeRef = RuleEnvironmentExtensions.bottomTypeRef(G);
-      T = _bottomTypeRef;
+      T = RuleEnvironmentExtensions.bottomTypeRef(G);
     }
     return new Result<TypeRef>(T);
   }
@@ -6511,8 +6255,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     checkAssignableTo(result.getFirst(), TypeRef.class);
     T = (TypeRef) result.getFirst();
     
-    TypeRef _copy = TypeUtils.<TypeRef>copy(T);
-    T = _copy;
+    T = TypeUtils.<TypeRef>copy(T);
     TypeUtils.copyTypeModifiers(T, existentialTypeRef);
     return new Result<TypeRef>(T);
   }
@@ -6538,7 +6281,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleLowerBoundUnionTypeExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final UnionTypeExpression U) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    EList<TypeRef> _typeRefs = U.getTypeRefs();
     final Function1<TypeRef, TypeRef> _function = (TypeRef it) -> {
       TypeRef _xblockexpression = null;
       {
@@ -6552,9 +6294,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    List<TypeRef> _map = ListExtensions.<TypeRef, TypeRef>map(_typeRefs, _function);
-    UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(_map);
-    T = _createNonSimplifiedUnionType;
+    T = TypeUtils.createNonSimplifiedUnionType(
+      ListExtensions.<TypeRef, TypeRef>map(U.getTypeRefs(), _function));
     TypeUtils.copyTypeModifiers(T, U);
     return new Result<TypeRef>(T);
   }
@@ -6580,7 +6321,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleLowerBoundIntersectionTypeExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression I) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    EList<TypeRef> _typeRefs = I.getTypeRefs();
     final Function1<TypeRef, TypeRef> _function = (TypeRef it) -> {
       TypeRef _xblockexpression = null;
       {
@@ -6594,9 +6334,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    List<TypeRef> _map = ListExtensions.<TypeRef, TypeRef>map(_typeRefs, _function);
-    IntersectionTypeExpression _createNonSimplifiedIntersectionType = TypeUtils.createNonSimplifiedIntersectionType(_map);
-    T = _createNonSimplifiedIntersectionType;
+    T = TypeUtils.createNonSimplifiedIntersectionType(
+      ListExtensions.<TypeRef, TypeRef>map(I.getTypeRefs(), _function));
     TypeUtils.copyTypeModifiers(T, I);
     return new Result<TypeRef>(T);
   }
@@ -6652,9 +6391,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleLowerBoundFunctionTypeRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionTypeRef F) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    Result<TypeRef> _applyRuleLowerBoundFunctionTypeExprOrRef = this.applyRuleLowerBoundFunctionTypeExprOrRef(G, _trace_, F);
-    TypeRef _value = _applyRuleLowerBoundFunctionTypeExprOrRef.getValue();
-    T = _value;
+    T = this.applyRuleLowerBoundFunctionTypeExprOrRef(G, _trace_, F).getValue();
     return new Result<TypeRef>(T);
   }
   
@@ -6679,8 +6416,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleLowerBoundFunctionTypeExprOrRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionTypeExprOrRef F) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    FunctionTypeExpression _createLowerBoundOfFunctionTypeExprOrRef = this.typeSystemHelper.createLowerBoundOfFunctionTypeExprOrRef(G, F);
-    T = _createLowerBoundOfFunctionTypeExprOrRef;
+    T = this.typeSystemHelper.createLowerBoundOfFunctionTypeExprOrRef(G, F);
     return new Result<TypeRef>(T);
   }
   
@@ -6705,8 +6441,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleLowerBoundThisTypeRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final BoundThisTypeRef boundThisTypeRef) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    ParameterizedTypeRef _undefinedTypeRef = RuleEnvironmentExtensions.undefinedTypeRef(G);
-    T = _undefinedTypeRef;
+    T = RuleEnvironmentExtensions.undefinedTypeRef(G);
     TypeUtils.copyTypeModifiers(T, boundThisTypeRef);
     return new Result<TypeRef>(T);
   }
@@ -6777,12 +6512,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       
     }
     if (((ub != wildcard.getDeclaredUpperBound()) || (lb != wildcard.getDeclaredLowerBound()))) {
-      Wildcard _copy = TypeUtils.<Wildcard>copy(wildcard);
-      T = _copy;
-      TypeRef _copyIfContained = TypeUtils.<TypeRef>copyIfContained(ub);
-      T.setDeclaredUpperBound(_copyIfContained);
-      TypeRef _copyIfContained_1 = TypeUtils.<TypeRef>copyIfContained(lb);
-      T.setDeclaredLowerBound(_copyIfContained_1);
+      T = TypeUtils.<Wildcard>copy(wildcard);
+      T.setDeclaredUpperBound(TypeUtils.<TypeRef>copyIfContained(ub));
+      T.setDeclaredLowerBound(TypeUtils.<TypeRef>copyIfContained(lb));
     } else {
       T = wildcard;
     }
@@ -6816,10 +6548,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       try {
         TypeRef _thisType = RuleEnvironmentExtensions.getThisType(G);
         final BoundThisTypeRef boundRefFromEnv = ((BoundThisTypeRef) _thisType);
-        ParameterizedTypeRef _actualThisTypeRef = boundRefFromEnv.getActualThisTypeRef();
-        final BoundThisTypeRef boundRef = TypeUtils.createBoundThisTypeRef(_actualThisTypeRef);
-        TypingStrategy _typingStrategy = thisTypeRef.getTypingStrategy();
-        boundRef.setTypingStrategy(_typingStrategy);
+        final BoundThisTypeRef boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.getActualThisTypeRef());
+        boundRef.setTypingStrategy(thisTypeRef.getTypingStrategy());
         TypeUtils.copyTypeModifiers(boundRef, thisTypeRef);
         T = boundRef;
       } catch (Exception e) {
@@ -6857,8 +6587,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       try {
         TypeRef _thisType = RuleEnvironmentExtensions.getThisType(G);
         final BoundThisTypeRef boundRefFromEnv = ((BoundThisTypeRef) _thisType);
-        ParameterizedTypeRef _actualThisTypeRef = boundRefFromEnv.getActualThisTypeRef();
-        final BoundThisTypeRef boundRef = TypeUtils.createBoundThisTypeRefStructural(_actualThisTypeRef, thisTypeRef);
+        final BoundThisTypeRef boundRef = TypeUtils.createBoundThisTypeRefStructural(boundRefFromEnv.getActualThisTypeRef(), thisTypeRef);
         TypeUtils.copyTypeModifiers(boundRef, thisTypeRef);
         T = boundRef;
       } catch (Exception e) {
@@ -6890,8 +6619,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeArgument> applyRuleSubstTypeVariablesInFunctionTypeRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionTypeRef typeRef) throws RuleFailedException {
     TypeRef result = null; // output parameter
-    Result<TypeArgument> _applyRuleSubstTypeVariablesInFunctionTypeExprOrRef = this.applyRuleSubstTypeVariablesInFunctionTypeExprOrRef(G, _trace_, typeRef);
-    TypeArgument _value = _applyRuleSubstTypeVariablesInFunctionTypeExprOrRef.getValue();
+    TypeArgument _value = this.applyRuleSubstTypeVariablesInFunctionTypeExprOrRef(G, _trace_, typeRef).getValue();
     result = ((TypeRef) _value);
     return new Result<TypeArgument>(result);
   }
@@ -6917,8 +6645,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeArgument> applyRuleSubstTypeVariablesInFunctionTypeExprOrRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final FunctionTypeExprOrRef typeRef) throws RuleFailedException {
     TypeRef result = null; // output parameter
-    FunctionTypeExpression _createSubstitutionOfFunctionTypeExprOrRef = this.typeSystemHelper.createSubstitutionOfFunctionTypeExprOrRef(G, typeRef);
-    result = _createSubstitutionOfFunctionTypeExprOrRef;
+    result = this.typeSystemHelper.createSubstitutionOfFunctionTypeExprOrRef(G, typeRef);
     return new Result<TypeArgument>(result);
   }
   
@@ -6961,17 +6688,12 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       haveReplacement = (haveReplacement || (substTypeRef != currTypeRef));
     }
     if (haveReplacement) {
-      ComposedTypeRef _copy = TypeUtils.<ComposedTypeRef>copy(typeRef);
-      result = _copy;
-      EList<TMember> _cachedComposedMembers = result.getCachedComposedMembers();
-      _cachedComposedMembers.clear();
+      result = TypeUtils.<ComposedTypeRef>copy(typeRef);
+      result.getCachedComposedMembers().clear();
       result.setOriginalComposedTypeRef(typeRef);
-      EList<TypeRef> _typeRefs_1 = result.getTypeRefs();
-      _typeRefs_1.clear();
-      EList<TypeRef> _typeRefs_2 = result.getTypeRefs();
-      Collection<TypeRef> _copyAll = TypeUtils.<TypeRef>copyAll(substTypeRefs);
+      result.getTypeRefs().clear();
       /* result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs)) */
-      if (!_typeRefs_2.addAll(_copyAll)) {
+      if (!result.getTypeRefs().addAll(TypeUtils.<TypeRef>copyAll(substTypeRefs))) {
         sneakyThrowRuleFailedException("result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs))");
       }
     } else {
@@ -7011,10 +6733,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     TypeArgument _typeArg_1 = typeRef.getTypeArg();
     boolean _tripleNotEquals = (_typeArg_1 != tResult);
     if (_tripleNotEquals) {
-      TypeArgument _copyIfContained = TypeUtils.<TypeArgument>copyIfContained(tResult);
-      tResult = _copyIfContained;
-      TypeTypeRef _copyIfContained_1 = TypeUtils.<TypeTypeRef>copyIfContained(typeRef);
-      result = _copyIfContained_1;
+      tResult = TypeUtils.<TypeArgument>copyIfContained(tResult);
+      result = TypeUtils.<TypeTypeRef>copyIfContained(typeRef);
       result.setTypeArg(tResult);
     } else {
       result = typeRef;
@@ -7056,8 +6776,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           if ((typeRef instanceof ParameterizedTypeRefStructural)) {
             if ((temp instanceof ParameterizedTypeRef)) {
               ParameterizedTypeRefStructural ptrs = TypeUtils.copyToParameterizedTypeRefStructural(((ParameterizedTypeRef)temp));
-              TypingStrategy _typingStrategy = ((ParameterizedTypeRefStructural)typeRef).getTypingStrategy();
-              ptrs.setTypingStrategy(_typingStrategy);
+              ptrs.setTypingStrategy(((ParameterizedTypeRefStructural)typeRef).getTypingStrategy());
               temp = ptrs;
             }
           }
@@ -7075,11 +6794,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             checkAssignableTo(result_1.getFirst(), TypeRef.class);
             result = (TypeRef) result_1.getFirst();
             
-            TypeRef _copy = TypeUtils.<TypeRef>copy(result);
-            result = _copy;
+            result = TypeUtils.<TypeRef>copy(result);
           } else {
-            TypeRef _copy_1 = TypeUtils.<TypeRef>copy(temp);
-            result = _copy_1;
+            result = TypeUtils.<TypeRef>copy(temp);
           }
           TypeUtils.copyTypeModifiers(result, typeRef);
         } catch (Exception e) {
@@ -7106,16 +6823,15 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                   checkAssignableTo(result_2.getFirst(), TypeRef.class);
                   tempResult = (TypeRef) result_2.getFirst();
                   
-                  TypeRef _copy_2 = TypeUtils.<TypeRef>copy(tempResult);
-                  tempResult = _copy_2;
+                  tempResult = TypeUtils.<TypeRef>copy(tempResult);
                   /* l += tempResult */
                   if (!l.add(tempResult)) {
                     sneakyThrowRuleFailedException("l += tempResult");
                   }
                 } else {
-                  TypeRef _copy_3 = TypeUtils.<TypeRef>copy(temp_1);
+                  TypeRef _copy = TypeUtils.<TypeRef>copy(temp_1);
                   /* l += TypeUtils.copy(temp) */
-                  if (!l.add(_copy_3)) {
+                  if (!l.add(_copy)) {
                     sneakyThrowRuleFailedException("l += TypeUtils.copy(temp)");
                   }
                 }
@@ -7157,18 +6873,15 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     if (!_tripleNotEquals) {
       _and = false;
     } else {
-      Type _declaredType_3 = typeRef.getDeclaredType();
-      boolean _isGeneric = _declaredType_3.isGeneric();
+      boolean _isGeneric = typeRef.getDeclaredType().isGeneric();
       _and = _isGeneric;
     }
     if (_and) {
-      EList<TypeArgument> _typeArgs = typeRef.getTypeArgs();
-      final int len = _typeArgs.size();
+      final int len = typeRef.getTypeArgs().size();
       boolean haveSubstitution = false;
       final TypeArgument[] argsChanged = new TypeArgument[len];
       for (int i = 0; (i < len); i++) {
-        EList<TypeArgument> _typeArgs_1 = typeRef.getTypeArgs();
-        final TypeArgument arg = _typeArgs_1.get(i);
+        final TypeArgument arg = typeRef.getTypeArgs().get(i);
         /* G |- arg ~> var TypeArgument argSubst */
         TypeArgument argSubst = null;
         Result<TypeArgument> result_2 = substTypeVariablesInternal(G, _trace_, arg);
@@ -7182,21 +6895,18 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       if (haveSubstitution) {
         if ((result == typeRef)) {
-          ParameterizedTypeRef _copy_2 = TypeUtils.<ParameterizedTypeRef>copy(typeRef);
-          result = _copy_2;
+          result = TypeUtils.<ParameterizedTypeRef>copy(typeRef);
         }
         for (int i = 0; (i < len); i++) {
           final TypeArgument argCh = argsChanged[i];
           if ((argCh != null)) {
-            EList<TypeArgument> _typeArgs_1 = result.getTypeArgs();
-            _typeArgs_1.set(i, argCh);
+            result.getTypeArgs().set(i, argCh);
           }
         }
       }
     }
     if ((result instanceof StructuralTypeRef)) {
-      TypeRef _substTypeVariablesInStructuralMembers = this.typeSystemHelper.substTypeVariablesInStructuralMembers(G, ((StructuralTypeRef)result));
-      result = _substTypeVariablesInStructuralMembers;
+      result = this.typeSystemHelper.substTypeVariablesInStructuralMembers(G, ((StructuralTypeRef)result));
     }
     return new Result<TypeArgument>(result);
   }
@@ -7296,8 +7006,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             if ((thisTarget instanceof N4ClassDeclaration)) {
               final TClass clazz = ((N4ClassDeclaration)thisTarget).getDefinedTypeAsClass();
               if (((clazz != null) && clazz.isStaticPolyfill())) {
-                ParameterizedTypeRef _superClassRef = clazz.getSuperClassRef();
-                final Type actualClazz = _superClassRef.getDeclaredType();
+                final Type actualClazz = clazz.getSuperClassRef().getDeclaredType();
                 if ((actualClazz != null)) {
                   thisTargetDEFTYPE = actualClazz;
                 }
@@ -7318,34 +7027,27 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 } else {
                   boolean _isInBody_Of_StaticMethod = RuleEnvironmentExtensions.isInBody_Of_StaticMethod(location, ((N4MethodDeclaration) containingFunction));
                   if (_isInBody_Of_StaticMethod) {
-                    TypeRef _ref_1 = TypeExtensions.ref(thisTargetDEFTYPE);
-                    TypeTypeRef _createTypeTypeRef = TypeUtils.createTypeTypeRef(_ref_1, false);
-                    TypeTypeRef _createClassifierBoundThisTypeRef = TypeUtils.createClassifierBoundThisTypeRef(_createTypeTypeRef);
-                    T = _createClassifierBoundThisTypeRef;
+                    T = TypeUtils.createClassifierBoundThisTypeRef(TypeUtils.createTypeTypeRef(TypeExtensions.ref(thisTargetDEFTYPE), false));
                   } else {
-                    TypeRef _createConstructorTypeRef = TypeUtils.createConstructorTypeRef(thisTargetDEFTYPE);
-                    T = _createConstructorTypeRef;
+                    T = TypeUtils.createConstructorTypeRef(thisTargetDEFTYPE);
                   }
                 }
               } else {
                 final N4FieldDeclaration n4Field = EcoreUtil2.<N4FieldDeclaration>getContainerOfType(location, N4FieldDeclaration.class);
                 if (((n4Field != null) && n4Field.isStatic())) {
-                  UnknownTypeRef _createUnknownTypeRef = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
-                  T = _createUnknownTypeRef;
+                  T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
                 } else {
                   final N4GetterDeclaration n4Getter = EcoreUtil2.<N4GetterDeclaration>getContainerOfType(location, N4GetterDeclaration.class);
                   if (((n4Getter != null) && n4Getter.isStatic())) {
-                    TypeRef _createConstructorTypeRef_1 = TypeUtils.createConstructorTypeRef(thisTargetDEFTYPE);
-                    T = _createConstructorTypeRef_1;
+                    T = TypeUtils.createConstructorTypeRef(thisTargetDEFTYPE);
                   } else {
                     final N4SetterDeclaration n4Setter = EcoreUtil2.<N4SetterDeclaration>getContainerOfType(location, N4SetterDeclaration.class);
                     if (((n4Setter != null) && n4Setter.isStatic())) {
-                      TypeRef _createConstructorTypeRef_2 = TypeUtils.createConstructorTypeRef(thisTargetDEFTYPE);
-                      T = _createConstructorTypeRef_2;
+                      T = TypeUtils.createConstructorTypeRef(thisTargetDEFTYPE);
                     } else {
                       /* G |~ thisTargetDEFTYPE.ref ~> T */
-                      TypeRef _ref_2 = TypeExtensions.ref(thisTargetDEFTYPE);
-                      Result<TypeRef> result_2 = thisTypeRefInternal(G, _trace_, _ref_2);
+                      TypeRef _ref_1 = TypeExtensions.ref(thisTargetDEFTYPE);
+                      Result<TypeRef> result_2 = thisTypeRefInternal(G, _trace_, _ref_1);
                       checkAssignableTo(result_2.getFirst(), TypeRef.class);
                       T = (TypeRef) result_2.getFirst();
                       
@@ -7354,19 +7056,16 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 }
               }
             } else {
-              ParameterizedTypeRef _anyTypeRefDynamic = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
-              T = _anyTypeRefDynamic;
+              T = RuleEnvironmentExtensions.anyTypeRefDynamic(G);
             }
           }
         }
         if (!_matched_1) {
           boolean _hasGlobalObject = this.jsVariantHelper.hasGlobalObject(location);
           if (_hasGlobalObject) {
-            ParameterizedTypeRef _globalObjectTypeRef = RuleEnvironmentExtensions.globalObjectTypeRef(G);
-            T = _globalObjectTypeRef;
+            T = RuleEnvironmentExtensions.globalObjectTypeRef(G);
           } else {
-            ParameterizedTypeRef _undefinedTypeRef = RuleEnvironmentExtensions.undefinedTypeRef(G);
-            T = _undefinedTypeRef;
+            T = RuleEnvironmentExtensions.undefinedTypeRef(G);
           }
         }
       }

@@ -139,8 +139,7 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * @generated
 	 */
 	public boolean isGeneric() {
-		EList<TypeVariable> _typeVars = this.getTypeVars();
-		boolean _isEmpty = _typeVars.isEmpty();
+		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
 	}
 
@@ -159,16 +158,13 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 	 * @generated
 	 */
 	public TFormalParameter getFparForArgIdx(final int argIndex) {
-		EList<TFormalParameter> _fpars = this.getFpars();
-		final int fparsSize = _fpars.size();
+		final int fparsSize = this.getFpars().size();
 		if (((argIndex >= 0) && (argIndex < fparsSize))) {
-			EList<TFormalParameter> _fpars_1 = this.getFpars();
-			return _fpars_1.get(argIndex);
+			return this.getFpars().get(argIndex);
 		}
 		else {
 			if ((((argIndex >= fparsSize) && (fparsSize > 0)) && this.getFpars().get((fparsSize - 1)).isVariadic())) {
-				EList<TFormalParameter> _fpars_2 = this.getFpars();
-				return _fpars_2.get((fparsSize - 1));
+				return this.getFpars().get((fparsSize - 1));
 			}
 		}
 		return null;
@@ -184,8 +180,7 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 		TypeRef _declaredThisType = this.getDeclaredThisType();
 		boolean _tripleNotEquals = (_declaredThisType != null);
 		if (_tripleNotEquals) {
-			TypeRef _declaredThisType_1 = this.getDeclaredThisType();
-			String _typeRefAsString = _declaredThisType_1.getTypeRefAsString();
+			String _typeRefAsString = this.getDeclaredThisType().getTypeRefAsString();
 			String _plus = ("@This(" + _typeRefAsString);
 			_xifexpression = (_plus + ") ");
 		}
@@ -197,15 +192,12 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 		String _xifexpression_1 = null;
 		boolean _isGeneric = this.isGeneric();
 		if (_isGeneric) {
-			EList<TypeVariable> _typeVars = this.getTypeVars();
 			final Function1<TypeVariable, String> _function = new Function1<TypeVariable, String>() {
 				public String apply(final TypeVariable it) {
-					TypeRef _typeVarUpperBound = FunctionTypeExprOrRefImpl.this.getTypeVarUpperBound(it);
-					return it.getTypeVariableAsString(_typeVarUpperBound);
+					return it.getTypeVariableAsString(FunctionTypeExprOrRefImpl.this.getTypeVarUpperBound(it));
 				}
 			};
-			EList<String> _map = XcoreEListExtensions.<TypeVariable, String>map(_typeVars, _function);
-			String _join = IterableExtensions.join(_map, ",");
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeVariable, String>map(this.getTypeVars(), _function), ",");
 			String _plus_3 = ("<" + _join);
 			_xifexpression_1 = (_plus_3 + ">");
 		}
@@ -214,22 +206,19 @@ public abstract class FunctionTypeExprOrRefImpl extends StaticBaseTypeRefImpl im
 		}
 		String _plus_4 = (_plus_2 + _xifexpression_1);
 		String _plus_5 = (_plus_4 + "(");
-		EList<TFormalParameter> _fpars = this.getFpars();
 		final Function1<TFormalParameter, String> _function_1 = new Function1<TFormalParameter, String>() {
 			public String apply(final TFormalParameter it) {
 				return it.getFormalParameterAsTypesString();
 			}
 		};
-		EList<String> _map_1 = XcoreEListExtensions.<TFormalParameter, String>map(_fpars, _function_1);
-		String _join_1 = IterableExtensions.join(_map_1, ",");
+		String _join_1 = IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ",");
 		String _plus_6 = (_plus_5 + _join_1);
 		String _plus_7 = (_plus_6 + ")");
 		String _xifexpression_2 = null;
 		TypeRef _returnTypeRef = this.getReturnTypeRef();
 		boolean _tripleNotEquals_1 = (_returnTypeRef != null);
 		if (_tripleNotEquals_1) {
-			TypeRef _returnTypeRef_1 = this.getReturnTypeRef();
-			String _typeRefAsString_1 = _returnTypeRef_1.getTypeRefAsString();
+			String _typeRefAsString_1 = this.getReturnTypeRef().getTypeRefAsString();
 			_xifexpression_2 = (":" + _typeRefAsString_1);
 		}
 		else {

@@ -46,7 +46,6 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 	/** Text field for storing the id of the system loader to use. (SystemJS, CommonJS) */
 	var ComboViewer systemLoaderCombo;
 
-	@Override
 	override createControl(Composite parent) {
 		val childControl = new Composite(parent, NONE) => [
 			layout = GridLayoutFactory.swtDefaults.create;
@@ -59,12 +58,10 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 		control = childControl;
 	}
 
-	@Override
 	override getName() {
 		'Node.js settings';
 	}
 
-	@Override
 	override initializeFrom(ILaunchConfiguration configuration) {
 		try {
 			optionsText.text = configuration.getAttribute(ENGINE_OPTIONS, '');
@@ -76,7 +73,6 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 		}
 	}
 
-	@Override
 	override performApply(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(ENGINE_OPTIONS, nullToEmpty(optionsText.text));
 		configuration.setAttribute(CUSTOM_ENGINE_PATH, nullToEmpty(customPathText.text));
@@ -91,7 +87,6 @@ class NodejsLaunchConfigurationTab extends AbstractLaunchConfigurationTab {
 		configuration.setAttribute(SYSTEM_LOADER, nullToEmpty(systemLoader.id));
 	}
 
-	@Override
 	override setDefaults(ILaunchConfigurationWorkingCopy configuration) {
 		configuration.setAttribute(CUSTOM_ENGINE_PATH, '');
 		configuration.setAttribute(ENGINE_OPTIONS, '');

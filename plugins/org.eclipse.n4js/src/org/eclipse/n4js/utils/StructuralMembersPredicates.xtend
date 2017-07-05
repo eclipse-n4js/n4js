@@ -104,7 +104,6 @@ abstract class StructuralMembersPredicates {
 			]);
 		}
 
-		@Override
 		override apply(TMember it) {
 
 			if (!hasStructuralTypeContainer) {

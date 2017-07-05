@@ -86,6 +86,7 @@ import com.google.inject.Inject;
 /**
  * Class for testing the functionality of the N4JS working set support.
  */
+@SuppressWarnings({ "deprecation" })
 public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest {
 
 	@Inject

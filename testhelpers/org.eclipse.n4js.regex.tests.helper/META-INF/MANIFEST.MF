@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.n4js.regex,
  org.eclipse.core.runtime,
- org.eclipse.xtext.junit4
+ org.eclipse.xtext.testing
 Import-Package: org.apache.log4j,
  org.junit;version="4.5.0",
  org.junit.runner;version="4.5.0",

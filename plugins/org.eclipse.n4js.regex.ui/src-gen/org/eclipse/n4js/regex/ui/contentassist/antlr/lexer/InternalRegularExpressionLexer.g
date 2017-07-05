@@ -56,8 +56,6 @@ VerticalLine : '|';
 
 RightCurlyBracket : '}';
 
-// Rules duplicated to allow inter-rule references
-
 RULE_WORD_BOUNDARY : '\\' 'b';
 
 RULE_NOT_WORD_BOUNDARY : '\\' 'B';

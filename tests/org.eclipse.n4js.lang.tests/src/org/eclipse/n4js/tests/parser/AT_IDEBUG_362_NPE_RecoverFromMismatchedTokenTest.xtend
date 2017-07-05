@@ -17,8 +17,8 @@ import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingParser
 import org.eclipse.n4js.ui.editor.syntaxcoloring.InternalHighlightingParser
 import org.eclipse.n4js.ui.editor.syntaxcoloring.InternalN4JSParser
 import org.antlr.runtime.RecognitionException
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 

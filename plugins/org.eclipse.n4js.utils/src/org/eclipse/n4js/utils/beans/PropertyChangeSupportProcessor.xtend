@@ -32,7 +32,6 @@ import org.eclipse.xtend.lib.macro.declaration.Visibility
  */
 class PropertyChangeSupportProcessor extends AbstractClassProcessor {
 
-	@Override
 	override doTransform(MutableClassDeclaration clazz, extension TransformationContext context) {
 
 		val annotations = clazz.annotations.filter[annotationTypeDeclaration.qualifiedName == org.eclipse.n4js.utils.beans.PropertyChangeSupport.name];

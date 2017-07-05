@@ -38,7 +38,7 @@ import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResourceValida
  *
  * To integrate this setup with an xpect runner, import this class via @XpectImport.
  *
- * For further configuration you can use {@link IssueConfiguration} in the XPECT_SETUP of specific files.
+ * For further configuration you can use {@link IssueConfiguration} in the XPECTSETUP of specific files.
  */
 @XpectSetupFactory
 @XpectReplace(IssuesByLineProvider)
@@ -109,7 +109,7 @@ class SuppressIssuesSetup extends IssuesByLineProvider {
 		// see super implementation
 		if (issuesByLine === null) {
 				val validator = getResource().getResourceServiceProvider().getResourceValidator() as TestingResourceValidator;
-				issuesByLine = validator.validateAndMapByOffset(getResource(), CheckMode.ALL, CancelIndicator.NullImpl);
+				issuesByLine = validator.validateDelegateAndMapByOffset(getResource(), CheckMode.ALL, CancelIndicator.NullImpl, null);
 		}
 
 		// if there are issues to suppress

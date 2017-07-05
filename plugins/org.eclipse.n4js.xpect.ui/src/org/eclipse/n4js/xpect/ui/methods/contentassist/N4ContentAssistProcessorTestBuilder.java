@@ -20,7 +20,7 @@ import com.google.inject.Injector;
 
 /**
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class N4ContentAssistProcessorTestBuilder extends ContentAssistProcessorTestBuilder {
 
 	/**

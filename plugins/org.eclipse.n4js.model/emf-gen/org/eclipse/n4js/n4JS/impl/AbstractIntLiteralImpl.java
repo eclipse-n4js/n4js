@@ -12,7 +12,6 @@ package org.eclipse.n4js.n4JS.impl;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 import org.eclipse.emf.common.util.EList;
@@ -55,8 +54,7 @@ public class AbstractIntLiteralImpl extends NumericLiteralImpl implements Abstra
 	 * @generated
 	 */
 	public int toInt() {
-		BigDecimal _value = this.getValue();
-		return _value.intValue();
+		return this.getValue().intValue();
 	}
 
 	/**
@@ -65,8 +63,7 @@ public class AbstractIntLiteralImpl extends NumericLiteralImpl implements Abstra
 	 * @generated
 	 */
 	public long toLong() {
-		BigDecimal _value = this.getValue();
-		return _value.longValue();
+		return this.getValue().longValue();
 	}
 
 	/**
@@ -75,8 +72,7 @@ public class AbstractIntLiteralImpl extends NumericLiteralImpl implements Abstra
 	 * @generated
 	 */
 	public BigInteger toBigInteger() {
-		BigDecimal _value = this.getValue();
-		return _value.toBigInteger();
+		return this.getValue().toBigInteger();
 	}
 
 	/**

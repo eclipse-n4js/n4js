@@ -129,7 +129,7 @@ public abstract class AbstractN4MFRuntimeModule extends DefaultRuntimeModule {
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	public Provider<InternalN4MFLexer> provideInternalN4MFLexer() {
+	public Provider<? extends InternalN4MFLexer> provideInternalN4MFLexer() {
 		return LexerProvider.create(InternalN4MFLexer.class);
 	}
 	

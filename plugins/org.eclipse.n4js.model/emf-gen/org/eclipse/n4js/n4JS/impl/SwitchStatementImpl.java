@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS.impl;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -168,13 +166,12 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * @generated
 	 */
 	public DefaultClause getDefaultClause() {
-		EList<AbstractCaseClause> _cases = this.getCases();
 		final Function1<AbstractCaseClause, Boolean> _function = new Function1<AbstractCaseClause, Boolean>() {
 			public Boolean apply(final AbstractCaseClause it) {
 				return Boolean.valueOf((it instanceof DefaultClause));
 			}
 		};
-		AbstractCaseClause _findFirst = IterableExtensions.<AbstractCaseClause>findFirst(_cases, _function);
+		AbstractCaseClause _findFirst = IterableExtensions.<AbstractCaseClause>findFirst(this.getCases(), _function);
 		return ((DefaultClause) _findFirst);
 	}
 
@@ -184,9 +181,7 @@ public class SwitchStatementImpl extends StatementImpl implements SwitchStatemen
 	 * @generated
 	 */
 	public EList<CaseClause> getCaseClauses() {
-		EList<AbstractCaseClause> _cases = this.getCases();
-		Iterable<CaseClause> _filter = Iterables.<CaseClause>filter(_cases, CaseClause.class);
-		return ECollections.<CaseClause>toEList(_filter);
+		return ECollections.<CaseClause>toEList(Iterables.<CaseClause>filter(this.getCases(), CaseClause.class));
 	}
 
 	/**

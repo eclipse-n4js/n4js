@@ -149,9 +149,7 @@ public class SourceFragmentImpl extends MinimalEObjectImpl.Container implements 
 			}
 			return _xifexpression;
 		}
-		SourceFragmentType _sourceFragmentType_2 = this.getSourceFragmentType();
-		SourceFragmentType _sourceFragmentType_3 = other.getSourceFragmentType();
-		return _sourceFragmentType_2.compareTo(_sourceFragmentType_3);
+		return this.getSourceFragmentType().compareTo(other.getSourceFragmentType());
 	}
 
 	/**

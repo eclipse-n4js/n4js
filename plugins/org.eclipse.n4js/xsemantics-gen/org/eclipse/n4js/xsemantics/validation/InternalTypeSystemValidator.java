@@ -8,8 +8,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-
-
 package org.eclipse.n4js.xsemantics.validation;
 
 import com.google.inject.Inject;

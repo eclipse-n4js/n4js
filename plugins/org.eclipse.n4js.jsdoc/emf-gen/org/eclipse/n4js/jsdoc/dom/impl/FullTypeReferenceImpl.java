@@ -117,8 +117,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 		StringBuilder strb = new StringBuilder();
 		boolean _moduleNameSet = this.moduleNameSet();
 		if (_moduleNameSet) {
-			String _moduleName = this.getModuleName();
-			strb.append(_moduleName);
+			strb.append(this.getModuleName());
 		}
 		boolean _typeNameSet = this.typeNameSet();
 		if (_typeNameSet) {
@@ -127,8 +126,7 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 			if (_greaterThan) {
 				strb.append(".");
 			}
-			String _typeName = this.getTypeName();
-			strb.append(_typeName);
+			strb.append(this.getTypeName());
 		}
 		return strb.toString();
 	}
@@ -142,14 +140,12 @@ public class FullTypeReferenceImpl extends SimpleTypeReferenceImpl implements Fu
 		StringBuilder strb = new StringBuilder();
 		boolean _moduleNameSet = this.moduleNameSet();
 		if (_moduleNameSet) {
-			String _moduleName = this.getModuleName();
-			strb.append(_moduleName);
+			strb.append(this.getModuleName());
 		}
 		boolean _typeNameSet = this.typeNameSet();
 		if (_typeNameSet) {
 			strb.append(".");
-			String _typeName = this.getTypeName();
-			strb.append(_typeName);
+			strb.append(this.getTypeName());
 		}
 		return strb.toString();
 	}

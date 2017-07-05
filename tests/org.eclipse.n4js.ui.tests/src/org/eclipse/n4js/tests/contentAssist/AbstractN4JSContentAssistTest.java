@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.junit4.ui.ContentAssistProcessorTestBuilder;
 import org.eclipse.xtext.junit4.util.ResourceLoadHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -42,13 +44,10 @@ import org.junit.BeforeClass;
 
 import com.google.inject.Injector;
 
-import org.eclipse.n4js.tests.util.ProjectUtils;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-
 /**
  * Abstract base class for CA tests. Uses a shared project for the entire test class.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public abstract class AbstractN4JSContentAssistTest extends Assert implements ResourceLoadHelper {
 
 	private static final String PROJECT_NAME = "ContentAssistTestProject";

@@ -15,6 +15,7 @@ import org.junit.Ignore
 
 /**
  */
+@SuppressWarnings("deprecation")
 class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTest {
 
 	@Test def void testTypeProposals_ignoreCase() {
@@ -37,8 +38,7 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 		''').assertProposalAtCursor("L.MyFirstClass").withDisplayString('MyFirstClass - L').apply.expectContent('''
 			import * as L from 'path/Libs'
 
-			var varName: L.MyFirstClass<|>
-		''');
+			var varName: L.MyFirstClass''');
 	}
 
 	@Test def void testTypeProposals_wildcardImport2() {
@@ -49,8 +49,7 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 		''').assertProposalAtCursor("L.MyFirstClass").withDisplayString('MyFirstClass - L').apply.expectContent('''
 			import * as L from 'path/Libs'
 
-			var varName: L.MyFirstClass<|>
-		''');
+			var varName: L.MyFirstClass''');
 	}
 
 	@Test def void testTypeProposals_importAdjusted() {
@@ -71,8 +70,7 @@ class TypeReferenceContentAssistPluginUITest extends AbstractN4JSContentAssistTe
 			import {MySecondClass} from 'path/Libs'
 			import {MyFirstClass} from "path/Libs";
 
-			var varName: MyFirstClass<|>
-		'''
+			var varName: MyFirstClass'''
 		);
 	}
 

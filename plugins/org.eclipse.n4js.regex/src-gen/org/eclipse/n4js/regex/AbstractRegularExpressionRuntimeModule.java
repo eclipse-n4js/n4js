@@ -131,7 +131,7 @@ public abstract class AbstractRegularExpressionRuntimeModule extends DefaultRunt
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	public Provider<InternalRegularExpressionLexer> provideInternalRegularExpressionLexer() {
+	public Provider<? extends InternalRegularExpressionLexer> provideInternalRegularExpressionLexer() {
 		return LexerProvider.create(InternalRegularExpressionLexer.class);
 	}
 	

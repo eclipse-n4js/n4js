@@ -14,14 +14,10 @@ import com.google.common.collect.Iterators;
 
 import java.lang.reflect.InvocationTargetException;
 
-import java.util.Iterator;
-
 import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
 
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.VariableBinding;
@@ -72,9 +68,7 @@ public abstract class VariableDeclarationOrBindingImpl extends ProxyResolvingEOb
 		if (!_matched) {
 			if (this instanceof VariableBinding) {
 				_matched=true;
-				TreeIterator<EObject> _eAllContents = this.eAllContents();
-				Iterator<VariableDeclaration> _filter = Iterators.<VariableDeclaration>filter(_eAllContents, VariableDeclaration.class);
-				_switchResult = ECollections.<VariableDeclaration>toEList(_filter);
+				_switchResult = ECollections.<VariableDeclaration>toEList(Iterators.<VariableDeclaration>filter(this.eAllContents(), VariableDeclaration.class));
 			}
 		}
 		if (!_matched) {

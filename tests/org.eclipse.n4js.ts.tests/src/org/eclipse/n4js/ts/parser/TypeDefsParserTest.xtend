@@ -13,9 +13,9 @@ package org.eclipse.n4js.ts.parser
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.TypesInjectorProvider
 import org.eclipse.n4js.ts.types.TypeDefs
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.runner.RunWith
 import org.junit.Test
 import static org.junit.Assert.*

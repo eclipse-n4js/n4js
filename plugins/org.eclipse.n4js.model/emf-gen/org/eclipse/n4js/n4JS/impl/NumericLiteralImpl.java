@@ -111,8 +111,7 @@ public class NumericLiteralImpl extends LiteralImpl implements NumericLiteral {
 		if (_tripleEquals) {
 			return null;
 		}
-		BigDecimal _value_1 = this.getValue();
-		return _value_1.toString();
+		return this.getValue().toString();
 	}
 
 	/**

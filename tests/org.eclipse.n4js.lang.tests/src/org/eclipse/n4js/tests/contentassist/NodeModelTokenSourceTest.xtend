@@ -22,9 +22,9 @@ import java.io.StringReader
 import java.util.List
 import org.antlr.runtime.CharStream
 import org.antlr.runtime.Token
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.nodemodel.impl.InvariantChecker
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.After

@@ -575,7 +575,7 @@ Contributors:
 		<dependency>
 			<groupId>net.sf.xsemantics</groupId>
 			<artifactId>it.xsemantics.dsl</artifactId>
-			<version>1.9.0</version>
+			<version>1.11.2</version>
 		</dependency>
 		<!-- java.lang.ClassNotFoundException: org.osgi.framework.BundleException -->
 		<dependency>

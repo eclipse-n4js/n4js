@@ -944,14 +944,11 @@ public class N4JSXSemanticSequencer extends N4JSSemanticSequencer {
 				}
 				else if (rule == grammarAccess.getPrimaryExpressionRule()
 						|| rule == grammarAccess.getParameterizedCallExpressionRule()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
+						|| rule == grammarAccess.getMemberExpressionRule()
 						|| action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_2_1_1_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0()) {
-					sequence_Arguments_ParameterizedCallExpression_TypeArguments(context, (ParameterizedCallExpression) semanticObject); 
-					return; 
-				}
-				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
-						|| rule == grammarAccess.getMemberExpressionRule()) {
 					sequence_Arguments_ParameterizedCallExpression_TypeArguments(context, (ParameterizedCallExpression) semanticObject); 
 					return; 
 				}

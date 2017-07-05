@@ -192,8 +192,7 @@ public class ParameterizedCallExpressionImpl extends ExpressionImpl implements P
 	 * @generated
 	 */
 	public boolean isParameterized() {
-		EList<TypeRef> _typeArgs = this.getTypeArgs();
-		boolean _isEmpty = _typeArgs.isEmpty();
+		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);
 	}
 

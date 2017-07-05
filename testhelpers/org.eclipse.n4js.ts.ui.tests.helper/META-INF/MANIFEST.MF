@@ -8,10 +8,10 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.n4js.ts,
  org.eclipse.n4js.ts.ui,
  org.eclipse.core.runtime,
- org.eclipse.xtext.junit4,
+ org.eclipse.xtext.testing,
  org.eclipse.ui.workbench;resolution:=optional,
  org.eclipse.n4js.ts.tests.helper;bundle-version="0.0.1",
- org.xpect.xtext.lib;bundle-version="0.1.0"
+ org.xpect.xtext.lib;bundle-version="0.2.0"
 Import-Package: org.apache.log4j,
  org.junit;version="4.5.0",
  org.junit.runner;version="4.5.0",

@@ -11,16 +11,12 @@
 package org.eclipse.n4js.n4mf.ui.contentassist.antlr;
 
 import com.google.inject.Inject;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.antlr.runtime.RecognitionException;
 import org.eclipse.n4js.n4mf.services.N4MFGrammarAccess;
 import org.eclipse.n4js.n4mf.ui.contentassist.antlr.internal.InternalN4MFParser;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.AbstractContentAssistParser;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
 public class N4MFParser extends AbstractContentAssistParser {
 
@@ -177,18 +173,7 @@ public class N4MFParser extends AbstractContentAssistParser {
 		}
 		return nameMappings.get(element);
 	}
-
-	@Override
-	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
-		try {
-			InternalN4MFParser typedParser = (InternalN4MFParser) parser;
-			typedParser.entryRuleProjectDescription();
-			return typedParser.getFollowElements();
-		} catch(RecognitionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
+			
 	@Override
 	protected String[] getInitialHiddenTokens() {
 		return new String[] { "RULE_WS", "RULE_ML_COMMENT", "RULE_SL_COMMENT" };
