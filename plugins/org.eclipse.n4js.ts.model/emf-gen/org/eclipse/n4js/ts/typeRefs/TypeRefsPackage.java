@@ -13,6 +13,7 @@ package org.eclipse.n4js.ts.typeRefs;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -396,22 +397,13 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_ARGUMENT_OPERATION_COUNT + 20;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = TYPE_ARGUMENT_OPERATION_COUNT + 21;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TYPE_ARGUMENT_OPERATION_COUNT + 22;
+	int TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_ARGUMENT_OPERATION_COUNT + 21;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -420,7 +412,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 23;
+	int TYPE_REF___GET_VERSION = TYPE_ARGUMENT_OPERATION_COUNT + 22;
 
 	/**
 	 * The number of operations of the '<em>Type Ref</em>' class.
@@ -429,7 +421,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 24;
+	int TYPE_REF_OPERATION_COUNT = TYPE_ARGUMENT_OPERATION_COUNT + 23;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.impl.StaticBaseTypeRefImpl <em>Static Base Type Ref</em>}' class.
@@ -658,22 +650,13 @@ public interface TypeRefsPackage extends EPackage {
 	int STATIC_BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int STATIC_BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int STATIC_BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -920,22 +903,13 @@ public interface TypeRefsPackage extends EPackage {
 	int BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = STATIC_BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = STATIC_BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = STATIC_BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -1200,22 +1174,13 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = STATIC_BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = STATIC_BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = STATIC_BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int COMPOSED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -1489,22 +1454,13 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION___IS_TYPE_OF_OBJECT_LITERAL = COMPOSED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = COMPOSED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int UNION_TYPE_EXPRESSION___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = COMPOSED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -1778,22 +1734,13 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = COMPOSED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION___IS_TYPE_OF_OBJECT_LITERAL = COMPOSED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = COMPOSED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int INTERSECTION_TYPE_EXPRESSION___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = COMPOSED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -2022,22 +1969,13 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -2293,22 +2231,13 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_NOMINAL___IS_DEF_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_NOMINAL___IS_TYPE_OF_OBJECT_LITERAL = THIS_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_NOMINAL___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = THIS_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int THIS_TYPE_REF_NOMINAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -2609,22 +2538,13 @@ public interface TypeRefsPackage extends EPackage {
 	int THIS_TYPE_REF_STRUCTURAL___IS_DEF_SITE_STRUCTURAL_TYPING = THIS_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int THIS_TYPE_REF_STRUCTURAL___IS_TYPE_OF_OBJECT_LITERAL = THIS_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int THIS_TYPE_REF_STRUCTURAL___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = THIS_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int THIS_TYPE_REF_STRUCTURAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -2934,22 +2854,13 @@ public interface TypeRefsPackage extends EPackage {
 	int BOUND_THIS_TYPE_REF___IS_BOTTOM_TYPE = THIS_TYPE_REF___IS_BOTTOM_TYPE;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BOUND_THIS_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = THIS_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BOUND_THIS_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = THIS_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int BOUND_THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = THIS_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Modifiers As String</em>' operation.
@@ -3106,22 +3017,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
-	 * The feature id for the '<em><b>Type Of Object Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__TYPE_OF_OBJECT_LITERAL = BASE_TYPE_REF_FEATURE_COUNT + 3;
-
-	/**
-	 * The feature id for the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = BASE_TYPE_REF_FEATURE_COUNT + 4;
+	int PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 3;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -3130,7 +3032,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 5;
+	int PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY = BASE_TYPE_REF_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of structural features of the '<em>Parameterized Type Ref</em>' class.
@@ -3139,7 +3041,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 6;
+	int PARAMETERIZED_TYPE_REF_FEATURE_COUNT = BASE_TYPE_REF_FEATURE_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Final By Type</em>' operation.
@@ -3250,22 +3152,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS = BASE_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -3531,22 +3424,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
 
 	/**
-	 * The feature id for the '<em><b>Type Of Object Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_OF_OBJECT_LITERAL = PARAMETERIZED_TYPE_REF__TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = PARAMETERIZED_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -3702,22 +3586,13 @@ public interface TypeRefsPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF___IS_BOTTOM_TYPE;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_TYPE_OF_OBJECT_LITERAL = PARAMETERIZED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = PARAMETERIZED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -4063,22 +3938,13 @@ public interface TypeRefsPackage extends EPackage {
 	int EXISTENTIAL_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXISTENTIAL_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXISTENTIAL_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int EXISTENTIAL_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -4352,22 +4218,13 @@ public interface TypeRefsPackage extends EPackage {
 	int UNKNOWN_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNKNOWN_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNKNOWN_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int UNKNOWN_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -4632,22 +4489,13 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TYPE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int TYPE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int TYPE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -4985,22 +4833,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPR_OR_REF___IS_DEF_SITE_STRUCTURAL_TYPING = STATIC_BASE_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___IS_TYPE_OF_OBJECT_LITERAL = STATIC_BASE_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPR_OR_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = STATIC_BASE_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int FUNCTION_TYPE_EXPR_OR_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = STATIC_BASE_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -5175,22 +5014,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
 
 	/**
-	 * The feature id for the '<em><b>Type Of Object Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF__TYPE_OF_OBJECT_LITERAL = PARAMETERIZED_TYPE_REF__TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = PARAMETERIZED_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int FUNCTION_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -5319,22 +5149,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_REF___GET_STRUCTURAL_MEMBERS = PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = PARAMETERIZED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = PARAMETERIZED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int FUNCTION_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -5797,22 +5618,13 @@ public interface TypeRefsPackage extends EPackage {
 	int FUNCTION_TYPE_EXPRESSION___IS_DEF_SITE_STRUCTURAL_TYPING = FUNCTION_TYPE_EXPR_OR_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int FUNCTION_TYPE_EXPRESSION___IS_TYPE_OF_OBJECT_LITERAL = FUNCTION_TYPE_EXPR_OR_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int FUNCTION_TYPE_EXPRESSION___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = FUNCTION_TYPE_EXPR_OR_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int FUNCTION_TYPE_EXPRESSION___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = FUNCTION_TYPE_EXPR_OR_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -6149,22 +5961,13 @@ public interface TypeRefsPackage extends EPackage {
 	int DEFERRED_TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int DEFERRED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int DEFERRED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int DEFERRED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -6240,6 +6043,16 @@ public interface TypeRefsPackage extends EPackage {
 	int TYPE_VARIABLE_MAPPING_OPERATION_COUNT = 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getOptionalFieldStrategy()
+	 * @generated
+	 */
+	int OPTIONAL_FIELD_STRATEGY = 24;
+
+	/**
 	 * The meta object id for the '<em>Parameterized Type Ref Iterable</em>' data type.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6247,7 +6060,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getParameterizedTypeRefIterable()
 	 * @generated
 	 */
-	int PARAMETERIZED_TYPE_REF_ITERABLE = 24;
+	int PARAMETERIZED_TYPE_REF_ITERABLE = 25;
 
 
 	/**
@@ -6492,24 +6305,14 @@ public interface TypeRefsPackage extends EPackage {
 	EOperation getTypeRef__IsDefSiteStructuralTyping();
 
 	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isTypeOfObjectLiteral() <em>Is Type Of Object Literal</em>}' operation.
+	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getASTNodeOptionalFieldStrategy() <em>Get AST Node Optional Field Strategy</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Type Of Object Literal</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#isTypeOfObjectLiteral()
+	 * @return the meta object for the '<em>Get AST Node Optional Field Strategy</em>' operation.
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#getASTNodeOptionalFieldStrategy()
 	 * @generated
 	 */
-	EOperation getTypeRef__IsTypeOfObjectLiteral();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#isTypeOfNewExpressionOrFinalNominal() <em>Is Type Of New Expression Or Final Nominal</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRef#isTypeOfNewExpressionOrFinalNominal()
-	 * @generated
-	 */
-	EOperation getTypeRef__IsTypeOfNewExpressionOrFinalNominal();
+	EOperation getTypeRef__GetASTNodeOptionalFieldStrategy();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.typeRefs.TypeRef#getVersion() <em>Get Version</em>}' operation.
@@ -6952,26 +6755,15 @@ public interface TypeRefsPackage extends EPackage {
 	EAttribute getParameterizedTypeRef_ArrayTypeLiteral();
 
 	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfObjectLiteral <em>Type Of Object Literal</em>}'.
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy <em>AST Node Optional Field Strategy</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type Of Object Literal</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfObjectLiteral()
+	 * @return the meta object for the attribute '<em>AST Node Optional Field Strategy</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getASTNodeOptionalFieldStrategy()
 	 * @see #getParameterizedTypeRef()
 	 * @generated
 	 */
-	EAttribute getParameterizedTypeRef_TypeOfObjectLiteral();
-
-	/**
-	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfNewExpressionOrFinalNominal <em>Type Of New Expression Or Final Nominal</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the attribute '<em>Type Of New Expression Or Final Nominal</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#isTypeOfNewExpressionOrFinalNominal()
-	 * @see #getParameterizedTypeRef()
-	 * @generated
-	 */
-	EAttribute getParameterizedTypeRef_TypeOfNewExpressionOrFinalNominal();
+	EAttribute getParameterizedTypeRef_ASTNodeOptionalFieldStrategy();
 
 	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef#getDefinedTypingStrategy <em>Defined Typing Strategy</em>}'.
@@ -7837,6 +7629,16 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getTypeVariableMapping_TypeArg();
 
 	/**
+	 * Returns the meta object for enum '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for enum '<em>Optional Field Strategy</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+	 * @generated
+	 */
+	EEnum getOptionalFieldStrategy();
+
+	/**
 	 * Returns the meta object for data type '{@link java.lang.Iterable <em>Parameterized Type Ref Iterable</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -8067,20 +7869,12 @@ public interface TypeRefsPackage extends EPackage {
 		EOperation TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING = eINSTANCE.getTypeRef__IsDefSiteStructuralTyping();
 
 		/**
-		 * The meta object literal for the '<em><b>Is Type Of Object Literal</b></em>' operation.
+		 * The meta object literal for the '<em><b>Get AST Node Optional Field Strategy</b></em>' operation.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EOperation TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL = eINSTANCE.getTypeRef__IsTypeOfObjectLiteral();
-
-		/**
-		 * The meta object literal for the '<em><b>Is Type Of New Expression Or Final Nominal</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = eINSTANCE.getTypeRef__IsTypeOfNewExpressionOrFinalNominal();
+		EOperation TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = eINSTANCE.getTypeRef__GetASTNodeOptionalFieldStrategy();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
@@ -8447,20 +8241,12 @@ public interface TypeRefsPackage extends EPackage {
 		EAttribute PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL = eINSTANCE.getParameterizedTypeRef_ArrayTypeLiteral();
 
 		/**
-		 * The meta object literal for the '<em><b>Type Of Object Literal</b></em>' attribute feature.
+		 * The meta object literal for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EAttribute PARAMETERIZED_TYPE_REF__TYPE_OF_OBJECT_LITERAL = eINSTANCE.getParameterizedTypeRef_TypeOfObjectLiteral();
-
-		/**
-		 * The meta object literal for the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EAttribute PARAMETERIZED_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = eINSTANCE.getParameterizedTypeRef_TypeOfNewExpressionOrFinalNominal();
+		EAttribute PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY = eINSTANCE.getParameterizedTypeRef_ASTNodeOptionalFieldStrategy();
 
 		/**
 		 * The meta object literal for the '<em><b>Defined Typing Strategy</b></em>' attribute feature.
@@ -9157,6 +8943,16 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference TYPE_VARIABLE_MAPPING__TYPE_ARG = eINSTANCE.getTypeVariableMapping_TypeArg();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy <em>Optional Field Strategy</em>}' enum.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+		 * @see org.eclipse.n4js.ts.typeRefs.impl.TypeRefsPackageImpl#getOptionalFieldStrategy()
+		 * @generated
+		 */
+		EEnum OPTIONAL_FIELD_STRATEGY = eINSTANCE.getOptionalFieldStrategy();
 
 		/**
 		 * The meta object literal for the '<em>Parameterized Type Ref Iterable</em>' data type.

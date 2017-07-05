@@ -902,22 +902,13 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL;
 
 	/**
-	 * The feature id for the '<em><b>Type Of Object Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM__TYPE_OF_OBJECT_LITERAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -1046,22 +1037,13 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_IM___GET_STRUCTURAL_MEMBERS = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_STRUCTURAL_MEMBERS;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_TYPE_OF_OBJECT_LITERAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_IM___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = TypeRefsPackage.PARAMETERIZED_TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = TypeRefsPackage.PARAMETERIZED_TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.
@@ -1272,22 +1254,13 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__ARRAY_TYPE_LITERAL = PARAMETERIZED_TYPE_REF_IM__ARRAY_TYPE_LITERAL;
 
 	/**
-	 * The feature id for the '<em><b>Type Of Object Literal</b></em>' attribute.
+	 * The feature id for the '<em><b>AST Node Optional Field Strategy</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_OF_OBJECT_LITERAL = PARAMETERIZED_TYPE_REF_IM__TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The feature id for the '<em><b>Type Of New Expression Or Final Nominal</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = PARAMETERIZED_TYPE_REF_IM__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM__AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The feature id for the '<em><b>Defined Typing Strategy</b></em>' attribute.
@@ -1443,22 +1416,13 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_BOTTOM_TYPE = PARAMETERIZED_TYPE_REF_IM___IS_BOTTOM_TYPE;
 
 	/**
-	 * The operation id for the '<em>Is Type Of Object Literal</em>' operation.
+	 * The operation id for the '<em>Get AST Node Optional Field Strategy</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_OF_OBJECT_LITERAL = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_OF_OBJECT_LITERAL;
-
-	/**
-	 * The operation id for the '<em>Is Type Of New Expression Or Final Nominal</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL = PARAMETERIZED_TYPE_REF_IM___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL;
+	int PARAMETERIZED_TYPE_REF_STRUCTURAL_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY = PARAMETERIZED_TYPE_REF_IM___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY;
 
 	/**
 	 * The operation id for the '<em>Get Version</em>' operation.

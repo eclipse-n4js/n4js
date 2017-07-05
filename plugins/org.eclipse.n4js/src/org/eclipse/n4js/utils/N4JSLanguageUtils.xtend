@@ -19,6 +19,7 @@ import org.eclipse.n4js.compileTime.CompileTimeValue
 import org.eclipse.n4js.conversion.IdentifierValueConverter
 import org.eclipse.n4js.n4JS.AbstractAnnotationList
 import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.n4JS.ConditionalExpression
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
@@ -37,6 +38,7 @@ import org.eclipse.n4js.n4JS.N4MemberAnnotationList
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
@@ -93,6 +95,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 
 /**
  * Intended for small, static utility methods that
@@ -762,6 +765,35 @@ class N4JSLanguageUtils {
 		}
 	}
 
+	/**
+	 * Calculate the optional field strategy of the given expression
+	 *
+	 * @param expr
+	 *			the expression to calculate.
+	 * @return the optional field strategy of the expression.
+	 */
+	def public static OptionalFieldStrategy calculateOptionalFieldStrategy(TypableElement expr, TypeRef typeRef) {
+		if (expr.constTransitiveObjectLiteral) {
+			// Req. IDE-240500, case 1, 4a
+			return OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL;
+		}
+
+		if (expr.isConstTransitiveNewExpressionOrFinalNominalClassInstance(typeRef)) {
+			// Req. IDE-240500, case 2, 3, 4b, 4c
+			return OptionalFieldStrategy.GETTERS_OPTIONAL;
+		}
+
+		if (expr instanceof ConditionalExpression) {
+			// GHOLD-411: Special handling of optionality in ternary expressions.
+			// e.g. const conditionalThing: Thing = true ? {something: 1} : null as Thing;
+			val optionalStrategyForTrueExpr = expr.trueExpression.calculateOptionalFieldStrategy(typeRef);
+			val optionalStrategyForFalseExpr = expr.falseExpression.calculateOptionalFieldStrategy(typeRef);
+			return minOptionalityFieldStrategy(optionalStrategyForTrueExpr, optionalStrategyForFalseExpr);
+		}
+
+		// Otherwise both are mandatory
+		return OptionalFieldStrategy.OFF;
+	}
 
 	/**
 	 * Checks whether the given expression is an object literal or references an object literal
@@ -772,7 +804,11 @@ class N4JSLanguageUtils {
 	 * @return true if the expression is an object literal or references an object literal
 	 * 			transitively through a const variable.
 	 */
-	def static boolean isConstTransitiveObjectLiteral(TypableElement expr) {
+	def private static boolean isConstTransitiveObjectLiteral(TypableElement expr) {
+		if (expr instanceof NullLiteral) {
+			return true;
+		}
+
 		if (expr instanceof ObjectLiteral)
 			return true;
 
@@ -801,7 +837,11 @@ class N4JSLanguageUtils {
 	 * @return true if the expression is a new expression, an expression of a final and nominal type,
 	 * 			or references these expressions transitively through a const variable.
 	 */
-	def static boolean isConstTransitiveNewExpressionOrFinalNominalClassInstance(TypableElement expr, TypeRef typeRef) {
+	def private static boolean isConstTransitiveNewExpressionOrFinalNominalClassInstance(TypableElement expr, TypeRef typeRef) {
+		if (expr instanceof NullLiteral) {
+			return true;
+		}
+
 		if (expr instanceof NewExpression)
 			return true;
 
@@ -827,7 +867,7 @@ class N4JSLanguageUtils {
 
 		return false;
 	}
-	
+
 	/**
 	 * Check if the interface is built-in or an external without N4JS annotation.
 	 *
@@ -843,5 +883,55 @@ class N4JSLanguageUtils {
 		val fileExtensionCalculator = new XpectAwareFileExtensionCalculator;
 		val fileExt = fileExtensionCalculator.getXpectAwareFileExtension(tinf);
 		return TypeUtils.isBuiltIn(tinf) || tinf.providedByRuntime || (tinf.isExternal() && !hasN4JSAnnotation) || (isDefStructural && (fileExt == N4JSGlobals.N4JSD_FILE_EXTENSION));
+	}
+	
+	/**
+	 * Check if an optional field strategy is less restricted than or equal to another optional field strategy.
+	 *
+	 * @param s1
+	 *            The first optional field strategy.
+	 * @param s2
+	 *            The second optional field strategy.
+	 * @return true if the first optional field strategy is less restricted than or equal to the second optional field
+	 *         strategy, false otherwise.
+	 */
+	def static boolean isOptionalityLessRestrictedOrEqual(OptionalFieldStrategy s1, OptionalFieldStrategy s2) {
+		if (s1 == s2) {
+			return true;
+		}
+
+		val result = switch (s1) {
+			case OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL:
+				true // Always true in this case
+			case OptionalFieldStrategy.OFF:
+				(s2 == OptionalFieldStrategy.OFF)
+			case OptionalFieldStrategy.GETTERS_OPTIONAL:
+				(s2 == OptionalFieldStrategy.GETTERS_OPTIONAL) || (s2 == OptionalFieldStrategy.OFF)
+			default:
+				throw new RuntimeException("Invalid enum value " + s1)
+		}
+
+		return result;
+	}
+
+	/**
+	 * Calculate the minimum of two given optional field strategies.
+	 *
+	 * @param s1
+	 *            The first optional field strategy.
+	 * @param s2
+	 *            The second optional field strategy.
+	 * @return the minimum optional field strategy.
+	 */
+	def static OptionalFieldStrategy minOptionalityFieldStrategy(OptionalFieldStrategy s1, OptionalFieldStrategy s2) {
+		if ((s1 == OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL) && (s2 == OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL)) {
+			return OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL;
+		}
+
+		if ((s1 != OptionalFieldStrategy.OFF) && (s2 != OptionalFieldStrategy.OFF)) {
+			return OptionalFieldStrategy.GETTERS_OPTIONAL;
+		}
+
+		return OptionalFieldStrategy.OFF;
 	}
 }

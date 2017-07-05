@@ -20,10 +20,10 @@ import org.junit.Test;
 
 /**
  */
-public class N4jscSingleFileCompileIT extends AbstractN4jscIT {
+public class N4jscSingleFileCompileTest extends AbstractN4jscTest {
 
 	/***/
-	public N4jscSingleFileCompileIT() {
+	public N4jscSingleFileCompileTest() {
 		super("fixture");
 	}
 

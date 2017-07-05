@@ -19,7 +19,6 @@ import java.util.List
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.internal.N4JSModel
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.Script
@@ -362,7 +361,7 @@ public class ProjectUtils {
 			val QualifiedName qnFilled = qualifiedNameConverter.toQualifiedName(res.module.qualifiedName);
 			val project = resolveProject(res.URI);
 			val fqn = qnFilled;
-			val fileExtension = Optional.of(N4JSGlobals.N4JS_FILE_EXTENSION);
+			val fileExtension = Optional.of(res.URI.fileExtension); // see Req.155#4: "Both extensions are equal."
 			val filledSrcContainer = n4jsCore.findN4JSSourceContainer(res.URI).get;
 			for (IN4JSSourceContainer srcConti : project.sourceContainers) {
 				if (filledSrcContainer != srcConti) {

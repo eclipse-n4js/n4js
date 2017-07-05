@@ -167,14 +167,11 @@ public class TypeProcessor extends AbstractProcessor {
 		if (!result.failed) {
 			val typeRef = result.value;
 			if (typeRef instanceof ParameterizedTypeRef) {
-				val isTypeOfObjectLiteral = N4JSLanguageUtils.isConstTransitiveObjectLiteral(astNode);
-				val isTypeOfNewExpressionOrFinalNominal = N4JSLanguageUtils.
-					isConstTransitiveNewExpressionOrFinalNominalClassInstance(astNode, typeRef);
-				if (typeRef.typeOfObjectLiteral !== isTypeOfObjectLiteral
-					|| typeRef.typeOfNewExpressionOrFinalNominal !== isTypeOfNewExpressionOrFinalNominal) {
+				val optionalFieldStrategy = N4JSLanguageUtils.
+					calculateOptionalFieldStrategy(astNode, typeRef);
+				if (typeRef.ASTNodeOptionalFieldStrategy !== optionalFieldStrategy) {
 					val typeRefCpy = TypeUtils.copy(typeRef);
-					typeRefCpy.typeOfObjectLiteral = isTypeOfObjectLiteral;
-					typeRefCpy.typeOfNewExpressionOrFinalNominal = isTypeOfNewExpressionOrFinalNominal;
+					typeRefCpy.ASTNodeOptionalFieldStrategy = optionalFieldStrategy;
 					return new Result(typeRefCpy);
 				}
 			}

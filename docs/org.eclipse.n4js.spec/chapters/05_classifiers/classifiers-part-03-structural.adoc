@@ -436,44 +436,47 @@ $\forall m \in T.members, m.owner \notin \types{N4Object}, m.acc=\lenum{public},
 $\hspace{1em} \exists m' \in X.members: $
 $\hspace{2em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name $
 $\infer{\lspc \tee X \subtype \tee \tsStr T \lspc}{\hspace{2em} \land \tee m' \subtype \tee m } $
-7.  A type $X$ is a subtype of a structural field version of a type $\tsFld T$, if it contains all public, non-static and non-optional fields of the type $T$:
+7.  A type $X$ is a subtype of a structural field version of a type $\tsFld T$, if it contains all public, non-static fields of the type $T$. 
+Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
 +
 [%hardbreaks]
 $ \forall m \in T.fields, m.owner \not\in \types{N4Object}, m.acc=\lenum{public}, \neg m.static$
-$ \hspace{1em} \nexists m' \in X.fields}: m.optional$
 $ \hspace{1em} \lor\ \exists m' \in X.fields:$
 $ \hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
 $ \hspace{3em} \land \tee m': T_m \land \tee m: T_{m'} \land T_m=T_{m'}}$
 $    \infer{\lspc \tee X \subtype \tsFld T  \lspc }{\hspace{3em} \land m'.assignability\geq m.assignability}$
-8.  A type $X$ is a subtype of a structural read-only field version of a type $\tsRoFld T$, if it contains all public, non-optional and non-static readable fields of the type $T$:
+
+8.  A type $X$ is a subtype of a structural read-only field version of a type $\tsRoFld T$, if it contains all public and non-static readable fields of the type $T$.
+Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
 +
 [%hardbreaks]
 $\forall m \in T.fields \cup T.getters, m.owner \not\in \types{N4Object}, m.acc=\lenum{public}, \neg m.static$
-$\hspace{1em} \nexists m' \in X.fields \cup X.getters}: m.optional$
 $\hspace{1em} \lor\ \exists m' \in X.fields \cup X.getters:$
 $\hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
 $\hspace{3em} \land \tee m': T_m \land \tee m: T_{m'} \land T_m=T_{m'}$
 $    \infer{\lspc \tee X \subtype \tsRoFld T \lspc}{\hspace{3em} \land m'.assignability\geq m.assignability}$
-9.  A type $X$ is a subtype of a structural write-only field version of a type $\tsWoFld T$, if it contains all public, non-optional and non-static writable fields of the type $T$:
+
+9.  A type $X$ is a subtype of a structural write-only field version of a type $\tsWoFld T$, if it contains all public and non-static writable fields of the type $T$. Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
 +
 [%hardbreaks]
 $    \forall m \in T.fields \cup T.setters, m.owner \not\in \types{N4Object}, m.acc=\lenum{public}, \neg m.static, \neg m.final$
-$    \hspace{1em} \nexists m' \in X.fields \cup X.setters}: m.optional$
 $    \hspace{1em} \lor\ \exists m' \in X.fields \cup X.setters:$
 $    \hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name $
 $    \hspace{3em} \land \tee m': T_m \land \tee m: T_{m'} \land T_m=T_{m'}$
 $       \infer{\lspc \tee X \subtype \tsWoFld T \lspc}{\hspace{3em} \land m'.assignability\geq m.assignability}$
-10. A type $X$ is a subtype of a structural field version of a type $\tsFld{this}$, if it contains all public, non-static and non-optional fields,
-either defined via data fields or field get accessors, of the inferred type of `this`. +
-_All fields which have an initializer are handled as if they were optional._
+
+10. A type $X$ is a subtype of a structural field version of a type $\tsFld{this}$, if it contains all public, non-static fields,
+either defined via data fields or field get accessors, of the inferred type of `this`.
+Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
 +
 [%hardbreaks]
 $    \tee this:  T $
 $    \forall m \in T.fields \cup T.setters, m.owner \not\in \types{N4Object}, m.acc=\lenum{public}, \neg m.static$
-$    \hspace{1em} \nexists m' \in X.fields \cup X.getters}: m.optional \lor m.expr \neq \NULL$
+$    \lor m.expr \neq \NULL$
 $    \hspace{1em} \lor\ \exists m' \in X.fields \cup X.getters:$
 $    \hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
 $    \infer{\lspc \tee X \subtype \tsFld this \lspc}{\hspace{3em} \land \tee m' \subtype{m} \land m'.assignability \geq m.assignability} $
+
 11. A structural field type $\tsFld T$ is a subtype of a structural type $\tsStr X$, if $\tsStr X$ only contains fields (except methods inherited from `Object`) and if $\tsFld T \subtype \tsFld X$.
 +
 [math]
@@ -692,63 +695,7 @@ console.log(new C({y: 42}).y); //24
 == Structural Types With Optional Fields
 
 Public optional fields become a member of the structural (field) type as
-well.
-But they will be optional in the structural type, that is to say
-it is not necessary to define the field.
-
-If a type defines an optional field then this type is always compatible
-with a type that does not define a field with same name and type but is
-equal in all other members.
-
-.Optional field on one side
-[example]
---
-
-.Optional field on one side
-[source,n4js]
-----
-class C {
-    public s: number;
-    public t: string?;
-}
-class D {
-    public s: number;
-}
-function f(c: ~C) {}
-f(new D()); // ok: D is a (structural) subtype of ~C
-function g(~D d) {}
-g(new C()); // ok: C is a (structural) subtype of ~D
-----
-
-
-.Optional field on one side
-[source,n4js]
-----
-class C {
-    public s: number;
-    public t: string?;
-}
-class D {
-    public s: number;
-    public t: string?;
-}
-class E {
-    public s: number;
-    public t: number?;
-}
-class F {
-    public s: number;
-    public t: string;
-}
-function f(c: ~C) {}
-f(new D()); // ok: D is a (structural) subtype of ~C
-f(new E()); // error: E is not (structural) subtype of ~C, as t types differ (string vs number)
-f(new F()); // ok: F is a (structural) subtype of ~C
-function g(f: ~F) {}
-g(new C()); // ok: C is a (structural) subtype of ~F
-----
-
---
+well. To ensure the overall type safety, the semantics of optionality (e.g. on or off) depends on the context, in which the optional fields are currently being used (See <<optional-fields, Optional Fields>>).
 
 [.language-n4js]
 == Structural Types With Access Modifier

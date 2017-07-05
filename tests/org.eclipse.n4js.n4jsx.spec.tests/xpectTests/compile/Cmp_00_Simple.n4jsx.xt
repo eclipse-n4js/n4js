@@ -63,12 +63,12 @@ spead operator
 {
     "type": "div",
     "props": {
+        "prop0": "0",
         "prop1": "hi",
         "prop2": 42,
+        "prop3": true,
         "prop4": "hi",
         "prop5": 42,
-        "prop0": "0",
-        "prop3": true,
         "prop6": true
     },
     "children": []

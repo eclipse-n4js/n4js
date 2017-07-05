@@ -300,7 +300,7 @@ public class ExternalLibrariesActivator implements BundleActivator {
 		checkNotNull(bundle, "Bundle was null. Does the platform running?");
 
 		final Iterable<Pair<URI, String>> uriNamePairs = from(EXTERNAL_LIBRARY_FOLDER_NAMES)
-				.transform(name -> bundle.getResource(SHIPPED_CODE_FOLDER_NAME + "/" + name))
+				.transform(name -> bundle.getResource(name))
 				.filter(notNull())
 				.transform(URL_TO_FILE_URL_FUNC)
 				.transform(URL_TO_URI_FUNC)

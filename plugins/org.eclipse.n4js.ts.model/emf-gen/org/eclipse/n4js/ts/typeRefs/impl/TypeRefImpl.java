@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -297,17 +298,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isTypeOfObjectLiteral() {
-		return false;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public boolean isTypeOfNewExpressionOrFinalNominal() {
-		return false;
+	public OptionalFieldStrategy getASTNodeOptionalFieldStrategy() {
+		return OptionalFieldStrategy.OFF;
 	}
 
 	/**
@@ -457,10 +449,8 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 				return isUseSiteStructuralTyping();
 			case TypeRefsPackage.TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING:
 				return isDefSiteStructuralTyping();
-			case TypeRefsPackage.TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL:
-				return isTypeOfObjectLiteral();
-			case TypeRefsPackage.TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL:
-				return isTypeOfNewExpressionOrFinalNominal();
+			case TypeRefsPackage.TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY:
+				return getASTNodeOptionalFieldStrategy();
 			case TypeRefsPackage.TYPE_REF___GET_VERSION:
 				return getVersion();
 		}

@@ -13,9 +13,11 @@ package org.eclipse.n4js.ui.navigator.internal;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.jdt.ui.IContextMenuConstants;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.n4js.ui.workingsets.WorkingSet;
+import org.eclipse.n4js.ui.workingsets.internal.AssignWorkingSetsAction;
 import org.eclipse.n4js.ui.workingsets.internal.N4JSProjectActionGroup;
 import org.eclipse.n4js.ui.workingsets.internal.N4JSWorkingSetActionProvider;
 import org.eclipse.ui.IActionBars;
@@ -24,6 +26,8 @@ import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
+
+import com.google.inject.Inject;
 
 /**
  * Common Navigator Framework (CNF) action provider for N4JS elements in the navigator. (resources, working sets,
@@ -34,11 +38,13 @@ public class N4JSNavigatorActionProvider extends CommonActionProvider {
 	private N4JSProjectActionGroup projectGroup;
 	private N4JSWorkingSetActionProvider workingSetActionProvider;
 
+	@Inject
+	private AssignWorkingSetsAction assignWorkingSetsAction;
+
 	private boolean selectionContainsWorkingSet = false;
 
 	@Override
 	public void init(final ICommonActionExtensionSite site) {
-
 		ICommonViewerWorkbenchSite workbenchSite = null;
 		if (site.getViewSite() instanceof ICommonViewerWorkbenchSite)
 			workbenchSite = (ICommonViewerWorkbenchSite) site.getViewSite();
@@ -51,8 +57,11 @@ public class N4JSNavigatorActionProvider extends CommonActionProvider {
 
 				workingSetActionProvider = new N4JSWorkingSetActionProvider();
 				workingSetActionProvider.init(site);
+
+				assignWorkingSetsAction.init(site);
 			}
 		}
+
 	}
 
 	@Override
@@ -65,6 +74,10 @@ public class N4JSNavigatorActionProvider extends CommonActionProvider {
 		// if the current selection contains working sets.
 		if (selectionContainsWorkingSet) {
 			workingSetActionProvider.fillContextMenu(menu);
+		}
+
+		if (assignWorkingSetsAction.isEnabled()) {
+			menu.appendToGroup(IContextMenuConstants.GROUP_BUILD, assignWorkingSetsAction);
 		}
 	}
 
@@ -85,7 +98,8 @@ public class N4JSNavigatorActionProvider extends CommonActionProvider {
 
 		// context is null if disposal of the provider is triggered
 		if (null != context) {
-			List<Object> selectedElements = Arrays.asList(((StructuredSelection) context.getSelection()).toArray());
+			StructuredSelection selection = (StructuredSelection) context.getSelection();
+			List<Object> selectedElements = Arrays.asList(selection.toArray());
 
 			selectionContainsWorkingSet = selectedElements.stream()
 					.anyMatch(element -> element instanceof WorkingSet);
@@ -94,6 +108,8 @@ public class N4JSNavigatorActionProvider extends CommonActionProvider {
 			if (selectionContainsWorkingSet) {
 				workingSetActionProvider.setContext(context);
 			}
+
+			assignWorkingSetsAction.selectionChanged(selection);
 		}
 	}
 

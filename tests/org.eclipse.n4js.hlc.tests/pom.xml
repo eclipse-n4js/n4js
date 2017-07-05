@@ -160,20 +160,24 @@ Contributors:
 					</dependency>
 				</dependencies>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<!--
+					Need to reset testSourceDirectory and testClassesDirectory to their default values, because
+					our parent pom.xml changes them to special values required for OSGi bundles (but here we are
+					in a plain maven project).
+					-->
+					<testSourceDirectory>${project.build.testSourceDirectory}</testSourceDirectory>
+					<testClassesDirectory>${project.build.testOutputDirectory}</testClassesDirectory>
+				</configuration>
 				<executions>
 					<execution>
-						<id>default-test</id>
-						<configuration>
-							<systemProperties>
-								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-							</systemProperties>
-						</configuration>
+						<id>run-pojo-surefire-tests</id>
+						<phase/> <!-- empty phase turns off the execution with id "run-pojo-surefire-tests" -->
 					</execution>
 				</executions>
 			</plugin>

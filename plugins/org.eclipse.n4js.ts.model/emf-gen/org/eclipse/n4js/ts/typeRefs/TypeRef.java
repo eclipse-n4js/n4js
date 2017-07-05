@@ -331,29 +331,14 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * Tells whether this type reference represents the type of an object literal.
+	 * Tells the optional field strategy.
 	 * Used to activate the special semantics of optional fields in certain cases.
-	 * @see TypeRef#isTypeOfNewExpressionOrFinalNominal()
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy%>.OFF;'"
 	 * @generated
 	 */
-	boolean isTypeOfObjectLiteral();
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * Tells whether this type reference represents the type of a new expression or final nominal classifier.
-	 * Used to activate the special semantics of optional fields in certain cases.
-	 * @see TypeRef#isTypeOfObjectLiteral()
-	 * <!-- end-model-doc -->
-	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return false;'"
-	 * @generated
-	 */
-	boolean isTypeOfNewExpressionOrFinalNominal();
+	OptionalFieldStrategy getASTNodeOptionalFieldStrategy();
 
 	/**
 	 * <!-- begin-user-doc -->

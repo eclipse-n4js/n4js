@@ -12,8 +12,14 @@ package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.Result
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Collection
+import java.util.List
+import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.FieldAccessor
@@ -30,11 +36,6 @@ import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.utils.StructuralMembersTriple
 import org.eclipse.n4js.utils.StructuralTypesHelper
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Collection
-import java.util.List
-import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
 
@@ -124,7 +125,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			case STRUCTURAL_READ_ONLY_FIELDS: {
 
 				// For any readable, non-optional right members. Initialized fields does not count as optional.
-				val handleOptionality = leftTypeRef.isTypeOfNewExpressionOrFinalNominal || leftTypeRef.isTypeOfObjectLiteral;
+				val handleOptionality = leftTypeRef.ASTNodeOptionalFieldStrategy.isOptionalityLessRestrictedOrEqual(OptionalFieldStrategy.GETTERS_OPTIONAL);
 				val memberNecessary = !rightMember.optional || (rightMember.optional && !handleOptionality);
 				if (memberNecessary && READABLE_FIELDS_PREDICATE.apply(rightMember)) {
 
@@ -146,7 +147,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 			case STRUCTURAL_WRITE_ONLY_FIELDS: {
 
 				// For any writable right members.
-				if (WRITABLE_FIELDS_PREDICATE.apply(rightMember) && !leftTypeRef.isTypeOfObjectLiteral) {
+				if (WRITABLE_FIELDS_PREDICATE.apply(rightMember) && (leftTypeRef.ASTNodeOptionalFieldStrategy != OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL)) {
 
 					// If left is either ~r~ or ~i~, then an explicit setter is required.
 					if ((STRUCTURAL_READ_ONLY_FIELDS === leftStrategy || STRUCTURAL_FIELD_INITIALIZER === leftStrategy)
@@ -210,10 +211,10 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 					// for a writable field on the right-hand side, require a getter/setter pair on the left
 					if (rightMember.writeableField && leftMember instanceof FieldAccessor) {
 						if (!(leftOtherAccessor instanceof TSetter)) {
-							if(!leftTypeRef.isTypeOfObjectLiteral) {
+							if(leftTypeRef.ASTNodeOptionalFieldStrategy != OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL) {
 								val isSpecialCaseOfDispensableGetterForOptionalField = leftMember instanceof TSetter
 									&& rightMember.optional
-									&& leftTypeRef.isTypeOfNewExpressionOrFinalNominal;
+									&& (leftTypeRef.ASTNodeOptionalFieldStrategy == OptionalFieldStrategy.GETTERS_OPTIONAL);
 								if(!isSpecialCaseOfDispensableGetterForOptionalField) {
 									// special error message in case only either a getter XOR setter is supplied for a field
 									val msgSpecial = if(leftMember instanceof TGetter && rightMember.optional) {
@@ -232,9 +233,7 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 
 				}
 			}
-
 		}
-
 	}
 
 	/** Returns with {@code true} iff the  the arguments are a getter-setter accessor pair. */
@@ -354,21 +353,41 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		}
 	}
 
+	/**
+	 * This method implements Req-IDE-240500 in language spec.
+	 */
 	def private boolean rightMemberIsOptional(TypeRef leftTypeRef, TMember right, TypingStrategy rightStrategy) {
-		val boolean objectLiteralOrNewExpression = leftTypeRef.isTypeOfObjectLiteral || leftTypeRef.isTypeOfNewExpressionOrFinalNominal;
-		val boolean optionalObjectLiteralOrNewExpression = right.optional && objectLiteralOrNewExpression;
+		val leftOptionalStrategy = leftTypeRef.ASTNodeOptionalFieldStrategy;
+
+		// Whether a right member is optional depends on both the right typing strategy and the right optionality field strategy.
 		val boolean rightMemberIsOptional = switch (rightStrategy) {
 			case STRUCTURAL,
-			case STRUCTURAL_FIELDS,
+			case STRUCTURAL_FIELDS: {
+				// L <: ~N or L <: ~~N
+				if (!right.optional) {
+					false
+				} else {
+					(leftOptionalStrategy == OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL) ||
+					(right instanceof TGetter && leftOptionalStrategy.isOptionalityLessRestrictedOrEqual(OptionalFieldStrategy.GETTERS_OPTIONAL))
+				}
+			}
+
 			case STRUCTURAL_WRITE_ONLY_FIELDS: {
-				right.optional && (leftTypeRef.isTypeOfObjectLiteral || (right instanceof TGetter && leftTypeRef.isTypeOfNewExpressionOrFinalNominal))
+				// L <: ~w~N
+				right.optional && (leftOptionalStrategy == OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL)
 			}
+
 			case STRUCTURAL_READ_ONLY_FIELDS: {
-				optionalObjectLiteralOrNewExpression
+				// L <: ~r~N
+				right.optional && leftOptionalStrategy.isOptionalityLessRestrictedOrEqual(OptionalFieldStrategy.GETTERS_OPTIONAL)
 			}
+
 			case STRUCTURAL_FIELD_INITIALIZER: {
-				right.initializedField || right.optionalSetter || optionalObjectLiteralOrNewExpression
+				// L <: ~i~N
+				(right.optional && leftOptionalStrategy.isOptionalityLessRestrictedOrEqual(OptionalFieldStrategy.GETTERS_OPTIONAL)) ||
+				right.initializedField || right.optionalSetter
 			}
+
 			default: {
 				false
 			}

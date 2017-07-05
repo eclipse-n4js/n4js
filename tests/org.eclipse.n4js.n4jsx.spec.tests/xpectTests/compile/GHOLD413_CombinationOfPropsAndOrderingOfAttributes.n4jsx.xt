@@ -1,0 +1,121 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest
+	ResourceSet {
+		ThisFile {}
+		File "../reactFiles/react.n4jsd" { from = "../reactFiles/react.n4jsd" }
+		File "../reactFiles/react.js" { from = "../reactFiles/react.js" }
+		File "../reactFiles/replacer.n4js" { from = "../reactFiles/replacer.n4js" }
+	}
+	END_SETUP
+ */
+
+import * as React from "reactFiles/react"
+import { replacer } from "reactFiles/replacer"
+
+var zzzz: React.Element; // Avoid unused import warnings
+zzzz;
+
+const baz = { baz: "MyBaz" }
+
+/* XPECT output ---
+<==
+stdout:
+Zero attribute:
+{
+    "type": "div",
+    "props": null,
+    "children": []
+}
+One property attribute:
+{
+    "type": "div",
+    "props": {
+        "foo": "Hi"
+    },
+    "children": []
+}
+One spread:
+{
+    "type": "div",
+    "props": {
+        "baz": "MyBaz"
+    },
+    "children": []
+}
+Spread as first attribute:
+{
+    "type": "div",
+    "props": {
+        "baz": "MyBaz",
+        "foo": true,
+        "qux": "tt",
+        "tux": 5
+    },
+    "children": []
+}
+Spread between props:
+{
+    "type": "div",
+    "props": {
+        "foo": true,
+        "baz": "MyBaz",
+        "qux": "tt",
+        "tux": 5
+    },
+    "children": []
+}
+Spread as last attribute:
+{
+    "type": "div",
+    "props": {
+        "foo": true,
+        "qux": "tt",
+        "tux": 5,
+        "baz": "MyBaz"
+    },
+    "children": []
+}
+stderr:
+==>
+--- */
+
+// Zero attribute
+const f1 = <div />
+console.log("Zero attribute:");
+console.log(JSON.stringify(f1, replacer, 4));
+
+// One property
+const f2 = <div foo = "Hi"/>
+console.log("One property attribute:");
+console.log(JSON.stringify(f2, replacer, 4));
+
+// One spread
+const f3 = <div {...baz}/>
+console.log("One spread:");
+console.log(JSON.stringify(f3, replacer, 4));
+
+// Spread as first attribute 
+const f4 =  <div {...baz} foo qux="tt" tux={5} />
+console.log("Spread as first attribute:");
+console.log(JSON.stringify(f4, replacer, 4));
+
+// Spread between props 
+const f5 = <div foo {...baz} qux="tt" tux={5} />
+console.log("Spread between props:");
+console.log(JSON.stringify(f5, replacer, 4));
+
+// Spread as last attribute 
+const f6 = <div foo qux="tt" tux={5} {...baz} />
+console.log("Spread as last attribute:");
+console.log(JSON.stringify(f6, replacer, 4));
+

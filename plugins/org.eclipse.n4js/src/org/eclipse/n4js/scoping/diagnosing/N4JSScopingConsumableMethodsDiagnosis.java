@@ -29,11 +29,12 @@ import com.google.inject.Inject;
  * A scoping diagnosis for the case that the user tries to refer to an interface default implementation using the super
  * keyword.
  */
-public class N4JSScopingConsumableMethodsDiagnosis {
+public class N4JSScopingConsumableMethodsDiagnosis extends ScopingDiagnosis<ParameterizedPropertyAccessExpression> {
 
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 
+	@Override
 	DiagnosticMessage diagnose(QualifiedName name, ParameterizedPropertyAccessExpression propertyAccess) {
 		// determine containing member declaration and classifier definition
 		N4MemberDeclaration containingMemberDeclaration = EcoreUtil2.getContainerOfType(propertyAccess,
@@ -61,14 +62,5 @@ public class N4JSScopingConsumableMethodsDiagnosis {
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * Creates a {@link DiagnosticMessage} for the given issue code and message.
-	 *
-	 * See {@link IssueCodes} for valid issue codes.
-	 */
-	private DiagnosticMessage createMessage(String issueCode, String message) {
-		return new DiagnosticMessage(message, IssueCodes.getDefaultSeverity(issueCode), issueCode);
 	}
 }

@@ -71,6 +71,24 @@ abstract class Versionable {
 }
 
 /*
+ * Optional field strategy enum defines three strategies for handling optional fields while checking structural subtypes.
+ * The optional field strategy is calculated based on the kind of AST node. Each {@code TypeRef} is associated with an optional field strategy.
+ * <p>
+ * It is important to note that this optional field strategy is introduced to as a workaround to solve the transitivity problem with structural subtyping
+ * in the presence of optional fields. As opposed to e.g. typing strategy, the optional field strategy is NOT passed through the type system in anyway.
+ * <p>
+ * For further details, see IDE-2405, GHOLD-411.
+ */
+enum OptionalFieldStrategy {
+	/** Default: optionality is turned of, e.g. both fields and accessors are mandatory */
+	^OFF = 0
+	/** Only getters are optional */
+	GETTERS_OPTIONAL = 1
+	/** Both fields and accessors are optional */
+	FIELDS_AND_ACCESSORS_OPTIONAL = 2
+}
+
+/*
  * Base class for all type references
  */
 abstract class TypeRef extends TypeArgument, Versionable {
@@ -228,20 +246,12 @@ abstract class TypeRef extends TypeArgument, Versionable {
 	}
 
 	/*
-	 * Tells whether this type reference represents the type of an object literal.
+	 * Tells the optional field strategy.
 	 * Used to activate the special semantics of optional fields in certain cases.
-	 * @see TypeRef#isTypeOfNewExpressionOrFinalNominal()
 	 */
-	op boolean isTypeOfObjectLiteral() {
-		return false;
-	}
-	/*
-	 * Tells whether this type reference represents the type of a new expression or final nominal classifier.
-	 * Used to activate the special semantics of optional fields in certain cases.
-	 * @see TypeRef#isTypeOfObjectLiteral()
-	 */
-	op boolean isTypeOfNewExpressionOrFinalNominal() {
-		return false;
+	 /* @see ParameterizedTypeRef#astOptionalFieldStrategy */
+	op OptionalFieldStrategy getASTNodeOptionalFieldStrategy() {
+		return OptionalFieldStrategy.OFF;
 	}
 
 	/*
@@ -489,11 +499,9 @@ class ParameterizedTypeRef extends BaseTypeRef {
 	refers Type declaredType
 	contains TypeArgument[] typeArgs
 	boolean arrayTypeLiteral = "false"
-
-	/* @see TypeRef#isTypeOfObjectLiteral() */
-	transient boolean typeOfObjectLiteral
-	/* @see TypeRef#isTypeOfNewExpressionOrFinalNominal() */
-	transient boolean typeOfNewExpressionOrFinalNominal
+	/**  */
+	/* @see TypeRef#getASTOptionalFieldStrategy() */
+	transient OptionalFieldStrategy aSTNodeOptionalFieldStrategy
 
 	/*
 	 * The defined (declared or inferred) typing strategy on use site, nominal typing by default. Could be changed to structural or structural

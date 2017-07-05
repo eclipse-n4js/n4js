@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+
+interface ~I {
+	public m?: int;
+}
+	
+class ~C { }
+
+@Final class F { }
+
+let b: boolean;
+const cc: C = {}
+let f1 = new F();
+let f2: ~F = {};
+
+// XPECT errors --> "C is not a structural subtype of I: missing field m." at "b? cc : new C()"
+var te1: I = b? cc : new C()
+
+// XPECT noerrors
+var te2: ~r~I = b? cc : new C() 
+
+// XPECT errors --> "union{F,~Object} is not a subtype of ~I." at "b? f1 : {}"
+var te3: ~I = b? f1 : {}
+
+// XPECT noerrors
+var te4: ~r~I = b? f1 : {}

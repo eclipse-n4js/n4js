@@ -15,6 +15,7 @@ import java.lang.Iterable;
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
+import org.eclipse.emf.ecore.EEnum;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
@@ -31,6 +32,7 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeRef;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.StaticBaseTypeRef;
@@ -227,6 +229,13 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * @generated
 	 */
 	private EClass typeVariableMappingEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EEnum optionalFieldStrategyEEnum = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -522,7 +531,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTypeRef__IsTypeOfObjectLiteral() {
+	public EOperation getTypeRef__GetASTNodeOptionalFieldStrategy() {
 		return typeRefEClass.getEOperations().get(20);
 	}
 
@@ -531,17 +540,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getTypeRef__IsTypeOfNewExpressionOrFinalNominal() {
-		return typeRefEClass.getEOperations().get(21);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EOperation getTypeRef__GetVersion() {
-		return typeRefEClass.getEOperations().get(22);
+		return typeRefEClass.getEOperations().get(21);
 	}
 
 	/**
@@ -927,7 +927,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getParameterizedTypeRef_TypeOfObjectLiteral() {
+	public EAttribute getParameterizedTypeRef_ASTNodeOptionalFieldStrategy() {
 		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -936,17 +936,8 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EAttribute getParameterizedTypeRef_TypeOfNewExpressionOrFinalNominal() {
-		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EAttribute getParameterizedTypeRef_DefinedTypingStrategy() {
-		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(5);
+		return (EAttribute)parameterizedTypeRefEClass.getEStructuralFeatures().get(4);
 	}
 
 	/**
@@ -1701,6 +1692,15 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EEnum getOptionalFieldStrategy() {
+		return optionalFieldStrategyEEnum;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EDataType getParameterizedTypeRefIterable() {
 		return parameterizedTypeRefIterableEDataType;
 	}
@@ -1758,8 +1758,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(typeRefEClass, TYPE_REF___GET_STRUCTURAL_MEMBERS);
 		createEOperation(typeRefEClass, TYPE_REF___IS_USE_SITE_STRUCTURAL_TYPING);
 		createEOperation(typeRefEClass, TYPE_REF___IS_DEF_SITE_STRUCTURAL_TYPING);
-		createEOperation(typeRefEClass, TYPE_REF___IS_TYPE_OF_OBJECT_LITERAL);
-		createEOperation(typeRefEClass, TYPE_REF___IS_TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL);
+		createEOperation(typeRefEClass, TYPE_REF___GET_AST_NODE_OPTIONAL_FIELD_STRATEGY);
 		createEOperation(typeRefEClass, TYPE_REF___GET_VERSION);
 
 		staticBaseTypeRefEClass = createEClass(STATIC_BASE_TYPE_REF);
@@ -1813,8 +1812,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 		createEReference(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__TYPE_ARGS);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__ARRAY_TYPE_LITERAL);
-		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__TYPE_OF_OBJECT_LITERAL);
-		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__TYPE_OF_NEW_EXPRESSION_OR_FINAL_NOMINAL);
+		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__AST_NODE_OPTIONAL_FIELD_STRATEGY);
 		createEAttribute(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF__DEFINED_TYPING_STRATEGY);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___GET_TYPING_STRATEGY);
 		createEOperation(parameterizedTypeRefEClass, PARAMETERIZED_TYPE_REF___CONTAINS_WILDCARDS);
@@ -1911,6 +1909,9 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		typeVariableMappingEClass = createEClass(TYPE_VARIABLE_MAPPING);
 		createEReference(typeVariableMappingEClass, TYPE_VARIABLE_MAPPING__TYPE_VAR);
 		createEReference(typeVariableMappingEClass, TYPE_VARIABLE_MAPPING__TYPE_ARG);
+
+		// Create enums
+		optionalFieldStrategyEEnum = createEEnum(OPTIONAL_FIELD_STRATEGY);
 
 		// Create data types
 		parameterizedTypeRefIterableEDataType = createEDataType(PARAMETERIZED_TYPE_REF_ITERABLE);
@@ -2022,9 +2023,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 
 		initEOperation(getTypeRef__IsDefSiteStructuralTyping(), theEcorePackage.getEBoolean(), "isDefSiteStructuralTyping", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEOperation(getTypeRef__IsTypeOfObjectLiteral(), theEcorePackage.getEBoolean(), "isTypeOfObjectLiteral", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTypeRef__IsTypeOfNewExpressionOrFinalNominal(), theEcorePackage.getEBoolean(), "isTypeOfNewExpressionOrFinalNominal", 0, 1, !IS_UNIQUE, IS_ORDERED);
+		initEOperation(getTypeRef__GetASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "getASTNodeOptionalFieldStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTypeRef__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -2103,8 +2102,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEReference(getParameterizedTypeRef_DeclaredType(), theTypesPackage.getType(), null, "declaredType", null, 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getParameterizedTypeRef_TypeArgs(), this.getTypeArgument(), null, "typeArgs", null, 0, -1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_ArrayTypeLiteral(), theEcorePackage.getEBoolean(), "arrayTypeLiteral", "false", 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getParameterizedTypeRef_TypeOfObjectLiteral(), theEcorePackage.getEBoolean(), "typeOfObjectLiteral", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getParameterizedTypeRef_TypeOfNewExpressionOrFinalNominal(), theEcorePackage.getEBoolean(), "typeOfNewExpressionOrFinalNominal", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getParameterizedTypeRef_ASTNodeOptionalFieldStrategy(), this.getOptionalFieldStrategy(), "aSTNodeOptionalFieldStrategy", null, 0, 1, ParameterizedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getParameterizedTypeRef_DefinedTypingStrategy(), theTypesPackage.getTypingStrategy(), "definedTypingStrategy", null, 0, 1, ParameterizedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getParameterizedTypeRef__GetTypingStrategy(), theTypesPackage.getTypingStrategy(), "getTypingStrategy", 0, 1, !IS_UNIQUE, IS_ORDERED);
@@ -2257,6 +2255,12 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEClass(typeVariableMappingEClass, TypeVariableMapping.class, "TypeVariableMapping", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTypeVariableMapping_TypeVar(), theTypesPackage.getTypeVariable(), null, "typeVar", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTypeVariableMapping_TypeArg(), this.getTypeArgument(), null, "typeArg", null, 0, 1, TypeVariableMapping.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Initialize enums and add enum literals
+		initEEnum(optionalFieldStrategyEEnum, OptionalFieldStrategy.class, "OptionalFieldStrategy");
+		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.OFF);
+		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.GETTERS_OPTIONAL);
+		addEEnumLiteral(optionalFieldStrategyEEnum, OptionalFieldStrategy.FIELDS_AND_ACCESSORS_OPTIONAL);
 
 		// Initialize data types
 		initEDataType(parameterizedTypeRefIterableEDataType, Iterable.class, "ParameterizedTypeRefIterable", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.lang.Iterable<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>");

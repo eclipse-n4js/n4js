@@ -139,6 +139,7 @@ boolean isNightly() { return env.NIGTHLY_BUILD == "true" }
 
 /**
  * Sends email notification about job status based on the provided data.
+ *
  * @param subject the subject of the email
  * @param body the body of the email
  */
@@ -148,10 +149,6 @@ void sendEmail(String subject, String body) {
                 body: body,
                 recipientProviders: [
                         [$class: 'CulpritsRecipientProvider'],
-                        [$class: 'UpstreamComitterRecipientProvider'],
-                        [$class: 'DevelopersRecipientProvider'],
-                        [$class: 'FailingTestSuspectsRecipientProvider'],
-                        [$class: 'FirstFailingBuildSuspectsRecipientProvider'],
                         [$class: 'RequesterRecipientProvider']]
 }
 

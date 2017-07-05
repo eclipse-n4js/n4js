@@ -139,58 +139,86 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 	}
 
 	/*
-	 * The following examples (testOneVsTwoStatements..) are similar to those described at 
 	 * http://lucumr.pocoo.org/2011/2/6/automatic-semicolon-insertion/
-	 * by Armin Ronacher. More information about the effects see blog entry.
+	 *
+	 * Excerpt regarding testBlogExample_01-03:
+	 *
+	 * Like Python, JavaScript has array literals ([1, 2, 3, 4]) and uses a very similar syntax to access items
+	 * of objects and arrays (foo[index]). Unfortunately that particular little pseudo-ambiguity becomes a problem
+	 * when you forget to place semicolons. Take the following piece of JavaScript code as example:
+	 *
+	 *     var name = "World"
+	 *     ["Hello", "Goodbye"].forEach(function(value) {
+	 *       document.write(value + " " + name + "<br>")
+	 *     })
+	 *
+	 * That is not a syntax error, but it will fail with an odd error. Why is that? The problem is that JavaScript
+	 * will insert semicolons after the document.write() call and after the .forEach() call, but not before the array
+	 * literal. In fact, it will attempt to use the array literal as indexer operator to the string from the line before.
+	 *
+	 * (c) Copyright 2014 by Armin Ronacher.
 	 */
-	
 	@Test
-	def void testOneVsTwoStatements_01_ASI() {
-		val parseResult = '''
-			let x = 1
-			[0];
-		'''.parseSuccessfully
+	def void testBlogExample_01() {
+		val parseResult = parseSuccessfully("var name = \"World\"\n" +
+				"[\"Hello\", \"Goodbye\"].forEach(function(value) {\n" +
+				"  document.write(value + \" \" + name + \"<br>\")\n" +
+				"})");
 		parseResult.hasChildren(1)
 	}
 	@Test
-	def void testOneVsTwoStatements_01_WithSem() {
-		val parseResult = '''
-			let x = 1;
-			[0];
-		'''.parseSuccessfully
+	def void testBlogExample_02() {
+		val parseResult = parseSuccessfully("var name = \"World\";\n" +
+				"[\"Hello\", \"Goodbye\"].forEach(function(value) {\n" +
+				"  document.write(value + \" \" + name + \"<br>\")\n" +
+				"})");
 		parseResult.hasChildren(2)
 	}
 	@Test
-	def void testOneVsTwoStatements_02_ASI() {
-		val parseResult = '''
-			let f = function (){}
-			(1)		
-		'''.parseSuccessfully
+	def void testBlogExample_03() {
+		parseSuccessfully("var name = \"World\";/*\n*/" +
+				"[\"Hello\", \"Goodbye\"].forEach(function(value) {\n" +
+				"  document.write(value + \" \" + name + \"<br>\")\n" +
+				"})");
+	}
+
+	@Test
+	def void testBlogExample_04() {
+		parseSuccessfully("namespace.makeCounter = function() {\n" +
+				"  var counter = 0\n" +
+				"  return function() {\n" +
+				"    return counter++\n" +
+				"  }\n" +
+				"}\n" +
+				"(function() {\n" +
+				"  namespace.exportedObject = function() {\n" +
+				"    1+2\n" +
+				"  }\n" +
+				"})()");
+	}
+	@Test
+	def void testBlogExample_05() {
+		val parseResult = parseSuccessfully("/* this works */\n" +
+				"var foo = 1 + 2\n" +
+				"something.method(foo) + 42");
+		parseResult.hasChildren(2)
+	}
+	@Test
+	def void testBlogExample_06() {
+		val parseResult = parseSuccessfully("/* this does not work, will try to call 2(...) */\n" +
+				"var foo = 1 + 2\n" +
+				"(something.method(foo) + 42).print()");
 		parseResult.hasChildren(1)
 	}
 	@Test
-	def void testOneVsTwoStatements_02_WithSem() {
-		val parseResult = '''
-			let f = function (){};
-			(1)
-		'''.parseSuccessfully
+	def void testBlogExample_07() {
+		val parseResult = parseSuccessfully("var x=function(){}\n" +
+				"var y=function(){}");
 		parseResult.hasChildren(2)
 	}
 	@Test
-	def void testOneVsTwoStatements_03_ASI() {
-		val parseResult = '''
-			1
-			(1)
-		'''.parseSuccessfully
-		parseResult.hasChildren(1)
-	}
-	@Test
-	def void testOneVsTwoStatements_03_WithSem() {
-		val parseResult = '''
-			1;
-			(1)
-		'''.parseSuccessfully
-		parseResult.hasChildren(2)
+	def void testBlogExample_08() {
+		parseWithError("var x=function(){}var y=function(){}");
 	}
 
 	@Test
@@ -643,4 +671,3 @@ class ES_07_09_AutomaticSemicolonInsertionParserTest extends AbstractParserTest 
 
 
 }
-
