@@ -225,7 +225,6 @@ Contributors:
 								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
 								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 							</systemProperties>
-							<classpathDependencyScopeExclude>test</classpathDependencyScopeExclude>
 						</configuration>
 					</execution>
 				</executions>
