@@ -554,11 +554,6 @@ Contributors:
 			<artifactId>jetty-maven-plugin</artifactId>
 			<version>9.2.9.v20150224</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>org.eclipse.equinox.common</artifactId>
-			<version>[3.6.0,)</version>
-		</dependency>
 		<!-- Missing IWorkspcae -->
 		<dependency>
 			<groupId>org.eclipse.core</groupId>
