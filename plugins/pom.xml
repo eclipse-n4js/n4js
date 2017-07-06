@@ -364,7 +364,7 @@ Contributors:
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>org.eclipse.core</groupId>
+							<groupId>org.eclipse.platform</groupId>
 							<artifactId>org.eclipse.core.resources</artifactId>
 							<version>${org.eclipse.core.resources-version}</version>
 						</dependency>
