@@ -578,16 +578,6 @@ Contributors:
 			<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
 			<version>${org.eclipse.emf.ecore.xcore.lib-version}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.runtime</artifactId>
-			<version>[3.7.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>org.eclipse.equinox.registry</artifactId>
-			<version>[3.5.100,)</version>
-		</dependency>
 <!--  Smaller version of com.ibm.icu - base path only :
 		<dependency>
 		    <groupId>at.bestsolution.eclipse</groupId>
