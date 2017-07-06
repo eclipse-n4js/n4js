@@ -554,23 +554,11 @@ Contributors:
 			<artifactId>jetty-maven-plugin</artifactId>
 			<version>9.2.9.v20150224</version>
 		</dependency>
-		<!-- Missing IWorkspcae -->
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.resources</artifactId>
-			<version>[3.7.100,)</version>
-		</dependency>
-		<!-- Missing org.eclipse.core.runtime.jobs.ISchedulingRule -->
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.jobs</artifactId>
-			<version>[3.5.100,)</version>
-		</dependency>
 		<!-- xsemantics -->
 		<dependency>
 			<groupId>net.sf.xsemantics</groupId>
 			<artifactId>it.xsemantics.dsl</artifactId>
-			<version>1.11.2</version>
+			<version>1.12.0</version>
 		</dependency>
 		<!-- Xcore lib -->
 		<dependency>
