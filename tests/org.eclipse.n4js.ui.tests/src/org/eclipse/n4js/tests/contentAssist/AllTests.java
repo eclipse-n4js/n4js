@@ -17,7 +17,7 @@ import org.junit.runners.Suite.SuiteClasses;
 /**
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TypeReferenceContentAssistPluginUITest.class })
+@SuiteClasses({ TypeReferenceContentAssistPluginUITest.class, ContentAssistParserSanityTest.class })
 public class AllTests {
 	// empty
 }
