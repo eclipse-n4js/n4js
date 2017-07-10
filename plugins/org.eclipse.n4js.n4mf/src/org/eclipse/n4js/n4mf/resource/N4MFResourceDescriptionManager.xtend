@@ -29,7 +29,6 @@ import static extension org.eclipse.n4js.n4mf.resource.N4MFResourceDescriptionSt
  */
 class N4MFResourceDescriptionManager extends DefaultResourceDescriptionManager {
 
-	@Override
 	override boolean isAffected(Collection<Delta> deltas, IResourceDescription candidate, IResourceDescriptions context) {
 
 		if (candidate.manifest) {

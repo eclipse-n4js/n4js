@@ -51,7 +51,6 @@ class NpmProjectAdaptionResult implements IStatus {
 		toBeBuilt = new ToBeBuilt(toBeUpdated.toSet.immutableCopy, toBeDeleted.toSet.immutableCopy);
 	}
 
-	@Override
 	override toString() {
 		return status + '\n' + toBeBuilt;
 	}
@@ -66,7 +65,6 @@ class NpmProjectAdaptionResult implements IStatus {
 		val Collection<URI> toBeUpdated;
 		val Collection<URI> toBeDeleted;
 
-		@Override
 		override toString() {
 			val sb = new StringBuilder;
 			sb.append('ToBeBuilt [\n\ttoBeUpdated=');

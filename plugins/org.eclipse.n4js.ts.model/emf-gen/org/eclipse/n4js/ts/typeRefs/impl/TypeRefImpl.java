@@ -312,8 +312,7 @@ public abstract class TypeRefImpl extends TypeArgumentImpl implements TypeRef {
 		Type _declaredType = this.getDeclaredType();
 		boolean _tripleNotEquals = (_declaredType != null);
 		if (_tripleNotEquals) {
-			Type _declaredType_1 = this.getDeclaredType();
-			_xifexpression = _declaredType_1.getVersion();
+			_xifexpression = this.getDeclaredType().getVersion();
 		}
 		else {
 			_xifexpression = 0;

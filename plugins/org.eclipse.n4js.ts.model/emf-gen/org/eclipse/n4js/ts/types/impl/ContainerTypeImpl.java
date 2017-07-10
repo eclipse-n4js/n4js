@@ -12,8 +12,6 @@ package org.eclipse.n4js.ts.types.impl;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -221,14 +219,12 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 * @generated
 	 */
 	public TMethod getOwnedCtor() {
-		EList<MT> _ownedMembers = this.getOwnedMembers();
-		Iterable<TMethod> _filter = Iterables.<TMethod>filter(_ownedMembers, TMethod.class);
 		final Function1<TMethod, Boolean> _function = new Function1<TMethod, Boolean>() {
 			public Boolean apply(final TMethod it) {
 				return Boolean.valueOf(it.isConstructor());
 			}
 		};
-		return IterableExtensions.<TMethod>findFirst(_filter, _function);
+		return IterableExtensions.<TMethod>findFirst(Iterables.<TMethod>filter(this.getOwnedMembers(), TMethod.class), _function);
 	}
 
 	/**
@@ -247,8 +243,7 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 	 */
 	public TMember findOwnedMember(final String name, final boolean writeAccess, final boolean staticAccess) {
 		final NameAndAccess nameAndAccess = new NameAndAccess(name, writeAccess, staticAccess);
-		Map<NameAndAccess, ? extends TMember> _orCreateOwnedMembersByNameAndAccess = this.getOrCreateOwnedMembersByNameAndAccess();
-		return _orCreateOwnedMembersByNameAndAccess.get(nameAndAccess);
+		return this.getOrCreateOwnedMembersByNameAndAccess().get(nameAndAccess);
 	}
 
 	/**
@@ -261,8 +256,7 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 		boolean _tripleEquals = (_ownedMembersByNameAndAccess == null);
 		if (_tripleEquals) {
 			Map<NameAndAccess, ? extends TMember> _switchResult = null;
-			EList<MT> _ownedMembers = this.getOwnedMembers();
-			int _size = _ownedMembers.size();
+			int _size = this.getOwnedMembers().size();
 			switch (_size) {
 				case 0:
 					_switchResult = Collections.<NameAndAccess, TMember>emptyMap();
@@ -270,8 +264,7 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 				case 1:
 					Map<NameAndAccess, ? extends TMember> _xblockexpression = null;
 					{
-						EList<MT> _ownedMembers_1 = this.getOwnedMembers();
-						final MT singleMember = _ownedMembers_1.get(0);
+						final MT singleMember = this.getOwnedMembers().get(0);
 						final NameAndAccess[] nameAndAccess = NameAndAccess.of(singleMember);
 						Map<NameAndAccess, ? extends TMember> _xifexpression = null;
 						int _length = nameAndAccess.length;
@@ -280,25 +273,22 @@ public abstract class ContainerTypeImpl<MT extends TMember> extends TypeImpl imp
 							Map<NameAndAccess, TMember> _xblockexpression_1 = null;
 							{
 								final HashMap<NameAndAccess, TMember> map = new HashMap<NameAndAccess, TMember>();
-								NameAndAccess _get = nameAndAccess[0];
-								map.put(_get, singleMember);
-								NameAndAccess _get_1 = nameAndAccess[1];
-								map.put(_get_1, singleMember);
+								map.put(nameAndAccess[0], singleMember);
+								map.put(nameAndAccess[1], singleMember);
 								_xblockexpression_1 = Collections.<NameAndAccess, TMember>unmodifiableMap(map);
 							}
 							_xifexpression = _xblockexpression_1;
 						}
 						else {
-							NameAndAccess _get = nameAndAccess[0];
-							_xifexpression = Collections.<NameAndAccess, MT>singletonMap(_get, singleMember);
+							_xifexpression = Collections.<NameAndAccess, MT>singletonMap(nameAndAccess[0], singleMember);
 						}
 						_xblockexpression = _xifexpression;
 					}
 					_switchResult = _xblockexpression;
 					break;
 				default:
-					EList<MT> _ownedMembers_1 = this.getOwnedMembers();
-					MemberByNameAndAccessMap _memberByNameAndAccessMap = new MemberByNameAndAccessMap(_ownedMembers_1);
+					EList<MT> _ownedMembers = this.getOwnedMembers();
+					MemberByNameAndAccessMap _memberByNameAndAccessMap = new MemberByNameAndAccessMap(_ownedMembers);
 					_switchResult = Collections.<NameAndAccess, TMember>unmodifiableMap(_memberByNameAndAccessMap);
 					break;
 			}

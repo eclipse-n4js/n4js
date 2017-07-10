@@ -200,14 +200,13 @@ public class InlineTagImpl extends ContentNodeImpl implements InlineTag {
 	 * @generated
 	 */
 	public TagValue getValueByKey(final String theKey) {
-		EList<TagValue> _values = this.getValues();
 		final Function1<TagValue, Boolean> _function = new Function1<TagValue, Boolean>() {
 			public Boolean apply(final TagValue it) {
 				String _key = it.getKey();
 				return Boolean.valueOf(Objects.equal(_key, theKey));
 			}
 		};
-		return IterableExtensions.<TagValue>findFirst(_values, _function);
+		return IterableExtensions.<TagValue>findFirst(this.getValues(), _function);
 	}
 
 	/**

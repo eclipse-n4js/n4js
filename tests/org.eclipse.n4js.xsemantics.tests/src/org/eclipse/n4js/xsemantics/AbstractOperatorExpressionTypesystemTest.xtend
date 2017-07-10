@@ -17,9 +17,9 @@ import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import it.xsemantics.runtime.TraceUtils
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*

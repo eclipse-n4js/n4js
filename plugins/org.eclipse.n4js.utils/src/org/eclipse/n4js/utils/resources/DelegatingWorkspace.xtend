@@ -26,7 +26,6 @@ class DelegatingWorkspace implements IWorkspace {
 	@Delegate
 	val IWorkspace delegate = if (Platform.running) workspace else createNewProxyWorkspace
 
-	@Override
 	override void checkpoint(boolean build) {
 		// Delegating workspace is used only for external projects. It must not prepare any operation in the Eclipse workspace.
 	}

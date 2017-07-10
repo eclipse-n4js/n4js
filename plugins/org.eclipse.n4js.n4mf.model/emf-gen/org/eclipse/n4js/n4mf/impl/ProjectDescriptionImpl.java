@@ -927,8 +927,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			_xifexpression = XcoreCollectionLiterals.<TestedProject>emptyEList();
 		}
 		else {
-			TestedProjects _testedProjects_1 = this.getTestedProjects();
-			_xifexpression = _testedProjects_1.getTestedProjects();
+			_xifexpression = this.getTestedProjects().getTestedProjects();
 		}
 		return _xifexpression;
 	}
@@ -946,8 +945,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			_xifexpression = XcoreCollectionLiterals.<BootstrapModule>emptyEList();
 		}
 		else {
-			InitModules _initModules_1 = this.getInitModules();
-			_xifexpression = _initModules_1.getInitModules();
+			_xifexpression = this.getInitModules().getInitModules();
 		}
 		return _xifexpression;
 	}
@@ -965,8 +963,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			_xifexpression = XcoreCollectionLiterals.<ProjectReference>emptyEList();
 		}
 		else {
-			ImplementedProjects _implementedProjects_1 = this.getImplementedProjects();
-			_xifexpression = _implementedProjects_1.getImplementedProjects();
+			_xifexpression = this.getImplementedProjects().getImplementedProjects();
 		}
 		return _xifexpression;
 	}
@@ -984,8 +981,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			_xifexpression = XcoreCollectionLiterals.<ProjectDependency>emptyEList();
 		}
 		else {
-			ProjectDependencies _projectDependencies_1 = this.getProjectDependencies();
-			_xifexpression = _projectDependencies_1.getProjectDependencies();
+			_xifexpression = this.getProjectDependencies().getProjectDependencies();
 		}
 		return _xifexpression;
 	}
@@ -1003,8 +999,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			_xifexpression = XcoreCollectionLiterals.<ProvidedRuntimeLibraryDependency>emptyEList();
 		}
 		else {
-			ProvidedRuntimeLibraries _providedRuntimeLibraries_1 = this.getProvidedRuntimeLibraries();
-			_xifexpression = _providedRuntimeLibraries_1.getProvidedRuntimeLibraries();
+			_xifexpression = this.getProvidedRuntimeLibraries().getProvidedRuntimeLibraries();
 		}
 		return _xifexpression;
 	}
@@ -1022,8 +1017,7 @@ public class ProjectDescriptionImpl extends SimpleProjectDescriptionImpl impleme
 			_xifexpression = XcoreCollectionLiterals.<RequiredRuntimeLibraryDependency>emptyEList();
 		}
 		else {
-			RequiredRuntimeLibraries _requiredRuntimeLibraries_1 = this.getRequiredRuntimeLibraries();
-			_xifexpression = _requiredRuntimeLibraries_1.getRequiredRuntimeLibraries();
+			_xifexpression = this.getRequiredRuntimeLibraries().getRequiredRuntimeLibraries();
 		}
 		return _xifexpression;
 	}

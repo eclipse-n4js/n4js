@@ -12,7 +12,7 @@ package org.eclipse.n4js.ts.types.util
 
 import org.eclipse.n4js.ts.types.TClassifier
 import java.util.List
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 

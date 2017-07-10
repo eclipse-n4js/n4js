@@ -126,7 +126,7 @@ public interface N4FieldDeclaration extends AnnotableN4MemberDeclaration, TypedE
 	 * Returns true if the field is declared as const.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4JS.N4Modifier%>> _declaredModifiers = this.getDeclaredModifiers();\nreturn _declaredModifiers.contains(<%org.eclipse.n4js.n4JS.N4Modifier%>.CONST);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getDeclaredModifiers().contains(<%org.eclipse.n4js.n4JS.N4Modifier%>.CONST);'"
 	 * @generated
 	 */
 	boolean isConst();

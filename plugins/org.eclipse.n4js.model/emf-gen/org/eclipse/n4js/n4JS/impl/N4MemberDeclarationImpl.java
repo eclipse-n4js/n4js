@@ -171,8 +171,7 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	public boolean isDeclaredStatic() {
-		EList<N4Modifier> _declaredModifiers = this.getDeclaredModifiers();
-		return _declaredModifiers.contains(N4Modifier.STATIC);
+		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
 
 	/**
@@ -190,14 +189,13 @@ public abstract class N4MemberDeclarationImpl extends AnnotableElementImpl imple
 	 * @generated
 	 */
 	public boolean isDeclaredFinal() {
-		EList<Annotation> _annotations = this.getAnnotations();
 		final Function1<Annotation, Boolean> _function = new Function1<Annotation, Boolean>() {
 			public Boolean apply(final Annotation it) {
 				String _name = it.getName();
 				return Boolean.valueOf(Objects.equal(_name, "Final"));
 			}
 		};
-		return IterableExtensions.<Annotation>exists(_annotations, _function);
+		return IterableExtensions.<Annotation>exists(this.getAnnotations(), _function);
 	}
 
 	/**

@@ -279,13 +279,11 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 		TStructuralType _structuralType = this.getStructuralType();
 		boolean _tripleNotEquals = (_structuralType != null);
 		if (_tripleNotEquals) {
-			TStructuralType _structuralType_1 = this.getStructuralType();
-			_xifexpression = _structuralType_1.getOwnedMembers();
+			_xifexpression = this.getStructuralType().getOwnedMembers();
 		}
 		else {
 			EList<TStructMember> _xifexpression_1 = null;
-			EList<TStructMember> _astStructuralMembers = this.getAstStructuralMembers();
-			boolean _isEmpty = _astStructuralMembers.isEmpty();
+			boolean _isEmpty = this.getAstStructuralMembers().isEmpty();
 			boolean _not = (!_isEmpty);
 			if (_not) {
 				_xifexpression_1 = this.getAstStructuralMembers();
@@ -316,7 +314,6 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 	 * @generated
 	 */
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
-		EList<TypeVariableMapping> _postponedSubstitutions = this.getPostponedSubstitutions();
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {
 				TypeVariable _typeVar = null;
@@ -326,7 +323,7 @@ public class ThisTypeRefStructuralImpl extends ThisTypeRefImpl implements ThisTy
 				return Boolean.valueOf((_typeVar == typeVar));
 			}
 		};
-		return IterableExtensions.<TypeVariableMapping>exists(_postponedSubstitutions, _function);
+		return IterableExtensions.<TypeVariableMapping>exists(this.getPostponedSubstitutions(), _function);
 	}
 
 	/**

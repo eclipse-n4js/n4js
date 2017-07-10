@@ -36,12 +36,10 @@ class SoureContainerAwareDependencyTraverser extends DependencyTraverser<IN4JSSo
 
 		private static final SourceContainerAwareEquivalence INSTANCE = new SourceContainerAwareEquivalence();
 
-		@Override
 		override boolean doEquivalent(IN4JSSourceContainerAware a, IN4JSSourceContainerAware b) {
 			return if (null === a) b === null else Objects.equal(a.getLocation(), b.getLocation());
 		}
 
-		@Override
 		override int doHash(IN4JSSourceContainerAware t) {
 			return if (null === t) 0 else Objects.hashCode(t.getLocation());
 		}

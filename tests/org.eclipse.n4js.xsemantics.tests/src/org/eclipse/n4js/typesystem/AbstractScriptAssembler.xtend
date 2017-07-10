@@ -18,8 +18,8 @@ import org.eclipse.n4js.validation.JavaScriptVariant
 import java.util.HashMap
 import java.util.Map
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 
 import static org.junit.Assert.*
 import java.util.Arrays

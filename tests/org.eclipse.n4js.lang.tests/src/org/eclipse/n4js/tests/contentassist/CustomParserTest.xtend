@@ -18,12 +18,13 @@ import org.eclipse.n4js.ui.contentassist.CustomN4JSParser
 import org.eclipse.n4js.ui.contentassist.TokenSourceFactory
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
 import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.runner.RunWith
+import org.eclipse.xtext.xtext.RuleNames
 
 /**
  */
@@ -35,6 +36,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 	@Inject TokenSourceFactory tokenSourceFactory
 	@Inject ContentAssistTokenTypeMapper tokenMapper
 	@Inject RequiredRuleNameComputer ruleNameComputer
+	@Inject RuleNames ruleNames
 
 	@Inject extension ReflectExtensions
 
@@ -45,6 +47,8 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 			it.unorderedGroupHelper = this
 			it.initializeTokenTypes(tokenMapper, grammarAccess)
 			it.set('requiredRuleNameComputer', ruleNameComputer)
+ 			it.set('ruleNames', ruleNames)
+ 			it.initializeFor(ruleNames.allParserRules.head)
 		]
 	}
 

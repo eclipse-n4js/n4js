@@ -375,7 +375,7 @@ class DestructuringTransformation extends Transformation {
 	 * Returns a list of statements that are the root statements of the next outer variable environment directly
 	 * containing the given AST node.
 	 */
-	def private static EList<? super Statement> getContainingVariableEnvironmentContent(EObject astNode) {
+	def public static EList<? super Statement> getContainingVariableEnvironmentContent(EObject astNode) {
 		val vee = EcoreUtil2.getContainerOfType(astNode.eContainer, VariableEnvironmentElement);
 		if(vee===null) {
 			throw new IllegalArgumentException("given AST node does not have an outer variable environment");

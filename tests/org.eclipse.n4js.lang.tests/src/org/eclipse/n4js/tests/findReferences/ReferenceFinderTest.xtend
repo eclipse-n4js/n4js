@@ -23,9 +23,9 @@ import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.findReferences.IReferenceFinder
 import org.eclipse.xtext.findReferences.TargetURICollector
 import org.eclipse.xtext.findReferences.TargetURIs
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.resource.IReferenceDescription
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.junit.Assert

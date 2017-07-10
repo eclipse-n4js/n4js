@@ -80,7 +80,7 @@ public interface TGetter extends FieldAccessor, TMemberWithAccessModifier {
 	 * colon separated (return) type if declared.  Overrides TMember's method.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>(\"get \");\n<%java.lang.String%> _name = this.getName();\nstrb.append(_name);\nboolean _isOptional = this.isOptional();\nif (_isOptional)\n{\n\tstrb.append(\"?\");\n}\nstrb.append(\"()\");\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _declaredTypeRef = this.getDeclaredTypeRef();\nboolean _tripleNotEquals = (_declaredTypeRef != null);\nif (_tripleNotEquals)\n{\n\t<%java.lang.StringBuilder%> _append = strb.append(\": \");\n\t<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _declaredTypeRef_1 = this.getDeclaredTypeRef();\n\t<%java.lang.String%> _typeRefAsString = _declaredTypeRef_1.getTypeRefAsString();\n\t_append.append(_typeRefAsString);\n}\nreturn strb.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>(\"get \");\nstrb.append(this.getName());\nboolean _isOptional = this.isOptional();\nif (_isOptional)\n{\n\tstrb.append(\"?\");\n}\nstrb.append(\"()\");\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _declaredTypeRef = this.getDeclaredTypeRef();\nboolean _tripleNotEquals = (_declaredTypeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getDeclaredTypeRef().getTypeRefAsString());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getMemberAsString();

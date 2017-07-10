@@ -10,21 +10,16 @@
  */
 package org.eclipse.n4js.scoping.diagnosing
 
-import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
-import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.n4JS.ParenExpression
-import org.eclipse.n4js.n4JS.RelationalExpression
-import org.eclipse.n4js.n4JS.RelationalOperator
+import org.eclipse.xtext.diagnostics.DiagnosticMessage
+import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.resource.ErrorAwareLinkingService
-import org.eclipse.xtext.diagnostics.DiagnosticMessage
+import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.nodemodel.INode
 
 /**
  * This class provides enhanced error reporting in the case that
@@ -39,14 +34,10 @@ class N4JSScopingDiagnostician {
 	N4JSScopingConsumableMethodsDiagnosis consumableMethodsDiagnosis;
 
 	@Inject
-	N4JSScopingInstanceOfPrimitivTypeDiagnosis instanceOfPrimitiveTypeDiagnosis;
-
-	@Inject
 	ErrorAwareLinkingService linkingService;
 
 	@Inject
 	IQualifiedNameConverter qualifiedNameConverter;
-
 
 	/**
 	 * Returns a custom {@link DiagnosticMessage} for the given unresolvable reference.
@@ -72,28 +63,6 @@ class N4JSScopingDiagnostician {
 			return consumableMethodsDiagnosis.diagnose(name, context);
 		}
 	}
-
-	// Handle {@link IdentifierRef}s
-	private def dispatch DiagnosticMessage diagnose(QualifiedName name, IdentifierRef context, EReference reference) {
-		var container = context.eContainer;
-		var containingFeature = context.eContainingFeature();
-		// Skip all parenthesis-expression containers to allow
-		// for expressions like '((int))'
-		while (container instanceof ParenExpression) {
-			containingFeature = container.eContainmentFeature;
-			container = container.eContainer;
-		}
-		// Handle instanceof expressions
-		if (container instanceof RelationalExpression) {
-			// Check that the unresolved identifier is on the RHS of the
-			// operator and the operator is INSTANCEOF
-			if (container.op == RelationalOperator.INSTANCEOF &&
-				containingFeature == N4JSPackage.Literals.RELATIONAL_EXPRESSION__RHS) {
-				return instanceOfPrimitiveTypeDiagnosis.diagnose(name, container);
-			}
-		}
-	}
-
 
 	// Default dispatch method
 	private def dispatch DiagnosticMessage diagnose(QualifiedName name, EObject context, EReference reference) {

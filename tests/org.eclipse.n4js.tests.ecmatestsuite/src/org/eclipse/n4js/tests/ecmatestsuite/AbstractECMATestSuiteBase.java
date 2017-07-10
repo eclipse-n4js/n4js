@@ -12,15 +12,6 @@ package org.eclipse.n4js.tests.ecmatestsuite;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.junit4.serializer.SerializerTester;
-import org.eclipse.xtext.junit4.util.ParseHelper;
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.junit.Test;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-
 import org.eclipse.n4js.AbstractJSLibTest;
 import org.eclipse.n4js.JSLibSingleTestConfig;
 import org.eclipse.n4js.TestCodeProvider;
@@ -28,10 +19,17 @@ import org.eclipse.n4js.analysis.Analyser;
 import org.eclipse.n4js.analysis.NegativeAnalyser;
 import org.eclipse.n4js.analysis.PositiveAnalyser;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.testing.serializer.SerializerTestHelper;
+import org.eclipse.xtext.testing.util.ParseHelper;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
+import org.junit.Test;
+
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractECMATestSuiteBase extends AbstractJSLibTest {
 
 	/**
@@ -50,7 +48,7 @@ public abstract class AbstractECMATestSuiteBase extends AbstractJSLibTest {
 	protected ValidationTestHelper validationTestHelper;
 	@SuppressWarnings("javadoc")
 	@Inject
-	protected SerializerTester tester;
+	protected SerializerTestHelper tester;
 
 	/**
 	 * @param config

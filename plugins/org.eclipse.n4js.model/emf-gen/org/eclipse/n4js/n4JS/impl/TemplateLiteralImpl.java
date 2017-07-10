@@ -102,21 +102,15 @@ public class TemplateLiteralImpl extends PrimaryExpressionImpl implements Templa
 				boolean _matched = false;
 				if (expr instanceof Literal) {
 					_matched=true;
-					String _valueAsString = TemplateLiteralImpl.this.getValueAsString();
-					_switchResult = result.append(_valueAsString);
+					_switchResult = result.append(TemplateLiteralImpl.this.getValueAsString());
 				}
 				if (!_matched) {
-					StringBuilder _append = result.append("<<");
-					EClass _eClass = TemplateLiteralImpl.this.eClass();
-					String _name = _eClass.getName();
-					StringBuilder _append_1 = _append.append(_name);
-					_switchResult = _append_1.append(">>");
+					_switchResult = result.append("<<").append(TemplateLiteralImpl.this.eClass().getName()).append(">>");
 				}
 				return _switchResult;
 			}
 		};
 		final Function1<Expression, StringBuilder> appender = _function;
-		EList<Expression> _segments = this.getSegments();
 		final Function2<Boolean, Expression, Boolean> _function_1 = new Function2<Boolean, Expression, Boolean>() {
 			public Boolean apply(final Boolean isRaw, final Expression expression) {
 				if ((!(isRaw).booleanValue())) {
@@ -130,7 +124,7 @@ public class TemplateLiteralImpl extends PrimaryExpressionImpl implements Templa
 				return Boolean.valueOf((!(isRaw).booleanValue()));
 			}
 		};
-		IterableExtensions.<Expression, Boolean>fold(_segments, Boolean.valueOf(true), _function_1);
+		IterableExtensions.<Expression, Boolean>fold(this.getSegments(), Boolean.valueOf(true), _function_1);
 		result.append("`");
 		return result.toString();
 	}

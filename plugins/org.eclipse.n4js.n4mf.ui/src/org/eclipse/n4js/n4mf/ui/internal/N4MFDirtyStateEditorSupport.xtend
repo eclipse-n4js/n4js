@@ -23,7 +23,7 @@ import static org.eclipse.n4js.n4mf.utils.N4MFConstants.N4MF_MANIFEST
  */
 class N4MFDirtyStateEditorSupport extends DirtyStateEditorSupport {
 
-		@Override
+
 		override def processDelta(IResourceDescription.Delta delta, Resource context, List<Resource> result) {
 			val resourceSet = context.resourceSet;
 			// If represents a N4JS manifest file and the new resource description is not null, in other words, not deleted.

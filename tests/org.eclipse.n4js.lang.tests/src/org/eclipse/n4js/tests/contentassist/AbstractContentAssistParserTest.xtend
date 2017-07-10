@@ -18,9 +18,9 @@ import java.util.Collection
 import java.util.Set
 import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.Assert

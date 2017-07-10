@@ -13,9 +13,9 @@ package org.eclipse.n4js.ts.utils
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*

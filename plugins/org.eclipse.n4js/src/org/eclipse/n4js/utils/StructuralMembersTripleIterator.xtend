@@ -75,12 +75,10 @@ class StructuralMembersTripleIterator implements Iterator<StructuralMembersTripl
 		return new StructuralMembersTripleIterator(membersLeft, membersRight, leftStrategy, rightStrategy);
 	}
 
-	@Override
 	override hasNext() {
 		return nextTriple.present;
 	}
 
-	@Override
 	override next() {
 		if (!nextTriple.present) {
 			throw new NoSuchElementException;
@@ -207,7 +205,6 @@ class MembersByNameTypeAndAccessComparator implements Comparator<TMember> {
      *         first argument is less than, equal to, or greater than the
      *         second.
 	 */
-	@Override
 	override compare(TMember m1, TMember m2) {
 
 		if (m1 === null) {

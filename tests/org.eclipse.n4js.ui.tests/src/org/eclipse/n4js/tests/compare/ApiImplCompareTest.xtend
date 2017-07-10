@@ -17,8 +17,8 @@ import org.eclipse.n4js.internal.N4JSRuntimeCore
 import org.eclipse.n4js.projectModel.IN4JSCore
 import java.io.File
 import org.eclipse.emf.common.util.URI
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Before
 import org.junit.runner.RunWith
 

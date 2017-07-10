@@ -69,7 +69,7 @@ import com.google.inject.Inject;
  * method.
  *
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG_Test {
 
 	private static final String PROJECT_NAME = "GHOLD-120";

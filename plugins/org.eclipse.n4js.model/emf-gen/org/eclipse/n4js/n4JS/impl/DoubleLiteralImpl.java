@@ -56,8 +56,7 @@ public class DoubleLiteralImpl extends NumericLiteralImpl implements DoubleLiter
 	 * @generated
 	 */
 	public double toDouble() {
-		BigDecimal _value = this.getValue();
-		return _value.doubleValue();
+		return this.getValue().doubleValue();
 	}
 
 	/**
@@ -71,8 +70,7 @@ public class DoubleLiteralImpl extends NumericLiteralImpl implements DoubleLiter
 		if (_tripleEquals) {
 			return null;
 		}
-		BigDecimal _value_1 = this.getValue();
-		return _value_1.toString();
+		return this.getValue().toString();
 	}
 
 	/**
