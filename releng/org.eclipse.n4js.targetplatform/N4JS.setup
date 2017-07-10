@@ -524,9 +524,6 @@
 	<setupTask
 			xsi:type="projects:ProjectsBuildTask"
 			refresh="true"/>
-	<setupTask
-			xsi:type="projects:ProjectsBuildTask"
-			refresh="true"/>
 	<stream name="master"
 			label="Master"/>
 	<logicalProjectContainer
