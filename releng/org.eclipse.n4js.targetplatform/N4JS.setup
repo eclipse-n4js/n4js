@@ -6,6 +6,7 @@
 		xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
 		xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
 		xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
+		xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
 		xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
 		xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
 		xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
@@ -520,6 +521,9 @@
 		</workingSet>
 		<description>The dynamic working sets for ${scope.project.label}</description>
 	</setupTask>
+	<setupTask
+			xsi:type="projects:ProjectsBuildTask"
+			refresh="true"/>
 	<stream name="master"
 			label="Master"/>
 	<logicalProjectContainer
