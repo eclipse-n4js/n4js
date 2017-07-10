@@ -15,7 +15,7 @@ import org.eclipse.xtend.lib.macro.Active
 import org.eclipse.xtext.util.ITextRegion
 
 /**
- * Active annotation for injecting a the {@code script} given as a string
+ * Active annotation for injecting the {@code script} given as a string
  * and a {@link ITextRegion} instance with {@code selection} name to the method
  * using with the current annotation. The text region instance is calculated from
  * the optional {@link #selectedText} value. If the script does not contain
