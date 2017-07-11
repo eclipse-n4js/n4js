@@ -44,6 +44,7 @@ import static extension org.eclipse.xtext.xtext.generator.model.TypeReference.*
 import static extension org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenUtil.*
 import java.util.Set
 import com.google.common.collect.ImmutableMap
+import org.eclipse.xtend2.lib.StringConcatenationClient
 
 /**
  * Customization of the {@link XtextAntlrGeneratorFragment2} applying some massaging
@@ -227,7 +228,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 	/**
 	 * Produce the initial name mappings for the grammar. Handles parameterized rule calls.
 	 */
-	private def CharSequence initNameMappings(Grammar it) {
+	private def StringConcatenationClient initNameMappings(Grammar it) {
 		val RuleFilter filter = new RuleFilter();
 		filter.discardUnreachableRules = true
 		val RuleNames ruleNames = RuleNames.getRuleNames(it, true);
