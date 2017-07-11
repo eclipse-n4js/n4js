@@ -21,8 +21,27 @@ import com.google.common.base.Joiner;
  */
 public class FileChecker extends AbstractFileChecker {
 
+	private enum Mode {
+		NORMAL, XSEMANTICS, XPECT
+	}
+
+	private static final Mode MODE = Mode.XSEMANTICS;
+
+	private static final boolean FIX_FILE_ENDING = false;
+	private static final boolean FIX_TRAILING_WHITE_SPACE = false;
+
+	private static final String[] REPOS = { "n4js", "n4js-n4" }; // FIXME remove all references to "n4js-n4"
+	private static final String[] REPOS_MANDATORY = { "n4js" };
+
+	private static final String[] XSEMANTICS_REPOS = { "xsemantics" };
+	private static final String[] XSEMANTICS_REPOS_MANDATORY = XSEMANTICS_REPOS;
+
+	private static final String[] XPECT_REPOS = { "Xpect" };
+	private static final String[] XPECT_REPOS_MANDATORY = XPECT_REPOS;
+
 	/** Name used as vendor (in manifest.mf) and provider (in feature.xml). */
-	private static final String PROVIDER_NAME = "Eclipse N4JS Project";
+	private static final String PROVIDER_NAME = "Eclipse " + (MODE == Mode.XSEMANTICS ? "Xsemantics" : "N4JS")
+			+ " Project";
 	private static final String PROVIDER_NAME_N4 = "NumberFour AG";
 
 	private static final String FILE_NAME__DOT_PROJECT = ".project";
@@ -201,16 +220,64 @@ public class FileChecker extends AbstractFileChecker {
 			"plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts",
 	};
 
+	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xsemantics. */
+	private static final String[] XSEMANTICS_BANNED_WORDS_WHITELIST = {
+			FILE_NAME__NOTICE_HTML,
+			FILE_NAME__ABOUT_HTML,
+			FILE_NAME__ABOUT_HTML_TEMPLATE,
+			FILE_NAME__EPL,
+			"LICENSE",
+			"README.md",
+
+			/* The following 4 files introduce & handle the keyword "copyright" of the Xsemantics DSL. */
+			"plugins/it.xsemantics.dsl/model/custom/Xsemantics.ecore",
+			"plugins/it.xsemantics.dsl/model/custom/Xsemantics.genmodel",
+			"plugins/it.xsemantics.dsl/src/it/xsemantics/dsl/jvmmodel/XsemanticsJvmModelInferrer.xtend",
+			"plugins/it.xsemantics.dsl/src/it/xsemantics/dsl/Xsemantics.xtext",
+
+			/* The following 4 files contain documentation for keyword "copyright" of the Xsemantics DSL. */
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/contents/00-Main.html",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/contents/00-Main_12.html",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/contents/XsemanticsSyntax.html",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/xdoc/00-Main.xdoc",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/xdoc/XsemanticsSyntax.xdoc",
+
+			/* Two test files for keyword "copyright" of the Xsemantics DSL. */
+			"tests/it.xsemantics.dsl.tests/tests_input_files/header_test.xsemantics",
+			"tests/it.xsemantics.dsl.tests/src/it/xsemantics/dsl/tests/generator/XsemanticsGeneratedFileHeaderTest.xtend",
+	};
+
+	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xpect. */
+	private static final String[] XPECT_BANNED_WORDS_WHITELIST = {
+	};
+
 	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
 	private static final String[] COPYRIGHT_TEXT = {
-			"Copyright (c) 2016 NumberFour AG.",
+			// "Copyright (c) 2016 NumberFour AG.",
+			// "All rights reserved. This program and the accompanying materials",
+			// "are made available under the terms of the Eclipse Public License v1.0",
+			// "which accompanies this distribution, and is available at",
+			// "http://www.eclipse.org/legal/epl-v10.html",
+			// "",
+			// "Contributors:",
+			// " NumberFour AG - Initial API and implementation",
+
+			/* Xpect: */
+			// "Copyright (c) 2012 itemis AG (http://www.itemis.eu) and others.",
+			// "All rights reserved. This program and the accompanying materials",
+			// "are made available under the terms of the Eclipse Public License v1.0",
+			// "which accompanies this distribution, and is available at",
+			// "http://www.eclipse.org/legal/epl-v10.html",
+
+			/* Xsemantics: */
+			"Copyright (c) 2013-2017 Lorenzo Bettini.",
 			"All rights reserved. This program and the accompanying materials",
 			"are made available under the terms of the Eclipse Public License v1.0",
 			"which accompanies this distribution, and is available at",
 			"http://www.eclipse.org/legal/epl-v10.html",
 			"",
 			"Contributors:",
-			"  NumberFour AG - Initial API and implementation",
+			"  Lorenzo Bettini - Initial contribution and API",
 	};
 
 	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
@@ -220,9 +287,10 @@ public class FileChecker extends AbstractFileChecker {
 	 * Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header (derived from
 	 * {@link #COPYRIGHT_TEXT}).
 	 */
-	private static final String COPYRIGHT_HEADER = ("/**\n"
+	private static final String COPYRIGHT_HEADER = ("/*******************************************************************************\n"
 			+ " * " + Joiner.on("\n * ").join(COPYRIGHT_TEXT) + "\n"
-			+ " */").replace("\n * \n", "\n *\n");
+			+ " *******************************************************************************/").replace("\n * \n",
+					"\n *\n");
 
 	/** JS files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
 	private static final String COPYRIGHT_HEADER_JS = ("/*\n"
@@ -262,6 +330,11 @@ public class FileChecker extends AbstractFileChecker {
 
 	/** Generated JS files must start with this header (derived from {@link #COPYRIGHT_TEXT_SHORT}). */
 	private static final String COPYRIGHT_HEADER_JS_SHORT = "// " + COPYRIGHT_TEXT_SHORT;
+
+	/** TXT files must start with this header. */
+	private static final String COPYRIGHT_HEADER_TXT = "*******************************************************************************\n"
+			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
+			+ "*******************************************************************************";
 
 	/**
 	 * When letting Xtext generate the AST model (only applies to the RegEx language), it corrupts the copyright header
@@ -312,6 +385,30 @@ public class FileChecker extends AbstractFileChecker {
 	// ################################################################################################################
 
 	@Override
+	protected String[] getRepos() {
+		switch (MODE) {
+		case XSEMANTICS:
+			return XSEMANTICS_REPOS;
+		case XPECT:
+			return XPECT_REPOS;
+		default:
+			return REPOS;
+		}
+	}
+
+	@Override
+	protected String[] getReposMandatory() {
+		switch (MODE) {
+		case XSEMANTICS:
+			return XSEMANTICS_REPOS_MANDATORY;
+		case XPECT:
+			return XPECT_REPOS_MANDATORY;
+		default:
+			return REPOS_MANDATORY;
+		}
+	}
+
+	@Override
 	protected boolean isIgnored(Path path, String pathStr) {
 		if (path.endsWith("pom.xml"))
 			return false; // never ignore pom.xml!
@@ -327,6 +424,24 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	// ################################################################################################################
+
+	private static final void fixCopyrightHeader(Path path, String content) {
+		if (hasExtension(path, ".xml")) {
+			final int preambleLen = COPYRIGHT_HEADER_XML.indexOf('\n') + 1;
+			final String preamble = COPYRIGHT_HEADER_XML.substring(0, preambleLen);
+			if (!content.startsWith(preamble)) {
+				throw new IllegalStateException(
+						"cannot fix copyright header of file " + path + ": does not start with preamble:\n" + preamble);
+			}
+			final String contentToKeep = content.substring(preambleLen);
+			writeFile(path, COPYRIGHT_HEADER_XML + '\n' + contentToKeep);
+		} else if (hasExtension(path, ".mwe2")) {
+			writeFile(path, COPYRIGHT_HEADER + '\n' + content);
+		} else {
+			throw new UnsupportedOperationException(
+					"cannot fix copyright header due to supported file extension: " + path);
+		}
+	}
 
 	/**
 	 * Invoked for every file for which {@link #isIgnored(Path, String)} returns <code>false</code>.
@@ -349,6 +464,10 @@ public class FileChecker extends AbstractFileChecker {
 		if (hasExtension(path, concat(FILE_EXTENSIONS, moreCRHs))) {
 			if (hasCorrectCopyrightHeader(path, content)) {
 				report.setToHasCRH();
+			} else {
+				if (path.toString().endsWith(".mwe2")) {
+					fixCopyrightHeader(path, content);
+				}
 			}
 		}
 
@@ -408,12 +527,17 @@ public class FileChecker extends AbstractFileChecker {
 
 				if (len > 0 && (charLast != '\n' || char2ndToLast == '\n')) {
 					report.problems.add("does not end with a single empty line");
-					writeFile(path, fixFileEnding(content));
+					if (FIX_FILE_ENDING) {
+						writeFile(path, fixFileEnding(content));
+					}
 				}
 				int lineNumber;
 				if ((lineNumber = containsTrailingWhiteSpace(content)) > 0) {
-					report.problems.add("must not contain lines with trailing white-space (line " + lineNumber + ")");
-					writeFile(path, trimTrailingWhiteSpace(content));
+					report.problems
+							.add("must not contain lines with trailing white-space (line " + lineNumber + ")");
+					if (FIX_TRAILING_WHITE_SPACE) {
+						writeFile(path, trimTrailingWhiteSpace(content));
+					}
 				}
 			}
 			if (!isRegisteredAsThirdParty && !hasCorrectCopyrightHeader(path, content)) {
@@ -425,7 +549,8 @@ public class FileChecker extends AbstractFileChecker {
 					&& !content.contains(COPYRIGHT_GEN_MODEL_PROPERTY)) {
 				report.problems.add(".xcore file does not contain correct 'copyrightText' genModel property");
 			}
-			if (!isRegisteredAsThirdParty && !hasExtension(path, ".adoc") && content.contains("@" + "author")) {
+			if (!isRegisteredAsThirdParty && MODE != Mode.XSEMANTICS
+					&& !hasExtension(path, ".adoc") && content.contains("@" + "author")) {
 				report.problems.add("must not contain author tags");
 			}
 		}
@@ -574,6 +699,9 @@ public class FileChecker extends AbstractFileChecker {
 		} else if (hasExtension(path, ".sh", ".idx")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_SH, true);
 
+		} else if (hasExtension(path, ".txt")) {
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TXT, false);
+
 		} else {
 			int base = 0;
 			// two tweaks for Xtext/EMF-generated code:
@@ -624,7 +752,18 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static boolean canContainBannedWord(Path path) {
-		for (String whitelisted : BANNED_WORDS_WHITELIST) {
+		final String[] whiteList;
+		switch (MODE) {
+		case XSEMANTICS:
+			whiteList = XSEMANTICS_BANNED_WORDS_WHITELIST;
+			break;
+		case XPECT:
+			whiteList = XPECT_BANNED_WORDS_WHITELIST;
+			break;
+		default:
+			whiteList = BANNED_WORDS_WHITELIST;
+		}
+		for (String whitelisted : whiteList) {
 			if (path.endsWith(whitelisted)) {
 				return true;
 			}
@@ -660,8 +799,7 @@ public class FileChecker extends AbstractFileChecker {
 
 	/** Main method. */
 	public static void main(String[] args) {
-		final Path[] repoPaths = findRepoPaths(args);
-		final boolean success = new FileChecker().run(repoPaths);
+		final boolean success = new FileChecker().run(args);
 		System.exit(success ? 0 : 1);
 	}
 }
