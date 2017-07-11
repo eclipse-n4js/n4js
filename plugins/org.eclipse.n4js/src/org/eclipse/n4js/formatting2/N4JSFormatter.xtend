@@ -1203,7 +1203,7 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 
 	public override createTextReplacerMerger(){
 		return new IndentHandlingTextReplaceMerger(this);
-	}	
+	}
 
 	/** DEBUG-helper */
 	private def static String containmentStructure(EObject eo) {
