@@ -1,16 +1,22 @@
-/*******************************************************************************
- * Copyright (c) 2012 itemis AG (http://www.itemis.eu) and others.
+/**
+ * Copyright (c) 2016 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *******************************************************************************/
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
 package org.eclipse.n4js.xpect.methods.scoping;
 
 import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -25,14 +31,7 @@ import org.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
 
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TMember;
-
 /**
- * @author Joerg Reichert <joerg.reichert@itemis.de> - Initial contribution and API
- * @author Jens von Pilgrim <jens.von.pilgrim@numberfour.eu> - Refactored to use line numbers etc.
- *
  */
 public class ScopeXpectMethod extends ScopingTest {
 
