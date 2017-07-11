@@ -40,6 +40,7 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xtext.junit4" version="2.12.0.v20170519-0809"/>
       <unit id="org.eclipse.xtext.testing" version="2.12.0.v20170518-0959"/>
+      <unit id="org.eclipse.xtext.ui.testing" version="2.12.0.v20170519-0809"/>
       <unit id="org.eclipse.xtext.xbase" version="2.12.0.v20170519-0752"/>
       <unit id="org.eclipse.xtext.xtext.ui" version="2.12.0.v20170519-0809"/>
       <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.12.0"/>
