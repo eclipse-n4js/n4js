@@ -13,8 +13,8 @@ package org.eclipse.n4js.xpect.ui.methods.contentassist;
 import java.io.InputStream;
 
 import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
-import org.eclipse.xtext.junit4.util.ResourceLoadHelper;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.testing.util.ResourceLoadHelper;
 
 import com.google.inject.Inject;
 

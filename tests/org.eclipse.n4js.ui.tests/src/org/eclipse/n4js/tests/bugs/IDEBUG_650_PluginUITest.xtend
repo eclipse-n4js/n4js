@@ -20,7 +20,7 @@ import org.junit.Test
 
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.fullBuild
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
 
 /**
  * Test for checking that the correctly polyfilled non-accessor members will not have auto-generated{@code API not implemented yet} stubs.

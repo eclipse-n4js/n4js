@@ -30,8 +30,8 @@ import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
 import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,7 +69,7 @@ import com.google.inject.Inject;
  * method.
  *
  */
-@SuppressWarnings({ "restriction", "deprecation" })
+@SuppressWarnings({ "restriction" })
 public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG_Test {
 
 	private static final String PROJECT_NAME = "GHOLD-120";

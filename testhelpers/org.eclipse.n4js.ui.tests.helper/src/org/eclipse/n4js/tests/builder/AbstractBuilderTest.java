@@ -15,9 +15,9 @@ import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.root;
 import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 
 import java.util.List;
 
@@ -37,7 +37,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Event;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -45,6 +44,7 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -57,7 +57,6 @@ import com.google.inject.Injector;
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest extends Assert implements IResourceDescription.Event.Listener {
@@ -206,6 +205,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	}
 
 	/***/
+	@SuppressWarnings("restriction")
 	protected IWorkbenchPage getActivePage() {
 		IWorkbenchPage page = null;
 		if (org.eclipse.ui.internal.Workbench.getInstance() != null) {

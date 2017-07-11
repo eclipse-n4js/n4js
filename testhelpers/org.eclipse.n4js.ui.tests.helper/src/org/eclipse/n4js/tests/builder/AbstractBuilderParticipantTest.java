@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.builder;
 
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.monitor;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -61,7 +61,6 @@ import com.google.inject.Injector;
 
 /**
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
 	private ResourceSet resourceSet = null;
 

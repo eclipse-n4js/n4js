@@ -62,8 +62,6 @@ import junit.framework.AssertionFailedError;
  * deprecated this class is not used or documented in design document, use content assist xpect methods instead
  * {@link ContentAssistXpectMethod} or {@link QuickFixXpectMethod}
  */
-// @Deprecated
-@SuppressWarnings({ "restriction", "deprecation" })
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class })
 public class ProposalXpectMethod {
 	@Inject

@@ -10,17 +10,14 @@
  */
 package org.eclipse.n4js.xpect.ui.methods.contentassist;
 
-import org.eclipse.xtext.ISetup;
-import org.eclipse.xtext.junit4.AbstractXtextTests;
-import org.eclipse.xtext.junit4.ui.ContentAssistProcessorTestBuilder;
-import org.eclipse.xtext.junit4.util.ResourceLoadHelper;
+import org.eclipse.xtext.ui.testing.ContentAssistProcessorTestBuilder;
+import org.eclipse.xtext.ui.testing.util.ResourceLoadHelper;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 /**
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 public class N4ContentAssistProcessorTestBuilder extends ContentAssistProcessorTestBuilder {
 
 	/**
@@ -42,10 +39,11 @@ public class N4ContentAssistProcessorTestBuilder extends ContentAssistProcessorT
 		}
 	}
 
-	/***/
-	public N4ContentAssistProcessorTestBuilder(ISetup setupClazz, AbstractXtextTests tests) throws Exception {
-		super(setupClazz, tests);
-	}
+	// /***/
+	// Commented out since AbstractXtextTests is deprecated
+	// public N4ContentAssistProcessorTestBuilder(ISetup setupClazz, AbstractXtextTests tests) throws Exception {
+	// super(setupClazz, tests);
+	// }
 
 	/***/
 	public N4ContentAssistProcessorTestBuilder(Injector injector, ResourceLoadHelper helper) throws Exception {

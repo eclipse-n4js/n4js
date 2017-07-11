@@ -18,7 +18,7 @@ import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.n4js.tests.bugs.AbstractIDEBUG_Test.WorkspaceInitializer.createInitializer;
 import static org.eclipse.n4js.tests.util.ProjectUtils.importProject;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -30,7 +30,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Before;
 
 import com.google.common.base.Supplier;
@@ -40,7 +40,6 @@ import com.google.common.base.Supplier;
  *
  * Responsible for setting up the workspace for the tests.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 public abstract class AbstractIDEBUG_Test extends AbstractBuilderParticipantTest {
 
 	/** Shared logger instance. */

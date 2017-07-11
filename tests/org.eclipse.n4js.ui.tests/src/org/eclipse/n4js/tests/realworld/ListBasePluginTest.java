@@ -31,14 +31,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
 import org.eclipse.xtext.ui.MarkerTypes;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Test;
 
 /**
  * Tests parsing and validation of ListBase and underscore.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 
 	/**

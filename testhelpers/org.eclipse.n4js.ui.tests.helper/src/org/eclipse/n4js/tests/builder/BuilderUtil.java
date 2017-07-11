@@ -8,7 +8,7 @@
 package org.eclipse.n4js.tests.builder;
 
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.printMarker;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.printMarker;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;

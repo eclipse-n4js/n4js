@@ -12,9 +12,9 @@ package org.eclipse.n4js.tests.contentAssist;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.addNature;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.monitor;
-import static org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.deleteProject;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.deleteProject;
 
 import java.io.InputStream;
 
@@ -29,12 +29,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.xtext.junit4.ui.ContentAssistProcessorTestBuilder;
-import org.eclipse.xtext.junit4.util.ResourceLoadHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.ui.XtextProjectHelper;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.xtext.ui.testing.ContentAssistProcessorTestBuilder;
+import org.eclipse.xtext.ui.testing.util.ResourceLoadHelper;
 import org.eclipse.xtext.util.StringInputStream;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -47,7 +47,6 @@ import com.google.inject.Injector;
 /**
  * Abstract base class for CA tests. Uses a shared project for the entire test class.
  */
-@SuppressWarnings({ "restriction", "deprecation" })
 public abstract class AbstractN4JSContentAssistTest extends Assert implements ResourceLoadHelper {
 
 	private static final String PROJECT_NAME = "ContentAssistTestProject";

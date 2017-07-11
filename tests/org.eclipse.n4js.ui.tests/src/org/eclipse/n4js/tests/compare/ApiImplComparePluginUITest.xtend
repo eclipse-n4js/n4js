@@ -25,7 +25,7 @@ import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.addNature
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature
 
 import static extension org.eclipse.n4js.tests.util.ProjectUtils.*
 

@@ -32,7 +32,7 @@ import static org.eclipse.core.runtime.jobs.Job.getJobManager
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
-import static extension org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.*
+import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
