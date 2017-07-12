@@ -287,10 +287,15 @@ public class FileChecker extends AbstractFileChecker {
 	 * Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header (derived from
 	 * {@link #COPYRIGHT_TEXT}).
 	 */
-	private static final String COPYRIGHT_HEADER = ("/*******************************************************************************\n"
+	private static final String COPYRIGHT_HEADER = ("/**\n"
 			+ " * " + Joiner.on("\n * ").join(COPYRIGHT_TEXT) + "\n"
-			+ " *******************************************************************************/").replace("\n * \n",
+			+ " */").replace("\n * \n",
 					"\n *\n");
+
+	/** Same as {@link #COPYRIGHT_HEADER}, but with more asterisks. Used in Xsemantics. */
+	private static final String COPYRIGHT_HEADER_V2 = COPYRIGHT_HEADER
+			.replace("/**\n", "/*******************************************************************************\n")
+			.replace(" */", " *******************************************************************************/");
 
 	/** JS files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
 	private static final String COPYRIGHT_HEADER_JS = ("/*\n"
@@ -335,6 +340,10 @@ public class FileChecker extends AbstractFileChecker {
 	private static final String COPYRIGHT_HEADER_TXT = "*******************************************************************************\n"
 			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
 			+ "*******************************************************************************";
+
+	/** The copyright keyword together with the copyright text as optionally contained in .xsemantics files. */
+	private static final String COPYRIGHT_KEYWORD_IN_XSEMANTICS = "copyright\n"
+			+ '"' + Joiner.on("\n").join(COPYRIGHT_TEXT) + '"';
 
 	/**
 	 * When letting Xtext generate the AST model (only applies to the RegEx language), it corrupts the copyright header
@@ -520,17 +529,19 @@ public class FileChecker extends AbstractFileChecker {
 		if (content.contains("\r")) {
 			report.problems.add("contains invalid line endings (i.e. contains carriage return: '\\r')");
 		} else {
-			if (!hasExtension(path, ".xt") && !isBelowFolder(path.toString(), GENERATED_FOLDERS)) {
+			if (!hasExtension(path, ".xt") && !isBelowFolder(path.toString(), GENERATED_FOLDERS)
+					&& MODE != Mode.XSEMANTICS && MODE != Mode.XPECT) {
+				// check file end (single '\n' character)
 				final int len = content.length();
 				final char charLast = len > 0 ? content.charAt(len - 1) : 0;
 				final char char2ndToLast = len > 1 ? content.charAt(len - 2) : 0;
-
 				if (len > 0 && (charLast != '\n' || char2ndToLast == '\n')) {
 					report.problems.add("does not end with a single empty line");
 					if (FIX_FILE_ENDING) {
 						writeFile(path, fixFileEnding(content));
 					}
 				}
+				// check line end (no trailing white-space)
 				int lineNumber;
 				if ((lineNumber = containsTrailingWhiteSpace(content)) > 0) {
 					report.problems
@@ -726,6 +737,12 @@ public class FileChecker extends AbstractFileChecker {
 			if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER)) {
 				return base + COPYRIGHT_HEADER.length();
 			}
+			if (MODE == Mode.XSEMANTICS) {
+				// Xsemantics may also use the slightly different version COPYRIGHT_HEADER_V2
+				if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER_V2)) {
+					return base + COPYRIGHT_HEADER_V2.length();
+				}
+			}
 			return 0;
 		}
 	}
@@ -776,6 +793,7 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static String containsWord(Path path, String content, boolean skipCopyrightHeader, String... words) {
+		// skip copyright header (if requested)
 		if (skipCopyrightHeader) {
 			final int beginIndex = beginIndexWithoutCopyrightHeader(path, content);
 			content = content.substring(beginIndex);
@@ -786,6 +804,14 @@ public class FileChecker extends AbstractFileChecker {
 				content = content.replace(COPYRIGHT_GEN_MODEL_PROPERTY.replace(" 2016 ", " 2017 "), ""); // FIXME
 			}
 		}
+		// skip "copyright" keyword in .xsemantics files
+		if (hasExtension(path, ".xsemantics")) {
+			final int idx = content.indexOf(COPYRIGHT_KEYWORD_IN_XSEMANTICS);
+			if (idx >= 0) {
+				content = content.substring(0, idx) + content.substring(idx + COPYRIGHT_KEYWORD_IN_XSEMANTICS.length());
+			}
+		}
+		// actually check for contained words
 		for (String word : words) {
 			if (content.contains(word) || content.contains(word.toLowerCase()) // FIXME use containsIgnoreCase()
 					|| content.contains(word.toUpperCase())) {
