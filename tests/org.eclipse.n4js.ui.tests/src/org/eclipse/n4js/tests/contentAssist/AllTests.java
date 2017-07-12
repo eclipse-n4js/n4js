@@ -21,10 +21,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({
 		TypeReferenceContentAssistPluginUITest.class,
 		ContentAssistParserSanityTest.class,
-		ContentAssistBugTest.class,
-		InternalParserTest.class,
-		ParserTest.class,
-		ParserWithNodesTest.class })
+		ContentAssistBugPluginUITest.class })
 public class AllTests {
 	// empty
 }

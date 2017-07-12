@@ -13,10 +13,9 @@ package org.eclipse.n4js.tests.contentAssist
 import org.junit.Test
 import org.junit.Ignore
 
-class ContentAssistBugTest extends AbstractN4JSContentAssistTest {
+class ContentAssistBugPluginUITest extends AbstractN4JSContentAssistTest {
 
 	@Test def void testGB_39_01() throws Exception {
-		println('>>>>>>>>>>> testGB_39_01 <<<<<<<<<<')
 		newBuilder().append(
 			"class A {}
 			export public function* foo(req: A) { 
@@ -26,7 +25,6 @@ class ContentAssistBugTest extends AbstractN4JSContentAssistTest {
 	}
 	
 	@Test def void testGB_39_02() throws Exception {
-		println('>>>>>>>>>>> testGB_39_02 <<<<<<<<<<')
 		newBuilder().append(
 			"class A {}
 			function* foo(req: A) { 

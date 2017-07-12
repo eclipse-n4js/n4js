@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.contentassist;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Iterator;
@@ -336,10 +335,10 @@ public class CustomN4JSParser extends N4JSParser {
 	}
 
 	@Inject
-	ReflectExtensions reflector;
+	private final ReflectExtensions reflector = new ReflectExtensions();
 
 	@SuppressWarnings("unchecked")
-	private <T> T reflective(String methodName, Object... args) {
+	private <T> T reflect(String methodName, Object... args) {
 		try {
 			return (T) reflector.invoke(this, methodName, args);
 		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException
@@ -354,16 +353,14 @@ public class CustomN4JSParser extends N4JSParser {
 		if (element.getLookAhead() <= 1)
 			throw new IllegalArgumentException("lookahead may not be less than or equal to 1");
 		Collection<FollowElement> result = new ArrayList<>();
-		for (AbstractElement elementToParse : this.<Collection<AbstractElement>> reflective("getElementsToParse",
+		for (AbstractElement elementToParse : this.<Collection<AbstractElement>> reflect("getElementsToParse",
 				element)) {
 			// fix is here
 			elementToParse = unwrapSingleElementGroups(elementToParse);
 			// done
 			String ruleName = getRuleName(elementToParse);
-			String[][] allRuleNames = reflective("getRequiredRuleNames", ruleName, element.getParamStack(),
-					elementToParse);
+			String[][] allRuleNames = reflect("getRequiredRuleNames", ruleName, element.getParamStack(), elementToParse);
 			for (String[] ruleNames : allRuleNames) {
-				System.out.println(Arrays.deepToString(ruleNames));
 				for (int i = 0; i < ruleNames.length; i++) {
 					AbstractInternalContentAssistParser parser = createParser();
 					parser.setUnorderedGroupHelper(getUnorderedGroupHelper().get());
@@ -449,7 +446,7 @@ public class CustomN4JSParser extends N4JSParser {
 
 						});
 					}
-					Collection<FollowElement> elements = reflective("getFollowElements", parser, elementToParse,
+					Collection<FollowElement> elements = reflect("getFollowElements", parser, elementToParse,
 							ruleNames, i);
 					result.addAll(elements);
 				}
