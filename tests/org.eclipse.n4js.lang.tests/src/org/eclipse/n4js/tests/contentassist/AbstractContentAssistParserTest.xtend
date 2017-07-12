@@ -447,7 +447,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		followElements.forEach [
 			assertEquals(1, lookAhead)
 		]
-		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.parameterizedPropertyAccessExpressionTailAccess.typeArgumentsParserRuleCall_1))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.parameterizedPropertyAccessExpressionTailAccess.concreteTypeArgumentsParserRuleCall_1))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.identifierNameAccess.alternatives))
 	}
 
