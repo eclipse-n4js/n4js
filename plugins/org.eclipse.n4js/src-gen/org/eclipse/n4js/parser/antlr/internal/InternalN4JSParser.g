@@ -5129,6 +5129,100 @@ norm1_AnnotatedExpression returns [EObject current=null]
 	)
 ;
 
+// Entry rule entryRuleTypeVariable
+entryRuleTypeVariable returns [EObject current=null]:
+	{ newCompositeNode(grammarAccess.getTypeVariableRule()); }
+	iv_ruleTypeVariable=ruleTypeVariable
+	{ $current=$iv_ruleTypeVariable.current; }
+	EOF;
+
+// Rule TypeVariable
+ruleTypeVariable returns [EObject current=null]
+@init {
+	enterRule();
+}
+@after {
+	leaveRule();
+}:
+	(
+		(
+			(
+				(
+					lv_declaredCovariant_0_0=Out
+					{
+						newLeafNode(lv_declaredCovariant_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTypeVariableRule());
+						}
+						setWithLastConsumed($current, "declaredCovariant", true, "out");
+					}
+				)
+			)
+			    |
+			(
+				(
+					lv_declaredContravariant_1_0=In
+					{
+						newLeafNode(lv_declaredContravariant_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
+					}
+					{
+						if ($current==null) {
+							$current = createModelElement(grammarAccess.getTypeVariableRule());
+						}
+						setWithLastConsumed($current, "declaredContravariant", true, "in");
+					}
+				)
+			)
+		)?
+		(
+			(
+				{
+					newCompositeNode(grammarAccess.getTypeVariableAccess().getNameIdentifierOrThisParserRuleCall_1_0());
+				}
+				lv_name_2_0=ruleIdentifierOrThis
+				{
+					if ($current==null) {
+						$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
+					}
+					set(
+						$current,
+						"name",
+						lv_name_2_0,
+						"org.eclipse.n4js.N4JS.IdentifierOrThis");
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			otherlv_3=Extends
+			{
+				newLeafNode(otherlv_3, grammarAccess.getTypeVariableAccess().getExtendsKeyword_2_0());
+			}
+			(
+				(
+					{
+						newCompositeNode(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundTypeRefParserRuleCall_2_1_0());
+					}
+					lv_declaredUpperBound_4_0=ruleTypeRef
+					{
+						if ($current==null) {
+							$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
+						}
+						set(
+							$current,
+							"declaredUpperBound",
+							lv_declaredUpperBound_4_0,
+							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
+						afterParserOrEnumRuleCall();
+					}
+				)
+			)
+		)?
+	)
+;
+
 // Entry rule entryRuleFormalParameter
 entryRuleFormalParameter returns [EObject current=null]:
 	{ newCompositeNode(grammarAccess.getFormalParameterRule()); }
@@ -33561,7 +33655,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 							$current,
 							"ownedTypeVars",
 							lv_ownedTypeVars_9_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+							"org.eclipse.n4js.N4JS.TypeVariable");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -33585,7 +33679,7 @@ ruleFunctionTypeExpressionOLD returns [EObject current=null]
 								$current,
 								"ownedTypeVars",
 								lv_ownedTypeVars_11_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+								"org.eclipse.n4js.N4JS.TypeVariable");
 							afterParserOrEnumRuleCall();
 						}
 					)
@@ -34674,7 +34768,7 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 						$current,
 						"typeVars",
 						lv_typeVars_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+						"org.eclipse.n4js.N4JS.TypeVariable");
 					afterParserOrEnumRuleCall();
 				}
 			)
@@ -34698,7 +34792,7 @@ ruleTypeVariables[EObject in_current]  returns [EObject current=in_current]
 							$current,
 							"typeVars",
 							lv_typeVars_3_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeVariable");
+							"org.eclipse.n4js.N4JS.TypeVariable");
 						afterParserOrEnumRuleCall();
 					}
 				)
@@ -35456,99 +35550,6 @@ ruleWildcardNewNotation returns [EObject current=null]
 				)
 			)
 		)
-	)
-;
-
-// Entry rule entryRuleTypeVariable
-entryRuleTypeVariable returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getTypeVariableRule()); }
-	iv_ruleTypeVariable=ruleTypeVariable
-	{ $current=$iv_ruleTypeVariable.current; }
-	EOF;
-
-// Rule TypeVariable
-ruleTypeVariable returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				(
-					lv_declaredCovariant_0_0=Out
-					{
-						newLeafNode(lv_declaredCovariant_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
-					}
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTypeVariableRule());
-						}
-						setWithLastConsumed($current, "declaredCovariant", true, "out");
-					}
-				)
-			)
-			    |
-			(
-				(
-					lv_declaredContravariant_1_0=In
-					{
-						newLeafNode(lv_declaredContravariant_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
-					}
-					{
-						if ($current==null) {
-							$current = createModelElement(grammarAccess.getTypeVariableRule());
-						}
-						setWithLastConsumed($current, "declaredContravariant", true, "in");
-					}
-				)
-			)
-		)?
-		(
-			(
-				lv_name_2_0=RULE_IDENTIFIER
-				{
-					newLeafNode(lv_name_2_0, grammarAccess.getTypeVariableAccess().getNameIDENTIFIERTerminalRuleCall_1_0());
-				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getTypeVariableRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"name",
-						lv_name_2_0,
-						"org.eclipse.n4js.ts.TypeExpressions.IDENTIFIER");
-				}
-			)
-		)
-		(
-			otherlv_3=Extends
-			{
-				newLeafNode(otherlv_3, grammarAccess.getTypeVariableAccess().getExtendsKeyword_2_0());
-			}
-			(
-				(
-					{
-						newCompositeNode(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundTypeRefParserRuleCall_2_1_0());
-					}
-					lv_declaredUpperBound_4_0=ruleTypeRef
-					{
-						if ($current==null) {
-							$current = createModelElementForParent(grammarAccess.getTypeVariableRule());
-						}
-						set(
-							$current,
-							"declaredUpperBound",
-							lv_declaredUpperBound_4_0,
-							"org.eclipse.n4js.ts.TypeExpressions.TypeRef");
-						afterParserOrEnumRuleCall();
-					}
-				)
-			)
-		)?
 	)
 ;
 

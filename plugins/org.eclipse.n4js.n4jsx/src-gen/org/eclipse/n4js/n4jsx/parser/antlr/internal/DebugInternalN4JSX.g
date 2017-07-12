@@ -1157,6 +1157,20 @@ norm1_AnnotatedExpression:
 	)
 ;
 
+// Rule TypeVariable
+ruleTypeVariable:
+	(
+		'out'
+		    |
+		'in'
+	)?
+	ruleIdentifierOrThis
+	(
+		'extends'
+		ruleTypeRef
+	)?
+;
+
 // Rule FormalParameter
 ruleFormalParameter:
 	ruleBindingElementFragment
@@ -8655,20 +8669,6 @@ ruleWildcardNewNotation:
 		'in'
 		ruleTypeRef
 	)
-;
-
-// Rule TypeVariable
-ruleTypeVariable:
-	(
-		'out'
-		    |
-		'in'
-	)?
-	RULE_IDENTIFIER
-	(
-		'extends'
-		ruleTypeRef
-	)?
 ;
 
 // Rule BindingIdentifier

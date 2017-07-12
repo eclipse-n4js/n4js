@@ -22703,6 +22703,18 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
+	 *     TypeVariable returns TypeVariable
+	 *
+	 * Constraint:
+	 *     ((declaredCovariant?='out' | declaredContravariant?='in')? name=IdentifierOrThis declaredUpperBound=TypeRef?)
+	 */
+	protected void sequence_TypeVariable(ISerializationContext context, TypeVariable semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
 	 *     UnaryExpression<Yield> returns UnaryExpression
 	 *     UnaryExpression returns UnaryExpression
 	 *     MultiplicativeExpression<Yield> returns UnaryExpression

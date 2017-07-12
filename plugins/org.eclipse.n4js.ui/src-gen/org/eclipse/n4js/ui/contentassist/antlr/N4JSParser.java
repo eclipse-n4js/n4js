@@ -55,6 +55,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getAlternatives_0_0_0(), "rule__ArrowExpression__Alternatives_0_0_0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getAlternatives_1(), "rule__ArrowExpression__Alternatives_1");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedExpressionAccess().getAlternatives_1(), "rule__AnnotatedExpression__Alternatives_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getAlternatives_0(), "rule__TypeVariable__Alternatives_0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getAlternatives_0(), "rule__BindingElementFragment__Alternatives_0");
 			nameMappingsBuilder.put(grammarAccess.getRootStatementAccess().getAlternatives(), "rule__RootStatement__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getStatementAccess().getAlternatives(), "rule__Statement__Alternatives");
@@ -123,7 +124,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getTypeArgumentAccess().getAlternatives(), "rule__TypeArgument__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getWildcardAccess().getAlternatives_1(), "rule__Wildcard__Alternatives_1");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getAlternatives(), "rule__WildcardNewNotation__Alternatives");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getAlternatives_0(), "rule__TypeVariable__Alternatives_0");
 			nameMappingsBuilder.put(grammarAccess.getBindingIdentifierAccess().getAlternatives(), "rule__BindingIdentifier__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getIdentifierNameAccess().getAlternatives(), "rule__IdentifierName__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getReservedWordAccess().getAlternatives(), "rule__ReservedWord__Alternatives");
@@ -207,6 +207,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedExpressionAccess().getGroup(), "rule__AnnotatedExpression__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedExpressionAccess().getGroup_1_0(), "rule__AnnotatedExpression__Group_1_0__0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedExpressionAccess().getGroup_1_1(), "rule__AnnotatedExpression__Group_1_1__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getGroup(), "rule__TypeVariable__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getGroup_2(), "rule__TypeVariable__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getFormalParameterAccess().getGroup(), "rule__FormalParameter__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getGroup(), "rule__BindingElementFragment__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getGroup_0_1(), "rule__BindingElementFragment__Group_0_1__0");
@@ -573,8 +575,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getWildcardAccess().getGroup_1_1(), "rule__Wildcard__Group_1_1__0");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getGroup_0(), "rule__WildcardNewNotation__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getGroup_1(), "rule__WildcardNewNotation__Group_1__0");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getGroup(), "rule__TypeVariable__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getGroup_2(), "rule__TypeVariable__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getAnnotationsAssignment_1(), "rule__Script__AnnotationsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getScriptAccess().getScriptElementsAssignment_2(), "rule__Script__ScriptElementsAssignment_2");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getDeclaredModifiersAssignment_1_2_1_0_0(), "rule__AnnotatedScriptElement__DeclaredModifiersAssignment_1_2_1_0_0");
@@ -646,6 +646,10 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getExpressionDisguisedAsBlockAccess().getStatementsAssignment_1(), "rule__ExpressionDisguisedAsBlock__StatementsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getAssignmentExpressionStatementAccess().getExpressionAssignment(), "rule__AssignmentExpressionStatement__ExpressionAssignment");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedExpressionAccess().getNameAssignment_1_0_2(), "rule__AnnotatedExpression__NameAssignment_1_0_2");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getDeclaredCovariantAssignment_0_0(), "rule__TypeVariable__DeclaredCovariantAssignment_0_0");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getDeclaredContravariantAssignment_0_1(), "rule__TypeVariable__DeclaredContravariantAssignment_0_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getNameAssignment_1(), "rule__TypeVariable__NameAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_2_1(), "rule__TypeVariable__DeclaredUpperBoundAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getBindingPatternAssignment_0_0(), "rule__BindingElementFragment__BindingPatternAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getAnnotationsAssignment_0_1_0(), "rule__BindingElementFragment__AnnotationsAssignment_0_1_0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getVariadicAssignment_0_1_2(), "rule__BindingElementFragment__VariadicAssignment_0_1_2");
@@ -970,10 +974,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getDeclaredUpperBoundAssignment_0_1(), "rule__WildcardNewNotation__DeclaredUpperBoundAssignment_0_1");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getUsingInOutNotationAssignment_1_0(), "rule__WildcardNewNotation__UsingInOutNotationAssignment_1_0");
 			nameMappingsBuilder.put(grammarAccess.getWildcardNewNotationAccess().getDeclaredLowerBoundAssignment_1_1(), "rule__WildcardNewNotation__DeclaredLowerBoundAssignment_1_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getDeclaredCovariantAssignment_0_0(), "rule__TypeVariable__DeclaredCovariantAssignment_0_0");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getDeclaredContravariantAssignment_0_1(), "rule__TypeVariable__DeclaredContravariantAssignment_0_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getNameAssignment_1(), "rule__TypeVariable__NameAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_2_1(), "rule__TypeVariable__DeclaredUpperBoundAssignment_2_1");
 			nameMappings = nameMappingsBuilder.build();
 		}
 		return nameMappings.get(element);
