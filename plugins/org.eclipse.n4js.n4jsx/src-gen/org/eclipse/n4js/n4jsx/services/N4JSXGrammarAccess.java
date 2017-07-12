@@ -1086,6 +1086,17 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getAnnotatedExpressionAccess().getRule();
 	}
 	
+	//TypeVariable types::TypeVariable:
+	//	(declaredCovariant?='out' | declaredContravariant?='in')?
+	//	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?;
+	public N4JSGrammarAccess.TypeVariableElements getTypeVariableAccess() {
+		return gaN4JS.getTypeVariableAccess();
+	}
+	
+	public ParserRule getTypeVariableRule() {
+		return getTypeVariableAccess().getRule();
+	}
+	
 	//FormalParameter <Yield>:
 	//	{FormalParameter} BindingElementFragment<Yield>;
 	public N4JSGrammarAccess.FormalParameterElements getFormalParameterAccess() {
@@ -3364,7 +3375,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 	//FunctionTypeExpressionOLD FunctionTypeExpression:
 	//	{FunctionTypeExpression}
 	//	'{' ('@' 'This' '(' declaredThisType=TypeRefFunctionTypeExpression ')')?
-	//	'function' ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
+	//	'function' ('<' ownedTypeVars+=super::TypeVariable (',' ownedTypeVars+=super::TypeVariable)* '>')?
 	//	'(' TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 	//	'}';
 	public TypeExpressionsGrammarAccess.FunctionTypeExpressionOLDElements getFunctionTypeExpressionOLDAccess() {
@@ -3559,7 +3570,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment TypeVariables *:
-	//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
+	//	'<' typeVars+=super::TypeVariable (',' typeVars+=super::TypeVariable)* '>';
 	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
 		return gaTypeExpressions.getTypeVariablesAccess();
 	}
@@ -3700,17 +3711,6 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getWildcardNewNotationRule() {
 		return getWildcardNewNotationAccess().getRule();
-	}
-	
-	//TypeVariable:
-	//	(declaredCovariant?='out' | declaredContravariant?='in')?
-	//	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
-	public TypeExpressionsGrammarAccess.TypeVariableElements getTypeVariableAccess() {
-		return gaTypeExpressions.getTypeVariableAccess();
-	}
-	
-	public ParserRule getTypeVariableRule() {
-		return getTypeVariableAccess().getRule();
 	}
 	
 	///*

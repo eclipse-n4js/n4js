@@ -1205,7 +1205,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDeclaredUpperBoundAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cDeclaredUpperBoundTypeRefParserRuleCall_1_1_0 = (RuleCall)cDeclaredUpperBoundAssignment_1_1.eContents().get(0);
 		
-		//TypeVariable:
+		//@ Override TypeVariable:
 		//	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -2479,7 +2479,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTInterfaceAccess().getRule();
 	}
 	
-	//TypeVariable:
+	//@ Override TypeVariable:
 	//	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
 	public TypeVariableElements getTypeVariableAccess() {
 		return pTypeVariable;

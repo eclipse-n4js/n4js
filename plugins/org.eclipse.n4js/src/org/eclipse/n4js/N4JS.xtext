@@ -320,6 +320,12 @@ AnnotatedExpression <Yield> returns Expression:
 	)
 ;
 
+@Override
+TypeVariable returns types::TypeVariable:
+	(declaredCovariant?='out' | declaredContravariant?='in')?
+	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?
+;
+
 FormalParameter <Yield>:
 	{FormalParameter} BindingElementFragment<Yield>
 ;

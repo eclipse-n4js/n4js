@@ -3357,13 +3357,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             )
+	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -22684,6 +22684,18 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getTypeRefAnnotationArgumentAccess().getTypeRefTypeRefParserRuleCall_0(), semanticObject.getTypeRef());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TypeVariable returns TypeVariable
+	 *
+	 * Constraint:
+	 *     ((declaredCovariant?='out' | declaredContravariant?='in')? name=IdentifierOrThis declaredUpperBound=TypeRef?)
+	 */
+	protected void sequence_TypeVariable(ISerializationContext context, TypeVariable semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

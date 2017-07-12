@@ -267,7 +267,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     ('[' ']') | ('{' '}')
+	 *     ('{' '}') | ('[' ']')
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) (rule start)
@@ -301,7 +301,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'extends' | 'implements' | ','
+	 *     'extends' | ',' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     implementedInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) implementedInterfaceRefs+=ParameterizedTypeRefNominal
@@ -365,7 +365,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     ',' | 'extends' | 'implements'
+	 *     'extends' | ',' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
@@ -376,7 +376,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'extends' | 'implements'
+	 *     'implements' | 'extends'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal

@@ -2889,6 +2889,59 @@ norm1_AnnotatedExpression
 )
 ;
 
+// Entry rule entryRuleTypeVariable
+entryRuleTypeVariable
+	:
+	ruleTypeVariable
+	EOF;
+
+// Rule TypeVariable
+ruleTypeVariable
+@init {
+}:
+(
+	(
+		(
+			(
+				DeclaredCovariantOutKeyword_0_0_0=Out
+				 {
+					announce($DeclaredCovariantOutKeyword_0_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
+				}
+			)
+		)
+		    |
+		(
+			(
+				DeclaredContravariantInKeyword_0_1_0=In
+				 {
+					announce($DeclaredContravariantInKeyword_0_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
+				}
+			)
+		)
+	)?
+	(
+		(
+			NameIdentifierOrThisParserRuleCall_1_0=ruleIdentifierOrThis{
+				announce($NameIdentifierOrThisParserRuleCall_1_0.start, $NameIdentifierOrThisParserRuleCall_1_0.stop, grammarAccess.getTypeVariableAccess().getNameAssignment_1());
+			}
+		)
+	)
+	(
+		ExtendsKeyword_2_0=Extends
+		 {
+			announce($ExtendsKeyword_2_0, grammarAccess.getTypeVariableAccess().getExtendsKeyword_2_0());
+		}
+		(
+			(
+				DeclaredUpperBoundTypeRefParserRuleCall_2_1_0=ruleTypeRef{
+					announce($DeclaredUpperBoundTypeRefParserRuleCall_2_1_0.start, $DeclaredUpperBoundTypeRefParserRuleCall_2_1_0.stop, grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_2_1());
+				}
+			)
+		)
+	)?
+)
+;
+
 // Entry rule entryRuleFormalParameter
 entryRuleFormalParameter
 	:
@@ -20420,59 +20473,6 @@ ruleWildcardNewNotation
 			)
 		)
 	)
-)
-;
-
-// Entry rule entryRuleTypeVariable
-entryRuleTypeVariable
-	:
-	ruleTypeVariable
-	EOF;
-
-// Rule TypeVariable
-ruleTypeVariable
-@init {
-}:
-(
-	(
-		(
-			(
-				DeclaredCovariantOutKeyword_0_0_0=Out
-				 {
-					announce($DeclaredCovariantOutKeyword_0_0_0, grammarAccess.getTypeVariableAccess().getDeclaredCovariantOutKeyword_0_0_0());
-				}
-			)
-		)
-		    |
-		(
-			(
-				DeclaredContravariantInKeyword_0_1_0=In
-				 {
-					announce($DeclaredContravariantInKeyword_0_1_0, grammarAccess.getTypeVariableAccess().getDeclaredContravariantInKeyword_0_1_0());
-				}
-			)
-		)
-	)?
-	(
-		(
-			NameIDENTIFIERTerminalRuleCall_1_0=RULE_IDENTIFIER{
-				announce($NameIDENTIFIERTerminalRuleCall_1_0, grammarAccess.getTypeVariableAccess().getNameAssignment_1());
-			}
-		)
-	)
-	(
-		ExtendsKeyword_2_0=Extends
-		 {
-			announce($ExtendsKeyword_2_0, grammarAccess.getTypeVariableAccess().getExtendsKeyword_2_0());
-		}
-		(
-			(
-				DeclaredUpperBoundTypeRefParserRuleCall_2_1_0=ruleTypeRef{
-					announce($DeclaredUpperBoundTypeRefParserRuleCall_2_1_0.start, $DeclaredUpperBoundTypeRefParserRuleCall_2_1_0.stop, grammarAccess.getTypeVariableAccess().getDeclaredUpperBoundAssignment_2_1());
-				}
-			)
-		)
-	)?
 )
 ;
 
