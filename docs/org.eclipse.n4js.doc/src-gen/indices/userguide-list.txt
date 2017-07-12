@@ -1,5 +1,0 @@
-dist/eclipse-html/userguides/index.html
-dist/eclipse-html/userguides/license.html
-dist/eclipse-html/userguides/n4js-ide-setup.html
-dist/eclipse-html/userguides/npm-export-guide.html
-dist/eclipse-html/userguides/tutorial.html
