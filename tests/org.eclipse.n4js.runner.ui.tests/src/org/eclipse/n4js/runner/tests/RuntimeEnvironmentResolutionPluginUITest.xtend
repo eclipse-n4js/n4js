@@ -51,18 +51,15 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 		assertTrue('Platform is not running. These tests should be executed as JUnit Plug-in Test.', isRunning)
 	}
 
-	@Override
 	override createInjector() {
 		new N4JSUiInjectorProvider().injector;
 	}
 
-	@Override
 	override before() {
 		super.before()
 		clearWorkspace()
 	}
 
-	@Override
 	override protected createProjectWithManifest(String projectId, String manifestContent) {
 		val project = workspace.root.getProject(projectId)
 		assertFalse(project.exists)

@@ -98,14 +98,13 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * @generated
 	 */
 	public String getMarkerValue(final String theKey) {
-		EList<Marker> _markers = this.getMarkers();
 		final Function1<Marker, Boolean> _function = new Function1<Marker, Boolean>() {
 			public Boolean apply(final Marker it) {
 				String _key = it.getKey();
 				return Boolean.valueOf(Objects.equal(_key, theKey));
 			}
 		};
-		Marker _findFirst = IterableExtensions.<Marker>findFirst(_markers, _function);
+		Marker _findFirst = IterableExtensions.<Marker>findFirst(this.getMarkers(), _function);
 		String _value = null;
 		if (_findFirst!=null) {
 			_value=_findFirst.getValue();
@@ -119,7 +118,6 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * @generated
 	 */
 	public void setMarker(final String theKey, final String value) {
-		EList<Marker> _markers = this.getMarkers();
 		final Function1<Marker, Boolean> _function = new Function1<Marker, Boolean>() {
 			public Boolean apply(final Marker it) {
 				String _key = it.getKey();
@@ -127,14 +125,11 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 				return Boolean.valueOf(Objects.equal(_key, _key_1));
 			}
 		};
-		Marker marker = IterableExtensions.<Marker>findFirst(_markers, _function);
-		boolean _equals = Objects.equal(marker, null);
-		if (_equals) {
-			Marker _createMarker = DomFactory.eINSTANCE.createMarker();
-			marker = _createMarker;
+		Marker marker = IterableExtensions.<Marker>findFirst(this.getMarkers(), _function);
+		if ((marker == null)) {
+			marker = DomFactory.eINSTANCE.createMarker();
 			marker.setKey(theKey);
-			EList<Marker> _markers_1 = this.getMarkers();
-			_markers_1.add(marker);
+			this.getMarkers().add(marker);
 		}
 		marker.setValue(value);
 	}
@@ -145,13 +140,12 @@ public abstract class JSDocNodeImpl extends DocletElementImpl implements JSDocNo
 	 * @generated
 	 */
 	public boolean isMarkedAs(final String theKey, final String theValue) {
-		EList<Marker> _markers = this.getMarkers();
 		final Function1<Marker, Boolean> _function = new Function1<Marker, Boolean>() {
 			public Boolean apply(final Marker it) {
 				return Boolean.valueOf((Objects.equal(it.getKey(), theKey) && Objects.equal(it.getValue(), theValue)));
 			}
 		};
-		Marker _findFirst = IterableExtensions.<Marker>findFirst(_markers, _function);
+		Marker _findFirst = IterableExtensions.<Marker>findFirst(this.getMarkers(), _function);
 		return (_findFirst != null);
 	}
 

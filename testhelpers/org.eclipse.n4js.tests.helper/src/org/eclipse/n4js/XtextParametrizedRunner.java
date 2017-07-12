@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.xtext.junit4.IInjectorProvider;
-import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipse.xtext.junit4.internal.InjectorProviders;
+import org.eclipse.xtext.testing.IInjectorProvider;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.testing.internal.InjectorProviders;
 import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
@@ -37,7 +37,7 @@ import com.google.inject.Provider;
 
 /**
  *
- * we need to use {@link org.eclipse.xtext.junit4.XtextRunner} to get dependency injection working we need to use extend
+ * we need to use {@link org.eclipse.xtext.testing.XtextRunner} to get dependency injection working we need to use extend
  * {@link org.junit.runners.Suite} the same way {@link org.junit.runners.Parameterized} does to get parameters working
  * following is naive merge between two.
  *
@@ -135,7 +135,7 @@ public final class XtextParametrizedRunner extends Suite {
 
 		/**
 		 * Implements behavior from: org.junit.runners.Parameterized$TestClassRunnerForParameters
-		 * org.eclipse.xtext.junit4.XtextRunner
+		 * org.eclipse.xtext.testing.XtextRunner
 		 */
 		@Override
 		public Object createTest() throws Exception {
@@ -148,7 +148,7 @@ public final class XtextParametrizedRunner extends Suite {
 				object = createTestUsingConstructorInjection();
 			}
 
-			// Functionality of org.eclipse.xtext.junit4.XtextRunner
+			// Functionality of org.eclipse.xtext.testing.XtextRunner
 			IInjectorProvider injectorProvider = getOrCreateInjectorProvider();
 			if (injectorProvider != null) {
 				Injector injector = injectorProvider.getInjector();
@@ -159,7 +159,7 @@ public final class XtextParametrizedRunner extends Suite {
 		}
 
 		/**
-		 * Implements behavior from: org.eclipse.xtext.junit4.XtextRunner
+		 * Implements behavior from: org.eclipse.xtext.testing.XtextRunner
 		 */
 		private Object createTestUsingConstructorInjection() throws Exception {
 			return getTestClass().getOnlyConstructor().newInstance(fParameters);

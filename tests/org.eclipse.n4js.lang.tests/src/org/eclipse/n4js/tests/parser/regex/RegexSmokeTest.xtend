@@ -13,8 +13,8 @@ package org.eclipse.n4js.tests.parser.regex
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.analysis.SmokeTester
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.runner.RunWith
 
 /**

@@ -17,7 +17,7 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.emf.common.util.URI
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.Test

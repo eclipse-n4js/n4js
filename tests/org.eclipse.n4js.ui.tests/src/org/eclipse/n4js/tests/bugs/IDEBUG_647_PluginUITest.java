@@ -23,7 +23,7 @@ import org.junit.Test;
 /**
  * Class for checking API implementation compilation for static polyfilled modules.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class IDEBUG_647_PluginUITest extends AbstractIDEBUG_Test {
 
 	/***/

@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.ecmatestsuite;
 
-import org.eclipse.xtext.junit4.InjectWith;
+import org.eclipse.xtext.testing.InjectWith;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

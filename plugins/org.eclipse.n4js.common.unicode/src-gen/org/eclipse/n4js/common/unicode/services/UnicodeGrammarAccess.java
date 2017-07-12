@@ -151,7 +151,7 @@ public class UnicodeGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal fragment ML_COMMENT_FRAGMENT:
-	//	'/ *'->'* /';
+	//	'/*'->'*/';
 	public TerminalRule getML_COMMENT_FRAGMENTRule() {
 		return tML_COMMENT_FRAGMENT;
 	}

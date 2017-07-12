@@ -175,7 +175,7 @@ class SimpleProjectDescription {
 	 */
 	String projectId
 	op String getVendorId() {
-		return if (declaredVendorId != null) declaredVendorId else (eContainer?.eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
+		return if (declaredVendorId !== null) declaredVendorId else (eContainer?.eContainer?.eContainer as ProjectDescription)?.declaredVendorId;
 	}
 }
 

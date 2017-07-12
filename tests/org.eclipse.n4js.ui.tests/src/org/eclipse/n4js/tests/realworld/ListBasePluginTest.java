@@ -28,18 +28,17 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.junit.Test;
 
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
-import org.eclipse.n4js.validation.IssueCodes;
-
 /**
  * Tests parsing and validation of ListBase and underscore.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 
 	/**

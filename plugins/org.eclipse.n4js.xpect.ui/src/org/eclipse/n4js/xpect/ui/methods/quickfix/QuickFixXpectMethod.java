@@ -25,6 +25,18 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.tests.util.EditorsUtil;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
+import org.eclipse.n4js.xpect.common.ResourceTweaker;
+import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
+import org.eclipse.n4js.xpect.config.Config;
+import org.eclipse.n4js.xpect.config.VarDef;
+import org.eclipse.n4js.xpect.config.XpEnvironmentData;
+import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper;
+import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
+import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -59,19 +71,6 @@ import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResourceValida
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.tests.util.EditorsUtil;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.common.ResourceTweaker;
-import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
-import org.eclipse.n4js.xpect.config.Config;
-import org.eclipse.n4js.xpect.config.VarDef;
-import org.eclipse.n4js.xpect.config.XpEnvironmentData;
-import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper;
-import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
-import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
 
 /**
  * Provides XPEXT test methods for quick fixes
@@ -213,8 +212,10 @@ public class QuickFixXpectMethod {
 
 				// Check for no other Issues
 				if ("fileValid".equals(mode)) {
-					List<Issue> remainingIssues = trVal.validateDelegate(resource, CheckMode.ALL,
-							CancelIndicator.NullImpl);
+					List<Issue> remainingIssues = trVal.validateDelegate(resource,
+							CheckMode.ALL,
+							CancelIndicator.NullImpl,
+							null);
 					assertEquals("Expecting all issues resolved, but got still left: " + remainingIssues, 0,
 							remainingIssues.size());
 				}

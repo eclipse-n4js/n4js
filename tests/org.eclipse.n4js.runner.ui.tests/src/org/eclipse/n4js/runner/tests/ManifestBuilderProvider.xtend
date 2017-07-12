@@ -25,7 +25,6 @@ class ManifestBuilderProvider implements Provider<ManifestBuilder> {
 	@Inject
 	Provider<ManifestBuilder> delegate
 
-	@Override
 	override get() {
 		delegate.get
 	}

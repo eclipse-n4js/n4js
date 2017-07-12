@@ -24,6 +24,17 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateProposal;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
+import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
+import org.eclipse.n4js.xpect.config.Config;
+import org.eclipse.n4js.xpect.config.VarDef;
+import org.eclipse.n4js.xpect.config.XpEnvironmentData;
+import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
+import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
+import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilder;
+import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;
+import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
+import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.parser.IParseResult;
 import org.eclipse.xtext.parser.IParser;
@@ -43,17 +54,6 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
-import org.eclipse.n4js.xpect.config.Config;
-import org.eclipse.n4js.xpect.config.VarDef;
-import org.eclipse.n4js.xpect.config.XpEnvironmentData;
-import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
-import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
-import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilder;
-import org.eclipse.n4js.xpect.ui.methods.contentassist.N4ContentAssistProcessorTestBuilderHelper;
-import org.eclipse.n4js.xpect.ui.methods.contentassist.RegionWithCursor;
-import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import junit.framework.AssertionFailedError;
 
 /**
@@ -63,7 +63,7 @@ import junit.framework.AssertionFailedError;
  * {@link ContentAssistXpectMethod} or {@link QuickFixXpectMethod}
  */
 // @Deprecated
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class })
 public class ProposalXpectMethod {
 	@Inject

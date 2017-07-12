@@ -20,10 +20,8 @@
 
 /* XPECT errors ---
 "Variable NaN shadows field NaN from global scope." at "NaN"
-"Variable names should start with lower case letter." at "NaN"
 ---
   XPECT warnings---
-"Variable NaN shadows field NaN from global scope." at "NaN"
 "Variable names should start with lower case letter." at "NaN"
 --- */
 var NaN;
@@ -32,12 +30,10 @@ var NaN;
 function Infinity(){};
 
 /* XPECT errors ---
-"Class names should start with upper case letter." at "undefined"
 "Class undefined shadows field undefined from global scope." at "undefined"
 ---
 // XPECT warnings---
 "Class names should start with upper case letter." at "undefined"
-"Class undefined shadows field undefined from global scope." at "undefined"
 --- */
 class undefined{};
 
@@ -52,31 +48,25 @@ class CparseInt{
 };
 
 /* XPECT errors ---
-"Interface names should start with upper case letter." at "parseFloat"
 "Interface parseFloat shadows method parseFloat from global scope." at "parseFloat"
 ---
 // XPECT warnings---
 "Interface names should start with upper case letter." at "parseFloat"
-"Interface parseFloat shadows method parseFloat from global scope." at "parseFloat"
 --- */
 interface parseFloat{};
 
 /* XPECT errors ---
 "Interface isNaN shadows method isNaN from global scope." at "isNaN"
-"Interface names should start with upper case letter." at "isNaN"
 ---
 // XPECT warnings---
-"Interface isNaN shadows method isNaN from global scope." at "isNaN"
 "Interface names should start with upper case letter." at "isNaN"
 --- */
 interface isNaN{};
 
 /* XPECT errors ---
 "Enum isFinite shadows method isFinite from global scope." at "isFinite"
-"Enum names should start with upper case letter." at "isFinite"
 ---
 // XPECT warnings---
-"Enum isFinite shadows method isFinite from global scope." at "isFinite"
 "Enum names should start with upper case letter." at "isFinite"
 --- */
 enum isFinite{a};

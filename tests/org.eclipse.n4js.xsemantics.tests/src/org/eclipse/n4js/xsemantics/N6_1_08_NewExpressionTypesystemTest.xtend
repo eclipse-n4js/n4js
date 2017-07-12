@@ -12,9 +12,9 @@ package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
 import org.eclipse.n4js.validation.JavaScriptVariant
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.eclipse.n4js.N4JSInjectorProviderWithIssueSuppression

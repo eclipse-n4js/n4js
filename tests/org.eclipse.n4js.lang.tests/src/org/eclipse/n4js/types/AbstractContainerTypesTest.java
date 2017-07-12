@@ -11,7 +11,7 @@
 package org.eclipse.n4js.types;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.xtext.junit4.util.ParseHelper;
+import org.eclipse.xtext.testing.util.ParseHelper;
 import org.junit.Assert;
 
 import com.google.inject.Inject;

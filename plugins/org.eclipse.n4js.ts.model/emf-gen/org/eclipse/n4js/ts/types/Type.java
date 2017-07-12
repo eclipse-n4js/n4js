@@ -159,7 +159,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * this method is introduced to simplify client code and reduce the number of instance-of cascades.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.ts.types.TypeVariable%>> _typeVars = this.getTypeVars();\nboolean _isEmpty = _typeVars.isEmpty();\nreturn (!_isEmpty);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isEmpty = this.getTypeVars().isEmpty();\nreturn (!_isEmpty);'"
 	 * @generated
 	 */
 	boolean isGeneric();
@@ -186,7 +186,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * For details see {@link TypeVariable#getVariance()}.
 	 * <!-- end-model-doc -->
 	 * @model dataType="org.eclipse.n4js.ts.types.Variance" unique="false" idxUnique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.util.Variance%> _xifexpression = null;\nif (((idx >= 0) && (idx < this.getTypeVars().size())))\n{\n\t<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.ts.types.TypeVariable%>> _typeVars = this.getTypeVars();\n\t<%org.eclipse.n4js.ts.types.TypeVariable%> _get = _typeVars.get(idx);\n\t_xifexpression = _get.getVariance();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.types.util.Variance%> _xifexpression = null;\nif (((idx >= 0) && (idx < this.getTypeVars().size())))\n{\n\t_xifexpression = this.getTypeVars().get(idx).getVariance();\n}\nelse\n{\n\t_xifexpression = null;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	Variance getVarianceOfTypeVar(int idx);
@@ -211,7 +211,7 @@ public interface Type extends TExportableElement, TAnnotableElement, Versionable
 	 * As the returned string is used for comparison in tests, this method should not be changed.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _xifexpression = null;\nboolean _isGeneric = this.isGeneric();\nif (_isGeneric)\n{\n\t<%java.lang.String%> _name = this.getName();\n\t<%java.lang.String%> _plus = (_name + \"<\");\n\t<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.ts.types.TypeVariable%>> _typeVars = this.getTypeVars();\n\tfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>>()\n\t{\n\t\tpublic <%java.lang.String%> apply(final <%org.eclipse.n4js.ts.types.TypeVariable%> it)\n\t\t{\n\t\t\treturn it.getTypeAsString();\n\t\t}\n\t};\n\t<%org.eclipse.emf.common.util.EList%><<%java.lang.String%>> _map = <%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%>.<<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>>map(_typeVars, _function);\n\t<%java.lang.String%> _join = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.join(_map, \",\");\n\t<%java.lang.String%> _plus_1 = (_plus + _join);\n\t_xifexpression = (_plus_1 + \">\");\n}\nelse\n{\n\t_xifexpression = this.getName();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _xifexpression = null;\nboolean _isGeneric = this.isGeneric();\nif (_isGeneric)\n{\n\t<%java.lang.String%> _name = this.getName();\n\t<%java.lang.String%> _plus = (_name + \"<\");\n\tfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>>()\n\t{\n\t\tpublic <%java.lang.String%> apply(final <%org.eclipse.n4js.ts.types.TypeVariable%> it)\n\t\t{\n\t\t\treturn it.getTypeAsString();\n\t\t}\n\t};\n\t<%java.lang.String%> _join = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.join(<%org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions%>.<<%org.eclipse.n4js.ts.types.TypeVariable%>, <%java.lang.String%>>map(this.getTypeVars(), _function), \",\");\n\t<%java.lang.String%> _plus_1 = (_plus + _join);\n\t_xifexpression = (_plus_1 + \">\");\n}\nelse\n{\n\t_xifexpression = this.getName();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	String getTypeAsString();

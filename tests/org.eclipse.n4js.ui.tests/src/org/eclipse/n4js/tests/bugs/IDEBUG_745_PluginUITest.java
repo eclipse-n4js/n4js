@@ -18,15 +18,14 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.junit.Test;
-
 import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.junit.Test;
 
 /**
  * Class for checking whether the order of the source containers influences the indexing order and the scoping for
  * imports.
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public class IDEBUG_745_PluginUITest extends AbstractIDEBUG_Test {
 
 	/***/

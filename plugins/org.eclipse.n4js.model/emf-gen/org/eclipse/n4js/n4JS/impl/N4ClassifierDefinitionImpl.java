@@ -106,15 +106,13 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public EList<N4MemberDeclaration> getOwnedMembers() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		Iterable<N4MemberDeclaration> _filter = Iterables.<N4MemberDeclaration>filter(_ownedMembersRaw, N4MemberDeclaration.class);
 		final Function1<N4MemberDeclaration, Boolean> _function = new Function1<N4MemberDeclaration, Boolean>() {
 			public Boolean apply(final N4MemberDeclaration it) {
 				boolean _isCallableConstructor = it.isCallableConstructor();
 				return Boolean.valueOf((!_isCallableConstructor));
 			}
 		};
-		final Iterable<N4MemberDeclaration> methods = IterableExtensions.<N4MemberDeclaration>filter(_filter, _function);
+		final Iterable<N4MemberDeclaration> methods = IterableExtensions.<N4MemberDeclaration>filter(Iterables.<N4MemberDeclaration>filter(this.getOwnedMembersRaw(), N4MemberDeclaration.class), _function);
 		List<N4MemberDeclaration> _list = IterableExtensions.<N4MemberDeclaration>toList(methods);
 		return new BasicEList<N4MemberDeclaration>(_list);
 	}
@@ -125,14 +123,12 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public N4MethodDeclaration getOwnedCtor() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		Iterable<N4MethodDeclaration> _filter = Iterables.<N4MethodDeclaration>filter(_ownedMembersRaw, N4MethodDeclaration.class);
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
 				return Boolean.valueOf(it.isConstructor());
 			}
 		};
-		return IterableExtensions.<N4MethodDeclaration>findFirst(_filter, _function);
+		return IterableExtensions.<N4MethodDeclaration>findFirst(Iterables.<N4MethodDeclaration>filter(this.getOwnedMembersRaw(), N4MethodDeclaration.class), _function);
 	}
 
 	/**
@@ -141,14 +137,12 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public N4MethodDeclaration getOwnedCallableCtor() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		Iterable<N4MethodDeclaration> _filter = Iterables.<N4MethodDeclaration>filter(_ownedMembersRaw, N4MethodDeclaration.class);
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
 				return Boolean.valueOf(it.isCallableConstructor());
 			}
 		};
-		return IterableExtensions.<N4MethodDeclaration>findFirst(_filter, _function);
+		return IterableExtensions.<N4MethodDeclaration>findFirst(Iterables.<N4MethodDeclaration>filter(this.getOwnedMembersRaw(), N4MethodDeclaration.class), _function);
 	}
 
 	/**
@@ -157,14 +151,12 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public EList<N4MethodDeclaration> getOwnedMethods() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		Iterable<N4MethodDeclaration> _filter = Iterables.<N4MethodDeclaration>filter(_ownedMembersRaw, N4MethodDeclaration.class);
 		final Function1<N4MethodDeclaration, Boolean> _function = new Function1<N4MethodDeclaration, Boolean>() {
 			public Boolean apply(final N4MethodDeclaration it) {
 				return Boolean.valueOf(((!it.isConstructor()) && (!it.isCallableConstructor())));
 			}
 		};
-		final Iterable<N4MethodDeclaration> methods = IterableExtensions.<N4MethodDeclaration>filter(_filter, _function);
+		final Iterable<N4MethodDeclaration> methods = IterableExtensions.<N4MethodDeclaration>filter(Iterables.<N4MethodDeclaration>filter(this.getOwnedMembersRaw(), N4MethodDeclaration.class), _function);
 		List<N4MethodDeclaration> _list = IterableExtensions.<N4MethodDeclaration>toList(methods);
 		return new BasicEList<N4MethodDeclaration>(_list);
 	}
@@ -175,8 +167,7 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public EList<N4FieldDeclaration> getOwnedFields() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		final Iterable<N4FieldDeclaration> fields = Iterables.<N4FieldDeclaration>filter(_ownedMembersRaw, N4FieldDeclaration.class);
+		final Iterable<N4FieldDeclaration> fields = Iterables.<N4FieldDeclaration>filter(this.getOwnedMembersRaw(), N4FieldDeclaration.class);
 		List<N4FieldDeclaration> _list = IterableExtensions.<N4FieldDeclaration>toList(fields);
 		return new BasicEList<N4FieldDeclaration>(_list);
 	}
@@ -187,8 +178,7 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public EList<N4GetterDeclaration> getOwnedGetters() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		final Iterable<N4GetterDeclaration> getters = Iterables.<N4GetterDeclaration>filter(_ownedMembersRaw, N4GetterDeclaration.class);
+		final Iterable<N4GetterDeclaration> getters = Iterables.<N4GetterDeclaration>filter(this.getOwnedMembersRaw(), N4GetterDeclaration.class);
 		List<N4GetterDeclaration> _list = IterableExtensions.<N4GetterDeclaration>toList(getters);
 		return new BasicEList<N4GetterDeclaration>(_list);
 	}
@@ -199,8 +189,7 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	 * @generated
 	 */
 	public EList<N4SetterDeclaration> getOwnedSetters() {
-		EList<N4MemberDeclaration> _ownedMembersRaw = this.getOwnedMembersRaw();
-		final Iterable<N4SetterDeclaration> setters = Iterables.<N4SetterDeclaration>filter(_ownedMembersRaw, N4SetterDeclaration.class);
+		final Iterable<N4SetterDeclaration> setters = Iterables.<N4SetterDeclaration>filter(this.getOwnedMembersRaw(), N4SetterDeclaration.class);
 		List<N4SetterDeclaration> _list = IterableExtensions.<N4SetterDeclaration>toList(setters);
 		return new BasicEList<N4SetterDeclaration>(_list);
 	}

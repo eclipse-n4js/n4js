@@ -34,6 +34,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -55,14 +59,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.tests.util.ProjectUtils;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-
 /**
  */
-@SuppressWarnings("restriction")
+@SuppressWarnings({ "restriction", "deprecation" })
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
 	private ResourceSet resourceSet = null;
 

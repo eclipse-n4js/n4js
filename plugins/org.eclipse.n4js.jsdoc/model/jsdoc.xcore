@@ -69,7 +69,7 @@ abstract class JSDocNode extends DocletElement {
 	 */
 	op void setMarker(String theKey, String value) {
 		var Marker marker = markers.findFirst[key == key];
-		if (marker == null) {
+		if (marker === null) {
 			marker = DomFactory.eINSTANCE.createMarker();
 			marker.key = theKey;
 			markers.add(marker);

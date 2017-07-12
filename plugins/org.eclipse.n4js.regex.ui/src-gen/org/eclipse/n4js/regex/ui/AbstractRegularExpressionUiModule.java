@@ -47,6 +47,7 @@ import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.ui.DefaultUiModule;
+import org.eclipse.xtext.ui.UIBindings;
 import org.eclipse.xtext.ui.codetemplates.ui.AccessibleCodetemplatesActivator;
 import org.eclipse.xtext.ui.codetemplates.ui.partialEditing.IPartialEditingContentAssistContextFactory;
 import org.eclipse.xtext.ui.codetemplates.ui.partialEditing.PartialEditingContentAssistContextFactory;
@@ -94,7 +95,7 @@ public abstract class AbstractRegularExpressionUiModule extends DefaultUiModule 
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ImplicitFragment
-	public Provider<IAllContainersState> provideIAllContainersState() {
+	public Provider<? extends IAllContainersState> provideIAllContainersState() {
 		return Access.getJavaProjectsState();
 	}
 	
@@ -249,12 +250,12 @@ public abstract class AbstractRegularExpressionUiModule extends DefaultUiModule 
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.templates.CodetemplatesGeneratorFragment2
-	public Provider<TemplatesLanguageConfiguration> provideTemplatesLanguageConfiguration() {
+	public Provider<? extends TemplatesLanguageConfiguration> provideTemplatesLanguageConfiguration() {
 		return AccessibleCodetemplatesActivator.getTemplatesLanguageConfigurationProvider();
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.ui.templates.CodetemplatesGeneratorFragment2
-	public Provider<LanguageRegistry> provideLanguageRegistry() {
+	public Provider<? extends LanguageRegistry> provideLanguageRegistry() {
 		return AccessibleCodetemplatesActivator.getLanguageRegistry();
 	}
 	
@@ -282,6 +283,11 @@ public abstract class AbstractRegularExpressionUiModule extends DefaultUiModule 
 	// contributed by org.eclipse.xtext.xtext.generator.ui.compare.CompareFragment2
 	public Class<? extends IViewerCreator> bindIViewerCreator() {
 		return DefaultViewerCreator.class;
+	}
+	
+	// contributed by org.eclipse.xtext.xtext.generator.ui.compare.CompareFragment2
+	public void configureCompareViewerTitle(Binder binder) {
+		binder.bind(String.class).annotatedWith(Names.named(UIBindings.COMPARE_VIEWER_TITLE)).toInstance("RegularExpression Compare");
 	}
 	
 }

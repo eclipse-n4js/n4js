@@ -11,7 +11,7 @@
 package org.eclipse.n4js.n4jsx.ecmatestsuite;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.junit4.InjectWith;
+import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import org.eclipse.n4js.JSLibSingleTestConfig;

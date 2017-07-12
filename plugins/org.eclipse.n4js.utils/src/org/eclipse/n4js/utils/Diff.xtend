@@ -69,7 +69,6 @@ class Diff<T> {
 			&& Arrays.equals(newAllItems, oldAllItems)
 	}
 
-	@Override
 	override toString() {
 		'''Diff:
 		-----------------------------

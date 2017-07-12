@@ -67,7 +67,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfExpression" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>> _function = new <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>>()\n{\n\tpublic boolean apply(final <%org.eclipse.emf.ecore.EObject%> it)\n\t{\n\t\treturn (!(it instanceof <%org.eclipse.n4js.n4JS.FunctionDefinition%>));\n\t}\n};\n<%org.eclipse.emf.common.util.TreeIterator%><<%org.eclipse.emf.ecore.EObject%>> _allContentsFiltered = <%org.eclipse.n4js.utils.EcoreUtilN4%>.getAllContentsFiltered(this, _function);\nreturn <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.Expression%>>filter(_allContentsFiltered, <%org.eclipse.n4js.n4JS.Expression%>.class);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>> _function = new <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>>()\n{\n\tpublic boolean apply(final <%org.eclipse.emf.ecore.EObject%> it)\n\t{\n\t\treturn (!(it instanceof <%org.eclipse.n4js.n4JS.FunctionDefinition%>));\n\t}\n};\nreturn <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.Expression%>>filter(<%org.eclipse.n4js.utils.EcoreUtilN4%>.getAllContentsFiltered(this, _function), <%org.eclipse.n4js.n4JS.Expression%>.class);'"
 	 * @generated
 	 */
 	Iterator<Expression> getAllExpressions();
@@ -80,7 +80,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfYieldExpression" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.Expression%>> _allExpressions = this.getAllExpressions();\nreturn <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.YieldExpression%>>filter(_allExpressions, <%org.eclipse.n4js.n4JS.YieldExpression%>.class);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.YieldExpression%>>filter(this.getAllExpressions(), <%org.eclipse.n4js.n4JS.YieldExpression%>.class);'"
 	 * @generated
 	 */
 	Iterator<YieldExpression> getAllYieldExpressions();
@@ -93,7 +93,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfYieldExpression" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.YieldExpression%>> _allYieldExpressions = this.getAllYieldExpressions();\nfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.YieldExpression%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf(<%com.google.common.base.Objects%>.equal(_expression, null));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.YieldExpression%>>filter(_allYieldExpressions, _function);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.YieldExpression%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf((_expression == null));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.YieldExpression%>>filter(this.getAllYieldExpressions(), _function);'"
 	 * @generated
 	 */
 	Iterator<YieldExpression> getAllVoidYieldExpressions();
@@ -106,7 +106,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfYieldExpression" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.YieldExpression%>> _allYieldExpressions = this.getAllYieldExpressions();\nfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.YieldExpression%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf((!<%com.google.common.base.Objects%>.equal(_expression, null)));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.YieldExpression%>>filter(_allYieldExpressions, _function);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.YieldExpression%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.YieldExpression%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf((_expression != null));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.YieldExpression%>>filter(this.getAllYieldExpressions(), _function);'"
 	 * @generated
 	 */
 	Iterator<YieldExpression> getAllNonVoidYieldExpressions();
@@ -118,7 +118,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * True iff one or more yield expressions exist in this block that return some value.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.YieldExpression%>> _allNonVoidYieldExpressions = this.getAllNonVoidYieldExpressions();\nboolean _isEmpty = <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.isEmpty(_allNonVoidYieldExpressions);\nreturn (!_isEmpty);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isEmpty = <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.isEmpty(this.getAllNonVoidYieldExpressions());\nreturn (!_isEmpty);'"
 	 * @generated
 	 */
 	boolean hasNonVoidYield();
@@ -131,7 +131,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but excludes statements in nested classes, nested functions, etc.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfStatement" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>> _function = new <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>>()\n{\n\tpublic boolean apply(final <%org.eclipse.emf.ecore.EObject%> it)\n\t{\n\t\treturn (!((it instanceof <%org.eclipse.n4js.n4JS.Expression%>) || (it instanceof <%org.eclipse.n4js.n4JS.FunctionDefinition%>)));\n\t}\n};\n<%org.eclipse.emf.common.util.TreeIterator%><<%org.eclipse.emf.ecore.EObject%>> _allContentsFiltered = <%org.eclipse.n4js.utils.EcoreUtilN4%>.getAllContentsFiltered(this, _function);\nreturn <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.Statement%>>filter(_allContentsFiltered, <%org.eclipse.n4js.n4JS.Statement%>.class);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>> _function = new <%com.google.common.base.Predicate%><<%org.eclipse.emf.ecore.EObject%>>()\n{\n\tpublic boolean apply(final <%org.eclipse.emf.ecore.EObject%> it)\n\t{\n\t\treturn (!((it instanceof <%org.eclipse.n4js.n4JS.Expression%>) || (it instanceof <%org.eclipse.n4js.n4JS.FunctionDefinition%>)));\n\t}\n};\nreturn <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.Statement%>>filter(<%org.eclipse.n4js.utils.EcoreUtilN4%>.getAllContentsFiltered(this, _function), <%org.eclipse.n4js.n4JS.Statement%>.class);'"
 	 * @generated
 	 */
 	Iterator<Statement> getAllStatements();
@@ -144,7 +144,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfReturnStatement" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.Statement%>> _allStatements = this.getAllStatements();\nreturn <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.ReturnStatement%>>filter(_allStatements, <%org.eclipse.n4js.n4JS.ReturnStatement%>.class);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%com.google.common.collect.Iterators%>.<<%org.eclipse.n4js.n4JS.ReturnStatement%>>filter(this.getAllStatements(), <%org.eclipse.n4js.n4JS.ReturnStatement%>.class);'"
 	 * @generated
 	 */
 	Iterator<ReturnStatement> getAllReturnStatements();
@@ -157,7 +157,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfReturnStatement" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.ReturnStatement%>> _allReturnStatements = this.getAllReturnStatements();\nfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.ReturnStatement%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf((!<%com.google.common.base.Objects%>.equal(_expression, null)));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.ReturnStatement%>>filter(_allReturnStatements, _function);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.ReturnStatement%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf((_expression != null));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.ReturnStatement%>>filter(this.getAllReturnStatements(), _function);'"
 	 * @generated
 	 */
 	Iterator<ReturnStatement> getAllNonVoidReturnStatements();
@@ -170,7 +170,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" dataType="org.eclipse.n4js.n4JS.IteratorOfReturnStatement" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.ReturnStatement%>> _allReturnStatements = this.getAllReturnStatements();\nfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.ReturnStatement%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf(<%com.google.common.base.Objects%>.equal(_expression, null));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.ReturnStatement%>>filter(_allReturnStatements, _function);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.ReturnStatement%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.ReturnStatement%> it)\n\t{\n\t\t<%org.eclipse.n4js.n4JS.Expression%> _expression = it.getExpression();\n\t\treturn <%java.lang.Boolean%>.valueOf((_expression == null));\n\t}\n};\nreturn <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.<<%org.eclipse.n4js.n4JS.ReturnStatement%>>filter(this.getAllReturnStatements(), _function);'"
 	 * @generated
 	 */
 	Iterator<ReturnStatement> getAllVoidReturnStatements();
@@ -182,7 +182,7 @@ public interface Block extends Statement, VariableEnvironmentElement {
 	 * True iff one or more return statements exist in this block that return some value.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.util.Iterator%><<%org.eclipse.n4js.n4JS.ReturnStatement%>> _allNonVoidReturnStatements = this.getAllNonVoidReturnStatements();\nboolean _isEmpty = <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.isEmpty(_allNonVoidReturnStatements);\nreturn (!_isEmpty);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='boolean _isEmpty = <%org.eclipse.xtext.xbase.lib.IteratorExtensions%>.isEmpty(this.getAllNonVoidReturnStatements());\nreturn (!_isEmpty);'"
 	 * @generated
 	 */
 	boolean hasNonVoidReturn();

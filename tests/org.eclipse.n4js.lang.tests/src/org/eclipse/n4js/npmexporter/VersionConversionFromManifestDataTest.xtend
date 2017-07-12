@@ -15,8 +15,8 @@ import org.eclipse.n4js.external.version.VersionConstraintFormatUtil
 import org.eclipse.n4js.n4mf.VersionConstraint
 import org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil
 import java.util.List
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -66,6 +66,15 @@ class VersionConversionFromManifestDataTest {
 	}
 
 	@Test def parseErrors2() {
+		#["no viable alternative at input '@'"].errors('''sax@">1.0.0-alpha <3.0.0-beta"''');
+	}
+
+	@Test def parseErrors3() {
+		#["no viable alternative at input 'beta'"].
+			errors('''sax (1.0.0-alpha beta, 3.0.0-beta gamma)''');
+	}
+
+	@Test def parseErrors4() {
 		#["no viable alternative at input '@'"].errors('''sax@">1.0.0-alpha <3.0.0-beta"''');
 	}
 

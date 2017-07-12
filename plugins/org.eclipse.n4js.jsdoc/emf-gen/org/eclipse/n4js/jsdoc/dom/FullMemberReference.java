@@ -99,7 +99,7 @@ public interface FullMemberReference extends FullTypeReference {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _string = super.toString();\n<%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>(_string);\nboolean _memberNameSet = this.memberNameSet();\nif (_memberNameSet)\n{\n\tint _length = strb.length();\n\tboolean _greaterThan = (_length > 0);\n\tif (_greaterThan)\n\t{\n\t\tboolean _isStaticMember = this.isStaticMember();\n\t\tif (_isStaticMember)\n\t\t{\n\t\t\tstrb.append(\"#\");\n\t\t}\n\t\telse\n\t\t{\n\t\t\tstrb.append(\".\");\n\t\t}\n\t}\n\t<%java.lang.String%> _memberName = this.getMemberName();\n\tstrb.append(_memberName);\n}\nreturn strb.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.lang.String%> _string = super.toString();\n<%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>(_string);\nboolean _memberNameSet = this.memberNameSet();\nif (_memberNameSet)\n{\n\tint _length = strb.length();\n\tboolean _greaterThan = (_length > 0);\n\tif (_greaterThan)\n\t{\n\t\tboolean _isStaticMember = this.isStaticMember();\n\t\tif (_isStaticMember)\n\t\t{\n\t\t\tstrb.append(\"#\");\n\t\t}\n\t\telse\n\t\t{\n\t\t\tstrb.append(\".\");\n\t\t}\n\t}\n\tstrb.append(this.getMemberName());\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String toString();

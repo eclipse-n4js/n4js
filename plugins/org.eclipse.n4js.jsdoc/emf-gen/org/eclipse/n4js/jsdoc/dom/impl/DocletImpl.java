@@ -11,9 +11,6 @@
 package org.eclipse.n4js.jsdoc.dom.impl;
 
 import com.google.common.base.Objects;
-
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -32,8 +29,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.jsdoc.dom.Doclet;
 import org.eclipse.n4js.jsdoc.dom.DomPackage;
 import org.eclipse.n4js.jsdoc.dom.LineTag;
-import org.eclipse.n4js.jsdoc.dom.TagTitle;
-
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -99,15 +94,13 @@ public class DocletImpl extends CompositeImpl implements Doclet {
 	 * @generated
 	 */
 	public boolean hasLineTag(final String title) {
-		EList<LineTag> _lineTags = this.getLineTags();
 		final Function1<LineTag, Boolean> _function = new Function1<LineTag, Boolean>() {
 			public Boolean apply(final LineTag it) {
-				TagTitle _title = it.getTitle();
-				String _title_1 = _title.getTitle();
-				return Boolean.valueOf(Objects.equal(_title_1, title));
+				String _title = it.getTitle().getTitle();
+				return Boolean.valueOf(Objects.equal(_title, title));
 			}
 		};
-		LineTag _findFirst = IterableExtensions.<LineTag>findFirst(_lineTags, _function);
+		LineTag _findFirst = IterableExtensions.<LineTag>findFirst(this.getLineTags(), _function);
 		return (_findFirst != null);
 	}
 
@@ -117,16 +110,13 @@ public class DocletImpl extends CompositeImpl implements Doclet {
 	 * @generated
 	 */
 	public EList<LineTag> lineTags(final String title) {
-		EList<LineTag> _lineTags = this.getLineTags();
 		final Function1<LineTag, Boolean> _function = new Function1<LineTag, Boolean>() {
 			public Boolean apply(final LineTag it) {
-				TagTitle _title = it.getTitle();
-				String _title_1 = _title.getTitle();
-				return Boolean.valueOf(Objects.equal(_title_1, title));
+				String _title = it.getTitle().getTitle();
+				return Boolean.valueOf(Objects.equal(_title, title));
 			}
 		};
-		Iterable<LineTag> _filter = IterableExtensions.<LineTag>filter(_lineTags, _function);
-		return ECollections.<LineTag>toEList(_filter);
+		return ECollections.<LineTag>toEList(IterableExtensions.<LineTag>filter(this.getLineTags(), _function));
 	}
 
 	/**

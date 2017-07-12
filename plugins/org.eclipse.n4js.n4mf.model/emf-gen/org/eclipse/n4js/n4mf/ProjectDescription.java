@@ -533,7 +533,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * Returns with an empty list if no test projects are set for the current project, otherwise returns with them.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.TestedProject%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.TestedProjects%> _testedProjects = this.getTestedProjects();\nboolean _tripleEquals = (null == _testedProjects);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.TestedProject%>>emptyEList();\n}\nelse\n{\n\t<%org.eclipse.n4js.n4mf.TestedProjects%> _testedProjects_1 = this.getTestedProjects();\n\t_xifexpression = _testedProjects_1.getTestedProjects();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.TestedProject%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.TestedProjects%> _testedProjects = this.getTestedProjects();\nboolean _tripleEquals = (null == _testedProjects);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.TestedProject%>>emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getTestedProjects().getTestedProjects();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<TestedProject> getAllTestedProjects();
@@ -547,7 +547,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * Returns with an empty list if no initializer modules are set for the current project, otherwise returns with them.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.BootstrapModule%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.InitModules%> _initModules = this.getInitModules();\nboolean _tripleEquals = (null == _initModules);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.BootstrapModule%>>emptyEList();\n}\nelse\n{\n\t<%org.eclipse.n4js.n4mf.InitModules%> _initModules_1 = this.getInitModules();\n\t_xifexpression = _initModules_1.getInitModules();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.BootstrapModule%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.InitModules%> _initModules = this.getInitModules();\nboolean _tripleEquals = (null == _initModules);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.BootstrapModule%>>emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getInitModules().getInitModules();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<BootstrapModule> getAllInitModules();
@@ -561,7 +561,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * Returns with an empty list if no modules are implemented by the current project, otherwise returns with them.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.ProjectReference%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.ImplementedProjects%> _implementedProjects = this.getImplementedProjects();\nboolean _tripleEquals = (null == _implementedProjects);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.ProjectReference%>>emptyEList();\n}\nelse\n{\n\t<%org.eclipse.n4js.n4mf.ImplementedProjects%> _implementedProjects_1 = this.getImplementedProjects();\n\t_xifexpression = _implementedProjects_1.getImplementedProjects();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.ProjectReference%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.ImplementedProjects%> _implementedProjects = this.getImplementedProjects();\nboolean _tripleEquals = (null == _implementedProjects);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.ProjectReference%>>emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getImplementedProjects().getImplementedProjects();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<ProjectReference> getAllImplementedProjects();
@@ -575,7 +575,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * Returns with an empty list if the current project does not depend on any other projects, otherwise returns with them.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.ProjectDependency%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.ProjectDependencies%> _projectDependencies = this.getProjectDependencies();\nboolean _tripleEquals = (null == _projectDependencies);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.ProjectDependency%>>emptyEList();\n}\nelse\n{\n\t<%org.eclipse.n4js.n4mf.ProjectDependencies%> _projectDependencies_1 = this.getProjectDependencies();\n\t_xifexpression = _projectDependencies_1.getProjectDependencies();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.ProjectDependency%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.ProjectDependencies%> _projectDependencies = this.getProjectDependencies();\nboolean _tripleEquals = (null == _projectDependencies);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.ProjectDependency%>>emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getProjectDependencies().getProjectDependencies();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<ProjectDependency> getAllProjectDependencies();
@@ -589,7 +589,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * Returns with an empty list if no runtime libraries are provided by the current project, otherwise returns with them.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries%> _providedRuntimeLibraries = this.getProvidedRuntimeLibraries();\nboolean _tripleEquals = (null == _providedRuntimeLibraries);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency%>>emptyEList();\n}\nelse\n{\n\t<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries%> _providedRuntimeLibraries_1 = this.getProvidedRuntimeLibraries();\n\t_xifexpression = _providedRuntimeLibraries_1.getProvidedRuntimeLibraries();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraries%> _providedRuntimeLibraries = this.getProvidedRuntimeLibraries();\nboolean _tripleEquals = (null == _providedRuntimeLibraries);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.ProvidedRuntimeLibraryDependency%>>emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getProvidedRuntimeLibraries().getProvidedRuntimeLibraries();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<ProvidedRuntimeLibraryDependency> getAllProvidedRuntimeLibraries();
@@ -603,7 +603,7 @@ public interface ProjectDescription extends SimpleProjectDescription {
 	 * Returns with an empty list if no required runtime libraries are specified by the current project, otherwise returns with them.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraries%> _requiredRuntimeLibraries = this.getRequiredRuntimeLibraries();\nboolean _tripleEquals = (null == _requiredRuntimeLibraries);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency%>>emptyEList();\n}\nelse\n{\n\t<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraries%> _requiredRuntimeLibraries_1 = this.getRequiredRuntimeLibraries();\n\t_xifexpression = _requiredRuntimeLibraries_1.getRequiredRuntimeLibraries();\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency%>> _xifexpression = null;\n<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraries%> _requiredRuntimeLibraries = this.getRequiredRuntimeLibraries();\nboolean _tripleEquals = (null == _requiredRuntimeLibraries);\nif (_tripleEquals)\n{\n\t_xifexpression = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4mf.RequiredRuntimeLibraryDependency%>>emptyEList();\n}\nelse\n{\n\t_xifexpression = this.getRequiredRuntimeLibraries().getRequiredRuntimeLibraries();\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	EList<RequiredRuntimeLibraryDependency> getAllRequiredRuntimeLibraries();

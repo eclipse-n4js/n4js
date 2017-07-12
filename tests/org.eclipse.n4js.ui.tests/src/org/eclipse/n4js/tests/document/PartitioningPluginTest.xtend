@@ -16,8 +16,8 @@ import org.eclipse.jface.text.BadLocationException
 import org.eclipse.jface.text.IDocument
 import org.eclipse.jface.text.IDocumentPartitioner
 import org.eclipse.jface.text.ITypedRegion
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.editor.model.XtextDocument
 import org.junit.Test
 import org.junit.runner.RunWith

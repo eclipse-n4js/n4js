@@ -20,28 +20,26 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
-import org.eclipse.xtext.junit4.serializer.SerializerTester;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.xtext.testing.serializer.SerializerTestHelper;
 
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 import com.google.common.io.LineProcessor;
 
-import org.eclipse.n4js.n4JS.Script;
-
 /**
  * Expects errors in provided {@link Script} object. If script errors are not found it will rise Error
  */
-@SuppressWarnings("restriction")
 public class PositiveAnalyser extends BaseAnalyser implements Analyser {
 	/**
 	 * Currently unused serializer tester
 	 */
-	protected final SerializerTester serializerTester;
+	protected final SerializerTestHelper serializerTester;
 
 	/***/
 	// TODO after java update bring back null analysis
 	// public PositiveAnalyser(final @Nonnull Logger logger) {
-	public PositiveAnalyser(final Logger logger, SerializerTester serializerTester) {
+	public PositiveAnalyser(final Logger logger, SerializerTestHelper serializerTester) {
 		super(logger);
 		this.serializerTester = serializerTester;
 	}
@@ -49,8 +47,8 @@ public class PositiveAnalyser extends BaseAnalyser implements Analyser {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.eclipse.n4js.tests.libraryparsing.analysis.DiagnosticAnalyser #analyse(java.util.List,
-	 * java.lang.String, java.lang.String)
+	 * @see org.eclipse.n4js.tests.libraryparsing.analysis.DiagnosticAnalyser #analyse(java.util.List, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public void analyse(Script script, String codeName, String code) {

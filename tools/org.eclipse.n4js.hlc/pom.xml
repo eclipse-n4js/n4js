@@ -545,59 +545,32 @@ Contributors:
 			<version>${xtext.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>args4j</groupId>
-			<artifactId>args4j</artifactId>
-			<version>2.0.21</version>
+  		  <groupId>args4j</groupId>
+  		  <artifactId>args4j</artifactId>
+  		  <version>2.0.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-maven-plugin</artifactId>
 			<version>9.2.9.v20150224</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>org.eclipse.equinox.common</artifactId>
-			<version>[3.6.0,)</version>
-		</dependency>
 		<!-- Missing IWorkspcae -->
 		<dependency>
-			<groupId>org.eclipse.core</groupId>
+			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.core.resources</artifactId>
-			<version>[3.7.100,)</version>
-		</dependency>
-		<!-- Missing org.eclipse.core.runtime.jobs.ISchedulingRule -->
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.jobs</artifactId>
-			<version>[3.5.100,)</version>
+			<version>${org.eclipse.core.resources-version}</version>
 		</dependency>
 		<!-- xsemantics -->
 		<dependency>
 			<groupId>net.sf.xsemantics</groupId>
 			<artifactId>it.xsemantics.dsl</artifactId>
-			<version>1.9.0</version>
-		</dependency>
-		<!-- java.lang.ClassNotFoundException: org.osgi.framework.BundleException -->
-		<dependency>
-			<groupId>org.eclipse.osgi</groupId>
-			<artifactId>org.eclipse.osgi</artifactId>
-			<version>[3.7.1,)</version>
+			<version>1.12.0</version>
 		</dependency>
 		<!-- Xcore lib -->
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
 			<version>${org.eclipse.emf.ecore.xcore.lib-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.runtime</artifactId>
-			<version>[3.7.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>org.eclipse.equinox.registry</artifactId>
-			<version>[3.5.100,)</version>
 		</dependency>
 <!--  Smaller version of com.ibm.icu - base path only :
 		<dependency>
