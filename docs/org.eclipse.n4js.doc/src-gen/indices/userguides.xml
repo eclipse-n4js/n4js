@@ -1,0 +1,53 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="dist/eclipse-html/userguides/index.html" label="N4JS Userguides">
+	<topic href="dist/eclipse-html/userguides/index.html" label="Index"></topic>
+	<topic href="dist/eclipse-html/userguides/license.html" label="N4JS License">
+		<topic href="dist/eclipse-html/userguides/license.html#epl-1-0" label="EPL 1.0"></topic>
+	</topic>
+	<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html" label="N4JS IDE Setup">
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#installation" label="Installation">
+			<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#requirements" label="Requirements"></topic>
+		</topic>
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#launching-the-ide" label="Launching the IDE"></topic>
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#creating-a-new-project-a-id-new_project-a" label="Creating a new project">
+			<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#project-explorer" label="Project Explorer"></topic>
+		</topic>
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#creating-a-new-class-a-id-creating_classes-a" label="Creating a new class"></topic>
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#outline-view-a-id-outline_view-a" label="Outline View"></topic>
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#running-as-node-js" label="Running as node.js"></topic>
+		<topic href="dist/eclipse-html/userguides/n4js-ide-setup.html#what-s-next" label="What’s Next?"></topic>
+	</topic>
+	<topic href="dist/eclipse-html/userguides/npm-export-guide.html" label="N4JS npm Export Guide">
+		<topic href="dist/eclipse-html/userguides/npm-export-guide.html#project-example" label="Project Example"></topic>
+		<topic href="dist/eclipse-html/userguides/npm-export-guide.html#exporting-as-npm" label="Exporting as npm"></topic>
+		<topic href="dist/eclipse-html/userguides/npm-export-guide.html#running-from-the-command-line" label="Running from the Command Line"></topic>
+		<topic href="dist/eclipse-html/userguides/npm-export-guide.html#modifying-package-info" label="Modifying Package Info">
+			<topic href="dist/eclipse-html/userguides/npm-export-guide.html#editing-the-package-json-from-the-command-line" label="Editing the package.json from the Command Line"></topic>
+		</topic>
+		<topic href="dist/eclipse-html/userguides/npm-export-guide.html#publishing-to-npm" label="Publishing to npm"></topic>
+	</topic>
+	<topic href="dist/eclipse-html/userguides/tutorial.html" label="N4JS Tutorial">
+		<topic href="dist/eclipse-html/userguides/tutorial.html#using-n4js-to-implement-a-node-js-application" label="Using N4JS to Implement a Node.js Application"></topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#creating-a-new-n4js-project" label="Creating a new N4JS Project">
+			<topic href="dist/eclipse-html/userguides/tutorial.html#the-domain-model" label="The Domain Model"></topic>
+			<topic href="dist/eclipse-html/userguides/tutorial.html#creating-new-classes-and-modules" label="Creating new classes and modules">
+				<topic href="dist/eclipse-html/userguides/tutorial.html#implement-the-entity-classes" label="Implement the entity classes"></topic>
+			</topic>
+			<topic href="dist/eclipse-html/userguides/tutorial.html#add-an-enumeration" label="Add an Enumeration"></topic>
+			<topic href="dist/eclipse-html/userguides/tutorial.html#the-storage-layer" label="The Storage Layer">
+				<topic href="dist/eclipse-html/userguides/tutorial.html#defining-an-interface" label="Defining an Interface"></topic>
+			</topic>
+			<topic href="dist/eclipse-html/userguides/tutorial.html#implement-the-interface" label="Implement the Interface"></topic>
+			<topic href="dist/eclipse-html/userguides/tutorial.html#edit-the-manifest" label="Edit the Manifest"></topic>
+		</topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#running-a-module" label="Running a Module"></topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#extend-entities-with-spec-constructor" label="Extend Entities with Spec-Constructor"></topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#creating-a-task-manager" label="Creating a Task Manager">
+			<topic href="dist/eclipse-html/userguides/tutorial.html#make-the-storage-asynchronous" label="Make the Storage Asynchronous"></topic>
+			<topic href="dist/eclipse-html/userguides/tutorial.html#testing" label="Testing"></topic>
+		</topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#storage-using-mongodb" label="Storage using MongoDB"></topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#dependency-injection" label="Dependency Injection"></topic>
+		<topic href="dist/eclipse-html/userguides/tutorial.html#web-ui-module" label="Web UI module"></topic>
+	</topic>
+</toc>
