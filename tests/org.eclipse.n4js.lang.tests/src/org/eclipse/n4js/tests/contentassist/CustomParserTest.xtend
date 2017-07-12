@@ -53,6 +53,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 	}
 
 	override getFollowElements(INode node, int start, int end, boolean strict) {
+		val parser = this.parser
 		parser.getFollowElements(node, start, end, strict)
 	}
 	

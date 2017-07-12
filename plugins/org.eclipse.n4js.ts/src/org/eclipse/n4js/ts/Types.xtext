@@ -213,6 +213,7 @@ TInterface:
 	'{' (ownedMembers+=TMember)* '}'
 ;
 
+@Override
 TypeVariable returns TypeVariable:
 	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
 
