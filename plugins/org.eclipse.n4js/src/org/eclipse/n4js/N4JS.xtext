@@ -101,10 +101,6 @@ AnnotatedScriptElement returns ScriptElement:
 	)
 ;
 
-fragment TypeVariables*:
-	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
-;
-
 ExportDeclaration:
 	{ExportDeclaration}
 	ExportDeclarationImpl
@@ -138,7 +134,7 @@ ExportableElement:
 	| N4ClassDeclaration<Yield=false>
 	| N4InterfaceDeclaration<Yield=false>
 	| N4EnumDeclaration<Yield=false>
-	| ExportedFunctionDeclaration<Yield=false>
+	| FunctionDeclaration<Yield=false>
 	| ExportedVariableStatement
 ;
 
@@ -244,21 +240,12 @@ fragment FunctionHeader<Yield, Generator>*:
 	TypeVariables?
 	name=BindingIdentifier<Yield>?
 	StrictFormalParameters<Yield=Generator>
-	(-> ':' returnTypeRef=TypeRef)?
+	(-> ColonSepReturnTypeRef)?
 ;
 
 fragment FunctionBody <Yield, Expression>*:
 		<Expression> body=Block<Yield>
 	|	<!Expression> body=Block<Yield>?
-;
-
-/**
- * A function declaration with access modifiers and  annotations. The annotated variant is factored into
- * an own production AnnotatedFunctionDeclaration to avoid the infinite lookahead
- * of the annotation list
- */
-ExportedFunctionDeclaration<Yield> returns FunctionDeclaration:
-	FunctionDeclaration<Yield>
 ;
 
 /*
@@ -273,9 +260,9 @@ AnnotatedFunctionDeclaration <Yield, Default> returns FunctionDeclaration:
 
 
 FunctionExpression:
-		 ({FunctionExpression}
-		 	FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
-		 )
+	({FunctionExpression}
+	 	FunctionImpl<Yield=false,YieldIfGenerator=true,Expression=true>
+	)
 ;
 
 
@@ -292,8 +279,8 @@ ArrowExpression <In, Yield> returns ArrowFunction:
 			(
 					// we cannot use fragments here since we have to combine the terminals into a syntactic predicate
 					// also, we have to use explicit alternatives instead of making async optional due to a generation bug
-					'(' (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')' (':' returnTypeRef=TypeRef)?
-				|	=>(declaredAsync?='async' NoLineTerminator '(') (fpars+=FormalParameter<Yield> (',' fpars+=FormalParameter<Yield>)*)? ')' (':' returnTypeRef=TypeRef)?
+					StrictFormalParameters<Yield> ColonSepReturnTypeRef?
+				|	=>(declaredAsync?='async' NoLineTerminator ->StrictFormalParameters<Yield>) ColonSepReturnTypeRef?
 				| 	fpars+=BindingIdentifierAsFormalParameter<Yield>
 			)
 			/* no line terminator here, guaranteed implicitly */ '=>'
@@ -333,28 +320,19 @@ AnnotatedExpression <Yield> returns Expression:
 	)
 ;
 
-TypeVariable returns types::TypeVariable:
-	(declaredCovariant?='out' | declaredContravariant?='in')?
-	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?
-;
-
 FormalParameter <Yield>:
 	{FormalParameter} BindingElementFragment<Yield>
 ;
 
 fragment BindingElementFragment <Yield>*:
 	( => bindingPattern=BindingPattern<Yield>
-	| annotations+=Annotation* BogusTypeRefFragment? variadic?='...'? name=BindingIdentifier<Yield> ColonSepTypeRef?
+	| annotations+=Annotation* BogusTypeRefFragment? variadic?='...'? name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
 	)
 	(hasInitializerAssignment?='=' initializer=AssignmentExpression<In=true, Yield>?)?
 ;
 
-fragment ColonSepTypeRef*:
-	':' declaredTypeRef=TypeRef
-;
-
 fragment BogusTypeRefFragment*:
-	bogusTypeRef=BogusTypeRef
+	bogusTypeRef=TypeRefWithModifiers
 ;
 
 Block <Yield>: => ({Block} '{') statements+=Statement<Yield>* '}';
@@ -432,7 +410,7 @@ fragment VariableDeclarationImpl <In, Yield, AllowType>*:
 	annotations+=Annotation*
 	(
 		<AllowType> =>(
-			name=BindingIdentifier<Yield> ColonSepTypeRef?
+			name=BindingIdentifier<Yield> ColonSepDeclaredTypeRef?
 		) ('=' expression=AssignmentExpression<In,Yield>)?
 	|	<!AllowType> =>(
 		name=BindingIdentifier<Yield>
@@ -563,7 +541,7 @@ CatchBlock <Yield>:	{CatchBlock} 'catch' '(' catchVariable=CatchVariable<Yield> 
  */
 CatchVariable <Yield>:
 		=>bindingPattern=BindingPattern<Yield>
-	|	=>(name=BindingIdentifier<Yield> -> ColonSepTypeRef)
+	|	=>(name=BindingIdentifier<Yield> -> ColonSepDeclaredTypeRef)
 	|	BogusTypeRefFragment? name=BindingIdentifier<Yield>
 ;
 
@@ -737,9 +715,13 @@ PropertySetterDeclaration <Yield>:
  */
 
 ParameterizedCallExpression <Yield>:
-	TypeArguments
+	ConcreteTypeArguments
 	target=IdentifierRef<Yield>
 	ArgumentsWithParentheses<Yield>
+;
+
+fragment ConcreteTypeArguments*:
+	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
 ;
 
 LeftHandSideExpression <Yield> returns Expression:
@@ -766,13 +748,9 @@ Argument<Yield>:
 	spread?='...'? expression=AssignmentExpression<In=true, Yield>
 ;
 
-fragment TypeArguments*:
-	'<' typeArgs+=TypeRef (',' typeArgs+=TypeRef)* '>'
-;
-
 MemberExpression <Yield> returns Expression:
 	=>({NewTarget} 'new' '.') 'target'
-	| => ({NewExpression} 'new') callee=MemberExpression<Yield> (-> TypeArguments)?
+	| => ({NewExpression} 'new') callee=MemberExpression<Yield> (-> ConcreteTypeArguments)?
 		(=> withArgs?='(' Arguments<Yield>? ')'
 			(
 				  {IndexedAccessExpression.target=current} IndexedAccessExpressionTail<Yield>
@@ -792,7 +770,7 @@ fragment IndexedAccessExpressionTail <Yield>*:
 ;
 
 fragment ParameterizedPropertyAccessExpressionTail <Yield>*:
-	'.' TypeArguments? property=[types::IdentifiableElement|IdentifierName]
+	'.' ConcreteTypeArguments? property=[types::IdentifiableElement|IdentifierName]
 ;
 
 /**
@@ -1193,6 +1171,17 @@ TypeRefAnnotationArgument:
 	typeRef=TypeRef
 ;
 
+TypeRefForCast returns types::StaticBaseTypeRef:
+	  ParameterizedTypeRef
+	| ArrayTypeRef
+	| ThisTypeRef
+	| TypeTypeRef
+	| ArrowFunctionTypeExpression
+	
+	| FunctionTypeExpressionOLD
+	| UnionTypeExpressionOLD
+	| IntersectionTypeExpressionOLD;
+
 AnnotationList:
 	=>({AnnotationList} '@' -> annotations+=AnnotationNoAtSign) annotations+=Annotation*
 ;
@@ -1354,7 +1343,7 @@ fragment FieldDeclarationImpl <Yield>*:
 	(declaredModifiers+=N4Modifier)* BogusTypeRefFragment?
 	declaredName=LiteralOrComputedPropertyName<Yield>
 	(declaredOptional?='?')?
-	ColonSepTypeRef?
+	ColonSepDeclaredTypeRef?
 	('=' expression=Expression<In=true,Yield>)?
 	Semi
 ;
@@ -1384,7 +1373,7 @@ fragment MethodParamsAndBody <Generator>*:
 
 fragment MethodParamsReturnAndBody <Generator>*:
 	StrictFormalParameters<Yield=Generator>
-	(':' returnTypeRef=TypeRef)?
+	ColonSepReturnTypeRef?
 	(body=Block<Yield=Generator>)?
 ;
 
@@ -1399,7 +1388,7 @@ N4GetterDeclaration <Yield>:
 ;
 
 fragment GetterHeader <Yield>*:
-	BogusTypeRefFragment? 'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepTypeRef?
+	BogusTypeRefFragment? 'get' -> declaredName=LiteralOrComputedPropertyName<Yield> (declaredOptional?='?')? '(' ')' ColonSepDeclaredTypeRef?
 ;
 
 N4SetterDeclaration <Yield>:
@@ -1449,16 +1438,17 @@ SingleNameBinding <Yield, AllowType> returns BindingElement:
 ;
 
 BindingElement <Yield>:
-	  =>(nestedPattern=BindingPattern<Yield>) ('=' expression=AssignmentExpression<In=true,Yield>)?
-	| varDecl=VariableDeclaration<In=true,Yield,AllowType=true>
+	BindingElementImpl<Yield>  
 ;
 
 BindingRestElement <Yield> returns BindingElement:
 	rest?='...'?
-	(
-		  =>(nestedPattern=BindingPattern<Yield>) ('=' expression=AssignmentExpression<In=true,Yield>)?
-		| varDecl=VariableDeclaration<In=true,Yield,AllowType=true>
-	)
+	BindingElementImpl<Yield>
+;
+
+fragment BindingElementImpl<Yield> returns BindingElement:
+	=>(nestedPattern=BindingPattern<Yield>) ('=' expression=AssignmentExpression<In=true,Yield>)?
+	| varDecl=VariableDeclaration<In=true,Yield,AllowType=true>
 ;
 
 Elision returns BindingElement:
