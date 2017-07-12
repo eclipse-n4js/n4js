@@ -338,7 +338,7 @@ public class CustomN4JSParser extends N4JSParser {
 	private final ReflectExtensions reflector = new ReflectExtensions();
 
 	@SuppressWarnings("unchecked")
-	private <T> T reflect(String methodName, Object... args) {
+	private <T> T reflective(String methodName, Object... args) {
 		try {
 			return (T) reflector.invoke(this, methodName, args);
 		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException
@@ -353,13 +353,13 @@ public class CustomN4JSParser extends N4JSParser {
 		if (element.getLookAhead() <= 1)
 			throw new IllegalArgumentException("lookahead may not be less than or equal to 1");
 		Collection<FollowElement> result = new ArrayList<>();
-		for (AbstractElement elementToParse : this.<Collection<AbstractElement>> reflect("getElementsToParse",
-				element)) {
+		Collection<AbstractElement> elementsToParse = this.reflective("getElementsToParse", element);
+		for (AbstractElement elementToParse : elementsToParse) {
 			// fix is here
 			elementToParse = unwrapSingleElementGroups(elementToParse);
 			// done
 			String ruleName = getRuleName(elementToParse);
-			String[][] allRuleNames = reflect("getRequiredRuleNames", ruleName, element.getParamStack(), elementToParse);
+			String[][] allRuleNames = reflective("getRequiredRuleNames", ruleName, element.getParamStack(), elementToParse);
 			for (String[] ruleNames : allRuleNames) {
 				for (int i = 0; i < ruleNames.length; i++) {
 					AbstractInternalContentAssistParser parser = createParser();
@@ -446,7 +446,7 @@ public class CustomN4JSParser extends N4JSParser {
 
 						});
 					}
-					Collection<FollowElement> elements = reflect("getFollowElements", parser, elementToParse,
+					Collection<FollowElement> elements = reflective("getFollowElements", parser, elementToParse,
 							ruleNames, i);
 					result.addAll(elements);
 				}
