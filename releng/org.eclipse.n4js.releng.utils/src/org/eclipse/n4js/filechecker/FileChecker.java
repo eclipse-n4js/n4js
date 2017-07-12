@@ -586,8 +586,10 @@ public class FileChecker extends AbstractFileChecker {
 				&& !content.contains(bundleSymbolicNamePropertyAndValue + ";")) {
 			report.problems.add("property 'Bundle-SymbolicName' missing or has incorrect value");
 		}
-		if (!content.contains("Bundle-Name: %pluginName")) {
-			report.problems.add("property 'Bundle-Name' missing or does not have value \"%pluginName\"");
+		if (MODE != Mode.XSEMANTICS) {
+			if (!content.contains("Bundle-Name: %pluginName")) {
+				report.problems.add("property 'Bundle-Name' missing or does not have value \"%pluginName\"");
+			}
 		}
 		if (!content.contains("Bundle-Vendor: %providerName")) {
 			report.problems.add("property 'Bundle-Vendor' missing or does not have value \"%providerName\"");
