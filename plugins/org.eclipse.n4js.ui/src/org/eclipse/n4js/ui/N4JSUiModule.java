@@ -19,6 +19,68 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
+import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.N4JSRuntimeModule;
+import org.eclipse.n4js.binaries.BinariesPreferenceStore;
+import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.GitCloneSupplier;
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
+import org.eclipse.n4js.generator.common.CompilerDescriptor;
+import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
+import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.ts.findReferences.TargetURIKey;
+import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
+import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder;
+import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
+import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
+import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
+import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
+import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
+import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
+import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
+import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
+import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
+import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
+import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
+import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
+import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
+import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
+import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
+import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory;
+import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingConfiguration;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.InvalidatingHighlightingHelper;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.ParserBasedDocumentTokenSource;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwarePartitionTokenScanner;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwareTokenScanner;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenToAttributeIdMapper;
+import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
+import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
+import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
+import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
+import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
+import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
+import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
+import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
+import org.eclipse.n4js.ui.organize.imports.IReferenceFilter;
+import org.eclipse.n4js.ui.organize.imports.N4JSReferencesFilter;
+import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
+import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
+import org.eclipse.n4js.ui.quickfix.N4JSIssue;
+import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
+import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
+import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
+import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
+import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
+import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
+import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
+import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -28,6 +90,7 @@ import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementComputer;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -58,68 +121,6 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
-import org.eclipse.n4js.CancelIndicatorBaseExtractor;
-import org.eclipse.n4js.N4JSRuntimeModule;
-import org.eclipse.n4js.binaries.BinariesPreferenceStore;
-import org.eclipse.n4js.binaries.OsgiBinariesPreferenceStore;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.external.GitCloneSupplier;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
-import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
-import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.ts.findReferences.TargetURIKey;
-import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
-import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder;
-import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
-import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
-import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
-import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
-import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
-import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
-import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
-import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
-import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
-import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
-import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
-import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
-import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
-import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory;
-import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingConfiguration;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.InvalidatingHighlightingHelper;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.ParserBasedDocumentTokenSource;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwarePartitionTokenScanner;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.TemplateAwareTokenScanner;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenToAttributeIdMapper;
-import org.eclipse.n4js.ui.editor.syntaxcoloring.TokenTypeToPartitionMapper;
-import org.eclipse.n4js.ui.formatting2.FixedContentFormatter;
-import org.eclipse.n4js.ui.internal.ConsoleOutputStreamProvider;
-import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
-import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
-import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
-import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
-import org.eclipse.n4js.ui.organize.imports.IReferenceFilter;
-import org.eclipse.n4js.ui.organize.imports.N4JSReferencesFilter;
-import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
-import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
-import org.eclipse.n4js.ui.quickfix.N4JSIssue;
-import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
-import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
-import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
-import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
-import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
-import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
-import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
-import org.eclipse.n4js.utils.process.OutputStreamProvider;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -353,6 +354,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends FollowElementComputer> bindFollowElementComputer() {
 		return PatchedFollowElementComputer.class;
+	}
+
+	/**
+	 * Remove this binding with Xtext 2.13
+	 */
+	public Class<? extends RequiredRuleNameComputer> bindRequiredRuleNameComputer() {
+		return PatchedRequiredRuleNameComputer.class;
 	}
 
 	@Override
