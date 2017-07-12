@@ -104,7 +104,7 @@ public class CustomN4JSParser extends N4JSParser {
 
 	@Override
 	public void initializeFor(AbstractRule rule) {
-		// FIXME: replace this workaround by a proper solution.
+		// TODO: GH-61.
 		// Remove this function to see test errors in GHOLD-92-LINKING_DIAGNOSTIC_import_missing_B.n4js.xt
 		if (super.getEntryRule() == null) {
 			super.initializeFor(rule);

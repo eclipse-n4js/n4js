@@ -69,15 +69,6 @@ class VersionConversionFromManifestDataTest {
 		#["no viable alternative at input '@'"].errors('''sax@">1.0.0-alpha <3.0.0-beta"''');
 	}
 
-	@Test def parseErrors3() {
-		#["no viable alternative at input 'beta'"].
-			errors('''sax (1.0.0-alpha beta, 3.0.0-beta gamma)''');
-	}
-
-	@Test def parseErrors4() {
-		#["no viable alternative at input '@'"].errors('''sax@">1.0.0-alpha <3.0.0-beta"''');
-	}
-
 ////////////////////////////////////////////////////////////////////////
 // test utils
 	private def fromDependency(CharSequence expected, CharSequence input) {
