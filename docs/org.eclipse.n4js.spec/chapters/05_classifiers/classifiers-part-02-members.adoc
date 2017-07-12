@@ -814,6 +814,7 @@ export external interface J  {
 }
 ----
 
+.Test.n4js
 [source,n4js]
 ----
 import { I } from "Inf";
