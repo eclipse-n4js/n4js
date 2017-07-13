@@ -61,7 +61,7 @@ fex8;
 var fex14 : (...int=)=>void;
 fex14;
 
-// XPECT warnings --> "Wrong syntax: Use int=undefined instead of ?." at "int?"
+// XPECT errors --> "Wrong syntax: Use int=undefined instead of ?." at "int?"
 var fex15 : (int?)=>void
 fex15;
 

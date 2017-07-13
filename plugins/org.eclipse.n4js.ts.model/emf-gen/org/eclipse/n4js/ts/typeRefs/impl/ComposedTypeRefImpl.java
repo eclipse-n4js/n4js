@@ -182,14 +182,12 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	 * @generated
 	 */
 	public String getTypeRefAsString() {
-		EList<TypeRef> _typeRefs = this.getTypeRefs();
 		final Function1<TypeRef, String> _function = new Function1<TypeRef, String>() {
 			public String apply(final TypeRef it) {
 				return it.getTypeRefAsString();
 			}
 		};
-		EList<String> _map = XcoreEListExtensions.<TypeRef, String>map(_typeRefs, _function);
-		String _join = IterableExtensions.join(_map, ",");
+		String _join = IterableExtensions.join(XcoreEListExtensions.<TypeRef, String>map(this.getTypeRefs(), _function), ",");
 		String _plus = ("{" + _join);
 		String _plus_1 = (_plus + "}");
 		String _modifiersAsString = this.getModifiersAsString();

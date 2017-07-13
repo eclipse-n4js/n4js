@@ -17,13 +17,11 @@ import com.google.common.collect.Iterators;
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -655,8 +653,7 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	public boolean isStatic() {
-		EList<N4Modifier> _declaredModifiers = this.getDeclaredModifiers();
-		return _declaredModifiers.contains(N4Modifier.STATIC);
+		return this.getDeclaredModifiers().contains(N4Modifier.STATIC);
 	}
 
 	/**
@@ -694,23 +691,18 @@ public class N4MethodDeclarationImpl extends AnnotableN4MemberDeclarationImpl im
 	 * @generated
 	 */
 	public boolean existsExplicitSuperCall() {
-		Block _body = this.getBody();
-		TreeIterator<Statement> _allDirectlyFoundContentsOfType = EcoreUtilN4.<Statement>getAllDirectlyFoundContentsOfType(_body, Statement.class);
-		Iterator<ExpressionStatement> _filter = Iterators.<ExpressionStatement>filter(_allDirectlyFoundContentsOfType, ExpressionStatement.class);
 		final Function1<ExpressionStatement, Expression> _function = new Function1<ExpressionStatement, Expression>() {
 			public Expression apply(final ExpressionStatement it) {
 				return it.getExpression();
 			}
 		};
-		Iterator<Expression> _map = IteratorExtensions.<ExpressionStatement, Expression>map(_filter, _function);
-		Iterator<ParameterizedCallExpression> _filter_1 = Iterators.<ParameterizedCallExpression>filter(_map, ParameterizedCallExpression.class);
 		final Function1<ParameterizedCallExpression, Boolean> _function_1 = new Function1<ParameterizedCallExpression, Boolean>() {
 			public Boolean apply(final ParameterizedCallExpression it) {
 				Expression _target = it.getTarget();
 				return Boolean.valueOf((_target instanceof SuperLiteral));
 			}
 		};
-		final boolean existsSuperCall = IteratorExtensions.<ParameterizedCallExpression>exists(_filter_1, _function_1);
+		final boolean existsSuperCall = IteratorExtensions.<ParameterizedCallExpression>exists(Iterators.<ParameterizedCallExpression>filter(IteratorExtensions.<ExpressionStatement, Expression>map(Iterators.<ExpressionStatement>filter(EcoreUtilN4.<Statement>getAllDirectlyFoundContentsOfType(this.getBody(), Statement.class), ExpressionStatement.class), _function), ParameterizedCallExpression.class), _function_1);
 		return existsSuperCall;
 	}
 

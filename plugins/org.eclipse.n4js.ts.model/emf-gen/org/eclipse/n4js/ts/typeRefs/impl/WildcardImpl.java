@@ -19,13 +19,11 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
@@ -234,11 +232,9 @@ public class WildcardImpl extends TypeArgumentImpl implements Wildcard {
 		}
 		final EObject parent = this.eContainer();
 		if ((parent instanceof ParameterizedTypeRef)) {
-			EList<TypeArgument> _typeArgs = ((ParameterizedTypeRef)parent).getTypeArgs();
-			final int typeArgIndex = _typeArgs.indexOf(this);
+			final int typeArgIndex = ((ParameterizedTypeRef)parent).getTypeArgs().indexOf(this);
 			if ((typeArgIndex >= 0)) {
-				EReference _parameterizedTypeRef_DeclaredType = TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType();
-				final Object declType = ((ParameterizedTypeRef)parent).eGet(_parameterizedTypeRef_DeclaredType, false);
+				final Object declType = ((ParameterizedTypeRef)parent).eGet(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(), false);
 				if ((declType instanceof ContainerType<?>)) {
 					boolean _eIsProxy = ((ContainerType<?>)declType).eIsProxy();
 					boolean _not = (!_eIsProxy);

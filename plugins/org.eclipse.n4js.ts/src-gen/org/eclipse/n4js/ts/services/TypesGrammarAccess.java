@@ -82,7 +82,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//=> ('@' name=IDENTIFIER)
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//('@' name=IDENTIFIER)
+		//'@' name=IDENTIFIER
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//'@'
@@ -190,11 +190,11 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cVirtualBaseTypeParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
 		
 		//// TODO jvp: more type information, cf. types model
-		/// *
+		///*
 		// * We cannot define a TypeVariableRef, as this cannot be distinguished from a ParameterizedTypeRef. That is,
 		// * we cannot distinguish whether 'T' is a type variable T, or a type with name 'T'. Thus,
 		// * type variables are handled similar to types (and are actually types).
-		// * / Type:
+		// */ Type:
 		//	TObjectPrototype
 		//	| TClass
 		//	| TInterface
@@ -256,7 +256,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cFollowedByQuestionMarkAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final Keyword cFollowedByQuestionMarkQuestionMarkKeyword_1_0 = (Keyword)cFollowedByQuestionMarkAssignment_1.eContents().get(0);
 		
-		//TypeRef:
+		//@ Override TypeRef:
 		//	TypeRefWithoutModifiers followedByQuestionMark?='?'?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -399,7 +399,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cSolidusKeyword_5_1_0 = (Keyword)cGroup_5_1.eContents().get(0);
 		private final RuleCall cIDENTIFIERTerminalRuleCall_5_1_1 = (RuleCall)cGroup_5_1.eContents().get(1);
 		
-		//TypeReferenceName:
+		//@ Override TypeReferenceName:
 		//	'void' | 'any' | 'undefined' | 'null' | 'indexed' | IDENTIFIER ('/' IDENTIFIER)*;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -686,7 +686,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'['
 		public Keyword getLeftSquareBracketKeyword_0() { return cLeftSquareBracketKeyword_0; }
 		
-		//(TypesSymbolLiteralComputedName | TypesStringLiteralComputedName)
+		//TypesSymbolLiteralComputedName | TypesStringLiteralComputedName
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//TypesSymbolLiteralComputedName
@@ -919,10 +919,10 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cOwnedMembersTMemberParserRuleCall_5_0 = (RuleCall)cOwnedMembersAssignment_5.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_6 = (Keyword)cGroup.eContents().get(6);
 		
-		/// *
+		///*
 		// * Virtual base type, not visible to N4JS users.
 		// * Used to define common super types, e.g. for all enumerations.
-		// * / VirtualBaseType:
+		// */ VirtualBaseType:
 		//	{VirtualBaseType}
 		//	'virtualBase' name=BindingTypesIdentifier ('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 		//	'{'
@@ -1350,7 +1350,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//CallableCtor TMethod:
 		//	{TMethod}
 		//	'(' (fpars+=TFormalParameter (',' fpars+=TFormalParameter)*)? ')' (':' returnTypeRef=TypeRef)?
-		//	';'?
+		//	';'?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//{TMethod} '(' (fpars+=TFormalParameter (',' fpars+=TFormalParameter)*)? ')' (':' returnTypeRef=TypeRef)? ';'?
@@ -1486,8 +1486,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')? (name=TypesIdentifier | name=TypesComputedPropertyName) '(')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//(declaredMemberAccessModifier=MemberAccessModifier (declaredStatic?='static' | declaredAbstract?='abstract')? ('<'
-		//typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')? (name=TypesIdentifier | name=TypesComputedPropertyName) '(')
+		//declaredMemberAccessModifier=MemberAccessModifier (declaredStatic?='static' | declaredAbstract?='abstract')? ('<'
+		//typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')? (name=TypesIdentifier | name=TypesComputedPropertyName) '('
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//declaredMemberAccessModifier=MemberAccessModifier
@@ -1538,7 +1538,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'>'
 		public Keyword getGreaterThanSignKeyword_0_0_2_3() { return cGreaterThanSignKeyword_0_0_2_3; }
 		
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)
+		//name=TypesIdentifier | name=TypesComputedPropertyName
 		public Alternatives getAlternatives_0_0_3() { return cAlternatives_0_0_3; }
 		
 		//name=TypesIdentifier
@@ -1654,7 +1654,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'final'
 		public Keyword getDeclaredFinalFinalKeyword_1_2_0() { return cDeclaredFinalFinalKeyword_1_2_0; }
 		
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)
+		//name=TypesIdentifier | name=TypesComputedPropertyName
 		public Alternatives getAlternatives_2() { return cAlternatives_2; }
 		
 		//name=TypesIdentifier
@@ -1730,8 +1730,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredStatic?='static')? 'get' (name=TypesIdentifier | name=TypesComputedPropertyName))
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//({TGetter} declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
-		//'get' (name=TypesIdentifier | name=TypesComputedPropertyName))
+		//{TGetter} declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
+		//'get' (name=TypesIdentifier | name=TypesComputedPropertyName)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TGetter}
@@ -1761,7 +1761,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'get'
 		public Keyword getGetKeyword_0_0_3() { return cGetKeyword_0_0_3; }
 		
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)
+		//name=TypesIdentifier | name=TypesComputedPropertyName
 		public Alternatives getAlternatives_0_0_4() { return cAlternatives_0_0_4; }
 		
 		//name=TypesIdentifier
@@ -1839,8 +1839,8 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//declaredStatic?='static')? 'set' (name=TypesIdentifier | name=TypesComputedPropertyName))
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//({TSetter} declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
-		//'set' (name=TypesIdentifier | name=TypesComputedPropertyName))
+		//{TSetter} declaredMemberAccessModifier=MemberAccessModifier (declaredAbstract?='abstract' | declaredStatic?='static')?
+		//'set' (name=TypesIdentifier | name=TypesComputedPropertyName)
 		public Group getGroup_0_0() { return cGroup_0_0; }
 		
 		//{TSetter}
@@ -1870,7 +1870,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		//'set'
 		public Keyword getSetKeyword_0_0_3() { return cSetKeyword_0_0_3; }
 		
-		//(name=TypesIdentifier | name=TypesComputedPropertyName)
+		//name=TypesIdentifier | name=TypesComputedPropertyName
 		public Alternatives getAlternatives_0_0_4() { return cAlternatives_0_0_4; }
 		
 		//name=TypesIdentifier
@@ -2427,11 +2427,11 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//// TODO jvp: more type information, cf. types model
-	/// *
+	///*
 	// * We cannot define a TypeVariableRef, as this cannot be distinguished from a ParameterizedTypeRef. That is,
 	// * we cannot distinguish whether 'T' is a type variable T, or a type with name 'T'. Thus,
 	// * type variables are handled similar to types (and are actually types).
-	// * / Type:
+	// */ Type:
 	//	TObjectPrototype
 	//	| TClass
 	//	| TInterface
@@ -2452,7 +2452,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeAccess().getRule();
 	}
 	
-	//TypeRef:
+	//@ Override TypeRef:
 	//	TypeRefWithoutModifiers followedByQuestionMark?='?'?;
 	public TypeRefElements getTypeRefAccess() {
 		return pTypeRef;
@@ -2476,7 +2476,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getPrimitiveTypeAccess().getRule();
 	}
 	
-	//TypeReferenceName:
+	//@ Override TypeReferenceName:
 	//	'void' | 'any' | 'undefined' | 'null' | 'indexed' | IDENTIFIER ('/' IDENTIFIER)*;
 	public TypeReferenceNameElements getTypeReferenceNameAccess() {
 		return pTypeReferenceName;
@@ -2622,10 +2622,10 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTObjectPrototypeAccess().getRule();
 	}
 	
-	/// *
+	///*
 	// * Virtual base type, not visible to N4JS users.
 	// * Used to define common super types, e.g. for all enumerations.
-	// * / VirtualBaseType:
+	// */ VirtualBaseType:
 	//	{VirtualBaseType}
 	//	'virtualBase' name=BindingTypesIdentifier ('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 	//	'{'
@@ -2680,7 +2680,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//CallableCtor TMethod:
 	//	{TMethod}
 	//	'(' (fpars+=TFormalParameter (',' fpars+=TFormalParameter)*)? ')' (':' returnTypeRef=TypeRef)?
-	//	';'?
+	//	';'?;
 	public CallableCtorElements getCallableCtorAccess() {
 		return pCallableCtor;
 	}
@@ -2792,7 +2792,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//UnionTypeExpression TypeRef:
-	//	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?
+	//	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
 	public TypeExpressionsGrammarAccess.UnionTypeExpressionElements getUnionTypeExpressionAccess() {
 		return gaTypeExpressions.getUnionTypeExpressionAccess();
 	}
@@ -2802,7 +2802,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//IntersectionTypeExpression TypeRef:
-	//	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?
+	//	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
 	public TypeExpressionsGrammarAccess.IntersectionTypeExpressionElements getIntersectionTypeExpressionAccess() {
 		return gaTypeExpressions.getIntersectionTypeExpressionAccess();
 	}
@@ -2815,7 +2815,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	=> ({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression
 	//	| ArrayTypeRef
 	//	| TypeRefWithModifiers
-	//	| "(" super::TypeRef ")"
+	//	| "(" super::TypeRef ")";
 	public TypeExpressionsGrammarAccess.PrimaryTypeExpressionElements getPrimaryTypeExpressionAccess() {
 		return gaTypeExpressions.getPrimaryTypeExpressionAccess();
 	}
@@ -2825,7 +2825,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//BogusTypeRef TypeRef:
-	//	TypeRefWithModifiers
+	//	TypeRefWithModifiers;
 	public TypeExpressionsGrammarAccess.BogusTypeRefElements getBogusTypeRefAccess() {
 		return gaTypeExpressions.getBogusTypeRefAccess();
 	}
@@ -2835,7 +2835,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypeRefWithModifiers StaticBaseTypeRef:
-	//	TypeRefWithoutModifiers => followedByQuestionMark?='?'?
+	//	TypeRefWithoutModifiers => followedByQuestionMark?='?'?;
 	public TypeExpressionsGrammarAccess.TypeRefWithModifiersElements getTypeRefWithModifiersAccess() {
 		return gaTypeExpressions.getTypeRefWithModifiersAccess();
 	}
@@ -2848,7 +2848,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	(ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'? | TypeTypeRef
 	//	| FunctionTypeExpressionOLD
 	//	| UnionTypeExpressionOLD
-	//	| IntersectionTypeExpressionOLD
+	//	| IntersectionTypeExpressionOLD;
 	public TypeExpressionsGrammarAccess.TypeRefWithoutModifiersElements getTypeRefWithoutModifiersAccess() {
 		return gaTypeExpressions.getTypeRefWithoutModifiersAccess();
 	}
@@ -2862,7 +2862,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	| ArrayTypeRef
 	//	| TypeTypeRef
 	//	| UnionTypeExpressionOLD
-	//	| IntersectionTypeExpressionOLD
+	//	| IntersectionTypeExpressionOLD;
 	public TypeExpressionsGrammarAccess.TypeRefFunctionTypeExpressionElements getTypeRefFunctionTypeExpressionAccess() {
 		return gaTypeExpressions.getTypeRefFunctionTypeExpressionAccess();
 	}
@@ -2879,7 +2879,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	| FunctionTypeExpressionOLD
 	//	| ArrowFunctionTypeExpression
 	//	| UnionTypeExpressionOLD
-	//	| IntersectionTypeExpressionOLD
+	//	| IntersectionTypeExpressionOLD;
 	public TypeExpressionsGrammarAccess.TypeRefForCastElements getTypeRefForCastAccess() {
 		return gaTypeExpressions.getTypeRefForCastAccess();
 	}
@@ -2891,7 +2891,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//TypeArgInTypeTypeRef TypeArgument:
 	//	ParameterizedTypeRefNominal
 	//	| ThisTypeRefNominal
-	//	| Wildcard
+	//	| Wildcard;
 	public TypeExpressionsGrammarAccess.TypeArgInTypeTypeRefElements getTypeArgInTypeTypeRefAccess() {
 		return gaTypeExpressions.getTypeArgInTypeTypeRefAccess();
 	}
@@ -2936,7 +2936,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	'{' ('@' 'This' '(' declaredThisType=TypeRefFunctionTypeExpression ')')?
 	//	'function' ('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
 	//	'(' TAnonymousFormalParameterList ')' (':' returnTypeRef=super::TypeRef)?
-	//	'}'
+	//	'}';
 	public TypeExpressionsGrammarAccess.FunctionTypeExpressionOLDElements getFunctionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getFunctionTypeExpressionOLDAccess();
 	}
@@ -2946,7 +2946,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ArrowFunctionTypeExpression FunctionTypeExpression:
-	//	{FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>' returnTypeRef=PrimaryTypeExpression
+	//	{FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>' returnTypeRef=PrimaryTypeExpression;
 	public TypeExpressionsGrammarAccess.ArrowFunctionTypeExpressionElements getArrowFunctionTypeExpressionAccess() {
 		return gaTypeExpressions.getArrowFunctionTypeExpressionAccess();
 	}
@@ -2965,9 +2965,9 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTAnonymousFormalParameterListAccess().getRule();
 	}
 	
-	/// **
+	///**
 	// * Used in type expressions, name is optional.
-	// * / TAnonymousFormalParameter:
+	// */ TAnonymousFormalParameter:
 	//	variadic?='...'? (=> name=BindingIdentifier<Yield=false> ':')? typeRef=super::TypeRef
 	//	DefaultFormalParameter;
 	public TypeExpressionsGrammarAccess.TAnonymousFormalParameterElements getTAnonymousFormalParameterAccess() {
@@ -2978,9 +2978,9 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTAnonymousFormalParameterAccess().getRule();
 	}
 	
-	/// **
+	///**
 	// * Used in Types language only.
-	// * / TFormalParameter:
+	// */ TFormalParameter:
 	//	variadic?='...'? name=BindingIdentifier<Yield=false>
 	//	':' typeRef=super::TypeRef
 	//	DefaultFormalParameter;
@@ -2992,12 +2992,12 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTFormalParameterAccess().getRule();
 	}
 	
-	/// **
+	///**
 	// * Default initializers in FunctionTypeExpressions or TFunctions
 	// * are necessary to specify optional formal parameters. Hence, their
 	// * initializer expression is rather uninteresting and limited by validations
 	// * to 'undefined'. The shorthand form, that is omitting the initializer, is supported.
-	// * / fragment DefaultFormalParameter *:
+	// */ fragment DefaultFormalParameter *:
 	//	(hasInitializerAssignment?='=' astInitializer=super::TypeReferenceName?)?;
 	public TypeExpressionsGrammarAccess.DefaultFormalParameterElements getDefaultFormalParameterAccess() {
 		return gaTypeExpressions.getDefaultFormalParameterAccess();
@@ -3009,7 +3009,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//UnionTypeExpressionOLD UnionTypeExpression:
 	//	{UnionTypeExpression}
-	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}'
+	//	'union' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
 	public TypeExpressionsGrammarAccess.UnionTypeExpressionOLDElements getUnionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getUnionTypeExpressionOLDAccess();
 	}
@@ -3020,7 +3020,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IntersectionTypeExpressionOLD IntersectionTypeExpression:
 	//	{IntersectionTypeExpression}
-	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}'
+	//	'intersection' '{' typeRefs+=TypeRefWithoutModifiers (',' typeRefs+=TypeRefWithoutModifiers)* '}';
 	public TypeExpressionsGrammarAccess.IntersectionTypeExpressionOLDElements getIntersectionTypeExpressionOLDAccess() {
 		return gaTypeExpressions.getIntersectionTypeExpressionOLDAccess();
 	}
@@ -3040,7 +3040,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ParameterizedTypeRefNominal ParameterizedTypeRef:
-	//	declaredType=[Type|super::TypeReferenceName] (=> '<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>')?
+	//	declaredType=[Type|super::TypeReferenceName] (=> '<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>')?;
 	public TypeExpressionsGrammarAccess.ParameterizedTypeRefNominalElements getParameterizedTypeRefNominalAccess() {
 		return gaTypeExpressions.getParameterizedTypeRefNominalAccess();
 	}
@@ -3050,7 +3050,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ArrayTypeRef ParameterizedTypeRef:
-	//	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]"
+	//	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
 	public TypeExpressionsGrammarAccess.ArrayTypeRefElements getArrayTypeRefAccess() {
 		return gaTypeExpressions.getArrayTypeRefAccess();
 	}
@@ -3081,11 +3081,11 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMemberListAccess().getRule();
 	}
 	
-	/// **
+	///**
 	// * All TMembers here are only used in ParameterizedTypeRefStructural references
 	// * Most type references are optional. However, in the types language (n4ts), these
 	// * references are NOT optional.
-	// * / TStructMember:
+	// */ TStructMember:
 	//	TStructGetter
 	//	| TStructSetter
 	//	| TStructMethod
@@ -3147,7 +3147,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypingStrategyUseSiteOperator TypingStrategy:
-	//	'~' ('~' | STRUCTMODSUFFIX)?
+	//	'~' ('~' | STRUCTMODSUFFIX)?;
 	public TypeExpressionsGrammarAccess.TypingStrategyUseSiteOperatorElements getTypingStrategyUseSiteOperatorAccess() {
 		return gaTypeExpressions.getTypingStrategyUseSiteOperatorAccess();
 	}
@@ -3157,7 +3157,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypingStrategyDefSiteOperator TypingStrategy:
-	//	'~'
+	//	'~';
 	public TypeExpressionsGrammarAccess.TypingStrategyDefSiteOperatorElements getTypingStrategyDefSiteOperatorAccess() {
 		return gaTypeExpressions.getTypingStrategyDefSiteOperatorAccess();
 	}
@@ -3206,7 +3206,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//WildcardNewNotation Wildcard:
 	//	usingInOutNotation?='out' declaredUpperBound=super::TypeRef | usingInOutNotation?='in'
-	//	declaredLowerBound=super::TypeRef
+	//	declaredLowerBound=super::TypeRef;
 	public TypeExpressionsGrammarAccess.WildcardNewNotationElements getWildcardNewNotationAccess() {
 		return gaTypeExpressions.getWildcardNewNotationAccess();
 	}
@@ -3227,7 +3227,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//TypeVariableWithDefSiteVariance TypeVariable:
 	//	(declaredCovariant?='out' | declaredContravariant?='in')?
-	//	name=IDENTIFIER ('extends' declaredUpperBound=super::TypeRef)?
+	//	name=IDENTIFIER ('extends' declaredUpperBound=super::TypeRef)?;
 	public TypeExpressionsGrammarAccess.TypeVariableWithDefSiteVarianceElements getTypeVariableWithDefSiteVarianceAccess() {
 		return gaTypeExpressions.getTypeVariableWithDefSiteVarianceAccess();
 	}
@@ -3236,11 +3236,11 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeVariableWithDefSiteVarianceAccess().getRule();
 	}
 	
-	/// *
+	///*
 	// * [ECM11] (7.6, pp. 17)
 	// * Identifier :: IdentifierName but not ReservedWord
 	// * ReservedWord :: Keyword | FutureReservedWord | NullLiteral | BooleanLiteral
-	// * / BindingIdentifier <Yield>:
+	// */ BindingIdentifier <Yield>:
 	//	IDENTIFIER
 	//	// yield as identifier as of [ECM15] (11.6.2, pp. 165)
 	//	| <!Yield> 'yield'
@@ -3269,7 +3269,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	'super' | 'switch' | 'this' | 'throw' | 'try' | 'typeof' | 'var' | 'void' | 'while' | 'with' | 'yield' // null literal
 	//	| 'null' // boolean literal
 	//	| 'true' | 'false' // Future Reserved Word as of [ECM15] (11.6.2.2, pp. 166)
-	//	// | 'await' / * reserved word only if parse goal is module - compromise: allow as identifier and validate * /
+	//	// | 'await' /* reserved word only if parse goal is module - compromise: allow as identifier and validate */
 	//	| 'enum';
 	public TypeExpressionsGrammarAccess.ReservedWordElements getReservedWordAccess() {
 		return gaTypeExpressions.getReservedWordAccess();
@@ -3437,7 +3437,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal fragment ML_COMMENT_FRAGMENT:
-	//	'/ *'->'* /';
+	//	'/*'->'*/';
 	public TerminalRule getML_COMMENT_FRAGMENTRule() {
 		return gaUnicode.getML_COMMENT_FRAGMENTRule();
 	}

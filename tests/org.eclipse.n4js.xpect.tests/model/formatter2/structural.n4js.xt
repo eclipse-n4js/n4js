@@ -12,8 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
-/* */
-/* XPECT formattedLines 300 ---
+// Formatter bug in Xtext 2.11: https://github.com/eclipse/xtext-core/issues/367
+/* XPECT FIXME formattedLines 300 ---
 var a: ~Object with {fieldA?: string, set bsetter(f: number), set csetter(number), get bgetter(): number, get
 		cgetter(), methodA(), methodB(): ~Object with {x?: string, y?: string, obj: ~i~Object with {sdfljsdf: any}
 		}, methodC(...string): [number]};

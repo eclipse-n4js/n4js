@@ -18,7 +18,7 @@ import org.eclipse.n4js.XtextParametrizedRunner.ParametersProvider
 import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 import org.eclipse.xtext.GrammarUtil
-import org.eclipse.xtext.junit4.InjectWith
+import org.eclipse.xtext.testing.InjectWith
 import org.junit.runner.RunWith
 import org.junit.Test
 import org.eclipse.xtext.parser.antlr.Lexer

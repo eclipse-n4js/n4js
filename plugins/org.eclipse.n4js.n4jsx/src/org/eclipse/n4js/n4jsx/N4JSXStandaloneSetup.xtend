@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,42 +8,39 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4jsx;
+package org.eclipse.n4js.n4jsx
 
-import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
-
-import com.google.inject.Injector;
-
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4mf.N4mfPackage;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage;
+import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4mf.N4mfPackage
+import com.google.inject.Injector
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
+import org.eclipse.n4js.ts.types.TypesPackage
 
 /**
- * Initialization support for running Xtext languages without equinox extension registry
+ * Initialization support for running Xtext languages without Equinox extension registry.
  */
-public class N4JSXStandaloneSetup extends N4JSXStandaloneSetupGenerated {
+class N4JSXStandaloneSetup extends N4JSXStandaloneSetupGenerated {
 
 	/**
 	 * Performs the setup and populates the EMF registers in the stand-alone environment.
 	 *
 	 * @see #createInjectorAndDoEMFRegistration()
 	 */
-	public static void doSetup() {
-		new N4JSXStandaloneSetup().createInjectorAndDoEMFRegistration();
+	def static void doSetup() {
+		new N4JSXStandaloneSetup().createInjectorAndDoEMFRegistration()
 	}
 
 	/**
 	 * Same as {@link #doSetup()}, but won't invoke {@code N4JSStandaloneSetup#doSetup()}. For details, see
 	 * {@link #createInjectorAndDoEMFRegistrationWithoutParentLanguages()}.
 	 */
-	public static Injector doSetupWithoutParentLanguages() {
+	def static Injector doSetupWithoutParentLanguages() {
 		return new N4JSXStandaloneSetup().createInjectorAndDoEMFRegistrationWithoutParentLanguages();
 	}
 
-	@Override
-	public Injector createInjectorAndDoEMFRegistration() {
+	override Injector createInjectorAndDoEMFRegistration() {
 		// trigger class loading
 		TypeRefsPackage.eINSTANCE.getNsURI();
 		TypesPackage.eINSTANCE.getNsURI();
@@ -64,7 +61,7 @@ public class N4JSXStandaloneSetup extends N4JSXStandaloneSetupGenerated {
 	 * <p>
 	 * <b>This method assumes that the setup of N4JS has already taken place.</b>
 	 */
-	public Injector createInjectorAndDoEMFRegistrationWithoutParentLanguages() {
+	def Injector createInjectorAndDoEMFRegistrationWithoutParentLanguages() {
 		// trigger class loading
 		TypeRefsPackage.eINSTANCE.getNsURI();
 		TypesPackage.eINSTANCE.getNsURI();
@@ -73,7 +70,7 @@ public class N4JSXStandaloneSetup extends N4JSXStandaloneSetupGenerated {
 		XMLTypePackage.eINSTANCE.getNsURI();
 		N4JSXPackage.eINSTANCE.getNsURI();
 
-		Injector injector = createInjector();
+		val Injector injector = createInjector();
 		register(injector);
 		return injector;
 	}

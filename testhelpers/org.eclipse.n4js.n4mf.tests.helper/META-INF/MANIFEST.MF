@@ -7,7 +7,7 @@ Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.n4js.n4mf,
  org.eclipse.core.runtime,
- org.eclipse.xtext.junit4,
+ org.eclipse.xtext.testing,
  org.eclipse.emf.codegen.ecore
 Import-Package: org.apache.log4j,
  org.junit;version="4.5.0",

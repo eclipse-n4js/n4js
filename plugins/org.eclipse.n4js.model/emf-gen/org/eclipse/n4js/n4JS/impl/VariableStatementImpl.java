@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS.impl;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -146,15 +144,12 @@ public class VariableStatementImpl extends StatementImpl implements VariableStat
 	 * @generated
 	 */
 	public EList<VariableDeclaration> getVarDecl() {
-		EList<VariableDeclarationOrBinding> _varDeclsOrBindings = this.getVarDeclsOrBindings();
 		final Function1<VariableDeclarationOrBinding, EList<VariableDeclaration>> _function = new Function1<VariableDeclarationOrBinding, EList<VariableDeclaration>>() {
 			public EList<VariableDeclaration> apply(final VariableDeclarationOrBinding it) {
 				return it.getVariableDeclarations();
 			}
 		};
-		EList<EList<VariableDeclaration>> _map = XcoreEListExtensions.<VariableDeclarationOrBinding, EList<VariableDeclaration>>map(_varDeclsOrBindings, _function);
-		Iterable<VariableDeclaration> _flatten = Iterables.<VariableDeclaration>concat(_map);
-		return ECollections.<VariableDeclaration>toEList(_flatten);
+		return ECollections.<VariableDeclaration>toEList(Iterables.<VariableDeclaration>concat(XcoreEListExtensions.<VariableDeclarationOrBinding, EList<VariableDeclaration>>map(this.getVarDeclsOrBindings(), _function)));
 	}
 
 	/**

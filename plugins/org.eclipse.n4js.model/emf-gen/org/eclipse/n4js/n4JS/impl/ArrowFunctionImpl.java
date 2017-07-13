@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import com.google.common.base.Objects;
-
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -23,7 +21,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.ArrowFunction;
-import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FunctionExpression;
@@ -120,7 +117,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	 */
 	public boolean isSingleExprImplicitReturn() {
 		return ((((this.isArrowFunction() && 
-			(!this.isHasBracesAroundBody())) && (!Objects.equal(this.getBody(), null))) && 
+			(!this.isHasBracesAroundBody())) && (this.getBody() != null)) && 
 			(!this.getBody().getStatements().isEmpty())) && (this.getBody().getStatements().get(0) instanceof ExpressionStatement));
 	}
 
@@ -133,9 +130,7 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 		Expression _xifexpression = null;
 		boolean _isSingleExprImplicitReturn = this.isSingleExprImplicitReturn();
 		if (_isSingleExprImplicitReturn) {
-			Block _body = this.getBody();
-			EList<Statement> _statements = _body.getStatements();
-			Statement _get = _statements.get(0);
+			Statement _get = this.getBody().getStatements().get(0);
 			_xifexpression = ((ExpressionStatement) _get).getExpression();
 		}
 		else {

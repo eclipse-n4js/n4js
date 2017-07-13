@@ -32,7 +32,7 @@ import static org.eclipse.core.runtime.jobs.Job.getJobManager
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
-import static extension org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.*
+import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.
@@ -51,18 +51,15 @@ class RuntimeEnvironmentResolutionPluginUITest extends RuntimeEnvironmentResolut
 		assertTrue('Platform is not running. These tests should be executed as JUnit Plug-in Test.', isRunning)
 	}
 
-	@Override
 	override createInjector() {
 		new N4JSUiInjectorProvider().injector;
 	}
 
-	@Override
 	override before() {
 		super.before()
 		clearWorkspace()
 	}
 
-	@Override
 	override protected createProjectWithManifest(String projectId, String manifestContent) {
 		val project = workspace.root.getProject(projectId)
 		assertFalse(project.exists)

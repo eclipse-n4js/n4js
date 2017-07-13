@@ -13,7 +13,7 @@ package org.eclipse.n4js.xsemantics.caching
 import com.google.inject.Inject
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.n4js.xsemantics.AbstractTypesystemTest
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 
 /**
  * Reusable methods for testing performance with and without caching

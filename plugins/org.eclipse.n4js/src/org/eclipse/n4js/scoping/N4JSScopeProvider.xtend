@@ -129,12 +129,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return delegate.getScope(context, reference)
 	}
 
-	@Override
 	override IScopeProvider getDelegate() {
 		return delegate;
 	}
 
-	@Override
 	override getScope(EObject context, EReference reference) {
 		try {
 			if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
@@ -170,7 +168,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return IScope.NULLSCOPE;
 	}
 
-	@Override
 	override getScopeForContentAssist(EObject context, EReference reference) {
 
 		val scope = getScope(context, reference);

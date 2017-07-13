@@ -33,10 +33,8 @@ function fd2(){
 		throw 2;
 		/* XPECT errors ---
 			"Catch variable A shadows class A (line 22)." at "A"
-			"Catch variable names should start with lower case letter." at "A"
 		---
 		// XPECT warnings ---
-			"Catch variable A shadows class A (line 22)." at "A"
 			"Catch variable names should start with lower case letter." at "A"
 		--- */
 		} catch (A){
@@ -47,25 +45,23 @@ function fd2(){
 // ... and no duplication
 
 class F{}
-// XPECT errors --> "Function F duplicates class F (line 49)." at "F"
+// XPECT errors --> "Function F duplicates class F (line 47)." at "F"
 function F(){}
 
 
 interface B{};
 /* XPECT errors ---
-"Variable names should start with lower case letter." at "B"
-"Variable B duplicates interface B (line 54)." at "B"
+"Variable B duplicates interface B (line 52)." at "B"
 ---
 // XPECT warnings ---
 "Variable names should start with lower case letter." at "B"
-"Variable B duplicates interface B (line 54)." at "B"
 --- */
 var B;
 
 class X{}
-// XPECT errors --> "Interface X duplicates class X (line 65)." at "X"
+// XPECT errors --> "Interface X duplicates class X (line 61)." at "X"
 interface X{}
 
 interface Y{}
-// XPECT errors --> "Enum Y duplicates interface Y (line 69)." at "Y"
+// XPECT errors --> "Enum Y duplicates interface Y (line 65)." at "Y"
 enum Y{ry,ey}

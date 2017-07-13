@@ -13,9 +13,9 @@ package org.eclipse.n4js.naming;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
-import org.eclipse.xtext.junit4.util.ParseHelper;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.eclipse.xtext.testing.util.ParseHelper;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.junit.Before;
 import org.junit.Test;

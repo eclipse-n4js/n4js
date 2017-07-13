@@ -39,7 +39,6 @@ class ProcessResult {
 		return 0 === exitCode;
 	}
 
-	@Override
 	override toString() {
 		"Exit code:" + exitCode + LN + "Standard out:" + LN + stdOut + LN + "Standard error:" + LN + stdErr;
 	}

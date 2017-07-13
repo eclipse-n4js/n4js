@@ -27,7 +27,6 @@ class FunctionDelegate<F, T> implements Function<F, T> {
 		this.delegate = delegate.checkNotNull;
 	}
 
-	@Override
 	override apply(F input) {
 		delegate.apply(input);
 	}

@@ -42,7 +42,6 @@ class ShowTypeInformationHandler extends AbstractHandler {
 	@Inject
 	private extension AstSelectionProvider2;
 
-	@Override
 	override execute(ExecutionEvent event) throws ExecutionException {
 		val editor = getActiveXtextEditor(event);
 		if (null !== editor) {

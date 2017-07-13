@@ -180,8 +180,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	 * @generated
 	 */
 	public boolean isGeneric() {
-		EList<TypeVariable> _typeVars = this.getTypeVars();
-		boolean _isEmpty = _typeVars.isEmpty();
+		boolean _isEmpty = this.getTypeVars().isEmpty();
 		return (!_isEmpty);
 	}
 
@@ -202,9 +201,7 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 	public Variance getVarianceOfTypeVar(final int idx) {
 		Variance _xifexpression = null;
 		if (((idx >= 0) && (idx < this.getTypeVars().size()))) {
-			EList<TypeVariable> _typeVars = this.getTypeVars();
-			TypeVariable _get = _typeVars.get(idx);
-			_xifexpression = _get.getVariance();
+			_xifexpression = this.getTypeVars().get(idx).getVariance();
 		}
 		else {
 			_xifexpression = null;
@@ -232,14 +229,12 @@ public class TypeImpl extends TExportableElementImpl implements Type {
 		if (_isGeneric) {
 			String _name = this.getName();
 			String _plus = (_name + "<");
-			EList<TypeVariable> _typeVars = this.getTypeVars();
 			final Function1<TypeVariable, String> _function = new Function1<TypeVariable, String>() {
 				public String apply(final TypeVariable it) {
 					return it.getTypeAsString();
 				}
 			};
-			EList<String> _map = XcoreEListExtensions.<TypeVariable, String>map(_typeVars, _function);
-			String _join = IterableExtensions.join(_map, ",");
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeVariable, String>map(this.getTypeVars(), _function), ",");
 			String _plus_1 = (_plus + _join);
 			_xifexpression = (_plus_1 + ">");
 		}

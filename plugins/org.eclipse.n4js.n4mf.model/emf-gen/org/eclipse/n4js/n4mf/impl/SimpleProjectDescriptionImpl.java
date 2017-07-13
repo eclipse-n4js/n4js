@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4mf.impl;
 
-import com.google.common.base.Objects;
-
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -152,8 +150,8 @@ public class SimpleProjectDescriptionImpl extends MinimalEObjectImpl.Container i
 	public String getVendorId() {
 		String _xifexpression = null;
 		String _declaredVendorId = this.getDeclaredVendorId();
-		boolean _notEquals = (!Objects.equal(_declaredVendorId, null));
-		if (_notEquals) {
+		boolean _tripleNotEquals = (_declaredVendorId != null);
+		if (_tripleNotEquals) {
 			_xifexpression = this.getDeclaredVendorId();
 		}
 		else {

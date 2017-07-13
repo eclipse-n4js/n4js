@@ -13,10 +13,10 @@ package org.eclipse.n4js.smoke.tests
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.io.StringReader
-import org.eclipse.xtext.junit4.smoketest.ProcessedBy
-import org.eclipse.xtext.junit4.smoketest.Scenarios
-import org.eclipse.xtext.junit4.smoketest.XtextSmokeTestRunner
-import org.eclipse.xtext.junit4.smoketest.processors.PartialParsingProcessor
+import org.eclipse.xtext.testing.smoketest.ProcessedBy
+import org.eclipse.xtext.testing.smoketest.Scenarios
+import org.eclipse.xtext.testing.smoketest.XtextSmokeTestRunner
+import org.eclipse.xtext.testing.smoketest.processors.PartialParsingProcessor
 import org.eclipse.xtext.parser.IParser
 import org.eclipse.xtext.util.ReplaceRegion
 import org.junit.ComparisonFailure

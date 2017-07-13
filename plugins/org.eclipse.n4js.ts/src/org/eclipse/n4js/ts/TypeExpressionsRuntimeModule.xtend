@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,20 +8,18 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.regex;
+package org.eclipse.n4js.ts
 
-import org.eclipse.xtext.conversion.impl.INTValueConverter;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
-public class RegularExpressionRuntimeModule extends org.eclipse.n4js.regex.AbstractRegularExpressionRuntimeModule {
-	// nothing to customize
+class TypeExpressionsRuntimeModule extends AbstractTypeExpressionsRuntimeModule {
 
-	/**
-	 * INT is a data type rule thus the specialized binding
-	 */
-	public Class<? extends INTValueConverter> bindINTValueConverter() {
-		return RegExINTValueConverter.class;
+	// contributed by org.eclipse.xtext.generator.formatting2.Formatter2Fragment
+	@SuppressWarnings("restriction")
+	override Class<? extends org.eclipse.xtext.formatting2.IFormatter2> bindIFormatter2() {
+		return org.eclipse.n4js.ts.formatting2.TypeExpressionFormatterNoOp;
 	}
+
 }

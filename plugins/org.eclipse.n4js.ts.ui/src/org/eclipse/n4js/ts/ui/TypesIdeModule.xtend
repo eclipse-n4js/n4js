@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.common.unicode;
+package org.eclipse.n4js.ts.ui
 
 
 /**
- * Use this class to register components to be used at runtime / without the
- * Equinox extension registry.
+ * Use this class to register ide components.
  */
-public class UnicodeRuntimeModule extends org.eclipse.n4js.common.unicode.AbstractUnicodeRuntimeModule {
-	// nothing to customize
+class TypesIdeModule extends AbstractTypesIdeModule {
 }

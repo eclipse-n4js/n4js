@@ -12,8 +12,8 @@ package org.eclipse.n4js.jsdoc2spec;
 
 import java.io.IOException;
 
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.junit.ComparisonFailure;
 import org.junit.Test;

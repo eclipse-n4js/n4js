@@ -127,7 +127,7 @@ public abstract class AbstractN4JSXRuntimeModule extends DefaultRuntimeModule {
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	public Provider<InternalN4JSXLexer> provideInternalN4JSXLexer() {
+	public Provider<? extends InternalN4JSXLexer> provideInternalN4JSXLexer() {
 		return LexerProvider.create(InternalN4JSXLexer.class);
 	}
 	

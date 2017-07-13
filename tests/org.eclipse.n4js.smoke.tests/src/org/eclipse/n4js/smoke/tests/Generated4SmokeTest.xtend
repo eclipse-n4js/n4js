@@ -16,9 +16,9 @@ import com.google.inject.Singleton
 import org.eclipse.n4js.analysis.ExceptionAnalyser
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.emf.common.util.URI
-import org.eclipse.xtext.junit4.smoketest.ProcessedBy
-import org.eclipse.xtext.junit4.smoketest.XtextSmokeTestRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.smoketest.ProcessedBy
+import org.eclipse.xtext.testing.smoketest.XtextSmokeTestRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.runner.RunWith
 import org.junit.runners.Suite.SuiteClasses

@@ -71,19 +71,16 @@ class FileMatcher extends SimpleFileVisitor<Path> {
 		matchedPaths = newArrayList;
 	}
 
-	@Override
 	override preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 		dir.match;
 		CONTINUE;
 	}
 
-	@Override
 	override visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 		file.match;
 		CONTINUE;
 	}
 
-	@Override
 	override visitFileFailed(Path file, IOException e) throws IOException {
 		LOGGER.error('''Error while visiting file at: «file».''', e);
 		CONTINUE;

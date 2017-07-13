@@ -139,7 +139,7 @@ public interface TypeVariable extends Type {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _declaredUpperBound = this.getDeclaredUpperBound();\nreturn this.getTypeVariableAsString(_declaredUpperBound);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getTypeVariableAsString(this.getDeclaredUpperBound());'"
 	 * @generated
 	 */
 	String getTypeAsString();

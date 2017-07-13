@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js;
 
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 
 import com.google.inject.Inject;
 

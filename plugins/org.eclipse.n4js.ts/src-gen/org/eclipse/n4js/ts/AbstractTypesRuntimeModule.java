@@ -120,7 +120,7 @@ public abstract class AbstractTypesRuntimeModule extends DefaultRuntimeModule {
 	}
 	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	public Provider<InternalTypesLexer> provideInternalTypesLexer() {
+	public Provider<? extends InternalTypesLexer> provideInternalTypesLexer() {
 		return LexerProvider.create(InternalTypesLexer.class);
 	}
 	

@@ -28,7 +28,6 @@ class NodejsTesterLaunchConfigurationTabGroup extends AbstractLaunchConfiguratio
 	@Inject
 	private Provider<NodejsTesterLaunchConfigurationTab> nodejsTabProvider;
 
-	@Override
 	override createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		tabs = #[mainTabProvider.get, nodejsTabProvider.get];
 	}

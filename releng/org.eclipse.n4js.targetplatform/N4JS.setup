@@ -6,12 +6,12 @@
     xmlns:git="http://www.eclipse.org/oomph/setup/git/1.0"
     xmlns:jdt="http://www.eclipse.org/oomph/setup/jdt/1.0"
     xmlns:predicates="http://www.eclipse.org/oomph/predicates/1.0"
-    xmlns:projects="http://www.eclipse.org/oomph/setup/projects/1.0"
+    xmlns:projects_1.0="http://www.eclipse.org/oomph/setup/projects/1.0"
     xmlns:setup="http://www.eclipse.org/oomph/setup/1.0"
     xmlns:setup.p2="http://www.eclipse.org/oomph/setup/p2/1.0"
     xmlns:setup.targlets="http://www.eclipse.org/oomph/setup/targlets/1.0"
     xmlns:setup.workingsets="http://www.eclipse.org/oomph/setup/workingsets/1.0"
-    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/projects/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Projects.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
+    xsi:schemaLocation="http://www.eclipse.org/oomph/setup/git/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Git.ecore http://www.eclipse.org/oomph/setup/jdt/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/JDT.ecore http://www.eclipse.org/oomph/predicates/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/Predicates.ecore http://www.eclipse.org/oomph/setup/targlets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupTarglets.ecore http://www.eclipse.org/oomph/setup/workingsets/1.0 http://git.eclipse.org/c/oomph/org.eclipse.oomph.git/plain/setups/models/SetupWorkingSets.ecore"
     name="n4js"
     label="N4JS">
   <annotation
@@ -177,11 +177,11 @@
   <setupTask
       xsi:type="setup:VariableTask"
       name="n4js.target.platform"
-      defaultValue="N4JS_Neon.2"
+      defaultValue="N4JS_Neon.2.GH-18"
       storageURI="scope://Workspace">
     <choice
-        value="N4JS_Neon.2"
-        label="N4JS_Neon.2"/>
+        value="N4JS_Neon.2.GH-18"
+        label="N4JS_Neon.2.GH-18"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -210,12 +210,12 @@
       label="Xtext/Xtend">
     <requirement
         name="org.eclipse.xtend.sdk.feature.group"
-        versionRange="[2.10.0,2.10.1)"/>
+        versionRange="[2.12.0,2.12.1)"/>
     <requirement
         name="org.eclipse.xtext.sdk.feature.group"
-        versionRange="[2.10.0,2.10.1)"/>
+        versionRange="[2.12.0,2.12.1)"/>
     <repository
-        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.10.0"/>
+        url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.12.0"/>
     <description>Install the tools needed in the IDE to work with the source code for ${scope.project.label}</description>
   </setupTask>
   <setupTask
@@ -223,9 +223,9 @@
       label="XSemantics">
     <requirement
         name="it.xsemantics.sdk.feature.group"
-        versionRange="[1.10.2,1.10.9)"/>
+        versionRange="[1.12.0,1.12.9)"/>
     <repository
-        url="https://dl.bintray.com/lorenzobettini/xsemantics/updates/1.10"/>
+        url="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -252,14 +252,14 @@
         name="org.eclipse.jdt.junit.runners.feature.feature.group"
         versionRange="[0.1.0,0.1.1)"/>
     <repository
-        url="http://www.xpect-tests.org/updatesite/nightly/"/>
+        url="http://meysholdt.github.io/eclipse_jdt_junit_runners/updatesite"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
       label="XPect">
     <requirement
         name="org.xpect.sdk.feature.group"
-        versionRange="[0.1.0,0.1.1)"/>
+        versionRange="[0.2.0,0.2.1)"/>
     <repository
         url="http://www.xpect-tests.org/updatesite/nightly/"/>
   </setupTask>
@@ -369,7 +369,7 @@
         </predicate>
       </sourceLocator>
       <repositoryList
-          name="N4JS_Neon.2">
+          name="N4JS_Neon.2.GH-18">
         <repository
             url="http://download.eclipse.org/eclipse/updates/4.6/R-4.6.2-201611241400"/>
         <repository
@@ -383,7 +383,7 @@
         <repository
             url="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201505260349"/>
         <repository
-            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.10.0"/>
+            url="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.12.0"/>
         <repository
             url="http://download.eclipse.org/technology/swtbot/releases/2.4.0"/>
         <repository
@@ -391,7 +391,7 @@
         <repository
             url="http://boothen.github.io/Json-Eclipse-Plugin"/>
         <repository
-            url="https://dl.bintray.com/lorenzobettini/xsemantics/updates/1.10"/>
+            url="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
         <repository
             url="http://www.xpect-tests.org/updatesite/nightly/"/>
         <repository
@@ -517,13 +517,13 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
-  <setupTask
-      xsi:type="projects:ProjectsBuildTask"
-      refresh="true"/>
   <stream name="master"
       label="Master"/>
   <logicalProjectContainer
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
   <description>N4JS provides an IDE for typed Javascript.</description>
+  <setupTask
+      xsi:type="projects_1.0:ProjectsBuildTask"
+      refresh="true"/>
 </setup:Project>

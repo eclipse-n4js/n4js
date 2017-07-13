@@ -20,6 +20,10 @@ import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser;
+import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
+import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Group;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ObservableXtextTokenStream;
@@ -31,10 +35,6 @@ import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser;
-import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
 
 /**
  * Specialized content assist parser entry point. Rather than parsing text from scratch, it uses an Antlr
@@ -100,6 +100,15 @@ public class CustomN4JSParser extends N4JSParser {
 		CustomInternalN4JSParser result = new CustomInternalN4JSParser();
 		result.setGrammarAccess(getGrammarAccess());
 		return result;
+	}
+
+	@Override
+	public void initializeFor(AbstractRule rule) {
+		// TODO: GH-61.
+		// Remove this function to see test errors in GHOLD-92-LINKING_DIAGNOSTIC_import_missing_B.n4js.xt
+		if (super.getEntryRule() == null) {
+			super.initializeFor(rule);
+		}
 	}
 
 	@Inject

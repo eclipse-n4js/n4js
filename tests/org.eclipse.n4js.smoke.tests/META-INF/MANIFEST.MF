@@ -9,10 +9,10 @@ Require-Bundle: org.eclipse.xtend.lib,
  com.google.guava,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.n4js.tests.helper,
- org.eclipse.xtext.junit4,
  com.google.inject,
  org.eclipse.n4js.ui,
- org.eclipse.n4js.ui.tests.helper
+ org.eclipse.n4js.ui.tests.helper,
+ org.eclipse.xtext.testing
 Import-Package: org.apache.log4j,
  org.hamcrest.core,
  org.junit;version="4.5.0",

@@ -28,7 +28,8 @@
   - line 137 & 143 & 153 auto-wrap not implemeneted for logical expressions.
   - line 158 & 159 newlines swallowed.
  */
-/* XPECT formattedLines 140 ---
+// Formatter bug in Xtext 2.11: https://github.com/eclipse/xtext-core/issues/367
+/* XPECT FIXME formattedLines 140 ---
 import {SomethingLongHere} from "formatter2/wishesImported";
 
 interface Goo {}

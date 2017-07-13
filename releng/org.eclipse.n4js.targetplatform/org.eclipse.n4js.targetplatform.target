@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_Neon.2" sequenceNumber="115">
+<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="118">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
@@ -28,8 +28,7 @@
       <repository location="http://download.eclipse.org/modeling/emf/emf/updates/2.12"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.emf.mwe2.language.ui" version="2.9.0.v201605261103"/>
-      <unit id="org.eclipse.emf.mwe2.launch.ui" version="2.9.0.v201605261103"/>
+      <unit id="org.eclipse.emf.mwe2.launch" version="2.9.0.v201605261103"/>
       <unit id="org.eclipse.emf.mwe2.lib" version="2.9.0.v201605261103"/>
       <repository location="http://download.eclipse.org/modeling/emft/mwe/updates/releases/2.9.0"/>
     </location>
@@ -39,10 +38,12 @@
       <repository location="http://download.eclipse.org/modeling/m2t/xpand/updates/releases/R201505260349"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xtext.junit4" version="2.10.0.v201605250459"/>
-      <unit id="org.eclipse.xtext.xbase" version="2.10.0.v201605250459"/>
-      <unit id="org.eclipse.xtext.xtext.ui" version="2.10.0.v201605250459"/>
-      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.10.0"/>
+      <unit id="org.eclipse.xtext.junit4" version="2.12.0.v20170519-0809"/>
+      <unit id="org.eclipse.xtext.testing" version="2.12.0.v20170518-0959"/>
+      <unit id="org.eclipse.xtext.ui.testing" version="2.12.0.v20170519-0809"/>
+      <unit id="org.eclipse.xtext.xbase" version="2.12.0.v20170519-0752"/>
+      <unit id="org.eclipse.xtext.xtext.ui" version="2.12.0.v20170519-0809"/>
+      <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.12.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.swtbot.go" version="2.4.0.201604200752"/>
@@ -51,15 +52,17 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="ch.qos.logback.classic" version="1.0.7.v20121108-1250"/>
       <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.5.0.v201504151636"/>
+      <unit id="com.google.guava" version="15.0.0.v201403281430"/>
       <unit id="com.google.inject" version="3.0.0.v201605172100"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="it.xsemantics.runtime" version="1.10.2.v20170211-0945"/>
-      <repository location="https://dl.bintray.com/lorenzobettini/xsemantics/updates/1.10"/>
+      <unit id="it.xsemantics.runtime" version="1.12.0.v20170627-2011"/>
+      <repository location="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.xpect.xtext.lib" version="0.1.0.201611181623"/>
+      <unit id="org.eclipse.jdt.junit.runners" version="0.1.0.201411181552"/>
+      <unit id="org.xpect.xtext.lib" version="0.2.0.201706301756"/>
       <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">

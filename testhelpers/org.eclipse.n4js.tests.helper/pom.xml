@@ -35,5 +35,36 @@ Contributors:
 				<artifactId>xtend-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
+		
+		
+		<pluginManagement>
+			<plugins>
+				<!-- TYCHO -->
+				<!--
+					IDE-1452
+					GHOLD-408
+					Reason to enable project specific settings here is that the class
+					XtextParametrizedRunner is accessing
+						org.eclipse.xtext.testing.internal.InjectorProviders
+					which results in the following exception:
+						Access restriction: The type 'InjectorProviders' is not API.
+					This can either be disabled directly in the pom, or in the
+					project specific Eclipse settings. The latter was done. Hence, these
+					settings have to be respected by the maven tool chain.
+					
+					Remove this when project specific settings are enabled globally in
+					one of the parent pom files, or when the error is ignored in the pom
+					files directly. Also, remove this, when GHOLD-408 is resolved.
+				-->
+				<plugin>
+					<groupId>org.eclipse.tycho</groupId>
+					<artifactId>tycho-compiler-plugin</artifactId>
+					<version>${tycho.version}</version>
+					<configuration>
+						<useProjectSettings>true</useProjectSettings>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>

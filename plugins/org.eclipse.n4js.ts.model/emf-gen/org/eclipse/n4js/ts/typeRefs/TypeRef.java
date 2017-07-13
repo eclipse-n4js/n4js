@@ -347,7 +347,7 @@ public interface TypeRef extends TypeArgument, Versionable {
 	 * Override Versioned#getVersion()
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\n<%org.eclipse.n4js.ts.types.Type%> _declaredType = this.getDeclaredType();\nboolean _tripleNotEquals = (_declaredType != null);\nif (_tripleNotEquals)\n{\n\t<%org.eclipse.n4js.ts.types.Type%> _declaredType_1 = this.getDeclaredType();\n\t_xifexpression = _declaredType_1.getVersion();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='int _xifexpression = (int) 0;\n<%org.eclipse.n4js.ts.types.Type%> _declaredType = this.getDeclaredType();\nboolean _tripleNotEquals = (_declaredType != null);\nif (_tripleNotEquals)\n{\n\t_xifexpression = this.getDeclaredType().getVersion();\n}\nelse\n{\n\t_xifexpression = 0;\n}\nreturn _xifexpression;'"
 	 * @generated
 	 */
 	int getVersion();

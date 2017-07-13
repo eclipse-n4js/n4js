@@ -26,7 +26,7 @@ public interface DoubleLiteral extends NumericLiteral {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.math.BigDecimal%> _value = this.getValue();\nreturn _value.doubleValue();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return this.getValue().doubleValue();'"
 	 * @generated
 	 */
 	double toDouble();
@@ -35,7 +35,7 @@ public interface DoubleLiteral extends NumericLiteral {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.math.BigDecimal%> _value = this.getValue();\nboolean _tripleEquals = (_value == null);\nif (_tripleEquals)\n{\n\treturn null;\n}\n<%java.math.BigDecimal%> _value_1 = this.getValue();\nreturn _value_1.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%java.math.BigDecimal%> _value = this.getValue();\nboolean _tripleEquals = (_value == null);\nif (_tripleEquals)\n{\n\treturn null;\n}\nreturn this.getValue().toString();'"
 	 * @generated
 	 */
 	String getValueAsString();

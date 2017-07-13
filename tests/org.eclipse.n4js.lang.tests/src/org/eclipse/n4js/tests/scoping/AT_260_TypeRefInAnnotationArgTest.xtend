@@ -22,10 +22,10 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith

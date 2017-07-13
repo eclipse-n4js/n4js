@@ -121,8 +121,7 @@ public class ParenExpressionImpl extends PrimaryExpressionImpl implements ParenE
 		Expression _expression = this.getExpression();
 		boolean _tripleNotEquals = (_expression != null);
 		if (_tripleNotEquals) {
-			Expression _expression_1 = this.getExpression();
-			return _expression_1.isValidSimpleAssignmentTarget();
+			return this.getExpression().isValidSimpleAssignmentTarget();
 		}
 		return true;
 	}

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,36 +8,33 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4mf;
+package org.eclipse.n4js.n4mf
 
-import org.eclipse.emf.ecore.EPackage;
-
-import com.google.inject.Injector;
+import com.google.inject.Injector
+import org.eclipse.emf.ecore.EPackage
 
 /**
- * Initialization support for running Xtext languages without equinox extension registry
+ * Initialization support for running Xtext languages without Equinox extension registry.
  */
-public class N4MFStandaloneSetup extends N4MFStandaloneSetupGenerated {
+class N4MFStandaloneSetup extends N4MFStandaloneSetupGenerated {
 
 	/**
 	 * Performs the setup and populates the EMF registries in the standalone environment.
 	 *
 	 * @see #createInjectorAndDoEMFRegistration()
 	 */
-	public static void doSetup() {
-		new N4MFStandaloneSetup().createInjectorAndDoEMFRegistration();
+	def static void doSetup() {
+		new N4MFStandaloneSetup().createInjectorAndDoEMFRegistration()
 	}
 
-	@Override
-	public Injector createInjectorAndDoEMFRegistration() {
+	override Injector createInjectorAndDoEMFRegistration() {
 		// trigger class loading
 		N4mfPackage.eINSTANCE.getNsURI();
 
 		return super.createInjectorAndDoEMFRegistration();
 	}
 
-	@Override
-	public void register(Injector injector) {
+	override void register(Injector injector) {
 		EPackage.Registry.INSTANCE.put(N4mfPackage.eINSTANCE.getNsURI(), N4mfPackage.eINSTANCE);
 		super.register(injector);
 	}

@@ -12,13 +12,13 @@ package org.eclipse.n4js;
 
 import java.util.Arrays;
 
-import org.eclipse.xtext.junit4.GlobalRegistries;
-import org.eclipse.xtext.junit4.GlobalRegistries.GlobalStateMemento;
-import org.eclipse.xtext.junit4.IInjectorProvider;
-import org.eclipse.xtext.junit4.IRegistryConfigurator;
-import org.eclipse.xtext.junit4.InjectWith;
 import org.eclipse.xtext.service.AbstractGenericModule;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
+import org.eclipse.xtext.testing.GlobalRegistries;
+import org.eclipse.xtext.testing.GlobalRegistries.GlobalStateMemento;
+import org.eclipse.xtext.testing.IInjectorProvider;
+import org.eclipse.xtext.testing.IRegistryConfigurator;
+import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.util.PolymorphicDispatcher;
 
 import com.google.inject.Guice;

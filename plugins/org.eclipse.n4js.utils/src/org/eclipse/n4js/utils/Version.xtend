@@ -132,7 +132,6 @@ class Version implements Comparable<Version> {
 		this.qualifier = Strings.nullToEmpty(qualifier);
 	}
 
-	@Override
 	override compareTo(Version o) {
 		if (!o.valid) {
 			return -1;
@@ -156,7 +155,6 @@ class Version implements Comparable<Version> {
 		return 0; // TODO consider qualifier once we support versions: Strings.nullToEmpty(qualifier).compareTo(o.qualifier);
 	}
 
-	@Override
 	override toString() {
 		if (MISSING == this) {
 			return 'MISSING';

@@ -89,7 +89,7 @@ public interface SwitchStatement extends Statement, VariableEnvironmentElement {
 	 * Convenience method returns default clause if switch statement defines such as clause or null.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4JS.AbstractCaseClause%>> _cases = this.getCases();\nfinal <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.AbstractCaseClause%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.AbstractCaseClause%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.AbstractCaseClause%> it)\n\t{\n\t\treturn <%java.lang.Boolean%>.valueOf((it instanceof <%org.eclipse.n4js.n4JS.DefaultClause%>));\n\t}\n};\n<%org.eclipse.n4js.n4JS.AbstractCaseClause%> _findFirst = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.<<%org.eclipse.n4js.n4JS.AbstractCaseClause%>>findFirst(_cases, _function);\nreturn ((<%org.eclipse.n4js.n4JS.DefaultClause%>) _findFirst);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.AbstractCaseClause%>, <%java.lang.Boolean%>> _function = new <%org.eclipse.xtext.xbase.lib.Functions.Function1%><<%org.eclipse.n4js.n4JS.AbstractCaseClause%>, <%java.lang.Boolean%>>()\n{\n\tpublic <%java.lang.Boolean%> apply(final <%org.eclipse.n4js.n4JS.AbstractCaseClause%> it)\n\t{\n\t\treturn <%java.lang.Boolean%>.valueOf((it instanceof <%org.eclipse.n4js.n4JS.DefaultClause%>));\n\t}\n};\n<%org.eclipse.n4js.n4JS.AbstractCaseClause%> _findFirst = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.<<%org.eclipse.n4js.n4JS.AbstractCaseClause%>>findFirst(this.getCases(), _function);\nreturn ((<%org.eclipse.n4js.n4JS.DefaultClause%>) _findFirst);'"
 	 * @generated
 	 */
 	DefaultClause getDefaultClause();
@@ -101,7 +101,7 @@ public interface SwitchStatement extends Statement, VariableEnvironmentElement {
 	 * Convenience method filters all CaseClauses from clauses.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4JS.AbstractCaseClause%>> _cases = this.getCases();\n<%java.lang.Iterable%><<%org.eclipse.n4js.n4JS.CaseClause%>> _filter = <%com.google.common.collect.Iterables%>.<<%org.eclipse.n4js.n4JS.CaseClause%>>filter(_cases, <%org.eclipse.n4js.n4JS.CaseClause%>.class);\nreturn <%org.eclipse.emf.common.util.ECollections%>.<<%org.eclipse.n4js.n4JS.CaseClause%>>toEList(_filter);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return <%org.eclipse.emf.common.util.ECollections%>.<<%org.eclipse.n4js.n4JS.CaseClause%>>toEList(<%com.google.common.collect.Iterables%>.<<%org.eclipse.n4js.n4JS.CaseClause%>>filter(this.getCases(), <%org.eclipse.n4js.n4JS.CaseClause%>.class));'"
 	 * @generated
 	 */
 	EList<CaseClause> getCaseClauses();
