@@ -1070,7 +1070,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class ImportClauseElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportClause");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(0);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Group cGroup_0 = (Group)cAlternatives.eContents().get(0);
 		private final Assignment cImportSpecifiersAssignment_0_0 = (Assignment)cGroup_0.eContents().get(0);
 		private final RuleCall cImportSpecifiersDefaultImportSpecifierParserRuleCall_0_0_0 = (RuleCall)cImportSpecifiersAssignment_0_0.eContents().get(0);
@@ -1079,7 +1079,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cImportSpecifiersExceptDefaultParserRuleCall_0_1_1 = (RuleCall)cGroup_0_1.eContents().get(1);
 		private final RuleCall cImportSpecifiersExceptDefaultParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		
-		//fragment ImportClause *:
+		//fragment ImportClause returns ImportDeclaration:
 		//	importSpecifiers+=DefaultImportSpecifier (',' ImportSpecifiersExceptDefault)?
 		//	| ImportSpecifiersExceptDefault;
 		@Override public ParserRule getRule() { return rule; }
@@ -1110,7 +1110,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class ImportSpecifiersExceptDefaultElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ImportSpecifiersExceptDefault");
-		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(0);
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final Assignment cImportSpecifiersAssignment_0 = (Assignment)cAlternatives.eContents().get(0);
 		private final RuleCall cImportSpecifiersNamespaceImportSpecifierParserRuleCall_0_0 = (RuleCall)cImportSpecifiersAssignment_0.eContents().get(0);
 		private final Group cGroup_1 = (Group)cAlternatives.eContents().get(1);
@@ -1125,7 +1125,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cCommaKeyword_1_1_2 = (Keyword)cGroup_1_1.eContents().get(2);
 		private final Keyword cRightCurlyBracketKeyword_1_2 = (Keyword)cGroup_1.eContents().get(2);
 		
-		//fragment ImportSpecifiersExceptDefault *:
+		//fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 		//	importSpecifiers+=NamespaceImportSpecifier
 		//	| '{' (importSpecifiers+=NamedImportSpecifier (',' importSpecifiers+=NamedImportSpecifier)* ','?)? '}';
 		@Override public ParserRule getRule() { return rule; }
@@ -10292,7 +10292,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getImportDeclarationImplAccess().getRule();
 	}
 	
-	//fragment ImportClause *:
+	//fragment ImportClause returns ImportDeclaration:
 	//	importSpecifiers+=DefaultImportSpecifier (',' ImportSpecifiersExceptDefault)?
 	//	| ImportSpecifiersExceptDefault;
 	public ImportClauseElements getImportClauseAccess() {
@@ -10303,7 +10303,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getImportClauseAccess().getRule();
 	}
 	
-	//fragment ImportSpecifiersExceptDefault *:
+	//fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 	//	importSpecifiers+=NamespaceImportSpecifier
 	//	| '{' (importSpecifiers+=NamedImportSpecifier (',' importSpecifiers+=NamedImportSpecifier)* ','?)? '}';
 	public ImportSpecifiersExceptDefaultElements getImportSpecifiersExceptDefaultAccess() {
@@ -12868,6 +12868,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrowFunctionTypeExpressionAccess().getRule();
 	}
 	
+	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
 	//fragment TAnonymousFormalParameterList *:
 	//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 	public TypeExpressionsGrammarAccess.TAnonymousFormalParameterListElements getTAnonymousFormalParameterListAccess() {
@@ -12982,7 +12983,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//fragment TypeAndTypeArguments *:
+	//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
 	//	declaredType=[Type|super::TypeReferenceName] -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
@@ -13041,6 +13042,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
+	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=super::TypeVariable (',' typeVars+=super::TypeVariable)* '>';
 	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
