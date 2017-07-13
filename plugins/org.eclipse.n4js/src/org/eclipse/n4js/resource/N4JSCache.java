@@ -10,8 +10,14 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.Collection;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.ecore.EObject;
@@ -21,9 +27,15 @@ import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.validation.helper.IssuesProvider;
 import org.eclipse.xtext.service.OperationCanceledError;
 import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.Exceptions;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
+
+import com.google.common.collect.Sets;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.Provider;
 
 /**
  */
@@ -46,6 +58,81 @@ public class N4JSCache extends OnChangeEvictingCache {
 			adapter.setResource(resource);
 		}
 		return adapter;
+	}
+
+	private Collection<EObject> findEObjects(Object element) {
+		Set<EObject> result = Sets.newHashSet();
+		findEObjects(element, result, Sets.newSetFromMap(new IdentityHashMap<>()));
+		return result;
+	}
+
+	private void findEObjects(Object element, Set<EObject> result, Set<Object> visited) {
+		if (element == null || !visited.add(element)) {
+			return;
+		}
+		if (element instanceof Class || element instanceof ClassLoader || element instanceof Logger) {
+			return;
+		}
+		if (element instanceof Injector) {
+			return;
+		}
+		if (element instanceof EObject) {
+			result.add((EObject) element);
+		} else if (element instanceof Resource) {
+			result.add(((Resource) element).getContents().get(0));
+		} else if (element instanceof Object[]) {
+			Object[] casted = (Object[]) element;
+			for (Object nested : casted) {
+				findEObjects(nested, result, visited);
+			}
+		} else {
+			Class<? extends Object> type = element.getClass();
+			if (!type.isArray()) {
+				findEObjects(type, element, result, visited);
+			}
+		}
+	}
+
+	private void findEObjects(Class<?> type, Object element, Set<EObject> result, Set<Object> visited) {
+		while (type != null) {
+			Field[] fields = type.getDeclaredFields();
+			for (Field field : fields) {
+				if (field.getAnnotation(Inject.class) != null) {
+					if (!field.getType().isPrimitive() && !Modifier.isStatic(field.getModifiers())) {
+						field.setAccessible(true);
+						try {
+							findEObjects(field.get(element), result, visited);
+						} catch (Exception e) {
+							Exceptions.throwUncheckedException(e);
+						}
+					}
+				}
+			}
+			type = type.getSuperclass();
+		}
+	}
+
+	@Override
+	public <T> T get(Object key, Resource resource, Provider<T> provider) {
+		assertObjectsStemFrom("key", key, resource);
+		assertObjectsStemFrom("provider", provider, resource);
+		T result = super.get(key, resource, provider);
+		assertObjectsStemFrom("result", result, resource);
+		return result;
+	}
+
+	private void assertObjectsStemFrom(String description, Object element, Resource resource) {
+		Collection<EObject> referencedEObjects = findEObjects(element);
+		for (EObject referencedEObject : referencedEObjects) {
+			Resource res = referencedEObject.eResource();
+			if (res != null && res != resource) {
+				RuntimeException e = new RuntimeException(
+						String.format("Illegal cache attempt: %s EObjects from %s on %s: %s",
+								description, res.getURI(), resource.getURI(), referencedEObject));
+				e.printStackTrace();
+				throw e;
+			}
+		}
 	}
 
 	/**
