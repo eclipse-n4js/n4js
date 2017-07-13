@@ -106,7 +106,7 @@ ExportDeclaration:
 	ExportDeclarationImpl
 ;
 
-fragment ExportDeclarationImpl*:
+fragment ExportDeclarationImpl *:
 	'export' (
 		wildcardExport?='*' ExportFromClause Semi
 	|	ExportClause ->ExportFromClause? Semi
@@ -190,12 +190,12 @@ fragment ImportDeclarationImpl*:
 	)? module=[types::TModule|ModuleSpecifier] Semi
 ;
 
-fragment ImportClause*:
+fragment ImportClause returns ImportDeclaration:
 		importSpecifiers+=DefaultImportSpecifier (',' ImportSpecifiersExceptDefault)?
 	|	ImportSpecifiersExceptDefault
 ;
 
-fragment ImportSpecifiersExceptDefault*:
+fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 		importSpecifiers+=NamespaceImportSpecifier
 	|	'{' (importSpecifiers+=NamedImportSpecifier (',' importSpecifiers+=NamedImportSpecifier)* ','?)? '}'
 ;
