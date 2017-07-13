@@ -2522,10 +2522,14 @@ rule substTypeVariablesThisTypeRef
 from {
 	{
 		val BoundThisTypeRef boundRefFromEnv = G.getThisType() as BoundThisTypeRef;
-		val boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.actualThisTypeRef);
-		boundRef.setTypingStrategy(thisTypeRef.typingStrategy); // note: must take use-site typing-strategy from 'thisTypeRef', not the one stored in the environment
-		TypeUtils.copyTypeModifiers(boundRef, thisTypeRef); // note: must take use-site type modifiers (e.g. optional)
-		T = boundRef;
+		if (boundRefFromEnv !== null) {
+			val boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.actualThisTypeRef);
+			boundRef.setTypingStrategy(thisTypeRef.typingStrategy); // note: must take use-site typing-strategy from 'thisTypeRef', not the one stored in the environment
+			TypeUtils.copyTypeModifiers(boundRef, thisTypeRef); // note: must take use-site type modifiers (e.g. optional)
+			T = boundRef;	
+		} else {
+			T = thisTypeRef
+		}
 	}
 	or
 	{

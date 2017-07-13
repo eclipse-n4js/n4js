@@ -6798,18 +6798,22 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeArgument> applyRuleSubstTypeVariablesThisTypeRef(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ThisTypeRef thisTypeRef) throws RuleFailedException {
     ThisTypeRef T = null; // output parameter
-    /* { val BoundThisTypeRef boundRefFromEnv = G.getThisType() as BoundThisTypeRef; val boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.actualThisTypeRef); boundRef.setTypingStrategy(thisTypeRef.typingStrategy); TypeUtils.copyTypeModifiers(boundRef, thisTypeRef); T = boundRef; } or { T = thisTypeRef } */
+    /* { val BoundThisTypeRef boundRefFromEnv = G.getThisType() as BoundThisTypeRef; if (boundRefFromEnv !== null) { val boundRef = TypeUtils.createBoundThisTypeRef(boundRefFromEnv.actualThisTypeRef); boundRef.setTypingStrategy(thisTypeRef.typingStrategy); TypeUtils.copyTypeModifiers(boundRef, thisTypeRef); T = boundRef; } else { T = thisTypeRef } } or { T = thisTypeRef } */
     {
       RuleFailedException previousFailure = null;
       try {
         TypeRef _thisType = RuleEnvironmentExtensions.getThisType(G);
         final BoundThisTypeRef boundRefFromEnv = ((BoundThisTypeRef) _thisType);
-        ParameterizedTypeRef _actualThisTypeRef = boundRefFromEnv.getActualThisTypeRef();
-        final BoundThisTypeRef boundRef = TypeUtils.createBoundThisTypeRef(_actualThisTypeRef);
-        TypingStrategy _typingStrategy = thisTypeRef.getTypingStrategy();
-        boundRef.setTypingStrategy(_typingStrategy);
-        TypeUtils.copyTypeModifiers(boundRef, thisTypeRef);
-        T = boundRef;
+        if ((boundRefFromEnv != null)) {
+          ParameterizedTypeRef _actualThisTypeRef = boundRefFromEnv.getActualThisTypeRef();
+          final BoundThisTypeRef boundRef = TypeUtils.createBoundThisTypeRef(_actualThisTypeRef);
+          TypingStrategy _typingStrategy = thisTypeRef.getTypingStrategy();
+          boundRef.setTypingStrategy(_typingStrategy);
+          TypeUtils.copyTypeModifiers(boundRef, thisTypeRef);
+          T = boundRef;
+        } else {
+          T = thisTypeRef;
+        }
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
         T = thisTypeRef;
