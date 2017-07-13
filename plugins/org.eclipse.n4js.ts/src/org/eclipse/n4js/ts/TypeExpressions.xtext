@@ -103,7 +103,8 @@ FunctionTypeExpressionOLD returns FunctionTypeExpression:
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
 	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
 
-fragment TAnonymousFormalParameterList*:
+// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
+fragment TAnonymousFormalParameterList* :
 	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?
 ;
 
@@ -155,11 +156,11 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 	TypeAndTypeArguments
 	('with' TStructMemberList)?;
 
-fragment TypeAndTypeArguments*:
+fragment TypeAndTypeArguments returns ParameterizedTypeRef:
 	declaredType=[Type|TypeReferenceName] (->TypeArguments)?
 ;
 
-fragment TypeArguments*:
+fragment TypeArguments *:
 	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'
 ;
 
@@ -185,6 +186,7 @@ TStructMethod:
 	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 ;
 
+// TODO extract TypeVariableContainer to be used here
 fragment TypeVariables*:
 	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
 ;
