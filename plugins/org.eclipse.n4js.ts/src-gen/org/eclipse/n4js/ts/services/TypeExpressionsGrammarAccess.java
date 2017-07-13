@@ -557,6 +557,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cFparsAssignment_1_1 = (Assignment)cGroup_1.eContents().get(1);
 		private final RuleCall cFparsTAnonymousFormalParameterParserRuleCall_1_1_0 = (RuleCall)cFparsAssignment_1_1.eContents().get(0);
 		
+		//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
 		//fragment TAnonymousFormalParameterList *:
 		//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 		@Override public ParserRule getRule() { return rule; }
@@ -914,13 +915,13 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class TypeAndTypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeAndTypeArguments");
-		private final Group cGroup = (Group)rule.eContents().get(0);
+		private final Group cGroup = (Group)rule.eContents().get(1);
 		private final Assignment cDeclaredTypeAssignment_0 = (Assignment)cGroup.eContents().get(0);
 		private final CrossReference cDeclaredTypeTypeCrossReference_0_0 = (CrossReference)cDeclaredTypeAssignment_0.eContents().get(0);
 		private final RuleCall cDeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1 = (RuleCall)cDeclaredTypeTypeCrossReference_0_0.eContents().get(1);
 		private final RuleCall cTypeArgumentsParserRuleCall_1 = (RuleCall)cGroup.eContents().get(1);
 		
-		//fragment TypeAndTypeArguments *:
+		//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
 		//	declaredType=[Type|TypeReferenceName] -> TypeArguments?;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -1124,6 +1125,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cTypeVarsTypeVariableParserRuleCall_2_1_0 = (RuleCall)cTypeVarsAssignment_2_1.eContents().get(0);
 		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
+		//// TODO extract TypeVariableContainer to be used here
 		//fragment TypeVariables *:
 		//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
 		@Override public ParserRule getRule() { return rule; }
@@ -2361,6 +2363,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrowFunctionTypeExpressionAccess().getRule();
 	}
 	
+	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
 	//fragment TAnonymousFormalParameterList *:
 	//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 	public TAnonymousFormalParameterListElements getTAnonymousFormalParameterListAccess() {
@@ -2475,7 +2478,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//fragment TypeAndTypeArguments *:
+	//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
 	//	declaredType=[Type|TypeReferenceName] -> TypeArguments?;
 	public TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return pTypeAndTypeArguments;
@@ -2534,6 +2537,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
+	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>';
 	public TypeVariablesElements getTypeVariablesAccess() {

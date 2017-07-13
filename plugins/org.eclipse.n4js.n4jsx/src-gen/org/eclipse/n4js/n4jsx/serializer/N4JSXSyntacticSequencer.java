@@ -290,7 +290,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'implements' | 'extends'
+	 *     'extends' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superClassRef=ParameterizedTypeRefNominal (ambiguity) implementedInterfaceRefs+=ParameterizedTypeRefNominal
@@ -301,7 +301,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'extends' | ',' | 'implements'
+	 *     'extends' | 'implements' | ','
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     implementedInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) implementedInterfaceRefs+=ParameterizedTypeRefNominal
@@ -365,7 +365,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'extends' | ',' | 'implements'
+	 *     'extends' | 'implements' | ','
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal

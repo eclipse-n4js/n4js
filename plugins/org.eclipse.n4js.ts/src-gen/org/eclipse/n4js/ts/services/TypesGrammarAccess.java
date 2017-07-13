@@ -2751,6 +2751,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrowFunctionTypeExpressionAccess().getRule();
 	}
 	
+	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
 	//fragment TAnonymousFormalParameterList *:
 	//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 	public TypeExpressionsGrammarAccess.TAnonymousFormalParameterListElements getTAnonymousFormalParameterListAccess() {
@@ -2865,7 +2866,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//fragment TypeAndTypeArguments *:
+	//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
 	//	declaredType=[Type|super::TypeReferenceName] -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
@@ -2924,6 +2925,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
+	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=super::TypeVariable (',' typeVars+=super::TypeVariable)* '>';
 	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
