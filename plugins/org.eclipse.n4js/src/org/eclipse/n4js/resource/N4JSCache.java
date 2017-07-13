@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.common.notify.Notifier;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -125,6 +126,18 @@ public class N4JSCache extends OnChangeEvictingCache {
 		Collection<EObject> referencedEObjects = findEObjects(element);
 		for (EObject referencedEObject : referencedEObjects) {
 			Resource res = referencedEObject.eResource();
+			if (res == null) {
+				URI objectURI = EcoreUtil.getURI(referencedEObject);
+				if (objectURI != null) {
+					if (!resource.getURI().equals(objectURI.trimFragment())) {
+						RuntimeException e = new RuntimeException(
+								String.format("Illegal cache attempt: %s EObjects from %s on %s: %s",
+										description, objectURI, resource.getURI(), referencedEObject));
+						e.printStackTrace();
+						throw e;
+					}
+				}
+			}
 			if (res != null && res != resource) {
 				RuntimeException e = new RuntimeException(
 						String.format("Illegal cache attempt: %s EObjects from %s on %s: %s",
