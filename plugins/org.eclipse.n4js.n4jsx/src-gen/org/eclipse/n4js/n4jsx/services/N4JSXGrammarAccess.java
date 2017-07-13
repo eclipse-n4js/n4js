@@ -839,7 +839,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getImportDeclarationImplAccess().getRule();
 	}
 	
-	//fragment ImportClause *:
+	//fragment ImportClause returns ImportDeclaration:
 	//	importSpecifiers+=DefaultImportSpecifier (',' ImportSpecifiersExceptDefault)?
 	//	| ImportSpecifiersExceptDefault;
 	public N4JSGrammarAccess.ImportClauseElements getImportClauseAccess() {
@@ -850,7 +850,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getImportClauseAccess().getRule();
 	}
 	
-	//fragment ImportSpecifiersExceptDefault *:
+	//fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 	//	importSpecifiers+=NamespaceImportSpecifier
 	//	| '{' (importSpecifiers+=NamedImportSpecifier (',' importSpecifiers+=NamedImportSpecifier)* ','?)? '}';
 	public N4JSGrammarAccess.ImportSpecifiersExceptDefaultElements getImportSpecifiersExceptDefaultAccess() {
@@ -3395,6 +3395,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrowFunctionTypeExpressionAccess().getRule();
 	}
 	
+	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
 	//fragment TAnonymousFormalParameterList *:
 	//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 	public TypeExpressionsGrammarAccess.TAnonymousFormalParameterListElements getTAnonymousFormalParameterListAccess() {
@@ -3509,7 +3510,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//fragment TypeAndTypeArguments *:
+	//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
 	//	declaredType=[Type|super::TypeReferenceName] -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
@@ -3568,6 +3569,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getTStructMethodAccess().getRule();
 	}
 	
+	//// TODO extract TypeVariableContainer to be used here
 	//fragment TypeVariables *:
 	//	'<' typeVars+=super::TypeVariable (',' typeVars+=super::TypeVariable)* '>';
 	public TypeExpressionsGrammarAccess.TypeVariablesElements getTypeVariablesAccess() {
