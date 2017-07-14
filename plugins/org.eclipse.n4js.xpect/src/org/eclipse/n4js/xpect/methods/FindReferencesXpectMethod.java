@@ -78,6 +78,7 @@ public class FindReferencesXpectMethod {
 			IEObjectCoveringRegion offset) {
 		// When you write Xpect test methods, ALWAYS retrieve eObject via IEObjectCoveringRegion to get the right
 		// eObject!
+		// Do NOT use EObject arg1!
 		EObject argEObj = offset.getEObject();
 		EObject eObj = argEObj;
 

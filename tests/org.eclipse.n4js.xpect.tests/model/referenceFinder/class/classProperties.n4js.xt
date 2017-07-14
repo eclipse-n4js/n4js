@@ -11,16 +11,33 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-//  XPECT findReferences --> referenceFinder/class/classProperties - T - 17, referenceFinder/class/classProperties - T - 25, referenceFinder/class/classProperties - T - 26
+/* XPECT findReferences at 'T' ---
+	referenceFinder/class/classProperties - T - 26,
+	referenceFinder/class/classProperties - T - 42,
+	referenceFinder/class/classProperties - T - 43
+---
+*/
 class T {
-// IDE-1662 XPECT FIXME findReferences at a --> t.a - 17, t.a - 18
+	/* XPECT findReferences at a ---
+		referenceFinder/class/classProperties - t.a - 45,
+		referenceFinder/class/classProperties - t.a - 46
+	---
+	*/
 	a : T;
-// IDE-1662 XPECT FIXME findReferences at i --> t.i - 20, t.i - 21
-	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> t.foo - 23
+
+	/* XPECT findReferences at i ---
+		referenceFinder/class/classProperties - t.i - 48,
+		referenceFinder/class/classProperties - t.i - 49
+	---
+	*/
+	i : int
+
+	/* XPECT findReferences at foo ---
+		referenceFinder/class/classProperties - t.foo - 51
+	---
+	*/
 	foo(){};
 }
-
 
 T;
 var t : T;
