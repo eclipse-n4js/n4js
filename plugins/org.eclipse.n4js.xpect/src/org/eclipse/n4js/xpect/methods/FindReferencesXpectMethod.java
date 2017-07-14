@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
@@ -78,6 +79,8 @@ public class FindReferencesXpectMethod {
 		if (arg1 instanceof ParameterizedTypeRef)
 			eObj = arg1.eContainer();
 		if (arg1 instanceof LiteralOrComputedPropertyName)
+			eObj = arg1.eContainer();
+		if (arg1 instanceof Block)
 			eObj = arg1.eContainer();
 
 		Resource eResource = eObj.eResource();

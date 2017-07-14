@@ -12,19 +12,17 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest 
     
    ResourceSet {
-		ThisFile { from="C.n4js.xt" }
-		File "D.n4js" { from = "D.n4js" }
+		ThisFile { from="A.n4js.xt" }
+		File "B.n4js" { from = "B.n4js" }
 	}
 
 	END_SETUP   
 */
 
-export public enum ColorEnum {
-	// Test find references in other files
-	// XPECT findReferences --> referenceFinder/enum/D - ColorEnum.RED - 2
-	RED,
-	// Test local find references
-	// XPECT findReferences at YELLOW --> referenceFinder/enum/C - ColorEnum.YELLOW - 30
-	YELLOW
+// Test find references of functions in local file or in other files
+// XPECT findReferences at 'foo' --> referenceFinder/functions/A - foo- 28, referenceFinder/functions/B - foo - 1, referenceFinder/functions/B - foo - 3
+export function foo() {
+
 }
-var b = ColorEnum.YELLOW;
+
+foo();

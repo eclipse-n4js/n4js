@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
-// IDE-1662 XPECT FIXME findReferences at x --> x - 7, x - 11
+// XPECT findReferences at x --> referenceFinder/functions/functions - x - 18, referenceFinder/functions/functions - x - 22
 function x () : void {}
 
 x();
