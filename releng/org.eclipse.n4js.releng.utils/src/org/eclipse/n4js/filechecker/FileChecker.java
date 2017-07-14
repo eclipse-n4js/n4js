@@ -22,7 +22,7 @@ import com.google.common.base.Joiner;
 public class FileChecker extends AbstractFileChecker {
 
 	private enum Mode {
-		NORMAL, XSEMANTICS, XPECT
+		NORMAL, XSEMANTICS, Xpect
 	}
 
 	private static final Mode MODE = Mode.XSEMANTICS;
@@ -36,8 +36,8 @@ public class FileChecker extends AbstractFileChecker {
 	private static final String[] XSEMANTICS_REPOS = { "xsemantics" };
 	private static final String[] XSEMANTICS_REPOS_MANDATORY = XSEMANTICS_REPOS;
 
-	private static final String[] XPECT_REPOS = { "Xpect" };
-	private static final String[] XPECT_REPOS_MANDATORY = XPECT_REPOS;
+	private static final String[] Xpect_REPOS = { "Xpect" };
+	private static final String[] Xpect_REPOS_MANDATORY = Xpect_REPOS;
 
 	/** Name used as vendor (in manifest.mf) and provider (in feature.xml). */
 	private static final String PROVIDER_NAME = "Eclipse " + (MODE == Mode.XSEMANTICS ? "Xsemantics" : "N4JS")
@@ -68,8 +68,8 @@ public class FileChecker extends AbstractFileChecker {
 	private static final String FILE_NAME__EPL = "EPL-1.0.html";
 
 	/** Extensions of files that should be checked more thoroughly. */
-	private static final String[] FILE_EXTENSIONS = { ".java", ".xtend", ".xtext", ".xcore", ".xsemantics", ".xml",
-			".mwe2", ".adoc", "Jenkinsfile", ".xt", ".n4jsx", ".n4jsd", ".n4mf" };
+	private static final String[] FILE_EXTENSIONS = { ".java", ".fj", ".xtend", ".xtext", ".xcore", ".xsemantics",
+			".xml", ".mwe2", ".adoc", "Jenkinsfile", ".xt", ".n4jsx", ".n4jsd", ".n4mf" };
 
 	/** These files will be ignored. May contain '/' but should not start or end with '/'. */
 	private static final String[] IGNORED_FILES = {
@@ -85,7 +85,7 @@ public class FileChecker extends AbstractFileChecker {
 			// "plugins/org.eclipse.n4js.common.unicode/grammar-gen",
 			"docs/org.eclipse.n4js.doc/src-gen", // under git-ignore, so not in repository
 			"docs/org.eclipse.n4js.doc/generated-docs", // under git-ignore, so not in repository
-			// "org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc", // test expectations (copyright header
+			// "org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc", // test eXpectations (copyright header
 			// unsupported)
 			"tools/org.eclipse.n4js.hlc/target/wsp", // temporary test data under git-ignore, so not in repository
 			".github", // removed in initial commit
@@ -185,7 +185,7 @@ public class FileChecker extends AbstractFileChecker {
 			"plugins/org.eclipse.n4js.common.unicode/src/org/eclipse/n4js/common/unicode/generator/UnicodeGrammarGenerator.xtend",
 
 			/* tests */
-			"tests/org.eclipse.n4js.n4ide.spec.tests/xpect-test/Ch05_04_01_02__Organize_Imports/organize_imports/GHOLD_103/GHOLD_103.txt",
+			"tests/org.eclipse.n4js.n4ide.spec.tests/Xpect-test/Ch05_04_01_02__Organize_Imports/organize_imports/GHOLD_103/GHOLD_103.txt",
 			"tests/org.eclipse.n4js.smoke.tests/src/org/eclipse/n4js/smoke/tests/GeneratedSmokeTestCases2.xtend",
 			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/tests/contentassist/NodeModelTokenSourceTest.xtend",
 			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/npmexporter/PackageJasonTemplateTest.xtend",
@@ -248,7 +248,7 @@ public class FileChecker extends AbstractFileChecker {
 	};
 
 	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xpect. */
-	private static final String[] XPECT_BANNED_WORDS_WHITELIST = {
+	private static final String[] Xpect_BANNED_WORDS_WHITELIST = {
 	};
 
 	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
@@ -303,14 +303,12 @@ public class FileChecker extends AbstractFileChecker {
 			+ " */").replace("\n * \n", "\n *\n");
 
 	/** XML files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
-	private static final String COPYRIGHT_HEADER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-			+ "<!--\n"
+	private static final String COPYRIGHT_HEADER_XML = "<!--\n"
 			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
 			+ "-->";
 
 	/** HTML files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
-	private static final String COPYRIGHT_HEADER_HTML = "<!DOCTYPE HTML>\n"
-			+ "<!--\n"
+	private static final String COPYRIGHT_HEADER_HTML = "<!--\n"
 			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
 			+ "-->";
 
@@ -398,8 +396,8 @@ public class FileChecker extends AbstractFileChecker {
 		switch (MODE) {
 		case XSEMANTICS:
 			return XSEMANTICS_REPOS;
-		case XPECT:
-			return XPECT_REPOS;
+		case Xpect:
+			return Xpect_REPOS;
 		default:
 			return REPOS;
 		}
@@ -410,8 +408,8 @@ public class FileChecker extends AbstractFileChecker {
 		switch (MODE) {
 		case XSEMANTICS:
 			return XSEMANTICS_REPOS_MANDATORY;
-		case XPECT:
-			return XPECT_REPOS_MANDATORY;
+		case Xpect:
+			return Xpect_REPOS_MANDATORY;
 		default:
 			return REPOS_MANDATORY;
 		}
@@ -469,13 +467,15 @@ public class FileChecker extends AbstractFileChecker {
 		}
 
 		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4ts", "n4js", "n4jsx", "n4mf",
-				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js" };
+				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js",
+				".ant", ".css", ".txt", ".mwe2txt", ".oldxsem", ".md", ".xtypes", ".xcoretxt", ".yml", ".fjcached",
+				".xpt" };
 		if (hasExtension(path, concat(FILE_EXTENSIONS, moreCRHs))) {
 			if (hasCorrectCopyrightHeader(path, content)) {
 				report.setToHasCRH();
 			} else {
 				if (path.toString().endsWith(".mwe2")) {
-					fixCopyrightHeader(path, content);
+					// fixCopyrightHeader(path, content);
 				}
 			}
 		}
@@ -530,7 +530,7 @@ public class FileChecker extends AbstractFileChecker {
 			report.problems.add("contains invalid line endings (i.e. contains carriage return: '\\r')");
 		} else {
 			if (!hasExtension(path, ".xt") && !isBelowFolder(path.toString(), GENERATED_FOLDERS)
-					&& MODE != Mode.XSEMANTICS && MODE != Mode.XPECT) {
+					&& MODE != Mode.XSEMANTICS && MODE != Mode.Xpect) {
 				// check file end (single '\n' character)
 				final int len = content.length();
 				final char charLast = len > 0 ? content.charAt(len - 1) : 0;
@@ -688,32 +688,32 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static int beginIndexWithoutCopyrightHeader(Path path, String content) {
-		if (hasExtension(path, ".xml")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_XML, false);
+		if (hasExtension(path, ".xml", ".ant", ".md")) {
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_XML, "<?xml ");
 
 		} else if (hasExtension(path, ".html")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_HTML, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_HTML, "<!DOCTYPE ");
 
 		} else if (hasExtension(path, ".adoc")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC);
 
 		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts", "Jenkinsfile", ".xt",
 				"xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
 
 		} else if (hasExtension(path, ".js")) {
-			int startPos = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS, false);
-			int startPosShort = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS_SHORT, false);
+			int startPos = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
+			int startPosShort = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS_SHORT);
 			return Math.max(startPos, startPosShort);
 
 		} else if (hasExtension(path, ".tex")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TEX, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TEX);
 
-		} else if (hasExtension(path, ".sh", ".idx")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_SH, true);
+		} else if (hasExtension(path, ".sh", ".idx", ".yml")) {
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_SH, "#!/");
 
 		} else if (hasExtension(path, ".txt")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TXT, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TXT);
 
 		} else {
 			int base = 0;
@@ -749,10 +749,14 @@ public class FileChecker extends AbstractFileChecker {
 		}
 	}
 
-	private static int beginIndexWithoutCopyrightHeader(String content, String header, boolean skipBashHeader) {
+	private static int beginIndexWithoutCopyrightHeader(String content, String header, String... skipHeaderLines) {
 		int offset = 0;
-		if (skipBashHeader && content.startsWith("#!/")) {
-			offset = content.indexOf("\n") + 1;
+		if (skipHeaderLines != null && skipHeaderLines.length > 0) {
+			for (String skipLine : skipHeaderLines) {
+				if (content.startsWith(skipLine)) {
+					offset = content.indexOf("\n") + 1;
+				}
+			}
 		}
 		int startPos = startsWithCopyrightHeader(content, header, offset) ? header.length() : 0;
 		return startPos;
@@ -776,8 +780,8 @@ public class FileChecker extends AbstractFileChecker {
 		case XSEMANTICS:
 			whiteList = XSEMANTICS_BANNED_WORDS_WHITELIST;
 			break;
-		case XPECT:
-			whiteList = XPECT_BANNED_WORDS_WHITELIST;
+		case Xpect:
+			whiteList = Xpect_BANNED_WORDS_WHITELIST;
 			break;
 		default:
 			whiteList = BANNED_WORDS_WHITELIST;
