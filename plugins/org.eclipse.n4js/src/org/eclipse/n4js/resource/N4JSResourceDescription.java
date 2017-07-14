@@ -21,6 +21,14 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -31,15 +39,6 @@ import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.common.collect.Sets;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TEnum;
-import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TFunction;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 
 /**
  * A description for N4JS resources. It enriches the list of imported names with the names of the super types of
@@ -123,7 +122,6 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	@Override
 	public Iterable<QualifiedName> getImportedNames() {
-
 		if (null == lazyImportedNames) {
 			synchronized (this) {
 				if (null == lazyImportedNames) {

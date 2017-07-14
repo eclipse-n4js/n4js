@@ -16,6 +16,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.GenericDeclaration;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
+import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -36,16 +44,8 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import org.eclipse.n4js.n4JS.GenericDeclaration;
-import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.PropertyNameOwner;
-import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
-import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
-
 /**
- * This class provides a XPECT method to specify tests regarding the {@link IReferenceFinder}
+ * This class provides a Xpect method to specify tests regarding the {@link IReferenceFinder}
  */
 @SuppressWarnings("restriction")
 @RunWith(XpectRunner.class)
@@ -65,7 +65,7 @@ public class FindReferencesXpectMethod {
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/**
-	 * This XPECT methods compares all computed references at a given EObject to the expected references. The expected
+	 * This Xpect methods compares all computed references at a given EObject to the expected references. The expected
 	 * references include the line number.
 	 */
 	@Xpect
@@ -85,24 +85,42 @@ public class FindReferencesXpectMethod {
 		collector.add(eObj, targets);
 		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(eResource);
 
+		final EObject targetObj = eObj;
+
 		ArrayList<String> result = Lists.newArrayList();
 		IReferenceFinder.Acceptor acceptor = new IReferenceFinder.Acceptor() {
 			@Override
 			public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
+				// Ignore the found reference to the target itself
+				if (src == targetObj) {
+					return;
+				}
+
 				if (src instanceof PropertyNameOwner)
 					src = ((PropertyNameOwner) src).getDeclaredName();
 
 				String resultText = "(unknown reference)";
 				ICompositeNode srcNode = NodeModelUtils.getNode(src);
-				if (srcNode != null) {
-					int line = srcNode.getStartLine();
-
-					String text = NodeModelUtils.getTokenText(srcNode);
-					if (src instanceof GenericDeclaration)
-						text = ((GenericDeclaration) src).getDefinedType().getName();
-
-					resultText = text + " - " + line;
+				// Ignore type representation candidate
+				if (srcNode == null) {
+					return;
 				}
+
+				int line = srcNode.getStartLine();
+
+				String moduleName;
+				if (src.eResource() instanceof N4JSResource) {
+					N4JSResource n4jsResource = (N4JSResource) src.eResource();
+					moduleName = n4jsResource.getModule().getQualifiedName();
+				} else {
+					moduleName = "(unknown resource)";
+				}
+
+				String text = NodeModelUtils.getTokenText(srcNode);
+				if (src instanceof GenericDeclaration)
+					text = ((GenericDeclaration) src).getDefinedType().getName();
+
+				resultText = moduleName + " - " + text + " - " + line;
 
 				result.add(resultText);
 			}

@@ -11,9 +11,8 @@
 package org.eclipse.n4js.resource;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.util.IAcceptor;
-
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
@@ -21,6 +20,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
+import org.eclipse.xtext.util.IAcceptor;
 
 /**
  * Allows to obtain all inferred elements from an AST element.
@@ -89,6 +89,14 @@ public class InferredElements {
 		public Void caseExportedVariableDeclaration(ExportedVariableDeclaration object) {
 			result.accept(object.getDefinedVariable());
 			return super.caseExportedVariableDeclaration(object);
+		}
+
+		@Override
+		public Void caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName object) {
+			if (object.eContainer() instanceof N4FieldDeclaration) {
+				return caseN4FieldDeclaration((N4FieldDeclaration) object.eContainer());
+			}
+			return super.caseLiteralOrComputedPropertyName(object);
 		}
 	}
 }

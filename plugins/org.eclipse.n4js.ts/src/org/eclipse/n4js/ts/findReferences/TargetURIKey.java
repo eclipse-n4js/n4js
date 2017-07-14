@@ -14,6 +14,11 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -24,11 +29,6 @@ import org.eclipse.xtext.util.SimpleAttributeResolver;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.Type;
 
 /**
  * Access to the n4 specific cached data during a find references operation.
@@ -82,6 +82,12 @@ public class TargetURIKey {
 			} else if (object instanceof TModule) {
 				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(object));
 			}
+
+			if (object instanceof IdentifiableElement) {
+				typesOrModulesToFind.add(qualifiedNameProvider
+						.getFullyQualifiedName(((IdentifiableElement) object).getContainingModule()));
+			}
+
 		}
 
 		/**
