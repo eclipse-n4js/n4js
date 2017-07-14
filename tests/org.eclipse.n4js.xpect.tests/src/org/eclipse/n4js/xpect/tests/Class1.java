@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2016 NumberFour AG.
+/**
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,25 +8,22 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+package org.eclipse.n4js.xpect.tests;
 
 class T {
-// IDE-1662 XPECT FIXME findReferences at a --> this.a - 18
-	a : T;
-// IDE-1662 XPECT FIXME findReferences at i --> this.i - 20
-	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> super.foo - 16
-	foo(){};
+	int a;;
+	int i;
+
+	void foo() {
+	};
 }
 
 class S extends T {
 	@Override
-// IDE-1662 XPECT FIXME findReferences at foo -->
-	foo() {
+	void foo() {
 		super.foo();
 
-		this.a;
+		System.out.println(this.a);
 
 		this.i = 0;
 	}

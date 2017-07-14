@@ -16,13 +16,14 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
@@ -32,6 +33,7 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.junit.runner.RunWith;
 import org.xpect.XpectImport;
@@ -73,15 +75,16 @@ public class FindReferencesXpectMethod {
 	@ParameterParser(syntax = "('at' arg1=OFFSET)?")
 	public void findReferences(
 			@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			EObject arg1) {
+			IEObjectCoveringRegion offset) {
+		// When you write Xpect test methods, ALWAYS retrieve eObject via IEObjectCoveringRegion to get the right
+		// eObject!
+		EObject argEObj = offset.getEObject();
+		EObject eObj = argEObj;
 
-		EObject eObj = arg1;
-		if (arg1 instanceof ParameterizedTypeRef)
-			eObj = arg1.eContainer();
-		if (arg1 instanceof LiteralOrComputedPropertyName)
-			eObj = arg1.eContainer();
-		if (arg1 instanceof Block)
-			eObj = arg1.eContainer();
+		if (argEObj instanceof ParameterizedTypeRef)
+			eObj = argEObj.eContainer();
+		if (argEObj instanceof LiteralOrComputedPropertyName)
+			eObj = argEObj.eContainer();
 
 		Resource eResource = eObj.eResource();
 		TargetURIs targets = targetURISetProvider.get();
@@ -138,6 +141,13 @@ public class FindReferencesXpectMethod {
 		referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
 
 		expectation.assertEquals(result);
+	}
+
+	public static Script getScript(XtextResource resource) {
+		if (resource instanceof N4JSResource) {
+			return ((N4JSResource) resource).getScript();
+		}
+		return null;
 	}
 
 	// ICompositeNode srcNode = NodeModelUtils.getNode(src);

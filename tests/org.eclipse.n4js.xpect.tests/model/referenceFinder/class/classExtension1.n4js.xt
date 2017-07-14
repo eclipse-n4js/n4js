@@ -11,24 +11,24 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at T --> T - 14, T - 15, T - 6
 class T {
-// IDE-1662 XPECT FIXME findReferences at a --> t.a - 17, t.a - 18
+// XPECT findReferences at a --> referenceFinder/class/classExtension1 - this.a - 30
 	a : T;
-// IDE-1662 XPECT FIXME findReferences at i --> t.i - 20, t.i - 21
+// XPECT findReferences at i --> referenceFinder/class/classExtension1 - this.i - 32
 	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> t.foo - 23
+// IDE-1662 XPECT findReferences at foo --> referenceFinder/class/classExtension1 - super.foo - 28
 	foo(){};
 }
 
+class S extends T {
+	@Override
+	// No references for foo, similar behavior as in JDT
+	// XPECT findReferences at foo -->
+	foo() {
+		super.foo();
 
-T;
-var t : T;
+		this.a;
 
-t.a;
-t.a = null;
-
-t.i;
-t.i = 0;
-
-t.foo();
+		this.i = 0;
+	}
+}

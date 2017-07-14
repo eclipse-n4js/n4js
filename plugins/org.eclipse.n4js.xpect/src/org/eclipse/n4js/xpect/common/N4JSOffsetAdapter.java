@@ -41,9 +41,9 @@ public class N4JSOffsetAdapter {
 	 * {@link EObjectCoveringRegionProvider}. The AST related node covers the complete region defined by the offset of
 	 * the specified location and the length of the specified location. That is, for a given test class with a parameter
 	 * 'of' as OFFSET (via {@code @ParameterParser(syntax = "('of' arg1=OFFSET)?")}), the following two tests <br/>
-	 * {@code // XPECT ... of 'a as B'} <br/>
+	 * {@code // XpECT ... of 'a as B'} <br/>
 	 * and <br/>
-	 * {@code // XPECT ... of 'a'} <br/>
+	 * {@code // XpECT ... of 'a'} <br/>
 	 * will return different objects (CastExpression vs. IdentifierRef). If no region is defined, this test will return
 	 * the next element after the test line.
 	 */
