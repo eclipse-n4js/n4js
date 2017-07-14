@@ -183,7 +183,14 @@ class MemberScopingHelper {
 	}
 
 	private def dispatch IScope members(ParameterizedTypeRefStructural ptrs, MemberScopeRequest request) {
-		val IScope result = membersOfType(ptrs.declaredType, request);
+		val IScope result = if (ptrs.declaredType instanceof PrimitiveType) {
+			// Structural primitive types do not have any members
+			return IScope.NULLSCOPE;
+		}
+		else {
+			membersOfType(ptrs.declaredType, request);	
+		}
+		
 		if (ptrs.dynamic && !(result instanceof DynamicPseudoScope)) {
 			return new DynamicPseudoScope(result.decorate(request, ptrs))
 		}
