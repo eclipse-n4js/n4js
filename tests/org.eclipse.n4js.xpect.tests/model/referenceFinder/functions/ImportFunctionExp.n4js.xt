@@ -11,14 +11,19 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
    ResourceSet {
-   	ThisFile {}
-   	Resource "importFunctionImp.n4js" {}
+	ThisFile {}
+	Resource "ImportFunctionImp.n4js" {}
    }
 END_SETUP
  */
 
 // Bug of x-pect. Ask Moritz, he knows. (Regarding 'function' as Offset indicator)
-// IDE-1662, IDE-1699 XPECT FIXME findReferences at function --> zzz - 13, zzz - 16, zzz - 18
+/* XPECT findReferences at function ---
+	referenceFinder/functions/ImportFunctionExp- zzz - 29,
+	referenceFinder/functions/ImportFunctionImp - zzz - 26,
+	referenceFinder/functions/ImportFunctionImp - zzz - 28
+---
+*/
 export function zzz() {}
 
 zzz();
