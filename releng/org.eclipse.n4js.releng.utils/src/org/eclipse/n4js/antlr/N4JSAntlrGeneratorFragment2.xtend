@@ -131,7 +131,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 
 
 	// below is the fix for GH-39 - Content Assist doesn't reliably work in generator functions
-	// will be available with Xtext 2.13 as part of the framework.
+	// TODO will be available with Xtext 2.13 as part of the framework.
 	@Inject ReflectExtensions reflector
 	@Inject extension GrammarAccessExtensions grammarUtil
 	@Inject extension SyntheticTerminalDetector
@@ -225,6 +225,7 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 		file
 	}
 
+	// TODO this will produce a compile error with 2.13 and can be removed then.
 	/**
 	 * Produce the initial name mappings for the grammar. Handles parameterized rule calls.
 	 */
@@ -242,5 +243,8 @@ class N4JSAntlrGeneratorFragment2 extends N4AntlrGeneratorFragment2 {
 			nameMappings = nameMappingsBuilder.build();
 		'''
 	}
+	
+	// ^^^^^^^^^^
+	// TODO remove until where with Xtext 2.13
 
 }

@@ -343,6 +343,7 @@ public class CustomN4JSParser extends N4JSParser {
 		this.postfixGroup = grammarAccess.getPostfixExpressionAccess().getGroup_1();
 	}
 
+	// TODO remove the code below with Xtext 2.13
 	@Inject
 	private final ReflectExtensions reflector = new ReflectExtensions();
 
@@ -466,7 +467,6 @@ public class CustomN4JSParser extends N4JSParser {
 	}
 
 	// This will yield a compile error with 2.13 because it will be present as a protected method
-	// TODO remove this code and the method above
 	private AbstractElement unwrapSingleElementGroups(AbstractElement elementToParse) {
 		if (elementToParse instanceof Group) {
 			List<AbstractElement> elements = ((Group) elementToParse).getElements();
@@ -476,5 +476,7 @@ public class CustomN4JSParser extends N4JSParser {
 		}
 		return elementToParse;
 	}
+	// ^^^^^^^
+	// TODO remove until here
 
 }
