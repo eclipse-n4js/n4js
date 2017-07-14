@@ -136,7 +136,7 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 
 	override void configure(Binder binder) {
 		super.configure(binder);
-		bindIGenerator(binder);
+		doBindIGenerator(binder);
 	}
 
 	override Class<? extends IXtextBuilderParticipant> bindIXtextBuilderParticipant() {
@@ -362,7 +362,7 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	 * @param binder
 	 *            the Google guice binder
 	 */
-	def void bindIGenerator(Binder binder) {
+	def void doBindIGenerator(Binder binder) {
 		var IComposedGenerator composedGenerator = null;
 		val List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
 		if (!composedGenerators.isEmpty()) {
