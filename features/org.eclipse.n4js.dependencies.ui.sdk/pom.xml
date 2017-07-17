@@ -49,7 +49,6 @@ Contributors:
 						<plugin id="org.eclipse.ui.ide"/>
 						<plugin id="org.eclipse.ui.workbench"/>
 						<plugin id="org.eclipse.jface.databinding"/>
-						<plugin id="org.eclipse.xtext.junit4"/>
 						<plugin id="org.eclipse.xtext.ui"/>
 						<plugin id="org.eclipse.ui.forms"/>
 						<plugin id="org.eclipse.ui.editors"/>

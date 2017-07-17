@@ -72,6 +72,7 @@ import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorDnDService;
 import org.eclipse.ui.navigator.resources.ProjectExplorer;
+import org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil;
 import org.eclipse.xtext.util.StringInputStream;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -86,7 +87,6 @@ import com.google.inject.Inject;
 /**
  * Class for testing the functionality of the N4JS working set support.
  */
-@SuppressWarnings({ "deprecation" })
 public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest {
 
 	@Inject
@@ -275,7 +275,6 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 	}
 
 	/***/
-	@SuppressWarnings("restriction")
 	@Test
 	public void testProjectNameFilterWorkingSetGrouping() throws CoreException {
 
@@ -376,7 +375,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 			// No need for the build at all.
 			workspaceDescription.setAutoBuilding(false);
 			for (final String projectName : filterNamesMapping.values()) {
-				org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createSimpleProject(projectName);
+				JavaProjectSetupUtil.createSimpleProject(projectName);
 			}
 		} finally {
 			workspaceDescription.setAutoBuilding(autoBuild);
@@ -580,7 +579,6 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 
 	/***/
 	@Test
-	@SuppressWarnings("restriction")
 	public void testDndSupport() throws CoreException {
 
 		final Collection<String> projectNames = newArrayList("A", "B", "C", "D", "E");
@@ -590,7 +588,7 @@ public class GHOLD_101_WorkingSetsTest_PluginUITest extends AbstractPluginUITest
 			// No need for the build at all.
 			workspaceDescription.setAutoBuilding(false);
 			for (final String projectName : projectNames) {
-				org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createSimpleProject(projectName);
+				JavaProjectSetupUtil.createSimpleProject(projectName);
 				assertTrue(
 						"Project " + projectName + " is not accessible.",
 						getProjectByName(projectName).isAccessible());
