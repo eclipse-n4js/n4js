@@ -701,9 +701,13 @@ public class FileChecker extends AbstractFileChecker {
 		} else if (hasExtension(path, ".adoc")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC);
 
-		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts",
+		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts", ".xt",
 				"xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
+			if (MODE == Mode.Xpect) {
+				return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_V2);
+			} else {
+				return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
+			}
 
 		} else if (hasExtension(path, ".js")) {
 			int startPos = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
@@ -744,7 +748,7 @@ public class FileChecker extends AbstractFileChecker {
 				return base + COPYRIGHT_HEADER.length();
 			}
 			if (MODE == Mode.XSEMANTICS || MODE == Mode.Xpect) {
-				// Xsemantics may also use the slightly different version COPYRIGHT_HEADER_V2
+				// Xpect and Xsemantics may also use the slightly different version COPYRIGHT_HEADER_V2
 				if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER_V2)) {
 					return base + COPYRIGHT_HEADER_V2.length();
 				}
