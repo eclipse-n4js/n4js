@@ -93,28 +93,32 @@ public class FindReferencesXpectMethod {
 		IReferenceFinder.Acceptor acceptor = new IReferenceFinder.Acceptor() {
 			@Override
 			public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
+				ICompositeNode srcNode = NodeModelUtils.getNode(src);
+				if (srcNode == null) {
+					// Ignore candidates without node model
+					return;
+				}
+
 				if (src instanceof PropertyNameOwner)
 					src = ((PropertyNameOwner) src).getDeclaredName();
 
-				String resultText = "(unknown reference)";
-				ICompositeNode srcNode = NodeModelUtils.getNode(src);
-				if (srcNode != null) {
-					int line = srcNode.getStartLine();
+				int line = srcNode.getStartLine();
 
-					String moduleName;
-					if (src.eResource() instanceof N4JSResource) {
-						N4JSResource n4jsResource = (N4JSResource) src.eResource();
-						moduleName = n4jsResource.getModule().getQualifiedName();
-					} else {
-						moduleName = "(unknown resource)";
-					}
-
-					String text = NodeModelUtils.getTokenText(srcNode);
-					if (src instanceof GenericDeclaration)
-						text = ((GenericDeclaration) src).getDefinedType().getName();
-
-					resultText = moduleName + " - " + text + " - " + line;
+				String moduleName;
+				// GH-73: TODO Consider using QualifiedNameProvider
+				if (src.eResource() instanceof N4JSResource) {
+					N4JSResource n4jsResource = (N4JSResource) src.eResource();
+					moduleName = n4jsResource.getModule().getQualifiedName();
+				} else {
+					moduleName = "(unknown resource)";
 				}
+
+				String text = NodeModelUtils.getTokenText(srcNode);
+				if (src instanceof GenericDeclaration)
+					text = ((GenericDeclaration) src).getDefinedType().getName();
+
+				String resultText = moduleName + " - " + text + " - " + line;
+
 				result.add(resultText);
 			}
 

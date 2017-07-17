@@ -41,9 +41,8 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 					URI targetURI) {
 				ICompositeNode srcNode = NodeModelUtils.getNode(source);
 				if (srcNode != null) {
-					// If the source does not have a corresponding node model, it is in the TModule.
+					// Only accept candidates with a corresponding node model.
 					// GH-73: TODO improve this
-					System.out.println("Candidate: " + source);
 					String name = labelProvider.getText(source);
 					LabelledReferenceDescription description = new LabelledReferenceDescription(sourceURI, targetURI,
 							eReference, index, name);
