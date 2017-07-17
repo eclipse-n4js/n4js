@@ -16,7 +16,7 @@ import org.eclipse.n4js.N4JSParseHelper;
 import org.eclipse.n4js.SmokeTestWriter;
 import org.eclipse.n4js.n4jsx.N4JSXRuntimeModule;
 import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
-import org.eclipse.xtext.junit4.util.ResourceHelper;
+import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
 import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.validation.IDiagnosticConverter;

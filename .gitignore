@@ -21,10 +21,6 @@ bin/
 com.chronon.sb.browser.launcher.prefs
 m2repo/
 ########################################
-# Xtend compiled sources 
-########################################
-xtend-gen/
-########################################
 # Xtext antlr
 ########################################
 plugins/org.eclipse.n4js/.antlr-generator-*.*

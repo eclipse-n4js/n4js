@@ -140,8 +140,7 @@ public class AnnotationImpl extends ProxyResolvingEObjectImpl implements Annotat
 	public EObject getAnnotatedElement() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof AbstractAnnotationList)) {
-			EObject _eContainer_1 = this.eContainer();
-			return _eContainer_1.eContainer();
+			return this.eContainer().eContainer();
 		}
 		return this.eContainer();
 	}

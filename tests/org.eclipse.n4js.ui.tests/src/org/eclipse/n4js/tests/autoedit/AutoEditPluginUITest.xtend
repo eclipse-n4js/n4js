@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.Path
 import org.eclipse.core.runtime.PlatformObject
 import org.eclipse.ui.PlatformUI
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import org.eclipse.xtext.junit4.ui.AbstractCStyleLanguageAutoEditTest
+import org.eclipse.xtext.ui.testing.AbstractCStyleLanguageAutoEditTest
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.ui.editor.utils.EditorUtils
 import org.eclipse.xtext.util.StringInputStream

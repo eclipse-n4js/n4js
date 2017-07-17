@@ -169,8 +169,7 @@ public class SymbolTableEntryOriginalImpl extends SymbolTableEntryImpl implement
 		if ((trgt instanceof TExportableElement)) {
 			return ((TExportableElement)trgt).getExportedName();
 		}
-		IdentifiableElement _originalTarget = this.getOriginalTarget();
-		return _originalTarget.getName();
+		return this.getOriginalTarget().getName();
 	}
 
 	/**

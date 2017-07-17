@@ -33,8 +33,8 @@ import org.eclipse.n4js.validation.JavaScriptVariant
 import it.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.util.CancelIndicator
 import org.junit.Assert
 import org.junit.Before

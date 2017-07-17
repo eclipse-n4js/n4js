@@ -16,8 +16,8 @@
 
 interface LoooooooooooongI {}
 
-/* */
-/* XPECT formattedLines 20 ---
+// Formatter bug in Xtext 2.11: https://github.com/eclipse/xtext-core/issues/367
+/* XPECT FIXME formattedLines 20 ---
 class LooooooooooongC {
 
 	looooooooooooooooongField: LooooooooooongC | LooooooooooongC & LoooooooooooongI | LoooooooooooongI

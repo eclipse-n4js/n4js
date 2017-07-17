@@ -16,8 +16,8 @@ import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.naming.ModuleNameComputer
 import java.io.File
 import org.eclipse.emf.common.util.URI
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.Test

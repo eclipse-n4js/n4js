@@ -19,8 +19,8 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4jsx.tests.helper.N4JSXInjectorProvider
 import org.eclipse.n4js.n4jsx.tests.helper.N4JSXParseHelper
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.Assert
 import org.junit.runner.RunWith

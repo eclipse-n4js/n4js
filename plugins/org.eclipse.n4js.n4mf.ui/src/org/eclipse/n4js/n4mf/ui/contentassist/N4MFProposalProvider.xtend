@@ -97,7 +97,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 	@Inject private extension N4MFGrammarAccess
 	private extension N4mfPackage = N4mfPackage.eINSTANCE;
 
-	@Override
 	override completeKeyword(Keyword it, ContentAssistContext ctx, extension ICompletionProposalAcceptor acceptor) {
 		val pair = keywordCache.getUnchecked(it);
 		val proposal = createCompletionProposal(pair.key, keywordDisplayString, image, ctx);
@@ -109,7 +108,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		accept(proposal);
 	}
 
-	@Override
 	override complete_ProjectDependency(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
 		val desc = eObject.findProjectDescription;
 		if (null !== desc) {
@@ -123,7 +121,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		}
 	}
 
-	@Override
 	override complete_ProvidedRuntimeLibraryDependency(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
 		val desc = eObject.findProjectDescription;
 		if (null !== desc) {
@@ -132,7 +129,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		}
 	}
 
-	@Override
 	override complete_RequiredRuntimeLibraryDependency(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
 		val desc = eObject.findProjectDescription;
 		if (null !== desc) {
@@ -141,7 +137,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		}
 	}
 
-	@Override
 	override complete_TestedProject(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
 		val desc = eObject.findProjectDescription;
 		if (null !== desc) {
@@ -159,7 +154,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 		}
 	}
 
-	@Override
 	override complete_ProjectReference(EObject eObject, RuleCall ruleCall, ContentAssistContext ctx, ICompletionProposalAcceptor acceptor) {
 		if (ruleCall?.eContainer instanceof Assignment) {
 			val desc = eObject.findProjectDescription;
@@ -283,7 +277,6 @@ class N4MFProposalProvider extends AbstractN4MFProposalProvider {
 			return !id.nullOrEmpty && null !== type;
 		}
 
-		@Override
 		override toString() {
 			'''«IF canBeReferenced»ID: «id» | Type: «type» «IF !implementationId.nullOrEmpty» Implementation ID: «implementationId»«ENDIF»«ELSE»Missing«ENDIF»''';
 		}

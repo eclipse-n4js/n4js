@@ -65,12 +65,10 @@ const c = c + 1;
 var cls1 = class { static field1 = "hello"; field2 = cls1.field1; };  // ok
 
 // XPECT errors ---
-// "Reference to variable cls2 within the initializer expression of the declaration of cls2." at "cls2"
 // "Unsupported feature: class expressions." at "class"
 // ---
 // XPECT warnings ---
 // "Reference to variable cls2 within the initializer expression of the declaration of cls2." at "cls2"
-// "Unsupported feature: class expressions." at "class"
 // ---
 var cls2 = new class { field1 = "hello"; field2 = cls2.field1; };  // not ok
 

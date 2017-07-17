@@ -68,7 +68,7 @@ public interface ExportableElement extends EObject {
 	 * transpiled to expressions later).
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.ecore.EObject%> _eContainer = this.eContainer();\nif ((_eContainer instanceof <%org.eclipse.n4js.n4JS.ExportDeclaration%>))\n{\n\t<%org.eclipse.emf.ecore.EObject%> _eContainer_1 = this.eContainer();\n\t<%org.eclipse.emf.ecore.EObject%> _eContainer_2 = _eContainer_1.eContainer();\n\treturn (_eContainer_2 instanceof <%org.eclipse.n4js.n4JS.Script%>);\n}\n<%org.eclipse.emf.ecore.EObject%> _eContainer_3 = this.eContainer();\nreturn (_eContainer_3 instanceof <%org.eclipse.n4js.n4JS.Script%>);'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.ecore.EObject%> _eContainer = this.eContainer();\nif ((_eContainer instanceof <%org.eclipse.n4js.n4JS.ExportDeclaration%>))\n{\n\t<%org.eclipse.emf.ecore.EObject%> _eContainer_1 = this.eContainer().eContainer();\n\treturn (_eContainer_1 instanceof <%org.eclipse.n4js.n4JS.Script%>);\n}\n<%org.eclipse.emf.ecore.EObject%> _eContainer_2 = this.eContainer();\nreturn (_eContainer_2 instanceof <%org.eclipse.n4js.n4JS.Script%>);'"
 	 * @generated
 	 */
 	boolean isToplevel();

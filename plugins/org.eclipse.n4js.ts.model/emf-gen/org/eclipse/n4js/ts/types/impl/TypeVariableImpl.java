@@ -238,8 +238,7 @@ public class TypeVariableImpl extends TypeImpl implements TypeVariable {
 	 * @generated
 	 */
 	public String getTypeAsString() {
-		TypeRef _declaredUpperBound = this.getDeclaredUpperBound();
-		return this.getTypeVariableAsString(_declaredUpperBound);
+		return this.getTypeVariableAsString(this.getDeclaredUpperBound());
 	}
 
 	/**

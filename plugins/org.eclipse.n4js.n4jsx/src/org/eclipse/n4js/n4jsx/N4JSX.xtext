@@ -22,6 +22,7 @@ IDLScript returns n4js::Script:
 	scriptElements+=ScriptElement*;
 
 /* see https://facebook.github.io/jsx/  */
+@Override
 PrimaryExpression <Yield> returns n4js::Expression:
 	ThisLiteral
 	| SuperLiteral

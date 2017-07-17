@@ -13,8 +13,8 @@ package org.eclipse.n4js.smoke.tests
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.n4js.editor.syntaxcoloring.HighlightingParserTester
-import org.eclipse.xtext.junit4.smoketest.ProcessedBy
-import org.eclipse.xtext.junit4.smoketest.XtextSmokeTestRunner
+import org.eclipse.xtext.testing.smoketest.ProcessedBy
+import org.eclipse.xtext.testing.smoketest.XtextSmokeTestRunner
 import org.junit.runner.RunWith
 import org.junit.runners.Suite.SuiteClasses
 import org.junit.ComparisonFailure

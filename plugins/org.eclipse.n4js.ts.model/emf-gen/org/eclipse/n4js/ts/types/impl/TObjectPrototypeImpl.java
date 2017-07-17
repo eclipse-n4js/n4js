@@ -14,8 +14,6 @@ import com.google.common.base.Objects;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.notify.Notification;
@@ -36,7 +34,6 @@ import org.eclipse.n4js.ts.types.ArrayLike;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier;
 import org.eclipse.n4js.ts.types.TClassifier;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TObjectPrototype;
 import org.eclipse.n4js.ts.types.Type;
@@ -319,15 +316,12 @@ public class TObjectPrototypeImpl extends TClassifierImpl implements TObjectProt
 	 * @generated
 	 */
 	public TMethod getOwnedCtor() {
-		EList<TMember> _ownedMembers = this.getOwnedMembers();
-		Iterable<TMethod> _filter = Iterables.<TMethod>filter(_ownedMembers, TMethod.class);
 		final Function1<TMethod, Boolean> _function = new Function1<TMethod, Boolean>() {
 			public Boolean apply(final TMethod it) {
-				String _name = it.getName();
-				return Boolean.valueOf(_name.equals("constructor"));
+				return Boolean.valueOf(it.getName().equals("constructor"));
 			}
 		};
-		return IterableExtensions.<TMethod>findFirst(_filter, _function);
+		return IterableExtensions.<TMethod>findFirst(Iterables.<TMethod>filter(this.getOwnedMembers(), TMethod.class), _function);
 	}
 
 	/**

@@ -11,22 +11,20 @@
 package org.eclipse.n4js.tests.bugs;
 
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.fullBuild;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild;
 
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
-import org.junit.Test;
-
 import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.junit.Test;
 
 /**
  * Class for checking whether the order of the source containers influences the indexing order and the scoping for
  * imports.
  */
-@SuppressWarnings("restriction")
 public class IDEBUG_745_PluginUITest extends AbstractIDEBUG_Test {
 
 	/***/

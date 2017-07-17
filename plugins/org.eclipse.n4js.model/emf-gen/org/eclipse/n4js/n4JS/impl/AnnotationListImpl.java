@@ -114,12 +114,11 @@ public class AnnotationListImpl extends AbstractAnnotationListImpl implements An
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {
-			EObject _eContainer_1 = this.eContainer();
-			EObject _eContainer_2 = _eContainer_1.eContainer();
-			return (_eContainer_2 instanceof Script);
+			EObject _eContainer_1 = this.eContainer().eContainer();
+			return (_eContainer_1 instanceof Script);
 		}
-		EObject _eContainer_3 = this.eContainer();
-		return (_eContainer_3 instanceof Script);
+		EObject _eContainer_2 = this.eContainer();
+		return (_eContainer_2 instanceof Script);
 	}
 
 	/**

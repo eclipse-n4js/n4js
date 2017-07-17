@@ -120,8 +120,7 @@ public class TAnnotationTypeRefArgumentImpl extends TAnnotationArgumentImpl impl
 	 * @generated
 	 */
 	public String getArgAsString() {
-		TypeRef _typeRef = this.getTypeRef();
-		return _typeRef.getTypeRefAsString();
+		return this.getTypeRef().getTypeRefAsString();
 	}
 
 	/**

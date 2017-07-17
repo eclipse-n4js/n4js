@@ -10,14 +10,11 @@
  */
 package org.eclipse.n4js.dirtystate;
 
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.monitor;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.xtext.util.StringInputStream;
-import org.junit.Test;
-
 import org.eclipse.n4js.dirtystate.testdata.CaseSensitiveTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.EnumTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.InheritanceTestFiles;
@@ -28,12 +25,13 @@ import org.eclipse.n4js.dirtystate.testdata.StaticTestFiles;
 import org.eclipse.n4js.dirtystate.testdata.TestFiles;
 import org.eclipse.n4js.dirtystate.testdata.TransitiveInheritMemberTestFiles;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.xtext.util.StringInputStream;
+import org.junit.Test;
 
 /**
  * tests if the Xtext builder creates and removes error markers at affected resources when another resource breaks
  * references in them after saving
  */
-@SuppressWarnings("restriction")
 public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest {
 
 	// @formatter:off

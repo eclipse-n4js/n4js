@@ -303,8 +303,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 		TypingStrategy _definedTypingStrategy = this.getDefinedTypingStrategy();
 		boolean _tripleEquals = (_definedTypingStrategy == TypingStrategy.DEFAULT);
 		if (_tripleEquals) {
-			ParameterizedTypeRef _actualThisTypeRef = this.getActualThisTypeRef();
-			return _actualThisTypeRef.getTypingStrategy();
+			return this.getActualThisTypeRef().getTypingStrategy();
 		}
 		else {
 			return this.getDefinedTypingStrategy();
@@ -328,8 +327,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 	public String getTypeRefAsString() {
 		TypingStrategy _typingStrategy = this.getTypingStrategy();
 		String _plus = (_typingStrategy + "this[");
-		ParameterizedTypeRef _actualThisTypeRef = this.getActualThisTypeRef();
-		String _typeRefAsString = _actualThisTypeRef.getTypeRefAsString();
+		String _typeRefAsString = this.getActualThisTypeRef().getTypeRefAsString();
 		String _plus_1 = (_plus + _typeRefAsString);
 		String _plus_2 = (_plus_1 + "]");
 		String _modifiersAsString = this.getModifiersAsString();
@@ -384,13 +382,11 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 		TStructuralType _structuralType = this.getStructuralType();
 		boolean _tripleNotEquals = (_structuralType != null);
 		if (_tripleNotEquals) {
-			TStructuralType _structuralType_1 = this.getStructuralType();
-			_xifexpression = _structuralType_1.getOwnedMembers();
+			_xifexpression = this.getStructuralType().getOwnedMembers();
 		}
 		else {
 			EList<TStructMember> _xifexpression_1 = null;
-			EList<TStructMember> _astStructuralMembers = this.getAstStructuralMembers();
-			boolean _isEmpty = _astStructuralMembers.isEmpty();
+			boolean _isEmpty = this.getAstStructuralMembers().isEmpty();
 			boolean _not = (!_isEmpty);
 			if (_not) {
 				_xifexpression_1 = this.getAstStructuralMembers();
@@ -409,8 +405,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 	 * @generated
 	 */
 	public int getVersion() {
-		ParameterizedTypeRef _actualThisTypeRef = this.getActualThisTypeRef();
-		return _actualThisTypeRef.getVersion();
+		return this.getActualThisTypeRef().getVersion();
 	}
 
 	/**
@@ -419,7 +414,6 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 	 * @generated
 	 */
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
-		EList<TypeVariableMapping> _postponedSubstitutions = this.getPostponedSubstitutions();
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {
 				TypeVariable _typeVar = null;
@@ -429,7 +423,7 @@ public class BoundThisTypeRefImpl extends ThisTypeRefImpl implements BoundThisTy
 				return Boolean.valueOf((_typeVar == typeVar));
 			}
 		};
-		return IterableExtensions.<TypeVariableMapping>exists(_postponedSubstitutions, _function);
+		return IterableExtensions.<TypeVariableMapping>exists(this.getPostponedSubstitutions(), _function);
 	}
 
 	/**

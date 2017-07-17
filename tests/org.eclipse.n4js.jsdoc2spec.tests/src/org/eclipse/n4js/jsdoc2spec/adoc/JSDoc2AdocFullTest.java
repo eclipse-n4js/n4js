@@ -30,8 +30,8 @@ import org.eclipse.n4js.jsdoc2spec.JSDoc2SpecProcessorFullTest;
 import org.eclipse.n4js.jsdoc2spec.SpecFile;
 import org.eclipse.n4js.jsdoc2spec.SubMonitorMsg;
 import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.util.Files;
 import org.junit.runner.RunWith;
 

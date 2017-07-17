@@ -333,6 +333,7 @@ AnnotatedExpression <Yield> returns Expression:
 	)
 ;
 
+@Override
 TypeVariable returns types::TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
 	name=IdentifierOrThis ('extends' declaredUpperBound=TypeRef)?
@@ -1213,6 +1214,7 @@ N4MemberAnnotationList:
 // N4JS versions of type references and expressions, overriding rules in Types.xtext
 // ****************************************************************************************************
 
+@Override
 TypeReferenceName:
 	'void' | 'This' | 'await' | 'Promisify' | 'target' | QualifiedTypeReferenceName
 ;

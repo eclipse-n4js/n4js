@@ -262,7 +262,7 @@ Contributors:
 		
 		<!--  
 		TODO IDE-2231:	Additionally introduced dependencies, since automatic resolution failed to correctly 
-		distinguish between SNAPSHOT and released version for Xtext 2.10.0-SNAPSHOT -->
+		distinguish between SNAPSHOT and released version for Xtext 2.12.0-SNAPSHOT -->
 		<dependency>
 			<artifactId>org.eclipse.xtext</artifactId>
 			<groupId>org.eclipse.xtext</groupId>

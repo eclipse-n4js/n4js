@@ -88,7 +88,6 @@ class N4MFResourceDescriptionStrategy extends DefaultResourceDescriptionStrategy
 	 */
 	public static val EXTENDED_RUNTIME_ENVIRONMENT_ID_KEY = 'extendedRuntimeEnvironmentId';
 
-	@Override
 	override createEObjectDescriptions(EObject eObject, IAcceptor<IEObjectDescription> acceptor) {
 
 		if (eObject === null) {

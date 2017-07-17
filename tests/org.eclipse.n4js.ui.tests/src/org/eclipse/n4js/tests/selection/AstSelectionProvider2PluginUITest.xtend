@@ -23,9 +23,9 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ui.selection.AstSelectionProvider2
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.ui.AbstractEditorTest
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.util.ITextRegion
 import org.junit.Test
@@ -34,11 +34,12 @@ import org.junit.runner.RunWith
 import static java.util.UUID.randomUUID
 import static org.hamcrest.Matchers.*
 
-import static extension org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.*
+import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 
 /**
  * Class for checking the functionality of the {@link AstSelectionProvider2} class.
  */
+@SuppressWarnings("deprecation")
 @RunWith(typeof(XtextRunner))
 @InjectWith(typeof(N4JSUiInjectorProvider))
 class AstSelectionProvider2PluginUITest extends AbstractEditorTest {
@@ -51,19 +52,16 @@ class AstSelectionProvider2PluginUITest extends AbstractEditorTest {
 	@Inject
 	private extension AstSelectionProvider2
 
-	@Override
 	override setUp() throws Exception {
 		super.setUp()
 		createN4JSProjectWithXtextNature
 	}
 
-	@Override
 	override tearDown() throws Exception {
 		super.tearDown()
 		cleanWorkspace
 	}
 
-	@Override
 	override protected getEditorId() {
 		EDITOR_ID
 	}

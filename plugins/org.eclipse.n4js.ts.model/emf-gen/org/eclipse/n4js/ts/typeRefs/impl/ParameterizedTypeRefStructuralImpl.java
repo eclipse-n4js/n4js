@@ -239,13 +239,11 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		TStructuralType _structuralType = this.getStructuralType();
 		boolean _tripleNotEquals = (_structuralType != null);
 		if (_tripleNotEquals) {
-			TStructuralType _structuralType_1 = this.getStructuralType();
-			_xifexpression = _structuralType_1.getOwnedMembers();
+			_xifexpression = this.getStructuralType().getOwnedMembers();
 		}
 		else {
 			EList<TStructMember> _xifexpression_1 = null;
-			EList<TStructMember> _astStructuralMembers = this.getAstStructuralMembers();
-			boolean _isEmpty = _astStructuralMembers.isEmpty();
+			boolean _isEmpty = this.getAstStructuralMembers().isEmpty();
 			boolean _not = (!_isEmpty);
 			if (_not) {
 				_xifexpression_1 = this.getAstStructuralMembers();
@@ -272,61 +270,50 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 		}
 		String _plus = (_typingStrategy + _rawTypeAsString);
 		String _xifexpression = null;
-		EList<TypeArgument> _typeArgs = this.getTypeArgs();
-		boolean _isEmpty = _typeArgs.isEmpty();
+		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		if (_isEmpty) {
 			_xifexpression = "";
 		}
 		else {
-			EList<TypeArgument> _typeArgs_1 = this.getTypeArgs();
 			final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
 				public String apply(final TypeArgument it) {
 					return it.getTypeRefAsString();
 				}
 			};
-			EList<String> _map = XcoreEListExtensions.<TypeArgument, String>map(_typeArgs_1, _function);
-			String _join = IterableExtensions.join(_map, ",");
+			String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getTypeArgs(), _function), ",");
 			String _plus_1 = ("<" + _join);
 			_xifexpression = (_plus_1 + ">");
 		}
 		String _plus_2 = (_plus + _xifexpression);
 		String _xifexpression_1 = null;
-		EList<TStructMember> _structuralMembers = this.getStructuralMembers();
-		boolean _isEmpty_1 = _structuralMembers.isEmpty();
+		boolean _isEmpty_1 = this.getStructuralMembers().isEmpty();
 		if (_isEmpty_1) {
 			_xifexpression_1 = "";
 		}
 		else {
-			EList<TStructMember> _structuralMembers_1 = this.getStructuralMembers();
 			final Function1<TStructMember, String> _function_1 = new Function1<TStructMember, String>() {
 				public String apply(final TStructMember it) {
 					return it.getMemberAsString();
 				}
 			};
-			EList<String> _map_1 = XcoreEListExtensions.<TStructMember, String>map(_structuralMembers_1, _function_1);
-			String _join_1 = IterableExtensions.join(_map_1, "; ");
+			String _join_1 = IterableExtensions.join(XcoreEListExtensions.<TStructMember, String>map(this.getStructuralMembers(), _function_1), "; ");
 			String _plus_3 = (" with { " + _join_1);
 			String _plus_4 = (_plus_3 + " }");
 			String _xifexpression_2 = null;
-			EList<TypeVariableMapping> _postponedSubstitutions = this.getPostponedSubstitutions();
-			boolean _isEmpty_2 = _postponedSubstitutions.isEmpty();
+			boolean _isEmpty_2 = this.getPostponedSubstitutions().isEmpty();
 			if (_isEmpty_2) {
 				_xifexpression_2 = "";
 			}
 			else {
-				EList<TypeVariableMapping> _postponedSubstitutions_1 = this.getPostponedSubstitutions();
 				final Function1<TypeVariableMapping, String> _function_2 = new Function1<TypeVariableMapping, String>() {
 					public String apply(final TypeVariableMapping it) {
-						TypeVariable _typeVar = it.getTypeVar();
-						String _typeAsString = _typeVar.getTypeAsString();
+						String _typeAsString = it.getTypeVar().getTypeAsString();
 						String _plus = (_typeAsString + "->");
-						TypeArgument _typeArg = it.getTypeArg();
-						String _typeRefAsString = _typeArg.getTypeRefAsString();
+						String _typeRefAsString = it.getTypeArg().getTypeRefAsString();
 						return (_plus + _typeRefAsString);
 					}
 				};
-				EList<String> _map_2 = XcoreEListExtensions.<TypeVariableMapping, String>map(_postponedSubstitutions_1, _function_2);
-				String _join_2 = IterableExtensions.join(_map_2, ", ");
+				String _join_2 = IterableExtensions.join(XcoreEListExtensions.<TypeVariableMapping, String>map(this.getPostponedSubstitutions(), _function_2), ", ");
 				String _plus_5 = (" [[" + _join_2);
 				_xifexpression_2 = (_plus_5 + "]]");
 			}
@@ -341,7 +328,6 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 	 * @generated
 	 */
 	public boolean hasPostponedSubstitutionFor(final TypeVariable typeVar) {
-		EList<TypeVariableMapping> _postponedSubstitutions = this.getPostponedSubstitutions();
 		final Function1<TypeVariableMapping, Boolean> _function = new Function1<TypeVariableMapping, Boolean>() {
 			public Boolean apply(final TypeVariableMapping m) {
 				TypeVariable _typeVar = null;
@@ -351,7 +337,7 @@ public class ParameterizedTypeRefStructuralImpl extends ParameterizedTypeRefImpl
 				return Boolean.valueOf((_typeVar == typeVar));
 			}
 		};
-		return IterableExtensions.<TypeVariableMapping>exists(_postponedSubstitutions, _function);
+		return IterableExtensions.<TypeVariableMapping>exists(this.getPostponedSubstitutions(), _function);
 	}
 
 	/**

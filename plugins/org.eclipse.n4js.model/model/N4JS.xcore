@@ -364,7 +364,7 @@ abstract class AnnotationArgument {
 	  */
 	op String getValueAsString() {
 		val value = value();
-		if (value == null) {
+		if (value === null) {
 			return null;
 		}
 		return switch (value) {
@@ -587,7 +587,7 @@ class ArrowFunction extends FunctionExpression {
 	op boolean isSingleExprImplicitReturn() {
 		arrowFunction &&
 		!hasBracesAroundBody &&
-		(body != null) &&
+		(body !== null) &&
 		!body.statements.isEmpty &&
 		(body.statements.get(0) instanceof ExpressionStatement)
 	}
@@ -655,14 +655,14 @@ class Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 */
 	op IteratorOfYieldExpression getAllVoidYieldExpressions() {
-		getAllYieldExpressions().filter([it.expression == null])
+		getAllYieldExpressions().filter([it.expression === null])
 	}
 	/*
 	 * Returns all return yield expressions contained in this block that return some value, including those in nested blocks
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 */
 	op IteratorOfYieldExpression getAllNonVoidYieldExpressions() {
-		getAllYieldExpressions().filter([it.expression != null])
+		getAllYieldExpressions().filter([it.expression !== null])
 	}
 	/*
 	 * True iff one or more yield expressions exist in this block that return some value.
@@ -691,14 +691,14 @@ class Block extends Statement, VariableEnvironmentElement {
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 */
 	op IteratorOfReturnStatement getAllNonVoidReturnStatements() {
-		getAllReturnStatements.filter([it.expression != null])
+		getAllReturnStatements.filter([it.expression !== null])
 	}
 	/*
 	 * Returns all return statements contained in this block that don't return any value, including those in nested blocks
 	 * but without delving into nested classes, or into nested expressions including functions.
 	 */
 	op IteratorOfReturnStatement getAllVoidReturnStatements() {
-		getAllReturnStatements.filter([it.expression == null])
+		getAllReturnStatements.filter([it.expression === null])
 	}
 	/*
 	 * True iff one or more return statements exist in this block that return some value.

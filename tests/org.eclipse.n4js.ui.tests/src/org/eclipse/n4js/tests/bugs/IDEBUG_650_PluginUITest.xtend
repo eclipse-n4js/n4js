@@ -20,11 +20,12 @@ import org.junit.Test
 
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.fullBuild
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
 
 /**
  * Test for checking that the correctly polyfilled non-accessor members will not have auto-generated{@code API not implemented yet} stubs.
  */
+@SuppressWarnings("deprecation")
 class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 
 	static val PATTERN = Pattern.compile('''system:\s+[{]\s+value:\s+function\s+system«METHOD_STACKTRACE_SUFFIX»\s*[(][)]''');
@@ -49,7 +50,6 @@ class IDEBUG_650_PluginUITest extends AbstractIDEBUG_Test {
 		assertTrue('Expected exactly one occurrence of the generated member. Got ' + matchCount + ' instead.', 1 == matchCount);
 	}
 
-	@Override
 	override protected AbstractIDEBUG_Test.ProjectImporter getProjectImporter() {
 		return new AbstractIDEBUG_Test.ProjectImporter(new File(new File('probands/IDEBUG_650/').absolutePath));
 	}

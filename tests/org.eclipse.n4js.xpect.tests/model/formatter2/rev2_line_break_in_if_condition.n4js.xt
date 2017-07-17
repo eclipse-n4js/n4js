@@ -16,7 +16,7 @@
 
 var c: any+;
 /* Don't break condition if block needs wrapping.*/
-/* XPECT FIXME formattedLines 8 ---
+/* XPECT formattedLines 8 ---
 class C {
 	m() {
 		if (c.selector.toString().includes(".pkeys[#i:")) {

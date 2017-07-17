@@ -56,7 +56,7 @@ class Box2 extends React.Component<BoxProps, Object> {
 	};
     @Override public render(): React.Element {
         return <div>
-        	//XPECT warnings --> "Non-optional property p2 should be specified." at "BigLabel"
+        	//XPECT errors --> "Non-optional property p2 should be specified." at "BigLabel"
             <BigLabel {...this.obj} />
         </div>
     }

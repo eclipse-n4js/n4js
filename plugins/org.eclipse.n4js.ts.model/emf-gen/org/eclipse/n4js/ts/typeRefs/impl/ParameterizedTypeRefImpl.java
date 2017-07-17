@@ -328,20 +328,17 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 		}
 		else {
 			String _xifexpression_1 = null;
-			EList<TypeArgument> _typeArgs = this.getTypeArgs();
-			boolean _isEmpty = _typeArgs.isEmpty();
+			boolean _isEmpty = this.getTypeArgs().isEmpty();
 			if (_isEmpty) {
 				_xifexpression_1 = "";
 			}
 			else {
-				EList<TypeArgument> _typeArgs_1 = this.getTypeArgs();
 				final Function1<TypeArgument, String> _function = new Function1<TypeArgument, String>() {
 					public String apply(final TypeArgument it) {
 						return it.getTypeRefAsString();
 					}
 				};
-				EList<String> _map = XcoreEListExtensions.<TypeArgument, String>map(_typeArgs_1, _function);
-				String _join = IterableExtensions.join(_map, ",");
+				String _join = IterableExtensions.join(XcoreEListExtensions.<TypeArgument, String>map(this.getTypeArgs(), _function), ",");
 				String _plus = ("<" + _join);
 				_xifexpression_1 = (_plus + ">");
 			}
@@ -358,8 +355,7 @@ public class ParameterizedTypeRefImpl extends BaseTypeRefImpl implements Paramet
 	 * @generated
 	 */
 	public boolean isParameterized() {
-		EList<TypeArgument> _typeArgs = this.getTypeArgs();
-		boolean _isEmpty = _typeArgs.isEmpty();
+		boolean _isEmpty = this.getTypeArgs().isEmpty();
 		return (!_isEmpty);
 	}
 

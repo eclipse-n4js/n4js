@@ -14,8 +14,6 @@ import com.google.common.base.Objects;
 
 import com.google.common.collect.Iterables;
 
-import java.lang.Iterable;
-
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -147,15 +145,13 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	 * @generated
 	 */
 	public boolean hasStringArgument(final String argumentValue) {
-		EList<TAnnotationArgument> _args = this.getArgs();
-		Iterable<TAnnotationStringArgument> _filter = Iterables.<TAnnotationStringArgument>filter(_args, TAnnotationStringArgument.class);
 		final Function1<TAnnotationStringArgument, Boolean> _function = new Function1<TAnnotationStringArgument, Boolean>() {
 			public Boolean apply(final TAnnotationStringArgument it) {
 				String _value = it.getValue();
 				return Boolean.valueOf(Objects.equal(_value, argumentValue));
 			}
 		};
-		return IterableExtensions.<TAnnotationStringArgument>exists(_filter, _function);
+		return IterableExtensions.<TAnnotationStringArgument>exists(Iterables.<TAnnotationStringArgument>filter(this.getArgs(), TAnnotationStringArgument.class), _function);
 	}
 
 	/**
@@ -166,10 +162,8 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 	public String getAnnotationAsString() {
 		final StringBuilder strb = new StringBuilder();
 		strb.append("@");
-		String _name = this.getName();
-		strb.append(_name);
-		EList<TAnnotationArgument> _args = this.getArgs();
-		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(_args, Object.class)).length;
+		strb.append(this.getName());
+		int _length = ((Object[])org.eclipse.xtext.xbase.lib.Conversions.unwrapArray(this.getArgs(), Object.class)).length;
 		boolean _greaterThan = (_length > 0);
 		if (_greaterThan) {
 			strb.append("(");
@@ -178,10 +172,7 @@ public class TAnnotationImpl extends ProxyResolvingEObjectImpl implements TAnnot
 					if ((i > 0)) {
 						strb.append(", ");
 					}
-					EList<TAnnotationArgument> _args_1 = this.getArgs();
-					TAnnotationArgument _get = _args_1.get(i);
-					String _argAsString = _get.getArgAsString();
-					strb.append(_argAsString);
+					strb.append(this.getArgs().get(i).getArgAsString());
 				}
 			}
 			strb.append(")");

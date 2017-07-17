@@ -100,7 +100,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		
 		//Disjunction Pattern:
 		//	Alternative ({Disjunction.elements+=current} ('|' elements+=Alternative?)+)?
-		//	| {Disjunction} ('|' elements+=Alternative?)*
+		//	| {Disjunction} ('|' elements+=Alternative?)*;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Alternative ({Disjunction.elements+=current} ('|' elements+=Alternative?)+)? | {Disjunction} ('|'
@@ -159,7 +159,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final RuleCall cElementsTermParserRuleCall_1_1_0 = (RuleCall)cElementsAssignment_1_1.eContents().get(0);
 		
 		//Alternative Pattern:
-		//	Term ({Sequence.elements+=current} elements+=Term+)?
+		//	Term ({Sequence.elements+=current} elements+=Term+)?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Term ({Sequence.elements+=current} elements+=Term+)?
@@ -190,7 +190,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final RuleCall cQuantifierQuantifierParserRuleCall_1_1_0 = (RuleCall)cQuantifierAssignment_1_1.eContents().get(0);
 		
 		//Term Pattern:
-		//	Assertion | Atom => quantifier=Quantifier?
+		//	Assertion | Atom => quantifier=Quantifier?;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//Assertion | Atom => quantifier=Quantifier?
@@ -295,7 +295,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//{WordBoundary}
 		public Action getWordBoundaryAction_0() { return cWordBoundaryAction_0; }
 		
-		//(WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY)
+		//WORD_BOUNDARY | not?=NOT_WORD_BOUNDARY
 		public Alternatives getAlternatives_1() { return cAlternatives_1; }
 		
 		//WORD_BOUNDARY
@@ -337,7 +337,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//'?'
 		public Keyword getQuestionMarkKeyword_2() { return cQuestionMarkKeyword_2; }
 		
-		//('=' | not?='!')
+		//'=' | not?='!'
 		public Alternatives getAlternatives_3() { return cAlternatives_3; }
 		
 		//'='
@@ -368,7 +368,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final RuleCall cGroupParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		
 		//Atom Pattern:
-		//	PatternCharacter | Wildcard | AtomEscape | CharacterClass | Group
+		//	PatternCharacter | Wildcard | AtomEscape | CharacterClass | Group;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//PatternCharacter | Wildcard | AtomEscape | CharacterClass | Group
@@ -684,7 +684,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		//=> ({CharacterClassRange.left=current} '-' right=CharacterClassAtom)?
 		public Group getGroup_1() { return cGroup_1; }
 		
-		//({CharacterClassRange.left=current} '-' right=CharacterClassAtom)
+		//{CharacterClassRange.left=current} '-' right=CharacterClassAtom
 		public Group getGroup_1_0() { return cGroup_1_0; }
 		
 		//{CharacterClassRange.left=current}
@@ -1089,7 +1089,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 		private final RuleCall cUNICODE_DIGITTerminalRuleCall = (RuleCall)rule.eContents().get(1);
 		
 		//INT ecore::EInt:
-		//	UNICODE_DIGIT+
+		//	UNICODE_DIGIT+;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//// TODO validate only valid ints
@@ -1247,7 +1247,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	
 	//Disjunction Pattern:
 	//	Alternative ({Disjunction.elements+=current} ('|' elements+=Alternative?)+)?
-	//	| {Disjunction} ('|' elements+=Alternative?)*
+	//	| {Disjunction} ('|' elements+=Alternative?)*;
 	public DisjunctionElements getDisjunctionAccess() {
 		return pDisjunction;
 	}
@@ -1257,7 +1257,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//Alternative Pattern:
-	//	Term ({Sequence.elements+=current} elements+=Term+)?
+	//	Term ({Sequence.elements+=current} elements+=Term+)?;
 	public AlternativeElements getAlternativeAccess() {
 		return pAlternative;
 	}
@@ -1267,7 +1267,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//Term Pattern:
-	//	Assertion | Atom => quantifier=Quantifier?
+	//	Assertion | Atom => quantifier=Quantifier?;
 	public TermElements getTermAccess() {
 		return pTerm;
 	}
@@ -1327,7 +1327,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//Atom Pattern:
-	//	PatternCharacter | Wildcard | AtomEscape | CharacterClass | Group
+	//	PatternCharacter | Wildcard | AtomEscape | CharacterClass | Group;
 	public AtomElements getAtomAccess() {
 		return pAtom;
 	}
@@ -1551,7 +1551,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//INT ecore::EInt:
-	//	UNICODE_DIGIT+
+	//	UNICODE_DIGIT+;
 	public INTElements getINTAccess() {
 		return pINT;
 	}
@@ -1695,7 +1695,7 @@ public class RegularExpressionGrammarAccess extends AbstractGrammarElementFinder
 	}
 	
 	//terminal fragment ML_COMMENT_FRAGMENT:
-	//	'/ *'->'* /';
+	//	'/*'->'*/';
 	public TerminalRule getML_COMMENT_FRAGMENTRule() {
 		return gaUnicode.getML_COMMENT_FRAGMENTRule();
 	}

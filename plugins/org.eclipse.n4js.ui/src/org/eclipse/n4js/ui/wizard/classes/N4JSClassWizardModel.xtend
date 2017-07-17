@@ -28,7 +28,6 @@ class N4JSClassWizardModel extends N4JSClassifierWizardModel
 	var boolean finalAnnotated;
 	var ClassifierReference superClass = new ClassifierReference("", "");
 
-	@Override
 	override getClassifierName() {
 		return 'class';
 	}

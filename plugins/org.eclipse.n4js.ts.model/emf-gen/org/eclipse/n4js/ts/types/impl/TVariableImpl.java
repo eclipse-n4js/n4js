@@ -508,15 +508,11 @@ public class TVariableImpl extends TExportableElementImpl implements TVariable {
 		else {
 			strb.append("var ");
 		}
-		String _name = this.getName();
-		strb.append(_name);
+		strb.append(this.getName());
 		TypeRef _typeRef = this.getTypeRef();
 		boolean _tripleNotEquals = (_typeRef != null);
 		if (_tripleNotEquals) {
-			StringBuilder _append = strb.append(": ");
-			TypeRef _typeRef_1 = this.getTypeRef();
-			String _typeRefAsString = _typeRef_1.getTypeRefAsString();
-			_append.append(_typeRefAsString);
+			strb.append(": ").append(this.getTypeRef().getTypeRefAsString());
 		}
 		return strb.toString();
 	}
