@@ -9,6 +9,7 @@ http://www.eclipse.org/legal/epl-v10.html
 Contributors:
   NumberFour AG - Initial API and implementation
 -->
+<!-- Test comment to trigger reference build -->
 <!-- root (not god pom, that is defined in /releng/org.eclipse.n4js.parent/pom.xml) -->
 <!-- Triggers the build of all modules by calling the poms of inside releng 
 	(via parent pom relationship), plugins, features, tests and later maybe for 
