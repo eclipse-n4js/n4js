@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -33,7 +32,6 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.junit.runner.RunWith;
 import org.xpect.XpectImport;
@@ -83,7 +81,7 @@ public class FindReferencesXpectMethod {
 		EObject eObj = argEObj;
 
 		if (argEObj instanceof ParameterizedTypeRef)
-			eObj = argEObj.eContainer();
+			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
 		if (argEObj instanceof LiteralOrComputedPropertyName)
 			eObj = argEObj.eContainer();
 
@@ -91,44 +89,32 @@ public class FindReferencesXpectMethod {
 		TargetURIs targets = targetURISetProvider.get();
 		collector.add(eObj, targets);
 		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(eResource);
-
-		final EObject targetObj = eObj;
-
 		ArrayList<String> result = Lists.newArrayList();
 		IReferenceFinder.Acceptor acceptor = new IReferenceFinder.Acceptor() {
 			@Override
 			public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
-				// Ignore the found reference to the target itself
-				if (src == targetObj) {
-					return;
-				}
-
 				if (src instanceof PropertyNameOwner)
 					src = ((PropertyNameOwner) src).getDeclaredName();
 
 				String resultText = "(unknown reference)";
 				ICompositeNode srcNode = NodeModelUtils.getNode(src);
-				// Ignore type representation candidate
-				if (srcNode == null) {
-					return;
+				if (srcNode != null) {
+					int line = srcNode.getStartLine();
+
+					String moduleName;
+					if (src.eResource() instanceof N4JSResource) {
+						N4JSResource n4jsResource = (N4JSResource) src.eResource();
+						moduleName = n4jsResource.getModule().getQualifiedName();
+					} else {
+						moduleName = "(unknown resource)";
+					}
+
+					String text = NodeModelUtils.getTokenText(srcNode);
+					if (src instanceof GenericDeclaration)
+						text = ((GenericDeclaration) src).getDefinedType().getName();
+
+					resultText = moduleName + " - " + text + " - " + line;
 				}
-
-				int line = srcNode.getStartLine();
-
-				String moduleName;
-				if (src.eResource() instanceof N4JSResource) {
-					N4JSResource n4jsResource = (N4JSResource) src.eResource();
-					moduleName = n4jsResource.getModule().getQualifiedName();
-				} else {
-					moduleName = "(unknown resource)";
-				}
-
-				String text = NodeModelUtils.getTokenText(srcNode);
-				if (src instanceof GenericDeclaration)
-					text = ((GenericDeclaration) src).getDefinedType().getName();
-
-				resultText = moduleName + " - " + text + " - " + line;
-
 				result.add(resultText);
 			}
 
@@ -142,13 +128,6 @@ public class FindReferencesXpectMethod {
 		referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
 
 		expectation.assertEquals(result);
-	}
-
-	public static Script getScript(XtextResource resource) {
-		if (resource instanceof N4JSResource) {
-			return ((N4JSResource) resource).getScript();
-		}
-		return null;
 	}
 
 	// ICompositeNode srcNode = NodeModelUtils.getNode(src);

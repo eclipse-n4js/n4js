@@ -93,10 +93,8 @@ public class InferredElements {
 
 		@Override
 		public Void caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName object) {
-			if (object.eContainer() instanceof N4FieldDeclaration) {
-				return caseN4FieldDeclaration((N4FieldDeclaration) object.eContainer());
-			}
-			return super.caseLiteralOrComputedPropertyName(object);
+			// LiteralOrComputedProperty does not have a type representation, that's why dispatch to its parent. GH-73
+			return doSwitch(object.eContainer());
 		}
 	}
 }

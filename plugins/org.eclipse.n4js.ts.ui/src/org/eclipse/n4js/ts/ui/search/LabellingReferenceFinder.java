@@ -14,6 +14,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.findReferences.IReferenceFinder.Acceptor;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.ui.editor.findrefs.DelegatingReferenceFinder;
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceAcceptor;
@@ -37,10 +39,16 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 			@Override
 			public void accept(EObject source, URI sourceURI, EReference eReference, int index, EObject targetOrProxy,
 					URI targetURI) {
-				String name = labelProvider.getText(source);
-				LabelledReferenceDescription description = new LabelledReferenceDescription(sourceURI, targetURI,
-						eReference, index, name);
-				accept(description);
+				ICompositeNode srcNode = NodeModelUtils.getNode(source);
+				if (srcNode != null) {
+					// If the source does not have a corresponding node model, it is in the TModule.
+					// GH-73: TODO improve this
+					System.out.println("Candidate: " + source);
+					String name = labelProvider.getText(source);
+					LabelledReferenceDescription description = new LabelledReferenceDescription(sourceURI, targetURI,
+							eReference, index, name);
+					accept(description);
+				}
 			}
 		};
 	}

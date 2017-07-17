@@ -12,14 +12,13 @@ package org.eclipse.n4js.ts.ui.search;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IResourceServiceProvider;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 
 /**
  * Label provider used in the UI of find references
@@ -39,7 +38,7 @@ public class ReferenceFinderLabelProvider {
 	private TypesKeywordProvider keywordProvider;
 
 	/**
-	 * Returns a string represenation for the find references UI to represent the matches and the queried object.
+	 * Returns a string representation for the find references UI to represent the matches and the queried object.
 	 * Dispatches to the correct, language specific implementation.
 	 */
 	public String getText(EObject source) {
@@ -59,10 +58,9 @@ public class ReferenceFinderLabelProvider {
 	}
 
 	/**
-	 * Returns a string represenation for the find references UI to represent the matches and the queried object.
+	 * Returns a string representation for the find references UI to represent the matches and the queried object.
 	 */
 	protected String doGetText(EObject source) {
-		// TODO improve a lot since this is just a misleading string representation in the UI
 		String keyword = getKeywordLabel(source);
 		QualifiedName containerName = qualifiedNameProvider.getFullyQualifiedName(source);
 		while (containerName == null) {

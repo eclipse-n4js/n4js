@@ -1,0 +1,9 @@
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+
+interface I {
+	// X:PECT findReferences at foo --> referenceFinder/Test - j.foo - 9
+	foo(){};
+}
+// XPECT findReferences at I --> referenceFinder/Test - I - 8
+var j : I;
+j.foo();
