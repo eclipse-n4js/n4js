@@ -31,7 +31,7 @@ public class CRHStatsPrinter {
 			"setup", "dict", "json", "launch", "svg", "xtextbin", /* plugin. */"xml_gen", "replacement", "bib", "ecore",
 			"genmodel", "gitattributes", /* about. */"html_TEMPLATE", "icns", "ignored", "index", "map", "mappings",
 			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "nfar", "xdoc",
-			"xcf", "ext", "cspex", "api_filters", "b3aggr" });
+			"xcf", "ext", "cspex", "api_filters", "b3aggr", "key" });
 
 	static boolean canHaveCRH(String extension) {
 		return !CANNOT_HAVE_CRH.contains(extension);

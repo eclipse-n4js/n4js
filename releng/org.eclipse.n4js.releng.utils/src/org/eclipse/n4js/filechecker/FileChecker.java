@@ -25,7 +25,7 @@ public class FileChecker extends AbstractFileChecker {
 		NORMAL, XSEMANTICS, Xpect
 	}
 
-	private static final Mode MODE = Mode.XSEMANTICS;
+	private static final Mode MODE = Mode.Xpect;
 
 	private static final boolean FIX_FILE_ENDING = false;
 	private static final boolean FIX_TRAILING_WHITE_SPACE = false;
@@ -40,7 +40,8 @@ public class FileChecker extends AbstractFileChecker {
 	private static final String[] Xpect_REPOS_MANDATORY = Xpect_REPOS;
 
 	/** Name used as vendor (in manifest.mf) and provider (in feature.xml). */
-	private static final String PROVIDER_NAME = "Eclipse " + (MODE == Mode.XSEMANTICS ? "Xsemantics" : "N4JS")
+	private static final String PROVIDER_NAME = "Eclipse "
+			+ (MODE == Mode.XSEMANTICS ? "Xsemantics" : (MODE == Mode.Xpect ? "Xpect" : "N4JS"))
 			+ " Project";
 	private static final String PROVIDER_NAME_N4 = "NumberFour AG";
 
@@ -263,21 +264,24 @@ public class FileChecker extends AbstractFileChecker {
 			// " NumberFour AG - Initial API and implementation",
 
 			/* Xpect: */
-			// "Copyright (c) 2012 itemis AG (http://www.itemis.eu) and others.",
-			// "All rights reserved. This program and the accompanying materials",
-			// "are made available under the terms of the Eclipse Public License v1.0",
-			// "which accompanies this distribution, and is available at",
-			// "http://www.eclipse.org/legal/epl-v10.html",
-
-			/* Xsemantics: */
-			"Copyright (c) 2013-2017 Lorenzo Bettini.",
+			"Copyright (c) 2012-2017 TypeFox GmbH and itemis AG.",
 			"All rights reserved. This program and the accompanying materials",
 			"are made available under the terms of the Eclipse Public License v1.0",
 			"which accompanies this distribution, and is available at",
 			"http://www.eclipse.org/legal/epl-v10.html",
 			"",
 			"Contributors:",
-			"  Lorenzo Bettini - Initial contribution and API",
+			"  Moritz Eysholdt - Initial contribution and API",
+
+			/* Xsemantics: */
+			// "Copyright (c) 2013-2017 Lorenzo Bettini.",
+			// "All rights reserved. This program and the accompanying materials",
+			// "are made available under the terms of the Eclipse Public License v1.0",
+			// "which accompanies this distribution, and is available at",
+			// "http://www.eclipse.org/legal/epl-v10.html",
+			// "",
+			// "Contributors:",
+			// " Lorenzo Bettini - Initial contribution and API",
 	};
 
 	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
@@ -469,7 +473,7 @@ public class FileChecker extends AbstractFileChecker {
 		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4ts", "n4js", "n4jsx", "n4mf",
 				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js",
 				".ant", ".css", ".txt", ".mwe2txt", ".oldxsem", ".md", ".xtypes", ".xcoretxt", ".yml", ".fjcached",
-				".xpt" };
+				".xpt", ".def" };
 		if (hasExtension(path, concat(FILE_EXTENSIONS, moreCRHs))) {
 			if (hasCorrectCopyrightHeader(path, content)) {
 				report.setToHasCRH();
@@ -688,7 +692,7 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static int beginIndexWithoutCopyrightHeader(Path path, String content) {
-		if (hasExtension(path, ".xml", ".ant", ".md")) {
+		if (hasExtension(path, ".xml", ".ant", ".md", ".def")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_XML, "<?xml ");
 
 		} else if (hasExtension(path, ".html")) {
@@ -697,7 +701,7 @@ public class FileChecker extends AbstractFileChecker {
 		} else if (hasExtension(path, ".adoc")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC);
 
-		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts", "Jenkinsfile", ".xt",
+		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts",
 				"xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED")) {
 			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
 
@@ -739,7 +743,7 @@ public class FileChecker extends AbstractFileChecker {
 			if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER)) {
 				return base + COPYRIGHT_HEADER.length();
 			}
-			if (MODE == Mode.XSEMANTICS) {
+			if (MODE == Mode.XSEMANTICS || MODE == Mode.Xpect) {
 				// Xsemantics may also use the slightly different version COPYRIGHT_HEADER_V2
 				if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER_V2)) {
 					return base + COPYRIGHT_HEADER_V2.length();
