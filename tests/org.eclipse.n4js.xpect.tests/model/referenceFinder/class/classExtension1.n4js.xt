@@ -12,18 +12,18 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 class T {
-// XPECT findReferences at a --> referenceFinder/class/classExtension1 - this.a - 30
+// XPECT findReferences at a --> referenceFinder/class/classExtension1 - a : T; - 16,  referenceFinder/class/classExtension1 - this.a - 30
 	a : T;
-// XPECT findReferences at i --> referenceFinder/class/classExtension1 - this.i - 32
+// XPECT findReferences at i --> referenceFinder/class/classExtension1 - i : int; - 18, referenceFinder/class/classExtension1 - this.i - 32
 	i : int;
-// IDE-1662 XPECT findReferences at foo --> referenceFinder/class/classExtension1 - super.foo - 28
+// IDE-1662 XPECT findReferences at foo --> referenceFinder/class/classExtension1 - foo(){}; - 20, referenceFinder/class/classExtension1 - super.foo - 28
 	foo(){};
 }
 
 class S extends T {
 	@Override
-	// No references for foo, similar behavior as in JDT
-	// XPECT findReferences at foo -->
+	// Only one references for foo, similar behavior as in JDT
+	// XPECT findReferences at foo --> referenceFinder/class/classExtension1 - @Override foo() { super.foo(); this.a; this.i = 0; } - 24
 	foo() {
 		super.foo();
 
