@@ -9,12 +9,12 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:doctype: book
-:notitle:
-:toc: right
 
 .FAQ
 = FAQ
+:doctype: book
+:notitle:
+:toc: right
 
 
 == Why Did You Create N4JS?

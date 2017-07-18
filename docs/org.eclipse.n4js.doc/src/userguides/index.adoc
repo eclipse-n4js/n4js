@@ -10,31 +10,37 @@ Contributors:
 ////
 
 ﻿
-
-.N4JS Documentation
-= N4JS Userguides
+[discrete]
+.Documentation
+= Documentation
+:doctype: book
 :notitle:
 
-All the resources you need to begin type safe development with the N4JS IDE
 
-.Documentation
-== Index
+== FAQ
 
----
+Find concise answers for the most frequently asked questions about the Eclipse N4JS project.
 
-**[[language-spec]]N4JS Specification**
+* link:../faq/index.html[Frequently Asked Questions]
 
-For a complete reference of the N4JS Language, the Specification
-is available at the following location:
+== Features
+
+The link:../features/index.html[Feature Table] describes the state of all current N4JS Language and IDE features.
+For specifics on each feature described here, see their respective feature pages:
+
+* link:../features/async-await.html[Async/Await]
+* link:../features/dependency-injection.html[Dependency Injection]
+* link:../features/generics.html[Generics]
+* link:../features/modules.html[Modules]
+* link:../features/nodejs-support.html[Node.js Support]
+* link:../features/nominal-and-structural-typing.html[Nominal vs. Structural Typing]
+* link:../features/testing.html[Test Support]
 
 
-* link:../spec/N4JSSpec.html[N4JS Language Specification]
+== Tutorials
 
----
+=== IDE Setup & HelloWorld!
 
-**[[ide-setup]]IDE Setup & HelloWorld!**
-
-[#ide-setup]
 This short introduction covers the basics of getting up and running with the
 N4JS IDE. From installation to running HelloWorld!, quickly learn about new features
 of the N4JS IDE, how to create a new project, manage workspaces and begin development!
@@ -42,9 +48,8 @@ of the N4JS IDE, how to create a new project, manage workspaces and begin develo
 
 * <<n4js-ide-setup.adoc#n4js-ide-setup,N4JS IDE Setup Guide>>: Basic installation and setup instructions.
 
----
 
-**[[npm-export-guide]]npm Export Guide**
+=== npm Export Guide
 
 The npm Export Guide briefly covers the essentials of Node.js development. A simple
 code example is written and exported from the N4JS IDE as an npm package, run from
@@ -54,9 +59,7 @@ using the N4JS IDE.
 
 * <<npm-export-guide.adoc#npm-export-guide,npm Export Guide>>: Basic npm export and publishing instructions.
 
----
-
-**[[tutorial]]In-Depth Tutorial**
+=== In-Depth Tutorial
 
 Using the built-in example projects as a reference, this in-depth tutorial covers the most important tools and features
 of the N4JS IDE. The example project is explained as a domain model and built step-by-step.
@@ -66,8 +69,20 @@ New features of the N4JS IDE are introduced along the way such as *modules*, *ty
 
 * <<tutorial.adoc#tutorial,In-Depth Tutorial>>: Begin using the more powerful features N4JS has to offer!
 
----
+== N4JS Language Specification
 
-**[[licence]]Copyright Information**
+For a complete reference of the N4JS Language, the Specification is available at the following location:
+
+* link:../spec/N4JSSpec.html[N4JS Language Specification]
+
+== Release Notes
+
+Information on the current state of the N4JS Language and IDE including details of known issues and upcoming features that are under development.
+
+* link:../releases/index.html[Eclipse N4JS Release Notes]
+
+=== Copyright Information
 
 * <<license.adoc#license,License>>
+
+

@@ -9,10 +9,12 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:toc: right
 
 .Generics
 = Generics
+:doctype: book
+:toc: right
+
 
 Generics in N4JS are a language feature that allows for generic programming. They enable
 a function, class, interface, or method to operate on the values of various (possibly unknown)

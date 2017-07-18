@@ -9,10 +9,12 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:doctype: book
+
 
 .Releases
 = Releases
+:doctype: book
+:notitle:
 
 [discrete]
 == Current N4JS Release
