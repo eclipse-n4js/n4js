@@ -93,7 +93,8 @@ public class InferredElements {
 
 		@Override
 		public Void caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName object) {
-			// LiteralOrComputedProperty does not have a type representation, that's why dispatch to its parent. GH-73
+			// LiteralOrComputedProperty does not have a type representation, that's add its parent GH-73
+			result.accept(object.eContainer());
 			return doSwitch(object.eContainer());
 		}
 	}

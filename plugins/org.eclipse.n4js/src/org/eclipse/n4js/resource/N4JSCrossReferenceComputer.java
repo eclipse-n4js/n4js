@@ -17,10 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.xtext.util.IAcceptor;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
@@ -34,6 +30,9 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.xtext.util.IAcceptor;
+
+import com.google.inject.Inject;
 
 /**
  * Collects all Types, TVariables, TLiterals and IdentifiableElements referenced within the AST of a given fully
@@ -216,7 +215,8 @@ public class N4JSCrossReferenceComputer {
 			Resource resource = to.eResource();
 			// guard against null resource that is sometimes returned if a member was put into a
 			// union type ref that is not contained in a resource and does not have an original decl
-			if (resource != null && N4Scheme.isResourceWithN4Scheme(resource)
+			// GH-73: TODO What is when 'to' is a proxy?
+			if (resource != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 					&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 				acceptor.accept(to);
 			} else if (resource == null && !to.eIsProxy()) {
