@@ -33,9 +33,9 @@ export class GMyClassTwo {
 	*/
 	myAttributeTwo : {function (param:string) : GMyInterfaceFour};
 
-	/* X-PECT findReferences at myMethodTwo ---
-	   referenceFinder/inferenceTypes/GMyClassTwo - myMethodTwo() : GMyRoleLikeInterface<GMyInterfaceFour> { return null; } - 41,
-	   referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo - 31
+	/* XPECT findReferences at myMethodTwo ---
+	   referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo - 30,
+	   referenceFinder/inferenceTypes/GMyClassTwo - myMethodTwo() : GMyRoleLikeInterface<GMyInterfaceFour> { return null; } - 41
 	---
 	 */
     myMethodTwo() : GMyRoleLikeInterface<GMyInterfaceFour> {
