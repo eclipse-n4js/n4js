@@ -328,8 +328,7 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 	 */
 	public String getMemberAsString() {
 		final StringBuilder strb = new StringBuilder();
-		String _name = this.getName();
-		strb.append(_name);
+		strb.append(this.getName());
 		boolean _isOptional = this.isOptional();
 		if (_isOptional) {
 			strb.append("?");
@@ -337,10 +336,7 @@ public class TFieldImpl extends TMemberWithAccessModifierImpl implements TField 
 		TypeRef _typeRef = this.getTypeRef();
 		boolean _tripleNotEquals = (_typeRef != null);
 		if (_tripleNotEquals) {
-			StringBuilder _append = strb.append(": ");
-			TypeRef _typeRef_1 = this.getTypeRef();
-			String _typeRefAsString = _typeRef_1.getTypeRefAsString();
-			_append.append(_typeRefAsString);
+			strb.append(": ").append(this.getTypeRef().getTypeRefAsString());
 		}
 		return strb.toString();
 	}

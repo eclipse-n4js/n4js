@@ -19,8 +19,8 @@ import org.eclipse.n4js.tests.typesbuilder.extensions.TypesStructureAssertionExt
 import org.eclipse.n4js.tests.typesbuilder.utils.AbstractTypesBuilderTest
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 

@@ -17,9 +17,9 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*

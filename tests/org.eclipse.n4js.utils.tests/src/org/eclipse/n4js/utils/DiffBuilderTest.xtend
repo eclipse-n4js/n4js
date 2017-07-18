@@ -106,7 +106,6 @@ class DiffBuilderTest extends Assert {
 			this.label = label;
 		}
 
-		@Override
 		override toString() {
 			'''ID: «id» | Label: «label»'''
 		}
@@ -126,12 +125,10 @@ class DiffBuilderTest extends Assert {
 			super(f)
 		}
 
-		@Override
 		override protected getOldItemsFunction() {
 			return [oldItems];
 		}
 
-		@Override
 		override protected getAllOldItemsFunction() {
 			return [oldAllItems];
 		}

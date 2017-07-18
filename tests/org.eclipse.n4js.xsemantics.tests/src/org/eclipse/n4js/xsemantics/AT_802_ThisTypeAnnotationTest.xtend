@@ -27,8 +27,8 @@ import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 

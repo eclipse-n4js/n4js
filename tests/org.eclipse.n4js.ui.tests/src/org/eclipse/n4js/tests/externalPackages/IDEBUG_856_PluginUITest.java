@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.externalPackages;
 
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 
 import java.io.File;
 

@@ -20,12 +20,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.eclipse.n4js.antlr.compressor.IfElseCascade.Replacement;
 import org.eclipse.xtext.xtext.generator.AbstractXtextGeneratorFragment;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-
-import org.eclipse.n4js.antlr.compressor.IfElseCascade.Replacement;
 
 /**
  * MWE fragment that injects the necessary code to compress the generated ANTLR V3 parser in order to avoid problems
@@ -51,6 +50,20 @@ public class ParserCompressorFragment2 extends AbstractXtextGeneratorFragment {
 	private int cascadeThreshold = 10;
 
 	/**
+	 * Set this flag to true if you want to shrink the parser file to a minimum number of lines.
+	 */
+	/*
+	 * The Java class file format specifies line numbers as unsigned short. Thus the largest line number that can be
+	 * stored is 2^16 = 65535. The eclipse debugger reads these numbers as signed shorts, thus the largest line in the
+	 * stacktrace that can be jumped to, is 2^15. The problem with the generated parser java source code is, that it
+	 * contains more than 300k lines of code. Every line beyond line no 32k is effectively not debuggable. This flag
+	 * allows to shrink the files by joining lines that are not of particular interest. When enabled, The N4JS content
+	 * assist parser class has approx 80000 lines before the DFA methods begin. This allows at least 40% of the code to
+	 * be stepped through and debugged. The shrinked parser java code is not exactly pretty, though.
+	 */
+	private boolean uglifyAndJoinLinesEagerly;
+
+	/**
 	 *
 	 */
 	public ParserCompressorFragment2() {
@@ -62,6 +75,16 @@ public class ParserCompressorFragment2 extends AbstractXtextGeneratorFragment {
 	 */
 	public void addGrammarFile(String fileName) {
 		grammarFiles.add(fileName);
+	}
+
+	/**
+	 * Enable this flag if you need to debug the content assist parser
+	 *
+	 * @param joinLines
+	 *            set to true if you need to debug the content assist parser
+	 */
+	public void setJoinLinesEagerly(boolean joinLines) {
+		this.uglifyAndJoinLinesEagerly = joinLines;
 	}
 
 	@Override
@@ -124,12 +147,71 @@ public class ParserCompressorFragment2 extends AbstractXtextGeneratorFragment {
 			return null;
 		}
 
-		return processCascades(javaSource, parserConstMap);
+		String result = processCascades(javaSource, parserConstMap);
+		if (uglifyAndJoinLinesEagerly) {
+			result = Pattern.compile("(\r?\n)\\s*\r?\n", Pattern.DOTALL | Pattern.MULTILINE).matcher(result)
+					.replaceAll("$1");
+			if (result.indexOf("restoreStackSize(stackSize);") > 0) {
+				// super eager compression of content assist parser
+				result = result.replace("catch (RecognitionException re) {\n" +
+						"            reportError(re);\n" +
+						"            recover(input,re);\n" +
+						"        }\n" +
+						"        finally {\n" +
+						"            	restoreStackSize(stackSize);\n" +
+						"        }\n" +
+						"        return ;",
+						"catch (RecognitionException re) { reportError(re); recover(input,re); } finally { restoreStackSize(stackSize); }");
+				result = result.replace("catch (RecognitionException re) {\n" +
+						"            reportError(re);\n" +
+						"            recover(input,re);\n" +
+						"        }\n" +
+						"        finally {\n" +
+						"        }\n" +
+						"        return ;", "catch (RecognitionException re) { reportError(re); recover(input,re); }");
+				result = result.replace("if ( state.backtracking==0 ) {\n" +
+						"               before", "if ( state.backtracking==0 ) { before");
+				result = result.replace("if ( state.backtracking==0 ) {\n" +
+						"               after", "if ( state.backtracking==0 ) { after");
+				result = result.replace("()); \n" +
+						"            }", "()); }");
+				result = result.replace("state._fsp--;\n" +
+						"            if (state.failed) return ;", "state._fsp--; if (state.failed) return ;");
+				result = result.replace("{\n" +
+						"            {", "{{");
+				result = result.replace("{\n" +
+						"            {", "{{");
+				result = result.replace("{\n" +
+						"            {", "{{");
+				result = result.replace("}\n" +
+						"            }", "}}");
+				result = result.replace("}\n" +
+						"            }", "}}");
+				result = result.replace("}\n" +
+						"            }", "}}");
+				result = result.replace(";\n" +
+						"        state._fsp--;\n" +
+						"        if (state.failed) return ;", "; state._fsp--; if (state.failed) return ;");
+				result = result.replace(";\n" +
+						"            state._fsp--; if (state.failed) return ;",
+						"; state._fsp--; if (state.failed) return ;");
+				result = result.replace("}\n" +
+						"        catch (RecognitionException re)", "} catch (RecognitionException re)");
+				result = result.replace("{\n" +
+						"        		int stackSize = keepStackSize();", "{ int stackSize = keepStackSize();");
+				result = result.replace("}\n" +
+						"        catch", "} catch");
+			}
+		}
+		return result;
 	}
 
 	String processCascades(String javaSource, Map<String, Integer> parserConstMap) {
 
 		List<IfElseCascade> cascades = findCascades(javaSource);
+		if (cascades.isEmpty()) {
+			return javaSource;
+		}
 		StringBuilder strb = new StringBuilder(javaSource.length());
 		int offset = 0;
 		int counter = 0;
@@ -181,9 +263,6 @@ public class ParserCompressorFragment2 extends AbstractXtextGeneratorFragment {
 			if (moreCascades != null) {
 				cascades.addAll(moreCascades);
 			}
-		}
-		if (cascades.isEmpty()) {
-			throw new IllegalStateException("No if-else cascades found.");
 		}
 		return cascades;
 	}

@@ -157,7 +157,7 @@ public interface TFormalParameter extends IdentifiableElement, TAnnotableElement
 	 * parameter as part of an type or a type expression.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>();\nboolean _isVariadic = this.isVariadic();\nif (_isVariadic)\n{\n\tstrb.append(\"...\");\n}\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\t<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef_1 = this.getTypeRef();\n\t<%java.lang.String%> _typeRefAsString = _typeRef_1.getTypeRefAsString();\n\tstrb.append(_typeRefAsString);\n}\nelse\n{\n\tstrb.append(\"null\");\n}\nboolean _isHasInitializerAssignment = this.isHasInitializerAssignment();\nif (_isHasInitializerAssignment)\n{\n\tstrb.append(\"=\\u2026\");\n}\nreturn strb.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>();\nboolean _isVariadic = this.isVariadic();\nif (_isVariadic)\n{\n\tstrb.append(\"...\");\n}\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(this.getTypeRef().getTypeRefAsString());\n}\nelse\n{\n\tstrb.append(\"null\");\n}\nboolean _isHasInitializerAssignment = this.isHasInitializerAssignment();\nif (_isHasInitializerAssignment)\n{\n\tstrb.append(\"=\\u2026\");\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getFormalParameterAsTypesString();
@@ -171,7 +171,7 @@ public interface TFormalParameter extends IdentifiableElement, TAnnotableElement
 	 * preceding variadic modifier and colon separated type if declared.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>();\nboolean _isVariadic = this.isVariadic();\nif (_isVariadic)\n{\n\tstrb.append(\"...\");\n}\n<%java.lang.String%> _name = this.getName();\nstrb.append(_name);\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\t<%java.lang.StringBuilder%> _append = strb.append(\": \");\n\t<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef_1 = this.getTypeRef();\n\t<%java.lang.String%> _typeRefAsString = _typeRef_1.getTypeRefAsString();\n\t_append.append(_typeRefAsString);\n}\nboolean _isHasInitializerAssignment = this.isHasInitializerAssignment();\nif (_isHasInitializerAssignment)\n{\n\tstrb.append(\"=\\u2026\");\n}\nreturn strb.toString();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%java.lang.StringBuilder%> strb = new <%java.lang.StringBuilder%>();\nboolean _isVariadic = this.isVariadic();\nif (_isVariadic)\n{\n\tstrb.append(\"...\");\n}\nstrb.append(this.getName());\n<%org.eclipse.n4js.ts.typeRefs.TypeRef%> _typeRef = this.getTypeRef();\nboolean _tripleNotEquals = (_typeRef != null);\nif (_tripleNotEquals)\n{\n\tstrb.append(\": \").append(this.getTypeRef().getTypeRefAsString());\n}\nboolean _isHasInitializerAssignment = this.isHasInitializerAssignment();\nif (_isHasInitializerAssignment)\n{\n\tstrb.append(\"=\\u2026\");\n}\nreturn strb.toString();'"
 	 * @generated
 	 */
 	String getFormalParameterAsString();

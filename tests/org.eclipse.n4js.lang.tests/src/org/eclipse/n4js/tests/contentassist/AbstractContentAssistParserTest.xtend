@@ -11,16 +11,16 @@
 package org.eclipse.n4js.tests.contentassist
 
 import com.google.inject.Inject
+import java.util.Collection
+import java.util.Set
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.services.N4JSGrammarAccess
-import java.util.Collection
-import java.util.Set
 import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.Assert
@@ -37,16 +37,20 @@ abstract class AbstractContentAssistParserTest extends Assert {
 	@Inject protected N4JSGrammarAccess grammarAccess
 	@Inject GrammarPrettyPrinter prettyPrinter
 
-	def Collection<FollowElement> getFollowElements(INode node, int start, int end)
+	def Collection<FollowElement> getFollowElements(INode node, int start, int end, boolean strict)
 
 	def Collection<FollowElement> getFollowElements(FollowElement prev)
 
 	def Collection<FollowElement> getFollowElements(INode node, String after) {
-		return node.getFollowElements(0, after.length)
+		return node.getFollowElements(0, after.length, true)
 	}
 
 	def Collection<FollowElement> getFollowElements(INode node) {
-		return node.getFollowElements(0, node.totalLength)
+		return node.getFollowElements(0, node.totalLength, true)
+	}
+	
+	def Collection<FollowElement> getFollowElements(INode node, boolean strict) {
+		return node.getFollowElements(0, node.totalLength, strict)
 	}
 
 	def String prettyPrint(Set<AbstractElement> elements) {
@@ -56,7 +60,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 	@Test
 	def void testEmptyInput() {
 		val node = ''.toNode
-		val followElements = getFollowElements(node, 0, 0)
+		val followElements = getFollowElements(node, 0, 0, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(2, grammarElements.size)
 		assertTrue(grammarElements.contains(grammarAccess.scriptAccess.annotationsAssignment_1))
@@ -195,7 +199,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElement = getFollowElements(node).head
 		followElement.assertSubsequentFollowElementsInMemberExpression
 	}
-
+	
 	@Test
 	def void testAfterDot_IDEBUG481_02() {
 		val node = '''
@@ -257,6 +261,183 @@ abstract class AbstractContentAssistParserTest extends Assert {
 		val followElement = getFollowElements(node).head
 		followElement.assertSubsequentFollowElementsInMemberExpression
 	}
+	
+	@Test
+	def void testNoModifiers_GH39_nonStrict() {
+		val node = '''
+			class A {}
+			function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElements = getFollowElements(node, false)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().getScriptElementsAssignment_2))
+	}
+	
+	@Test
+	def void testNoModifiers_GH39_strict() {
+		val node = '''
+			class A {}
+			function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElements = getFollowElements(node, true)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
+	}
+
+	@Test
+	def void testPublicModifier_GH39() {
+		val node = '''
+			class A {}
+			public function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElements = getFollowElements(node, false)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().getScriptElementsAssignment_2))
+	}
+
+	@Test
+	def void testExportModifier_GH39() {
+		val node = '''
+			class A {}
+			public function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElements = getFollowElements(node, false)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().getScriptElementsAssignment_2))
+	}
+
+	@Test
+	def void testExportPublicModifier_GH39_nonStrict() {
+		val node = '''
+			class A {}
+			export public function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElements = getFollowElements(node, false)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().getScriptElementsAssignment_2))
+	}
+	
+	@Test
+	def void testExportPublicModifier_GH39_strict() {
+		val node = '''
+			class A {}
+			export public function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElements = getFollowElements(node, true)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+	}
+	
+	@Test
+	def void testExportPublicModifier_GH39_asi() {
+		val node = '''
+			class A {}
+			export public function* foo(req: A) { 
+			  yield 5
+			  req.'''.toNode
+		val followElements = getFollowElements(node, true)
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+	}
+	
+	@Test
+	def void testNoModifiersFollowUp_01() {
+		val node = '''
+			class A {}
+			function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElement = getFollowElements(node, true).filter[grammarElement == grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0].head
+		assertNotNull(followElement)
+		val followElements = getFollowElements(followElement);
+		
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.rootStatementAccess.alternatives))
+	}
+
+	@Test
+	def void testNoModifiersFollowUp_02() {
+		val node = '''
+			class A {}
+			function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElement = getFollowElements(node, true).filter[grammarElement == grammarAccess.getRootStatementAccess().getAlternatives()].head
+		assertNotNull(followElement)
+		val followElements = getFollowElements(followElement);
+		
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 2, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.rootStatementAccess.alternatives))
+	}
+
+	@Test
+	def void testNoModifiersFollowUp_03() {
+		val node = '''
+			class A {}
+			function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.getScriptAccess().getScriptElementsAssignment_2()].head
+		assertNotNull(followElement)
+		val followElements = getFollowElements(followElement);
+		
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 0, grammarElements.size)
+	}
+
+	@Test
+	def void testExportPublicFollowUp_01() {
+		val node = '''
+			class A {}
+			export public function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0].head
+		assertNotNull(followElement)
+		val followElements = getFollowElements(followElement);
+		
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
+		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives()))
+	}
+
+	@Test
+	def void testExportPublicFollowUp_02() {
+		val node = '''
+			class A {}
+			export public function* foo(req: A) { 
+			  yield 5; // removing 5 fixes the problem
+			  req.'''.toNode
+		val followElement = getFollowElements(node, false).filter[grammarElement == grammarAccess.getScriptAccess().getScriptElementsAssignment_2()].head
+		assertNotNull(followElement)
+		val followElements = getFollowElements(followElement);
+		
+		val grammarElements = followElements.map [ grammarElement ].toSet
+		assertEquals(grammarElements.prettyPrint, 0, grammarElements.size)
+	}
 
 	def assertSubsequentFollowElementsInMemberExpression(FollowElement followElement) {
 		val followElements = followElement.followElements
@@ -273,7 +454,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 	@Test
 	def void testAfterDot_nl() {
 		val node = 'a.\n\n'.toNode
-		val followElements = getFollowElements(node, 0, 3)
+		val followElements = getFollowElements(node, 0, 3, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 1, grammarElements.size)
 		assertEquals(4, followElements.head.lookAhead)
@@ -283,7 +464,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 	@Test
 	def void testAfterDot_nl_NextBatchOfFollowElements() {
 		val node = 'a.\n\n'.toNode
-		val followElement = getFollowElements(node, 0, 3).head
+		val followElement = getFollowElements(node, 0, 3, true).head
 		followElement.assertSubsequentFollowElementsInMemberExpression
 	}
 
@@ -327,7 +508,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 	@Test
 	def void testBinaryOp_03() {
 		val node = '1\n+2'.toNode
-		val followElements = getFollowElements(node, 0, 2)
+		val followElements = getFollowElements(node, 0, 2, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 18, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2))
@@ -337,7 +518,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 	@Test
 	def void testBinaryOp_04() {
 		val node = '1/*\n*/+2'.toNode
-		val followElements = getFollowElements(node, 0, 6)
+		val followElements = getFollowElements(node, 0, 6, true)
 		val grammarElements = followElements.map [ grammarElement ].toSet
 		assertEquals(grammarElements.prettyPrint, 18, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.scriptAccess.scriptElementsAssignment_2))

@@ -15,8 +15,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.JavaScriptVariant
 import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 

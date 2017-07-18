@@ -37,7 +37,6 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -451,42 +450,27 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		final StringBuilder strb = new StringBuilder();
 		boolean _isGeneric = this.isGeneric();
 		if (_isGeneric) {
-			StringBuilder _append = strb.append("<");
-			EList<TypeVariable> _typeVars = this.getTypeVars();
 			final Function1<TypeVariable, String> _function = new Function1<TypeVariable, String>() {
 				public String apply(final TypeVariable it) {
 					return it.getTypeAsString();
 				}
 			};
-			EList<String> _map = XcoreEListExtensions.<TypeVariable, String>map(_typeVars, _function);
-			String _join = IterableExtensions.join(_map, ",");
-			StringBuilder _append_1 = _append.append(_join);
-			_append_1.append("> ");
+			strb.append("<").append(IterableExtensions.join(XcoreEListExtensions.<TypeVariable, String>map(this.getTypeVars(), _function), ",")).append("> ");
 		}
 		boolean _isDeclaredAsync = this.isDeclaredAsync();
 		if (_isDeclaredAsync) {
 			strb.append("async ");
 		}
-		String _name = this.getName();
-		StringBuilder _append_2 = strb.append(_name);
-		StringBuilder _append_3 = _append_2.append("(");
-		EList<TFormalParameter> _fpars = this.getFpars();
 		final Function1<TFormalParameter, String> _function_1 = new Function1<TFormalParameter, String>() {
 			public String apply(final TFormalParameter it) {
 				return it.getFormalParameterAsString();
 			}
 		};
-		EList<String> _map_1 = XcoreEListExtensions.<TFormalParameter, String>map(_fpars, _function_1);
-		String _join_1 = IterableExtensions.join(_map_1, ", ");
-		StringBuilder _append_4 = _append_3.append(_join_1);
-		_append_4.append(")");
+		strb.append(this.getName()).append("(").append(IterableExtensions.join(XcoreEListExtensions.<TFormalParameter, String>map(this.getFpars(), _function_1), ", ")).append(")");
 		TypeRef _returnTypeRef = this.getReturnTypeRef();
 		boolean _tripleNotEquals = (_returnTypeRef != null);
 		if (_tripleNotEquals) {
-			StringBuilder _append_5 = strb.append(": ");
-			TypeRef _returnTypeRef_1 = this.getReturnTypeRef();
-			String _typeRefAsString = _returnTypeRef_1.getTypeRefAsString();
-			_append_5.append(_typeRefAsString);
+			strb.append(": ").append(this.getReturnTypeRef().getTypeRefAsString());
 		}
 		boolean _isReturnValueOptional = this.isReturnValueOptional();
 		if (_isReturnValueOptional) {
@@ -515,8 +499,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		if (_tripleEquals) {
 			final EObject parent = this.eContainer();
 			if ((parent instanceof TInterface)) {
-				TypeAccessModifier _typeAccessModifier = ((Type) parent).getTypeAccessModifier();
-				final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(_typeAccessModifier);
+				final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(((Type) parent).getTypeAccessModifier());
 				if ((modifierDerivedFromType != MemberAccessModifier.PRIVATE)) {
 					return modifierDerivedFromType;
 				}

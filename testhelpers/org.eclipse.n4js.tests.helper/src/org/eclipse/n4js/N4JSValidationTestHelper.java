@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper;
+import org.eclipse.xtext.testing.validation.ValidationTestHelper;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.common.base.Joiner;

@@ -34,7 +34,6 @@ class N4JSXScopeProvider extends N4JSScopeProvider {
 	@Inject MemberScopingHelper memberScopingHelper
 	@Inject extension ReactHelper reactHelper;
 
-	@Override
 	override getScope(EObject context, EReference reference) {
 		if (reference == N4JSXPackage.Literals.JSX_PROPERTY_ATTRIBUTE__PROPERTY) {
 			if (context instanceof JSXPropertyAttribute) {

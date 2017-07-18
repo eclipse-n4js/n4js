@@ -101,7 +101,7 @@ public class FormatterXpectMethod {
 		request.setTextRegionAccess(reg);
 		request.setExceptionHandler(ExceptionAcceptor.THROWING);
 		// needed in case a check like this will be implemented:
-		// org.eclipse.xtext.junit4.formatter.FormatterTester.assertAllWhitespaceIsFormatted()
+		// org.eclipse.xtext.testing.formatter.FormatterTester.assertAllWhitespaceIsFormatted()
 		request.setAllowIdentityEdits(true);
 		request.setFormatUndefinedHiddenRegionsOnly(false);
 		request.addRegion(region);

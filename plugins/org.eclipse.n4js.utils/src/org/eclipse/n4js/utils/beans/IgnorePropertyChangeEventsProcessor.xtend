@@ -19,7 +19,6 @@ import org.eclipse.xtend.lib.macro.declaration.FieldDeclaration
  */
 class IgnorePropertyChangeEventsProcessor extends AbstractFieldProcessor {
 
-	@Override
 	override doValidate(FieldDeclaration field, extension ValidationContext context) {
 
 		val clazz = field.declaringType;

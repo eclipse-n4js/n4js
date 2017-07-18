@@ -12,10 +12,10 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.addNature;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.monitor;
-import static org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createSimpleProject;
-import static org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createSubFolder;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
+import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -190,7 +190,6 @@ public class ProjectUtils {
 	 * @param manifestAdjustments
 	 *            for details see method {@link #createManifestN4MFFile(IProject, String, String, Consumer)}.
 	 */
-	@SuppressWarnings("restriction")
 	public static IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
 		IProject result = createSimpleProject(projectName);
@@ -211,7 +210,6 @@ public class ProjectUtils {
 	 *            properties (the ProjectDescription object passed to the procedure will already contain all default
 	 *            values). May be <code>null</code> if no adjustments are required.
 	 */
-	@SuppressWarnings("restriction")
 	public static void createManifestN4MFFile(IProject project, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
 		IFile config = project.getFile("manifest.n4mf");
@@ -261,7 +259,6 @@ public class ProjectUtils {
 
 	// moved here from AbstractBuilderParticipantTest:
 	/** Applies the Xtext nature to the project and creates (if necessary) and returns the source folder. */
-	@SuppressWarnings("restriction")
 	public static IFolder configureProjectWithXtext(IProject project, String sourceFolder) throws CoreException {
 		addNature(project.getProject(), XtextProjectHelper.NATURE_ID);
 		IFolder folder = project.getProject().getFolder(sourceFolder);

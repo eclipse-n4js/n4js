@@ -17,8 +17,6 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
 
 import org.eclipse.n4js.ts.types.TAnonymousFormalParameter;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -60,13 +58,9 @@ public class TAnonymousFormalParameterImpl extends TFormalParameterImpl implemen
 		if ((definedName != null)) {
 			return definedName;
 		}
-		EObject _eContainer = this.eContainer();
-		EStructuralFeature _eContainingFeature = this.eContainingFeature();
-		final Object containingFeature = _eContainer.eGet(_eContainingFeature);
+		final Object containingFeature = this.eContainer().eGet(this.eContainingFeature());
 		if ((containingFeature instanceof List<?>)) {
-			EObject _eContainer_1 = this.eContainer();
-			EStructuralFeature _eContainingFeature_1 = this.eContainingFeature();
-			Object _eGet = _eContainer_1.eGet(_eContainingFeature_1);
+			Object _eGet = this.eContainer().eGet(this.eContainingFeature());
 			final int index = ((List<?>) _eGet).indexOf(this);
 			return ("_par_" + Integer.valueOf(index));
 		}

@@ -20,6 +20,17 @@ import java.util.Set;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IDocumentExtension4;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.N4JSFactory;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
+import org.eclipse.n4js.resource.AccessibleSerializer;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ui.utils.ImportSpacerUserPreferenceHelper;
+import org.eclipse.n4js.utils.Lazy;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.text.edits.InsertEdit;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
@@ -40,18 +51,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.MembersInjector;
-
-import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.N4JSFactory;
-import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.resource.AccessibleSerializer;
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ts.types.TExportableElement;
-import org.eclipse.n4js.ui.utils.ImportSpacerUserPreferenceHelper;
-import org.eclipse.n4js.utils.Lazy;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 /**
  * Obtain an import rewriter for a resource and add used types optionally along with aliases. It uses the serializer to
@@ -243,10 +242,11 @@ public class ImportRewriter {
 		return syntacticModuleName;
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "deprecation" })
 	private AliasLocation enhanceExistingImportDeclaration(ImportDeclaration importDeclaration,
 			QualifiedName qualifiedName,
 			String optionalAlias, MultiTextEdit result) {
+
 		addImportSpecifier(importDeclaration, qualifiedName, optionalAlias);
 		ICompositeNode replaceMe = NodeModelUtils.getNode(importDeclaration);
 		int offset = replaceMe.getOffset();
@@ -254,6 +254,7 @@ public class ImportRewriter {
 				optionalAlias,
 				offset,
 				grammarAccess);
+
 		try {
 			serializer.serialize(
 					importDeclaration,

@@ -109,7 +109,7 @@ public class TypesSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     '(' | ('('? '{' 'function' '(')
+	 *     ('('? '{' 'function' '(') | '('
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) fpars+=TAnonymousFormalParameter
@@ -177,7 +177,7 @@ public class TypesSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     (';' | ',')?
+	 *     (',' | ';')?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' (rule end)

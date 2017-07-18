@@ -25,10 +25,10 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.validation.IssueCodes
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
-import org.eclipse.xtext.junit4.validation.ValidationTestHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.junit.Assert
 import org.junit.Ignore

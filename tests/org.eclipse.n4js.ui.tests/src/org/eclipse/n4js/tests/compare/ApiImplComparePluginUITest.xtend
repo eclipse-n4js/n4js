@@ -18,14 +18,14 @@ import org.eclipse.n4js.ui.compare.ProjectCompareTreeHelper
 import org.eclipse.n4js.n4mf.N4mfFactory
 import java.io.File
 import org.eclipse.core.resources.IProject
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.addNature
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature
 
 import static extension org.eclipse.n4js.tests.util.ProjectUtils.*
 

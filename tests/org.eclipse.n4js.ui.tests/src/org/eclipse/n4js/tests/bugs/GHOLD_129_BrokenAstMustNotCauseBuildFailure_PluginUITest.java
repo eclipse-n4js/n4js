@@ -15,15 +15,13 @@ import java.io.File;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
-import org.junit.Test;
-
 import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.junit.Test;
 
 /**
  * Test class for checking type system does not cause build failure when processing and traversing broken AST.
  */
-@SuppressWarnings("restriction")
 public class GHOLD_129_BrokenAstMustNotCauseBuildFailure_PluginUITest extends AbstractIDEBUG_Test {
 
 	private static final String PROJECT_NAME = "GHOLD-129";

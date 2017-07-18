@@ -34,7 +34,6 @@ class N4MFHyperlinker extends HyperlinkHelper {
 
 	extension N4mfPackage = N4mfPackage.eINSTANCE;
 
-	@Override
 	override createHyperlinksByOffset(XtextResource it, int offset, IHyperlinkAcceptor acceptor) {
 
 		if (null === parseResult) {

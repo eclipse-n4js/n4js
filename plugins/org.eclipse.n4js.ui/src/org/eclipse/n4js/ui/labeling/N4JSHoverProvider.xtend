@@ -42,12 +42,10 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 	@Inject
 	private TypesHoverProvider typesHoverProvider;
 
-	@Override
 	override protected getFirstLine(EObject o) {
 		return composeFirstLine(o.keyword, o.label);
 	}
 
-	@Override
 	override protected getLabel(EObject o) {
 		sanitizeForHTML(doGetLabel(o));
 	}
@@ -102,7 +100,6 @@ class N4JSHoverProvider extends DefaultEObjectHoverProvider {
 		''' «fe.name»''';
 	}
 
-	@Override
 	override protected hasHover(EObject o) {
 		doHasHover(o);
 	}

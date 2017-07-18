@@ -21,9 +21,9 @@ import org.eclipse.n4js.ui.contentassist.antlr.lexer.InternalN4JSLexer
 import java.io.InputStreamReader
 import java.io.StringReader
 import org.antlr.runtime.Token
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
-import org.eclipse.xtext.junit4.util.ParseHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.junit.After

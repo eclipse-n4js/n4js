@@ -21,8 +21,8 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.EcorePackage
 import org.eclipse.xtext.findReferences.TargetURIs
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.XtextResourceSet

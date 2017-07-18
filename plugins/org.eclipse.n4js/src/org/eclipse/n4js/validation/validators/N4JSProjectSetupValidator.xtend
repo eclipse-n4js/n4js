@@ -102,19 +102,16 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 	 * for objects belong to N4MF language to the underlying  context when validating the project
 	 * setup based on a {@link ProjectDescription project description}.
 	 */
-	@Override
 	override protected getIssueSeverities(Map<Object, Object> context, EObject eObject) {
 		return issueSeveritiesProvider.getIssueSeverities(eObject.eResource);
 	}
 
-	@Override
 	override protected List<EPackage> getEPackages() {
 		val ePackages = super.EPackages;
 		ePackages += EPackage.Registry.INSTANCE.getEPackage(N4mfPackage.eINSTANCE.nsURI);
 		return ePackages;
 	}
 
-	@Override
 	override isLanguageSpecific() {
 		return false; // we are not language specific: n4js AND manifest
 	}

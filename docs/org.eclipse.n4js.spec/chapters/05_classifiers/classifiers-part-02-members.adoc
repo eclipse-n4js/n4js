@@ -786,6 +786,73 @@ new C( { s: "Hello", weird: true } );
 
 ====
 
+Restriction when initializing interface fields via @Spec constructor [[restriction-interface-field-spec-style-constructor]] ::
+
+In most cases, interface definitions in `n4jsd` files simply declare functions and fields that are supposed to be provided by the runtime environment.
+As a result, there are restrictions as to whether fields of interfaces defined in `n4jsd` files can initialized via `@Spec` constructors or not.
+In particular, fields of an interface declared in a `n4jsd` file  cannot be initialized via @Spec constructor if the interface
+
+. is a built-in or
+. does not have an `@N4JS` annotation
+
+The following example illustrates this restriction.
+
+.Interface fields that cannot be initialized via @Spec constructors
+[example]
+====
+
+.Inf.n4jsd
+[source,n4js]
+----
+export external interface I  {
+    public m: string;
+}
+
+@N4JS
+export external interface J  {
+    public n: string;
+}
+----
+
+.Test.n4js
+[source,n4js]
+----
+import { I } from "Inf";
+// I is an external interface WITHOUT @N4JS annotation
+class C implements I {
+    constructor(@Spec spec:~i~this) {}
+}
+
+// J is an external interface with @N4JS annotation
+class D implements J {
+    constructor(@Spec spec:~i~this) {}
+}
+
+// XPECT warnings --> "m is a property of built-in / provided by runtime / external without @N4JS annotation interface I and can not be initialized in Spec constructor." at "m"
+let c:C = new C({m: "Hello"});
+
+// XPECT nowarnings
+let d:D = new D({n: "Bye"});
+
+console.log(c.m)
+console.log(d.n)
+
+/* XPECT output ---
+<==
+stdout:
+undefined
+Bye
+stderr:
+==>
+--- */
+
+----
+
+====
+
+In this example, the interface `I` is defined in the `Inf.n4jsd` file without the `@N4JS` annotation. As a result, its field `m` cannot be initialized via the `@Spec` constructor and hence the output of `console.log(c.m)` is `undefined`. On the other hand,  since the interface `J` is declared with the annotation `@N4JS`, it is possible to initialize its field `n` in the `@Spec` constructor. That's why the result of `console.log(d.n)` is `Bye`.
+
+
 === Callable Constructors
 
 === Covariant Constructors

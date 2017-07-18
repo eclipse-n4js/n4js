@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 
-import org.eclipse.xtext.junit4.InjectWith;
+import org.eclipse.xtext.testing.InjectWith;
 import org.junit.runner.RunWith;
 
 import org.eclipse.n4js.JSLibSingleTestConfig;

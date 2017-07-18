@@ -10,31 +10,38 @@
  */
 package org.eclipse.n4js.ui.contentassist;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.antlr.runtime.BaseRecognizer;
 import org.antlr.runtime.CommonToken;
 import org.antlr.runtime.RecognizerSharedState;
 import org.antlr.runtime.Token;
 import org.antlr.runtime.TokenSource;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser;
+import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
+import org.eclipse.xtext.AbstractElement;
+import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Group;
+import org.eclipse.xtext.UnorderedGroup;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.LookAheadTerminal;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.ObservableXtextTokenStream;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.InfiniteRecursion;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper;
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ui.contentassist.antlr.N4JSParser;
-import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
 
 /**
  * Specialized content assist parser entry point. Rather than parsing text from scratch, it uses an Antlr
@@ -100,6 +107,26 @@ public class CustomN4JSParser extends N4JSParser {
 		CustomInternalN4JSParser result = new CustomInternalN4JSParser();
 		result.setGrammarAccess(getGrammarAccess());
 		return result;
+	}
+
+	@Override
+	public void initializeFor(AbstractRule rule) {
+		// TODO: GH-61.
+		// Remove this function to see test errors in GHOLD-92-LINKING_DIAGNOSTIC_import_missing_B.n4js.xt
+		/*
+		 * Comment by Sebastian: This is a super nasty side effect of some Xpect internals: Xpect uses own injectors
+		 * thus reflectively creates a new injector for the language. Effectively two injectors for N4JS exist at that
+		 * time. Both have their own 'singleton'-bindings, their own in-memory gramar representation etc. This is highly
+		 * problematic since all sorts of assumptions do no longer hold in such a setup. That is, especially the grammar
+		 * elements are supposed to be singletons and to be comparable by identity. Now we have each grammar element
+		 * twice in memory. Further there appears to be a blurry boundary between which object is obtain from which of
+		 * both injectors, so in the end, we face a parser instance that was produced by the real injector being used by
+		 * objects that were produced by the second injector. To be honest, I wonder wow this can even work. This is a
+		 * super critical misbehavior of Xpect from my point of view.
+		 */
+		if (super.getEntryRule() == null) {
+			super.initializeFor(rule);
+		}
 	}
 
 	@Inject
@@ -327,5 +354,141 @@ public class CustomN4JSParser extends N4JSParser {
 		this.semi = mapper.getInternalTokenType(getGrammarAccess().getSemiAccess().getSemicolonKeyword());
 		this.postfixGroup = grammarAccess.getPostfixExpressionAccess().getGroup_1();
 	}
+
+	// TODO remove the code below with Xtext 2.13
+	@Inject
+	private final ReflectExtensions reflector = new ReflectExtensions();
+
+	@SuppressWarnings("unchecked")
+	private <T> T reflective(String methodName, Object... args) {
+		try {
+			return (T) reflector.invoke(this, methodName, args);
+		} catch (SecurityException | IllegalArgumentException | IllegalAccessException | InvocationTargetException
+				| NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@SuppressWarnings("hiding")
+	@Override
+	public Collection<FollowElement> getFollowElements(FollowElement element) {
+		if (element.getLookAhead() <= 1)
+			throw new IllegalArgumentException("lookahead may not be less than or equal to 1");
+		Collection<FollowElement> result = new ArrayList<>();
+		Collection<AbstractElement> elementsToParse = this.reflective("getElementsToParse", element);
+		for (AbstractElement elementToParse : elementsToParse) {
+			// fix is here
+			elementToParse = unwrapSingleElementGroups(elementToParse);
+			// done
+			String ruleName = getRuleName(elementToParse);
+			String[][] allRuleNames = reflective("getRequiredRuleNames", ruleName, element.getParamStack(),
+					elementToParse);
+			for (String[] ruleNames : allRuleNames) {
+				for (int i = 0; i < ruleNames.length; i++) {
+					AbstractInternalContentAssistParser parser = createParser();
+					parser.setUnorderedGroupHelper(getUnorderedGroupHelper().get());
+					parser.getUnorderedGroupHelper().initializeWith(parser);
+					final Iterator<LookAheadTerminal> iter = element.getLookAheadTerminals().iterator();
+					ObservableXtextTokenStream tokens = new ObservableXtextTokenStream(new TokenSource() {
+						@Override
+						public Token nextToken() {
+							if (iter.hasNext()) {
+								LookAheadTerminal lookAhead = iter.next();
+								return lookAhead.getToken();
+							}
+							return Token.EOF_TOKEN;
+						}
+
+						@Override
+						public String getSourceName() {
+							return "LookAheadTerminalTokenSource";
+						}
+					}, parser);
+					parser.setTokenStream(tokens);
+					tokens.setListener(parser);
+					parser.getGrammarElements().addAll(element.getTrace());
+					parser.getGrammarElements().add(elementToParse);
+					parser.getLocalTrace().addAll(element.getLocalTrace());
+					parser.getLocalTrace().add(elementToParse);
+					parser.getParamStack().addAll(element.getParamStack());
+					if (elementToParse instanceof UnorderedGroup && element.getGrammarElement() == elementToParse) {
+						UnorderedGroup group = (UnorderedGroup) elementToParse;
+						final IUnorderedGroupHelper helper = parser.getUnorderedGroupHelper();
+						helper.enter(group);
+						for (AbstractElement consumed : element.getHandledUnorderedGroupElements()) {
+							parser.before(consumed);
+							helper.select(group, group.getElements().indexOf(consumed));
+							helper.returnFromSelection(group);
+							parser.after(consumed);
+						}
+						parser.setUnorderedGroupHelper(new IUnorderedGroupHelper() {
+
+							boolean first = true;
+
+							@Override
+							public void initializeWith(BaseRecognizer recognizer) {
+								helper.initializeWith(recognizer);
+							}
+
+							@Override
+							public void enter(UnorderedGroup group) {
+								if (!first)
+									helper.enter(group);
+								first = false;
+							}
+
+							@Override
+							public void leave(UnorderedGroup group) {
+								helper.leave(group);
+							}
+
+							@Override
+							public boolean canSelect(UnorderedGroup group, int index) {
+								return helper.canSelect(group, index);
+							}
+
+							@Override
+							public void select(UnorderedGroup group, int index) {
+								helper.select(group, index);
+							}
+
+							@Override
+							public void returnFromSelection(UnorderedGroup group) {
+								helper.returnFromSelection(group);
+							}
+
+							@Override
+							public boolean canLeave(UnorderedGroup group) {
+								return helper.canLeave(group);
+							}
+
+							@Override
+							public UnorderedGroupState snapShot(UnorderedGroup... groups) {
+								return helper.snapShot(groups);
+							}
+
+						});
+					}
+					Collection<FollowElement> elements = reflective("getFollowElements", parser, elementToParse,
+							ruleNames, i);
+					result.addAll(elements);
+				}
+			}
+		}
+		return result;
+	}
+
+	// This will yield a compile error with 2.13 because it will be present as a protected method
+	private AbstractElement unwrapSingleElementGroups(AbstractElement elementToParse) {
+		if (elementToParse instanceof Group) {
+			List<AbstractElement> elements = ((Group) elementToParse).getElements();
+			if (elements.size() == 1) {
+				return unwrapSingleElementGroups(elements.get(0));
+			}
+		}
+		return elementToParse;
+	}
+	// ^^^^^^^
+	// TODO remove until here
 
 }

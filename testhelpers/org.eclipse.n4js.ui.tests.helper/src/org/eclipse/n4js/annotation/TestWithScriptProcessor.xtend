@@ -25,7 +25,6 @@ import static extension com.google.common.base.Strings.*
  */
 class TestWithScriptProcessor extends AbstractMethodProcessor {
 
-	@Override
 	override doTransform(MutableMethodDeclaration m, extension TransformationContext context) {
 
 		val annotations = m.annotations.filter[annotationTypeDeclaration.qualifiedName == TestWithScript.name];

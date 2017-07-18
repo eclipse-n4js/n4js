@@ -90,6 +90,7 @@ Type: 	  TObjectPrototype
 		| VirtualBaseType
 ;
 
+@Override
 TypeRef:
 	TypeRefWithoutModifiers followedByQuestionMark?='?'?
 ;
@@ -104,6 +105,7 @@ PrimitiveType:
 	'}'
 ;
 
+@Override
 TypeReferenceName: 'void' | 'any' | 'undefined' | 'null' | 'indexed' | IDENTIFIER ('/' IDENTIFIER)*;
 
 // These will be defined only once to be able to load them as singletons and refer to them via x-refs

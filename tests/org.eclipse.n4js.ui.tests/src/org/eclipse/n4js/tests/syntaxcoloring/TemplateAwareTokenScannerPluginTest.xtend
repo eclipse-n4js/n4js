@@ -13,8 +13,8 @@ package org.eclipse.n4js.tests.syntaxcoloring
 import com.google.inject.Inject
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.jface.text.rules.ITokenScanner
-import org.eclipse.xtext.junit4.InjectWith
-import org.eclipse.xtext.junit4.XtextRunner
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.editor.model.XtextDocument
 import org.junit.Test
 import org.junit.runner.RunWith

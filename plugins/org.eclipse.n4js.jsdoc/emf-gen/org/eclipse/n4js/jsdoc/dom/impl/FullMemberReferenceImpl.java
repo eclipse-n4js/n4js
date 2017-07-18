@@ -172,8 +172,7 @@ public class FullMemberReferenceImpl extends FullTypeReferenceImpl implements Fu
 					strb.append(".");
 				}
 			}
-			String _memberName = this.getMemberName();
-			strb.append(_memberName);
+			strb.append(this.getMemberName());
 		}
 		return strb.toString();
 	}
