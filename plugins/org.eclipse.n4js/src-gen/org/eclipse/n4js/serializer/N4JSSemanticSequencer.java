@@ -186,7 +186,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ArrayPadding(context, (ArrayPadding) semanticObject); 
 				return; 
 			case N4JSPackage.ARROW_FUNCTION:
-				sequence_ArrowExpression(context, (ArrowFunction) semanticObject); 
+				sequence_ArrowExpression_ColonSepReturnTypeRef_StrictFormalParameters(context, (ArrowFunction) semanticObject); 
 				return; 
 			case N4JSPackage.ASSIGNMENT_EXPRESSION:
 				sequence_AssignmentExpression(context, (AssignmentExpression) semanticObject); 
@@ -244,11 +244,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				else break;
 			case N4JSPackage.BINDING_ELEMENT:
 				if (rule == grammarAccess.getBindingElementRule()) {
-					sequence_BindingElement(context, (BindingElement) semanticObject); 
+					sequence_BindingElementImpl(context, (BindingElement) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getBindingRestElementRule()) {
-					sequence_BindingRestElement(context, (BindingElement) semanticObject); 
+					sequence_BindingElementImpl_BindingRestElement(context, (BindingElement) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getElisionRule()) {
@@ -310,7 +310,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_CatchBlock(context, (CatchBlock) semanticObject); 
 				return; 
 			case N4JSPackage.CATCH_VARIABLE:
-				sequence_BogusTypeRefFragment_CatchVariable_ColonSepTypeRef(context, (CatchVariable) semanticObject); 
+				sequence_BogusTypeRefFragment_CatchVariable_ColonSepDeclaredTypeRef(context, (CatchVariable) semanticObject); 
 				return; 
 			case N4JSPackage.COMMA_EXPRESSION:
 				sequence_Expression(context, (CommaExpression) semanticObject); 
@@ -363,7 +363,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_ExportedVariableBinding(context, (ExportedVariableBinding) semanticObject); 
 				return; 
 			case N4JSPackage.EXPORTED_VARIABLE_DECLARATION:
-				sequence_ColonSepTypeRef_ExportedVariableDeclaration_VariableDeclarationImpl(context, (ExportedVariableDeclaration) semanticObject); 
+				sequence_ColonSepDeclaredTypeRef_ExportedVariableDeclaration_VariableDeclarationImpl(context, (ExportedVariableDeclaration) semanticObject); 
 				return; 
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT:
 				if (rule == grammarAccess.getAnnotatedExportableElementRule()) {
@@ -403,7 +403,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.FORMAL_PARAMETER:
 				if (rule == grammarAccess.getFormalParameterRule()) {
-					sequence_BindingElementFragment_BogusTypeRefFragment_ColonSepTypeRef_FormalParameter(context, (FormalParameter) semanticObject); 
+					sequence_BindingElementFragment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FormalParameter(context, (FormalParameter) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getBindingIdentifierAsFormalParameterRule()) {
@@ -413,33 +413,32 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				else break;
 			case N4JSPackage.FUNCTION_DECLARATION:
 				if (rule == grammarAccess.getExportableElementRule()) {
-					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedExportableElementRule()) {
-					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getStatementRule()) {
-					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedFunctionDeclarationRule()) {
-					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getScriptElementRule()) {
-					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedScriptElementRule()) {
-					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getFunctionDeclarationRule()
-						|| rule == grammarAccess.getExportedFunctionDeclarationRule()
 						|| rule == grammarAccess.getRootStatementRule()) {
-					sequence_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
+					sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -482,19 +481,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
 						|| rule == grammarAccess.getExpressionRule()
 						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
-					sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
+					sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedExpressionRule()) {
-					sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
+					sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAsyncFunctionExpressionRule()) {
-					sequence_AsyncFunctionExpression_FunctionBody_FunctionHeader_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
+					sequence_AsyncFunctionExpression_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getFunctionExpressionRule()) {
-					sequence_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
+					sequence_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(context, (FunctionExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -745,29 +744,29 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.N4_FIELD_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_FieldDeclarationImpl(context, (N4FieldDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl(context, (N4FieldDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4FieldDeclarationRule()) {
-					sequence_BogusTypeRefFragment_ColonSepTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
+					sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(context, (N4FieldDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
 			case N4JSPackage.N4_GETTER_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader(context, (N4GetterDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(context, (N4GetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4GetterDeclarationRule()) {
-					sequence_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
+					sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(context, (N4GetterDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -798,19 +797,19 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.N4_METHOD_DECLARATION:
 				if (rule == grammarAccess.getN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getAnnotatedN4MemberDeclarationRule()) {
-					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4MethodDeclarationRule()) {
-					sequence_AsyncNoTrailingLineBreak_BogusTypeRefFragment_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
+					sequence_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getN4CallableConstructorDeclarationRule()) {
-					sequence_MethodParamsReturnAndBody_StrictFormalParameters(context, (N4MethodDeclaration) semanticObject); 
+					sequence_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters(context, (N4MethodDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -838,7 +837,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				if (action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_3_0_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_3_1_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_2_0()) {
-					sequence_Arguments_MemberExpression_TypeArguments_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(context, (NewExpression) semanticObject); 
+					sequence_Arguments_ConcreteTypeArguments_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(context, (NewExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getLeftHandSideExpressionRule()
@@ -875,7 +874,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
 						|| rule == grammarAccess.getExpressionRule()
 						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
-					sequence_Arguments_MemberExpression_TypeArguments(context, (NewExpression) semanticObject); 
+					sequence_Arguments_ConcreteTypeArguments_MemberExpression(context, (NewExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -892,14 +891,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				sequence_OctalIntLiteral(context, (OctalIntLiteral) semanticObject); 
 				return; 
 			case N4JSPackage.PARAMETERIZED_CALL_EXPRESSION:
-				if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
-						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
-					sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (ParameterizedCallExpression) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getLeftHandSideExpressionRule()
+				if (rule == grammarAccess.getLeftHandSideExpressionRule()
 						|| rule == grammarAccess.getPostfixExpressionRule()
 						|| action == grammarAccess.getPostfixExpressionAccess().getPostfixExpressionExpressionAction_1_0_0()
 						|| rule == grammarAccess.getCastExpressionRule()
@@ -931,7 +923,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
 						|| rule == grammarAccess.getExpressionRule()
 						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
-					sequence_Arguments_LeftHandSideExpression_ParameterizedCallExpression_TypeArguments(context, (ParameterizedCallExpression) semanticObject); 
+					sequence_Arguments_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getPrimaryExpressionRule()
@@ -941,7 +933,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_2_1_1_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0()) {
-					sequence_Arguments_ParameterizedCallExpression_TypeArguments(context, (ParameterizedCallExpression) semanticObject); 
+					sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
+					return; 
+				}
+				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
+					sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (ParameterizedCallExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -978,31 +977,31 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
 						|| rule == grammarAccess.getExpressionRule()
 						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
-					sequence_LeftHandSideExpression_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments(context, (ParameterizedPropertyAccessExpression) semanticObject); 
+					sequence_ConcreteTypeArguments_LeftHandSideExpression_MemberExpression_ParameterizedPropertyAccessExpressionTail(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_2_0_0()
 						|| action == grammarAccess.getLeftHandSideExpressionAccess().getIndexedAccessExpressionTargetAction_1_2_1_0()
 						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_2_2_0()
 						|| action == grammarAccess.getLeftHandSideExpressionAccess().getTaggedTemplateStringTargetAction_1_2_3_0_0()) {
-					sequence_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
+					sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_1_3_3_0_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_3_3_1_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_1_3_3_2_0()) {
-					sequence_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
+					sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_2_1_1_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0()) {
-					sequence_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
+					sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
 				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
 						|| rule == grammarAccess.getMemberExpressionRule()) {
-					sequence_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments(context, (ParameterizedPropertyAccessExpression) semanticObject); 
+					sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail(context, (ParameterizedPropertyAccessExpression) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1020,15 +1019,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.PROPERTY_GETTER_DECLARATION:
 				if (rule == grammarAccess.getAnnotatedPropertyAssignmentRule()) {
-					sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader(context, (PropertyGetterDeclaration) semanticObject); 
+					sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(context, (PropertyGetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getPropertyAssignmentRule()) {
-					sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
+					sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getPropertyGetterDeclarationRule()) {
-					sequence_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
+					sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(context, (PropertyGetterDeclaration) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1246,7 +1245,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				 			|| ImmutableSet.of(grammarAccess.getVariableDeclarationRule().getParameters().get(0/*In*/), grammarAccess.getVariableDeclarationRule().getParameters().get(2/*AllowType*/)).equals(parameters)
 				 			|| ImmutableSet.of(grammarAccess.getVariableDeclarationRule().getParameters().get(1/*Yield*/), grammarAccess.getVariableDeclarationRule().getParameters().get(2/*AllowType*/)).equals(parameters)
 				 			|| ImmutableSet.of(grammarAccess.getVariableDeclarationRule().getParameters().get(2/*AllowType*/)).equals(parameters))) {
-					sequence_ColonSepTypeRef_VariableDeclaration_VariableDeclarationImpl(context, (VariableDeclaration) semanticObject); 
+					sequence_ColonSepDeclaredTypeRef_VariableDeclaration_VariableDeclarationImpl(context, (VariableDeclaration) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getVariableDeclarationRule() && (ImmutableSet.of(grammarAccess.getVariableDeclarationRule().getParameters().get(0/*In*/), grammarAccess.getVariableDeclarationRule().getParameters().get(1/*Yield*/)).equals(parameters)
@@ -1274,50 +1273,46 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 			switch (semanticObject.eClass().getClassifierID()) {
 			case TypeRefsPackage.FUNCTION_TYPE_EXPRESSION:
 				if (rule == grammarAccess.getTypeRefForCastRule()) {
-					sequence_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
+					sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefRule()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
+						|| rule == grammarAccess.getTypeArgumentRule()) {
+					sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(context, (FunctionTypeExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getArrowFunctionTypeExpressionRule()) {
 					sequence_ArrowFunctionTypeExpression_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
-						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
-						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
-						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_FunctionTypeExpressionOLD_PrimaryTypeExpression_TAnonymousFormalParameterList_TypeRefWithModifiers(context, (FunctionTypeExpression) semanticObject); 
-					return; 
-				}
 				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getFunctionTypeExpressionOLDRule()) {
-					sequence_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
+					sequence_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(context, (FunctionTypeExpression) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getBogusTypeRefRule()
-						|| rule == grammarAccess.getTypeRefWithModifiersRule()) {
-					sequence_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(context, (FunctionTypeExpression) semanticObject); 
+				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
+					sequence_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList_TypeRefWithModifiers(context, (FunctionTypeExpression) semanticObject); 
 					return; 
 				}
 				else break;
 			case TypeRefsPackage.INTERSECTION_TYPE_EXPRESSION:
-				if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefForCastRule()
 						|| rule == grammarAccess.getIntersectionTypeExpressionOLDRule()) {
 					sequence_IntersectionTypeExpressionOLD(context, (IntersectionTypeExpression) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getBogusTypeRefRule()
-						|| rule == grammarAccess.getTypeRefWithModifiersRule()) {
+				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
 					sequence_IntersectionTypeExpressionOLD_TypeRefWithModifiers(context, (IntersectionTypeExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
@@ -1331,59 +1326,55 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					sequence_ArrayTypeRef(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefForCastRule()) {
-					sequence_ArrayTypeRef_ParameterizedTypeRefNominal(context, (ParameterizedTypeRef) semanticObject); 
+				else if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
+					sequence_ArrayTypeRef_TypeAndTypeArguments_TypeArguments(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_ArrayTypeRef_ParameterizedTypeRefNominal_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_ArrayTypeRef_TypeAndTypeArguments_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefNominalRule()) {
-					sequence_ParameterizedTypeRefNominal(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_TypeAndTypeArguments_TypeArguments(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getBogusTypeRefRule()
-						|| rule == grammarAccess.getTypeRefWithModifiersRule()) {
-					sequence_ParameterizedTypeRefNominal_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
+				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
+					sequence_TypeAndTypeArguments_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()) {
-					sequence_ParameterizedTypeRefNominal_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
+					sequence_TypeAndTypeArguments_TypeArguments_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
 					return; 
 				}
 				else break;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL:
-				if (rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefForCastRule()
+				if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
 						|| rule == grammarAccess.getParameterizedTypeRefRule()
 						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
-					sequence_ParameterizedTypeRefStructural_TStructMemberList(context, (ParameterizedTypeRefStructural) semanticObject); 
+					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeAndTypeArguments_TypeArguments(context, (ParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getBogusTypeRefRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRefStructural) semanticObject); 
+					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeAndTypeArguments_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()) {
-					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeRefWithoutModifiers(context, (ParameterizedTypeRefStructural) semanticObject); 
+					sequence_ParameterizedTypeRefStructural_TStructMemberList_TypeAndTypeArguments_TypeArguments_TypeRefWithoutModifiers(context, (ParameterizedTypeRefStructural) semanticObject); 
 					return; 
 				}
 				else break;
@@ -1396,12 +1387,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getBogusTypeRefRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_ThisTypeRefNominal_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ThisTypeRefNominal) semanticObject); 
@@ -1420,12 +1409,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getBogusTypeRefRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_TStructMemberList_ThisTypeRefStructural_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ThisTypeRefStructural) semanticObject); 
@@ -1438,44 +1425,40 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				else break;
 			case TypeRefsPackage.TYPE_TYPE_REF:
 				if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
-						|| rule == grammarAccess.getBogusTypeRefRule()
 						|| rule == grammarAccess.getTypeRefWithModifiersRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
 					sequence_TypeRefWithModifiers_TypeTypeRef(context, (TypeTypeRef) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				else if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefForCastRule()
 						|| rule == grammarAccess.getTypeTypeRefRule()) {
 					sequence_TypeTypeRef(context, (TypeTypeRef) semanticObject); 
 					return; 
 				}
 				else break;
 			case TypeRefsPackage.UNION_TYPE_EXPRESSION:
-				if (rule == grammarAccess.getBogusTypeRefRule()
-						|| rule == grammarAccess.getTypeRefWithModifiersRule()) {
+				if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
 					sequence_TypeRefWithModifiers_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
 					return; 
 				}
 				else if (rule == grammarAccess.getTypeRefRule()
-						|| rule == grammarAccess.getUnionTypeExpressionRule()
-						|| action == grammarAccess.getUnionTypeExpressionAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
 						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
 						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
 						|| rule == grammarAccess.getTypeArgumentRule()) {
-					sequence_TypeRefWithModifiers_UnionTypeExpression_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
+					sequence_TypeRef_TypeRefWithModifiers_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
 					return; 
 				}
-				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()
+				else if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefWithoutModifiersRule()
 						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
-						|| rule == grammarAccess.getTypeRefForCastRule()
 						|| rule == grammarAccess.getUnionTypeExpressionOLDRule()) {
 					sequence_UnionTypeExpressionOLD(context, (UnionTypeExpression) semanticObject); 
 					return; 
@@ -1500,33 +1483,26 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		else if (epackage == TypesPackage.eINSTANCE)
 			switch (semanticObject.eClass().getClassifierID()) {
 			case TypesPackage.TANONYMOUS_FORMAL_PARAMETER:
-				sequence_DefaultFormalParameter_TAnonymousFormalParameter(context, (TAnonymousFormalParameter) semanticObject); 
+				sequence_ColonSepTypeRef_DefaultFormalParameter_TAnonymousFormalParameter(context, (TAnonymousFormalParameter) semanticObject); 
 				return; 
 			case TypesPackage.TFORMAL_PARAMETER:
-				sequence_DefaultFormalParameter_TFormalParameter(context, (TFormalParameter) semanticObject); 
+				sequence_ColonSepTypeRef_DefaultFormalParameter_TFormalParameter(context, (TFormalParameter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_FIELD:
-				sequence_TStructField(context, (TStructField) semanticObject); 
+				sequence_ColonSepTypeRef_TStructField(context, (TStructField) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_GETTER:
-				sequence_TStructGetter(context, (TStructGetter) semanticObject); 
+				sequence_ColonSepDeclaredTypeRef_TStructGetter(context, (TStructGetter) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_METHOD:
-				sequence_TAnonymousFormalParameterList_TStructMethod(context, (TStructMethod) semanticObject); 
+				sequence_ColonSepReturnTypeRef_TAnonymousFormalParameterList_TStructMethod_TypeVariables(context, (TStructMethod) semanticObject); 
 				return; 
 			case TypesPackage.TSTRUCT_SETTER:
 				sequence_TStructSetter(context, (TStructSetter) semanticObject); 
 				return; 
 			case TypesPackage.TYPE_VARIABLE:
-				if (rule == grammarAccess.getTypeVariableWithDefSiteVarianceRule()) {
-					sequence_TypeVariableWithDefSiteVariance(context, (TypeVariable) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getTypeVariableRule()) {
-					sequence_TypeVariable(context, (TypeVariable) semanticObject); 
-					return; 
-				}
-				else break;
+				sequence_TypeVariable(context, (TypeVariable) semanticObject); 
+				return; 
 			}
 		if (errorAcceptor != null)
 			errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
@@ -1855,7 +1831,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -1878,7 +1854,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedExportableElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -2646,7 +2622,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
+	protected void sequence_AnnotatedExpression_AsyncFunctionExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -2668,7 +2644,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
+	protected void sequence_AnnotatedExpression_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3295,7 +3271,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3320,7 +3296,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedFunctionDeclaration_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3335,15 +3311,15 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         (
 	 *             (
 	 *                 (
-	 *                     (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier* bogusTypeRef=BogusTypeRef?) | 
+	 *                     (annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier* bogusTypeRef=TypeRefWithModifiers?) | 
 	 *                     (
 	 *                         ((annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+) 
 	 *                         typeVars+=TypeVariable 
 	 *                         typeVars+=TypeVariable* 
-	 *                         bogusTypeRef=BogusTypeRef?
+	 *                         bogusTypeRef=TypeRefWithModifiers?
 	 *                     ) | 
 	 *                     declaredModifiers+=N4Modifier+ | 
-	 *                     (declaredModifiers+=N4Modifier+ bogusTypeRef=BogusTypeRef?)
+	 *                     (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)
 	 *                 )? 
 	 *                 declaredAsync?='async' 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
@@ -3352,8 +3328,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *                 declaredModifiers+=N4Modifier* 
 	 *                 (
-	 *                     (bogusTypeRef=BogusTypeRef? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     (bogusTypeRef=BogusTypeRef? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
 	 *                     declaredName=LiteralOrComputedPropertyName
 	 *                 )
 	 *             ) | 
@@ -3362,8 +3338,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typeVars+=TypeVariable 
 	 *                 typeVars+=TypeVariable* 
 	 *                 (
-	 *                     (bogusTypeRef=BogusTypeRef? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *                     (bogusTypeRef=BogusTypeRef? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *                     (bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
 	 *                     declaredName=LiteralOrComputedPropertyName | 
 	 *                     declaredName=LiteralOrComputedPropertyName
 	 *                 )
@@ -3378,23 +3354,23 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                     declaredModifiers+=N4Modifier+ | 
 	 *                     (declaredModifiers+=N4Modifier+ (typeVars+=TypeVariable typeVars+=TypeVariable*)?)
 	 *                 ) 
-	 *                 bogusTypeRef=BogusTypeRef? 
+	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
 	 *             (
-	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=BogusTypeRef?)) 
+	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
 	 *             ) | 
 	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=BogusTypeRef? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3409,14 +3385,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4MethodDeclaration_1_2_0_0_0 
 	 *         declaredModifiers+=N4Modifier* 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         ((declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName) | (generator?='*' declaredName=LiteralOrComputedPropertyName)) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3430,14 +3406,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4FieldDeclaration_1_3_0 
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_FieldDeclarationImpl(ISerializationContext context, N4FieldDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3451,14 +3427,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4FieldDeclaration_1_3_0? 
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3472,14 +3448,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         annotationList=AnnotatedN4MemberDeclaration_N4GetterDeclaration_1_0_0_0_0 
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader(ISerializationContext context, N4GetterDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3492,14 +3468,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         ((annotationList=AnnotatedN4MemberDeclaration_N4GetterDeclaration_1_0_0_0_0 declaredModifiers+=N4Modifier*) | declaredModifiers+=N4Modifier+)? 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         (body=Block | body=Block)?
 	 *     )
 	 */
-	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
+	protected void sequence_AnnotatedN4MemberDeclaration_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3555,14 +3531,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
+	protected void sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3575,14 +3551,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         annotationList=AnnotatedPropertyAssignment_PropertyGetterDeclaration_1_1_0_0_0? 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         (body=Block | body=Block)
 	 *     )
 	 */
-	protected void sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
+	protected void sequence_AnnotatedPropertyAssignment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3773,7 +3749,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -3795,7 +3771,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AnnotatedScriptElement_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4072,172 +4048,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (spread?='...'? expression=AssignmentExpression)
 	 */
 	protected void sequence_Argument(ISerializationContext context, Argument semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns ParameterizedCallExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         (target=LeftHandSideExpression_ParameterizedCallExpression_1_0 | target=LeftHandSideExpression_ParameterizedCallExpression_1_2_0_0) 
-	 *         (arguments+=Argument arguments+=Argument*)?
-	 *     )
-	 */
-	protected void sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4649,14 +4459,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (
+	 *             (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef) | 
 	 *             target=LeftHandSideExpression_ParameterizedCallExpression_1_0 | 
-	 *             target=LeftHandSideExpression_ParameterizedCallExpression_1_2_0_0 | 
-	 *             (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef)
+	 *             target=LeftHandSideExpression_ParameterizedCallExpression_1_2_0_0
 	 *         ) 
 	 *         (arguments+=Argument arguments+=Argument*)?
 	 *     )
 	 */
-	protected void sequence_Arguments_LeftHandSideExpression_ParameterizedCallExpression_TypeArguments(ISerializationContext context, ParameterizedCallExpression semanticObject) {
+	protected void sequence_Arguments_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -4784,7 +4594,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (callee=MemberExpression (typeArgs+=TypeRef typeArgs+=TypeRef*)? withArgs?='(' (arguments+=Argument arguments+=Argument*)?)
 	 */
-	protected void sequence_Arguments_MemberExpression_TypeArguments_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, NewExpression semanticObject) {
+	protected void sequence_Arguments_ConcreteTypeArguments_MemberExpression_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, NewExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -5236,7 +5046,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (callee=MemberExpression (typeArgs+=TypeRef typeArgs+=TypeRef*)? (withArgs?='(' (arguments+=Argument arguments+=Argument*)?)?)
 	 */
-	protected void sequence_Arguments_MemberExpression_TypeArguments(ISerializationContext context, NewExpression semanticObject) {
+	protected void sequence_Arguments_ConcreteTypeArguments_MemberExpression(ISerializationContext context, NewExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -5408,7 +5218,173 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef (arguments+=Argument arguments+=Argument*)?)
 	 */
-	protected void sequence_Arguments_ParameterizedCallExpression_TypeArguments(ISerializationContext context, ParameterizedCallExpression semanticObject) {
+	protected void sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns ParameterizedCallExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         (target=LeftHandSideExpression_ParameterizedCallExpression_1_0 | target=LeftHandSideExpression_ParameterizedCallExpression_1_2_0_0) 
+	 *         (arguments+=Argument arguments+=Argument*)?
+	 *     )
+	 */
+	protected void sequence_Arguments_LeftHandSideExpression_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, ParameterizedCallExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6064,15 +6040,33 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *
 	 * Constraint:
 	 *     (
-	 *         (
-	 *             ((fpars+=FormalParameter fpars+=FormalParameter*)? returnTypeRef=TypeRef?) | 
-	 *             (declaredAsync?='async' (fpars+=FormalParameter fpars+=FormalParameter*)? returnTypeRef=TypeRef?) | 
-	 *             fpars+=BindingIdentifierAsFormalParameter
-	 *         )? 
+	 *         ((declaredAsync?='async'? (fpars+=FormalParameter fpars+=FormalParameter*)? returnTypeRef=TypeRef?) | fpars+=BindingIdentifierAsFormalParameter)? 
 	 *         ((hasBracesAroundBody?='{' body=BlockMinusBraces) | body=ExpressionDisguisedAsBlock)
 	 *     )
 	 */
-	protected void sequence_ArrowExpression(ISerializationContext context, ArrowFunction semanticObject) {
+	protected void sequence_ArrowExpression_ColonSepReturnTypeRef_StrictFormalParameters(ISerializationContext context, ArrowFunction semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     TypeRefForCast returns FunctionTypeExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             declaredThisType=TypeRefFunctionTypeExpression? 
+	 *             (ownedTypeVars+=TypeVariable ownedTypeVars+=TypeVariable*)? 
+	 *             (
+	 *                 (fpars+=TAnonymousFormalParameter fpars+=TAnonymousFormalParameter* (returnTypeRef=PrimaryTypeExpression | returnTypeRef=TypeRef)) | 
+	 *                 returnTypeRef=TypeRef
+	 *             )?
+	 *         ) | 
+	 *         returnTypeRef=PrimaryTypeExpression
+	 *     )?
+	 */
+	protected void sequence_ArrowFunctionTypeExpression_ColonSepReturnTypeRef_FunctionTypeExpressionOLD_TAnonymousFormalParameterList(ISerializationContext context, FunctionTypeExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6145,7 +6139,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block
 	 *     )
 	 */
-	protected void sequence_AsyncFunctionExpression_FunctionBody_FunctionHeader_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
+	protected void sequence_AsyncFunctionExpression_ColonSepReturnTypeRef_FunctionBody_FunctionHeader_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6159,14 +6153,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         declaredModifiers+=N4Modifier* 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         ((declaredAsync?='async'? declaredName=LiteralOrComputedPropertyName) | (generator?='*' declaredName=LiteralOrComputedPropertyName)) 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AsyncNoTrailingLineBreak_BogusTypeRefFragment_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
+	protected void sequence_AsyncNoTrailingLineBreak_BogusTypeRefFragment_ColonSepReturnTypeRef_MethodParamsReturnAndBody_N4MethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6175,8 +6169,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Contexts:
 	 *     FunctionDeclaration<Yield> returns FunctionDeclaration
 	 *     FunctionDeclaration returns FunctionDeclaration
-	 *     ExportedFunctionDeclaration<Yield> returns FunctionDeclaration
-	 *     ExportedFunctionDeclaration returns FunctionDeclaration
 	 *     RootStatement<Yield> returns FunctionDeclaration
 	 *     RootStatement returns FunctionDeclaration
 	 *
@@ -6192,7 +6184,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_AsyncNoTrailingLineBreak_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
+	protected void sequence_AsyncNoTrailingLineBreak_ColonSepReturnTypeRef_FunctionBody_FunctionDeclaration_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6819,12 +6811,12 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         (
 	 *             bindingPattern=BindingPattern | 
-	 *             (annotations+=Annotation* bogusTypeRef=BogusTypeRef? variadic?='...'? name=BindingIdentifier declaredTypeRef=TypeRef?)
+	 *             (annotations+=Annotation* bogusTypeRef=TypeRefWithModifiers? variadic?='...'? name=BindingIdentifier declaredTypeRef=TypeRef?)
 	 *         ) 
 	 *         (hasInitializerAssignment?='=' initializer=AssignmentExpression?)?
 	 *     )
 	 */
-	protected void sequence_BindingElementFragment_BogusTypeRefFragment_ColonSepTypeRef_FormalParameter(ISerializationContext context, FormalParameter semanticObject) {
+	protected void sequence_BindingElementFragment_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FormalParameter(ISerializationContext context, FormalParameter semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6837,7 +6829,20 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     ((nestedPattern=BindingPattern expression=AssignmentExpression?) | varDecl=VariableDeclaration)
 	 */
-	protected void sequence_BindingElement(ISerializationContext context, BindingElement semanticObject) {
+	protected void sequence_BindingElementImpl(ISerializationContext context, BindingElement semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     BindingRestElement<Yield> returns BindingElement
+	 *     BindingRestElement returns BindingElement
+	 *
+	 * Constraint:
+	 *     (rest?='...'? ((nestedPattern=BindingPattern expression=AssignmentExpression?) | varDecl=VariableDeclaration))
+	 */
+	protected void sequence_BindingElementImpl_BindingRestElement(ISerializationContext context, BindingElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -6893,19 +6898,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     ((declaredName=LiteralOrComputedPropertyName value=BindingElement) | value=SingleNameBinding)
 	 */
 	protected void sequence_BindingProperty(ISerializationContext context, BindingProperty semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     BindingRestElement<Yield> returns BindingElement
-	 *     BindingRestElement returns BindingElement
-	 *
-	 * Constraint:
-	 *     (rest?='...'? ((nestedPattern=BindingPattern expression=AssignmentExpression?) | varDecl=VariableDeclaration))
-	 */
-	protected void sequence_BindingRestElement(ISerializationContext context, BindingElement semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -7147,9 +7139,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     CatchVariable returns CatchVariable
 	 *
 	 * Constraint:
-	 *     ((bogusTypeRef=BogusTypeRef? name=BindingIdentifier) | bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRef=TypeRef))
+	 *     ((bogusTypeRef=TypeRefWithModifiers? name=BindingIdentifier) | bindingPattern=BindingPattern | (name=BindingIdentifier declaredTypeRef=TypeRef))
 	 */
-	protected void sequence_BogusTypeRefFragment_CatchVariable_ColonSepTypeRef(ISerializationContext context, CatchVariable semanticObject) {
+	protected void sequence_BogusTypeRefFragment_CatchVariable_ColonSepDeclaredTypeRef(ISerializationContext context, CatchVariable semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -7162,14 +7154,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         expression=Expression?
 	 *     )
 	 */
-	protected void sequence_BogusTypeRefFragment_ColonSepTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
+	protected void sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_FieldDeclarationImpl_N4FieldDeclaration(ISerializationContext context, N4FieldDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -7182,14 +7174,14 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredModifiers+=N4Modifier* 
-	 *         bogusTypeRef=BogusTypeRef? 
+	 *         bogusTypeRef=TypeRefWithModifiers? 
 	 *         declaredName=LiteralOrComputedPropertyName 
 	 *         declaredOptional?='?'? 
 	 *         declaredTypeRef=TypeRef? 
 	 *         body=Block?
 	 *     )
 	 */
-	protected void sequence_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
+	protected void sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_N4GetterDeclaration(ISerializationContext context, N4GetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -7200,9 +7192,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PropertyGetterDeclaration returns PropertyGetterDeclaration
 	 *
 	 * Constraint:
-	 *     (bogusTypeRef=BogusTypeRef? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block)
+	 *     (bogusTypeRef=TypeRefWithModifiers? declaredName=LiteralOrComputedPropertyName declaredOptional?='?'? declaredTypeRef=TypeRef? body=Block)
 	 */
-	protected void sequence_BogusTypeRefFragment_ColonSepTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
+	protected void sequence_BogusTypeRefFragment_ColonSepDeclaredTypeRef_GetterHeader_PropertyGetterDeclaration(ISerializationContext context, PropertyGetterDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -8236,7 +8228,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRef=TypeRef? expression=AssignmentExpression?)
 	 */
-	protected void sequence_ColonSepTypeRef_ExportedVariableDeclaration_VariableDeclarationImpl(ISerializationContext context, ExportedVariableDeclaration semanticObject) {
+	protected void sequence_ColonSepDeclaredTypeRef_ExportedVariableDeclaration_VariableDeclarationImpl(ISerializationContext context, ExportedVariableDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -8259,7 +8251,945 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (annotations+=Annotation* name=BindingIdentifier declaredTypeRef=TypeRef? expression=AssignmentExpression?)
 	 */
-	protected void sequence_ColonSepTypeRef_VariableDeclaration_VariableDeclarationImpl(ISerializationContext context, VariableDeclaration semanticObject) {
+	protected void sequence_ColonSepDeclaredTypeRef_VariableDeclaration_VariableDeclarationImpl(ISerializationContext context, VariableDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     FunctionExpression returns FunctionExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         generator?='*'? 
+	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
+	 *         name=BindingIdentifier? 
+	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
+	 *         returnTypeRef=TypeRef? 
+	 *         body=Block
+	 *     )
+	 */
+	protected void sequence_ColonSepReturnTypeRef_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     N4CallableConstructorDeclaration<Yield> returns N4MethodDeclaration
+	 *     N4CallableConstructorDeclaration returns N4MethodDeclaration
+	 *
+	 * Constraint:
+	 *     ((fpars+=FormalParameter fpars+=FormalParameter*)? returnTypeRef=TypeRef? body=Block?)
+	 */
+	protected void sequence_ColonSepReturnTypeRef_MethodParamsReturnAndBody_StrictFormalParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     LeftHandSideExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     PostfixExpression.PostfixExpression_1_0_0 returns ParameterizedPropertyAccessExpression
+	 *     CastExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     CastExpression.CastExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     UnaryExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     UnaryExpression returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AdditiveExpression.AdditiveExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ShiftExpression.ShiftExpression_1_0_0 returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     RelationalExpression.RelationalExpression_1_0_0 returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     EqualityExpression.EqualityExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression<In> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns ParameterizedPropertyAccessExpression
+	 *     Expression<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     Expression<In> returns ParameterizedPropertyAccessExpression
+	 *     Expression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     Expression returns ParameterizedPropertyAccessExpression
+	 *     Expression.CommaExpression_1_0<In,Yield> returns ParameterizedPropertyAccessExpression
+	 *     Expression.CommaExpression_1_0<In> returns ParameterizedPropertyAccessExpression
+	 *     Expression.CommaExpression_1_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     Expression.CommaExpression_1_0 returns ParameterizedPropertyAccessExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         (
+	 *             target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_2_2_0 | 
+	 *             target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 | 
+	 *             target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0
+	 *         ) 
+	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
+	 *         property=[IdentifiableElement|IdentifierName]
+	 *     )
+	 */
+	protected void sequence_ConcreteTypeArguments_LeftHandSideExpression_MemberExpression_ParameterizedPropertyAccessExpressionTail(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns ParameterizedPropertyAccessExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_2_2_0 
+	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
+	 *         property=[IdentifiableElement|IdentifierName]
+	 *     )
+	 */
+	protected void sequence_ConcreteTypeArguments_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0 returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0 returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0 returns ParameterizedPropertyAccessExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 
+	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
+	 *         property=[IdentifiableElement|IdentifierName]
+	 *     )
+	 */
+	protected void sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.IndexedAccessExpression_2_1_0_0 returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0 returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns ParameterizedPropertyAccessExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0 
+	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
+	 *         property=[IdentifiableElement|IdentifierName]
+	 *     )
+	 */
+	protected void sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Contexts:
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression<Yield> returns ParameterizedPropertyAccessExpression
+	 *     MemberExpression returns ParameterizedPropertyAccessExpression
+	 *
+	 * Constraint:
+	 *     (
+	 *         (target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 | target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0) 
+	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
+	 *         property=[IdentifiableElement|IdentifierName]
+	 *     )
+	 */
+	protected void sequence_ConcreteTypeArguments_MemberExpression_ParameterizedPropertyAccessExpressionTail(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -9492,25 +10422,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_ForStatement(ISerializationContext context, ForStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     FunctionExpression returns FunctionExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         generator?='*'? 
-	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
-	 *         name=BindingIdentifier? 
-	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
-	 *         returnTypeRef=TypeRef? 
-	 *         body=Block
-	 *     )
-	 */
-	protected void sequence_FunctionBody_FunctionExpression_FunctionHeader_FunctionImpl_StrictFormalParameters_TypeVariables(ISerializationContext context, FunctionExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -12428,426 +13339,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     LeftHandSideExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     PostfixExpression.PostfixExpression_1_0_0 returns ParameterizedPropertyAccessExpression
-	 *     CastExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     CastExpression.CastExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     UnaryExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     UnaryExpression returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MultiplicativeExpression.MultiplicativeExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AdditiveExpression.AdditiveExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ShiftExpression.ShiftExpression_1_0_0 returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     RelationalExpression.RelationalExpression_1_0_0 returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     EqualityExpression.EqualityExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseANDExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseXORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     BitwiseORExpression.BinaryBitwiseExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalANDExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LogicalORExpression.BinaryLogicalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     ConditionalExpression.ConditionalExpression_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression<In> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<In> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     AssignmentExpression.AssignmentExpression_4_1_0_0_0 returns ParameterizedPropertyAccessExpression
-	 *     Expression<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     Expression<In> returns ParameterizedPropertyAccessExpression
-	 *     Expression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     Expression returns ParameterizedPropertyAccessExpression
-	 *     Expression.CommaExpression_1_0<In,Yield> returns ParameterizedPropertyAccessExpression
-	 *     Expression.CommaExpression_1_0<In> returns ParameterizedPropertyAccessExpression
-	 *     Expression.CommaExpression_1_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     Expression.CommaExpression_1_0 returns ParameterizedPropertyAccessExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         (
-	 *             target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_2_2_0 | 
-	 *             target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 | 
-	 *             target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0
-	 *         ) 
-	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
-	 *         property=[IdentifiableElement|IdentifierName]
-	 *     )
-	 */
-	protected void sequence_LeftHandSideExpression_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     LeftHandSideExpression<Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression returns TaggedTemplateString
 	 *     PostfixExpression<Yield> returns TaggedTemplateString
@@ -13258,173 +13749,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_LeftHandSideExpression_MemberExpression(ISerializationContext context, TaggedTemplateString semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_2_0_0 returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.IndexedAccessExpression_1_2_1_0 returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedPropertyAccessExpression_1_2_2_0 returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.TaggedTemplateString_1_2_3_0_0 returns ParameterizedPropertyAccessExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         target=LeftHandSideExpression_ParameterizedPropertyAccessExpression_1_2_2_0 
-	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
-	 *         property=[IdentifiableElement|IdentifierName]
-	 *     )
-	 */
-	protected void sequence_LeftHandSideExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments_IndexedAccessExpression_1_2_1_0_ParameterizedCallExpression_1_2_0_0_ParameterizedPropertyAccessExpression_1_2_2_0_TaggedTemplateString_1_2_3_0_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -14894,325 +15218,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	
 	/**
 	 * Contexts:
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_1_3_3_0_0 returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_1_3_3_1_0 returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_1_3_3_2_0 returns ParameterizedPropertyAccessExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 
-	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
-	 *         property=[IdentifiableElement|IdentifierName]
-	 *     )
-	 */
-	protected void sequence_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments_IndexedAccessExpression_1_3_3_0_0_ParameterizedPropertyAccessExpression_1_3_3_1_0_TaggedTemplateString_1_3_3_2_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.IndexedAccessExpression_2_1_0_0 returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.ParameterizedPropertyAccessExpression_2_1_1_0 returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LeftHandSideExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression.TaggedTemplateString_2_1_2_0 returns ParameterizedPropertyAccessExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0 
-	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
-	 *         property=[IdentifiableElement|IdentifierName]
-	 *     )
-	 */
-	protected void sequence_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments_IndexedAccessExpression_2_1_0_0_ParameterizedPropertyAccessExpression_2_1_1_0_TaggedTemplateString_2_1_2_0(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns ParameterizedPropertyAccessExpression
-	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression<Yield> returns ParameterizedPropertyAccessExpression
-	 *     MemberExpression returns ParameterizedPropertyAccessExpression
-	 *
-	 * Constraint:
-	 *     (
-	 *         (target=MemberExpression_ParameterizedPropertyAccessExpression_1_3_3_1_0 | target=MemberExpression_ParameterizedPropertyAccessExpression_2_1_1_0) 
-	 *         (typeArgs+=TypeRef typeArgs+=TypeRef*)? 
-	 *         property=[IdentifiableElement|IdentifierName]
-	 *     )
-	 */
-	protected void sequence_MemberExpression_ParameterizedPropertyAccessExpressionTail_TypeArguments(ISerializationContext context, ParameterizedPropertyAccessExpression semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns TaggedTemplateString
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns TaggedTemplateString
@@ -15280,19 +15285,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_MethodParamsAndBody_PropertyMethodDeclaration_StrictFormalParameters_TypeVariables(ISerializationContext context, PropertyMethodDeclaration semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     N4CallableConstructorDeclaration<Yield> returns N4MethodDeclaration
-	 *     N4CallableConstructorDeclaration returns N4MethodDeclaration
-	 *
-	 * Constraint:
-	 *     ((fpars+=FormalParameter fpars+=FormalParameter*)? returnTypeRef=TypeRef? body=Block?)
-	 */
-	protected void sequence_MethodParamsReturnAndBody_StrictFormalParameters(ISerializationContext context, N4MethodDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

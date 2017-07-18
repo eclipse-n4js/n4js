@@ -510,12 +510,12 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 	@Test
 	def void testError_01() {
 		val script = '''
-			 function f() {
-			 	var z = (x)=>{
-			 		()=>
-			 		return z(x)
-			 	}
-			 }
+				 function f() {
+				 	var z = (x)=>{
+				 		()=>
+				 		return z(x)
+				 	}
+				 }
 		'''.parseWithError
 		val fun = script.scriptElements.head as FunctionDeclaration
 		val variableStmt = fun.body.statements.head as VariableStatement
@@ -523,7 +523,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 		val init = z.expression as ArrowFunction
 		val nestedStmt = init.body.statements.head as ExpressionStatement
 		val arrow = nestedStmt.expression as ArrowFunction
-		assertNull(arrow)
+		assertNotNull(arrow)
 		val nestedReturnStmt = init.body.statements.last as ReturnStatement
 		assertNotNull(nestedReturnStmt.expression)
 	}
@@ -544,7 +544,7 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 		val init = z.expression as ArrowFunction
 		val nestedStmt = init.body.statements.head as ExpressionStatement
 		val arrow = nestedStmt.expression as ArrowFunction
-		assertNull(arrow)
+		assertNotNull(arrow)
 		val nestedReturnStmt = init.body.statements.last as ReturnStatement
 		assertNotNull(nestedReturnStmt.expression)
 	}
@@ -565,7 +565,70 @@ class N4_7_1_11_ArrowExpressionTest extends AbstractParserTest {
 		val init = z.expression as ArrowFunction
 		val nestedStmt = init.body.statements.head as ExpressionStatement
 		val arrow = nestedStmt.expression as ArrowFunction
-		assertNull(arrow)
+		assertNotNull(arrow)
+		val nestedReturnStmt = init.body.statements.last as ReturnStatement
+		assertNotNull(nestedReturnStmt.expression)
+	}
+	
+	@Test
+	def void testError_04() {
+		val script = '''
+			 function f() {
+			 	var z = (x)=>{
+			 		(a)=>
+			 		return z(x)
+			 	}
+			 }
+		'''.parseWithError
+		val fun = script.scriptElements.head as FunctionDeclaration
+		val variableStmt = fun.body.statements.head as VariableStatement
+		val z = variableStmt.varDecl.head
+		val init = z.expression as ArrowFunction
+		val nestedStmt = init.body.statements.head as ExpressionStatement
+		val arrow = nestedStmt.expression as ArrowFunction
+		assertNotNull(arrow)
+		val nestedReturnStmt = init.body.statements.last as ReturnStatement
+		assertNotNull(nestedReturnStmt.expression)
+	}
+	
+	@Test
+	def void testError_05() {
+		val script = '''
+			 function f() {
+			 	var z = (x)=>{
+			 		(a: a)=>
+			 		return z(x)
+			 	}
+			 }
+		'''.parseWithError
+		val fun = script.scriptElements.head as FunctionDeclaration
+		val variableStmt = fun.body.statements.head as VariableStatement
+		val z = variableStmt.varDecl.head
+		val init = z.expression as ArrowFunction
+		val nestedStmt = init.body.statements.head as ExpressionStatement
+		val arrow = nestedStmt.expression as ArrowFunction
+		assertNotNull(arrow)
+		val nestedReturnStmt = init.body.statements.last as ReturnStatement
+		assertNotNull(nestedReturnStmt.expression)
+	}
+	
+	@Test
+	def void testError_06() {
+		val script = '''
+			 function f() {
+			 	var z = (x)=>{
+			 		(a: any)=>
+			 		return z(x)
+			 	}
+			 }
+		'''.parseWithError
+		val fun = script.scriptElements.head as FunctionDeclaration
+		val variableStmt = fun.body.statements.head as VariableStatement
+		val z = variableStmt.varDecl.head
+		val init = z.expression as ArrowFunction
+		val nestedStmt = init.body.statements.head as ExpressionStatement
+		val arrow = nestedStmt.expression as ArrowFunction
+		assertNotNull(arrow)
 		val nestedReturnStmt = init.body.statements.last as ReturnStatement
 		assertNotNull(nestedReturnStmt.expression)
 	}
