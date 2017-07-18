@@ -249,11 +249,9 @@ Contributors:
 							Note: by default, the setting is enabled.
 						-->
 						<useProjectSettings>true</useProjectSettings>
-						<!--
 						<compilerArgs>
-							<arg>-nowarn:[${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
+							<arg>-nowarn:[${project.basedir}/emf-gen${path.separator}${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
 						</compilerArgs>
-						-->
 					</configuration>
 				</plugin>
 				<!-- enable source bundle generation -->
