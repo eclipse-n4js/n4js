@@ -247,7 +247,12 @@ Contributors:
 							is not considered by Tycho/maven together with our harsh settings for optional warnings/errors;
 							therefore: do not use this at the moment!)
 							Note: by default, the setting is enabled.
+						-->
 						<useProjectSettings>true</useProjectSettings>
+						<!--
+						<compilerArgs>
+							<arg>-nowarn:[${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
+						</compilerArgs>
 						-->
 					</configuration>
 				</plugin>
