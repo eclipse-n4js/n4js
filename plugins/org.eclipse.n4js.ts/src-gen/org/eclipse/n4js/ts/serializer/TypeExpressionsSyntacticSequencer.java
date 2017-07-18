@@ -121,7 +121,7 @@ public class TypeExpressionsSyntacticSequencer extends AbstractSyntacticSequence
 	
 	/**
 	 * Ambiguous syntax:
-	 *     (';' | ',')?
+	 *     (',' | ';')?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' (rule end)
