@@ -30,6 +30,9 @@ public class FileChecker extends AbstractFileChecker {
 	private static final boolean FIX_FILE_ENDING = false;
 	private static final boolean FIX_TRAILING_WHITE_SPACE = false;
 
+	/** All folders on this level in the repository must be a valid Eclipse project, e.g. contain ".project" file. */
+	private static final int DEPTH_OF_PROJECTS = MODE == Mode.Xpect ? 1 : 2;
+
 	private static final String[] REPOS = { "n4js", "n4js-n4" }; // FIXME remove all references to "n4js-n4"
 	private static final String[] REPOS_MANDATORY = { "n4js" };
 
@@ -625,8 +628,8 @@ public class FileChecker extends AbstractFileChecker {
 	protected void checkFolder(Path path, int depth, Report report) {
 		if (depth == 0) {
 			checkFolderRepositoryRoot(path, report);
-		} else if (depth == 2 && !isBelowFolder(path.toString(), "n4js/n4js-libraries")) {
-			checkFolderBundleRoot(path, report);
+		} else if (depth == DEPTH_OF_PROJECTS && !path.endsWith(".git")) {
+			checkFolderProjectRoot(path, report);
 		}
 	}
 
@@ -639,14 +642,17 @@ public class FileChecker extends AbstractFileChecker {
 		assertContainsFileWithName(path, FILE_NAME__EPL, report);
 	}
 
-	private void checkFolderBundleRoot(Path path, Report report) {
+	private void checkFolderProjectRoot(Path path, Report report) {
 
 		if (!containsFileWithName(path, FILE_NAME__DOT_PROJECT)) {
 			report.problems.add("folder on level 2 does not contain an Eclipse '.project' file");
 		}
 
+		final boolean isFeatureBundle = isBelowFolder(path.toString(), "features")
+				|| containsFileWithName(path, FILE_NAME__FEATURE_XML);
+
 		if (inN4Repo(path)) {
-			if (isBelowFolder(path.toString(), "features")) {
+			if (isFeatureBundle) {
 				// feature bundles
 				// nothing to check here
 			} else {
@@ -654,7 +660,7 @@ public class FileChecker extends AbstractFileChecker {
 				assertContainsFileWithName(path, FILE_NAME__PLUGIN_PROPERTIES, report);
 			}
 		} else {
-			if (isBelowFolder(path.toString(), "features")) {
+			if (isFeatureBundle) {
 				// feature bundles
 				// See Section 4.3 Features Licenses and Feature Update Licenses
 				// at https://www.eclipse.org/legal/guidetolegaldoc.php
