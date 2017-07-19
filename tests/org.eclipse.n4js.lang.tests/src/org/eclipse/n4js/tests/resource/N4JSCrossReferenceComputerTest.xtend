@@ -34,24 +34,21 @@ import static org.junit.Assert.*
 @InjectWith(N4JSInjectorProvider)
 class N4JSCrossReferenceComputerTest {
 	@Inject 
-	Provider<XtextResourceSet> resourceSetProvider
-	
+	private Provider<XtextResourceSet> resourceSetProvider
 	@Inject
 	private N4JSCrossReferenceComputer crossReferenceComputer;
-	
 	@Inject
 	private TypesKeywordProvider typesKeywordProvider
 
-	URI resourceA;
-	URI resourceB;
+	URI resourceA
+	URI resourceB
+	URI resourceC
 
 	URI myClassOne
 	URI myClassTwo
 	URI myInterfaceFour
 	URI myRoleLikeInterface
 	URI myVariableTwo
-	
-	URI resourceC
 
 	@Test
 	def void testCrossRefVarDeclGeneric() {

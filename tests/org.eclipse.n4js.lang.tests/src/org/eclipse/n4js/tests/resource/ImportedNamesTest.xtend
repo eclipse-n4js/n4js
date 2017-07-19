@@ -15,18 +15,11 @@ import com.google.inject.Provider
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.xtext.naming.IQualifiedNameConverter
-import org.eclipse.xtext.resource.IResourceDescription
-import org.eclipse.xtext.resource.OutdatedStateManager
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
-import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -34,22 +27,10 @@ import org.junit.runner.RunWith
 @InjectWith(N4JSInjectorProvider)
 class ImportedNamesTest {
 
-	@Inject extension ReflectExtensions
-
-	@Inject IQualifiedNameConverter qualifiedNameConverter
-
-	@Inject Provider<XtextResourceSet> resourceSetProvider
-
-	@Inject OutdatedStateManager outdatedStateManager
-
-	@Inject OperationCanceledManager cancelManager
-
 	@Inject
-	ResourceDescriptionsProvider resourceDescriptionsProvider;
-
-	IResourceDescription emptyDescription = new EmptyResourceDescription
-
-	@Inject extension ParseHelper<Script>
+	private Provider<XtextResourceSet> resourceSetProvider
+	@Inject
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	URI myClassOne
 	URI myClassTwo

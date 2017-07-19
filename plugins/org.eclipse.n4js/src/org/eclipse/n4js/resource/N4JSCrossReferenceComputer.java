@@ -32,7 +32,6 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
@@ -47,8 +46,6 @@ import com.google.inject.Inject;
  * TODO: handle {@link Wildcard}s and other {@link TypeArgument}s in {@link ParameterizedTypeRef}s.
  */
 public class N4JSCrossReferenceComputer {
-	@Inject
-	private N4JSTypeSystem ts;
 
 	@Inject
 	private N4JSExternalReferenceChecker externalReferenceChecker;
