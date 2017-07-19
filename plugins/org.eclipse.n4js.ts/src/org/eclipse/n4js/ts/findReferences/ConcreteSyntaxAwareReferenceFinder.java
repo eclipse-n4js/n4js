@@ -58,7 +58,9 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		if (typesOrModulesToFind.isEmpty()) {
 			return;
 		}
+		Iterable<QualifiedName> importedNames = resourceDescription.getImportedNames();
 		for (QualifiedName importedName : resourceDescription.getImportedNames()) {
+			// GH-73 TODO getImportedNames does not handle generic correctly
 			if (typesOrModulesToFind.contains(importedName)) {
 				resourceAccess.readOnly(
 						resourceDescription.getURI(),

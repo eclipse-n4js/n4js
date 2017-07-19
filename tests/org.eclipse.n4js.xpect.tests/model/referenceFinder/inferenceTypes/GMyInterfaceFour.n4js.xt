@@ -23,5 +23,11 @@
 */
 
 export public interface GMyInterfaceFour {
+	/* XPECT findReferences at myMethodFour ---
+	referenceFinder/inferenceTypes/GMyClassOne - two.myAttributeTwo("test").myMethodFour - 31,
+	referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo().getElement().myMethodFour - 30,
+	referenceFinder/inferenceTypes/GMyInterfaceFour - myMethodFour():void - 32
+	---
+	*/
 	myMethodFour():void
 }

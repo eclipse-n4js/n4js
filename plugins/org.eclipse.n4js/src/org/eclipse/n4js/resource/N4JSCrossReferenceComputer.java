@@ -21,18 +21,25 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
+
+import it.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Collects all Types, TVariables, TLiterals and IdentifiableElements referenced within the AST of a given fully
@@ -44,6 +51,9 @@ import com.google.inject.Inject;
  * TODO: handle {@link Wildcard}s and other {@link TypeArgument}s in {@link ParameterizedTypeRef}s.
  */
 public class N4JSCrossReferenceComputer {
+	@Inject
+	private N4JSTypeSystem ts;
+
 	@Inject
 	private N4JSExternalReferenceChecker externalReferenceChecker;
 
@@ -173,6 +183,7 @@ public class N4JSCrossReferenceComputer {
 	 */
 	private void handlePropertyAccess(ParameterizedPropertyAccessExpression from, IAcceptor<EObject> acceptor,
 			Object val) {
+
 		if (val instanceof TypeRef
 				|| val instanceof ParameterizedTypeRef) {
 			handleTypeRef(from, acceptor, val);
@@ -194,6 +205,10 @@ public class N4JSCrossReferenceComputer {
 		} else {
 			// TODO handle other type refs
 			// TypeRef ref = (TypeRef) val;
+			if (val instanceof FunctionTypeExpression) {
+				TypeRef returnTypeRef = ((FunctionTypeExpression) val).getReturnTypeRef();
+				handleTypeRef(from, acceptor, returnTypeRef);
+			}
 		}
 	}
 
@@ -204,6 +219,13 @@ public class N4JSCrossReferenceComputer {
 				return; // quick fix: ignore this member (would lead to an exception below)
 			}
 		}
+
+		if (to instanceof TFunction) {
+			RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(from);
+			TypeRef typeRef = ts.tau((TypableElement) from);
+			handleTypeRef(from, acceptor, typeRef);
+		}
+
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 			acceptor.accept(to);
