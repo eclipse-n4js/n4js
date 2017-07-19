@@ -220,12 +220,6 @@ public class N4JSCrossReferenceComputer {
 			}
 		}
 
-		// if (to instanceof TFunction) {
-		// RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(from);
-		// TypeRef typeRef = ts.tau((TypableElement) from);
-		// handleTypeRef(from, acceptor, typeRef);
-		// }
-
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 			acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
@@ -238,7 +232,6 @@ public class N4JSCrossReferenceComputer {
 			Resource resource = to.eResource();
 			// guard against null resource that is sometimes returned if a member was put into a
 			// union type ref that is not contained in a resource and does not have an original decl
-			// GH-73: TODO What is when 'to' is a proxy?
 			if (resource != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 					&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 				acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
