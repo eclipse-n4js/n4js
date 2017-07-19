@@ -67,7 +67,7 @@ else
 fi
 
 ####### Build PDF via docbook toolchain #######
-asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml 
+asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml && rm $GEN_FOLDER/N4JSSpec.xml
 
 # Clean unwanted adoc/graffle files and delete empty subdirectories
 pushd ./$GEN_FOLDER/chapters
