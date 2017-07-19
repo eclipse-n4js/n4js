@@ -39,10 +39,6 @@ Contributors:
 				<groupId>org.eclipse.xtext</groupId>
 				<artifactId>xtext-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.eclipse.xtend</groupId>
-				<artifactId>xtend-maven-plugin</artifactId>
-			</plugin>
 
 			<!--
 			The following will deploy this artifact to a temporary maven repository (aka "local build repo").
