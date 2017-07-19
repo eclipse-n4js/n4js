@@ -24,6 +24,13 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<properties>
+		<skip.mwe2>false</skip.mwe2>
+		<mwe2-file-location>/src/org/eclipse/n4js/transpiler/im/GenerateN4JS_IM_Model.mwe2</mwe2-file-location>
+		<!-- fornax: -->
+		<mwe2descriptor>org.eclipse.n4js.GenerateN4JS</mwe2descriptor>
+	</properties>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -37,10 +44,6 @@ Contributors:
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.xtext</groupId>
-				<artifactId>xtext-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
