@@ -439,6 +439,7 @@ public class FileChecker extends AbstractFileChecker {
 
 	// ################################################################################################################
 
+	@SuppressWarnings("unused")
 	private static final void fixCopyrightHeader(Path path, String content) {
 		if (hasExtension(path, ".xml")) {
 			final int preambleLen = COPYRIGHT_HEADER_XML.indexOf('\n') + 1;
@@ -675,6 +676,9 @@ public class FileChecker extends AbstractFileChecker {
 					report.problems.add("feature bundles should not contain an '" + FILE_NAME__ABOUT_HTML + "' file");
 				}
 				assertContainsFileWithName(path, FILE_NAME__FEATURE_PROPERTIES, report);
+
+				// TODO consider checking that feature.properties is among the bin.includes in build.properties
+				// (note: this seems to be required for feature plugins, but not for ordinary plugins)
 			} else {
 				// all other bundles
 				// See https://www.eclipse.org/legal/guidetolegaldoc.php#Abouts
