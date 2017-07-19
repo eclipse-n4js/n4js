@@ -43,6 +43,7 @@ import org.eclipse.xtext.ui.label.AbstractLabelProvider
 import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.*
 import org.eclipse.jface.resource.ImageDescriptor
 import java.util.List
+import org.eclipse.n4js.ui.labeling.EObjectWithContext
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -99,6 +100,10 @@ class ImageCalculationHelper {
 	 */
 	def dispatch ImageDescriptor dispatchDoGetImage(Void _null) {
 		return null;
+	}
+	
+	def dispatch ImageDescriptor dispatchDoGetImage(EObjectWithContext eObjectWithContext) {
+		return dispatchDoGetImage(eObjectWithContext.obj)
 	}
 
 	def dispatch ImageDescriptor dispatchDoGetImage(N4ClassifierDeclaration n4ClassifierDeclaration) {

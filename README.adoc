@@ -11,20 +11,22 @@ Contributors:
 
 = N4JS
 
-The https://numberfour.github.io/n4js[N4JS language and its IDE] enables high-quality JavaScript development for large Node.js projects.
+The https://www.eclipse.org/n4js[Eclipse N4JS language and IDE] enable high-quality JavaScript development for large Node.js projects.
 N4JS enriches ECMAScript with a static type system and provides extensive support for static validation hosted within a feature-rich IDE.
 
 N4JS is based on ECMAScript Version 5 and ECMAScript 2015 is supported to a great extent. It adds a sound static type system inspired by Java 8, extended by concepts such as structural typing or union types. The language provides built-in support for state-of-the-art programming paradigms such as dependency injection and robust test support. The Eclipse based IDE for typed JavaScript is custom-built for exactly these concepts. Code is validated as you type in addition to tools such as content-assist and quick-fixes to ensure your code is written safely and intuitively.
 
 == Releases
 
-- N4JS IDE Snapshot Releases: http://goo.gl/qGKcm9[Linux64] http://goo.gl/2QDLfc[Win64] http://goo.gl/DszAu3[MacOS]
-- Eclipse Update Site N4JS IDE: http://updates.n4js.org/updatesite/
-- N4JS command line compiler (jar): http://goo.gl/09dfYB[n4jsc.jar]
+The Eclipse N4JS project is in the link:https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase[Incubation Phase] and there is no official release available yet (for unofficial releases see the link:https://www.eclipse.org/n4js/download.html[download page].
+This doesn't mean that N4JS is unstable; we have an extensive test suite (>90.000 tests including the https://github.com/tc39/test262[ECMAScript test suites]) to ensure a stable nightly build.
+N4JS has been in use in several large non-public projects for years. 
+There still may be bugs (as there are always bugs) and features which are currently under development. 
+We encourage feedback from all users! For questions about getting started with the N4JS Language and IDE for developing your own projects, see the link:https://www.eclipse.org/forums/index.php/f/365/[the Eclipse N4JS forum].
 
 == Contribute
 
-Eclipse developers who want to develop N4JS itself should use the https://www.eclipse.org/downloads/[Oomph Eclipse installer]. The N4JS project is listed under "Advanced/Github Projects/N4JS"
+Eclipse developers who want to develop N4JS itself should use the https://www.eclipse.org/downloads/[Oomph Eclipse installer]. The N4JS project is listed under "Eclipse Projects/N4JS"
 This setup installs the correct Eclipse version, creates a new workspace and clones all projects into it (for details see below).
 
 === Eclipse Installer
@@ -36,7 +38,7 @@ Run the installer and apply the following steps:
 
 1. change to "Advance Mode" via the menu (upper-right corner) (no need to move the installer)
 2. select a product, e.g. "Eclipse IDE for Eclipse Committers" with product version "Latest(Neon)"
-3. double-click the entry Github/N4JS so that it is shown in the catalog view below
+3. double-click the entry **Eclipse Projects/N4JS** so that it is shown in the catalog view below
 4. on the next page, configure paths accordingly. You only have to configure the installation and workspace folder.
 5. start installation
 
@@ -55,20 +57,24 @@ It is almost impossible to use another IDE to develop Eclipse plugins. The list 
 - Xpect 0.1
 
 It is important to use the latest version of Xtext and the corresponding service release of Xcore. You will find the latest version numbers and plugins used in the target platform definition at
-https://github.com/NumberFour/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
+https://github.com/eclipse/n4js/blob/master/releng/org.eclipse.n4js.targetplatform/org.eclipse.n4js.targetplatform.target
 
 == Documentation
 
-- http://numberfour.github.io/n4js/userguides[User Guides and Tutorials]: IDE Setup, writing Node.js modules and exporting as npm with the N4JS IDE
-- http://numberfour.github.io/n4js/spec/N4JSSpec.html[N4JS Language Specification]
-- https://numberfour.github.io/n4js/features/[Complete Feature Table]
-- https://numberfour.github.io/n4js/releases/[Release Notes]
+- https://www.eclipse.org/n4js/userguides[User Guides and Tutorials]: IDE Setup, writing Node.js modules and exporting as npm with the N4JS IDE
+- https://www.eclipse.org/n4js/spec/N4JSSpec.html[N4JS Language Specification]
+- https://www.eclipse.org/n4js/features/[Complete Feature Table]
+- https://www.eclipse.org/n4js/releases/[Release Notes]
 
 == Participate
 
-- https://numberfour.github.io/n4js/faq/[FAQ]
-- http://groups.google.com/group/n4js[mailing list / web forum]
-- https://github.com/numberfour/n4js/issues/[issues]
+- https://www.eclipse.org/n4js/faq/[FAQ]
+- https://www.eclipse.org/forums/index.php/f/365/[Eclipse Forum]
+- https://dev.eclipse.org/mailman/listinfo/n4js-dev[Developer Mailing List]
+- https://github.com/eclipse/n4js/issues/[Issues]
+- http://n4js.blogspot.de/[Eclipse N4JS Blog]
+- https://projects.eclipse.org/projects/technology.n4js[Eclipse Project Pages]
+- https://projects.eclipse.org/projects/technology.n4js/who[Who's Involved]
 
 == Build the N4JS IDE from command line
 
@@ -83,7 +89,7 @@ installed on your system.
 Clone the repository
 
 ----
-git clone https://github.com/NumberFour/n4js.git
+git clone https://github.com/Eclipse/n4js.git
 ----
 
 Change to the n4js folder:

@@ -9,12 +9,13 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:doctype: book
-:notitle:
-:toc: right
+
 
 .N4JS and TypeScript
 = N4JS and TypeScript
+:doctype: book
+:notitle:
+:toc: right
 
 [.faq-intro]
 N4JS and TypeScript are both supersets of ECMAScript. They both introduce type annotations and a

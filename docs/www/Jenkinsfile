@@ -1,0 +1,95 @@
+#!/usr/bin/env groovy
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+// email configuration
+def mailSender = 'robot@numberfour.eu'
+def String recipient = 'brian.smith@numberfour.eu'
+def String replyTo = 'brian.smith@numberfour.eu'
+def String team = 'brian.smith@numberfour.eu, staff-devtools@numberfour.eu'
+def String buildhtml = env.BUILD_URL+"execution/node/5/ws/sourceX/docs/www/web-html"
+
+import org.codehaus.groovy.runtime.DefaultGroovyMethods
+
+try {
+
+	timestamps {
+
+	node ("docker-spec") {
+		currentBuild.result = "SUCCESS"
+
+		def workspace = pwd()
+		def sourceX = "sourceX"
+		def sourceBranch = env.BRANCH
+		def htmlDir="$WORKSPACE/${sourceX}/docs/www/web-html"
+		def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
+
+		sh "pwd; ls -la"
+
+		stage('Cleanup') {
+			dir( sourceX ) {
+			    deleteDir()
+			}
+		}
+
+		dir( sourceX ) {
+
+			stage('Source Checkout') {
+				sh "git clone --depth 1 -b $sourceBranch https://github.com/eclipse/n4js.git ."
+			}
+			
+			stage ('Build Eclipse Web Pages') {
+
+				dir ('docs/www') {
+					sh "${workspace}/${sourceX}/docs/www/buildweb.sh --docker"
+				}
+				echo "\u2705 Build successful."
+
+			}
+
+			stage ('Build N4JS Specification') {
+				sh "cp -r $WORKSPACE/${sourceX}/docs/www/assets/. $specDir/"
+				sh "docker run --rm --user `id -u`:`id -g` -t -e DOC_NAME=N4JSSpec -v \$(pwd)/docs/org.eclipse.n4js.spec:/workspace:rw docker.corp.numberfour.eu/numberfour/asciispec:0.0.10 -a"
+				echo "\u2705 Build successful."
+			}	
+		}
+
+		stage ('Aggregating Web Pages') {
+			sh "cp -r $specDir/generated-docs/. $WORKSPACE/${sourceX}/docs/www/web-html/spec"
+			echo "On branch $sourceBranch - HTML can be viewed in Job ${env.BUILD_NUMBER} workspace: $buildhtml"
+			echo "\u2705 Aggregation finished."
+		}
+	}} // close try & timestamp
+}
+
+catch (exc) {
+	currentBuild.result = "FAILURE"
+	echo "Caught: ${exc}"
+	echo "[ERROR]\u274C ${sourceBranch} failing. Sending email notification."
+
+	if ($sourceBranch == 'master' )
+	{
+
+		mail to: 		recipient, // Consider adding team to list here
+			from: 		mailSender,
+			replyTo: 	replyTo,
+			subject: 	"Eclipse-www Master (${env.BUILD_NUMBER}) is failing.",
+			body: 		"Build URL - ${env.BUILD_URL}.\nJob: ${env.JOB_NAME}\nThe following exception was caught:\n${exc}"
+	} else {
+		mail to: 		recipient,
+			from: 		mailSender,
+			replyTo: 	replyTo,
+			subject: 	"Eclipse-www (${env.BUILD_NUMBER}) failed.",
+			body: 		"Build URL - ${env.BUILD_URL}.\nJob: ${env.JOB_NAME}\nThe following exception was caught:\n${exc}"
+	}
+}
+
+// vim: ft=groovy

@@ -18,7 +18,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <asciidoctor.maven.plugin.version>1.5.3</asciidoctor.maven.plugin.version>
+        <asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
         <asciidoctorj.version>1.5.4</asciidoctorj.version>
         <jruby.version>1.7.21</jruby.version>
         <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
@@ -130,50 +130,22 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                             <preserveDirectories>true</preserveDirectories>
                             <outputDirectory>${project.build.directory}/${eclipse.html}</outputDirectory>
                             <backend>html5</backend>
-                            <sourceHighlighter>highlightjs</sourceHighlighter>
+                            <sourceHighlighter></sourceHighlighter>
                             <attributes> <!-- Individual attributes per conversion execution -->
+                                <doctype>book</doctype>
                                 <toc>false</toc> <!-- No embedded TOC -->
-                                <stylesdir>../styles</stylesdir>
-                                <stylesheet>foundation.css</stylesheet>
-                                <highlightjsdir>../scripts</highlightjsdir>
-                                <highlightjs-theme>n4jshighlighter</highlightjs-theme>
+                                <stylesdir>../assets/styles</stylesdir>
+                                <stylesheet>foundation.min.css</stylesheet>
+								<docinfo1>true</docinfo1>
+                                <docinfodir>${basedir}/assets/headers</docinfodir>
+                                <imagesdir></imagesdir>             
                                 <experimental>true</experimental>
                                 <commandkey>&#8984;</commandkey>
                                 <icons>font</icons>
                                 <sectanchors>true</sectanchors>
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <doctype>book</doctype>
-                                <linkcss>true</linkcss>
-                                <docinfodir>${basedir}/src/_eclipseheader</docinfodir>
-                                <imagesdir></imagesdir>
-                                <docinfo1>true</docinfo1>
-                            </attributes>
-                        </configuration>
-                    </execution>
-
-                    <!-- PDF Generation of User Guides -->
-                    <execution>
-                        <id>asciidoc-to-pdf</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip> <!-- Execution skipped! -->
-                            <sourceDirectory>src/</sourceDirectory>
-                            <outputDirectory>${pdf.dir}</outputDirectory>
-                            <backend>pdf</backend>
-                            <sourceHighlighter>highlightjs</sourceHighlighter>
-                            <highlightjsdir>/scripts</highlightjsdir>
-                            <highlightjs-theme>n4jshighlighter</highlightjs-theme>
-                            <attributes>
-                                <toc>left</toc>
-                                <icons>font</icons>
-                                <sectanchors>true</sectanchors>
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <docinfo1>false</docinfo1>
+                                <sectlinks>true</sectlinks>
+                                <linkattrs>true</linkattrs>
+                                <reproducible>true</reproducible>
                             </attributes>
                         </configuration>
                     </execution>
@@ -225,11 +197,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 </executions>
             </plugin>
 
+<!-- Plugin to copy the final output from the /target/ folder into the /dist/folder       -->
 
-<!-- 
-                Plugin to copy the final output from the /target/ folder into the /dist/folder  
-                
-                -->
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-resources-plugin</artifactId>
@@ -252,7 +221,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         </includes>
                         
                         <filtering>false</filtering>
-                      </resource>
+                      </resource> 
                     </resources>
                   </configuration>
                   <goals>
