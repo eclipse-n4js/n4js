@@ -106,7 +106,6 @@
 	<topic href="dist/eclipse-html/releases/index.html" label="Releases">
 		<topic href="dist/eclipse-html/releases/index.html#_current_n4js_release" label="Current N4JS Release"></topic>
 		<topic href="dist/eclipse-html/releases/index.html#_known_issues" label="Known Issues"></topic>
-		<topic href="dist/eclipse-html/releases/index.html#_unknown_issues" label="Unknown Issues"></topic>
 		<topic href="dist/eclipse-html/releases/index.html#_new_features" label="New Features"></topic>
 		<topic href="dist/eclipse-html/releases/index.html#_incompatible_changes_in_future_releases" label="Incompatible Changes in Future Releases"></topic>
 	</topic>

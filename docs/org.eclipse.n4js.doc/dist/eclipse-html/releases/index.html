@@ -3182,38 +3182,11 @@ Prism.languages.typescript=Prism.languages.extend("javascript",{keyword:/\b(brea
 <div class="content">
 <h2 id="_current_n4js_release" class="discrete">Current N4JS Release</h2>
 <div class="paragraph">
-<p>The current release of N4JS, version 0.3, is a "public alpha".
-What that implies:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>There are some known issues.</p>
-</li>
-<li>
-<p>There are probably a greater number of unknown issues.</p>
-</li>
-<li>
-<p>There will be more features in future releases.</p>
-</li>
-<li>
-<p>There may be incompatible changes in future releases.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>"Alpha" does not mean unstable. In fact, N4JS has been in development for three years.
-There is already an extensive test suite with more that 70.000 tests including the
-<a href="https://github.com/tc39/test262">ECMAScript test suites</a>. It has been in
-use internally in production mode for more than a year, handling a code base with more
-than 3.000 modules and many thousands of tests.</p>
-</div>
-<div class="paragraph">
-<p>N4JS has successfully passed its
-internal beta phase: it&#8217;s working for us and, furthermore, we&#8217;re confident it will work
-for you. Since every programmer has their own style, you may find issues we didn&#8217;t. We
-may add new features or make changes in order to solve these particular issues. That&#8217;s
-why we call it a "public alpha".</p>
+<p>The Eclipse N4JS project is in the <a href="https://wiki.eclipse.org/Development_Resources/HOWTO/Incubation_Phase">Incubation Phase</a> and there is no official release available yet (for unofficial releases see the <a href="../download.html">download page</a>.
+This doesn&#8217;t mean that N4JS is unstable; we have an extensive test suite (&gt;90.000 tests including the <a href="https://github.com/tc39/test262">ECMAScript test suites</a>) to ensure a stable nightly build.
+N4JS has been in use in several large non-public projects for years.
+There still may be bugs (as there are always bugs) and features which are currently under development.
+We encourage feedback from all users! For questions about getting started with the N4JS Language and IDE for developing your own projects, see the <a href="https://www.eclipse.org/forums/index.php/f/365/">the Eclipse N4JS forum</a>.</p>
 </div>
 </div>
 </div>
@@ -3221,27 +3194,10 @@ why we call it a "public alpha".</p>
 <h2 id="_known_issues"><a class="anchor" href="#_known_issues"></a>Known Issues</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Since we are using N4JS and the N4JS IDE internally for quite a while, we have found some
-issues. There are still a lot of bugs open and we have plenty of ideas for new features.
-We used an non-public bug tracking system to manage bugs internally. We will review and migrate
-them to <a href="https://github.com/eclipse/n4js/issues">GitHub issues</a> as soon as possible.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_unknown_issues"><a class="anchor" href="#_unknown_issues"></a>Unknown Issues</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p><strong>We embrace bug reports and feature requests.</strong></p>
-</div>
-<div class="paragraph">
-<p>For the moment we use <a href="https://github.com/eclipse/n4js/issues">GitHub issues</a>
-to manage issues found by public users. When we move to a different bug tracking system,
-these issues shall be migrated.</p>
-</div>
-<div class="paragraph">
-<p>The N4JS IDE comes with special tool support for <a href="reporting-bugs.html#reporting_bugs">writing
-bug reports</a>.</p>
+<p>Since we are using N4JS and the N4JS IDE internally for quite a while, we have found some issues.
+There are still a lot of bugs open and we have plenty of ideas for new features.
+We have used a non-public bug tracking system to manage bugs internally and we are currently migrating them to <a href="https://github.com/eclipse/n4js/issues">GitHub issues</a>.
+Note that it&#8217;s also possible to write and <a href="reporting-bugs.html#reporting_bugs">submit bug reports</a> from within the N4JS IDE itself.</p>
 </div>
 </div>
 </div>
@@ -3274,8 +3230,8 @@ bug reports</a>.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>There may be other topics raised by users. Separating these topics into individual
-features and prioritizing them will <strong>highly depend on your feedback</strong>.</p>
+<p>There may be other topics raised by users.
+Separating these topics into individual features and prioritizing them will <strong>highly depend on your feedback</strong>.</p>
 </div>
 </div>
 </div>
@@ -3283,18 +3239,16 @@ features and prioritizing them will <strong>highly depend on your feedback</stro
 <h2 id="_incompatible_changes_in_future_releases"><a class="anchor" href="#_incompatible_changes_in_future_releases"></a>Incompatible Changes in Future Releases</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Yes, this may happen. It&#8217;s quite possible that the language or APIs must be changed in
-future releases, which could break existing code. This is no cause for concern, however.
-As mentioned before, we have a substantial internal code base, so if incompatible changes
-are introduced, we will provide tools to migrate your code automatically unless the changes
-are easier to solve manually.</p>
+<p>Yes, this may happen.
+It&#8217;s quite possible that the language or APIs must be changed in future releases, which could break existing code.
+This is no cause for concern, however.
+As mentioned before, we have a substantial internal code base, so if incompatible changes are introduced, we will provide tools to migrate your code automatically unless the changes are easier to solve manually.</p>
 </div>
 <div class="paragraph">
-<p>To give you an idea of how this can happen: In earlier versions we used a Java-like syntax
-for type annotations. Since this did not work well together with features such as async/await,
-we changed the syntax to ECMAScript 4 colon style. This required our entire code base to be
-reworked. Fortunately this was simple as we provided a quick-fix, enabling almost all problems
-stemming from that change to be corrected with a single key stroke!</p>
+<p>To give you an idea of how this can happen: In earlier versions we used a Java-like syntax for type annotations.
+Since this did not work well together with features such as async/await, we changed the syntax to ECMAScript 4 colon style.
+This required our entire code base to be reworked.
+Fortunately this was simple as we provided a quick-fix, enabling almost all problems stemming from that change to be corrected with a single keystroke!</p>
 </div>
 </div>
 </div>

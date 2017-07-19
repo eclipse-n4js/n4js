@@ -751,7 +751,7 @@ ol.lowergreek { list-style-type: lower-greek; }
 .hdlist > table, .colist > table { border: 0; background: none; }
 .hdlist > table > tbody > tr, .colist > table > tbody > tr { background: none; }
 
-td.hdlist1, td.hdlist2 { vertical-align: top; padding: 0 0.625em; }
+td.hdlist1, td.hdlist2 { vertical-align: baseline; padding: 0 0.625em; }
 
 td.hdlist1 { font-weight: bold; padding-bottom: 1.25em; }
 
