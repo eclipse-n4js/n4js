@@ -18,13 +18,13 @@ import org.eclipse.n4js.ui.contentassist.CustomN4JSParser
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer
 import org.eclipse.n4js.ui.contentassist.TokenSourceFactory
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
-import org.junit.runner.RunWith
 import org.eclipse.xtext.xtext.RuleNames
+import org.junit.runner.RunWith
 
 /**
  */

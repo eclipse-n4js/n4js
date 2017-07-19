@@ -161,16 +161,16 @@ TObjectPrototype:
 	(declaredProvidedByRuntime?='providedByRuntime')?
 	(declaredFinal?='final')?
 	'object' name=BindingTypesIdentifier
-	( '<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>' )?
+	TypeVariables?
 	('extends'  superType=ParameterizedTypeRefNominal)?
 	('indexed' declaredElementType=ParameterizedTypeRefNominal)?
 	annotations+=TAnnotation*
 	'{'
-	ownedMembers+=TMember*
-	(
-		callableCtor=CallableCtor
 		ownedMembers+=TMember*
-	)?
+		(
+			callableCtor=CallableCtor
+			ownedMembers+=TMember*
+		)?
 	'}'
 ;
 
@@ -191,35 +191,46 @@ TClass:
 	(declaredProvidedByRuntime?='providedByRuntime')?
 	(declaredAbstract?='abstract')?
 	(declaredFinal?='final')?
-	'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingTypesIdentifier
-	( '<' typeVars+=TypeVariableWithDefSiteVariance (',' typeVars+=TypeVariableWithDefSiteVariance)* '>' )?
+	'class' TClassOrInterfaceHeader
 	('extends'  superClassRef=ParameterizedTypeRefNominal)?
 	('implements' implementedInterfaceRefs+=ParameterizedTypeRefNominal (',' implementedInterfaceRefs+=ParameterizedTypeRefNominal)*)?
 	annotations+=TAnnotation*
 	'{'
-	ownedMembers+=TMember*
-	(
-		callableCtor=CallableCtor
 		ownedMembers+=TMember*
-	)?
+		(
+			callableCtor=CallableCtor
+			ownedMembers+=TMember*
+		)?
 	'}'
 ;
 
 TInterface:
 	declaredTypeAccessModifier=TypeAccessModifier
 	(declaredProvidedByRuntime?='providedByRuntime')?
-	'interface'  typingStrategy=TypingStrategyDefSiteOperator? name=BindingTypesIdentifier
-	( '<' typeVars+=TypeVariableWithDefSiteVariance (',' typeVars+=TypeVariableWithDefSiteVariance)* '>' )?
+	'interface' TClassOrInterfaceHeader 
 	('extends' superInterfaceRefs+=ParameterizedTypeRefNominal (',' superInterfaceRefs+=ParameterizedTypeRefNominal)*)?
 	annotations+=TAnnotation*
 	'{' (ownedMembers+=TMember)* '}'
 ;
 
+@Override
+TypeVariable returns TypeVariable:
+	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
+
+fragment TClassOrInterfaceHeader*:
+	typingStrategy=TypingStrategyDefSiteOperator? name=BindingTypesIdentifier
+	( '<' typeVars+=super::TypeVariable (',' typeVars+=super::TypeVariable)* '>' )?
+;
+
 CallableCtor returns TMethod:
 	{TMethod}
-	'(' (fpars += TFormalParameter (',' fpars += TFormalParameter)*)? ')'
-	(':' returnTypeRef=TypeRef)?
+	TFormalParameters
+	ColonSepReturnTypeRef?
 	';'?
+;
+
+fragment TFormalParameters*:
+	'(' (fpars += TFormalParameter (',' fpars += TFormalParameter)*)? ')'
 ;
 
 TMember: TGetter | TSetter | TMethod | TField ;
@@ -227,12 +238,11 @@ TMember: TGetter | TSetter | TMethod | TField ;
 TMethod: =>
 	(
 	 	declaredMemberAccessModifier=MemberAccessModifier
-	 	(declaredStatic?='static'|declaredAbstract?='abstract')?
-	 	('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
+	 	(declaredAbstract?='abstract'|declaredStatic?='static')?
+	 	TypeVariables?
 	 	(name=TypesIdentifier | name=TypesComputedPropertyName)
-	'(')
-	(fpars += TFormalParameter (',' fpars += TFormalParameter)*)? ')'
-	':' returnTypeRef = TypeRef
+	->TFormalParameters)
+	ColonSepReturnTypeRef
 	';'?
 ;
 
@@ -241,26 +251,27 @@ TField:
  	(declaredStatic?='static' | const?='const' | declaredFinal?='final')?
 	(name=TypesIdentifier | name=TypesComputedPropertyName)
 	(optional?='?')?
-	':' typeRef=TypeRef
+	ColonSepTypeRef
 	';'?
 ;
 
-TGetter: =>({TGetter}
-	declaredMemberAccessModifier=MemberAccessModifier
-	(declaredAbstract?='abstract' | declaredStatic?='static')?
-	'get'
-  	(name=TypesIdentifier | name=TypesComputedPropertyName)
+TGetter: =>
+	(
+		declaredMemberAccessModifier=MemberAccessModifier
+		(declaredAbstract?='abstract' | declaredStatic?='static')?
+		'get'
+	  	(name=TypesIdentifier | name=TypesComputedPropertyName)
   	)
 	(optional?='?')?
-  	'(' ')' ':' declaredTypeRef=TypeRef
+  	'(' ')' ColonSepDeclaredTypeRef
 ;
 
-TSetter:
-	=>({TSetter}
-	declaredMemberAccessModifier=MemberAccessModifier
-	(declaredAbstract?='abstract' | declaredStatic?='static')?
- 	'set'
- 	(name=TypesIdentifier | name=TypesComputedPropertyName)
+TSetter: =>
+	(
+		declaredMemberAccessModifier=MemberAccessModifier
+		(declaredAbstract?='abstract' | declaredStatic?='static')?
+	 	'set'
+	 	(name=TypesIdentifier | name=TypesComputedPropertyName)
  	)
 	(optional?='?')?
  	'(' fpar=TFormalParameter ')'
@@ -270,10 +281,10 @@ TFunction:
 	declaredTypeAccessModifier=TypeAccessModifier
 	(declaredProvidedByRuntime?='providedByRuntime')?
 	'function'
-	('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
+	TypeVariables?
 	name=BindingTypesIdentifier
-	'(' (fpars += TFormalParameter (',' fpars += TFormalParameter)*)? ')'
-	':' returnTypeRef = TypeRef
+	TFormalParameters
+	ColonSepReturnTypeRef
 ;
 
 TEnum:

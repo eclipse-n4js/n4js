@@ -12,13 +12,15 @@ package org.eclipse.n4js.ui.contentassist.antlr;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
-import java.util.HashMap;
 import java.util.Collection;
 import java.util.Map;
+import org.antlr.runtime.RecognitionException;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ui.contentassist.antlr.internal.InternalN4JSParser;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.AbstractContentAssistParser;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
 public class N4JSParser extends AbstractContentAssistParser {
 
@@ -91,6 +93,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getAnnotationNameAccess().getAlternatives(), "rule__AnnotationName__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getREGEX_LITERALAccess().getAlternatives_0(), "rule__REGEX_LITERAL__Alternatives_0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotationArgumentAccess().getAlternatives(), "rule__AnnotationArgument__Alternatives");
+			nameMappingsBuilder.put(grammarAccess.getTypeRefForCastAccess().getAlternatives(), "rule__TypeRefForCast__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeReferenceNameAccess().getAlternatives(), "rule__TypeReferenceName__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives(), "rule__ClassExtendsClause__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives_0_1(), "rule__ClassExtendsClause__Alternatives_0_1");
@@ -104,16 +107,15 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getN4MethodDeclarationAccess().getAlternatives_0_0_4(), "rule__N4MethodDeclaration__Alternatives_0_0_4");
 			nameMappingsBuilder.put(grammarAccess.getBindingPatternAccess().getAlternatives(), "rule__BindingPattern__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getBindingPropertyAccess().getAlternatives(), "rule__BindingProperty__Alternatives");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getAlternatives(), "rule__BindingElement__Alternatives");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getAlternatives_1(), "rule__BindingRestElement__Alternatives_1");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getAlternatives(), "rule__BindingElementImpl__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getAlternatives(), "rule__LiteralOrComputedPropertyName__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getAlternatives(), "rule__PrimaryTypeExpression__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getAlternatives(), "rule__TypeRefWithoutModifiers__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getAlternatives_0_0(), "rule__TypeRefWithoutModifiers__Alternatives_0_0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefFunctionTypeExpressionAccess().getAlternatives(), "rule__TypeRefFunctionTypeExpression__Alternatives");
-			nameMappingsBuilder.put(grammarAccess.getTypeRefForCastAccess().getAlternatives(), "rule__TypeRefForCast__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeArgInTypeTypeRefAccess().getAlternatives(), "rule__TypeArgInTypeTypeRef__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getThisTypeRefAccess().getAlternatives(), "rule__ThisTypeRef__Alternatives");
+			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getAlternatives_1(), "rule__TAnonymousFormalParameter__Alternatives_1");
 			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefAccess().getAlternatives(), "rule__ParameterizedTypeRef__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberListAccess().getAlternatives_1_1(), "rule__TStructMemberList__Alternatives_1_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberAccess().getAlternatives(), "rule__TStructMember__Alternatives");
@@ -145,8 +147,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_3_0_1(), "rule__AnnotatedScriptElement__Group_1_3_0_1__0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_4(), "rule__AnnotatedScriptElement__Group_1_4__0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getGroup_1_4_6(), "rule__AnnotatedScriptElement__Group_1_4_6__0");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getGroup(), "rule__TypeVariables__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getGroup_2(), "rule__TypeVariables__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getExportDeclarationAccess().getGroup(), "rule__ExportDeclaration__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getExportDeclarationImplAccess().getGroup(), "rule__ExportDeclarationImpl__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getExportDeclarationImplAccess().getGroup_1_0(), "rule__ExportDeclarationImpl__Group_1_0__0");
@@ -186,7 +186,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getFunctionImplAccess().getGroup_1_0(), "rule__FunctionImpl__Group_1_0__0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionImplAccess().getGroup_1_1(), "rule__FunctionImpl__Group_1_1__0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionHeaderAccess().getGroup(), "rule__FunctionHeader__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getFunctionHeaderAccess().getGroup_3(), "rule__FunctionHeader__Group_3__0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedFunctionDeclarationAccess().getGroup(), "rule__AnnotatedFunctionDeclaration__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionExpressionAccess().getGroup(), "rule__FunctionExpression__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getAsyncFunctionExpressionAccess().getGroup(), "rule__AsyncFunctionExpression__Group__0");
@@ -196,15 +195,9 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0(), "rule__ArrowExpression__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0(), "rule__ArrowExpression__Group_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_0(), "rule__ArrowExpression__Group_0_0_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_0_1(), "rule__ArrowExpression__Group_0_0_0_0_1__0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_0_1_1(), "rule__ArrowExpression__Group_0_0_0_0_1_1__0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_0_3(), "rule__ArrowExpression__Group_0_0_0_0_3__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_1(), "rule__ArrowExpression__Group_0_0_0_1__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_1_0(), "rule__ArrowExpression__Group_0_0_0_1_0__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_1_0_0(), "rule__ArrowExpression__Group_0_0_0_1_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_1_1(), "rule__ArrowExpression__Group_0_0_0_1_1__0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_1_1_1(), "rule__ArrowExpression__Group_0_0_0_1_1_1__0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_0_0_0_1_3(), "rule__ArrowExpression__Group_0_0_0_1_3__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getGroup_1_0(), "rule__ArrowExpression__Group_1_0__0");
 			nameMappingsBuilder.put(grammarAccess.getStrictFormalParametersAccess().getGroup(), "rule__StrictFormalParameters__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getStrictFormalParametersAccess().getGroup_1(), "rule__StrictFormalParameters__Group_1__0");
@@ -220,7 +213,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getGroup(), "rule__BindingElementFragment__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getGroup_0_1(), "rule__BindingElementFragment__Group_0_1__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getGroup_1(), "rule__BindingElementFragment__Group_1__0");
-			nameMappingsBuilder.put(grammarAccess.getColonSepTypeRefAccess().getGroup(), "rule__ColonSepTypeRef__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getBlockAccess().getGroup(), "rule__Block__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getBlockAccess().getGroup_0(), "rule__Block__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getBlockAccess().getGroup_0_0(), "rule__Block__Group_0_0__0");
@@ -333,6 +325,8 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getPropertySetterDeclarationAccess().getGroup_0(), "rule__PropertySetterDeclaration__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getPropertySetterDeclarationAccess().getGroup_0_0(), "rule__PropertySetterDeclaration__Group_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getParameterizedCallExpressionAccess().getGroup(), "rule__ParameterizedCallExpression__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getConcreteTypeArgumentsAccess().getGroup(), "rule__ConcreteTypeArguments__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getConcreteTypeArgumentsAccess().getGroup_2(), "rule__ConcreteTypeArguments__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getLeftHandSideExpressionAccess().getGroup(), "rule__LeftHandSideExpression__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getLeftHandSideExpressionAccess().getGroup_1(), "rule__LeftHandSideExpression__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getLeftHandSideExpressionAccess().getGroup_1_2_0(), "rule__LeftHandSideExpression__Group_1_2_0__0");
@@ -344,8 +338,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getArgumentsAccess().getGroup(), "rule__Arguments__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getArgumentsAccess().getGroup_1(), "rule__Arguments__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getArgumentAccess().getGroup(), "rule__Argument__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getGroup(), "rule__TypeArguments__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getGroup_2(), "rule__TypeArguments__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getMemberExpressionAccess().getGroup_0(), "rule__MemberExpression__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getMemberExpressionAccess().getGroup_0_0(), "rule__MemberExpression__Group_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getMemberExpressionAccess().getGroup_0_0_0(), "rule__MemberExpression__Group_0_0_0__0");
@@ -499,7 +491,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getN4CallableConstructorDeclarationAccess().getGroup(), "rule__N4CallableConstructorDeclaration__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getMethodParamsAndBodyAccess().getGroup(), "rule__MethodParamsAndBody__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getMethodParamsReturnAndBodyAccess().getGroup(), "rule__MethodParamsReturnAndBody__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getMethodParamsReturnAndBodyAccess().getGroup_1(), "rule__MethodParamsReturnAndBody__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getN4GetterDeclarationAccess().getGroup(), "rule__N4GetterDeclaration__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getN4GetterDeclarationAccess().getGroup_0(), "rule__N4GetterDeclaration__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getN4GetterDeclarationAccess().getGroup_0_0(), "rule__N4GetterDeclaration__Group_0_0__0");
@@ -517,24 +508,18 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getBindingPropertyAccess().getGroup_0(), "rule__BindingProperty__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingPropertyAccess().getGroup_0_0(), "rule__BindingProperty__Group_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingPropertyAccess().getGroup_0_0_0(), "rule__BindingProperty__Group_0_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getGroup_0(), "rule__BindingElement__Group_0__0");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getGroup_0_0(), "rule__BindingElement__Group_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getGroup_0_1(), "rule__BindingElement__Group_0_1__0");
 			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getGroup(), "rule__BindingRestElement__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getGroup_1_0(), "rule__BindingRestElement__Group_1_0__0");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getGroup_1_0_0(), "rule__BindingRestElement__Group_1_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getGroup_1_0_1(), "rule__BindingRestElement__Group_1_0_1__0");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getGroup_0(), "rule__BindingElementImpl__Group_0__0");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getGroup_0_0(), "rule__BindingElementImpl__Group_0_0__0");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getGroup_0_1(), "rule__BindingElementImpl__Group_0_1__0");
 			nameMappingsBuilder.put(grammarAccess.getElisionAccess().getGroup(), "rule__Elision__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getGroup_3(), "rule__LiteralOrComputedPropertyName__Group_3__0");
-			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup(), "rule__UnionTypeExpression__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup_1(), "rule__UnionTypeExpression__Group_1__0");
-			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionAccess().getGroup_1_1(), "rule__UnionTypeExpression__Group_1_1__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup_1(), "rule__TypeRef__Group_1__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup_1_1(), "rule__TypeRef__Group_1_1__0");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup(), "rule__IntersectionTypeExpression__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup_1(), "rule__IntersectionTypeExpression__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionAccess().getGroup_1_1(), "rule__IntersectionTypeExpression__Group_1_1__0");
-			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getGroup_0(), "rule__PrimaryTypeExpression__Group_0__0");
-			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getGroup_0_0(), "rule__PrimaryTypeExpression__Group_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getGroup_0_0_0(), "rule__PrimaryTypeExpression__Group_0_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getGroup_3(), "rule__PrimaryTypeExpression__Group_3__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithModifiersAccess().getGroup(), "rule__TypeRefWithModifiers__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getGroup_0(), "rule__TypeRefWithoutModifiers__Group_0__0");
@@ -545,39 +530,39 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getGroup_2(), "rule__FunctionTypeExpressionOLD__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getGroup_4(), "rule__FunctionTypeExpressionOLD__Group_4__0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getGroup_4_2(), "rule__FunctionTypeExpressionOLD__Group_4_2__0");
-			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getGroup_8(), "rule__FunctionTypeExpressionOLD__Group_8__0");
 			nameMappingsBuilder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup(), "rule__ArrowFunctionTypeExpression__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0(), "rule__ArrowFunctionTypeExpression__Group_0__0");
+			nameMappingsBuilder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getGroup_0_0(), "rule__ArrowFunctionTypeExpression__Group_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterListAccess().getGroup(), "rule__TAnonymousFormalParameterList__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterListAccess().getGroup_1(), "rule__TAnonymousFormalParameterList__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getGroup(), "rule__TAnonymousFormalParameter__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getGroup_1(), "rule__TAnonymousFormalParameter__Group_1__0");
+			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getGroup_1_0(), "rule__TAnonymousFormalParameter__Group_1_0__0");
+			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getGroup_1_0_0(), "rule__TAnonymousFormalParameter__Group_1_0_0__0");
 			nameMappingsBuilder.put(grammarAccess.getDefaultFormalParameterAccess().getGroup(), "rule__DefaultFormalParameter__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionOLDAccess().getGroup(), "rule__UnionTypeExpressionOLD__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionOLDAccess().getGroup_4(), "rule__UnionTypeExpressionOLD__Group_4__0");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getGroup(), "rule__IntersectionTypeExpressionOLD__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getGroup_4(), "rule__IntersectionTypeExpressionOLD__Group_4__0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefNominalAccess().getGroup(), "rule__ParameterizedTypeRefNominal__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefNominalAccess().getGroup_1(), "rule__ParameterizedTypeRefNominal__Group_1__0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefNominalAccess().getGroup_1_2(), "rule__ParameterizedTypeRefNominal__Group_1_2__0");
 			nameMappingsBuilder.put(grammarAccess.getArrayTypeRefAccess().getGroup(), "rule__ArrayTypeRef__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup(), "rule__ParameterizedTypeRefStructural__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_2(), "rule__ParameterizedTypeRefStructural__Group_2__0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_2_2(), "rule__ParameterizedTypeRefStructural__Group_2_2__0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_3(), "rule__ParameterizedTypeRefStructural__Group_3__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeAndTypeArgumentsAccess().getGroup(), "rule__TypeAndTypeArguments__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getGroup(), "rule__TypeArguments__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getGroup_2(), "rule__TypeArguments__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberListAccess().getGroup(), "rule__TStructMemberList__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberListAccess().getGroup_1(), "rule__TStructMemberList__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getGroup(), "rule__TStructMethod__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getGroup_0(), "rule__TStructMethod__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getGroup_0_0(), "rule__TStructMethod__Group_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getGroup_0_0_1(), "rule__TStructMethod__Group_0_0_1__0");
-			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getGroup_0_0_1_2(), "rule__TStructMethod__Group_0_0_1_2__0");
-			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getGroup_3(), "rule__TStructMethod__Group_3__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getGroup(), "rule__TypeVariables__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getGroup_2(), "rule__TypeVariables__Group_2__0");
+			nameMappingsBuilder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getGroup(), "rule__ColonSepDeclaredTypeRef__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getColonSepTypeRefAccess().getGroup(), "rule__ColonSepTypeRef__Group__0");
+			nameMappingsBuilder.put(grammarAccess.getColonSepReturnTypeRefAccess().getGroup(), "rule__ColonSepReturnTypeRef__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructFieldAccess().getGroup(), "rule__TStructField__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getTStructFieldAccess().getGroup_2(), "rule__TStructField__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getGroup(), "rule__TStructGetter__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getGroup_0(), "rule__TStructGetter__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getGroup_0_0(), "rule__TStructGetter__Group_0_0__0");
-			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getGroup_4(), "rule__TStructGetter__Group_4__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructSetterAccess().getGroup(), "rule__TStructSetter__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructSetterAccess().getGroup_0(), "rule__TStructSetter__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructSetterAccess().getGroup_0_0(), "rule__TStructSetter__Group_0_0__0");
@@ -603,8 +588,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getNameAssignment_1_4_3(), "rule__AnnotatedScriptElement__NameAssignment_1_4_3");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_5(), "rule__AnnotatedScriptElement__LiteralsAssignment_1_4_5");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedScriptElementAccess().getLiteralsAssignment_1_4_6_1(), "rule__AnnotatedScriptElement__LiteralsAssignment_1_4_6_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_1(), "rule__TypeVariables__TypeVarsAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_2_1(), "rule__TypeVariables__TypeVarsAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getExportDeclarationImplAccess().getWildcardExportAssignment_1_0_0(), "rule__ExportDeclarationImpl__WildcardExportAssignment_1_0_0");
 			nameMappingsBuilder.put(grammarAccess.getExportDeclarationImplAccess().getExportedElementAssignment_1_2(), "rule__ExportDeclarationImpl__ExportedElementAssignment_1_2");
 			nameMappingsBuilder.put(grammarAccess.getExportDeclarationImplAccess().getDefaultExportAssignment_1_3_0(), "rule__ExportDeclarationImpl__DefaultExportAssignment_1_3_0");
@@ -646,19 +629,12 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getAsyncNoTrailingLineBreakAccess().getDeclaredAsyncAssignment_0(), "rule__AsyncNoTrailingLineBreak__DeclaredAsyncAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionImplAccess().getGeneratorAssignment_1_0_0(), "rule__FunctionImpl__GeneratorAssignment_1_0_0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionHeaderAccess().getNameAssignment_1(), "rule__FunctionHeader__NameAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getFunctionHeaderAccess().getReturnTypeRefAssignment_3_1(), "rule__FunctionHeader__ReturnTypeRefAssignment_3_1");
 			nameMappingsBuilder.put(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0(), "rule__FunctionBody__BodyAssignment_1_0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionBodyAccess().getBodyAssignment_0_0(), "rule__FunctionBody__BodyAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedFunctionDeclarationAccess().getAnnotationListAssignment_0(), "rule__AnnotatedFunctionDeclaration__AnnotationListAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getAnnotatedFunctionDeclarationAccess().getDeclaredModifiersAssignment_1(), "rule__AnnotatedFunctionDeclaration__DeclaredModifiersAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getAsyncFunctionExpressionAccess().getDeclaredAsyncAssignment_0_0_0(), "rule__AsyncFunctionExpression__DeclaredAsyncAssignment_0_0_0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getFparsAssignment_0_0_0_0_1_0(), "rule__ArrowExpression__FparsAssignment_0_0_0_0_1_0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getFparsAssignment_0_0_0_0_1_1_1(), "rule__ArrowExpression__FparsAssignment_0_0_0_0_1_1_1");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getReturnTypeRefAssignment_0_0_0_0_3_1(), "rule__ArrowExpression__ReturnTypeRefAssignment_0_0_0_0_3_1");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getDeclaredAsyncAssignment_0_0_0_1_0_0_0(), "rule__ArrowExpression__DeclaredAsyncAssignment_0_0_0_1_0_0_0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getFparsAssignment_0_0_0_1_1_0(), "rule__ArrowExpression__FparsAssignment_0_0_0_1_1_0");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getFparsAssignment_0_0_0_1_1_1_1(), "rule__ArrowExpression__FparsAssignment_0_0_0_1_1_1_1");
-			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getReturnTypeRefAssignment_0_0_0_1_3_1(), "rule__ArrowExpression__ReturnTypeRefAssignment_0_0_0_1_3_1");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getFparsAssignment_0_0_0_2(), "rule__ArrowExpression__FparsAssignment_0_0_0_2");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getHasBracesAroundBodyAssignment_1_0_0(), "rule__ArrowExpression__HasBracesAroundBodyAssignment_1_0_0");
 			nameMappingsBuilder.put(grammarAccess.getArrowExpressionAccess().getBodyAssignment_1_0_1(), "rule__ArrowExpression__BodyAssignment_1_0_1");
@@ -680,7 +656,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getNameAssignment_0_1_3(), "rule__BindingElementFragment__NameAssignment_0_1_3");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getHasInitializerAssignmentAssignment_1_0(), "rule__BindingElementFragment__HasInitializerAssignmentAssignment_1_0");
 			nameMappingsBuilder.put(grammarAccess.getBindingElementFragmentAccess().getInitializerAssignment_1_1(), "rule__BindingElementFragment__InitializerAssignment_1_1");
-			nameMappingsBuilder.put(grammarAccess.getColonSepTypeRefAccess().getDeclaredTypeRefAssignment_1(), "rule__ColonSepTypeRef__DeclaredTypeRefAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getBogusTypeRefFragmentAccess().getBogusTypeRefAssignment(), "rule__BogusTypeRefFragment__BogusTypeRefAssignment");
 			nameMappingsBuilder.put(grammarAccess.getBlockAccess().getStatementsAssignment_1(), "rule__Block__StatementsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getVariableStatementAccess().getVarStmtKeywordAssignment_0_0_1(), "rule__VariableStatement__VarStmtKeywordAssignment_0_0_1");
@@ -805,13 +780,13 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getPropertySetterDeclarationAccess().getFparAssignment_3(), "rule__PropertySetterDeclaration__FparAssignment_3");
 			nameMappingsBuilder.put(grammarAccess.getPropertySetterDeclarationAccess().getBodyAssignment_5(), "rule__PropertySetterDeclaration__BodyAssignment_5");
 			nameMappingsBuilder.put(grammarAccess.getParameterizedCallExpressionAccess().getTargetAssignment_1(), "rule__ParameterizedCallExpression__TargetAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__ConcreteTypeArguments__TypeArgsAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getConcreteTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__ConcreteTypeArguments__TypeArgsAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getLeftHandSideExpressionAccess().getTemplateAssignment_1_2_3_0_1(), "rule__LeftHandSideExpression__TemplateAssignment_1_2_3_0_1");
 			nameMappingsBuilder.put(grammarAccess.getArgumentsAccess().getArgumentsAssignment_0(), "rule__Arguments__ArgumentsAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getArgumentsAccess().getArgumentsAssignment_1_1(), "rule__Arguments__ArgumentsAssignment_1_1");
 			nameMappingsBuilder.put(grammarAccess.getArgumentAccess().getSpreadAssignment_0(), "rule__Argument__SpreadAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getArgumentAccess().getExpressionAssignment_1(), "rule__Argument__ExpressionAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__TypeArguments__TypeArgsAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__TypeArguments__TypeArgsAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getMemberExpressionAccess().getCalleeAssignment_1_1(), "rule__MemberExpression__CalleeAssignment_1_1");
 			nameMappingsBuilder.put(grammarAccess.getMemberExpressionAccess().getWithArgsAssignment_1_3_0(), "rule__MemberExpression__WithArgsAssignment_1_3_0");
 			nameMappingsBuilder.put(grammarAccess.getMemberExpressionAccess().getTemplateAssignment_1_3_3_2_1(), "rule__MemberExpression__TemplateAssignment_1_3_3_2_1");
@@ -922,7 +897,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameAssignment_0_0_4_0_1(), "rule__N4MethodDeclaration__DeclaredNameAssignment_0_0_4_0_1");
 			nameMappingsBuilder.put(grammarAccess.getN4MethodDeclarationAccess().getDeclaredNameAssignment_0_0_4_1_1(), "rule__N4MethodDeclaration__DeclaredNameAssignment_0_0_4_1_1");
 			nameMappingsBuilder.put(grammarAccess.getMethodParamsAndBodyAccess().getBodyAssignment_1(), "rule__MethodParamsAndBody__BodyAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getMethodParamsReturnAndBodyAccess().getReturnTypeRefAssignment_1_1(), "rule__MethodParamsReturnAndBody__ReturnTypeRefAssignment_1_1");
 			nameMappingsBuilder.put(grammarAccess.getMethodParamsReturnAndBodyAccess().getBodyAssignment_2(), "rule__MethodParamsReturnAndBody__BodyAssignment_2");
 			nameMappingsBuilder.put(grammarAccess.getN4GetterDeclarationAccess().getDeclaredModifiersAssignment_0_0_1(), "rule__N4GetterDeclaration__DeclaredModifiersAssignment_0_0_1");
 			nameMappingsBuilder.put(grammarAccess.getN4GetterDeclarationAccess().getBodyAssignment_1(), "rule__N4GetterDeclaration__BodyAssignment_1");
@@ -944,59 +918,51 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getBindingPropertyAccess().getValueAssignment_0_1(), "rule__BindingProperty__ValueAssignment_0_1");
 			nameMappingsBuilder.put(grammarAccess.getBindingPropertyAccess().getValueAssignment_1(), "rule__BindingProperty__ValueAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getSingleNameBindingAccess().getVarDeclAssignment(), "rule__SingleNameBinding__VarDeclAssignment");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getNestedPatternAssignment_0_0_0(), "rule__BindingElement__NestedPatternAssignment_0_0_0");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getExpressionAssignment_0_1_1(), "rule__BindingElement__ExpressionAssignment_0_1_1");
-			nameMappingsBuilder.put(grammarAccess.getBindingElementAccess().getVarDeclAssignment_1(), "rule__BindingElement__VarDeclAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getRestAssignment_0(), "rule__BindingRestElement__RestAssignment_0");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getNestedPatternAssignment_1_0_0_0(), "rule__BindingRestElement__NestedPatternAssignment_1_0_0_0");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getExpressionAssignment_1_0_1_1(), "rule__BindingRestElement__ExpressionAssignment_1_0_1_1");
-			nameMappingsBuilder.put(grammarAccess.getBindingRestElementAccess().getVarDeclAssignment_1_1(), "rule__BindingRestElement__VarDeclAssignment_1_1");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getNestedPatternAssignment_0_0_0(), "rule__BindingElementImpl__NestedPatternAssignment_0_0_0");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getExpressionAssignment_0_1_1(), "rule__BindingElementImpl__ExpressionAssignment_0_1_1");
+			nameMappingsBuilder.put(grammarAccess.getBindingElementImplAccess().getVarDeclAssignment_1(), "rule__BindingElementImpl__VarDeclAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getLiteralNameAssignment_0(), "rule__LiteralOrComputedPropertyName__LiteralNameAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getLiteralNameAssignment_1(), "rule__LiteralOrComputedPropertyName__LiteralNameAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getLiteralNameAssignment_2(), "rule__LiteralOrComputedPropertyName__LiteralNameAssignment_2");
 			nameMappingsBuilder.put(grammarAccess.getLiteralOrComputedPropertyNameAccess().getExpressionAssignment_3_1(), "rule__LiteralOrComputedPropertyName__ExpressionAssignment_3_1");
-			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionAccess().getTypeRefsAssignment_1_1_1(), "rule__UnionTypeExpression__TypeRefsAssignment_1_1_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getTypeRefsAssignment_1_1_1(), "rule__TypeRef__TypeRefsAssignment_1_1_1");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionAccess().getTypeRefsAssignment_1_1_1(), "rule__IntersectionTypeExpression__TypeRefsAssignment_1_1_1");
-			nameMappingsBuilder.put(grammarAccess.getPrimaryTypeExpressionAccess().getReturnTypeRefAssignment_0_1(), "rule__PrimaryTypeExpression__ReturnTypeRefAssignment_0_1");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithModifiersAccess().getFollowedByQuestionMarkAssignment_1(), "rule__TypeRefWithModifiers__FollowedByQuestionMarkAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefWithoutModifiersAccess().getDynamicAssignment_0_1(), "rule__TypeRefWithoutModifiers__DynamicAssignment_0_1");
 			nameMappingsBuilder.put(grammarAccess.getThisTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0(), "rule__ThisTypeRefStructural__DefinedTypingStrategyAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getDeclaredThisTypeAssignment_2_3(), "rule__FunctionTypeExpressionOLD__DeclaredThisTypeAssignment_2_3");
 			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getOwnedTypeVarsAssignment_4_1(), "rule__FunctionTypeExpressionOLD__OwnedTypeVarsAssignment_4_1");
 			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getOwnedTypeVarsAssignment_4_2_1(), "rule__FunctionTypeExpressionOLD__OwnedTypeVarsAssignment_4_2_1");
-			nameMappingsBuilder.put(grammarAccess.getFunctionTypeExpressionOLDAccess().getReturnTypeRefAssignment_8_1(), "rule__FunctionTypeExpressionOLD__ReturnTypeRefAssignment_8_1");
-			nameMappingsBuilder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypeRefAssignment_5(), "rule__ArrowFunctionTypeExpression__ReturnTypeRefAssignment_5");
+			nameMappingsBuilder.put(grammarAccess.getArrowFunctionTypeExpressionAccess().getReturnTypeRefAssignment_1(), "rule__ArrowFunctionTypeExpression__ReturnTypeRefAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterListAccess().getFparsAssignment_0(), "rule__TAnonymousFormalParameterList__FparsAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterListAccess().getFparsAssignment_1_1(), "rule__TAnonymousFormalParameterList__FparsAssignment_1_1");
 			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getVariadicAssignment_0(), "rule__TAnonymousFormalParameter__VariadicAssignment_0");
-			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getNameAssignment_1_0(), "rule__TAnonymousFormalParameter__NameAssignment_1_0");
-			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getTypeRefAssignment_2(), "rule__TAnonymousFormalParameter__TypeRefAssignment_2");
+			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getNameAssignment_1_0_0_0(), "rule__TAnonymousFormalParameter__NameAssignment_1_0_0_0");
+			nameMappingsBuilder.put(grammarAccess.getTAnonymousFormalParameterAccess().getTypeRefAssignment_1_1(), "rule__TAnonymousFormalParameter__TypeRefAssignment_1_1");
 			nameMappingsBuilder.put(grammarAccess.getDefaultFormalParameterAccess().getHasInitializerAssignmentAssignment_0(), "rule__DefaultFormalParameter__HasInitializerAssignmentAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getDefaultFormalParameterAccess().getAstInitializerAssignment_1(), "rule__DefaultFormalParameter__AstInitializerAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsAssignment_3(), "rule__UnionTypeExpressionOLD__TypeRefsAssignment_3");
 			nameMappingsBuilder.put(grammarAccess.getUnionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1(), "rule__UnionTypeExpressionOLD__TypeRefsAssignment_4_1");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_3(), "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_3");
 			nameMappingsBuilder.put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1(), "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefNominalAccess().getDeclaredTypeAssignment_0(), "rule__ParameterizedTypeRefNominal__DeclaredTypeAssignment_0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefNominalAccess().getTypeArgsAssignment_1_1(), "rule__ParameterizedTypeRefNominal__TypeArgsAssignment_1_1");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefNominalAccess().getTypeArgsAssignment_1_2_1(), "rule__ParameterizedTypeRefNominal__TypeArgsAssignment_1_2_1");
 			nameMappingsBuilder.put(grammarAccess.getArrayTypeRefAccess().getArrayTypeLiteralAssignment_0(), "rule__ArrayTypeRef__ArrayTypeLiteralAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getArrayTypeRefAccess().getTypeArgsAssignment_1(), "rule__ArrayTypeRef__TypeArgsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0(), "rule__ParameterizedTypeRefStructural__DefinedTypingStrategyAssignment_0");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeAssignment_1(), "rule__ParameterizedTypeRefStructural__DeclaredTypeAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getTypeArgsAssignment_2_1(), "rule__ParameterizedTypeRefStructural__TypeArgsAssignment_2_1");
-			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getTypeArgsAssignment_2_2_1(), "rule__ParameterizedTypeRefStructural__TypeArgsAssignment_2_2_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0");
+			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__TypeArguments__TypeArgsAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__TypeArguments__TypeArgsAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberListAccess().getAstStructuralMembersAssignment_1_0(), "rule__TStructMemberList__AstStructuralMembersAssignment_1_0");
-			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getTypeVarsAssignment_0_0_1_1(), "rule__TStructMethod__TypeVarsAssignment_0_0_1_1");
-			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getTypeVarsAssignment_0_0_1_2_1(), "rule__TStructMethod__TypeVarsAssignment_0_0_1_2_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getNameAssignment_0_0_2(), "rule__TStructMethod__NameAssignment_0_0_2");
-			nameMappingsBuilder.put(grammarAccess.getTStructMethodAccess().getReturnTypeRefAssignment_3_1(), "rule__TStructMethod__ReturnTypeRefAssignment_3_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_1(), "rule__TypeVariables__TypeVarsAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getTypeVariablesAccess().getTypeVarsAssignment_2_1(), "rule__TypeVariables__TypeVarsAssignment_2_1");
+			nameMappingsBuilder.put(grammarAccess.getColonSepDeclaredTypeRefAccess().getDeclaredTypeRefAssignment_1(), "rule__ColonSepDeclaredTypeRef__DeclaredTypeRefAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getColonSepTypeRefAccess().getTypeRefAssignment_1(), "rule__ColonSepTypeRef__TypeRefAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getColonSepReturnTypeRefAccess().getReturnTypeRefAssignment_1(), "rule__ColonSepReturnTypeRef__ReturnTypeRefAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructFieldAccess().getNameAssignment_0(), "rule__TStructField__NameAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getTStructFieldAccess().getOptionalAssignment_1(), "rule__TStructField__OptionalAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTStructFieldAccess().getTypeRefAssignment_2_1(), "rule__TStructField__TypeRefAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getNameAssignment_0_0_2(), "rule__TStructGetter__NameAssignment_0_0_2");
 			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getOptionalAssignment_1(), "rule__TStructGetter__OptionalAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getTStructGetterAccess().getDeclaredTypeRefAssignment_4_1(), "rule__TStructGetter__DeclaredTypeRefAssignment_4_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructSetterAccess().getNameAssignment_0_0_2(), "rule__TStructSetter__NameAssignment_0_0_2");
 			nameMappingsBuilder.put(grammarAccess.getTStructSetterAccess().getOptionalAssignment_1(), "rule__TStructSetter__OptionalAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructSetterAccess().getFparAssignment_3(), "rule__TStructSetter__FparAssignment_3");
@@ -1012,7 +978,18 @@ public class N4JSParser extends AbstractContentAssistParser {
 		}
 		return nameMappings.get(element);
 	}
-			
+
+	@Override
+	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
+		try {
+			InternalN4JSParser typedParser = (InternalN4JSParser) parser;
+			typedParser.entryRuleScript();
+			return typedParser.getFollowElements();
+		} catch(RecognitionException ex) {
+			throw new RuntimeException(ex);
+		}
+	}
+
 	@Override
 	protected String[] getInitialHiddenTokens() {
 		return new String[] { "RULE_WS", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL" };
