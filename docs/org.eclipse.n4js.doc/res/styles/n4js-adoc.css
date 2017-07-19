@@ -535,7 +535,7 @@ div.social :first-child { margin-top: 0; }
 div.social h2 {        margin-bottom: 20px;font-weight: 600;font-size: 1.3em;margin-top: 4rem;color: #244d82;font-family: sans-serif;}
 div.social li:before {content: "› "; color: #244d82;font-size: large;font-weight: 800;}
 div.social ul {margin-top: -10px;line-height: 30px;}
-div.social li {display: -webkit-inline-box; padding-right: 6rem;padding-bottom: 1rem;}
+div.social li {/* nothing */}
 
 #bottomright {float: right;}
 
