@@ -13,8 +13,7 @@
 
 # -e  == exit immediately
 # -x  == enable debug. (+x for disable)
-# -v  == Print shell input lines as they are read.
-set -e +x -v
+set -e +x
 
 echo "Terminate running but possibly outdated asciispec server..."
 asciispec term

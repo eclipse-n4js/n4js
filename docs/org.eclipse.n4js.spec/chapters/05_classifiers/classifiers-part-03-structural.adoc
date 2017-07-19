@@ -445,7 +445,7 @@ $ \hspace{1em} \lor\ \exists m' \in X.fields:$
 $ \hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
 $ \hspace{3em} \land \tee m': T_m \land \tee m: T_{m'} \land T_m=T_{m'}}$
 $    \infer{\lspc \tee X \subtype \tsFld T  \lspc }{\hspace{3em} \land m'.assignability\geq m.assignability}$
-
++
 8.  A type $X$ is a subtype of a structural read-only field version of a type $\tsRoFld T$, if it contains all public and non-static readable fields of the type $T$.
 Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
 +
@@ -455,7 +455,7 @@ $\hspace{1em} \lor\ \exists m' \in X.fields \cup X.getters:$
 $\hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
 $\hspace{3em} \land \tee m': T_m \land \tee m: T_{m'} \land T_m=T_{m'}$
 $    \infer{\lspc \tee X \subtype \tsRoFld T \lspc}{\hspace{3em} \land m'.assignability\geq m.assignability}$
-
++
 9.  A type $X$ is a subtype of a structural write-only field version of a type $\tsWoFld T$, if it contains all public and non-static writable fields of the type $T$. Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
 +
 [%hardbreaks]
@@ -464,7 +464,7 @@ $    \hspace{1em} \lor\ \exists m' \in X.fields \cup X.setters:$
 $    \hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name $
 $    \hspace{3em} \land \tee m': T_m \land \tee m: T_{m'} \land T_m=T_{m'}$
 $       \infer{\lspc \tee X \subtype \tsWoFld T \lspc}{\hspace{3em} \land m'.assignability\geq m.assignability}$
-
++
 10. A type $X$ is a subtype of a structural field version of a type $\tsFld{this}$, if it contains all public, non-static fields,
 either defined via data fields or field get accessors, of the inferred type of `this`.
 Special cases regarding optional fields are described in <<optional-fields, Optional Fields>>.
@@ -476,7 +476,7 @@ $    \lor m.expr \neq \NULL$
 $    \hspace{1em} \lor\ \exists m' \in X.fields \cup X.getters:$
 $    \hspace{3em} m'.acc=\lenum{public} \land \neg m'.static \land m'.name=m.name$
 $    \infer{\lspc \tee X \subtype \tsFld this \lspc}{\hspace{3em} \land \tee m' \subtype{m} \land m'.assignability \geq m.assignability} $
-
++
 11. A structural field type $\tsFld T$ is a subtype of a structural type $\tsStr X$, if $\tsStr X$ only contains fields (except methods inherited from `Object`) and if $\tsFld T \subtype \tsFld X$.
 +
 [math]
@@ -484,6 +484,7 @@ $    \infer{\lspc \tee X \subtype \tsFld this \lspc}{\hspace{3em} \land \tee m' 
 \infer{\tee \tsFld T \subtype \tsStr X}
     {X.methods \setminus \lstnfjs{Object}.methods = \emptyset \land \tee \tsFld T \subtype \tsFld X}
 ++++
++
 12. Use-site structural typing cannot be used for declaring supertypes of classes or interfaces.
 That is to say that structural types cannot be used after `extends`, `implements` or `with` in type declarations footnote:[This is already constrained by the grammar.].
 
