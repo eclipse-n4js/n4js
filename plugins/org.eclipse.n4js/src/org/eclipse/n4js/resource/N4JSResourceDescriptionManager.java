@@ -16,6 +16,12 @@ import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
+import org.eclipse.n4js.ts.utils.TypeHelper;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.DerivedStateAwareResourceDescriptionManager;
@@ -28,12 +34,6 @@ import org.eclipse.xtext.resource.impl.EObjectDescriptionLookUp;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.fileextensions.FileExtensionTypeHelper;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 
 /**
  * Only differences to super class method are that a {@link N4JSResourceDescription} is created as well the call to
@@ -58,13 +58,16 @@ public class N4JSResourceDescriptionManager extends DerivedStateAwareResourceDes
 	@Inject
 	private FileExtensionTypeHelper fileExtensionTypeHelper;
 
+	@Inject
+	private N4JSTypeSystem ts;
+
 	@Override
 	protected IResourceDescription createResourceDescription(final Resource resource,
 			IDefaultResourceDescriptionStrategy strategy) {
 		return new N4JSResourceDescription(crossReferenceComputer, typeHelper,
 				qualifiedNameProvider, resource,
 				(N4JSResourceDescriptionStrategy) strategy,
-				getCache()) {
+				getCache(), ts) {
 			@Override
 			protected EObjectDescriptionLookUp getLookUp() {
 				if (lookup == null)

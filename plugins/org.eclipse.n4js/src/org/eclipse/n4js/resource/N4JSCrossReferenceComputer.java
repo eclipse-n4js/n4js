@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.resource;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -28,18 +29,13 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
-
-import it.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Collects all Types, TVariables, TLiterals and IdentifiableElements referenced within the AST of a given fully
@@ -67,7 +63,7 @@ public class N4JSCrossReferenceComputer {
 	 * @param acceptor
 	 *            the logic that collects the passed EObject found in a cross reference
 	 */
-	void computeCrossRefs(Resource resource, IAcceptor<EObject> acceptor) {
+	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
 		TreeIterator<EObject> allContentsIter = resource.getAllContents();
 		while (allContentsIter.hasNext()) {
 			EObject eObject = allContentsIter.next();
@@ -79,7 +75,7 @@ public class N4JSCrossReferenceComputer {
 	 * Browse all references type by the EClass of the given EObject ignoring References between AST element to its
 	 * defined type and vice versa.
 	 */
-	private void computeCrossRefs(EObject from, IAcceptor<EObject> acceptor) {
+	private void computeCrossRefs(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
 		EList<EReference> references = from.eClass().getEAllReferences();
 		for (EReference eReference : references) {
 			if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
@@ -95,7 +91,8 @@ public class N4JSCrossReferenceComputer {
 	 * Collect references to type references, types and identifiable element (direct or as part of and property access
 	 * expression):
 	 */
-	private void handleReference(EObject from, IAcceptor<EObject> acceptor, EReference eReference) {
+	private void handleReference(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			EReference eReference) {
 		Object val = from.eGet(eReference, true);
 		if (eReference != N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY) {
 			if (eReference.getEReferenceType() == TypeRefsPackage.Literals.TYPE_REF
@@ -114,7 +111,9 @@ public class N4JSCrossReferenceComputer {
 	/*
 	 * handle toOne and toMany references for reference of type property access expression
 	 */
-	private void handlePropertyAccess(EObject from, IAcceptor<EObject> acceptor, EReference eReference, Object val) {
+	private void handlePropertyAccess(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			EReference eReference,
+			Object val) {
 		if (!eReference.isMany()) {
 			handlePropertyAccess((ParameterizedPropertyAccessExpression) from, acceptor, val);
 		} else {
@@ -130,7 +129,8 @@ public class N4JSCrossReferenceComputer {
 	/*
 	 * handle toOne and toMany references for reference of type identifiable element
 	 */
-	private void handleIdentifiableElement(EObject from, IAcceptor<EObject> acceptor, EReference eReference,
+	private void handleIdentifiableElement(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			EReference eReference,
 			Object val) {
 		if (!eReference.isMany()) {
 			handleIdentifiableElement(from, acceptor, (IdentifiableElement) val);
@@ -147,7 +147,8 @@ public class N4JSCrossReferenceComputer {
 	/*
 	 * handle toOne and toMany references for reference of type Type
 	 */
-	private void handleType(EObject from, IAcceptor<EObject> acceptor, EReference eReference, Object val) {
+	private void handleType(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, EReference eReference,
+			Object val) {
 		if (!eReference.isMany()) {
 			handleType(from, acceptor, (Type) val);
 		} else {
@@ -163,7 +164,8 @@ public class N4JSCrossReferenceComputer {
 	/*
 	 * handle toOne and toMany references for reference of type ParameterizedTypeRef
 	 */
-	private void handleParameterizedTypeRef(EObject from, IAcceptor<EObject> acceptor, EReference eReference,
+	private void handleParameterizedTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			EReference eReference,
 			Object val) {
 		if (!eReference.isMany()) {
 			handleTypeRef(from, acceptor, val);
@@ -181,7 +183,8 @@ public class N4JSCrossReferenceComputer {
 	 * dispatches Types, TVariables, TLiterals and IdentifiableElements for resolved reference for property in property
 	 * access expression.
 	 */
-	private void handlePropertyAccess(ParameterizedPropertyAccessExpression from, IAcceptor<EObject> acceptor,
+	private void handlePropertyAccess(ParameterizedPropertyAccessExpression from,
+			IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
 			Object val) {
 
 		if (val instanceof TypeRef
@@ -197,7 +200,7 @@ public class N4JSCrossReferenceComputer {
 	/*
 	 * Extract declared type for the given type reference.
 	 */
-	private void handleTypeRef(EObject from, IAcceptor<EObject> acceptor, Object val) {
+	private void handleTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, Object val) {
 		if (val instanceof ParameterizedTypeRef) {
 			ParameterizedTypeRef ref = (ParameterizedTypeRef) val;
 			Type to = ref.getDeclaredType();
@@ -212,7 +215,7 @@ public class N4JSCrossReferenceComputer {
 		}
 	}
 
-	private void handleType(EObject from, IAcceptor<EObject> acceptor, Type to) {
+	private void handleType(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, Type to) {
 		if (to instanceof TMember && ComposedMemberScope.isComposedMember((TMember) to)) {
 			// TODO IDE-1253 / IDE-1806: handling of composed members in N4JSCrossReferenceComputer
 			if (to.eResource() == null) {
@@ -220,19 +223,20 @@ public class N4JSCrossReferenceComputer {
 			}
 		}
 
-		if (to instanceof TFunction) {
-			RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(from);
-			TypeRef typeRef = ts.tau((TypableElement) from);
-			handleTypeRef(from, acceptor, typeRef);
-		}
+		// if (to instanceof TFunction) {
+		// RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(from);
+		// TypeRef typeRef = ts.tau((TypableElement) from);
+		// handleTypeRef(from, acceptor, typeRef);
+		// }
 
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
-			acceptor.accept(to);
+			acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
 		}
 	}
 
-	private void handleIdentifiableElement(EObject from, IAcceptor<EObject> acceptor, IdentifiableElement to) {
+	private void handleIdentifiableElement(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			IdentifiableElement to) {
 		if (to != null) {
 			Resource resource = to.eResource();
 			// guard against null resource that is sometimes returned if a member was put into a
@@ -240,10 +244,10 @@ public class N4JSCrossReferenceComputer {
 			// GH-73: TODO What is when 'to' is a proxy?
 			if (resource != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 					&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
-				acceptor.accept(to);
+				acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
 			} else if (resource == null && !to.eIsProxy()) {
 				// we want to record these imported names anyway
-				acceptor.accept(to);
+				acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
 			}
 		}
 	}

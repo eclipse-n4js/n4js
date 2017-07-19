@@ -36,7 +36,8 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.core.jobs,
  org.eclipse.xtext.builder,
  org.eclipse.core.resources
-Import-Package: org.apache.log4j,
+Import-Package: org.apache.commons.lang3.tuple,
+ org.apache.log4j,
  org.eclipse.xtext.builder,
  org.eclipse.xtext.xbase.lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

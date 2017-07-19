@@ -18,17 +18,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFunction;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeHelper;
+import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -58,6 +64,8 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private Iterable<QualifiedName> lazyImportedNames;
 
+	private final N4JSTypeSystem ts;
+
 	/**
 	 * Creates a new description for the given resource.
 	 */
@@ -66,12 +74,13 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 			IQualifiedNameProvider qualifiedNameProvider,
 			Resource resource,
 			N4JSResourceDescriptionStrategy strategy,
-			IResourceScopeCache cache) {
+			IResourceScopeCache cache, N4JSTypeSystem ts) {
 		super(resource, strategy, cache);
 		this.crossReferenceComputer = crossReferenceComputer;
 		this.qualifiedNameProvider = qualifiedNameProvider;
 		this.typeHelper = typeHelper;
 		this.strategy = strategy;
+		this.ts = ts;
 	}
 
 	@Override
@@ -125,9 +134,6 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		if (null == lazyImportedNames) {
 			synchronized (this) {
 				if (null == lazyImportedNames) {
-
-					// System.out.println("######\t" + getURI());
-
 					// get imported names collected during global scoping
 					// the scope provider registers every request in scoping so that by this
 					// also all names are collected that cannot be resolved
@@ -146,21 +152,10 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 						importedNames.add(qualifiedNameProvider.getFullyQualifiedName(module));
 					}
 					final Set<EObject> crossRefTypes = Sets.newHashSet();
-					IAcceptor<EObject> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
+					IAcceptor<ImmutablePair<EObject, EObject>> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
 					crossReferenceComputer.computeCrossRefs(resource, acceptor);
 					for (EObject type : crossRefTypes) {
-						// TODO TS handle also generics (later with working type system)
-						if (type instanceof TFunction) {
-							// TODO TS work around for not yet inferred return types of methods and functions
-							// later for all expressions the types have to be calculated and for those types
-							// all super types have to be collected as well
-							// for methods and functions: -> declaredType != returnType (as returnType is
-							// inferred at runtime)
-							TypeRef returnTypeRef = ((TFunction) type).getReturnTypeRef();
-							if (returnTypeRef != null) {
-								handleType(importedNames, returnTypeRef.getDeclaredType());
-							}
-						} else if (type instanceof Type) {
+						if (type instanceof Type) {
 							handleType(importedNames, type);
 						} else if (type instanceof TVariable) {
 							handleTVariable(importedNames, (TVariable) type);
@@ -207,14 +202,27 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		importedNames.add(importedName);
 	}
 
-	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
-		IAcceptor<EObject> acceptor = new IAcceptor<EObject>() {
-
+	private IAcceptor<ImmutablePair<EObject, EObject>> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
+		IAcceptor<ImmutablePair<EObject, EObject>> acceptor = new IAcceptor<ImmutablePair<EObject, EObject>>() {
 			@Override
-			public void accept(EObject t) {
-				// TODO TS later use the type inferencer here (and do not work with types but with type references)
-				if (t instanceof Type || t instanceof TVariable || t instanceof TEnumLiteral) {
-					crossRefTypes.add(t);
+			public void accept(ImmutablePair<EObject, EObject> pair) {
+				EObject from = pair.left;
+				if (from instanceof ParameterizedPropertyAccessExpression
+						&& from.eContainer() instanceof ParameterizedCallExpression) {
+					// The return type of a method/function is the type of the call expression
+					from = from.eContainer();
+				}
+				EObject to = pair.right;
+
+				if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
+					crossRefTypes.add(to);
+				}
+
+				// Add declared type of a field to cross ref types
+				// Add return type of function/method to cross ref types
+				if (to instanceof TFunction || to instanceof TField) {
+					TypeRef typeRef = ts.tau((TypableElement) from);
+					crossRefTypes.add(typeRef.getDeclaredType());
 				}
 			}
 		};
