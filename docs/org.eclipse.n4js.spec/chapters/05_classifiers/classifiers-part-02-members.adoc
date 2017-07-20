@@ -52,7 +52,7 @@ Boolean property to distinguish instance from classifier members, see <<_static-
 The following pseudo properties are defined via annotations:
 
 `deprecated` ::
-Boolean property set to true if annotation `@Deprecated` is set. footnote:[ version 0.4  - not implemented in version 0.3]
+Boolean property set to true if annotation `@Deprecated` is set. footnote:[not yet implemented]
 
 And we additionally define the following pseudo properties:
 
