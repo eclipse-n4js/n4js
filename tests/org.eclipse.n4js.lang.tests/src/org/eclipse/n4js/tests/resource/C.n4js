@@ -11,6 +11,12 @@
 
 import { B } from "org/eclipse/n4js/tests/resource/B";
 
-export public class C {}
+export public class C<T> {
+	public foo: int = 42;
+}
+
+export public class Z { }
+
+export public class Y { }
 
 export var b : B<C>

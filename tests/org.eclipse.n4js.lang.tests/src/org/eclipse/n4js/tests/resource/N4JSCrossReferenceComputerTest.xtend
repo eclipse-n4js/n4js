@@ -13,6 +13,7 @@ package org.eclipse.n4js.tests.resource
 import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.ArrayList
+import java.util.LinkedHashSet
 import org.apache.commons.lang3.tuple.ImmutablePair
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -63,12 +64,22 @@ class N4JSCrossReferenceComputerTest {
 
 		EcoreUtil.resolveAll(rs)
 
+		val refs = new LinkedHashSet<EObject>();
+
 		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceA, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
 			override accept(ImmutablePair<EObject, EObject> pair) {
 				val t = pair.right
-				println("Found " + t)
+				refs.add(t);
 			}
 		});
+
+		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
+		println("---");
+		println("Found");
+		println(actualRefs);
+		println("---");
+		val expectedRefs = "class - C,class - Z"
+		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 
 	@Test
@@ -88,21 +99,33 @@ class N4JSCrossReferenceComputerTest {
 
 		EcoreUtil.resolveAll(rs)
 
-		val refs = new ArrayList<String>();
+		val refs = new LinkedHashSet<String>();
 		
 		crossReferenceComputer.computeCrossRefs(rs.getResource(myClassOne, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
 			override accept(ImmutablePair<EObject, EObject> pair) {
 				val t = pair.right
 				if (t instanceof IdentifiableElement) {
-					refs.add(typesKeywordProvider.keyword(t) + " - " + t.name);
+					refs.add(t.toStringRep);
 				} else {
 					throw new Exception(t + " is not identifiable element");
 				}
 			}
 		});
 
-		val actualRefs = refs.toSet.join(",");
+		val actualRefs = refs.filterNull.join(",");
 		val expectedRefs = "variable - two,method - myMethodFour,method - getElement,method - myMethodTwo,field - myAttributeTwo"
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
+		println("---");
+		println("Found");
+		println(actualRefs);
+		println("---");
+	}
+
+	private def String toStringRep(EObject eobj) {
+		if (eobj instanceof IdentifiableElement) {
+			return typesKeywordProvider.keyword(eobj) + " - " + eobj.name
+		} else {
+			return null
+		}
 	}
 }

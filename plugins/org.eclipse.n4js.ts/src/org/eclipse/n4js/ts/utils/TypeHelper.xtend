@@ -13,6 +13,7 @@ package org.eclipse.n4js.ts.utils
 import com.google.inject.Inject
 import java.util.Iterator
 import java.util.List
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -21,6 +22,7 @@ import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
+import static extension java.util.Collections.singletonList
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 
 /**
@@ -31,8 +33,6 @@ public class TypeHelper {
 
 	@Inject
 	extension TypeCompareHelper
-
-
 
 	/*
 	 * Collects all declared super types of a type referenced by a type references, recognizing cyclic dependencies in
@@ -197,15 +197,20 @@ public class TypeHelper {
 	}
 
 	/**
-	 * Extracts the type referenced by a type ref.
-	 * @param typeRef the type ref, from which the type should be extracted.
+	 * Extracts the type(s) referenced by a type ref.
+	 * @param typeRef
+	 *  		the type ref, from which the type should be extracted.
+	 * @return
+	 * 			the list of extracted types. There can be multiple returned types due to composed type refs.
 	 */
-	def Type extractType(TypeRef typeRef) {
+	def List<Type> extractType(TypeRef typeRef) {
 		switch (typeRef) {
 			ParameterizedTypeRef:
-				return extractType_ParameterizedTypeRef(typeRef)
+				return extractType_ParameterizedTypeRef(typeRef).singletonList
 			FunctionTypeExpression:
 				return extractType_FunctionTypeExpression(typeRef)
+			ComposedTypeRef:
+			return typeRef.typeRefs.map[it | it.extractType].flatten.toList
 			default:
 				throw new UnsupportedOperationException("Extracting type from " + typeRef  + " is not supported/not implemented")
 		}
@@ -215,7 +220,7 @@ public class TypeHelper {
 		return parameterizedTypeRef.declaredType;
 	}
 
-	private def Type extractType_FunctionTypeExpression (FunctionTypeExpression functionTypeExpression) {
+	private def List<Type> extractType_FunctionTypeExpression (FunctionTypeExpression functionTypeExpression) {
 		 val returnTypeRef = functionTypeExpression.getReturnTypeRef();
 		 return extractType(returnTypeRef);
 	}

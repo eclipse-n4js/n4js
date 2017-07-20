@@ -10,8 +10,9 @@
  */
 
 import { C } from "org/eclipse/n4js/tests/resource/C"
+import { Z } from "org/eclipse/n4js/tests/resource/C"
 
-//b.m;
-var c : C;
-//class Z extends C {
-//}
+
+var c1 : C<Z>;
+
+var c2: Z | int;

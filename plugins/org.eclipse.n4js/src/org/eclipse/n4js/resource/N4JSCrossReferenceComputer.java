@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.util.List;
+
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -112,10 +114,9 @@ public class N4JSCrossReferenceComputer {
 	 * Extract declared type for the given type reference.
 	 */
 	private void handleTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TypeRef to) {
-		Type toType = th.extractType(to);
-		if (toType != null) {
+		List<Type> toTypes = th.extractType(to);
+		for (Type toType : toTypes)
 			handleType(from, acceptor, toType);
-		}
 	}
 
 	private void handleType(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, Type to) {
