@@ -26,7 +26,7 @@ Contributors:
 
 	<properties>
 		<skip.mwe2>false</skip.mwe2>
-		<mwe2-file-location>/src/org/eclipse/n4js/model/GenerateN4JSModel.mwe2</mwe2-file-location>
+		<mwe2-file-location>/src/org/eclipse/n4js/n4jsx/model/GenerateN4JSXModel.mwe2</mwe2-file-location>
 		<!-- fornax: -->
 		<mwe2descriptor>org.eclipse.n4js.GenerateN4JS</mwe2descriptor>
 	</properties>
