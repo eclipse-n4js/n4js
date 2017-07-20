@@ -11,11 +11,13 @@
 package org.eclipse.n4js.ts.utils
 
 import com.google.inject.Inject
+import java.util.Iterator
+import java.util.List
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.Type
-import java.util.Iterator
-import java.util.List
 
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
@@ -194,4 +196,27 @@ public class TypeHelper {
 		return -1;
 	}
 
+	/**
+	 * Extracts the type referenced by a type ref.
+	 * @param typeRef the type ref, from which the type should be extracted.
+	 */
+	def Type extractType(TypeRef typeRef) {
+		switch (typeRef) {
+			ParameterizedTypeRef:
+				return extractType_ParameterizedTypeRef(typeRef)
+			FunctionTypeExpression:
+				return extractType_FunctionTypeExpression(typeRef)
+			default:
+				throw new UnsupportedOperationException("Extracting type from " + typeRef  + " is not supported/not implemented")
+		}
+	}
+
+	private def Type extractType_ParameterizedTypeRef (ParameterizedTypeRef parameterizedTypeRef) {
+		return parameterizedTypeRef.declaredType;
+	}
+
+	private def Type extractType_FunctionTypeExpression (FunctionTypeExpression functionTypeExpression) {
+		 val returnTypeRef = functionTypeExpression.getReturnTypeRef();
+		 return extractType(returnTypeRef);
+	}
 }

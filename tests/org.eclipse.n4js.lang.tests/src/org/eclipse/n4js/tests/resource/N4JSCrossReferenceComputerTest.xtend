@@ -102,7 +102,7 @@ class N4JSCrossReferenceComputerTest {
 		});
 
 		val actualRefs = refs.toSet.join(",");
-		val expectedRefs = "method - myMethodFour,method - getElement,method - myMethodTwo,variable - two,field - myAttributeTwo"
+		val expectedRefs = "variable - two,method - myMethodFour,method - getElement,method - myMethodTwo,field - myAttributeTwo"
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 }

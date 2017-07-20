@@ -17,31 +17,28 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
 
 /**
- * Collects all Types, TVariables, TLiterals and IdentifiableElements referenced within the AST of a given fully
- * resolved resource, when they aren't contained in this resource, fully resolved and no built-in type. Additional
- * checks can be performed by the passed acceptor.
+ * Collects all Types,TVariables,TLiterals and IdentifiableElements referenced within the AST of a given fully*resolved
+ * resource,when they aren'tcontained in this resource,fully resolved and no built-in type.Additional*checks can be
+ * performed by the passed acceptor.*
  * <p>
- * Helper for {@link N4JSResourceDescription}.
+ * Helper for{@link N4JSResourceDescription}.
  *
  * TODO: handle {@link Wildcard}s and other {@link TypeArgument}s in {@link ParameterizedTypeRef}s.
  */
@@ -49,6 +46,8 @@ public class N4JSCrossReferenceComputer {
 
 	@Inject
 	private N4JSExternalReferenceChecker externalReferenceChecker;
+	@Inject
+	private TypeHelper th;
 
 	/**
 	 * Collects all Types, TVariables, TLiterals and IdentifiableElements that are directly referenced somewhere in the
@@ -78,7 +77,18 @@ public class N4JSCrossReferenceComputer {
 			if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
 					&& eReference != TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT) {
 				if (from.eIsSet(eReference)) {
-					handleReference(from, acceptor, eReference);
+					Object val = from.eGet(eReference);
+					// Handle both toOne and toMany cases
+					if (!eReference.isMany()) {
+						handleReferenceObject(from, acceptor, (EObject) val);
+					} else {
+						@SuppressWarnings("unchecked")
+						BasicEList<EObject> list = (BasicEList<EObject>) val;
+						for (int i = 0; i < list.size(); i++) {
+							EObject to = list.basicGet(i);
+							handleReferenceObject(from, acceptor, to);
+						}
+					}
 				}
 			}
 		}
@@ -88,127 +98,23 @@ public class N4JSCrossReferenceComputer {
 	 * Collect references to type references, types and identifiable element (direct or as part of and property access
 	 * expression):
 	 */
-	private void handleReference(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
-			EReference eReference) {
-		Object val = from.eGet(eReference, true);
-		if (eReference != N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY) {
-			if (eReference.getEReferenceType() == TypeRefsPackage.Literals.TYPE_REF
-					|| eReference.getEReferenceType() == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF) {
-				handleParameterizedTypeRef(from, acceptor, eReference, val);
-			} else if (eReference.getEReferenceType() == TypesPackage.Literals.TYPE) {
-				handleType(from, acceptor, eReference, val);
-			} else if (eReference.getEReferenceType() == TypesPackage.Literals.IDENTIFIABLE_ELEMENT) {
-				handleIdentifiableElement(from, acceptor, eReference, val);
-			}
-		} else {
-			handlePropertyAccess(from, acceptor, eReference, val);
-		}
-	}
-
-	/*
-	 * handle toOne and toMany references for reference of type property access expression
-	 */
-	private void handlePropertyAccess(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
-			EReference eReference,
-			Object val) {
-		if (!eReference.isMany()) {
-			handlePropertyAccess((ParameterizedPropertyAccessExpression) from, acceptor, val);
-		} else {
-			@SuppressWarnings("unchecked")
-			BasicEList<EObject> list = (BasicEList<EObject>) val;
-			for (int i = 0; i < list.size(); i++) {
-				EObject to = list.basicGet(i);
-				handlePropertyAccess((ParameterizedPropertyAccessExpression) from, acceptor, to);
-			}
-		}
-	}
-
-	/*
-	 * handle toOne and toMany references for reference of type identifiable element
-	 */
-	private void handleIdentifiableElement(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
-			EReference eReference,
-			Object val) {
-		if (!eReference.isMany()) {
-			handleIdentifiableElement(from, acceptor, (IdentifiableElement) val);
-		} else {
-			@SuppressWarnings("unchecked")
-			InternalEList<EObject> list = (InternalEList<EObject>) val;
-			for (int i = 0; i < list.size(); i++) {
-				EObject to = list.basicGet(i);
-				handleIdentifiableElement(from, acceptor, (IdentifiableElement) to);
-			}
-		}
-	}
-
-	/*
-	 * handle toOne and toMany references for reference of type Type
-	 */
-	private void handleType(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, EReference eReference,
-			Object val) {
-		if (!eReference.isMany()) {
-			handleType(from, acceptor, (Type) val);
-		} else {
-			@SuppressWarnings("unchecked")
-			InternalEList<EObject> list = (InternalEList<EObject>) val;
-			for (int i = 0; i < list.size(); i++) {
-				EObject to = list.basicGet(i);
-				handleType(from, acceptor, (Type) to);
-			}
-		}
-	}
-
-	/*
-	 * handle toOne and toMany references for reference of type ParameterizedTypeRef
-	 */
-	private void handleParameterizedTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
-			EReference eReference,
-			Object val) {
-		if (!eReference.isMany()) {
-			handleTypeRef(from, acceptor, val);
-		} else {
-			@SuppressWarnings("unchecked")
-			InternalEList<EObject> list = (InternalEList<EObject>) val;
-			for (int i = 0; i < list.size(); i++) {
-				EObject to = list.basicGet(i);
-				handleTypeRef(from, acceptor, to);
-			}
-		}
-	}
-
-	/*
-	 * dispatches Types, TVariables, TLiterals and IdentifiableElements for resolved reference for property in property
-	 * access expression.
-	 */
-	private void handlePropertyAccess(ParameterizedPropertyAccessExpression from,
-			IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
-			Object val) {
-
-		if (val instanceof TypeRef
-				|| val instanceof ParameterizedTypeRef) {
-			handleTypeRef(from, acceptor, val);
-		} else if (val instanceof Type) {
-			handleType(from, acceptor, (Type) val);
-		} else if (val instanceof IdentifiableElement) {
-			handleIdentifiableElement(from, acceptor, (IdentifiableElement) val);
+	private void handleReferenceObject(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, EObject to) {
+		if (to instanceof TypeRef) {
+			handleTypeRef(from, acceptor, (TypeRef) to);
+		} else if (to instanceof Type) {
+			handleType(from, acceptor, (Type) to);
+		} else if (to instanceof IdentifiableElement) {
+			handleIdentifiableElement(from, acceptor, (IdentifiableElement) to);
 		}
 	}
 
 	/*
 	 * Extract declared type for the given type reference.
 	 */
-	private void handleTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, Object val) {
-		if (val instanceof ParameterizedTypeRef) {
-			ParameterizedTypeRef ref = (ParameterizedTypeRef) val;
-			Type to = ref.getDeclaredType();
-			handleType(from, acceptor, to);
-		} else {
-			// TODO handle other type refs
-			// TypeRef ref = (TypeRef) val;
-			if (val instanceof FunctionTypeExpression) {
-				TypeRef returnTypeRef = ((FunctionTypeExpression) val).getReturnTypeRef();
-				handleTypeRef(from, acceptor, returnTypeRef);
-			}
+	private void handleTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TypeRef to) {
+		Type toType = th.extractType(to);
+		if (toType != null) {
+			handleType(from, acceptor, toType);
 		}
 	}
 
@@ -241,5 +147,4 @@ public class N4JSCrossReferenceComputer {
 			}
 		}
 	}
-
 }
