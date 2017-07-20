@@ -14183,7 +14183,7 @@ public interface TypesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Iterable Of TClassifier</em>'.
 	 * @see java.lang.Iterable
-	 * @model instanceClass="java.lang.Iterable<? extends org.eclipse.n4js.ts.types.TClassifier>"
+	 * @model instanceClass="java.lang.Iterable&lt;? extends org.eclipse.n4js.ts.types.TClassifier&gt;"
 	 * @generated
 	 */
 	EDataType getIterableOfTClassifier();
@@ -14216,7 +14216,7 @@ public interface TypesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Member List</em>'.
 	 * @see java.util.List
-	 * @model instanceClass="java.util.List<? extends org.eclipse.n4js.ts.types.TMember>"
+	 * @model instanceClass="java.util.List&lt;? extends org.eclipse.n4js.ts.types.TMember&gt;"
 	 * @generated
 	 */
 	EDataType getMemberList();
@@ -14227,7 +14227,7 @@ public interface TypesPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>TClassifier Iterable</em>'.
 	 * @see java.lang.Iterable
-	 * @model instanceClass="java.lang.Iterable<org.eclipse.n4js.ts.types.TClassifier>"
+	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.ts.types.TClassifier&gt;"
 	 * @generated
 	 */
 	EDataType getTClassifierIterable();

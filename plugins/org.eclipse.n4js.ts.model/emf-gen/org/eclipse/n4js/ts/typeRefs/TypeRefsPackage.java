@@ -7644,7 +7644,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @return the meta object for data type '<em>Parameterized Type Ref Iterable</em>'.
 	 * @see java.lang.Iterable
-	 * @model instanceClass="java.lang.Iterable<org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef>"
+	 * @model instanceClass="java.lang.Iterable&lt;org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef&gt;"
 	 * @generated
 	 */
 	EDataType getParameterizedTypeRefIterable();
