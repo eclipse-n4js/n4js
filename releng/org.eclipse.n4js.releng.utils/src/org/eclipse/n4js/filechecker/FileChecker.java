@@ -21,8 +21,31 @@ import com.google.common.base.Joiner;
  */
 public class FileChecker extends AbstractFileChecker {
 
+	private enum Mode {
+		NORMAL, XSEMANTICS, Xpect
+	}
+
+	private static final Mode MODE = Mode.Xpect;
+
+	private static final boolean FIX_FILE_ENDING = false;
+	private static final boolean FIX_TRAILING_WHITE_SPACE = false;
+
+	/** All folders on this level in the repository must be a valid Eclipse project, e.g. contain ".project" file. */
+	private static final int DEPTH_OF_PROJECTS = MODE == Mode.Xpect ? 1 : 2;
+
+	private static final String[] REPOS = { "n4js", "n4js-n4" }; // FIXME remove all references to "n4js-n4"
+	private static final String[] REPOS_MANDATORY = { "n4js" };
+
+	private static final String[] XSEMANTICS_REPOS = { "xsemantics" };
+	private static final String[] XSEMANTICS_REPOS_MANDATORY = XSEMANTICS_REPOS;
+
+	private static final String[] Xpect_REPOS = { "Xpect" };
+	private static final String[] Xpect_REPOS_MANDATORY = Xpect_REPOS;
+
 	/** Name used as vendor (in manifest.mf) and provider (in feature.xml). */
-	private static final String PROVIDER_NAME = "Eclipse N4JS Project";
+	private static final String PROVIDER_NAME = "Eclipse "
+			+ (MODE == Mode.XSEMANTICS ? "Xsemantics" : (MODE == Mode.Xpect ? "Xpect" : "N4JS"))
+			+ " Project";
 	private static final String PROVIDER_NAME_N4 = "NumberFour AG";
 
 	private static final String FILE_NAME__DOT_PROJECT = ".project";
@@ -49,8 +72,8 @@ public class FileChecker extends AbstractFileChecker {
 	private static final String FILE_NAME__EPL = "EPL-1.0.html";
 
 	/** Extensions of files that should be checked more thoroughly. */
-	private static final String[] FILE_EXTENSIONS = { ".java", ".xtend", ".xtext", ".xcore", ".xsemantics", ".xml",
-			".mwe2", ".adoc", "Jenkinsfile", ".xt", ".n4jsx", ".n4jsd", ".n4mf" };
+	private static final String[] FILE_EXTENSIONS = { ".java", ".fj", ".xtend", ".xtext", ".xcore", ".xsemantics",
+			".xml", ".mwe2", ".adoc", "Jenkinsfile", ".xt", ".n4jsx", ".n4jsd", ".n4mf" };
 
 	/** These files will be ignored. May contain '/' but should not start or end with '/'. */
 	private static final String[] IGNORED_FILES = {
@@ -66,7 +89,7 @@ public class FileChecker extends AbstractFileChecker {
 			// "plugins/org.eclipse.n4js.common.unicode/grammar-gen",
 			"docs/org.eclipse.n4js.doc/src-gen", // under git-ignore, so not in repository
 			"docs/org.eclipse.n4js.doc/generated-docs", // under git-ignore, so not in repository
-			// "org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc", // test expectations (copyright header
+			// "org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc", // test eXpectations (copyright header
 			// unsupported)
 			"tools/org.eclipse.n4js.hlc/target/wsp", // temporary test data under git-ignore, so not in repository
 			".github", // removed in initial commit
@@ -166,7 +189,7 @@ public class FileChecker extends AbstractFileChecker {
 			"plugins/org.eclipse.n4js.common.unicode/src/org/eclipse/n4js/common/unicode/generator/UnicodeGrammarGenerator.xtend",
 
 			/* tests */
-			"tests/org.eclipse.n4js.n4ide.spec.tests/xpect-test/Ch05_04_01_02__Organize_Imports/organize_imports/GHOLD_103/GHOLD_103.txt",
+			"tests/org.eclipse.n4js.n4ide.spec.tests/Xpect-test/Ch05_04_01_02__Organize_Imports/organize_imports/GHOLD_103/GHOLD_103.txt",
 			"tests/org.eclipse.n4js.smoke.tests/src/org/eclipse/n4js/smoke/tests/GeneratedSmokeTestCases2.xtend",
 			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/tests/contentassist/NodeModelTokenSourceTest.xtend",
 			"tests/org.eclipse.n4js.lang.tests/src/org/eclipse/n4js/npmexporter/PackageJasonTemplateTest.xtend",
@@ -201,8 +224,43 @@ public class FileChecker extends AbstractFileChecker {
 			"plugins/org.eclipse.n4js.environments/src-env/env/builtin_js.n4ts",
 	};
 
-	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
-	private static final String[] COPYRIGHT_TEXT = {
+	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xsemantics. */
+	private static final String[] XSEMANTICS_BANNED_WORDS_WHITELIST = {
+			FILE_NAME__NOTICE_HTML,
+			FILE_NAME__ABOUT_HTML,
+			FILE_NAME__ABOUT_HTML_TEMPLATE,
+			FILE_NAME__EPL,
+			"LICENSE",
+			"README.md",
+
+			/* The following 4 files introduce & handle the keyword "copyright" of the Xsemantics DSL. */
+			"plugins/it.xsemantics.dsl/model/custom/Xsemantics.ecore",
+			"plugins/it.xsemantics.dsl/model/custom/Xsemantics.genmodel",
+			"plugins/it.xsemantics.dsl/src/it/xsemantics/dsl/jvmmodel/XsemanticsJvmModelInferrer.xtend",
+			"plugins/it.xsemantics.dsl/src/it/xsemantics/dsl/Xsemantics.xtext",
+
+			/* The following 4 files contain documentation for keyword "copyright" of the Xsemantics DSL. */
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/contents/00-Main.html",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/contents/00-Main_12.html",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/contents/XsemanticsSyntax.html",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/xdoc/00-Main.xdoc",
+			"/Users/mark-oliver.reiser/Home/Prog/Java/n4js-main/git-repo/xsemantics/doc/it.xsemantics.doc/xdoc/XsemanticsSyntax.xdoc",
+
+			/* Two test files for keyword "copyright" of the Xsemantics DSL. */
+			"tests/it.xsemantics.dsl.tests/tests_input_files/header_test.xsemantics",
+			"tests/it.xsemantics.dsl.tests/src/it/xsemantics/dsl/tests/generator/XsemanticsGeneratedFileHeaderTest.xtend",
+	};
+
+	/** Same as {@link #BANNED_WORDS_WHITELIST}, but for Xpect. */
+	private static final String[] Xpect_BANNED_WORDS_WHITELIST = {
+			FILE_NAME__NOTICE_HTML,
+			FILE_NAME__ABOUT_HTML,
+			FILE_NAME__ABOUT_HTML_TEMPLATE,
+			FILE_NAME__EPL,
+			"org.xpect/model/Xpect.genmodel",
+	};
+
+	private static final String[] COPYRIGHT_TEXT_N4JS = {
 			"Copyright (c) 2016 NumberFour AG.",
 			"All rights reserved. This program and the accompanying materials",
 			"are made available under the terms of the Eclipse Public License v1.0",
@@ -212,6 +270,30 @@ public class FileChecker extends AbstractFileChecker {
 			"Contributors:",
 			"  NumberFour AG - Initial API and implementation",
 	};
+	private static final String[] COPYRIGHT_TEXT_XSEMANTICS = {
+			"Copyright (c) 2013-2017 Lorenzo Bettini.",
+			"All rights reserved. This program and the accompanying materials",
+			"are made available under the terms of the Eclipse Public License v1.0",
+			"which accompanies this distribution, and is available at",
+			"http://www.eclipse.org/legal/epl-v10.html",
+			"",
+			"Contributors:",
+			"  Lorenzo Bettini - Initial contribution and API",
+	};
+	private static final String[] COPYRIGHT_TEXT_Xpect = {
+			"Copyright (c) 2012-2017 TypeFox GmbH and itemis AG.",
+			"All rights reserved. This program and the accompanying materials",
+			"are made available under the terms of the Eclipse Public License v1.0",
+			"which accompanies this distribution, and is available at",
+			"http://www.eclipse.org/legal/epl-v10.html",
+			"",
+			"Contributors:",
+			"  Moritz Eysholdt - Initial contribution and API",
+	};
+
+	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
+	private static final String[] COPYRIGHT_TEXT = MODE == Mode.XSEMANTICS ? COPYRIGHT_TEXT_XSEMANTICS
+			: (MODE == Mode.Xpect ? COPYRIGHT_TEXT_Xpect : COPYRIGHT_TEXT_N4JS);
 
 	/** Files with an extension listed in {@link #FILE_EXTENSIONS} must start with this header. */
 	private static final String COPYRIGHT_TEXT_SHORT = "Generated by N4JS transpiler; for copyright see original N4JS source file.";
@@ -222,7 +304,13 @@ public class FileChecker extends AbstractFileChecker {
 	 */
 	private static final String COPYRIGHT_HEADER = ("/**\n"
 			+ " * " + Joiner.on("\n * ").join(COPYRIGHT_TEXT) + "\n"
-			+ " */").replace("\n * \n", "\n *\n");
+			+ " */").replace("\n * \n",
+					"\n *\n");
+
+	/** Same as {@link #COPYRIGHT_HEADER}, but with more asterisks. Used in Xsemantics. */
+	private static final String COPYRIGHT_HEADER_V2 = COPYRIGHT_HEADER
+			.replace("/**\n", "/*******************************************************************************\n")
+			.replace(" */", " *******************************************************************************/");
 
 	/** JS files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
 	private static final String COPYRIGHT_HEADER_JS = ("/*\n"
@@ -230,14 +318,12 @@ public class FileChecker extends AbstractFileChecker {
 			+ " */").replace("\n * \n", "\n *\n");
 
 	/** XML files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
-	private static final String COPYRIGHT_HEADER_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-			+ "<!--\n"
+	private static final String COPYRIGHT_HEADER_XML = "<!--\n"
 			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
 			+ "-->";
 
 	/** HTML files must start with this header (derived from {@link #COPYRIGHT_TEXT}). */
-	private static final String COPYRIGHT_HEADER_HTML = "<!DOCTYPE HTML>\n"
-			+ "<!--\n"
+	private static final String COPYRIGHT_HEADER_HTML = "<!--\n"
 			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
 			+ "-->";
 
@@ -262,6 +348,15 @@ public class FileChecker extends AbstractFileChecker {
 
 	/** Generated JS files must start with this header (derived from {@link #COPYRIGHT_TEXT_SHORT}). */
 	private static final String COPYRIGHT_HEADER_JS_SHORT = "// " + COPYRIGHT_TEXT_SHORT;
+
+	/** TXT files must start with this header. */
+	private static final String COPYRIGHT_HEADER_TXT = "*******************************************************************************\n"
+			+ Joiner.on("\n").join(COPYRIGHT_TEXT) + "\n"
+			+ "*******************************************************************************";
+
+	/** The copyright keyword together with the copyright text as optionally contained in .xsemantics files. */
+	private static final String COPYRIGHT_KEYWORD_IN_XSEMANTICS = "copyright\n"
+			+ '"' + Joiner.on("\n").join(COPYRIGHT_TEXT) + '"';
 
 	/**
 	 * When letting Xtext generate the AST model (only applies to the RegEx language), it corrupts the copyright header
@@ -312,6 +407,30 @@ public class FileChecker extends AbstractFileChecker {
 	// ################################################################################################################
 
 	@Override
+	protected String[] getRepos() {
+		switch (MODE) {
+		case XSEMANTICS:
+			return XSEMANTICS_REPOS;
+		case Xpect:
+			return Xpect_REPOS;
+		default:
+			return REPOS;
+		}
+	}
+
+	@Override
+	protected String[] getReposMandatory() {
+		switch (MODE) {
+		case XSEMANTICS:
+			return XSEMANTICS_REPOS_MANDATORY;
+		case Xpect:
+			return Xpect_REPOS_MANDATORY;
+		default:
+			return REPOS_MANDATORY;
+		}
+	}
+
+	@Override
 	protected boolean isIgnored(Path path, String pathStr) {
 		if (path.endsWith("pom.xml"))
 			return false; // never ignore pom.xml!
@@ -327,6 +446,25 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	// ################################################################################################################
+
+	@SuppressWarnings("unused")
+	private static final void fixCopyrightHeader(Path path, String content) {
+		if (hasExtension(path, ".xml")) {
+			final int preambleLen = COPYRIGHT_HEADER_XML.indexOf('\n') + 1;
+			final String preamble = COPYRIGHT_HEADER_XML.substring(0, preambleLen);
+			if (!content.startsWith(preamble)) {
+				throw new IllegalStateException(
+						"cannot fix copyright header of file " + path + ": does not start with preamble:\n" + preamble);
+			}
+			final String contentToKeep = content.substring(preambleLen);
+			writeFile(path, COPYRIGHT_HEADER_XML + '\n' + contentToKeep);
+		} else if (hasExtension(path, ".mwe2")) {
+			writeFile(path, COPYRIGHT_HEADER + '\n' + content);
+		} else {
+			throw new UnsupportedOperationException(
+					"cannot fix copyright header due to supported file extension: " + path);
+		}
+	}
 
 	/**
 	 * Invoked for every file for which {@link #isIgnored(Path, String)} returns <code>false</code>.
@@ -345,10 +483,16 @@ public class FileChecker extends AbstractFileChecker {
 		}
 
 		String[] moreCRHs = { ".xml", ".html", ".sh", ".tex", ".grammar", "adoc", "n4ts", "n4js", "n4jsx", "n4mf",
-				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js" };
+				"n4jsd", "xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED", ".idx", ".js",
+				".ant", ".css", ".txt", ".mwe2txt", ".oldxsem", ".md", ".xtypes", ".xcoretxt", ".yml", ".fjcached",
+				".xpt", ".def" };
 		if (hasExtension(path, concat(FILE_EXTENSIONS, moreCRHs))) {
 			if (hasCorrectCopyrightHeader(path, content)) {
 				report.setToHasCRH();
+			} else {
+				if (path.toString().endsWith(".mwe2")) {
+					// fixCopyrightHeader(path, content);
+				}
 			}
 		}
 
@@ -401,19 +545,26 @@ public class FileChecker extends AbstractFileChecker {
 		if (content.contains("\r")) {
 			report.problems.add("contains invalid line endings (i.e. contains carriage return: '\\r')");
 		} else {
-			if (!hasExtension(path, ".xt") && !isBelowFolder(path.toString(), GENERATED_FOLDERS)) {
+			if (!hasExtension(path, ".xt") && !isBelowFolder(path.toString(), GENERATED_FOLDERS)
+					&& MODE != Mode.XSEMANTICS && MODE != Mode.Xpect) {
+				// check file end (single '\n' character)
 				final int len = content.length();
 				final char charLast = len > 0 ? content.charAt(len - 1) : 0;
 				final char char2ndToLast = len > 1 ? content.charAt(len - 2) : 0;
-
 				if (len > 0 && (charLast != '\n' || char2ndToLast == '\n')) {
 					report.problems.add("does not end with a single empty line");
-					writeFile(path, fixFileEnding(content));
+					if (FIX_FILE_ENDING) {
+						writeFile(path, fixFileEnding(content));
+					}
 				}
+				// check line end (no trailing white-space)
 				int lineNumber;
 				if ((lineNumber = containsTrailingWhiteSpace(content)) > 0) {
-					report.problems.add("must not contain lines with trailing white-space (line " + lineNumber + ")");
-					writeFile(path, trimTrailingWhiteSpace(content));
+					report.problems
+							.add("must not contain lines with trailing white-space (line " + lineNumber + ")");
+					if (FIX_TRAILING_WHITE_SPACE) {
+						writeFile(path, trimTrailingWhiteSpace(content));
+					}
 				}
 			}
 			if (!isRegisteredAsThirdParty && !hasCorrectCopyrightHeader(path, content)) {
@@ -425,7 +576,8 @@ public class FileChecker extends AbstractFileChecker {
 					&& !content.contains(COPYRIGHT_GEN_MODEL_PROPERTY)) {
 				report.problems.add(".xcore file does not contain correct 'copyrightText' genModel property");
 			}
-			if (!isRegisteredAsThirdParty && !hasExtension(path, ".adoc") && content.contains("@" + "author")) {
+			if (!isRegisteredAsThirdParty && MODE != Mode.XSEMANTICS && MODE != Mode.Xpect
+					&& !hasExtension(path, ".adoc") && content.contains("@" + "author")) {
 				report.problems.add("must not contain author tags");
 			}
 		}
@@ -450,11 +602,19 @@ public class FileChecker extends AbstractFileChecker {
 				&& !content.contains(bundleSymbolicNamePropertyAndValue + ";")) {
 			report.problems.add("property 'Bundle-SymbolicName' missing or has incorrect value");
 		}
-		if (!content.contains("Bundle-Name: %pluginName")) {
-			report.problems.add("property 'Bundle-Name' missing or does not have value \"%pluginName\"");
+		if (MODE != Mode.XSEMANTICS && MODE != Mode.Xpect) {
+			if (!content.contains("Bundle-Name: %pluginName")) {
+				report.problems.add("property 'Bundle-Name' missing or does not have value \"%pluginName\"");
+			}
 		}
 		if (!content.contains("Bundle-Vendor: %providerName")) {
 			report.problems.add("property 'Bundle-Vendor' missing or does not have value \"%providerName\"");
+		}
+		if (countSubstring(content, "Bundle-Name") > 1) {
+			report.problems.add("property 'Bundle-Vendor' provided more than once");
+		}
+		if (countSubstring(content, "Bundle-Vendor") > 1) {
+			report.problems.add("property 'Bundle-Vendor' provided more than once");
 		}
 	}
 
@@ -483,8 +643,8 @@ public class FileChecker extends AbstractFileChecker {
 	protected void checkFolder(Path path, int depth, Report report) {
 		if (depth == 0) {
 			checkFolderRepositoryRoot(path, report);
-		} else if (depth == 2 && !isBelowFolder(path.toString(), "n4js/n4js-libraries")) {
-			checkFolderBundleRoot(path, report);
+		} else if (depth == DEPTH_OF_PROJECTS && !path.endsWith(".git")) {
+			checkFolderProjectRoot(path, report);
 		}
 	}
 
@@ -497,14 +657,17 @@ public class FileChecker extends AbstractFileChecker {
 		assertContainsFileWithName(path, FILE_NAME__EPL, report);
 	}
 
-	private void checkFolderBundleRoot(Path path, Report report) {
+	private void checkFolderProjectRoot(Path path, Report report) {
 
 		if (!containsFileWithName(path, FILE_NAME__DOT_PROJECT)) {
 			report.problems.add("folder on level 2 does not contain an Eclipse '.project' file");
 		}
 
+		final boolean isFeatureBundle = isBelowFolder(path.toString(), "features")
+				|| containsFileWithName(path, FILE_NAME__FEATURE_XML);
+
 		if (inN4Repo(path)) {
-			if (isBelowFolder(path.toString(), "features")) {
+			if (isFeatureBundle) {
 				// feature bundles
 				// nothing to check here
 			} else {
@@ -512,7 +675,7 @@ public class FileChecker extends AbstractFileChecker {
 				assertContainsFileWithName(path, FILE_NAME__PLUGIN_PROPERTIES, report);
 			}
 		} else {
-			if (isBelowFolder(path.toString(), "features")) {
+			if (isFeatureBundle) {
 				// feature bundles
 				// See Section 4.3 Features Licenses and Feature Update Licenses
 				// at https://www.eclipse.org/legal/guidetolegaldoc.php
@@ -527,6 +690,9 @@ public class FileChecker extends AbstractFileChecker {
 					report.problems.add("feature bundles should not contain an '" + FILE_NAME__ABOUT_HTML + "' file");
 				}
 				assertContainsFileWithName(path, FILE_NAME__FEATURE_PROPERTIES, report);
+
+				// TODO consider checking that feature.properties is among the bin.includes in build.properties
+				// (note: this seems to be required for feature plugins, but not for ordinary plugins)
 			} else {
 				// all other bundles
 				// See https://www.eclipse.org/legal/guidetolegaldoc.php#Abouts
@@ -550,29 +716,36 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static int beginIndexWithoutCopyrightHeader(Path path, String content) {
-		if (hasExtension(path, ".xml")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_XML, false);
+		if (hasExtension(path, ".xml", ".ant", ".md", ".def")) {
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_XML, "<?xml ");
 
 		} else if (hasExtension(path, ".html")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_HTML, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_HTML, "<!DOCTYPE ");
 
 		} else if (hasExtension(path, ".adoc")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_ADOC);
 
-		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts", "Jenkinsfile", ".xt",
+		} else if (hasExtension(path, ".n4js", "n4jsx", ".n4jsd", ".n4mf", ".n4ts", ".xt",
 				"xt_IN_FOLDER_my", "xt_", "xt_IN_FOLDER_P", "xt_IN_FOLDER_p", "xt.DISABLED")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS, false);
+			if (MODE == Mode.Xpect) {
+				return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_V2);
+			} else {
+				return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
+			}
 
 		} else if (hasExtension(path, ".js")) {
-			int startPos = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS, false);
-			int startPosShort = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS_SHORT, false);
+			int startPos = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS);
+			int startPosShort = beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_JS_SHORT);
 			return Math.max(startPos, startPosShort);
 
 		} else if (hasExtension(path, ".tex")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TEX, false);
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TEX);
 
-		} else if (hasExtension(path, ".sh", ".idx")) {
-			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_SH, true);
+		} else if (hasExtension(path, ".sh", ".idx", ".yml")) {
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_SH, "#!/");
+
+		} else if (hasExtension(path, ".txt")) {
+			return beginIndexWithoutCopyrightHeader(content, COPYRIGHT_HEADER_TXT);
 
 		} else {
 			int base = 0;
@@ -598,14 +771,24 @@ public class FileChecker extends AbstractFileChecker {
 			if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER)) {
 				return base + COPYRIGHT_HEADER.length();
 			}
+			if (MODE == Mode.XSEMANTICS || MODE == Mode.Xpect) {
+				// Xpect and Xsemantics may also use the slightly different version COPYRIGHT_HEADER_V2
+				if (startsWithCopyrightHeader(content, COPYRIGHT_HEADER_V2)) {
+					return base + COPYRIGHT_HEADER_V2.length();
+				}
+			}
 			return 0;
 		}
 	}
 
-	private static int beginIndexWithoutCopyrightHeader(String content, String header, boolean skipBashHeader) {
+	private static int beginIndexWithoutCopyrightHeader(String content, String header, String... skipHeaderLines) {
 		int offset = 0;
-		if (skipBashHeader && content.startsWith("#!/")) {
-			offset = content.indexOf("\n") + 1;
+		if (skipHeaderLines != null && skipHeaderLines.length > 0) {
+			for (String skipLine : skipHeaderLines) {
+				if (content.startsWith(skipLine)) {
+					offset = content.indexOf("\n") + 1;
+				}
+			}
 		}
 		int startPos = startsWithCopyrightHeader(content, header, offset) ? header.length() : 0;
 		return startPos;
@@ -624,7 +807,18 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static boolean canContainBannedWord(Path path) {
-		for (String whitelisted : BANNED_WORDS_WHITELIST) {
+		final String[] whiteList;
+		switch (MODE) {
+		case XSEMANTICS:
+			whiteList = XSEMANTICS_BANNED_WORDS_WHITELIST;
+			break;
+		case Xpect:
+			whiteList = Xpect_BANNED_WORDS_WHITELIST;
+			break;
+		default:
+			whiteList = BANNED_WORDS_WHITELIST;
+		}
+		for (String whitelisted : whiteList) {
 			if (path.endsWith(whitelisted)) {
 				return true;
 			}
@@ -637,6 +831,7 @@ public class FileChecker extends AbstractFileChecker {
 	}
 
 	private static String containsWord(Path path, String content, boolean skipCopyrightHeader, String... words) {
+		// skip copyright header (if requested)
 		if (skipCopyrightHeader) {
 			final int beginIndex = beginIndexWithoutCopyrightHeader(path, content);
 			content = content.substring(beginIndex);
@@ -647,6 +842,14 @@ public class FileChecker extends AbstractFileChecker {
 				content = content.replace(COPYRIGHT_GEN_MODEL_PROPERTY.replace(" 2016 ", " 2017 "), ""); // FIXME
 			}
 		}
+		// skip "copyright" keyword in .xsemantics files
+		if (hasExtension(path, ".xsemantics")) {
+			final int idx = content.indexOf(COPYRIGHT_KEYWORD_IN_XSEMANTICS);
+			if (idx >= 0) {
+				content = content.substring(0, idx) + content.substring(idx + COPYRIGHT_KEYWORD_IN_XSEMANTICS.length());
+			}
+		}
+		// actually check for contained words
 		for (String word : words) {
 			if (content.contains(word) || content.contains(word.toLowerCase()) // FIXME use containsIgnoreCase()
 					|| content.contains(word.toUpperCase())) {
@@ -656,12 +859,21 @@ public class FileChecker extends AbstractFileChecker {
 		return null;
 	}
 
+	private int countSubstring(String content, String substr) {
+		int cnt = 0;
+		int i = 0;
+		while ((i = content.indexOf(substr, i)) >= 0) {
+			cnt++;
+			i += substr.length();
+		}
+		return cnt;
+	}
+
 	// ################################################################################################################
 
 	/** Main method. */
 	public static void main(String[] args) {
-		final Path[] repoPaths = findRepoPaths(args);
-		final boolean success = new FileChecker().run(repoPaths);
+		final boolean success = new FileChecker().run(args);
 		System.exit(success ? 0 : 1);
 	}
 }

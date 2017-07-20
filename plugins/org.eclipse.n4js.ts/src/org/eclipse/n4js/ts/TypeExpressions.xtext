@@ -28,7 +28,7 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs"
 
 /*
  * cf. N4JSSec §4
- * Depending on where the type references is used, not all possible variants are allows.
+ * Depending on where the type references is used, not all possible variants are allowed.
  * This is however checked by the validator in order to
  * 1) provide better error messages
  * 2) simplify grammar
@@ -41,24 +41,18 @@ import "http://www.eclipse.org/n4js/ts/TypeRefs"
  * VarTypeRef: no Void, i.e.
  * AttributeTypeRef: no Void
  */
-TypeRef:
-	UnionTypeExpression;
-
-UnionTypeExpression returns TypeRef:
+TypeRef returns TypeRef:
 	IntersectionTypeExpression ({UnionTypeExpression.typeRefs+=current} ("|" typeRefs+=IntersectionTypeExpression)+)?;
 
 IntersectionTypeExpression returns TypeRef:
 	PrimaryTypeExpression ({IntersectionTypeExpression.typeRefs+=current} ("&" typeRefs+=PrimaryTypeExpression)+)?;
 
 PrimaryTypeExpression returns TypeRef:
-	( =>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression
+	( ArrowFunctionTypeExpression
 	| ArrayTypeRef
 	| TypeRefWithModifiers
 	| "(" TypeRef ")"
 	);
-
-BogusTypeRef returns TypeRef:
-	TypeRefWithModifiers;
 
 TypeRefWithModifiers returns StaticBaseTypeRef:
 	TypeRefWithoutModifiers =>followedByQuestionMark?='?'?;
@@ -66,6 +60,7 @@ TypeRefWithModifiers returns StaticBaseTypeRef:
 TypeRefWithoutModifiers returns StaticBaseTypeRef:
 	  ((ParameterizedTypeRef | ThisTypeRef) => dynamic?='+'?)
 	| TypeTypeRef
+	
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -74,19 +69,10 @@ TypeRefFunctionTypeExpression returns StaticBaseTypeRef:
 	  ParameterizedTypeRef
 	| ArrayTypeRef
 	| TypeTypeRef
+	
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD
 	;
-
-TypeRefForCast returns StaticBaseTypeRef:
-	  ParameterizedTypeRef
-	| ArrayTypeRef
-	| ThisTypeRef
-	| TypeTypeRef
-	| FunctionTypeExpressionOLD
-	| ArrowFunctionTypeExpression
-	| UnionTypeExpressionOLD
-	| IntersectionTypeExpressionOLD;
 
 TypeArgInTypeTypeRef returns TypeArgument:
 	  ParameterizedTypeRefNominal
@@ -111,14 +97,14 @@ FunctionTypeExpressionOLD returns FunctionTypeExpression:
 	('@' 'This' '(' declaredThisType=TypeRefFunctionTypeExpression ')')?
 	'function'
 	('<' ownedTypeVars+=TypeVariable (',' ownedTypeVars+=TypeVariable)* '>')?
-	'(' TAnonymousFormalParameterList ')'
-	(':' returnTypeRef=TypeRef)?
+	'(' TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 	'}';
 
 ArrowFunctionTypeExpression returns FunctionTypeExpression:
-	{FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>' returnTypeRef=PrimaryTypeExpression;
+	=>({FunctionTypeExpression} '(' TAnonymousFormalParameterList ')' '=>') returnTypeRef=PrimaryTypeExpression;
 
-fragment TAnonymousFormalParameterList*:
+// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
+fragment TAnonymousFormalParameterList* :
 	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?
 ;
 
@@ -126,7 +112,7 @@ fragment TAnonymousFormalParameterList*:
  * Used in type expressions, name is optional.
  */
 TAnonymousFormalParameter:
-	variadic?='...'? (=> name=BindingIdentifier<Yield=false> ':')? typeRef=TypeRef
+	variadic?='...'? (=>(name=BindingIdentifier<Yield=false> ->ColonSepTypeRef) | typeRef=TypeRef) 
 	DefaultFormalParameter
 ;
 
@@ -134,8 +120,7 @@ TAnonymousFormalParameter:
  * Used in Types language only.
  */
 TFormalParameter:
-	variadic?='...'? name=BindingIdentifier<Yield=false>
-	':' typeRef=TypeRef
+	variadic?='...'? name=BindingIdentifier<Yield=false> ColonSepTypeRef
 	DefaultFormalParameter
 ;
 
@@ -161,16 +146,23 @@ ParameterizedTypeRef returns ParameterizedTypeRef:
 	ParameterizedTypeRefNominal | ParameterizedTypeRefStructural;
 
 ParameterizedTypeRefNominal returns ParameterizedTypeRef:
-	declaredType=[Type|TypeReferenceName] (=> '<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>')?;
+	TypeAndTypeArguments;
 
 ArrayTypeRef returns ParameterizedTypeRef:
 	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
 
 ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 	definedTypingStrategy=TypingStrategyUseSiteOperator
-	declaredType=[Type|TypeReferenceName]
-	(=>'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>')?
+	TypeAndTypeArguments
 	('with' TStructMemberList)?;
+
+fragment TypeAndTypeArguments returns ParameterizedTypeRef:
+	declaredType=[Type|TypeReferenceName] (->TypeArguments)?
+;
+
+fragment TypeArguments *:
+	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'
+;
 
 fragment TStructMemberList*:  '{' (astStructuralMembers+=TStructMember (';'|',')?)*  '}';
 
@@ -188,15 +180,31 @@ TStructMember:
 TStructMethod:
 	=>
 	({TStructMethod}
-		('<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>')?
+		TypeVariables?
 	    name=IdentifierName '('
-	) TAnonymousFormalParameterList ')'
-	(':' returnTypeRef=TypeRef)?
+	)
+	TAnonymousFormalParameterList ')' ColonSepReturnTypeRef?
 ;
 
+// TODO extract TypeVariableContainer to be used here
+fragment TypeVariables*:
+	'<' typeVars+=TypeVariable (',' typeVars+=TypeVariable)* '>'
+;
+
+fragment ColonSepDeclaredTypeRef*:
+	':' declaredTypeRef=TypeRef
+;
+
+fragment ColonSepTypeRef*:
+	':' typeRef=TypeRef
+;
+
+fragment ColonSepReturnTypeRef*:
+	':' returnTypeRef=TypeRef
+;
 
 TStructField:
-	name=IdentifierName (optional?='?')? (':' typeRef=TypeRef)?
+	name=IdentifierName (optional?='?')? ColonSepTypeRef?
 ;
 
 TStructGetter:
@@ -204,7 +212,7 @@ TStructGetter:
 	'get'
 	name=IdentifierName)
 	(optional?='?')?
-	'(' ')' (':' declaredTypeRef=TypeRef)?
+	'(' ')' ColonSepDeclaredTypeRef?
 ;
 
 TStructSetter:
@@ -244,10 +252,7 @@ WildcardNewNotation returns Wildcard:
 	(usingInOutNotation?='out' declaredUpperBound=TypeRef)
 |	(usingInOutNotation?='in' declaredLowerBound=TypeRef);
 
-TypeVariable:
-	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
-
-TypeVariableWithDefSiteVariance returns TypeVariable:
+TypeVariable returns TypeVariable:
 	(declaredCovariant?='out' | declaredContravariant?='in')?
 	name=IDENTIFIER ('extends' declaredUpperBound=TypeRef)?;
 
