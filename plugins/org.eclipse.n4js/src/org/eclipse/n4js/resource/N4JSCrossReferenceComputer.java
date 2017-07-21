@@ -72,7 +72,7 @@ public class N4JSCrossReferenceComputer {
 
 		while (allContentsIter.hasNext()) {
 			EObject eObject = allContentsIter.next();
-			computeCrossRefs(eObject, acceptor);
+			computeCrossRefs(resource, eObject, acceptor);
 		}
 	}
 
@@ -80,7 +80,8 @@ public class N4JSCrossReferenceComputer {
 	 * Browse all references type by the EClass of the given EObject ignoring References between AST element to its
 	 * defined type and vice versa.
 	 */
-	private void computeCrossRefs(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
+	private void computeCrossRefs(Resource resource, EObject from,
+			IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
 		EList<EReference> references = from.eClass().getEAllReferences();
 		for (EReference eReference : references) {
 			if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
@@ -89,13 +90,13 @@ public class N4JSCrossReferenceComputer {
 					Object val = from.eGet(eReference);
 					// Handle both toOne and toMany cases
 					if (!eReference.isMany()) {
-						handleReferenceObject(from, acceptor, (EObject) val);
+						handleReferenceObject(resource, from, acceptor, (EObject) val);
 					} else {
 						@SuppressWarnings("unchecked")
 						BasicEList<EObject> list = (BasicEList<EObject>) val;
 						for (int i = 0; i < list.size(); i++) {
 							EObject to = list.basicGet(i);
-							handleReferenceObject(from, acceptor, to);
+							handleReferenceObject(resource, from, acceptor, to);
 						}
 					}
 				}
@@ -107,20 +108,22 @@ public class N4JSCrossReferenceComputer {
 	 * Collect references to type references, types and identifiable element (direct or as part of and property access
 	 * expression):
 	 */
-	private void handleReferenceObject(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, EObject to) {
+	private void handleReferenceObject(Resource resource, EObject from,
+			IAcceptor<ImmutablePair<EObject, EObject>> acceptor, EObject to) {
 		if (to instanceof TypeRef) {
-			handleTypeRef(from, acceptor, (TypeRef) to);
+			handleTypeRef(resource, from, acceptor, (TypeRef) to);
 		} else if (to instanceof Type) {
-			handleType(from, acceptor, (Type) to);
+			handleType(resource, from, acceptor, (Type) to);
 		} else if (to instanceof TMember) {
 			// Handle composed member
-			handleComposedMember(from, acceptor, (TMember) to);
+			handleComposedMember(resource, from, acceptor, (TMember) to);
 		} else if (to instanceof IdentifiableElement) {
-			handleIdentifiableElement(from, acceptor, (IdentifiableElement) to);
+			handleIdentifiableElement(resource, from, acceptor, (IdentifiableElement) to);
 		}
 	}
 
-	private void handleComposedMember(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TMember to) {
+	private void handleComposedMember(Resource resource, EObject from,
+			IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TMember to) {
 		if (ComposedMemberScope.isComposedMember(to)) {
 			// Special handling for composed members
 			// Add the constituent members
@@ -129,38 +132,40 @@ public class N4JSCrossReferenceComputer {
 				// we need to navigate to the original resource.
 				N4MemberDeclaration fromMemberDecl = (N4MemberDeclaration) constituentMember.getAstElement();
 				TMember originalMember = fromMemberDecl.getDefinedTypeElement();
-				handleIdentifiableElement(fromMemberDecl, acceptor, originalMember);
+				handleIdentifiableElement(resource, fromMemberDecl, acceptor, originalMember);
 			}
 		} else {
 			// Standard case
-			handleIdentifiableElement(from, acceptor, to);
+			handleIdentifiableElement(resource, from, acceptor, to);
 		}
 	}
 
 	/*
 	 * Extract declared type for the given type reference.
 	 */
-	private void handleTypeRef(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TypeRef to) {
+	private void handleTypeRef(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			TypeRef to) {
 		List<Type> toTypes = th.extractType(to);
 		for (Type toType : toTypes)
-			handleType(from, acceptor, toType);
+			handleType(resource, from, acceptor, toType);
 	}
 
-	private void handleType(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, Type to) {
+	private void handleType(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+			Type to) {
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
-				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
+				&& externalReferenceChecker.isResolvedAndExternal(resource, to)) {
 			acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
 		}
 	}
 
-	private void handleIdentifiableElement(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
+	private void handleIdentifiableElement(Resource resource, EObject from,
+			IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
 			IdentifiableElement to) {
 		if (to != null) {
-			Resource resource = to.eResource();
 			// guard against null resource that is sometimes returned if a member was put into a
 			// union type ref that is not contained in a resource and does not have an original decl
 			if (resource != null && !N4Scheme.isFromResourceWithN4Scheme(to)
-					&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
+					&& externalReferenceChecker.isResolvedAndExternal(resource, to)) {
 				acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));
 			} else if (resource == null && !to.eIsProxy()) {
 				// we want to record these imported names anyway
