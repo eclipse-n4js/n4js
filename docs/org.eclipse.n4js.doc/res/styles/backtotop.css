@@ -7,7 +7,7 @@ a.back-to-top {
 	text-indent: -9999px;
 	position: fixed;
 	z-index: 999;
-	right: 15%;
+	right: 8%;
 	bottom: 5%;
 	background: #032c52 url("up-arrow.png") no-repeat center 43%;
 	-webkit-border-radius: 30px;

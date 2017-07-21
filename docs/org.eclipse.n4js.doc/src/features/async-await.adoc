@@ -9,11 +9,11 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
+.Async/Await
+= Async/Await
 :doctype: book
 :toc: right
 
-.Async/Await
-= Async/Await
 
 Due to the event-driven nature inherent in JavaScript, asynchronous code has
 always been explicit and verbose, leading to projects which are hard to read and maintain.
