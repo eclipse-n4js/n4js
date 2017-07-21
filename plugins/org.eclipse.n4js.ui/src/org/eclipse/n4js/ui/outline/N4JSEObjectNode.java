@@ -16,7 +16,8 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode;
 
 /**
- * Special EObjectNode used to carry additional information, such as "isInherited".
+ * Special EObjectNode used to carry additional information, such as "isInherited". Created by
+ * {@link N4JSOutlineNodeFactory}.
  */
 public class N4JSEObjectNode extends EObjectNode {
 
