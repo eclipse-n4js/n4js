@@ -70,14 +70,10 @@ public class N4JSCrossReferenceComputer {
 			allContentsIter = resource.getAllContents();
 		}
 
-		System.out.println("All elements");
-		// GH-73: TODO Ignore cachedComposedMembers because they not real AST nodes!
 		while (allContentsIter.hasNext()) {
 			EObject eObject = allContentsIter.next();
-			System.out.println("eObject = " + eObject);
 			computeCrossRefs(eObject, acceptor);
 		}
-		System.out.println("End of all elements");
 	}
 
 	/*
@@ -131,9 +127,9 @@ public class N4JSCrossReferenceComputer {
 			for (TMember constituentMember : to.getConstituentMembers()) {
 				// Since the constituentMember node may actually be located in another resource,
 				// we need to navigate to the original resource.
-				TMember originalMember = ((N4MemberDeclaration) (constituentMember.getAstElement()))
-						.getDefinedTypeElement();
-				handleIdentifiableElement(from, acceptor, originalMember);
+				N4MemberDeclaration fromMemberDecl = (N4MemberDeclaration) constituentMember.getAstElement();
+				TMember originalMember = fromMemberDecl.getDefinedTypeElement();
+				handleIdentifiableElement(fromMemberDecl, acceptor, originalMember);
 			}
 		} else {
 			// Standard case

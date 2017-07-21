@@ -18,4 +18,5 @@ export public class X1 {
 }
 export public class X2 {
 	public foo: J;
-} 
+}
+

@@ -37,10 +37,14 @@ class ImportedNamesTest {
 	URI myInterfaceFour
 	URI myRoleLikeInterface
 	URI myVariableTwo
-	
+
 	URI resourceA
 	URI resourceB
 	URI resourceC
+
+	URI resourceX
+	
+	URI resourceY
 
 	private def getImportedNames(N4JSResource resource) {
 		val allDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
@@ -63,6 +67,23 @@ class ImportedNamesTest {
 
 		val resourceA = rs.getResource(resourceA, true) as N4JSResource
 		val importedQFNs = resourceA.getImportedNames
+		val importedNames = importedQFNs.filterNull.toSet.join(",")
+		// TODO GH-73: Expected?
+		println("imported names = " + importedNames)
+	}
+	
+	@Test
+	def void testImportedNamesComposedTypes() {
+		var rs = resourceSetProvider.get();
+		resourceX = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/X.n4js"))
+		resourceY = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/Y.n4js"))
+
+		rs.getResource(resourceX, true).contents
+		rs.getResource(resourceY, true).contents
+		EcoreUtil.resolveAll(rs)
+
+		val resourceX = rs.getResource(resourceY, true) as N4JSResource
+		val importedQFNs = resourceX.getImportedNames
 		val importedNames = importedQFNs.filterNull.toSet.join(",")
 		// TODO GH-73: Expected?
 		println("imported names = " + importedNames)
