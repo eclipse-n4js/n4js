@@ -19,6 +19,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.linking.impl.LinkingHelper;
@@ -102,6 +106,101 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			} else {
 				result = resolveInternalProxy(value, resource);
 			}
+		}
+		return result;
+	}
+
+	/**
+	 * This method overrides Xtext's standard behavior because we need special handling for composed members.
+	 */
+	@Override
+	protected void findLocalReferencesFromElement(
+			Predicate<URI> targetURIs,
+			EObject sourceCandidate,
+			Resource localResource,
+			Acceptor acceptor) {
+		URI sourceURI = null;
+		if (doProcess(sourceCandidate, targetURIs)) {
+			for (EReference ref : sourceCandidate.eClass().getEAllReferences()) {
+				Object value = sourceCandidate.eGet(ref, false);
+				if (sourceCandidate.eIsSet(ref) && value != null) {
+					if (ref.isContainment()) {
+						if (ref.isMany()) {
+							@SuppressWarnings("unchecked")
+							InternalEList<EObject> contentList = (InternalEList<EObject>) value;
+							for (int i = 0; i < contentList.size(); ++i) {
+								EObject childElement = contentList.basicGet(i);
+								if (!childElement.eIsProxy()) {
+									findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
+								}
+							}
+						} else {
+							EObject childElement = (EObject) value;
+							if (!childElement.eIsProxy()) {
+								findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
+							}
+						}
+					} else if (!ref.isContainer()) {
+						if (doProcess(ref, targetURIs)) {
+							if (ref.isMany()) {
+								@SuppressWarnings("unchecked")
+								InternalEList<EObject> values = (InternalEList<EObject>) value;
+								for (int i = 0; i < values.size(); ++i) {
+									EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
+											values.basicGet(i));
+									if (instanceOrProxy != null) {
+										URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
+										if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
+											sourceURI = (sourceURI == null)
+													? EcoreUtil2.getPlatformResourceOrNormalizedURI(sourceCandidate)
+													: sourceURI;
+											acceptor.accept(sourceCandidate, sourceURI, ref, i, instanceOrProxy,
+													refURI);
+										}
+									}
+								}
+							} else {
+								EObject instanceOrProxy = toValidInstanceOrNull(localResource, targetURIs,
+										(EObject) value);
+								if (instanceOrProxy != null) {
+									URI refURI = EcoreUtil2.getPlatformResourceOrNormalizedURI(instanceOrProxy);
+									if (referenceHasBeenFound(targetURIs, refURI, instanceOrProxy)) {
+										sourceURI = (sourceURI == null) ? EcoreUtil2
+												.getPlatformResourceOrNormalizedURI(sourceCandidate) : sourceURI;
+										acceptor.accept(sourceCandidate, sourceURI, ref, -1, instanceOrProxy, refURI);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
+		boolean result = false;
+		// Handle composed member
+		if (instanceOrProxy instanceof TMember
+				&& ((TMember) instanceOrProxy).getConstituentMembers().size() > 0) {
+			TMember member = (TMember) instanceOrProxy;
+			if (member.getConstituentMembers().size() > 0) {
+				for (TMember constituentMember : member.getConstituentMembers()) {
+					// GH-73: TODO this logics appear again and again. Consider solve this conceptual problem
+					// differently or extract this logic for reuse.
+					// Since the constituentMember node may actually be located in another resource,
+					// we need to navigate to the original resource.
+					N4MemberDeclaration fromMemberDecl = (N4MemberDeclaration) constituentMember.getAstElement();
+					TMember originalMember = fromMemberDecl.getDefinedTypeElement();
+
+					URI constituentReffURI = EcoreUtil2
+							.getPlatformResourceOrNormalizedURI(originalMember);
+					result = result || targetURIs.apply(constituentReffURI);
+				}
+			}
+		} else {
+			// Standard case
+			result = targetURIs.apply(refURI);
 		}
 		return result;
 	}

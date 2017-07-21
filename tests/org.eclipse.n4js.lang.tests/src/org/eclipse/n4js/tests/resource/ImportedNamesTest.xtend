@@ -43,7 +43,6 @@ class ImportedNamesTest {
 	URI resourceC
 
 	URI resourceX
-	
 	URI resourceY
 
 	private def getImportedNames(N4JSResource resource) {

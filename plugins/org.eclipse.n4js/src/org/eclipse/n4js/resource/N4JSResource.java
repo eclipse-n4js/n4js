@@ -1119,5 +1119,4 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 		};
 	}
-
 }
