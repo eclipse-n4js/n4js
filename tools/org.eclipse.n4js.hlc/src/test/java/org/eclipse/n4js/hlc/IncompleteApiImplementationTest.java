@@ -13,6 +13,7 @@ package org.eclipse.n4js.hlc;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.BeforeClass;
@@ -63,7 +64,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 	}
 
 	String fileToExecute_direct(String filename) {
@@ -97,7 +98,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 	}
 
 	void run(String[] args) throws ExitCodeException {
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 	}
 
 	static String runCaptureOut(String[] args) throws ExitCodeException, IOException {
@@ -116,7 +117,7 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 
 		setOutputfileSystemProperties(errorFile.getAbsolutePath(), outputFile.getAbsolutePath());
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		// cleanup properties.
 		setOutputfileSystemProperties("", "");

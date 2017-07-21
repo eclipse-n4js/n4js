@@ -1048,7 +1048,7 @@ public class N4jscBase {
 	 *            the code.
 	 * @return empty string or explanation
 	 */
-	protected static String explanationOfExitCode(int exit) {
+	public static String explanationOfExitCode(int exit) {
 		String ret = exitCodeExplained.get(exit);
 		if (ret == null)
 			return "";

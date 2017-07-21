@@ -48,7 +48,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String[] args = { "-pl", proot, "-t", "allprojects" };
 
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			assertEquals("Wrong exit code", N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
 			throw e;
@@ -68,7 +68,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String[] args = { "-pl", proot, "-t", "allprojects" };
 
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			assertFalse("Line should not have been reached, ExitCodeException expected.", true);
 		} catch (ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
@@ -94,7 +94,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 
 		String[] args = { "-pl", proot, file1 };
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 	}
 
@@ -107,7 +107,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 
 		String[] args = { "-pl" };
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 	}
 
@@ -119,7 +119,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		System.out.println(logMethodname());
 		String[] args = { "-h" };
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			assertTrue("Should have printed help and exited before", false);
 		} catch (ExitCodeException e) {
 			assertEquals("Wrong exit code.", N4jscBase.EXITCODE_SUCCESS, e.getExitCode());
@@ -135,7 +135,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String[] args = { "-h", "--debug", "--preferences", "xxx", "-t", "allprojects" }; // , "more1", "more2", "more3"
 		// };
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			assertTrue("Should have printed help and exited before", false);
 		} catch (ExitCodeException e) {
 			assertEquals("Wrong exit code (not 0).", N4jscBase.EXITCODE_SUCCESS, e.getExitCode());
@@ -168,7 +168,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		};
 
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
@@ -219,7 +219,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String proot = TARGET + "/" + WSP;
 		String[] args = { "--clean", "-pl", proot };
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			assertEquals("Exit with wrong exitcode", N4jscBase.EXITCODE_WRONG_CMDLINE_OPTIONS, e.getExitCode());
 			throw e;
@@ -239,7 +239,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String pathToFile = proot + "/" + project + "/src/C.n4js";
 		String[] args = { "--clean", "-pl", proot, "-t", "singlefile", pathToFile };
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			assertEquals("Exit with wrong exitcode", N4jscBase.EXITCODE_WRONG_CMDLINE_OPTIONS, e.getExitCode());
 			throw e;
@@ -259,7 +259,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String project = "TestCleanPrj1";
 		String pathToProject = proot + "/" + project;
 		String[] args = { "--clean", "-pl", proot, "-t", "projects", pathToProject };
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		assertEquals(1, countFilesCompiledToES(proot)); // 1 = 0 in TestCleanPrj1 + 1 in TestCleanPrj2
 	}
@@ -276,7 +276,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String project = "TestCleanPrj1";
 		String pathToProject = proot + "/" + project;
 		String[] args = { "-pl", proot, "-t", "projects", pathToProject };
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		assertEquals(4, countFilesCompiledToES(proot)); // 4 = 3 in TestCleanPrj1 + 1 in TestCleanPrj2
 	}
@@ -296,7 +296,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String pathToProject2 = proot + "/" + project2;
 		String[] args = { "-c", "-pl", proot, "-t", "projects", pathToProject1, pathToProject2 };
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 		assertEquals(0, countFilesCompiledToES(proot)); // 0 = 0 in TestCleanPrj1 + 0 in TestCleanPrj2
 	}
 
@@ -312,7 +312,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		String proot = TARGET + "/" + WSP;
 		String[] args = { "-c", "-t", "projects" };
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			assertEquals("Exit with wrong exitcode", N4jscBase.EXITCODE_WRONG_CMDLINE_OPTIONS, e.getExitCode());
 			throw e;
@@ -331,7 +331,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	public void testCleanAllProjects() throws ExitCodeException {
 		String proot = TARGET + "/" + WSP;
 		String[] args = { "-c", "-pl", proot, "-t", "allprojects" };
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		assertEquals(0, countFilesCompiledToES(proot)); // 0 = 0 in all projects inside wsp/basic
 	}

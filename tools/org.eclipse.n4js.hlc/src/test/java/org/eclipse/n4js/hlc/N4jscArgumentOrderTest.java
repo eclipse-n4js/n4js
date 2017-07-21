@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -100,7 +101,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 		System.setOut(ps);
 
 		try {
-			new N4jsc().doMain(shuffledArgs);
+			new N4jscBase().doMain(shuffledArgs);
 
 			Reader reader = new InputStreamReader(new ByteArrayInputStream(baos.toByteArray()));
 			BufferedReader bufferedReader = new BufferedReader(reader);

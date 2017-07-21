@@ -14,6 +14,7 @@ import static org.eclipse.n4js.hlc.IncompleteApiImplementationTest.runCaptureOut
 
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.BeforeClass;
@@ -38,7 +39,7 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 				"-t", "allprojects",
 				"-v"
 		};
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 	}
 
 	/***/

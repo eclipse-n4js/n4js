@@ -11,6 +11,7 @@
 package org.eclipse.n4js.hlc;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 
 /**
  * N4JS Compiler.
@@ -23,7 +24,7 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
  * is contained in an OSGI bundle) to facilitate dependency management through Tycho and reuse of the logic in tests and
  * MWE2 work flows (see {@link N4jscBase#doMain(String...)}).
  */
-public class N4jsc extends N4jscBase {
+public class N4jsc {
 
 	/**
 	 * Entry point to start the compiler. Parses the Parameters.
@@ -33,12 +34,14 @@ public class N4jsc extends N4jscBase {
 	 */
 	public static void main(String[] args) {
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
 			final int exitCode = e.getExitCode();
 			if (exitCode != N4jscBase.EXITCODE_SUCCESS) {
-				warn(e.getMessage() + " exitcode: " + exitCode + explanationOfExitCode(exitCode));
 				System.out.flush();
+				System.err
+						.println(e.getMessage() + " exitcode: " + exitCode + N4jscBase.explanationOfExitCode(exitCode));
+				System.err.flush();
 			}
 			System.exit(e.getExitCode());
 		}

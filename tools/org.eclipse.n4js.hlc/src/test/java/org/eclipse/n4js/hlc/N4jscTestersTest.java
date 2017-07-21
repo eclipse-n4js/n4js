@@ -77,7 +77,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		// TODO add proper assertion that test was actually executed properly!!!
 	}
@@ -108,7 +108,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		// TODO add proper assertion that test was actually executed properly!!!
 	}
@@ -129,7 +129,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 		final File file = new File(tempDir + "/test-catalog.json");
 		file.deleteOnExit();
 		final String actual = new String(
@@ -152,7 +152,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 		final File file = new File("test-catalog.json");
 		file.deleteOnExit();
 		final String actual = new String(
@@ -180,7 +180,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 		final File file = new File("test-catalog.json");
 		file.deleteOnExit();
 		final String actual = new String(
@@ -203,7 +203,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		};
 
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR, e.getExitCode());
@@ -226,7 +226,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		};
 
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR, e.getExitCode());

@@ -56,7 +56,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_CONFIGURATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_CONFIGURATION_ERROR, e.getExitCode());
@@ -81,7 +81,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_CONFIGURATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_CONFIGURATION_ERROR, e.getExitCode());
@@ -111,7 +111,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (final ExitCodeException e) {
 			assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
 			assertEquals(N4jscBase.EXITCODE_SUCCESS, e.getExitCode());
@@ -141,7 +141,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (final ExitCodeException e) {
 			assertFalse("install location was not cleaned, test file exists at " + testFile.getAbsolutePath(),
 					testFile.exists());
@@ -170,7 +170,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformSkipInstall"
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_CONFIGURATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
@@ -196,7 +196,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformSkipInstall"
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_CONFIGURATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
@@ -221,7 +221,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 			fail("Expecting exit code: " + N4jscBase.EXITCODE_CONFIGURATION_ERROR);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
@@ -247,7 +247,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformSkipInstall"
 		};
 		try {
-			new N4jsc().doMain(args);
+			new N4jscBase().doMain(args);
 		} catch (final ExitCodeException e) {
 			assertEquals(N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
 		}
@@ -273,7 +273,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(argsInstall);
+			new N4jscBase().doMain(argsInstall);
 		} catch (final ExitCodeException e) {
 			assertTrue("install location was not created", getTargetPlatformInstallLocation().exists());
 			assertEquals(N4jscBase.EXITCODE_SUCCESS, e.getExitCode());
@@ -289,7 +289,7 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"-t", BuildType.allprojects.toString()
 		};
 		try {
-			new N4jsc().doMain(argsSkipInstall);
+			new N4jscBase().doMain(argsSkipInstall);
 		} catch (final ExitCodeException e) {
 			assertTrue("install location still exists", getTargetPlatformInstallLocation().exists());
 			assertEquals(N4jscBase.EXITCODE_SUCCESS, e.getExitCode());

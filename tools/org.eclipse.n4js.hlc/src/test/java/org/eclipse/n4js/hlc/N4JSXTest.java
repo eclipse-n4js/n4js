@@ -12,6 +12,7 @@ package org.eclipse.n4js.hlc;
 
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +38,7 @@ public class N4JSXTest extends AbstractN4jscTest {
 
 		String p1Root = WS_ROOT + "/" + "P1";
 
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "projects", p1Root);
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "projects", p1Root);
 		assertFilesCompiledToES(1, p1Root);
 	}
 
@@ -48,7 +49,7 @@ public class N4JSXTest extends AbstractN4jscTest {
 
 		String p2Root = WS_ROOT + "/" + "P2";
 
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "projects", p2Root);
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "projects", p2Root);
 		assertFilesCompiledToES(3, p2Root);
 	}
 
@@ -59,11 +60,11 @@ public class N4JSXTest extends AbstractN4jscTest {
 
 		String p2Root = WS_ROOT + "/" + "P2";
 
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "singlefile", p2Root + "/src/foo.n4js");
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "singlefile", p2Root + "/src/foo.n4js");
 		assertFilesCompiledToES(1, p2Root);
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "singlefile", p2Root + "/src/bar.n4jsx");
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "singlefile", p2Root + "/src/bar.n4jsx");
 		assertFilesCompiledToES(2, p2Root);
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "singlefile", p2Root + "/src/bar2.n4jsx");
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "singlefile", p2Root + "/src/bar2.n4jsx");
 		assertFilesCompiledToES(3, p2Root);
 	}
 
@@ -74,7 +75,7 @@ public class N4JSXTest extends AbstractN4jscTest {
 
 		String p3Root = WS_ROOT + "/" + "P3";
 
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "projects", p3Root);
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "projects", p3Root);
 		assertFilesCompiledToES(2, p3Root);
 	}
 
@@ -87,9 +88,9 @@ public class N4JSXTest extends AbstractN4jscTest {
 
 		String p3Root = WS_ROOT + "/" + "P3";
 
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "singlefile", p3Root + "/src/foo.n4js");
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "singlefile", p3Root + "/src/foo.n4js");
 		assertFilesCompiledToES(1, p3Root);
-		new N4jsc().doMain("-pl", WS_ROOT, "-t", "singlefile", p3Root + "/src/bar.n4jsx");
+		new N4jscBase().doMain("-pl", WS_ROOT, "-t", "singlefile", p3Root + "/src/bar.n4jsx");
 		assertFilesCompiledToES(2, p3Root);
 	}
 }

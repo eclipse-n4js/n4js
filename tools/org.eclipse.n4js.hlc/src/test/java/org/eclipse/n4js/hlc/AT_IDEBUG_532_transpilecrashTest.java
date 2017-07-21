@@ -12,6 +12,7 @@ package org.eclipse.n4js.hlc;
 
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 		};
 
 		// compile
-		new N4jsc().doMain(args);
+		new N4jscBase().doMain(args);
 
 		// Make sure, we get here and have exactly one file compiled:
 		assertFilesCompiledToES(1, proot);
