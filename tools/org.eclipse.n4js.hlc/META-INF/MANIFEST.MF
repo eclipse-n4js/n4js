@@ -5,16 +5,6 @@ Bundle-Vendor: %providerName
 Bundle-Version: 1.0.0.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.hlc
 Export-Package: org.eclipse.n4js.hlc
-Require-Bundle: org.eclipse.n4js,
- org.eclipse.n4js.hlc.base,
- org.eclipse.n4js.n4mf,
- org.eclipse.n4js.regex,
- org.eclipse.n4js.ts,
- org.eclipse.n4js.utils,
- org.kohsuke.args4j;bundle-version="2.0.21",
- org.junit,
- org.eclipse.n4js.runner,
- org.eclipse.n4js.external.libraries,
- org.eclipse.n4js.n4jsx
+Require-Bundle: org.eclipse.n4js.hlc.base
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Import-Package: org.slf4j;version="1.7.2"

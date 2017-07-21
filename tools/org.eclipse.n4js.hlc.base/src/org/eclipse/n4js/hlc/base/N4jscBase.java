@@ -341,6 +341,27 @@ public class N4jscBase {
 	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
 
 	/**
+	 * POJO style entry point to start the compiler.
+	 *
+	 * @param args
+	 *            the parameters.
+	 */
+	public static void main(String[] args) {
+		try {
+			new N4jscBase().doMain(args);
+		} catch (ExitCodeException e) {
+			final int exitCode = e.getExitCode();
+			if (exitCode != N4jscBase.EXITCODE_SUCCESS) {
+				System.out.flush();
+				System.err
+						.println(e.getMessage() + " exitcode: " + exitCode + N4jscBase.explanationOfExitCode(exitCode));
+				System.err.flush();
+			}
+			System.exit(exitCode);
+		}
+	}
+
+	/**
 	 * This method can be used when the headless builder (a.k.a. n4jsc.jar) is to be invoked programmatically from
 	 * outside bundle {@code org.eclipse.n4js.hlc}, e.g. in tests or in MWE2 work flows.
 	 * <p>

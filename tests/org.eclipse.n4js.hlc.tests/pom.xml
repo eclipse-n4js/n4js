@@ -179,6 +179,15 @@ Contributors:
 						<id>run-pojo-surefire-tests</id>
 						<phase/> <!-- empty phase turns off the execution with id "run-pojo-surefire-tests" -->
 					</execution>
+					<execution>
+						<id>default-test</id>
+						<configuration>
+							<systemProperties>
+								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+							</systemProperties>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 
@@ -297,6 +306,86 @@ Contributors:
 	
 	
 	<profiles>
+		<profile>
+			<id>noTests</id>
+			<activation>
+				<property>
+					<name>noTests</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-testCompile</id>
+								<phase>none</phase>
+								<configuration>
+									<systemProperties>
+										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+									</systemProperties>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<version>${maven-resources-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>default-testResources</id>
+								<phase>none</phase>
+								<configuration>
+									<systemProperties>
+										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+									</systemProperties>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<version>${maven-surefire-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>default-test</id>
+								<phase>none</phase>
+								<configuration>
+									<systemProperties>
+										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+									</systemProperties>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>it-of-n4js-compiler-command</id>
+								<phase>none</phase>
+								<configuration>
+									<systemProperties>
+										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
+										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
+									</systemProperties>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>	
+	
+	
 		<!--
 			Extra profile activated in case a property for local deploys is set.
 			

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 
 /**
  * N4JS Compiler.
@@ -33,17 +32,6 @@ public class N4jsc {
 	 *            the parameters.
 	 */
 	public static void main(String[] args) {
-		try {
-			new N4jscBase().doMain(args);
-		} catch (ExitCodeException e) {
-			final int exitCode = e.getExitCode();
-			if (exitCode != N4jscBase.EXITCODE_SUCCESS) {
-				System.out.flush();
-				System.err
-						.println(e.getMessage() + " exitcode: " + exitCode + N4jscBase.explanationOfExitCode(exitCode));
-				System.err.flush();
-			}
-			System.exit(e.getExitCode());
-		}
+		N4jscBase.main(args);
 	}
 }

@@ -24,8 +24,6 @@ import java.nio.file.Files;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.hlc.EnvironmentVariableUtils;
-
 import com.google.common.base.Joiner;
 
 /**
