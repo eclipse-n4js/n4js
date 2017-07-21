@@ -1,6 +1,4 @@
 dist/eclipse-html/articles/index.html
-dist/eclipse-html/community.html
-dist/eclipse-html/downloads.html
 dist/eclipse-html/faq/comparison-java.html
 dist/eclipse-html/faq/comparison-typescript.html
 dist/eclipse-html/faq/index.html

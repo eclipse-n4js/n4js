@@ -1,16 +1,6 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <toc topic="dist/eclipse-html/articles/index.html" label="N4JS Articles">
-	<topic href="dist/eclipse-html/articles/index.html" label="Index">
-		<topic href="dist/eclipse-html/community.html" label="Forum"></topic>
-		<topic href="dist/eclipse-html/community.html#_n4js_blog" label="N4JS Blog"></topic>
-		<topic href="dist/eclipse-html/community.html#_developer_mailing_list" label="Developer Mailing List"></topic>
-		<topic href="dist/eclipse-html/community.html#_gitHub_issues" label="GitHub Issues"></topic>
-		<topic href="dist/eclipse-html/community.html#_eclipse_project_page" label="Eclipse Project Page"></topic>
-		<topic href="dist/eclipse-html/community.html#_the_eclipse_n4js_team" label="The Eclipse N4JS Team"></topic>
-		<topic href="dist/eclipse-html/downloads.html" label="Eclipse Installer (Oomph)"></topic>
-	</topic>
-	<topic href="dist/eclipse-html/community.html" label="Community"></topic>
-	<topic href="dist/eclipse-html/downloads.html" label="Download"></topic>
+	<topic href="dist/eclipse-html/articles/index.html" label="Index"></topic>
 	<topic href="dist/eclipse-html/faq/comparison-java.html" label="N4JS and Java">
 		<topic href="dist/eclipse-html/faq/comparison-java.html#_introduction" label="Introduction"></topic>
 		<topic href="dist/eclipse-html/faq/comparison-java.html#_similarities" label="Similarities">
