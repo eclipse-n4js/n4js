@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc;
+package org.eclipse.n4js.hlc.tests;
 
 import static java.util.Collections.singletonMap;
-import static org.eclipse.n4js.hlc.IncompleteApiImplementationTest.runCaptureOut;
+import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.IOException;
@@ -19,13 +19,12 @@ import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.N4jscBase.BuildType;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
-import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.Test;
 
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
-public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends BaseN4jscExternalTest {
 
 	@Override
 	protected Map<String, String> getNpmDependencies() {
@@ -39,9 +38,10 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		System.out.println(name.getMethodName());
-		setupWorkspace("external");
+		setupWorkspace("external_singleProjectOrFileCompile");
 		final String wsRoot = TARGET + "/" + WSP;
-		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
+		final String fileToCompile = wsRoot + "/external.project/src/Main.n4js";
+		final String fileToRun = fileToCompile;
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
@@ -51,12 +51,12 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 				"-r", fileToRun,
 				"--debug",
 				"--verbose",
-				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-t", BuildType.singlefile.toString(),
+				fileToCompile
 		};
 		final String out = runCaptureOut(args);
 		N4CliHelper.assertExpectedOutput(
-				"express properties: application, request, response, Route, Router, query, static", out);
+				"Application was created!", out);
 	}
 
 }

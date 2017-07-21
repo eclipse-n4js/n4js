@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc;
+package org.eclipse.n4js.hlc.tests;
 
 import java.io.IOException;
 
@@ -21,9 +21,9 @@ import com.google.common.base.Predicates;
 
 /**
  */
-public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
+public class AT_IDEBUG_532_transpilecrashTest extends AbstractN4jscTest {
 
-	static String WSP_212 = "GHOLD-212";
+	static String WSP_532 = "IDEBUG-532";
 
 	/**
 	 * Setup workspace with api & api-impl & compile
@@ -31,7 +31,7 @@ public class AT_GHOLD_212_transpilecrashTest extends AbstractN4jscTest {
 	 */
 	@BeforeClass
 	public static void setupWorkspace() throws IOException {
-		setupWorkspace(WSP_212, Predicates.alwaysTrue());
+		setupWorkspace(WSP_532, Predicates.alwaysTrue());
 	}
 
 	/** The Problem was, that nothing was compiled. */

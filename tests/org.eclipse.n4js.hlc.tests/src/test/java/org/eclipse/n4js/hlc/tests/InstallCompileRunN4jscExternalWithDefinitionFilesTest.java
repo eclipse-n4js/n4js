@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc;
+package org.eclipse.n4js.hlc.tests;
 
 import static java.util.Collections.singletonMap;
-import static org.eclipse.n4js.hlc.IncompleteApiImplementationTest.runCaptureOut;
+import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.IOException;
@@ -19,7 +19,6 @@ import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.N4jscBase.BuildType;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
-import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.Test;
 
 /**

@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc;
+package org.eclipse.n4js.hlc.tests;
 
 import static java.util.Collections.singletonMap;
-import static org.eclipse.n4js.hlc.IncompleteApiImplementationTest.runCaptureOut;
+import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
 import java.io.IOException;
@@ -19,28 +19,29 @@ import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.N4jscBase.BuildType;
 import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
-import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.Test;
 
 /**
- * Downloads, installs, compiles and runs 'express' where target platform file specifies version range.
+ * Downloads, installs, compiles and runs 'express'.
  */
-public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest {
+public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends BaseN4jscExternalTest {
 
 	@Override
 	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@\">=4.0.0 <5.0.0\"");
+		return singletonMap("express", "@4.13.4");
 	}
 
 	/**
-	 * Test for compiling project with external dependency specified within version range.
+	 * Test for checking the npm support in the headless case by downloading third party package, importing it and
+	 * running it with Common JS.
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
 		System.out.println(name.getMethodName());
-		setupWorkspace("external");
+		setupWorkspace("external_singleProjectOrFileCompile");
 		final String wsRoot = TARGET + "/" + WSP;
-		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
+		final String projectToCompile = wsRoot + "/external.project";
+		final String fileToRun = projectToCompile + "/src/Main.n4js";
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
@@ -50,11 +51,12 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 				"-r", fileToRun,
 				"--debug",
 				"--verbose",
-				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-t", BuildType.projects.toString(),
+				projectToCompile
 		};
 		final String out = runCaptureOut(args);
 		N4CliHelper.assertExpectedOutput(
-				"express properties: application, request, response, Route, Router, query, static", out);
+				"Application was created!", out);
 	}
+
 }

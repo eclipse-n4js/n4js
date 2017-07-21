@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc;
+package org.eclipse.n4js.hlc.tests;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Collections.emptyMap;

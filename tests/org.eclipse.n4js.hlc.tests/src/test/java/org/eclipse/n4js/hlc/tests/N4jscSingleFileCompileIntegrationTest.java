@@ -15,15 +15,14 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.Test;
 
 /**
  */
-public class N4jscSingleFileCompileTest extends AbstractN4jscTest {
+public class N4jscSingleFileCompileIntegrationTest extends AbstractN4jscIntegrationTest {
 
 	/***/
-	public N4jscSingleFileCompileTest() {
+	public N4jscSingleFileCompileIntegrationTest() {
 		super("fixture");
 	}
 

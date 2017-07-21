@@ -13,18 +13,17 @@ package org.eclipse.n4js.hlc.tests;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.helper.N4CliHelper;
 import org.junit.Test;
 
 /**
  * Tests API / implementation replacement when running via n4jsc.
  */
-public class N4jscAPIReplacementTest extends AbstractN4jscTest {
+public class N4jscAPIReplacementIntegrationTest extends AbstractN4jscIntegrationTest {
 
 	/**
 	 * Doin' what constructors do best: creating an instance.
 	 */
-	public N4jscAPIReplacementTest() {
+	public N4jscAPIReplacementIntegrationTest() {
 		super("fixtureAPIReplacement");
 	}
 
