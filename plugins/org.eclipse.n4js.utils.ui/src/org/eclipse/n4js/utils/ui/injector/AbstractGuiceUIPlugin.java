@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.injector;
+package org.eclipse.n4js.utils.ui.injector;
 
 import static java.util.Collections.emptyList;
 

@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.n4js.utils;singleton:=true
+Bundle-SymbolicName: org.eclipse.n4js.utils.ui;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
@@ -16,6 +16,7 @@ Require-Bundle: org.eclipse.n4js.releng.utils;resolution:=optional,
  org.eclipse.xtend.lib;bundle-version="2.4.2",
  org.apache.log4j;bundle-version="[1.2.0,2.0.0)";visibility:=reexport,
  org.objectweb.asm;bundle-version="5.0.1";resolution:=optional,
+ org.eclipse.xtext.ui,
  com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.5.0";visibility:=reexport,
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.5.0";visibility:=reexport,
  com.fasterxml.jackson.core.jackson-databind;bundle-version="2.5.0";visibility:=reexport,
@@ -29,22 +30,7 @@ Import-Package: com.jcraft.jsch,
  org.eclipse.jgit.transport,
  org.eclipse.jgit.util,
  org.eclipse.xtend.typesystem.emf
-Export-Package: org.eclipse.n4js.fileextensions,
- org.eclipse.n4js.utils,
- org.eclipse.n4js.utils.beans,
- org.eclipse.n4js.utils.collections,
- org.eclipse.n4js.utils.di.scopes,
- org.eclipse.n4js.utils.emf,
- org.eclipse.n4js.utils.git,
- org.eclipse.n4js.utils.injector,
- org.eclipse.n4js.utils.io,
- org.eclipse.n4js.utils.languages,
- org.eclipse.n4js.utils.nodemodel,
- org.eclipse.n4js.utils.process,
- org.eclipse.n4js.utils.resources,
- org.eclipse.n4js.utils.validation,
- org.eclipse.n4js.utils.validation.impl,
- org.eclipse.n4js.utils.validation.util,
- org.eclipse.n4js.xtext.scoping
+Export-Package: org.eclipse.n4js.utils.ui.injector,
+ org.eclipse.n4js.utils.ui.quickfix
 Bundle-Vendor: %providerName
 Bundle-ClassPath: .

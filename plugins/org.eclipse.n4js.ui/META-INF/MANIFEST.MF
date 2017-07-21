@@ -44,7 +44,8 @@ Require-Bundle: org.eclipse.n4js;visibility:=reexport,
  org.eclipse.jgit,
  com.fasterxml.jackson.core.jackson-annotations,
  com.fasterxml.jackson.core.jackson-core,
- com.fasterxml.jackson.core.jackson-databind
+ com.fasterxml.jackson.core.jackson-databind,
+ org.eclipse.n4js.utils.ui
 Import-Package: com.ibm.icu.text,
  org.apache.log4j
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

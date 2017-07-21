@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.quickfix;
+package org.eclipse.n4js.utils.ui.quickfix;
 
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
@@ -23,7 +23,7 @@ public interface QuickfixProviderSupplier extends Supplier<DefaultQuickfixProvid
 	/**
 	 * Unique ID of the {@code quickfixProviderSupplier} extension point.
 	 */
-	String EXTENSION_POINT_ID = "org.eclipse.n4js.utils.quickfixProviderSupplier";
+	String EXTENSION_POINT_ID = "org.eclipse.n4js.utils.ui.quickfixProviderSupplier";
 
 	/**
 	 * The {@link IConfigurationElement configuration element} property name that will be used to instantiate the

@@ -8,13 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.utils.quickfix;
+package org.eclipse.n4js.utils.ui.quickfix;
 
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.n4js.utils.quickfix.QuickfixProviderSupplier.CLAZZ_PROPERTY_NAME;
-import static org.eclipse.n4js.utils.quickfix.QuickfixProviderSupplier.EXTENSION_POINT_ID;
 import static org.eclipse.core.runtime.Platform.getExtensionRegistry;
+import static org.eclipse.n4js.utils.ui.quickfix.QuickfixProviderSupplier.CLAZZ_PROPERTY_NAME;
+import static org.eclipse.n4js.utils.ui.quickfix.QuickfixProviderSupplier.EXTENSION_POINT_ID;
 
 import java.util.List;
 
