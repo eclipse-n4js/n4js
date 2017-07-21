@@ -18,17 +18,18 @@ import org.eclipse.n4js.scoping.members.MethodFactory.FParFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
  * The abstract {@link SetterFactory} is the base class for the child classes {@link UnionSetterFactory} and
- * {@link IntersectionSetterFactory}. It implements the method {@link #create(String)} which gets its information through
- * abstract methods implemented in the child classes mentioned before The child classes are instantiated in
+ * {@link IntersectionSetterFactory}. It implements the method {@link #create(String)} which gets its information
+ * through abstract methods implemented in the child classes mentioned before The child classes are instantiated in
  * {@link IntersectionMemberFactory} and {@link UnionMemberFactory} respectively.
  * <p>
- * This class also defines the class {@link StandaloneFPar} which is based upon the class {@link FParFactory}
- * and reuses its method {@link FParFactory#create()}.
+ * This class also defines the class {@link StandaloneFPar} which is based upon the class {@link FParFactory} and reuses
+ * its method {@link FParFactory#create()}.
  */
 abstract class SetterFactory implements MemberFactory {
 	final ComposedMemberInfo cma;
@@ -81,6 +82,11 @@ abstract class SetterFactory implements MemberFactory {
 			List<TypeRef> typeRefs = cma.getTypeRefsOfMemberType(MemberType.SETTER, MemberType.FIELD);
 			return cma.getTypeSystem().createSimplifiedUnion(typeRefs, cma.getResource());
 		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to implement logic with regard to setters in {@code Union Types}. */
@@ -105,6 +111,10 @@ abstract class SetterFactory implements MemberFactory {
 			return cma.getTypeSystem().createSimplifiedIntersection(typeRefs, cma.getResource());
 		}
 
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to create formal parameters of setters. */

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.scoping.members;
 
+import java.util.List;
+
 import org.eclipse.n4js.ts.types.TMember;
 
 /**
@@ -22,5 +24,8 @@ public interface MemberFactory {
 
 	/** Returns a new composed {@link TMember}. */
 	public TMember create(String name);
+
+	/** Returns the constituent members */
+	public List<TMember> getConstituentMembers();
 
 }

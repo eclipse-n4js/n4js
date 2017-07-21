@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
@@ -62,11 +63,21 @@ public class N4JSCrossReferenceComputer {
 	 *            the logic that collects the passed EObject found in a cross reference
 	 */
 	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
-		TreeIterator<EObject> allContentsIter = resource.getAllContents();
+		TreeIterator<EObject> allContentsIter;
+		if (resource instanceof N4JSResource) {
+			allContentsIter = ((N4JSResource) resource).getAllContentIgnoreCachedElements();
+		} else {
+			allContentsIter = resource.getAllContents();
+		}
+
+		System.out.println("All elements");
+		// GH-73: TODO Ignore cachedComposedMembers because they not real AST nodes!
 		while (allContentsIter.hasNext()) {
 			EObject eObject = allContentsIter.next();
+			System.out.println("eObject = " + eObject);
 			computeCrossRefs(eObject, acceptor);
 		}
+		System.out.println("End of all elements");
 	}
 
 	/*
@@ -105,8 +116,28 @@ public class N4JSCrossReferenceComputer {
 			handleTypeRef(from, acceptor, (TypeRef) to);
 		} else if (to instanceof Type) {
 			handleType(from, acceptor, (Type) to);
+		} else if (to instanceof TMember) {
+			// Handle composed member
+			handleComposedMember(from, acceptor, (TMember) to);
 		} else if (to instanceof IdentifiableElement) {
 			handleIdentifiableElement(from, acceptor, (IdentifiableElement) to);
+		}
+	}
+
+	private void handleComposedMember(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TMember to) {
+		if (ComposedMemberScope.isComposedMember(to)) {
+			// Special handling for composed members
+			// Add the constituent members
+			for (TMember constituentMember : to.getConstituentMembers()) {
+				// Since the constituentMember node may actually be located in another resource,
+				// we need to navigate to the original resource.
+				TMember originalMember = ((N4MemberDeclaration) (constituentMember.getAstElement()))
+						.getDefinedTypeElement();
+				handleIdentifiableElement(from, acceptor, originalMember);
+			}
+		} else {
+			// Standard case
+			handleIdentifiableElement(from, acceptor, to);
 		}
 	}
 
@@ -120,13 +151,6 @@ public class N4JSCrossReferenceComputer {
 	}
 
 	private void handleType(EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor, Type to) {
-		if (to instanceof TMember && ComposedMemberScope.isComposedMember((TMember) to)) {
-			// TODO IDE-1253 / IDE-1806: handling of composed members in N4JSCrossReferenceComputer
-			if (to.eResource() == null) {
-				return; // quick fix: ignore this member (would lead to an exception below)
-			}
-		}
-
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 			acceptor.accept(new ImmutablePair<EObject, EObject>(from, to));

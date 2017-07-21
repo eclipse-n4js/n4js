@@ -15,14 +15,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.xbase.lib.Pair;
-
-import com.google.common.base.Joiner;
-
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
@@ -35,6 +32,10 @@ import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.xtext.xbase.lib.Pair;
+
+import com.google.common.base.Joiner;
+
 import it.xsemantics.runtime.RuleEnvironment;
 
 /**
@@ -527,4 +528,12 @@ public class ComposedMemberInfo {
 		return isVariadicButLastFParIsDifferent;
 	}
 
+	/**
+	 * Return the constituent members that comprise this composed member.
+	 */
+	public List<TMember> getConstituentMembers() {
+		initMemberAggregate();
+		// We copy the members here in order to have new nodes.
+		return this.siblings.stream().map(sibling -> TypeUtils.copy(sibling.getKey())).collect(Collectors.toList());
+	}
 }

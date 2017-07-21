@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ts.types;
 
+import org.eclipse.emf.common.util.EList;
 
 /**
  * <!-- begin-user-doc -->
@@ -24,6 +25,7 @@ package org.eclipse.n4js.ts.types;
  *   <li>{@link org.eclipse.n4js.ts.types.TMember#isDeclaredStatic <em>Declared Static</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TMember#isDeclaredOverride <em>Declared Override</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TMember#isHasComputedName <em>Has Computed Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TMember#getConstituentMembers <em>Constituent Members</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTMember()
@@ -134,6 +136,21 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * @generated
 	 */
 	void setHasComputedName(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TMember}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * The constituent members if this member is a composed member.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Constituent Members</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTMember_ConstituentMembers()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<TMember> getConstituentMembers();
 
 	/**
 	 * <!-- begin-user-doc -->

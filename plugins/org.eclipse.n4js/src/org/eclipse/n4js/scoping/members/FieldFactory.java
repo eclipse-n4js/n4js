@@ -16,6 +16,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 
@@ -77,6 +78,11 @@ abstract class FieldFactory implements MemberFactory {
 			TypeRef typeRef = typeRefs.get(0); // since this is a field, the typeRef is never a composed type
 			return typeRef;
 		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to implement logic with regard to fields in {@code Union Types}. */
@@ -101,6 +107,10 @@ abstract class FieldFactory implements MemberFactory {
 			TypeRef typeRef = typeRefs.get(0); // since this is a field, the typeRef is never a composed type
 			return typeRef;
 		}
-	}
 
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
+	}
 }

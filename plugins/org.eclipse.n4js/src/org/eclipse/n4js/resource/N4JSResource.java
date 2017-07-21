@@ -26,9 +26,11 @@ import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.impl.NotificationImpl;
 import org.eclipse.emf.common.util.AbstractEList;
+import org.eclipse.emf.common.util.AbstractTreeIterator;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.SegmentSequence;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
@@ -52,8 +54,11 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
+import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
+import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
@@ -1083,4 +1088,36 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			super.createAndAddDiagnostic(triple);
 		}
 	}
+
+	/**
+	 * Retrieves all contents but ignore cached elements such as subtree below cachedComposedElements.
+	 */
+	public TreeIterator<EObject> getAllContentIgnoreCachedElements() {
+		return new AbstractTreeIterator<EObject>(this, false) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Iterator<EObject> getChildren(Object obj) {
+				if (obj == N4JSResource.this) {
+					return N4JSResource.this.getContents().iterator();
+				} else {
+					if (!(obj instanceof ComposedTypeRef)) {
+						return ((EObject) obj).eContents().iterator();
+					} else {
+						// Ignore subtree below cachedComposedMembers
+						ComposedTypeRef composedTypeRef = (ComposedTypeRef) obj;
+						Iterator<EObject> iterator = composedTypeRef.eContents().stream()
+								.filter(child -> {
+									boolean isCachedComposedMembersSubtree = child instanceof TMember
+											&& ComposedMemberScope.isComposedMember((TMember) child);
+									return !isCachedComposedMembersSubtree;
+								})
+								.iterator();
+						return iterator;
+					}
+				}
+			}
+		};
+	}
+
 }

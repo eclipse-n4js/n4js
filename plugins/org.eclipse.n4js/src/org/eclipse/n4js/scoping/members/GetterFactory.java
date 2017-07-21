@@ -16,13 +16,14 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 
 /**
  * The abstract {@link GetterFactory} is the base class for the child classes {@link UnionGetterFactory} and
- * {@link IntersectionGetterFactory}. It implements the method {@link #create(String)} which gets its information through
- * abstract methods implemented in the child classes mentioned before The child classes are instantiated in
+ * {@link IntersectionGetterFactory}. It implements the method {@link #create(String)} which gets its information
+ * through abstract methods implemented in the child classes mentioned before The child classes are instantiated in
  * {@link IntersectionMemberFactory} and {@link UnionMemberFactory} respectively.
  */
 abstract class GetterFactory implements MemberFactory {
@@ -48,6 +49,7 @@ abstract class GetterFactory implements MemberFactory {
 		TypeUtils.setMemberTypeRef(getter, typeRef);
 		getter.setName(name);
 		getter.setDeclaredMemberAccessModifier(getAccessability());
+		getter.getConstituentMembers().addAll(getConstituentMembers());
 		return getter;
 	}
 
@@ -67,6 +69,11 @@ abstract class GetterFactory implements MemberFactory {
 			List<TypeRef> typeRefs = cma.getTypeRefsOfMemberType(MemberType.GETTER, MemberType.FIELD);
 			return cma.getTypeSystem().createSimplifiedIntersection(typeRefs, cma.getResource());
 		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to implement logic with regard to getters in {@code Union Types}. */
@@ -84,6 +91,11 @@ abstract class GetterFactory implements MemberFactory {
 		TypeRef getReturnTypeRefComposition() {
 			List<TypeRef> typeRefs = cma.getTypeRefsOfMemberType(MemberType.GETTER, MemberType.FIELD);
 			return cma.getTypeSystem().createSimplifiedUnion(typeRefs, cma.getResource());
+		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
 		}
 	}
 

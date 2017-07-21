@@ -14,14 +14,21 @@ import com.google.common.base.Objects;
 
 import java.lang.reflect.InvocationTargetException;
 
+import java.util.Collection;
+
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
@@ -58,6 +65,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isDeclaredStatic <em>Declared Static</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isDeclaredOverride <em>Declared Override</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isHasComputedName <em>Has Computed Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#getConstituentMembers <em>Constituent Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isHasNoBody <em>Has No Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#getDeclaredMemberAccessModifier <em>Declared Member Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isDeclaredAbstract <em>Declared Abstract</em>}</li>
@@ -146,6 +154,16 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * @ordered
 	 */
 	protected boolean hasComputedName = HAS_COMPUTED_NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getConstituentMembers() <em>Constituent Members</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConstituentMembers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TMember> constituentMembers;
 
 	/**
 	 * The default value of the '{@link #isHasNoBody() <em>Has No Body</em>}' attribute.
@@ -328,6 +346,18 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		hasComputedName = newHasComputedName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMETHOD__HAS_COMPUTED_NAME, oldHasComputedName, hasComputedName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<TMember> getConstituentMembers() {
+		if (constituentMembers == null) {
+			constituentMembers = new EObjectContainmentEList<TMember>(TMember.class, this, TypesPackage.TMETHOD__CONSTITUENT_MEMBERS);
+		}
+		return constituentMembers;
 	}
 
 	/**
@@ -639,6 +669,20 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * @generated
 	 */
 	@Override
+	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+		switch (featureID) {
+			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
+				return ((InternalEList<?>)getConstituentMembers()).basicRemove(otherEnd, msgs);
+		}
+		return super.eInverseRemove(otherEnd, featureID, msgs);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
 			case TypesPackage.TMETHOD__DECLARED_FINAL:
@@ -649,6 +693,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return isDeclaredOverride();
 			case TypesPackage.TMETHOD__HAS_COMPUTED_NAME:
 				return isHasComputedName();
+			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
+				return getConstituentMembers();
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				return isHasNoBody();
 			case TypesPackage.TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER:
@@ -666,6 +712,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
@@ -680,6 +727,10 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return;
 			case TypesPackage.TMETHOD__HAS_COMPUTED_NAME:
 				setHasComputedName((Boolean)newValue);
+				return;
+			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
+				getConstituentMembers().clear();
+				getConstituentMembers().addAll((Collection<? extends TMember>)newValue);
 				return;
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				setHasNoBody((Boolean)newValue);
@@ -717,6 +768,9 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 			case TypesPackage.TMETHOD__HAS_COMPUTED_NAME:
 				setHasComputedName(HAS_COMPUTED_NAME_EDEFAULT);
 				return;
+			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
+				getConstituentMembers().clear();
+				return;
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				setHasNoBody(HAS_NO_BODY_EDEFAULT);
 				return;
@@ -749,6 +803,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return declaredOverride != DECLARED_OVERRIDE_EDEFAULT;
 			case TypesPackage.TMETHOD__HAS_COMPUTED_NAME:
 				return hasComputedName != HAS_COMPUTED_NAME_EDEFAULT;
+			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
+				return constituentMembers != null && !constituentMembers.isEmpty();
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				return hasNoBody != HAS_NO_BODY_EDEFAULT;
 			case TypesPackage.TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER:
@@ -774,6 +830,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				case TypesPackage.TMETHOD__DECLARED_STATIC: return TypesPackage.TMEMBER__DECLARED_STATIC;
 				case TypesPackage.TMETHOD__DECLARED_OVERRIDE: return TypesPackage.TMEMBER__DECLARED_OVERRIDE;
 				case TypesPackage.TMETHOD__HAS_COMPUTED_NAME: return TypesPackage.TMEMBER__HAS_COMPUTED_NAME;
+				case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS: return TypesPackage.TMEMBER__CONSTITUENT_MEMBERS;
 				default: return -1;
 			}
 		}
@@ -800,6 +857,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				case TypesPackage.TMEMBER__DECLARED_STATIC: return TypesPackage.TMETHOD__DECLARED_STATIC;
 				case TypesPackage.TMEMBER__DECLARED_OVERRIDE: return TypesPackage.TMETHOD__DECLARED_OVERRIDE;
 				case TypesPackage.TMEMBER__HAS_COMPUTED_NAME: return TypesPackage.TMETHOD__HAS_COMPUTED_NAME;
+				case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS: return TypesPackage.TMETHOD__CONSTITUENT_MEMBERS;
 				default: return -1;
 			}
 		}

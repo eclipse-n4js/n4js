@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.utils
 
 import com.google.inject.Inject
+import java.util.Collections
 import java.util.Iterator
 import java.util.List
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -204,6 +205,9 @@ public class TypeHelper {
 	 * 			the list of extracted types. There can be multiple returned types due to composed type refs.
 	 */
 	def List<Type> extractType(TypeRef typeRef) {
+		if (typeRef === null) {
+			return Collections.emptyList();
+		}
 		switch (typeRef) {
 			ParameterizedTypeRef:
 				return extractType_ParameterizedTypeRef(typeRef).singletonList

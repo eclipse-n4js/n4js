@@ -25,11 +25,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.util.OnChangeEvictingCache.CacheAdapter;
-
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
@@ -43,6 +38,11 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.OnChangeEvictingCache.CacheAdapter;
+
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleEnvironment;
 
@@ -109,9 +109,12 @@ public final class ASTMetaInfoCache {
 			if (isCanceled()) {
 				return new Result<>(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
 			} else {
-				throw UtilN4.reportError(new IllegalStateException(
-						"cache miss: no actual type in cache for AST node: " + astNode
-								+ " in resource: " + resource.getURI()));
+				// TODO GH-73: Temporary hack. Reactivate the throw statement and solve cache miss problem, i.e. GH-95
+				Result<TypeRef> tr = new Result<>((TypeRef) astNode.eContainer());
+				return tr;
+				// throw UtilN4.reportError(new IllegalStateException(
+				// "cache miss: no actual type in cache for AST node: " + astNode
+				// + " in resource: " + resource.getURI()));
 			}
 		}
 		return result;

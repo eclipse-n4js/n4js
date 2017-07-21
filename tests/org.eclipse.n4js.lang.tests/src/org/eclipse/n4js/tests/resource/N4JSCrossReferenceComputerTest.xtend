@@ -12,7 +12,6 @@ package org.eclipse.n4js.tests.resource
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import java.util.ArrayList
 import java.util.LinkedHashSet
 import org.apache.commons.lang3.tuple.ImmutablePair
 import org.eclipse.emf.common.util.URI
@@ -51,6 +50,9 @@ class N4JSCrossReferenceComputerTest {
 	URI myRoleLikeInterface
 	URI myVariableTwo
 
+	URI resourceX
+	URI resourceY
+
 	@Test
 	def void testCrossRefVarDeclGeneric() {
 		var rs = resourceSetProvider.get();
@@ -79,6 +81,36 @@ class N4JSCrossReferenceComputerTest {
 		println(actualRefs);
 		println("---");
 		val expectedRefs = "class - C,class - Z"
+		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
+	}
+
+	@Test
+	def void testCrossRefComposedMember() {
+		var rs = resourceSetProvider.get();
+		resourceX = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/X.n4js"))
+		resourceY = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/Y.n4js"))
+
+		rs.getResource(resourceX, true).contents
+		rs.getResource(resourceY, true).contents
+
+		EcoreUtil.resolveAll(rs)
+
+		val refs = new LinkedHashSet<EObject>();
+
+		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceY, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
+			override accept(ImmutablePair<EObject, EObject> pair) {
+				val t = pair.right
+				println("Found " + t);
+				refs.add(t);
+			}
+		});
+
+		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
+		println("---");
+		println("Found");
+		println(actualRefs);
+		println("---");
+		val expectedRefs = "class - X1,class - X2,field - foo,field - foo"
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 
@@ -114,11 +146,11 @@ class N4JSCrossReferenceComputerTest {
 
 		val actualRefs = refs.filterNull.join(",");
 		val expectedRefs = "variable - two,method - myMethodFour,method - getElement,method - myMethodTwo,field - myAttributeTwo"
-		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 		println("---");
 		println("Found");
 		println(actualRefs);
 		println("---");
+		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 
 	private def String toStringRep(EObject eobj) {
