@@ -4,12 +4,16 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
 package org.eclipse.n4js.ui.outline
 
+import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.resource.ImageDescriptor
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
@@ -23,14 +27,18 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.jface.resource.ImageDescriptor
+import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.xtext.ui.editor.model.IXtextDocument
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
+import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.impl.BackgroundOutlineTreeProvider
-import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
+import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineMode
+import org.eclipse.xtext.util.CancelIndicator
 
 /**
  * Customization of the default outline structure.
@@ -43,9 +51,18 @@ import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
  * <p>
  * @see http://www.eclipse.org/Xtext/documentation.html#outline
  */
-class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider  {
+class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements IOutlineTreeProvider.ModeAware {
 
-
+	@Inject
+	ContainerTypesHelper containerTypesHelper
+	
+	/**
+	 * This is used for cycling through the modes in the quick outline view. It is set on demand to detect whether
+	 * we run in quick outline view or in normal outline view.
+	 */
+	private IOutlineTreeProvider.ModeAware modeAware = null;
+	
+	
 	/** casted access to the underlying label provider. */
 	private def N4JSLabelProvider getN4JSLabelProvider() {
 		return labelProvider as N4JSLabelProvider;
@@ -73,7 +90,7 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider  {
 	override void createChildren(IOutlineNode parentNode, EObject modelElement) {
 		checkCanceled()
 		if (modelElement !== null && parentNode.hasChildren()) {
-			createChildren_(parentNode,modelElement);
+			createChildren_(parentNode, modelElement);
 		}
 	}
 
@@ -114,11 +131,39 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider  {
 
 	// only create nodes for members (methods, fields) and field accessors (getter, setter)
 	def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
-		for (child : classifierDefinition.eContents.filterNull) {
-			if (isInstanceOfExpectedClassifierChildren(child)) {
-				parentNode.createNode(child)
+
+		val t = classifierDefinition.definedType as TClassifier;
+		if (t !== null && showInherited) {
+			val members = containerTypesHelper.fromContext(classifierDefinition).allMembers(t, false, true, true);
+			for (tchild : members.filterNull) {
+				if (tchild.astElement !== null) {
+					val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild.astElement, t));
+					if (node instanceof N4JSEObjectNode 
+						&& tchild.containingType!==null
+						&& tchild.containingType!=t
+					) {
+						(node as N4JSEObjectNode).isInherited = true;
+					}
+				}
+			}
+		} else {
+			for (child : classifierDefinition.eContents.filterNull) {
+				if (isInstanceOfExpectedClassifierChildren(child)) {
+					parentNode.createNode(child)
+				}
 			}
 		}
+
+	}
+
+	def EObjectNode createNodeForObjectWithContext(IOutlineNode parentNode, EObjectWithContext objectWithContext) {
+		checkCanceled();
+		val Object text = getText(objectWithContext);
+		val boolean isLeaf = isLeaf(objectWithContext.obj);
+		if (text === null && isLeaf)
+			return null;
+		val ImageDescriptor image = getImageDescriptor(objectWithContext);
+		return getOutlineNodeFactory().createEObjectNode(parentNode, objectWithContext.obj, image, text, isLeaf);
 	}
 
 	// create nodes for literals
@@ -197,4 +242,39 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider  {
 	def dispatch protected boolean isLeaf(ImportDeclaration id) {
 		id.importSpecifiers.size == 1
 	}
+	
+	
+	protected def boolean showInherited() {
+		if (modeAware !== null) {
+			return modeAware.getCurrentMode() == N4JSOutlineModes.SHOW_INHERITED_MODE;
+		}
+		return true; // use filter in normal outline
+	}
+	
+	override List<OutlineMode> getOutlineModes() {
+		getOrCreateModeAware.getOutlineModes();
+	}
+
+	override OutlineMode getCurrentMode() {
+		getOrCreateModeAware.getCurrentMode();
+	}
+
+	override OutlineMode getNextMode() {
+		getOrCreateModeAware.getNextMode();
+	}
+
+	override void setCurrentMode(OutlineMode outlineMode) {
+		getOrCreateModeAware.setCurrentMode(outlineMode);
+	}
+	
+	/**
+	 * Create lazy in order to be able to distinguish between quick and non-quick outline mode.
+	 */
+	def private ModeAware getOrCreateModeAware() {
+		if (modeAware === null) {
+			modeAware = new N4JSOutlineModes();
+		}
+		return modeAware;
+	}
+	
 }
