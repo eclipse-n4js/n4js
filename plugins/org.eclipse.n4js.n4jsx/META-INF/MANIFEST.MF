@@ -34,8 +34,6 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.core.jobs,
  org.eclipse.n4js,
  org.eclipse.n4js.n4jsx.model
-Import-Package: org.apache.log4j,
- org.eclipse.xtext.xbase.lib
 Export-Package: org.eclipse.n4js.n4jsx,
  org.eclipse.n4js.n4jsx.formatting2,
  org.eclipse.n4js.n4jsx.parser,

@@ -16,5 +16,3 @@ Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.n4js.generator.common,
  org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.runner.ui
-Import-Package: org.eclipse.n4js.n4mf,
- org.apache.log4j

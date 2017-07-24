@@ -9,6 +9,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.n4js.runner,
  org.eclipse.equinox.common,
  org.eclipse.emf.ecore,
- org.eclipse.n4js
+ org.eclipse.n4js,
+ org.apache.log4j
 Export-Package: org.eclipse.n4js.runner.chrome
-Import-Package: org.apache.log4j
