@@ -63,7 +63,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			return;
 		}
 		Iterable<QualifiedName> importedNames = resourceDescription.getImportedNames();
-		for (QualifiedName importedName : resourceDescription.getImportedNames()) {
+		for (QualifiedName importedName : importedNames) {
 			if (typesOrModulesToFind.contains(importedName)) {
 				resourceAccess.readOnly(
 						resourceDescription.getURI(),
