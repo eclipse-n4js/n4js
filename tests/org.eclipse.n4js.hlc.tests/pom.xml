@@ -291,9 +291,8 @@ Contributors:
 			<version>[15.0.0]</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
+    		<groupId>junit</groupId>
+    		<artifactId>junit</artifactId>
 		</dependency>
 	</dependencies>
 	
