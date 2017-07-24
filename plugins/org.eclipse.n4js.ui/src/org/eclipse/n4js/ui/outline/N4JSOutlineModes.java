@@ -56,8 +56,8 @@ public class N4JSOutlineModes implements ModeAware {
 	@Override
 	public void setCurrentMode(OutlineMode outlineMode) {
 		int newIndex = getOutlineModes().indexOf(outlineMode);
-		if (newIndex != -1)
+		if (newIndex != -1) {
 			index = newIndex;
+		}
 	}
-
 }

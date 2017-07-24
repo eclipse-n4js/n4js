@@ -51,8 +51,8 @@ import org.eclipse.xtext.util.CancelIndicator
  * <p>
  * This outline tree provider supports different modes. There are two use cases:
  * <ul>
- * 	<li>Quick Outline View: In this case, modes are toggled via CMD/CTRL-O. This simply means that 
- * 		{@link N4JSOutlineTreeProvider#getNextMode()} is called every time. These modes are defined in 
+ * 	<li>Quick Outline View: In this case, modes are toggled via CMD/CTRL-O. This simply means that
+ * 		{@link N4JSOutlineTreeProvider#getNextMode()} is called every time. These modes are defined in
  * 		{@link N4JSOutlineModes}. For that to work, the {@link IOutlineTreeProvider#ModeAware} protocol is used
  *  <li>Outline View: The normal outline view. In this case, toggle buttons are used to enable filtering. This
  * 		is achieved by the {@link N4JSShowInheritedMembersOutlineContribution}. After an object node has been
@@ -60,7 +60,7 @@ import org.eclipse.xtext.util.CancelIndicator
  * </ul>
  * There is no direct way of detecting the current use case. Since the "normal" outline view does not call any
  * method of {@link IOutlineTreeProvider#ModeAware}, we initialize the corresponding field
- * {@link N4JSOutlineTreeProvider#modeAware} on demand. If it is null we can then conclude that we are in "normal" 
+ * {@link N4JSOutlineTreeProvider#modeAware} on demand. If it is null we can then conclude that we are in "normal"
  * outline view mode, other wise in the quick outline view.
  * 
  * @see http://www.eclipse.org/Xtext/documentation.html#outline
@@ -69,14 +69,13 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 
 	@Inject
 	ContainerTypesHelper containerTypesHelper
-	
+
 	/**
 	 * This is used for cycling through the modes in the quick outline view. It is set on demand to detect whether
 	 * we run in quick outline view or in normal outline view.
 	 */
 	private IOutlineTreeProvider.ModeAware modeAware = null;
-	
-	
+
 	/** casted access to the underlying label provider. */
 	private def N4JSLabelProvider getN4JSLabelProvider() {
 		return labelProvider as N4JSLabelProvider;
@@ -145,9 +144,9 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 
 	/**
 	 * Create nodes for members (methods, fields) and field accessors (getter, setter).
-	 * If not turned off, also inherited (and consumed or polyfilled) members are shown. 
+	 * If not turned off, also inherited (and consumed or polyfilled) members are shown.
 	 */
-	 def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
+	def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
 
 		val t = classifierDefinition.definedType as TClassifier;
 		if (t !== null && showInherited) {
@@ -155,10 +154,8 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 			for (tchild : members.filterNull) {
 				if (tchild.astElement !== null) {
 					val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild.astElement, t));
-					if (node instanceof N4JSEObjectNode 
-						&& tchild.containingType!==null
-						&& tchild.containingType!=t
-					) {
+					if (node instanceof N4JSEObjectNode && tchild.containingType !== null &&
+						tchild.containingType != t) {
 						(node as N4JSEObjectNode).isInherited = true;
 					}
 				}
@@ -239,7 +236,7 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	 */
 	def dispatch protected boolean isLeaf(N4ClassifierDefinition classifierDefinition) {
 		val t = classifierDefinition.definedType as TClassifier;
-		if (t===null) {
+		if (t === null) {
 			return true;
 		}
 		if (showInherited) {
@@ -270,15 +267,14 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	def dispatch protected boolean isLeaf(ImportDeclaration id) {
 		id.importSpecifiers.size == 1
 	}
-	
-	
+
 	protected def boolean showInherited() {
 		if (modeAware !== null) {
 			return modeAware.getCurrentMode() == N4JSOutlineModes.SHOW_INHERITED_MODE;
 		}
 		return true; // use filter in normal outline
 	}
-	
+
 	override List<OutlineMode> getOutlineModes() {
 		getOrCreateModeAware.getOutlineModes();
 	}
@@ -294,7 +290,7 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	override void setCurrentMode(OutlineMode outlineMode) {
 		getOrCreateModeAware.setCurrentMode(outlineMode);
 	}
-	
+
 	/**
 	 * Create lazy in order to be able to distinguish between quick and non-quick outline mode.
 	 */
@@ -304,5 +300,5 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		}
 		return modeAware;
 	}
-	
+
 }

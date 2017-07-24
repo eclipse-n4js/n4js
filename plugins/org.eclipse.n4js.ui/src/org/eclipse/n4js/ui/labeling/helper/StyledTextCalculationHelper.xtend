@@ -64,7 +64,7 @@ class StyledTextCalculationHelper {
 	private static val OUTLINE_TYPE_REF_LENGTH_THRESHOLD = 30;
 
 	private N4JSLabelProvider labelProvider;
-	
+
 	@Inject
 	private LabelCalculationHelper labelCalculationHelper
 
@@ -100,18 +100,17 @@ class StyledTextCalculationHelper {
 			val TMember member = (objectWithContext.obj as N4MemberDeclaration).definedTypeElement;
 			if (member !== null && member.containingType !== null &&
 				member.containingType != objectWithContext.context) {
-					
-				val orgDest = " from " + labelCalculationHelper.dispatchDoGetText(member.containingType);	
-					
+
+				val orgDest = " from " + labelCalculationHelper.dispatchDoGetText(member.containingType);
+
 				if (member.polyfilled) {
 					styledText.append(" polyfilled" + orgDest, N4JSStylers.POLYFILLED_MEMBERS_STYLER);
-				} else if (member.containingType instanceof TInterface
-					&& objectWithContext.context instanceof TClass) {
-						styledText.append(" consumed" + orgDest, N4JSStylers.CONSUMED_MEMBERS_STYLER);
+				} else if (member.containingType instanceof TInterface && objectWithContext.context instanceof TClass) {
+					styledText.append(" consumed" + orgDest, N4JSStylers.CONSUMED_MEMBERS_STYLER);
 				} else {
 					styledText.append(" inherited" + orgDest, N4JSStylers.INHERITED_MEMBERS_STYLER);
 				}
-				
+
 			}
 		}
 		return styledText;
@@ -119,17 +118,17 @@ class StyledTextCalculationHelper {
 
 	// produces e.g. functionName(param1TypeName, param2TypeName) : returnTypeName
 	def dispatch StyledString dispatchGetStyledText(FunctionDefinition functionDefinition) {
-		var styledText = getLabelProvider.getSuperStyledText(functionDefinition)
-		val definedType = functionDefinition.definedType
-		
+		var styledText = getLabelProvider.getSuperStyledText(functionDefinition);
+		val definedType = functionDefinition.definedType;
+
 		if (definedType instanceof TFunction) {
-			styledText = styledText.appendStyledTextForFormalParameters(functionDefinition, definedType)
-			styledText = styledText.append(definedType.typeVars.handleTypeVars)
+			styledText = styledText.appendStyledTextForFormalParameters(functionDefinition, definedType);
+			styledText = styledText.append(definedType.typeVars.handleTypeVars);
 
 			val typeStr = (if (!definedType.constructor && definedType.returnTypeRef !== null)
 					" : " + getTypeRefDescription(definedType.returnTypeRef)
 				else
-					"")
+					"");
 
 			return if (functionDefinition.returnTypeRef === null) {
 				// type was inferred
@@ -138,24 +137,24 @@ class StyledTextCalculationHelper {
 				styledText.append(typeStr)
 			}
 		}
-		return styledText
+		return styledText;
 	}
 
 	// produces e.g. <T, U>
 	def private handleTypeVars(List<TypeVariable> typeVars) {
-		if (typeVars.size > 0) " <" + typeVars.map[name].join(", ") + ">" else ""
+		if (typeVars.size > 0) " <" + typeVars.map[name].join(", ") + ">" else "";
 	}
 
 	// produces e.g. getterName() : returnTypeName
 	def dispatch StyledString dispatchGetStyledText(N4GetterDeclaration n4GetterDeclaration) {
-		var styledText = getLabelProvider.getSuperStyledText(n4GetterDeclaration)
-		val definedGetter = n4GetterDeclaration.definedGetter
+		var styledText = getLabelProvider.getSuperStyledText(n4GetterDeclaration);
+		val definedGetter = n4GetterDeclaration.definedGetter;
 
 		if (definedGetter !== null) {
 			val typeStr = (if (definedGetter.declaredTypeRef !== null)
 					" : " + getTypeRefDescription(definedGetter.declaredTypeRef)
 				else
-					"")
+					"");
 
 			return if (n4GetterDeclaration.declaredTypeRef === null) {
 				// type was inferred
@@ -180,14 +179,14 @@ class StyledTextCalculationHelper {
 
 	// produces e.g. fieldName : fieldTypeName
 	def dispatch StyledString dispatchGetStyledText(N4FieldDeclaration n4FieldDeclaration) {
-		val styledText = getLabelProvider.getSuperStyledText(n4FieldDeclaration)
-		val definedField = n4FieldDeclaration.definedField
-		
+		val styledText = getLabelProvider.getSuperStyledText(n4FieldDeclaration);
+		val definedField = n4FieldDeclaration.definedField;
+
 		val typeStr = (if (definedField?.typeRef !== null)
 				" : " + getTypeRefDescription(definedField.typeRef)
 			else
-				"")
-		
+				"");
+
 		return if (n4FieldDeclaration.declaredTypeRef === null) {
 			// type was inferred
 			styledText?.append(typeStr, INFERRED_TYPE_STYLER)

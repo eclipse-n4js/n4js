@@ -24,6 +24,9 @@ import com.google.inject.Inject;
  */
 public class N4JSShowInheritedMembersOutlineContribution extends AbstractFilterOutlineContribution {
 
+	/**
+	 * Preference key to store default mode.
+	 */
 	public static final String PREFERENCE_KEY = "ui.outline.showInherited";
 
 	@Inject
