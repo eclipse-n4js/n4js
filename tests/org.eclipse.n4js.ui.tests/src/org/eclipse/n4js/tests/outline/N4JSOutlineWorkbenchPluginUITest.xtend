@@ -255,4 +255,36 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 		));
 	}
 	
+	/**
+	 * Special case for inherited case, basically testing N4JSOutlineTree#isLeaf.
+	 */
+	@Test
+	def void testModesWithMemberlessSubclass() throws Exception {
+		val model = '''
+				class A { foo; }
+				class B extends A {}
+				'''
+		var rootNode = assertNoException(model, "owned");
+		assertEquals("There is only one top level node", rootNode.children.length, 1);
+
+		var documentNode = rootNode.children.get(0);
+
+		// test document level nodes
+		assertNodeChildrenTextDeep(documentNode, newLinkedHashMap(
+				"A" -> #["foo : any"],
+				"B" -> #[]
+		));
+		
+		rootNode = assertNoException(model, "inherited");
+		assertEquals("There is only one top level node", rootNode.children.length, 1);
+
+		documentNode = rootNode.children.get(0);
+
+		// test document level nodes
+		assertNodeChildrenTextDeep(documentNode, newLinkedHashMap(
+				"A" -> #["foo : any"],
+				"B" -> #["foo : any inherited from A"]
+		));
+	}
+	
 }

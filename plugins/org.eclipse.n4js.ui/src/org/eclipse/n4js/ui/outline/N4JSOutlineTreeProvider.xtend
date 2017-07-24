@@ -233,10 +233,21 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		!script.eContents.exists[isInstanceOfExpectedScriptChildren]
 	}
 
-	// suppress + symbol in outline when classifier has no members
-	// or we have a broken AST and the defined type of the classifier is not available yet
-	def dispatch protected boolean isLeaf(N4ClassifierDefinition it) {
-		null === definedType || !eContents.exists[isInstanceOfExpectedClassifierChildren]
+	/*
+	 * suppress + symbol in outline when classifier has no members
+	 * or we have a broken AST and the defined type of the classifier is not available yet
+	 */
+	def dispatch protected boolean isLeaf(N4ClassifierDefinition classifierDefinition) {
+		val t = classifierDefinition.definedType as TClassifier;
+		if (t===null) {
+			return true;
+		}
+		if (showInherited) {
+			val members = containerTypesHelper.fromContext(classifierDefinition).members(t, false, true);
+			return members.isNullOrEmpty;
+		} else {
+			return !classifierDefinition.eContents.exists[isInstanceOfExpectedClassifierChildren]
+		}
 	}
 
 	// fields should have never children
