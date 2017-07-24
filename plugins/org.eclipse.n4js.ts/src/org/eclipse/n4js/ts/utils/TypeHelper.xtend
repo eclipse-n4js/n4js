@@ -14,11 +14,14 @@ import com.google.inject.Inject
 import java.util.Collections
 import java.util.Iterator
 import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
@@ -198,13 +201,38 @@ public class TypeHelper {
 	}
 
 	/**
+	 * Check if an EObject is a composed member. GH-73: TODO: duplicate with {@code ComposedMemberScope#isComposedMember}.
+	 */
+	public def static boolean isComposedMember(EObject eobj) {
+		return (eobj instanceof TMember) && ((eobj as TMember).constituentMembers.size > 0);
+	}
+
+	/**
+	 * Retrieves the list of original TMembers of a composed member.
+	 * @param composedMember
+	 * 				the input composed member
+	 * @return the list of original TMembers of the input composed member
+	 */
+	public def static List<TMember> getOriginalTMembersOfComposedMember(TMember composedMember) {
+		val constituentMembers = composedMember.getConstituentMembers();
+		constituentMembers.map[constituentMember |
+			val originalASTNode = constituentMember.getAstElement();
+			if (originalASTNode instanceof N4MemberDeclaration) {
+				originalASTNode.getDefinedTypeElement();
+			} else {
+				throw new RuntimeException("The corresponding AST element of the constituent member " + constituentMember + " is not of type N4MemberDeclaration. Something has gone wrong");
+			}
+		]
+	}
+
+	/**
 	 * Extracts the type(s) referenced by a type ref.
 	 * @param typeRef
 	 *  		the type ref, from which the type should be extracted.
 	 * @return
 	 * 			the list of extracted types. There can be multiple returned types due to composed type refs.
 	 */
-	def List<Type> extractType(TypeRef typeRef) {
+	public def List<Type> extractType(TypeRef typeRef) {
 		if (typeRef === null) {
 			return Collections.emptyList();
 		}

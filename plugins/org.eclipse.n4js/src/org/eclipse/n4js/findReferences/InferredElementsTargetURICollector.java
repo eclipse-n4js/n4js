@@ -10,14 +10,17 @@
  */
 package org.eclipse.n4js.findReferences;
 
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.resource.InferredElements;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.resource.InferredElements;
 
 /**
  * Collector of target URIs when find referencs is triggered. Collects the URI of the given object and of all objects
@@ -32,7 +35,16 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 	@Override
 	protected void doAdd(EObject primaryTarget, TargetURIs targetURIs) {
 		EcoreUtil.resolveAll(primaryTarget.eResource());
-		super.doAdd(primaryTarget, targetURIs);
+		if (TypeHelper.isComposedMember(primaryTarget)) {
+			// In case of composed member, add the constituent members instead.
+			List<TMember> originalMembers = TypeHelper.getOriginalTMembersOfComposedMember((TMember) primaryTarget);
+			for (TMember originalMember : originalMembers) {
+				super.doAdd(originalMember, targetURIs);
+			}
+		} else {
+			super.doAdd(primaryTarget, targetURIs);
+		}
+
 		inferredElements.collectInferredElements(primaryTarget, (object) -> {
 			if (object != null) {
 				super.doAdd(object, targetURIs);

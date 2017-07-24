@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ts.findReferences;
 
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EClass;
@@ -19,6 +20,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -74,6 +76,18 @@ public class TargetURIKey {
 			this.applicableTypes.add(object.eClass());
 			this.valueStrings.add(SimpleAttributeResolver.NAME_RESOLVER.apply(object));
 
+			// Handle composed members
+			if (TypeHelper.isComposedMember(object)) {
+				List<TMember> originalMembers = TypeHelper.getOriginalTMembersOfComposedMember((TMember) object);
+				for (TMember originalMember : originalMembers) {
+					addFQNs(originalMember);
+				}
+			} else {
+				addFQNs(object);
+			}
+		}
+
+		private void addFQNs(EObject object) {
 			if (object instanceof TMember || object instanceof TEnumLiteral) {
 				Type t = EcoreUtil2.getContainerOfType(object.eContainer(), Type.class);
 				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(t));
@@ -87,7 +101,6 @@ public class TargetURIKey {
 				typesOrModulesToFind.add(qualifiedNameProvider
 						.getFullyQualifiedName(((IdentifiableElement) object).getContainingModule()));
 			}
-
 		}
 
 		/**
@@ -131,6 +144,7 @@ public class TargetURIKey {
 			}
 			return false;
 		}
+
 	}
 
 	/**
