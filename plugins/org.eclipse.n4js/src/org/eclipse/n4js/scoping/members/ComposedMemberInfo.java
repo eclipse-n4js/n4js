@@ -533,7 +533,6 @@ public class ComposedMemberInfo {
 	 */
 	public List<TMember> getConstituentMembers() {
 		initMemberAggregate();
-		// We copy the members here in order to have new nodes.
-		return this.siblings.stream().map(sibling -> TypeUtils.copy(sibling.getKey())).collect(Collectors.toList());
+		return this.siblings.stream().map(sibling -> sibling.getKey()).collect(Collectors.toList());
 	}
 }

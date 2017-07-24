@@ -76,41 +76,7 @@ class N4JSCrossReferenceComputerTest {
 		});
 
 		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
-		println("---");
-		println("Found");
-		println(actualRefs);
-		println("---");
 		val expectedRefs = "class - C,class - Z"
-		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
-	}
-
-	@Test
-	def void testCrossRefComposedMember() {
-		var rs = resourceSetProvider.get();
-		resourceX = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/X.n4js"))
-		resourceY = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/Y.n4js"))
-
-		rs.getResource(resourceX, true).contents
-		rs.getResource(resourceY, true).contents
-
-		EcoreUtil.resolveAll(rs)
-
-		val refs = new LinkedHashSet<EObject>();
-
-		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceY, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
-			override accept(ImmutablePair<EObject, EObject> pair) {
-				val t = pair.right
-				println("Found " + t);
-				refs.add(t);
-			}
-		});
-
-		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
-		println("---");
-		println("Found");
-		println(actualRefs);
-		println("---");
-		val expectedRefs = "class - X1,class - X2,field - foo,field - foo"
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 
@@ -146,10 +112,6 @@ class N4JSCrossReferenceComputerTest {
 
 		val actualRefs = refs.filterNull.join(",");
 		val expectedRefs = "variable - two,method - myMethodFour,method - getElement,method - myMethodTwo,field - myAttributeTwo"
-		println("---");
-		println("Found");
-		println(actualRefs);
-		println("---");
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 
@@ -157,7 +119,32 @@ class N4JSCrossReferenceComputerTest {
 		if (eobj instanceof IdentifiableElement) {
 			return typesKeywordProvider.keyword(eobj) + " - " + eobj.name
 		} else {
-			return null
+			throw new RuntimeException(eobj + " is not an IdentifiableElement!");
 		}
+	}
+
+	@Test
+	def void testCrossRefComposedMember() {
+		var rs = resourceSetProvider.get();
+		resourceX = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/X.n4js"))
+		resourceY = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/Y.n4js"))
+
+		rs.getResource(resourceX, true).contents
+		rs.getResource(resourceY, true).contents
+
+		EcoreUtil.resolveAll(rs)
+
+		val refs = new LinkedHashSet<EObject>();
+
+		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceY, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
+			override accept(ImmutablePair<EObject, EObject> pair) {
+				val t = pair.right
+				refs.add(t);
+			}
+		});
+
+		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
+		val expectedRefs = "class - X1,class - X2,field - foo,field - foo"
+		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 }

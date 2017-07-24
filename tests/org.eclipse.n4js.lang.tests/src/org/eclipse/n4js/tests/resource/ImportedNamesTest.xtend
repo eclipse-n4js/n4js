@@ -23,6 +23,8 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
+import static org.junit.Assert.*
+
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
 class ImportedNamesTest {
@@ -42,15 +44,9 @@ class ImportedNamesTest {
 	URI resourceB
 	URI resourceC
 
-	URI resourceX
-	URI resourceY
+	URI resourceXURI
+	URI resourceYURI
 
-	private def getImportedNames(N4JSResource resource) {
-		val allDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
-		val result = allDescriptions.getResourceDescription(resource.URI)
-		return result.importedNames;
-	}
-	
 	@Test
 	def void testImportedNamesVarDeclGeneric() {
 		var rs = resourceSetProvider.get();
@@ -64,32 +60,19 @@ class ImportedNamesTest {
 
 		EcoreUtil.resolveAll(rs)
 
+		val expectedImportedNames = #["org.eclipse.n4js.tests.resource.C",
+			"org.eclipse.n4js.tests.resource.A",
+			"org.eclipse.n4js.tests.resource.C.C",
+			"org.eclipse.n4js.tests.resource.C.Z",
+			"#.org.eclipse.n4js.tests.resource.C"].join(',');
 		val resourceA = rs.getResource(resourceA, true) as N4JSResource
 		val importedQFNs = resourceA.getImportedNames
-		val importedNames = importedQFNs.filterNull.toSet.join(",")
-		// TODO GH-73: Expected?
-		println("imported names = " + importedNames)
-	}
-	
-	@Test
-	def void testImportedNamesComposedTypes() {
-		var rs = resourceSetProvider.get();
-		resourceX = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/X.n4js"))
-		resourceY = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/Y.n4js"))
-
-		rs.getResource(resourceX, true).contents
-		rs.getResource(resourceY, true).contents
-		EcoreUtil.resolveAll(rs)
-
-		val resourceX = rs.getResource(resourceY, true) as N4JSResource
-		val importedQFNs = resourceX.getImportedNames
-		val importedNames = importedQFNs.filterNull.toSet.join(",")
-		// TODO GH-73: Expected?
-		println("imported names = " + importedNames)
+		val actualImportedNames = importedQFNs.filterNull.toSet.join(",")
+		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
 	@Test
-	def void testImportedNames() {
+	def void testImportedNamesFunctionReturnType() {
 		var rs = resourceSetProvider.get();
 		myClassOne = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/MyClassOne.n4js"))
 		myClassTwo = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/MyClassTwo.n4js"))
@@ -104,11 +87,48 @@ class ImportedNamesTest {
 		rs.getResource(myVariableTwo, true).contents
 
 		EcoreUtil.resolveAll(rs)
-		
+
+		val expectedImportedNames = #["org.eclipse.n4js.tests.resource.MyClassTwo.MyClassTwo",
+			"void",
+			"#.void",
+			"org.eclipse.n4js.tests.resource.MyInterfaceFour.MyInterfaceFour",
+			"org.eclipse.n4js.tests.resource.MyRoleLikeInterface.MyRoleLikeInterface",
+			"org.eclipse.n4js.tests.resource.MyClassOne",
+			"#.org.eclipse.n4js.tests.resource.MyVariableTwo",
+			"org.eclipse.n4js.tests.resource.MyVariableTwo"
+		].join(',');
 		val myClassOneResource = rs.getResource(myClassOne, true) as N4JSResource
 		val importedQFNs = myClassOneResource.getImportedNames
-		val importedNames = importedQFNs.filterNull.join(",")
-		// TODO GH-73: Expected?
-		println("imported names = " + importedNames)
+		val actualImportedNames = importedQFNs.join(',')
+		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
+	}
+
+	@Test
+	def void testImportedNamesComposedTypes() {
+		var rs = resourceSetProvider.get();
+		resourceXURI = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/X.n4js"))
+		resourceYURI = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/resource/Y.n4js"))
+
+		rs.getResource(resourceXURI, true).contents
+		rs.getResource(resourceYURI, true).contents
+		EcoreUtil.resolveAll(rs)
+
+		val resourceX = rs.getResource(resourceYURI, true) as N4JSResource
+		val importedQFNs = resourceX.getImportedNames
+		val actualImportedNames = importedQFNs.filterNull.toSet.join(",")
+		val expectedImportedNames = #["#.org.eclipse.n4js.tests.resource.X",
+									 "org.eclipse.n4js.tests.resource.X.J",
+									 "org.eclipse.n4js.tests.resource.X.I",
+									 "org.eclipse.n4js.tests.resource.X.X1",
+									 "org.eclipse.n4js.tests.resource.X.X2",
+									 "org.eclipse.n4js.tests.resource.Y",
+									 "org.eclipse.n4js.tests.resource.X"].join(",");
+		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
+	}
+
+	private def getImportedNames(N4JSResource resource) {
+		val allDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
+		val result = allDescriptions.getResourceDescription(resource.URI)
+		return result.importedNames;
 	}
 }

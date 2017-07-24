@@ -6459,7 +6459,7 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER__HAS_COMPUTED_NAME = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -6721,7 +6721,7 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -7001,7 +7001,7 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_MEMBER__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -7389,7 +7389,7 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD__HAS_COMPUTED_NAME = TFUNCTION_FEATURE_COUNT + 3;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -7957,7 +7957,7 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_METHOD__HAS_COMPUTED_NAME = TMETHOD__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -8743,7 +8743,7 @@ public interface TypesPackage extends EPackage {
 	int TFIELD__HAS_COMPUTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -9068,7 +9068,7 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_FIELD__HAS_COMPUTED_NAME = TFIELD__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -9411,7 +9411,7 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR__HAS_COMPUTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -9727,7 +9727,7 @@ public interface TypesPackage extends EPackage {
 	int TGETTER__HAS_COMPUTED_NAME = FIELD_ACCESSOR__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -10052,7 +10052,7 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_GETTER__HAS_COMPUTED_NAME = TGETTER__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -10395,7 +10395,7 @@ public interface TypesPackage extends EPackage {
 	int TSETTER__HAS_COMPUTED_NAME = FIELD_ACCESSOR__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -10720,7 +10720,7 @@ public interface TypesPackage extends EPackage {
 	int TSTRUCT_SETTER__HAS_COMPUTED_NAME = TSETTER__HAS_COMPUTED_NAME;
 
 	/**
-	 * The feature id for the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -13292,10 +13292,10 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTMember_HasComputedName();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TMember#getConstituentMembers <em>Constituent Members</em>}'.
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMember#getConstituentMembers <em>Constituent Members</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Constituent Members</em>'.
+	 * @return the meta object for the reference list '<em>Constituent Members</em>'.
 	 * @see org.eclipse.n4js.ts.types.TMember#getConstituentMembers()
 	 * @see #getTMember()
 	 * @generated
@@ -15723,7 +15723,7 @@ public interface TypesPackage extends EPackage {
 		EAttribute TMEMBER__HAS_COMPUTED_NAME = eINSTANCE.getTMember_HasComputedName();
 
 		/**
-		 * The meta object literal for the '<em><b>Constituent Members</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Constituent Members</b></em>' reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -160,7 +161,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	protected boolean hasComputedName = HAS_COMPUTED_NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getConstituentMembers() <em>Constituent Members</em>}' containment reference list.
+	 * The cached value of the '{@link #getConstituentMembers() <em>Constituent Members</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getConstituentMembers()
@@ -329,7 +330,7 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 */
 	public EList<TMember> getConstituentMembers() {
 		if (constituentMembers == null) {
-			constituentMembers = new EObjectContainmentEList<TMember>(TMember.class, this, TypesPackage.TMEMBER__CONSTITUENT_MEMBERS);
+			constituentMembers = new EObjectResolvingEList<TMember>(TMember.class, this, TypesPackage.TMEMBER__CONSTITUENT_MEMBERS);
 		}
 		return constituentMembers;
 	}
@@ -517,8 +518,6 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 		switch (featureID) {
 			case TypesPackage.TMEMBER__ANNOTATIONS:
 				return ((InternalEList<?>)getAnnotations()).basicRemove(otherEnd, msgs);
-			case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS:
-				return ((InternalEList<?>)getConstituentMembers()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}

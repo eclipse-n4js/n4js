@@ -78,9 +78,9 @@ public class TargetURIKey {
 
 			// Handle composed members
 			if (TypeHelper.isComposedMember(object)) {
-				List<TMember> originalMembers = TypeHelper.getOriginalTMembersOfComposedMember((TMember) object);
-				for (TMember originalMember : originalMembers) {
-					addFQNs(originalMember);
+				List<TMember> constituentMembers = ((TMember) object).getConstituentMembers();
+				for (TMember constituentMember : constituentMembers) {
+					addFQNs(constituentMember);
 				}
 			} else {
 				addFQNs(object);

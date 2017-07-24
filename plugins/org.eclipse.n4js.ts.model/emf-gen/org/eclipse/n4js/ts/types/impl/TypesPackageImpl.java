@@ -3714,7 +3714,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEAttribute(getTMember_DeclaredStatic(), theEcorePackage.getEBoolean(), "declaredStatic", null, 0, 1, TMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTMember_DeclaredOverride(), theEcorePackage.getEBoolean(), "declaredOverride", null, 0, 1, TMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEAttribute(getTMember_HasComputedName(), theEcorePackage.getEBoolean(), "hasComputedName", null, 0, 1, TMember.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getTMember_ConstituentMembers(), this.getTMember(), null, "constituentMembers", null, 0, -1, TMember.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTMember_ConstituentMembers(), this.getTMember(), null, "constituentMembers", null, 0, -1, TMember.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		op = initEOperation(getTMember__GetContainingType(), null, "getContainingType", 0, 1, !IS_UNIQUE, IS_ORDERED);
 		g1 = createEGenericType(this.getContainerType());

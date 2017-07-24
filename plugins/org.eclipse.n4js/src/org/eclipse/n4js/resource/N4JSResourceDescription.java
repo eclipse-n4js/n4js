@@ -199,7 +199,9 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private void collectAsImportedName(Set<QualifiedName> importedNames, EObject eObject) {
 		QualifiedName importedName = qualifiedNameProvider.getFullyQualifiedName(eObject);
-		importedNames.add(importedName);
+		if (importedName != null) {
+			importedNames.add(importedName);
+		}
 	}
 
 	private IAcceptor<ImmutablePair<EObject, EObject>> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {

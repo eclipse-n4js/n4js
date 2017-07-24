@@ -138,16 +138,16 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	void setHasComputedName(boolean value);
 
 	/**
-	 * Returns the value of the '<em><b>Constituent Members</b></em>' containment reference list.
+	 * Returns the value of the '<em><b>Constituent Members</b></em>' reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TMember}.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * * The constituent members if this member is a composed member.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Constituent Members</em>' containment reference list.
+	 * @return the value of the '<em>Constituent Members</em>' reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTMember_ConstituentMembers()
-	 * @model containment="true" transient="true"
+	 * @model transient="true"
 	 * @generated
 	 */
 	EList<TMember> getConstituentMembers();

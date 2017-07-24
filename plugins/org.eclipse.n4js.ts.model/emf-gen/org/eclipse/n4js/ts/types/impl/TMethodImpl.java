@@ -17,18 +17,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 
 import org.eclipse.emf.ecore.xcore.lib.XcoreEListExtensions;
 
@@ -156,7 +153,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	protected boolean hasComputedName = HAS_COMPUTED_NAME_EDEFAULT;
 
 	/**
-	 * The cached value of the '{@link #getConstituentMembers() <em>Constituent Members</em>}' containment reference list.
+	 * The cached value of the '{@link #getConstituentMembers() <em>Constituent Members</em>}' reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getConstituentMembers()
@@ -355,7 +352,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 */
 	public EList<TMember> getConstituentMembers() {
 		if (constituentMembers == null) {
-			constituentMembers = new EObjectContainmentEList<TMember>(TMember.class, this, TypesPackage.TMETHOD__CONSTITUENT_MEMBERS);
+			constituentMembers = new EObjectResolvingEList<TMember>(TMember.class, this, TypesPackage.TMETHOD__CONSTITUENT_MEMBERS);
 		}
 		return constituentMembers;
 	}
@@ -661,20 +658,6 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 			return false;
 		}
 		return (containingType.isPolyfill() || containingType.isStaticPolyfill());
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
-				return ((InternalEList<?>)getConstituentMembers()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**

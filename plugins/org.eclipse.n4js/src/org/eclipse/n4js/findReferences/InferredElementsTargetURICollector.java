@@ -37,9 +37,9 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 		EcoreUtil.resolveAll(primaryTarget.eResource());
 		if (TypeHelper.isComposedMember(primaryTarget)) {
 			// In case of composed member, add the constituent members instead.
-			List<TMember> originalMembers = TypeHelper.getOriginalTMembersOfComposedMember((TMember) primaryTarget);
-			for (TMember originalMember : originalMembers) {
-				super.doAdd(originalMember, targetURIs);
+			List<TMember> constituentMembers = ((TMember) primaryTarget).getConstituentMembers();
+			for (TMember constituentMember : constituentMembers) {
+				super.doAdd(constituentMember, targetURIs);
 			}
 		} else {
 			super.doAdd(primaryTarget, targetURIs);

@@ -1012,7 +1012,7 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
 	boolean hasComputedName
 
 	/** The constituent members if this member is a composed member. */
-	contains transient TMember[] constituentMembers
+	refers transient TMember[] constituentMembers
 
 	/**
 	 * Convenience method, returns the container casted to a container type or 'null'

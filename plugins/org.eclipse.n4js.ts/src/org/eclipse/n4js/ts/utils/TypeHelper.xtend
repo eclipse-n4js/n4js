@@ -15,7 +15,6 @@ import java.util.Collections
 import java.util.Iterator
 import java.util.List
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -205,24 +204,6 @@ public class TypeHelper {
 	 */
 	public def static boolean isComposedMember(EObject eobj) {
 		return (eobj instanceof TMember) && ((eobj as TMember).constituentMembers.size > 0);
-	}
-
-	/**
-	 * Retrieves the list of original TMembers of a composed member.
-	 * @param composedMember
-	 * 				the input composed member
-	 * @return the list of original TMembers of the input composed member
-	 */
-	public def static List<TMember> getOriginalTMembersOfComposedMember(TMember composedMember) {
-		val constituentMembers = composedMember.getConstituentMembers();
-		constituentMembers.map[constituentMember |
-			val originalASTNode = constituentMember.getAstElement();
-			if (originalASTNode instanceof N4MemberDeclaration) {
-				originalASTNode.getDefinedTypeElement();
-			} else {
-				throw new RuntimeException("The corresponding AST element of the constituent member " + constituentMember + " is not of type N4MemberDeclaration. Something has gone wrong");
-			}
-		]
 	}
 
 	/**

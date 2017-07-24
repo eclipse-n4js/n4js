@@ -12,5 +12,5 @@
 import { X1 } from "org/eclipse/n4js/tests/resource/X"
 import { X2 } from "org/eclipse/n4js/tests/resource/X"
 
-let x1ux2: X1 & X2;
+let x1ux2: X1 | X2;
 x1ux2.foo; 
