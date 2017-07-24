@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.external;
+package org.eclipse.n4js.ui.external;
 
 import static com.google.common.collect.FluentIterable.from;
 import static java.util.Arrays.asList;
@@ -26,11 +26,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.n4js.external.ExternalProjectsCollector;
+import org.eclipse.n4js.external.NpmManager;
+import org.eclipse.n4js.external.RebuildWorkspaceProjectsScheduler;
+import org.eclipse.n4js.utils.Cancelable;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.utils.Cancelable;
 
 /**
  * Helper class for reloading the registered external libraries by recreating the Xtext index for them.

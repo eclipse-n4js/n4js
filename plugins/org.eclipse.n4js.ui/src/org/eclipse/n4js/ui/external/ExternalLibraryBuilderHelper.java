@@ -8,19 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.external;
+package org.eclipse.n4js.ui.external;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
-import static org.eclipse.n4js.utils.collections.Arrays2.transform;
-import static org.eclipse.n4js.utils.resources.ExternalProjectBuildOrderProvider.getBuildOrder;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.core.runtime.SubMonitor.SUPPRESS_BEGINTASK;
 import static org.eclipse.core.runtime.SubMonitor.SUPPRESS_NONE;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
+import static org.eclipse.n4js.utils.collections.Arrays2.transform;
+import static org.eclipse.n4js.utils.resources.ExternalProjectBuildOrderProvider.getBuildOrder;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,6 +40,11 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.n4js.external.ExternalProjectsCollector;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.collections.Arrays2;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.impl.BuildData;
 import org.eclipse.xtext.builder.impl.QueuedBuildData;
@@ -54,11 +59,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.utils.collections.Arrays2;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 /**
  * Helper class for building projects outside from the {@link IWorkspace Eclipse workspace} directly with the

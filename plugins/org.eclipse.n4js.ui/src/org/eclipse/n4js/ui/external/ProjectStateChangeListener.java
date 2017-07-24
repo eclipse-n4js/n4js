@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.external;
+package org.eclipse.n4js.ui.external;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Sets.newLinkedHashSet;
@@ -25,6 +25,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
