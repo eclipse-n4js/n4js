@@ -17,8 +17,8 @@
 END_SETUP
  */
 
-// Bug of x-pect. Ask Moritz, he knows. (Regarding 'function' as Offset indicator)
 /* XPECT findReferences at function ---
+	referenceFinder/functions/ImportFunctionExp- zzz - 27,
 	referenceFinder/functions/ImportFunctionExp- zzz - 29,
 	referenceFinder/functions/ImportFunctionImp - zzz - 26,
 	referenceFinder/functions/ImportFunctionImp - zzz - 28

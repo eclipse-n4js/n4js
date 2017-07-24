@@ -12,8 +12,14 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 export public class A {
-// IDE-1662 XPECT FIXME findReferences at a --> b.a - 30, union.a - 25
+	/* XPECT findReferences at a ---
+	referenceFinder/composedTypes/unions - a : A; - 21,
+	referenceFinder/composedTypes/unions - b.a - 47,
+	referenceFinder/composedTypes/unions - union.a - 41
+	---
+	*/
 	a : A;
+
 // IDE-1662 XPECT FIXME findReferences at i --> b.i - 31, union.i - 26
 	i : int;
 // IDE-1662 XPECT FIXME findReferences at foo --> b.foo - 32, union.foo - 26
@@ -31,9 +37,9 @@ interface I {
 
 class AI extends A implements I {}
 
-
 var union : A | I;
 union.a;
+
 union.i;
 union.foo();
 

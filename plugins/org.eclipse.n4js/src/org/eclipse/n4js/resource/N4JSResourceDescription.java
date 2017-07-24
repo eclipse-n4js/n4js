@@ -208,6 +208,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		IAcceptor<ImmutablePair<EObject, EObject>> acceptor = new IAcceptor<ImmutablePair<EObject, EObject>>() {
 			@Override
 			public void accept(ImmutablePair<EObject, EObject> pair) {
+				// GH-73: TODO Refactor this to make the logics clearer.
 				EObject from = pair.left;
 				if (from instanceof ParameterizedPropertyAccessExpression
 						&& from.eContainer() instanceof ParameterizedCallExpression) {
@@ -220,11 +221,22 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					crossRefTypes.add(to);
 				}
 
+				// Add return type of function/method to cross ref types. Note that setters/getters are methods.
 				// Add declared type of a field to cross ref types
-				// Add return type of function/method to cross ref types
 				if (to instanceof TFunction || to instanceof TField) {
-					TypeRef typeRef = ts.tau((TypableElement) from);
-					crossRefTypes.add(typeRef.getDeclaredType());
+					if (from instanceof TypableElement) {
+						TypeRef typeRef = ts.tau((TypableElement) from);
+						crossRefTypes.add(typeRef.getDeclaredType());
+					} else {
+						if (to instanceof TFunction) {
+							TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
+							crossRefTypes.add(returnTypeRef.getDeclaredType());
+						} else {
+							TypeRef typeRef = ((TField) to).getTypeRef();
+							crossRefTypes.add(typeRef.getDeclaredType());
+						}
+
+					}
 				}
 			}
 		};

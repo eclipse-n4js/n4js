@@ -49,7 +49,6 @@ abstract class GetterFactory implements MemberFactory {
 		TypeUtils.setMemberTypeRef(getter, typeRef);
 		getter.setName(name);
 		getter.setDeclaredMemberAccessModifier(getAccessability());
-		getter.getConstituentMembers().addAll(getConstituentMembers());
 		return getter;
 	}
 
