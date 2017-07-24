@@ -254,13 +254,6 @@ Contributors:
 			<artifactId>org.eclipse.n4js.hlc.base</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency> <!-- additional dependency to shared test-code  -->
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.hlc</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-			<type>test-jar</type>
-  			<scope>test</scope>
-  		</dependency>
 		<dependency>
 			<artifactId>org.eclipse.n4js.utils</artifactId>
 			<groupId>org.eclipse.n4js</groupId>
