@@ -10,13 +10,17 @@
  */
 package org.eclipse.n4js.tests.outline
 
-import org.eclipse.n4js.dirtystate.testdata.TestFiles
+import java.util.LinkedHashMap
 import java.util.List
+import java.util.Map.Entry
+import org.eclipse.n4js.dirtystate.testdata.TestFiles
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
 import org.junit.Test
 
 /**
+ * Ensure to configure the right product when running this plugin-ui tests:
+ * Main / Program to Run: Run a product: com.enfore.n4js.product.product
  */
 class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 
@@ -132,6 +136,24 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 		]
 	}
 
+	def void assertNodeChildrenTextDeep(IOutlineNode parentNode, LinkedHashMap<String, List<String>> textExpectations) {
+		val nodeChildren = parentNode.children;
+
+		assertEquals("The number of children wasn't correct.", textExpectations.keySet.length, nodeChildren.length);
+		
+		var int typeIndex = 0;
+		for (Entry<String, List<String>> typeExpectation: textExpectations.entrySet) {
+			val String typeName = typeExpectation.key;
+			val List<String> memberExpectations = typeExpectation.value;
+			val IOutlineNode typeNode = nodeChildren.get(typeIndex);
+			assertEquals(typeName, typeNode.text.toString);
+			assertEquals("The number of children for " + typeName + " wasn't correct", memberExpectations.length, typeNode.children.length);
+			assertNodeChildrenText(typeNode, memberExpectations);
+			typeIndex++;
+		}
+		
+	}
+
 	@Test
 	def void testClassWithTypedField() throws Exception {
 		val model = '''
@@ -159,9 +181,23 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 	}
 
 	protected def IOutlineNode assertNoException(String model) throws Exception {
+		assertNoException(model, null)
+	}
+
+	protected def IOutlineNode assertNoException(String model, String modeID) throws Exception {
 		return try {
 			val document = editor.document => [ set(model) ]
-			val treeProvider = getInstance(IOutlineTreeProvider)
+			val IOutlineTreeProvider treeProvider = getInstance(IOutlineTreeProvider)
+			assertTrue("treeProvider is " + treeProvider.class + ", should be instanceof ModeAware",
+				 treeProvider instanceof IOutlineTreeProvider.ModeAware
+			);
+			val modeAwareTreeProvider = treeProvider as IOutlineTreeProvider.ModeAware;
+			val firstMode = modeAwareTreeProvider.currentMode;
+			while (modeID!==null && modeAwareTreeProvider.currentMode.id != modeID) {
+				assertNotEquals("Mode " +modeID + " not found", firstMode, modeAwareTreeProvider.nextMode);
+				modeAwareTreeProvider.currentMode = modeAwareTreeProvider.nextMode
+			}
+			
 			treeProvider.createRoot(document) => [ traverseChildren ]
 		} catch (Exception exc) {
 			exc.printStackTrace
@@ -173,4 +209,50 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 	private def void traverseChildren(IOutlineNode node) {
 		node.children.forEach[traverseChildren]
 	}
+	
+	/**
+	 * Tests different modes (with and without inherited members). Since the tests directly tests
+	 * the IOutlineTreeProvider (and not the displayed test), the modes used for toggling the quick out line 
+	 * view are used to test the result of this provider. In the "normal" outline view, these items are filtered
+	 * via a toggle button after creation -- this filter is not tested here.
+	 */
+	@Test
+	def void testModes() throws Exception {
+		val model = '''
+				interface I 			{ fooI() {} }
+				interface J extends I 	{ fooJ() {} }
+				class A implements J 	{ fooA() {} }
+				class B extends A 		{ fooB() {} @Override fooI() {}}
+				class C extends B 		{ fooC() {} }
+				'''
+		var rootNode = assertNoException(model, "owned");
+		assertEquals("There is only one top level node", rootNode.children.length, 1);
+
+		var documentNode = rootNode.children.get(0);
+
+		// test document level nodes
+		assertNodeChildrenTextDeep(documentNode, newLinkedHashMap(
+				"I" -> #["fooI() : void"],
+				"J" -> #["fooJ() : void"],
+				"A" -> #["fooA() : void"],
+				"B" -> #["fooB() : void", "fooI() : void"],
+				"C" -> #["fooC() : void"]
+		));
+		
+		rootNode = assertNoException(model, "inherited");
+		assertEquals("There is only one top level node", rootNode.children.length, 1);
+
+		documentNode = rootNode.children.get(0);
+
+		// test document level nodes
+		assertNodeChildrenTextDeep(documentNode, newLinkedHashMap(
+				"I" -> #["fooI() : void"],
+				"J" -> #["fooJ() : void", "fooI() : void inherited from I"],
+				"A" -> #["fooA() : void", "fooJ() : void consumed from J", "fooI() : void consumed from I"],
+				"B" -> #["fooB() : void", "fooI() : void", "fooA() : void inherited from A", "fooJ() : void consumed from J"],
+				"C" -> #["fooC() : void", "fooB() : void inherited from B", "fooI() : void inherited from B", 
+										"fooA() : void inherited from A", "fooJ() : void consumed from J"]
+		));
+	}
+	
 }

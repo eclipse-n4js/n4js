@@ -18,7 +18,8 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory;
 
 /**
- * Needs to be bound in module.
+ * Needs to be bound in module. Used by {@link N4JSOutlineTreeProvider} to create N4JS specific nodes with additional
+ * information not found in the element in order to improve visualization.
  */
 public class N4JSOutlineNodeFactory extends OutlineNodeFactory {
 

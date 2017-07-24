@@ -104,12 +104,12 @@ class StyledTextCalculationHelper {
 				val orgDest = " from " + labelCalculationHelper.dispatchDoGetText(member.containingType);	
 					
 				if (member.polyfilled) {
-					styledText.append(" polyfilled " + orgDest, N4JSStylers.POLYFILLED_MEMBERS_STYLER);
+					styledText.append(" polyfilled" + orgDest, N4JSStylers.POLYFILLED_MEMBERS_STYLER);
 				} else if (member.containingType instanceof TInterface
 					&& objectWithContext.context instanceof TClass) {
-						styledText.append(" consumed " + orgDest, N4JSStylers.CONSUMED_MEMBERS_STYLER);
+						styledText.append(" consumed" + orgDest, N4JSStylers.CONSUMED_MEMBERS_STYLER);
 				} else {
-					styledText.append(" inherited " + orgDest, N4JSStylers.INHERITED_MEMBERS_STYLER);
+					styledText.append(" inherited" + orgDest, N4JSStylers.INHERITED_MEMBERS_STYLER);
 				}
 				
 			}

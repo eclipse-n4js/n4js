@@ -49,6 +49,20 @@ import org.eclipse.xtext.util.CancelIndicator
  * In particular, {@link N4JSLabelProvider#doGetImage} shouldn't perform such operations.
  * A rule of thumb is "prefer {@link ImageDescriptor} over {@code Image}".
  * <p>
+ * This outline tree provider supports different modes. There are two use cases:
+ * <ul>
+ * 	<li>Quick Outline View: In this case, modes are toggled via CMD/CTRL-O. This simply means that 
+ * 		{@link N4JSOutlineTreeProvider#getNextMode()} is called every time. These modes are defined in 
+ * 		{@link N4JSOutlineModes}. For that to work, the {@link IOutlineTreeProvider#ModeAware} protocol is used
+ *  <li>Outline View: The normal outline view. In this case, toggle buttons are used to enable filtering. This
+ * 		is achieved by the {@link N4JSShowInheritedMembersOutlineContribution}. After an object node has been
+ * 		created, it is send to this contribution class which does the filtering.
+ * </ul>
+ * There is no direct way of detecting the current use case. Since the "normal" outline view does not call any
+ * method of {@link IOutlineTreeProvider#ModeAware}, we initialize the corresponding field
+ * {@link N4JSOutlineTreeProvider#modeAware} on demand. If it is null we can then conclude that we are in "normal" 
+ * outline view mode, other wise in the quick outline view.
+ * 
  * @see http://www.eclipse.org/Xtext/documentation.html#outline
  */
 class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements IOutlineTreeProvider.ModeAware {
@@ -129,12 +143,15 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		}
 	}
 
-	// only create nodes for members (methods, fields) and field accessors (getter, setter)
-	def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
+	/**
+	 * Create nodes for members (methods, fields) and field accessors (getter, setter).
+	 * If not turned off, also inherited (and consumed or polyfilled) members are shown. 
+	 */
+	 def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
 
 		val t = classifierDefinition.definedType as TClassifier;
 		if (t !== null && showInherited) {
-			val members = containerTypesHelper.fromContext(classifierDefinition).allMembers(t, false, true, true);
+			val members = containerTypesHelper.fromContext(classifierDefinition).members(t, false, true);
 			for (tchild : members.filterNull) {
 				if (tchild.astElement !== null) {
 					val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild.astElement, t));
