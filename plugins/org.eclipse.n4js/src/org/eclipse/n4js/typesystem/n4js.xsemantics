@@ -1350,12 +1350,9 @@ from {
 			}
 		}
 		if (! structuralTyping) { // do nominal, right is not a structural type
+			// enforce that ~T !<: S except for S = Object and T <: Object
 			if( (left.isUseSiteStructuralTyping || left.isDefSiteStructuralTyping)
-				&&
-				! (leftDeclType instanceof TypeVariable || rightDeclType instanceof TypeVariable)
-				&&
-				{G |- right <: G.n4ObjectTypeRef}
-				)
+				&& !(rightDeclType == G.objectType && leftDeclType instanceof TClassifier))
 			{
 				fail
 					error "Structural type " + left.typeRefAsString + " is not a subtype of non-structural type " + right.typeRefAsString
