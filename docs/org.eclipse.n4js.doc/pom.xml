@@ -130,50 +130,22 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                             <preserveDirectories>true</preserveDirectories>
                             <outputDirectory>${project.build.directory}/${eclipse.html}</outputDirectory>
                             <backend>html5</backend>
-                            <sourceHighlighter>highlightjs</sourceHighlighter>
+                            <sourceHighlighter></sourceHighlighter>
                             <attributes> <!-- Individual attributes per conversion execution -->
+                                <doctype>book</doctype>
                                 <toc>false</toc> <!-- No embedded TOC -->
-                                <stylesdir>../styles</stylesdir>
+                                <stylesdir>../res/styles</stylesdir>
+                                <reproducible>true</reproducible>
                                 <stylesheet>foundation.css</stylesheet>
-                                <highlightjsdir>../scripts</highlightjsdir>
-                                <highlightjs-theme>n4jshighlighter</highlightjs-theme>
+								<docinfo1>true</docinfo1>
+                                <docinfodir>${basedir}/res/headers/eclipse</docinfodir>
+                                <imagesdir></imagesdir>             
                                 <experimental>true</experimental>
                                 <commandkey>&#8984;</commandkey>
                                 <icons>font</icons>
                                 <sectanchors>true</sectanchors>
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <doctype>book</doctype>
-                                <linkcss>true</linkcss>
-                                <docinfodir>${basedir}/src/_eclipseheader</docinfodir>
-                                <imagesdir></imagesdir>
-                                <docinfo1>true</docinfo1>
-                            </attributes>
-                        </configuration>
-                    </execution>
-
-                    <!-- PDF Generation of User Guides -->
-                    <execution>
-                        <id>asciidoc-to-pdf</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <skip>true</skip> <!-- Execution skipped! -->
-                            <sourceDirectory>src/</sourceDirectory>
-                            <outputDirectory>${pdf.dir}</outputDirectory>
-                            <backend>pdf</backend>
-                            <sourceHighlighter>highlightjs</sourceHighlighter>
-                            <highlightjsdir>/scripts</highlightjsdir>
-                            <highlightjs-theme>n4jshighlighter</highlightjs-theme>
-                            <attributes>
-                                <toc>left</toc>
-                                <icons>font</icons>
-                                <sectanchors>true</sectanchors>
-                                <idprefix/>
-                                <idseparator>-</idseparator>
-                                <docinfo1>false</docinfo1>
+                                <sectlinks>true</sectlinks>
+                                <linkattrs>true</linkattrs>
                             </attributes>
                         </configuration>
                     </execution>
@@ -252,7 +224,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                         </includes>
                         
                         <filtering>false</filtering>
-                      </resource>
+                      </resource> 
                     </resources>
                   </configuration>
                   <goals>

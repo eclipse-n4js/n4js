@@ -1184,6 +1184,7 @@ class FunctionTypeExpression extends FunctionTypeExprOrRef {
 		}
 		return typeVar.declaredUpperBound;
 	}
+	// TODO extract FormalParameterContainer 
 	/*
 	 * Formal parameters declared in the FunctionTypeExpression in the AST or
 	 * a copy of the formal parameters of the 'declaredType' or original FunctionTypeExpression.

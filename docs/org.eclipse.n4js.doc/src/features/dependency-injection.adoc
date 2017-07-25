@@ -9,11 +9,11 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
+.Dependency Injection in N4JS
+= Dependency Injection in N4JS
 :doctype: book
 :toc: right
 
-.Dependency Injection in N4JS
-= Dependency Injection in N4JS
 
 Dependency injection (DI) is a concept that allows for configuring dependencies
 between classes at a central location. Instead of passing dependencies from class to class, N4JS' built-in

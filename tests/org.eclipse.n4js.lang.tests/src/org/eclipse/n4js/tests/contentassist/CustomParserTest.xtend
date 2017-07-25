@@ -15,16 +15,16 @@ import com.google.inject.Provider
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.ui.contentassist.ContentAssistTokenTypeMapper
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser
+import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer
 import org.eclipse.n4js.ui.contentassist.TokenSourceFactory
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
-import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
-import org.junit.runner.RunWith
 import org.eclipse.xtext.xtext.RuleNames
+import org.junit.runner.RunWith
 
 /**
  */
@@ -35,7 +35,7 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 	@Inject IUnorderedGroupHelper unorderedGroupHelper
 	@Inject TokenSourceFactory tokenSourceFactory
 	@Inject ContentAssistTokenTypeMapper tokenMapper
-	@Inject RequiredRuleNameComputer ruleNameComputer
+	@Inject PatchedRequiredRuleNameComputer ruleNameComputer
 	@Inject RuleNames ruleNames
 
 	@Inject extension ReflectExtensions
@@ -52,12 +52,17 @@ class CustomParserTest extends AbstractContentAssistParserTest implements Provid
 		]
 	}
 
-	override getFollowElements(INode node, int start, int end) {
-		parser.getFollowElements(node, start, end, true)
+	override getFollowElements(INode node, int start, int end, boolean strict) {
+		parser.getFollowElements(node, start, end, strict)
 	}
-
+	
 	override getFollowElements(FollowElement prev) {
-		parser.getFollowElements(prev)
+		if (prev.lookAhead == 1) {
+			return #{};
+		} else {
+			return parser.getFollowElements(prev)	
+		}
+		
 	}
 
 	override get() {

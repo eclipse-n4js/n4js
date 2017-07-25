@@ -38,6 +38,7 @@ import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtext.resource.IEObjectDescription
 
 import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.*
+import org.eclipse.n4js.ui.labeling.EObjectWithContext
 
 /**
  * This helper class dispatches the selection of the main image file to use for
@@ -51,6 +52,10 @@ import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.*
 class ImageFileNameCalculationHelper {
 
 	/* calculation of image file name for AST -> delegates to types model, as information is easier to retrieve there */
+
+	def dispatch String getImageFileName(EObjectWithContext eObjectWithContext) {
+		return getImageFileName(eObjectWithContext.obj)
+	}
 
 	def dispatch String getImageFileName(Script script) {
 		return getImageFileName(script.module)

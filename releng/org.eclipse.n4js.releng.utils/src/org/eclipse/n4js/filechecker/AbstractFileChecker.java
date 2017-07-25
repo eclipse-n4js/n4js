@@ -38,9 +38,6 @@ import com.google.common.collect.Multimap;
  */
 /* package */ abstract class AbstractFileChecker {
 
-	protected static final String[] REPOS = { "n4js", "n4js-n4" }; // FIXME remove all references to "n4js-n4"
-	protected static final String[] REPOS_MANDATORY = { "n4js" };
-
 	/** Folders that are disregarded entirely (contained files won't even be counted as "ignored files"). */
 	protected static final String[] DISREGARDED_FOLDERS = {
 			".git",
@@ -50,6 +47,17 @@ import com.google.common.collect.Multimap;
 	/** Optional file in the root of a git repository that declares some files as third-party files. */
 	protected static final String FILE_NAME__THIRD_PARTY = "third-party.txt";
 
+	/**
+	 * Names of repositories to check.
+	 */
+	protected abstract String[] getRepos();
+
+	/**
+	 * Returns names of the mandatory repositories to check, i.e. not finding these repositories will be reported as an
+	 * error. Should be a subset of the names returned by {@link #getRepos()}.
+	 */
+	protected abstract String[] getReposMandatory();
+
 	protected abstract boolean isIgnored(Path path, String pathStr);
 
 	protected abstract void checkFile(Path path, String content, boolean isRegisteredAsThirdParty, Report report);
@@ -58,25 +66,27 @@ import com.google.common.collect.Multimap;
 
 	// ################################################################################################################
 
-	protected static Path[] findRepoPaths(String[] args) {
-		final Path rootPath = findRootPath(args);
-		for (String repoMandatory : REPOS_MANDATORY) {
+	protected Path[] findRepoPaths(String[] args) {
+		final String[] repoNames = getRepos();
+		final String[] repoNamesMandatory = getReposMandatory();
+		final Path rootPath = findRootPath(args, repoNames);
+		for (String repoMandatory : repoNamesMandatory) {
 			if (!rootPath.resolve(repoMandatory).toFile().isDirectory()) {
 				System.out.println("ERROR: root folder doesn't contain mandatory sub folder \"" + repoMandatory + "\"");
 				System.exit(1);
 			}
 		}
-		final Path[] repoPaths = Arrays.asList(REPOS).stream().map((repoName) -> rootPath.resolve(repoName))
+		final Path[] repoPaths = Arrays.asList(repoNames).stream().map((repoName) -> rootPath.resolve(repoName))
 				.toArray((n) -> new Path[n]);
 		return repoPaths;
 	}
 
 	/**
-	 * Same as {@link #findRootPathFailSafe(String[])}, but will show error messages and exit in case of error. Always
-	 * returns a non-<code>null</code> path that points to an existing folder.
+	 * Same as {@link #findRootPathFailSafe(String[], String[])}, but will show error messages and exit in case of
+	 * error. Always returns a non-<code>null</code> path that points to an existing folder.
 	 */
-	protected static Path findRootPath(String[] args) {
-		final Path rootPath = findRootPathFailSafe(args);
+	protected static Path findRootPath(String[] args, String[] repoNames) {
+		final Path rootPath = findRootPathFailSafe(args, repoNames);
 		if (rootPath == null || !rootPath.toFile().exists() || !rootPath.toFile().isDirectory()) {
 			System.out.println("ERROR: root path not found or does not point to a folder");
 			System.out.println("Root path must either be given as first command line argument\n"
@@ -87,12 +97,13 @@ import com.google.common.collect.Multimap;
 	}
 
 	/**
-	 * The root path is expected to point to the folder containing the git repositories listed in {@link #REPOS}. It
-	 * must be provided as the first command line argument OR it will be derived from the current working directory.
+	 * The root path is expected to point to the folder containing at least one of the git repositories listed in
+	 * <code>repoNames</code>. It must be provided as the first command line argument OR it will be derived from the
+	 * current working directory.
 	 *
 	 * Returns <code>null</code> in case of error.
 	 */
-	protected static Path findRootPathFailSafe(String[] args) {
+	protected static Path findRootPathFailSafe(String[] args, String[] repoNames) {
 		try {
 			if (args.length > 0) {
 				// take root path from 1st command line argument
@@ -100,20 +111,33 @@ import com.google.common.collect.Multimap;
 			} else {
 				// derive root path from current working directory
 				File curr = new File(".").getCanonicalFile();
-				while (curr != null && curr.isDirectory()
-						&& !org.eclipse.xtext.util.Arrays.contains(REPOS, curr.getName())) {
+				while (curr != null && curr.isDirectory() && !containsSubDir(curr, repoNames)) {
 					curr = curr.getParentFile();
 				}
-				return curr != null ? curr.getParentFile().toPath() : null;
+				return curr != null ? curr.toPath() : null;
 			}
 		} catch (IOException e) {
 			return null;
 		}
 	}
 
+	private static boolean containsSubDir(File dir, String[] subDirNames) {
+		final String[] actualSubDirNames = dir.list();
+		if (actualSubDirNames != null) {
+			for (String subDirName : subDirNames) {
+				if (org.eclipse.xtext.util.Arrays.contains(actualSubDirNames, subDirName)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	// ################################################################################################################
 
-	protected boolean run(Path... repoPaths) {
+	protected boolean run(String[] args) {
+		final Path[] repoPaths = findRepoPaths(args);
+
 		System.out.println("=====================================================================================");
 
 		final AtomicInteger count = new AtomicInteger(0);

@@ -19,47 +19,6 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
-import org.eclipse.xtext.builder.IXtextBuilderParticipant;
-import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
-import org.eclipse.xtext.generator.IFileSystemAccess;
-import org.eclipse.xtext.generator.IGenerator;
-import org.eclipse.xtext.generator.IOutputConfigurationProvider;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementComputer;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
-import org.eclipse.xtext.resource.ILocationInFileProvider;
-import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
-import org.eclipse.xtext.resource.XtextResourceSet;
-import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
-import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
-import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
-import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher;
-import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFinder;
-import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory;
-import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
-import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
-import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
-import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
-import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
-import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
-import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
-import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
-import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
-import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
-import org.eclipse.xtext.ui.shared.Access;
-import org.eclipse.xtext.ui.util.IssueUtil;
-import org.eclipse.xtext.validation.IResourceValidator;
-
-import com.google.inject.Binder;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
@@ -87,6 +46,7 @@ import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
 import org.eclipse.n4js.ui.contentassist.CustomN4JSParser;
 import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator;
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
+import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
@@ -107,8 +67,12 @@ import org.eclipse.n4js.ui.internal.EclipseBasedN4JSWorkspace;
 import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
+import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
 import org.eclipse.n4js.ui.organize.imports.IReferenceFilter;
 import org.eclipse.n4js.ui.organize.imports.N4JSReferencesFilter;
+import org.eclipse.n4js.ui.outline.N4JSOutlineModes;
+import org.eclipse.n4js.ui.outline.N4JSOutlineNodeFactory;
+import org.eclipse.n4js.ui.outline.N4JSShowInheritedMembersOutlineContribution;
 import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
@@ -120,6 +84,50 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
+import org.eclipse.xtext.builder.IXtextBuilderParticipant;
+import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
+import org.eclipse.xtext.generator.IFileSystemAccess;
+import org.eclipse.xtext.generator.IGenerator;
+import org.eclipse.xtext.generator.IOutputConfigurationProvider;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementComputer;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer;
+import org.eclipse.xtext.resource.ILocationInFileProvider;
+import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.resource.containers.IAllContainersState;
+import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
+import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
+import org.eclipse.xtext.ui.editor.XtextEditor;
+import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
+import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher;
+import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFinder;
+import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory;
+import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
+import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
+import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
+import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
+import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
+import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
+import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
+import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
+import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory;
+import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
+import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
+import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider;
+import org.eclipse.xtext.ui.shared.Access;
+import org.eclipse.xtext.ui.util.IssueUtil;
+import org.eclipse.xtext.validation.IResourceValidator;
+
+import com.google.inject.Binder;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -355,6 +363,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return PatchedFollowElementComputer.class;
 	}
 
+	/**
+	 * Remove this binding with Xtext 2.13
+	 */
+	public Class<? extends RequiredRuleNameComputer> bindRequiredRuleNameComputer() {
+		return PatchedRequiredRuleNameComputer.class;
+	}
+
 	@Override
 	public Class<? extends IContentAssistParser> bindIContentAssistParser() {
 		return CustomN4JSParser.class;
@@ -565,5 +580,25 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Languages variation point for the organize imports */
 	public Class<? extends IReferenceFilter> bindContentReferenceFilter() {
 		return N4JSReferencesFilter.class;
+	}
+
+	/**
+	 * Binds outline factory which creates special nodes to allow for inherited members to be filtered.
+	 */
+	public Class<? extends OutlineNodeFactory> bindOutlineNodeFactory() {
+		return N4JSOutlineNodeFactory.class;
+	}
+
+	/** Outline modes for showing inherited members or not */
+	public Class<? extends IOutlineTreeProvider.ModeAware> bindIOutlineTreeProvider_ModeAware() {
+		return N4JSOutlineModes.class;
+	}
+
+	/**
+	 * Toggle showing inherited members or not.
+	 */
+	public void configureFilterSyntheticMembersContribution(Binder binder) {
+		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("InheritedMembersOutlineContribution")).to(
+				N4JSShowInheritedMembersOutlineContribution.class);
 	}
 }

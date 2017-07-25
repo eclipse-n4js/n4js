@@ -151,9 +151,8 @@ No matching error found, apparently bug IDEBUG-91 has been fixed or does not occ
 
 ==== Suppress Warnings
 
-TIP: *version>0.5* - This is not part of version 0.3
+TIP: This is not part of the current version
 
-[.language-n4js]
 == Declaration of Annotations
 
-TIP: *version>0.5* - Not implemented in version 0.3
+TIP: This is not part of the current version

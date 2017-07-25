@@ -27,6 +27,12 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateProposal;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
+import org.eclipse.n4js.xpect.config.Config;
+import org.eclipse.n4js.xpect.config.VarDef;
+import org.eclipse.n4js.xpect.config.XpEnvironmentData;
+import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper.ChangeInfo;
+import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.diagnostics.Severity;
@@ -53,12 +59,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
-import org.eclipse.n4js.xpect.config.Config;
-import org.eclipse.n4js.xpect.config.VarDef;
-import org.eclipse.n4js.xpect.config.XpEnvironmentData;
-import org.eclipse.n4js.xpect.ui.common.QuickFixTestHelper.ChangeInfo;
-import org.eclipse.n4js.xpect.ui.common.XtextResourceCleanUtil;
 import junit.framework.AssertionFailedError;
 import junit.framework.ComparisonFailure;
 
@@ -133,7 +133,8 @@ public class ContentAssistXpectMethod {
 
 			// TODO mode override: needs to have a real selectionprovider in the fixture.
 			// currently there is a mockup which doesn't support selection
-			// see org.eclipse.xtext.junit4.ui.ContentAssistProcessorTestBuilder.getSourceViewer(String, IXtextDocument)
+			// see org.eclipse.xtext.ui.testing.ContentAssistProcessorTestBuilder.getSourceViewer(String,
+			// IXtextDocument)
 
 			// val sv = fixture.getSourceViewer(null, document)
 
@@ -182,7 +183,7 @@ public class ContentAssistXpectMethod {
 	 contentAssistList              at 'a.<|>methodA'       proposals             unordered --> methodA2, methodA
 	 contentAssistList              at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
 	 contentAssistList kind 'smart' at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
-
+	
 	                    kind        offset                  checkType  selected    mode
 	                    arg4        arg2                    arg3       arg5        arg6
 	 */

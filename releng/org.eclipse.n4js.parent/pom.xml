@@ -241,14 +241,24 @@ Contributors:
 						<target>${java-compile-version}</target>
 						<verbose>true</verbose>
 						<compilerArgument>${java-compiler-arguments}</compilerArgument>
-						<!-- IDE-1452
-							since tycho 0.22: use eclipse stored compiler-settings from .settings/org.eclipse.jdt.core.prefs
-							(but causing problems in generated code, because class path property "ignore_optional_problems"
-							is not considered by Tycho/maven together with our harsh settings for optional warnings/errors;
-							therefore: do not use this at the moment!)
-							Note: by default, the setting is enabled.
-						<useProjectSettings>true</useProjectSettings>
+						<!-- GH-83
+							The following setting enables project specific settings in the
+							maven build so that specific Eclipse settings e.g. regarding
+							warning and error levels are respected. The reason that makes
+							specific settings necessary is the following (see GHOLD-408):
+							  The class XtextParametrizedRunner is accessing
+							  org.eclipse.xtext.testing.internal.InjectorProviders
+							  which results in the following exception:
+							    Access restriction: The type 'InjectorProviders' is not API.
 						-->
+						<useProjectSettings>true</useProjectSettings>
+						<compilerArgs>
+							<!--
+								The following line disables warnings in the generated source
+								folders, since their sources cause many warnings.
+							-->
+							<arg>-nowarn:[${project.basedir}/emf-gen${path.separator}${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 				<!-- enable source bundle generation -->
