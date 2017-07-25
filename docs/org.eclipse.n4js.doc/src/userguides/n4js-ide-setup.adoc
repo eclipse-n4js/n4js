@@ -32,11 +32,7 @@ collaborative projects that are to be maintained over a long period of time.
 
 == Installation
 
-Download the N4JS IDE as a single bundle from the following nightly builds:
-
-* http://goo.gl/2QDLfc[Windows]
-* http://goo.gl/qGKcm9[Linux]
-* http://goo.gl/DszAu3[Mac]
+For all available options for downloads and installation steps using the Eclipse Installer, see the link:https://www.eclipse.org/n4js/downloads.html[download page].
 
 
 === Requirements
@@ -55,7 +51,7 @@ In general, N4JS is based on the Eclipse Mars release.
 
 *node.js*
 
-In order to run or test code from the IDE, https://nodejs.org/en/[node.js 5] (or later) is required.
+In order to run or test code from the IDE, https://nodejs.org/en/[node.js 6] (or later) is required.
 
 == Launching the IDE
 

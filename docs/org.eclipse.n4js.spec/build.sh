@@ -13,8 +13,7 @@
 
 # -e  == exit immediately
 # -x  == enable debug. (+x for disable)
-# -v  == Print shell input lines as they are read.
-set -e +x -v
+set -e +x
 
 echo "Terminate running but possibly outdated asciispec server..."
 asciispec term
@@ -67,7 +66,7 @@ else
 fi
 
 ####### Build PDF via docbook toolchain #######
-asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml 
+asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml && rm $GEN_FOLDER/N4JSSpec.xml
 
 # Clean unwanted adoc/graffle files and delete empty subdirectories
 pushd ./$GEN_FOLDER/chapters

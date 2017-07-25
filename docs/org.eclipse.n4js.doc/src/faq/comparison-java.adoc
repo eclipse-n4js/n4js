@@ -9,12 +9,13 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:doctype: book
-:notitle:
-:toc: right
+
 
 .N4JS and Java
 = N4JS and Java
+:doctype: book
+:notitle:
+:toc: right
 
 == Introduction
 

@@ -9,10 +9,12 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:toc: right
 
 .Modules
 = Modules
+:doctype: book
+:toc: right
+
 
 Large-scale projects of almost any language require good modularization for maintenance reasons.
 It's vital for projects that modules don't become oversized and comprise a well-defined purpose
