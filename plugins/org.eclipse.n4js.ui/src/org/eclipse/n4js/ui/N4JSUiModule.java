@@ -70,6 +70,9 @@ import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
 import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
 import org.eclipse.n4js.ui.organize.imports.IReferenceFilter;
 import org.eclipse.n4js.ui.organize.imports.N4JSReferencesFilter;
+import org.eclipse.n4js.ui.outline.N4JSOutlineModes;
+import org.eclipse.n4js.ui.outline.N4JSOutlineNodeFactory;
+import org.eclipse.n4js.ui.outline.N4JSShowInheritedMembersOutlineContribution;
 import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
@@ -109,6 +112,9 @@ import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
+import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
+import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory;
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
@@ -121,6 +127,7 @@ import org.eclipse.xtext.validation.IResourceValidator;
 import com.google.inject.Binder;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
+import com.google.inject.name.Names;
 
 /**
  * Use this class to register components to be used within the IDE.
@@ -573,5 +580,25 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Languages variation point for the organize imports */
 	public Class<? extends IReferenceFilter> bindContentReferenceFilter() {
 		return N4JSReferencesFilter.class;
+	}
+
+	/**
+	 * Binds outline factory which creates special nodes to allow for inherited members to be filtered.
+	 */
+	public Class<? extends OutlineNodeFactory> bindOutlineNodeFactory() {
+		return N4JSOutlineNodeFactory.class;
+	}
+
+	/** Outline modes for showing inherited members or not */
+	public Class<? extends IOutlineTreeProvider.ModeAware> bindIOutlineTreeProvider_ModeAware() {
+		return N4JSOutlineModes.class;
+	}
+
+	/**
+	 * Toggle showing inherited members or not.
+	 */
+	public void configureFilterSyntheticMembersContribution(Binder binder) {
+		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("InheritedMembersOutlineContribution")).to(
+				N4JSShowInheritedMembersOutlineContribution.class);
 	}
 }

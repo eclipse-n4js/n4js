@@ -9,8 +9,15 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-.N4JS Language and IDE Features
-= N4JS Language and IDE Features
+[discrete]
+.Eclipse N4JS Language and IDE Features
+= Eclipse N4JS Language and IDE Features
+:doctype: book
+:toc: right
+
+
+[discrete]
+== Feature Table
 
 ifdef::index[]
 ++++
@@ -92,7 +99,7 @@ s| Arrow expression | ES2015 | Arrow functions with this binding according to ES
 s| Rest parameters | ES2015 | Fully supported, parameters are treated as arrays inside function
 |===
 
-[role=tbc,cols="^2,^1,<4"]
+[role=done,cols="^2,^1,<4"]
 |===
 s| Optional parameters |  | Parameters can be marked optional. This is going to be replaced with ES2015 default parameters.
 |===
@@ -102,7 +109,7 @@ s| Optional parameters |  | Parameters can be marked optional. This is going to 
 s| Super calls | ES2015 | Inside methods (of classes), super can be used to call overridden method (or constructor)
 |===
 
-[role=tbd,cols="^2,^1,<4"]
+[role=done,cols="^2,^1,<4"]
 |===
 s| Generators | ES2015 | Syntax supported but not supported by language (type checker) yet.
 |===
@@ -143,10 +150,10 @@ s| any | TS | Top type (super type of every other type), used as default type in
 s| Primitives | ES | primitive types as in ES5 (number, string, boolean), special types null and undefined (with special variant void to be used for return type)
 |===
 
-[role=tbc,cols="^2,^1,<4"]
+[role=most,cols="^2,^1,<4"]
 |===
 s| int |  | primitive type int, at the moment used synonymously to number, will be stricter checked and handled in future releases
-s| Symbols | ES2015 | minimal support for symbols, basically only predefined symbols, more support may be added
+s| Symbols | ES2015 | Built-in symbols are supported, dynamically created symbols are not supported yet.
 |===
 
 [role=done,cols="^2,^1,<4"]
@@ -179,7 +186,7 @@ s| Type variable inference | Java  | Type variables are inferred if not explicit
 s| Union type | *&tilde; TS* | An union type defines that a variable (of that type) is subtype of (at least) one type defined in the union. Without further type checks, only members available in all types of the union are available. In case of methods, formal parameter types are merged by means of intersection types (and return types by means of union types)
 |===
 
-[role=most,cols="^2,^1,<4"]
+[role=done,cols="^2,^1,<4"]
 |===
 s| Intersection type | TS | An intersection type defines that a variable (of that type) is subtype of all types defined in the intersection. Thus, members defined in any type of the union are available. Property access to intersection types is not fully supported yet.
 |===
@@ -279,7 +286,7 @@ s| Jump to declaration |  | Navigate from reference to bound declaration
 s| Find all references |  | Find all references bound to a declaration
 |===
 
-[role=tbc,cols="^2,^1,<4"]
+[role=done,cols="^2,^1,<4"]
 |===
 s| Error reporting |  | We embrace bug reports! In order to enable easier writing of bug reports, language tests can be written inside the IDE.
 This feature will be improved in the future.
@@ -335,6 +342,6 @@ s|ES2015 4+| http://www.ecma-international.org/ecma-262/6.0/[ECMAScript 2015 Lan
 s|ES4 4+| Proposed ECMAScript 4th Edition – Language Overview / ECMA. – Proposal, http://www.ecmascript.org/es4/spec/overview.pdf[PDF].
 s|ES.next 4+| ECMAScript proposals (ECMAScript 2017 or later or never)
 s|TS 4+| Hejlsberg, Anders ; Lucco, Steve: https://github.com/Microsoft/TypeScript/blob/master/doc/spec.md[TypeScript Language Specification]. 1.8. Microsoft, Januar 2016.
-**&tilde; TS** means almost similar functionality, **!TS** refers to similar concepts but with major differences.
+**&tilde; TS** means very similar functionality.
 s|Java  4+| Gosling, James et al: https://docs.oracle.com/javase/specs/jls/se8/html/index.html[The Java Language Specification]. Java SE 8 Edition. JSR-337 Java SE 8 Release Contents.
 |===

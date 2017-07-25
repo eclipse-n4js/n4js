@@ -9,10 +9,11 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:toc: right
 
 .Node.js Support
 = Node.js Support
+:doctype: book
+:toc: right
 
 N4JS and its IDE are optimized to develop large scale server applications with https://nodejs.org[Node.js]
 Besides launching and testing code from the IDE using Node.js, additional support is provided for automatically downloading

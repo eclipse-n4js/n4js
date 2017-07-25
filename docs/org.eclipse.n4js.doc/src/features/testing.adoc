@@ -9,10 +9,11 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:toc: right
 
 .Testing
 = Testing
+:doctype: book
+:toc: right
 
 Test Driven Development (TDD) is one of the key techniques to write large systems with maintainable code.
 The more tests you write, the more confident you can be that your software works as expected and the more

@@ -149,10 +149,10 @@ To clarify: _should not_ means that only a warning will be produced.
 // not ok (simple case)
 var n = n + 1;
 
-// ok (class expression  not in version 0.1)
+// ok (class expression not fully supported)
 // var cls1 = class { static sfield1 = "hello"; field2 = cls1.sfield1; };
 
-// not ok, immediately instantiated (class expression  not in version 0.1)
+// not ok, immediately instantiated (class expression not fully supported)
 // var cls2 = new class { field1 = "hello"; field2 = cls2.field1; };
 
 // ok
@@ -596,7 +596,7 @@ The elements to be imported with their names.
 
 ////
 %Properties set via annotations:
-%\version{postponed}{Not implemented as part of version 0.1, will be implemented if needed}
+%\version{postponed}{Not currently implemented, will be implemented if needed}
 %\begin{properties}
 %\item [$exclude$ \annotationDef{@Exclude}; compiler instruction to exclude the particular dependency from the generated define() call, even if the dependency analyzer would add it.
 %\item [$force$ \annotationDef{@Force}; compiler instruction to include the particular dependency from the generated define() call, even if the dependency analyzer would have removed it.
