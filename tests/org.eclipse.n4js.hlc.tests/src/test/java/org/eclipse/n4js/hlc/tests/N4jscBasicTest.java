@@ -17,8 +17,10 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.ErrorExitCode;
+import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
+import org.eclipse.n4js.hlc.base.SuccessExitStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,7 +52,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
-			assertEquals("Wrong exit code", N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
+			assertEquals("Wrong exit code", ErrorExitCode.EXITCODE_COMPILE_ERROR.getExitCodeValue(), e.getExitCode());
 			throw e;
 		}
 	}
@@ -71,7 +73,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 			new N4jscBase().doMain(args);
 			assertFalse("Line should not have been reached, ExitCodeException expected.", true);
 		} catch (ExitCodeException e) {
-			assertEquals(N4jscBase.EXITCODE_COMPILE_ERROR, e.getExitCode());
+			assertEquals(ErrorExitCode.EXITCODE_COMPILE_ERROR.getExitCodeValue(), e.getExitCode());
 		}
 		// Assert that at most 13 files are compiled. The actual number depends on the chosen algorithm for the build
 		// order and on the order in which the project dependency graph is traversed. 13 is the maximum number of files
@@ -101,7 +103,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	/**
 	 * test missing parameter-operand for projectroot, expecting Exception
 	 */
-	@Test(expected = N4jscBase.ExitCodeException.class)
+	@Test(expected = ExitCodeException.class)
 	public void testMainArgsProjectRoot_broken() throws ExitCodeException {
 		System.out.println(logMethodname());
 
@@ -113,40 +115,37 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 
 	/**
 	 * Test successful exit, Exception is expected but with Error-Code 0
+	 *
+	 * @throws ExitCodeException
+	 *             propagated from compiler in case of issues
 	 */
 	@Test
-	public void testMainHelp() {
+	public void testMainHelp() throws ExitCodeException {
 		System.out.println(logMethodname());
 		String[] args = { "-h" };
-		try {
-			new N4jscBase().doMain(args);
-			assertTrue("Should have printed help and exited before", false);
-		} catch (ExitCodeException e) {
-			assertEquals("Wrong exit code.", N4jscBase.EXITCODE_SUCCESS, e.getExitCode());
-		}
+		SuccessExitStatus status = new N4jscBase().doMain(args);
+		assertEquals("Should have printed help and exited with success.", SuccessExitStatus.INSTANCE.code, status.code);
 	}
 
 	/**
 	 * Test debug output before help. This test doesn't run a compile but because of the "-help" option should
+	 *
+	 * @throws ExitCodeException
+	 *             propagated from compiler in case of issues
 	 */
 	@Test
-	public void testMainDebugHelp() {
+	public void testMainDebugHelp() throws ExitCodeException {
 		System.out.println(logMethodname());
 		String[] args = { "-h", "--debug", "--preferences", "xxx", "-t", "allprojects" }; // , "more1", "more2", "more3"
-		// };
-		try {
-			new N4jscBase().doMain(args);
-			assertTrue("Should have printed help and exited before", false);
-		} catch (ExitCodeException e) {
-			assertEquals("Wrong exit code (not 0).", N4jscBase.EXITCODE_SUCCESS, e.getExitCode());
-		}
+		SuccessExitStatus status = new N4jscBase().doMain(args);
+		assertEquals("Should have printed help and exited with success.", SuccessExitStatus.INSTANCE.code, status.code);
 	}
 
 	/**
 	 * Simple test of compiling a project and running a class from that compiled code with NODEJS.
 	 *
 	 * @throws ExitCodeException
-	 *             in error cases ( not expected )
+	 *             propagated from compiler in case of issues
 	 */
 	@Test
 	public void testCompileP1_And_Run_A_WithNodeRunner() throws ExitCodeException {
@@ -167,8 +166,8 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 				"-r", fileA,
 				"-v"
 		};
-
-		new N4jscBase().doMain(args);
+		SuccessExitStatus status = new N4jscBase().doMain(args);
+		assertEquals("Should exit with success", SuccessExitStatus.INSTANCE.code, status.code);
 	}
 
 	/**
@@ -203,7 +202,9 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 			// check the expected exit code of 7:
-			assertEquals("Exit with wrong exitcode.", N4jscBase.EXITCODE_RUNNER_STOPPED_WITH_ERROR, e.getExitCode());
+			assertEquals("Exit with wrong exitcode.",
+					ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR.getExitCodeValue(),
+					e.getExitCode());
 			throw e;
 		}
 	}
@@ -221,7 +222,8 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
-			assertEquals("Exit with wrong exitcode", N4jscBase.EXITCODE_WRONG_CMDLINE_OPTIONS, e.getExitCode());
+			assertEquals("Exit with wrong exitcode", ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS.getExitCodeValue(),
+					e.getExitCode());
 			throw e;
 		}
 	}
@@ -241,7 +243,8 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
-			assertEquals("Exit with wrong exitcode", N4jscBase.EXITCODE_WRONG_CMDLINE_OPTIONS, e.getExitCode());
+			assertEquals("Exit with wrong exitcode", ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS.getExitCodeValue(),
+					e.getExitCode());
 			throw e;
 		}
 	}
@@ -314,7 +317,8 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException e) {
-			assertEquals("Exit with wrong exitcode", N4jscBase.EXITCODE_WRONG_CMDLINE_OPTIONS, e.getExitCode());
+			assertEquals("Exit with wrong exitcode", ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS.getExitCodeValue(),
+					e.getExitCode());
 			throw e;
 		}
 

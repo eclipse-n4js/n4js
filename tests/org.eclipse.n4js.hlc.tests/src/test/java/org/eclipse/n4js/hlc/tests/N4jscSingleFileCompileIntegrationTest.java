@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.junit.Test;
 
@@ -185,7 +186,8 @@ public class N4jscSingleFileCompileIntegrationTest extends AbstractN4jscIntegrat
 		int exitCode = p.waitFor();
 
 		// check the expected exit code of 7:
-		assertEquals("Exit with wrong exitcode.", N4jscBase.EXITCODE_RUNNER_STOPPED_WITH_ERROR, exitCode);
+		assertEquals("Exit with wrong exitcode.", ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR.getExitCodeValue(),
+				exitCode);
 
 	}
 }

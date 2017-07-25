@@ -17,8 +17,8 @@ import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 import java.io.IOException;
 import java.util.Map;
 
+import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase.BuildType;
-import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.junit.Test;
 
 /**

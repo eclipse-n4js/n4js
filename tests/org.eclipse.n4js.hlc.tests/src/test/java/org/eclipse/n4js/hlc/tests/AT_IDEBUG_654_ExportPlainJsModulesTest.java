@@ -14,7 +14,7 @@ import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCapt
 
 import java.io.IOException;
 
-import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
+import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

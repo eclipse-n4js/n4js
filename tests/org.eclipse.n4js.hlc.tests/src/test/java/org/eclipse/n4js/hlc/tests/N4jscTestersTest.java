@@ -20,8 +20,9 @@ import java.nio.file.Paths;
 import java.util.Collection;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.hlc.base.ErrorExitCode;
+import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -204,9 +205,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 		try {
 			new N4jscBase().doMain(args);
-			fail("Expecting exit code: " + N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
+			fail("Expecting exit code: " + ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue());
 		} catch (final ExitCodeException e) {
-			assertEquals(N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR, e.getExitCode());
+			assertEquals(ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue(), e.getExitCode());
 		}
 	}
 
@@ -227,9 +228,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 		try {
 			new N4jscBase().doMain(args);
-			fail("Expecting exit code: " + N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
+			fail("Expecting exit code: " + ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue());
 		} catch (final ExitCodeException e) {
-			assertEquals(N4jscBase.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR, e.getExitCode());
+			assertEquals(ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue(), e.getExitCode());
 		}
 	}
 

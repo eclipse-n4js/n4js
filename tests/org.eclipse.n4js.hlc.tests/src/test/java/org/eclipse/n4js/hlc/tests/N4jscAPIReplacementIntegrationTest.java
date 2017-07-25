@@ -12,7 +12,7 @@ package org.eclipse.n4js.hlc.tests;
 
 import static org.junit.Assert.assertEquals;
 
-import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.junit.Test;
 
 /**
@@ -85,7 +85,8 @@ public class N4jscAPIReplacementIntegrationTest extends AbstractN4jscIntegration
 				"-r", WSP + "/" + "org.eclipse.n4js.client/src/A.n4js"); // note: not defining an implementation id!
 
 		int exitCode = p.waitFor();
-		assertEquals("runner throws exception", N4jscBase.EXITCODE_RUNNER_STOPPED_WITH_ERROR, exitCode);
+		assertEquals("runner throws exception", ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR.getExitCodeValue(),
+				exitCode);
 
 		// check output
 		N4CliHelper

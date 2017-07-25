@@ -12,8 +12,8 @@ package org.eclipse.n4js.hlc.tests;
 
 import java.io.IOException;
 
+import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.eclipse.n4js.hlc.base.N4jscBase.ExitCodeException;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
