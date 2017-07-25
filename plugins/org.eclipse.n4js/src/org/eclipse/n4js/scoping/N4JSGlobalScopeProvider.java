@@ -13,14 +13,6 @@ package org.eclipse.n4js.scoping;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.resource.IContainer;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.containers.FilterUriContainer;
-import org.eclipse.xtext.scoping.IScope;
-
-import com.google.common.base.Predicate;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
@@ -30,6 +22,13 @@ import org.eclipse.n4js.scoping.utils.UserDataAwareScope;
 import org.eclipse.n4js.ts.scoping.builtin.DefaultN4GlobalScopeProvider;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.xtext.resource.IContainer;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.containers.FilterUriContainer;
+import org.eclipse.xtext.scoping.IScope;
+
+import com.google.common.base.Predicate;
+import com.google.inject.Inject;
 
 /**
  * Global scope which allows access to types stored in user data of {@link IEObjectDescription}s.
@@ -89,7 +88,7 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 			if (container.hasResourceDescription(uriToFilter) && !isStaticPolyFiller(resource))
 				container = new FilterUriContainer(uriToFilter, container);
 			IScope result = UserDataAwareScope.createScope(parent, container, filter, type, ignoreCase,
-					resource.getResourceSet(), container);
+					resource.getResourceSet(), resource, container);
 			return result;
 		}
 		return IScope.NULLSCOPE;

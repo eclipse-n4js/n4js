@@ -16,6 +16,13 @@ import java.util.Collections;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.ts.types.TClass;
+import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
@@ -26,13 +33,6 @@ import org.eclipse.xtext.util.IAcceptor;
 import com.google.common.collect.ForwardingMap;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.ts.types.TClass;
-import org.eclipse.n4js.ts.types.TMethod;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.Type;
 
 /**
  * Only produce {@link EObjectDescription descriptions} for instances of the type-representation of the resource.
@@ -100,6 +100,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	@Override
 	public boolean createEObjectDescriptions(final EObject eObject, IAcceptor<IEObjectDescription> acceptor) {
@@ -142,6 +144,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				if (delegate == null) {
 					try {
 						delegate = UserdataMapper.createUserData(module);
+						UserdataMapper.writeDependenciesToUserData(n4jsCore, (N4JSResource) module.eResource(),
+								delegate);
 					} catch (Exception e) {
 						throw new IllegalStateException(e);
 					}

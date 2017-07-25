@@ -69,6 +69,7 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
+import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
@@ -752,7 +753,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				final Resource targetResource = resSet.getResource(targetResourceUri, false);
 				// special handling #1:
 				// if targetResource is not loaded yet, try to load it from index first
-				if (targetResource == null) {
+				// (EXCEPT: in case of a cyclic dependency between 'this' and targetResource, we need to load from
+				// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we
+				// already know contextResource depends on resourceURI)
+				// FIXME GH-66 but what if 'this' is not currently being processed? (e.g. after loading this from index)
+				final boolean isCycliclyDependentTargetResource = isBackwardDependentResource(targetResourceUri);
+				if (targetResource == null && !isCycliclyDependentTargetResource) {
 					if (targetFragment != null && (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
 						// uri points to a TModule element in a resource not yet contained in our resource set
 						// --> try to load target resource from index
@@ -788,6 +794,31 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// b) targetUri points to an n4ts resource or some other, non-N4JS resource
 		// --> above special handling not required, so just apply EMF's default resolution behavior
 		return EcoreUtil.resolve(proxy, this);
+	}
+
+	@Override
+	protected EObject getEObject(String uriFragment, Triple<EObject, EReference, INode> triple) throws AssertionError {
+		// TODO Auto-generated method stub
+		return super.getEObject(uriFragment, triple);
+	}
+
+	/**
+	 * Tells if the receiving resource is among the dependencies of the resource represented by the given URI. For a
+	 * definition of "dependencies", see {@link UserdataMapper#readDependenciesFromDescription(IResourceDescription)}.
+	 */
+	public boolean isBackwardDependentResource(URI targetResourceUri) {
+		final ResourceSet resSet = getResourceSet();
+		if (n4jsCore.isInSameProject(targetResourceUri, getURI())) {
+			final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+			final IResourceDescription targetResourceDesc = index.getResourceDescription(targetResourceUri);
+			if (targetResourceDesc != null) {
+				final String[] targetResourceDeps = UserdataMapper.readDependenciesFromDescription(targetResourceDesc);
+				if (targetResourceDeps != null) {
+					return Arrays.contains(targetResourceDeps, getURI().toString());
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

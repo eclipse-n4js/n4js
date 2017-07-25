@@ -18,8 +18,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -28,15 +30,21 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.ecore.xml.type.XMLTypeFactory;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.util.IAcceptor;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 /**
  * The user data for exported modules contains a serialized representation of the module's content. This allows to
@@ -56,6 +64,12 @@ public final class UserdataMapper {
 	 * The key in the user data map of the module's description.
 	 */
 	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
+
+	/**
+	 * Comma-separated list of URIs of resources the containing resource depends on. Includes only resources within the
+	 * same project as the containing resource! See {@link #readDependenciesFromDescription(IResourceDescription)}.
+	 */
+	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
 
 	/**
 	 * The key in the user data map of static-polyfill contents-hash
@@ -239,5 +253,60 @@ public final class UserdataMapper {
 	 */
 	public static boolean hasSerializedModule(IEObjectDescription eObjectDescription) {
 		return eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT) != null;
+	}
+
+	/**
+	 * Computes list of dependencies of given resource and stores the list in the given user data. For details, see
+	 * {@link #readDependenciesFromDescription(IResourceDescription)}.
+	 */
+	public static void writeDependenciesToUserData(IN4JSCore n4jsCore, N4JSResource resource,
+			Map<String, String> userData) {
+		final URI resourceURI = resource.getURI();
+		final Set<URI> dependencies = Sets.newLinkedHashSet();
+		computeCrossRefs(resource, targetObj -> {
+			final Resource targetRes = targetObj.eResource();
+			if (targetRes != null && n4jsCore.isInSameProject(targetRes.getURI(), resourceURI)) {
+				dependencies.add(targetRes.getURI());
+			}
+		});
+		final String dependenciesStr = Joiner.on(",").join(dependencies);
+		userData.put(USERDATA_KEY_DEPENDENCIES, dependenciesStr);
+	}
+
+	// this is just a temporary place-holder and does not nearly cover all cases
+	// FIXME GH-66 use N4JSCrossReferenceComputer#computeCrossRefs() or something else instead OR extend this method!
+	private static void computeCrossRefs(Resource resource, IAcceptor<EObject> acceptor) {
+		final TreeIterator<EObject> allContentsIter = resource.getAllContents();
+		while (allContentsIter.hasNext()) {
+			final EObject eObject = allContentsIter.next();
+			if (eObject instanceof IdentifierRef) {
+				acceptor.accept(((IdentifierRef) eObject).getId());
+				allContentsIter.prune();
+			}
+		}
+	}
+
+	/**
+	 * Reads the list of dependencies of the resource R represented by the given resource description from its user
+	 * data. Returns an array of strings, in which each string represents the URI of a resource D that is a dependency
+	 * of R (i.e. R depends on D).
+	 * <p>
+	 * Definition: a resource R <em>depends on</em> a resource D, iff
+	 * <ul>
+	 * <li>D is contained in the same N4JS project as R, and
+	 * <li>R's TModule might be affected by changes of D's TModule.
+	 * </ul>
+	 * In this case, we also say D <em>is a dependency of</em> R.
+	 */
+	public static String[] readDependenciesFromDescription(IResourceDescription description) {
+		final Iterable<IEObjectDescription> modules = description
+				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
+		for (IEObjectDescription module : modules) {
+			final String dependenciesStr = module.getUserData(USERDATA_KEY_DEPENDENCIES);
+			if (dependenciesStr != null) {
+				return dependenciesStr.split(",");
+			}
+		}
+		return null;
 	}
 }
