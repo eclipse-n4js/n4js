@@ -10,5 +10,8 @@ Require-Bundle: org.eclipse.n4js.generator,
  org.eclipse.xtext.generator,
  org.eclipse.n4js.utils,
  org.eclipse.n4js,
- org.eclipse.n4js.n4jsx
-Export-Package: org.eclipse.n4js.generator.headless
+ org.eclipse.n4js.n4jsx,
+ org.eclipse.n4js.environments,
+ org.eclipse.core.resources
+Export-Package: org.eclipse.n4js.generator.headless,
+ org.eclipse.xtext.ui.resource
