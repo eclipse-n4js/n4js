@@ -45,6 +45,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
@@ -113,7 +115,7 @@ import com.google.inject.util.Modules;
  * This code was moved here from class {@code N4jsc} to allow method {@link #doMain(String...)} to be called from OSGI
  * bundles (e.g. tests, MWE2 work flows).
  */
-public class N4jscBase {
+public class N4jscBase implements IApplication {
 
 	/**
 	 * Marker used to distinguish between compile-messages and runner output.
@@ -306,6 +308,29 @@ public class N4jscBase {
 	@Inject
 	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
 
+	@Override
+	public Object start(IApplicationContext context) throws Exception {
+		int exitCode;
+		try {
+			// TODO get args from application context, https://stackoverflow.com/a/17919860/52564
+			String[] args = new String[] { "--help" };
+			SuccessExitStatus success = new N4jscBase().doMain(args);
+			exitCode = success.code;
+		} catch (ExitCodeException e) {
+			exitCode = e.getExitCode();
+			System.err
+					.println(e.getMessage() + " exitcode: " + exitCode + e.explanationOfExitCode());
+		}
+		System.out.flush();
+		System.err.flush();
+		return new Integer(exitCode);
+	}
+
+	@Override
+	public void stop() {
+		// nothing to do
+	}
+
 	/**
 	 * POJO style entry point to start the compiler.
 	 *
@@ -338,7 +363,7 @@ public class N4jscBase {
 	 *            parameters from command-line
 	 * @throws ExitCodeException
 	 *             in case of errors.
-	 * 
+	 *
 	 * @return SuccessExitStatus {@link SuccessExitStatus#INSTANCE success status} when everything went fine
 	 */
 	public SuccessExitStatus doMain(String... args) throws ExitCodeException {
