@@ -14,7 +14,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,7 +182,9 @@ public final class UserdataMapper {
 		} else {
 			timestamp = System.currentTimeMillis();
 		}
-		return Collections.singletonMap(USERDATA_KEY_TIMESTAMP, String.valueOf(timestamp));
+		final HashMap<String, String> result = new HashMap<>();
+		result.put(USERDATA_KEY_TIMESTAMP, String.valueOf(timestamp));
+		return result;
 	}
 
 	private static Map<Object, Object> getOptions(URI resourceURI, Boolean binary) {
