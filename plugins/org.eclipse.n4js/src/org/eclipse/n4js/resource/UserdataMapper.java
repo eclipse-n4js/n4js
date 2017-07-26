@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -30,7 +29,9 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.ecore.xml.type.XMLTypeFactory;
-import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -38,10 +39,12 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
+import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -265,23 +268,42 @@ public final class UserdataMapper {
 		final Set<URI> dependencies = Sets.newLinkedHashSet();
 		computeCrossRefs(resource, targetObj -> {
 			final Resource targetRes = targetObj.eResource();
-			if (targetRes != null && n4jsCore.isInSameProject(targetRes.getURI(), resourceURI)) {
-				dependencies.add(targetRes.getURI());
+			if (targetRes != null) {
+				final URI targetResURI = targetRes.getURI();
+				if (n4jsCore.isInSameProject(targetResURI, resourceURI)) {
+					dependencies.add(targetResURI);
+				}
 			}
 		});
-		final String dependenciesStr = Joiner.on(",").join(dependencies);
+		final String dependenciesStr = Joiner.on(",").join(dependencies); // FIXME GH-66 no need to persist entire URI!
 		userData.put(USERDATA_KEY_DEPENDENCIES, dependenciesStr);
 	}
 
+	/*-
 	// this is just a temporary place-holder and does not nearly cover all cases
 	// FIXME GH-66 use N4JSCrossReferenceComputer#computeCrossRefs() or something else instead OR extend this method!
-	private static void computeCrossRefs(Resource resource, IAcceptor<EObject> acceptor) {
+	private static void computeCrossRefs(N4JSResource resource, IAcceptor<EObject> acceptor) {
 		final TreeIterator<EObject> allContentsIter = resource.getAllContents();
 		while (allContentsIter.hasNext()) {
 			final EObject eObject = allContentsIter.next();
 			if (eObject instanceof IdentifierRef) {
 				acceptor.accept(((IdentifierRef) eObject).getId());
 				allContentsIter.prune();
+			}
+		}
+	}
+	*/
+	// other variant that only collects directly imported TModules:
+	private static void computeCrossRefs(N4JSResource resource, IAcceptor<TModule> acceptor) {
+		final Script script = resource.getScript();
+		if (script != null && !script.eIsProxy()) {
+			for (ScriptElement elem : script.getScriptElements()) {
+				if (elem instanceof ImportDeclaration) {
+					final TModule module = ((ImportDeclaration) elem).getModule();
+					if (module != null && !module.eIsProxy()) {
+						acceptor.accept(module);
+					}
+				}
 			}
 		}
 	}
@@ -308,5 +330,49 @@ public final class UserdataMapper {
 			}
 		}
 		return null;
+	}
+
+	// FIXME GH-66 consider caching return value
+	// FIXME GH-66 consider computing closure before writing to index
+	/**
+	 * Like {@link #readDependenciesFromDescription(IResourceDescription)}, but the dependencies are returned as a set
+	 * of URIs. When <code>transitive</code> is <code>true</code>, the transitive closure of dependencies will be
+	 * returned.
+	 *
+	 * @return set of URIs (may be empty in case there are no dependencies) or {@link Optional#absent() nothing} if the
+	 *         index is missing dependency information for the resource represented by 'description' or one of the
+	 *         resources in the transitive closure and thus the closure could not be computed entirely (and would
+	 *         therefore be unreliable).
+	 */
+	public static Optional<Set<URI>> readDependenciesFromDescription(IResourceDescription description,
+			boolean transitive, IResourceDescriptions index) {
+		final Set<URI> result = Sets.newLinkedHashSet();
+		if (readDependenciesFromDescription(description, transitive, index, result)) {
+			return Optional.of(result);
+		}
+		return Optional.absent();
+	}
+
+	private static boolean readDependenciesFromDescription(IResourceDescription description, boolean transitive,
+			IResourceDescriptions index, Set<URI> addHere) {
+		final String[] deps = readDependenciesFromDescription(description);
+		if (deps == null) {
+			return false;
+		}
+		for (String dep : deps) {
+			final URI depURI = URI.createURI(dep);
+			final boolean wasAdded = addHere.add(depURI);
+			if (transitive && wasAdded) {
+				final IResourceDescription depDesc = index.getResourceDescription(depURI);
+				if (depDesc != null) {
+					if (!readDependenciesFromDescription(depDesc, transitive, index, addHere)) {
+						return false;
+					}
+				} else {
+					// FIXME GH-66 returning false here breaks the tests, but why? (this would seem more consistent)
+				}
+			}
+		}
+		return true;
 	}
 }

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IResourceStatus;
@@ -75,6 +76,7 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -808,13 +810,21 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	public boolean isBackwardDependentResource(URI targetResourceUri) {
 		final ResourceSet resSet = getResourceSet();
-		if (n4jsCore.isInSameProject(targetResourceUri, getURI())) {
-			final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+		if (!targetResourceUri.equals(getURI())
+				&& n4jsCore.isInSameProject(targetResourceUri, getURI())) {
+			final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet); // FIXME GH-66
 			final IResourceDescription targetResourceDesc = index.getResourceDescription(targetResourceUri);
 			if (targetResourceDesc != null) {
-				final String[] targetResourceDeps = UserdataMapper.readDependenciesFromDescription(targetResourceDesc);
-				if (targetResourceDeps != null) {
-					return Arrays.contains(targetResourceDeps, getURI().toString());
+				final Optional<Set<URI>> targetResourceDeps = UserdataMapper.readDependenciesFromDescription(
+						targetResourceDesc, true, index);
+				if (targetResourceDeps.isPresent()) {
+					if (targetResourceDeps.get().contains(getURI())) {
+						return true;
+					}
+				} else {
+					// dependency information in index is incomplete (see API doc of #readDependenciesFromDescription())
+					// -> assume the target resource is backward dependent (to be on the safe side)
+					return true; // FIXME GH-66 this might be a performance leak; reconsider!!
 				}
 			}
 		}
