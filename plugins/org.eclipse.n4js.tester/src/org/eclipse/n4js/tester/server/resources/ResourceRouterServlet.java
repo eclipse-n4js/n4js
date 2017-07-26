@@ -18,7 +18,6 @@ import static com.google.common.collect.Iterables.any;
 import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Iterables.transform;
 import static com.google.common.collect.Iterables.tryFind;
-import static org.eclipse.n4js.tester.server.resources.HttpMethod.equalsWithMethod;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableCollection;
 import static javax.servlet.http.HttpServletResponse.SC_METHOD_NOT_ALLOWED;
@@ -26,6 +25,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static javax.servlet.http.HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE;
 import static org.apache.log4j.Logger.getLogger;
+import static org.eclipse.n4js.tester.server.resources.HttpMethod.equalsWithMethod;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -36,11 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import com.google.common.base.Optional;
-import com.google.common.base.Supplier;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.UrlDecoderService;
 import org.eclipse.n4js.tester.server.resources.service.TestCatalogAssemblerResource;
 import org.eclipse.n4js.tester.server.resources.sessions.EndSessionResource;
@@ -49,6 +44,10 @@ import org.eclipse.n4js.tester.server.resources.sessions.StartSessionResource;
 import org.eclipse.n4js.tester.server.resources.tests.EndTestResource;
 import org.eclipse.n4js.tester.server.resources.tests.PingTestResource;
 import org.eclipse.n4js.tester.server.resources.tests.StartTestResource;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Supplier;
+import com.google.inject.Inject;
 
 /**
  * HTTP servlet implementation for accepting all request URIs matching with the context root, then this class is
@@ -71,8 +70,7 @@ public class ResourceRouterServlet extends HttpServlet {
 			StartTestResource.class,
 			PingTestResource.class,
 			EndTestResource.class,
-			TestCatalogAssemblerResource.class
-		));
+			TestCatalogAssemblerResource.class));
 
 	//@formatter:off
 	private static final Supplier<Iterable<ResourceDescriptor>> RESOURCE_DESCRIPTORS = memoize(new Supplier<Iterable<ResourceDescriptor>>() {
