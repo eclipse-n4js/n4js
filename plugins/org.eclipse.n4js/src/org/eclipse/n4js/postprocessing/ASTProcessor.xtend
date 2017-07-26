@@ -12,6 +12,11 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.ArrayList
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
@@ -45,12 +50,8 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.ArrayList
-import java.util.List
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -108,6 +109,8 @@ public class ASTProcessor extends AbstractProcessor {
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
+UtilN4.tlog(resource.URI);
+
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be
 		// interpreted as a cyclic proxy resolution by method LazyLinkingResource#getEObject(String,Triple)
@@ -137,6 +140,8 @@ public class ASTProcessor extends AbstractProcessor {
 				log(4, resource.script, cache);
 			}
 			log(0, "### done: " + resource.URI);
+
+UtilN4.tlog("DONE " + resource.URI);
 		}
 	}
 

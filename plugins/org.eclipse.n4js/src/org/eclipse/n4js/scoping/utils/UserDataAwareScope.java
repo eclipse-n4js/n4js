@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.AbstractEObjectDescription;
@@ -159,9 +160,11 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			// in case of a cyclic dependency between contextResource and resourceURI, we need to force loading from
 			// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we already
 			// know contextResource depends on resourceURI
+			UtilN4.tlog("checking: " + contextResource.getURI().lastSegment() + " -> " + resourceURI.lastSegment());
 			final boolean isBackwardDependentResource = contextResource instanceof N4JSResource
 					&& ((N4JSResource) contextResource).isBackwardDependentResource(resourceURI);
 			final boolean forceLoadingFromSourceFile = isBackwardDependentResource;
+			UtilN4.tlog("force = " + forceLoadingFromSourceFile);
 			Resource resource = resourceSet.getResource(resourceURI, forceLoadingFromSourceFile);
 			if (resource != null && resource.isLoaded()) {
 				return original;

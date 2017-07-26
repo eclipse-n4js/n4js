@@ -58,6 +58,7 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
@@ -70,7 +71,6 @@ import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnostic;
 import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
-import org.eclipse.xtext.util.Arrays;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
@@ -306,6 +306,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		boolean wasDeliver = eDeliver();
 		try {
+			UtilN4.tlog(getURI());
+
 			eSetDeliver(false);
 			ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
 			if (!theContents.isEmpty())
@@ -531,9 +533,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
+		UtilN4.tlog(getURI());
 		if (contents != null && !contents.isEmpty())
 			discardStateFromDescription();
 		super.doLoad(inputStream, options);
+		UtilN4.tlog("DONE");
 	}
 
 	@Override

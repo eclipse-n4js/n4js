@@ -27,6 +27,14 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
+import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
+import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
@@ -46,14 +54,6 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
-import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
-import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
 
 /**
  * Produces the compiled js files immediately after the validation in order save CPU cycles, e.g. the file is already
@@ -167,6 +167,9 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
 
+		UtilN4.tlog("================================================================================================");
+		UtilN4.tlog(buildData.getProjectName());
+
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
 		logBuildData(buildData, " of before #doUpdate");
 
@@ -190,6 +193,8 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		logBuildData(buildData, " of after #doUpdate");
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
+
+		UtilN4.tlog("DONE " + buildData.getProjectName());
 
 		return modifiedDeltas;
 	}
@@ -308,6 +313,8 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 			BuildData buildData,
 			final IProgressMonitor monitor) {
 
+		UtilN4.tlog(changedDeltas);
+
 		// don't wanna copy super-class method, so using this helper to get the set of affected URIs:
 		final Set<URI> affectedURIs = new HashSet<>(allRemainingURIs);
 
@@ -361,6 +368,8 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 						new ResourceDescriptionWithoutModuleUserData(resDesc)));
 			}
 		}
+
+		UtilN4.tlog("DONE");
 	}
 
 	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {

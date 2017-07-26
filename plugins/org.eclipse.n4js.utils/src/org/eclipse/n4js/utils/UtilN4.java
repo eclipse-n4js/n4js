@@ -43,6 +43,12 @@ import com.google.common.collect.ImmutableList;
  */
 public class UtilN4 {
 
+	// FIXME GH-66 remove this!
+	public static final void tlog(Object msg) {
+		// final StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+		// System.out.println("#" + trace[2].getMethodName() + " " + msg);
+	}
+
 	private static Logger logger = Logger.getLogger(UtilN4.class);
 
 	private static final Iterable<Pair<String, String>> CHARS_TO_ESCAPED_CHARS = ImmutableList
