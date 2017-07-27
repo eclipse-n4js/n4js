@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+
+/* X-PECT findReferences at T ---
+   referenceFinder/structuralTypes/structuralTypes - T - 21,
+   referenceFinder/structuralTypes/structuralTypes - T - 28,
+   referenceFinder/structuralTypes/structuralTypes - T - 45,
+   referenceFinder/structuralTypes/structuralTypes - ~T - 46
+   ---
+ */
+class T {
+	/* XPECT findReferences at a ---
+	   referenceFinder/structuralTypes/structuralTypes - public a : T; - 28,
+	   referenceFinder/structuralTypes/structuralTypes - t.a - 48,
+	   referenceFinder/structuralTypes/structuralTypes - t.a - 49,
+	---
+	 */
+	public a : T;
+	/* XPECT findReferences at i ---
+	   referenceFinder/structuralTypes/structuralTypes - public i : int; - 35,
+	   referenceFinder/structuralTypes/structuralTypes - t.i - 51,
+	   referenceFinder/structuralTypes/structuralTypes - t.i - 52,
+	---
+	*/
+	public i : int;
+	/* XPECT findReferences at foo---
+	   referenceFinder/structuralTypes/structuralTypes - public foo(){}; - 41,
+	   referenceFinder/structuralTypes/structuralTypes - t.foo - 54
+	---
+	*/
+	public foo(){};
+}
+
+
+T;
+var t : ~T;
+
+t.a;
+t.a = null;
+
+t.i;
+t.i = 0;
+
+t.foo();
