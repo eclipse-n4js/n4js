@@ -15,9 +15,13 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 /**
+ * All the unit tests related to content assist.
  */
 @RunWith(Suite.class)
-@SuiteClasses({ TypeReferenceContentAssistPluginUITest.class })
+@SuiteClasses({
+		TypeReferenceContentAssistPluginUITest.class,
+		ContentAssistParserSanityTest.class,
+		ContentAssistBugPluginUITest.class })
 public class AllTests {
 	// empty
 }

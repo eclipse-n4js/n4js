@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.contentassist;
 
 import java.util.Collection;
-import java.util.concurrent.ExecutorService;
 
 import org.antlr.runtime.ANTLRStringStream;
 import org.antlr.runtime.Token;
@@ -32,11 +31,6 @@ import org.eclipse.xtext.util.Strings;
  */
 public class ContentAssistContextFactory
 		extends org.eclipse.xtext.ide.editor.contentassist.antlr.ContentAssistContextFactory {
-
-	@Override
-	public void setPool(ExecutorService pool) {
-		super.setPool(pool);
-	}
 
 	@Override
 	public CustomN4JSParser getParser() {

@@ -90,12 +90,12 @@ Contributors:
 			</plugin>
 			
 			<plugin>
-				<groupId>org.eclipse.xtext</groupId>
-				<artifactId>xtext-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>xtend-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.xtext</groupId>
+				<artifactId>xtext-maven-plugin</artifactId>
 			</plugin>
 
 			<!--
@@ -123,23 +123,6 @@ Contributors:
 					</executions>
 			</plugin>
 		</plugins>
-		
-		<pluginManagement>
-			<plugins>
-				<!-- TYCHO -->
-				<plugin>
-					<groupId>org.eclipse.tycho</groupId>
-					<artifactId>tycho-compiler-plugin</artifactId>
-					<version>${tycho.version}</version>
-					<configuration>
-						<useProjectSettings>true</useProjectSettings>
-						<compilerArgs>
-							<arg>-nowarn:[${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
-						</compilerArgs>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 	
 </project>

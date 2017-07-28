@@ -12,10 +12,10 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
-import static org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createSimpleProject;
-import static org.eclipse.xtext.junit4.ui.util.JavaProjectSetupUtil.createSubFolder;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
+import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSubFolder;
 
 import java.io.File;
 import java.io.IOException;
@@ -190,7 +190,6 @@ public class ProjectUtils {
 	 * @param manifestAdjustments
 	 *            for details see method {@link #createManifestN4MFFile(IProject, String, String, Consumer)}.
 	 */
-	@SuppressWarnings({ "restriction", "deprecation" })
 	public static IProject createJSProject(String projectName, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
 		IProject result = createSimpleProject(projectName);

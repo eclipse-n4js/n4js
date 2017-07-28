@@ -24,16 +24,19 @@ Contributors:
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
+	<properties>
+		<skip.mwe2>false</skip.mwe2>
+		<mwe2-file-location>/src/org/eclipse/n4js/n4jsx/model/GenerateN4JSXModel.mwe2</mwe2-file-location>
+		<!-- fornax: -->
+		<mwe2descriptor>org.eclipse.n4js.GenerateN4JS</mwe2descriptor>
+	</properties>
+
 
 	<build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>${maven-resources-plugin.version}</version>
-			</plugin>
-			<plugin>
-				<groupId>org.eclipse.xtext</groupId>
-				<artifactId>xtext-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.xtend</groupId>

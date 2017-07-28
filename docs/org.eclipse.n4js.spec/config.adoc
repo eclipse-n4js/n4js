@@ -32,7 +32,7 @@ Contributors:
 
 // General / Document layout etc. //
 :toc: left
-:toclevel: 3
+:toclevels: 5
 :doctype: book
 
 // Numbered section titles with auto-generated anchors

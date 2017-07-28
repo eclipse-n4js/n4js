@@ -25,11 +25,13 @@ import com.google.common.collect.Multimap;
 public class CRHStatsPrinter {
 
 	final static List<String> CANNOT_HAVE_CRH = Arrays.asList(new String[] {
-			"png", "bmp", "gif", "class", "classpath", "properties", "prefs", "MF", "project", "_project", "graffle",
+			"png", "bmp", "gif", "jpeg", "class", "classpath", "properties", "prefs", "MF", "project", "_project",
+			"graffle",
 			"gitignore", "jar", "npmignore", "ico", "zip", "graffle", "pdf", "csv", "target", "licence", "license",
 			"setup", "dict", "json", "launch", "svg", "xtextbin", /* plugin. */"xml_gen", "replacement", "bib", "ecore",
 			"genmodel", "gitattributes", /* about. */"html_TEMPLATE", "icns", "ignored", "index", "map", "mappings",
-			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "nfar" });
+			"placeholder", "product", "see", "sublime-project", "xpm", "exsd", "xlsx", "dummy", "nfar", "xdoc",
+			"xcf", "ext", "cspex", "api_filters", "b3aggr", "key" });
 
 	static boolean canHaveCRH(String extension) {
 		return !CANNOT_HAVE_CRH.contains(extension);
@@ -42,7 +44,7 @@ public class CRHStatsPrinter {
 	/** Prints copyright header statistics */
 	public static void println(final FullReport fullReport) {
 		Collection<Report> reportsNoCRH = fullReport.getReportsNoCRH();
-		reportsNoCRH = ReportUtils.filterReportsInN4JS(reportsNoCRH);
+		// reportsNoCRH = ReportUtils.filterReportsInN4JS(reportsNoCRH);
 		Multimap<String, Report> hist = ReportUtils.getHistogram(reportsNoCRH, (report) -> report.getFileExtension());
 		Map<String, Collection<Report>> sortedHist = ReportUtils.sortByListSize(hist);
 

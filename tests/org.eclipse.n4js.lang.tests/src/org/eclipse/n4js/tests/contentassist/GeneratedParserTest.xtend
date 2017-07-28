@@ -19,6 +19,8 @@ import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.parser.antlr.IUnorderedGroupHelper
 import org.junit.Ignore
+import org.eclipse.xtext.ide.editor.contentassist.antlr.RequiredRuleNameComputer
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 
 /**
  * Used to document bogus behavior of the default parser
@@ -27,19 +29,23 @@ import org.junit.Ignore
 class GeneratedParserTest extends AbstractContentAssistParserTest implements Provider<IUnorderedGroupHelper> {
 
 	@Inject IUnorderedGroupHelper unorderedGroupHelper
+	@Inject RequiredRuleNameComputer ruleNameComputer
+
+	@Inject extension ReflectExtensions
 
 	def getParser() {
 		return new TestableN4JSParser => [
 			it.grammarAccess = grammarAccess
 			it.unorderedGroupHelper = this
+			it.set('requiredRuleNameComputer', ruleNameComputer)
 		]
 	}
 
-	override getFollowElements(INode node, int start, int end) {
+	override getFollowElements(INode node, int start, int end, boolean strict) {
 		val s = node.text.substring(start, end)
-		parser.getFollowElements(s, true)
+		parser.getFollowElements(s, strict)
 	}
-
+	
 	override getFollowElements(FollowElement prev) {
 		parser.getFollowElements(prev)
 	}
