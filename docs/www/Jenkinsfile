@@ -15,7 +15,6 @@ def mailSender = 'robot@numberfour.eu'
 def String recipient = 'brian.smith@numberfour.eu'
 def String replyTo = 'brian.smith@numberfour.eu'
 def String team = 'brian.smith@numberfour.eu, staff-devtools@numberfour.eu'
-// TODO check node workspace URL
 def String buildhtml = env.BUILD_URL+"execution/node/5/ws/sourceX/docs/www/web-html"
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
@@ -38,31 +37,24 @@ try {
 			}
 		}
 
-		def sourceBranch = env.BRANCH
-
-		def htmlDir="$WORKSPACE/${sourceX}/docs/www/web-html"
-		def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
-
 		dir( sourceX ) {
+
+			def sourceBranch = env.BRANCH
+			def htmlDir="$WORKSPACE/${sourceX}/docs/www/web-html"
+			def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
 
 			stage('Source Checkout') {
 				// Change following repository to eclipse/n4js
 				sh "git clone --depth 1 -b $sourceBranch https://github.com/bsmith-n4/n4js.git ."
 			}
 			
-			stage ('Generate commit info') {
-				// Comitter name
-				sh "git log --format=%cN -1 . >docs/www/shortcommit.txt"
-				// Abbreviated Hash
-				sh "git log --format=%h -1 . >>docs/www/shortcommit.txt"
-			}
-
 			stage ('Build Eclipse Web Pages') {
 
 				dir ('docs/www') {
 					sh "${workspace}/${sourceX}/docs/www/buildweb.sh --docker"
 				}
 				echo "\u2705 Build successful."
+
 			}
 
 			stage ('Build N4JS Specification') {
@@ -72,58 +64,9 @@ try {
 			}	
 		}
 
-
-		stage ('Publish/Aggregation Step') {
-
+		stage ('Aggregating Web Pages') {
 			sh "cp -r $specDir/generated-docs/. $WORKSPACE/${sourceX}/docs/www/web-html/spec"
-
-
-			// A test repo, this should be changed to one of the protocols listed below
-			def targetRepo = "https://github.numberfour.eu/bsmith/eclipse-www.git"
-
-			// change 'targetRepo' to one of these:
-			// git://git.eclipse.org/gitroot/gerrit/www.eclipse.org/n4js.git
-			// ssh://git.eclipse.org/gitroot/gerrit/www.eclipse.org/n4js.git
-			// http://git.eclipse.org/gitroot/gerrit/www.eclipse.org/n4js.git
-						
-			// should be master for publishing
-			def targetBranch = "testbranch"
-			
-			// TODO change 'GH-103' feature branch to master before merging
- 			if("$sourceBranch" == "GH-103" ) {
-
-				sh "rm -rf htmldir"
-				sh "mkdir htmldir"
-
-				dir ("htmldir") {
-					sh "git clone --depth 1 -b $targetBranch $targetRepo ."
-
-					// Cannot remove everything in destination repo because of Handwritten HTML files.
-				 	// sh "rm -rf *"
-
-				 	sh "cp -r ${workspace}/${sourceX}/docs/www/web-html/. ."
-
-					sh "git add --all ."
-
-					// Some credentials needed here: see stage ('Generate commit info')
-					sh "git commit -m 'Pipeline published from ${sourceBranch} commit ---' "
-					sh "git status"
-					// Or change the following to open a PR
-					sh "git push --set-upstream origin $targetBranch"
-				}
-
-				mail to: 		recipient,
-					 from: 		mailSender,
-					 replyTo: 	replyTo,
-					 subject: 	"Eclipse N4JS Website build successful",
-					 body: 		"Documentation published to https://eclipse.org/n4js"+
-						  		"\nTriggered by commit: https://github.com/bsmith-n4/n4js/commit/---"
-
-				echo "\u2705 Published Webpages."
-
-			} else {
-				echo "On branch $sourceBranch - publishing step skipped. HTML can be viewed in Job ${env.BUILD_NUMBER} workspace: $buildhtml"
-			}
+			echo "On branch $sourceBranch - HTML can be viewed in Job ${env.BUILD_NUMBER} workspace: $buildhtml"
 			echo "\u2705 Aggregation finished."
 		}
 	}} // close try & timestamp
@@ -132,7 +75,7 @@ try {
 catch (exc) {
 	currentBuild.result = "FAILURE"
 	echo "Caught: ${exc}"
-	echo "[ERROR]\u274C $sourceBranch failing. Sending email notification."
+	echo "[ERROR]\u274C ${sourceBranch} failing. Sending email notification."
 
 	if ($sourceBranch == 'master' )
 	{
