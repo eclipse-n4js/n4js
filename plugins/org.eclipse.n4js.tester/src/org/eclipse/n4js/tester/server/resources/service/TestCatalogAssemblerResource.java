@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.tester.server.resources.service;
 
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.eclipse.n4js.tester.server.resources.ContentType.ASSEMBLE_TEST_CATALOG;
 import static org.eclipse.n4js.tester.server.resources.HttpMethod.GET;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -21,12 +21,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.server.resources.BaseResource;
 import org.eclipse.n4js.tester.server.resources.Resource;
+
+import com.google.inject.Inject;
 
 /**
  * RESTful resource for assembling and providing a test catalog based on the tests available in the {@link IN4JSCore
