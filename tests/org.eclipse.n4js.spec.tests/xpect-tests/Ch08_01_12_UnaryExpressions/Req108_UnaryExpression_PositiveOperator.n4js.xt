@@ -43,7 +43,7 @@ var nPlus9 : number = +
 // XPECT errors --> "string is not a subtype of number." at ""4""
 "4";
 var nPlus10 : number = + Infinity; //
-// XPECT errors --> "~Object is not a subtype of number." at "{}"
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "{}"
 var nPlus11 : number = + {};
 var nPlus11b : number = + NaN; // NaN
 // XPECT errors --> "boolean is not a subtype of number." at "true"
