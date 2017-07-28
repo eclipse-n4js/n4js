@@ -24,9 +24,7 @@ import {A} from "referenceFinder/inheritance/A";
 
 export public class B extends A {
 	/* XPECT findReferences at foo ---
-		referenceFinder/inheritance/A - public foo(): int { return 42; } - 29,
-		referenceFinder/inheritance/B - @Override public foo(): int { return 43; } - 33,
-		referenceFinder/inheritance/C - a.foo - 27,
+		referenceFinder/inheritance/B - @Override public foo(): int { return 43; } - 31,
 		referenceFinder/inheritance/C - b.foo - 33
 	---
 	*/
@@ -36,9 +34,7 @@ export public class B extends A {
 	}
 
 	/* XPECT findReferences at gg ---
-		referenceFinder/inheritance/A - public get gg(): string { return "Hi A"; } - 39,
-		referenceFinder/inheritance/B - @Override public get gg(): string { return "Hi B"; } - 45,
-		referenceFinder/inheritance/C - a.gg - 28,
+		referenceFinder/inheritance/B - @Override public get gg(): string { return "Hi B"; } - 41,
 		referenceFinder/inheritance/C - b.gg - 34
 	---
 	*/
@@ -46,9 +42,7 @@ export public class B extends A {
 	public get gg(): string { return "Hi B"; }
 
 	/* XPECT findReferences at ss ---
-		referenceFinder/inheritance/A - public set ss(val: string) { }- 46,
-		referenceFinder/inheritance/B - @Override public set ss(val: string) { }- 55,
-		referenceFinder/inheritance/C - a.ss - 29,
+		referenceFinder/inheritance/B - @Override public set ss(val: string) { }- 49,
 		referenceFinder/inheritance/C - b.ss - 35,
 	---
 	*/
@@ -56,9 +50,7 @@ export public class B extends A {
 	public set ss(val: string) { }
 
 	/* XPECT findReferences at ff ---
-		 referenceFinder/inheritance/A - public ff: string = "ff in A"; - 52,
-		 referenceFinder/inheritance/B - @Override public ff: string = "ff in B"; - 65,
-		 referenceFinder/inheritance/C - a.ff - 30,
+		 referenceFinder/inheritance/B - @Override public ff: string = "ff in B"; - 57,
 		 referenceFinder/inheritance/C - b.ff - 36
 	---
 	*/	

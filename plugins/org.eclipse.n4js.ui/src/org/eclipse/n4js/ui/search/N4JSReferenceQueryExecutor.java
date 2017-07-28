@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
@@ -29,7 +28,6 @@ import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.validation.validators.utils.MemberCube;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix;
-import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -55,13 +53,13 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 			primaryTarget = primaryTarget.eContainer();
 		}
 		// Add overriden members
-		if (primaryTarget instanceof N4MemberDeclaration) {
-			TMember tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
-			for (TMember inheritedOrImplementedMember : getInheritedAndImplementedMembers(tmember)) {
-				URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(inheritedOrImplementedMember);
-				newResult.add(uri);
-			}
-		}
+		// if (primaryTarget instanceof N4MemberDeclaration) {
+		// TMember tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
+		// for (TMember inheritedOrImplementedMember : getInheritedAndImplementedMembers(tmember)) {
+		// URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(inheritedOrImplementedMember);
+		// newResult.add(uri);
+		// }
+		// }
 
 		// GH-73: TODO add overriding members
 

@@ -28,8 +28,14 @@
  */
 
 @@StaticPolyfillModule
+
 @StaticPolyfill
 export public class Polyfill extends Polyfill {
-// IDE-1662 XPECT FIXME findReferences at z --> z - 32
+	// XPECT findReferences at z --> Poly - p.z - 58, Poly - z : String;- 35
 	z : String;
+
+	@Override
+	public m(): void {
+		console.log("I am in the polyfill");
+	}
 }

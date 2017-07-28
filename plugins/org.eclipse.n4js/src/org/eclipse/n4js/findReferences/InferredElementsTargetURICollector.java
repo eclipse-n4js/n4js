@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.utils.TypeHelper;
@@ -32,6 +33,9 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 	@Inject
 	private InferredElements inferredElements;
 
+	@Inject
+	private ProjectUtils projectUtils;
+
 	@Override
 	protected void doAdd(EObject primaryTarget, TargetURIs targetURIs) {
 		EcoreUtil.resolveAll(primaryTarget.eResource());
@@ -44,12 +48,11 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 		} else {
 			super.doAdd(primaryTarget, targetURIs);
 		}
-
 		inferredElements.collectInferredElements(primaryTarget, (object) -> {
 			if (object != null) {
 				super.doAdd(object, targetURIs);
 			}
-		});
+		}, projectUtils);
 	}
 
 }

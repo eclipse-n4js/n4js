@@ -10,17 +10,24 @@
  */
 package org.eclipse.n4js.resource;
 
+import java.util.Optional;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
+import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.util.IAcceptor;
 
 /**
@@ -39,15 +46,19 @@ public class InferredElements {
 	 * @param result
 	 *            acceptor for all elements
 	 */
-	public void collectInferredElements(EObject astElement, IAcceptor<? super EObject> result) {
-		new Impl(result).doSwitch(astElement);
+	public void collectInferredElements(EObject astElement, IAcceptor<? super EObject> result,
+			ProjectUtils projectUtils) {
+		new Impl(result, projectUtils).doSwitch(astElement);
 	}
 
 	private static class Impl extends N4JSSwitch<Void> {
 		private final IAcceptor<? super EObject> result;
+		private final ProjectUtils projectUtils;
 
-		private Impl(IAcceptor<? super EObject> result) {
+		private Impl(IAcceptor<? super EObject> result,
+				ProjectUtils projectUtils) {
 			this.result = result;
+			this.projectUtils = projectUtils;
 		}
 
 		@Override
@@ -94,7 +105,7 @@ public class InferredElements {
 
 		@Override
 		public Void caseLiteralOrComputedPropertyName(LiteralOrComputedPropertyName object) {
-			// LiteralOrComputedProperty does not have a type representation, that's add its parent GH-73
+			// LiteralOrComputedProperty does not have a type representation, that's why add its parent GH-73.
 			result.accept(object.eContainer());
 			return doSwitch(object.eContainer());
 		}
@@ -103,6 +114,25 @@ public class InferredElements {
 		public Void caseN4MethodDeclaration(N4MethodDeclaration object) {
 			result.accept(object.getDefinedTypeElement());
 			return super.caseN4MethodDeclaration(object);
+		}
+
+		@Override
+		public Void caseN4MemberDeclaration(N4MemberDeclaration memberDecl) {
+			TMember tmember = memberDecl.getDefinedTypeElement();
+			TClassifier tclassFilled = (TClassifier) tmember.getContainingType();
+			// If this member is replaced by a polyfill's member, we accept that polyfill'member as well.
+			if (tmember.getContainingModule().isStaticPolyfillAware()) {
+				N4ClassDeclaration filler = projectUtils.getStaticPolyfill(tclassFilled);
+				// Search for the polyfill's member
+				Optional<N4MemberDeclaration> fillerMember = filler.getOwnedMembers().stream()
+						.filter(mem -> mem.eClass() == memberDecl.eClass() &&
+								mem.getName().equals(memberDecl.getName()))
+						.findFirst();
+				if (fillerMember.isPresent()) {
+					return doSwitch(fillerMember.get());
+				}
+			}
+			return super.caseN4MemberDeclaration(memberDecl);
 		}
 	}
 }
