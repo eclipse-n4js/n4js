@@ -23,7 +23,7 @@ import org.eclipse.n4js.hlc.base.N4jscBase;
  * is contained in an OSGI bundle) to facilitate dependency management through Tycho and reuse of the logic in tests and
  * MWE2 work flows (see {@link N4jscBase#doMain(String...)}).
  */
-public class N4jsc extends N4jscBase {
+public class N4jsc {
 
 	/**
 	 * Entry point to start the compiler. Parses the Parameters.
@@ -32,15 +32,6 @@ public class N4jsc extends N4jscBase {
 	 *            the parameters.
 	 */
 	public static void main(String[] args) {
-		try {
-			new N4jsc().doMain(args);
-		} catch (ExitCodeException e) {
-			final int exitCode = e.getExitCode();
-			if (exitCode != N4jscBase.EXITCODE_SUCCESS) {
-				warn(e.getMessage() + " exitcode: " + exitCode + explanationOfExitCode(exitCode));
-				System.out.flush();
-			}
-			System.exit(e.getExitCode());
-		}
+		N4jscBase.main(args);
 	}
 }

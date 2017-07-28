@@ -5,11 +5,10 @@ Bundle-SymbolicName: org.eclipse.n4js.generator.headless
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Require-Bundle: org.eclipse.n4js.generator;bundle-version="0.0.1",
- org.eclipse.n4js.generator.common;bundle-version="0.0.1",
+Require-Bundle: org.eclipse.n4js.generator,
+ org.eclipse.n4js.generator.common,
  org.eclipse.xtext.generator,
- org.eclipse.n4js.utils,
+ org.eclipse.core.resources,
  org.eclipse.n4js,
- org.eclipse.n4js.environments;bundle-version="0.0.1",
- org.eclipse.n4js.n4jsx
+ org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.generator.headless

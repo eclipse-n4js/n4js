@@ -10,9 +10,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
  com.google.guava,
  org.eclipse.ui.ide.application,
- org.eclipse.e4.ui.model.workbench
+ org.eclipse.e4.ui.model.workbench,
+ org.apache.log4j
 Bundle-Localization: plugin
-Import-Package: org.apache.log4j,
- org.eclipse.ui.internal.editors.text,
- org.eclipse.ui.texteditor
 Export-Package: org.eclipse.n4js.product
