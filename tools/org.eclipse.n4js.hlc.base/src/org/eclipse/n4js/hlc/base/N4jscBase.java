@@ -12,6 +12,14 @@ package org.eclipse.n4js.hlc.base;
 
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.inject.util.Modules.override;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CLEAN_ERROR;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_COMPILE_ERROR;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CONFIGURATION_ERROR;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_MODULE_TO_RUN_NOT_FOUND;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_NOT_FOUND;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR;
+import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
 import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
 import static org.eclipse.n4js.utils.git.GitUtils.pull;
 
@@ -25,7 +33,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -112,47 +119,6 @@ public class N4jscBase {
 	 * Marker used to distinguish between compile-messages and runner output.
 	 */
 	public static final String MARKER_RUNNER_OUPTUT = "======= =======";
-
-	/** Normal successful exit. */
-	public final static int EXITCODE_SUCCESS = 0;
-
-	/** Exit with 1, wrong parameter set given */
-	public final static int EXITCODE_WRONG_CMDLINE_OPTIONS = 1;
-
-	/** Exit with 2, if compilation did not succeed. */
-	public final static int EXITCODE_COMPILE_ERROR = 2;
-
-	/** Exit with 3, if configuration is erroneous. */
-	public final static int EXITCODE_CONFIGURATION_ERROR = 3;
-
-	/** Exit with 4, if required runner could not be loaded. */
-	public final static int EXITCODE_RUNNER_NOT_FOUND = 4;
-
-	/** Exit with 5, if module to run doesn't exist. */
-	public final static int EXITCODE_MODULE_TO_RUN_NOT_FOUND = 5;
-
-	/** Exit code 6 indicating an unsuccessful execution of the runner. */
-	public static final int EXITCODE_RUNNER_STOPPED_WITH_ERROR = 6;
-
-	/** Exit code 7 indicating that assembling the test catalog failed for compiler projects. */
-	public static final int EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR = 7;
-
-	/** Exit with 8, if cleaning did not succeed. */
-	public final static int EXITCODE_CLEAN_ERROR = 8;
-
-	private static final HashMap<Integer, String> exitCodeExplained = new HashMap<>();
-
-	static {
-		exitCodeExplained.put(EXITCODE_SUCCESS, "normal successful exit");
-		exitCodeExplained.put(EXITCODE_WRONG_CMDLINE_OPTIONS, "wrong parameter set given");
-		exitCodeExplained.put(EXITCODE_COMPILE_ERROR, "compilation did not succeed");
-		exitCodeExplained.put(EXITCODE_CONFIGURATION_ERROR, "configuration is erroneous");
-		exitCodeExplained.put(EXITCODE_RUNNER_NOT_FOUND, "required runner could not be loaded");
-		exitCodeExplained.put(EXITCODE_MODULE_TO_RUN_NOT_FOUND, "module to run doesn't exist");
-		exitCodeExplained.put(EXITCODE_RUNNER_STOPPED_WITH_ERROR, "unsuccessful execution of the runner");
-		exitCodeExplained.put(EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR,
-				"assembling the test catalog failed for compiler projects");
-	}
 
 	/** Printing of usage and exit */
 	@Option(name = "--help", aliases = "-h", usage = "print help & exit")
@@ -341,6 +307,27 @@ public class N4jscBase {
 	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
 
 	/**
+	 * POJO style entry point to start the compiler.
+	 *
+	 * @param args
+	 *            the parameters.
+	 */
+	public static void main(String[] args) {
+		int exitCode;
+		try {
+			SuccessExitStatus success = new N4jscBase().doMain(args);
+			exitCode = success.code;
+		} catch (ExitCodeException e) {
+			exitCode = e.getExitCode();
+			System.err
+					.println(e.getMessage() + " exitcode: " + exitCode + e.explanationOfExitCode());
+		}
+		System.out.flush();
+		System.err.flush();
+		System.exit(exitCode);
+	}
+
+	/**
 	 * This method can be used when the headless builder (a.k.a. n4jsc.jar) is to be invoked programmatically from
 	 * outside bundle {@code org.eclipse.n4js.hlc}, e.g. in tests or in MWE2 work flows.
 	 * <p>
@@ -351,8 +338,10 @@ public class N4jscBase {
 	 *            parameters from command-line
 	 * @throws ExitCodeException
 	 *             in case of errors.
+	 * 
+	 * @return SuccessExitStatus {@link SuccessExitStatus#INSTANCE success status} when everything went fine
 	 */
-	public void doMain(String... args) throws ExitCodeException {
+	public SuccessExitStatus doMain(String... args) throws ExitCodeException {
 		try {
 
 			CmdLineParser parser = new CmdLineParser(this);
@@ -382,7 +371,7 @@ public class N4jscBase {
 			if (help) {
 				// print and exit:
 				printExtendedUsage(parser, System.out);
-				throw new ExitCodeException(EXITCODE_SUCCESS);
+				return SuccessExitStatus.INSTANCE;
 			}
 
 			// Injection should not be called before making sure the argument parsing successfully finished. Such as
@@ -403,11 +392,11 @@ public class N4jscBase {
 
 			if (listRunners) {
 				printAvailableRunners(System.out);
-				throw new ExitCodeException(EXITCODE_SUCCESS);
+				return SuccessExitStatus.INSTANCE;
 			}
 			if (listTesters) {
 				printAvailableTesters(System.out);
-				throw new ExitCodeException(EXITCODE_SUCCESS);
+				return SuccessExitStatus.INSTANCE;
 			}
 
 			EnumSet<BuildType> noSrcRequired = EnumSet.of(BuildType.allprojects, BuildType.dontcompile);
@@ -526,6 +515,9 @@ public class N4jscBase {
 			targetPlatformFile = null;
 			targetPlatformInstallLocation = null;
 		}
+
+		// did everything there was to be done
+		return SuccessExitStatus.INSTANCE;
 	}
 
 	private void clean() throws ExitCodeException {
@@ -1032,8 +1024,7 @@ public class N4jscBase {
 
 			if (exit != 0) {
 				throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR, "The spawned runner '" + rd.getId()
-						+ "' exited with code="
-						+ exit + explanationOfExitCode(exit));
+						+ "' exited with code=" + exit);
 			}
 
 		} catch (Exception e1) {
@@ -1041,18 +1032,6 @@ public class N4jscBase {
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
 					"The spawned runner exited by throwing an exception", e1);
 		}
-	}
-
-	/**
-	 * @param exit
-	 *            the code.
-	 * @return empty string or explanation
-	 */
-	protected static String explanationOfExitCode(int exit) {
-		String ret = exitCodeExplained.get(exit);
-		if (ret == null)
-			return "";
-		return " (" + ret + ")";
 	}
 
 	private void startTester() throws ExitCodeException {
@@ -1070,8 +1049,7 @@ public class N4jscBase {
 
 			if (exit != 0) {
 				throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR, "The spawned tester '" + td.getId()
-						+ "' exited with code="
-						+ exit + explanationOfExitCode(exit));
+						+ "' exited with code=" + exit);
 			}
 
 		} catch (Exception e1) {
@@ -1417,78 +1395,6 @@ public class N4jscBase {
 		sb.append("Current execution directory = " + new File(".").getAbsolutePath());
 
 		System.out.println(sb.toString());
-	}
-
-	/**
-	 * Class Wrapping the information to shutdown VM in error-case. Remember to do user-output before throwing an
-	 * instance of this class.
-	 */
-	public static class ExitCodeException extends Exception {
-
-		private int exitCode = 0;
-
-		/**
-		 * @return code to exit VM with.
-		 */
-		public int getExitCode() {
-			return exitCode;
-		}
-
-		/**
-		 * @param exitCode
-		 *            code to shutdown VM with
-		 */
-		public ExitCodeException(int exitCode) {
-			super();
-			this.exitCode = exitCode;
-		}
-
-		/**
-		 */
-		public ExitCodeException(int exitCode, String message, Throwable cause, boolean enableSuppression,
-				boolean writableStackTrace) {
-			super(message, cause, enableSuppression, writableStackTrace);
-			this.exitCode = exitCode;
-		}
-
-		/**
-		 */
-		public ExitCodeException(int exitcode, String string) {
-			super(string);
-			this.exitCode = exitcode;
-		}
-
-		/**
-		 * @param exitCode
-		 *            code to shutdown VM with
-		 * @param message
-		 *            user presentable cause
-		 * @param cause
-		 *            wrapped Exception.
-		 */
-		public ExitCodeException(int exitCode, String message, Throwable cause) {
-			super(cause);
-			this.exitCode = exitCode;
-		}
-
-		/**
-		 * @param exitCode
-		 *            code to shutdown VM with
-		 * @param cause
-		 *            wrapped Exception.
-		 */
-		public ExitCodeException(int exitCode, Throwable cause) {
-			super(cause);
-			this.exitCode = exitCode;
-		}
-
-		/**
-		 * @return if a message is set.
-		 */
-		public boolean hasMessage() {
-			return getMessage() != null && getMessage().length() > 0;
-		}
-
 	}
 
 	/**

@@ -5,10 +5,6 @@ Bundle-SymbolicName: org.eclipse.n4js.tester;singleton:=true
 Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Import-Package: javax.inject,
- javax.servlet,
- javax.servlet.http,
- org.apache.log4j
 Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.ts.model,
  org.eclipse.n4js.runner,
@@ -26,7 +22,8 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.jetty.server,
  org.eclipse.jetty.http,
  org.eclipse.jetty.io,
- org.eclipse.jetty.security
+ org.eclipse.jetty.security,
+ javax.servlet
 Export-Package: org.eclipse.n4js.tester,
  org.eclipse.n4js.tester.domain,
  org.eclipse.n4js.tester.events,

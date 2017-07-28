@@ -19,10 +19,10 @@ import org.eclipse.core.internal.resources.WorkManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.n4js.external.ExternalLibrariesReloadHelper;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
+import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.junit.After;
 import org.junit.Test;
 

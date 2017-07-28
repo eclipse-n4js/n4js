@@ -6,7 +6,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-ClassPath: .
 Bundle-SymbolicName: org.eclipse.n4js.npmexporter.ui;singleton:=true
 Bundle-ActivationPolicy: lazy
-Require-Bundle: org.eclipse.n4js.npmexporter;bundle-version="0.0.1",
+Require-Bundle: org.eclipse.n4js.npmexporter,
  org.eclipse.osgi,
  org.eclipse.xtext.ui,
  org.eclipse.n4js.ui,
@@ -15,8 +15,7 @@ Require-Bundle: org.eclipse.n4js.npmexporter;bundle-version="0.0.1",
  org.eclipse.ui.ide,
  org.eclipse.equinox.bidi,
  org.eclipse.compare,
- org.eclipse.n4js.utils
-Import-Package: org.apache.log4j,
- org.eclipse.xtext.xbase.lib
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.utils.ui
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-Activator: org.eclipse.n4js.npmexporter.ui.NpmExporterActivator

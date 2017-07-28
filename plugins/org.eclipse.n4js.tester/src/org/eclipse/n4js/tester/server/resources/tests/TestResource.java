@@ -19,13 +19,13 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
-import com.google.common.base.Throwables;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.server.resources.BaseResource;
 import org.eclipse.n4js.tester.server.resources.ClientResourceException;
+
+import com.google.common.base.Throwables;
+import com.google.inject.Inject;
 
 /**
  * Base of all resources used for interacting tests such as {@code start test}, {@code end test}, and {@code ping test}.
