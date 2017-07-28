@@ -17,14 +17,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.utils.TypeHelper;
-import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 
 import com.google.inject.Inject;
 
 /**
- * Collector of target URIs when find referencs is triggered. Collects the URI of the given object and of all objects
+ * Collector of target URIs when find references is triggered. Collects the URI of the given object and of all objects
  * that have been inferred from that.
  */
 @SuppressWarnings("restriction")
@@ -32,9 +31,6 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 
 	@Inject
 	private InferredElements inferredElements;
-
-	@Inject
-	private ContainerTypesHelper containerTypesHelper;
 
 	@Override
 	protected void doAdd(EObject primaryTarget, TargetURIs targetURIs) {
@@ -53,7 +49,7 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 			if (object != null) {
 				super.doAdd(object, targetURIs);
 			}
-		}, containerTypesHelper);
+		});
 	}
 
 }
