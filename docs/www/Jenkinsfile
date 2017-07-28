@@ -43,7 +43,7 @@ try {
 		dir( sourceX ) {
 
 			stage('Source Checkout') {
-				sh "git clone --depth 1 -b $sourceBranch https://github.com/bsmith-n4/n4js.git ."
+				sh "git clone --depth 1 -b $sourceBranch https://github.com/eclipse/n4js.git ."
 			}
 			
 			stage ('Build Eclipse Web Pages') {
