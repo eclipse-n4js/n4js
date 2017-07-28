@@ -993,7 +993,7 @@ Contributors:
            </contribution>
         </extension>
         <extension
-              point="org.eclipse.n4js.utils.quickfixProviderSupplier">
+              point="org.eclipse.n4js.utils.ui.quickfixProviderSupplier">
            <supplier
                  class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.quickfix.N4JSQuickfixProviderSupplier">
            </supplier>

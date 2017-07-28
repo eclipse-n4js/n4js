@@ -13,7 +13,6 @@ package org.eclipse.n4js.runner.nodejs;
 import static com.google.common.base.Joiner.on;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.newLinkedHashSet;
-import static org.apache.log4j.Logger.getLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
@@ -49,7 +49,7 @@ public class NodeRunner implements IRunner {
 	/** Environment key */
 	private static final String NODE_PATH = "NODE_PATH";
 
-	private static final org.apache.log4j.Logger LOGGER = getLogger(NodeRunner.class);
+	private static final Logger LOGGER = Logger.getLogger(NodeRunner.class);
 
 	/** ID of the Node.js runner as defined in the plugin.xml. */
 	public static final String ID = "org.eclipse.n4js.runner.nodejs.NODEJS";

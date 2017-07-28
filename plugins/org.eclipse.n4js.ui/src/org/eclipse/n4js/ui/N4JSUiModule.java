@@ -597,7 +597,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/**
 	 * Toggle showing inherited members or not.
 	 */
-	public void configureFilterSyntheticMembersContribution(Binder binder) {
+	public void configureInheritedMembersOutlineContribution(Binder binder) {
 		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("InheritedMembersOutlineContribution")).to(
 				N4JSShowInheritedMembersOutlineContribution.class);
 	}
