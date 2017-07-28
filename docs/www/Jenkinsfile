@@ -28,6 +28,9 @@ try {
 
 		def workspace = pwd()
 		def sourceX = "sourceX"
+		def sourceBranch = env.BRANCH
+		def htmlDir="$WORKSPACE/${sourceX}/docs/www/web-html"
+		def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
 
 		sh "pwd; ls -la"
 
@@ -39,12 +42,8 @@ try {
 
 		dir( sourceX ) {
 
-			def sourceBranch = env.BRANCH
-			def htmlDir="$WORKSPACE/${sourceX}/docs/www/web-html"
-			def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
-
 			stage('Source Checkout') {
-				sh "git clone --depth 1 -b $sourceBranch https://github.com/eclipse/n4js.git ."
+				sh "git clone --depth 1 -b $sourceBranch https://github.com/bsmith-n4/n4js.git ."
 			}
 			
 			stage ('Build Eclipse Web Pages') {
