@@ -16,11 +16,9 @@ asciispec term
 SRC_DIR="../org.eclipse.n4js.spec"
 SPEC_DIR=web-html/spec
 
-function copy_scripts () {
-	echo "[INFO] Copying shared assets to web-html dir (scripts, images)"
-	cp -r $SRC_DIR/$GEN_FOLDER/. $SPEC_DIR
-	cp -r assets/scripts assets/styles assets/images web-html	
-}
+if [ ! -d "$SPEC_DIR" ]; then
+   mkdir -p ./$SPEC_DIR/
+fi
 
 pushd $SRC_DIR
 	# Specify & Clean output directory
@@ -31,23 +29,15 @@ pushd $SRC_DIR
 	echo "[INFO] Building HTML Language Specification"
 	asciispec -D $GEN_FOLDER N4JSSpec.adoc
 
-	# running "./buildspec.sh -p" (preview) will skip PDF build and launch N4JSSpec.html
-	if [ "${1}" == "--preview" ] || [ "${1}" == "-p" ]; then
-		popd
-		copy_scripts
-		open $SRC_DIR/$GEN_FOLDER/N4JSSpec.html
-		exit 0
+	if [ "${1}" == "--pdf" ]; then
+		echo "[INFO] Building PDF via docbook toolchain"
+		asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml && rm $GEN_FOLDER/N4JSSpec.xml
 	fi
-
-	echo "[INFO] Building PDF via docbook toolchain"
-	asciispec -b docbook -D $GEN_FOLDER N4JSSpec.adoc && fopub $GEN_FOLDER/N4JSSpec.xml && rm $GEN_FOLDER/N4JSSpec.xml
 popd
 
-if [ ! -d "$SPEC_DIR" ]; then
-   mkdir -p ./$SPEC_DIR/
-fi
-
-copy_scripts
+echo "[INFO] Copying shared assets to web-html dir (scripts, images)"
+cp -r $SRC_DIR/$GEN_FOLDER/. $SPEC_DIR
+cp -r assets/scripts assets/styles assets/images web-html
 
 # Clean unwanted source files
 pushd $SPEC_DIR/chapters
@@ -55,3 +45,8 @@ pushd $SPEC_DIR/chapters
 popd
 
 echo "[INFO] N4JS Language Specification built"
+
+if [ "${1}" == "--launch" ]; then
+	echo "[INFO] Opening HTML Spec"
+	open $SPEC_DIR/N4JSSpec.html
+fi
