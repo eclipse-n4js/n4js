@@ -44,8 +44,7 @@ try {
 			def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
 
 			stage('Source Checkout') {
-				// Change following repository to eclipse/n4js
-				sh "git clone --depth 1 -b $sourceBranch https://github.com/bsmith-n4/n4js.git ."
+				sh "git clone --depth 1 -b $sourceBranch https://github.com/eclipse/n4js.git ."
 			}
 			
 			stage ('Build Eclipse Web Pages') {
