@@ -19,7 +19,7 @@ final class MainBundleConstants {
 		Class<?> appClass = N4jscBase.class;
 		String className = appClass.getSimpleName();
 		calulatedClassName = appClass.getCanonicalName();
-		calculatedBundleName = calulatedClassName.substring(0, className.length());
+		calculatedBundleName = calulatedClassName.substring(0, calulatedClassName.length() - className.length() - 1);
 	}
 
 	/** regex pattern used to identify main product bundle */
