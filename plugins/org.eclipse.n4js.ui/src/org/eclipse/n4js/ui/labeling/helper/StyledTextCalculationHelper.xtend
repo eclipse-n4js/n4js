@@ -124,17 +124,15 @@ class StyledTextCalculationHelper {
 		if (definedType instanceof TFunction) {
 			styledText = styledText.appendStyledTextForFormalParameters(functionDefinition, definedType);
 			styledText = styledText.append(definedType.typeVars.handleTypeVars);
+			var typeStr = "";
 
-			val typeStr = (if (!definedType.constructor && definedType.returnTypeRef !== null)
-					" : " + getTypeRefDescription(definedType.returnTypeRef)
-				else
-					"");
+			if (!definedType.constructor && definedType.returnTypeRef !== null)
+				typeStr = " : " + getTypeRefDescription(definedType.returnTypeRef)
 
-			return if (functionDefinition.returnTypeRef === null) {
-				// type was inferred
-				styledText.append(typeStr, INFERRED_TYPE_STYLER)
+			if (functionDefinition.returnTypeRef === null) {
+				styledText = styledText.append(typeStr, INFERRED_TYPE_STYLER)
 			} else {
-				styledText.append(typeStr)
+				styledText = styledText.append(typeStr)
 			}
 		}
 		return styledText;
@@ -149,20 +147,19 @@ class StyledTextCalculationHelper {
 	def dispatch StyledString dispatchGetStyledText(N4GetterDeclaration n4GetterDeclaration) {
 		var styledText = getLabelProvider.getSuperStyledText(n4GetterDeclaration);
 		val definedGetter = n4GetterDeclaration.definedGetter;
+		var typeStr = "";
 
 		if (definedGetter !== null) {
-			val typeStr = (if (definedGetter.declaredTypeRef !== null)
-					" : " + getTypeRefDescription(definedGetter.declaredTypeRef)
-				else
-					"");
+			if (definedGetter.declaredTypeRef !== null)
+				typeStr = " : " + getTypeRefDescription(definedGetter.declaredTypeRef)
 
-			return if (n4GetterDeclaration.declaredTypeRef === null) {
-				// type was inferred
-				styledText.append(typeStr, INFERRED_TYPE_STYLER)
+			if (n4GetterDeclaration.declaredTypeRef === null) {
+				styledText = styledText.append(typeStr, INFERRED_TYPE_STYLER)
 			} else {
-				styledText.append(typeStr)
+				styledText = styledText.append(typeStr)
 			}
 		}
+		return styledText;
 	}
 
 	/** produces e.g. setterName: paramTypeName */
@@ -179,38 +176,37 @@ class StyledTextCalculationHelper {
 
 	// produces e.g. fieldName : fieldTypeName
 	def dispatch StyledString dispatchGetStyledText(N4FieldDeclaration n4FieldDeclaration) {
-		val styledText = getLabelProvider.getSuperStyledText(n4FieldDeclaration);
+		var styledText = getLabelProvider.getSuperStyledText(n4FieldDeclaration);
 		val definedField = n4FieldDeclaration.definedField;
+		var typeStr = "";
 
-		val typeStr = (if (definedField?.typeRef !== null)
-				" : " + getTypeRefDescription(definedField.typeRef)
-			else
-				"");
+		if (definedField?.typeRef !== null)
+			typeStr = " : " + getTypeRefDescription(definedField.typeRef)
 
-		return if (n4FieldDeclaration.declaredTypeRef === null) {
+		if (n4FieldDeclaration.declaredTypeRef === null) {
 			// type was inferred
-			styledText?.append(typeStr, INFERRED_TYPE_STYLER)
+			styledText = styledText?.append(typeStr, INFERRED_TYPE_STYLER)
 		} else {
-			styledText?.append(typeStr)
+			styledText = styledText?.append(typeStr)
 		}
+		return styledText;
 	}
 
 	// produces e.g. variableName : variableTypeName
 	def dispatch StyledString dispatchGetStyledText(ExportedVariableDeclaration variableDeclaration) {
-		val styledText = getLabelProvider.getSuperStyledText(variableDeclaration)
+		var styledText = getLabelProvider.getSuperStyledText(variableDeclaration)
 		val definedVariable = variableDeclaration.definedVariable
+		var typeRefString = ""
 
-		val typeRefString = (if (definedVariable?.typeRef !== null)
-				" : " + getTypeRefDescription(definedVariable.typeRef)
-			else
-				"");
+		 if (definedVariable?.typeRef !== null)
+			typeRefString = " : " + getTypeRefDescription(definedVariable.typeRef)
 
-		return if (variableDeclaration.declaredTypeRef === null) {
-			// type was inferred
-			styledText?.append(typeRefString, INFERRED_TYPE_STYLER)
+		if (variableDeclaration.declaredTypeRef === null) {
+			styledText = styledText?.append(typeRefString, INFERRED_TYPE_STYLER)
 		} else {
-			styledText?.append(typeRefString)
+			styledText = styledText?.append(typeRefString)
 		}
+		return styledText;
 	}
 
 	// produces e.g. (param1TypeName, param2TypeName)

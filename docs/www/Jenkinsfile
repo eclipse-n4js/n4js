@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 /*
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,13 +9,6 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-
-// email configuration
-def mailSender = 'robot@numberfour.eu'
-def String recipient = 'brian.smith@numberfour.eu'
-def String replyTo = 'brian.smith@numberfour.eu'
-def String team = 'brian.smith@numberfour.eu, staff-devtools@numberfour.eu'
-def String buildhtml = env.BUILD_URL+"execution/node/5/ws/sourceX/docs/www/web-html"
 
 import org.codehaus.groovy.runtime.DefaultGroovyMethods
 
@@ -29,8 +22,11 @@ try {
 		def workspace = pwd()
 		def sourceX = "sourceX"
 		def sourceBranch = env.BRANCH
+
 		def htmlDir="$WORKSPACE/${sourceX}/docs/www/web-html"
 		def specDir="$WORKSPACE/${sourceX}/docs/org.eclipse.n4js.spec"
+
+		def String buildhtml = env.BUILD_URL+"execution/node/5/ws/sourceX/docs/www/web-html"
 
 		sh "pwd; ls -la"
 
@@ -74,22 +70,22 @@ catch (exc) {
 	currentBuild.result = "FAILURE"
 	echo "Caught: ${exc}"
 	echo "[ERROR]\u274C ${sourceBranch} failing. Sending email notification."
+    sendEmail( "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed", "${env.BUILD_URL} is failing - ${env.JOB_NAME} (#${env.BUILD_NUMBER}). The following exception was caught : \n ${exc.toString()}")
+}
 
-	if ($sourceBranch == 'master' )
-	{
-
-		mail to: 		recipient, // Consider adding team to list here
-			from: 		mailSender,
-			replyTo: 	replyTo,
-			subject: 	"Eclipse-www Master (${env.BUILD_NUMBER}) is failing.",
-			body: 		"Build URL - ${env.BUILD_URL}.\nJob: ${env.JOB_NAME}\nThe following exception was caught:\n${exc}"
-	} else {
-		mail to: 		recipient,
-			from: 		mailSender,
-			replyTo: 	replyTo,
-			subject: 	"Eclipse-www (${env.BUILD_NUMBER}) failed.",
-			body: 		"Build URL - ${env.BUILD_URL}.\nJob: ${env.JOB_NAME}\nThe following exception was caught:\n${exc}"
-	}
+/**
+ * Sends email notification about job status based on the provided data.
+ *
+ * @param subject the subject of the email
+ * @param body the body of the email
+ */
+@NonCPS
+void sendEmail(String subject, String body) {
+        emailext subject: subject,
+                body: body,
+                recipientProviders: [
+                        [$class: 'CulpritsRecipientProvider'],
+                        [$class: 'RequesterRecipientProvider']]
 }
 
 // vim: ft=groovy

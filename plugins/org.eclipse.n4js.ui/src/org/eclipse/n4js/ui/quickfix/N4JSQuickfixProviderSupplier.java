@@ -12,12 +12,11 @@ package org.eclipse.n4js.ui.quickfix;
 
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.ui.quickfix.QuickfixProviderSupplier;
 import org.eclipse.xtext.ui.editor.quickfix.DefaultQuickfixProvider;
 
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.quickfix.QuickfixProviderSupplier;
 
 /**
  * Supplies the {@link N4JSQuickfixProvider quickfix provider} service for the N4JS language.
