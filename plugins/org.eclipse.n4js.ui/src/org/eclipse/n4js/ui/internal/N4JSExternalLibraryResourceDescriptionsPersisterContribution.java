@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -23,14 +23,13 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
+import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
+import org.eclipse.n4js.utils.StatusHelper;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.external.ExternalLibrariesReloadHelper;
-import org.eclipse.n4js.external.ExternalLibraryWorkspace;
-import org.eclipse.n4js.ui.resource.IResourceDescriptionPersisterContribution;
-import org.eclipse.n4js.utils.StatusHelper;
 
 /**
  * Resource description persister contribution to restore the state of the Xtext index for the external libraries on

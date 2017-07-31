@@ -9,16 +9,9 @@ http://www.eclipse.org/legal/epl-v10.html
 Contributors:
   NumberFour AG - Initial API and implementation
 -->
-<?eclipse version="3.0"?>
-
-<!-- 
-The eclipse version must be specified in order for id to be able to contain dots '.'
-See: http://help.eclipse.org/kepler/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/misc/plugin_manifest.html
--->
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="injectorSupplier" name="Injector Supplier" schema="schema/injectorSupplier.exsd"/>
-   <extension-point id="quickfixProviderSupplier" name="quickfixProviderSupplier" schema="schema/quickfixProviderSupplier.exsd"/>
    <extension-point id="org.eclipse.n4js.utils.fileExtensions" name="File Extensions" schema="schema/org.eclipse.n4js.utils.fileExtensions.exsd"/>
 
    <extension point="org.eclipse.emf.ecore.generated_package">

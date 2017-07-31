@@ -15,15 +15,15 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.ImmutableMap.builder;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
-import static org.eclipse.n4js.tester.server.HttpConstants.SC_UNPROCESSABLE_ENTITY;
-import static org.eclipse.n4js.tester.server.resources.ContentType.START_TEST;
-import static org.eclipse.n4js.tester.server.resources.HttpMethod.POST;
 import static java.lang.Long.parseLong;
 import static java.lang.String.valueOf;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.singletonMap;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static org.eclipse.n4js.tester.server.HttpConstants.SC_UNPROCESSABLE_ENTITY;
+import static org.eclipse.n4js.tester.server.resources.ContentType.START_TEST;
+import static org.eclipse.n4js.tester.server.resources.HttpMethod.POST;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -36,16 +36,16 @@ import java.util.function.Consumer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.UrlDecoderService;
 import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
 import org.eclipse.n4js.tester.server.resources.ClientResourceException;
 import org.eclipse.n4js.tester.server.resources.Resource;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.Inject;
 
 /**
  * Implementation of the {@code start test} RESTful resource.

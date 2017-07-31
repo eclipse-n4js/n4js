@@ -11,10 +11,11 @@ Contributors:
 
 = N4JS Language Specification
 
-Build PDF, HTML and launch in browser: ::
+Build HTML and launch in browser: ::
 [source,bash]
 ----
-./build.sh -l
+cd docs/www
+./buildspec.sh --launch
 ----
 
 == Prerequisites

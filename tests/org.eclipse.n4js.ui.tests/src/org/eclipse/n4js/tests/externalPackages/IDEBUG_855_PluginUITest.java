@@ -24,6 +24,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
+import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
+import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.EMFBasedPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -34,12 +39,6 @@ import org.junit.Test;
 
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.external.ExternalLibrariesReloadHelper;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
-import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 
 /**
  * Test for checking whether the whole Xtext index content can be persisted by checking the size of the

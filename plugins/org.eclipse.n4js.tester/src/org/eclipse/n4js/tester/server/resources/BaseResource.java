@@ -23,11 +23,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.tester.UrlDecoderService;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
+
+import com.google.inject.Inject;
 
 /**
  * Base class of the HTTP resources.
@@ -130,7 +129,8 @@ public abstract class BaseResource {
 	 * @throws ServletException
 	 *             if the request-response post processing fails.
 	 */
-	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
+	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp)
+			throws ServletException {
 		// Does nothing by default.
 	}
 
