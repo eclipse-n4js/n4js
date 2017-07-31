@@ -13,5 +13,4 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.ui,
  org.eclipse.n4js.ui,
  org.eclipse.jface
-Import-Package: org.eclipse.n4js.utils
 Export-Package: org.eclipse.n4js.runner.chrome.ui
