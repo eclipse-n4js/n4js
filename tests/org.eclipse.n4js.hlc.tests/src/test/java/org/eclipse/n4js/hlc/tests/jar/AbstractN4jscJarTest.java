@@ -26,7 +26,7 @@ import org.eclipse.n4js.utils.io.FileDeleter;
 
 /**
  */
-public abstract class AbstractN4jscIntegrationTest {
+public abstract class AbstractN4jscJarTest {
 
 	// Running directory will be ${TARGET}/${WSP}
 
@@ -45,7 +45,7 @@ public abstract class AbstractN4jscIntegrationTest {
 	/**
 	 * Subclass must provide the fixture, i.e. name of folder containing test data.
 	 */
-	protected AbstractN4jscIntegrationTest(String fixture) {
+	protected AbstractN4jscJarTest(String fixture) {
 		this.fixture = fixture;
 	}
 

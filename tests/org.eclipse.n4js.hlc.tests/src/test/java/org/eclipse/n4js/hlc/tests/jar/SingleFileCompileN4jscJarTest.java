@@ -21,10 +21,10 @@ import org.junit.Test;
 
 /**
  */
-public class N4jscSingleFileCompileIntegrationTest extends AbstractN4jscIntegrationTest {
+public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 
 	/***/
-	public N4jscSingleFileCompileIntegrationTest() {
+	public SingleFileCompileN4jscJarTest() {
 		super("fixture");
 	}
 

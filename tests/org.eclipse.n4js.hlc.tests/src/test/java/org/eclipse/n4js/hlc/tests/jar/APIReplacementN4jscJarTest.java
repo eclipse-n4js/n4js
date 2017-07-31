@@ -19,12 +19,12 @@ import org.junit.Test;
 /**
  * Tests API / implementation replacement when running via n4jsc.
  */
-public class N4jscAPIReplacementIntegrationTest extends AbstractN4jscIntegrationTest {
+public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 	/**
 	 * Doin' what constructors do best: creating an instance.
 	 */
-	public N4jscAPIReplacementIntegrationTest() {
+	public APIReplacementN4jscJarTest() {
 		super("fixtureAPIReplacement");
 	}
 
