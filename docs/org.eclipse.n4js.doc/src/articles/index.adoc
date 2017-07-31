@@ -48,6 +48,6 @@ Contributors:
 
 From brief quickstart guides to fully-involved tutorials, the following N4JS documentation will help beginners get started with the N4JS IDE and advanced users to build and maintain large server-side projects.
 
-* <<../userguides/ide-setup.adoc#_ide_setup,N4JS IDE Setup Guide>> - Basic installation and setup instructions.
+* <<../userguides/n4js-ide-setup.adoc#_ide_setup,N4JS IDE Setup Guide>> - Basic installation and setup instructions.
 * <<../userguides/npm-export-guide.adoc#_npm_export_guide,npm Export Guide>> - Basic npm export and publishing instructions.
 * <<../userguides/tutorial.adoc#_tutorial,In-Depth Tutorial>> - Begin using the more powerful features N4JS has to offer!
