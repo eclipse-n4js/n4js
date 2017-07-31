@@ -688,6 +688,24 @@ Contributors:
 			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
 			name="Quick Outline">
 		</command>
+  <command
+        defaultHandler="org.eclipse.n4js.ui.search.ConsiderOverridenMembersHandler"
+        id="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+        name="Consider Overriden Members">
+        <!-- By default, do NOT consider overriden members when finding references.-->
+        <state
+			class="org.eclipse.ui.handlers.RegistryToggleState:false"
+			id="org.eclipse.ui.commands.toggleState"/>
+  </command>
+  <command
+        defaultHandler="org.eclipse.n4js.ui.search.ShowDeclarationsHandler"
+        id="org.eclipse.n4js.ui.ShowDeclarationsCmd"
+        name="Show Declarations">
+        <!-- By default, do NOT show declarations when finding references. -->
+        <state
+			class="org.eclipse.ui.handlers.RegistryToggleState:false"
+			id="org.eclipse.ui.commands.toggleState"/>
+  </command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
@@ -1280,5 +1298,24 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.building.BuilderStateLogger$Factory"
             label="Builder State">
       </consoleFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
+         <command
+               commandId="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+               label="Consider Overriden Members"
+               style="toggle"
+               tooltip="If checked, references to the overriden members in superclasses and implemented interfaces are also considered when finding references.">
+         </command>
+         <command
+               commandId="org.eclipse.n4js.ui.ShowDeclarationsCmd"
+               label="Show Declarations"
+               style="toggle"
+               tooltip="If checked, the declarations are displayed in the result of find references.">
+         </command>
+      </menuContribution>
    </extension>
 </plugin>

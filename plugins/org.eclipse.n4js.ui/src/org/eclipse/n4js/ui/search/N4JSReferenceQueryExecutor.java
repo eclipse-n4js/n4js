@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
@@ -28,6 +29,7 @@ import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.validation.validators.utils.MemberCube;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix;
+import org.eclipse.xtext.EcoreUtil2;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -38,6 +40,10 @@ import com.google.inject.Inject;
 public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor {
 	@Inject
 	ContainerTypesHelper containerTypesHelper;
+	/** Flag indicating whether overriden members should be considered or not while finding references. */
+	public static boolean considerOverridenMethods = false;
+	/** Flag indicating whether declarations should be shown or not while finding references. */
+	public static boolean shouldShowDeclarations = false;
 
 	/***
 	 * Here, we add overriden/overrding members or super/subclasses if needed depending on user preferences when finding
@@ -52,14 +58,22 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 		if (primaryTarget instanceof LiteralOrComputedPropertyName) {
 			primaryTarget = primaryTarget.eContainer();
 		}
-		// Add overriden members
-		// if (primaryTarget instanceof N4MemberDeclaration) {
-		// TMember tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
-		// for (TMember inheritedOrImplementedMember : getInheritedAndImplementedMembers(tmember)) {
-		// URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(inheritedOrImplementedMember);
-		// newResult.add(uri);
-		// }
-		// }
+
+		if (N4JSReferenceQueryExecutor.considerOverridenMethods) {
+			// Add overriden members
+			if (primaryTarget instanceof N4MemberDeclaration || primaryTarget instanceof TMember) {
+				TMember tmember;
+				if (primaryTarget instanceof N4MemberDeclaration) {
+					tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
+				} else {
+					tmember = (TMember) primaryTarget;
+				}
+				for (TMember inheritedOrImplementedMember : getInheritedAndImplementedMembers(tmember)) {
+					URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(inheritedOrImplementedMember);
+					newResult.add(uri);
+				}
+			}
+		}
 
 		// GH-73: TODO add overriding members
 
@@ -100,13 +114,15 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 
 	@Override
 	protected boolean isRelevantToUser(EReference reference) {
-		return super.isRelevantToUser(reference)
-				&& N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE != reference &&
-				N4JSPackage.Literals.N4_ENUM_LITERAL__DEFINED_LITERAL != reference &&
-				N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD != reference &&
-				N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER != reference &&
-				N4JSPackage.Literals.SETTER_DECLARATION__DEFINED_SETTER != reference &&
-				N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE != reference &&
-				N4JSPackage.Literals.SCRIPT__MODULE != reference;
+		boolean isRelevant = super.isRelevantToUser(reference) && N4JSPackage.Literals.SCRIPT__MODULE != reference;
+		if (!N4JSReferenceQueryExecutor.shouldShowDeclarations) {
+			isRelevant = isRelevant && N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE != reference &&
+					N4JSPackage.Literals.N4_ENUM_LITERAL__DEFINED_LITERAL != reference &&
+					N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD != reference &&
+					N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER != reference &&
+					N4JSPackage.Literals.SETTER_DECLARATION__DEFINED_SETTER != reference &&
+					N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE != reference;
+		}
+		return isRelevant;
 	}
 }
