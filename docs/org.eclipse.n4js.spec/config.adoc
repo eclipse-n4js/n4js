@@ -20,12 +20,12 @@ Contributors:
 // For more info, see http://asciidoctor.org/docs/user-manual/#builtin-attributes
 
 // Header and Footer info //
-:docinfodir: headers
+:docinfodir: ../www/assets/headers/spec
 :docinfo1:
 
 // Stylesheet settings //
-:stylesdir: styles
-:stylesheet: foundation.css
+:stylesdir: ../styles
+:stylesheet: spec.min.css
 
 // Syntax Highlighting //
 :!source-highlighter:
