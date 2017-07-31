@@ -692,20 +692,39 @@ Contributors:
         defaultHandler="org.eclipse.n4js.ui.search.ConsiderOverridenMembersHandler"
         id="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
         name="Consider Overriden Members">
-        <!-- By default, do NOT consider overriden members when finding references.-->
-        <state
-			class="org.eclipse.ui.handlers.RegistryToggleState:false"
-			id="org.eclipse.ui.commands.toggleState"/>
+        <!-- By default, do NOT consider overriden members when finding references. Also, Do NOT persist the state.-->
+        <state id="org.eclipse.ui.commands.toggleState">
+		    <class class="org.eclipse.ui.handlers.RegistryToggleState">
+				<parameter
+					name="default"
+					value="false">
+				</parameter>
+				<parameter
+					name="persisted"
+					value="false">
+				</parameter>
+			</class>
+		</state>
   </command>
+
   <command
         defaultHandler="org.eclipse.n4js.ui.search.ShowDeclarationsHandler"
         id="org.eclipse.n4js.ui.ShowDeclarationsCmd"
         name="Show Declarations">
-        <!-- By default, do NOT show declarations when finding references. -->
-        <state
-			class="org.eclipse.ui.handlers.RegistryToggleState:false"
-			id="org.eclipse.ui.commands.toggleState"/>
-  </command>
+        <!-- By default, do NOT show declarations when finding references. Also, Do NOT persist the state.-->
+        <state id="org.eclipse.ui.commands.toggleState">
+		    <class class="org.eclipse.ui.handlers.RegistryToggleState">
+		    	<parameter
+               		name="default"
+               		value="false">
+         		</parameter>
+         		<parameter
+               		name="persisted"
+               		value="false">
+         		</parameter>
+         	</class>
+         </state>
+ </command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
@@ -1306,12 +1325,14 @@ Contributors:
             locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
          <command
                commandId="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+               icon="icons/inher_co.png"
                label="Consider Overriden Members"
                style="toggle"
                tooltip="If checked, references to the overriden members in superclasses and implemented interfaces are also considered when finding references.">
          </command>
          <command
                commandId="org.eclipse.n4js.ui.ShowDeclarationsCmd"
+               icon="icons/search_decl_obj.png"
                label="Show Declarations"
                style="toggle"
                tooltip="If checked, the declarations are displayed in the result of find references.">
