@@ -91,8 +91,8 @@ class ImportedNamesTest {
 		val expectedImportedNames = #["org.eclipse.n4js.tests.resource.MyClassTwo.MyClassTwo",
 			"void",
 			"#.void",
-			"org.eclipse.n4js.tests.resource.MyInterfaceFour.MyInterfaceFour",
 			"org.eclipse.n4js.tests.resource.MyRoleLikeInterface.MyRoleLikeInterface",
+			"org.eclipse.n4js.tests.resource.MyInterfaceFour.MyInterfaceFour",
 			"org.eclipse.n4js.tests.resource.MyClassOne",
 			"#.org.eclipse.n4js.tests.resource.MyVariableTwo",
 			"org.eclipse.n4js.tests.resource.MyVariableTwo"
