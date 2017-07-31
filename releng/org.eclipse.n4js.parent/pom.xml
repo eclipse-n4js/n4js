@@ -31,7 +31,7 @@ Contributors:
 		<!-- see also https://bugs.eclipse.org/bugs/show_bug.cgi?id=444793 -->
 		<!-- see also http://wiki.eclipse.org/Tycho/Release_Notes/0.21 -->
 		<!-- see also https://bugs.eclipse.org/bugs/show_bug.cgi?id=436617#c11 -->
-		<tycho.version>0.24.0</tycho.version>
+		<tycho.version>1.0.0</tycho.version>
 		<!-- tycho 20 by default is using Kepler jdt compiler -->
 		<!--  we are forcing Luna jdt compiler, see http://dev.eclipse.org/mhonarc/lists/tycho-user/msg05619.html -->
 		<!-- TODO: remove after switching to tycho 0.21.0-->
