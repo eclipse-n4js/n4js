@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -533,6 +534,7 @@ public class ComposedMemberInfo {
 	 */
 	public List<TMember> getConstituentMembers() {
 		initMemberAggregate();
-		return this.siblings.stream().map(sibling -> sibling.getKey()).collect(Collectors.toList());
+		return this.siblings.stream().filter(Objects::nonNull).map(sibling -> sibling.getKey())
+				.collect(Collectors.toList());
 	}
 }
