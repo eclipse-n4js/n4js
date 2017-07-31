@@ -355,8 +355,8 @@ Contributors:
 									<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
 								</systemProperties>
 								<failIfNoTests>${tycho-surefire-plugin.failIfNoTests}</failIfNoTests>
-								<!-- 10 Minutes timeout -->
-								<forkedProcessTimeoutInSeconds>601</forkedProcessTimeoutInSeconds>
+								<!-- 15 Minutes timeout -->
+								<forkedProcessTimeoutInSeconds>901</forkedProcessTimeoutInSeconds>
 								<!-- useUIHarness=true ensures the workbench is started before the
 									tests are run. -->
 								<useUIHarness>true</useUIHarness>
