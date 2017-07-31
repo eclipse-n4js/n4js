@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.tests;
+package org.eclipse.n4js.hlc.tests.jar;
 
 import static org.junit.Assert.assertEquals;
 
@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.junit.Test;
 
 /**

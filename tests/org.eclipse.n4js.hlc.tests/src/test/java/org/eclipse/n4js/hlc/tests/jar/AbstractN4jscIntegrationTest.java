@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.tests;
+package org.eclipse.n4js.hlc.tests.jar;
 
-import static org.eclipse.n4js.hlc.tests.HlcTestingConstants.N4JSC_JAR;
-import static org.eclipse.n4js.hlc.tests.HlcTestingConstants.TARGET;
+import static org.eclipse.n4js.hlc.tests.jar.HlcTestingConstants.N4JSC_JAR;
+import static org.eclipse.n4js.hlc.tests.jar.HlcTestingConstants.TARGET;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +20,7 @@ import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
+import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
