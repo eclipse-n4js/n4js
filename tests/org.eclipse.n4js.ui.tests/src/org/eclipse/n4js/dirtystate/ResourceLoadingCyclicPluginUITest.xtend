@@ -137,16 +137,43 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 		assertEquals("editor for file A should not have any errors", #[], errorsA)
 
 		setDocumentContent("file A", fileA, editorA, sourceA_modify_a)
-		val errorsA_modified = getEditorValidationErrors(editorA)
+		waitForUpdateEditorJob
 
-		assertEquals("editor for file A should now have exactly 1 error", 1, errorsA_modified.size)
-		assertEquals("editor for file A should now have the expected error",
-			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorSimple/src/m/A.n4js line : 10 column : 33)",
-			errorsA_modified.head.toString)
+		val errorsA_modified = getEditorValidationErrors(editorA)
+		assertEquals("editor for file A should now have exactly 1 expected error", #[
+			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorSimple/src/m/A.n4js line : 10 column : 33)"
+		], errorsA_modified.map[toString])
 
 		setDocumentContent("file A", fileA, editorA, sourceA)
-		val errorsA_backToOriginal = getEditorValidationErrors(editorA)
+		waitForUpdateEditorJob
 
+		val errorsA_backToOriginal = getEditorValidationErrors(editorA)
+		assertEquals("editor for file A should no longer have any errors", #[], errorsA_backToOriginal)
+	}
+
+	@Test
+	def void test_inEditor_throughXY() {
+		prepare("TestInEditorThroughXY");
+		
+		val page = getActivePage()
+		val editorA = openAndGetXtextEditor(fileA, page)
+		val errorsA = getEditorValidationErrors(editorA)
+		assertEquals("editor for file A should not have any errors", #[], errorsA)
+
+		changeTestFile(fileX, sourceX_modify_x)
+		waitForAutoBuild
+		waitForUpdateEditorJob
+
+		val errorsA_modified = getEditorValidationErrors(editorA)
+		assertEquals("editor for file A should now have exactly 1 expected error", #[
+			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorThroughXY/src/m/A.n4js line : 10 column : 33)"
+		], errorsA_modified.map[toString])
+
+		changeTestFile(fileX, sourceX)
+		waitForAutoBuild
+		waitForUpdateEditorJob
+
+		val errorsA_backToOriginal = getEditorValidationErrors(editorA)
 		assertEquals("editor for file A should no longer have any errors", #[], errorsA_backToOriginal)
 	}
 
@@ -232,8 +259,6 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("output file of file C should NOT have been rebuilt", unchangedC);
 		assertTrue("output file of file D should NOT have been rebuilt", unchangedD);
 	}
-
-	// FIXME GH-66 add test: modify X while an editor for A is open
 
 
 	// ======================================================================
