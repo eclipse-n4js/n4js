@@ -25,6 +25,7 @@ import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.ui.search.LabellingReferenceQueryExecutor;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.validation.validators.utils.MemberCube;
@@ -59,27 +60,42 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 			primaryTarget = primaryTarget.eContainer();
 		}
 
-		if (N4JSReferenceQueryExecutor.considerOverridenMethods) {
-			// Add overriden members
-			if (primaryTarget instanceof N4MemberDeclaration || primaryTarget instanceof TMember) {
-				TMember tmember;
-				if (primaryTarget instanceof N4MemberDeclaration) {
-					tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
-				} else {
-					tmember = (TMember) primaryTarget;
-				}
-				for (TMember inheritedOrImplementedMember : getInheritedAndImplementedMembers(tmember)) {
-					URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(inheritedOrImplementedMember);
-					newResult.add(uri);
-				}
+		// Special handling for composed members
+		List<EObject> realTargets = new ArrayList<>();
+		if (!TypeHelper.isComposedMember(primaryTarget)) {
+			realTargets.add(primaryTarget);
+		} else {
+			// In case of composed member, add the constituent members instead.
+			List<TMember> constituentMembers = ((TMember) primaryTarget).getConstituentMembers();
+			for (TMember constituentMember : constituentMembers) {
+				realTargets.add(constituentMember);
 			}
 		}
 
-		// GH-73: TODO add overriding members
+		for (EObject realTarget : realTargets) {
+			if (N4JSReferenceQueryExecutor.considerOverridenMethods) {
+				// Add overriden members
+				if (realTarget instanceof N4MemberDeclaration || realTarget instanceof TMember) {
+					TMember tmember;
+					if (primaryTarget instanceof N4MemberDeclaration) {
+						tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
+					} else {
+						tmember = (TMember) primaryTarget;
+					}
+					for (TMember inheritedOrImplementedMember : getInheritedAndImplementedMembers(tmember)) {
+						URI uri = EcoreUtil2.getPlatformResourceOrNormalizedURI(inheritedOrImplementedMember);
+						newResult.add(uri);
+					}
+				}
+			}
 
-		// GH-73: TODO add superclasses
+			// GH-73: TODO add overriding members
 
-		// GH-73: TODO add subclasses
+			// GH-73: TODO add superclasses
+
+			// GH-73: TODO add subclasses
+
+		}
 
 		return newResult;
 	}

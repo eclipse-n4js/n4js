@@ -11,6 +11,7 @@
 package org.eclipse.n4js.xpect.methods;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -21,6 +22,8 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
@@ -29,8 +32,10 @@ import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.EObjectAtOffsetHelper;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.junit.runner.RunWith;
 import org.xpect.XpectImport;
@@ -64,6 +69,9 @@ public class FindReferencesXpectMethod {
 	@Inject
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
+	@Inject
+	private EObjectAtOffsetHelper offsetHelper;
+
 	/**
 	 * This Xpect methods compares all computed references at a given EObject to the expected references. The expected
 	 * references include the line number.
@@ -76,15 +84,38 @@ public class FindReferencesXpectMethod {
 		// When you write Xpect test methods, ALWAYS retrieve eObject via IEObjectCoveringRegion to get the right
 		// eObject!
 		// Do NOT use EObject arg1!
-		EObject argEObj = offset.getEObject();
+		EObject context = offset.getEObject();
+		// Get the cross-referenced element at the offset.
+		EObject argEObj = offsetHelper
+				.resolveCrossReferencedElementAt((XtextResource) context.eResource(), offset.getOffset());
+		// If not a cross-reference element, use context instead
+		if (argEObj == null)
+			argEObj = context;
+
 		EObject eObj = argEObj;
 
 		if (argEObj instanceof ParameterizedTypeRef)
 			eObj = ((ParameterizedTypeRef) argEObj).getDeclaredType();
 
+		// Special handling for composed members
+		List<EObject> realTargets = new ArrayList<>();
+		if (!TypeHelper.isComposedMember(eObj)) {
+			realTargets.add(eObj);
+		} else {
+			// In case of composed member, add the constituent members instead.
+			List<TMember> constituentMembers = ((TMember) eObj).getConstituentMembers();
+			for (TMember constituentMember : constituentMembers) {
+				realTargets.add(constituentMember);
+			}
+		}
+
 		Resource eResource = eObj.eResource();
 		TargetURIs targets = targetURISetProvider.get();
-		collector.add(eObj, targets);
+
+		for (EObject realTarget : realTargets) {
+			collector.add(realTarget, targets);
+		}
+
 		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(eResource);
 		ArrayList<String> result = Lists.newArrayList();
 		IReferenceFinder.Acceptor acceptor = new IReferenceFinder.Acceptor() {

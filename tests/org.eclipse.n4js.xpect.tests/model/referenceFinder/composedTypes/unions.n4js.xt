@@ -14,26 +14,52 @@
 export public class A {
 	/* XPECT findReferences at a ---
 	referenceFinder/composedTypes/unions - a : A; - 21,
-	referenceFinder/composedTypes/unions - b.a - 47,
-	referenceFinder/composedTypes/unions - union.a - 41
+	referenceFinder/composedTypes/unions - b.a - 81,
+	referenceFinder/composedTypes/unions - union.a - 67
 	---
 	*/
 	a : A;
 
-// IDE-1662 XPECT FIXME findReferences at i --> b.i - 31, union.i - 26
+	/* XPECT findReferences at i ---
+	referenceFinder/composedTypes/unions - b.i - 82,
+	referenceFinder/composedTypes/unions - i : int; - 29,
+	referenceFinder/composedTypes/unions - union.i - 69
+	---
+	 */
 	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> b.foo - 32, union.foo - 26
+	/* XPECT findReferences at foo ---
+	referenceFinder/composedTypes/unions - b.foo - 83,
+	referenceFinder/composedTypes/unions - foo(){}; - 36,
+	referenceFinder/composedTypes/unions - union.foo - 78
+	---
+	*/
 	foo(){};
 }
 
 interface I {
-// IDE-1662 XPECT FIXME findReferences at a --> j.a - 35, union.a - 25
+	/* XPECT findReferences at a ---
+	referenceFinder/composedTypes/unions - j.a - 86,
+	referenceFinder/composedTypes/unions - a : A; - 46,
+	referenceFinder/composedTypes/unions - union.a - 67
+	---
+	*/
 	a : A;
-// IDE-1662 XPECT FIXME findReferences at i --> j.i - 36, union.i - 26
+	/* XPECT findReferences at i ---
+	referenceFinder/composedTypes/unions - j.i - 87,
+	referenceFinder/composedTypes/unions - i : int; - 53,
+	referenceFinder/composedTypes/unions - union.i - 69
+	---
+	*/
 	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> j.foo - 37, union.foo - 27
+	/* XPECT findReferences at foo ---
+	referenceFinder/composedTypes/unions - j.foo - 88,
+	referenceFinder/composedTypes/unions - foo(){}; - 60,
+	referenceFinder/composedTypes/unions - union.foo - 78
+	---
+	*/
 	foo(){};
 }
+
 
 class AI extends A implements I {}
 
@@ -41,6 +67,14 @@ var union : A | I;
 union.a;
 
 union.i;
+/* XPECT findReferences at foo---
+referenceFinder/composedTypes/unions - b.foo - 83,
+referenceFinder/composedTypes/unions - foo(){}; - 36,
+referenceFinder/composedTypes/unions - foo(){}; - 60,
+referenceFinder/composedTypes/unions - j.foo - 88,
+referenceFinder/composedTypes/unions - union.foo - 78
+---
+*/
 union.foo();
 
 var b : A;
