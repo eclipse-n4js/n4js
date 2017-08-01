@@ -304,7 +304,6 @@ public class UtilN4 {
 	 */
 	public static boolean isN4jsRepoRoot(File folder) {
 		return folder.isDirectory()
-				&& "n4js".equals(folder.getName())
 				&& new File(folder, "plugins/" + UtilN4.class.getPackage().getName()).isDirectory();
 	}
 }
