@@ -69,8 +69,9 @@ try {
 catch (exc) {
 	currentBuild.result = "FAILURE"
 	echo "Caught: ${exc}"
-	echo "[ERROR]\u274C ${sourceBranch} failing. Sending email notification."
-    sendEmail( "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed", "${env.BUILD_URL} is failing - ${env.JOB_NAME} (#${env.BUILD_NUMBER}). The following exception was caught : \n ${exc.toString()}")
+	// Email notification temporarily disabled
+	//echo "[ERROR]\u274C ${sourceBranch} failing. Sending email notification."
+    //sendEmail( "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed", "${env.BUILD_URL} is failing - ${env.JOB_NAME} (#${env.BUILD_NUMBER}). The following exception was caught : \n ${exc.toString()}")
 }
 
 /**
