@@ -61,8 +61,7 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 			currentPath + "PD",
 			currentPath + "PE",
 			currentPath + "PF",
-			currentPath + "PG",
-			"--debug"
+			currentPath + "PG"
 	};
 
 	final static int[][] shuffleOrders = {

@@ -49,7 +49,6 @@ public class InstallCompileRunN4jscExternalWithSingleFileCompileTest extends Bas
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"--verbose",
 				"-t", BuildType.singlefile.toString(),
 				fileToCompile
