@@ -8,22 +8,23 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.tests;
+package org.eclipse.n4js.hlc.tests.jar;
 
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
+import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.junit.Test;
 
 /**
  * Tests API / implementation replacement when running via n4jsc.
  */
-public class N4jscAPIReplacementIntegrationTest extends AbstractN4jscIntegrationTest {
+public class APIReplacementN4jscJarTest extends AbstractN4jscJarTest {
 
 	/**
 	 * Doin' what constructors do best: creating an instance.
 	 */
-	public N4jscAPIReplacementIntegrationTest() {
+	public APIReplacementN4jscJarTest() {
 		super("fixtureAPIReplacement");
 	}
 

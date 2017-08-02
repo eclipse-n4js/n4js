@@ -67,7 +67,7 @@ timestamps {
                     String snapshotRepo = "${workspace}/${N4JS_SNAPSHOT_MAVEN_REPO_FOLDER_WSREL}"
                     String snapshotProperty = "-Dlocal-snapshot-deploy-folder=${snapshotRepo}"
                     String targetPomFile = "--file ${workspace}/${n4jsDir}//pom.xml"
-                    String commonOptions = "-Dmaven.test.failure.ignore -X -e -DWORKSPACE=${env.WORKSPACE}"
+                    String commonOptions = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
 
                     String commonProfiles = "-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests"
                     if (isNightly()) {
@@ -98,9 +98,9 @@ timestamps {
 
                 stage('PostBuild') {
                 }
-                sendEmail("${env.JOB_NAME} (${env.BUILD_NUMBER}) succeeded", "${env.BUILD_URL} succeeded - ${env.JOB_NAME} (#${env.BUILD_NUMBER}).")
+                //sendEmail("${env.JOB_NAME} (${env.BUILD_NUMBER}) succeeded", "${env.BUILD_URL} succeeded - ${env.JOB_NAME} (#${env.BUILD_NUMBER}).")
             } catch (exc) {
-                sendEmail( "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed", "${env.BUILD_URL} is failing - ${env.JOB_NAME} (#${env.BUILD_NUMBER}). The following exception was caught : \n ${exc.toString()}")
+                //sendEmail( "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed", "${env.BUILD_URL} is failing - ${env.JOB_NAME} (#${env.BUILD_NUMBER}). The following exception was caught : \n ${exc.toString()}")
                 //rethrow otherwise job will always be green
                 throw exc
             } finally {

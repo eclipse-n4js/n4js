@@ -40,7 +40,7 @@ Contributors:
 	</logger>
 
 	<root>
-		<level value="debug" />
+		<level value="warn" />
 		<appender-ref ref="default" />
 	</root>
 </log4j:configuration>
