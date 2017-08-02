@@ -20,6 +20,7 @@ Contributors:
 	</parent>
 	<artifactId>org.eclipse.n4js.hlc.tests</artifactId>
 	<name>org.eclipse.n4js.hlc.tests</name>
+	<packaging>eclipse-test-plugin</packaging>
 	<description>Test the headless N4js compiler bundled into one jar.</description>
 
 	<build>
@@ -113,7 +114,7 @@ Contributors:
 				<artifactId>maven-verifier-plugin</artifactId>
 				<version>${maven-verifier-plugin.version}</version>
 				<configuration>
-					<verificationFile>src/test/verifier/verifications-test.xml</verificationFile>
+					<verificationFile>verifier/verifications-test.xml</verificationFile>
 				</configuration>
 				<executions>
 					<execution>

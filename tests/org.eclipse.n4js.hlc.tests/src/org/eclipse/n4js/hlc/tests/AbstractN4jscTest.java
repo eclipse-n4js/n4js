@@ -49,7 +49,7 @@ public abstract class AbstractN4jscTest {
 	/** name of workspace sub-folder (inside target folder) */
 	protected static final String WSP = "wsp";
 	/** name of package containing the test resources */
-	protected static final String FIXTURE = "src/test/resources";
+	protected static final String FIXTURE = "probands";
 	/** name of default test data set */
 	protected static final String TEST_DATA_SET__BASIC = "basic";
 	/** name of test data set for launching testers from the command line */
