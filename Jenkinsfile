@@ -14,7 +14,6 @@ import groovy.util.AntBuilder
 
 timestamps {
     ansiColor('xterm') {
-    return;
 
         /** keep builds/artifacts for 10 days */
         String keep10 = '10'
