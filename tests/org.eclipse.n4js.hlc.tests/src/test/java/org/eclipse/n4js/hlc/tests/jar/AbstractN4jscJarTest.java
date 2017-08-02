@@ -8,10 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.hlc.tests;
+package org.eclipse.n4js.hlc.tests.jar;
 
-import static org.eclipse.n4js.hlc.tests.HlcTestingConstants.N4JSC_JAR;
-import static org.eclipse.n4js.hlc.tests.HlcTestingConstants.TARGET;
+import static org.eclipse.n4js.hlc.tests.jar.HlcTestingConstants.N4JSC_JAR;
+import static org.eclipse.n4js.hlc.tests.jar.HlcTestingConstants.TARGET;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,12 +20,13 @@ import java.util.Collections;
 
 import org.junit.After;
 import org.junit.Before;
+import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 
 /**
  */
-public abstract class AbstractN4jscIntegrationTest {
+public abstract class AbstractN4jscJarTest {
 
 	// Running directory will be ${TARGET}/${WSP}
 
@@ -44,7 +45,7 @@ public abstract class AbstractN4jscIntegrationTest {
 	/**
 	 * Subclass must provide the fixture, i.e. name of folder containing test data.
 	 */
-	protected AbstractN4jscIntegrationTest(String fixture) {
+	protected AbstractN4jscJarTest(String fixture) {
 		this.fixture = fixture;
 	}
 

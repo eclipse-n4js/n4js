@@ -30,52 +30,7 @@ Contributors:
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</build>
-	<profiles>
-		<!-- as of 05/2015 currently no plugin-test present, UNCOMMENT profile if required: 
-		<profile>
-			<id>execute-plugin-tests</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-surefire-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>TychoSurefirePluginTest</id>
-								<phase>integration-test</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		-->
-		
-		<!-- as of 05/2015 currently no UI-test present, UNCOMMENT profile if required: 
-		<profile>
-			<id>execute-plugin-ui-tests</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.eclipse.tycho</groupId>
-						<artifactId>tycho-surefire-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>TychoSurefirePluginUITest</id>
-								<phase>integration-test</phase>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		-->
-	</profiles>
 
 </project>
