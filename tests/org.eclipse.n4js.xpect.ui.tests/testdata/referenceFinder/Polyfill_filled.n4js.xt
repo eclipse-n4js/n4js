@@ -33,7 +33,7 @@
 /* XPECT findReferences at Polyfill ---
 	Poly - Polyfill - 33,
 	Poly - Polyfill - 39,
-	Poly - Polyfill - 53
+	Poly - Polyfill - 54
 ---
 */
 export public class Polyfill {
