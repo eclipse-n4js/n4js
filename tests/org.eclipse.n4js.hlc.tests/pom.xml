@@ -217,34 +217,5 @@ Contributors:
 			</build>
 		</profile>	
 	
-	
-		<!--
-			Extra profile activated in case a property for local deploys is set.
-			Local repo format:
-				local-build-repo::default::file:${local-snapshot-deploy-folder}
-			-->
-		<profile>
-			<id>local-snapshot-deploy-folder</id>
-			<activation>
-				<property>
-					<name>local-snapshot-deploy-folder</name>
-				</property>
-			</activation>
-
-			<!-- repositories for created artifacts -->
-			<repositories>
-				<repository>
-					<id>local-build-repo</id>
-					<url>file://${local-snapshot-deploy-folder}</url>
-					<layout>default</layout>
-					<releases>
-			           <enabled>true</enabled>
-			        </releases>
-			        <snapshots>
-			          <enabled>true</enabled>
-			        </snapshots>
-				</repository>
-			</repositories>
-		</profile>
 	</profiles>
 </project>
