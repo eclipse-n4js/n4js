@@ -51,6 +51,7 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
@@ -501,6 +502,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void updateInternalState(IParseResult newParseResult) {
+		ASTProcessor.resetCycliclyDependentResourcesOf(this);
 		setParseResult(newParseResult);
 		if (newParseResult.getRootASTElement() != null && !getContents().contains(newParseResult.getRootASTElement())) {
 			sneakyAddToContent(newParseResult.getRootASTElement());
