@@ -95,7 +95,7 @@ import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider
 import org.eclipse.n4js.parser.PropertyNameAwareElementFactory
 import org.eclipse.n4js.resource.N4JSDerivedStateComputer
 import org.eclipse.n4js.n4jsx.parser.antlr.lexer.InternalN4JSXLexer
-import org.eclipse.n4js.ts.findReferences.ConcreteSyntaxAwareReferenceFinder
+import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder
 import org.eclipse.n4js.n4jsx.parser.N4JSXSemicolonInjectingParser
 import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
 import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider

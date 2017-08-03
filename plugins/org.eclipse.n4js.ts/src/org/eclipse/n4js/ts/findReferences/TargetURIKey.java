@@ -41,7 +41,8 @@ public class TargetURIKey {
 	/**
 	 * The key that is used to obtain the cache.
 	 */
-	static final TargetURIs.Key<Data> KEY = TargetURIs.Key.from("org.eclipse.n4js.ts.findReferences.TargetURIKey",
+	public static final TargetURIs.Key<Data> KEY = TargetURIs.Key.from(
+			"org.eclipse.n4js.ts.findReferences.TargetURIKey",
 			Data.class);
 
 	@Inject

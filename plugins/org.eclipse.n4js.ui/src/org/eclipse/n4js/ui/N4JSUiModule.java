@@ -27,6 +27,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
+import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
@@ -88,6 +89,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
+import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
@@ -600,5 +602,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	public void configureInheritedMembersOutlineContribution(Binder binder) {
 		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("InheritedMembersOutlineContribution")).to(
 				N4JSShowInheritedMembersOutlineContribution.class);
+	}
+
+	/***/
+	public Class<? extends IReferenceFinder> bindReferenceFinder() {
+		return ConcreteSyntaxAwareReferenceFinder.class;
 	}
 }

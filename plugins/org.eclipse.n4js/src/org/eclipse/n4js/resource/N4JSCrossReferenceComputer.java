@@ -21,17 +21,16 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeHelper;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
@@ -43,7 +42,6 @@ import com.google.inject.Inject;
  * <p>
  * Helper for{@link N4JSResourceDescription}.
  *
- * TODO: handle {@link Wildcard}s and other {@link TypeArgument}s in {@link ParameterizedTypeRef}s.
  */
 public class N4JSCrossReferenceComputer {
 
@@ -65,7 +63,9 @@ public class N4JSCrossReferenceComputer {
 	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
 		TreeIterator<EObject> allContentsIter;
 		if (resource instanceof N4JSResource) {
-			allContentsIter = ((N4JSResource) resource).getAllContentIgnoreCachedElements();
+			Script script = (Script) ((N4JSResource) resource).getContents().get(0);
+			// We only traverse AST tree without cached elements.
+			allContentsIter = N4JSLanguageUtils.getAllContentsWithoutCachedElements(script);
 		} else {
 			allContentsIter = resource.getAllContents();
 		}
@@ -84,19 +84,22 @@ public class N4JSCrossReferenceComputer {
 			IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
 		EList<EReference> references = from.eClass().getEAllReferences();
 		for (EReference eReference : references) {
-			if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
-					&& eReference != TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT) {
-				if (from.eIsSet(eReference)) {
-					Object val = from.eGet(eReference);
-					// Handle both toOne and toMany cases
-					if (!eReference.isMany()) {
-						handleReferenceObject(resource, from, acceptor, (EObject) val);
-					} else {
-						@SuppressWarnings("unchecked")
-						BasicEList<EObject> list = (BasicEList<EObject>) val;
-						for (int i = 0; i < list.size(); i++) {
-							EObject to = list.basicGet(i);
-							handleReferenceObject(resource, from, acceptor, to);
+			// We only follow cross references
+			if (!eReference.isContainment()) {
+				if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
+						&& eReference != TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT) {
+					if (from.eIsSet(eReference)) {
+						Object val = from.eGet(eReference);
+						// Handle both toOne and toMany cases
+						if (!eReference.isMany()) {
+							handleReferenceObject(resource, from, acceptor, (EObject) val);
+						} else {
+							@SuppressWarnings("unchecked")
+							BasicEList<EObject> list = (BasicEList<EObject>) val;
+							for (int i = 0; i < list.size(); i++) {
+								EObject to = list.basicGet(i);
+								handleReferenceObject(resource, from, acceptor, to);
+							}
 						}
 					}
 				}

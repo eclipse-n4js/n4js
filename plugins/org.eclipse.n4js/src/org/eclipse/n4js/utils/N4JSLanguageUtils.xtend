@@ -11,6 +11,9 @@
 package org.eclipse.n4js.utils
 
 import it.xsemantics.runtime.RuleEnvironment
+import java.util.Iterator
+import org.eclipse.emf.common.util.AbstractTreeIterator
+import org.eclipse.emf.common.util.TreeIterator
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
@@ -60,6 +63,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -95,7 +99,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
+import org.eclipse.n4js.scoping.members.ComposedMemberScope
 
 /**
  * Intended for small, static utility methods that
@@ -933,5 +937,29 @@ class N4JSLanguageUtils {
 		}
 
 		return OptionalFieldStrategy.OFF;
+	}
+
+	/**
+	 * Retrieve all contents without cached elements of a root script.
+	 */
+	def static TreeIterator<EObject> getAllContentsWithoutCachedElements(Script script) {
+		return new AbstractTreeIterator<EObject>(script, true) {
+			override public Iterator<EObject> getChildren(Object object) {
+				if (!(object instanceof ComposedTypeRef)) {
+					return (object as EObject).eContents.iterator();
+				} else {
+					// Ignore subtree below cachedComposedMembers
+					val composedTypeRef = object as ComposedTypeRef;
+						val Iterator<EObject> iterator = composedTypeRef.eContents().stream()
+								.filter[child |
+									val isCachedComposedMembersSubtree = child instanceof TMember
+											&& ComposedMemberScope.isComposedMember(child as TMember);
+									return !isCachedComposedMembersSubtree;
+								]
+								.iterator();
+						return iterator;
+				}
+			}
+		}
 	}
 }
