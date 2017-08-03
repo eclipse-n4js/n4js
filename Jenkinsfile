@@ -156,8 +156,8 @@ void sendEmail(String subject, String body) {
  * by passing {@code [[url: git@github.com:Profile/repo.git]]}
  *
  * @param checkoutDir string with directory name where to checkout, relative to the workspace
- * @param gitRemote scm object configuring remotes ({@code scm.userRemoteConfigs})
- * @param branch brach name to checkout (it is String but cannot infer from scm object)
+ * @param gitRemote scm object configuring remote ({@code scm.userRemoteConfigs})
+ * @param branch branch name to checkout (it is String but cannot infer from scm object)
  * @param refCache string with absolute location of the git reference cache to use
  */
 @NonCPS
