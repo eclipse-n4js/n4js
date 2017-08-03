@@ -26,7 +26,7 @@ pushd $GEN_FOLDER
 	FILES=`find .  -name "*.adoc" -print`
 popd
 
-for f in $FILES; 
+for f in $FILES;
 do 
 	ADOC_FILE=$GEN_FOLDER/$f
 	HEADER_DIR=../../assets/headers/$(basename $(dirname $f))
