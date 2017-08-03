@@ -29,7 +29,7 @@ Contributors:
 
 	<properties>
 		<!-- Since tycho is deploying eclipse-repository as zip and not as jar, 
-			we will piggy back the product name and install jar with elipde plugins it 
+			we will piggy back the product name and install jar with eclipse plugins it 
 			into maven repo under product name. Note that piggybacking the product name 
 			will give us correct project build order . -->
 		<jarProductName>${project.artifactId}-${project.version}</jarProductName>
@@ -58,7 +58,7 @@ Contributors:
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-repository-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<configuration>
 					<includeAllDependencies>true</includeAllDependencies>
 				</configuration>

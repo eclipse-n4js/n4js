@@ -77,7 +77,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>${maven-jar-plugin.version}</version>
 				<!-- execution adds second jar -->
 				<executions>
 					<execution>
@@ -108,7 +108,7 @@
 			<!-- add eclipse plugins contents to our executable jar -->
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
+				<version>${maven-antrun-plugin.version}</version>
 				<executions>
 					<!-- cleanup folder with unpacked deps -->
 					<execution>
@@ -157,7 +157,7 @@
 			<plugin>
 				<groupId>com.coderplus.maven.plugins</groupId>
 				<artifactId>copy-rename-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>${codehaus-copy-rename-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>copy-file</id>
@@ -238,7 +238,7 @@
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-p2-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<executions>
 					<execution>
 						<id>attach-p2-metadata</id>

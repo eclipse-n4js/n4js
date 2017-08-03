@@ -287,7 +287,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <plugin>
                         <groupId>org.eclipse.tycho</groupId>
                         <artifactId>tycho-packaging-plugin</artifactId>
-                        <version>${tycho.version}</version>
+                        <version>${tycho-version}</version>
                         <executions>
                             <execution> <id>default-build-qualifier</id> <phase /> </execution>
                             <execution> <id>default-validate-version</id> <phase /> </execution>
@@ -298,7 +298,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <plugin>
                         <groupId>org.eclipse.tycho</groupId>
                         <artifactId>tycho-compiler-plugin</artifactId>
-                        <version>${tycho.version}</version>
+                        <version>${tycho-version}</version>
                         <executions>
                             <execution> <id>default-compile</id> <phase /> </execution>
                         </executions>
@@ -306,7 +306,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <plugin>
                         <groupId>org.eclipse.tycho</groupId>
                         <artifactId>tycho-p2-plugin</artifactId>
-                        <version>${tycho.version}</version>
+                        <version>${tycho-version}</version>
                         <executions>
                             <execution> <id>default-p2-metadata-default</id> <phase /> </execution>
                             <execution> <id>attach-p2-metadata</id> <phase /> </execution>
