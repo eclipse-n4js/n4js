@@ -23,14 +23,14 @@ class MyClassOne  {
 
 class MyClassTwo {
 	/* XPECT findReferences at myAttributeTwo ---
-	referenceFinder/inferenceTypes/typeInference - myAttributeTwo : {function (param:string) : MyInterfaceFour}; - 30,
+	referenceFinder/inferenceTypes/typeInference - myAttributeTwo - 30,
 	referenceFinder/inferenceTypes/typeInference - two.myAttributeTwo - 20
 	---
 	*/
 	myAttributeTwo : {function (param:string) : MyInterfaceFour};
 
 	/* XPECT findReferences at myMethodTwo ---
-	   referenceFinder/inferenceTypes/typeInference - myMethodTwo() : MyRoleLikeInterface<MyInterfaceFour> { return null; } - 37,
+	   referenceFinder/inferenceTypes/typeInference - myMethodTwo - 37,
 	   referenceFinder/inferenceTypes/typeInference - two.myMethodTwo - 19
 	---
 	 */
@@ -43,7 +43,7 @@ interface MyRoleLikeInterface<T extends MyInterfaceFour> {
     element : T;
 
 	/* XPECT findReferences at getElement ---
-	referenceFinder/inferenceTypes/typeInference - getElement() : T { return this.element; } - 50,
+	referenceFinder/inferenceTypes/typeInference - getElement - 50,
 	referenceFinder/inferenceTypes/typeInference - two.myMethodTwo().getElement - 19
 	---
 	*/
@@ -54,7 +54,7 @@ interface MyRoleLikeInterface<T extends MyInterfaceFour> {
 
 interface MyInterfaceFour {
 	/* XPECT findReferences at myMethodFour ---
-	 referenceFinder/inferenceTypes/typeInference - myMethodFour() : void - 62,
+	 referenceFinder/inferenceTypes/typeInference - myMethodFour - 62,
 	 referenceFinder/inferenceTypes/typeInference - two.myAttributeTwo("test").myMethodFour - 20,
 	 referenceFinder/inferenceTypes/typeInference - two.myMethodTwo().getElement().myMethodFour - 19
 	---

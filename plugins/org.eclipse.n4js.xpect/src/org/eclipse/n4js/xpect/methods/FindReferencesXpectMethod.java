@@ -121,19 +121,13 @@ public class FindReferencesXpectMethod {
 		IReferenceFinder.Acceptor acceptor = new IReferenceFinder.Acceptor() {
 			@Override
 			public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
-				ICompositeNode srcNode = NodeModelUtils.getNode(src);
-				if (srcNode == null) {
-					// Ignore candidates without node model
-					return;
-				}
-
 				if (src instanceof PropertyNameOwner)
 					src = ((PropertyNameOwner) src).getDeclaredName();
 
+				ICompositeNode srcNode = NodeModelUtils.getNode(src);
 				int line = srcNode.getStartLine();
 
 				String moduleName;
-				// GH-73: TODO Consider using QualifiedNameProvider
 				if (src.eResource() instanceof N4JSResource) {
 					N4JSResource n4jsResource = (N4JSResource) src.eResource();
 					moduleName = n4jsResource.getModule().getQualifiedName();
@@ -161,19 +155,4 @@ public class FindReferencesXpectMethod {
 
 		expectation.assertEquals(result);
 	}
-
-	// ICompositeNode srcNode = NodeModelUtils.getNode(src);
-	// ICompositeNode tgtNode = NodeModelUtils.getNode(tgtOrProxy);
-	//
-	// System.out.println(NodeModelUtils.compactDump(srcNode, true));
-	// String string = src.eClass().getName() + "." + eRef.getName();
-	// if (srcNode == null)
-	// result.add(srcURI.fragment() + " " + string);
-	// else {
-	// int line = srcNode.getStartLine();
-	// List<INode> feature = NodeModelUtils.findNodesForFeature(src, eRef);
-	// String text = feature.isEmpty() ? "" : feature.get(0).getText();
-	// result.add(text + " - " + srcURI.fragment() + " " + string + " at line " + line);
-	// }
-
 }

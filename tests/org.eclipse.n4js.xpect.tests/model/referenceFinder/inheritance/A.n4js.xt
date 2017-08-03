@@ -22,7 +22,7 @@
 
 export public class A {
 	/* XPECT findReferences at foo ---
-		 referenceFinder/inheritance/A - public foo(): int { return 42; } - 29,
+		 referenceFinder/inheritance/A - foo - 29,
 		 referenceFinder/inheritance/C - a.foo - 27
 	---
 	*/
@@ -32,20 +32,20 @@ export public class A {
 	}
 
 	/* XPECT findReferences at gg ---
-		 referenceFinder/inheritance/A - public get gg(): string { return "Hi A"; } - 39,
+		 referenceFinder/inheritance/A - gg - 39,
 		 referenceFinder/inheritance/C - a.gg - 28
 	---
 	*/
 	public get gg(): string { return "Hi A"; }
 
 	/* XPECT findReferences at ss ---
-		 referenceFinder/inheritance/A - public set ss(val: string) { }- 46,
+		 referenceFinder/inheritance/A - ss- 46,
 		 referenceFinder/inheritance/C - a.ss - 29
 	---
 	*/
 	public set ss(val: string) { }
 	/* XPECT findReferences at ff ---
-		 referenceFinder/inheritance/A - public ff: string = "ff in A"; - 52,
+		 referenceFinder/inheritance/A - ff - 52,
 		 referenceFinder/inheritance/C - a.ff - 30
 	---
 	*/	

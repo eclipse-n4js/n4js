@@ -89,16 +89,16 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			IProgressMonitor monitor) {
 		// make sure data is present
 		keys.getData((TargetURIs) targetURIs, new SimpleResourceAccess(resource.getResourceSet()));
-		EList<EObject> contents;
+		EList<EObject> astContents;
 		if (resource instanceof N4JSResource) {
-			// We search in the AST tree and ignore cached members. We not NOT search in TModule tree.
+			// We search in the AST tree but ignore cached members. We not NOT search in TModule tree!
 			Script script = (Script) ((N4JSResource) resource).getContents().get(0);
-			contents = new BasicEList<>();
-			contents.add(script);
+			astContents = new BasicEList<>();
+			astContents.add(script);
 		} else {
-			contents = resource.getContents();
+			astContents = resource.getContents();
 		}
-		for (EObject content : resource.getContents()) {
+		for (EObject content : astContents) {
 			findReferences(targetURIs, content, acceptor, monitor);
 		}
 	}

@@ -20,7 +20,7 @@
 */
 class T {
 	/* XPECT findReferences at a ---
-		referenceFinder/class/classProperties - a : T; - 28,
+		referenceFinder/class/classProperties - a - 28,
 		referenceFinder/class/classProperties - t.a - 49,
 		referenceFinder/class/classProperties - t.a - 50
 	---
@@ -28,7 +28,7 @@ class T {
 	a : T;
 
 	/* XPECT findReferences at i ---
-		referenceFinder/class/classProperties - i : int - 36,
+		referenceFinder/class/classProperties - i - 36,
 		referenceFinder/class/classProperties - t.i - 52,
 		referenceFinder/class/classProperties - t.i - 53
 	---
@@ -36,7 +36,7 @@ class T {
 	i : int
 
 	/* XPECT findReferences at foo ---
-		referenceFinder/class/classProperties - foo(){}; - 43,
+		referenceFinder/class/classProperties - foo - 43,
 		referenceFinder/class/classProperties - t.foo - 55
 	---
 	*/

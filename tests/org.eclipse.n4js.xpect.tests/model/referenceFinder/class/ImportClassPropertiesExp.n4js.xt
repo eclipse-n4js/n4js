@@ -28,21 +28,21 @@ END_SETUP
 */
 export public class T {
 	/* XPECT findReferences at a ---
-		referenceFinder/class/ImportClassPropertiesExp - a : T; - 36,
+		referenceFinder/class/ImportClassPropertiesExp - a - 36,
 		referenceFinder/class/ImportClassPropertiesImp - t.a - 18,
 		referenceFinder/class/ImportClassPropertiesImp - t.a - 19
 	---
 	*/
 	a : T;
 	/* XPECT findReferences at i ---
-		referenceFinder/class/ImportClassPropertiesExp - i : int; - 43,
+		referenceFinder/class/ImportClassPropertiesExp - i - 43,
 		referenceFinder/class/ImportClassPropertiesImp - t.i - 21,
 		referenceFinder/class/ImportClassPropertiesImp - t.i - 22
 	---
 	*/
 	i : int;
 	/* XPECT findReferences at foo ---
-		referenceFinder/class/ImportClassPropertiesExp - foo(){}; - 49,
+		referenceFinder/class/ImportClassPropertiesExp - foo - 49,
 		referenceFinder/class/ImportClassPropertiesImp - t.foo - 24
 	---
 	*/

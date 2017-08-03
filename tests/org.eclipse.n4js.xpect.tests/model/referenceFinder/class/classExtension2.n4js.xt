@@ -14,21 +14,21 @@
 
 export public class A {
 	/* XPECT findReferences at a ---
-		referenceFinder/class/classExtension2 - a : A; - 22,
+		referenceFinder/class/classExtension2 - a - 22,
 		referenceFinder/class/classExtension2 - b.a - 57,
 		referenceFinder/class/classExtension2 - bj.a - 52
 	---
 	*/
 	a : A;
 	/* XPECT findReferences at i ---
-		referenceFinder/class/classExtension2 - i : int; - 29,
+		referenceFinder/class/classExtension2 - i - 29,
 		referenceFinder/class/classExtension2 - b.i - 58,
 		referenceFinder/class/classExtension2 - bj.i - 53
 	---
 	*/
 	i : int;
 	/* XPECT findReferences at foo ---
-		referenceFinder/class/classExtension2 - foo(){}; - 36,
+		referenceFinder/class/classExtension2 - foo - 36,
 		referenceFinder/class/classExtension2 - b.foo - 59,
 		referenceFinder/class/classExtension2 - bj.foo - 54
 	---
@@ -37,11 +37,11 @@ export public class A {
 }
 
 interface I {
-// XPECT findReferences at a --> referenceFinder/class/classExtension2 - a : A; - 41, referenceFinder/class/classExtension2 - j.a - 62
+// XPECT findReferences at a --> referenceFinder/class/classExtension2 - a - 41, referenceFinder/class/classExtension2 - j.a - 62
 	a : A;
-// XPECT findReferences at i --> referenceFinder/class/classExtension2 - i : int; - 43, referenceFinder/class/classExtension2 - j.i - 63
+// XPECT findReferences at i --> referenceFinder/class/classExtension2 - i - 43, referenceFinder/class/classExtension2 - j.i - 63
 	i : int;
-// XPECT findReferences at foo --> referenceFinder/class/classExtension2 - foo(){}; - 45, referenceFinder/class/classExtension2 - j.foo - 64
+// XPECT findReferences at foo --> referenceFinder/class/classExtension2 - foo - 45, referenceFinder/class/classExtension2 - j.foo - 64
 	foo(){};
 }
 
