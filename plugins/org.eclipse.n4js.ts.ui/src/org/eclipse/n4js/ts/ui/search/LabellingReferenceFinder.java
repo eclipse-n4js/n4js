@@ -38,7 +38,9 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 			public void accept(EObject source, URI sourceURI, EReference eReference, int index, EObject targetOrProxy,
 					URI targetURI) {
 				String name = labelProvider.getText(source);
-				LabelledReferenceDescription description = new LabelledReferenceDescription(sourceURI, targetURI,
+				LabelledReferenceDescription description = new LabelledReferenceDescription(source, sourceURI,
+						targetOrProxy,
+						targetURI,
 						eReference, index, name);
 				accept(description);
 			}

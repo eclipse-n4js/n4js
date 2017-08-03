@@ -10,9 +10,16 @@
  */
 package org.eclipse.n4js.ui.labeling
 
-import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
-import org.eclipse.xtext.resource.IEObjectDescription
+import com.google.inject.Inject
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
+import org.eclipse.n4js.ui.labeling.helper.ImageCalculationHelper
+import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.resource.IResourceDescription
+import org.eclipse.xtext.ui.IImageHelper
+import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
 
 /**
  * Provides labels for a IEObjectDescriptions and IResourceDescriptions.
@@ -24,6 +31,15 @@ import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
  */
 class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
+	@Inject
+	private IImageHelper imageHelper;
+
+	@Inject
+	private ImageCalculationHelper imageCalculatorHelper;
+
+	@Inject
+	private N4JSLabelProvider labelProvider;
+
 	override text(IEObjectDescription ele) {
 		ele.name.toString
 	}
@@ -32,11 +48,23 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 		return description.getLabel
 	}
 
-//	override text(IEObjectDescription ele) {
-//		ele.name.toString
-//	}
-//
-//	override image(IEObjectDescription ele) {
-//		ele.EClass.name + '.gif'
-//	}
+	override Object doGetImage(Object element) {
+		imageCalculatorHelper.labelProvider = this.labelProvider;
+		if (element instanceof IResourceDescription) {
+			// GH-73: TODO Handle this case
+		} else if (element instanceof LabelledReferenceDescription) {
+			var src = element.source;
+			if (src instanceof ParameterizedTypeRef) {
+				src = element.target;
+			} else if (src instanceof IdentifierRef) {
+				src = element.target;
+			} else if (src instanceof ParameterizedPropertyAccessExpression) {
+				src = element.target;
+			}
+			val imgDsc = imageCalculatorHelper.dispatchDoGetImage(src);
+			val image =  imageHelper.getImage(imgDsc);
+			return image;
+		}
+		return null;
+	}
 }
