@@ -80,7 +80,7 @@ public class ProductLauncher {
 			invoke(context, findBundle(context, MainBundleConstants.MAIN_BUNDLE_NAME_PATTERN),
 					MainBundleConstants.MAIN_BUNDLE_CLASS_FQN, MainBundleConstants.MAIN_BUNDLE_METHOD_NAME,
 					appCallArgs);
-			log("invocation finised");
+			log("invocation finished");
 
 			shutdownPlatform();
 
