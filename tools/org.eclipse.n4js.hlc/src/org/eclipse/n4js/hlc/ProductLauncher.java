@@ -46,7 +46,7 @@ public class ProductLauncher {
 		// is user passed args are mixture of plain platform arguments and arguments for
 		// the (later) invoked bundle, then now is the time to process them.
 
-		String[] platformArgs = new String[] { "-consoleLog", "-debug" };
+		String[] platformArgs = new String[] { /* defaults are in ProductLauncher.startPlatform */ };
 
 		/** parameters for the product call, e.g. parameters for the N4JSC.class */
 		String[] appCallArgs = args;
@@ -64,12 +64,14 @@ public class ProductLauncher {
 			for (Iterator<String> iterator = bundlesToInstall.iterator(); iterator.hasNext();) {
 				String bundle = iterator.next();
 				if (isBundleLoaded(bundle, installedBundleDescriptions)) {
-					log("Skip install of already running bundle " + bundle);
+					log("SKIP INSTALL  " + bundle);
 					continue;
 				}
 				InputStream bndInputStream = getResourceAsStream(bundle);
 				Objects.requireNonNull(bndInputStream, "Cannot obtain resource for bundle " + bundle);
-				context.installBundle(BUNDLE_INSTALL_SCHEME + bundle, bndInputStream);
+				String loc = BUNDLE_INSTALL_SCHEME + bundle;
+				log("INSTALL " + loc);
+				context.installBundle(loc, bndInputStream);
 				bndInputStream.close();
 			}
 			log("finish install bundles");
@@ -106,9 +108,17 @@ public class ProductLauncher {
 	private static BundleContext startPlatform(String[] platformArgs) throws Exception {
 		Map<String, String> ip = new HashMap<>();
 		ip.put("eclipse.ignoreApp", "true");
+		ip.put("eclipse.consoleLog", "true");
+		ip.put("eclipse.log.level", "ALL");
+		ip.put("eclipse.noRegistryCache", "true");
 		ip.put("osgi.clean", "true");
-		ip.put(EclipseStarter.PROP_NOSHUTDOWN, "false");
-		ip.put(EclipseStarter.PROP_CONSOLE_LOG, "true");
+		ip.put("osgi.debug", "true");
+		ip.put("osgi.debug.verbose", "true");
+		ip.put("osgi.framework.shape", "jar");
+		ip.put("osgi.configuration.area", "@user.dir/.n4jsc");
+		ip.put("osgi.noShutdown", "false");
+		EclipseStarter.setInitialProperties(ip);
+
 		BundleContext context = EclipseStarter.startup(platformArgs, null);
 		return context;
 	}
