@@ -9,9 +9,7 @@
 # Contributors:
 #   NumberFour AG - Initial API and implementation
 #
-set -e 
-echo "Terminate running but possibly outdated asciispec server..."
-asciispec term
+set -e
 
 SRC_DIR="../org.eclipse.n4js.spec"
 SPEC_DIR=web-html/spec
