@@ -86,7 +86,7 @@ timestamps {
                                        echo "==================================="
                                   """
 
-                                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean deploy ${targetPomFile} ${commonProfiles} ${commonOptions}"""
+                                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean verify ${targetPomFile} ${commonProfiles} ${commonOptions}"""
                             }
                         }
                     }
