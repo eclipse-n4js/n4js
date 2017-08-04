@@ -17,7 +17,6 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4mf.QualifiedNameProvider;
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription;
 import org.eclipse.n4js.ts.ui.search.ReferenceFinderLabelProvider;
 import org.eclipse.xtext.findReferences.IReferenceFinder.Acceptor;
@@ -36,9 +35,6 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 
 	@Inject
 	private ReferenceFinderLabelProvider labelProvider;
-
-	@Inject
-	private QualifiedNameProvider qualifiedNameProvider;
 
 	@Override
 	protected Acceptor toAcceptor(IAcceptor<IReferenceDescription> acceptor) {

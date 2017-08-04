@@ -44,7 +44,7 @@ import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.findReferences.TargetURIKey
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey
-import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder
+import org.eclipse.n4js.ui.search.LabellingReferenceFinder
 import org.eclipse.n4js.ui.N4JSEditor
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant

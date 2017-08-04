@@ -10,19 +10,19 @@
  */
 package org.eclipse.n4js.ts.ui
 
-import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import org.eclipse.xtext.resource.SynchronizedXtextResourceSet
-import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
 import org.eclipse.n4js.ts.findReferences.TargetURIKey
-import org.eclipse.n4js.ts.ui.navigation.URIBasedStorageEditorInputFactory
-import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder
 import org.eclipse.n4js.ts.ui.labeling.TypesDocumentationProvider
+import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
+import org.eclipse.n4js.ts.ui.navigation.URIBasedStorageEditorInputFactory
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey
 import org.eclipse.n4js.ts.ui.search.LabellingReferenceQueryExecutor
-import org.eclipse.n4js.ts.ui.labeling.TypesHoverProvider
-import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
-import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
+import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
+import org.eclipse.xtext.resource.SynchronizedXtextResourceSet
 import org.eclipse.xtext.resource.XtextResourceSet
+import org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor
+import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
+import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -59,20 +59,11 @@ class TypesUiModule extends AbstractTypesUiModule {
 	}
 
 	/**
-	 * Bind the {@link org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor} that maps to types.
+	 * Bind the {@link ReferenceQueryExecutor} that maps to types.
 	 */
 	@SuppressWarnings("restriction")
-	def Class<? extends org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor> bindReferenceQueryExecutor() {
+	def Class<? extends ReferenceQueryExecutor> bindReferenceQueryExecutor() {
 		return LabellingReferenceQueryExecutor;
-	}
-
-	/**
-	 * Bind the {@link org.eclipse.xtext.ui.editor.findrefs.IReferenceFinder} that find references solely to types (and
-	 * TVariables, IdentifiableElement and TEnumLiterals).
-	 */
-	@SuppressWarnings("restriction")
-	def Class<? extends org.eclipse.xtext.ui.editor.findrefs.IReferenceFinder> bindIReferenceFinder() {
-		return LabellingReferenceFinder;
 	}
 
 	override Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
