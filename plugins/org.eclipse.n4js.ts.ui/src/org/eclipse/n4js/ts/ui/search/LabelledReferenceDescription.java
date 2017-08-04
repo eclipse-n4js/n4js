@@ -25,7 +25,18 @@ public class LabelledReferenceDescription extends DefaultReferenceDescription {
 	private final String label;
 	private final EObject source;
 	private final EObject target;
+	private final EObject displayEObject;
 
+	/**
+	 * Return the display EObject.
+	 */
+	public EObject getDisplayEObject() {
+		return displayEObject;
+	}
+
+	/**
+	 * Return the target.
+	 */
 	public EObject getTarget() {
 		return target;
 	}
@@ -50,13 +61,15 @@ public class LabelledReferenceDescription extends DefaultReferenceDescription {
 	 * @param label
 	 *            the label to use in the find references result view
 	 */
-	public LabelledReferenceDescription(EObject source, URI fromURI, EObject target, URI toURI, EReference eReference,
+	public LabelledReferenceDescription(EObject source, EObject displayEObject, URI fromURI, EObject target, URI toURI,
+			EReference eReference,
 			int index,
 			String label) {
 		super(fromURI, toURI, eReference, index, null /* bug in Xtext, may not pass the real value here */);
 		this.label = label;
 		this.source = source;
 		this.target = target;
+		this.displayEObject = displayEObject;
 	}
 
 	/**
