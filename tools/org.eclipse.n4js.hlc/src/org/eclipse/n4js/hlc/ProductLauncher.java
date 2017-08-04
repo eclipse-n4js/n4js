@@ -25,6 +25,9 @@ import org.osgi.framework.BundleContext;
  */
 @SuppressWarnings("restriction")
 public class ProductLauncher {
+	private static boolean DEBUG = false;
+
+	private static final String OSGI_CONFIG_AREA = "@user.dir/.n4jsc";
 
 	/** see org.eclipse.core.runtime.adaptor.EclipseStarter.REFERENCE_SCHEME */
 	private final static String BUNDLE_INSTALL_SCHEME = "reference:file:/";
@@ -74,7 +77,6 @@ public class ProductLauncher {
 				context.installBundle(loc, bndInputStream);
 				bndInputStream.close();
 			}
-			log("finish install bundles");
 
 			log("load bundle and invoke its method");
 			invoke(context, findBundle(context, MainBundleConstants.MAIN_BUNDLE_NAME_PATTERN),
@@ -110,12 +112,11 @@ public class ProductLauncher {
 		ip.put("eclipse.ignoreApp", "true");
 		ip.put("eclipse.consoleLog", "true");
 		ip.put("eclipse.log.level", "ALL");
-		ip.put("eclipse.noRegistryCache", "true");
 		ip.put("osgi.clean", "true");
 		ip.put("osgi.debug", "true");
 		ip.put("osgi.debug.verbose", "true");
 		ip.put("osgi.framework.shape", "jar");
-		ip.put("osgi.configuration.area", "@user.dir/.n4jsc");
+		ip.put("osgi.configuration.area", OSGI_CONFIG_AREA);
 		ip.put("osgi.noShutdown", "false");
 		EclipseStarter.setInitialProperties(ip);
 
@@ -170,7 +171,8 @@ public class ProductLauncher {
 	}
 
 	private static void log(String msg) {
-		System.out.println(new java.text.SimpleDateFormat("HH:mm:ss:SSS").format(new java.util.Date()) + " " + msg);
+		if (DEBUG)
+			System.out.println(new java.text.SimpleDateFormat("HH:mm:ss:SSS").format(new java.util.Date()) + " " + msg);
 	}
 
 	private static List<String> getInstallableBundlesNames(String path, String separator) {
