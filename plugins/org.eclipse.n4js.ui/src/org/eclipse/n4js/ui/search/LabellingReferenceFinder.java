@@ -58,15 +58,16 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 
 	private EObject calculateDisplayEObject(EObject source) {
 		EObject displayObject = source;
-
 		while (!isShowable(displayObject)) {
 			displayObject = displayObject.eContainer();
 		}
 		return displayObject;
 	}
 
-	private boolean isShowable(EObject eobj) {
-		// GH-73 TODO check if this covers all cases!
+	/**
+	 * Check if an EObject is showable or not.
+	 */
+	public static boolean isShowable(EObject eobj) {
 		return eobj instanceof N4MemberDeclaration || eobj instanceof N4ClassifierDefinition
 				|| eobj instanceof FunctionDeclaration || eobj instanceof Script;
 	}

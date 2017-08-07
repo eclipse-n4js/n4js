@@ -11,8 +11,9 @@
 package org.eclipse.n4js.ui.labeling
 
 import com.google.inject.Inject
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
-import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.n4js.ui.search.LabellingReferenceFinder
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
 
@@ -29,17 +30,22 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 	@Inject
 	private N4JSLabelProvider labelProvider;
 
-	override text(IEObjectDescription ele) {
-		ele.name.toString
-	}
-
 	def text(LabelledReferenceDescription description) {
-		labelProvider.getText(description.displayEObject);
+		// Calculate hierarchical logical name, e.g. C.m
+		var text = labelProvider.getText(description.displayEObject);
+		var currContainer = description.displayEObject.eContainer;
+		while (currContainer !== null && !(currContainer instanceof Script)) {
+			if (LabellingReferenceFinder.isShowable(currContainer)) {
+				text = labelProvider.getText(currContainer) + "." + text;
+			}
+			currContainer = currContainer.eContainer;
+		}
+		return text;
 	}
 
 	override Object doGetImage(Object element) {
 		if (element instanceof IResourceDescription) {
-			// GH-73: TODO Handle this case
+			// No image for resource for now.
 		} else if (element instanceof LabelledReferenceDescription) {
 			val image = labelProvider.getImage(element.displayEObject);
 			return image;
