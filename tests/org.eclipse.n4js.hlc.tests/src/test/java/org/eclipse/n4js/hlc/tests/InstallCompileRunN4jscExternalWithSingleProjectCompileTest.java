@@ -49,7 +49,6 @@ public class InstallCompileRunN4jscExternalWithSingleProjectCompileTest extends 
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"--verbose",
 				"-t", BuildType.projects.toString(),
 				projectToCompile

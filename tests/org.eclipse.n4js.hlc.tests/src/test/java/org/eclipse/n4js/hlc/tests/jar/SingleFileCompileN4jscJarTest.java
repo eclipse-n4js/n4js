@@ -182,7 +182,7 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 				"-t", "dontcompile",
 				"-rw", "nodejs",
 				"-r", fileA,
-				"-v", "--debug");
+				"-v");
 
 		int exitCode = p.waitFor();
 

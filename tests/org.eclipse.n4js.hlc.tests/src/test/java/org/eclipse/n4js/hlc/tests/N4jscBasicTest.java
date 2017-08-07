@@ -136,7 +136,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	@Test
 	public void testMainDebugHelp() throws ExitCodeException {
 		System.out.println(logMethodname());
-		String[] args = { "-h", "--debug", "--preferences", "xxx", "-t", "allprojects" }; // , "more1", "more2", "more3"
+		String[] args = { "-h", "--preferences", "xxx", "-t", "allprojects" }; // , "more1", "more2", "more3"
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should have printed help and exited with success.", SuccessExitStatus.INSTANCE.code, status.code);
 	}
