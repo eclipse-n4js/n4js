@@ -52,7 +52,6 @@ public class AT_IDEBUG_654_MissingPolyfillImportsTest extends AbstractN4jscTest 
 				"-t", "dontcompile",
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"-v"
 		};
 

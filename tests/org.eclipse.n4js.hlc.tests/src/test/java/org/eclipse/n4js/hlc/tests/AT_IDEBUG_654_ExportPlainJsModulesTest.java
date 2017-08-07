@@ -44,7 +44,6 @@ public class AT_IDEBUG_654_ExportPlainJsModulesTest extends AbstractN4jscTest {
 				"-t", "allprojects",
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"-v"
 		};
 

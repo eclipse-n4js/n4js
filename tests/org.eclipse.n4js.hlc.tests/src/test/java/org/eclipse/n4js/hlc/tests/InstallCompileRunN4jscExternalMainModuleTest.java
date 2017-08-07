@@ -81,7 +81,6 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"--verbose"
 		};
 		final String actual = runCaptureOut(args);
