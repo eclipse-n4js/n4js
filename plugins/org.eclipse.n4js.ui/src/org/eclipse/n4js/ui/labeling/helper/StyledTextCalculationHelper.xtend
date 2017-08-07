@@ -14,7 +14,6 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
-import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
@@ -27,16 +26,19 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.Wildcard
+import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
+import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.labeling.N4JSStylers
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
-import org.eclipse.n4js.ts.types.TClass
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -56,9 +58,6 @@ import org.eclipse.n4js.ts.types.TClass
  * as only those can have types.
  */
 class StyledTextCalculationHelper {
-
-	/** A styler which is used to emphasize inferred types in the outline */
-	private static val INFERRED_TYPE_STYLER = StyledString.DECORATIONS_STYLER;
 
 	/** Threshold length at which a type reference description is compressed*/
 	private static val OUTLINE_TYPE_REF_LENGTH_THRESHOLD = 30;
@@ -96,45 +95,54 @@ class StyledTextCalculationHelper {
 	def dispatch StyledString dispatchGetStyledText(EObjectWithContext objectWithContext) {
 		var StyledString styledText = dispatchGetStyledText(objectWithContext.obj);
 
-		if (objectWithContext.obj instanceof N4MemberDeclaration) {
-			val TMember member = (objectWithContext.obj as N4MemberDeclaration).definedTypeElement;
-			if (member !== null && member.containingType !== null &&
-				member.containingType != objectWithContext.context) {
+		val TMember member = if (objectWithContext.obj instanceof N4MemberDeclaration) {
+				(objectWithContext.obj as N4MemberDeclaration).definedTypeElement
+			} else if (objectWithContext.obj instanceof TMember) {
+				objectWithContext.obj as TMember
+			} else
+				null;
 
-				val orgDest = " from " + labelCalculationHelper.dispatchDoGetText(member.containingType);
+		if (member !== null && member.containingType !== null && member.containingType != objectWithContext.context) {
 
-				if (member.polyfilled) {
-					styledText.append(" polyfilled" + orgDest, N4JSStylers.POLYFILLED_MEMBERS_STYLER);
-				} else if (member.containingType instanceof TInterface && objectWithContext.context instanceof TClass) {
-					styledText.append(" consumed" + orgDest, N4JSStylers.CONSUMED_MEMBERS_STYLER);
-				} else {
-					styledText.append(" inherited" + orgDest, N4JSStylers.INHERITED_MEMBERS_STYLER);
-				}
+			val orgDest = " from " + labelCalculationHelper.dispatchDoGetText(member.containingType);
 
+			if (member.polyfilled) {
+				styledText.append(" polyfilled" + orgDest, N4JSStylers.POLYFILLED_MEMBERS_STYLER);
+			} else if (member.containingType instanceof TInterface && objectWithContext.context instanceof TClass) {
+				styledText.append(" consumed" + orgDest, N4JSStylers.CONSUMED_MEMBERS_STYLER);
+			} else {
+				styledText.append(" inherited" + orgDest, N4JSStylers.INHERITED_MEMBERS_STYLER);
 			}
+
 		}
 		return styledText;
 	}
 
 	// produces e.g. functionName(param1TypeName, param2TypeName) : returnTypeName
 	def dispatch StyledString dispatchGetStyledText(FunctionDefinition functionDefinition) {
-		var styledText = getLabelProvider.getSuperStyledText(functionDefinition);
 		val definedType = functionDefinition.definedType;
-
 		if (definedType instanceof TFunction) {
-			styledText = styledText.appendStyledTextForFormalParameters(functionDefinition, definedType);
-			styledText = styledText.append(definedType.typeVars.handleTypeVars);
-			var typeStr = "";
+			return dispatchGetStyledText(definedType);
+		}	
+		getLabelProvider.getSuperStyledText(functionDefinition);
+	}
+	
+	
+	/**
+	 * Does not access AST. 
+	 */
+	def dispatch StyledString dispatchGetStyledText(TFunction tfunction) {
+		var styledText = getLabelProvider.getSuperStyledText(tfunction);
+		styledText = styledText.appendStyledTextForFormalParameters(tfunction);
+		styledText = styledText.append(tfunction.typeVars.handleTypeVars);
+		var typeStr = "";
 
-			if (!definedType.constructor && definedType.returnTypeRef !== null)
-				typeStr = " : " + getTypeRefDescription(definedType.returnTypeRef)
+		if (!tfunction.constructor && tfunction.returnTypeRef !== null)
+			typeStr = " : " + getTypeRefDescription(tfunction.returnTypeRef)
 
-			if (functionDefinition.returnTypeRef === null) {
-				styledText = styledText.append(typeStr, INFERRED_TYPE_STYLER)
-			} else {
-				styledText = styledText.append(typeStr)
-			}
-		}
+		
+		styledText = styledText.append(typeStr)
+		
 		return styledText;
 	}
 
@@ -145,50 +153,64 @@ class StyledTextCalculationHelper {
 
 	// produces e.g. getterName() : returnTypeName
 	def dispatch StyledString dispatchGetStyledText(N4GetterDeclaration n4GetterDeclaration) {
-		var styledText = getLabelProvider.getSuperStyledText(n4GetterDeclaration);
-		val definedGetter = n4GetterDeclaration.definedGetter;
+		if (n4GetterDeclaration.definedGetter!==null)
+			return dispatchGetStyledText(n4GetterDeclaration.definedGetter);
+	
+		return getLabelProvider.getSuperStyledText(n4GetterDeclaration);
+
+	}
+
+	/**
+	 * Returns the styled text for the given getter, does not accesses the AST.
+	 */
+	def dispatch StyledString dispatchGetStyledText(TGetter tgetter) {
+		var styledText = getLabelProvider.getSuperStyledText(tgetter);
 		var typeStr = "";
 
-		if (definedGetter !== null) {
-			if (definedGetter.declaredTypeRef !== null)
-				typeStr = " : " + getTypeRefDescription(definedGetter.declaredTypeRef)
+		if (tgetter.declaredTypeRef !== null)
+			typeStr = " : " + getTypeRefDescription(tgetter.declaredTypeRef)
 
-			if (n4GetterDeclaration.declaredTypeRef === null) {
-				styledText = styledText.append(typeStr, INFERRED_TYPE_STYLER)
-			} else {
-				styledText = styledText.append(typeStr)
-			}
-		}
+		styledText = styledText.append(typeStr)
 		return styledText;
 	}
 
 	/** produces e.g. setterName: paramTypeName */
 	def dispatch StyledString dispatchGetStyledText(N4SetterDeclaration n4SetterDeclaration) {
-		var styledText = getLabelProvider.getSuperStyledText(n4SetterDeclaration)
-		val definedSetter = n4SetterDeclaration.definedSetter
-		if (definedSetter !== null) {
-			if (n4SetterDeclaration.fpar !== null && definedSetter.fpar !== null) {
-				styledText.append(" : ").append(
-					getStyledTextForFormalParameter(n4SetterDeclaration.fpar, definedSetter.fpar))
-			}
+		if (n4SetterDeclaration.definedSetter!==null)
+			return dispatchGetStyledText(n4SetterDeclaration.definedSetter);
+		
+		return getLabelProvider.getSuperStyledText(n4SetterDeclaration);
+	}
+
+	/**
+	 * Returns the styled text for the given setter, does not access AST.
+	 */
+	def dispatch StyledString dispatchGetStyledText(TSetter tsetter) {
+		var styledText = getLabelProvider.getSuperStyledText(tsetter)
+		if (tsetter.fpar !== null && tsetter.fpar !== null) {
+			styledText.append(" : ").append(
+				getStyledTextForFormalParameter(tsetter.fpar))
 		}
+
 	}
 
 	// produces e.g. fieldName : fieldTypeName
 	def dispatch StyledString dispatchGetStyledText(N4FieldDeclaration n4FieldDeclaration) {
-		var styledText = getLabelProvider.getSuperStyledText(n4FieldDeclaration);
-		val definedField = n4FieldDeclaration.definedField;
+		if (n4FieldDeclaration.definedField!==null)
+			return dispatchGetStyledText(n4FieldDeclaration.definedField);
+		
+		return getLabelProvider.getSuperStyledText(n4FieldDeclaration);
+	}
+	
+	/**
+	 * Returns the styled text for the given field, does not accesses the AST.
+	 */
+	def dispatch StyledString dispatchGetStyledText(TField tfield) {
+		var styledText = getLabelProvider.getSuperStyledText(tfield);
 		var typeStr = "";
-
-		if (definedField?.typeRef !== null)
-			typeStr = " : " + getTypeRefDescription(definedField.typeRef)
-
-		if (n4FieldDeclaration.declaredTypeRef === null) {
-			// type was inferred
-			styledText = styledText?.append(typeStr, INFERRED_TYPE_STYLER)
-		} else {
-			styledText = styledText?.append(typeStr)
-		}
+		if (tfield.typeRef !== null)
+			typeStr = " : " + getTypeRefDescription(tfield.typeRef)
+		styledText = styledText?.append(typeStr)
 		return styledText;
 	}
 
@@ -198,36 +220,26 @@ class StyledTextCalculationHelper {
 		val definedVariable = variableDeclaration.definedVariable
 		var typeRefString = ""
 
-		 if (definedVariable?.typeRef !== null)
+		if (definedVariable?.typeRef !== null)
 			typeRefString = " : " + getTypeRefDescription(definedVariable.typeRef)
 
-		if (variableDeclaration.declaredTypeRef === null) {
-			styledText = styledText?.append(typeRefString, INFERRED_TYPE_STYLER)
-		} else {
-			styledText = styledText?.append(typeRefString)
-		}
+		styledText = styledText?.append(typeRefString)
 		return styledText;
 	}
 
 	// produces e.g. (param1TypeName, param2TypeName)
-	def private appendStyledTextForFormalParameters(StyledString styledText, FunctionDefinition n4Function,
-		TFunction tFunction) {
+	def private appendStyledTextForFormalParameters(StyledString styledText, TFunction tFunction) {
 		(styledText.append("(") => [
 			if (tFunction.fpars.size > 0) {
-				it.append((0 .. tFunction.fpars.size - 1).map [
-					getStyledTextForFormalParameter(n4Function.fpars.get(it), tFunction.fpars.get(it))
+				it.append((0 .. tFunction.fpars.size - 1).map [i|
+					getStyledTextForFormalParameter(tFunction.fpars.get(i))
 				].reduce(l, r|l.append(", ").append(r)))
 			}
 		]).append(")")
 	}
 
-	def private getStyledTextForFormalParameter(FormalParameter formalParameter, TFormalParameter tFormalParameter) {
-		return if (formalParameter.declaredTypeRef === null) {
-			// type was inferred
-			getTypeRefDescription(tFormalParameter.typeRef)
-		} else {
-			getTypeRefDescription(formalParameter.declaredTypeRef)
-		}
+	def private getStyledTextForFormalParameter(TFormalParameter tFormalParameter) {
+		getTypeRefDescription(tFormalParameter.typeRef)
 	}
 
 	/**
@@ -258,7 +270,12 @@ class StyledTextCalculationHelper {
 
 	// appends the simple type name to the styled string
 	def dispatch private void dispatchGetTypeRefDescription(TypeRef ref, StyledString styledString) {
-		styledString.append(ref.declaredType?.name ?: "<unknown>");
+		val name = ref.declaredType?.name;
+		if(name === null) {
+			styledString.append("<unknown>")
+		} else {
+			styledString.append(name);
+		}
 	}
 
 	// produces 'this' for ThisType references
