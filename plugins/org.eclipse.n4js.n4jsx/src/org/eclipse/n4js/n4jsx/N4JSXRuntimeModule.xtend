@@ -271,9 +271,7 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	 */
 	def void configureIScopeProviderDelegate(Binder binder) {
 		binder.bind(IScopeProvider)
-				.annotatedWith(
-						Names
-								.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
+				.annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
 				.to(N4JSImportedNamespaceAwareLocalScopeProvider);
 	}
 

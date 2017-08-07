@@ -21,7 +21,8 @@ import org.eclipse.emf.ecore.EObject;
  *
  * <!-- begin-model-doc -->
  * *
- * A cache for composed members. See {@link ComposedTypeRef#composedMemberCache()} for details.
+ * A cache for composed members. Not serialized to the Xtext index.
+ * See {@link ComposedTypeRef#composedMemberCache()} for details.
  * <!-- end-model-doc -->
  *
  * <p>

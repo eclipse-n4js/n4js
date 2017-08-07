@@ -374,7 +374,8 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
 	 * *
-	 * Caches for composed members. See {@link ComposedTypeRef#composedMemberCache()} for details.
+	 * Caches for composed members. Not serialized to the Xtext index.
+	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Composed Member Caches</em>' containment reference list.
 	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ComposedMemberCaches()

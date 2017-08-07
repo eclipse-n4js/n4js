@@ -43,10 +43,11 @@ public interface ComposedTypeRef extends StaticBaseTypeRef {
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * This points to cached members that can be accessed via property access on the union/intersection
+	 * This points to a cache of members that can be accessed via property access on the union/intersection
 	 * type directly, because they are, for example, common to all types contained in a UnionTypeExpression.
-	 * This cache will be filled lazily by ComposedMemberScope, so client code should usually not assume this
-	 * information is complete and best not use it at all. Instead, access these members only via the scoping.
+	 * These members are cached for two reasons: (1) performance, (2) TMembers have to be contained in a resource.
+	 * The cache will be filled lazily by ComposedMemberScope, so client code should usually not assume this
+	 * information to be complete and best not use it at all. Instead, access these members only via the scoping.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Composed Member Cache</em>' reference.
 	 * @see #setComposedMemberCache(ComposedMemberCache)

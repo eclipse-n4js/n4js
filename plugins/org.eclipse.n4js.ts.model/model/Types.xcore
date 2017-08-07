@@ -138,7 +138,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	contains Type[] exposedInternalTypes
 	/**
-	 * Caches for composed members. See {@link ComposedTypeRef#composedMemberCache()} for details.
+	 * Caches for composed members. Not serialized to the Xtext index.
+	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
 	 */
 	contains transient ComposedMemberCache[] composedMemberCaches
 	/**
@@ -155,7 +156,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 }
 
 /**
- * A cache for composed members. See {@link ComposedTypeRef#composedMemberCache()} for details.
+ * A cache for composed members. Not serialized to the Xtext index.
+ * See {@link ComposedTypeRef#composedMemberCache()} for details.
  */
 class ComposedMemberCache {
 	contains transient TMember[] cachedComposedMembers

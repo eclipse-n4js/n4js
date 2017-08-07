@@ -194,13 +194,13 @@ public abstract class ComposedMemberScope extends AbstractScope {
 				// in #getSingleLocalElementByName(QualifiedName) above)
 				result = createErrorPlaceholder(memberName);
 			}
-			// add composed member to ComposedTypeRef (without notifications to avoid cache-clear)
+			// add composed member to ComposedTypeRef's cache (without notifications to avoid cache-clear)
 			final ComposedMemberCache cache = getOrCreateComposedMemberCache(composedTypeRef);
 			if (cache != null) {
 				EcoreUtilN4.doWithDeliver(false, () -> {
 					cache.getCachedComposedMembers().add(result);
 				}, cache);
-			} // if cache==null: simply do not cache the composed member
+			} // if cache==null: simply do not cache the composed member (but member won't be contained in a resource!)
 			return result;
 		} else {
 			// none of the subScopes has an element of that name
@@ -254,6 +254,8 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	}
 
 	/**
+	 * Returns the ComposedTypeRef that can be expected to have a cache of composed members in its resource's TModule.
+	 * <p>
 	 * Cached composed members must be stored in a resource. However, due to copying during type variable substitution,
 	 * we might be dealing with a dangling (i.e. not contained in a resource) copy of another ComposedTypeRef contained
 	 * in the AST or type model. Therefore, follow the chain defined by property 'originalComposedTypeRef' until we find
