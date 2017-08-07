@@ -1365,13 +1365,16 @@ public class N4jscBase implements IApplication {
 			checkFileIsDirAndWriteable(tpLoc);
 			retList.add(tpLoc);
 		}
+		System.out.println("N4jscBase.convertToFilesAddTargetPlatformAndCheckWritableDir() with");
 		if (!dirpaths.isEmpty()) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
 				checkFileIsDirAndWriteable(ret);
 				retList.add(ret);
+				System.out.println(" # " + dirpath);
 			}
 		}
+
 		return retList;
 	}
 

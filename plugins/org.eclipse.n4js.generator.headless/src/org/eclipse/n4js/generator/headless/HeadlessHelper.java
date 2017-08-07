@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -47,8 +46,7 @@ public class HeadlessHelper {
 
 		ArrayList<URI> projectURIs = new ArrayList<>(pDir.size());
 
-		for (File pdir : pDir)
-		{
+		for (File pdir : pDir) {
 			URI puri = URI.createFileURI(pdir.toString());
 			projectURIs.add(puri);
 
@@ -92,17 +90,16 @@ public class HeadlessHelper {
 	static ArrayList<File> collectAllProjectPaths(List<File> absProjectRoots) {
 		ArrayList<File> pDir = new ArrayList<>();
 		for (File projectRoot : absProjectRoots) {
+			System.out.println("HeadlessHelper.collectAllProjectPaths() consider " + projectRoot);
 			Arrays.asList(projectRoot.listFiles(f -> {
 				return f.isDirectory(); // all directrories
 			}))//
-			.stream() //
-			.filter(f -> {
-				File[] list = f.listFiles(f2 ->
-				f2.getName().equals(IN4JSProject.N4MF_MANIFEST)
-						);
-				return list != null && list.length > 0; // only those with manifest.n4mf
-			}) //
-			.forEach(f -> pDir.add(f));
+					.stream() //
+					.filter(f -> {
+						File[] list = f.listFiles(f2 -> f2.getName().equals(IN4JSProject.N4MF_MANIFEST));
+						return list != null && list.length > 0; // only those with manifest.n4mf
+					}) //
+					.forEach(f -> pDir.add(f));
 		}
 		return pDir;
 	}

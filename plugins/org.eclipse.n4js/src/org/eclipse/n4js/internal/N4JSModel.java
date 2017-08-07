@@ -133,6 +133,7 @@ public class N4JSModel {
 			return getN4JSProject(location);
 		}
 
+		System.out.println("N4JSModel.findProjectWith() returns null for " + nestedLocation);
 		return null;
 	}
 
