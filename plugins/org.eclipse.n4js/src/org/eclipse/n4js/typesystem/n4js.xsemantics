@@ -2590,7 +2590,7 @@ from {
 	}
 	if(haveReplacement) {
 		result = TypeUtils.copy(typeRef);
-		result.cachedComposedMembers.clear();
+		result.composedMemberCache = null;
 		result.originalComposedTypeRef = typeRef;
 		result.typeRefs.clear();
 		result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs));

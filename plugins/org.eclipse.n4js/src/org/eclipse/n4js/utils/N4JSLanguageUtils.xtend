@@ -60,10 +60,8 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -97,6 +95,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 
 /**
  * Intended for small, static utility methods that
@@ -150,6 +149,17 @@ class N4JSLanguageUtils {
 
 
 	/**
+	 * Tells if given object is an <em>AST node</em>, i.e. contained below a {@link Script} element.
+	 * <p>
+	 * Note that it is not possible to tell AST nodes from type model elements only based on the object's type, because
+	 * there exist type model entities that may appear as a node in the AST (e.g. some TypeRefs, TStructField).
+	 */
+	def static boolean isASTNode(EObject obj) {
+		// note: despite its name, #getContainerOfType() returns 'obj' if instance of Script
+		return EcoreUtil2.getContainerOfType(obj, Script)!==null;
+	}
+
+	/**
 	 * Tells if given expression denotes the value 'undefined'.
 	 */
 	def static boolean isUndefinedLiteral(RuleEnvironment G, Expression expr) {
@@ -159,21 +169,6 @@ class N4JSLanguageUtils {
 		return false;
 	}
 
-
-	/**
-	 * Tells if given object is an <em>AST node</em>, i.e. contained below a {@link Script} element.
-	 * <p>
-	 * Note that it is not possible to tell AST nodes from type model elements only based on the object's type, because
-	 * there exist type model entities that may appear as a node in the AST (e.g. some TypeRefs, TStructField).
-	 */
-	def static boolean isASTNode(EObject obj) {
-		if(isCachedComposedMember(obj)) {
-			return false;
-		}
-		// note: despite its name, #getContainerOfType() returns 'obj' if instance of Script
-		return EcoreUtil2.getContainerOfType(obj, Script)!==null;
-	}
-
 	/**
 	 * Tells if given object is a <em>type model element</em>, i.e. is contained below a {@link TModule} element.
 	 * <p>
@@ -181,16 +176,8 @@ class N4JSLanguageUtils {
 	 * there exist type model entities that may appear as a node in the AST (e.g. some TypeRefs, TStructField).
 	 */
 	def static boolean isTypeModelElement(EObject obj) {
-		if(isCachedComposedMember(obj)) {
-			return true;
-		}
 		// note: despite its name, #getContainerOfType() returns 'obj' if instance of TModule
 		return EcoreUtil2.getContainerOfType(obj, TModule)!==null;
-	}
-
-	def static boolean isCachedComposedMember(EObject eobj) {
-		return eobj !== null
-			&& eobj.eContainingFeature() === TypeRefsPackage.eINSTANCE.getComposedTypeRef_CachedComposedMembers();
 	}
 
 	/**
