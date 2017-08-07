@@ -12,14 +12,16 @@ package org.eclipse.n4js.ui.labeling.helper;
 
 class A {
 	public int foo() {
+		A a2;
 		return 42;
 
 	}
 }
 
 class C {
-	public void bar() {
+	protected void bar() {
 		A a = new A();
+		a.foo();
 		a.foo();
 	}
 }

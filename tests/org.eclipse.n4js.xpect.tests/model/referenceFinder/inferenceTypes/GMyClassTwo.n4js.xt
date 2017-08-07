@@ -27,15 +27,13 @@ import { GMyRoleLikeInterface } from "referenceFinder/inferenceTypes/GMyRoleLike
 
 export class GMyClassTwo {
 	/* XPECT findReferences at myAttributeTwo ---
-	referenceFinder/inferenceTypes/GMyClassTwo - myAttributeTwo - 34,
 	referenceFinder/inferenceTypes/GMyClassOne - two.myAttributeTwo - 31
 	---
 	*/
 	myAttributeTwo : {function (param:string) : GMyInterfaceFour};
 
 	/* XPECT findReferences at myMethodTwo ---
-	   referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo - 30,
-	   referenceFinder/inferenceTypes/GMyClassTwo - myMethodTwo - 41
+	   referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo - 30
 	---
 	 */
     myMethodTwo() : GMyRoleLikeInterface<GMyInterfaceFour> {

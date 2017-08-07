@@ -32,18 +32,15 @@
 
 /* XPECT findReferences at Polyfill ---
 	Poly - Polyfill - 33,
-	Poly - Polyfill - 39,
-	Poly - Polyfill - 54
+	Poly - Polyfill - 51
 ---
 */
 export public class Polyfill {
-	// XPECT findReferences at x --> Poly - p.x - 56, Poly - x : int; - 41
+	// XPECT findReferences at x --> Poly - p.x - 53
 	x : int;
 
 	/* XPECT findReferences at m ---
-	Poly - @Override public m(): void { console.log("I am in the polyfill"); } - 37,
-	Poly - public m(): void { console.log("I am in the polyfillable type"); } - 49,
-	Poly - p.m - 60
+	Poly - p.m - 57
 	---
 	*/
 	public m(): void {

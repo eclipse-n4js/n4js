@@ -13,24 +13,21 @@
 
 export public class A {
 	/* XPECT findReferences at a ---
-	referenceFinder/composedTypes/unions - a - 21,
-	referenceFinder/composedTypes/unions - b.a - 81,
-	referenceFinder/composedTypes/unions - union.a - 67
+	referenceFinder/composedTypes/unions - b.a - 75,
+	referenceFinder/composedTypes/unions - union.a - 61
 	---
 	*/
 	a : A;
 
 	/* XPECT findReferences at i ---
-	referenceFinder/composedTypes/unions - b.i - 82,
-	referenceFinder/composedTypes/unions - i - 29,
-	referenceFinder/composedTypes/unions - union.i - 69
+	referenceFinder/composedTypes/unions - b.i - 76,
+	referenceFinder/composedTypes/unions - union.i - 63
 	---
 	 */
 	i : int;
 	/* XPECT findReferences at foo ---
-	referenceFinder/composedTypes/unions - b.foo - 83,
-	referenceFinder/composedTypes/unions - foo - 36,
-	referenceFinder/composedTypes/unions - union.foo - 78
+	referenceFinder/composedTypes/unions - b.foo - 77,
+	referenceFinder/composedTypes/unions - union.foo - 72
 	---
 	*/
 	foo(){};
@@ -38,23 +35,20 @@ export public class A {
 
 interface I {
 	/* XPECT findReferences at a ---
-	referenceFinder/composedTypes/unions - j.a - 86,
-	referenceFinder/composedTypes/unions - a - 46,
-	referenceFinder/composedTypes/unions - union.a - 67
+	referenceFinder/composedTypes/unions - j.a - 80,
+	referenceFinder/composedTypes/unions - union.a - 61
 	---
 	*/
 	a : A;
 	/* XPECT findReferences at i ---
-	referenceFinder/composedTypes/unions - j.i - 87,
-	referenceFinder/composedTypes/unions - i - 53,
-	referenceFinder/composedTypes/unions - union.i - 69
+	referenceFinder/composedTypes/unions - j.i - 81,
+	referenceFinder/composedTypes/unions - union.i - 63
 	---
 	*/
 	i : int;
 	/* XPECT findReferences at foo ---
-	referenceFinder/composedTypes/unions - j.foo - 88,
-	referenceFinder/composedTypes/unions - foo - 60,
-	referenceFinder/composedTypes/unions - union.foo - 78
+	referenceFinder/composedTypes/unions - j.foo - 82,
+	referenceFinder/composedTypes/unions - union.foo - 72
 	---
 	*/
 	foo(){};
@@ -68,13 +62,13 @@ union.a;
 
 union.i;
 /* XPECT findReferences at foo---
-referenceFinder/composedTypes/unions - b.foo - 83,
-referenceFinder/composedTypes/unions - foo - 36,
-referenceFinder/composedTypes/unions - foo - 60,
-referenceFinder/composedTypes/unions - j.foo - 88,
-referenceFinder/composedTypes/unions - union.foo - 78
+referenceFinder/composedTypes/unions - b.foo - 77,
+referenceFinder/composedTypes/unions - j.foo - 82,
+referenceFinder/composedTypes/unions - union.foo - 72
 ---
 */
+
+
 union.foo();
 
 var b : A;

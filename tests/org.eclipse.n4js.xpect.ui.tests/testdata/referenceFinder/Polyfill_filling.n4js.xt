@@ -31,7 +31,7 @@
 
 @StaticPolyfill
 export public class Polyfill extends Polyfill {
-	// XPECT findReferences at z --> Poly - p.z - 58, Poly - z : String;- 35
+	// XPECT findReferences at z --> Poly - p.z - 55
 	z : String;
 
 	@Override

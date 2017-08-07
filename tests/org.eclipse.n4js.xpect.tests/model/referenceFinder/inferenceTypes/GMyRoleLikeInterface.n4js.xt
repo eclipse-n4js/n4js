@@ -28,7 +28,6 @@ export public interface GMyRoleLikeInterface<T extends GMyInterfaceFour> {
 	element:T;
 
 	/* XPECT findReferences at getElement ---
-	referenceFinder/inferenceTypes/GMyRoleLikeInterface - getElement - 35,
 	referenceFinder/inferenceTypes/GMyClassOne - two.myMethodTwo().getElement - 30
 	---
 	*/

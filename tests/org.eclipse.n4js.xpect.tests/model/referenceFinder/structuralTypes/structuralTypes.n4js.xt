@@ -11,31 +11,27 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-/* X-PECT findReferences at T ---
-   referenceFinder/structuralTypes/structuralTypes - T - 21,
-   referenceFinder/structuralTypes/structuralTypes - T - 28,
-   referenceFinder/structuralTypes/structuralTypes - T - 45,
-   referenceFinder/structuralTypes/structuralTypes - ~T - 46
+/* XPECT findReferences at T ---
+   referenceFinder/structuralTypes/structuralTypes - T - 26,
+   referenceFinder/structuralTypes/structuralTypes - T - 41,
+   referenceFinder/structuralTypes/structuralTypes - ~T - 42
    ---
  */
 class T {
 	/* XPECT findReferences at a ---
-	   referenceFinder/structuralTypes/structuralTypes - a - 28,
-	   referenceFinder/structuralTypes/structuralTypes - t.a - 48,
-	   referenceFinder/structuralTypes/structuralTypes - t.a - 49,
+	   referenceFinder/structuralTypes/structuralTypes - t.a - 44,
+	   referenceFinder/structuralTypes/structuralTypes - t.a - 45,
 	---
 	 */
 	public a : T;
 	/* XPECT findReferences at i ---
-	   referenceFinder/structuralTypes/structuralTypes - i - 35,
-	   referenceFinder/structuralTypes/structuralTypes - t.i - 51,
-	   referenceFinder/structuralTypes/structuralTypes - t.i - 52,
+	   referenceFinder/structuralTypes/structuralTypes - t.i - 47,
+	   referenceFinder/structuralTypes/structuralTypes - t.i - 48,
 	---
 	*/
 	public i : int;
 	/* XPECT findReferences at foo---
-	   referenceFinder/structuralTypes/structuralTypes - foo - 41,
-	   referenceFinder/structuralTypes/structuralTypes - t.foo - 54
+	   referenceFinder/structuralTypes/structuralTypes - t.foo - 50
 	---
 	*/
 	public foo(){};

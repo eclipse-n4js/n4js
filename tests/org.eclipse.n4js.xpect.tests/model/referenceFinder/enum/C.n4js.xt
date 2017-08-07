@@ -21,10 +21,10 @@
 
 export public enum ColorEnum {
 	// Test find references in other files
-	// XPECT findReferences --> referenceFinder/enum/C - RED - 25, referenceFinder/enum/D - ColorEnum.RED - 2
+	// XPECT findReferences --> referenceFinder/enum/D - ColorEnum.RED - 2
 	RED,
 	// Test local find references
-	// XPECT findReferences at YELLOW --> referenceFinder/enum/C - ColorEnum.YELLOW - 30, referenceFinder/enum/C - YELLOW - 28
+	// XPECT findReferences at YELLOW --> referenceFinder/enum/C - ColorEnum.YELLOW - 30
 	YELLOW
 }
 var b = ColorEnum.YELLOW;

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
@@ -163,7 +164,17 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 								findLocalReferencesFromElement(targetURIs, childElement, localResource, acceptor);
 							}
 						}
-					} else if (!ref.isContainer()) {
+					} else if (!ref.isContainer()
+							// Ignore defined corresponding TModule nodes of AST nodes because we do not want
+							// declarations to be part of the find ref result.
+							// These cases correspond to those in {@code InferredElements} !
+							&& ref != N4JSPackage.Literals.SCRIPT__MODULE
+							&& ref != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
+							&& ref != N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD
+							&& ref != N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER
+							&& ref != N4JSPackage.Literals.SETTER_DECLARATION__DEFINED_SETTER
+							&& ref != N4JSPackage.Literals.N4_ENUM_LITERAL__DEFINED_LITERAL
+							&& ref != N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE) {
 						if (doProcess(ref, targetURIs)) {
 							if (ref.isMany()) {
 								@SuppressWarnings("unchecked")

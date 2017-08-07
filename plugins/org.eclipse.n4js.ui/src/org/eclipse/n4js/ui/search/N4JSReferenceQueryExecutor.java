@@ -17,9 +17,7 @@ import java.util.Optional;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
@@ -43,8 +41,6 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 	ContainerTypesHelper containerTypesHelper;
 	/** Flag indicating whether overriden members should be considered or not while finding references. */
 	public static boolean considerOverridenMethods = false;
-	/** Flag indicating whether declarations should be shown or not while finding references. */
-	public static boolean shouldShowDeclarations = false;
 
 	/***
 	 * Here, we add overriden/overrding members or super/subclasses if needed depending on user preferences when finding
@@ -126,19 +122,5 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 			}
 		}
 		return ret;
-	}
-
-	@Override
-	protected boolean isRelevantToUser(EReference reference) {
-		boolean isRelevant = super.isRelevantToUser(reference) && N4JSPackage.Literals.SCRIPT__MODULE != reference;
-		if (!N4JSReferenceQueryExecutor.shouldShowDeclarations) {
-			isRelevant = isRelevant && N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE != reference &&
-					N4JSPackage.Literals.N4_ENUM_LITERAL__DEFINED_LITERAL != reference &&
-					N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD != reference &&
-					N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER != reference &&
-					N4JSPackage.Literals.SETTER_DECLARATION__DEFINED_SETTER != reference &&
-					N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE != reference;
-		}
-		return isRelevant;
 	}
 }

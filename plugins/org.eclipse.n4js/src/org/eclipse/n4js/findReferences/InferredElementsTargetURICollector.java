@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -45,7 +46,14 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 			for (TMember constituentMember : constituentMembers) {
 				super.doAdd(constituentMember, targetURIs);
 			}
+		} else if (primaryTarget instanceof TStructMember) {
+			// TStructMember crossRefStructMember = ((TStructMember) primaryTarget).getDefinedMember();
+			// if (crossRefStructMember != null)
+			// // If this TStructMember is an AST, also add the defined member located in the TModule
+			// super.doAdd(((TStructMember) primaryTarget).getDefinedMember(), targetURIs);
+			super.doAdd(primaryTarget, targetURIs);
 		} else {
+			// Standard case
 			super.doAdd(primaryTarget, targetURIs);
 		}
 		inferredElements.collectInferredElements(primaryTarget, (object) -> {

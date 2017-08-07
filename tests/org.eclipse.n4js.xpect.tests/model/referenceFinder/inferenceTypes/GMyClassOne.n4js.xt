@@ -30,4 +30,13 @@ class GMyClassOne  {
         two.myMethodTwo().getElement().myMethodFour();
         two.myAttributeTwo("test").myMethodFour();
     }
+
+	private myfunz() {
+		/* XPECT findReferences at myCons ---
+		referenceFinder/inferenceTypes/GMyClassOne - myCons - 40
+		---
+		*/
+		const myCons = 42;
+		console.log(myCons);
+	}
 }

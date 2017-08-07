@@ -13,9 +13,8 @@
 
 
 /* XPECT findReferences at x ---
-	referenceFinder/functions/functions - x - 21,
-	referenceFinder/functions/functions - x - 23,
-	referenceFinder/functions/functions - x - 27
+	referenceFinder/functions/functions - x - 22,
+	referenceFinder/functions/functions - x - 30
 	---
 	*/
 function x () : void {}
@@ -23,8 +22,13 @@ function x () : void {}
 x();
 
 class C {
-	constructor() {
+	/* XPECT findReferences at param ---
+	referenceFinder/functions/functions - param - 31
+	---
+	*/
+	constructor(param :int) {
 		x();
+		console.log(param);
 	}
 
 	x : {function():void} = function () {return;};

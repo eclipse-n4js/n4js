@@ -21,8 +21,7 @@
 
 // Test find references of functions in local file or in other files
 /* XPECT findReferences at foo ---
- referenceFinder/functions/A - foo - 30,
- referenceFinder/functions/A - foo - 34,
+  referenceFinder/functions/A - foo - 33,
  referenceFinder/functions/B - foo - 1,
  referenceFinder/functions/B - foo - 3
  ---
