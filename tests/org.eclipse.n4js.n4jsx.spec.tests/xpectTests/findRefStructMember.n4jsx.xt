@@ -24,8 +24,7 @@ import * as React from "reactFiles/react";
 class MyComponent extends
 
 	/* XPECT findReferences at aProp ---
-	findRefStructMember - aProp: string - 31,
-	findRefStructMember - aProp="Blah" - 41
+	findRefStructMember - aProp="Blah" - 39
 	---
 	*/
 	React.Component<~React.ComponentProps with {aProp: string}, String> {
@@ -34,8 +33,7 @@ class MyComponent extends
 	public render(): React.Element {
 		const constText = "some text";
 		/* XPECT findReferences at aProp ---
-		findRefStructMember - aProp: string - 31,
-		findRefStructMember - aProp="Blah" - 41
+		findRefStructMember - aProp="Blah" - 39
 		---
 		*/
 		return (<MyComponent aProp="Blah">{constText}</MyComponent>

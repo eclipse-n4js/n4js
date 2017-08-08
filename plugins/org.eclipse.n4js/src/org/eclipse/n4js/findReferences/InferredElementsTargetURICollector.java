@@ -45,22 +45,24 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 		if (resource == null)
 			return;
 		EcoreUtil.resolveAll(primaryTarget.eResource());
+
+		// Special handling for composed members and TStructMember
 		if (TypeHelper.isComposedMember(primaryTarget)) {
 			// In case of composed member, add the constituent members instead.
 			List<TMember> constituentMembers = ((TMember) primaryTarget).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				super.doAdd(constituentMember, targetURIs);
 			}
-		} else if (primaryTarget instanceof TStructMember) {
-			// TStructMember crossRefStructMember = ((TStructMember) primaryTarget).getDefinedMember();
-			// if (crossRefStructMember != null)
-			// // If this TStructMember is an AST, also add the defined member located in the TModule
-			// super.doAdd(((TStructMember) primaryTarget).getDefinedMember(), targetURIs);
-			super.doAdd(primaryTarget, targetURIs);
 		} else {
-			// Standard case
+			if (primaryTarget instanceof TStructMember) {
+				TStructMember crossRefStructMember = ((TStructMember) primaryTarget).getDefinedMember();
+				if (crossRefStructMember != null)
+					// If this TStructMember is an AST, also add the defined member located in the TModule
+					super.doAdd(((TStructMember) primaryTarget).getDefinedMember(), targetURIs);
+			}
 			super.doAdd(primaryTarget, targetURIs);
 		}
+
 		inferredElements.collectInferredElements(primaryTarget, (object) -> {
 			if (object != null) {
 				super.doAdd(object, targetURIs);

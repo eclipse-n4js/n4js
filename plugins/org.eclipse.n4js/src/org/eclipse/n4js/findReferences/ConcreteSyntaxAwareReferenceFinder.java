@@ -28,6 +28,7 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
@@ -161,16 +162,18 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 							}
 						}
 					} else if (!ref.isContainer()
-							// Ignore defined corresponding TModule nodes of AST nodes because we do not want
+							// CUSTOM BEHAVIOR: Ignore defined corresponding TModule nodes of AST nodes because we do
+							// not want
 							// declarations to be part of the find ref result.
-							// These cases correspond to those in {@link InferredElements} !
+							// These cases correspond to those in {@link InferredElements} + the TStructMember case !
 							&& ref != N4JSPackage.Literals.SCRIPT__MODULE
 							&& ref != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
 							&& ref != N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD
 							&& ref != N4JSPackage.Literals.GETTER_DECLARATION__DEFINED_GETTER
 							&& ref != N4JSPackage.Literals.SETTER_DECLARATION__DEFINED_SETTER
 							&& ref != N4JSPackage.Literals.N4_ENUM_LITERAL__DEFINED_LITERAL
-							&& ref != N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE) {
+							&& ref != N4JSPackage.Literals.EXPORTED_VARIABLE_DECLARATION__DEFINED_VARIABLE
+							&& ref != TypesPackage.Literals.TSTRUCT_MEMBER__DEFINED_MEMBER) {
 						if (doProcess(ref, targetURIs)) {
 							if (ref.isMany()) {
 								@SuppressWarnings("unchecked")

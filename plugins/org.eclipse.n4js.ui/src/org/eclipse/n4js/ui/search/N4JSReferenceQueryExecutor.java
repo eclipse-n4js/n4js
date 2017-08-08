@@ -23,7 +23,6 @@ import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
 import org.eclipse.n4js.ts.ui.search.LabellingReferenceQueryExecutor;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.validation.validators.utils.MemberCube;
@@ -56,16 +55,17 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 			primaryTarget = primaryTarget.eContainer();
 		}
 
-		// Special handling for composed members
+		// Handling for various configurations e.g. consider overriden members
 		List<EObject> realTargets = new ArrayList<>();
-		if (!TypeHelper.isComposedMember(primaryTarget)) {
-			realTargets.add(primaryTarget);
-		} else {
+		if (primaryTarget instanceof TMember && ((TMember) primaryTarget).isComposed()) {
 			// In case of composed member, add the constituent members instead.
 			List<TMember> constituentMembers = ((TMember) primaryTarget).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				realTargets.add(constituentMember);
 			}
+		} else {
+			// Standard case
+			realTargets.add(primaryTarget);
 		}
 
 		for (EObject realTarget : realTargets) {
