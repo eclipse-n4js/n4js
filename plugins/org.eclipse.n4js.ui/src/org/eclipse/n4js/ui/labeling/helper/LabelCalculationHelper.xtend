@@ -142,10 +142,10 @@ class LabelCalculationHelper {
 	 * name + optional type variables, e.g. A<T, U>
 	 */
 	def dispatch String dispatchDoGetText(TClassifier tClassifier) {
-		return tClassifier.name + handleTypeVars(tClassifier)
+		return tClassifier.name + getTypeVarDescriptions(tClassifier)
 	}
 
-	def private handleTypeVars(TClassifier tClassifier) {
+	def private getTypeVarDescriptions(TClassifier tClassifier) {
 		if (tClassifier.typeVars.size > 0)
 			"<" + tClassifier.typeVars.map[name].join(", ") + ">"
 		else

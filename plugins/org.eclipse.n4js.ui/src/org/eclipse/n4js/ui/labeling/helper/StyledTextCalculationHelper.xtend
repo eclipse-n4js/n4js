@@ -82,7 +82,9 @@ class StyledTextCalculationHelper {
 		return new StyledString("*error*")
 	}
 
-	// fallback
+	/**
+	 * fallback
+	 */
 	def dispatch StyledString dispatchGetStyledText(Object element) {
 		getLabelProvider.getSuperStyledText(element)
 	}
@@ -118,16 +120,17 @@ class StyledTextCalculationHelper {
 		return styledText;
 	}
 
-	// produces e.g. functionName(param1TypeName, param2TypeName) : returnTypeName
+	/**
+	 * produces e.g. functionName(param1TypeName, param2TypeName) : returnTypeName
+	 */
 	def dispatch StyledString dispatchGetStyledText(FunctionDefinition functionDefinition) {
 		val definedType = functionDefinition.definedType;
 		if (definedType instanceof TFunction) {
 			return dispatchGetStyledText(definedType);
-		}	
+		}
 		getLabelProvider.getSuperStyledText(functionDefinition);
 	}
-	
-	
+
 	/**
 	 * Does not access AST. 
 	 */
@@ -140,28 +143,31 @@ class StyledTextCalculationHelper {
 		if (!tfunction.constructor && tfunction.returnTypeRef !== null)
 			typeStr = " : " + getTypeRefDescription(tfunction.returnTypeRef)
 
-		
 		styledText = styledText.append(typeStr)
-		
+
 		return styledText;
 	}
 
-	// produces e.g. <T, U>
+	/**
+	 * produces e.g. <T, U>
+	 */
 	def private handleTypeVars(List<TypeVariable> typeVars) {
 		if (typeVars.size > 0) " <" + typeVars.map[name].join(", ") + ">" else "";
 	}
 
-	// produces e.g. getterName() : returnTypeName
+	/**
+	 * produces e.g. getterName() : returnTypeName
+	 */
 	def dispatch StyledString dispatchGetStyledText(N4GetterDeclaration n4GetterDeclaration) {
-		if (n4GetterDeclaration.definedGetter!==null)
+		if (n4GetterDeclaration.definedGetter !== null)
 			return dispatchGetStyledText(n4GetterDeclaration.definedGetter);
-	
-		return getLabelProvider.getSuperStyledText(n4GetterDeclaration);
+
+		return getLabelProvider().getSuperStyledText(n4GetterDeclaration);
 
 	}
 
 	/**
-	 * Returns the styled text for the given getter, does not accesses the AST.
+	 * Returns the styled text for the given getter, does not access the AST.
 	 */
 	def dispatch StyledString dispatchGetStyledText(TGetter tgetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tgetter);
@@ -174,11 +180,13 @@ class StyledTextCalculationHelper {
 		return styledText;
 	}
 
-	/** produces e.g. setterName: paramTypeName */
+	/** 
+	 * produces e.g. setterName: paramTypeName 
+	 */
 	def dispatch StyledString dispatchGetStyledText(N4SetterDeclaration n4SetterDeclaration) {
-		if (n4SetterDeclaration.definedSetter!==null)
+		if (n4SetterDeclaration.definedSetter !== null)
 			return dispatchGetStyledText(n4SetterDeclaration.definedSetter);
-		
+
 		return getLabelProvider.getSuperStyledText(n4SetterDeclaration);
 	}
 
@@ -188,20 +196,21 @@ class StyledTextCalculationHelper {
 	def dispatch StyledString dispatchGetStyledText(TSetter tsetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tsetter)
 		if (tsetter.fpar !== null && tsetter.fpar !== null) {
-			styledText.append(" : ").append(
-				getStyledTextForFormalParameter(tsetter.fpar))
+			styledText.append(" : ").append(getStyledTextForFormalParameter(tsetter.fpar))
 		}
 
 	}
 
-	// produces e.g. fieldName : fieldTypeName
+	/**
+	 * produces e.g. fieldName : fieldTypeName
+	 */
 	def dispatch StyledString dispatchGetStyledText(N4FieldDeclaration n4FieldDeclaration) {
-		if (n4FieldDeclaration.definedField!==null)
+		if (n4FieldDeclaration.definedField !== null)
 			return dispatchGetStyledText(n4FieldDeclaration.definedField);
-		
+
 		return getLabelProvider.getSuperStyledText(n4FieldDeclaration);
 	}
-	
+
 	/**
 	 * Returns the styled text for the given field, does not accesses the AST.
 	 */
@@ -214,7 +223,9 @@ class StyledTextCalculationHelper {
 		return styledText;
 	}
 
-	// produces e.g. variableName : variableTypeName
+	/**
+	 * produces e.g. variableName : variableTypeName
+	 */
 	def dispatch StyledString dispatchGetStyledText(ExportedVariableDeclaration variableDeclaration) {
 		var styledText = getLabelProvider.getSuperStyledText(variableDeclaration)
 		val definedVariable = variableDeclaration.definedVariable
@@ -227,11 +238,13 @@ class StyledTextCalculationHelper {
 		return styledText;
 	}
 
-	// produces e.g. (param1TypeName, param2TypeName)
+	/**
+	 * produces e.g. (param1TypeName, param2TypeName)
+	 */
 	def private appendStyledTextForFormalParameters(StyledString styledText, TFunction tFunction) {
 		(styledText.append("(") => [
 			if (tFunction.fpars.size > 0) {
-				it.append((0 .. tFunction.fpars.size - 1).map [i|
+				it.append((0 .. tFunction.fpars.size - 1).map [ i |
 					getStyledTextForFormalParameter(tFunction.fpars.get(i))
 				].reduce(l, r|l.append(", ").append(r)))
 			}
@@ -268,22 +281,28 @@ class StyledTextCalculationHelper {
 		}
 	}
 
-	// appends the simple type name to the styled string
+	/**
+	 * appends the simple type name to the styled string
+	 */
 	def dispatch private void dispatchGetTypeRefDescription(TypeRef ref, StyledString styledString) {
 		val name = ref.declaredType?.name;
-		if(name === null) {
+		if (name === null) {
 			styledString.append("<unknown>")
 		} else {
 			styledString.append(name);
 		}
 	}
 
-	// produces 'this' for ThisType references
+	/**
+	 * produces 'this' for ThisType references
+	 */
 	def dispatch private void dispatchGetTypeRefDescription(ThisTypeRef ref, StyledString styledString) {
 		styledString.append("this");
 	}
 
-	// produces (param1, param2,...) => returnType
+	/**
+	 * produces (param1, param2,...) => returnType
+	 */
 	def dispatch private void dispatchGetTypeRefDescription(FunctionTypeExpression ref, StyledString styledString) {
 		styledString.append("(");
 
@@ -302,7 +321,9 @@ class StyledTextCalculationHelper {
 		styledString.append(returnTypeString);
 	}
 
-	// produces type{typeName} or constructor{typeName}
+	/**
+	 * produces type{typeName} or constructor{typeName}
+	 */
 	def dispatch private void dispatchGetTypeRefDescription(TypeTypeRef ref, StyledString styledString) {
 		val typeName = switch ref.typeArg {
 			ThisTypeRef:
@@ -317,7 +338,9 @@ class StyledTextCalculationHelper {
 		}
 	}
 
-	// produces union{type1, type2, ...} or intersection{type1, type2, ...}
+	/**
+	 * produces union{type1, type2, ...} or intersection{type1, type2, ...}
+	 */
 	def dispatch private void dispatchGetTypeRefDescription(ComposedTypeRef ref, StyledString styledString) {
 		if (ref instanceof UnionTypeExpression) {
 			styledString.append("union{");
@@ -329,7 +352,9 @@ class StyledTextCalculationHelper {
 		styledString.append("}");
 	}
 
-	// produces a comma separated TypeRef description list element by element
+	/**
+	 * produces a comma separated TypeRef description list element by element
+	 */
 	def private void appendCommaSeparatedTypeRefList(Iterable<TypeRef> refs, StyledString styledString, boolean first) {
 		if (!refs.iterator.hasNext) {
 			return;

@@ -92,7 +92,6 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	 */
 	override IOutlineNode createRoot(IXtextDocument document, CancelIndicator cancelIndicator) {
 		try {
-			// Thread.sleep(5000);
 			getN4JSLabelProvider.establishCancelIndicator(cancelIndicator);
 			return super.createRoot(document, cancelIndicator);
 		} finally {
