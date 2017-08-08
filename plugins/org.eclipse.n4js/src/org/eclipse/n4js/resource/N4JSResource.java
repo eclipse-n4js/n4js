@@ -29,10 +29,14 @@ import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.SegmentSequence;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -415,6 +419,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				forceInstallDerivedState(false);
 			} else {
 				installDerivedState(false);
+				if (discardedState.size() > 1 && discardedState.get(1) instanceof TModule
+						&& contents.size() > 1 && contents.basicGet(1) instanceof TModule) {
+					TModule moduleFromIndex = (TModule) discardedState.get(1);
+					TModule moduleFromAST = (TModule) contents.basicGet(1);
+					rewireTModule(moduleFromAST, moduleFromIndex);
+				}
 			}
 
 			for (int i = 0; i < discardedState.size(); i++) {
@@ -438,6 +448,93 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			logger.error("Error in demandLoadResource for " + getURI(), ioe);
 			return object;
 		}
+	}
+
+	/**
+	 * When loading an AST from a TModule (usually retrieved from the index) by calling
+	 * SyntaxRelatedTElement.astElement, this caused a new TModule to be created again from the AST. That lead to an
+	 * inconsistent state: Two different TModules which both link to the same AST, but the original TModule not
+	 * contained in any resource anymore (because it was removed from the resource and replaced with the newly loaded
+	 * one). Since the original one is detached from a resource, it cannot resolve proxies anymore. This lead to a lot
+	 * of weird scenarios which are extremely hard to debug because the both TModule instances look similar.
+	 *
+	 * This method adds a new rewire step after the AST has been loaded and a new TModule has been created. It first
+	 * compares the original TModule with the new one. If both are similar (except for references or derived/transient
+	 * data), all links from the AST pointing to the new TModule are rewired to point to the old TModule (and vice versa
+	 * all astElements are set to the new AST).
+	 */
+	private void rewireTModule(TModule moduleFromAST, TModule moduleFromIndex) {
+		// ensure new and old module are similar
+		if (!similar(moduleFromAST, moduleFromIndex)) {
+			logger.error("TModule causing AST reload differs from TModule derived from that AST");
+			return;
+		}
+		// now rewire
+		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
+		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
+		while (mastIter.hasNext() && midxIter.hasNext()) {
+			EObject mastNext = mastIter.next();
+			EObject midxNext = midxIter.next();
+			EClass eclass = midxNext.eClass();
+			EStructuralFeature sfAST = eclass.getEStructuralFeature("astElement");
+			if (sfAST != null) {
+				EObject astElement = (EObject) mastNext.eGet(sfAST);
+				// from TModule to AST
+				midxNext.eSet(sfAST, astElement);
+				if (astElement != null) {
+					// from AST to TModule
+					for (EReference ref : astElement.eClass().getEAllReferences()) {
+						Object refValue = mastNext.eGet(ref);
+						if (refValue == mastNext) {
+							astElement.eSet(ref, midxNext);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Compares the two TModules and returns true if both are similar, that is, have same structure and attribute
+	 * values. Derived and transient attributes are ignored, so are references.
+	 *
+	 * Since both TModules are derived from the same AST, the only way that they can differ if the script (the actual
+	 * source code) has been changed after the index-TModule has been created. This change must have happened "behind"
+	 * the scenes, otherwise the TModule of the index would have been updated anyway. In this case, we cannot do much,
+	 * since it would probably too complicated to detect the actual changes and merge them.
+	 *
+	 * TODO: maybe we can at least trigger the index TModule to be reloaded in that case?
+	 */
+	private boolean similar(TModule moduleFromAST, TModule moduleFromIndex) {
+		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
+		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
+		while (mastIter.hasNext() && midxIter.hasNext()) {
+			EObject mastNext = mastIter.next();
+			EObject midxNext = midxIter.next();
+			if (mastNext.getClass() != midxNext.getClass()) {
+				return false;
+			}
+			EClass eclass = midxNext.eClass();
+			for (EAttribute attr : eclass.getEAllAttributes()) {
+				Object mastAttr = mastNext.eGet(attr);
+				Object midxAttr = midxNext.eGet(attr);
+				if (mastAttr != midxAttr) {
+					if (attr.isTransient() || attr.isDerived()) {
+						continue;
+					}
+					if (mastAttr == null || midxAttr == null) {
+						return false;
+					}
+					if (!midxAttr.equals(mastAttr)) {
+						return false;
+					}
+				}
+			}
+		}
+		if (mastIter.hasNext() || midxIter.hasNext()) {
+			return false;
+		}
+		return true;
 	}
 
 	@SuppressWarnings("restriction")
@@ -811,6 +908,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				if (position < contents.size() && position >= 1) {
 					return contents.get(position);
 				}
+				if (position == 0 && contents.size() > 1) {
+					// we have a proxified AST, but a TModule loaded from the index
+
+				}
 				if (position >= 1 && isLoaded && isASTProxy(contents.basicGet(0)) && contents.size() == 1) {
 					// requested position exceeds contents length
 					// apparently we have an astProxy at index 0 but no module
@@ -820,6 +921,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// Note: this would be a good place to track when a proxified AST is being reloaded.
 					contents.get(0);
 				}
+
 			}
 		}
 		return super.getEObjectForURIFragmentRootSegment(uriFragmentRootSegment);
