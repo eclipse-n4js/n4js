@@ -13,6 +13,7 @@ package org.eclipse.n4js.findReferences;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.InferredElements;
@@ -39,6 +40,10 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 
 	@Override
 	protected void doAdd(EObject primaryTarget, TargetURIs targetURIs) {
+		Resource resource = primaryTarget.eResource();
+		// If the target is not contained in a resource, we cannot do anything but return.
+		if (resource == null)
+			return;
 		EcoreUtil.resolveAll(primaryTarget.eResource());
 		if (TypeHelper.isComposedMember(primaryTarget)) {
 			// In case of composed member, add the constituent members instead.
