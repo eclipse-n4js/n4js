@@ -29,10 +29,14 @@ import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.SegmentSequence;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
+import org.eclipse.emf.ecore.EAttribute;
+import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -415,6 +419,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				forceInstallDerivedState(false);
 			} else {
 				installDerivedState(false);
+				if (discardedState.size() > 1 && discardedState.get(1) instanceof TModule && contents.size() > 0
+						&& contents.basicGet(1) instanceof TModule && contents.basicGet(0) instanceof Script) {
+					TModule moduleFromIndex = (TModule) discardedState.get(1);
+					TModule moduleFromAST = (TModule) contents.basicGet(1);
+					rewireTModule(moduleFromAST, moduleFromIndex);
+				}
 			}
 
 			for (int i = 0; i < discardedState.size(); i++) {
@@ -438,6 +448,66 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			logger.error("Error in demandLoadResource for " + getURI(), ioe);
 			return object;
 		}
+	}
+
+	private void rewireTModule(TModule moduleFromAST, TModule moduleFromIndex) {
+		// ensure new and old module are similar
+		if (!similar(moduleFromAST, moduleFromIndex)) {
+			return;
+		}
+		// now rewire
+		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
+		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
+		while (mastIter.hasNext() && midxIter.hasNext()) {
+			EObject mastNext = mastIter.next();
+			EObject midxNext = midxIter.next();
+			EClass eclass = midxNext.eClass();
+			EStructuralFeature sfAST = eclass.getEStructuralFeature("astElement");
+			if (sfAST != null) {
+				EObject astElement = (EObject) mastNext.eGet(sfAST);
+				midxNext.eSet(sfAST, astElement);
+				if (astElement != null) {
+					for (EReference ref : astElement.eClass().getEAllReferences()) {
+						Object refValue = mastNext.eGet(ref);
+						if (refValue == mastNext) {
+							astElement.eSet(ref, midxNext);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private boolean similar(TModule moduleFromAST, TModule moduleFromIndex) {
+		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
+		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
+		while (mastIter.hasNext() && midxIter.hasNext()) {
+			EObject mastNext = mastIter.next();
+			EObject midxNext = midxIter.next();
+			if (mastNext.getClass() != midxNext.getClass()) {
+				return false;
+			}
+			EClass eclass = midxNext.eClass();
+			for (EAttribute attr : eclass.getEAllAttributes()) {
+				Object mastAttr = mastNext.eGet(attr);
+				Object midxAttr = midxNext.eGet(attr);
+				if (mastAttr != midxAttr) {
+					if (attr.isTransient() || attr.isDerived()) {
+						continue;
+					}
+					if (mastAttr == null || midxAttr == null) {
+						return false;
+					}
+					if (!midxAttr.equals(mastAttr)) {
+						return false;
+					}
+				}
+			}
+		}
+		if (mastIter.hasNext() || midxIter.hasNext()) {
+			return false;
+		}
+		return true;
 	}
 
 	@SuppressWarnings("restriction")
@@ -811,6 +881,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				if (position < contents.size() && position >= 1) {
 					return contents.get(position);
 				}
+				if (position == 0 && contents.size() > 1) {
+					// we have a proxified AST, but a TModule loaded from the index
+
+				}
 				if (position >= 1 && isLoaded && isASTProxy(contents.basicGet(0)) && contents.size() == 1) {
 					// requested position exceeds contents length
 					// apparently we have an astProxy at index 0 but no module
@@ -820,6 +894,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// Note: this would be a good place to track when a proxified AST is being reloaded.
 					contents.get(0);
 				}
+
 			}
 		}
 		return super.getEObjectForURIFragmentRootSegment(uriFragmentRootSegment);
