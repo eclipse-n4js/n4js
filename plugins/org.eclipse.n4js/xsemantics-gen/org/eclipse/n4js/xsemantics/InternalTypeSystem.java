@@ -6689,7 +6689,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     }
     if (haveReplacement) {
       result = TypeUtils.<ComposedTypeRef>copy(typeRef);
-      result.getCachedComposedMembers().clear();
+      result.setComposedMemberCache(null);
       result.setOriginalComposedTypeRef(typeRef);
       result.getTypeRefs().clear();
       /* result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs)) */

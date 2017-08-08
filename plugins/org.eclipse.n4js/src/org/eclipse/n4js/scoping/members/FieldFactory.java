@@ -46,6 +46,7 @@ abstract class FieldFactory implements MemberFactory {
 	@Override
 	public TField create(String name) {
 		TField field = TypesFactory.eINSTANCE.createTField();
+		field.setComposed(true);
 		TypeRef typeRef = getReturnTypeRef();
 		TypeUtils.setMemberTypeRef(field, typeRef);
 		field.setName(name);
