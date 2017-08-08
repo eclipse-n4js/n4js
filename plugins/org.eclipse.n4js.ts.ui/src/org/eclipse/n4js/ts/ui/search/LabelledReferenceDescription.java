@@ -26,6 +26,14 @@ public class LabelledReferenceDescription extends DefaultReferenceDescription {
 	private final EObject source;
 	private final EObject target;
 	private final EObject displayEObject;
+	private final int line;
+
+	/**
+	 * Return the line number of the found reference.
+	 */
+	public int getLine() {
+		return line;
+	}
 
 	/**
 	 * Return the display EObject.
@@ -60,16 +68,19 @@ public class LabelledReferenceDescription extends DefaultReferenceDescription {
 	 *            referenced element, 0 is used for toOne references
 	 * @param label
 	 *            the label to use in the find references result view
+	 * @param line
+	 *            the line number of the found reference
 	 */
 	public LabelledReferenceDescription(EObject source, EObject displayEObject, URI fromURI, EObject target, URI toURI,
 			EReference eReference,
 			int index,
-			String label) {
+			String label, int line) {
 		super(fromURI, toURI, eReference, index, null /* bug in Xtext, may not pass the real value here */);
 		this.label = label;
 		this.source = source;
 		this.target = target;
 		this.displayEObject = displayEObject;
+		this.line = line;
 	}
 
 	/**

@@ -20,6 +20,8 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription;
 import org.eclipse.n4js.ts.ui.search.ReferenceFinderLabelProvider;
 import org.eclipse.xtext.findReferences.IReferenceFinder.Acceptor;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.ui.editor.findrefs.DelegatingReferenceFinder;
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceAcceptor;
@@ -45,12 +47,15 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 					URI targetURI) {
 				EObject displayObject = calculateDisplayEObject(source);
 
+				ICompositeNode srcNode = NodeModelUtils.getNode(source);
+				int line = srcNode.getStartLine();
+
 				String name = labelProvider.getText(displayObject);
 				LabelledReferenceDescription description = new LabelledReferenceDescription(source, displayObject,
 						sourceURI,
 						targetOrProxy,
 						targetURI,
-						eReference, index, name);
+						eReference, index, name, line);
 				accept(description);
 			}
 		};

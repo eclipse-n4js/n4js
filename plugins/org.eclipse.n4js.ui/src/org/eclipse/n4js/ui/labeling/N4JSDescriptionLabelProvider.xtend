@@ -32,7 +32,7 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
 	def text(LabelledReferenceDescription description) {
 		// Calculate hierarchical logical name, e.g. C.m
-		var text = labelProvider.getText(description.displayEObject);
+		var text = labelProvider.getText(description.displayEObject) + " : line number " + description.line;
 		var currContainer = description.displayEObject.eContainer;
 		while (currContainer !== null && !(currContainer instanceof Script)) {
 			if (LabellingReferenceFinder.isShowable(currContainer)) {
