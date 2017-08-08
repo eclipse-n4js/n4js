@@ -419,8 +419,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				forceInstallDerivedState(false);
 			} else {
 				installDerivedState(false);
-				if (discardedState.size() > 1 && discardedState.get(1) instanceof TModule && contents.size() > 0
-						&& contents.basicGet(1) instanceof TModule && contents.basicGet(0) instanceof Script) {
+				if (discardedState.size() > 1 && discardedState.get(1) instanceof TModule
+						&& contents.size() > 1 && contents.basicGet(1) instanceof TModule) {
 					TModule moduleFromIndex = (TModule) discardedState.get(1);
 					TModule moduleFromAST = (TModule) contents.basicGet(1);
 					rewireTModule(moduleFromAST, moduleFromIndex);
@@ -450,9 +450,23 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
+	/**
+	 * When loading an AST from a TModule (usually retrieved from the index) by calling
+	 * SyntaxRelatedTElement.astElement, this caused a new TModule to be created again from the AST. That lead to an
+	 * inconsistent state: Two different TModules which both link to the same AST, but the original TModule not
+	 * contained in any resource anymore (because it was removed from the resource and replaced with the newly loaded
+	 * one). Since the original one is detached from a resource, it cannot resolve proxies anymore. This lead to a lot
+	 * of weird scenarios which are extremely hard to debug because the both TModule instances look similar.
+	 *
+	 * This method adds a new rewire step after the AST has been loaded and a new TModule has been created. It first
+	 * compares the original TModule with the new one. If both are similar (except for references or derived/transient
+	 * data), all links from the AST pointing to the new TModule are rewired to point to the old TModule (and vice versa
+	 * all astElements are set to the new AST).
+	 */
 	private void rewireTModule(TModule moduleFromAST, TModule moduleFromIndex) {
 		// ensure new and old module are similar
 		if (!similar(moduleFromAST, moduleFromIndex)) {
+			logger.error("TModule causing AST reload differs from TModule derived from that AST");
 			return;
 		}
 		// now rewire
@@ -465,8 +479,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			EStructuralFeature sfAST = eclass.getEStructuralFeature("astElement");
 			if (sfAST != null) {
 				EObject astElement = (EObject) mastNext.eGet(sfAST);
+				// from TModule to AST
 				midxNext.eSet(sfAST, astElement);
 				if (astElement != null) {
+					// from AST to TModule
 					for (EReference ref : astElement.eClass().getEAllReferences()) {
 						Object refValue = mastNext.eGet(ref);
 						if (refValue == mastNext) {
@@ -478,6 +494,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
+	/**
+	 * Compares the two TModules and returns true if both are similar, that is, have same structure and attribute
+	 * values. Derived and transient attributes are ignored, so are references.
+	 *
+	 * Since both TModules are derived from the same AST, the only way that they can differ if the script (the actual
+	 * source code) has been changed after the index-TModule has been created. This change must have happened "behind"
+	 * the scenes, otherwise the TModule of the index would have been updated anyway. In this case, we cannot do much,
+	 * since it would probably too complicated to detect the actual changes and merge them.
+	 *
+	 * TODO: maybe we can at least trigger the index TModule to be reloaded in that case?
+	 */
 	private boolean similar(TModule moduleFromAST, TModule moduleFromIndex) {
 		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
 		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
