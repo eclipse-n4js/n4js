@@ -21,10 +21,15 @@
 
 import * as React from "reactFiles/react";
 
+/* XPECT findReferences at MyComponent ---
+findRefJSX - MyComponent - 44,
+findRefJSX - MyComponent - 44,
+---
+*/
 class MyComponent extends
 
 	/* XPECT findReferences at aProp ---
-	findRefStructMember - aProp="Blah" - 39
+	findRefJSX - aProp="Blah" - 44
 	---
 	*/
 	React.Component<~React.ComponentProps with {aProp: string}, String> {
@@ -33,10 +38,19 @@ class MyComponent extends
 	public render(): React.Element {
 		const constText = "some text";
 		/* XPECT findReferences at aProp ---
-		findRefStructMember - aProp="Blah" - 39
+		findRefJSX - aProp="Blah" - 44
 		---
 		*/
 		return (<MyComponent aProp="Blah">{constText}</MyComponent>
 		);
 	}
 }
+
+
+// XPECT findReferences at MyReactFuncComponent --> findRefJSX - MyReactFuncComponent - 56
+function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+
+// XPECT findReferences at myProp --> findRefJSX - myProp="My prop" - 56, findRefJSX - props.myProp - 52
+<MyReactFuncComponent myProp="My prop"/>
