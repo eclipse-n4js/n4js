@@ -30,16 +30,12 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 	@Inject
 	private N4JSLabelProvider labelProvider;
 
+	override text(Object obj) {
+		println(obj);
+	}
+
 	def text(LabelledReferenceDescription description) {
-		// Calculate hierarchical logical name, e.g. C.m
-		var text = labelProvider.getText(description.displayEObject) + " : line number " + description.line;
-		var currContainer = description.displayEObject.eContainer;
-		while (currContainer !== null && !(currContainer instanceof Script)) {
-			if (LabellingReferenceFinder.isShowable(currContainer)) {
-				text = labelProvider.getText(currContainer) + "." + text;
-			}
-			currContainer = currContainer.eContainer;
-		}
+		val text = description.label + " : line number " + description.line
 		return text;
 	}
 
@@ -47,7 +43,7 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 		if (element instanceof IResourceDescription) {
 			// No image for resource for now.
 		} else if (element instanceof LabelledReferenceDescription) {
-			val image = labelProvider.getImage(element.displayEObject);
+			val image = labelProvider.getImage(element.displayEObject)
 			return image;
 		}
 		return null;
