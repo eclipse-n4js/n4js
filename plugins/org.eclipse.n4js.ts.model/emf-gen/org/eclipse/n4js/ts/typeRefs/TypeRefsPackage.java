@@ -958,13 +958,13 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK = STATIC_BASE_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
-	 * The feature id for the '<em><b>Cached Composed Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 0;
+	int COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Original Composed Type Ref</b></em>' reference.
@@ -1238,13 +1238,13 @@ public interface TypeRefsPackage extends EPackage {
 	int UNION_TYPE_EXPRESSION__FOLLOWED_BY_QUESTION_MARK = COMPOSED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
-	 * The feature id for the '<em><b>Cached Composed Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int UNION_TYPE_EXPRESSION__CACHED_COMPOSED_MEMBERS = COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS;
+	int UNION_TYPE_EXPRESSION__COMPOSED_MEMBER_CACHE = COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE;
 
 	/**
 	 * The feature id for the '<em><b>Original Composed Type Ref</b></em>' reference.
@@ -1518,13 +1518,13 @@ public interface TypeRefsPackage extends EPackage {
 	int INTERSECTION_TYPE_EXPRESSION__FOLLOWED_BY_QUESTION_MARK = COMPOSED_TYPE_REF__FOLLOWED_BY_QUESTION_MARK;
 
 	/**
-	 * The feature id for the '<em><b>Cached Composed Members</b></em>' containment reference list.
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int INTERSECTION_TYPE_EXPRESSION__CACHED_COMPOSED_MEMBERS = COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS;
+	int INTERSECTION_TYPE_EXPRESSION__COMPOSED_MEMBER_CACHE = COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE;
 
 	/**
 	 * The feature id for the '<em><b>Original Composed Type Ref</b></em>' reference.
@@ -6376,15 +6376,15 @@ public interface TypeRefsPackage extends EPackage {
 	EClass getComposedTypeRef();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getCachedComposedMembers <em>Cached Composed Members</em>}'.
+	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getComposedMemberCache <em>Composed Member Cache</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Cached Composed Members</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getCachedComposedMembers()
+	 * @return the meta object for the reference '<em>Composed Member Cache</em>'.
+	 * @see org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getComposedMemberCache()
 	 * @see #getComposedTypeRef()
 	 * @generated
 	 */
-	EReference getComposedTypeRef_CachedComposedMembers();
+	EReference getComposedTypeRef_ComposedMemberCache();
 
 	/**
 	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getOriginalComposedTypeRef <em>Original Composed Type Ref</em>}'.
@@ -7931,12 +7931,12 @@ public interface TypeRefsPackage extends EPackage {
 		EClass COMPOSED_TYPE_REF = eINSTANCE.getComposedTypeRef();
 
 		/**
-		 * The meta object literal for the '<em><b>Cached Composed Members</b></em>' containment reference list feature.
+		 * The meta object literal for the '<em><b>Composed Member Cache</b></em>' reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
-		EReference COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS = eINSTANCE.getComposedTypeRef_CachedComposedMembers();
+		EReference COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE = eINSTANCE.getComposedTypeRef_ComposedMemberCache();
 
 		/**
 		 * The meta object literal for the '<em><b>Original Composed Type Ref</b></em>' reference feature.

@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TMember;
@@ -99,9 +98,7 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 				if (!candidate.eIsProxy() && candidate.eResource() == null) {
 					// TODO remove following exception case after resolving IDE-1253
 					final boolean isCaseOfCachedComposedMemberHack = candidate instanceof TMember
-							&& candidate.eContainer() instanceof ComposedTypeRef
-							&& candidate.eContainmentFeature() == TypeRefsPackage.eINSTANCE
-									.getComposedTypeRef_CachedComposedMembers();
+							&& ((TMember) candidate).isComposed();
 
 					if (!isCaseOfCachedComposedMemberHack) {
 						// Error is necessary since EMF catches all exceptions in EcoreUtil#resolve

@@ -21,8 +21,8 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 
 /**
  * The abstract {@link GetterFactory} is the base class for the child classes {@link UnionGetterFactory} and
- * {@link IntersectionGetterFactory}. It implements the method {@link #create(String)} which gets its information through
- * abstract methods implemented in the child classes mentioned before The child classes are instantiated in
+ * {@link IntersectionGetterFactory}. It implements the method {@link #create(String)} which gets its information
+ * through abstract methods implemented in the child classes mentioned before. The sub classes are instantiated in
  * {@link IntersectionMemberFactory} and {@link UnionMemberFactory} respectively.
  */
 abstract class GetterFactory implements MemberFactory {
@@ -44,6 +44,7 @@ abstract class GetterFactory implements MemberFactory {
 	@Override
 	public TGetter create(String name) {
 		TGetter getter = TypesFactory.eINSTANCE.createTGetter();
+		getter.setComposed(true);
 		TypeRef typeRef = getReturnTypeRefComposition();
 		TypeUtils.setMemberTypeRef(getter, typeRef);
 		getter.setName(name);
