@@ -23,13 +23,13 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 
 /**
  * The abstract {@link MethodFactory} is the base class for the child classes {@link UnionMethodFactory} and
- * {@link IntersectionMethodFactory}. It implements the method {@link #create(String)} which gets its information through
- * abstract methods implemented in the child classes mentioned before The child classes are instantiated in
+ * {@link IntersectionMethodFactory}. It implements the method {@link #create(String)} which gets its information
+ * through abstract methods implemented in the child classes mentioned before The child classes are instantiated in
  * {@link IntersectionMemberFactory} and {@link UnionMemberFactory} respectively.
  * <p>
  * Additionally, the base class {@link FParFactory} for formal parameters including its method
- * {@link FParFactory#create()} is defined here. This class is used here to eventually create formal
- * parameters of methods, and moreover it is used in {@link SetterFactory} to create the formal parameter of setters.
+ * {@link FParFactory#create()} is defined here. This class is used here to eventually create formal parameters of
+ * methods, and moreover it is used in {@link SetterFactory} to create the formal parameter of setters.
  */
 abstract class MethodFactory implements MemberFactory {
 	final ComposedMemberInfo cma;
@@ -69,6 +69,7 @@ abstract class MethodFactory implements MemberFactory {
 	@Override
 	public TMethod create(String name) {
 		TMethod method = TypesFactory.eINSTANCE.createTMethod();
+		method.setComposed(true);
 		method.setDeclaredMemberAccessModifier(getAccessability());
 		method.setName(name);
 		TypeUtils.setMemberTypeRef(method, getReturnTypeRefComposition());

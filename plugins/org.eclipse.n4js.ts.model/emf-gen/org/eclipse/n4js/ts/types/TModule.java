@@ -39,6 +39,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
@@ -365,6 +366,23 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	EList<Type> getExposedInternalTypes();
+
+	/**
+	 * Returns the value of the '<em><b>Composed Member Caches</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.ComposedMemberCache}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Caches for composed members. Not serialized to the Xtext index.
+	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Composed Member Caches</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_ComposedMemberCaches()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<ComposedMemberCache> getComposedMemberCaches();
 
 	/**
 	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
