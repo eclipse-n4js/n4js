@@ -70,6 +70,7 @@ abstract class MethodFactory implements MemberFactory {
 	@Override
 	public TMethod create(String name) {
 		TMethod method = TypesFactory.eINSTANCE.createTMethod();
+		method.setComposed(true);
 		method.setDeclaredMemberAccessModifier(getAccessability());
 		method.setName(name);
 		TypeUtils.setMemberTypeRef(method, getReturnTypeRefComposition());

@@ -12,7 +12,7 @@ package org.eclipse.n4js.ts.typeRefs;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 
 /**
  * <!-- begin-user-doc -->
@@ -28,7 +28,7 @@ import org.eclipse.n4js.ts.types.TMember;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getCachedComposedMembers <em>Cached Composed Members</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getOriginalComposedTypeRef <em>Original Composed Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getTypeRefs <em>Type Refs</em>}</li>
  * </ul>
@@ -39,22 +39,33 @@ import org.eclipse.n4js.ts.types.TMember;
  */
 public interface ComposedTypeRef extends StaticBaseTypeRef {
 	/**
-	 * Returns the value of the '<em><b>Cached Composed Members</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.n4js.ts.types.TMember}.
+	 * Returns the value of the '<em><b>Composed Member Cache</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * These are the members that can be accessed via property access on the union/intersection
-	 * type directly, because they are common to all types contained in the ComposedTypeRef.
-	 * This cache will be filled lazily by ComposedMemberScope, so client code should
-	 * usually not assume this information is complete and best not use it at all.
+	 * This points to a cache of members that can be accessed via property access on the union/intersection
+	 * type directly, because they are, for example, common to all types contained in a UnionTypeExpression.
+	 * These members are cached for two reasons: (1) performance, (2) TMembers have to be contained in a resource.
+	 * The cache will be filled lazily by ComposedMemberScope, so client code should usually not assume this
+	 * information to be complete and best not use it at all. Instead, access these members only via the scoping.
 	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Cached Composed Members</em>' containment reference list.
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getComposedTypeRef_CachedComposedMembers()
-	 * @model containment="true" transient="true"
+	 * @return the value of the '<em>Composed Member Cache</em>' reference.
+	 * @see #setComposedMemberCache(ComposedMemberCache)
+	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getComposedTypeRef_ComposedMemberCache()
+	 * @model transient="true"
 	 * @generated
 	 */
-	EList<TMember> getCachedComposedMembers();
+	ComposedMemberCache getComposedMemberCache();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getComposedMemberCache <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Composed Member Cache</em>' reference.
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 */
+	void setComposedMemberCache(ComposedMemberCache value);
 
 	/**
 	 * Returns the value of the '<em><b>Original Composed Type Ref</b></em>' reference.

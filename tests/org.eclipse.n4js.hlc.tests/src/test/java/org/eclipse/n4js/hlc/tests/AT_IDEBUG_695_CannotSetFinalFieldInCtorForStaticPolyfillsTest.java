@@ -52,7 +52,6 @@ public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest exten
 				"-t", "dontcompile",
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"-v"
 		};
 

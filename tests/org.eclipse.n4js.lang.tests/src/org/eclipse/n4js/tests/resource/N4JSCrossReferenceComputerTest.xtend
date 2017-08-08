@@ -144,7 +144,7 @@ class N4JSCrossReferenceComputerTest {
 		});
 
 		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
-		val expectedRefs = "class - X1,class - X2,field - foo,field - foo"
+		val expectedRefs = "class - X1,class - X2,field - foo,field - foo,interface - I,interface - J"
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 }

@@ -26,6 +26,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TMember#isDeclaredOverride <em>Declared Override</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TMember#isHasComputedName <em>Has Computed Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TMember#getConstituentMembers <em>Constituent Members</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TMember#isComposed <em>Composed</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getTMember()
@@ -151,6 +152,31 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * @generated
 	 */
 	EList<TMember> getConstituentMembers();
+
+	/**
+	 * Returns the value of the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * * Tells if this member is a composed member created by {@code ComposedMemberFactory}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Composed</em>' attribute.
+	 * @see #setComposed(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTMember_Composed()
+	 * @model unique="false"
+	 * @generated
+	 */
+	boolean isComposed();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TMember#isComposed <em>Composed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Composed</em>' attribute.
+	 * @see #isComposed()
+	 * @generated
+	 */
+	void setComposed(boolean value);
 
 	/**
 	 * <!-- begin-user-doc -->

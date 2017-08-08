@@ -91,7 +91,6 @@ public class IncompleteApiImplementationTest extends AbstractN4jscTest {
 				"-t", "dontcompile",
 				"-rw", "nodejs",
 				"-r", execPath,
-				"--debug",
 				"-v"
 		};
 	}

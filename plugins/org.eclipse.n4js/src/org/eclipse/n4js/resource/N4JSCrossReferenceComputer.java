@@ -21,8 +21,6 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -30,7 +28,6 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeHelper;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
@@ -61,15 +58,7 @@ public class N4JSCrossReferenceComputer {
 	 *            the logic that collects the passed EObject found in a cross reference
 	 */
 	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
-		TreeIterator<EObject> allContentsIter;
-		if (resource instanceof N4JSResource) {
-			Script script = (Script) ((N4JSResource) resource).getContents().get(0);
-			// We only traverse AST tree without cached elements.
-			allContentsIter = N4JSLanguageUtils.getAllContentsWithoutCachedElements(script);
-		} else {
-			allContentsIter = resource.getAllContents();
-		}
-
+		TreeIterator<EObject> allContentsIter = resource.getAllContents();
 		while (allContentsIter.hasNext()) {
 			EObject eObject = allContentsIter.next();
 			computeCrossRefs(resource, eObject, acceptor);
@@ -127,15 +116,12 @@ public class N4JSCrossReferenceComputer {
 
 	private void handleComposedMember(Resource resource, EObject from,
 			IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TMember to) {
-		if (ComposedMemberScope.isComposedMember(to)) {
+		if (to.isComposed()) {
 			// Special handling for composed members
 			// Add the constituent members
 			for (TMember constituentMember : to.getConstituentMembers()) {
-				// Since the constituentMember node may actually be located in another resource,
-				// we need to navigate to the original resource.
 				N4MemberDeclaration fromMemberDecl = (N4MemberDeclaration) constituentMember.getAstElement();
-				TMember originalMember = fromMemberDecl.getDefinedTypeElement();
-				handleIdentifiableElement(resource, fromMemberDecl, acceptor, originalMember);
+				handleIdentifiableElement(resource, fromMemberDecl, acceptor, constituentMember);
 			}
 		} else {
 			// Standard case

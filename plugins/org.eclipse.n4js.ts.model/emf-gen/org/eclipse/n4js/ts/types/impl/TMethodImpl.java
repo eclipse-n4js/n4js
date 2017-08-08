@@ -63,6 +63,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isDeclaredOverride <em>Declared Override</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isHasComputedName <em>Has Computed Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#getConstituentMembers <em>Constituent Members</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isComposed <em>Composed</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isHasNoBody <em>Has No Body</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#getDeclaredMemberAccessModifier <em>Declared Member Access Modifier</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMethodImpl#isDeclaredAbstract <em>Declared Abstract</em>}</li>
@@ -161,6 +162,26 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 	 * @ordered
 	 */
 	protected EList<TMember> constituentMembers;
+
+	/**
+	 * The default value of the '{@link #isComposed() <em>Composed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isComposed()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean COMPOSED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isComposed() <em>Composed</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isComposed()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean composed = COMPOSED_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #isHasNoBody() <em>Has No Body</em>}' attribute.
@@ -355,6 +376,27 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 			constituentMembers = new EObjectResolvingEList<TMember>(TMember.class, this, TypesPackage.TMETHOD__CONSTITUENT_MEMBERS);
 		}
 		return constituentMembers;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isComposed() {
+		return composed;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setComposed(boolean newComposed) {
+		boolean oldComposed = composed;
+		composed = newComposed;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMETHOD__COMPOSED, oldComposed, composed));
 	}
 
 	/**
@@ -678,6 +720,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return isHasComputedName();
 			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
 				return getConstituentMembers();
+			case TypesPackage.TMETHOD__COMPOSED:
+				return isComposed();
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				return isHasNoBody();
 			case TypesPackage.TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER:
@@ -714,6 +758,9 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
 				getConstituentMembers().clear();
 				getConstituentMembers().addAll((Collection<? extends TMember>)newValue);
+				return;
+			case TypesPackage.TMETHOD__COMPOSED:
+				setComposed((Boolean)newValue);
 				return;
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				setHasNoBody((Boolean)newValue);
@@ -754,6 +801,9 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
 				getConstituentMembers().clear();
 				return;
+			case TypesPackage.TMETHOD__COMPOSED:
+				setComposed(COMPOSED_EDEFAULT);
+				return;
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				setHasNoBody(HAS_NO_BODY_EDEFAULT);
 				return;
@@ -788,6 +838,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				return hasComputedName != HAS_COMPUTED_NAME_EDEFAULT;
 			case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS:
 				return constituentMembers != null && !constituentMembers.isEmpty();
+			case TypesPackage.TMETHOD__COMPOSED:
+				return composed != COMPOSED_EDEFAULT;
 			case TypesPackage.TMETHOD__HAS_NO_BODY:
 				return hasNoBody != HAS_NO_BODY_EDEFAULT;
 			case TypesPackage.TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER:
@@ -814,6 +866,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				case TypesPackage.TMETHOD__DECLARED_OVERRIDE: return TypesPackage.TMEMBER__DECLARED_OVERRIDE;
 				case TypesPackage.TMETHOD__HAS_COMPUTED_NAME: return TypesPackage.TMEMBER__HAS_COMPUTED_NAME;
 				case TypesPackage.TMETHOD__CONSTITUENT_MEMBERS: return TypesPackage.TMEMBER__CONSTITUENT_MEMBERS;
+				case TypesPackage.TMETHOD__COMPOSED: return TypesPackage.TMEMBER__COMPOSED;
 				default: return -1;
 			}
 		}
@@ -841,6 +894,7 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 				case TypesPackage.TMEMBER__DECLARED_OVERRIDE: return TypesPackage.TMETHOD__DECLARED_OVERRIDE;
 				case TypesPackage.TMEMBER__HAS_COMPUTED_NAME: return TypesPackage.TMETHOD__HAS_COMPUTED_NAME;
 				case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS: return TypesPackage.TMETHOD__CONSTITUENT_MEMBERS;
+				case TypesPackage.TMEMBER__COMPOSED: return TypesPackage.TMETHOD__COMPOSED;
 				default: return -1;
 			}
 		}
@@ -971,6 +1025,8 @@ public class TMethodImpl extends TFunctionImpl implements TMethod {
 		result.append(declaredOverride);
 		result.append(", hasComputedName: ");
 		result.append(hasComputedName);
+		result.append(", composed: ");
+		result.append(composed);
 		result.append(", hasNoBody: ");
 		result.append(hasNoBody);
 		result.append(", declaredMemberAccessModifier: ");

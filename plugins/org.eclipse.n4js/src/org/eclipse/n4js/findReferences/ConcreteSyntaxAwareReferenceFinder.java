@@ -27,7 +27,6 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.EcoreUtil2;
@@ -143,9 +142,6 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		URI sourceURI = null;
 		if (doProcess(sourceCandidate, targetURIs)) {
 			for (EReference ref : sourceCandidate.eClass().getEAllReferences()) {
-				// CUSTOM BEHAVIOR: Ignore cachedComposedMember
-				if (ref == TypeRefsPackage.eINSTANCE.getComposedTypeRef_CachedComposedMembers())
-					continue;
 				Object value = sourceCandidate.eGet(ref, false);
 				if (sourceCandidate.eIsSet(ref) && value != null) {
 					if (ref.isContainment()) {
@@ -167,7 +163,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 					} else if (!ref.isContainer()
 							// Ignore defined corresponding TModule nodes of AST nodes because we do not want
 							// declarations to be part of the find ref result.
-							// These cases correspond to those in {@code InferredElements} !
+							// These cases correspond to those in {@link InferredElements} !
 							&& ref != N4JSPackage.Literals.SCRIPT__MODULE
 							&& ref != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
 							&& ref != N4JSPackage.Literals.N4_FIELD_DECLARATION__DEFINED_FIELD
@@ -219,7 +215,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
 		if (TypeHelper.isComposedMember(instanceOrProxy)) {
 			TMember member = (TMember) instanceOrProxy;
-			if (member.getConstituentMembers().size() > 0) {
+			if (member.isComposed()) {
 				for (TMember constituentMember : member.getConstituentMembers()) {
 					URI constituentReffURI = EcoreUtil2
 							.getPlatformResourceOrNormalizedURI(constituentMember);

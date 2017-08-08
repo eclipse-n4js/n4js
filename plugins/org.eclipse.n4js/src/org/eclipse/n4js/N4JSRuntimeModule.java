@@ -67,8 +67,8 @@ import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper;
 import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
+import org.eclipse.n4js.utils.validation.PrePostDiagnostician;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import org.eclipse.n4js.validation.N4JSDiagnostician;
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider;
 import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
@@ -452,7 +452,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	@Override
 	@SingletonBinding
 	public Class<? extends Diagnostician> bindDiagnostician() {
-		return N4JSDiagnostician.class;
+		return PrePostDiagnostician.class;
 	}
 
 	/**

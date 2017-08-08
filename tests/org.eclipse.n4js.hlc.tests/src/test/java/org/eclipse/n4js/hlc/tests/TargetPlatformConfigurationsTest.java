@@ -52,7 +52,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
@@ -77,7 +76,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
@@ -110,7 +108,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
@@ -140,7 +137,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
@@ -165,7 +161,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString(),
@@ -191,7 +186,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString(),
@@ -217,7 +211,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
@@ -242,7 +235,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] args = {
 				// "--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				// "--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString(),
@@ -272,7 +264,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 		final String[] argsInstall = {
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()
@@ -286,7 +277,6 @@ public class TargetPlatformConfigurationsTest extends BaseN4jscExternalTest {
 				"--targetPlatformFile", getTargetPlatformFile().getAbsolutePath(),
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"--targetPlatformSkipInstall",
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()

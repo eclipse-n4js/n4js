@@ -34,7 +34,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
-import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 
@@ -48,7 +48,7 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ComposedTypeRefImpl#getCachedComposedMembers <em>Cached Composed Members</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ComposedTypeRefImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ComposedTypeRefImpl#getOriginalComposedTypeRef <em>Original Composed Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.impl.ComposedTypeRefImpl#getTypeRefs <em>Type Refs</em>}</li>
  * </ul>
@@ -57,14 +57,14 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
  */
 public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implements ComposedTypeRef {
 	/**
-	 * The cached value of the '{@link #getCachedComposedMembers() <em>Cached Composed Members</em>}' containment reference list.
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getCachedComposedMembers()
+	 * @see #getComposedMemberCache()
 	 * @generated
 	 * @ordered
 	 */
-	protected EList<TMember> cachedComposedMembers;
+	protected ComposedMemberCache composedMemberCache;
 
 	/**
 	 * The cached value of the '{@link #getOriginalComposedTypeRef() <em>Original Composed Type Ref</em>}' reference.
@@ -110,11 +110,37 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EList<TMember> getCachedComposedMembers() {
-		if (cachedComposedMembers == null) {
-			cachedComposedMembers = new EObjectContainmentEList<TMember>(TMember.class, this, TypeRefsPackage.COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS);
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypeRefsPackage.COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
 		}
-		return cachedComposedMembers;
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypeRefsPackage.COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -202,8 +228,6 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case TypeRefsPackage.COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS:
-				return ((InternalEList<?>)getCachedComposedMembers()).basicRemove(otherEnd, msgs);
 			case TypeRefsPackage.COMPOSED_TYPE_REF__TYPE_REFS:
 				return ((InternalEList<?>)getTypeRefs()).basicRemove(otherEnd, msgs);
 		}
@@ -218,8 +242,9 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case TypeRefsPackage.COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS:
-				return getCachedComposedMembers();
+			case TypeRefsPackage.COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case TypeRefsPackage.COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF:
 				if (resolve) return getOriginalComposedTypeRef();
 				return basicGetOriginalComposedTypeRef();
@@ -238,9 +263,8 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case TypeRefsPackage.COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS:
-				getCachedComposedMembers().clear();
-				getCachedComposedMembers().addAll((Collection<? extends TMember>)newValue);
+			case TypeRefsPackage.COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
 				return;
 			case TypeRefsPackage.COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF:
 				setOriginalComposedTypeRef((ComposedTypeRef)newValue);
@@ -261,8 +285,8 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS:
-				getCachedComposedMembers().clear();
+			case TypeRefsPackage.COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
 				return;
 			case TypeRefsPackage.COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF:
 				setOriginalComposedTypeRef((ComposedTypeRef)null);
@@ -282,8 +306,8 @@ public abstract class ComposedTypeRefImpl extends StaticBaseTypeRefImpl implemen
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case TypeRefsPackage.COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS:
-				return cachedComposedMembers != null && !cachedComposedMembers.isEmpty();
+			case TypeRefsPackage.COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case TypeRefsPackage.COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF:
 				return originalComposedTypeRef != null;
 			case TypeRefsPackage.COMPOSED_TYPE_REF__TYPE_REFS:
