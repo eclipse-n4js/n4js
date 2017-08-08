@@ -141,7 +141,7 @@ public interface TMember extends IdentifiableElement, TAnnotableElement, SyntaxR
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * <!-- begin-model-doc -->
-	 * * Tells if this member is a composed member created by ComposedMemberFactory.
+	 * * Tells if this member is a composed member created by {@code ComposedMemberFactory}.
 	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Composed</em>' attribute.
 	 * @see #setComposed(boolean)

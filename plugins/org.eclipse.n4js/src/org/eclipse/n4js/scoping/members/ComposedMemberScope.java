@@ -234,7 +234,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * N4JSResource or this resource does not have a TModule.
 	 */
 	private ComposedMemberCache getOrCreateComposedMemberCache(ComposedTypeRef ctr) {
-		final ComposedTypeRef cacheHolder = getCacheHolder(ctr);
+		final ComposedTypeRef ctrWithCache = getComposedTypeRefWithCache(ctr);
 		final ComposedMemberCache cache = ctr.getComposedMemberCache();
 		if (cache != null) {
 			return cache;
@@ -246,8 +246,8 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
 			EcoreUtilN4.doWithDeliver(false, () -> {
 				module.getComposedMemberCaches().add(cacheNew);
-				cacheHolder.setComposedMemberCache(cacheNew);
-			}, module, cacheHolder);
+				ctrWithCache.setComposedMemberCache(cacheNew);
+			}, module, ctrWithCache);
 			return cacheNew;
 		}
 		return null;
@@ -263,7 +263,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * <p>
 	 * See also Xsemantics rule 'substTypeVariablesInComposedTypeRef'.
 	 */
-	private ComposedTypeRef getCacheHolder(ComposedTypeRef ctr) {
+	private ComposedTypeRef getComposedTypeRefWithCache(ComposedTypeRef ctr) {
 		while (ctr.eResource() == null && ctr.getOriginalComposedTypeRef() != null) {
 			ctr = ctr.getOriginalComposedTypeRef();
 		}

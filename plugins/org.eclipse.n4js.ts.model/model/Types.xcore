@@ -1024,7 +1024,7 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
 
 	boolean hasComputedName
 
-	/** Tells if this member is a composed member created by ComposedMemberFactory. */
+	/** Tells if this member is a composed member created by {@code ComposedMemberFactory}. */
 	boolean composed
 
 	/**

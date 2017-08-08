@@ -24,7 +24,7 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 /**
  * The abstract {@link SetterFactory} is the base class for the child classes {@link UnionSetterFactory} and
  * {@link IntersectionSetterFactory}. It implements the method {@link #create(String)} which gets its information
- * through abstract methods implemented in the child classes mentioned before The child classes are instantiated in
+ * through abstract methods implemented in the child classes mentioned before. The sub classes are instantiated in
  * {@link IntersectionMemberFactory} and {@link UnionMemberFactory} respectively.
  * <p>
  * This class also defines the class {@link StandaloneFPar} which is based upon the class {@link FParFactory} and reuses
