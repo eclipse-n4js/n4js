@@ -11,9 +11,7 @@
 package org.eclipse.n4js.ui.labeling
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
-import org.eclipse.n4js.ui.search.LabellingReferenceFinder
 import org.eclipse.xtext.resource.IResourceDescription
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
 

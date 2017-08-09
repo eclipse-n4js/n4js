@@ -213,6 +213,7 @@ public class TypeHelper {
 	 * @return
 	 * 			the list of extracted types. There can be multiple returned types due to composed type refs.
 	 */
+	// GH-73 TODO Check with Oliver!
 	public def List<Type> extractType(TypeRef typeRef) {
 		if (typeRef === null) {
 			return Collections.emptyList();
@@ -223,9 +224,10 @@ public class TypeHelper {
 			FunctionTypeExpression:
 				return extractType_FunctionTypeExpression(typeRef)
 			ComposedTypeRef:
-			return typeRef.typeRefs.map[it | it.extractType].flatten.toList
+				return typeRef.typeRefs.map[it | it.extractType].flatten.toList
 			default:
-				throw new UnsupportedOperationException("Extracting type from " + typeRef  + " is not supported/not implemented")
+				//throw new UnsupportedOperationException("Extracting type from " + typeRef  + " is not supported/not implemented")
+				return typeRef.declaredType.singletonList
 		}
 	}
 
