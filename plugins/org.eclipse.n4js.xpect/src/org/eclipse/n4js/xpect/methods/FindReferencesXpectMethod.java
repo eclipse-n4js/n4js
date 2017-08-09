@@ -146,7 +146,10 @@ public class FindReferencesXpectMethod {
 
 			@Override
 			public void accept(IReferenceDescription description) {
-				throw new UnsupportedOperationException("Should not be called");
+				// This method is only called in case of finding refs for primitives.
+				// For instance, the method is called when a reference to a primitive type (e.g. string)
+				// is found in primitive_ts.n4ts
+				// We don't care about those in Xpect test.
 			}
 		};
 

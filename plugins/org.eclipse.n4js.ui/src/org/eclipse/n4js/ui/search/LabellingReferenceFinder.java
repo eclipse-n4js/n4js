@@ -61,6 +61,13 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 						eReference, index, logicallyQualifiedDisplayName, line);
 				accept(description);
 			}
+
+			@Override
+			public void accept(IReferenceDescription description) {
+				// throw new UnsupportedOperationException("Should not be called");
+				System.out.println("I am also called");
+				System.out.println(description.getSourceEObjectUri());
+			}
 		};
 	}
 

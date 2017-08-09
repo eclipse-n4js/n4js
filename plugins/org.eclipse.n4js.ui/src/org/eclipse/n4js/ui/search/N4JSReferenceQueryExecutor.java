@@ -73,7 +73,9 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 		for (EObject realTarget : realTargets) {
 			if (N4JSReferenceQueryExecutor.considerOverridenMethods) {
 				// Add overriden members
-				if (realTarget instanceof N4MemberDeclaration || realTarget instanceof TMember) {
+				if (realTarget instanceof N4MemberDeclaration
+						// Only consider members within a classifier.Ignore TStructMember.
+						|| (realTarget instanceof TMember && realTarget.eContainer() instanceof TClassifier)) {
 					TMember tmember;
 					if (primaryTarget instanceof N4MemberDeclaration) {
 						tmember = ((N4MemberDeclaration) primaryTarget).getDefinedTypeElement();
@@ -86,13 +88,6 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 					}
 				}
 			}
-
-			// GH-73: TODO add overriding members
-
-			// GH-73: TODO add superclasses
-
-			// GH-73: TODO add subclasses
-
 		}
 
 		return newResult;
