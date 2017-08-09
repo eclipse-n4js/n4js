@@ -19,7 +19,6 @@ import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.InferredElements;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TStructMember;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 
@@ -47,7 +46,7 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 		EcoreUtil.resolveAll(primaryTarget.eResource());
 
 		// Special handling for composed members and TStructMember
-		if (TypeHelper.isComposedMember(primaryTarget)) {
+		if (primaryTarget instanceof TMember && ((TMember) primaryTarget).isComposed()) {
 			// In case of composed member, add the constituent members instead.
 			List<TMember> constituentMembers = ((TMember) primaryTarget).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {

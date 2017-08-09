@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor;
 
@@ -81,7 +80,8 @@ public class LabellingReferenceQueryExecutor extends ReferenceQueryExecutor {
 	 * Returns <code>true</code> if the reference should be presented to the user.
 	 */
 	protected boolean isRelevantToUser(EReference reference) {
-		return TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT != reference &&
-				TypesPackage.Literals.TSTRUCT_MEMBER__DEFINED_MEMBER != reference;
+		return true;
+		// return TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT != reference &&
+		// TypesPackage.Literals.TSTRUCT_MEMBER__DEFINED_MEMBER != reference;
 	}
 }

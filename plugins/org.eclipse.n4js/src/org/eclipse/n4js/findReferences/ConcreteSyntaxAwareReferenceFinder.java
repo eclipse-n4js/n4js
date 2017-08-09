@@ -29,7 +29,6 @@ import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.ReferenceFinder;
 import org.eclipse.xtext.findReferences.TargetURIs;
@@ -216,7 +215,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 	private boolean referenceHasBeenFound(Predicate<URI> targetURIs, URI refURI, EObject instanceOrProxy) {
 		boolean result = false;
 		// If the EObject is a composed member, we compare the target URIs with the URIs of the constituent members.
-		if (TypeHelper.isComposedMember(instanceOrProxy)) {
+		if (instanceOrProxy instanceof TMember && ((TMember) instanceOrProxy).isComposed()) {
 			TMember member = (TMember) instanceOrProxy;
 			if (member.isComposed()) {
 				for (TMember constituentMember : member.getConstituentMembers()) {

@@ -11,17 +11,17 @@
 package org.eclipse.n4js.ts.utils
 
 import com.google.inject.Inject
-import java.util.ArrayList
 import java.util.Collections
 import java.util.Iterator
 import java.util.List
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.PrimitiveType
-import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
@@ -200,12 +200,6 @@ public class TypeHelper {
 		return -1;
 	}
 
-	/**
-	 * Check if an EObject is a composed member. GH-73: TODO: duplicate with {@code ComposedMemberScope#isComposedMember}.
-	 */
-	public def static boolean isComposedMember(EObject eobj) {
-		return (eobj instanceof TMember) && ((eobj as TMember).constituentMembers.size > 0);
-	}
 
 	/**
 	 * Extracts the type(s) referenced by a type ref.
@@ -214,21 +208,29 @@ public class TypeHelper {
 	 * @return
 	 * 			the list of extracted types. There can be multiple returned types due to composed type refs.
 	 */
-	// GH-73 TODO Check with Oliver!
-	public def List<Type> extractType(TypeRef typeRef) {
-		if (typeRef === null) {
+	public def List<Type> extractType(TypeArgument typeArg) {
+		if (typeArg === null) {
 			return Collections.emptyList();
 		}
-		switch (typeRef) {
+		switch (typeArg) {
+			Wildcard: {
+				// In case of wildcard, extract types in lower bound and upper bound
+				val ret = typeArg.declaredLowerBound.extractType
+				ret.addAll(typeArg.declaredUpperBound.extractType)
+				return ret
+			}
 			ParameterizedTypeRef:
-				return extractType_ParameterizedTypeRef(typeRef).singletonList
+				return extractType_ParameterizedTypeRef(typeArg).singletonList
 			FunctionTypeExpression:
-				return extractType_FunctionTypeExpression(typeRef)
+				return extractType_FunctionTypeExpression(typeArg)
 			ComposedTypeRef:
-				return typeRef.typeRefs.map[it | it.extractType].flatten.toList
+				return typeArg.typeRefs.map[extractType].flatten.toList
+			TypeTypeRef:
+				// Add type arguments of the constructor type
+				return typeArg.typeArgs.map[extractType].flatten.toList
 			default:
+				// Otherwise, no type can be extracted
 				return Collections.emptyList()
-				//throw new UnsupportedOperationException("Extracting type from " + typeRef  + " is not supported/not implemented")
 		}
 	}
 

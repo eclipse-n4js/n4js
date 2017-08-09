@@ -40,6 +40,8 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 	ContainerTypesHelper containerTypesHelper;
 	/** Flag indicating whether overriden members should be considered or not while finding references. */
 	public static boolean considerOverridenMethods = false;
+	/** Flag indicating whether named import specifier should be ignored. */
+	public static boolean ignoreNamedImportSpecifier = true;
 
 	/***
 	 * Here, we add overriden/overrding members or super/subclasses if needed depending on user preferences when finding

@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
@@ -45,8 +46,11 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 			@Override
 			public void accept(EObject source, URI sourceURI, EReference eReference, int index, EObject targetOrProxy,
 					URI targetURI) {
-				EObject displayObject = calculateDisplayEObject(source);
+				// Check if we should ignore named import specifier
+				if (N4JSReferenceQueryExecutor.ignoreNamedImportSpecifier && source instanceof NamedImportSpecifier)
+					return;
 
+				EObject displayObject = calculateDisplayEObject(source);
 				String logicallyQualifiedDisplayName = calculateLogicallyQualifiedDisplayName(displayObject);
 				ICompositeNode srcNode = NodeModelUtils.getNode(source);
 				int line = srcNode.getStartLine();

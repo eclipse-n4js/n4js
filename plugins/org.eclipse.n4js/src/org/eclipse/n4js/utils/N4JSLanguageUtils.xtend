@@ -56,7 +56,6 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.scoping.members.ComposedMemberScope
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef

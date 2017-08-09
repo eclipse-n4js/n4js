@@ -706,6 +706,24 @@ Contributors:
 				</class>
 			</state>
 		</command>
+		<command
+			defaultHandler="org.eclipse.n4js.ui.search.IgnoreNamedImportSpecifierHandler"
+			id="org.eclipse.n4js.ui.IgnoreNamedImportSpecifiersCmd"
+			name="Ignore named import specifier">
+			<!-- By default, do ignore named import specifier. Do NOT persist the state.-->
+			<state id="org.eclipse.ui.commands.toggleState">
+				<class class="org.eclipse.ui.handlers.RegistryToggleState">
+					<parameter
+						name="default"
+						value="true">
+					</parameter>
+					<parameter
+						name="persisted"
+						value="false">
+					</parameter>
+				</class>
+			</state>
+		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
 		<menuContribution
@@ -1310,6 +1328,17 @@ Contributors:
                label="Consider Overriden Members"
                style="toggle"
                tooltip="If checked, references to the overriden members in superclasses and implemented interfaces are also considered when finding references.">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
+         <command
+               commandId="org.eclipse.n4js.ui.IgnoreNamedImportSpecifiersCmd"
+               icon="icons/import.gif"
+               label="Ignore Named Import Specifier"
+               style="toggle"
+               tooltip="If checked, references to named import specifier are not shown in the find references result.">
          </command>
       </menuContribution>
    </extension>

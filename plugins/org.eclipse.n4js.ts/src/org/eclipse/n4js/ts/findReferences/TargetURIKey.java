@@ -20,7 +20,6 @@ import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -78,7 +77,7 @@ public class TargetURIKey {
 			this.valueStrings.add(SimpleAttributeResolver.NAME_RESOLVER.apply(object));
 
 			// Handle composed members
-			if (TypeHelper.isComposedMember(object)) {
+			if (object instanceof TMember && ((TMember) object).isComposed()) {
 				List<TMember> constituentMembers = ((TMember) object).getConstituentMembers();
 				for (TMember constituentMember : constituentMembers) {
 					addFQNs(constituentMember);

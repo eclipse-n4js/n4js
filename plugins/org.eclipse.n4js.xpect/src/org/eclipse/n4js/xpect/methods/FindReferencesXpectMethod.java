@@ -23,7 +23,6 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.findReferences.SimpleResourceAccess;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
@@ -99,14 +98,15 @@ public class FindReferencesXpectMethod {
 
 		// Special handling for composed members
 		List<EObject> realTargets = new ArrayList<>();
-		if (!TypeHelper.isComposedMember(eObj)) {
-			realTargets.add(eObj);
-		} else {
+		if ((eObj instanceof TMember) && ((TMember) eObj).isComposed()) {
 			// In case of composed member, add the constituent members instead.
 			List<TMember> constituentMembers = ((TMember) eObj).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
 				realTargets.add(constituentMember);
 			}
+		} else {
+			// Standard case
+			realTargets.add(eObj);
 		}
 
 		Resource eResource = eObj.eResource();
