@@ -61,6 +61,7 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 						eReference, index, logicallyQualifiedDisplayName, line);
 				accept(description);
 			}
+		};
 	}
 
 	private EObject calculateDisplayEObject(EObject source) {
