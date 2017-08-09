@@ -11,6 +11,9 @@
 package org.eclipse.n4js.utils
 
 import it.xsemantics.runtime.RuleEnvironment
+import java.util.Iterator
+import org.eclipse.emf.common.util.AbstractTreeIterator
+import org.eclipse.emf.common.util.TreeIterator
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.N4JSGlobals
@@ -53,6 +56,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
+import org.eclipse.n4js.scoping.members.ComposedMemberScope
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -933,5 +937,16 @@ class N4JSLanguageUtils {
 		}
 
 		return OptionalFieldStrategy.OFF;
+	}
+
+	/**
+	 * Retrieve all contents of AST tree starting from a Script root.
+	 */
+	def static TreeIterator<EObject> getAllContents(Script script) {
+		return new AbstractTreeIterator<EObject>(script, true) {
+			override public Iterator<EObject> getChildren(Object object) {
+				return (object as EObject).eContents.iterator();
+			}
+		}
 	}
 }

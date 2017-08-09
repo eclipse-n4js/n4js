@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.N4MemberDeclaration;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -28,6 +28,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeHelper;
+import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
@@ -58,9 +59,16 @@ public class N4JSCrossReferenceComputer {
 	 *            the logic that collects the passed EObject found in a cross reference
 	 */
 	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, EObject>> acceptor) {
-		TreeIterator<EObject> allContentsIter = resource.getAllContents();
-		while (allContentsIter.hasNext()) {
-			EObject eObject = allContentsIter.next();
+		TreeIterator<EObject> allASTContentsIter;
+		if (resource instanceof N4JSResource) {
+			Script script = (Script) ((N4JSResource) resource).getContents().get(0);
+			// We traverse the AST but not the TModule tree
+			allASTContentsIter = N4JSLanguageUtils.getAllContents(script);
+		} else {
+			allASTContentsIter = resource.getAllContents();
+		}
+		while (allASTContentsIter.hasNext()) {
+			EObject eObject = allASTContentsIter.next();
 			computeCrossRefs(resource, eObject, acceptor);
 		}
 	}
@@ -75,13 +83,15 @@ public class N4JSCrossReferenceComputer {
 		for (EReference eReference : references) {
 			// We only follow cross references
 			if (!eReference.isContainment()) {
+				// Ignore references between AST element and its defined type and vice versa
 				if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
 						&& eReference != TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT) {
 					if (from.eIsSet(eReference)) {
 						Object val = from.eGet(eReference);
 						// Handle both toOne and toMany cases
 						if (!eReference.isMany()) {
-							handleReferenceObject(resource, from, acceptor, (EObject) val);
+							EObject to = (EObject) val;
+							handleReferenceObject(resource, from, acceptor, to);
 						} else {
 							@SuppressWarnings("unchecked")
 							BasicEList<EObject> list = (BasicEList<EObject>) val;
@@ -120,8 +130,7 @@ public class N4JSCrossReferenceComputer {
 			// Special handling for composed members
 			// Add the constituent members
 			for (TMember constituentMember : to.getConstituentMembers()) {
-				N4MemberDeclaration fromMemberDecl = (N4MemberDeclaration) constituentMember.getAstElement();
-				handleIdentifiableElement(resource, fromMemberDecl, acceptor, constituentMember);
+				handleIdentifiableElement(resource, from, acceptor, constituentMember);
 			}
 		} else {
 			// Standard case

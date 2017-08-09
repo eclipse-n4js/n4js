@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.utils
 
 import com.google.inject.Inject
+import java.util.ArrayList
 import java.util.Collections
 import java.util.Iterator
 import java.util.List
@@ -226,8 +227,8 @@ public class TypeHelper {
 			ComposedTypeRef:
 				return typeRef.typeRefs.map[it | it.extractType].flatten.toList
 			default:
+				return Collections.emptyList()
 				//throw new UnsupportedOperationException("Extracting type from " + typeRef  + " is not supported/not implemented")
-				return typeRef.declaredType.singletonList
 		}
 	}
 
