@@ -13,6 +13,8 @@ package org.eclipse.n4js.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -29,14 +31,11 @@ import org.eclipse.emf.common.util.AbstractEList;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.SegmentSequence;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -53,12 +52,16 @@ import org.eclipse.n4js.conversion.RegExLiteralConverter;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
+import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -76,7 +79,9 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
+import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Triple;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -390,12 +395,13 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * will build up the second slot again) and sends notifications that proxies have been resolved. The resource will
 	 * be even loaded if its already marked as loaded.
 	 *
+	 * If the second slot, that is the TModule, was already loaded and we just resolved the AST, then the existing
+	 * TModule is kept in the resource and rewired to the resolved AST.
+	 *
 	 * @param object
 	 *            the object which resource should be loaded
 	 * @return the loaded/resolved object
 	 */
-	// TODO ?jvp only called from ModuleAwareContentsList, which is the contents, isn't it? Thus, contents can never be
-	// null here? Can it be empty?
 	private EObject demandLoadResource(EObject object) {
 		List<EObject> discardedState = null;
 		try {
@@ -403,6 +409,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (contents != null && !contents.isEmpty()) {
 				discardedState.add(0, contents.basicGet(0));
 				((ModuleAwareContentsList) contents).sneakyClear();
+				// if (contents.size() > 1) {
+				// discardedState.add(1, contents.basicGet(1));
+				// }
 			}
 			eSetDeliver(false);
 
@@ -419,8 +428,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				forceInstallDerivedState(false);
 			} else {
 				installDerivedState(false);
-				if (discardedState.size() > 1 && discardedState.get(1) instanceof TModule
-						&& contents.size() > 1 && contents.basicGet(1) instanceof TModule) {
+				if (wasASTresolvedFromIndexBasedTModule(discardedState)) {
 					TModule moduleFromIndex = (TModule) discardedState.get(1);
 					TModule moduleFromAST = (TModule) contents.basicGet(1);
 					rewireTModule(moduleFromAST, moduleFromIndex);
@@ -432,7 +440,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 			fullyPostProcessed = false;
 			return result;
-		} catch (IOException ioe) {
+		} catch (IOException | IllegalStateException ioe) {
 			if (discardedState != null) {
 				for (int i = 0; i < discardedState.size(); i++) {
 					((ModuleAwareContentsList) contents).sneakyAdd(i, discardedState.get(i));
@@ -450,91 +458,116 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 	}
 
-	/**
-	 * When loading an AST from a TModule (usually retrieved from the index) by calling
-	 * SyntaxRelatedTElement.astElement, this caused a new TModule to be created again from the AST. That lead to an
-	 * inconsistent state: Two different TModules which both link to the same AST, but the original TModule not
-	 * contained in any resource anymore (because it was removed from the resource and replaced with the newly loaded
-	 * one). Since the original one is detached from a resource, it cannot resolve proxies anymore. This lead to a lot
-	 * of weird scenarios which are extremely hard to debug because the both TModule instances look similar.
-	 *
-	 * This method adds a new rewire step after the AST has been loaded and a new TModule has been created. It first
-	 * compares the original TModule with the new one. If both are similar (except for references or derived/transient
-	 * data), all links from the AST pointing to the new TModule are rewired to point to the old TModule (and vice versa
-	 * all astElements are set to the new AST).
-	 */
-	private void rewireTModule(TModule moduleFromAST, TModule moduleFromIndex) {
-		// ensure new and old module are similar
-		if (!similar(moduleFromAST, moduleFromIndex)) {
-			logger.error("TModule causing AST reload differs from TModule derived from that AST");
-			return;
-		}
-		// now rewire
-		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
-		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
-		while (mastIter.hasNext() && midxIter.hasNext()) {
-			EObject mastNext = mastIter.next();
-			EObject midxNext = midxIter.next();
-			EClass eclass = midxNext.eClass();
-			EStructuralFeature sfAST = eclass.getEStructuralFeature("astElement");
-			if (sfAST != null) {
-				EObject astElement = (EObject) mastNext.eGet(sfAST);
-				// from TModule to AST
-				midxNext.eSet(sfAST, astElement);
-				if (astElement != null) {
-					// from AST to TModule
-					for (EReference ref : astElement.eClass().getEAllReferences()) {
-						Object refValue = mastNext.eGet(ref);
-						if (refValue == mastNext) {
-							astElement.eSet(ref, midxNext);
-						}
-					}
-				}
-			}
-		}
+	private boolean wasASTresolvedFromIndexBasedTModule(List<EObject> discardedState) {
+		return discardedState.size() > 1 && discardedState.get(1) instanceof TModule
+				&& contents.size() > 1 && contents.basicGet(1) instanceof TModule;
 	}
 
 	/**
-	 * Compares the two TModules and returns true if both are similar, that is, have same structure and attribute
-	 * values. Derived and transient attributes are ignored, so are references.
+	 * When loading an AST from a TModule (usually retrieved from the index) by calling
+	 * SyntaxRelatedTElement.astElement, this would cause a new TModule to be created again from the AST. That would
+	 * lead to an inconsistent state: Two different TModules which both link to the same AST, but the original TModule
+	 * (from the index) would not contained in any resource anymore (because it was removed from the resource and
+	 * replaced with the newly loaded one). Since the original one is detached from a resource, it cannot resolve
+	 * proxies anymore. This would lead to a lot of weird scenarios which are extremely hard to debug because the both
+	 * TModule instances look similar.
 	 *
-	 * Since both TModules are derived from the same AST, the only way that they can differ if the script (the actual
-	 * source code) has been changed after the index-TModule has been created. This change must have happened "behind"
-	 * the scenes, otherwise the TModule of the index would have been updated anyway. In this case, we cannot do much,
-	 * since it would probably too complicated to detect the actual changes and merge them.
+	 * This method adds a new rewire step after the AST has been loaded and a new TModule has been created. It first
+	 * compares the original TModule with the new one. If both were derived from the same AST (using a hashCode to
+	 * compare that), all links from the AST pointing to the new TModule are rewired to point to the old TModule (and
+	 * vice versa all astElements are set to the now loaded AST).
 	 *
-	 * TODO: maybe we can at least trigger the index TModule to be reloaded in that case?
+	 * If either the modules were derived from different ASTs or the rewiring fails for other reasons (information will
+	 * be logged), an {@link IllegalStateException} is thrown. In that case, the AST won't be linked to the old TModule
+	 * (and vice versa) at all.
 	 */
-	private boolean similar(TModule moduleFromAST, TModule moduleFromIndex) {
-		TreeIterator<EObject> mastIter = moduleFromAST.eAllContents();
-		TreeIterator<EObject> midxIter = moduleFromIndex.eAllContents();
-		while (mastIter.hasNext() && midxIter.hasNext()) {
-			EObject mastNext = mastIter.next();
-			EObject midxNext = midxIter.next();
-			if (mastNext.getClass() != midxNext.getClass()) {
-				return false;
+	private void rewireTModule(TModule moduleFromAST, TModule moduleFromIndex) {
+
+		if (moduleFromAST == moduleFromIndex) {
+			return;
+		}
+		// This is the only expected error
+		if (!moduleFromAST.getAstMD5().equals(moduleFromIndex.getAstMD5())) {
+			throw new IllegalStateException(
+					"AST has changed since creation of TModule from index, cannot attach resolved AST to outdated TModule: "
+							+
+							moduleFromAST.getAstMD5() + " != " + moduleFromIndex.getAstMD5());
+		}
+		// From here on, there may be an exception thrown, but we actually do not expect that.
+		List<Pair<TypeDefiningElement, Type>> astToTypes = new ArrayList<>();
+		List<Pair<SyntaxRelatedTElement, EObject>> typesToAST = new ArrayList<>();
+		doRewire(moduleFromAST, moduleFromIndex, astToTypes, typesToAST);
+		for (Pair<SyntaxRelatedTElement, EObject> typeToAST : typesToAST) {
+			typeToAST.getFirst().setAstElement(typeToAST.getSecond());
+		}
+		for (Pair<TypeDefiningElement, Type> astToType : astToTypes) {
+			astToType.getFirst().setDefinedType(astToType.getSecond());
+		}
+		((Script) moduleFromAST.getAstElement()).setModule(moduleFromIndex);
+	}
+
+	/**
+	 * Helper method called by {@link #rewireTModule(TModule, TModule)} to do the rewiring recursively.
+	 */
+	@SuppressWarnings("rawtypes")
+	private void doRewire(EObject eobjFromAST, EObject eobjFromIndex,
+			List<Pair<TypeDefiningElement, Type>> astToTypes, List<Pair<SyntaxRelatedTElement, EObject>> typesToAST) {
+		if (eobjFromAST.getClass() != eobjFromIndex.getClass()) {
+			if (!(eobjFromAST instanceof DeferredTypeRef && eobjFromIndex instanceof TypeRef)) {
+				throw new IllegalStateException(
+						"Different types in model, index has " + eobjFromAST.getClass().getName()
+								+ " but AST derived model has " + eobjFromIndex.getClass().getName());
 			}
-			EClass eclass = midxNext.eClass();
-			for (EAttribute attr : eclass.getEAllAttributes()) {
-				Object mastAttr = mastNext.eGet(attr);
-				Object midxAttr = midxNext.eGet(attr);
-				if (mastAttr != midxAttr) {
-					if (attr.isTransient() || attr.isDerived()) {
-						continue;
+		}
+
+		if (eobjFromAST instanceof SyntaxRelatedTElement) {
+			// from TModule to AST
+			EObject astElement = ((SyntaxRelatedTElement) eobjFromAST).getAstElement();
+			typesToAST.add(Tuples.pair((SyntaxRelatedTElement) eobjFromIndex, astElement));
+
+			if (astElement instanceof TypeDefiningElement) {
+				if (eobjFromAST != ((TypeDefiningElement) astElement).getDefinedType()) {
+					throw new IllegalStateException(
+							"Inconsistent AST: defined type does not reference expected element");
+				}
+				astToTypes.add(Tuples.create((TypeDefiningElement) astElement, (Type) eobjFromIndex));
+			}
+		}
+
+		EClass eclass = eobjFromAST.eClass();
+		for (EReference containmentRef : eclass.getEAllContainments()) {
+			if (!(containmentRef.isTransient() || containmentRef.isDerived())) {
+				Object elementFromAst = eobjFromAST.eGet(containmentRef);
+				Object elementFromIndex = eobjFromIndex.eGet(containmentRef);
+				if (elementFromAst instanceof Iterable) {
+					@SuppressWarnings("unchecked")
+					Iterator<EObject> iterRefsFromAST = ((Iterable<EObject>) elementFromAst).iterator();
+					@SuppressWarnings("unchecked")
+					Iterator<EObject> iterRefsFromIndex = ((Iterable<EObject>) elementFromIndex).iterator();
+					while (iterRefsFromAST.hasNext() && iterRefsFromIndex.hasNext()) {
+						doRewire(iterRefsFromAST.next(), iterRefsFromIndex.next(), astToTypes, typesToAST);
 					}
-					if (mastAttr == null || midxAttr == null) {
-						return false;
+					if (iterRefsFromAST.hasNext()) { // we allow the index model to contain more data, which may be
+														// added during post-processing
+						throw new IllegalStateException(
+								"Inconsistent TModules, contained attributes " + containmentRef.getName()
+										+ " derived from same AST have different sizes: index model is " +
+										((Collection) elementFromIndex).size() + ", ast model is "
+										+ ((Collection) elementFromAst).size());
 					}
-					if (!midxAttr.equals(mastAttr)) {
-						return false;
+				} else {
+					if (elementFromIndex != elementFromAst) {
+						if (elementFromIndex == null || elementFromAst == null) {
+							throw new IllegalStateException(
+									"Inconsistent TModules, contained attribute " + containmentRef.getName()
+											+ " is null in " + (elementFromIndex == null ? "index" : "AST derived")
+											+ " model");
+						}
+						doRewire((EObject) elementFromAst, (EObject) elementFromIndex, astToTypes, typesToAST);
 					}
 				}
 			}
 		}
-		if (mastIter.hasNext() || midxIter.hasNext()) {
-			return false;
-		}
-		return true;
 	}
 
 	@SuppressWarnings("restriction")

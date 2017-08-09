@@ -11,6 +11,8 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import java.math.BigInteger
+import java.security.MessageDigest
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -62,6 +64,14 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * will later be resolved either on demand or by calling {@link N4JSResource#flattenModule()}.
  */
 public class N4JSTypesBuilder {
+	
+	public static def md5Hex(String s) {
+		try {
+			return new BigInteger(1, MessageDigest.getInstance("MD5").digest(s.getBytes("UTF-8"))).toString(16);
+		} catch (Exception exc) {
+			throw new RuntimeException("Error creating MD5 for content: " + exc.message, exc);
+		};
+	}
 
 	@Inject(optional=true) TypesFactory typesFactory = TypesFactory.eINSTANCE
 	@Inject extension N4JSTypesBuilderHelper
@@ -101,6 +111,7 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule result = typesFactory.createTModule;
+			result.astMD5 = md5Hex(parseResult.rootNode.text);
 			var qualifiedModuleName = resource.qualifiedModuleName;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
