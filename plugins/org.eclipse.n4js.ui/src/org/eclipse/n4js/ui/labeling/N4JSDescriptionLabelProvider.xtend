@@ -12,8 +12,9 @@ package org.eclipse.n4js.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
-import org.eclipse.xtext.resource.IResourceDescription
+import org.eclipse.xtext.resource.impl.DefaultReferenceDescription
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 
 /**
  * Provides labels for a IEObjectDescriptions and IResourceDescriptions.
@@ -32,7 +33,9 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 		println(obj);
 	}
 
-
+	/**
+	 * Custom label for labeled reference description.
+	 */
 	def text(LabelledReferenceDescription description) {
 		val text = description.label + " : line number " + description.line
 		return text;
@@ -43,5 +46,14 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 	def image(LabelledReferenceDescription element) {
 		val image = labelProvider.getImage(element.displayEObject)
 		return image;
+	}
+
+	def text(DefaultReferenceDescription referenceDescription) {
+		if (N4Scheme.isN4Scheme(referenceDescription.targetEObjectUri)) {
+			// built-in type
+			referenceDescription.targetEObjectUri.lastSegment
+		} else {
+			super.text(referenceDescription)
+		}
 	}
 }

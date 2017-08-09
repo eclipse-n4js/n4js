@@ -58,14 +58,6 @@ class TypesUiModule extends AbstractTypesUiModule {
 		return BuiltinSchemeAwareTargetURIKey;
 	}
 
-	/**
-	 * Bind the {@link ReferenceQueryExecutor} that maps to types.
-	 */
-	@SuppressWarnings("restriction")
-	def Class<? extends ReferenceQueryExecutor> bindReferenceQueryExecutor() {
-		return LabellingReferenceQueryExecutor;
-	}
-
 	override Class<? extends IResourceForEditorInputFactory> bindIResourceForEditorInputFactory() {
 		return URIBasedStorageEditorInputFactory;
 	}
