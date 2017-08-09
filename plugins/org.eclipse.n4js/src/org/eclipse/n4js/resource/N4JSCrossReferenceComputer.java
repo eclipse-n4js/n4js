@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
@@ -95,9 +96,26 @@ public class N4JSCrossReferenceComputer {
 						} else {
 							@SuppressWarnings("unchecked")
 							BasicEList<EObject> list = (BasicEList<EObject>) val;
-							for (int i = 0; i < list.size(); i++) {
-								EObject to = list.basicGet(i);
-								handleReferenceObject(resource, from, acceptor, to);
+							// Since the cross type computer is called very frequently, we want to optimize *many*
+							// cases
+							if (TypeRefsPackage.Literals.TYPE_REF.isSuperTypeOf(eReference.getEReferenceType())) {
+								for (EObject to : list) {
+									handleTypeRef(resource, from, acceptor, (TypeRef) to);
+								}
+							} else if (TypesPackage.Literals.TYPE.isSuperTypeOf(eReference.getEReferenceType())) {
+								for (EObject to : list) {
+									handleType(resource, from, acceptor, (Type) to);
+								}
+							} else if (TypesPackage.Literals.IDENTIFIABLE_ELEMENT
+									.isSuperTypeOf(eReference.getEReferenceType())) {
+								for (EObject to : list) {
+									handleIdentifiableElement(resource, from, acceptor, (IdentifiableElement) to);
+								}
+							} else {
+								// Handle all other cases
+								for (EObject to : list) {
+									handleReferenceObject(resource, from, acceptor, to);
+								}
 							}
 						}
 					}
@@ -117,18 +135,17 @@ public class N4JSCrossReferenceComputer {
 		} else if (to instanceof Type) {
 			handleType(resource, from, acceptor, (Type) to);
 		} else if (to instanceof TMember) {
-			// Handle composed member
-			handleComposedMember(resource, from, acceptor, (TMember) to);
+			// Special handling of TMember because it can be a composed member
+			handleTMember(resource, from, acceptor, (TMember) to);
 		} else if (to instanceof IdentifiableElement) {
 			handleIdentifiableElement(resource, from, acceptor, (IdentifiableElement) to);
 		}
 	}
 
-	private void handleComposedMember(Resource resource, EObject from,
+	private void handleTMember(Resource resource, EObject from,
 			IAcceptor<ImmutablePair<EObject, EObject>> acceptor, TMember to) {
 		if (to.isComposed()) {
-			// Special handling for composed members
-			// Add the constituent members
+			// If the member is a composed member, handle the constituent members instead
 			for (TMember constituentMember : to.getConstituentMembers()) {
 				handleIdentifiableElement(resource, from, acceptor, constituentMember);
 			}
@@ -139,7 +156,7 @@ public class N4JSCrossReferenceComputer {
 	}
 
 	/*
-	 * Extract declared type for the given type reference.
+	 * Extract declared type for the given type ref.
 	 */
 	private void handleTypeRef(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, EObject>> acceptor,
 			TypeRef to) {

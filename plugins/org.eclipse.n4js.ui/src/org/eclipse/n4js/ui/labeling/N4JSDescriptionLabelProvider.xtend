@@ -32,18 +32,16 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 		println(obj);
 	}
 
+
 	def text(LabelledReferenceDescription description) {
 		val text = description.label + " : line number " + description.line
 		return text;
 	}
-
-	override Object doGetImage(Object element) {
-		if (element instanceof IResourceDescription) {
-			// No image for resource for now.
-		} else if (element instanceof LabelledReferenceDescription) {
-			val image = labelProvider.getImage(element.displayEObject)
-			return image;
-		}
-		return null;
+	/**
+	 * Custom image for labeled reference description. Reuse N4JSLabelProvider used by the outline view.
+	 */
+	def image(LabelledReferenceDescription element) {
+		val image = labelProvider.getImage(element.displayEObject)
+		return image;
 	}
 }
