@@ -47,13 +47,4 @@ class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 		val image = labelProvider.getImage(element.displayEObject)
 		return image;
 	}
-
-	def text(DefaultReferenceDescription referenceDescription) {
-		if (N4Scheme.isN4Scheme(referenceDescription.targetEObjectUri)) {
-			// built-in type
-			referenceDescription.targetEObjectUri.lastSegment
-		} else {
-			super.text(referenceDescription)
-		}
-	}
 }
