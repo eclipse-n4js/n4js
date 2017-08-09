@@ -235,7 +235,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 */
 	private ComposedMemberCache getOrCreateComposedMemberCache(ComposedTypeRef ctr) {
 		final ComposedTypeRef ctrWithCache = getComposedTypeRefWithCache(ctr);
-		final ComposedMemberCache cache = ctr.getComposedMemberCache();
+		final ComposedMemberCache cache = ctrWithCache.getComposedMemberCache();
 		if (cache != null) {
 			return cache;
 		}
