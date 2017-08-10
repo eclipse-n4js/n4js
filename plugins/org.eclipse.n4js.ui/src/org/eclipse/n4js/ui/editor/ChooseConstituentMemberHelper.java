@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.inject.Inject;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.window.Window;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
@@ -31,8 +32,9 @@ public class ChooseConstituentMemberHelper {
 	/***
 	 * Choose a constituent member if needed
 	 */
-	public N4MemberDeclaration chooseConstituentMemberDialogIfRequired(List<N4MemberDeclaration> choices) {
-		final AtomicReference<N4MemberDeclaration> result = new AtomicReference<>();
+	public EObject chooseConstituentMemberDialogIfRequired(EObject source,
+			List<N4MemberDeclaration> choices) {
+		final AtomicReference<EObject> result = new AtomicReference<>();
 		final ChooseConstituentMemberDialog dlg = new ChooseConstituentMemberDialog(null, choices, labelProvider);
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
@@ -40,8 +42,8 @@ public class ChooseConstituentMemberHelper {
 				if (dlg.open() == Window.OK) {
 					result.set((N4MemberDeclaration) dlg.getResult()[0]);
 				} else {
-					// Otherwise, simply choose the first element
-					result.set(choices.get(0));
+					// Otherwise, simply return the source
+					result.set(source);
 				}
 			}
 		});

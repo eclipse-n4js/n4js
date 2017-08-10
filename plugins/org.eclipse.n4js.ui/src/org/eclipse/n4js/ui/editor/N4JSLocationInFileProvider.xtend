@@ -99,9 +99,8 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 		}
 	}
 
-
 	def EObject chooseMemberAST (TMember member) {
-		val chosenMember = chooseConstituentMemberHelper.chooseConstituentMemberDialogIfRequired(member.constituentMembers.map[astElement as N4MemberDeclaration]) 
+		val chosenMember = chooseConstituentMemberHelper.chooseConstituentMemberDialogIfRequired(member, member.constituentMembers.map[astElement as N4MemberDeclaration]) 
 		return chosenMember;
 	}
 
