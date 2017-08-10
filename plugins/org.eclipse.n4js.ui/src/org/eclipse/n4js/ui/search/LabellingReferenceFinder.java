@@ -13,6 +13,7 @@ package org.eclipse.n4js.ui.search;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
@@ -87,6 +88,7 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 
 	private boolean isShowable(EObject eobj) {
 		return eobj instanceof N4MemberDeclaration || eobj instanceof N4ClassifierDefinition
-				|| eobj instanceof FunctionDeclaration || eobj instanceof Script;
+				|| eobj instanceof FunctionDeclaration || eobj instanceof ExportedVariableDeclaration
+				|| eobj instanceof Script;
 	}
 }
