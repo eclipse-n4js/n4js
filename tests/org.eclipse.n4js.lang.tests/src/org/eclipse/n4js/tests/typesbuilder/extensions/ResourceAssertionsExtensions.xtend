@@ -22,20 +22,21 @@ import static org.junit.Assert.*
  */
 class ResourceAssertionsExtensions {
 
-	def assertASTResolved(String phase, N4JSResource newN4jsResource) {
+	def void assertASTResolved(String phase, N4JSResource newN4jsResource) {
 		val astElement = (newN4jsResource.contents.get(1) as SyntaxRelatedTElement).astElement
 		assertFalse(phase + ": AST element no proxy when fetched from type", astElement.eIsProxy)
 	}
 
-	def resolveAST(String phase, N4JSResource newN4jsResource) {
-		assertFalse(phase + ": AST no proxy after first access", newN4jsResource.contents.get(0).eIsProxy)
+	def void resolveAST(String phase, N4JSResource newN4jsResource) {
+		val ast = newN4jsResource.contents.get(0); // this resolves the AST if is was not resolved before
+		assertFalse(phase + ": AST no proxy after first access", ast.eIsProxy)
 	}
 
-	def assertASTIsProxifed(String phase, N4JSResource newN4jsResource) {
+	def void assertASTIsProxifed(String phase, N4JSResource newN4jsResource) {
 		assertTrue(phase + ": AST is proxy", (newN4jsResource.contents as BasicEList<? extends EObject>).basicGet(0).eIsProxy)
 	}
 
-	def assertResourceHasNoErrors(String phase, Resource testResource) {
+	def void assertResourceHasNoErrors(String phase, Resource testResource) {
 		assertTrue(phase + ": " + testResource.URI.trimFileExtension.lastSegment + " should have no errors but: " + testResource.errors.toString, testResource.errors.empty)
 	}
 }

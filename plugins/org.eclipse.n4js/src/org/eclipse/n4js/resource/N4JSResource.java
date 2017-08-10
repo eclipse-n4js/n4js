@@ -152,6 +152,21 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 
 		/**
+		 * Don't announce any notification but keep the inverse references in sync.
+		 *
+		 * @param object
+		 *            the to-be-added object
+		 */
+		protected void sneakySet(int index, EObject object) {
+			if (index == size) {
+				sneakyAdd(object);
+			} else {
+				assign(index, validate(index, object));
+				inverseAdd(object, null);
+			}
+		}
+
+		/**
 		 * Creates a new array for the content. The calculation of its new size is optimized related to the last size
 		 * and the minimum required size. This method is called by {@link ModuleAwareContentsList#sneakyAdd(EObject)}
 		 * and {@link ModuleAwareContentsList#sneakyAdd(int, EObject)}.
@@ -409,9 +424,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (contents != null && !contents.isEmpty()) {
 				discardedState.add(0, contents.basicGet(0));
 				((ModuleAwareContentsList) contents).sneakyClear();
-				// if (contents.size() > 1) {
-				// discardedState.add(1, contents.basicGet(1));
-				// }
 			}
 			eSetDeliver(false);
 
@@ -434,10 +446,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					rewireTModule(moduleFromAST, moduleFromIndex);
 				}
 			}
-
 			for (int i = 0; i < discardedState.size(); i++) {
 				notifyProxyResolved(i, discardedState.get(i));
 			}
+
 			fullyPostProcessed = false;
 			return result;
 		} catch (IOException | IllegalStateException ioe) {
@@ -459,7 +471,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	private boolean wasASTresolvedFromIndexBasedTModule(List<EObject> discardedState) {
-		return discardedState.size() > 1 && discardedState.get(1) instanceof TModule
+		return
+		// TModule from index found
+		discardedState.size() > 1 && discardedState.get(1) instanceof TModule
+		// TModule derived from AST found
 				&& contents.size() > 1 && contents.basicGet(1) instanceof TModule;
 	}
 
@@ -504,6 +519,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			astToType.getFirst().setDefinedType(astToType.getSecond());
 		}
 		((Script) moduleFromAST.getAstElement()).setModule(moduleFromIndex);
+		((ModuleAwareContentsList) contents).sneakySet(1, moduleFromIndex);
 	}
 
 	/**
