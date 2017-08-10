@@ -122,8 +122,6 @@ class ImportedNamesTest {
 									 "org.eclipse.n4js.tests.resource.X"].toSet;
 
 		val actualImportedNames = resourceX.getImportedNames.map[toString].toSet
-		println("actual   = " + actualImportedNames)
-		println("expected = " + expectedImportedNames)
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
