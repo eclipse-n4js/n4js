@@ -23,6 +23,11 @@ import org.eclipse.swt.graphics.RGB;
 public class N4JSStylers {
 
 	/**
+	 * Color used for styling type refs. Used by {@link N4JSStylers#TYPEREF_STYLER} and defined in same class to ensure
+	 * static initialization.
+	 */
+	public final static String TYPEREF_COLOR_NAME = "org.eclipse.n4js.ui.labeling.TYPEREF_COLOR_NAME";
+	/**
 	 * Color used for styling origin of inherited members. Used by {@link N4JSStylers#INHERITED_MEMBERS_STYLER} and
 	 * defined in same class to ensure static initialization.
 	 */
@@ -40,11 +45,18 @@ public class N4JSStylers {
 
 	static {
 		ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
-		colorRegistry.put(INHERITED_MEMBER_COLOR_NAME, new RGB(0, 0, 200));
-		colorRegistry.put(CONSUMED_MEMBER_COLOR_NAME, new RGB(0, 150, 0));
-		colorRegistry.put(POLYFILLED_MEMBER_COLOR_NAME, new RGB(150, 0, 0));
+		colorRegistry.put(TYPEREF_COLOR_NAME, new RGB(140, 140, 140)); // color we use in editor as well
+		colorRegistry.put(INHERITED_MEMBER_COLOR_NAME, new RGB(180, 180, 255));
+		colorRegistry.put(CONSUMED_MEMBER_COLOR_NAME, new RGB(255, 180, 180));
+		colorRegistry.put(POLYFILLED_MEMBER_COLOR_NAME, new RGB(255, 255, 180));
 	}
 
+	/**
+	 * Styler used to style origin of inherited members. Used by
+	 * {@link StyledTextCalculationHelper#dispatchGetStyledText(Object)} for EObjectWithContext.
+	 */
+	public final static Styler TYPEREF_STYLER = StyledString.createColorRegistryStyler(
+			TYPEREF_COLOR_NAME, null);
 	/**
 	 * Styler used to style origin of inherited members. Used by
 	 * {@link StyledTextCalculationHelper#dispatchGetStyledText(Object)} for EObjectWithContext.
