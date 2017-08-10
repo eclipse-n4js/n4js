@@ -67,7 +67,7 @@ class ImportedNamesTest {
 			"#.org.eclipse.n4js.tests.resource.C"].join(',');
 		val resourceA = rs.getResource(resourceA, true) as N4JSResource
 		val importedQFNs = resourceA.getImportedNames
-		val actualImportedNames = importedQFNs.filterNull.toSet.join(",")
+		val actualImportedNames = importedQFNs.toSet.join(",")
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
@@ -99,7 +99,7 @@ class ImportedNamesTest {
 		].join(',');
 		val myClassOneResource = rs.getResource(myClassOne, true) as N4JSResource
 		val importedQFNs = myClassOneResource.getImportedNames
-		val actualImportedNames = importedQFNs.join(',')
+		val actualImportedNames = importedQFNs.toSet.join(',')
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
@@ -115,7 +115,7 @@ class ImportedNamesTest {
 
 		val resourceX = rs.getResource(resourceYURI, true) as N4JSResource
 		val importedQFNs = resourceX.getImportedNames
-		val actualImportedNames = importedQFNs.filterNull.toSet.join(",")
+		val actualImportedNames = importedQFNs.toSet.join(",")
 		val expectedImportedNames = #["#.org.eclipse.n4js.tests.resource.X",
 									 "org.eclipse.n4js.tests.resource.X.J",
 									 "org.eclipse.n4js.tests.resource.X.I",
