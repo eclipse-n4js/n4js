@@ -78,10 +78,13 @@ public class LabellingReferenceQueryExecutor extends ReferenceQueryExecutor {
 
 	/**
 	 * Returns <code>true</code> if the reference should be presented to the user.
+	 *
+	 * @param reference
+	 *            The EReference to check
 	 */
 	protected boolean isRelevantToUser(EReference reference) {
+		// By default, all references are relevant. Irrelevant references are already filter in the non-ui
+		// findReference's logic.
 		return true;
-		// return TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT != reference &&
-		// TypesPackage.Literals.TSTRUCT_MEMBER__DEFINED_MEMBER != reference;
 	}
 }

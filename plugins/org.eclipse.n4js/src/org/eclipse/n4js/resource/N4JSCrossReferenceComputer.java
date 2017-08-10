@@ -183,19 +183,11 @@ public class N4JSCrossReferenceComputer {
 			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
 			List<IdentifiableElement> tos) {
 		if (tos != null) {
-			// guard against null resource that is sometimes returned if a member was put into a
-			// union type ref that is not contained in a resource and does not have an original decl
 			// Filter those in 'tos' that are located in other resources
-
 			if (resource != null) {
-				// && !N4Scheme.isFromResourceWithN4Scheme(to)
-				// && externalReferenceChecker.isResolvedAndExternal(resource, to)
 				acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from,
 						tos.stream().filter(to -> isLocatedInOtherResources(resource, to))
 								.collect(Collectors.toList())));
-			} else if (resource == null) { // GH-73 TODO check this && !to.eIsProxy()
-				// we want to record these imported names anyway
-				// acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from, tos));
 			}
 		}
 	}
@@ -204,5 +196,5 @@ public class N4JSCrossReferenceComputer {
 		boolean ret = !N4Scheme.isFromResourceWithN4Scheme(eobj)
 				&& externalReferenceChecker.isResolvedAndExternal(resource, eobj);
 		return ret;
-	};
+	}
 }

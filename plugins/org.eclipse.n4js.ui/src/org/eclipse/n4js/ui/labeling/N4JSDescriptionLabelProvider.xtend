@@ -12,9 +12,7 @@ package org.eclipse.n4js.ui.labeling
 
 import com.google.inject.Inject
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
-import org.eclipse.xtext.resource.impl.DefaultReferenceDescription
 import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 
 /**
  * Provides labels for a IEObjectDescriptions and IResourceDescriptions.
