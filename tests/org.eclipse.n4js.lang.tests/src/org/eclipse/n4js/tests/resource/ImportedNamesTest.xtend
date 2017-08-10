@@ -64,10 +64,9 @@ class ImportedNamesTest {
 			"org.eclipse.n4js.tests.resource.A",
 			"org.eclipse.n4js.tests.resource.C.C",
 			"org.eclipse.n4js.tests.resource.C.Z",
-			"#.org.eclipse.n4js.tests.resource.C"].join(',');
+			"#.org.eclipse.n4js.tests.resource.C"].toSet;
 		val resourceA = rs.getResource(resourceA, true) as N4JSResource
-		val importedQFNs = resourceA.getImportedNames
-		val actualImportedNames = importedQFNs.toSet.join(",")
+		val actualImportedNames = resourceA.getImportedNames.map[toString].toSet
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
@@ -96,10 +95,9 @@ class ImportedNamesTest {
 			"org.eclipse.n4js.tests.resource.MyClassOne",
 			"#.org.eclipse.n4js.tests.resource.MyVariableTwo",
 			"org.eclipse.n4js.tests.resource.MyVariableTwo"
-		].join(',');
+		].toSet
 		val myClassOneResource = rs.getResource(myClassOne, true) as N4JSResource
-		val importedQFNs = myClassOneResource.getImportedNames
-		val actualImportedNames = importedQFNs.toSet.join(',')
+		val actualImportedNames = myClassOneResource.getImportedNames.map[toString].toSet
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
@@ -114,15 +112,18 @@ class ImportedNamesTest {
 		EcoreUtil.resolveAll(rs)
 
 		val resourceX = rs.getResource(resourceYURI, true) as N4JSResource
-		val importedQFNs = resourceX.getImportedNames
-		val actualImportedNames = importedQFNs.toSet.join(",")
+
 		val expectedImportedNames = #["#.org.eclipse.n4js.tests.resource.X",
 									 "org.eclipse.n4js.tests.resource.X.J",
 									 "org.eclipse.n4js.tests.resource.X.I",
 									 "org.eclipse.n4js.tests.resource.X.X1",
 									 "org.eclipse.n4js.tests.resource.X.X2",
 									 "org.eclipse.n4js.tests.resource.Y",
-									 "org.eclipse.n4js.tests.resource.X"].join(",");
+									 "org.eclipse.n4js.tests.resource.X"].toSet;
+
+		val actualImportedNames = resourceX.getImportedNames.map[toString].toSet
+		println("actual   = " + actualImportedNames)
+		println("expected = " + expectedImportedNames)
 		assertEquals("The list of imported names is wrong", expectedImportedNames, actualImportedNames)
 	}
 
