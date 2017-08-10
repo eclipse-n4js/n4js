@@ -152,7 +152,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 						importedNames.add(qualifiedNameProvider.getFullyQualifiedName(module));
 					}
 					final Set<EObject> crossRefTypes = Sets.newHashSet();
-					IAcceptor<ImmutablePair<EObject, EObject>> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
+					IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
 					crossReferenceComputer.computeCrossRefs(resource, acceptor);
 					for (EObject type : crossRefTypes) {
 						if (type instanceof Type) {
@@ -204,10 +204,10 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		}
 	}
 
-	private IAcceptor<ImmutablePair<EObject, EObject>> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
-		IAcceptor<ImmutablePair<EObject, EObject>> acceptor = new IAcceptor<ImmutablePair<EObject, EObject>>() {
+	private IAcceptor<ImmutablePair<EObject, List<EObject>>> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
+		IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor = new IAcceptor<ImmutablePair<EObject, List<EObject>>>() {
 			@Override
-			public void accept(ImmutablePair<EObject, EObject> pair) {
+			public void accept(ImmutablePair<EObject, List<EObject>> pair) {
 				// GH-73: TODO Refactor this to make the logics clearer.
 				EObject from = pair.left;
 				if (from instanceof ParameterizedPropertyAccessExpression
@@ -215,27 +215,39 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					// The return type of a method/function is the type of the call expression
 					from = from.eContainer();
 				}
-				EObject to = pair.right;
+				List<EObject> tos = pair.right;
+				boolean isComposedMemberCase = tos.size() > 1;
 
-				if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
-					crossRefTypes.add(to);
-				}
+				for (EObject to : tos) {
+					if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
+						crossRefTypes.add(to);
+					}
 
-				// Add return type of function/method to cross ref types. Note that setters/getters are methods.
-				// Add declared type of a field to cross ref types
-				if (to instanceof TFunction || to instanceof TField) {
-					if (from instanceof TypableElement) {
-						TypeRef typeRef = ts.tau((TypableElement) from);
-						crossRefTypes.add(typeRef.getDeclaredType());
-					} else {
-						if (to instanceof TFunction) {
-							TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
-							crossRefTypes.add(returnTypeRef.getDeclaredType());
-						} else {
-							TypeRef typeRef = ((TField) to).getTypeRef();
+					// Add return type of function/method to cross ref types. Note that setters/getters are methods.
+					// Add declared type of a field to cross ref types
+					if (to instanceof TFunction || to instanceof TField) {
+						// We only ask the type system to calculate the type of the AST node 'from' if we are not
+						// dealing with composed members because the AST node is normally a ParameterizedPropertyAccess
+						// which is not actually
+						// the corresponding AST of the reference 'to'.
+						// GH-73 TODO: BUT it means that if the type of constituent members contain type arguments e.g.
+						// I<T>,
+						// these
+						// type arguments are not resolved! We really need to clearly define what the 'transitive
+						// closure of dependencies' really means.
+						if (from instanceof TypableElement && !isComposedMemberCase) {
+							TypeRef typeRef = ts.tau((TypableElement) from);
 							crossRefTypes.add(typeRef.getDeclaredType());
-						}
+						} else {
+							if (to instanceof TFunction) {
+								TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
+								crossRefTypes.add(returnTypeRef.getDeclaredType());
+							} else {
+								TypeRef typeRef = ((TField) to).getTypeRef();
+								crossRefTypes.add(typeRef.getDeclaredType());
+							}
 
+						}
 					}
 				}
 			}

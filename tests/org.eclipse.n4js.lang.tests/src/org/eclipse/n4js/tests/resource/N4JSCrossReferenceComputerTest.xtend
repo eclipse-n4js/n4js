@@ -13,6 +13,7 @@ package org.eclipse.n4js.tests.resource
 import com.google.inject.Inject
 import com.google.inject.Provider
 import java.util.LinkedHashSet
+import java.util.List
 import org.apache.commons.lang3.tuple.ImmutablePair
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
@@ -68,10 +69,10 @@ class N4JSCrossReferenceComputerTest {
 
 		val refs = new LinkedHashSet<EObject>();
 
-		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceA, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
-			override accept(ImmutablePair<EObject, EObject> pair) {
+		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceA, true), new IAcceptor<ImmutablePair<EObject, List<EObject>>> {
+			override accept(ImmutablePair<EObject, List<EObject>> pair) {
 				val t = pair.right
-				refs.add(t);
+				refs.addAll(t);
 			}
 		});
 
@@ -99,13 +100,15 @@ class N4JSCrossReferenceComputerTest {
 
 		val refs = new LinkedHashSet<String>();
 		
-		crossReferenceComputer.computeCrossRefs(rs.getResource(myClassOne, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
-			override accept(ImmutablePair<EObject, EObject> pair) {
-				val t = pair.right
-				if (t instanceof IdentifiableElement) {
-					refs.add(t.toStringRep);
-				} else {
-					throw new Exception(t + " is not identifiable element");
+		crossReferenceComputer.computeCrossRefs(rs.getResource(myClassOne, true), new IAcceptor<ImmutablePair<EObject, List<EObject>>> {
+			override accept(ImmutablePair<EObject, List<EObject>> pair) {
+				val ts = pair.right
+				for (EObject t : ts) {
+					if (t instanceof IdentifiableElement) {
+						refs.add(t.toStringRep);
+					} else {
+						throw new Exception(t + " is not identifiable element");
+					}
 				}
 			}
 		});
@@ -136,15 +139,15 @@ class N4JSCrossReferenceComputerTest {
 
 		val refs = new LinkedHashSet<EObject>();
 
-		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceY, true), new IAcceptor<ImmutablePair<EObject, EObject>> {
-			override accept(ImmutablePair<EObject, EObject> pair) {
+		crossReferenceComputer.computeCrossRefs(rs.getResource(resourceY, true), new IAcceptor<ImmutablePair<EObject, List<EObject>>> {
+			override accept(ImmutablePair<EObject, List<EObject>> pair) {
 				val t = pair.right
-				refs.add(t);
+				refs.addAll(t);
 			}
 		});
 
 		val actualRefs = refs.map[it | it.toStringRep].filterNull.join(",");
-		val expectedRefs = "class - X1,class - X2,field - foo,field - foo,interface - I,interface - J"
+		val expectedRefs = "class - X1,class - X2,field - foo,field - foo"
 		assertEquals("The list of found cross references is wrong", expectedRefs, actualRefs)
 	}
 }
