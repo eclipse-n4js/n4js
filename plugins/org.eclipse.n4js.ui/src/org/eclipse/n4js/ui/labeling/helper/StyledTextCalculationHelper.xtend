@@ -222,6 +222,9 @@ class StyledTextCalculationHelper {
 		var styledText = getLabelProvider.getSuperStyledText(tfield);
 		if (styledText === null) return null;
 		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER)
+		if (tfield.isOptional) {
+			styledText.append("?");
+		}
 		if (tfield.typeRef !== null) {
 			styledText.append(": ");
 			styledText.append(getTypeRefDescription(tfield.typeRef));
@@ -250,18 +253,21 @@ class StyledTextCalculationHelper {
 	/**
 	 * produces e.g. (param1TypeName, param2TypeName)
 	 */
-	def private appendStyledTextForFormalParameters(StyledString styledText, TFunction tFunction) {
-		(styledText.append("(") => [
-			if (tFunction.fpars.size > 0) {
-				it.append((0 .. tFunction.fpars.size - 1).map [ i |
-					getStyledTextForFormalParameter(tFunction.fpars.get(i))
-				].reduce(l, r|l.append(", ").append(r)))
-			}
-		]).append(")")
+	def private StyledString appendStyledTextForFormalParameters(StyledString styledText, TFunction tFunction) {
+		styledText.append("(");
+		styledText.append(tFunction.fpars.map[getStyledTextForFormalParameter].reduce[l,r|l.append(", ").append(r)]);
+		styledText.append(")");
 	}
 
 	def private StyledString getStyledTextForFormalParameter(TFormalParameter tFormalParameter) {
-		getTypeRefDescription(tFormalParameter.typeRef)
+		var styledText = getTypeRefDescription(tFormalParameter.typeRef);
+		if (tFormalParameter.isVariadic) {
+			styledText = new StyledString("…").append(styledText);
+		}
+		if(tFormalParameter.hasInitializerAssignment) {
+			styledText.append("=");
+		} 
+		return styledText;
 	}
 
 	/**
