@@ -17,6 +17,7 @@ import org.eclipse.n4js.documentation.N4JSDocumentationProvider;
 import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -406,6 +407,13 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends N4JSTypeSystem> bindTypeSystem() {
 		return N4JSTypeSystem.class;
+	}
+
+	/**
+	 * Binds the flow analyses facade used as an entry point into flow analyses.
+	 */
+	public Class<? extends N4JSFlowAnalyses> bindFlowAnalyses() {
+		return N4JSFlowAnalyses.class;
 	}
 
 	/**

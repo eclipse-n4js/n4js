@@ -55,6 +55,7 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall
@@ -80,6 +81,8 @@ public class ASTProcessor extends AbstractProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
+	@Inject
+	private N4JSFlowAnalyses flowAnalyses;
 	@Inject
 	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 	@Inject
@@ -176,6 +179,8 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		}
+		// phase 4: control-/data-flow analyses
+		flowAnalyses.perform(script);
 	}
 
 	/**

@@ -73,6 +73,13 @@ interface NamedElement {
 	op String getName()
 }
 
+/**
+ * Common interface for all AST elements that contain a control flow.
+ */
+interface ControlFlowElement {
+	// empty (marker interface)
+}
+
 // ****************************************************************************************************
 // Root element is a script,
 // cf. http://wiki.ecmascript.org/doku.php?id=harmony:modules
@@ -708,7 +715,7 @@ class Block extends Statement, VariableEnvironmentElement {
 	}
 }
 
-class Statement extends ScriptElement {
+class Statement extends ScriptElement, ControlFlowElement {
 }
 
 enum VariableStatementKeyword {
@@ -777,7 +784,7 @@ class ExportedVariableBinding extends VariableBinding {
 	refers transient TVariable definedVariable
 }
 
-class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable {
+class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable, ControlFlowElement  {
 	contains Annotation[] annotations
 	contains Expression expression
 	/**
@@ -889,7 +896,7 @@ class SwitchStatement extends Statement, VariableEnvironmentElement {
 	}
 }
 
-abstract class AbstractCaseClause {
+abstract class AbstractCaseClause extends ControlFlowElement {
 	/*
 	 * The consequent of the clause.
 	 */
@@ -1309,7 +1316,7 @@ enum BinaryLogicalOperator {
 /**
  * Also see utility methods in N4JSASTUtils
  */
-abstract class Expression extends TypableElement {
+abstract class Expression extends TypableElement, ControlFlowElement {
 	/**
 	 * Implements the method #isValidSimpleAssignmentTarget from ES6 spec.
 	 * Returns false by default.
