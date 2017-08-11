@@ -39,6 +39,8 @@ import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.labeling.N4JSStylers
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -171,12 +173,12 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(TGetter tgetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tgetter);
-		var typeStr = "";
 
-		if (tgetter.declaredTypeRef !== null)
-			typeStr = ": " + getTypeRefDescription(tgetter.declaredTypeRef)
+		if (tgetter.declaredTypeRef !== null) {
+			styledText.append(": ");
+			styledText.append(getTypeRefDescription(tgetter.declaredTypeRef));
+		}
 
-		styledText = styledText.append(typeStr)
 		return styledText;
 	}
 
@@ -251,7 +253,7 @@ class StyledTextCalculationHelper {
 		]).append(")")
 	}
 
-	def private getStyledTextForFormalParameter(TFormalParameter tFormalParameter) {
+	def private StyledString getStyledTextForFormalParameter(TFormalParameter tFormalParameter) {
 		getTypeRefDescription(tFormalParameter.typeRef)
 	}
 
@@ -281,11 +283,40 @@ class StyledTextCalculationHelper {
 	/**
 	 * appends the simple type name to the styled string
 	 */
+	def dispatch private String getTypeRefDescriptionString(TypeArgument ref) {
+		val name = ref.getTypeRefAsString();
+		if (name === null) {
+			return "<unknown>"
+		} else {
+			return name;
+		}
+	}
+
+	/**
+	 * appends the simple type name to the styled string
+	 */
 	def dispatch private String getTypeRefDescriptionString(TypeRef ref) {
 		val name = ref.declaredType?.name;
 		if (name === null) {
 			return "<unknown>"
 		} else {
+			return name;
+		}
+	}
+
+	/**
+	 * appends the simple type name to the styled string
+	 */
+	def dispatch private String getTypeRefDescriptionString(ParameterizedTypeRef ref) {
+		var name = ref.declaredType?.name;
+		if (name === null) {
+			return "<unknown>"
+		} else {
+			if (name.equals("Array") && ref.declaredType.isArrayLike) {
+				name = "[" + ref.typeArgs.join(",", [arg|getTypeRefDescriptionString(arg)]) + "]";
+			} else {
+				name += ref.typeArgs.join("<", ",", ">", [arg|getTypeRefDescriptionString(arg)]);
+			}
 			return name;
 		}
 	}
