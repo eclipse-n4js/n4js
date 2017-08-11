@@ -45,7 +45,7 @@ import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectati
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 
 /**
- * This class provides a XPECT method to specify tests regarding the {@link IReferenceFinder}
+ * This class provides a Xpect method to specify tests regarding the {@link IReferenceFinder}
  */
 @SuppressWarnings("restriction")
 @RunWith(XpectRunner.class)
@@ -65,7 +65,7 @@ public class FindReferencesXpectMethod {
 	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/**
-	 * This XPECT methods compares all computed references at a given EObject to the expected references. The expected
+	 * This Xpect methods compares all computed references at a given EObject to the expected references. The expected
 	 * references include the line number.
 	 */
 	@Xpect
