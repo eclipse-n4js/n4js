@@ -166,16 +166,25 @@ public class N4JSCrossReferenceComputer {
 	private void handleTypeRef(Resource resource, EObject from,
 			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
 			TypeRef to) {
-		List<Type> toTypes = th.extractType(to);
-		for (Type toType : toTypes)
-			handleType(resource, from, acceptor, toType);
+		if (to != null) {
+			List<Type> toTypes = th.extractType(to);
+			for (Type toType : toTypes)
+				handleType(resource, from, acceptor, toType);
+		}
 	}
 
 	private void handleType(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
 			Type to) {
-		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
-				&& externalReferenceChecker.isResolvedAndExternal(resource, to)) {
-			acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from, Collections.singletonList(to)));
+		if (to != null) {
+			// TDO IDE-1253: If 'to' is a composed member, it can happen that 'to' is not contained in a resource
+			if (to instanceof TMember && ((TMember) to).isComposed()) {
+				if (to.eResource() == null)
+					return; // quick fix: ignore this member (would lead to an exception below)
+			}
+			if (!N4Scheme.isFromResourceWithN4Scheme(to) &&
+					externalReferenceChecker.isResolvedAndExternal(resource, to)) {
+				acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from, Collections.singletonList(to)));
+			}
 		}
 	}
 
@@ -184,15 +193,16 @@ public class N4JSCrossReferenceComputer {
 			List<IdentifiableElement> tos) {
 		if (tos != null) {
 			// Filter those in 'tos' that are located in other resources
-			if (resource != null) {
-				acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from,
-						tos.stream().filter(to -> isLocatedInOtherResources(resource, to))
-								.collect(Collectors.toList())));
-			}
+			acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from,
+					tos.stream().filter(to -> isLocatedInOtherResources(resource, to))
+							.collect(Collectors.toList())));
 		}
 	}
 
 	private boolean isLocatedInOtherResources(Resource resource, EObject eobj) {
+		if (eobj == null || eobj.eResource() == null)
+			return false;
+
 		boolean ret = !N4Scheme.isFromResourceWithN4Scheme(eobj)
 				&& externalReferenceChecker.isResolvedAndExternal(resource, eobj);
 		return ret;
