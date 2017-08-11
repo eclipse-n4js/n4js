@@ -41,6 +41,7 @@ import org.eclipse.n4js.ui.labeling.N4JSStylers
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
+import org.eclipse.n4js.ts.types.TMethod
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -138,6 +139,9 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(TFunction tfunction) {
 		var styledText = getLabelProvider.getSuperStyledText(tfunction);
+		if ("constructor".equals(tfunction.name) && tfunction instanceof TMethod) {
+			styledText.setStyle(0, styledText.length, N4JSStylers.CONSTRUCTOR_STYLER)
+		}
 		styledText = styledText.appendStyledTextForFormalParameters(tfunction);
 		styledText = styledText.append(tfunction.typeVars.handleTypeVars);
 		var typeStr = "";
