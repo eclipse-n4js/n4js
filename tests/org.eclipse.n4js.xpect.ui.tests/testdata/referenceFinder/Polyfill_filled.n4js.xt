@@ -32,15 +32,16 @@
 
 /* XPECT findReferences at Polyfill ---
 	Poly - Polyfill - 33,
-	Poly - Polyfill - 51
+	Poly - Polyfill - 52
 ---
 */
 export public class Polyfill {
-	// XPECT findReferences at x --> Poly - p.x - 53
+	// XPECT findReferences at x --> Poly - p.x - 54
 	x : int;
 
 	/* XPECT findReferences at m ---
-	Poly - p.m - 57
+	Poly - p.m - 58,
+	Poly - p.m - 60
 	---
 	*/
 	public m(): void {
@@ -55,3 +56,5 @@ p.x;
 p.z;
 
 p.m();
+
+p.m(5);

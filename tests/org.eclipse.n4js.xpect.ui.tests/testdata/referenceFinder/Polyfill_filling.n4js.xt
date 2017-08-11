@@ -31,11 +31,16 @@
 
 @StaticPolyfill
 export public class Polyfill extends Polyfill {
-	// XPECT findReferences at z --> Poly - p.z - 55
+	// XPECT findReferences at z --> Poly - p.z - 56
 	z : String;
 
+	/* XPECT findReferences at m ---
+	Poly - p.m - 58,
+	Poly - p.m - 60
+	---
+	*/
 	@Override
-	public m(): void {
+	public m(p:int=42): void {
 		console.log("I am in the polyfill");
 	}
 }
