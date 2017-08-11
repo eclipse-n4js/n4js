@@ -12,6 +12,8 @@ package org.eclipse.n4js.ui.outline
 
 import com.google.inject.Inject
 import java.util.List
+import org.apache.log4j.Logger
+import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.resource.ImageDescriptor
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -27,6 +29,7 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
@@ -40,8 +43,6 @@ import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineMode
 import org.eclipse.xtext.util.CancelIndicator
-import org.eclipse.n4js.ts.types.MemberAccessModifier
-import org.eclipse.core.runtime.OperationCanceledException
 
 /**
  * Customization of the default outline structure.
@@ -69,6 +70,8 @@ import org.eclipse.core.runtime.OperationCanceledException
  * @see http://www.eclipse.org/Xtext/documentation.html#outline
  */
 class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements IOutlineTreeProvider.ModeAware {
+
+	private static final Logger logger = Logger.getLogger(N4JSOutlineTreeProvider);
 
 	@Inject
 	ContainerTypesHelper containerTypesHelper
@@ -110,13 +113,16 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 				createChildren_(parentNode, modelElement);
 			} catch (Exception ex) {
 				// cancel this operation in case something went wrong
+				logger.error("Error creating nodes for children", ex);
 				throw new OperationCanceledException("Canceled due to internal error: " + ex);
 			}
 		}
 	}
 
+	/**
+	 * First entry should not dispatch but specifically create the root node
+	 */
 	def dispatch protected void createChildren_(DocumentRootNode parentNode, EObject modelElement) {
-		// First entry should not dispatch but specifically create the root node
 		super.createChildren(parentNode, modelElement)
 	}
 
@@ -126,10 +132,12 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		super.createChildren(parentNode, modelElement);
 	}
 
-	// only create entries on top level for elements listed in
-	// isInstanceOfExpectedScriptChildren - so not exported functions
-	// and not exported variables won't appear in the outline
-	// for variable statements with one element only create one node
+	/** 
+	 * only create entries on top level for elements listed in
+	 * isInstanceOfExpectedScriptChildren - so not exported functions
+	 * and not exported variables won't appear in the outline
+	 * for variable statements with one element only create one node
+	 */
 	def dispatch protected void createChildren_(IOutlineNode parentNode, Script script) {
 
 		var EObjectNode node = null
@@ -187,7 +195,10 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		}
 
 	}
-
+	
+	/**
+	 * Creates a node with context to be able to distinguish between owned and inherited/consumed members
+	 */
 	def EObjectNode createNodeForObjectWithContext(IOutlineNode parentNode, EObjectWithContext objectWithContext) {
 		checkCanceled();
 		val Object text = getText(objectWithContext);
@@ -198,7 +209,9 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		return getOutlineNodeFactory().createEObjectNode(parentNode, objectWithContext.obj, image, text, isLeaf);
 	}
 
-	// create nodes for literals
+	/**
+	 * create nodes for literals
+	 */
 	def dispatch protected void createChildren_(IOutlineNode parentNode, N4EnumDeclaration ed) {
 		for (literal : ed.literals.filterNull) {
 			parentNode.createNode(literal)
@@ -213,7 +226,9 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		null !== definedType
 	}
 
-	// top level elements in outline view
+	/**
+	 * top level elements in outline view
+	 */
 	def private boolean isInstanceOfExpectedScriptChildren(EObject child) {
 		isInstanceOfOneOfTheTypes(
 			child,
