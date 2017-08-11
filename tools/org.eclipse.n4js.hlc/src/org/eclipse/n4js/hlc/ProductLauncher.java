@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
+import org.eclipse.n4js.utils.io.FileDeleter;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
@@ -26,8 +29,6 @@ import org.osgi.framework.BundleContext;
 @SuppressWarnings("restriction")
 public class ProductLauncher {
 	private static boolean DEBUG = false;
-
-	private static final String OSGI_CONFIG_AREA = "@user.dir/.n4jsc";
 
 	/** see org.eclipse.core.runtime.adaptor.EclipseStarter.REFERENCE_SCHEME */
 	private final static String BUNDLE_INSTALL_SCHEME = "reference:file:/";
@@ -59,8 +60,12 @@ public class ProductLauncher {
 		if (bundlesToInstall.isEmpty())
 			throw new RuntimeException("No bundles to load discovered");
 
+		final Path osgiConfigurationArea = Files.createTempDirectory(".n4jsc");
+		if (!osgiConfigurationArea.toFile().exists())
+			throw new RuntimeException("Cannot obtain working directory");
+
 		try {
-			BundleContext context = startPlatform(platformArgs);
+			BundleContext context = startPlatform(platformArgs, osgiConfigurationArea);
 
 			Set<String> installedBundleDescriptions = preLaodedBundlesNamePtterns(context);
 			log("start install bundles");
@@ -88,6 +93,11 @@ public class ProductLauncher {
 
 		} finally {
 			log("finally");
+
+			log("working area exists : " + osgiConfigurationArea.toFile().exists());
+			FileDeleter.delete(osgiConfigurationArea);
+			log("working area exists : " + osgiConfigurationArea.toFile().exists());
+
 			if (ThreadsUtil.getIdentifiedThredsCount(EQUINOX_THREAD_DESCRIPTION_TOKEN) > 0) {
 				log("There are still platform threads running:\n"
 						+ ThreadsUtil.getThreadsInfo(EQUINOX_THREAD_DESCRIPTION_TOKEN));
@@ -107,7 +117,7 @@ public class ProductLauncher {
 	 * @throws Exception
 	 *             propagates exception from Equinox
 	 */
-	private static BundleContext startPlatform(String[] platformArgs) throws Exception {
+	private static BundleContext startPlatform(String[] platformArgs, Path osgiConfigurationArea) throws Exception {
 		Map<String, String> ip = new HashMap<>();
 		ip.put("eclipse.ignoreApp", "true");
 		ip.put("eclipse.consoleLog", "true");
@@ -116,7 +126,7 @@ public class ProductLauncher {
 		ip.put("osgi.debug", "true");
 		ip.put("osgi.debug.verbose", "true");
 		ip.put("osgi.framework.shape", "jar");
-		ip.put("osgi.configuration.area", OSGI_CONFIG_AREA);
+		ip.put("osgi.configuration.area", osgiConfigurationArea.toAbsolutePath().toString());
 		ip.put("osgi.noShutdown", "false");
 		EclipseStarter.setInitialProperties(ip);
 
