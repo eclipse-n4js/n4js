@@ -18,11 +18,8 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
-import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.ui.N4JSHierarchicalNameComputerHelper;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -31,17 +28,19 @@ import org.eclipse.ui.dialogs.ListDialog;
 import org.eclipse.xtext.ui.label.AbstractLabelProvider;
 
 /**
- *
+ * A dialog that allows the user to choose a constituent member when navigating a composed member.
  */
 public class ChooseConstituentMemberDialog extends ListDialog {
 
 	/**
+	 * Constructor
+	 *
 	 * @param parentShell
 	 *            parent shell
-	 * @param constituentMembers
-	 *            the list of choices
+	 * @param constituentMemberASTs
+	 *            the list of constituent AST member declarations
 	 */
-	public ChooseConstituentMemberDialog(Shell parentShell, List<N4MemberDeclaration> constituentMembers,
+	public ChooseConstituentMemberDialog(Shell parentShell, List<N4MemberDeclaration> constituentMemberASTs,
 			LabelProvider labelProvider) {
 		super(parentShell);
 
@@ -55,7 +54,7 @@ public class ChooseConstituentMemberDialog extends ListDialog {
 		setContentProvider(new IStructuredContentProvider() {
 			@Override
 			public Object[] getElements(Object inputElement) {
-				return constituentMembers.toArray();
+				return constituentMemberASTs.toArray();
 			}
 
 			@Override
@@ -68,7 +67,6 @@ public class ChooseConstituentMemberDialog extends ListDialog {
 				// ignore
 			}
 		});
-		// setLabelProvider(labelProvider);
 		setLabelProvider(new AbstractLabelProvider() {
 
 			@Override
@@ -79,26 +77,8 @@ public class ChooseConstituentMemberDialog extends ListDialog {
 			@Override
 			public String getText(Object element) {
 				EObject eobj = (EObject) element;
-				String text = calculateLogicallyQualifiedDisplayName(eobj);
-				return text;
-			}
-
-			private boolean isShowable(EObject eobj) {
-				return eobj instanceof N4MemberDeclaration || eobj instanceof N4ClassifierDefinition
-						|| eobj instanceof FunctionDeclaration || eobj instanceof ExportedVariableDeclaration
-						|| eobj instanceof Script;
-			}
-
-			private String calculateLogicallyQualifiedDisplayName(EObject eob) {
-				// Calculate hierarchical logical name, e.g. C.m
-				String text = labelProvider.getText(eob);
-				EObject currContainer = eob.eContainer();
-				while (currContainer != null) {
-					if (isShowable(currContainer)) {
-						text = labelProvider.getText(currContainer) + "." + text;
-					}
-					currContainer = currContainer.eContainer();
-				}
+				String text = N4JSHierarchicalNameComputerHelper.calculateLogicallyQualifiedDisplayName(eobj,
+						labelProvider, true);
 				return text;
 			}
 

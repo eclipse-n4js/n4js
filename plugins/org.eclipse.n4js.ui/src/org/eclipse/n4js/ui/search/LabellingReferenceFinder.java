@@ -13,13 +13,9 @@ package org.eclipse.n4js.ui.search;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
-import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
-import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription;
+import org.eclipse.n4js.ui.N4JSHierarchicalNameComputerHelper;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.xtext.findReferences.IReferenceFinder.Acceptor;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -52,7 +48,8 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 					return;
 
 				EObject displayObject = calculateDisplayEObject(source);
-				String logicallyQualifiedDisplayName = calculateLogicallyQualifiedDisplayName(displayObject);
+				String logicallyQualifiedDisplayName = N4JSHierarchicalNameComputerHelper
+						.calculateLogicallyQualifiedDisplayName(displayObject, labelProvider, false);
 				ICompositeNode srcNode = NodeModelUtils.getNode(source);
 				int line = srcNode.getStartLine();
 				LabelledReferenceDescription description = new LabelledReferenceDescription(source, displayObject,
@@ -67,28 +64,9 @@ public class LabellingReferenceFinder extends DelegatingReferenceFinder {
 
 	private EObject calculateDisplayEObject(EObject source) {
 		EObject displayObject = source;
-		while (!isShowable(displayObject)) {
+		while (!N4JSHierarchicalNameComputerHelper.isShowable(displayObject)) {
 			displayObject = displayObject.eContainer();
 		}
 		return displayObject;
-	}
-
-	private String calculateLogicallyQualifiedDisplayName(EObject eob) {
-		// Calculate hierarchical logical name, e.g. C.m
-		String text = labelProvider.getText(eob);
-		EObject currContainer = eob.eContainer();
-		while (currContainer != null && !(currContainer instanceof Script)) {
-			if (isShowable(currContainer)) {
-				text = labelProvider.getText(currContainer) + "." + text;
-			}
-			currContainer = currContainer.eContainer();
-		}
-		return text;
-	}
-
-	private boolean isShowable(EObject eobj) {
-		return eobj instanceof N4MemberDeclaration || eobj instanceof N4ClassifierDefinition
-				|| eobj instanceof FunctionDeclaration || eobj instanceof ExportedVariableDeclaration
-				|| eobj instanceof Script;
 	}
 }
