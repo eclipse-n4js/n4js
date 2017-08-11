@@ -85,6 +85,7 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -100,7 +101,9 @@ import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
+import org.eclipse.xtext.ui.LanguageSpecific;
 import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
+import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
@@ -607,5 +610,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/***/
 	public Class<? extends IReferenceFinder> bindReferenceFinder() {
 		return ConcreteSyntaxAwareReferenceFinder.class;
+	}
+
+	/** Customization to deal with Cmd + click of composed members. */
+	@Override
+	public void configureLanguageSpecificURIEditorOpener(com.google.inject.Binder binder) {
+		if (PlatformUI.isWorkbenchRunning())
+			binder.bind(IURIEditorOpener.class).annotatedWith(LanguageSpecific.class)
+					.to(N4JSLanguageSpecificURIEditorOpener.class);
 	}
 }

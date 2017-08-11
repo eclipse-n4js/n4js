@@ -11,6 +11,9 @@
 package org.eclipse.n4js.scoping.members
 
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
@@ -30,15 +33,13 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.ContainerType
-import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -48,12 +49,12 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
-import java.util.List
+import org.eclipse.n4js.ts.types.TypeVariable
+import org.eclipse.n4js.ts.types.PrimitiveType
+import org.eclipse.n4js.ts.types.Type
 
 /**
  */
@@ -259,7 +260,10 @@ class MemberScopingHelper {
 		switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
 			case 0: return IScope.NULLSCOPE
 			case 1: return subScopes.get(0)
-			default: return new UnionMemberScope(uniontypeexp, request.context, subScopes, ts)
+			default: {
+				var defaultModule = request.context.eResource.contents.get(1) as TModule;
+				return new UnionMemberScope(uniontypeexp, request.context, subScopes, defaultModule, ts)
+			}
 		}
 	}
 
@@ -272,8 +276,8 @@ class MemberScopingHelper {
 			val scope = members(elementTypeRef, request);
 			return scope;
 		]
-
-		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, ts);
+		var defaultModule = request.context.eResource.contents.get(0) as TModule;
+		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, defaultModule, ts);
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {

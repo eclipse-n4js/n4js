@@ -35,35 +35,48 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 	@Inject
 	private ChooseConstituentMemberHelper chooseConstituentMemberHelper;
 
+	private EObject cachedSource;
+
+	/** Return the cached real source. Needed to open the right editor when Cmd + click. */
+	def EObject getCachedSource() {
+		return cachedSource;
+	}
+
 	override getFullTextRegion(EObject element) {
-		return super.getFullTextRegion(convertToSource(element));
+		cachedSource = convertToSource(element);
+		return super.getFullTextRegion(cachedSource);
 	}
 
 	override getFullTextRegion(EObject owner, EStructuralFeature feature, int indexInList) {
-		return super.getFullTextRegion(convertToSource(owner), feature, indexInList);
+		cachedSource = convertToSource(owner);
+		return super.getFullTextRegion(cachedSource, feature, indexInList);
 	}
 
 	override getSignificantTextRegion(EObject element) {
-		return super.getSignificantTextRegion(convertToSource(element));
+		cachedSource = convertToSource(element);
+		return super.getSignificantTextRegion(cachedSource);
 	}
 
 	override getSignificantTextRegion(EObject owner, EStructuralFeature feature, int indexInList) {
-		return super.getSignificantTextRegion(convertToSource(owner), feature, indexInList);
+		cachedSource = convertToSource(owner);
+		return super.getSignificantTextRegion(cachedSource, feature, indexInList);
 	}
 
 	override getTextRegion(EObject object, EStructuralFeature feature, int indexInList,
 		ILocationInFileProviderExtension.RegionDescription query) {
-		return super.getTextRegion(convertToSource(object), feature, indexInList, query);
+		cachedSource = convertToSource(object);
+		return super.getTextRegion(cachedSource, feature, indexInList, query);
 	}
 
 	override getTextRegion(EObject object, ILocationInFileProviderExtension.RegionDescription query) {
-		return super.getTextRegion(convertToSource(object), query);
+		cachedSource = convertToSource(object);
+		return super.getTextRegion(cachedSource, query);
 	}
 
 	def protected EObject convertToSource(EObject element) {
 		if (element === null)
 			return null;
-		switch (element) {
+		val ret = switch (element) {
 			TypeVariable: {
 				val parentAST = convertToSource(element.eContainer);
 				if(parentAST instanceof GenericDeclaration || parentAST instanceof TStructMethod || parentAST instanceof FunctionTypeExpression) {
@@ -85,10 +98,11 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 				element
 			TStructMember case element.astElement === null:
 				element
-			TMember case element.eContainer instanceof ComposedMemberCache:
+			TMember case element.eContainer instanceof ComposedMemberCache: {
 				// In case of composed member, the user can choose the constituent member she wants to jump to.
-				chooseMemberAST(element)
-
+				val chosenMember = chooseMember(element);
+				return chosenMember;
+			}
 			SyntaxRelatedTElement: {
 				if (element.astElement === null)
 					throw new IllegalStateException()
@@ -97,11 +111,23 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 			default:
 				element
 		}
+		ret;
 	}
 
-	def private EObject chooseMemberAST (TMember member) {
-		val chosenMember = chooseConstituentMemberHelper.chooseConstituentMemberDialogIfRequired(member, member.constituentMembers.map[astElement as N4MemberDeclaration]) 
-		return chosenMember;
+	def private EObject chooseMember (TMember member) {
+		if (member.constituentMembers.size < 2) {
+			 return member.constituentMembers.get(0).memberInASTOrTModule
+		} else
+		{
+			val chosenMember = chooseConstituentMemberHelper.chooseConstituentMemberDialogIfRequired(member, member.constituentMembers.map[memberInASTOrTModule]) 
+			return chosenMember;
+		}
+	}
+
+	def private EObject getMemberInASTOrTModule(TMember member) {
+		if (member.astElement instanceof N4MemberDeclaration)
+			member.astElement as N4MemberDeclaration
+		else member
 	}
 
 	override protected EStructuralFeature getIdentifierFeature(EObject obj) {

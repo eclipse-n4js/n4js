@@ -62,6 +62,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	final ComposedTypeRef composedTypeRef;
 	final IScope[] subScopes;
 	final EObject context;
+	final TModule defaultModule;
 
 	final N4JSTypeSystem ts;
 	final boolean writeAccess;
@@ -86,12 +87,14 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * etc.)
 	 */
 	public ComposedMemberScope(ComposedTypeRef composedTypeRef, EObject context, List<IScope> subScopes,
+			TModule defaultModule,
 			N4JSTypeSystem ts) {
 
 		super(IScope.NULLSCOPE, false);
 
 		this.composedTypeRef = composedTypeRef;
 		this.subScopes = subScopes.toArray(new IScope[subScopes.size()]);
+		this.defaultModule = defaultModule;
 		this.ts = ts;
 		this.context = context;
 		this.writeAccess = ExpressionExtensions.isLeftHandSide(context);
@@ -241,7 +244,8 @@ public abstract class ComposedMemberScope extends AbstractScope {
 		}
 		// does not exist yet -> create new composed member cache in TModule:
 		final Resource res = ctrWithCache.eResource(); // may be null
-		final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : null;
+		// Use default module if the composed member is not in a resource
+		final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : defaultModule;
 		if (module != null) {
 			final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
 			EcoreUtilN4.doWithDeliver(false, () -> {

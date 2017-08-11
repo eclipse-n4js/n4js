@@ -18,7 +18,6 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ui.N4JSHierarchicalNameComputerHelper;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -40,7 +39,7 @@ public class ChooseConstituentMemberDialog extends ListDialog {
 	 * @param constituentMemberASTs
 	 *            the list of constituent AST member declarations
 	 */
-	public ChooseConstituentMemberDialog(Shell parentShell, List<N4MemberDeclaration> constituentMemberASTs,
+	public ChooseConstituentMemberDialog(Shell parentShell, List<EObject> constituentMemberASTs,
 			LabelProvider labelProvider) {
 		super(parentShell);
 

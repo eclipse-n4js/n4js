@@ -17,7 +17,6 @@ import javax.inject.Inject;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.window.Window;
-import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.swt.widgets.Display;
 
@@ -33,14 +32,14 @@ public class ChooseConstituentMemberHelper {
 	 * Choose a constituent member if needed
 	 */
 	public EObject chooseConstituentMemberDialogIfRequired(EObject source,
-			List<N4MemberDeclaration> choices) {
+			List<EObject> choices) {
 		final AtomicReference<EObject> result = new AtomicReference<>();
 		final ChooseConstituentMemberDialog dlg = new ChooseConstituentMemberDialog(null, choices, labelProvider);
 		Display.getDefault().syncExec(new Runnable() {
 			@Override
 			public void run() {
 				if (dlg.open() == Window.OK) {
-					result.set((N4MemberDeclaration) dlg.getResult()[0]);
+					result.set((EObject) dlg.getResult()[0]);
 				} else {
 					// Otherwise, simply return the source
 					result.set(source);
