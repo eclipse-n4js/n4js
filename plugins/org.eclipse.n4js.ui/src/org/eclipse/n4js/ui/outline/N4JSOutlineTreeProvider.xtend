@@ -40,6 +40,8 @@ import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineMode
 import org.eclipse.xtext.util.CancelIndicator
+import org.eclipse.n4js.ts.types.MemberAccessModifier
+import org.eclipse.core.runtime.OperationCanceledException
 
 /**
  * Customization of the default outline structure.
@@ -104,7 +106,12 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	override void createChildren(IOutlineNode parentNode, EObject modelElement) {
 		checkCanceled()
 		if (modelElement !== null && parentNode.hasChildren()) {
-			createChildren_(parentNode, modelElement);
+			try {
+				createChildren_(parentNode, modelElement);
+			} catch (Exception ex) {
+				// cancel this operation in case something went wrong
+				throw new OperationCanceledException("Canceled due to internal error: " + ex);
+			}
 		}
 	}
 
@@ -125,20 +132,25 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	// for variable statements with one element only create one node
 	def dispatch protected void createChildren_(IOutlineNode parentNode, Script script) {
 
+		var EObjectNode node = null
 		for (child : script.scriptElements.filterNull) {
+			node = null;
 			if (child instanceof ExportDeclaration) {
 				val exportedElement = child.exportedElement
 				if (exportedElement instanceof ExportedVariableStatement) {
 					if (exportedElement.varDecl.size == 1) {
-						parentNode.createNode(exportedElement.varDecl.head)
+						node = parentNode.createNode(exportedElement.varDecl.head)
 					} else {
-						parentNode.createNode(exportedElement)
+						node = parentNode.createNode(exportedElement)
 					}
 				} else if (exportedElement !== null) {
-					parentNode.createNode(exportedElement)
+					node = parentNode.createNode(exportedElement)
 				}
 			} else if (child.isInstanceOfExpectedScriptChildren && child.canCreateChildNode) {
-				parentNode.createNode(child)
+				node = parentNode.createNode(child);
+				if (node instanceof N4JSEObjectNode) {
+					node.isLocal = true;
+				}
 			}
 		}
 	}
@@ -151,13 +163,19 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		val tclassifier = classifierDefinition.definedType as TClassifier;
 		if (tclassifier !== null && showInherited) {
 			val members = containerTypesHelper.fromContext(tclassifier).members(tclassifier, false, true);
-			
-			for (tchild : members.filterNull) {
+
+			for (TMember tchild : members.filterNull) {
 				val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild, tclassifier));
-				if (node instanceof N4JSEObjectNode && tchild.containingType !== null &&
-					tchild.containingType != tclassifier) {
-					(node as N4JSEObjectNode).isInherited = true;
+				if (node instanceof N4JSEObjectNode) {
+					if (tchild.containingType !== null && tchild.containingType != tclassifier) {
+						node.isInherited = true;
+					}
+					node.isMember = true;
+					node.isStatic = tchild.isStatic;
+					node.isPublic = tchild.memberAccessModifier == MemberAccessModifier.PUBLIC ||
+						tchild.memberAccessModifier == MemberAccessModifier.PUBLIC_INTERNAL
 				}
+
 			}
 		} else {
 			for (child : classifierDefinition.eContents.filterNull) {
@@ -247,14 +265,13 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 			return !classifierDefinition.eContents.exists[isInstanceOfExpectedClassifierChildren]
 		}
 	}
-	
+
 	/**
 	 * Type model members are always leaves. 
 	 */
 	def dispatch protected boolean isLeaf(TMember member) {
 		return true;
 	}
-
 
 	// fields should have never children
 	def dispatch protected boolean isLeaf(N4FieldDeclaration md) {

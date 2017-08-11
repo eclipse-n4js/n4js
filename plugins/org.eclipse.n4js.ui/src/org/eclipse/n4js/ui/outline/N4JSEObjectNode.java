@@ -26,6 +26,14 @@ public class N4JSEObjectNode extends EObjectNode {
 	 */
 	public boolean isInherited = false;
 
+	public boolean isMember = false;
+
+	public boolean isStatic = false;
+
+	public boolean isPublic = false;
+
+	public boolean isLocal = false;
+
 	/**
 	 * Creates this node, required for super call.
 	 */
