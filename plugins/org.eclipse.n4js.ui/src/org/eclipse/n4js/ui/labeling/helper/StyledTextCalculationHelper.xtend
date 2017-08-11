@@ -359,7 +359,7 @@ class StyledTextCalculationHelper {
 	}
 
 	/**
-	 * produces (param1, param2,...) => returnType
+	 * produces (param1, param2,...)=>returnType
 	 */
 	def dispatch private String getTypeRefDescriptionString(FunctionTypeExpression ref) {
 		val result = new StringBuilder();
@@ -370,7 +370,7 @@ class StyledTextCalculationHelper {
 		appendCommaSeparatedTypeRefList(ref.fpars.map[it.typeRef], parameterString, true, ", ");
 		result.append(parameterString).toString();
 
-		result.append(") => ");
+		result.append(")=>");
 		if (ref.returnTypeRef !== null) {
 			result.append(getCompressedTypeRefDescription(ref.returnTypeRef, 0));
 		} else {

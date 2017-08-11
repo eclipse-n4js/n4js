@@ -74,7 +74,7 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 				c(param: type{I1}) {}
 				d(param: constructor{I1}) {}
 				e(param: {function(union{int, string}): int}): void {}
-				f(param: (intersection{I1<string, string, string>, I2}) => int) {}
+				f(param: (intersection{I1<string, string, string>, I2})=>int) {}
 			}
 			
 			function a(param: union{int, string}) {}
@@ -82,10 +82,10 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 			function c(param: type{I1}) {}
 			function d(param: constructor{I1}) {}
 			function e(param: {function(union{int, string}): int}) {}
-			function f(param: (union{int, string, intersection{number,int, string}, int}) => union{int, string, intersection{number,int, string}, int}): union{int, string, intersection{number,int, string}, int}{return 1;}
+			function f(param: (union{int, string, intersection{number,int, string}, int})=>union{int, string, intersection{number,int, string}, int}): union{int, string, intersection{number,int, string}, int}{return 1;}
 			function g(param: union{int, string, intersection{number,int, string}, int}): union{int, string, intersection{int, string, number}, int} { return 3; }
 			function g1(param: union{int, string, intersection{number,int, string},number}): union{int, string, intersection{int, string, number}, string} { return 3; }
-			function none(fct: () => void) {}
+			function none(fct: ()=>void) {}
 			export public var fct = 3;
 			export var c: constructor{? super OutlineTest}
 		'''
@@ -103,11 +103,11 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 			"b(int, I1<B,string | int,string> & I2, number)<B>: void",
 			"c(type{I1}): void",
 			"d(constructor{I1}): void",
-			"e((int | string) => int): void",
-			"f((int | string | (number & int & string) | …) => int | string | (number & int & string) | …): int | string | (number & int & string) | …",
+			"e((int | string)=>int): void",
+			"f((int | string | (number & int & string) | …)=>int | string | (number & int & string) | …): int | string | (number & int & string) | …",
 			"g(int | string | (number & int & string) | …): int | string | (int & string & number) | …",
 			"g1(int | string | (number & int & string) | …): int | string | (int & string & number) | …",
-			"none(() => void): void",
+			"none(()=>void): void",
 			"fct: int",
 			"c: constructor{? super OutlineTest}"
 		]);
@@ -120,8 +120,8 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 			"b(I1<int,int,int> & I2): void",
 			"c(type{I1}): void",
 			"d(constructor{I1}): void",
-			"e((int | string) => int): void",
-			"f((I1<string,string,string> & I2) => int): void"
+			"e((int | string)=>int): void",
+			"f((I1<string,string,string> & I2)=>int): void"
 		])
 	}
 
