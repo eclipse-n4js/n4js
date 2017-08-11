@@ -19,14 +19,16 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.n4js.smith.graph.Activator;
 import org.eclipse.n4js.smith.graph.editoroverlay.EditorOverlay;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 
@@ -38,23 +40,43 @@ public class GraphList extends Composite {
 
 	protected final List<ListEntry> entries = new ArrayList<>();
 
-	protected ListViewer listViewer;
+	protected TableViewer listViewer;
 	protected GraphCanvas canvas;
+
+	protected enum GraphType {
+		AST, CFG, DFG
+	}
 
 	protected static class ListEntry {
 		public final String label;
+		public final GraphType type;
 		public final Graph graph;
 
-		public ListEntry(String label, Graph graph) {
+		public ListEntry(String label, GraphType type, Graph graph) {
 			this.label = label;
+			this.type = type;
 			this.graph = graph;
 		}
 	}
 
 	protected class MyLabelProvider extends LabelProvider {
+		final Image imageAST = Activator.getInstance().ICON_GRAPH_AST.createImage();
+		final Image imageCFG = Activator.getInstance().ICON_GRAPH_CF.createImage();
+		final Image imageDFG = Activator.getInstance().ICON_GRAPH_DF.createImage();
+
 		@Override
 		public String getText(Object element) {
 			return ((ListEntry) element).label;
+		}
+
+		@Override
+		public Image getImage(Object element) {
+			if (((ListEntry) element).type == GraphType.AST) {
+				return imageAST;
+			}
+			if (((ListEntry) element).type == GraphType.CFG)
+				return imageCFG;
+			return null;
 		}
 	}
 
@@ -68,7 +90,7 @@ public class GraphList extends Composite {
 
 		canvas = new GraphCanvas(sf, SWT.NONE, editorOverlay);
 
-		listViewer = new ListViewer(sf, SWT.MULTI | SWT.V_SCROLL);
+		listViewer = new TableViewer(sf, SWT.MULTI | SWT.V_SCROLL);
 		listViewer.setContentProvider(new ArrayContentProvider());
 		listViewer.setLabelProvider(new MyLabelProvider());
 		listViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -77,7 +99,7 @@ public class GraphList extends Composite {
 				onSelectionChanged(event);
 			}
 		});
-		listViewer.getList().addKeyListener(new KeyListener() {
+		listViewer.getTable().addKeyListener(new KeyListener() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// do nothing
@@ -90,7 +112,7 @@ public class GraphList extends Composite {
 			}
 		});
 
-		sf.setWeights(new int[] { 90, 10 });
+		sf.setWeights(new int[] { 85, 15 });
 	}
 
 	public GraphCanvas getCanvas() {
@@ -98,7 +120,7 @@ public class GraphList extends Composite {
 	}
 
 	public void addGraph(String label, Graph graph, boolean select) {
-		addEntry(new ListEntry(label, graph), select);
+		addEntry(new ListEntry(label, GraphType.AST, graph), select);
 	}
 
 	public void removeSelectedGraphs(boolean removeAllIfNothingSelected) {
@@ -163,6 +185,6 @@ public class GraphList extends Composite {
 
 	@Override
 	public boolean setFocus() {
-		return listViewer.getList().setFocus();
+		return listViewer.getTable().setFocus();
 	}
 }

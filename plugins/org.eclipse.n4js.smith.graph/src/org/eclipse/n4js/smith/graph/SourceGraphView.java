@@ -41,7 +41,7 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 /**
  * A view showing a graph of the AST and type model (i.e. TModule).
  */
-public class ASTGraphView extends ViewPart {
+public class SourceGraphView extends ViewPart {
 
 	private GraphList graphList;
 	private GraphProvider graphProvider;
@@ -57,7 +57,7 @@ public class ASTGraphView extends ViewPart {
 	/**
 	 * Create new instance.
 	 */
-	public ASTGraphView() {
+	public SourceGraphView() {
 		Activator.getInstance().setViewInstance(this);
 	}
 
@@ -111,10 +111,20 @@ public class ASTGraphView extends ViewPart {
 		graphProvider = new EMFGraphProvider();
 
 		createAction(
-				"Snapshot", IAction.AS_PUSH_BUTTON,
-				"Take a manual snapshot.",
-				Activator.getInstance().ICON_SNAPSHOT,
-				this::onTakeSnapshot);
+				"AST Snapshot", IAction.AS_PUSH_BUTTON,
+				"Take an AST snapshot.",
+				Activator.getInstance().ICON_GRAPH_AST,
+				this::onTakeASTSnapshot);
+		createAction(
+				"CFG Snapshot", IAction.AS_PUSH_BUTTON,
+				"Take a CFG snapshot.",
+				Activator.getInstance().ICON_GRAPH_CF,
+				this::onTakeCFGSnapshot);
+		createAction(
+				"DFG Snapshot", IAction.AS_PUSH_BUTTON,
+				"Take a DFG snapshot.",
+				Activator.getInstance().ICON_GRAPH_DF,
+				this::onTakeCFGSnapshot);
 		createAction(
 				"Pause", IAction.AS_CHECK_BOX,
 				"Suspend accepting snapshots that were triggered programmatically.",
@@ -153,7 +163,7 @@ public class ASTGraphView extends ViewPart {
 	 *            {@link EObject}.
 	 */
 	public static final void show(String label, Object root) {
-		final ASTGraphView view = findInstance();
+		final SourceGraphView view = findInstance();
 		if (view != null && !view.paused)
 			view.showGraph(label, root);
 	}
@@ -219,7 +229,37 @@ public class ASTGraphView extends ViewPart {
 	/**
 	 * User clicked button 'take snapshot'.
 	 */
-	protected void onTakeSnapshot(@SuppressWarnings("unused") Action action) {
+	protected void onTakeASTSnapshot(@SuppressWarnings("unused") Action action) {
+		if (activeEditor != null) {
+			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
+				@Override
+				public Boolean exec(XtextResource state) throws Exception {
+					showGraph("manual", state.getResourceSet());
+					return null;
+				}
+			});
+		}
+	}
+
+	/**
+	 * User clicked button 'take snapshot'.
+	 */
+	protected void onTakeCFGSnapshot(@SuppressWarnings("unused") Action action) {
+		if (activeEditor != null) {
+			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
+				@Override
+				public Boolean exec(XtextResource state) throws Exception {
+					showGraph("manual", state.getResourceSet());
+					return null;
+				}
+			});
+		}
+	}
+
+	/**
+	 * User clicked button 'take snapshot'.
+	 */
+	protected void onTakeDFGSnapshot(@SuppressWarnings("unused") Action action) {
 		if (activeEditor != null) {
 			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 				@Override
@@ -245,7 +285,7 @@ public class ASTGraphView extends ViewPart {
 		graphList.removeSelectedGraphs(true);
 	}
 
-	private static final ASTGraphView findInstance() {
+	private static final SourceGraphView findInstance() {
 		return Activator.getInstance().getViewInstance();
 	}
 }
