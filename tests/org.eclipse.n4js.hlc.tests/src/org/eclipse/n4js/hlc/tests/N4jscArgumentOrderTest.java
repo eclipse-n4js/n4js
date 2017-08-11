@@ -17,6 +17,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
@@ -26,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -37,7 +39,38 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
-	final static String currentPath = new File(".").getAbsolutePath() + "/src/test/resources/N4jscArgumentOrderTest/";
+	static String WS_ORDER_TEST = "N4jscArgumentOrderTest";
+
+	static String[] args;
+
+	/**
+	 * Setup workspace.
+	 */
+	@BeforeClass
+	public static void setupWorkspace() throws IOException {
+		File f = setupWorkspace(WS_ORDER_TEST);
+		String currentPath = f.getAbsolutePath().toString();
+		System.out.println("just for reference base-path is: " + currentPath);
+
+		// @formatter:off
+		args = new String[]{
+				"--testCatalogFile " + currentPath + "/build/test-catalog.json",
+				"--targetPlatformInstallLocation " + currentPath + "/test-catalog.json",
+				"--targetPlatformFile " + currentPath + "/build/npm",
+				"--targetPlatformSkipInstall",
+				"-t projects",
+				currentPath + "/PA",
+				currentPath + "/PB",
+				currentPath + "/PC",
+				currentPath + "/PD",
+				currentPath + "/PE",
+				currentPath + "/PF",
+				currentPath + "/PG",
+				"--debug"
+		};
+		// @formatter:on
+
+	}
 
 	// @formatter:off
 	final static String expectedOrder = "" +
@@ -48,22 +81,6 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 			"DEBUG: 5. Project Project 'PE'  type=RUNTIME_LIBRARY  used by [Project 'PE'  type=RUNTIME_LIBRARY ]\n" +
 			"DEBUG: 6. Project Project 'PF'  type=RUNTIME_LIBRARY  used by [Project 'PF'  type=RUNTIME_LIBRARY ]\n" +
 			"DEBUG: 7. Project Project 'PG'  type=RUNTIME_LIBRARY  used by [Project 'PG'  type=RUNTIME_LIBRARY ]\n";
-
-	final static String[] args = {
-			"--testCatalogFile " + currentPath + "build/test-catalog.json",
-			"--targetPlatformInstallLocation " + currentPath + "test-catalog.json",
-			"--targetPlatformFile " + currentPath + "build/npm",
-			"--targetPlatformSkipInstall",
-			"-t projects",
-			currentPath + "PA",
-			currentPath + "PB",
-			currentPath + "PC",
-			currentPath + "PD",
-			currentPath + "PE",
-			currentPath + "PF",
-			currentPath + "PG",
-			"--debug"
-	};
 
 	final static int[][] shuffleOrders = {
 			{0,1,2,3,4,5,6,7,8,9,10,11,12},
@@ -91,7 +108,6 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	@Test
 	public void testDifferentArgumentOrder() {
 		System.out.println(logMethodname());
-		System.out.println("just for reference base-path is: " + new File(".").getAbsolutePath());
 
 		String[] shuffledArgs = shuffleArgs(shuffleOrder);
 

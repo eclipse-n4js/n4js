@@ -594,7 +594,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getComposedTypeRef_CachedComposedMembers() {
+	public EReference getComposedTypeRef_ComposedMemberCache() {
 		return (EReference)composedTypeRefEClass.getEStructuralFeatures().get(0);
 	}
 
@@ -1768,7 +1768,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		createEOperation(baseTypeRefEClass, BASE_TYPE_REF___GET_MODIFIERS_AS_STRING);
 
 		composedTypeRefEClass = createEClass(COMPOSED_TYPE_REF);
-		createEReference(composedTypeRefEClass, COMPOSED_TYPE_REF__CACHED_COMPOSED_MEMBERS);
+		createEReference(composedTypeRefEClass, COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE);
 		createEReference(composedTypeRefEClass, COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF);
 		createEReference(composedTypeRefEClass, COMPOSED_TYPE_REF__TYPE_REFS);
 		createEOperation(composedTypeRefEClass, COMPOSED_TYPE_REF___IS_DYNAMIC);
@@ -2035,7 +2035,7 @@ public class TypeRefsPackageImpl extends EPackageImpl implements TypeRefsPackage
 		initEOperation(getBaseTypeRef__GetModifiersAsString(), theEcorePackage.getEString(), "getModifiersAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(composedTypeRefEClass, ComposedTypeRef.class, "ComposedTypeRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getComposedTypeRef_CachedComposedMembers(), theTypesPackage.getTMember(), null, "cachedComposedMembers", null, 0, -1, ComposedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComposedTypeRef_ComposedMemberCache(), theTypesPackage.getComposedMemberCache(), null, "composedMemberCache", null, 0, 1, ComposedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getComposedTypeRef_OriginalComposedTypeRef(), this.getComposedTypeRef(), null, "originalComposedTypeRef", null, 0, 1, ComposedTypeRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getComposedTypeRef_TypeRefs(), this.getTypeRef(), null, "typeRefs", null, 0, -1, ComposedTypeRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 

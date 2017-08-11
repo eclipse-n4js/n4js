@@ -10,111 +10,115 @@
  */
 package org.eclipse.n4js.n4jsx
 
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
-import org.eclipse.n4js.resource.ErrorAwareLinkingService
-import org.eclipse.n4js.internal.InternalN4JSWorkspace
-import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider
-import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.xtext.resource.IDerivedStateComputer
-import org.eclipse.n4js.n4jsx.resource.N4JSXLinker
-import org.eclipse.xtext.formatting2.FormatterPreferences
-import org.eclipse.n4js.resource.N4JSPostProcessor
-import org.eclipse.n4js.ts.validation.TypesKeywordProvider
-import org.eclipse.n4js.n4jsx.typesystem.N4JSXUnsupportedExpressionTypeHelper
-import org.eclipse.xtext.naming.IQualifiedNameConverter
-import org.eclipse.xtext.linking.ILinkingService
-import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
-import org.eclipse.xtext.validation.IssueSeveritiesProvider
-import org.eclipse.n4js.parser.N4JSHiddenTokenHelper
-import org.eclipse.n4js.conversion.ValueConverters
-import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder
-import it.xsemantics.runtime.StringRepresentation
-import org.eclipse.xtext.linking.impl.ImportedNamesAdapter
-import org.eclipse.n4js.resource.N4JSLinker
-import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider
-import org.eclipse.xtext.parser.IAstFactory
-import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider
-import org.eclipse.n4js.n4jsx.scoping.N4JSXScopeProvider
-import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector
-import org.eclipse.xtext.linking.ILinker
-import org.eclipse.n4js.utils.di.scopes.ScopeManager
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
-import org.eclipse.n4js.naming.N4JSImportedNamesAdapter
-import org.eclipse.xtext.scoping.IGlobalScopeProvider
-import org.eclipse.n4js.utils.di.scopes.TransformationScoped
-import org.eclipse.n4js.resource.UserdataMapper
-import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator
-import org.eclipse.n4js.resource.AccessibleSerializer
 import com.google.inject.Binder
-import org.eclipse.xtext.conversion.impl.STRINGValueConverter
-import org.eclipse.xtext.parser.antlr.SyntaxErrorMessageProvider
-import org.eclipse.n4js.n4jsx.validation.N4JSXIssueSeveritiesProvider
-import org.eclipse.n4js.resource.N4JSDescriptionUtils
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
-import org.eclipse.xtext.validation.IResourceValidator
-import com.google.inject.name.Names
-import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme
-import org.eclipse.n4js.validation.N4JSResourceValidator
-import org.eclipse.n4js.documentation.N4JSDocumentationProvider
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
-import org.eclipse.emf.ecore.util.Diagnostician
-import org.eclipse.n4js.parser.BadEscapementAwareMessageProvider
-import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
-import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.n4js.n4jsx.internal.N4JSXRuntimeCore
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser
-import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor
 import com.google.inject.Inject
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar
-import org.eclipse.xtext.findReferences.TargetURICollector
-import org.eclipse.xtext.resource.IResourceDescription
-import org.eclipse.xtext.documentation.impl.AbstractMultiLineCommentProvider
-import org.eclipse.n4js.resource.N4JSUnloader
-import org.eclipse.xtext.util.OnChangeEvictingCache
-import org.eclipse.xtext.parser.antlr.IReferableElementsUnloader
-import org.eclipse.n4js.resource.N4JSCache
-import org.eclipse.xtext.documentation.IEObjectDocumentationProviderExtension
-import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper
-import org.eclipse.xtext.findReferences.IReferenceFinder
-import org.eclipse.n4js.typesystem.VersionResolver
-import org.eclipse.n4js.resource.N4JSResourceDescription
-import org.eclipse.n4js.n4jsx.validation.N4JSXJavaScriptVariantHelper
-import org.eclipse.xtext.service.SingletonBinding
-import org.eclipse.n4js.scoping.builtin.ScopeRegistrar
-import org.eclipse.n4js.conversion.N4JSStringValueConverter
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.xtext.parser.IParser
-import org.eclipse.n4js.typesystem.N4JSStringRepresenation
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
-import org.eclipse.n4js.internal.FileBasedWorkspace
-import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider
-import org.eclipse.n4js.parser.PropertyNameAwareElementFactory
-import org.eclipse.n4js.resource.N4JSDerivedStateComputer
-import org.eclipse.n4js.n4jsx.parser.antlr.lexer.InternalN4JSXLexer
-import org.eclipse.n4js.ts.findReferences.ConcreteSyntaxAwareReferenceFinder
-import org.eclipse.n4js.n4jsx.parser.N4JSXSemicolonInjectingParser
-import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
-import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider
-import org.eclipse.xtext.preferences.IPreferenceValuesProvider
-import org.eclipse.n4js.typesystem.N4JSVersionResolver
-import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import org.eclipse.n4js.CancelIndicatorBaseExtractor
-import org.eclipse.xtext.resource.XtextResource
-import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
-import org.eclipse.n4js.xsemantics.InternalTypeSystem
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.xtext.conversion.IValueConverterService
-import org.eclipse.xtext.serializer.ISerializer
 import com.google.inject.Provider
-import org.eclipse.n4js.preferences.FileBasedExternalLibraryPreferenceStore
-import org.eclipse.xtext.resource.DescriptionUtils
-import org.eclipse.n4js.validation.N4JSDiagnostician
+import com.google.inject.name.Names
+import it.xsemantics.runtime.StringRepresentation
+import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import java.io.File
+import org.eclipse.emf.ecore.util.Diagnostician
+import org.eclipse.n4js.CancelIndicatorBaseExtractor
+import org.eclipse.n4js.conversion.N4JSStringValueConverter
+import org.eclipse.n4js.conversion.ValueConverters
+import org.eclipse.n4js.documentation.N4JSDocumentationProvider
+import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
+import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector
+import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider
+import org.eclipse.n4js.internal.FileBasedWorkspace
+import org.eclipse.n4js.internal.InternalN4JSWorkspace
+import org.eclipse.n4js.n4jsx.internal.N4JSXRuntimeCore
+import org.eclipse.n4js.n4jsx.parser.N4JSXSemicolonInjectingParser
 import org.eclipse.n4js.n4jsx.parser.RegExLiteralAwareLexer
+import org.eclipse.n4js.n4jsx.parser.antlr.lexer.InternalN4JSXLexer
+import org.eclipse.n4js.n4jsx.resource.N4JSXLinker
+import org.eclipse.n4js.n4jsx.scoping.N4JSXScopeProvider
+import org.eclipse.n4js.n4jsx.typesystem.N4JSXUnsupportedExpressionTypeHelper
+import org.eclipse.n4js.n4jsx.validation.N4JSXIssueSeveritiesProvider
+import org.eclipse.n4js.n4jsx.validation.N4JSXJavaScriptVariantHelper
+import org.eclipse.n4js.naming.N4JSImportedNamesAdapter
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
+import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
+import org.eclipse.n4js.parser.BadEscapementAwareMessageProvider
+import org.eclipse.n4js.parser.N4JSHiddenTokenHelper
+import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser
+import org.eclipse.n4js.parser.PropertyNameAwareElementFactory
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
+import org.eclipse.n4js.preferences.FileBasedExternalLibraryPreferenceStore
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.resource.AccessibleSerializer
+import org.eclipse.n4js.resource.ErrorAwareLinkingService
+import org.eclipse.n4js.resource.N4JSCache
+import org.eclipse.n4js.resource.N4JSDerivedStateComputer
+import org.eclipse.n4js.resource.N4JSDescriptionUtils
+import org.eclipse.n4js.resource.N4JSLinker
+import org.eclipse.n4js.resource.N4JSPostProcessor
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.resource.N4JSResourceDescription
+import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy
+import org.eclipse.n4js.resource.N4JSUnloader
+import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor
+import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
+import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider
+import org.eclipse.n4js.scoping.builtin.ScopeRegistrar
+import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider
+import org.eclipse.n4js.ts.findReferences.ConcreteSyntaxAwareReferenceFinder
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar
+import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme
+import org.eclipse.n4js.ts.validation.TypesKeywordProvider
+import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder
+import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
+import org.eclipse.n4js.typesystem.N4JSStringRepresenation
+import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator
+import org.eclipse.n4js.typesystem.N4JSVersionResolver
+import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper
+import org.eclipse.n4js.typesystem.VersionResolver
+import org.eclipse.n4js.utils.di.scopes.ScopeManager
+import org.eclipse.n4js.utils.di.scopes.TransformationScoped
+import org.eclipse.n4js.utils.validation.PrePostDiagnostician
+import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import org.eclipse.n4js.validation.N4JSResourceValidator
+import org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator
+import org.eclipse.n4js.xsemantics.InternalTypeSystem
+import org.eclipse.xtext.conversion.IValueConverterService
+import org.eclipse.xtext.conversion.impl.STRINGValueConverter
+import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
+import org.eclipse.xtext.documentation.IEObjectDocumentationProviderExtension
+import org.eclipse.xtext.documentation.impl.AbstractMultiLineCommentProvider
+import org.eclipse.xtext.findReferences.IReferenceFinder
+import org.eclipse.xtext.findReferences.TargetURICollector
+import org.eclipse.xtext.formatting2.FormatterPreferences
+import org.eclipse.xtext.linking.ILinker
+import org.eclipse.xtext.linking.ILinkingService
+import org.eclipse.xtext.linking.impl.ImportedNamesAdapter
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import org.eclipse.xtext.parser.IAstFactory
+import org.eclipse.xtext.parser.IParser
+import org.eclipse.xtext.parser.antlr.IReferableElementsUnloader
+import org.eclipse.xtext.parser.antlr.SyntaxErrorMessageProvider
+import org.eclipse.xtext.parsetree.reconstr.IHiddenTokenHelper
+import org.eclipse.xtext.preferences.IPreferenceValuesProvider
+import org.eclipse.xtext.resource.DescriptionUtils
+import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy
+import org.eclipse.xtext.resource.IDerivedStateComputer
+import org.eclipse.xtext.resource.IResourceDescription
+import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.XtextResourceSet
+import org.eclipse.xtext.scoping.IGlobalScopeProvider
+import org.eclipse.xtext.scoping.IScopeProvider
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider
+import org.eclipse.xtext.serializer.ISerializer
+import org.eclipse.xtext.service.SingletonBinding
+import org.eclipse.xtext.util.OnChangeEvictingCache
+import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider
+import org.eclipse.xtext.validation.IResourceValidator
+import org.eclipse.xtext.validation.IssueSeveritiesProvider
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -207,7 +211,7 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	/**
 	 * Returns type {@link N4JSResourceDescriptionStrategy}, creates EObjectDescriptions in index.
 	 */
-	def Class<? extends org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
+	def Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
 		return N4JSResourceDescriptionStrategy;
 	}
 
@@ -266,10 +270,8 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	 * types should be made.
 	 */
 	def void configureIScopeProviderDelegate(Binder binder) {
-		binder.bind(org.eclipse.xtext.scoping.IScopeProvider)
-				.annotatedWith(
-						com.google.inject.name.Names
-								.named(org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
+		binder.bind(IScopeProvider)
+				.annotatedWith(Names.named(AbstractDeclarativeScopeProvider.NAMED_DELEGATE))
 				.to(N4JSImportedNamespaceAwareLocalScopeProvider);
 	}
 
@@ -351,7 +353,7 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	}
 
 	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
+	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link File files}.
 	 */
 	def Class<? extends IN4JSCore> bindN4JSCore() {
 		return N4JSXRuntimeCore;
@@ -366,7 +368,7 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	}
 
 	/**
-	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link java.io.File files}.
+	 * Configure the IN4JSCore instance to use the implementation that is backed by {@link File files}.
 	 */
 	def Class<? extends InternalN4JSWorkspace> bindInternalN4JSWorkspace() {
 		return FileBasedWorkspace;
@@ -436,7 +438,7 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	 */
 	@SingletonBinding
 	override Class<? extends Diagnostician> bindDiagnostician() {
-		return N4JSDiagnostician;
+		return PrePostDiagnostician;
 	}
 
 	/**
@@ -456,9 +458,9 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	/**
 	 * Binds a special language-independent validator checking project setups, mainly used for polyfill-clashes.
 	 */
-	@org.eclipse.xtext.service.SingletonBinding(eager = true)
-	def Class<? extends org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator> bindN4JSProjectSetupValidator() {
-		return org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator;
+	@SingletonBinding(eager = true)
+	def Class<? extends N4JSProjectSetupValidator> bindN4JSProjectSetupValidator() {
+		return N4JSProjectSetupValidator;
 	}
 
 	/***/

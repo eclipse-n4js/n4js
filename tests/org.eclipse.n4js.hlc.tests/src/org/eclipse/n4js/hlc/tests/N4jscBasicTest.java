@@ -128,7 +128,8 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Test debug output before help. This test doesn't run a compile but because of the "-help" option should
+	 * Test debug output before help. This test doesn't run a compile but because of the "-help" option should end
+	 * execution.
 	 *
 	 * @throws ExitCodeException
 	 *             propagated from compiler in case of issues
@@ -136,7 +137,7 @@ public class N4jscBasicTest extends AbstractN4jscTest {
 	@Test
 	public void testMainDebugHelp() throws ExitCodeException {
 		System.out.println(logMethodname());
-		String[] args = { "-h", "--debug", "--preferences", "xxx", "-t", "allprojects" }; // , "more1", "more2", "more3"
+		String[] args = { "--debug", "-h", "--preferences", "xxx", "-t", "allprojects" }; // , "more1", "more2", "more3"
 		SuccessExitStatus status = new N4jscBase().doMain(args);
 		assertEquals("Should have printed help and exited with success.", SuccessExitStatus.INSTANCE.code, status.code);
 	}

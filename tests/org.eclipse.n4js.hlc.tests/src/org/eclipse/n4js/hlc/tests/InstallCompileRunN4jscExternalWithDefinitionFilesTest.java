@@ -48,7 +48,6 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"--targetPlatformInstallLocation", getTargetPlatformInstallLocation().getAbsolutePath(),
 				"-rw", "nodejs",
 				"-r", fileToRun,
-				"--debug",
 				"--verbose",
 				"--projectlocations", wsRoot,
 				"-t", BuildType.allprojects.toString()

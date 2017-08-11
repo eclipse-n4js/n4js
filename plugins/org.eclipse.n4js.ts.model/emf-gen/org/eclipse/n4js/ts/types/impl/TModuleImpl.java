@@ -25,6 +25,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.TAnnotableElement;
 import org.eclipse.n4js.ts.types.TAnnotation;
 import org.eclipse.n4js.ts.types.TModule;
@@ -54,6 +55,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
@@ -289,6 +291,16 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<Type> exposedInternalTypes;
+
+	/**
+	 * The cached value of the '{@link #getComposedMemberCaches() <em>Composed Member Caches</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCaches()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<ComposedMemberCache> composedMemberCaches;
 
 	/**
 	 * The default value of the '{@link #getModuleSpecifier() <em>Module Specifier</em>}' attribute.
@@ -573,6 +585,18 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<ComposedMemberCache> getComposedMemberCaches() {
+		if (composedMemberCaches == null) {
+			composedMemberCaches = new EObjectContainmentEList<ComposedMemberCache>(ComposedMemberCache.class, this, TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES);
+		}
+		return composedMemberCaches;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getModuleSpecifier() {
 		return this.getQualifiedName();
 	}
@@ -595,6 +619,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return ((InternalEList<?>)getInternalTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return ((InternalEList<?>)getExposedInternalTypes()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
+				return ((InternalEList<?>)getComposedMemberCaches()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -635,6 +661,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return getExposedInternalTypes();
+			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
+				return getComposedMemberCaches();
 			case TypesPackage.TMODULE__MODULE_SPECIFIER:
 				return getModuleSpecifier();
 		}
@@ -697,6 +725,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				getExposedInternalTypes().clear();
 				getExposedInternalTypes().addAll((Collection<? extends Type>)newValue);
 				return;
+			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
+				getComposedMemberCaches().clear();
+				getComposedMemberCaches().addAll((Collection<? extends ComposedMemberCache>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -751,6 +783,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				getExposedInternalTypes().clear();
 				return;
+			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
+				getComposedMemberCaches().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -791,6 +826,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return exposedInternalTypes != null && !exposedInternalTypes.isEmpty();
+			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
+				return composedMemberCaches != null && !composedMemberCaches.isEmpty();
 			case TypesPackage.TMODULE__MODULE_SPECIFIER:
 				return MODULE_SPECIFIER_EDEFAULT == null ? getModuleSpecifier() != null : !MODULE_SPECIFIER_EDEFAULT.equals(getModuleSpecifier());
 		}

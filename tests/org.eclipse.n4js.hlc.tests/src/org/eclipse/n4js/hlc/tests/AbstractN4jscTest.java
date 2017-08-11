@@ -97,12 +97,14 @@ public abstract class AbstractN4jscTest {
 		File wsp = new File(TARGET, WSP);
 		File fixture = new File(testDataRoot, testDataSet);
 		// clean
-		// System.out.println("Workspace : " + wsp.getAbsolutePath());
+		System.out.println("Workspace : " + wsp.getAbsolutePath());
 		// Files.deleteIfExists(wsp.toPath());
 		if (wsp.exists()) {
 			FileDeleter.delete(wsp.toPath(), true);
 		}
 
+		System.out.println("from " + fixture.getAbsolutePath());
+		System.out.println("to  " + wsp.getAbsolutePath());
 		// copy fixtures to workspace
 		FileCopier.copy(fixture.toPath(), wsp.toPath(), true);
 
