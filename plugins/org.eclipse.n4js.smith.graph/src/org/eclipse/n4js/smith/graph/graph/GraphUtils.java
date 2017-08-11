@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.swt.graphics.Color;
@@ -39,9 +39,9 @@ public class GraphUtils {
 
 	public static Color getColor(RGB rgb) {
 		if (!colors.containsKey(rgb)) {
-			colors.put(
-					new RGB(rgb.red, rgb.green, rgb.blue),
-					new Color(Display.getCurrent(), rgb.red, rgb.green, rgb.blue));
+			RGB rgbKey = new RGB(rgb.red, rgb.green, rgb.blue);
+			Color rgbColor = new Color(Display.getCurrent(), rgb.red, rgb.green, rgb.blue);
+			colors.put(rgbKey, rgbColor);
 		}
 		return colors.get(rgb);
 	}
@@ -56,35 +56,42 @@ public class GraphUtils {
 	}
 
 	public static void drawString(GC gc, String str, float x, float y, float width, float height, int bgAlpha) {
-		if (str != null) {
-			org.eclipse.swt.graphics.Point size = gc.stringExtent(str);
-			if (bgAlpha >= 255) {
-				gc.drawString(str, Math.round(x + width / 2 - size.x / 2), Math.round(y + height / 2 - size.y / 2));
-			}
-			else {
-				gc.drawString(str, Math.round(x + width / 2 - size.x / 2), Math.round(y + height / 2 - size.y / 2),
-						true);
-				if (bgAlpha > 0) {
-					gc.setAlpha(bgAlpha);
-					gc.fillRectangle(Math.round(x + width / 2 - size.x / 2), Math.round(y + height / 2 - size.y / 2),
-							size.x, size.y);
-					gc.setAlpha(255);
-				}
+		if (str == null)
+			return;
+
+		org.eclipse.swt.graphics.Point size = gc.stringExtent(str);
+		int posX = Math.round(x + width / 2 - size.x / 2);
+		int posY = Math.round(y + height / 2 - size.y / 2);
+
+		if (bgAlpha >= 255) {
+			gc.drawString(str, posX, posY);
+		} else {
+			gc.drawString(str, posX, posY, true);
+			if (bgAlpha > 0) {
+				gc.setAlpha(bgAlpha);
+				gc.fillRectangle(posX, posY, size.x, size.y);
+				gc.setAlpha(255);
 			}
 		}
 	}
 
 	public static List<Node> getNodesForElements(Collection<?> elements, List<? extends Node> allNodes) {
-		return elements.stream()
-				.map(elem -> getNodeForElement(elem, allNodes))
-				.filter(node -> node != null)
-				.collect(Collectors.toList());
+		List<Node> nodes = new LinkedList<>();
+		for (Object elem : elements) {
+			Node node = getNodeForElement(elem, allNodes);
+			if (node != null) {
+				nodes.add(node);
+			}
+		}
+		return nodes;
 	}
 
 	public static Node getNodeForElement(Object element, List<? extends Node> allNodes) {
-		for (Node currN : allNodes)
-			if (currN.getElement() == element)
+		for (Node currN : allNodes) {
+			if (currN.getElement() == element) {
 				return currN;
+			}
+		}
 		return null;
 	}
 
@@ -103,15 +110,15 @@ public class GraphUtils {
 				yMax = Math.max(yMax, n.getY() + n.getHeight());
 			}
 			return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
-		}
-		else
+		} else
 			return Rectangle.EMPTY;
 	}
 
 	public static void drawLine(GC gc, Point p1, Point p2, boolean directed) {
 		gc.drawLine(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y));
-		if (directed)
+		if (directed) {
 			drawArrowHead(gc, p1, p2);
+		}
 	}
 
 	// poor man's implementation of decorators

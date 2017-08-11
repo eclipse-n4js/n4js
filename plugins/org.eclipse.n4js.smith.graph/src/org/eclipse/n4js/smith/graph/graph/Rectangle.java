@@ -50,23 +50,19 @@ public class Rectangle {
 	 */
 	public Point getIntersectionLocation(Point reference) {
 		final Rectangle r = new Rectangle(x, y, width, height);
-		// r.translate(-1, -1);
-		// r.resize(1, 1);
 
-		// getOwner().translateToAbsolute(r);
 		float centerX = r.x + 0.5f * r.width;
 		float centerY = r.y + 0.5f * r.height;
 
-		if (r.isEmpty()
-				|| (reference.x == (int) centerX && reference.y == (int) centerY))
+		if (r.isEmpty() || (reference.x == (int) centerX && reference.y == (int) centerY))
 			return new Point(centerX, centerY); // This avoids divide-by-zero
 
 		float dx = reference.x - centerX;
 		float dy = reference.y - centerY;
 
-		// r.width, r.height, dx, and dy are guaranteed to be non-zero.
-		float scale = 0.5f / Math.max(Math.abs(dx) / r.width, Math.abs(dy)
-				/ r.height);
+		float scaleX = Math.abs(dx) / r.width;
+		float scaleY = Math.abs(dy) / r.height;
+		float scale = 0.5f / Math.max(scaleX, scaleY);
 
 		dx *= scale;
 		dy *= scale;

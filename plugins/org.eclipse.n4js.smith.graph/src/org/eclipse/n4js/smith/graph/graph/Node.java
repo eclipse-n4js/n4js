@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 
@@ -151,35 +152,35 @@ public class Node {
 			final org.eclipse.swt.graphics.Point size = gc.stringExtent(title);
 			this.width = size.x + BORDER * 2;
 			this.height = size.y + BORDER * 2;
-		}
-		else {
+		} else {
 			this.width = DEFAULT_WIDTH;
 			this.height = DEFAULT_HEIGHT;
 		}
 	}
 
 	/**
-	 * Paint the ... guess what!
+	 * Paints the Node
 	 */
 	public void paint(GC gc) {
 		gc.setBackground(GraphUtils.getColor(200, 200, 255));
 		gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
 
 		gc.fillRoundRectangle(Math.round(x), Math.round(y), Math.round(width), Math.round(height), 5, 5);
-		// gc.drawRoundRectangle(Math.round(x), Math.round(y), Math.round(width), Math.round(height), 5, 5);
 		GraphUtils.drawString(gc, title, x, y, width, height, 0);
 
 		if (hasOutgoingCrossLinksInternal || hasOutgoingCrossLinksExternal) {
-			gc.setBackground(gc.getDevice().getSystemColor(SWT.COLOR_RED));
-			gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_RED));
-			if (hasOutgoingCrossLinksInternal)
-				gc.fillOval(
-						Math.round(x + width - SIZE_CROSS_LINKS_MARKER - 2), Math.round(y + 2),
-						Math.round(SIZE_CROSS_LINKS_MARKER), Math.round(SIZE_CROSS_LINKS_MARKER));
-			else
-				gc.drawOval(
-						Math.round(x + width - SIZE_CROSS_LINKS_MARKER - 2), Math.round(y + 2),
-						Math.round(SIZE_CROSS_LINKS_MARKER), Math.round(SIZE_CROSS_LINKS_MARKER));
+			Color colorRed = gc.getDevice().getSystemColor(SWT.COLOR_RED);
+			gc.setBackground(colorRed);
+			gc.setForeground(colorRed);
+
+			int ovalX = Math.round(x + width - SIZE_CROSS_LINKS_MARKER - 2);
+			int ovalY = Math.round(y + 2);
+			int ovalSize = Math.round(SIZE_CROSS_LINKS_MARKER);
+			if (hasOutgoingCrossLinksInternal) {
+				gc.fillOval(ovalX, ovalY, ovalSize, ovalSize);
+			} else {
+				gc.drawOval(ovalX, ovalY, ovalSize, ovalSize);
+			}
 		}
 
 		gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));

@@ -64,6 +64,7 @@ import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DebuggerStatement;
 import org.eclipse.n4js.n4JS.DefaultClause;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
@@ -214,6 +215,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass namedElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass controlFlowElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1510,6 +1518,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	public EOperation getNamedElement__GetName() {
 		return namedElementEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getControlFlowElement() {
+		return controlFlowElementEClass;
 	}
 
 	/**
@@ -6187,6 +6204,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		namedElementEClass = createEClass(NAMED_ELEMENT);
 		createEOperation(namedElementEClass, NAMED_ELEMENT___GET_NAME);
 
+		controlFlowElementEClass = createEClass(CONTROL_FLOW_ELEMENT);
+
 		scriptEClass = createEClass(SCRIPT);
 		createEReference(scriptEClass, SCRIPT__ANNOTATIONS);
 		createEReference(scriptEClass, SCRIPT__SCRIPT_ELEMENTS);
@@ -6950,6 +6969,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		blockEClass.getESuperTypes().add(this.getStatement());
 		blockEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		statementEClass.getESuperTypes().add(this.getScriptElement());
+		statementEClass.getESuperTypes().add(this.getControlFlowElement());
 		variableStatementEClass.getESuperTypes().add(this.getStatement());
 		variableStatementEClass.getESuperTypes().add(this.getVariableDeclarationContainer());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getVariableStatement());
@@ -6961,6 +6981,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		variableDeclarationEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
 		variableDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
 		variableDeclarationEClass.getESuperTypes().add(this.getVariable());
+		variableDeclarationEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportedVariableDeclarationEClass.getESuperTypes().add(this.getVariableDeclaration());
 		emptyStatementEClass.getESuperTypes().add(this.getStatement());
 		expressionStatementEClass.getESuperTypes().add(this.getStatement());
@@ -6978,6 +6999,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		withStatementEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		switchStatementEClass.getESuperTypes().add(this.getStatement());
 		switchStatementEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
+		abstractCaseClauseEClass.getESuperTypes().add(this.getControlFlowElement());
 		caseClauseEClass.getESuperTypes().add(this.getAbstractCaseClause());
 		defaultClauseEClass.getESuperTypes().add(this.getAbstractCaseClause());
 		labelledStatementEClass.getESuperTypes().add(this.getStatement());
@@ -7026,6 +7048,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		expressionEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
+		expressionEClass.getESuperTypes().add(this.getControlFlowElement());
 		newTargetEClass.getESuperTypes().add(this.getExpression());
 		newExpressionEClass.getESuperTypes().add(this.getExpression());
 		newExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
@@ -7126,6 +7149,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getNamedElement__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(controlFlowElementEClass, ControlFlowElement.class, "ControlFlowElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(scriptEClass, Script.class, "Script", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScript_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

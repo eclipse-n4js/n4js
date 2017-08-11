@@ -21,6 +21,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.smith.graph.editoroverlay.EditorOverlay;
+import org.eclipse.n4js.smith.graph.graph.Graph;
+import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.GraphList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -33,10 +37,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-
-import org.eclipse.n4js.smith.graph.graph.Graph;
-import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
-import org.eclipse.n4js.smith.graph.graph.GraphList;
 
 /**
  * A view showing a graph of the AST and type model (i.e. TModule).
@@ -51,6 +51,8 @@ public class ASTGraphView extends ViewPart {
 	private boolean paused = true;
 
 	private final DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss.SSS");
+
+	private final EditorOverlay editorOverlay = new EditorOverlay();
 
 	/**
 	 * Create new instance.
@@ -105,7 +107,7 @@ public class ASTGraphView extends ViewPart {
 			}
 		});
 
-		graphList = new GraphList(parent, SWT.NONE);
+		graphList = new GraphList(parent, SWT.NONE, editorOverlay);
 		graphProvider = new EMFGraphProvider();
 
 		createAction(
@@ -186,6 +188,7 @@ public class ASTGraphView extends ViewPart {
 	public void showGraph(String label, Graph graph) {
 		if (graphList.isDisposed())
 			return;
+
 		final String prefix = getTimeStamp() + ": ";
 		if (Display.getCurrent() != null) {
 			// already on UI thread
@@ -244,16 +247,5 @@ public class ASTGraphView extends ViewPart {
 
 	private static final ASTGraphView findInstance() {
 		return Activator.getInstance().getViewInstance();
-
-		// the following code won't work, because #getActiveWorkbenchWindow() returns 'null' if called form non-UI
-		// (that's why we cache the instance in the Activator)
-
-		// thread
-		// try {
-		// return (TestView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ID);
-		// }
-		// catch(Exception e) {
-		// return null;
-		// }
 	}
 }

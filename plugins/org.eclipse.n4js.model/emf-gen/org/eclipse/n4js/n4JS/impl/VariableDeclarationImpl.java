@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -504,6 +505,11 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 				default: return -1;
 			}
 		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -548,6 +554,11 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 			}
 		}
 		if (baseClass == Variable.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
 			}
@@ -599,6 +610,11 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 		if (baseClass == Variable.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.VARIABLE___IS_CONST: return N4JSPackage.VARIABLE_DECLARATION___IS_CONST;
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

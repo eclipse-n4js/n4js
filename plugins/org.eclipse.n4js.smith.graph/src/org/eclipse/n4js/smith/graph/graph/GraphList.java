@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.n4js.smith.graph.editoroverlay.EditorOverlay;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.KeyEvent;
@@ -57,7 +58,7 @@ public class GraphList extends Composite {
 		}
 	}
 
-	public GraphList(Composite parent, int style) {
+	public GraphList(Composite parent, int style, EditorOverlay editorOverlay) {
 		super(parent, style);
 
 		this.setLayout(new FillLayout());
@@ -65,7 +66,7 @@ public class GraphList extends Composite {
 		final SashForm sf = new SashForm(this, SWT.HORIZONTAL);
 		sf.setLayout(new FillLayout());
 
-		canvas = new GraphCanvas(sf, SWT.NONE);
+		canvas = new GraphCanvas(sf, SWT.NONE, editorOverlay);
 
 		listViewer = new ListViewer(sf, SWT.MULTI | SWT.V_SCROLL);
 		listViewer.setContentProvider(new ArrayContentProvider());
@@ -104,8 +105,7 @@ public class GraphList extends Composite {
 		ISelection sel = listViewer.getSelection();
 		if (!sel.isEmpty()) {
 			removeEntries(((IStructuredSelection) sel).toList());
-		}
-		else {
+		} else {
 			// empty selection:
 			if (removeAllIfNothingSelected)
 				removeEntries(new ArrayList<>(entries));
@@ -156,8 +156,7 @@ public class GraphList extends Composite {
 		final ListEntry selEntry = getSingleSelectedEntry();
 		if (selEntry != null) {
 			canvas.setGraph(selEntry.graph);
-		}
-		else {
+		} else {
 			canvas.clear();
 		}
 	}

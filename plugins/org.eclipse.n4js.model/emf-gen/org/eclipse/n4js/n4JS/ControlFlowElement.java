@@ -10,16 +10,22 @@
  */
 package org.eclipse.n4js.n4JS;
 
+import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Statement</b></em>'.
+ * A representation of the model object '<em><b>Control Flow Element</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * *
+ * Common interface for all AST elements that contain a control flow.
+ * <!-- end-model-doc -->
  *
- * @see org.eclipse.n4js.n4JS.N4JSPackage#getStatement()
- * @model
+ *
+ * @see org.eclipse.n4js.n4JS.N4JSPackage#getControlFlowElement()
+ * @model interface="true" abstract="true"
  * @generated
  */
-public interface Statement extends ScriptElement, ControlFlowElement {
-} // Statement
+public interface ControlFlowElement extends EObject {
+} // ControlFlowElement

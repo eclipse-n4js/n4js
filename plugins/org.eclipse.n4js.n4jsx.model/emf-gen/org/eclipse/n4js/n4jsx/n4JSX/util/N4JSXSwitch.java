@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EPackage;
 
 import org.eclipse.emf.ecore.util.Switch;
 
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 
 import org.eclipse.n4js.n4jsx.n4JSX.*;
@@ -84,6 +85,7 @@ public class N4JSXSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExpression(jsxElement);
 				if (result == null) result = caseJSXChild(jsxElement);
 				if (result == null) result = caseTypableElement(jsxElement);
+				if (result == null) result = caseControlFlowElement(jsxElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -269,6 +271,21 @@ public class N4JSXSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypableElement(TypableElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseControlFlowElement(ControlFlowElement object) {
 		return null;
 	}
 

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.xtext.resource.DefaultLocationInFileProvider;
+import org.eclipse.xtext.resource.ILocationInFileProvider;
 
 /**
  * A Graph is mainly a container for {@link Node}s and {@link Edge}s. In addition, this class is responsible for
@@ -24,6 +26,8 @@ import org.eclipse.swt.graphics.GC;
  */
 @SuppressWarnings("javadoc")
 public class Graph {
+
+	ILocationInFileProvider locFileProvider = new DefaultLocationInFileProvider();
 
 	protected final List<Node> nodes = new ArrayList<>();
 	protected final List<Edge> edges = new ArrayList<>();
@@ -112,36 +116,44 @@ public class Graph {
 		final List<Object> elements = new ArrayList<>();
 		final List<Node> newNodes = new ArrayList<>();
 		final List<Edge> newEdges = new ArrayList<>();
+
 		if (input != null && provider != null) {
 			elements.addAll(provider.getElements(input));
-			for (Object currE : elements)
+			for (Object currE : elements) {
 				newNodes.add(provider.getNode(currE));
-			for (Node currNode : newNodes)
+			}
+			for (Node currNode : newNodes) {
 				newEdges.addAll(provider.getConnectedEdges(currNode, newNodes));
+			}
 		}
+
 		// set derived properties
-		newEdges.stream().forEach(e -> {
+		for (Edge e : newEdges) {
 			if (e.isCrossLink()) {
 				// set hasCrossLinks flags
 				final boolean internal = e.isInternal();
 				final boolean external = e.isExternal();
-				e.getStartNodes().forEach(n -> {
+
+				for (Node n : e.getStartNodes()) {
 					n.hasOutgoingCrossLinksInternal |= internal;
 					n.hasOutgoingCrossLinksExternal |= external;
-				});
-				e.getEndNodes().forEach(n -> {
+				}
+				for (Node n : e.getEndNodes()) {
 					n.hasIncomingCrossLinksInternal |= internal;
-				});
+				}
+
 			} else {
 				// set children property
 				// (simply add all end nodes to the first(!) start node's children property)
 				final Node parent = e.getFirstStartNode();
 				if (parent != null) {
 					parent.children.addAll(e.getEndNodes());
-					e.getEndNodes().forEach(en -> en.parent = parent);
+					for (Node en : e.getEndNodes()) {
+						en.parent = parent;
+					}
 				}
 			}
-		});
+		}
 		// store newly created nodes, edges
 		setGraph(newNodes, newEdges);
 	}
@@ -160,7 +172,10 @@ public class Graph {
 
 	private void doTreeLayout(GC gc) {
 		// trim all nodes
-		nodes.forEach(n -> n.trim(gc));
+		for (Node n : nodes) {
+			n.trim(gc);
+		}
+
 		// actual layout
 		final Stream<Node> roots = nodes.stream().filter(n -> n.parent == null);
 		doLayoutSubtrees(roots);
@@ -194,7 +209,8 @@ public class Graph {
 			final Node last = node.children.get(node.children.size() - 1);
 			final float xLeft = first.getX() + first.getWidth() / 2;
 			final float xRight = last.getX() + last.getWidth() / 2;
-			node.x = xLeft + (xRight - xLeft) / 2 - node.getWidth() / 2;
+			final float width = xRight - xLeft;
+			node.x = xLeft + width / 2 - node.getWidth() / 2;
 		} else {
 			node.x = 0;
 		}
