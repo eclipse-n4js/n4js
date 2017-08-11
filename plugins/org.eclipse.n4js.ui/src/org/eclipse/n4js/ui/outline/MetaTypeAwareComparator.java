@@ -80,6 +80,9 @@ public class MetaTypeAwareComparator implements IComparator {
 				if (!n4node.isStatic) {
 					key += 100;
 				}
+				if (n4node.isConstructor) {
+					key -= 50;
+				}
 			}
 			return key;
 		}

@@ -46,6 +46,10 @@ public class N4JSStylers {
 	 * Color used for styling constructor.
 	 */
 	public final static String CONSTRUCTOR_COLOR_NAME = "org.eclipse.n4js.ui.labeling.CONSTRUCTOR_COLOR";
+	/**
+	 * Color used for styling fields.
+	 */
+	public final static String FIELD_OR_VAR_COLOR_NAME = "org.eclipse.n4js.ui.labeling.FIELD_COLOR";
 
 	static {
 		ColorRegistry colorRegistry = JFaceResources.getColorRegistry();
@@ -53,7 +57,8 @@ public class N4JSStylers {
 		colorRegistry.put(INHERITED_MEMBER_COLOR_NAME, new RGB(180, 180, 255));
 		colorRegistry.put(CONSUMED_MEMBER_COLOR_NAME, new RGB(255, 180, 180));
 		colorRegistry.put(POLYFILLED_MEMBER_COLOR_NAME, new RGB(255, 255, 180));
-		colorRegistry.put(CONSTRUCTOR_COLOR_NAME, new RGB(0, 0, 180));
+		colorRegistry.put(CONSTRUCTOR_COLOR_NAME, new RGB(0, 0, 200));
+		colorRegistry.put(FIELD_OR_VAR_COLOR_NAME, new RGB(148, 82, 0)); // mocha
 	}
 
 	/**
@@ -86,5 +91,11 @@ public class N4JSStylers {
 	 */
 	public final static Styler CONSTRUCTOR_STYLER = StyledString.createColorRegistryStyler(
 			CONSTRUCTOR_COLOR_NAME, null);
+	/**
+	 * Styler used to style fields. Used by {@link StyledTextCalculationHelper#dispatchGetStyledText(Object)} for
+	 * EObjectWithContext.
+	 */
+	public final static Styler FIELD_OR_VAR_STYLER = StyledString.createColorRegistryStyler(
+			FIELD_OR_VAR_COLOR_NAME, null);
 
 }

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.labeling.helper
 
 import com.google.inject.Inject
-import java.util.List
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -21,7 +20,9 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
@@ -34,14 +35,11 @@ import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TSetter
-import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.ui.labeling.N4JSStylers
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
-import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -99,6 +97,7 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(EObjectWithContext objectWithContext) {
 		var StyledString styledText = dispatchGetStyledText(objectWithContext.obj);
+		if (styledText === null) return null;
 
 		val TMember member = if (objectWithContext.obj instanceof N4MemberDeclaration) {
 				(objectWithContext.obj as N4MemberDeclaration).definedTypeElement
@@ -139,26 +138,21 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(TFunction tfunction) {
 		var styledText = getLabelProvider.getSuperStyledText(tfunction);
-		if ("constructor".equals(tfunction.name) && tfunction instanceof TMethod) {
+		if (styledText === null) return null;
+		if (tfunction.constructor) {
 			styledText.setStyle(0, styledText.length, N4JSStylers.CONSTRUCTOR_STYLER)
 		}
 		styledText = styledText.appendStyledTextForFormalParameters(tfunction);
-		styledText = styledText.append(tfunction.typeVars.handleTypeVars);
-		var typeStr = "";
+		if (!tfunction.typeVars.isEmpty()) {
+			styledText.append(tfunction.typeVars.join("<", ", ", ">", [name]))
+		}
 
-		if (!tfunction.constructor && tfunction.returnTypeRef !== null)
-			typeStr = ": " + getTypeRefDescription(tfunction.returnTypeRef)
-
-		styledText = styledText.append(typeStr, N4JSStylers.TYPEREF_STYLER)
+		if (!tfunction.constructor && tfunction.returnTypeRef !== null) {
+			styledText.append(": ");
+			styledText.append(getTypeRefDescription(tfunction.returnTypeRef))
+		}
 
 		return styledText;
-	}
-
-	/**
-	 * produces e.g. <T, U>
-	 */
-	def private handleTypeVars(List<TypeVariable> typeVars) {
-		if (typeVars.size > 0) " <" + typeVars.map[name].join(", ") + ">" else "";
 	}
 
 	/**
@@ -177,6 +171,8 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(TGetter tgetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tgetter);
+		if (styledText === null) return null;
+		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER)
 
 		if (tgetter.declaredTypeRef !== null) {
 			styledText.append(": ");
@@ -201,6 +197,8 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(TSetter tsetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tsetter)
+		if (styledText === null) return null;
+		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER)
 		if (tsetter.fpar !== null && tsetter.fpar !== null) {
 			styledText.append(": ").append(getStyledTextForFormalParameter(tsetter.fpar))
 		}
@@ -222,7 +220,9 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(TField tfield) {
 		var styledText = getLabelProvider.getSuperStyledText(tfield);
-		if (tfield.typeRef !== null && styledText !== null) {
+		if (styledText === null) return null;
+		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER)
+		if (tfield.typeRef !== null) {
 			styledText.append(": ");
 			styledText.append(getTypeRefDescription(tfield.typeRef));
 		}
@@ -234,13 +234,16 @@ class StyledTextCalculationHelper {
 	 */
 	def dispatch StyledString dispatchGetStyledText(ExportedVariableDeclaration variableDeclaration) {
 		var styledText = getLabelProvider.getSuperStyledText(variableDeclaration)
+		if (styledText === null) return null;
+
+		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER);
 		val definedVariable = variableDeclaration.definedVariable
-		var typeRefString = ""
 
-		if (definedVariable?.typeRef !== null)
-			typeRefString = ": " + getTypeRefDescription(definedVariable.typeRef)
+		if (definedVariable?.typeRef !== null) {
+			styledText.append(": ");
+			styledText.append(getTypeRefDescription(definedVariable.typeRef));
+		}
 
-		styledText = styledText?.append(typeRefString)
 		return styledText;
 	}
 
@@ -266,7 +269,7 @@ class StyledTextCalculationHelper {
 	 */
 	def private StyledString getTypeRefDescription(TypeRef ref) {
 		val typeRefDescription = new StyledString(getCompressedTypeRefDescription(ref, 0), N4JSStylers.TYPEREF_STYLER);
-		
+
 		return typeRefDescription;
 	}
 
@@ -316,6 +319,10 @@ class StyledTextCalculationHelper {
 		if (name === null) {
 			return "<unknown>"
 		} else {
+			if (ref.typingStrategy !== null && ref.typingStrategy != TypingStrategy.DEFAULT) {
+				name = ref.typingStrategy + name;
+			}
+
 			if (name.equals("Array") && ref.declaredType.isArrayLike) {
 				name = "[" + ref.typeArgs.join(",", [arg|getTypeRefDescriptionString(arg)]) + "]";
 			} else {
@@ -329,6 +336,9 @@ class StyledTextCalculationHelper {
 	 * produces 'this' for ThisType references
 	 */
 	def dispatch private String getTypeRefDescriptionString(ThisTypeRef ref) {
+		if (ref.typingStrategy !== null && ref.typingStrategy != TypingStrategy.DEFAULT) {
+			return ref.typingStrategy + "this";
+		}
 		return "this";
 	}
 
@@ -344,7 +354,6 @@ class StyledTextCalculationHelper {
 		appendCommaSeparatedTypeRefList(ref.fpars.map[it.typeRef], parameterString, true);
 		result.append(parameterString).toString();
 
-		
 		result.append(") => ");
 		if (ref.returnTypeRef !== null) {
 			result.append(getCompressedTypeRefDescription(ref.returnTypeRef, 0));

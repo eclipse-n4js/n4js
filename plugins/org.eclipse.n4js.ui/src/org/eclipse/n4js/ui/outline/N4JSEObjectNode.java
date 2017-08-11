@@ -47,6 +47,11 @@ public class N4JSEObjectNode extends EObjectNode {
 	public boolean isLocal = false;
 
 	/**
+	 * True iff node represents a constuctor method.
+	 */
+	public boolean isConstructor;
+
+	/**
 	 * Creates this node, required for super call.
 	 */
 	public N4JSEObjectNode(EObject eObject, IOutlineNode parent, ImageDescriptor imageDescriptor, Object text,

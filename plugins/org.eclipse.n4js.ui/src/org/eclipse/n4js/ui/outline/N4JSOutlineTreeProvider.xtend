@@ -174,6 +174,7 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 					node.isStatic = tchild.isStatic;
 					node.isPublic = tchild.memberAccessModifier == MemberAccessModifier.PUBLIC ||
 						tchild.memberAccessModifier == MemberAccessModifier.PUBLIC_INTERNAL
+					node.isConstructor = tchild.isConstructor;
 				}
 
 			}
