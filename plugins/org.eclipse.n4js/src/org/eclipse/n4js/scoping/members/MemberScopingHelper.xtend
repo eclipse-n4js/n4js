@@ -276,7 +276,7 @@ class MemberScopingHelper {
 			val scope = members(elementTypeRef, request);
 			return scope;
 		]
-		var defaultModule = request.context.eResource.contents.get(0) as TModule;
+		var defaultModule = request.context.eResource.contents.get(1) as TModule;
 		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, defaultModule, ts);
 	}
 
