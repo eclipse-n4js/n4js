@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.smith.graph.editoroverlay;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
@@ -76,10 +79,50 @@ public class EditorOverlay implements PaintListener {
 		e.gc.setForeground(green);
 		e.gc.setBackground(green);
 
+		int[] pointArray = getConturePointArray();
+		e.gc.drawPolygon(pointArray);
+	}
+
+	private int[] getConturePointArray() {
 		ITextRegion tr = locFileProvider.getSignificantTextRegion(currentSelection);
-		Point p1 = styledText.getLocationAtOffset(tr.getOffset());
-		Point p2 = styledText.getLocationAtOffset(tr.getOffset() + tr.getLength());
-		int lineHeight = styledText.getLineHeight(tr.getOffset()) - 1;
-		e.gc.drawRectangle(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y + lineHeight);
+		int lineHeight = styledText.getLineHeight(tr.getOffset());
+
+		// Calculate end points for each line
+		List<Point> points = new LinkedList<>();
+		Point sPoint = styledText.getLocationAtOffset(tr.getOffset());
+		Point lPoint = sPoint;
+		int minX = sPoint.x;
+		for (int i = 1; i <= tr.getLength(); i++) {
+			Point p = styledText.getLocationAtOffset(tr.getOffset() + i);
+			minX = Math.min(minX, p.x);
+			if (p.y != lPoint.y) {
+				points.add(lPoint);
+				Point lPointNL = new Point(lPoint.x, lPoint.y + lineHeight);
+				points.add(lPointNL);
+			}
+			lPoint = p;
+		}
+		// Add end points for the last line
+		points.add(lPoint);
+		Point lPointNL = new Point(lPoint.x, lPoint.y + lineHeight);
+		points.add(lPointNL);
+
+		// Prepend the start point
+		sPoint.x = minX;
+		points.add(0, sPoint);
+
+		// Append the end point
+		Point ePoint = new Point(minX, lPoint.y + lineHeight);
+		points.add(ePoint);
+
+		// convert to array
+		int[] pointArray = new int[2 * points.size()];
+		for (int i = 0; i < points.size(); i++) {
+			Point p = points.get(i);
+			pointArray[i * 2] = p.x;
+			pointArray[i * 2 + 1] = p.y;
+		}
+
+		return pointArray;
 	}
 }
