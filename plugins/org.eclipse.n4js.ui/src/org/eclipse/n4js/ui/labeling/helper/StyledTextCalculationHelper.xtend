@@ -174,8 +174,11 @@ class StyledTextCalculationHelper {
 	def dispatch StyledString dispatchGetStyledText(TGetter tgetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tgetter);
 		if (styledText === null) return unknown;
-
 		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER)
+		
+		if (tgetter.isOptional) {
+			styledText.append("?");
+		}
 
 		if (tgetter.declaredTypeRef !== null) {
 			styledText.append(": ");
@@ -201,9 +204,13 @@ class StyledTextCalculationHelper {
 	def dispatch StyledString dispatchGetStyledText(TSetter tsetter) {
 		var styledText = getLabelProvider.getSuperStyledText(tsetter)
 		if (styledText === null) return unknown;
-
 		styledText.setStyle(0, styledText.length, N4JSStylers.FIELD_OR_VAR_STYLER)
-		if (tsetter.fpar !== null && tsetter.fpar !== null) {
+		
+		if (tsetter.isOptional) {
+			styledText.append("?");
+		}
+				
+		if (tsetter.fpar !== null) {
 			styledText.append(": ").append(getStyledTextForFormalParameter(tsetter.fpar))
 		}
 
