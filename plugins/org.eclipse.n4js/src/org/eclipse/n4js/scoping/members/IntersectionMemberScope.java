@@ -15,7 +15,6 @@ import java.util.List;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -32,9 +31,8 @@ public class IntersectionMemberScope extends ComposedMemberScope {
 	 * Constructor
 	 */
 	public IntersectionMemberScope(ComposedTypeRef composedTypeRef, EObject context, List<IScope> subScopes,
-			TModule defaultModule,
 			N4JSTypeSystem ts) {
-		super(composedTypeRef, context, subScopes, defaultModule, ts);
+		super(composedTypeRef, context, subScopes, ts);
 	}
 
 	@Override

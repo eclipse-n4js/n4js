@@ -33,13 +33,15 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.ts.types.ContainerType
+import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TMember
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -52,9 +54,6 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
-import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.n4js.ts.types.PrimitiveType
-import org.eclipse.n4js.ts.types.Type
 
 /**
  */
@@ -261,8 +260,7 @@ class MemberScopingHelper {
 			case 0: return IScope.NULLSCOPE
 			case 1: return subScopes.get(0)
 			default: {
-				var defaultModule = request.context.eResource.contents.get(1) as TModule;
-				return new UnionMemberScope(uniontypeexp, request.context, subScopes, defaultModule, ts)
+				return new UnionMemberScope(uniontypeexp, request.context, subScopes, ts)
 			}
 		}
 	}
@@ -276,8 +274,8 @@ class MemberScopingHelper {
 			val scope = members(elementTypeRef, request);
 			return scope;
 		]
-		var defaultModule = request.context.eResource.contents.get(1) as TModule;
-		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, defaultModule, ts);
+
+		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, ts);
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {
