@@ -238,10 +238,15 @@ public class NpmManager {
 			monitor.setTaskName("Registering new projects... [step 4 of 4]");
 			// nothing to do in the headless case. TODO inject logic instead?
 			if (Platform.isRunning()) {
+				logger.logInfo("Platform is running.");
 				final Iterable<java.net.URI> toBeUpdated = from(adaptedPackages).transform(file -> file.toURI());
 				final NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated,
 						toBeDeleted);
+				logger.logInfo("Call " + externalLibraryWorkspace + " to register " + toBeUpdated + " and de-register "
+						+ toBeDeleted);
 				externalLibraryWorkspace.registerProjects(adaptionResult, monitor);
+			} else {
+				logger.logInfo("Platform is not running.");
 			}
 			logger.logInfo("Finished registering projects.");
 

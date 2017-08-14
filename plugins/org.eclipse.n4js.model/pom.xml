@@ -43,30 +43,6 @@ Contributors:
 				<artifactId>xtend-maven-plugin</artifactId>
 			</plugin>
 
-			<!--
-			The following will deploy this artifact to a temporary maven repository (aka "local build repo").
-			This be used by the N4JS IDE extensions builds to obtain dependencies of the MWE2 workflows. There are several
-			other cases like this; search for "Enable deploy:". THIS IS TEMPORARY AND SHOULD BE CLEANED-UP!
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>${maven-deploy-plugin.version}</version>
-				<!-- Enable deploy: -->
-					<executions>
-						<execution>
-							<id>deploy-to-local-build-repo</id>
-							<!-- rebind to default phase 'deploy' -->
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-							<configuration>
-								<altDeploymentRepository>local-build-repo::default::file:${local-snapshot-deploy-folder}</altDeploymentRepository>
-							</configuration>
-						</execution>
-					</executions>
-			</plugin>
 		</plugins>
 	</build>
 
