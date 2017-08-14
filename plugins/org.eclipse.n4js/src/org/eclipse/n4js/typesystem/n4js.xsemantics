@@ -50,8 +50,24 @@
  * 			Specification. <a href="https://github.com/NumberFour/specs/">https://github.com/NumberFour/specs/</a></dd>
  * </dl>
  */
-system org.eclipse.n4js.xsemantics.InternalTypeSystem validatorExtends AbstractMessageAdjustingN4JSValidator // AbstractN4JSValidator
+system org.eclipse.n4js.xsemantics.InternalTypeSystem
 
+copyright
+"Copyright (c) 2016 NumberFour AG.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+  NumberFour AG - Initial API and implementation"
+
+validatorExtends AbstractMessageAdjustingN4JSValidator // AbstractN4JSValidator
+
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.List
+import org.eclipse.emf.common.util.ECollections
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.misc.DestructureHelper
 import org.eclipse.n4js.n4JS.AdditiveExpression
@@ -181,10 +197,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.List
-import org.eclipse.emf.common.util.ECollections
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.PRIORITY_ERROR
@@ -529,7 +541,7 @@ from {
 rule typeGetterDeclaration
 	G |- GetterDeclaration getter: TypeRef T
 from {
-	if (getter.declaredTypeRef!=null) {
+	if (getter.declaredTypeRef!==null) {
 		T = getter.declaredTypeRef
 	} else {
 		if (getter.definedGetter?.declaredTypeRef!==null) {
@@ -548,7 +560,7 @@ from {
 rule typeSetterDeclaration
 	G |- SetterDeclaration setter: TypeRef T
 from {
-	if (setter.declaredTypeRef!=null) {
+	if (setter.declaredTypeRef!==null) {
 		T = setter.declaredTypeRef
 	}
 
@@ -595,7 +607,7 @@ from {
 		}
 	}
 
-	if (t == null) {
+	if (t === null) {
 		t = G.anyTypeRef;
 	}
 	T = t;
@@ -684,7 +696,7 @@ from {
 			val checkVisibility = false // access modifiers checked in validation
 			val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess)
 			val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess)
-			if(member != null) {
+			if(member !== null) {
 				G |- member : var TypeRef memberTypeRef
 				val G2 = G.wrap
 				typeSystemHelper.addSubstitutions(G2,targetTypeRef)
@@ -795,7 +807,7 @@ from {
 			if ((T as FunctionTypeExprOrRef).returnTypeRef instanceof BoundThisTypeRef) {
 				var TypeRef rawT; G |~ expr ~> rawT;
 				val thisTypeRef = TypeUtils.enforceNominalTyping(rawT);
-				if (T instanceof FunctionTypeExpression && T.eContainer==null) { // avoid creation of new instance
+				if (T instanceof FunctionTypeExpression && T.eContainer===null) { // avoid creation of new instance
 					val fte = T as FunctionTypeExpression
 					fte.returnTypeRef = TypeUtils.copyIfContained(thisTypeRef);
 				} else {
@@ -1280,7 +1292,7 @@ from {
 	val right = G.getReplacement(rightOriginal)
 	val leftDeclType = left.declaredType;
 	val rightDeclType = right.declaredType;
-	if (leftDeclType == null || rightDeclType == null) {
+	if (leftDeclType === null || rightDeclType === null) {
 		true;
 	} else if (leftDeclType.eIsProxy || rightDeclType.eIsProxy) {
 		true;
@@ -1701,7 +1713,7 @@ from {
 		} else {
 			val leftCtor = containerTypesHelper.fromContext(G.contextResource).findConstructor(left_staticType as ContainerType<?>);
 			val rightCtor = containerTypesHelper.fromContext(G.contextResource).findConstructor(right_staticType as ContainerType<?>);
-			leftCtor!=null && rightCtor!=null
+			leftCtor!==null && rightCtor!==null
 
 			// we need the type of the two constructors (i.e. their signature)
 			// DO NOT USE "var leftCtorRef = TypeUtils.createTypeRef(leftCtor)", because this would by-pass the handling
@@ -1873,12 +1885,12 @@ from {
 			var TMethod ctor = containerTypesHelper.fromContext(expr.eResource).findConstructor(typeOfInstanceToCreate)
 
 			val fpar = ctor?.getFparForArgIdx(ECollections.indexOf(expr.arguments, argument, 0));
-			if (fpar==null) {
+			if (fpar===null) {
 				// consequential error or ignored:
 				T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 			} else {
 				val paramType = fpar.typeRef;
-				if (paramType==null) {
+				if (paramType===null) {
 					T = G2.anyTypeRef
 				} else {
 					// bind type variables in function type's parameter type
@@ -1903,12 +1915,12 @@ from {
 			val F = targetTypeRef
 			val argIndex = ECollections.indexOf(expr.arguments, argument, 0);
 			val fpar = F.getFparForArgIdx(argIndex);
-			if (fpar==null) {
+			if (fpar===null) {
 				// consequential error or ignored:
 				T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
 			} else {
 				val paramType = fpar.typeRef;
-				if (paramType==null) {
+				if (paramType===null) {
 					T = G.anyTypeRef
 				} else {
 					val G2 = G.wrap;
@@ -2171,7 +2183,7 @@ rule expectedTypeOfRightSideInVariableDeclaration
 from {
 	// only an explicitly declared type may serve as expected type
 	// (inferred types do not introduce a type expectation because they were derived from the initializer expression, etc.)
-	if (vdecl.declaredTypeRef!=null) {
+	if (vdecl.declaredTypeRef!==null) {
 		T = vdecl.declaredTypeRef
 	}
 	else {
@@ -2190,7 +2202,7 @@ from {
 rule expectedTypeOfRightSideInN4FieldDeclaration
 	G |- N4FieldDeclaration fdecl |> Expression rhs : TypeRef T
 from {
-	if (fdecl.declaredTypeRef!=null) {
+	if (fdecl.declaredTypeRef!==null) {
 		T = fdecl.declaredTypeRef
 	}
 	else {
@@ -2201,7 +2213,7 @@ from {
 rule expectedTypeOfRightSideInPropertyNameValuePair
 	G |- PropertyNameValuePair pnvp |> Expression rhs : TypeRef T
 from {
-	if (pnvp.declaredTypeRef!=null) {
+	if (pnvp.declaredTypeRef!==null) {
 		T = pnvp.declaredTypeRef
 	}
 	else {
@@ -2274,7 +2286,7 @@ from {
 					if(forStmnt.initExpr instanceof IdentifierRef && (forStmnt.initExpr as IdentifierRef).id instanceof VariableDeclaration) {
 						(forStmnt.initExpr as IdentifierRef).id as VariableDeclaration
 					};
-			if(varDeclInFor?.declaredTypeRef!=null || varDeclOutside!==null) {
+			if(varDeclInFor?.declaredTypeRef!==null || varDeclOutside!==null) {
 				val varDecl = if(varDeclOutside!==null) varDeclOutside else varDeclInFor;
 				G |- varDecl : var TypeRef varTypeRef
 				wildThing.declaredUpperBound = TypeUtils.copyIfContained(varTypeRef);
@@ -2581,7 +2593,7 @@ from {
 	}
 	if(haveReplacement) {
 		result = TypeUtils.copy(typeRef);
-		result.cachedComposedMembers.clear();
+		result.composedMemberCache = null;
 		result.originalComposedTypeRef = typeRef;
 		result.typeRefs.clear();
 		result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs));

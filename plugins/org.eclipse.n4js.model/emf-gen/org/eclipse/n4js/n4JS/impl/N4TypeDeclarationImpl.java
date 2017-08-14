@@ -203,8 +203,7 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	 * @generated
 	 */
 	public boolean isExternal() {
-		EList<N4Modifier> _declaredModifiers = this.getDeclaredModifiers();
-		return _declaredModifiers.contains(N4Modifier.EXTERNAL);
+		return this.getDeclaredModifiers().contains(N4Modifier.EXTERNAL);
 	}
 
 	/**
@@ -266,12 +265,11 @@ public abstract class N4TypeDeclarationImpl extends N4TypeDefinitionImpl impleme
 	public boolean isToplevel() {
 		EObject _eContainer = this.eContainer();
 		if ((_eContainer instanceof ExportDeclaration)) {
-			EObject _eContainer_1 = this.eContainer();
-			EObject _eContainer_2 = _eContainer_1.eContainer();
-			return (_eContainer_2 instanceof Script);
+			EObject _eContainer_1 = this.eContainer().eContainer();
+			return (_eContainer_1 instanceof Script);
 		}
-		EObject _eContainer_3 = this.eContainer();
-		return (_eContainer_3 instanceof Script);
+		EObject _eContainer_2 = this.eContainer();
+		return (_eContainer_2 instanceof Script);
 	}
 
 	/**

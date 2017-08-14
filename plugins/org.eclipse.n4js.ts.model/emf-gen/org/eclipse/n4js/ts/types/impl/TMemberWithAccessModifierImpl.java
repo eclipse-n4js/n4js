@@ -25,7 +25,6 @@ import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMemberWithAccessModifier;
 import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 import org.eclipse.n4js.ts.types.util.AccessModifiers;
@@ -157,8 +156,7 @@ public abstract class TMemberWithAccessModifierImpl extends TMemberImpl implemen
 		if (_tripleEquals) {
 			final EObject parent = this.eContainer();
 			if ((parent instanceof TInterface)) {
-				TypeAccessModifier _typeAccessModifier = ((Type) parent).getTypeAccessModifier();
-				final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(_typeAccessModifier);
+				final MemberAccessModifier modifierDerivedFromType = AccessModifiers.toMemberModifier(((Type) parent).getTypeAccessModifier());
 				if ((modifierDerivedFromType != MemberAccessModifier.PRIVATE)) {
 					return modifierDerivedFromType;
 				}

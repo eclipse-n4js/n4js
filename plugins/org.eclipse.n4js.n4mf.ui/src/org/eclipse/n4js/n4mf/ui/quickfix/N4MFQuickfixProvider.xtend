@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.n4mf.ui.quickfix
 
-import org.eclipse.n4js.utils.quickfix.DelegatingQuickfixProvider
+import org.eclipse.n4js.utils.ui.quickfix.DelegatingQuickfixProvider
 
 /**
  * Quickfix provider for N4MF language. Due to code visibility issues it delegates to N4JS implementation as well.

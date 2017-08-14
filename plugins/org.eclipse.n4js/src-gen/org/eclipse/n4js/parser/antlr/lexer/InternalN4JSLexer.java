@@ -17530,7 +17530,7 @@ public class InternalN4JSLexer extends Lexer {
             this.transition = DFA367_transition;
         }
         public String getDescription() {
-            return "()* loopback of 623:26: ( RULE_TEMPLATE_LITERAL_CHAR )*";
+            return "()* loopback of 621:26: ( RULE_TEMPLATE_LITERAL_CHAR )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -17614,7 +17614,7 @@ public class InternalN4JSLexer extends Lexer {
             this.transition = DFA369_transition;
         }
         public String getDescription() {
-            return "()* loopback of 625:45: ( RULE_TEMPLATE_LITERAL_CHAR )*";
+            return "()* loopback of 623:45: ( RULE_TEMPLATE_LITERAL_CHAR )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;
@@ -17700,7 +17700,7 @@ public class InternalN4JSLexer extends Lexer {
             this.transition = DFA372_transition;
         }
         public String getDescription() {
-            return "()* loopback of 627:37: ( RULE_TEMPLATE_LITERAL_CHAR )*";
+            return "()* loopback of 625:37: ( RULE_TEMPLATE_LITERAL_CHAR )*";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;

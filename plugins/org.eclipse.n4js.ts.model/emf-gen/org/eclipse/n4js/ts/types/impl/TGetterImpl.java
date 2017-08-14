@@ -131,8 +131,7 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 	 */
 	public String getMemberAsString() {
 		final StringBuilder strb = new StringBuilder("get ");
-		String _name = this.getName();
-		strb.append(_name);
+		strb.append(this.getName());
 		boolean _isOptional = this.isOptional();
 		if (_isOptional) {
 			strb.append("?");
@@ -141,10 +140,7 @@ public class TGetterImpl extends FieldAccessorImpl implements TGetter {
 		TypeRef _declaredTypeRef = this.getDeclaredTypeRef();
 		boolean _tripleNotEquals = (_declaredTypeRef != null);
 		if (_tripleNotEquals) {
-			StringBuilder _append = strb.append(": ");
-			TypeRef _declaredTypeRef_1 = this.getDeclaredTypeRef();
-			String _typeRefAsString = _declaredTypeRef_1.getTypeRefAsString();
-			_append.append(_typeRefAsString);
+			strb.append(": ").append(this.getDeclaredTypeRef().getTypeRefAsString());
 		}
 		return strb.toString();
 	}

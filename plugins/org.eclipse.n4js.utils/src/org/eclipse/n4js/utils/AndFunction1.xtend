@@ -49,7 +49,6 @@ class AndFunction1<F> implements Function1<F, Boolean> {
 			.build;
 	}
 
-	@Override
 	override apply(F p) {
 		for (f : functions) {
 			if (!f.apply(p)) {

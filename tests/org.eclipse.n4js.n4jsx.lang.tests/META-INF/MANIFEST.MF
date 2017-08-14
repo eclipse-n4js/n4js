@@ -8,7 +8,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Fragment-Host: org.eclipse.n4js.n4jsx
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.workbench;resolution:=optional,
- org.eclipse.xtext.junit4,
+ org.eclipse.xtext.testing,
  org.eclipse.xtext.ui,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xtend.lib,
@@ -16,12 +16,5 @@ Require-Bundle: org.eclipse.core.runtime,
  com.google.guava,
  org.eclipse.n4js.n4jsx.tests.helper,
  org.eclipse.n4js.tests.helper,
- org.eclipse.n4js.tests.ecmatestsuite
-Import-Package: org.apache.log4j,
- org.junit;version="4.5.0",
- org.junit.runner;version="4.5.0",
- org.junit.runner.manipulation;version="4.5.0",
- org.junit.runner.notification;version="4.5.0",
- org.junit.runners;version="4.5.0",
- org.junit.runners.model;version="4.5.0",
- org.hamcrest.core
+ org.eclipse.n4js.tests.ecmatestsuite,
+ org.junit

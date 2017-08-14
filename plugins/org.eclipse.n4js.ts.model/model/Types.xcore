@@ -138,6 +138,11 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 */
 	contains Type[] exposedInternalTypes
 	/**
+	 * Caches for composed members. Not serialized to the Xtext index.
+	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
+	 */
+	contains transient ComposedMemberCache[] composedMemberCaches
+	/**
 	 * Returns the qualified module name as a file path, using '/' as a segment delimiter. No file extension is added,
 	 * though.
 	 * <p>
@@ -148,6 +153,14 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	derived String moduleSpecifier get {
 		return qualifiedName
 	}
+}
+
+/**
+ * A cache for composed members. Not serialized to the Xtext index.
+ * See {@link ComposedTypeRef#composedMemberCache()} for details.
+ */
+class ComposedMemberCache {
+	contains transient TMember[] cachedComposedMembers
 }
 
 /*
@@ -1010,6 +1023,9 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
 	boolean declaredOverride
 
 	boolean hasComputedName
+
+	/** Tells if this member is a composed member created by {@code ComposedMemberFactory}. */
+	boolean composed
 
 	/**
 	 * Convenience method, returns the container casted to a container type or 'null'

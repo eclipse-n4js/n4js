@@ -177,8 +177,7 @@ public class TypeTypeRefImpl extends BaseTypeRefImpl implements TypeTypeRef {
 			_xifexpression_1 = "";
 		}
 		else {
-			TypeArgument _typeArg_1 = this.getTypeArg();
-			_xifexpression_1 = _typeArg_1.getTypeRefAsString();
+			_xifexpression_1 = this.getTypeArg().getTypeRefAsString();
 		}
 		final String refName = _xifexpression_1;
 		String _modifiersAsString = this.getModifiersAsString();

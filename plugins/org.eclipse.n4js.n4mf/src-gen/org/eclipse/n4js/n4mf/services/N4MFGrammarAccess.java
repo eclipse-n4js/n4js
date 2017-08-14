@@ -1159,9 +1159,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cProjectAssignment = (Assignment)rule.eContents().get(1);
 		private final RuleCall cProjectSimpleProjectDescriptionParserRuleCall_0 = (RuleCall)cProjectAssignment.eContents().get(0);
 		
-		/// *
+		///*
 		// * scope is optional, default scope is compile
-		// * / ProjectReference:
+		// */ ProjectReference:
 		//	project=SimpleProjectDescription;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -1181,9 +1181,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cDeclaredScopeAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cDeclaredScopeProjectDependencyScopeEnumRuleCall_2_0 = (RuleCall)cDeclaredScopeAssignment_2.eContents().get(0);
 		
-		/// *
+		///*
 		// * scope is optional, default scope is compile
-		// * / ProjectDependency:
+		// */ ProjectDependency:
 		//	project=SimpleProjectDescription
 		//	versionConstraint=VersionConstraint?
 		//	declaredScope=ProjectDependencyScope?;
@@ -1220,9 +1220,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cProjectIdAssignment_1 = (Assignment)cGroup.eContents().get(1);
 		private final RuleCall cProjectIdN4mfIdentifierParserRuleCall_1_0 = (RuleCall)cProjectIdAssignment_1.eContents().get(0);
 		
-		/// *
+		///*
 		// * vendorN4mfIdentifier is optional, if it is not specified, vendor id of current project is used.
-		// * / SimpleProjectDescription:
+		// */ SimpleProjectDescription:
 		//	(declaredVendorId=N4mfIdentifier ':')? projectId=N4mfIdentifier;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -1270,9 +1270,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		private final Assignment cLowerVersionAssignment_1 = (Assignment)cAlternatives.eContents().get(1);
 		private final RuleCall cLowerVersionDeclaredVersionParserRuleCall_1_0 = (RuleCall)cLowerVersionAssignment_1.eContents().get(0);
 		
-		/// *
+		///*
 		// * If no version range is specified, lower version is inclusive.
-		// * / VersionConstraint:
+		// */ VersionConstraint:
 		//	(exclLowerBound?='(' | '[') lowerVersion=DeclaredVersion ((',' upperVersion=DeclaredVersion (exclUpperBound?=')' |
 		//	']'))? | ')') | lowerVersion=DeclaredVersion;
 		@Override public ParserRule getRule() { return rule; }
@@ -1285,7 +1285,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//']'))? | ')')
 		public Group getGroup_0() { return cGroup_0; }
 		
-		//(exclLowerBound?='(' | '[')
+		//exclLowerBound?='(' | '['
 		public Alternatives getAlternatives_0_0() { return cAlternatives_0_0; }
 		
 		//exclLowerBound?='('
@@ -1303,7 +1303,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//DeclaredVersion
 		public RuleCall getLowerVersionDeclaredVersionParserRuleCall_0_1_0() { return cLowerVersionDeclaredVersionParserRuleCall_0_1_0; }
 		
-		//((',' upperVersion=DeclaredVersion (exclUpperBound?=')' | ']'))? | ')')
+		//(',' upperVersion=DeclaredVersion (exclUpperBound?=')' | ']'))? | ')'
 		public Alternatives getAlternatives_0_2() { return cAlternatives_0_2; }
 		
 		//(',' upperVersion=DeclaredVersion (exclUpperBound?=')' | ']'))?
@@ -1318,7 +1318,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		//DeclaredVersion
 		public RuleCall getUpperVersionDeclaredVersionParserRuleCall_0_2_0_1_0() { return cUpperVersionDeclaredVersionParserRuleCall_0_2_0_1_0; }
 		
-		//(exclUpperBound?=')' | ']')
+		//exclUpperBound?=')' | ']'
 		public Alternatives getAlternatives_0_2_0_2() { return cAlternatives_0_2_0_2; }
 		
 		//exclUpperBound?=')'
@@ -2004,9 +2004,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getTestedProjectAccess().getRule();
 	}
 	
-	/// *
+	///*
 	// * scope is optional, default scope is compile
-	// * / ProjectReference:
+	// */ ProjectReference:
 	//	project=SimpleProjectDescription;
 	public ProjectReferenceElements getProjectReferenceAccess() {
 		return pProjectReference;
@@ -2016,9 +2016,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getProjectReferenceAccess().getRule();
 	}
 	
-	/// *
+	///*
 	// * scope is optional, default scope is compile
-	// * / ProjectDependency:
+	// */ ProjectDependency:
 	//	project=SimpleProjectDescription
 	//	versionConstraint=VersionConstraint?
 	//	declaredScope=ProjectDependencyScope?;
@@ -2030,9 +2030,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getProjectDependencyAccess().getRule();
 	}
 	
-	/// *
+	///*
 	// * vendorN4mfIdentifier is optional, if it is not specified, vendor id of current project is used.
-	// * / SimpleProjectDescription:
+	// */ SimpleProjectDescription:
 	//	(declaredVendorId=N4mfIdentifier ':')? projectId=N4mfIdentifier;
 	public SimpleProjectDescriptionElements getSimpleProjectDescriptionAccess() {
 		return pSimpleProjectDescription;
@@ -2042,9 +2042,9 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getSimpleProjectDescriptionAccess().getRule();
 	}
 	
-	/// *
+	///*
 	// * If no version range is specified, lower version is inclusive.
-	// * / VersionConstraint:
+	// */ VersionConstraint:
 	//	(exclLowerBound?='(' | '[') lowerVersion=DeclaredVersion ((',' upperVersion=DeclaredVersion (exclUpperBound?=')' |
 	//	']'))? | ')') | lowerVersion=DeclaredVersion;
 	public VersionConstraintElements getVersionConstraintAccess() {
@@ -2106,7 +2106,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 		return getN4mfIdentifierAccess().getRule();
 	}
 	
-	//terminal ID:
+	//@ Override terminal ID:
 	//	'^'? ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '-' | '.' | '0'..'9')*;
 	public TerminalRule getIDRule() {
 		return tID;
@@ -2126,7 +2126,7 @@ public class N4MFGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//terminal ML_COMMENT:
-	//	'/ *'->'* /';
+	//	'/*'->'*/';
 	public TerminalRule getML_COMMENTRule() {
 		return gaTerminals.getML_COMMENTRule();
 	}

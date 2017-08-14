@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.tests.builder;
 
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.monitor;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -34,6 +34,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -55,14 +59,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import com.google.inject.Injector;
 
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.tests.util.ProjectUtils;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-
 /**
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
 	private ResourceSet resourceSet = null;
 
@@ -179,6 +177,16 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		IFile file = folder.getFile(fullName);
 		file.create(new StringInputStream(content.toString()), true, monitor());
 		waitForAutoBuild();
+		return file;
+	}
+
+	/**
+	 * Changes content of an existing file to the given {@link CharSequence}.
+	 */
+	@SuppressWarnings("resource")
+	protected IFile changeTestFile(IFile file, CharSequence newContent) throws CoreException {
+		assertTrue("test file should exist", file.exists());
+		file.setContents(new StringInputStream(newContent.toString()), true, true, monitor());
 		return file;
 	}
 

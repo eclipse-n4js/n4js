@@ -418,8 +418,7 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 			TFunction _declaredType = this.getDeclaredType();
 			boolean _tripleNotEquals = (_declaredType != null);
 			if (_tripleNotEquals) {
-				TFunction _declaredType_1 = this.getDeclaredType();
-				_xifexpression_1 = _declaredType_1.getTypeVars();
+				_xifexpression_1 = this.getDeclaredType().getTypeVars();
 			}
 			else {
 				_xifexpression_1 = this.getOwnedTypeVars();
@@ -438,11 +437,9 @@ public class FunctionTypeExpressionImpl extends FunctionTypeExprOrRefImpl implem
 		if ((typeVar == null)) {
 			throw new IllegalArgumentException("given type variable may not be null");
 		}
-		EList<TypeVariable> _unboundTypeVars = this.getUnboundTypeVars();
-		final int idx = _unboundTypeVars.indexOf(typeVar);
+		final int idx = this.getUnboundTypeVars().indexOf(typeVar);
 		if (((idx >= 0) && (idx < this.getUnboundTypeVarsUpperBounds().size()))) {
-			EList<TypeRef> _unboundTypeVarsUpperBounds = this.getUnboundTypeVarsUpperBounds();
-			final TypeRef modifiedUpperBound = _unboundTypeVarsUpperBounds.get(idx);
+			final TypeRef modifiedUpperBound = this.getUnboundTypeVarsUpperBounds().get(idx);
 			if ((modifiedUpperBound != null)) {
 				return modifiedUpperBound;
 			}

@@ -155,30 +155,6 @@ Contributors:
 					<!-- successCodes>0</successCodes -->
 				</configuration>
 			</plugin>
-			<!-- possibly have to publish the artifact? -->
-			<!--  plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>1.9.1</version>
-				<executions>
-					<execution>
-						<id>attach-artifacts</id>
-						<phase>package</phase>
-						<goals>
-							<goal>attach-artifact</goal>
-						</goals>
-						<configuration>
-							<artifacts>
-								<artifact>
-									<file></file>
-									<type>extension of your file </type>
-									<classifier>optional</classifier>
-								</artifact>
-							</artifacts>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -188,47 +164,7 @@ Contributors:
 					<target>${jdk-version}</target>
 				</configuration>
 			</plugin>
-			<!-- Publish test-jar with shared test-helper classes -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-<!-- 					<configuration> -->
-<!-- 						<systemProperties> -->
-<!-- 							<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH> -->
-<!-- 							<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath> -->
-<!-- 						</systemProperties> -->
-<!-- 					</configuration> -->
-				<version>2.6</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>**/*</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>${maven-surefire-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>default-test</id>
-						<configuration>
-							<systemProperties>
-								<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-								<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-							</systemProperties>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 
 			<!--
 			The following will deploy this artifact to a temporary maven repository (aka "local build repo").
@@ -289,86 +225,7 @@ Contributors:
 		</pluginManagement>
 	</build>
 
-	<profiles>
-		<profile>
-			<id>noTests</id>
-			<activation>
-				<property>
-					<name>noTests</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>default-testCompile</id>
-								<phase>none</phase>
-								<configuration>
-									<systemProperties>
-										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-									</systemProperties>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>${maven-resources-plugin.version}</version>
-						<executions>
-							<execution>
-								<id>default-testResources</id>
-								<phase>none</phase>
-								<configuration>
-									<systemProperties>
-										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-									</systemProperties>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
-						<version>${maven-surefire-plugin.version}</version>
-						<executions>
-							<execution>
-								<id>default-test</id>
-								<phase>none</phase>
-								<configuration>
-									<systemProperties>
-										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-									</systemProperties>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>exec-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>it-of-n4js-compiler-command</id>
-								<phase>none</phase>
-								<configuration>
-									<systemProperties>
-										<NODEJS_PATH>${NODEJS_PATH}</NODEJS_PATH>
-										<org.eclipse.n4js.defaultNodePath>${org.eclipse.n4js.defaultNodePath}</org.eclipse.n4js.defaultNodePath>
-									</systemProperties>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+
 
 
 
@@ -545,59 +402,32 @@ Contributors:
 			<version>${xtext.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>args4j</groupId>
-			<artifactId>args4j</artifactId>
-			<version>2.0.21</version>
+  		  <groupId>args4j</groupId>
+  		  <artifactId>args4j</artifactId>
+  		  <version>2.0.31</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-maven-plugin</artifactId>
 			<version>9.2.9.v20150224</version>
 		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>org.eclipse.equinox.common</artifactId>
-			<version>[3.6.0,)</version>
-		</dependency>
 		<!-- Missing IWorkspcae -->
 		<dependency>
-			<groupId>org.eclipse.core</groupId>
+			<groupId>org.eclipse.platform</groupId>
 			<artifactId>org.eclipse.core.resources</artifactId>
-			<version>[3.7.100,)</version>
-		</dependency>
-		<!-- Missing org.eclipse.core.runtime.jobs.ISchedulingRule -->
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.jobs</artifactId>
-			<version>[3.5.100,)</version>
+			<version>${org.eclipse.core.resources-version}</version>
 		</dependency>
 		<!-- xsemantics -->
 		<dependency>
 			<groupId>net.sf.xsemantics</groupId>
 			<artifactId>it.xsemantics.dsl</artifactId>
-			<version>1.9.0</version>
-		</dependency>
-		<!-- java.lang.ClassNotFoundException: org.osgi.framework.BundleException -->
-		<dependency>
-			<groupId>org.eclipse.osgi</groupId>
-			<artifactId>org.eclipse.osgi</artifactId>
-			<version>[3.7.1,)</version>
+			<version>1.12.0</version>
 		</dependency>
 		<!-- Xcore lib -->
 		<dependency>
 			<groupId>org.eclipse.emf</groupId>
 			<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
 			<version>${org.eclipse.emf.ecore.xcore.lib-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.core</groupId>
-			<artifactId>org.eclipse.core.runtime</artifactId>
-			<version>[3.7.0,)</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.equinox</groupId>
-			<artifactId>org.eclipse.equinox.registry</artifactId>
-			<version>[3.5.100,)</version>
 		</dependency>
 <!--  Smaller version of com.ibm.icu - base path only :
 		<dependency>
@@ -627,17 +457,6 @@ Contributors:
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>[15.0.0]</version>
-		</dependency>
-
-		<!-- # # Below are dependencies which don't go into the jar # # # # # # 
-			# # # # # # # # # # # # # # # # # # They are required for testing. -->
-		<!-- JUnit is required for compiling the tests It will not be copied to 
-			the jar -->
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

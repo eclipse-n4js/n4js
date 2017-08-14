@@ -11,8 +11,8 @@
 package org.eclipse.n4js.tests.projectModel;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.xtext.junit4.InjectWith;
-import org.eclipse.xtext.junit4.XtextRunner;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.junit.runner.RunWith;
 

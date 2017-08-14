@@ -6,9 +6,9 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Fragment-Host: org.eclipse.n4js.transpiler.es
-Require-Bundle: org.xpect.xtext.lib;bundle-version="0.1.0",
+Require-Bundle: org.xpect.xtext.lib;bundle-version="0.2.0",
  org.eclipse.core.runtime,
- org.eclipse.xtext.junit4,
+ org.eclipse.xtext.testing,
  org.eclipse.emf.codegen.ecore,
  it.xsemantics.runtime,
  org.eclipse.n4js.utils,
@@ -22,6 +22,5 @@ Require-Bundle: org.xpect.xtext.lib;bundle-version="0.1.0",
  org.eclipse.emf.ecore.xcore;bundle-version="1.1.2",
  org.eclipse.emf.ecore.xcore.lib;bundle-version="1.0.0",
  org.eclipse.n4js.generator.common,
- org.eclipse.n4js.environments,
  org.eclipse.n4js.generator,
  org.eclipse.n4js.transpiler

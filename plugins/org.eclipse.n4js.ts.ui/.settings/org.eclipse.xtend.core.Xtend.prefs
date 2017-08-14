@@ -1,4 +1,5 @@
 .version=1
+ValidatorConfiguration.is_project_specific=true
 autobuilding=true
 blank.line.around.expressions=0
 blank.lines.after.imports=1
@@ -25,6 +26,7 @@ newline.after.method.annotations=false
 newline.after.parameter.annotations=false
 org.eclipse.xtend.core.validation.IssueCodes.java_doc_linking=warning
 org.eclipse.xtend.ide.default.eclipse_profile=_N4JS
+org.eclipse.xtext.xbase.validation.IssueCodes.discouraged_reference=ignore
 org.eclipse.xtext.xbase.validation.IssueCodes.equals_with_null=warning
 org.eclipse.xtext.xbase.validation.IssueCodes.unhandled_exception=warning
 outlet.DEFAULT_OUTPUT.cleanDirectory=false

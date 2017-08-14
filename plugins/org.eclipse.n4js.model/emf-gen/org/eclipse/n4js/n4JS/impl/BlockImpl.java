@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
 
 import com.google.common.collect.Iterators;
@@ -23,7 +22,6 @@ import java.util.Iterator;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -122,8 +120,7 @@ public class BlockImpl extends StatementImpl implements Block {
 				return (!(it instanceof FunctionDefinition));
 			}
 		};
-		TreeIterator<EObject> _allContentsFiltered = EcoreUtilN4.getAllContentsFiltered(this, _function);
-		return Iterators.<Expression>filter(_allContentsFiltered, Expression.class);
+		return Iterators.<Expression>filter(EcoreUtilN4.getAllContentsFiltered(this, _function), Expression.class);
 	}
 
 	/**
@@ -132,8 +129,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public Iterator<YieldExpression> getAllYieldExpressions() {
-		Iterator<Expression> _allExpressions = this.getAllExpressions();
-		return Iterators.<YieldExpression>filter(_allExpressions, YieldExpression.class);
+		return Iterators.<YieldExpression>filter(this.getAllExpressions(), YieldExpression.class);
 	}
 
 	/**
@@ -142,14 +138,13 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public Iterator<YieldExpression> getAllVoidYieldExpressions() {
-		Iterator<YieldExpression> _allYieldExpressions = this.getAllYieldExpressions();
 		final Function1<YieldExpression, Boolean> _function = new Function1<YieldExpression, Boolean>() {
 			public Boolean apply(final YieldExpression it) {
 				Expression _expression = it.getExpression();
-				return Boolean.valueOf(Objects.equal(_expression, null));
+				return Boolean.valueOf((_expression == null));
 			}
 		};
-		return IteratorExtensions.<YieldExpression>filter(_allYieldExpressions, _function);
+		return IteratorExtensions.<YieldExpression>filter(this.getAllYieldExpressions(), _function);
 	}
 
 	/**
@@ -158,14 +153,13 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public Iterator<YieldExpression> getAllNonVoidYieldExpressions() {
-		Iterator<YieldExpression> _allYieldExpressions = this.getAllYieldExpressions();
 		final Function1<YieldExpression, Boolean> _function = new Function1<YieldExpression, Boolean>() {
 			public Boolean apply(final YieldExpression it) {
 				Expression _expression = it.getExpression();
-				return Boolean.valueOf((!Objects.equal(_expression, null)));
+				return Boolean.valueOf((_expression != null));
 			}
 		};
-		return IteratorExtensions.<YieldExpression>filter(_allYieldExpressions, _function);
+		return IteratorExtensions.<YieldExpression>filter(this.getAllYieldExpressions(), _function);
 	}
 
 	/**
@@ -174,8 +168,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public boolean hasNonVoidYield() {
-		Iterator<YieldExpression> _allNonVoidYieldExpressions = this.getAllNonVoidYieldExpressions();
-		boolean _isEmpty = IteratorExtensions.isEmpty(_allNonVoidYieldExpressions);
+		boolean _isEmpty = IteratorExtensions.isEmpty(this.getAllNonVoidYieldExpressions());
 		return (!_isEmpty);
 	}
 
@@ -190,8 +183,7 @@ public class BlockImpl extends StatementImpl implements Block {
 				return (!((it instanceof Expression) || (it instanceof FunctionDefinition)));
 			}
 		};
-		TreeIterator<EObject> _allContentsFiltered = EcoreUtilN4.getAllContentsFiltered(this, _function);
-		return Iterators.<Statement>filter(_allContentsFiltered, Statement.class);
+		return Iterators.<Statement>filter(EcoreUtilN4.getAllContentsFiltered(this, _function), Statement.class);
 	}
 
 	/**
@@ -200,8 +192,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public Iterator<ReturnStatement> getAllReturnStatements() {
-		Iterator<Statement> _allStatements = this.getAllStatements();
-		return Iterators.<ReturnStatement>filter(_allStatements, ReturnStatement.class);
+		return Iterators.<ReturnStatement>filter(this.getAllStatements(), ReturnStatement.class);
 	}
 
 	/**
@@ -210,14 +201,13 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public Iterator<ReturnStatement> getAllNonVoidReturnStatements() {
-		Iterator<ReturnStatement> _allReturnStatements = this.getAllReturnStatements();
 		final Function1<ReturnStatement, Boolean> _function = new Function1<ReturnStatement, Boolean>() {
 			public Boolean apply(final ReturnStatement it) {
 				Expression _expression = it.getExpression();
-				return Boolean.valueOf((!Objects.equal(_expression, null)));
+				return Boolean.valueOf((_expression != null));
 			}
 		};
-		return IteratorExtensions.<ReturnStatement>filter(_allReturnStatements, _function);
+		return IteratorExtensions.<ReturnStatement>filter(this.getAllReturnStatements(), _function);
 	}
 
 	/**
@@ -226,14 +216,13 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public Iterator<ReturnStatement> getAllVoidReturnStatements() {
-		Iterator<ReturnStatement> _allReturnStatements = this.getAllReturnStatements();
 		final Function1<ReturnStatement, Boolean> _function = new Function1<ReturnStatement, Boolean>() {
 			public Boolean apply(final ReturnStatement it) {
 				Expression _expression = it.getExpression();
-				return Boolean.valueOf(Objects.equal(_expression, null));
+				return Boolean.valueOf((_expression == null));
 			}
 		};
-		return IteratorExtensions.<ReturnStatement>filter(_allReturnStatements, _function);
+		return IteratorExtensions.<ReturnStatement>filter(this.getAllReturnStatements(), _function);
 	}
 
 	/**
@@ -242,8 +231,7 @@ public class BlockImpl extends StatementImpl implements Block {
 	 * @generated
 	 */
 	public boolean hasNonVoidReturn() {
-		Iterator<ReturnStatement> _allNonVoidReturnStatements = this.getAllNonVoidReturnStatements();
-		boolean _isEmpty = IteratorExtensions.isEmpty(_allNonVoidReturnStatements);
+		boolean _isEmpty = IteratorExtensions.isEmpty(this.getAllNonVoidReturnStatements());
 		return (!_isEmpty);
 	}
 

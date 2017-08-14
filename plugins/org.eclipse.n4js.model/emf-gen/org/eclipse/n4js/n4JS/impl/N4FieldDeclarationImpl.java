@@ -394,8 +394,7 @@ public class N4FieldDeclarationImpl extends AnnotableN4MemberDeclarationImpl imp
 	 * @generated
 	 */
 	public boolean isConst() {
-		EList<N4Modifier> _declaredModifiers = this.getDeclaredModifiers();
-		return _declaredModifiers.contains(N4Modifier.CONST);
+		return this.getDeclaredModifiers().contains(N4Modifier.CONST);
 	}
 
 	/**

@@ -71,7 +71,6 @@ public class PlaceholderReplacerTest {
 				"rulePrimaryExpression.java.replacement" }) {
 			new PlaceholderReplacer(s);
 		}
-
 	}
 
 	void assertReplacement(String expectedOutput, String in, String pattern, String replacement) {
@@ -89,7 +88,6 @@ public class PlaceholderReplacerTest {
 		} catch (IllegalStateException ex) {
 			assertTrue(ex.getMessage().startsWith("Pattern not found!"));
 		}
-
 	}
 
 }

@@ -17,6 +17,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IResourceStatus;
@@ -50,6 +51,7 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
@@ -57,6 +59,7 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
@@ -74,6 +77,7 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
+import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -303,6 +307,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		boolean wasDeliver = eDeliver();
 		try {
+			UtilN4.tlog(getURI());
+
 			eSetDeliver(false);
 			ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
 			if (!theContents.isEmpty())
@@ -491,6 +497,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		((ModuleAwareContentsList) contents).sneakyAdd(object);
 	}
 
+	@Override
+	public void update(int offset, int replacedTextLength, String newText) {
+		ASTProcessor.resetCycliclyDependentResourcesOf(this);
+		super.update(offset, replacedTextLength, newText);
+	}
+
 	/**
 	 * Overridden to make sure that the cache is initialized during {@link #isLoading() loading}.
 	 */
@@ -528,9 +540,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
+		UtilN4.tlog(getURI());
 		if (contents != null && !contents.isEmpty())
 			discardStateFromDescription();
 		super.doLoad(inputStream, options);
+		UtilN4.tlog("DONE");
 	}
 
 	@Override
@@ -752,7 +766,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				final Resource targetResource = resSet.getResource(targetResourceUri, false);
 				// special handling #1:
 				// if targetResource is not loaded yet, try to load it from index first
-				if (targetResource == null) {
+				// (EXCEPT: in case of a cyclic dependency between 'this' and targetResource, we need to load from
+				// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we
+				// already know contextResource depends on resourceURI)
+				// FIXME GH-66 but what if 'this' is not currently being processed? (e.g. after loading this from index)
+				final boolean isCycliclyDependentTargetResource = isBackwardDependentResource(targetResourceUri);
+				if (targetResource == null && !isCycliclyDependentTargetResource) {
 					if (targetFragment != null && (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
 						// uri points to a TModule element in a resource not yet contained in our resource set
 						// --> try to load target resource from index
@@ -788,6 +807,39 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// b) targetUri points to an n4ts resource or some other, non-N4JS resource
 		// --> above special handling not required, so just apply EMF's default resolution behavior
 		return EcoreUtil.resolve(proxy, this);
+	}
+
+	@Override
+	protected EObject getEObject(String uriFragment, Triple<EObject, EReference, INode> triple) throws AssertionError {
+		// TODO Auto-generated method stub
+		return super.getEObject(uriFragment, triple);
+	}
+
+	/**
+	 * Tells if the receiving resource is among the dependencies of the resource represented by the given URI. For a
+	 * definition of "dependencies", see {@link UserdataMapper#readDependenciesFromDescription(IResourceDescription)}.
+	 */
+	public boolean isBackwardDependentResource(URI targetResourceUri) {
+		final ResourceSet resSet = getResourceSet();
+		if (!targetResourceUri.equals(getURI())
+				&& n4jsCore.isInSameProject(targetResourceUri, getURI())) {
+			final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet); // FIXME GH-66
+			final IResourceDescription targetResourceDesc = index.getResourceDescription(targetResourceUri);
+			if (targetResourceDesc != null) {
+				final Optional<Set<URI>> targetResourceDeps = UserdataMapper.readDependenciesFromDescription(
+						targetResourceDesc, true, index);
+				if (targetResourceDeps.isPresent()) {
+					if (targetResourceDeps.get().contains(getURI())) {
+						return true;
+					}
+				} else {
+					// dependency information in index is incomplete (see API doc of #readDependenciesFromDescription())
+					// -> assume the target resource is backward dependent (to be on the safe side)
+					return true; // FIXME GH-66 this might be a performance leak; reconsider!!
+				}
+			}
+		}
+		return false;
 	}
 
 	/**

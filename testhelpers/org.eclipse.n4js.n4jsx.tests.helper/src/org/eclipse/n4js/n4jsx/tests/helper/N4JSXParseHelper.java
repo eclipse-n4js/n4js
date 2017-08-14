@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.n4jsx.tests.helper;
 
-import org.eclipse.xtext.junit4.util.ParseHelper;
-import org.eclipse.xtext.junit4.util.ResourceHelper;
+import org.eclipse.xtext.testing.util.ParseHelper;
+import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.eclipse.xtext.resource.FileExtensionProvider;
 import org.junit.Assert;
 

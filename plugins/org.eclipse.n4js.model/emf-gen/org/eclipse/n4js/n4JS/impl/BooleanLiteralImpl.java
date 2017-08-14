@@ -104,8 +104,7 @@ public class BooleanLiteralImpl extends LiteralImpl implements BooleanLiteral {
 	 * @generated
 	 */
 	public String getValueAsString() {
-		boolean _isTrue = this.isTrue();
-		return Boolean.toString(_isTrue);
+		return Boolean.toString(this.isTrue());
 	}
 
 	/**

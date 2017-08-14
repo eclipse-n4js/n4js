@@ -31,7 +31,7 @@ var x = new Class1().someField . someField . someField.someField.someField.someF
 
 
 
-/* XPECT FIXME formattedLines 1 ---
+/* XPECT formattedLines 1 ---
 var z = new YStuff().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m234567890().m("012")
 	.m234567890().m234567890();
 --- */

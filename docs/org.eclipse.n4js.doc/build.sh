@@ -36,7 +36,6 @@ echo copying resources to ./$GEN_FOLDER/
 
 rm -rf ./$GEN_FOLDER/; mkdir ./$GEN_FOLDER/ 
 cp -r ./res/scripts ./res/styles ./src/articles ./src/faq ./src/features ./src/images ./src/releases  ./src/userguides ./$GEN_FOLDER/
-cp ./src/index.html ./$GEN_FOLDER/index.html 
 
 pushd src
 	FILES=`find .  -name "*.adoc" ! -name 'config.adoc' -print`
@@ -45,23 +44,15 @@ popd
 # Rundoc function to convert source files to HTML. Attributes are passed with the '-a' flag.
 for f in $FILES; 
 do 
-	# If Jenkins is building, then use AsciiSpec
-	# otherwise, use AsciiDoctor
-	if [ "${1}" == "--jenkins" ]; then
-		echo "Terminate running but possibly outdated asciispec server..."
-		asciispec term
-		ASPEC=asciispec
-	else
-		ASPEC=asciidoctor
-	fi
 
+	ASPEC=asciidoctor
 	ADOC_FILE=src/$f
 	REL_PATH="${f//\.\//}"
 	REL_PATH="${REL_PATH//[^\/]/}"
 	REL_PATH="${REL_PATH//[\/]/../}"
 	HEADER_DIR=$(basename $(dirname $f))
 	OUT_FOLDER=./$GEN_FOLDER/$(dirname $f)
-	ATTRS="-a doctype=book -a experimental=true -a stylesheet=n4js-adoc.css -a sectlinks -a docinfo1=true -a linkcss=true -a !source-highlighter -a reproducible -a icons=font"
+	ATTRS="-a doctype=book -a experimental=true -a sectlinks -a docinfo1=true -a linkcss=true -a !source-highlighter -a reproducible -a icons=font -a !webfonts"
 
 	echo running $ASPEC on $ADOC_FILE to $OUT_FOLDER
 
@@ -82,6 +73,6 @@ if [ "${1}" == "--jenkins" ]; then
 	exit 0
 # Add -p flag to launch pages after build
 elif [ "${1}" == "--preview" ] || [ "${1}" == "-p" ]; then
-	open ./$GEN_FOLDER/index.html
+	open ./$GEN_FOLDER/userguides/index.html
 	exit 0
 fi

@@ -12,6 +12,11 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.ArrayList
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.CatchBlock
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
@@ -45,12 +50,8 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.ArrayList
-import java.util.List
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
@@ -108,6 +109,8 @@ public class ASTProcessor extends AbstractProcessor {
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
+UtilN4.tlog(resource.URI);
+
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be
 		// interpreted as a cyclic proxy resolution by method LazyLinkingResource#getEObject(String,Triple)
@@ -135,6 +138,8 @@ public class ASTProcessor extends AbstractProcessor {
 				log(4, resource.script, cache);
 			}
 			log(0, "### done: " + resource.URI);
+
+UtilN4.tlog("DONE " + resource.URI);
 		}
 	}
 
@@ -470,6 +475,35 @@ public class ASTProcessor extends AbstractProcessor {
 
 	// ---------------------------------------------------------------------------------------------------------------
 
+
+	// FIXME GH-66 clean up: move this somewhere else
+	/**
+	 * Resets all resources R from the containing resource set that have a cyclic dependency with the given resource, as
+	 * follows: if R was loaded from the Xtext index, it is unloaded; if R was loaded from AST its derived state is
+	 * discarded.
+	 * <p>
+	 * BACKGROUND: this method has to be invoked before any actual post-processing of the given resource starts, because
+	 * otherwise, during the processing of the given resource, we might end up using TModule information that was
+	 * derived from the resource we are currently processing and is thus out-dated.
+	 */
+	def public static void resetCycliclyDependentResourcesOf(N4JSResource resource) {
+		for(otherResource : resource.getResourceSet().getResources()) {
+			if(otherResource!==resource) {
+				if(otherResource instanceof N4JSResource) {
+					if(otherResource.isFullyProcessed) {
+						if(resource.isBackwardDependentResource(otherResource.URI)
+								&& otherResource.isBackwardDependentResource(resource.URI)) {
+							if(otherResource.isLoadedFromDescription) {
+								otherResource.unload;
+							} else {
+								otherResource.discardDerivedState;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Normally, forward references are allowed only to {@link N4JSLanguageUtils#isIdentifiableSubtree(EObject)

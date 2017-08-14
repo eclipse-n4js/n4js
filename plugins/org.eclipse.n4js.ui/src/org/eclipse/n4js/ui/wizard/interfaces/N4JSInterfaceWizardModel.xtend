@@ -24,7 +24,6 @@ import org.eclipse.n4js.utils.beans.PropertyChangeSupport
 class N4JSInterfaceWizardModel extends N4JSClassifierWizardModel
 	implements InterfacesContainingModel, AccessModifiableModel, NamedModel, DefinitionFileModel {
 
-	@Override
 	override getClassifierName() {
 		return 'interface';
 	}

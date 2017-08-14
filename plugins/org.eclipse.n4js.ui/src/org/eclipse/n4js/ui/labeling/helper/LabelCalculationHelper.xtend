@@ -14,19 +14,24 @@ import org.eclipse.n4js.n4JS.ExportedVariableStatement
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
+import org.eclipse.n4js.n4JS.N4MemberDeclaration
+import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
-import org.eclipse.n4js.ui.outline.N4JSOutlineTreeProvider
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesPackage
+import org.eclipse.n4js.ui.labeling.EObjectWithContext
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
+import org.eclipse.n4js.ui.outline.N4JSOutlineTreeProvider
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.label.AbstractLabelProvider
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 
 /**
  * This helper class serves as replacement for the polymorphic dispatch done
@@ -60,6 +65,26 @@ class LabelCalculationHelper {
 
 	/* dispatchDoGetText AST -> delegates to types model, as information is easier to retrieve there */
 
+	def dispatch String dispatchDoGetText(Void _null) {
+		return "*null*";
+	}
+
+
+	def dispatch String dispatchDoGetText(EObjectWithContext objectWithContext) {
+		var label = dispatchDoGetText(objectWithContext.obj);
+
+		if (objectWithContext.obj instanceof N4MemberDeclaration) {
+			val TMember member = (objectWithContext.obj as N4MemberDeclaration).definedTypeElement;
+			if (member !== null && member.containingType !== null &&
+				member.containingType != objectWithContext.context) {
+				label += " from " + dispatchDoGetText(member.containingType);		
+			}
+		}
+		
+		return label;
+		
+	}
+
 	def dispatch String dispatchDoGetText(Script script) {
 		return dispatchDoGetText(script.module)
 	}
@@ -85,6 +110,10 @@ class LabelCalculationHelper {
 
 	def dispatch String dispatchDoGetText(N4GetterDeclaration n4GetterDeclaration) {
 		return dispatchDoGetText(n4GetterDeclaration.definedGetter)
+	}
+
+	def dispatch String dispatchDoGetText(N4SetterDeclaration n4SetterDeclaration) {
+		return dispatchDoGetText(n4SetterDeclaration.definedSetter)
 	}
 
 	// comma separated list of all contained variable names
@@ -114,7 +143,11 @@ class LabelCalculationHelper {
 	}
 
 	def dispatch String dispatchDoGetText(TGetter tGetter) {
-		return tGetter.name + "()"
+		return tGetter.name
+	}
+
+	def dispatch String dispatchDoGetText(TSetter tSetter) {
+		return tSetter.name
 	}
 
 	def dispatch String dispatchDoGetText(IdentifiableElement identifiableElement) {

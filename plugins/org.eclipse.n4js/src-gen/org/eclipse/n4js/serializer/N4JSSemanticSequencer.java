@@ -928,14 +928,11 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else if (rule == grammarAccess.getPrimaryExpressionRule()
 						|| rule == grammarAccess.getParameterizedCallExpressionRule()
+						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
+						|| rule == grammarAccess.getMemberExpressionRule()
 						|| action == grammarAccess.getMemberExpressionAccess().getIndexedAccessExpressionTargetAction_2_1_0_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_2_1_1_0()
 						|| action == grammarAccess.getMemberExpressionAccess().getTaggedTemplateStringTargetAction_2_1_2_0()) {
-					sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
-					return; 
-				}
-				else if (action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
-						|| rule == grammarAccess.getMemberExpressionRule()) {
 					sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(context, (ParameterizedCallExpression) semanticObject); 
 					return; 
 				}
@@ -3360,13 +3357,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -5060,6 +5057,46 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     PrimaryExpression returns ParameterizedCallExpression
 	 *     ParameterizedCallExpression<Yield> returns ParameterizedCallExpression
 	 *     ParameterizedCallExpression returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
+	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns ParameterizedCallExpression
+	 *     MemberExpression<Yield> returns ParameterizedCallExpression
+	 *     MemberExpression returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<LeftHandSideExpression.Yield> returns ParameterizedCallExpression
 	 *     MemberExpression.IndexedAccessExpression_2_1_0_0<PostfixExpression.Yield> returns ParameterizedCallExpression
@@ -5185,57 +5222,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
-	
-	// This method is commented out because it has the same signature as another method in this class.
-	// This is probably a bug in Xtext's serializer, please report it here: 
-	// https://bugs.eclipse.org/bugs/enter_bug.cgi?product=TMF
-	//
-	// Contexts:
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<PostfixExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<CastExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<UnaryExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<MultiplicativeExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<AdditiveExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<ShiftExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<RelationalExpression.In,RelationalExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<EqualityExpression.In,EqualityExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseANDExpression.In,BitwiseANDExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseXORExpression.In,BitwiseXORExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<BitwiseORExpression.In,BitwiseORExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalANDExpression.In,LogicalANDExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<LogicalORExpression.In,LogicalORExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<ConditionalExpression.In,ConditionalExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<AssignmentExpression.In,AssignmentExpression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0<Expression.In,Expression.Yield> returns ParameterizedCallExpression
-	//     LeftHandSideExpression.ParameterizedCallExpression_1_0 returns ParameterizedCallExpression
-	//     MemberExpression<Yield> returns ParameterizedCallExpression
-	//     MemberExpression returns ParameterizedCallExpression
-	//
-	// Constraint:
-	//     (typeArgs+=TypeRef typeArgs+=TypeRef* target=IdentifierRef (arguments+=Argument arguments+=Argument?)?)
-	//
-	// protected void sequence_Arguments_ConcreteTypeArguments_ParameterizedCallExpression(ISerializationContext context, ParameterizedCallExpression semanticObject) { }
 	
 	/**
 	 * Contexts:
@@ -9315,7 +9301,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.getImportedElement());
+		feeder.accept(grammarAccess.getDefaultImportSpecifierAccess().getImportedElementTExportableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER__IMPORTED_ELEMENT, false));
 		feeder.finish();
 	}
 	
@@ -11594,7 +11580,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.getId());
+		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
 		feeder.finish();
 	}
 	
@@ -14360,7 +14346,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, N4JSPackage.Literals.IDENTIFIER_REF__ID));
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
-		feeder.accept(grammarAccess.getLetIdentifierRefAccess().getIdIdentifiableElementLetAsIdentifierParserRuleCall_0_1(), semanticObject.getId());
+		feeder.accept(grammarAccess.getLetIdentifierRefAccess().getIdIdentifiableElementLetAsIdentifierParserRuleCall_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
 		feeder.finish();
 	}
 	

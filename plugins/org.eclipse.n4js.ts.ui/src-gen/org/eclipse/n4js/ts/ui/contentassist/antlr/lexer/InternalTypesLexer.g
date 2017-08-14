@@ -208,8 +208,6 @@ RightCurlyBracket : '}';
 
 Tilde : '~';
 
-// Rules duplicated to allow inter-rule references
-
 RULE_STRING : '\'' RULE_SINGLE_STRING_CHAR* '\'';
 
 fragment RULE_SINGLE_STRING_CHAR : (~((RULE_LINE_TERMINATOR_FRAGMENT|'\''|'\\'))|'\\' (RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT|~(RULE_LINE_TERMINATOR_FRAGMENT)));

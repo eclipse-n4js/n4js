@@ -28,17 +28,14 @@ class N4JSTypeInformationHoverProvider extends N4JSHoverProvider {
 
 	@Inject private extension N4JSTypeSystem;
 
-	@Override
 	override protected hasHover(EObject obj) {
 		return doHasHover(obj);
 	}
 
-	@Override
 	override protected getLabel(EObject obj) {
 		return sanitizeForHTML(doGetLabel(obj).nullToEmpty);
 	}
 
-	@Override
 	override protected String getFirstLine(EObject obj) {
 		val label = getLabel(obj);
 		return if (label.isNullOrEmpty) null else '''Type of selected expression:<br>«IF !label.contains('<b>')»<b>«label»</b>«ELSE»«label»«ENDIF»''';
@@ -48,7 +45,6 @@ class N4JSTypeInformationHoverProvider extends N4JSHoverProvider {
 	 * Copied from super class to add support interrupting the hover information calculation
 	 * when type information does not exist for an expression.
 	 */
-	@Override
 	override protected String getHoverInfoAsHtml(EObject obj) {
 		if (!obj.hasHover) {
 			return null;

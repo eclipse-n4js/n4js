@@ -79,7 +79,8 @@ Contributors:
 		<!-- <eclipse-signing-maven-plugin.version>1.0.5</eclipse-signing-maven-plugin.version> -->
 
 		<!-- current xtext version -->
-		<xtext.version>2.10.0</xtext.version>
+		<xtext.version>2.12.0</xtext.version>
+		<mwe2-version>2.9.0.201605261059</mwe2-version>
 		<!-- compile xtend files to java -->
 <!-- 		<xtend-maven-plugin.version>${xtext.version}-SNAPSHOT</xtend-maven-plugin.version> -->
 		<xtend-maven-plugin.version>${xtext.version}</xtend-maven-plugin.version>
@@ -107,8 +108,7 @@ Contributors:
 		<org.eclipse.xtext.xtext-version>[${xtend-maven-plugin.version}]</org.eclipse.xtext.xtext-version>
 		<org.eclipse.xtext.xbase-version>[${xtend-maven-plugin.version}]</org.eclipse.xtext.xbase-version>
 		<org.osgi.core-version>4.3.1</org.osgi.core-version>
-		<org.eclipse.equinox.common-version>3.6.200-v20130402-1505</org.eclipse.equinox.common-version>
-		<org.eclipse.core.resources-version>3.7.100</org.eclipse.core.resources-version>
+		<org.eclipse.core.resources-version>3.11.1</org.eclipse.core.resources-version>
 		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
 		<org.eclipse.emf.codegen.ecore-version>[2.11.0-v20150806-0404]</org.eclipse.emf.codegen.ecore-version>
 		<org.eclipse.emf.codegen.ecore.xtext-version>[1.2.0]</org.eclipse.emf.codegen.ecore.xtext-version>
@@ -241,13 +241,24 @@ Contributors:
 						<target>${java-compile-version}</target>
 						<verbose>true</verbose>
 						<compilerArgument>${java-compiler-arguments}</compilerArgument>
-						<!-- IDE-1452
-							since tycho 0.22: use eclipse stored compiler-settings from .settings/org.eclipse.jdt.core.prefs
-							(but causing problems in generated code, because class path property "ignore_optional_problems"
-							is not considered by Tycho/maven together with our harsh settings for optional warnings/errors;
-							therefore: do not use this at the moment!)
-						<useProjectSettings>true</useProjectSettings>
+						<!-- GH-83
+							The following setting enables project specific settings in the
+							maven build so that specific Eclipse settings e.g. regarding
+							warning and error levels are respected. The reason that makes
+							specific settings necessary is the following (see GHOLD-408):
+							  The class XtextParametrizedRunner is accessing
+							  org.eclipse.xtext.testing.internal.InjectorProviders
+							  which results in the following exception:
+							    Access restriction: The type 'InjectorProviders' is not API.
 						-->
+						<useProjectSettings>true</useProjectSettings>
+						<compilerArgs>
+							<!--
+								The following line disables warnings in the generated source
+								folders, since their sources cause many warnings.
+							-->
+							<arg>-nowarn:[${project.basedir}/emf-gen${path.separator}${project.basedir}/src-gen${path.separator}${project.basedir}/xtend-gen${path.separator}${project.basedir}/xsemantics-gen]</arg>
+						</compilerArgs>
 					</configuration>
 				</plugin>
 				<!-- enable source bundle generation -->

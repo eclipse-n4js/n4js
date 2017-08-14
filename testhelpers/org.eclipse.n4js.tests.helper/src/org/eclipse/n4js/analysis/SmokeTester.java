@@ -11,7 +11,7 @@
 package org.eclipse.n4js.analysis;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.junit4.util.ParseHelper;
+import org.eclipse.xtext.testing.util.ParseHelper;
 
 import com.google.inject.Inject;
 

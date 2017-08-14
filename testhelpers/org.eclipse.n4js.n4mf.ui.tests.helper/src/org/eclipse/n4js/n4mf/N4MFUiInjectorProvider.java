@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.n4mf;
 
-import org.eclipse.xtext.junit4.IInjectorProvider;
+import org.eclipse.xtext.testing.IInjectorProvider;
 
 import com.google.inject.Injector;
 

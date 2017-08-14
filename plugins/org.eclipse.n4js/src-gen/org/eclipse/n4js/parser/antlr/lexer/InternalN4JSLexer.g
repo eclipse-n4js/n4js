@@ -582,8 +582,6 @@ RightCurlyBracket : '}';
 
 Tilde : '~';
 
-// Rules duplicated to allow inter-rule references
-
 RULE_DOUBLE : ('.' RULE_DECIMAL_DIGIT_FRAGMENT+ RULE_EXPONENT_PART?|RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT '.' RULE_DECIMAL_DIGIT_FRAGMENT* RULE_EXPONENT_PART?);
 
 RULE_HEX_INT : '0' ('x'|'X') RULE_INT_SUFFIX;

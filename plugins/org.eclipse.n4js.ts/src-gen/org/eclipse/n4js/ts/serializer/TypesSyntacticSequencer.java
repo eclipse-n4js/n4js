@@ -81,7 +81,7 @@ public class TypesSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	/**
 	 * Ambiguous syntax:
-	 *     '(' | ('('? '{' 'function' '(')
+	 *     ('('? '{' 'function' '(') | '('
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) fpars+=TAnonymousFormalParameter

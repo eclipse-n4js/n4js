@@ -7,18 +7,11 @@ Bundle-SymbolicName: org.eclipse.n4js.lang.tests;singleton:=true
 Fragment-Host: org.eclipse.n4js
 Require-Bundle: org.eclipse.n4js.ui,
  org.eclipse.core.runtime,
- org.eclipse.xtext.junit4,
+ org.eclipse.xtext.testing,
  org.eclipse.ui.workbench;resolution:=optional,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.regex.tests.helper,
  org.eclipse.xtext.ui,
+ org.junit,
  org.eclipse.n4js.npmexporter
-Import-Package: org.apache.log4j,
- org.junit;version="4.5.0",
- org.junit.runner;version="4.5.0",
- org.junit.runner.manipulation;version="4.5.0",
- org.junit.runner.notification;version="4.5.0",
- org.junit.runners;version="4.5.0",
- org.junit.runners.model;version="4.5.0",
- org.hamcrest.core
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

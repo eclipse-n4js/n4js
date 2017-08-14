@@ -175,7 +175,7 @@ class TargetPlatformModel {
 
 		loc.projects.put(projectId, properties);
 	}
-	@Override
+
 	override String toString() {
 		try {
 			val mapper  = new ObjectMapper(new JsonPrettyPrinterFactory());

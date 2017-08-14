@@ -26,6 +26,7 @@ Contributors:
 	<modules>
 		<!-- utilities -->
 		<module>org.eclipse.n4js.utils</module>
+		<module>org.eclipse.n4js.utils.ui</module>
 		<module>org.eclipse.n4js.utils.logging</module>
 		<module>org.eclipse.n4js.common.unicode</module>
 		<!-- types -->
@@ -222,8 +223,7 @@ Contributors:
 							</configuration>
 						</execution>
 					</executions>
-				</plugin>			
-				
+				</plugin>
 
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
@@ -261,13 +261,13 @@ Contributors:
 					</executions>
 					<dependencies>
 						<dependency>
-							<groupId>org.eclipse.equinox</groupId>
-							<artifactId>common</artifactId>
-							<version>${org.eclipse.equinox.common-version}</version>
+							<groupId>org.eclipse.emf</groupId>
+							<artifactId>org.eclipse.emf.mwe2.launch</artifactId>
+							<version>${mwe2-version}</version>
 						</dependency>
 						<dependency>
 							<groupId>org.eclipse.xtext</groupId>
-							<artifactId>org.eclipse.xtext.xtext</artifactId>
+							<artifactId>org.eclipse.xtext.common.types</artifactId>
 							<version>${xtext-version}</version>
 						</dependency>
 						<dependency>
@@ -279,6 +279,21 @@ Contributors:
 							<groupId>org.eclipse.xtext</groupId>
 							<artifactId>org.eclipse.xtext.xbase</artifactId>
 							<version>${xtext-version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.eclipse.xtext</groupId>
+							<artifactId>org.eclipse.xtext.ecore</artifactId>
+							<version>${xtext-version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.eclipse.xtext</groupId>
+							<artifactId>org.eclipse.xtext.xbase</artifactId>
+							<version>${xtext-version}</version>
+						</dependency>
+						<dependency>
+						    <groupId>org.eclipse.xtext</groupId>
+						    <artifactId>org.eclipse.xtext.testing</artifactId>
+						    <version>${xtext-version}</version>
 						</dependency>
 						<dependency>
 							<groupId>org.eclipse.emf</groupId>
@@ -294,6 +309,11 @@ Contributors:
 							<groupId>org.eclipse.emf</groupId>
 							<artifactId>org.eclipse.emf.ecore.xcore</artifactId>
 							<version>${org.eclipse.emf.ecore.xcore-version}</version>
+						</dependency>
+						<dependency>
+							<groupId>org.eclipse.xtext</groupId>
+							<artifactId>xtext-antlr-generator</artifactId>
+							<version>[2.1.1, 3)</version>
 						</dependency>
 					</dependencies>
 				</plugin>
@@ -345,7 +365,7 @@ Contributors:
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>org.eclipse.core</groupId>
+							<groupId>org.eclipse.platform</groupId>
 							<artifactId>org.eclipse.core.resources</artifactId>
 							<version>${org.eclipse.core.resources-version}</version>
 						</dependency>

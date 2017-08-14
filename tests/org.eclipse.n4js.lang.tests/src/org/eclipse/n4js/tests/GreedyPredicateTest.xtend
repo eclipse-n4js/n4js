@@ -23,7 +23,7 @@ import org.eclipse.xtext.AbstractElement
 import org.eclipse.xtext.GrammarUtil
 import org.eclipse.xtext.ParserRule
 import org.eclipse.xtext.RuleCall
-import org.eclipse.xtext.junit4.InjectWith
+import org.eclipse.xtext.testing.InjectWith
 import org.junit.Assert
 import org.junit.Assume
 import org.junit.Test

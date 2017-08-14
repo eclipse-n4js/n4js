@@ -13,12 +13,12 @@ package org.eclipse.n4js.tests.bugs;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.tests.bugs.AbstractIDEBUG_Test.WorkspaceInitializer.createInitializer;
-import static org.eclipse.n4js.tests.util.ProjectUtils.importProject;
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
+import static org.eclipse.n4js.tests.bugs.AbstractIDEBUG_Test.WorkspaceInitializer.createInitializer;
+import static org.eclipse.n4js.tests.util.ProjectUtils.importProject;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-import static org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace;
+import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -27,21 +27,19 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil;
-import org.junit.Before;
-
-import com.google.common.base.Supplier;
-
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.junit.Before;
+
+import com.google.common.base.Supplier;
 
 /**
  * Base class for IDEBUG plug-in tests.
  *
  * Responsible for setting up the workspace for the tests.
  */
-@SuppressWarnings("restriction")
 public abstract class AbstractIDEBUG_Test extends AbstractBuilderParticipantTest {
 
 	/** Shared logger instance. */

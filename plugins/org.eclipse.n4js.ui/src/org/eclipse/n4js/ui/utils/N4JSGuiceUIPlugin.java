@@ -10,13 +10,12 @@
  */
 package org.eclipse.n4js.ui.utils;
 
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.ui.injector.AbstractGuiceUIPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.injector.AbstractGuiceUIPlugin;
 
 /**
  * N4JS specific Guice aware UI plug-in.

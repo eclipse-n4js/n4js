@@ -11,4 +11,3 @@ Require-Bundle: org.eclipse.n4js.tester.tests.helper,
  org.eclipse.xtend.lib,
  org.junit,
  org.eclipse.n4js.n4jsx
-Import-Package: org.apache.log4j.varia;version="1.2.15"

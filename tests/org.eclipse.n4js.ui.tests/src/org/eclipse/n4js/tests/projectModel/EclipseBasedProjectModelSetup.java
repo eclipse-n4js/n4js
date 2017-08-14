@@ -44,12 +44,11 @@ public class EclipseBasedProjectModelSetup extends AbstractProjectModelSetup {
 		this.workspace = workspace;
 	}
 
-	@SuppressWarnings("restriction")
 	@Override
 	protected void deleteTempProjects() {
 		try {
-			org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.cleanWorkspace();
-			org.eclipse.xtext.junit4.ui.util.IResourcesSetupUtil.waitForBuild();
+			org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace();
+			org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.waitForBuild();
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}

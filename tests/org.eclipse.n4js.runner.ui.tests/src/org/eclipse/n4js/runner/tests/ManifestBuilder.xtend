@@ -122,7 +122,6 @@ class ManifestBuilder {
 
 
 
-	@Override
 	override toString() {
 		build('!!! This is just a preview of the N4JS manifest file !!!')
 	}

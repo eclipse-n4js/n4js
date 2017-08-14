@@ -1205,10 +1205,6 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 		return new IndentHandlingTextReplaceMerger(this);
 	}
 
-	override createTextReplacerContext(IFormattableDocument document) {
-		new FixedTextReplacerContext(document)
-	}
-
 	/** DEBUG-helper */
 	private def static String containmentStructure(EObject eo) {
 		val name = eo.class.simpleName;

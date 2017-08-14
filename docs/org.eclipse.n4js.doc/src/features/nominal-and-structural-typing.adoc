@@ -9,11 +9,11 @@ Contributors:
   NumberFour AG - Initial API and implementation
 ////
 
-:notitle:
-:toc: right
 
 .Nominal And Structural Typing
 = Nominal And Structural Typing
+:doctype: book
+:toc: right
 
 
 One of the core responsibilities of a type system is to decide if two given types

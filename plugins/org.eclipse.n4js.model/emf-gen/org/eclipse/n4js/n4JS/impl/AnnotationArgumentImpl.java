@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
-import com.google.common.base.Objects;
-
 import java.lang.reflect.InvocationTargetException;
 
 import org.eclipse.emf.common.util.EList;
@@ -72,8 +70,7 @@ public abstract class AnnotationArgumentImpl extends ProxyResolvingEObjectImpl i
 	 */
 	public String getValueAsString() {
 		final EObject value = this.value();
-		boolean _equals = Objects.equal(value, null);
-		if (_equals) {
+		if ((value == null)) {
 			return null;
 		}
 		String _switchResult = null;

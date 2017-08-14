@@ -11,16 +11,12 @@
 package org.eclipse.n4js.regex.ui.contentassist.antlr;
 
 import com.google.inject.Inject;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.antlr.runtime.RecognitionException;
 import org.eclipse.n4js.regex.services.RegularExpressionGrammarAccess;
 import org.eclipse.n4js.regex.ui.contentassist.antlr.internal.InternalRegularExpressionParser;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.AbstractContentAssistParser;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElement;
-import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.AbstractInternalContentAssistParser;
 
 public class RegularExpressionParser extends AbstractContentAssistParser {
 
@@ -119,18 +115,7 @@ public class RegularExpressionParser extends AbstractContentAssistParser {
 		}
 		return nameMappings.get(element);
 	}
-
-	@Override
-	protected Collection<FollowElement> getFollowElements(AbstractInternalContentAssistParser parser) {
-		try {
-			InternalRegularExpressionParser typedParser = (InternalRegularExpressionParser) parser;
-			typedParser.entryRuleRegularExpressionLiteral();
-			return typedParser.getFollowElements();
-		} catch(RecognitionException ex) {
-			throw new RuntimeException(ex);
-		}
-	}
-
+			
 	@Override
 	protected String[] getInitialHiddenTokens() {
 		return new String[] {  };

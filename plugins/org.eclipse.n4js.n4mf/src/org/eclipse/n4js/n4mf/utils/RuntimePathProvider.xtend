@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.URI
  */
 class RuntimePathProvider implements IPathProvider {
 
-	@Override
 	override getAbsoluteProjectPath(URI manifestURI) {
         val root = getWorkspaceRoot
         if (null !== root) {

@@ -58,7 +58,10 @@ import org.eclipse.xtext.formatting2.internal.HiddenRegionReplacer
 
 				// there is already a ";" so let's format it
 				region.prepend[noSpace; newLines = 0; highPriority];
-			} else if (previous.containsComment) {
+			} else if(region.nextSemanticRegion?.text == "}" && !region.isMultiline){
+				// do nothing
+			}
+			else if (previous.containsComment) {
 
 				// we're behind a comment - insert semicolon before the comment
 				val insertAt = region.textRegionAccess.regionForOffset(previous.offset, 0)
@@ -72,7 +75,7 @@ import org.eclipse.xtext.formatting2.internal.HiddenRegionReplacer
 					document.addReplacer(new InsertSemi(replaceRegion, ";\n"));
 				} else {
 					// the text region only contains whitespace, e.g. so let's insert a ; and a "\n"
-					document.addReplacer(new InsertSemi(region, ";\n"));
+					document.addReplacer(new InsertSemi(region, ";"));
 				}
 			} else {
 
@@ -169,82 +172,86 @@ import org.eclipse.xtext.formatting2.internal.HiddenRegionReplacer
 	}
 }
 
+interface InsertSemiBase extends ITextReplacer {}
 
-@Accessors class InsertSemi implements ITextReplacer {
+@Accessors class InsertSemi implements InsertSemiBase {
 	val ITextSegment region
 	val String text
 
-	/** to be set by {@link IndentHandlingTextReplaceMerger#merge(List) } */
-	var Integer indentationIncrease
-	/** to be set by {@link IndentHandlingTextReplaceMerger#merge(List) } */
-	var Integer indentationDecrease
-
 	override createReplacements(ITextReplacerContext context) {
 		context.addReplacement(region.replaceWith(text))
-		return context.withIndentation(computeNewIndentation(context))
+		return context;
+	}
+}
+
+class InsertSemiFollowedByTextReplacer implements InsertSemiBase {
+	val InsertSemiBase insertSemi;
+	val ITextReplacer textReplacer;
+	val ITextSegment region;
+	
+	new(InsertSemiBase insertSemi, ITextReplacer textReplacer) {
+		this.insertSemi = insertSemi;
+		this.textReplacer = textReplacer;
+		this.region = insertSemi.region.merge(textReplacer.region)
 	}
 
-	def protected int computeNewIndentation(ITextReplacerContext context) {
-		var int indentation = context.getIndentation()
-		if (indentationIncrease !== null) indentation += indentationIncrease
-		if (indentationDecrease !== null) indentation -= indentationDecrease
-		if (indentation >= 0) return indentation
-		return 0
+	override createReplacements(ITextReplacerContext context) {
+		// First insert semicolon
+		var replContext = insertSemi.createReplacements(context).withReplacer(textReplacer);
+		// Then apply the text replacer
+		return textReplacer.createReplacements(replContext);
+	}
+	
+	override getRegion() {
+		return this.region;
 	}
 }
 
 @Log
 class IndentHandlingTextReplaceMerger extends TextReplacerMerger {
+	val AbstractFormatter2 fmt
 
 	new(AbstractFormatter2 formatter) {
 		super(formatter)
+		fmt = formatter
 	}
 
 	/** Overridden for special case of {@link InsertSemi} & {@link HiddenRegionReplacer} merging.
 	 * Calls super implementation if no InsertSemi object is involved */
 	override merge(List<? extends ITextReplacer> conflicting) {
-		if(conflicting.findFirst[it instanceof InsertSemi] === null ){
-			// standard case
+		if(conflicting.findFirst[it instanceof InsertSemiBase] === null ) {
+ 			// standard case, but not handled as we want by super because due to ASI there can be
+ 			// HiddenRegionReplacer that have equal offsets and length but are not identical.
+ 			val hrf = conflicting.filter(HiddenRegionReplacer).toList
+ 			if(hrf.size === conflicting.size) {
+ 				val merged = fmt.createHiddenRegionFormattingMerger.merge(hrf.map[formatting])
+ 				if(merged !== null) {
+ 					return fmt.createHiddenRegionReplacer(hrf.head.region, merged)
+ 				}
+ 			}
 			return super.merge(conflicting);
 		}
 
 		// there is an insertSemi.
-		val semiReplacements = conflicting.filter(InsertSemi).toList;
-		val otherReplacements = conflicting.filter[!(it instanceof InsertSemi)].toList;
-
+		val semiReplacements = conflicting.filter[it instanceof InsertSemiBase].toList;
+		val otherReplacements = conflicting.filter[!(it instanceof InsertSemiBase)].toList;
 
 		if( semiReplacements.size !== 1  || otherReplacements.size !== 1  ) {
 			logger.warn( '''
 			Unhandled merge-case: "
 				"Semis replacer («semiReplacements.size») :«semiReplacements»
 				"Non-Semi replacer ( «otherReplacements.size»  «otherReplacements»
-			 ''')
-
+			 ''');
 			return null; // null creates merge Exception
 		}
 		// exactly one:
-		val semiRepl = semiReplacements.get(0);
+		val semiRepl = semiReplacements.get(0) as InsertSemiBase;
 		val otherRepl = otherReplacements.get(0);
-
+		
 		if( otherRepl instanceof HiddenRegionReplacer ) {
-			// copy over the indentation information
-			semiRepl.indentationIncrease = otherRepl.formatting.indentationIncrease;
-			semiRepl.indentationDecrease = otherRepl.formatting.indentationDecrease;
-			// NOT handled are the following non-null cases:
-			if( otherRepl.formatting.autowrap !== null
-				|| otherRepl.formatting.newLineDefault !== null
-				|| otherRepl.formatting.newLineMax !== null
-				|| otherRepl.formatting.newLineMin !== null
-				|| otherRepl.formatting.noIndentation !== null
-				|| otherRepl.formatting.space !== null
-			) {
-				logger.warn("Unsupported property for merging.");
-				return null; // Throws exception in caller.
-			}
-			return semiRepl;
+			return new InsertSemiFollowedByTextReplacer(semiRepl, otherRepl);
 		}
 
 		return null;
 	}
-
 }

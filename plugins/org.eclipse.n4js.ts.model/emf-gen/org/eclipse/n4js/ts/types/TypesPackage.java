@@ -123,7 +123,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getSyntaxRelatedTElement()
 	 * @generated
 	 */
-	int SYNTAX_RELATED_TELEMENT = 49;
+	int SYNTAX_RELATED_TELEMENT = 50;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -298,13 +298,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+
+	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -313,7 +322,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -325,6 +334,43 @@ public interface TypesPackage extends EPackage {
 	int TMODULE_OPERATION_COUNT = SYNTAX_RELATED_TELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl
+	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getComposedMemberCache()
+	 * @generated
+	 */
+	int COMPOSED_MEMBER_CACHE = 2;
+
+	/**
+	 * The feature id for the '<em><b>Cached Composed Members</b></em>' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = 0;
+
+	/**
+	 * The number of structural features of the '<em>Composed Member Cache</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_MEMBER_CACHE_FEATURE_COUNT = 1;
+
+	/**
+	 * The number of operations of the '<em>Composed Member Cache</em>' class.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_MEMBER_CACHE_OPERATION_COUNT = 0;
+
+	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -332,7 +378,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypableElement()
 	 * @generated
 	 */
-	int TYPABLE_ELEMENT = 2;
+	int TYPABLE_ELEMENT = 3;
 
 	/**
 	 * The number of structural features of the '<em>Typable Element</em>' class.
@@ -360,7 +406,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIdentifiableElement()
 	 * @generated
 	 */
-	int IDENTIFIABLE_ELEMENT = 3;
+	int IDENTIFIABLE_ELEMENT = 4;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -406,7 +452,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTExportableElement()
 	 * @generated
 	 */
-	int TEXPORTABLE_ELEMENT = 4;
+	int TEXPORTABLE_ELEMENT = 5;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -470,7 +516,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotation()
 	 * @generated
 	 */
-	int TANNOTATION = 5;
+	int TANNOTATION = 6;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -534,7 +580,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationArgument()
 	 * @generated
 	 */
-	int TANNOTATION_ARGUMENT = 6;
+	int TANNOTATION_ARGUMENT = 7;
 
 	/**
 	 * The number of structural features of the '<em>TAnnotation Argument</em>' class.
@@ -571,7 +617,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationStringArgument()
 	 * @generated
 	 */
-	int TANNOTATION_STRING_ARGUMENT = 7;
+	int TANNOTATION_STRING_ARGUMENT = 8;
 
 	/**
 	 * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -617,7 +663,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTTypedElement()
 	 * @generated
 	 */
-	int TTYPED_ELEMENT = 8;
+	int TTYPED_ELEMENT = 9;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -654,7 +700,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotationTypeRefArgument()
 	 * @generated
 	 */
-	int TANNOTATION_TYPE_REF_ARGUMENT = 9;
+	int TANNOTATION_TYPE_REF_ARGUMENT = 10;
 
 	/**
 	 * The feature id for the '<em><b>Type Ref</b></em>' containment reference.
@@ -700,7 +746,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnnotableElement()
 	 * @generated
 	 */
-	int TANNOTABLE_ELEMENT = 10;
+	int TANNOTABLE_ELEMENT = 11;
 
 	/**
 	 * The feature id for the '<em><b>Annotations</b></em>' containment reference list.
@@ -737,7 +783,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getType()
 	 * @generated
 	 */
-	int TYPE = 14;
+	int TYPE = 15;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -936,7 +982,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeVariable()
 	 * @generated
 	 */
-	int TYPE_VARIABLE = 11;
+	int TYPE_VARIABLE = 12;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1180,7 +1226,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getInferenceVariable()
 	 * @generated
 	 */
-	int INFERENCE_VARIABLE = 12;
+	int INFERENCE_VARIABLE = 13;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1424,7 +1470,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getDeclaredTypeWithAccessModifier()
 	 * @generated
 	 */
-	int DECLARED_TYPE_WITH_ACCESS_MODIFIER = 16;
+	int DECLARED_TYPE_WITH_ACCESS_MODIFIER = 17;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1641,7 +1687,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFunction()
 	 * @generated
 	 */
-	int TFUNCTION = 13;
+	int TFUNCTION = 14;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1984,7 +2030,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAccessibleTypeElement()
 	 * @generated
 	 */
-	int ACCESSIBLE_TYPE_ELEMENT = 15;
+	int ACCESSIBLE_TYPE_ELEMENT = 16;
 
 	/**
 	 * The feature id for the '<em><b>Declared Type Access Modifier</b></em>' attribute.
@@ -2057,7 +2103,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getContainerType()
 	 * @generated
 	 */
-	int CONTAINER_TYPE = 17;
+	int CONTAINER_TYPE = 18;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2328,7 +2374,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVirtualBaseType()
 	 * @generated
 	 */
-	int VIRTUAL_BASE_TYPE = 18;
+	int VIRTUAL_BASE_TYPE = 19;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2617,7 +2663,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getModuleNamespaceVirtualType()
 	 * @generated
 	 */
-	int MODULE_NAMESPACE_VIRTUAL_TYPE = 19;
+	int MODULE_NAMESPACE_VIRTUAL_TYPE = 20;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2843,7 +2889,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getPrimitiveType()
 	 * @generated
 	 */
-	int PRIMITIVE_TYPE = 20;
+	int PRIMITIVE_TYPE = 21;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3141,7 +3187,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getBuiltInType()
 	 * @generated
 	 */
-	int BUILT_IN_TYPE = 21;
+	int BUILT_IN_TYPE = 22;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3340,7 +3386,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getAnyType()
 	 * @generated
 	 */
-	int ANY_TYPE = 22;
+	int ANY_TYPE = 23;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3539,7 +3585,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getUndefinedType()
 	 * @generated
 	 */
-	int UNDEFINED_TYPE = 23;
+	int UNDEFINED_TYPE = 24;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3738,7 +3784,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNullType()
 	 * @generated
 	 */
-	int NULL_TYPE = 24;
+	int NULL_TYPE = 25;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -3937,7 +3983,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVoidType()
 	 * @generated
 	 */
-	int VOID_TYPE = 25;
+	int VOID_TYPE = 26;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4136,7 +4182,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructuralType()
 	 * @generated
 	 */
-	int TSTRUCTURAL_TYPE = 26;
+	int TSTRUCTURAL_TYPE = 27;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4416,7 +4462,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifier()
 	 * @generated
 	 */
-	int TCLASSIFIER = 27;
+	int TCLASSIFIER = 28;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -4750,7 +4796,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTObjectPrototype()
 	 * @generated
 	 */
-	int TOBJECT_PROTOTYPE = 28;
+	int TOBJECT_PROTOTYPE = 29;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5129,7 +5175,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getArrayLike()
 	 * @generated
 	 */
-	int ARRAY_LIKE = 29;
+	int ARRAY_LIKE = 30;
 
 	/**
 	 * The feature id for the '<em><b>Declared Element Type</b></em>' containment reference.
@@ -5175,7 +5221,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTN4Classifier()
 	 * @generated
 	 */
-	int TN4_CLASSIFIER = 30;
+	int TN4_CLASSIFIER = 31;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -5545,7 +5591,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClass()
 	 * @generated
 	 */
-	int TCLASS = 31;
+	int TCLASS = 32;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6005,7 +6051,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTInterface()
 	 * @generated
 	 */
-	int TINTERFACE = 32;
+	int TINTERFACE = 33;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6393,7 +6439,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMember()
 	 * @generated
 	 */
-	int TMEMBER = 33;
+	int TMEMBER = 34;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6459,13 +6505,22 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER__HAS_COMPUTED_NAME = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER__COMPOSED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+
+	/**
 	 * The number of structural features of the '<em>TMember</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TMEMBER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -6646,7 +6701,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMemberWithAccessModifier()
 	 * @generated
 	 */
-	int TMEMBER_WITH_ACCESS_MODIFIER = 34;
+	int TMEMBER_WITH_ACCESS_MODIFIER = 35;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6710,6 +6765,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER__COMPOSED = TMEMBER__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -6917,7 +6981,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMember()
 	 * @generated
 	 */
-	int TSTRUCT_MEMBER = 35;
+	int TSTRUCT_MEMBER = 36;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -6981,6 +7045,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_MEMBER__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER__COMPOSED = TMEMBER__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Defined Member</b></em>' reference.
@@ -7188,7 +7261,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTMethod()
 	 * @generated
 	 */
-	int TMETHOD = 36;
+	int TMETHOD = 37;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7362,13 +7435,22 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD__HAS_COMPUTED_NAME = TFUNCTION_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__COMPOSED = TFUNCTION_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__HAS_NO_BODY = TFUNCTION_FEATURE_COUNT + 4;
+	int TMETHOD__HAS_NO_BODY = TFUNCTION_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Declared Member Access Modifier</b></em>' attribute.
@@ -7377,7 +7459,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER = TFUNCTION_FEATURE_COUNT + 5;
+	int TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER = TFUNCTION_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared Abstract</b></em>' attribute.
@@ -7386,7 +7468,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__DECLARED_ABSTRACT = TFUNCTION_FEATURE_COUNT + 6;
+	int TMETHOD__DECLARED_ABSTRACT = TFUNCTION_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Lacks This Or Super Usage</b></em>' attribute.
@@ -7395,7 +7477,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__LACKS_THIS_OR_SUPER_USAGE = TFUNCTION_FEATURE_COUNT + 7;
+	int TMETHOD__LACKS_THIS_OR_SUPER_USAGE = TFUNCTION_FEATURE_COUNT + 8;
 
 	/**
 	 * The number of structural features of the '<em>TMethod</em>' class.
@@ -7404,7 +7486,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 8;
+	int TMETHOD_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -7747,7 +7829,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructMethod()
 	 * @generated
 	 */
-	int TSTRUCT_METHOD = 37;
+	int TSTRUCT_METHOD = 38;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -7919,6 +8001,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD__HAS_COMPUTED_NAME = TMETHOD__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__COMPOSED = TMETHOD__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -8324,7 +8415,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTFormalParameter()
 	 * @generated
 	 */
-	int TFORMAL_PARAMETER = 38;
+	int TFORMAL_PARAMETER = 39;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8469,7 +8560,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTAnonymousFormalParameter()
 	 * @generated
 	 */
-	int TANONYMOUS_FORMAL_PARAMETER = 39;
+	int TANONYMOUS_FORMAL_PARAMETER = 40;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8632,7 +8723,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTField()
 	 * @generated
 	 */
-	int TFIELD = 40;
+	int TFIELD = 41;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -8696,6 +8787,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TFIELD__HAS_COMPUTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD__COMPOSED = TMEMBER_WITH_ACCESS_MODIFIER__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -8948,7 +9048,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructField()
 	 * @generated
 	 */
-	int TSTRUCT_FIELD = 41;
+	int TSTRUCT_FIELD = 42;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9012,6 +9112,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_FIELD__HAS_COMPUTED_NAME = TFIELD__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD__COMPOSED = TFIELD__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -9282,7 +9391,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getFieldAccessor()
 	 * @generated
 	 */
-	int FIELD_ACCESSOR = 42;
+	int FIELD_ACCESSOR = 43;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9346,6 +9455,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int FIELD_ACCESSOR__HAS_COMPUTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR__COMPOSED = TMEMBER_WITH_ACCESS_MODIFIER__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -9589,7 +9707,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTGetter()
 	 * @generated
 	 */
-	int TGETTER = 43;
+	int TGETTER = 44;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9653,6 +9771,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER__HAS_COMPUTED_NAME = FIELD_ACCESSOR__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER__COMPOSED = FIELD_ACCESSOR__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -9905,7 +10032,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructGetter()
 	 * @generated
 	 */
-	int TSTRUCT_GETTER = 44;
+	int TSTRUCT_GETTER = 45;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -9969,6 +10096,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_GETTER__HAS_COMPUTED_NAME = TGETTER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER__COMPOSED = TGETTER__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -10239,7 +10375,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTSetter()
 	 * @generated
 	 */
-	int TSETTER = 45;
+	int TSETTER = 46;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10303,6 +10439,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSETTER__HAS_COMPUTED_NAME = FIELD_ACCESSOR__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER__COMPOSED = FIELD_ACCESSOR__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -10555,7 +10700,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTStructSetter()
 	 * @generated
 	 */
-	int TSTRUCT_SETTER = 46;
+	int TSTRUCT_SETTER = 47;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -10619,6 +10764,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_SETTER__HAS_COMPUTED_NAME = TSETTER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Composed</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER__COMPOSED = TSETTER__COMPOSED;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -10889,7 +11043,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnum()
 	 * @generated
 	 */
-	int TENUM = 47;
+	int TENUM = 48;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11133,7 +11287,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTEnumLiteral()
 	 * @generated
 	 */
-	int TENUM_LITERAL = 48;
+	int TENUM_LITERAL = 49;
 
 	/**
 	 * The feature id for the '<em><b>Ast Element</b></em>' reference.
@@ -11206,7 +11360,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTConstableElement()
 	 * @generated
 	 */
-	int TCONSTABLE_ELEMENT = 50;
+	int TCONSTABLE_ELEMENT = 51;
 
 	/**
 	 * The feature id for the '<em><b>Const</b></em>' attribute.
@@ -11252,7 +11406,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTVariable()
 	 * @generated
 	 */
-	int TVARIABLE = 51;
+	int TVARIABLE = 52;
 
 	/**
 	 * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -11433,7 +11587,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypingStrategy()
 	 * @generated
 	 */
-	int TYPING_STRATEGY = 52;
+	int TYPING_STRATEGY = 53;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.TypeAccessModifier <em>Type Access Modifier</em>}' enum.
@@ -11443,7 +11597,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTypeAccessModifier()
 	 * @generated
 	 */
-	int TYPE_ACCESS_MODIFIER = 53;
+	int TYPE_ACCESS_MODIFIER = 54;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberAccessModifier <em>Member Access Modifier</em>}' enum.
@@ -11453,7 +11607,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberAccessModifier()
 	 * @generated
 	 */
-	int MEMBER_ACCESS_MODIFIER = 54;
+	int MEMBER_ACCESS_MODIFIER = 55;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.ts.types.MemberType <em>Member Type</em>}' enum.
@@ -11463,7 +11617,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberType()
 	 * @generated
 	 */
-	int MEMBER_TYPE = 55;
+	int MEMBER_TYPE = 56;
 
 	/**
 	 * The meta object id for the '<em>Iterable Of TClassifier</em>' data type.
@@ -11473,7 +11627,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getIterableOfTClassifier()
 	 * @generated
 	 */
-	int ITERABLE_OF_TCLASSIFIER = 56;
+	int ITERABLE_OF_TCLASSIFIER = 57;
 
 	/**
 	 * The meta object id for the '<em>Variance</em>' data type.
@@ -11483,7 +11637,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getVariance()
 	 * @generated
 	 */
-	int VARIANCE = 57;
+	int VARIANCE = 58;
 
 	/**
 	 * The meta object id for the '<em>Name And Access</em>' data type.
@@ -11493,7 +11647,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getNameAndAccess()
 	 * @generated
 	 */
-	int NAME_AND_ACCESS = 58;
+	int NAME_AND_ACCESS = 59;
 
 	/**
 	 * The meta object id for the '<em>Member List</em>' data type.
@@ -11503,7 +11657,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getMemberList()
 	 * @generated
 	 */
-	int MEMBER_LIST = 59;
+	int MEMBER_LIST = 60;
 
 	/**
 	 * The meta object id for the '<em>TClassifier Iterable</em>' data type.
@@ -11513,7 +11667,7 @@ public interface TypesPackage extends EPackage {
 	 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getTClassifierIterable()
 	 * @generated
 	 */
-	int TCLASSIFIER_ITERABLE = 60;
+	int TCLASSIFIER_ITERABLE = 61;
 
 
 	/**
@@ -11691,6 +11845,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTModule_ExposedInternalTypes();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Composed Member Caches</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EReference getTModule_ComposedMemberCaches();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11700,6 +11865,27 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EAttribute getTModule_ModuleSpecifier();
+
+	/**
+	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.ComposedMemberCache <em>Composed Member Cache</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for class '<em>Composed Member Cache</em>'.
+	 * @see org.eclipse.n4js.ts.types.ComposedMemberCache
+	 * @generated
+	 */
+	EClass getComposedMemberCache();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getCachedComposedMembers <em>Cached Composed Members</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Cached Composed Members</em>'.
+	 * @see org.eclipse.n4js.ts.types.ComposedMemberCache#getCachedComposedMembers()
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 */
+	EReference getComposedMemberCache_CachedComposedMembers();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}'.
@@ -13184,6 +13370,17 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTMember_HasComputedName();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TMember#isComposed <em>Composed</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Composed</em>'.
+	 * @see org.eclipse.n4js.ts.types.TMember#isComposed()
+	 * @see #getTMember()
+	 * @generated
+	 */
+	EAttribute getTMember_Composed();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.ts.types.TMember#getContainingType() <em>Get Containing Type</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14388,12 +14585,38 @@ public interface TypesPackage extends EPackage {
 		EReference TMODULE__EXPOSED_INTERNAL_TYPES = eINSTANCE.getTModule_ExposedInternalTypes();
 
 		/**
+		 * The meta object literal for the '<em><b>Composed Member Caches</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMODULE__COMPOSED_MEMBER_CACHES = eINSTANCE.getTModule_ComposedMemberCaches();
+
+		/**
 		 * The meta object literal for the '<em><b>Module Specifier</b></em>' attribute feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EAttribute TMODULE__MODULE_SPECIFIER = eINSTANCE.getTModule_ModuleSpecifier();
+
+		/**
+		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl <em>Composed Member Cache</em>}' class.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @see org.eclipse.n4js.ts.types.impl.ComposedMemberCacheImpl
+		 * @see org.eclipse.n4js.ts.types.impl.TypesPackageImpl#getComposedMemberCache()
+		 * @generated
+		 */
+		EClass COMPOSED_MEMBER_CACHE = eINSTANCE.getComposedMemberCache();
+
+		/**
+		 * The meta object literal for the '<em><b>Cached Composed Members</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = eINSTANCE.getComposedMemberCache_CachedComposedMembers();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}' class.
@@ -15602,6 +15825,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMEMBER__HAS_COMPUTED_NAME = eINSTANCE.getTMember_HasComputedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Composed</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TMEMBER__COMPOSED = eINSTANCE.getTMember_Composed();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Containing Type</b></em>' operation.
