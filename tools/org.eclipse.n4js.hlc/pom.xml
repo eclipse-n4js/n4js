@@ -20,60 +20,152 @@ Contributors:
 	</parent>
 	<artifactId>org.eclipse.n4js.hlc</artifactId>
 	<name>org.eclipse.n4js.hlc</name>
+	<packaging>eclipse-plugin</packaging>
 	<description>Headless N4js compiler bundled into one jar.</description>
 
 	<properties>
 		<!-- hint: also look at inherited properties -->
 		<hlc.jar-descriptorRef>jar-with-dependencies</hlc.jar-descriptorRef>
-		<hlc.jar-longname>${project.artifactId}-${project.version}-${hlc.jar-descriptorRef}.jar</hlc.jar-longname>
+		<hlc.jar-longname>${project.artifactId}-${project.version}-${cli.fat.jar.classifier}.jar</hlc.jar-longname>
 		<hlc.plugin-folder>plugins</hlc.plugin-folder>
 		<jackson.version>2.5.0</jackson.version>
+		<dir.lib>${project.build.directory}/lib</dir.lib>
+		<plugins.file>plugins-list.txt</plugins.file>
+		<path.dot>.</path.dot>
+		<cli.fat.jar.classifier>jar-with-dependencies</cli.fat.jar.classifier>
 	</properties>
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
 
+
+	<dependencies>
+		<!-- product plugins to be packaged in this jar -->
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>org.eclipse.n4js.headless.product.build</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>provided</scope>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+
+	<build>
 		<plugins>
-			<!-- http://stackoverflow.com/questions/574594/how-can-i-create-an-executable-jar-with-dependencies-using-maven
-				Compile with "mvn clean compile assembly:single" -->
+			<!-- unpack product plugins to target folder -->
 			<plugin>
-				<!-- Building a single jar for command-line usage. -->
-				<artifactId>maven-assembly-plugin</artifactId>
+				<artifactId>maven-dependency-plugin</artifactId>
 				<executions>
-					<!-- Also binding to packaging phase -->
 					<execution>
-						<id>N4jsCompileFatJar</id>
+						<id>unpack-product</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>${project.groupId}</groupId>
+									<artifactId>org.eclipse.n4js.headless.product.build</artifactId>
+									<version>${project.version}</version>
+									<type>jar</type>
+									<!-- <overWrite>true</overWrite> -->
+									<outputDirectory>${dir.lib}</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- create executable jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>${maven-jar-plugin.version}</version>
+				<!-- execution adds second jar -->
+				<executions>
+					<execution>
 						<phase>package</phase>
 						<goals>
-							<goal>single</goal>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<forceCreation>true</forceCreation>
+							<classifier>${cli.fat.jar.classifier}</classifier>
+							<archive>
+								<addMavenDescriptor>false</addMavenDescriptor>
+								<manifest>
+									<mainClass>org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader</mainClass>
+								</manifest>
+								<manifestEntries>
+									<Class-Path>${path.dot}</Class-Path>
+									<Rsrc-Main-Class>org.eclipse.n4js.hlc.ProductLauncher</Rsrc-Main-Class>
+									<Rsrc-Class-Path><![CDATA[${path.dot}/ MANIFEST.MF ${plugins.jars.list} ${plugins.file}]]></Rsrc-Class-Path>
+								</manifestEntries>
+							</archive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- add eclipse plugins contents to our executable jar -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>${maven-antrun-plugin.version}</version>
+				<executions>
+					<!-- cleanup folder with unpacked deps -->
+					<execution>
+						<id>list-jars-in-lib</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<!-- let maven use property with plugins list -->
+							<exportAntProperties>true</exportAntProperties>
+							<tasks>
+								<echo message="Running list-jars-in-lib in ${dir.lib}" />
+								<fileset id="dist.contents" dir="${dir.lib}" includes="*.jar*" />
+								<pathconvert pathsep=" " property="plugins.jars.list"
+									refid="dist.contents">
+									<map from="${dir.lib}/" to="" />
+								</pathconvert>
+								<echo>${plugins.jars.list}</echo>
+								<echo file="${dir.lib}/${plugins.file}">${plugins.jars.list}</echo>
+							</tasks>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>add-jars-in-jar</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<echo message="Adding content to cli-standalone" />
+								<!-- update our executable jar with unpacked eclipse bundles -->
+								<jar update="yes"
+									jarfile="${project.build.directory}/${project.artifactId}-${project.version}-${cli.fat.jar.classifier}.jar">
+									<fileset dir="${dir.lib}" />
+								</jar>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
 						</goals>
 					</execution>
 				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>org.eclipse.n4js.hlc.N4jsc</mainClass>
-						</manifest>
-					</archive>
-					<!--
-					<descriptorRefs>
-						<descriptorRef>${hlc.jar-descriptorRef}</descriptorRef>
-					</descriptorRefs>
-					-->
-					<descriptors>
-						<descriptor>assembly-jar-one.xml</descriptor>
-					</descriptors>
-				</configuration>
 			</plugin>
 
 			<!-- copy the longname-jar to a usable shorthand name. -->
 			<plugin>
 				<groupId>com.coderplus.maven.plugins</groupId>
 				<artifactId>copy-rename-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>${codehaus-copy-rename-maven-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>copy-file</id>
-						<phase>package</phase>
+						<phase>pre-integration-test</phase>
 						<goals>
 							<goal>copy</goal>
 						</goals>
@@ -86,35 +178,7 @@ Contributors:
 				</executions>
 			</plugin>
 
-			<!-- copy plugin-list -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>${maven-dependency-plugin.version}</version>
-				<executions>
-					<execution>
-						<id>copy-n4js-plugins</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.eclipse.n4js</groupId>
-									<artifactId>org.eclipse.n4js.runner.nodejs</artifactId>
-									<version>0.0.1-SNAPSHOT</version>
-									<type>jar</type>
-									<destFileName>optional-new-name.jar</destFileName>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${project.build.directory}/${hlc.plugin-folder}</outputDirectory>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+
 
 			<plugin>
 				<!-- Executing the build as part of the integration test in a separate 
@@ -147,7 +211,7 @@ Contributors:
 						<argument>-jar</argument>
 						<argument>${project.build.directory}/${hlc.jar-shortname}</argument>
 						<argument>--help</argument><!-- this will show helpl only -->
-						<!-- <argument>-projectroot</argument> <argument>${project.build.directory}/test</argument>
+						<!-- <argument>-projectroot</argument> <argument>${project.build.directory}/test</argument> 
 							<argument>a/b/c/A.n4js</argument> <argument>-version</argument> -->
 					</arguments>
 					<!-- optional -->
@@ -165,298 +229,32 @@ Contributors:
 				</configuration>
 			</plugin>
 
-
-			<!--
-			The following will deploy this artifact to a temporary maven repository (aka "local build repo").
-			This be used by the N4JS IDE extensions builds to extend / test N4JSC. There are several
-			other cases like this; search for "Enable deploy:". THIS IS TEMPORARY AND SHOULD BE CLEANED-UP!
-			-->
+			<!-- Jenkins issues -->
+			<!-- We only consume fat-jar we produce with maven by the configuration 
+				above. But, hlc is an 'eclipse-bundle' to have it nicely shown in eclipse, 
+				but we are not really interested in the bundle jar. Unfortunately when this 
+				artificial bundle is process by tycho-p2-plugin it produces errors !ENTRY 
+				org.eclipse.equinox.p2.publisher.eclipse 4 0 2017-07-31 11:14:34.478 !MESSAGE 
+				Unable to acquire PluginConverter service during generation for: /var/lib/build/workspace/n4js/tools/org.eclipse.n4js.hlc/target/org.eclipse.n4js.hlc-0.0.1-SNAPSHOT-fat.jar. 
+				which is probably due to the manifest of the fat jar, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=407312 
+				It would be best to not process attached fat-jar with tycho tools. Alternatively 
+				revert HLC to be plain maven project. For now, just disable tycho-p2. -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>${maven-deploy-plugin.version}</version>
-				<!-- Enable deploy: -->
-					<executions>
-						<execution>
-							<id>deploy-to-local-build-repo</id>
-							<!-- rebind to default phase 'deploy' -->
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-							<configuration>
-								<altDeploymentRepository>local-build-repo::default::file:${local-snapshot-deploy-folder}</altDeploymentRepository>
-							</configuration>
-						</execution>
-					</executions>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-p2-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>attach-p2-metadata</id>
+						<goals>
+							<goal>p2-metadata</goal>
+						</goals>
+						<phase></phase>
+					</execution>
+				</executions>
 			</plugin>
-
 		</plugins>
 
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<!-- M2E specific lifecycle configruation to suppress the warning: "maven-enforcer-plugin 
-						(goal "enforce") is ignored by m2e." source: http://stackoverflow.com/a/13043842 -->
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.apache.maven.plugins</groupId>
-										<artifactId>maven-enforcer-plugin</artifactId>
-										<versionRange>[1.0.0,)</versionRange>
-										<goals>
-											<goal>enforce</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore />
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 
-
-
-
-
-	<dependencies>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.transpiler</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.transpiler.es</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.n4mf</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.n4mf.model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.external.libraries</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.hlc.base</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.utils</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.ts.model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.ts</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.common.unicode</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.environments</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.generator</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.generator.common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.generator.headless</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.regex</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.jsdoc</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!-- N4JSX -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.n4jsx</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.n4jsx.model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!-- Runner base -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.runner</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!-- Node Runner -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.runner.nodejs</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!-- Tester base -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.tester</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-servlets</artifactId>
-			<version>[9.2.9.v20150224]</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-util-ajax</artifactId>
-			<version>[9.2.9.v20150224]</version>
-		</dependency>
-		<!-- Node Tester -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.tester.nodejs</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<!-- Test helper for the integration tests. -->
-		<dependency>
-			<groupId>org.eclipse.n4js</groupId>
-			<artifactId>org.eclipse.n4js.tests.helper</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext</artifactId>
-			<version>${xtext.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext.common.types</artifactId>
-			<version>${xtext.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.xtext</groupId>
-			<artifactId>org.eclipse.xtext.xbase.lib</artifactId>
-			<version>${xtext.version}</version>
-		</dependency>
-		<dependency>
-  		  <groupId>args4j</groupId>
-  		  <artifactId>args4j</artifactId>
-  		  <version>2.0.31</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-maven-plugin</artifactId>
-			<version>9.2.9.v20150224</version>
-		</dependency>
-		<!-- Missing IWorkspcae -->
-		<dependency>
-			<groupId>org.eclipse.platform</groupId>
-			<artifactId>org.eclipse.core.resources</artifactId>
-			<version>${org.eclipse.core.resources-version}</version>
-		</dependency>
-		<!-- xsemantics -->
-		<dependency>
-			<groupId>net.sf.xsemantics</groupId>
-			<artifactId>it.xsemantics.dsl</artifactId>
-			<version>1.12.0</version>
-		</dependency>
-		<!-- Xcore lib -->
-		<dependency>
-			<groupId>org.eclipse.emf</groupId>
-			<artifactId>org.eclipse.emf.ecore.xcore.lib</artifactId>
-			<version>${org.eclipse.emf.ecore.xcore.lib-version}</version>
-		</dependency>
-<!--  Smaller version of com.ibm.icu - base path only :
-		<dependency>
-		    <groupId>at.bestsolution.eclipse</groupId>
-		    <artifactId>com.ibm.icu.base</artifactId>
-		    <version>54.1.1</version>
-		</dependency>
- -->
- 		<dependency>
-				<groupId>com.ibm.icu</groupId>
-				<artifactId>icu4j</artifactId>
-				<version>56.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.eclipse.jgit</groupId>
-			<artifactId>org.eclipse.jgit</artifactId>
-			<version>4.6.0.201612231935-r</version>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.12</version>
-		</dependency>
-
-		<!-- Fixed version of guava -->
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>[15.0.0]</version>
-		</dependency>
-	</dependencies>
 </project>

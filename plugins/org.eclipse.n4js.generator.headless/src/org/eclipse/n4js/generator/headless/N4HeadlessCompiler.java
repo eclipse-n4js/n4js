@@ -1037,6 +1037,7 @@ public class N4HeadlessCompiler {
 		collectResources(markedProject, resSet, recorder);
 		loadResources(markedProject, recorder);
 		indexResources(markedProject, resSet);
+		postProcessResources(markedProject);
 	}
 
 	/**
@@ -1239,6 +1240,36 @@ public class N4HeadlessCompiler {
 	/*
 	 * ===============================================================================================================
 	 *
+	 * PROJECT POST-PROCESSING
+	 *
+	 * ===============================================================================================================
+	 */
+
+	/**
+	 * Post processing on the whole project. While validations can trigger post processing in a lazy way, they do not
+	 * guarantee that all resources will be fully processed. This is an issue in larger project graphs. Unlike in the
+	 * IDE which can at any point load AST on demand based on the TModel, the HLC does not allow to access AST after
+	 * unloading therefore we explicitly post process all N4JS resources in the given project.
+	 *
+	 * @param markedProject
+	 *            project to trigger post process.
+	 */
+	private void postProcessResources(MarkedProject markedProject) {
+		printDebug(" PostProcessing " + markedProject);
+		Iterables.filter(markedProject.resources, resource -> resource.isLoaded()).forEach(resource -> {
+			if (resource instanceof N4JSResource) {
+				N4JSResource n4jsResource = (N4JSResource) resource;
+
+				// Make sure the resource is fully postprocessed before unloading the AST. Otherwise, resolving
+				// cross references to the elements inside the resources from dependent projects will fail.
+				n4jsResource.performPostProcessing();
+			}
+		});
+	}
+
+	/*
+	 * ===============================================================================================================
+	 *
 	 * PROJECT VALIDATION
 	 *
 	 * ===============================================================================================================
@@ -1260,6 +1291,7 @@ public class N4HeadlessCompiler {
 	private void validateProject(MarkedProject markedProject, N4ProgressStateRecorder recorder,
 			IssueAcceptor issueAcceptor) throws N4JSCompileErrorException {
 
+		printDebug(" Validating project " + markedProject);
 		IssueCollector issueCollector = new IssueCollector();
 		IssueFilter issueFilter = new IssueFilter(issueCollector, issue -> issue.getSeverity() == Severity.ERROR);
 		issueAcceptor = new IssueAcceptorTee(issueAcceptor, issueFilter);
@@ -1270,6 +1302,7 @@ public class N4HeadlessCompiler {
 					(!n4jsCore.isNoValidate(resource.getURI())) && // is validating
 					(!markedProject.externalResources.contains(resource)) // not in external folder
 			) {
+				printDebug("   Validating resource " + resource.getURI());
 				XtextResource xtextResource = (XtextResource) resource;
 				IResourceValidator validator = xtextResource.getResourceServiceProvider().getResourceValidator();
 				List<Issue> issues = validator.validate(xtextResource, CheckMode.ALL, CancelIndicator.NullImpl);
@@ -1609,7 +1642,7 @@ public class N4HeadlessCompiler {
 	 *            the warning to print
 	 */
 	private void warn(String message) {
-		println(" WARN:  " + message);
+		println(" WARN: " + message);
 	}
 
 	/**
@@ -1922,9 +1955,6 @@ public class N4HeadlessCompiler {
 				if (resource instanceof N4JSResource) {
 					N4JSResource n4jsResource = (N4JSResource) resource;
 
-					// Make sure the resource is fully postprocessed before unloading the AST. Otherwise, resolving
-					// cross references to the elements inside the resources from dependent projects will fail.
-					n4jsResource.performPostProcessing();
 					n4jsResource.unloadAST();
 				}
 			});

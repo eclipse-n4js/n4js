@@ -25,7 +25,7 @@ public class FileChecker extends AbstractFileChecker {
 		NORMAL, XSEMANTICS, Xpect
 	}
 
-	private static final Mode MODE = Mode.Xpect;
+	private static final Mode MODE = Mode.NORMAL;
 
 	private static final boolean FIX_FILE_ENDING = false;
 	private static final boolean FIX_TRAILING_WHITE_SPACE = false;
