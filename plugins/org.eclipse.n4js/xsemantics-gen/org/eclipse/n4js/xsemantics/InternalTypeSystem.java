@@ -179,9 +179,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
-import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**
  * N4JS Type System.
@@ -5976,13 +5974,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(
+    T = TypeUtils.createNonSimplifiedUnionType(
       ListExtensions.<TypeRef, TypeRef>map(U.getTypeRefs(), _function));
-    final Procedure1<UnionTypeExpression> _function_1 = (UnionTypeExpression it) -> {
-      it.setOriginalComposedTypeRef(U);
-    };
-    UnionTypeExpression _doubleArrow = ObjectExtensions.<UnionTypeExpression>operator_doubleArrow(_createNonSimplifiedUnionType, _function_1);
-    T = _doubleArrow;
     TypeUtils.copyTypeModifiers(T, U);
     return new Result<TypeRef>(T);
   }
@@ -6021,13 +6014,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    IntersectionTypeExpression _createNonSimplifiedIntersectionType = TypeUtils.createNonSimplifiedIntersectionType(
+    T = TypeUtils.createNonSimplifiedIntersectionType(
       ListExtensions.<TypeRef, TypeRef>map(I.getTypeRefs(), _function));
-    final Procedure1<IntersectionTypeExpression> _function_1 = (IntersectionTypeExpression it) -> {
-      it.setOriginalComposedTypeRef(I);
-    };
-    IntersectionTypeExpression _doubleArrow = ObjectExtensions.<IntersectionTypeExpression>operator_doubleArrow(_createNonSimplifiedIntersectionType, _function_1);
-    T = _doubleArrow;
     TypeUtils.copyTypeModifiers(T, I);
     return new Result<TypeRef>(T);
   }
@@ -6690,7 +6678,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     if (haveReplacement) {
       result = TypeUtils.<ComposedTypeRef>copy(typeRef);
       result.setComposedMemberCache(null);
-      result.setOriginalComposedTypeRef(typeRef);
       result.getTypeRefs().clear();
       /* result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs)) */
       if (!result.getTypeRefs().addAll(TypeUtils.<TypeRef>copyAll(substTypeRefs))) {

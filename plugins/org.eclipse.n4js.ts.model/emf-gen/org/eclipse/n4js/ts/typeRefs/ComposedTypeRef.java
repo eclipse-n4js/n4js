@@ -29,7 +29,6 @@ import org.eclipse.n4js.ts.types.ComposedMemberCache;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getComposedMemberCache <em>Composed Member Cache</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getOriginalComposedTypeRef <em>Original Composed Type Ref</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getTypeRefs <em>Type Refs</em>}</li>
  * </ul>
  *
@@ -66,34 +65,6 @@ public interface ComposedTypeRef extends StaticBaseTypeRef {
 	 * @generated
 	 */
 	void setComposedMemberCache(ComposedMemberCache value);
-
-	/**
-	 * Returns the value of the '<em><b>Original Composed Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * <!-- begin-model-doc -->
-	 * During type variable substitution, type references may be copied. Whenever this happens
-	 * to a ComposedTypeRef, Xsemantics rule 'substTypeVariablesInComposedTypeRef' will let this
-	 * property point to the original ComposedTypeRef. This is required for caching composed
-	 * members, see {@link ComposedMemberScope#getCacheHolder(ComposedTypeRef)}.
-	 * <!-- end-model-doc -->
-	 * @return the value of the '<em>Original Composed Type Ref</em>' reference.
-	 * @see #setOriginalComposedTypeRef(ComposedTypeRef)
-	 * @see org.eclipse.n4js.ts.typeRefs.TypeRefsPackage#getComposedTypeRef_OriginalComposedTypeRef()
-	 * @model transient="true"
-	 * @generated
-	 */
-	ComposedTypeRef getOriginalComposedTypeRef();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getOriginalComposedTypeRef <em>Original Composed Type Ref</em>}' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Original Composed Type Ref</em>' reference.
-	 * @see #getOriginalComposedTypeRef()
-	 * @generated
-	 */
-	void setOriginalComposedTypeRef(ComposedTypeRef value);
 
 	/**
 	 * Returns the value of the '<em><b>Type Refs</b></em>' containment reference list.
