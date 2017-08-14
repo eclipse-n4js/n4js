@@ -235,12 +235,12 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 */
 	private ComposedMemberCache getOrCreateComposedMemberCache(ComposedTypeRef ctr) {
 		final ComposedTypeRef ctrWithCache = getComposedTypeRefWithCache(ctr);
-		final ComposedMemberCache cache = ctr.getComposedMemberCache();
+		final ComposedMemberCache cache = ctrWithCache.getComposedMemberCache();
 		if (cache != null) {
 			return cache;
 		}
 		// does not exist yet -> create new composed member cache in TModule:
-		final Resource res = ctr.eResource(); // may be null
+		final Resource res = ctrWithCache.eResource(); // may be null
 		final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : null;
 		if (module != null) {
 			final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();

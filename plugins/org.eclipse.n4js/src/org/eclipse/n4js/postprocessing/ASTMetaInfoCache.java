@@ -282,9 +282,9 @@ public final class ASTMetaInfoCache {
 		sb.append("cache's hasBrokenAST == " + hasBrokenAST + "\n");
 		sb.append("cache's astNodesCurrentlyBeingTyped == " + astNodesCurrentlyBeingTyped + "\n");
 		sb.append("resource' fullyPostProcessed = " + (resource != null ? resource.isFullyProcessed()
-				: "dont know. Resource is null"));
+				: "don't know. Resource is null.") + "\n");
 		sb.append("resource' isPostProcessing = "
-				+ (resource != null ? resource.isProcessing() : "dont know. Resource is null"));
+				+ (resource != null ? resource.isProcessing() : "don't know. Resource is null") + "\n");
 
 		if (showSourceCode) {
 			final Script script = resource != null ? resource.getScript() : null;

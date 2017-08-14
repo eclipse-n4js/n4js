@@ -12,6 +12,6 @@ Contributors:
 
 n4jside-build: Building Products.
 =====
-Currently there is the Product definition for the N4JS-IDE.
-
-The Products will be created when using the Profile *buildProduct*
+`org.eclipse.n4js.product.build` is the Product definition for the N4JS-IDE, which is materialized when using the Profile *buildProduct*
+`org.eclipse.n4js.product.headless.build` is the product definition used in the headless compiler. This one is not materialized, but 
+repository for its plugins is always created.

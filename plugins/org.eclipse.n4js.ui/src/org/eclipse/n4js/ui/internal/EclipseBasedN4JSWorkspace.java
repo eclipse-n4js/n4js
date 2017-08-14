@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.ui.internal;
 
-import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 import static java.util.Collections.emptyList;
+import static org.eclipse.n4js.internal.N4JSModel.DIRECT_RESOURCE_IN_PROJECT_SEGMENTCOUNT;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,6 +37,13 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.ArchiveURIUtil;
+import org.eclipse.n4js.internal.InternalN4JSWorkspace;
+import org.eclipse.n4js.internal.N4JSSourceContainerType;
+import org.eclipse.n4js.n4mf.ProjectDescription;
+import org.eclipse.n4js.n4mf.ProjectReference;
+import org.eclipse.n4js.projectModel.IN4JSArchive;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 
 import com.google.common.collect.Iterators;
@@ -45,14 +52,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.UnmodifiableIterator;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ArchiveURIUtil;
-import org.eclipse.n4js.internal.InternalN4JSWorkspace;
-import org.eclipse.n4js.internal.N4JSSourceContainerType;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.n4mf.ProjectReference;
-import org.eclipse.n4js.projectModel.IN4JSArchive;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 
 /**
  */
