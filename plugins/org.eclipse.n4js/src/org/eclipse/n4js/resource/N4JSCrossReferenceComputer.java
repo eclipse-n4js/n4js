@@ -176,11 +176,6 @@ public class N4JSCrossReferenceComputer {
 	private void handleType(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
 			Type to) {
 		if (to != null) {
-			// TDO IDE-1253: If 'to' is a composed member, it can happen that 'to' is not contained in a resource
-			if (to instanceof TMember && ((TMember) to).isComposed()) {
-				if (to.eResource() == null)
-					return; // quick fix: ignore this member (would lead to an exception below)
-			}
 			if (!N4Scheme.isFromResourceWithN4Scheme(to) &&
 					externalReferenceChecker.isResolvedAndExternal(resource, to)) {
 				acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from, Collections.singletonList(to)));
