@@ -51,9 +51,9 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
-import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
+import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -77,7 +77,6 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
-import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -236,6 +235,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Inject
 	private IN4JSCore n4jsCore;
+
+	@Inject
+	private LoadFromSourceHelper loadFromSourceHelper;
 
 	/**
 	 *
@@ -497,12 +499,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		((ModuleAwareContentsList) contents).sneakyAdd(object);
 	}
 
-	@Override
-	public void update(int offset, int replacedTextLength, String newText) {
-		ASTProcessor.resetCycliclyDependentResourcesOf(this);
-		super.update(offset, replacedTextLength, newText);
-	}
-
 	/**
 	 * Overridden to make sure that the cache is initialized during {@link #isLoading() loading}.
 	 */
@@ -761,28 +757,31 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSD_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)) {
+
 				// proxy is pointing into an .n4js or .n4jsd file ...
-				final String targetFragment = targetUri.fragment();
-				final Resource targetResource = resSet.getResource(targetResourceUri, false);
-				// special handling #1:
-				// if targetResource is not loaded yet, try to load it from index first
-				// (EXCEPT: in case of a cyclic dependency between 'this' and targetResource, we need to load from
-				// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we
-				// already know contextResource depends on resourceURI)
-				// FIXME GH-66 but what if 'this' is not currently being processed? (e.g. after loading this from index)
-				final boolean isCycliclyDependentTargetResource = isBackwardDependentResource(targetResourceUri);
-				if (targetResource == null && !isCycliclyDependentTargetResource) {
-					if (targetFragment != null && (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
-						// uri points to a TModule element in a resource not yet contained in our resource set
-						// --> try to load target resource from index
-						final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-						final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
-						if (resDesc != null) {
-							// next line will add the new resource to resSet.resources
-							n4jsCore.loadModuleFromIndex(resSet, resDesc, false);
+				// check if we can work with the TModule from the index or if it is mandatory to load from source
+				if (loadFromSourceHelper.mustLoadFromSource(targetUri.trimFragment(), getResourceSet())) {
+
+					final String targetFragment = targetUri.fragment();
+					final Resource targetResource = resSet.getResource(targetResourceUri, false);
+
+					// special handling #1:
+					// if targetResource is not loaded yet, try to load it from index first
+					if (targetResource == null) {
+						if (targetFragment != null
+								&& (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
+							// uri points to a TModule element in a resource not yet contained in our resource set
+							// --> try to load target resource from index
+							final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+							final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
+							if (resDesc != null) {
+								// next line will add the new resource to resSet.resources
+								n4jsCore.loadModuleFromIndex(resSet, resDesc, false);
+							}
 						}
 					}
 				}
+
 				// standard behavior:
 				// obtain target EObject from targetResource in the usual way
 				// (might load targetResource from disk if it wasn't loaded from index above)
@@ -794,8 +793,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				if (targetObject != null && (this.isProcessing() || this.isFullyProcessed())) {
 					final Resource targetResource2 = targetObject.eResource();
 					if (targetResource2 instanceof N4JSResource) {
-						((N4JSResource) targetResource2)
-								.performPostProcessing(); // no harm done, if already running/completed
+						// no harm done, if already running/completed
+						((N4JSResource) targetResource2).performPostProcessing();
 					}
 				}
 				// return resolved target object
@@ -809,37 +808,15 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		return EcoreUtil.resolve(proxy, this);
 	}
 
-	@Override
-	protected EObject getEObject(String uriFragment, Triple<EObject, EReference, INode> triple) throws AssertionError {
-		// TODO Auto-generated method stub
-		return super.getEObject(uriFragment, triple);
-	}
-
 	/**
-	 * Tells if the receiving resource is among the dependencies of the resource represented by the given URI. For a
-	 * definition of "dependencies", see {@link UserdataMapper#readDependenciesFromDescription(IResourceDescription)}.
+	 * Returns {@code true} if this resource has a transitive dependency on the given other resource.
+	 *
+	 * @param other
+	 *            the uri of the other resource.
+	 * @return true if this resource depends on the resource with the given URI.
 	 */
-	public boolean isBackwardDependentResource(URI targetResourceUri) {
-		final ResourceSet resSet = getResourceSet();
-		if (!targetResourceUri.equals(getURI())
-				&& n4jsCore.isInSameProject(targetResourceUri, getURI())) {
-			final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet); // FIXME GH-66
-			final IResourceDescription targetResourceDesc = index.getResourceDescription(targetResourceUri);
-			if (targetResourceDesc != null) {
-				final Optional<Set<URI>> targetResourceDeps = UserdataMapper.readDependenciesFromDescription(
-						targetResourceDesc, true, index);
-				if (targetResourceDeps.isPresent()) {
-					if (targetResourceDeps.get().contains(getURI())) {
-						return true;
-					}
-				} else {
-					// dependency information in index is incomplete (see API doc of #readDependenciesFromDescription())
-					// -> assume the target resource is backward dependent (to be on the safe side)
-					return true; // FIXME GH-66 this might be a performance leak; reconsider!!
-				}
-			}
-		}
-		return false;
+	public boolean isDependingOn(Set<URI> other) {
+		return loadFromSourceHelper.isDependingOn(this, other);
 	}
 
 	/**

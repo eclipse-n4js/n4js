@@ -476,35 +476,6 @@ UtilN4.tlog("DONE " + resource.URI);
 	// ---------------------------------------------------------------------------------------------------------------
 
 
-	// FIXME GH-66 clean up: move this somewhere else
-	/**
-	 * Resets all resources R from the containing resource set that have a cyclic dependency with the given resource, as
-	 * follows: if R was loaded from the Xtext index, it is unloaded; if R was loaded from AST its derived state is
-	 * discarded.
-	 * <p>
-	 * BACKGROUND: this method has to be invoked before any actual post-processing of the given resource starts, because
-	 * otherwise, during the processing of the given resource, we might end up using TModule information that was
-	 * derived from the resource we are currently processing and is thus out-dated.
-	 */
-	def public static void resetCycliclyDependentResourcesOf(N4JSResource resource) {
-		for(otherResource : resource.getResourceSet().getResources()) {
-			if(otherResource!==resource) {
-				if(otherResource instanceof N4JSResource) {
-					if(otherResource.isFullyProcessed) {
-						if(resource.isBackwardDependentResource(otherResource.URI)
-								&& otherResource.isBackwardDependentResource(resource.URI)) {
-							if(otherResource.isLoadedFromDescription) {
-								otherResource.unload;
-							} else {
-								otherResource.discardDerivedState;
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
 	/**
 	 * Normally, forward references are allowed only to {@link N4JSLanguageUtils#isIdentifiableSubtree(EObject)
 	 * identifiable subtrees}. However, there are exception cases that are also allowed and this method returns

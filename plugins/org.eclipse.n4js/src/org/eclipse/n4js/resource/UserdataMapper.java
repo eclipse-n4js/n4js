@@ -38,12 +38,10 @@ import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
-import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -322,58 +320,17 @@ public final class UserdataMapper {
 	 * In this case, we also say D <em>is a dependency of</em> R.
 	 */
 	public static String[] readDependenciesFromDescription(IResourceDescription description) {
+		// TODO use type and name computed from descrition uri
 		final Iterable<IEObjectDescription> modules = description
 				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
 			final String dependenciesStr = module.getUserData(USERDATA_KEY_DEPENDENCIES);
 			if (dependenciesStr != null) {
+				// TODO use delimiter e.g. File.pathDelimiter
 				return dependenciesStr.split(",");
 			}
 		}
 		return null;
 	}
 
-	// FIXME GH-66 consider caching return value
-	// FIXME GH-66 consider computing closure before writing to index
-	/**
-	 * Like {@link #readDependenciesFromDescription(IResourceDescription)}, but the dependencies are returned as a set
-	 * of URIs. When <code>transitive</code> is <code>true</code>, the transitive closure of dependencies will be
-	 * returned.
-	 *
-	 * @return set of URIs (may be empty in case there are no dependencies) or {@link Optional#absent() nothing} if the
-	 *         index is missing dependency information for the resource represented by 'description' or one of the
-	 *         resources in the transitive closure and thus the closure could not be computed entirely (and would
-	 *         therefore be unreliable).
-	 */
-	public static Optional<Set<URI>> readDependenciesFromDescription(IResourceDescription description,
-			boolean transitive, IResourceDescriptions index) {
-		final Set<URI> result = Sets.newLinkedHashSet();
-		if (readDependenciesFromDescription(description, transitive, index, result)) {
-			return Optional.of(result);
-		}
-		return Optional.absent();
-	}
-
-	private static boolean readDependenciesFromDescription(IResourceDescription description, boolean transitive,
-			IResourceDescriptions index, Set<URI> addHere) {
-		final String[] deps = readDependenciesFromDescription(description);
-		if (deps == null) {
-			return false;
-		}
-		for (String dep : deps) {
-			final URI depURI = URI.createURI(dep);
-			final boolean wasAdded = addHere.add(depURI);
-			if (transitive && wasAdded) {
-				final IResourceDescription depDesc = index.getResourceDescription(depURI);
-				if (depDesc != null) {
-					if (!readDependenciesFromDescription(depDesc, transitive, index, addHere)) {
-						return false;
-					}
-				} else {
-					// FIXME GH-66 returning false here breaks the tests, but why? (this would seem more consistent)
-				}
-			}
-		}
-		return true;
-	}
 }

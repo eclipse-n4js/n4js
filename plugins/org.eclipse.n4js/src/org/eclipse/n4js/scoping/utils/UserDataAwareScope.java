@@ -13,7 +13,6 @@ package org.eclipse.n4js.scoping.utils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -29,7 +28,6 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.ISelectable;
 import org.eclipse.xtext.scoping.IScope;
-import org.eclipse.xtext.scoping.IScopeProvider;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -103,9 +101,8 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 	 * Factory method to produce a scope. The factory pattern allows to bypass the explicit object creation if the
 	 * produced scope would be empty.
 	 *
-	 * @param contextResource
-	 *            containing resource of the EObject passed as 'context' argument to
-	 *            {@link IScopeProvider#getScope(EObject, EReference)} when triggering creation of this scope.
+	 * @param loadFromSourceHelper
+	 *            utility to decide if a resource must be loaded from source or may be loaded from the index.
 	 */
 	public static IScope createScope(
 			IScope outer,
@@ -113,26 +110,30 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			Predicate<IEObjectDescription> filter,
 			EClass type, boolean ignoreCase,
 			ResourceSet resourceSet,
-			Resource contextResource,
+			LoadFromSourceHelper loadFromSourceHelper,
 			IContainer container) {
 		if (selectable == null || selectable.isEmpty())
 			return outer;
-		IScope scope = new UserDataAwareScope(outer, selectable, filter, type, ignoreCase, resourceSet, contextResource,
+		IScope scope = new UserDataAwareScope(outer, selectable, filter, type, ignoreCase, resourceSet,
+				loadFromSourceHelper,
 				container);
 		return scope;
 	}
 
 	private final ResourceSet resourceSet;
-	/** @see #createScope(IScope, ISelectable, Predicate, EClass, boolean, ResourceSet, Resource, IContainer) */
-	private final Resource contextResource;
+	/**
+	 * @see #createScope(IScope, ISelectable, Predicate, EClass, boolean, ResourceSet, LoadFromSourceHelper, IContainer)
+	 */
+	private final LoadFromSourceHelper loadFromSourceHelper;
 	private final IContainer container;
 	private final EClass type;
 
 	UserDataAwareScope(IScope outer, ISelectable selectable, Predicate<IEObjectDescription> filter, EClass type,
-			boolean ignoreCase, ResourceSet resourceSet, Resource contextResource, IContainer container) {
+			boolean ignoreCase, ResourceSet resourceSet, LoadFromSourceHelper loadFromSourceHelper,
+			IContainer container) {
 		super(outer, selectable, filter, type, ignoreCase);
 		this.resourceSet = resourceSet;
-		this.contextResource = contextResource;
+		this.loadFromSourceHelper = loadFromSourceHelper;
 		this.container = container;
 		this.type = type;
 	}
@@ -157,15 +158,14 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 				&& EcoreUtil2.isAssignableFrom(type, original.getEClass())) {
 			final URI objectURI = original.getEObjectURI();
 			final URI resourceURI = objectURI.trimFragment();
-			// in case of a cyclic dependency between contextResource and resourceURI, we need to force loading from
-			// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we already
-			// know contextResource depends on resourceURI
-			UtilN4.tlog("checking: " + contextResource.getURI().lastSegment() + " -> " + resourceURI.lastSegment());
-			final boolean isBackwardDependentResource = contextResource instanceof N4JSResource
-					&& ((N4JSResource) contextResource).isBackwardDependentResource(resourceURI);
-			final boolean forceLoadingFromSourceFile = isBackwardDependentResource;
+			Resource resource = resourceSet.getResource(resourceURI, false);
+			if (resource != null && resource.isLoaded()) {
+				return original;
+			}
+			final boolean forceLoadingFromSourceFile = loadFromSourceHelper.mustLoadFromSource(resourceURI,
+					resourceSet);
 			UtilN4.tlog("force = " + forceLoadingFromSourceFile);
-			Resource resource = resourceSet.getResource(resourceURI, forceLoadingFromSourceFile);
+			resource = resourceSet.getResource(resourceURI, forceLoadingFromSourceFile);
 			if (resource != null && resource.isLoaded()) {
 				return original;
 			}
