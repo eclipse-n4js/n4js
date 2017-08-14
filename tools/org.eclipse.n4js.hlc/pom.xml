@@ -50,7 +50,6 @@ Contributors:
 
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<!-- unpack product plugins to target folder -->
 			<plugin>

@@ -24,7 +24,6 @@ Contributors:
 	<description>Test the headless N4js compiler bundled into one jar.</description>
 
 	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<!-- copy the executable jar to this run -->
 			<plugin>
@@ -96,15 +95,6 @@ Contributors:
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
-				<configuration>
-					<!--
-					Need to reset testSourceDirectory and testClassesDirectory to their default values, because
-					our parent pom.xml changes them to special values required for OSGi bundles (but here we are
-					in a plain maven project).
-					-->
-					<testSourceDirectory>${project.build.testSourceDirectory}</testSourceDirectory>
-					<testClassesDirectory>${project.build.testOutputDirectory}</testClassesDirectory>
-				</configuration>
 				<executions>
 					<execution>
 						<id>default-test</id>
