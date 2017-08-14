@@ -107,10 +107,6 @@ Contributors:
 				</configuration>
 				<executions>
 					<execution>
-						<id>run-pojo-surefire-tests</id>
-						<phase/> <!-- empty phase turns off the execution with id "run-pojo-surefire-tests" -->
-					</execution>
-					<execution>
 						<id>default-test</id>
 						<configuration>
 							<systemProperties>
