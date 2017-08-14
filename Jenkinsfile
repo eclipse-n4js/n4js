@@ -63,7 +63,7 @@ timestamps {
                     def xvfbBin = tool(name: 'default', type: 'org.jenkinsci.plugins.xvfb.XvfbInstallation')
 
                     String targetPomFile = "--file ${workspace}/${n4jsDir}//pom.xml"
-                    String commonOptions = "-Dmaven.test.failure.ignore -X -e -DWORKSPACE=${env.WORKSPACE}"
+                    String commonOptions = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
 
                     String commonProfiles = "-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests"
                     if (isNightly()) {
