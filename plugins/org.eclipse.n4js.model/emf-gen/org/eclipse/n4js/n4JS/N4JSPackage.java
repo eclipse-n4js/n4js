@@ -2670,13 +2670,22 @@ public interface N4JSPackage extends EPackage {
 	int ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN = FUNCTION_EXPRESSION_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Single Expression</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARROW_FUNCTION___GET_SINGLE_EXPRESSION = FUNCTION_EXPRESSION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Implicit Return Expr</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARROW_FUNCTION___IMPLICIT_RETURN_EXPR = FUNCTION_EXPRESSION_OPERATION_COUNT + 2;
+	int ARROW_FUNCTION___IMPLICIT_RETURN_EXPR = FUNCTION_EXPRESSION_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Arrow Function</em>' class.
@@ -2685,7 +2694,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ARROW_FUNCTION_OPERATION_COUNT = FUNCTION_EXPRESSION_OPERATION_COUNT + 3;
+	int ARROW_FUNCTION_OPERATION_COUNT = FUNCTION_EXPRESSION_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.LocalArgumentsVariableImpl <em>Local Arguments Variable</em>}' class.
@@ -15308,6 +15317,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getArrowFunction__IsSingleExprImplicitReturn();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ArrowFunction#getSingleExpression() <em>Get Single Expression</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Single Expression</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ArrowFunction#getSingleExpression()
+	 * @generated
+	 */
+	EOperation getArrowFunction__GetSingleExpression();
+
+	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ArrowFunction#implicitReturnExpr() <em>Implicit Return Expr</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -20518,6 +20537,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN = eINSTANCE.getArrowFunction__IsSingleExprImplicitReturn();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Single Expression</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ARROW_FUNCTION___GET_SINGLE_EXPRESSION = eINSTANCE.getArrowFunction__GetSingleExpression();
 
 		/**
 		 * The meta object literal for the '<em><b>Implicit Return Expr</b></em>' operation.

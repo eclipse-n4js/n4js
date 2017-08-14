@@ -589,7 +589,15 @@ class ArrowFunction extends FunctionExpression {
 		!hasBracesAroundBody &&
 		(body !== null) &&
 		!body.statements.isEmpty &&
-		(body.statements.get(0) instanceof ExpressionStatement)
+		(body.statements.head instanceof ExpressionStatement)
+	}
+
+	/**
+	 * If {@link #isSingleExprImplicitReturn()} returns <code>true</code>, this method will return the single expression
+	 * that makes up the body of this arrow function, otherwise the behavior is undefined (might throw exception).
+	 */
+	op Expression getSingleExpression() {
+		return (body.statements.head as ExpressionStatement).expression;
 	}
 
 	/**

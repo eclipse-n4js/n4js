@@ -172,7 +172,9 @@ public abstract class AbstractTranspiler {
 			}
 
 			// step 1: ask transformation manager for transformations to execute
-			final Transformation[] transformations = computeTransformationsToBeExecuted(state);
+			final Transformation[] transformationsPreFiler = computeTransformationsToBeExecuted(state);
+			final Transformation[] transformations = TransformationDependency
+					.filterByTranspilerOptions(transformationsPreFiler, state.options);
 			TransformationDependency.assertDependencies(transformations);
 
 			// step 2: give each transformation a chance to perform early analysis on the initial (unchanged!) state

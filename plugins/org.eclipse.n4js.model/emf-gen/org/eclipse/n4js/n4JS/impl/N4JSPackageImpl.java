@@ -2462,8 +2462,17 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getArrowFunction__ImplicitReturnExpr() {
+	public EOperation getArrowFunction__GetSingleExpression() {
 		return arrowFunctionEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getArrowFunction__ImplicitReturnExpr() {
+		return arrowFunctionEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -6323,6 +6332,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(arrowFunctionEClass, ARROW_FUNCTION__HAS_BRACES_AROUND_BODY);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IS_ARROW_FUNCTION);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN);
+		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___GET_SINGLE_EXPRESSION);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IMPLICIT_RETURN_EXPR);
 
 		localArgumentsVariableEClass = createEClass(LOCAL_ARGUMENTS_VARIABLE);
@@ -7296,6 +7306,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getArrowFunction__IsArrowFunction(), theEcorePackage.getEBoolean(), "isArrowFunction", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getArrowFunction__IsSingleExprImplicitReturn(), theEcorePackage.getEBoolean(), "isSingleExprImplicitReturn", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getArrowFunction__GetSingleExpression(), this.getExpression(), "getSingleExpression", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getArrowFunction__ImplicitReturnExpr(), this.getExpression(), "implicitReturnExpr", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

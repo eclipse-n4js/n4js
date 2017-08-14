@@ -29,12 +29,12 @@ import org.eclipse.n4js.transpiler.es.transform.DestructuringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumAccessTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ExpressionTransformation;
-import org.eclipse.n4js.transpiler.es.transform.FormalParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.FunctionDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.JSXTransformation;
 import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
+import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation;
@@ -87,7 +87,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
 	@Inject
-	private Provider<FormalParameterTransformation> formalParameterTransformationProvider;
+	private Provider<RestParameterTransformation> restParameterTransformationProvider;
 	@Inject
 	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_TransformationProvider;
 	@Inject
@@ -130,7 +130,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				functionDeclarationTransformationProvider.get(),
 				arrowFunction_Part1_TransformationProvider.get(),
 				blockTransformationProvider.get(),
-				formalParameterTransformationProvider.get(),
+				restParameterTransformationProvider.get(),
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),

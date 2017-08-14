@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.transpiler;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Set;
 
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -24,6 +26,7 @@ import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
+
 import it.xsemantics.runtime.RuleEnvironment;
 
 /**
@@ -32,6 +35,8 @@ import it.xsemantics.runtime.RuleEnvironment;
  */
 @TransformationScoped
 public class TranspilerState {
+
+	public final Set<Class<? extends TranspilerOption>> options;
 
 	/**
 	 * The original resource to transpile. Should <b>never</b> be modified in any way from within the transpiler.
@@ -80,6 +85,7 @@ public class TranspilerState {
 	public TranspilerState(N4JSResource resource, MemberCollector memberCollector, Script_IM im, STECache steCache,
 			Tracer tracer,
 			InformationRegistry info) {
+		this.options = Collections.emptySet();
 		this.resource = resource;
 		this.G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
 		this.memberCollector = memberCollector;
@@ -106,7 +112,7 @@ public class TranspilerState {
 	/** The internal cache of STEs managed by {@link SymbolTableManagement} */
 	public static class STECache {
 
-		/** Map identifeable to original STE */
+		/** Map identifiable element to original STE */
 		public final HashMap<IdentifiableElement, SymbolTableEntryOriginal> mapOriginal = new HashMap<>();
 
 		/** Map name to internal STE */

@@ -20,15 +20,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import com.google.common.base.Joiner;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import org.eclipse.n4js.utils.collections.Arrays2;
+
+import com.google.common.base.Joiner;
 
 /**
  * Contains some annotation classes for declaring dependencies between {@link Transformation}s.
  */
 public abstract class TransformationDependency {
+
+	@Target({ TYPE })
+	@Retention(RetentionPolicy.RUNTIME)
+	public static @interface Optional {
+		public Class<? extends TranspilerOption>[] value();
+	}
 
 	/**
 	 * Declares that a {@link Transformation} {@code T} requires one or more other transformations {@code T1...Tn} to be
@@ -98,6 +106,29 @@ public abstract class TransformationDependency {
 	public static @interface ExcludesAfter {
 		/** Lists the excluded other transformations. */
 		public Class<? extends Transformation>[] value();
+	}
+
+	public static final boolean isActive(Transformation transformation,
+			Set<Class<? extends TranspilerOption>> activeOptions) {
+		final Optional ann = transformation.getClass().getAnnotation(Optional.class);
+		if (ann != null) {
+			// at least one of the options given in the annotation must be a super type of any of the active options
+			final Class<? extends TranspilerOption>[] annOptions = ann.value();
+			for (Class<? extends TranspilerOption> annOption : annOptions) {
+				for (Class<? extends TranspilerOption> activeOption : activeOptions) {
+					if (annOption.isAssignableFrom(activeOption)) { // is annOption a super type of activeOption?
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	public static final Transformation[] filterByTranspilerOptions(Transformation[] transformations,
+			Set<Class<? extends TranspilerOption>> options) {
+		return Stream.of(transformations).filter(t -> isActive(t, options)).toArray(len -> new Transformation[len]);
 	}
 
 	/**

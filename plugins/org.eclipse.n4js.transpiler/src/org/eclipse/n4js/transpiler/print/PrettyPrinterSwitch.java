@@ -16,13 +16,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-
 import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Annotation;
@@ -89,6 +88,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
@@ -100,6 +100,8 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.SwitchStatement;
+import org.eclipse.n4js.n4JS.TemplateLiteral;
+import org.eclipse.n4js.n4JS.TemplateSegment;
 import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
@@ -123,6 +125,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * Traverses an intermediate model and serializes it to a {@link SourceMapAwareAppendable}. Client code should only use
@@ -282,7 +285,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 	@Override
 	public Boolean caseArrowFunction(ArrowFunction original) {
-		throwUnsupportedSyntax();
 		if (original.isAsync()) {
 			write("async");
 		}
@@ -294,7 +296,12 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 		if (original.isHasBracesAroundBody()) {
 			process(original.getBody());
 		} else {
-			process(original.getBody().getStatements().get(0));
+			if (!original.isSingleExprImplicitReturn()) {
+				throw new IllegalStateException(
+						"arrow function without braces must be a valid single-expression arrow function");
+			}
+			final Expression singleExpr = original.getSingleExpression();
+			process(singleExpr);
 		}
 		return DONE;
 	}
@@ -308,6 +315,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 	@Override
 	public Boolean caseFormalParameter(FormalParameter original) {
 		processAnnotations(original.getAnnotations(), false);
+		if (original.isVariadic()) {
+			write("...");
+		}
 		write(original.getName());
 		processTypeRef(original.getDeclaredTypeRef());
 		if (original.getInitializer() != null) {
@@ -655,9 +665,19 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 	@Override
 	public Boolean casePropertyNameValuePair(PropertyNameValuePair original) {
-		processPropertyName(original);
-		write(": ");
+		if (original.getDeclaredName() != null) {
+			processPropertyName(original);
+			write(": ");
+		} else {
+			// FIXME PNVP without name only legal in destructuring pattern!!
+		}
 		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
+	public Boolean casePropertyNameValuePairSingleName(PropertyNameValuePairSingleName original) {
+		process(original.getIdentifierRef());
 		return DONE;
 	}
 
@@ -824,6 +844,52 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 			write(original.getRawValue());
 		} else {
 			write(quote(original.getValueAsString()));
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseTemplateLiteral(TemplateLiteral original) {
+		final int indentLevelOLD = out.getIndentLevel();
+		try {
+			out.setIndentLevel(0);
+			for (Expression segment : original.getSegments()) {
+				process(segment);
+			}
+		} finally {
+			out.setIndentLevel(indentLevelOLD);
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseTemplateSegment(TemplateSegment original) {
+		if (out.getIndentLevel() != 0) {
+			// note: if the segment contains new line characters, the indent level must be 0 because otherwise 'out'
+			// would add incorrect indentation inside the template segment; we could reset it to 0 here, but since
+			// TemplateSegments may only appear as children of TemplateLiterals and #caseTemplateLiteral() is also
+			// resetting the indent level, we can here simply rely on our parent having already done this.
+			throw new IllegalStateException("parent TemplateLiteral did not reset the indent level to 0");
+		}
+		final TemplateLiteral parent = (TemplateLiteral) original.eContainer();
+		final List<Expression> segments = parent.getSegments();
+		final int len = segments.size();
+		final Expression first = segments.get(0);
+		final Expression last = segments.get(len - 1);
+		if (original == first) {
+			write("`");
+		} else {
+			write("}");
+		}
+		if (original.getRawValue() != null) {
+			write(original.getRawValue());
+		} else {
+			write(quote(original.getValueAsString()));
+		}
+		if (original == last) {
+			write("`");
+		} else {
+			write("${");
 		}
 		return DONE;
 	}
