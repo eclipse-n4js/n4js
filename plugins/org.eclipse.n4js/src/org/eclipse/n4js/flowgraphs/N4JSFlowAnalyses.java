@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,6 +77,17 @@ public class N4JSFlowAnalyses {
 			cfElems.add(cfEdge.end.getCFE());
 		}
 		return cfElems;
+	}
+
+	/**
+	 * @return collection of all {@link ControlFlowElement}s covered by the control flow analyses
+	 */
+	public Collection<ControlFlowElement> getAllElements() {
+		List<ControlFlowElement> allCFEs = new LinkedList<>();
+		for (ComplexNode cn : cfg.getAllComplexNodes()) {
+			allCFEs.add(cn.getCFE());
+		}
+		return allCFEs;
 	}
 
 }

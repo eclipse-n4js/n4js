@@ -193,10 +193,6 @@ final class ControlFlowChildren extends Dispatcher {
 		return cfc;
 	}
 
-	static List<Expression> _get(@SuppressWarnings("unused") Expression e) {
-		return Collections.emptyList();
-	}
-
 	private static List<Expression> getCFChildren(Expression accessExpr) {
 		List<Expression> cfChildren = new LinkedList<>();
 		if (accessExpr instanceof ParameterizedPropertyAccessExpression) {

@@ -52,6 +52,7 @@ abstract public class Dispatcher {
 			if (candidate) {
 				try {
 					result = (R) m.invoke(null, cfe);
+					// System.out.println("dispatch to " + name + "(" + pTypes[0].getSimpleName() + ")");
 					return result;
 				} catch (Exception e) {
 					e.printStackTrace();
