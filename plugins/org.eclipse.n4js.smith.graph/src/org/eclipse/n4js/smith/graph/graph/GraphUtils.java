@@ -21,6 +21,7 @@ import java.util.stream.Stream;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Path;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Transform;
 import org.eclipse.swt.widgets.Display;
@@ -119,6 +120,65 @@ public class GraphUtils {
 		if (directed) {
 			drawArrowHead(gc, p1, p2);
 		}
+	}
+
+	public static void drawArc(GC gc, Point p1, Point p2, boolean directed) {
+		gc.drawLine(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y));
+		if (directed) {
+			drawArrowHead(gc, p1, p2);
+		}
+	}
+
+	public static float[] arc(GC gc, Point ctr, Point src, Point tgt) {
+		Path path = new Path(gc.getDevice());
+		path.moveTo((int) src.x, (int) src.y);
+		path.quadTo((int) ctr.x, (int) ctr.y, (int) tgt.x, (int) tgt.y);
+		gc.drawPath(path);
+
+		float[] pp = path.getPathData().points;
+		return pp;
+	}
+
+	public static Point pointOnRect(float x, float y, float minX, float minY, float maxX, float maxY) {
+		// assert minX <= maxX;
+		// assert minY <= maxY;
+		if ((minX < x && x < maxX) && (minY < y && y < maxY))
+			return null;
+
+		float midX = (minX + maxX) / 2;
+		float midY = (minY + maxY) / 2;
+		// if (midX - x == 0) -> m == ±Inf -> minYx/maxYx == x (because value / ±Inf = ±0)
+		float m = (midY - y) / (midX - x);
+
+		if (x <= midX) { // check "left" side
+			float minXy = m * (minX - x) + y;
+			if (minY <= minXy && minXy <= maxY)
+				return new Point(minX, minXy);
+		}
+
+		if (x >= midX) { // check "right" side
+			float maxXy = m * (maxX - x) + y;
+			if (minY <= maxXy && maxXy <= maxY)
+				return new Point(maxX, maxXy);
+		}
+
+		if (y <= midY) { // check "top" side
+			float minYx = (minY - y) / m + x;
+			if (minX <= minYx && minYx <= maxX)
+				return new Point(minYx, minY);
+		}
+
+		if (y >= midY) { // check "bottom" side
+			float maxYx = (maxY - y) / m + x;
+			if (minX <= maxYx && maxYx <= maxX)
+				return new Point(maxYx, maxY);
+		}
+
+		// edge case when finding midpoint intersection: m = 0/0 = NaN
+		if (x == midX && y == midY)
+			return new Point(x, y);
+
+		return null;
 	}
 
 	// poor man's implementation of decorators

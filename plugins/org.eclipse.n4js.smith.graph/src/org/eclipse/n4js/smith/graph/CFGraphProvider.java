@@ -1,0 +1,111 @@
+/**
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.smith.graph;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.graph.graph.CFEdge;
+import org.eclipse.n4js.smith.graph.graph.Edge;
+import org.eclipse.n4js.smith.graph.graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.Node;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.ICompositeNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+
+/**
+ */
+public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
+	N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
+	Map<ControlFlowElement, Node> nodeMap = new HashMap<>();
+	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
+
+	@Override
+	public Collection<ControlFlowElement> getElements(Object input) {
+		init(input);
+
+		return nodeMap.keySet();
+	}
+
+	@Override
+	public Node getNode(ControlFlowElement element) {
+		return nodeMap.get(element);
+	}
+
+	@Override
+	public List<Edge> getConnectedEdges(Node node, List<Node> allNodes) {
+		ControlFlowElement cfe = (ControlFlowElement) node.getElement();
+		return edgesMap.get(cfe);
+	}
+
+	private void init(Object input) {
+		nodeMap.clear();
+		performFlowAnalyses(input);
+
+		Collection<ControlFlowElement> allCFEs = flowAnalyses.getAllElements();
+		for (ControlFlowElement cfe : allCFEs) {
+			String label = getText(cfe);
+			Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
+			nodeMap.put(cfe, node);
+		}
+		edgesMap.clear();
+		for (ControlFlowElement cfe : allCFEs) {
+			List<Edge> edges = new LinkedList<>();
+			Collection<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+			Node sNode = nodeMap.get(cfe);
+
+			for (ControlFlowElement succ : succs) {
+				List<Node> eNodes = new LinkedList<>();
+				Node eNode = nodeMap.get(succ);
+				eNodes.add(eNode);
+				Edge edge = new CFEdge("CF", sNode, eNodes);
+				edges.add(edge);
+			}
+			edgesMap.put(cfe, edges);
+		}
+	}
+
+	private void performFlowAnalyses(Object input) {
+		Script script = findScript(input);
+		flowAnalyses.perform(script);
+	}
+
+	private Script findScript(Object input) {
+		if (input instanceof ResourceSet) {
+			ResourceSet rs = (ResourceSet) input;
+			if (!rs.getResources().isEmpty()) {
+				Resource res = rs.getResources().get(0);
+				EList<EObject> contents = res.getContents();
+				if (!contents.isEmpty()) {
+					Script script = EcoreUtil2.getContainerOfType(contents.get(0), Script.class);
+					return script;
+				}
+			}
+		}
+		return null;
+	}
+
+	private String getText(EObject eo) {
+		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
+		String text = NodeModelUtils.getTokenText(actualNode);
+		return text;
+	}
+}

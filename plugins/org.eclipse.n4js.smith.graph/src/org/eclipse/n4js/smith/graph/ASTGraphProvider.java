@@ -29,7 +29,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.smith.graph.graph.Edge;
-import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.GraphProvider;
 import org.eclipse.n4js.smith.graph.graph.GraphUtils;
 import org.eclipse.n4js.smith.graph.graph.Node;
 import org.eclipse.xtext.TerminalRule;
@@ -43,7 +43,7 @@ import com.google.common.collect.Iterators;
 /**
  * Creates nodes and edges from an EMF {@link ResourceSet} as input.
  */
-public class EMFGraphProvider implements GraphProvider {
+public class ASTGraphProvider implements GraphProvider<Object, Object> {
 
 	/**
 	 * Names of elements in the built-in resources (builtin_js.n4ts and builtin_n4.n4ts) that should appear in the

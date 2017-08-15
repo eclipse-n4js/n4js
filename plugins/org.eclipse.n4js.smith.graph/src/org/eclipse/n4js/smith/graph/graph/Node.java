@@ -22,7 +22,7 @@ import org.eclipse.swt.widgets.Display;
  * Node in a graph.
  */
 @SuppressWarnings("javadoc")
-public class Node {
+public class Node implements Paintable {
 
 	private static final float BORDER = 4;
 	private static final float DEFAULT_WIDTH = 200;
@@ -161,6 +161,7 @@ public class Node {
 	/**
 	 * Paints the Node
 	 */
+	@Override
 	public void paint(GC gc) {
 		gc.setBackground(GraphUtils.getColor(200, 200, 255));
 		gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));

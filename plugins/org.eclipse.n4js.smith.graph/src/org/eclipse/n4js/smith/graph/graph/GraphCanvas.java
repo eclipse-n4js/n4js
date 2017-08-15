@@ -35,13 +35,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * SWT widget to draw a {@link Graph}.
+ * SWT widget to draw a {@link ASTGraph}.
  */
 @SuppressWarnings("javadoc")
 public class GraphCanvas extends Canvas {
 	final protected EditorOverlay editorOverlay;
 
-	protected Graph graph = null;
+	protected Graph<?> graph = null;
 	protected boolean graphNeedsLayout = true;
 
 	protected boolean showAllCrossLinks = false;

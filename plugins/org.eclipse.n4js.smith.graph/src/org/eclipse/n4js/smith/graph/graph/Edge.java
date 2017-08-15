@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Display;
  * a different style, and will be presented to the user only under certain circumstances (e.g. if a node is hovered /
  * selected or if drawing of all cross-links is turned on).
  */
-public class Edge {
+public class Edge implements Paintable {
 
 	/**
 	 * @see Edge
@@ -173,6 +173,7 @@ public class Edge {
 	/**
 	 * Paint edge to given GC.
 	 */
+	@Override
 	public void paint(GC gc) {
 		if (startNodes.isEmpty() || endNodes.isEmpty())
 			return;
@@ -189,19 +190,24 @@ public class Edge {
 		// collect anchors & draw connections
 		for (Node startNode : startNodes) {
 			Point anchor = startNode.getAnchor(this, rp);
-			GraphUtils.drawLine(gc, anchor, rp, false);
+			paintEdgeLine(gc, anchor, rp, false);
 		}
 		for (Node endNode : endNodes) {
 			Point anchor = endNode.getAnchor(this, rp);
-			GraphUtils.drawLine(gc, rp, anchor, crossLink);
+			paintEdgeLine(gc, rp, anchor, crossLink);
 		}
 		for (Rectangle extBound : nodesExternalBounds) {
 			Point anchor = extBound.getIntersectionLocation(rp);
-			GraphUtils.drawLine(gc, rp, anchor, crossLink);
+			paintEdgeLine(gc, rp, anchor, crossLink);
 		}
 
 		// draw label
 		drawLabel(gc, nodes, rp);
+	}
+
+	/***/
+	protected void paintEdgeLine(GC gc, Point src, Point tgt, boolean drawArrow) {
+		GraphUtils.drawLine(gc, src, tgt, drawArrow);
 	}
 
 	private void drawLabel(GC gc, final List<Node> nodes, final Point rp) {

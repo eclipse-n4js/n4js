@@ -22,9 +22,12 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.n4js.smith.graph.editoroverlay.EditorOverlay;
+import org.eclipse.n4js.smith.graph.graph.ASTGraph;
+import org.eclipse.n4js.smith.graph.graph.CFGraph;
 import org.eclipse.n4js.smith.graph.graph.Graph;
-import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
 import org.eclipse.n4js.smith.graph.graph.GraphList;
+import org.eclipse.n4js.smith.graph.graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.GraphType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -44,7 +47,8 @@ import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 public class SourceGraphView extends ViewPart {
 
 	private GraphList graphList;
-	private GraphProvider graphProvider;
+	private ASTGraphProvider astGraphProvider;
+	private CFGraphProvider cfGraphProvider;
 
 	private XtextEditor activeEditor = null;
 
@@ -108,7 +112,8 @@ public class SourceGraphView extends ViewPart {
 		});
 
 		graphList = new GraphList(parent, SWT.NONE, editorOverlay);
-		graphProvider = new EMFGraphProvider();
+		astGraphProvider = new ASTGraphProvider();
+		cfGraphProvider = new CFGraphProvider();
 
 		createAction(
 				"AST Snapshot", IAction.AS_PUSH_BUTTON,
@@ -153,8 +158,8 @@ public class SourceGraphView extends ViewPart {
 	}
 
 	/**
-	 * Static version of method {@link #showGraph(String, Object)}. It is safe to call this method at all times (i.e.
-	 * even if the view is not opened or disposed, from UI or non-UI thread, etc.).
+	 * Static version of method {@link #showGraph(String, Graph, GraphType, GraphProvider, Object)}. It is safe to call
+	 * this method at all times (i.e. even if the view is not opened or disposed, from UI or non-UI thread, etc.).
 	 *
 	 * @param label
 	 *            the label for the new graph.
@@ -165,11 +170,25 @@ public class SourceGraphView extends ViewPart {
 	public static final void show(String label, Object root) {
 		final SourceGraphView view = findInstance();
 		if (view != null && !view.paused)
-			view.showGraph(label, root);
+			view.showASTGraph(label, root);
 	}
 
 	/**
-	 * Create a new graph for the given resource set (using an {@link EMFGraphProvider}), add it to the history and show
+	 *
+	 */
+	public void showASTGraph(String label, Object root) {
+		if (!(root instanceof ResourceSet || root instanceof Resource || root instanceof EObject))
+			throw new IllegalArgumentException("root must be a ResourceSet, Resource, or EObject");
+		if (graphList.isDisposed())
+			return;
+		ASTGraph graph = new ASTGraph();
+		GraphType graphType = GraphType.AST;
+		graph.build(astGraphProvider, root);
+		showGraph(label, graph, graphType);
+	}
+
+	/**
+	 * Create a new graph for the given resource set (using an {@link ASTGraphProvider}), add it to the history and show
 	 * it in the view.
 	 * <p>
 	 * Need not be invoked from the UI thread.
@@ -180,14 +199,15 @@ public class SourceGraphView extends ViewPart {
 	 *            the root object to create the graph from; must be a {@link ResourceSet}, {@link Resource}, or
 	 *            {@link EObject}.
 	 */
-	public void showGraph(String label, Object root) {
+	public <GP extends GraphProvider<?, ?>> void showGraph(String label, Graph<GP> graph, GraphType graphType,
+			GP graphProvider, Object root) {
+
 		if (!(root instanceof ResourceSet || root instanceof Resource || root instanceof EObject))
 			throw new IllegalArgumentException("root must be a ResourceSet, Resource, or EObject");
 		if (graphList.isDisposed())
 			return;
-		final Graph graph = new Graph();
 		graph.build(graphProvider, root);
-		showGraph(label, graph);
+		showGraph(label, graph, graphType);
 	}
 
 	/**
@@ -195,20 +215,20 @@ public class SourceGraphView extends ViewPart {
 	 * <p>
 	 * Need not be invoked from the UI thread.
 	 */
-	public void showGraph(String label, Graph graph) {
+	public void showGraph(String label, Graph<?> graph, GraphType graphType) {
 		if (graphList.isDisposed())
 			return;
 
 		final String prefix = getTimeStamp() + ": ";
 		if (Display.getCurrent() != null) {
 			// already on UI thread
-			graphList.addGraph(prefix + label, graph, true);
+			graphList.addGraph(prefix + label, graph, graphType, true);
 		} else {
 			// not on UI thread
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					graphList.addGraph(prefix + label, graph, true);
+					graphList.addGraph(prefix + label, graph, graphType, true);
 				}
 			});
 		}
@@ -234,7 +254,7 @@ public class SourceGraphView extends ViewPart {
 			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 				@Override
 				public Boolean exec(XtextResource state) throws Exception {
-					showGraph("manual", state.getResourceSet());
+					showGraph("manual", new ASTGraph(), GraphType.AST, astGraphProvider, state.getResourceSet());
 					return null;
 				}
 			});
@@ -249,7 +269,7 @@ public class SourceGraphView extends ViewPart {
 			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 				@Override
 				public Boolean exec(XtextResource state) throws Exception {
-					showGraph("manual", state.getResourceSet());
+					showGraph("manual", new CFGraph(), GraphType.CFG, cfGraphProvider, state.getResourceSet());
 					return null;
 				}
 			});
@@ -264,7 +284,7 @@ public class SourceGraphView extends ViewPart {
 			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 				@Override
 				public Boolean exec(XtextResource state) throws Exception {
-					showGraph("manual", state.getResourceSet());
+					showGraph("manual", new ASTGraph(), GraphType.DFG, astGraphProvider, state.getResourceSet());
 					return null;
 				}
 			});

@@ -43,10 +43,6 @@ public class GraphList extends Composite {
 	protected TableViewer listViewer;
 	protected GraphCanvas canvas;
 
-	protected enum GraphType {
-		AST, CFG, DFG
-	}
-
 	protected static class ListEntry {
 		public final String label;
 		public final GraphType type;
@@ -119,8 +115,8 @@ public class GraphList extends Composite {
 		return canvas;
 	}
 
-	public void addGraph(String label, Graph graph, boolean select) {
-		addEntry(new ListEntry(label, GraphType.AST, graph), select);
+	public void addGraph(String label, Graph graph, GraphType graphType, boolean select) {
+		addEntry(new ListEntry(label, graphType, graph), select);
 	}
 
 	public void removeSelectedGraphs(boolean removeAllIfNothingSelected) {
