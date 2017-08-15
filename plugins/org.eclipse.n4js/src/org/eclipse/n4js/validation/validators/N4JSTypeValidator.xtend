@@ -195,6 +195,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 		internalCheckStructuralPrimitiveTypeRef(paramTypeRef);
 	}
 	
+	/**
+	 * Add an issue if explicit use of structural type operator with a primitive type is detected.
+	 */
 	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
 		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
 			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);

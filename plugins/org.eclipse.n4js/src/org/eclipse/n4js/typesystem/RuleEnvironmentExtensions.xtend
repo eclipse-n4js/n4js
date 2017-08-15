@@ -13,15 +13,6 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Collection
-import java.util.Collections
-import java.util.List
-import java.util.Map
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
@@ -54,6 +45,15 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Collection
+import java.util.Collections
+import java.util.List
+import java.util.Map
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
@@ -525,11 +525,6 @@ class RuleEnvironmentExtensions {
 	/* 	Returns newly created reference to built-in type {@code Function} */
 	public def static functionTypeRef(RuleEnvironment G) {
 		G.functionType.createTypeRef
-	}
-	
-	/* Returns newly created structural reference to built-in type {@code Function} */
-	public def static structuralFunctionTypeRef(RuleEnvironment G) {
-		G.functionType.createTypeRef(TypingStrategy.STRUCTURAL)
 	}
 
 	/* Returns built-in type {@code N4Object} */

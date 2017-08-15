@@ -1349,7 +1349,7 @@ from {
 			}
 		}
 		if (! structuralTyping) { // do nominal, right is not a structural type
-			// enforce that ~T !<: S except for S = Object and T <: Object
+			// enforce that ~T !<: S except for S = Object and T <: Object and for primitive types on the left
 			if( (left.isUseSiteStructuralTyping || left.isDefSiteStructuralTyping)
 				&& !(rightDeclType == G.objectType && leftDeclType instanceof TClassifier)
 				&& !(leftDeclType instanceof PrimitiveType))
