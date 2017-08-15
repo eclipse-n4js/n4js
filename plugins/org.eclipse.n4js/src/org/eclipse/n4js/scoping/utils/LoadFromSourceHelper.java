@@ -75,10 +75,6 @@ public class LoadFromSourceHelper {
 	 * @return true, if the resource must be loaded from source.
 	 */
 	public boolean mustLoadFromSource(URI resourceURI, ResourceSet resourceSet) {
-		// in case of a cyclic dependency between contextResource and resourceURI, we need to force loading from
-		// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we already
-		// know contextResource depends on resourceURI
-
 		// We do already know the resource. Nothing fancy to happen here.
 		Resource knownResource = resourceSet.getResource(resourceURI, false);
 		if (knownResource != null) {
