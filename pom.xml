@@ -34,15 +34,10 @@ Contributors:
 		<module>features</module>
 		<module>docs</module>
 		<module>tools</module>
+		<module>builds</module>
 	</modules>
 
 	<profiles>
-		<profile>
-			<id>buildProduct</id>
-			<modules>
-				<module>builds</module>
-			</modules>
-		</profile>
 		<!-- This profile adds the tests-folder to the build. 
 			 It's always active - unless the build is started with "-DnoTests". 
 			 -->

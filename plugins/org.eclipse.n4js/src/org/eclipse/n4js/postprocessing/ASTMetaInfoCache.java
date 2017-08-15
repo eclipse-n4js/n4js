@@ -25,11 +25,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.CancelIndicator;
-import org.eclipse.xtext.util.OnChangeEvictingCache.CacheAdapter;
-
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
@@ -43,6 +38,11 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.CancelIndicator;
+import org.eclipse.xtext.util.OnChangeEvictingCache.CacheAdapter;
+
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleEnvironment;
 
@@ -270,9 +270,9 @@ public final class ASTMetaInfoCache {
 		sb.append("cache's hasBrokenAST == " + hasBrokenAST + "\n");
 		sb.append("cache's astNodesCurrentlyBeingTyped == " + astNodesCurrentlyBeingTyped + "\n");
 		sb.append("resource' fullyPostProcessed = " + (resource != null ? resource.isFullyProcessed()
-				: "dont know. Resource is null"));
+				: "don't know. Resource is null.") + "\n");
 		sb.append("resource' isPostProcessing = "
-				+ (resource != null ? resource.isProcessing() : "dont know. Resource is null"));
+				+ (resource != null ? resource.isProcessing() : "don't know. Resource is null") + "\n");
 
 		if (showSourceCode) {
 			final Script script = resource != null ? resource.getScript() : null;

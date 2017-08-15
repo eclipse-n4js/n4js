@@ -1,5 +1,0 @@
-TODO-#96: remove dummy
-this is temporary workaround, that should be resolved by #96:
- - remove configuration for this folder if no content
- - remove folder if transformed to eclipse-bundle
- - add tests and remove dummy
