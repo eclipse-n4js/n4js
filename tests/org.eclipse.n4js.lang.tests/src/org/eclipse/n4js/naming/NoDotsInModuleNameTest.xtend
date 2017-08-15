@@ -124,7 +124,7 @@ class NoDotsInModuleNameTest {
 	}
 
 	/**
-	 * Tests that module names without dots in name nor folder hierarchy are fine.
+	 * Tests that XPECT module names without dots in name nor folder hierarchy are fine.
 	 */
 	@Test
 	public def testValidXpectModuleName() throws Exception {
@@ -133,7 +133,7 @@ class NoDotsInModuleNameTest {
 	}
 
 	/**
-	 * Tests that module names with dots in the name are not allowed.
+	 * Tests that XPECT module names with dots in the name are not allowed.
 	 */
 	@Test
 	public def testXpectModuleWithDotInName() throws Exception {
@@ -143,7 +143,7 @@ class NoDotsInModuleNameTest {
 	}
 
 	/**
-	 * Tests that module names with dots in the containing folder hierarchy are invalid.
+	 * Tests that XPECT module names with dots in the containing folder hierarchy are invalid.
 	 */
 	@Test
 	public def testXpectModuleWithDotInContaingFolderName() throws Exception {
@@ -154,7 +154,7 @@ class NoDotsInModuleNameTest {
 	}
 
 	/**
-	 * Tests that module names with dots in the folder hierarchy as well as the filename are invalid.
+	 * Tests that XPECT module names with dots in the folder hierarchy as well as the filename are invalid.
 	 */
 	@Test
 	public def testXpectModuleWithDotInContaingFolderAndFilename() throws Exception {
