@@ -22,6 +22,7 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.transform.ApiImplStubGenerationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part1_Transformation;
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part2_Transformation;
+import org.eclipse.n4js.transpiler.es.transform.AsyncAwaitTransformation;
 import org.eclipse.n4js.transpiler.es.transform.BlockTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.DependencyInjectionTransformation;
@@ -87,6 +88,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
 	@Inject
+	private Provider<AsyncAwaitTransformation> asyncAwaitTransformationProvider;
+	@Inject
 	private Provider<RestParameterTransformation> restParameterTransformationProvider;
 	@Inject
 	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_TransformationProvider;
@@ -130,6 +133,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				functionDeclarationTransformationProvider.get(),
 				arrowFunction_Part1_TransformationProvider.get(),
 				blockTransformationProvider.get(),
+				asyncAwaitTransformationProvider.get(),
 				restParameterTransformationProvider.get(),
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),

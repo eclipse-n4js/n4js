@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.ArrayPadding;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
+import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.Block;
@@ -237,6 +238,9 @@ import org.eclipse.xtext.EcoreUtil2;
 			processModifiers(original.getDeclaredModifiers());
 			write(' ');
 		}
+		if (original.isAsync()) {
+			write("async ");
+		}
 		write("function ");
 		if (!original.getTypeVars().isEmpty()) {
 			processTypeParams(original.getTypeVars());
@@ -260,6 +264,9 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseFunctionExpression(FunctionExpression original) {
 		processAnnotations(original.getAnnotations());
+		if (original.isAsync()) {
+			write("async ");
+		}
 		write("function");
 		if (!original.getTypeVars().isEmpty()) {
 			write(' ');
@@ -988,6 +995,13 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean caseCommaExpression(CommaExpression original) {
 		process(original.getExprs(), ", ");
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseAwaitExpression(AwaitExpression original) {
+		write("await ");
+		process(original.getExpression());
 		return DONE;
 	}
 

@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -37,7 +38,15 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  * Some expressions need special handling, this is done in this transformation.
+ * <p>
+ * Dependencies:
+ * <ul>
+ * <li>ExcludesBefore: AsyncAwaitTransformation<br>
+ *     otherwise the 'await' expressions have already be converted to 'yield', but we need to find them in order to
+ *     support auto-promisify after 'await'; see method {@link #transformExpression(AwaitExpression)}
+ * </ul>
  */
+@ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
 	@Inject private QualifiedNameComputer qualifiedNameComputer;
@@ -103,11 +112,11 @@ class ExpressionTransformation extends Transformation {
 	 * Changes
 	 * <pre>await cls.meth(a, b)</pre>
 	 * to
-	 * <pre>$n4promisifyMethod(cls, 'meth', [a, b])</pre>
+	 * <pre>await $n4promisifyMethod(cls, 'meth', [a, b])</pre>
 	 * OR
 	 * <pre>await fun(a, b)</pre>
 	 * to
-	 * <pre>$n4promisifyFunction(fun, [a, b])</pre>
+	 * <pre>await $n4promisifyFunction(fun, [a, b])</pre>
 	 * assuming that method 'meth' and function 'fun' are annotated with <code>@Promisifiable</code>.
 	 */
 	def private dispatch void transformExpression(AwaitExpression awaitExpr) {
