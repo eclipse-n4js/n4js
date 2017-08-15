@@ -179,9 +179,7 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
-import org.eclipse.xtext.xbase.lib.ObjectExtensions;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
 /**
  * N4JS Type System.
@@ -2145,7 +2143,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeIndexedAccessExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IndexedAccessExpression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member !== null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeForTemporaryUse(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member !== null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -2156,7 +2154,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member !== null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScopeForTemporaryUse(targetTypeRef, expr, checkVisibility, staticAccess) val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess) if(member !== null) { G |- member : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
         {
           try {
             Expression _target = expr.getTarget();
@@ -2214,7 +2212,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
               if ((memberName != null)) {
                 final boolean staticAccess = (targetTypeRef instanceof TypeTypeRef);
                 final boolean checkVisibility = false;
-                final IScope scope = this.memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess);
+                final IScope scope = this.memberScopingHelper.createMemberScopeForTemporaryUse(targetTypeRef, expr, checkVisibility, staticAccess);
                 final TMember member = this.memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess);
                 if ((member != null)) {
                   /* G |- member : var TypeRef memberTypeRef */
@@ -5976,13 +5974,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    UnionTypeExpression _createNonSimplifiedUnionType = TypeUtils.createNonSimplifiedUnionType(
+    T = TypeUtils.createNonSimplifiedUnionType(
       ListExtensions.<TypeRef, TypeRef>map(U.getTypeRefs(), _function));
-    final Procedure1<UnionTypeExpression> _function_1 = (UnionTypeExpression it) -> {
-      it.setOriginalComposedTypeRef(U);
-    };
-    UnionTypeExpression _doubleArrow = ObjectExtensions.<UnionTypeExpression>operator_doubleArrow(_createNonSimplifiedUnionType, _function_1);
-    T = _doubleArrow;
     TypeUtils.copyTypeModifiers(T, U);
     return new Result<TypeRef>(T);
   }
@@ -6021,13 +6014,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       }
       return _xblockexpression;
     };
-    IntersectionTypeExpression _createNonSimplifiedIntersectionType = TypeUtils.createNonSimplifiedIntersectionType(
+    T = TypeUtils.createNonSimplifiedIntersectionType(
       ListExtensions.<TypeRef, TypeRef>map(I.getTypeRefs(), _function));
-    final Procedure1<IntersectionTypeExpression> _function_1 = (IntersectionTypeExpression it) -> {
-      it.setOriginalComposedTypeRef(I);
-    };
-    IntersectionTypeExpression _doubleArrow = ObjectExtensions.<IntersectionTypeExpression>operator_doubleArrow(_createNonSimplifiedIntersectionType, _function_1);
-    T = _doubleArrow;
     TypeUtils.copyTypeModifiers(T, I);
     return new Result<TypeRef>(T);
   }
@@ -6689,8 +6677,6 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     }
     if (haveReplacement) {
       result = TypeUtils.<ComposedTypeRef>copy(typeRef);
-      result.setComposedMemberCache(null);
-      result.setOriginalComposedTypeRef(typeRef);
       result.getTypeRefs().clear();
       /* result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs)) */
       if (!result.getTypeRefs().addAll(TypeUtils.<TypeRef>copyAll(substTypeRefs))) {

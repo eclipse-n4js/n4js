@@ -694,7 +694,7 @@ from {
 			// indexing via constant computed-name, sub-cases: static or instance member, for the latter nominally-typed or structurally-typed receiver
 			val staticAccess = (targetTypeRef instanceof TypeTypeRef)
 			val checkVisibility = false // access modifiers checked in validation
-			val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess)
+			val scope = memberScopingHelper.createMemberScopeForTemporaryUse(targetTypeRef, expr, checkVisibility, staticAccess)
 			val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess)
 			if(member !== null) {
 				G |- member : var TypeRef memberTypeRef
@@ -2360,7 +2360,7 @@ rule upperBoundUnionTypeExpression
 from {
 	T = TypeUtils.createNonSimplifiedUnionType(
 		U.typeRefs.map[var TypeRef E; G|~ it /\ E; E]
-	) => [ originalComposedTypeRef = U ]
+	)
 	TypeUtils.copyTypeModifiers(T,U)
 }
 
@@ -2370,7 +2370,7 @@ rule upperBoundIntersectionTypeExpression
 from {
 	T = TypeUtils.createNonSimplifiedIntersectionType(
 		I.typeRefs.map[var TypeRef E; G|~ it /\ E; E]
-	) => [ originalComposedTypeRef = I ]
+	)
 	TypeUtils.copyTypeModifiers(T,I)
 }
 
@@ -2589,8 +2589,6 @@ from {
 	}
 	if(haveReplacement) {
 		result = TypeUtils.copy(typeRef);
-		result.composedMemberCache = null;
-		result.originalComposedTypeRef = typeRef;
 		result.typeRefs.clear();
 		result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs));
 	}

@@ -62,7 +62,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 
 	final ComposedTypeRef composedTypeRef;
 	final IScope[] subScopes;
-	final EObject context;
+	final MemberScopeRequest request;
 
 	final N4JSTypeSystem ts;
 	final boolean writeAccess;
@@ -86,7 +86,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * Creates union type scope, passed subScopes are expected to be fully configured (i.e., including required filters
 	 * etc.)
 	 */
-	public ComposedMemberScope(ComposedTypeRef composedTypeRef, EObject context, List<IScope> subScopes,
+	public ComposedMemberScope(ComposedTypeRef composedTypeRef, MemberScopeRequest request, List<IScope> subScopes,
 			N4JSTypeSystem ts) {
 
 		super(IScope.NULLSCOPE, false);
@@ -94,8 +94,8 @@ public abstract class ComposedMemberScope extends AbstractScope {
 		this.composedTypeRef = composedTypeRef;
 		this.subScopes = subScopes.toArray(new IScope[subScopes.size()]);
 		this.ts = ts;
-		this.context = context;
-		this.writeAccess = ExpressionExtensions.isLeftHandSide(context);
+		this.request = request;
+		this.writeAccess = ExpressionExtensions.isLeftHandSide(request.context);
 	}
 
 	/**
@@ -165,14 +165,14 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	private TMember createComposedMember(String memberName) {
 		// check all subScopes for a member of the given name and
 		// merge the properties of the existing members into 'composedMember'
-		final Resource resource = EcoreUtilN4.getResource(context, composedTypeRef);
+		final Resource resource = EcoreUtilN4.getResource(request.context, composedTypeRef);
 		ComposedMemberInfoBuilder cmiBuilder = new ComposedMemberInfoBuilder();
 		cmiBuilder.init(writeAccess, resource, ts);
 
 		for (int idx = 0; idx < subScopes.length; idx++) {
 			final IScope subScope = subScopes[idx];
 			final TypeRef typeRef = composedTypeRef.getTypeRefs().get(idx);
-			final Resource res = EcoreUtilN4.getResource(context, composedTypeRef);
+			final Resource res = EcoreUtilN4.getResource(request.context, composedTypeRef);
 			final RuleEnvironment GwithSubstitutions = ts.createRuleEnvironmentForContext(typeRef, res);
 			final TMember member = findMemberInSubScope(subScope, memberName);
 			cmiBuilder.addMember(member, GwithSubstitutions);
@@ -201,7 +201,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 				EcoreUtilN4.doWithDeliver(false, () -> {
 					cache.getCachedComposedMembers().add(result);
 				}, cache);
-			} // if cache==null: simply do not cache the composed member (but member won't be contained in a resource!)
+			} // if cache==null: simply do not cache the composed member (i.e. member won't be contained in a resource!)
 			return result;
 		} else {
 			// none of the subScopes has an element of that name
@@ -235,8 +235,8 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * N4JSResource or this resource does not have a TModule.
 	 */
 	private ComposedMemberCache getOrCreateComposedMemberCache() {
-		if (context instanceof MemberAccess) {
-			final MemberAccess contextCasted = (MemberAccess) context;
+		if (request.context instanceof MemberAccess) {
+			final MemberAccess contextCasted = (MemberAccess) request.context;
 			final ComposedMemberCache cache = contextCasted.getComposedMemberCache();
 			if (cache != null) {
 				return cache;
@@ -308,7 +308,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	}
 
 	/**
-	 * This clears all cached TMembers referenced via EMF property {@link ComposedTypeRef#getComposedMemberCache()
+	 * This clears all cached TMembers referenced via EMF property {@link MemberAccess#getComposedMemberCache()
 	 * getComposedMemberCache()} in astElement and the entire AST below astElement.
 	 * <p>
 	 * IMPORTANT: this must be called whenever parts of the AST are being reused (when doing partial parsing).
@@ -318,13 +318,11 @@ public abstract class ComposedMemberScope extends AbstractScope {
 				astElement.eAllContents());
 		while (iter.hasNext()) {
 			final EObject currObj = iter.next();
-			if (currObj instanceof ComposedTypeRef) {
+			if (currObj instanceof MemberAccess) {
 				// clear the cache of composed members (if it exists)
-				if (astElement instanceof ComposedTypeRef) {
-					final ComposedMemberCache cache = ((ComposedTypeRef) astElement).getComposedMemberCache();
-					if (cache != null) {
-						cache.getCachedComposedMembers().clear();
-					}
+				final ComposedMemberCache cache = ((MemberAccess) currObj).getComposedMemberCache();
+				if (cache != null) {
+					cache.getCachedComposedMembers().clear();
 				}
 			}
 		}

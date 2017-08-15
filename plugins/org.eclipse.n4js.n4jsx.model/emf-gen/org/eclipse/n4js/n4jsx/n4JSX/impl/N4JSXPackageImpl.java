@@ -415,6 +415,7 @@ public class N4JSXPackageImpl extends EPackageImpl implements N4JSXPackage {
 		jsxTextEClass.getESuperTypes().add(this.getJSXChild());
 		jsxExpressionEClass.getESuperTypes().add(this.getJSXChild());
 		jsxPropertyAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
+		jsxPropertyAttributeEClass.getESuperTypes().add(theN4JSPackage.getMemberAccess());
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 
 		// Initialize classes, features, and operations; add parameters

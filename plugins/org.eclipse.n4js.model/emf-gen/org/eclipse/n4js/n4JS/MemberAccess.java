@@ -34,11 +34,14 @@ public interface MemberAccess extends EObject {
 	/**
 	 * Returns the value of the '<em><b>Composed Member Cache</b></em>' reference.
 	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Composed Member Cache</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * This points to a cache of members that can be accessed via property access on the union/intersection
+	 * type directly, because they are, for example, common to all types contained in a UnionTypeExpression.
+	 * These members are cached for two reasons: (1) performance, (2) TMembers have to be contained in a resource.
+	 * The cache will be filled lazily by ComposedMemberScope, so client code should usually not assume this
+	 * information to be complete and best not use it at all. Instead, access these members only via the scoping.
+	 * <!-- end-model-doc -->
 	 * @return the value of the '<em>Composed Member Cache</em>' reference.
 	 * @see #setComposedMemberCache(ComposedMemberCache)
 	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getMemberAccess_ComposedMemberCache()

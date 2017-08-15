@@ -692,8 +692,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 			}
 
-			val memberScope = memberScopingHelper.createMemberScopeFor(TypeUtils.createTypeRef(ctorClassifier),
-				expression, false, false); // always non-static
+			val memberScope = memberScopingHelper.createMemberScopeForTemporaryUse(
+				TypeUtils.createTypeRef(ctorClassifier), expression, false, false); // always non-static
 			val vacs = new VisibilityAwareCtorScope(memberScope, memberVisibilityChecker, ref, staticType, expression);
 			val scope = new TypingStrategyAwareMemberScope(vacs, ref, expression);
 

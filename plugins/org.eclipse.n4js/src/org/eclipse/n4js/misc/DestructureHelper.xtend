@@ -174,7 +174,7 @@ class DestructureHelper {
 	 *               {@link #INVISIBLE_MEMBER}.
 	 */
 	public def IScope createMemberScopeForPropertyAccess(TypeRef receiverTypeRef, EObject propertyAccess, boolean checkVisibility) {
-		return memberScopingHelper.createMemberScopeFor(receiverTypeRef,propertyAccess,checkVisibility,false)
+		return memberScopingHelper.createMemberScopeForTemporaryUse(receiverTypeRef, propertyAccess, checkVisibility, false);
 	}
 
 	/**

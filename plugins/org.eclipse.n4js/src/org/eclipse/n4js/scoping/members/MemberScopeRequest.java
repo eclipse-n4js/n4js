@@ -11,7 +11,7 @@
 package org.eclipse.n4js.scoping.members;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 
 /**
@@ -23,18 +23,29 @@ public class MemberScopeRequest {
 	public final TypeRef originalReceiverTypeRef;
 	/** Context of original scoping request. */
 	public final EObject context;
+	/**
+	 * Iff true, the scoping is requested to provide TMembers that are guaranteed to be contained in a resource. In this
+	 * case, {@link #context} is guaranteed to be of type {@link MemberAccess}.
+	 */
+	public final boolean provideContainedMembers;
 	/** Flag indicating whether visibility is to be checked. */
 	public final boolean checkVisibility;
 	/** Flag whether static or instance members are to be accessed. */
 	public final boolean staticAccess;
 
 	/**
-	 * Creates a new memeber scope request with given values, these values are directly accessibly via fields.
+	 * Creates a new member scope request with given values, these values are directly accessible via fields.
 	 */
-	public MemberScopeRequest(TypeRef originalReceiverTypeRef, EObject context, boolean checkVisibility,
-			boolean staticAccess) {
+	public MemberScopeRequest(TypeRef originalReceiverTypeRef, EObject context, boolean provideContainedMembers,
+			boolean checkVisibility, boolean staticAccess) {
+		if (provideContainedMembers && !(context instanceof MemberAccess)) {
+			throw new IllegalStateException(
+					"member scoping can only guarantee to provide contained members if given a context of type "
+							+ MemberAccess.class.getSimpleName());
+		}
 		this.originalReceiverTypeRef = originalReceiverTypeRef;
 		this.context = context;
+		this.provideContainedMembers = provideContainedMembers;
 		this.checkVisibility = checkVisibility;
 		this.staticAccess = staticAccess;
 	}
@@ -46,7 +57,7 @@ public class MemberScopeRequest {
 		if (staticAccess) {
 			return this;
 		}
-		return new MemberScopeRequest(originalReceiverTypeRef, context, checkVisibility, true);
+		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility, true);
 	}
 
 	/**
@@ -56,7 +67,7 @@ public class MemberScopeRequest {
 		if (!staticAccess) {
 			return this;
 		}
-		return new MemberScopeRequest(originalReceiverTypeRef, context, checkVisibility, false);
+		return new MemberScopeRequest(originalReceiverTypeRef, context, provideContainedMembers, checkVisibility,
+				false);
 	}
-
 }

@@ -11,6 +11,10 @@
 package org.eclipse.n4js.scoping.members
 
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
@@ -48,12 +52,9 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilterWithErrorMarkerScope
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
-import java.util.List
 
 /**
  */
@@ -82,10 +83,17 @@ class MemberScopingHelper {
 	 * @param staticAccess
 	 *               true: only static members are relevant; false: only non-static ones.
 	 */
-	public def IScope createMemberScopeFor(TypeRef receiverTypeRef, EObject context, boolean checkVisibility,
-		boolean staticAccess) {
+	public def IScope createMemberScopeFor(TypeRef receiverTypeRef, MemberAccess context,
+		boolean checkVisibility, boolean staticAccess) {
 		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, checkVisibility, staticAccess));
+			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess));
+	}
+
+	// FIXME doc
+	public def IScope createMemberScopeForTemporaryUse(TypeRef receiverTypeRef, EObject context,
+		boolean checkVisibility, boolean staticAccess) {
+		return decoratedMemberScopeFor(receiverTypeRef,
+			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess));
 	}
 
 	/**
@@ -259,7 +267,7 @@ class MemberScopingHelper {
 		switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
 			case 0: return IScope.NULLSCOPE
 			case 1: return subScopes.get(0)
-			default: return new UnionMemberScope(uniontypeexp, request.context, subScopes, ts)
+			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts)
 		}
 	}
 
@@ -273,7 +281,7 @@ class MemberScopingHelper {
 			return scope;
 		]
 
-		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, ts);
+		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts);
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {
