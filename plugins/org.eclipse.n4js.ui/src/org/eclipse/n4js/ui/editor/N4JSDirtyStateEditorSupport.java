@@ -160,7 +160,7 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 		for (IResourceDescription.Delta delta : event.getDeltas()) {
 			if (delta.getOld() == getDirtyResource().getDescription()
 					|| delta.getNew() == getDirtyResource().getDescription()) {
-				if (loadFromSourceHelper.isPartOfCycle(delta.getUri(), dirtyState)) {
+				if (loadFromSourceHelper.isPartOfDependencyCycle(delta.getUri(), dirtyState)) {
 					scheduleUpdateEditorJob(event);
 				}
 

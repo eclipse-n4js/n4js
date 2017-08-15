@@ -760,7 +760,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source
-				if (loadFromSourceHelper.mustLoadFromSource(targetUri.trimFragment(), getResourceSet())) {
+				if (loadFromSourceHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet())) {
 
 					final String targetFragment = targetUri.fragment();
 					final Resource targetResource = resSet.getResource(targetResourceUri, false);
@@ -816,7 +816,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * @return true if this resource depends on the resource with the given URI.
 	 */
 	public boolean isDependingOn(Set<URI> other) {
-		return loadFromSourceHelper.isDependingOn(this, other);
+		return loadFromSourceHelper.dependsOnAny(this, other);
 	}
 
 	/**

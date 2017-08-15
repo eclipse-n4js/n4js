@@ -19,16 +19,20 @@ import org.eclipse.xtext.resource.ResourceSetContext;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.IDirtyStateManagerExtension;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- *
+ * Dirty editor aware extension to the {@link LoadFromSourceHelper}.
  */
 @Singleton
 public class DirtyStateAwareLoadFromSourceHelper extends LoadFromSourceHelper {
 
+	/*
+	 * Actually injected but we do not have a binding for the IDirtyStateManagerExtension thus we use a setter and do
+	 * the instanceof / cast only once.
+	 */
 	private IDirtyStateManagerExtension dirtyStateManager = Collections::emptyList;
 
 	@Inject
@@ -38,17 +42,24 @@ public class DirtyStateAwareLoadFromSourceHelper extends LoadFromSourceHelper {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * This implementation is aware of open editors and in the context of dirty resource / multiple open editors, we
+	 * need to consider also resources across project boundaries.
+	 */
 	@Override
 	public boolean mustLoadFromSource(URI resourceURI, ResourceSet resourceSet) {
 		if (super.mustLoadFromSource(resourceURI, resourceSet)) {
 			return true;
 		}
 		ResourceSetContext context = ResourceSetContext.get(resourceSet);
-		if (context.isEditor()) {
-			if (isTransitivlyDependingOn(resourceURI, Sets.newHashSet(dirtyStateManager.getDirtyResourceURIs()),
-					getIndex(resourceSet), false)) {
-				return true;
-			}
+		// check that we are not in the builder scope (which has strict boundaries
+		// wrt project dependencies
+		if (!context.isBuilder()) {
+			ImmutableSet<URI> openEditors = ImmutableSet.copyOf(dirtyStateManager.getDirtyResourceURIs());
+			/* ignore project boundaries */
+			return dependsOnAny(resourceURI, openEditors, getIndex(resourceSet), false);
 		}
 		return false;
 	}

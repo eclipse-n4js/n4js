@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -42,6 +43,7 @@ import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
@@ -257,6 +259,8 @@ public final class UserdataMapper {
 		return eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT) != null;
 	}
 
+	private static Joiner joiner = Joiner.on(",");
+
 	/**
 	 * Computes list of dependencies of given resource and stores the list in the given user data. For details, see
 	 * {@link #readDependenciesFromDescription(IResourceDescription)}.
@@ -274,8 +278,8 @@ public final class UserdataMapper {
 				}
 			}
 		});
-		final String dependenciesStr = Joiner.on(",").join(dependencies); // FIXME GH-66 no need to persist entire URI!
-		userData.put(USERDATA_KEY_DEPENDENCIES, dependenciesStr);
+		// FIXME GH-66 probably no need to persist entire URI!
+		userData.put(USERDATA_KEY_DEPENDENCIES, joiner.join(dependencies));
 	}
 
 	/*-
@@ -307,10 +311,12 @@ public final class UserdataMapper {
 		}
 	}
 
+	private static final Splitter splitter = Splitter.on(',').omitEmptyStrings();
+
 	/**
 	 * Reads the list of dependencies of the resource R represented by the given resource description from its user
-	 * data. Returns an array of strings, in which each string represents the URI of a resource D that is a dependency
-	 * of R (i.e. R depends on D).
+	 * data. Returns a list of strings, in which each string represents the URI of a resource D that is a direct
+	 * dependency of R (i.e. R depends on D).
 	 * <p>
 	 * Definition: a resource R <em>depends on</em> a resource D, iff
 	 * <ul>
@@ -318,19 +324,20 @@ public final class UserdataMapper {
 	 * <li>R's TModule might be affected by changes of D's TModule.
 	 * </ul>
 	 * In this case, we also say D <em>is a dependency of</em> R.
+	 *
+	 * Returns none if the information is missing in the resource description.
 	 */
-	public static String[] readDependenciesFromDescription(IResourceDescription description) {
+	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
 		// TODO use type and name computed from descrition uri
 		final Iterable<IEObjectDescription> modules = description
 				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
 			final String dependenciesStr = module.getUserData(USERDATA_KEY_DEPENDENCIES);
 			if (dependenciesStr != null) {
-				// TODO use delimiter e.g. File.pathDelimiter
-				return dependenciesStr.split(",");
+				return Optional.of(splitter.splitToList(dependenciesStr));
 			}
 		}
-		return null;
+		return Optional.empty();
 	}
 
 }

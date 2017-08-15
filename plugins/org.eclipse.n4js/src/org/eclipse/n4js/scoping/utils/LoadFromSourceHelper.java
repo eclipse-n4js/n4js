@@ -12,6 +12,9 @@ package org.eclipse.n4js.scoping.utils;
 
 import java.util.ArrayDeque;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.URI;
@@ -22,14 +25,15 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.util.Strings;
 
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
+ * Utility that decides if a resource can be loaded from the index into a given resource set.
  *
+ * This is specialized in the UI context to consider the dirty state.
  */
 @Singleton
 public class LoadFromSourceHelper {
@@ -37,113 +41,179 @@ public class LoadFromSourceHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 
+	/*
+	 * This method is added to improve readability, e.g. if (canBeLoadedFromDescription(..)) vs if
+	 * (!mustBeLoadedFromSource(..)).
+	 */
 	/**
+	 * Returns true if the given resourceURI points to a resource that is allowed to be loaded from the index into the
+	 * given resource set.
+	 *
+	 * This is the inverse operation to {@link #mustLoadFromSource(URI, ResourceSet)}.
+	 *
+	 * @param resourceURI
+	 *            the URI of the to-be-loaded resource
+	 * @param resourceSet
+	 *            the target resource st
+	 * @return true, if the resource can be loaded from source.
+	 */
+	public boolean canLoadFromDescription(URI resourceURI, ResourceSet resourceSet) {
+		return !mustLoadFromSource(resourceURI, resourceSet);
+	}
+
+	/**
+	 * Returns true if the given resourceURI points to a resource that is must be loaded from source into the given
+	 * resource set. A resource must be loaded from source if the resource set contains resources, that were loaded from
+	 * source and that are in the transitive closure of depenencies of the given resource.
+	 *
+	 * This is the inverse operation to {@link #canLoadFromDescription(URI, ResourceSet)}.
+	 *
+	 * @param resourceURI
+	 *            the URI of the to-be-loaded resource
+	 * @param resourceSet
+	 *            the target resource st
+	 * @return true, if the resource must be loaded from source.
 	 */
 	public boolean mustLoadFromSource(URI resourceURI, ResourceSet resourceSet) {
 		// in case of a cyclic dependency between contextResource and resourceURI, we need to force loading from
 		// source file (because Xtext index is out-dated); but no need to check for a full cycle, because we already
 		// know contextResource depends on resourceURI
 
+		// We do already know the resource. Nothing fancy to happen here.
 		Resource knownResource = resourceSet.getResource(resourceURI, false);
 		if (knownResource != null) {
 			return false;
 		}
 
-		// FIXME extract method
+		/*
+		 * Iterate all the resources in the resource set and check the instances that have been loaded from source. If
+		 * the to-be-loaded resource has a transitive dependency to any resource, that was loaded from source, we need
+		 * to load this resource from source, too.
+		 */
+		Set<URI> sourceURIs = Sets.newHashSet();
 		for (Resource existingResource : resourceSet.getResources()) {
 			if (existingResource instanceof N4JSResource) {
 				N4JSResource casted = (N4JSResource) existingResource;
 				if (!casted.isLoadedFromDescription()) {
-					// TODO check is same project in place in isBackwardDR?
-					if (isBackwardDependentResource(casted, resourceURI)) {
-						return true;
-					}
+					sourceURIs.add(casted.getURI());
 				}
 			}
 		}
-		return false;
+		return dependsOnAny(resourceURI, sourceURIs, getIndex(resourceSet), true);
 	}
 
 	/**
 	 * Tells if the receiving resource is among the dependencies of the resource represented by the given URI. For a
 	 * definition of "dependencies", see {@link UserdataMapper#readDependenciesFromDescription(IResourceDescription)}.
 	 */
-	public boolean isBackwardDependentResource(Resource resource, URI other) {
-		return isTransitivlyDependingOn(other, resource.getURI(), resource.getResourceSet(), true);
-	}
-
-	/**
-	 * Tells if the receiving resource is among the dependencies of the resource represented by the given URI. For a
-	 * definition of "dependencies", see {@link UserdataMapper#readDependenciesFromDescription(IResourceDescription)}.
-	 */
-	public boolean isDependingOn(Resource resource, Set<URI> others) {
-		if (isTransitivlyDependingOn(resource.getURI(), others, getIndex(resource.getResourceSet()),
+	public boolean dependsOnAny(Resource resource, Set<URI> others) {
+		if (dependsOnAny(
+				resource.getURI(),
+				others,
+				getIndex(resource.getResourceSet()),
 				false)) {
 			return true;
 		}
 		return false;
 	}
 
+	/**
+	 * Facade to access the index from subclasses.
+	 */
 	protected IResourceDescriptions getIndex(ResourceSet resourceSet) {
 		return n4jsCore.getXtextIndex(resourceSet);
 	}
 
-	protected boolean isTransitivlyDependingOn(URI thisURI, URI other, ResourceSet resSet,
-			boolean considerOnlySameProject) {
-		if (other.equals(thisURI)) {
-			return false;
-		}
-		if (considerOnlySameProject && !n4jsCore.isInSameProject(thisURI, other)) {
-			return false;
-		}
-		return isTransitivlyDependingOn(thisURI, Collections.singleton(other), n4jsCore.getXtextIndex(resSet),
-				considerOnlySameProject);
+	/**
+	 * Returns true if the resource denoted by thisURI is part of a dependency cycle.
+	 *
+	 * @param thisURI
+	 *            the resource
+	 * @param index
+	 *            the index to be used
+	 * @return true, if this resource is part of a cycle.
+	 */
+	public boolean isPartOfDependencyCycle(URI thisURI, IResourceDescriptions index) {
+		return dependsOnAny(thisURI, Collections.singleton(thisURI), index, true);
 	}
 
-	public boolean isPartOfCycle(URI thisURI, IResourceDescriptions resourceDescriptions) {
-		return isTransitivlyDependingOn(thisURI, Collections.singleton(thisURI), resourceDescriptions, true);
-	}
-
-	protected boolean isTransitivlyDependingOn(URI thisURI, Set<URI> others, IResourceDescriptions index,
+	/**
+	 * Checks if the resource denoted by {@code thisURI} has a transitive dependency to any of the resources in others.
+	 * If others is empty, returns false.
+	 *
+	 * Implements Dijkstras BFS algorithm.
+	 *
+	 * The direct dependencies are taken from the index. If a resource is missing form the index, we consider a
+	 * dependency to exist so in that sense we are pessimistic. If a resource description is available from the index
+	 * but does not have any dependency information, we consider a dependency to exist, too.
+	 *
+	 * @param thisURI
+	 *            the URI under consideration.
+	 * @param candidates
+	 *            the URIs to be checked against
+	 * @param index
+	 *            the index to be used.
+	 * @param considerOnlySameProject
+	 *            flag to consider / ignore project boundaries.
+	 * @return true, if this resource has a transitive dependency to any of the others.
+	 */
+	protected boolean dependsOnAny(URI thisURI, Set<URI> candidates, IResourceDescriptions index,
 			boolean considerOnlySameProject) {
-		if (others.isEmpty()) {
+		if (candidates.isEmpty()) {
 			return false;
 		}
-		final Set<URI> seen = Sets.newHashSet();
+		// Keep track of all visited resources
+		final Set<URI> visited = Sets.newHashSet();
 		// breaths first search since it is more likely to find resources from the same project
 		// in our own dependencies rather than in the transitive dependencies
-		final ArrayDeque<URI> next = new ArrayDeque<>();
-		next.add(thisURI);
-		while (!next.isEmpty()) {
-			IResourceDescription description = index.getResourceDescription(next.pollFirst());
-			if (description == null) {
+		final Queue<URI> queue = new ArrayDeque<>();
+		// the starting point. It is deliberately not added to the visited resources
+		// to allow to detect cycles.
+		queue.add(thisURI);
+
+		while (!queue.isEmpty()) {
+			// try to find the direct dependencies for the next URI in the que
+			Optional<List<String>> dependencies = readDirectDependencies(index, queue.poll());
+			if (!dependencies.isPresent()) {
+				// none found - be pessimistic and return false
 				return true;
 			}
-			String[] dependencies = UserdataMapper.readDependenciesFromDescription(description);
-			if (dependencies != null) {
-				for (String dependency : dependencies) {
-					if (!Strings.isEmpty(dependency)) {
-						URI dependencyURI = URI.createURI(dependency);
-						if (seen.add(dependencyURI)) {
-							if (considerOnlySameProject) {
-								if (n4jsCore.isInSameProject(thisURI, dependencyURI)) {
-									if (others.contains(dependencyURI)) {
-										return true;
-									}
-									next.add(dependencyURI);
-								}
-							} else {
-								if (others.contains(dependencyURI)) {
-									return true;
-								}
-								next.add(dependencyURI);
+			// traverse the direct dependencies
+			for (String dependency : dependencies.get()) {
+				// and convert each string based dependency to a URI
+				URI dependencyURI = URI.createURI(dependency);
+				// mark the dependency as visited and if its the first occurrence
+				if (visited.add(dependencyURI)) {
+					// are we only interested in the project local dependency graph?
+					if (considerOnlySameProject) {
+						// the initial URI and the current candidate stem from the same project?
+						if (n4jsCore.isInSameProject(thisURI, dependencyURI)) {
+							// it is part of the interesting resources, return true
+							if (candidates.contains(dependencyURI)) {
+								return true;
 							}
+							// enque the dependency
+							queue.add(dependencyURI);
 						}
+					} else {
+						// it is part of the interesting resources, return true
+						if (candidates.contains(dependencyURI)) {
+							return true;
+						}
+						// enque the dependency
+						queue.add(dependencyURI);
 					}
 				}
 			}
 		}
+		// the entire relevant graph was successfully traversed. There is no transitive dependency
+		// to one of the candidates
 		return false;
+	}
+
+	private Optional<List<String>> readDirectDependencies(IResourceDescriptions index, URI next) {
+		IResourceDescription description = index.getResourceDescription(next);
+		return Optional.ofNullable(description).flatMap(UserdataMapper::readDependenciesFromDescription);
 	}
 
 }

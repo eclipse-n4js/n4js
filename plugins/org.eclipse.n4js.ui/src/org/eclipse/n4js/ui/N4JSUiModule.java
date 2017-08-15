@@ -604,6 +604,9 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 				N4JSShowInheritedMembersOutlineContribution.class);
 	}
 
+	/**
+	 * LoadFromSourceHelper specific to the interactive editor scenario.
+	 */
 	public Class<? extends LoadFromSourceHelper> bindLoadFromSourceHelper() {
 		return DirtyStateAwareLoadFromSourceHelper.class;
 	}
