@@ -87,7 +87,13 @@ public class LoadFromSourceHelper {
 		 * to load this resource from source, too.
 		 */
 		Set<URI> sourceURIs = Sets.newHashSet();
-		for (Resource existingResource : resourceSet.getResources()) {
+		/*
+		 * We load resources concurrently in tests thus we may face a concurrent modification exception here if we
+		 * simply iterate over the resources. Therefore a classical for loop is used here.
+		 */
+		List<Resource> listOfResources = resourceSet.getResources();
+		for (int i = 0, size = listOfResources.size(); i < size; i++) {
+			Resource existingResource = listOfResources.get(i);
 			if (existingResource instanceof N4JSResource) {
 				N4JSResource casted = (N4JSResource) existingResource;
 				if (!casted.isLoadedFromDescription()) {
