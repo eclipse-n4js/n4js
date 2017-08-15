@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
@@ -195,7 +196,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 				result = createErrorPlaceholder(memberName);
 			}
 			// add composed member to ComposedTypeRef's cache (without notifications to avoid cache-clear)
-			final ComposedMemberCache cache = getOrCreateComposedMemberCache(composedTypeRef);
+			final ComposedMemberCache cache = getOrCreateComposedMemberCache();
 			if (cache != null) {
 				EcoreUtilN4.doWithDeliver(false, () -> {
 					cache.getCachedComposedMembers().add(result);
@@ -215,7 +216,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 */
 	private TMember getOrCreateComposedMember(String memberName) {
 		// look up cache
-		final ComposedMemberCache cache = getOrCreateComposedMemberCache(composedTypeRef);
+		final ComposedMemberCache cache = getOrCreateComposedMemberCache();
 		if (cache != null) {
 			for (TMember currM : cache.getCachedComposedMembers()) {
 				if (memberName.equals(currM.getName()) && hasCorrectAccess(currM, writeAccess)) {
@@ -233,41 +234,26 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * <code>null</code> if a cache could not be created, because the given type reference is not contained in an
 	 * N4JSResource or this resource does not have a TModule.
 	 */
-	private ComposedMemberCache getOrCreateComposedMemberCache(ComposedTypeRef ctr) {
-		final ComposedTypeRef ctrWithCache = getComposedTypeRefWithCache(ctr);
-		final ComposedMemberCache cache = ctrWithCache.getComposedMemberCache();
-		if (cache != null) {
-			return cache;
-		}
-		// does not exist yet -> create new composed member cache in TModule:
-		final Resource res = ctrWithCache.eResource(); // may be null
-		final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : null;
-		if (module != null) {
-			final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
-			EcoreUtilN4.doWithDeliver(false, () -> {
-				module.getComposedMemberCaches().add(cacheNew);
-				ctrWithCache.setComposedMemberCache(cacheNew);
-			}, module, ctrWithCache);
-			return cacheNew;
+	private ComposedMemberCache getOrCreateComposedMemberCache() {
+		if (context instanceof MemberAccess) {
+			final MemberAccess contextCasted = (MemberAccess) context;
+			final ComposedMemberCache cache = contextCasted.getComposedMemberCache();
+			if (cache != null) {
+				return cache;
+			}
+			// does not exist yet -> create new composed member cache in TModule:
+			final Resource res = contextCasted.eResource();
+			final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : null;
+			if (module != null) {
+				final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
+				EcoreUtilN4.doWithDeliver(false, () -> {
+					module.getComposedMemberCaches().add(cacheNew);
+					contextCasted.setComposedMemberCache(cacheNew);
+				}, module, contextCasted);
+				return cacheNew;
+			}
 		}
 		return null;
-	}
-
-	/**
-	 * Returns the ComposedTypeRef that can be expected to have a cache of composed members in its resource's TModule.
-	 * <p>
-	 * Cached composed members must be stored in a resource. However, due to copying during type variable substitution,
-	 * we might be dealing with a dangling (i.e. not contained in a resource) copy of another ComposedTypeRef contained
-	 * in the AST or type model. Therefore, follow the chain defined by property 'originalComposedTypeRef' until we find
-	 * the first ComputedTypeRef that is contained in a resource.
-	 * <p>
-	 * See also Xsemantics rule 'substTypeVariablesInComposedTypeRef'.
-	 */
-	private ComposedTypeRef getComposedTypeRefWithCache(ComposedTypeRef ctr) {
-		while (ctr.eResource() == null && ctr.getOriginalComposedTypeRef() != null) {
-			ctr = ctr.getOriginalComposedTypeRef();
-		}
-		return ctr;
 	}
 
 	/**
