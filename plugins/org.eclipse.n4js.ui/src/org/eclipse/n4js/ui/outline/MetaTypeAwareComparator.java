@@ -24,7 +24,16 @@ import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import com.google.inject.Inject;
 
 /**
+ * Sorts elements (of a node) in the outline by meta type and lexicographic. This replaces the default pure
+ * lexicographic comparator.
+ * <p>
+ * Note that it is not that easy to provide multiple comparators, since they effect each other. In other words, only one
+ * comparator must be active at a time or there must be something like a composed comparator. Also cf.
+ * OutlineFilterAndSorter: This API is only capable of managing a single comparator. Thus, for the time being, we simply
+ * override the default behavior.
  *
+ * @see <a href="https://www.eclipse.org/forums/index.php/t/1088234/">TMF Forum: Multiple Sort Contributions (or
+ *      Comparators) in Outline</a>
  */
 public class MetaTypeAwareComparator implements IComparator {
 
