@@ -72,6 +72,10 @@ import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
 import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
 import org.eclipse.n4js.ui.organize.imports.IReferenceFilter;
 import org.eclipse.n4js.ui.organize.imports.N4JSReferencesFilter;
+import org.eclipse.n4js.ui.outline.MetaTypeAwareComparator;
+import org.eclipse.n4js.ui.outline.N4JSFilterLocalTypesOutlineContribution;
+import org.eclipse.n4js.ui.outline.N4JSFilterNonPublicMembersOutlineContribution;
+import org.eclipse.n4js.ui.outline.N4JSFilterStaticMembersOutlineContribution;
 import org.eclipse.n4js.ui.outline.N4JSOutlineModes;
 import org.eclipse.n4js.ui.outline.N4JSOutlineNodeFactory;
 import org.eclipse.n4js.ui.outline.N4JSShowInheritedMembersOutlineContribution;
@@ -116,6 +120,7 @@ import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory;
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
@@ -602,6 +607,35 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	public void configureInheritedMembersOutlineContribution(Binder binder) {
 		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("InheritedMembersOutlineContribution")).to(
 				N4JSShowInheritedMembersOutlineContribution.class);
+	}
+
+	/**
+	 * Toggle showing static members or not.
+	 */
+	public void configureFilterStaticMembersOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("FilterStaticMembersOutlineContribution")).to(
+				N4JSFilterStaticMembersOutlineContribution.class);
+	}
+
+	/**
+	 * Toggle showing non-public members or not.
+	 */
+	public void configureFilterNonPublicMembersOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("FilterNonPublicMembersOutlineContribution"))
+				.to(N4JSFilterNonPublicMembersOutlineContribution.class);
+	}
+
+	/**
+	 * Toggle showing local types or not.
+	 */
+	public void configureFilterLocalTypesOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution.class).annotatedWith(Names.named("FilterLocalTypesOutlineContribution"))
+				.to(N4JSFilterLocalTypesOutlineContribution.class);
+	}
+
+	@Override
+	public Class<? extends IComparator> bindOutlineFilterAndSorter$IComparator() {
+		return MetaTypeAwareComparator.class;
 	}
 
 	/**
