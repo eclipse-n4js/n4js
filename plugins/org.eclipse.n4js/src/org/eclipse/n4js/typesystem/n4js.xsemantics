@@ -694,7 +694,7 @@ from {
 			// indexing via constant computed-name, sub-cases: static or instance member, for the latter nominally-typed or structurally-typed receiver
 			val staticAccess = (targetTypeRef instanceof TypeTypeRef)
 			val checkVisibility = false // access modifiers checked in validation
-			val scope = memberScopingHelper.createMemberScopeForTemporaryUse(targetTypeRef, expr, checkVisibility, staticAccess)
+			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess)
 			val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess)
 			if(member !== null) {
 				G |- member : var TypeRef memberTypeRef

@@ -692,7 +692,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 			}
 
-			val memberScope = memberScopingHelper.createMemberScopeForTemporaryUse(
+			val memberScope = memberScopingHelper.createMemberScopeAllowingNonContainedMembers(
 				TypeUtils.createTypeRef(ctorClassifier), expression, false, false); // always non-static
 			val vacs = new VisibilityAwareCtorScope(memberScope, memberVisibilityChecker, ref, staticType, expression);
 			val scope = new TypingStrategyAwareMemberScope(vacs, ref, expression);
@@ -1471,7 +1471,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
-		val scope = memberScopingHelper.createMemberScopeFor(receiverTypeRef, indexedAccess,
+		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess,
 			checkVisibility, staticAccess)
 		if (memberScopingHelper.isNonExistentMember(scope, memberName, staticAccess)) {
 			if (indexIsNumeric) {

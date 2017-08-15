@@ -13,6 +13,7 @@ package org.eclipse.n4js.scoping.members;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.xtext.scoping.IScopeProvider;
 
 /**
  * Immutable value object containing information related to member scoping.
@@ -35,6 +36,12 @@ public class MemberScopeRequest {
 
 	/**
 	 * Creates a new member scope request with given values, these values are directly accessible via fields.
+	 *
+	 * @param context
+	 *            the context as defined by {@link IScopeProvider#getScope(EObject, org.eclipse.emf.ecore.EReference)}.
+	 *            If <code>provideContainedMembers</code> this must be of type {@link MemberAccess}.
+	 * @param provideContainedMembers
+	 *            see {@link #provideContainedMembers}.
 	 */
 	public MemberScopeRequest(TypeRef originalReceiverTypeRef, EObject context, boolean provideContainedMembers,
 			boolean checkVisibility, boolean staticAccess) {

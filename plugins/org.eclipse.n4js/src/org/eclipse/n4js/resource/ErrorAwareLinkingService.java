@@ -24,7 +24,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.utils.languages.N4LanguageUtils;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
@@ -96,14 +95,8 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 			if (eObjectDescription != null) {
 				EObject candidate = eObjectDescription.getEObjectOrProxy();
 				if (!candidate.eIsProxy() && candidate.eResource() == null) {
-					// TODO remove following exception case after resolving IDE-1253
-					final boolean isCaseOfCachedComposedMemberHack = candidate instanceof TMember
-							&& ((TMember) candidate).isComposed();
-
-					if (!isCaseOfCachedComposedMemberHack) {
-						// Error is necessary since EMF catches all exceptions in EcoreUtil#resolve
-						throw new AssertionError("Found an instance without resource and without URI");
-					}
+					// Error is necessary since EMF catches all exceptions in EcoreUtil#resolve
+					throw new AssertionError("Found an instance without resource and without URI");
 				}
 				return Collections.singletonList(candidate);
 			}

@@ -19,6 +19,10 @@ import org.eclipse.n4js.ts.types.ComposedMemberCache;
  * A representation of the model object '<em><b>Member Access</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * An AST node accessing the member of a ContainerType via member scoping.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

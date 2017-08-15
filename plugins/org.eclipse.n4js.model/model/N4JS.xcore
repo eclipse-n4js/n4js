@@ -1387,6 +1387,9 @@ class TaggedTemplateString extends Expression {
 	contains TemplateLiteral template
 }
 
+/*
+ * An AST node accessing the member of a ContainerType via member scoping.
+ */
 abstract class MemberAccess {
 	/*
 	 * This points to a cache of members that can be accessed via property access on the union/intersection

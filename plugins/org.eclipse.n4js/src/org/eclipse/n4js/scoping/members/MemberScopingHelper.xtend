@@ -67,7 +67,8 @@ class MemberScopingHelper {
 
 
 	/**
-	 * Create a new member scope that filters using the given criteria (visibility, static access).
+	 * Create a new member scope that filters using the given criteria (visibility, static access). Members retrieved
+	 * via the scope returned by this method are guaranteed to be contained in a resource.
 	 * <p>
 	 * When choosing static scope, the {@code context} is inspected to determine read/write access
 	 * but only if it's a {@link ParameterizedPropertyAccessExpression} or a {@code IndexedAccessExpression}.
@@ -75,7 +76,8 @@ class MemberScopingHelper {
 	 * @param receiverTypeRef
 	 *               TypeRef for the value whose scope is of interest.
 	 * @param context
-	 *               AST node used for (a) obtaining context resource and (b) visibility checking.
+	 *               AST node used for (a) obtaining context resource, (b) visibility checking, and
+	 *               (c) caching composed members.
 	 * @param checkVisibility
 	 *               if true, the member scope will be wrapped in a {@link VisibilityAwareMemberScope}; if
 	 *               false, method {@link getPropertyTypeForNode(IScope,String)} will <b>never</b> return
@@ -83,14 +85,22 @@ class MemberScopingHelper {
 	 * @param staticAccess
 	 *               true: only static members are relevant; false: only non-static ones.
 	 */
-	public def IScope createMemberScopeFor(TypeRef receiverTypeRef, MemberAccess context,
+	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
 		boolean checkVisibility, boolean staticAccess) {
 		return decoratedMemberScopeFor(receiverTypeRef,
 			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess));
 	}
 
-	// FIXME doc
-	public def IScope createMemberScopeForTemporaryUse(TypeRef receiverTypeRef, EObject context,
+	/**
+	 * Same as {@link #createMemberScope(TypeRef, MemberAccess, boolean, boolean)}, but the returned scope <b>DOES
+	 * NOT</b> guarantee that members will be contained in a resource. In turn, this method does not require a context
+	 * of type {@link MemberAccess}.
+	 * <p>
+	 * This method can be used if members are only used temporarily for a purpose that does not require proper
+	 * containment of the member, e.g. retrieving the type of a field for validation purposes. Use of this method
+	 * in new code should be avoided as far as possible.
+	 */
+	public def IScope createMemberScopeAllowingNonContainedMembers(TypeRef receiverTypeRef, EObject context,
 		boolean checkVisibility, boolean staticAccess) {
 		return decoratedMemberScopeFor(receiverTypeRef,
 			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess));
