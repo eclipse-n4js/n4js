@@ -106,7 +106,7 @@
 							return $spawn(function *() {
 								let parts, ctorName, groupModule, testClasses, testClass, instrumentedTestObjects = [], moduleName;
 								;
-								parts = info.fqn.split("\.");
+								parts = info.fqn.split("/");
 								ctorName = parts.pop();
 								moduleName = parts.join("/");
 								try {
