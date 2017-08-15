@@ -90,6 +90,7 @@ import static org.eclipse.n4js.ts.typeRefs.TypeRefsPackage.Literals.PARAMETERIZE
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.types.TypingStrategy
 
 /**
  * Class for validating the N4JS types.
@@ -190,6 +191,14 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 				declaredType, paramTypeRef, TypeRefsPackage.eINSTANCE.parameterizedTypeRef_DeclaredType);
 		}
 		internalCheckDynamic(paramTypeRef);
+		
+		internalCheckStructuralPrimitiveTypeRef(paramTypeRef);
+	}
+	
+	def private void internalCheckStructuralPrimitiveTypeRef(ParameterizedTypeRef typeRef) {
+		if (typeRef.declaredType instanceof PrimitiveType && typeRef.typingStrategy != TypingStrategy.NOMINAL) {
+			addIssue(IssueCodes.messageForTYS_STRUCTURAL_PRIMITIVE, typeRef, TYS_STRUCTURAL_PRIMITIVE);
+		}
 	}
 
 	/**

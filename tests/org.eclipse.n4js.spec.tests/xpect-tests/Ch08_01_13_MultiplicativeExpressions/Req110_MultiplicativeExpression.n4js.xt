@@ -58,7 +58,7 @@ var mult05 : number = "2" * "3";
 // ---
 var mult06 : number = true * true;
 var mult07 : number = NaN * -Infinity;
-// XPECT errors --> "~Object is not a subtype of number." at "{}"
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "{}"
 var mult08 : number = -0 * {};
 // XPECT errors --> "C is not a subtype of number." at "new C()"
 var mult09 : number = new C() * mult01;

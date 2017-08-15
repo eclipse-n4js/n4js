@@ -3863,17 +3863,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                             }
                           }
                           if ((!structuralTyping)) {
-                            boolean _and_1 = false;
-                            if (!((left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping()) && 
-                              (!((leftDeclType instanceof TypeVariable) || (rightDeclType instanceof TypeVariable))))) {
-                              _and_1 = false;
-                            } else {
-                              /* G |- right <: G.n4ObjectTypeRef */
-                              ParameterizedTypeRef _n4ObjectTypeRef = RuleEnvironmentExtensions.n4ObjectTypeRef(G);
-                              boolean _ruleinvocation_1 = subtypeSucceeded(G, _trace_, right, _n4ObjectTypeRef);
-                              _and_1 = _ruleinvocation_1;
-                            }
-                            if (_and_1) {
+                            if ((((left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping()) && (!(Objects.equal(rightDeclType, RuleEnvironmentExtensions.objectType(G)) && (leftDeclType instanceof TClassifier)))) && (!(leftDeclType instanceof PrimitiveType)))) {
                               /* fail error "Structural type " + left.typeRefAsString + " is not a subtype of non-structural type " + right.typeRefAsString data PRIORITY_ERROR */
                               String _typeRefAsString = left.getTypeRefAsString();
                               String _plus = ("Structural type " + _typeRefAsString);
