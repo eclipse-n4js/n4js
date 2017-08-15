@@ -43,6 +43,20 @@ public class SingleFileCompileN4jscJarTest extends AbstractN4jscJarTest {
 	}
 
 	/**
+	 * Test simple help command with dangling argument (should be ignored).
+	 */
+	@Test
+	public void testHelpWithDanglingArgument() throws Exception {
+		logFile();
+
+		Process p = createAndStartProcess("--help", "true");
+
+		int exitCode = p.waitFor();
+
+		assertEquals("successful termination", 0, exitCode);
+	}
+
+	/**
 	 * Compile a single file.
 	 *
 	 * @throws Exception

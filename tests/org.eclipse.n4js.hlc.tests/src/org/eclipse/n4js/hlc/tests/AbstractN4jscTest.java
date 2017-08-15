@@ -53,7 +53,7 @@ public abstract class AbstractN4jscTest {
 	 */
 	private static final String SUBGENERATOR_PATH = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 	/** name of workspace sub-folder (inside target folder) */
-	protected static final String WSP = "wsp";
+	private static final String WSP = "wsp";
 	/** name of package containing the test resources */
 	protected static final String FIXTURE = "probands";
 	/** name of default test data set */
