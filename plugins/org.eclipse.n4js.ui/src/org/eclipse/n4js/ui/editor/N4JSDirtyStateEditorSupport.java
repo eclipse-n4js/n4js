@@ -117,11 +117,14 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 			if (candidate != resource) {
 				URI uri = candidate.getURI();
 				if (deltaURIs.contains(uri)) {
+					// the candidate is contained in the delta list
+					// schedule it for unloading
 					result.add(candidate);
 				} else if (candidate instanceof N4JSResource) {
-					N4JSResource casted = (N4JSResource) candidate;
-					if (casted.isDependingOn(deltaURIs)) {
-						result.add(casted);
+					// the candidate does depend on one of the changed resources
+					// schedule it for unloading
+					if (loadFromSourceHelper.dependsOnAny(candidate, deltaURIs)) {
+						result.add(candidate);
 					}
 				}
 			}
@@ -146,24 +149,18 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 	}
 
 	@Override
-	public boolean haveEObjectDescriptionsChanged(final IResourceDescription newDescription,
-			IResourceDescription.Manager resourceDescriptionManager) {
-		boolean haveEObjectDescriptionsChanged = resourceDescriptionManager
-				.createDelta(getDirtyResource().getDescription(), newDescription).haveEObjectDescriptionsChanged();
-		return haveEObjectDescriptionsChanged;
-	}
-
-	@Override
 	public void descriptionsChanged(final IResourceDescription.Event event) {
 		if (!getDirtyResource().isInitialized())
 			return;
 		for (IResourceDescription.Delta delta : event.getDeltas()) {
 			if (delta.getOld() == getDirtyResource().getDescription()
 					|| delta.getNew() == getDirtyResource().getDescription()) {
+				// usually we ignore events from this resource itself, but when it is part
+				// of a dependency cylce, the event may affect other resources in the same
+				// resource set thus we schedule the event in that case
 				if (loadFromSourceHelper.isPartOfDependencyCycle(delta.getUri(), dirtyState)) {
 					scheduleUpdateEditorJob(event);
 				}
-
 				return;
 			}
 		}

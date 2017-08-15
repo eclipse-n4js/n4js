@@ -127,6 +127,8 @@ import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider
 import org.eclipse.xtext.ui.shared.Access
 import org.eclipse.xtext.ui.util.IssueUtil
 import org.eclipse.xtext.validation.IResourceValidator
+import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper
+import org.eclipse.n4js.ui.editor.DirtyStateAwareLoadFromSourceHelper
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -558,5 +560,12 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	/** Languages variation point for the organize imports */
 	def Class<? extends IReferenceFilter> bindContentReferenceFilter() {
 		return N4JSXReferencesFilter;
+	}
+	
+	/**
+	 * LoadFromSourceHelper specific to the interactive editor scenario.
+	 */
+	def Class<? extends LoadFromSourceHelper> bindLoadFromSourceHelper() {
+		return DirtyStateAwareLoadFromSourceHelper;
 	}
 }

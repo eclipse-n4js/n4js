@@ -162,14 +162,13 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			if (resource != null && resource.isLoaded()) {
 				return original;
 			}
-			final boolean forceLoadingFromSourceFile = loadFromSourceHelper.mustLoadFromSource(resourceURI,
-					resourceSet);
-			UtilN4.tlog("force = " + forceLoadingFromSourceFile);
-			resource = resourceSet.getResource(resourceURI, forceLoadingFromSourceFile);
+			final boolean mustLoadFromSource = loadFromSourceHelper.mustLoadFromSource(resourceURI, resourceSet);
+			UtilN4.tlog(resourceURI + ".mustLoadFromSource = " + mustLoadFromSource);
+			resource = resourceSet.getResource(resourceURI, mustLoadFromSource);
 			if (resource != null && resource.isLoaded()) {
 				return original;
 			}
-			if (forceLoadingFromSourceFile) {
+			if (mustLoadFromSource) {
 				// error case: forced loading failed
 				// --> still avoid loading from index; instead simply return 'original' as in other error cases
 				return original;

@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
@@ -100,8 +99,6 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
-	@Inject
-	private IN4JSCore n4jsCore;
 
 	@Override
 	public boolean createEObjectDescriptions(final EObject eObject, IAcceptor<IEObjectDescription> acceptor) {
@@ -144,8 +141,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				if (delegate == null) {
 					try {
 						delegate = UserdataMapper.createUserData(module);
-						UserdataMapper.writeDependenciesToUserData(n4jsCore, (N4JSResource) module.eResource(),
-								delegate);
+						N4JSResource resource = (N4JSResource) module.eResource();
+						UserdataMapper.writeDependenciesToUserData(resource, delegate);
 					} catch (Exception e) {
 						throw new IllegalStateException(e);
 					}

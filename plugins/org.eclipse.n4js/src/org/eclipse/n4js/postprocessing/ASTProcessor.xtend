@@ -50,7 +50,6 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
@@ -109,8 +108,6 @@ public class ASTProcessor extends AbstractProcessor {
 		if (resource === null)
 			throw new IllegalArgumentException("resource may not be null");
 
-UtilN4.tlog(resource.URI);
-
 		// the following is required, because typing may have been initiated by resolution of a proxy
 		// -> when traversing the AST, we will sooner or later try to resolve this same proxy, which would be
 		// interpreted as a cyclic proxy resolution by method LazyLinkingResource#getEObject(String,Triple)
@@ -138,8 +135,6 @@ UtilN4.tlog(resource.URI);
 				log(4, resource.script, cache);
 			}
 			log(0, "### done: " + resource.URI);
-
-UtilN4.tlog("DONE " + resource.URI);
 		}
 	}
 

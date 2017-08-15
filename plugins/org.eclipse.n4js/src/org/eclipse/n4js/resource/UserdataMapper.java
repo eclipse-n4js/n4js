@@ -32,7 +32,6 @@ import org.eclipse.emf.ecore.xml.type.XMLTypeFactory;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
-import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeUtils;
@@ -68,8 +67,7 @@ public final class UserdataMapper {
 	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
 
 	/**
-	 * Comma-separated list of URIs of resources the containing resource depends on. Includes only resources within the
-	 * same project as the containing resource! See {@link #readDependenciesFromDescription(IResourceDescription)}.
+	 * Comma-separated list of URIs of resource URIs this resource depends on.
 	 */
 	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
 
@@ -265,17 +263,12 @@ public final class UserdataMapper {
 	 * Computes list of dependencies of given resource and stores the list in the given user data. For details, see
 	 * {@link #readDependenciesFromDescription(IResourceDescription)}.
 	 */
-	public static void writeDependenciesToUserData(IN4JSCore n4jsCore, N4JSResource resource,
-			Map<String, String> userData) {
-		final URI resourceURI = resource.getURI();
+	public static void writeDependenciesToUserData(N4JSResource resource, Map<String, String> userData) {
 		final Set<URI> dependencies = Sets.newLinkedHashSet();
 		computeCrossRefs(resource, targetObj -> {
 			final Resource targetRes = targetObj.eResource();
 			if (targetRes != null) {
-				final URI targetResURI = targetRes.getURI();
-				if (n4jsCore.isInSameProject(targetResURI, resourceURI)) {
-					dependencies.add(targetResURI);
-				}
+				dependencies.add(targetRes.getURI());
 			}
 		});
 		// FIXME GH-66 probably no need to persist entire URI!
@@ -318,12 +311,8 @@ public final class UserdataMapper {
 	 * data. Returns a list of strings, in which each string represents the URI of a resource D that is a direct
 	 * dependency of R (i.e. R depends on D).
 	 * <p>
-	 * Definition: a resource R <em>depends on</em> a resource D, iff
-	 * <ul>
-	 * <li>D is contained in the same N4JS project as R, and
-	 * <li>R's TModule might be affected by changes of D's TModule.
-	 * </ul>
-	 * In this case, we also say D <em>is a dependency of</em> R.
+	 * Definition: a resource R <em>depends on</em> a resource D, if R's TModule might be affected by changes of D's
+	 * TModule. In this case, we also say D <em>is a dependency of</em> R.
 	 *
 	 * Returns none if the information is missing in the resource description.
 	 */

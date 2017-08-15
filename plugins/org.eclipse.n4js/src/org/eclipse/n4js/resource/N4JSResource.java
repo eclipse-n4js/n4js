@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IResourceStatus;
@@ -59,7 +58,6 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
-import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
@@ -309,8 +307,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		boolean wasDeliver = eDeliver();
 		try {
-			UtilN4.tlog(getURI());
-
 			eSetDeliver(false);
 			ModuleAwareContentsList theContents = (ModuleAwareContentsList) getContents();
 			if (!theContents.isEmpty())
@@ -536,11 +532,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
-		UtilN4.tlog(getURI());
 		if (contents != null && !contents.isEmpty())
 			discardStateFromDescription();
 		super.doLoad(inputStream, options);
-		UtilN4.tlog("DONE");
 	}
 
 	@Override
@@ -760,7 +754,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source
-				if (loadFromSourceHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet())) {
+				if (canResolveFromDescription(targetUri)) {
 
 					final String targetFragment = targetUri.fragment();
 					final Resource targetResource = resSet.getResource(targetResourceUri, false);
@@ -781,7 +775,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 						}
 					}
 				}
-
 				// standard behavior:
 				// obtain target EObject from targetResource in the usual way
 				// (might load targetResource from disk if it wasn't loaded from index above)
@@ -809,14 +802,12 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Returns {@code true} if this resource has a transitive dependency on the given other resource.
-	 *
-	 * @param other
-	 *            the uri of the other resource.
-	 * @return true if this resource depends on the resource with the given URI.
+	 * @param targetUri
+	 *            the uri to be resolved
+	 * @return true, if the referenced object may come from the the index TModule.
 	 */
-	public boolean isDependingOn(Set<URI> other) {
-		return loadFromSourceHelper.dependsOnAny(this, other);
+	private boolean canResolveFromDescription(URI targetUri) {
+		return loadFromSourceHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
 	}
 
 	/**
