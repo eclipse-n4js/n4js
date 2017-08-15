@@ -967,22 +967,13 @@ public interface TypeRefsPackage extends EPackage {
 	int COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Original Composed Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Type Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF__TYPE_REFS = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 2;
+	int COMPOSED_TYPE_REF__TYPE_REFS = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Composed Type Ref</em>' class.
@@ -991,7 +982,7 @@ public interface TypeRefsPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_TYPE_REF_FEATURE_COUNT = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 3;
+	int COMPOSED_TYPE_REF_FEATURE_COUNT = STATIC_BASE_TYPE_REF_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Contains Wildcards</em>' operation.
@@ -1245,15 +1236,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int UNION_TYPE_EXPRESSION__COMPOSED_MEMBER_CACHE = COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE;
-
-	/**
-	 * The feature id for the '<em><b>Original Composed Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int UNION_TYPE_EXPRESSION__ORIGINAL_COMPOSED_TYPE_REF = COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Type Refs</b></em>' containment reference list.
@@ -1525,15 +1507,6 @@ public interface TypeRefsPackage extends EPackage {
 	 * @ordered
 	 */
 	int INTERSECTION_TYPE_EXPRESSION__COMPOSED_MEMBER_CACHE = COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE;
-
-	/**
-	 * The feature id for the '<em><b>Original Composed Type Ref</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int INTERSECTION_TYPE_EXPRESSION__ORIGINAL_COMPOSED_TYPE_REF = COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF;
 
 	/**
 	 * The feature id for the '<em><b>Type Refs</b></em>' containment reference list.
@@ -6387,17 +6360,6 @@ public interface TypeRefsPackage extends EPackage {
 	EReference getComposedTypeRef_ComposedMemberCache();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getOriginalComposedTypeRef <em>Original Composed Type Ref</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Original Composed Type Ref</em>'.
-	 * @see org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getOriginalComposedTypeRef()
-	 * @see #getComposedTypeRef()
-	 * @generated
-	 */
-	EReference getComposedTypeRef_OriginalComposedTypeRef();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.typeRefs.ComposedTypeRef#getTypeRefs <em>Type Refs</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -7937,14 +7899,6 @@ public interface TypeRefsPackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMPOSED_TYPE_REF__COMPOSED_MEMBER_CACHE = eINSTANCE.getComposedTypeRef_ComposedMemberCache();
-
-		/**
-		 * The meta object literal for the '<em><b>Original Composed Type Ref</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference COMPOSED_TYPE_REF__ORIGINAL_COMPOSED_TYPE_REF = eINSTANCE.getComposedTypeRef_OriginalComposedTypeRef();
 
 		/**
 		 * The meta object literal for the '<em><b>Type Refs</b></em>' containment reference list feature.

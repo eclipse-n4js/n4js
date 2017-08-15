@@ -2360,7 +2360,7 @@ rule upperBoundUnionTypeExpression
 from {
 	T = TypeUtils.createNonSimplifiedUnionType(
 		U.typeRefs.map[var TypeRef E; G|~ it /\ E; E]
-	) => [ originalComposedTypeRef = U ]
+	)
 	TypeUtils.copyTypeModifiers(T,U)
 }
 
@@ -2370,7 +2370,7 @@ rule upperBoundIntersectionTypeExpression
 from {
 	T = TypeUtils.createNonSimplifiedIntersectionType(
 		I.typeRefs.map[var TypeRef E; G|~ it /\ E; E]
-	) => [ originalComposedTypeRef = I ]
+	)
 	TypeUtils.copyTypeModifiers(T,I)
 }
 
@@ -2590,7 +2590,6 @@ from {
 	if(haveReplacement) {
 		result = TypeUtils.copy(typeRef);
 		result.composedMemberCache = null;
-		result.originalComposedTypeRef = typeRef;
 		result.typeRefs.clear();
 		result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs));
 	}

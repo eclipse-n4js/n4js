@@ -234,40 +234,22 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * N4JSResource or this resource does not have a TModule.
 	 */
 	private ComposedMemberCache getOrCreateComposedMemberCache(ComposedTypeRef ctr) {
-		final ComposedTypeRef ctrWithCache = getComposedTypeRefWithCache(ctr);
-		final ComposedMemberCache cache = ctrWithCache.getComposedMemberCache();
+		final ComposedMemberCache cache = ctr.getComposedMemberCache();
 		if (cache != null) {
 			return cache;
 		}
 		// does not exist yet -> create new composed member cache in TModule:
-		final Resource res = ctrWithCache.eResource(); // may be null
+		final Resource res = context.eResource();
 		final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : null;
 		if (module != null) {
 			final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
 			EcoreUtilN4.doWithDeliver(false, () -> {
 				module.getComposedMemberCaches().add(cacheNew);
-				ctrWithCache.setComposedMemberCache(cacheNew);
-			}, module, ctrWithCache);
+				ctr.setComposedMemberCache(cacheNew);
+			}, module, ctr);
 			return cacheNew;
 		}
 		return null;
-	}
-
-	/**
-	 * Returns the ComposedTypeRef that can be expected to have a cache of composed members in its resource's TModule.
-	 * <p>
-	 * Cached composed members must be stored in a resource. However, due to copying during type variable substitution,
-	 * we might be dealing with a dangling (i.e. not contained in a resource) copy of another ComposedTypeRef contained
-	 * in the AST or type model. Therefore, follow the chain defined by property 'originalComposedTypeRef' until we find
-	 * the first ComputedTypeRef that is contained in a resource.
-	 * <p>
-	 * See also Xsemantics rule 'substTypeVariablesInComposedTypeRef'.
-	 */
-	private ComposedTypeRef getComposedTypeRefWithCache(ComposedTypeRef ctr) {
-		while (ctr.eResource() == null && ctr.getOriginalComposedTypeRef() != null) {
-			ctr = ctr.getOriginalComposedTypeRef();
-		}
-		return ctr;
 	}
 
 	/**

@@ -296,13 +296,7 @@ abstract class ComposedTypeRef extends StaticBaseTypeRef {
 	 * information to be complete and best not use it at all. Instead, access these members only via the scoping.
 	 */
 	refers transient ComposedMemberCache composedMemberCache
-	/*
-	 * During type variable substitution, type references may be copied. Whenever this happens
-	 * to a ComposedTypeRef, Xsemantics rule 'substTypeVariablesInComposedTypeRef' will let this
-	 * property point to the original ComposedTypeRef. This is required for caching composed
-	 * members, see {@link ComposedMemberScope#getCacheHolder(ComposedTypeRef)}.
-	 */
-	refers transient ComposedTypeRef originalComposedTypeRef
+
 	/*
 	 * Union type cannot be marked as dynamic
 	 */
