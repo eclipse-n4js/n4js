@@ -1255,7 +1255,8 @@ public class N4HeadlessCompiler {
 	 *            project to trigger post process.
 	 */
 	private void postProcessResources(MarkedProject markedProject) {
-		printDebug(" PostProcessing " + markedProject);
+		if (isCreateDebugOutput())
+			printDebug(" PostProcessing " + markedProject);
 		Iterables.filter(markedProject.resources, resource -> resource.isLoaded()).forEach(resource -> {
 			if (resource instanceof N4JSResource) {
 				N4JSResource n4jsResource = (N4JSResource) resource;
@@ -1291,7 +1292,8 @@ public class N4HeadlessCompiler {
 	private void validateProject(MarkedProject markedProject, N4ProgressStateRecorder recorder,
 			IssueAcceptor issueAcceptor) throws N4JSCompileErrorException {
 
-		printDebug(" Validating project " + markedProject);
+		if (isVerbose() || isCreateDebugOutput())
+			printDebug(" Validating project " + markedProject);
 		IssueCollector issueCollector = new IssueCollector();
 		IssueFilter issueFilter = new IssueFilter(issueCollector, issue -> issue.getSeverity() == Severity.ERROR);
 		issueAcceptor = new IssueAcceptorTee(issueAcceptor, issueFilter);
@@ -1302,7 +1304,8 @@ public class N4HeadlessCompiler {
 					(!n4jsCore.isNoValidate(resource.getURI())) && // is validating
 					(!markedProject.externalResources.contains(resource)) // not in external folder
 			) {
-				printDebug("   Validating resource " + resource.getURI());
+				if (isCreateDebugOutput())
+					printDebug("   Validating resource " + resource.getURI());
 				XtextResource xtextResource = (XtextResource) resource;
 				IResourceValidator validator = xtextResource.getResourceServiceProvider().getResourceValidator();
 				List<Issue> issues = validator.validate(xtextResource, CheckMode.ALL, CancelIndicator.NullImpl);

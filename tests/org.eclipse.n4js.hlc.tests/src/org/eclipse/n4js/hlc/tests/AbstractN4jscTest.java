@@ -14,6 +14,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.collect.Sets.newHashSet;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,11 +27,18 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.hlc.base.ErrorExitCode;
+import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.hlc.base.N4jscBase;
 import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.junit.After;
+import org.junit.Rule;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
@@ -44,8 +52,6 @@ public abstract class AbstractN4jscTest {
 	 * {@link #assertFilesCompiledToES(int, String)}
 	 */
 	private static final String SUBGENERATOR_PATH = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
-	/** name of target folder */
-	protected static final String TARGET = "target";
 	/** name of workspace sub-folder (inside target folder) */
 	protected static final String WSP = "wsp";
 	/** name of package containing the test resources */
@@ -94,17 +100,18 @@ public abstract class AbstractN4jscTest {
 	protected static File setupWorkspace(String testDataRoot, String testDataSet,
 			Predicate<String> n4jsLibrariesPredicate)
 			throws IOException {
-		File wsp = new File(TARGET, WSP);
+		File root = Files.createTempDirectory(testDataRoot + "_" + testDataSet + "_").toFile();
+		if (root == null || !root.exists()) {
+			throw new RuntimeException("Cannot create working directory;");
+		}
+
+		File wsp = new File(root, WSP);
 		File fixture = new File(testDataRoot, testDataSet);
 		// clean
-		System.out.println("Workspace : " + wsp.getAbsolutePath());
-		// Files.deleteIfExists(wsp.toPath());
 		if (wsp.exists()) {
 			FileDeleter.delete(wsp.toPath(), true);
 		}
 
-		System.out.println("from " + fixture.getAbsolutePath());
-		System.out.println("to  " + wsp.getAbsolutePath());
 		// copy fixtures to workspace
 		FileCopier.copy(fixture.toPath(), wsp.toPath(), true);
 
@@ -129,6 +136,23 @@ public abstract class AbstractN4jscTest {
 	}
 
 	/**
+	 * Convince method to call compiler with provided arguments and assert given exception with given exit code is
+	 * thrown. Since it handles thrown error, allow callers to do further assertions.
+	 *
+	 * @return the {@link ExitCodeException} thrown by the compiler.
+	 */
+	protected static ExitCodeException expectCompilerException(String[] args, ErrorExitCode expectedExitCode) {
+		try {
+			new N4jscBase().doMain(args);
+		} catch (ExitCodeException excpetion) {
+			assertEquals("Wrong exit code", expectedExitCode.getExitCodeValue(), excpetion.getExitCode());
+			return excpetion;
+		}
+		fail("Compiler did not throw exception for " + String.join(",", args));
+		throw new RuntimeException("Should never be reached.");
+	}
+
+	/**
 	 * Flush outputs after tests.
 	 */
 	@After
@@ -139,6 +163,25 @@ public abstract class AbstractN4jscTest {
 		System.out.flush();
 
 	}
+
+	/** Description object of the currently running test. */
+	protected Description description;
+	/** Logs test name that is executed. */
+	@Rule
+	public TestRule watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description desc) {
+			description = desc;
+			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+		}
+
+		@Override
+		protected void finished(Description desc) {
+			description = null;
+			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+		}
+
+	};
 
 	/**
 	 * @param expectedCompiledModuleCount
@@ -215,16 +258,4 @@ public abstract class AbstractN4jscTest {
 
 		return counter.get();
 	}
-
-	/**
-	 * Determine class.method of the direct caller by inspecting the current thread's stack trace.
-	 *
-	 * @return Class + Method name of the caller.
-	 */
-	protected String logMethodname() {
-		StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
-		String name = stackTraceElement.getClassName() + "." + stackTraceElement.getMethodName() + "";
-		return "INSIDE of " + name;
-	}
-
 }

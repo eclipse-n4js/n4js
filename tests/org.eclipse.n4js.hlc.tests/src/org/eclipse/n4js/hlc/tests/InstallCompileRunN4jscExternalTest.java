@@ -14,17 +14,36 @@ import static java.util.Collections.singletonMap;
 import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 import static org.eclipse.n4js.runner.SystemLoaderInfo.COMMON_JS;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase.BuildType;
+import org.eclipse.n4js.utils.io.FileDeleter;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+
+import com.google.common.base.Predicates;
 
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
 public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
+	File workspace;
+
+	/** Prepare workspace. */
+	@Before
+	public void setupWorkspace() throws IOException {
+		workspace = setupWorkspace("external", Predicates.alwaysTrue());
+	}
+
+	/** Delete workspace. */
+	@After
+	public void deleteWorkspace() throws IOException {
+		FileDeleter.delete(workspace.toPath(), true);
+	}
 
 	@Override
 	protected Map<String, String> getNpmDependencies() {
@@ -37,9 +56,7 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 	 */
 	@Test
 	public void testCompileAndRunWithExternalDependencies() throws IOException, ExitCodeException {
-		System.out.println(name.getMethodName());
-		setupWorkspace("external");
-		final String wsRoot = TARGET + "/" + WSP;
+		final String wsRoot = workspace.getAbsolutePath().toString();
 		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
 
 		final String[] args = {
