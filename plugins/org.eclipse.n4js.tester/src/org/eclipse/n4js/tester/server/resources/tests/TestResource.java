@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.server.resources.BaseResource;
@@ -32,6 +33,9 @@ import com.google.inject.Inject;
  */
 /* default */abstract class TestResource extends BaseResource {
 
+	/** Reserved character to be used as delimiter for the test id */
+	private static final String TEST_ID_DELIMITER = "$";
+
 	@Inject
 	private TesterEventBus bus;
 
@@ -44,11 +48,11 @@ import com.google.inject.Inject;
 		}
 
 		final String sessionId = pathValues.get(0);
-		final String testId = pathValues.get(2);
+		final String escapeTestId = unescapeTestId(pathValues.get(2));
 
 		if (sessionExists(sessionId)) {
 			try {
-				bus.post(createEvent(sessionId, testId, body));
+				bus.post(createEvent(sessionId, escapeTestId, body));
 			} catch (final Exception e) {
 				final Throwable rootCause = Throwables.getRootCause(e);
 				if (rootCause instanceof ClientResourceException) {
@@ -81,5 +85,15 @@ import com.google.inject.Inject;
 	 */
 	protected abstract TestEvent createEvent(final String sessionId, final String testId, final String body)
 			throws ServletException;
+
+	/**
+	 * Un-escapes the given test-id for the use within the N4JS tester.
+	 *
+	 * This makes sure, that the underlying module specifier is restored to use the correct delimiter according to
+	 * {@link N4JSQualifiedNameConverter#DELIMITER}.
+	 */
+	private static String unescapeTestId(String testId) {
+		return testId.replace(TEST_ID_DELIMITER, N4JSQualifiedNameConverter.DELIMITER);
+	}
 
 }
