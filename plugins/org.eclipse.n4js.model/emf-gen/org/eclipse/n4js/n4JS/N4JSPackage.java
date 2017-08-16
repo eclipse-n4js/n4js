@@ -13762,31 +13762,13 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_PATTERN = 153;
 
 	/**
-	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BINDING_PATTERN__PROPERTIES = 0;
-
-	/**
-	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BINDING_PATTERN__ELEMENTS = 1;
-
-	/**
 	 * The number of structural features of the '<em>Binding Pattern</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PATTERN_FEATURE_COUNT = 2;
+	int BINDING_PATTERN_FEATURE_COUNT = 0;
 
 	/**
 	 * The number of operations of the '<em>Binding Pattern</em>' class.
@@ -13814,16 +13796,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OBJECT_BINDING_PATTERN__PROPERTIES = BINDING_PATTERN__PROPERTIES;
-
-	/**
-	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OBJECT_BINDING_PATTERN__ELEMENTS = BINDING_PATTERN__ELEMENTS;
+	int OBJECT_BINDING_PATTERN__PROPERTIES = BINDING_PATTERN_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Object Binding Pattern</em>' class.
@@ -13832,7 +13805,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OBJECT_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 0;
+	int OBJECT_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Object Binding Pattern</em>' class.
@@ -13854,22 +13827,13 @@ public interface N4JSPackage extends EPackage {
 	int ARRAY_BINDING_PATTERN = 155;
 
 	/**
-	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ARRAY_BINDING_PATTERN__PROPERTIES = BINDING_PATTERN__PROPERTIES;
-
-	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARRAY_BINDING_PATTERN__ELEMENTS = BINDING_PATTERN__ELEMENTS;
+	int ARRAY_BINDING_PATTERN__ELEMENTS = BINDING_PATTERN_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Array Binding Pattern</em>' class.
@@ -13878,7 +13842,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ARRAY_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 0;
+	int ARRAY_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Array Binding Pattern</em>' class.
@@ -19272,28 +19236,6 @@ public interface N4JSPackage extends EPackage {
 	EClass getBindingPattern();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.BindingPattern#getProperties <em>Properties</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Properties</em>'.
-	 * @see org.eclipse.n4js.n4JS.BindingPattern#getProperties()
-	 * @see #getBindingPattern()
-	 * @generated
-	 */
-	EReference getBindingPattern_Properties();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.BindingPattern#getElements <em>Elements</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Elements</em>'.
-	 * @see org.eclipse.n4js.n4JS.BindingPattern#getElements()
-	 * @see #getBindingPattern()
-	 * @generated
-	 */
-	EReference getBindingPattern_Elements();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ObjectBindingPattern <em>Object Binding Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19304,6 +19246,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getObjectBindingPattern();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.ObjectBindingPattern#getProperties <em>Properties</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Properties</em>'.
+	 * @see org.eclipse.n4js.n4JS.ObjectBindingPattern#getProperties()
+	 * @see #getObjectBindingPattern()
+	 * @generated
+	 */
+	EReference getObjectBindingPattern_Properties();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ArrayBindingPattern <em>Array Binding Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19312,6 +19265,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getArrayBindingPattern();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.ArrayBindingPattern#getElements <em>Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Elements</em>'.
+	 * @see org.eclipse.n4js.n4JS.ArrayBindingPattern#getElements()
+	 * @see #getArrayBindingPattern()
+	 * @generated
+	 */
+	EReference getArrayBindingPattern_Elements();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.BindingProperty <em>Binding Property</em>}'.
@@ -23829,22 +23793,6 @@ public interface N4JSPackage extends EPackage {
 		EClass BINDING_PATTERN = eINSTANCE.getBindingPattern();
 
 		/**
-		 * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BINDING_PATTERN__PROPERTIES = eINSTANCE.getBindingPattern_Properties();
-
-		/**
-		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BINDING_PATTERN__ELEMENTS = eINSTANCE.getBindingPattern_Elements();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ObjectBindingPatternImpl <em>Object Binding Pattern</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23855,6 +23803,14 @@ public interface N4JSPackage extends EPackage {
 		EClass OBJECT_BINDING_PATTERN = eINSTANCE.getObjectBindingPattern();
 
 		/**
+		 * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OBJECT_BINDING_PATTERN__PROPERTIES = eINSTANCE.getObjectBindingPattern_Properties();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ArrayBindingPatternImpl <em>Array Binding Pattern</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -23863,6 +23819,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ARRAY_BINDING_PATTERN = eINSTANCE.getArrayBindingPattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ARRAY_BINDING_PATTERN__ELEMENTS = eINSTANCE.getArrayBindingPattern_Elements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.BindingPropertyImpl <em>Binding Property</em>}' class.

@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.misc
 
+import java.util.stream.Stream
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
@@ -20,20 +24,18 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
+import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.types.TypesPackage
-import java.util.stream.Stream
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtend.lib.annotations.Data
-import org.eclipse.n4js.n4JS.PropertyNameOwner
-import org.eclipse.n4js.n4JS.N4JSFactory
 
 /**
  * Destructuring patterns can appear in very different forms within the AST and in different contexts.
@@ -259,17 +261,10 @@ public class DestructNode {
 			pattern.elements.map[toEntry]
 		ObjectLiteral:
 			pattern.propertyAssignments.filter(PropertyNameValuePair).map[toEntry]
-		BindingPattern: {
-			if(!pattern.elements.empty) {
-				pattern.elements.map[toEntry]
-			}
-			else if(!pattern.properties.empty) {
-				pattern.properties.map[toEntry]
-			}
-			else {
-				#[]
-			}
-		}
+		ArrayBindingPattern:
+			pattern.elements.map[toEntry]
+		ObjectBindingPattern:
+			pattern.properties.map[toEntry]
 		default:
 			#[]
 		}

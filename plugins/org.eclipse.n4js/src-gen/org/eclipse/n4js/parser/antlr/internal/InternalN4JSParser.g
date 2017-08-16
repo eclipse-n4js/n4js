@@ -31720,7 +31720,7 @@ ruleObjectBindingPattern returns [EObject current=null]
 		(
 			{
 				$current = forceCreateModelElement(
-					grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0(),
+					grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0(),
 					$current);
 			}
 		)
@@ -31794,7 +31794,7 @@ norm1_ObjectBindingPattern returns [EObject current=null]
 		(
 			{
 				$current = forceCreateModelElement(
-					grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0(),
+					grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0(),
 					$current);
 			}
 		)
@@ -31874,7 +31874,7 @@ ruleArrayBindingPattern returns [EObject current=null]
 		(
 			{
 				$current = forceCreateModelElement(
-					grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0(),
+					grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0(),
 					$current);
 			}
 		)
@@ -32011,7 +32011,7 @@ norm1_ArrayBindingPattern returns [EObject current=null]
 		(
 			{
 				$current = forceCreateModelElement(
-					grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0(),
+					grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0(),
 					$current);
 			}
 		)

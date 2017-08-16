@@ -5891,24 +5891,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBindingPattern_Properties() {
-		return (EReference)bindingPatternEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBindingPattern_Elements() {
-		return (EReference)bindingPatternEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getObjectBindingPattern() {
 		return objectBindingPatternEClass;
 	}
@@ -5918,8 +5900,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getObjectBindingPattern_Properties() {
+		return (EReference)objectBindingPatternEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getArrayBindingPattern() {
 		return arrayBindingPatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getArrayBindingPattern_Elements() {
+		return (EReference)arrayBindingPatternEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -6834,12 +6834,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4SetterDeclarationEClass, N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT);
 
 		bindingPatternEClass = createEClass(BINDING_PATTERN);
-		createEReference(bindingPatternEClass, BINDING_PATTERN__PROPERTIES);
-		createEReference(bindingPatternEClass, BINDING_PATTERN__ELEMENTS);
 
 		objectBindingPatternEClass = createEClass(OBJECT_BINDING_PATTERN);
+		createEReference(objectBindingPatternEClass, OBJECT_BINDING_PATTERN__PROPERTIES);
 
 		arrayBindingPatternEClass = createEClass(ARRAY_BINDING_PATTERN);
+		createEReference(arrayBindingPatternEClass, ARRAY_BINDING_PATTERN__ELEMENTS);
 
 		bindingPropertyEClass = createEClass(BINDING_PROPERTY);
 		createEReference(bindingPropertyEClass, BINDING_PROPERTY__VALUE);
@@ -7922,13 +7922,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4SetterDeclaration__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(bindingPatternEClass, BindingPattern.class, "BindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBindingPattern_Properties(), this.getBindingProperty(), null, "properties", null, 0, -1, BindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBindingPattern_Elements(), this.getBindingElement(), null, "elements", null, 0, -1, BindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(bindingPatternEClass, BindingPattern.class, "BindingPattern", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(objectBindingPatternEClass, ObjectBindingPattern.class, "ObjectBindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getObjectBindingPattern_Properties(), this.getBindingProperty(), null, "properties", null, 0, -1, ObjectBindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(arrayBindingPatternEClass, ArrayBindingPattern.class, "ArrayBindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getArrayBindingPattern_Elements(), this.getBindingElement(), null, "elements", null, 0, -1, ArrayBindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(bindingPropertyEClass, BindingProperty.class, "BindingProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBindingProperty_Value(), this.getBindingElement(), null, "value", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

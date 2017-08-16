@@ -178,7 +178,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.N4_METHOD_DECLARATION: return createN4MethodDeclaration();
 			case N4JSPackage.N4_GETTER_DECLARATION: return createN4GetterDeclaration();
 			case N4JSPackage.N4_SETTER_DECLARATION: return createN4SetterDeclaration();
-			case N4JSPackage.BINDING_PATTERN: return createBindingPattern();
 			case N4JSPackage.OBJECT_BINDING_PATTERN: return createObjectBindingPattern();
 			case N4JSPackage.ARRAY_BINDING_PATTERN: return createArrayBindingPattern();
 			case N4JSPackage.BINDING_PROPERTY: return createBindingProperty();
@@ -1390,16 +1389,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public N4SetterDeclaration createN4SetterDeclaration() {
 		N4SetterDeclarationImpl n4SetterDeclaration = new N4SetterDeclarationImpl();
 		return n4SetterDeclaration;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public BindingPattern createBindingPattern() {
-		BindingPatternImpl bindingPattern = new BindingPatternImpl();
-		return bindingPattern;
 	}
 
 	/**

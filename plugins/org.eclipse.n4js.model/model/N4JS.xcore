@@ -2098,14 +2098,16 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 	}
 }
 
-class BindingPattern {
-	contains BindingProperty[] properties
-	contains BindingElement[] elements
+abstract class BindingPattern {
 }
 
-class ObjectBindingPattern extends BindingPattern {}
+class ObjectBindingPattern extends BindingPattern {
+	contains BindingProperty[] properties
+}
 
-class ArrayBindingPattern extends BindingPattern {}
+class ArrayBindingPattern extends BindingPattern {
+	contains BindingElement[] elements
+}
 
 class BindingProperty extends PropertyNameOwner {
 	contains BindingElement value

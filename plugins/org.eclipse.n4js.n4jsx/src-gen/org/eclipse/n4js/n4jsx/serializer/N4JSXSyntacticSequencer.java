@@ -35,7 +35,6 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	protected AbstractElementAlias match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q;
 	protected AbstractElementAlias match_AnnotationNoAtSign___LeftParenthesisKeyword_1_0_RightParenthesisKeyword_1_2__q;
 	protected AbstractElementAlias match_ArrayBindingPattern_CommaKeyword_3_2_0_q;
-	protected AbstractElementAlias match_ArrayBindingPattern_ObjectBindingPattern___LeftCurlyBracketKeyword_1_RightCurlyBracketKeyword_3___or___LeftSquareBracketKeyword_1_RightSquareBracketKeyword_4__;
 	protected AbstractElementAlias match_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_LeftParenthesisKeyword_0_0_1_or___LeftCurlyBracketKeyword_1_FunctionKeyword_3_LeftParenthesisKeyword_5__;
 	protected AbstractElementAlias match_ClassExtendsClause_ExtendsKeyword_0_1_0_1_0_1_or_ImplementsKeyword_0_1_0_1_0_0;
 	protected AbstractElementAlias match_ClassImplementsList_CommaKeyword_1_0_0_or_ExtendsKeyword_1_0_2_or_ImplementsKeyword_1_0_1;
@@ -65,7 +64,6 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 		match_AnnotatedPropertyAssignment_SemicolonKeyword_1_3_1_q = new TokenAlias(false, true, grammarAccess.getAnnotatedPropertyAssignmentAccess().getSemicolonKeyword_1_3_1());
 		match_AnnotationNoAtSign___LeftParenthesisKeyword_1_0_RightParenthesisKeyword_1_2__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getAnnotationNoAtSignAccess().getLeftParenthesisKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getAnnotationNoAtSignAccess().getRightParenthesisKeyword_1_2()));
 		match_ArrayBindingPattern_CommaKeyword_3_2_0_q = new TokenAlias(false, true, grammarAccess.getArrayBindingPatternAccess().getCommaKeyword_3_2_0());
-		match_ArrayBindingPattern_ObjectBindingPattern___LeftCurlyBracketKeyword_1_RightCurlyBracketKeyword_3___or___LeftSquareBracketKeyword_1_RightSquareBracketKeyword_4__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getArrayBindingPatternAccess().getLeftSquareBracketKeyword_1()), new TokenAlias(false, false, grammarAccess.getArrayBindingPatternAccess().getRightSquareBracketKeyword_4())), new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getObjectBindingPatternAccess().getLeftCurlyBracketKeyword_1()), new TokenAlias(false, false, grammarAccess.getObjectBindingPatternAccess().getRightCurlyBracketKeyword_3())));
 		match_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_LeftParenthesisKeyword_0_0_1_or___LeftCurlyBracketKeyword_1_FunctionKeyword_3_LeftParenthesisKeyword_5__ = new AlternativeAlias(false, false, new GroupAlias(false, false, new TokenAlias(false, false, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftCurlyBracketKeyword_1()), new TokenAlias(false, false, grammarAccess.getFunctionTypeExpressionOLDAccess().getFunctionKeyword_3()), new TokenAlias(false, false, grammarAccess.getFunctionTypeExpressionOLDAccess().getLeftParenthesisKeyword_5())), new TokenAlias(false, false, grammarAccess.getArrowFunctionTypeExpressionAccess().getLeftParenthesisKeyword_0_0_1()));
 		match_ClassExtendsClause_ExtendsKeyword_0_1_0_1_0_1_or_ImplementsKeyword_0_1_0_1_0_0 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getClassExtendsClauseAccess().getExtendsKeyword_0_1_0_1_0_1()), new TokenAlias(false, false, grammarAccess.getClassExtendsClauseAccess().getImplementsKeyword_0_1_0_1_0_0()));
 		match_ClassImplementsList_CommaKeyword_1_0_0_or_ExtendsKeyword_1_0_2_or_ImplementsKeyword_1_0_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getClassImplementsListAccess().getCommaKeyword_1_0_0()), new TokenAlias(false, false, grammarAccess.getClassImplementsListAccess().getExtendsKeyword_1_0_2()), new TokenAlias(false, false, grammarAccess.getClassImplementsListAccess().getImplementsKeyword_1_0_1()));
@@ -146,8 +144,6 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 				emit_AnnotationNoAtSign___LeftParenthesisKeyword_1_0_RightParenthesisKeyword_1_2__q(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ArrayBindingPattern_CommaKeyword_3_2_0_q.equals(syntax))
 				emit_ArrayBindingPattern_CommaKeyword_3_2_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if (match_ArrayBindingPattern_ObjectBindingPattern___LeftCurlyBracketKeyword_1_RightCurlyBracketKeyword_3___or___LeftSquareBracketKeyword_1_RightSquareBracketKeyword_4__.equals(syntax))
-				emit_ArrayBindingPattern_ObjectBindingPattern___LeftCurlyBracketKeyword_1_RightCurlyBracketKeyword_3___or___LeftSquareBracketKeyword_1_RightSquareBracketKeyword_4__(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_LeftParenthesisKeyword_0_0_1_or___LeftCurlyBracketKeyword_1_FunctionKeyword_3_LeftParenthesisKeyword_5__.equals(syntax))
 				emit_ArrowFunctionTypeExpression_FunctionTypeExpressionOLD_LeftParenthesisKeyword_0_0_1_or___LeftCurlyBracketKeyword_1_FunctionKeyword_3_LeftParenthesisKeyword_5__(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if (match_ClassExtendsClause_ExtendsKeyword_0_1_0_1_0_1_or_ImplementsKeyword_0_1_0_1_0_0.equals(syntax))
@@ -267,17 +263,6 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     ('[' ']') | ('{' '}')
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) (rule start)
-	 */
-	protected void emit_ArrayBindingPattern_ObjectBindingPattern___LeftCurlyBracketKeyword_1_RightCurlyBracketKeyword_3___or___LeftSquareBracketKeyword_1_RightSquareBracketKeyword_4__(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
 	 *     '(' | ('{' 'function' '(')
 	 *
 	 * This ambiguous syntax occurs at:
@@ -290,7 +275,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'implements' | 'extends'
+	 *     'extends' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superClassRef=ParameterizedTypeRefNominal (ambiguity) implementedInterfaceRefs+=ParameterizedTypeRefNominal
@@ -365,7 +350,7 @@ public class N4JSXSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'implements' | 'extends' | ','
+	 *     'extends' | 'implements' | ','
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
