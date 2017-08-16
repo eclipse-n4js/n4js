@@ -37,7 +37,6 @@ import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
@@ -92,13 +91,18 @@ class MemberScopingHelper {
 	}
 
 	/**
-	 * Same as {@link #createMemberScope(TypeRef, MemberAccess, boolean, boolean)}, but the returned scope <b>DOES
-	 * NOT</b> guarantee that members will be contained in a resource. In turn, this method does not require a context
-	 * of type {@link MemberAccess}.
+	 * Same as {@link #createMemberScope(TypeRef, MemberAccess, boolean, boolean)}, but the returned scope <b><u>DOES
+	 * NOT</u></b> guarantee that members will be contained in a resource (in particular, composed members will not be
+	 * contained in a resource). In turn, this method does not require a context of type {@link MemberAccess}.
 	 * <p>
 	 * This method can be used if members are only used temporarily for a purpose that does not require proper
-	 * containment of the member, e.g. retrieving the type of a field for validation purposes. Use of this method
-	 * in new code should be avoided as far as possible.
+	 * containment of the member, e.g. retrieving the type of a field for validation purposes. There are two reasons
+	 * for using this method:
+	 * <ol>
+	 * <li>client code is unable to provide a context of type {@link MemberAccess},
+	 * <li>client code wants to invoke {@link IScope#getAllElements()} or similar methods on the returned scope and
+	 *     wants to avoid unnecessary caching of all those members.
+	 * </ol>
 	 */
 	public def IScope createMemberScopeAllowingNonContainedMembers(TypeRef receiverTypeRef, EObject context,
 		boolean checkVisibility, boolean staticAccess) {

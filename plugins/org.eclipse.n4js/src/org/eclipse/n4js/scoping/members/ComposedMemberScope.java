@@ -235,8 +235,9 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * N4JSResource or this resource does not have a TModule.
 	 */
 	private ComposedMemberCache getOrCreateComposedMemberCache() {
-		if (request.context instanceof MemberAccess) {
-			final MemberAccess contextCasted = (MemberAccess) request.context;
+		if (request.provideContainedMembers) {
+			final MemberAccess contextCasted = //
+					(MemberAccess) request.context; // cast is valid, see MemberScopeRequest#provideContainedMembers
 			final ComposedMemberCache cache = contextCasted.getComposedMemberCache();
 			if (cache != null) {
 				return cache;
