@@ -67,7 +67,7 @@ public final class UserdataMapper {
 	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
 
 	/**
-	 * Comma-separated list of URIs of resource URIs this resource depends on.
+	 * Comma-separated list of URIs of resource URIs this resource directly depends on.
 	 */
 	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
 
@@ -271,25 +271,9 @@ public final class UserdataMapper {
 				dependencies.add(targetRes.getURI());
 			}
 		});
-		// FIXME GH-66 probably no need to persist entire URI!
 		userData.put(USERDATA_KEY_DEPENDENCIES, joiner.join(dependencies));
 	}
 
-	/*-
-	// this is just a temporary place-holder and does not nearly cover all cases
-	// FIXME GH-66 use N4JSCrossReferenceComputer#computeCrossRefs() or something else instead OR extend this method!
-	private static void computeCrossRefs(N4JSResource resource, IAcceptor<EObject> acceptor) {
-		final TreeIterator<EObject> allContentsIter = resource.getAllContents();
-		while (allContentsIter.hasNext()) {
-			final EObject eObject = allContentsIter.next();
-			if (eObject instanceof IdentifierRef) {
-				acceptor.accept(((IdentifierRef) eObject).getId());
-				allContentsIter.prune();
-			}
-		}
-	}
-	*/
-	// other variant that only collects directly imported TModules:
 	private static void computeCrossRefs(N4JSResource resource, IAcceptor<TModule> acceptor) {
 		final Script script = resource.getScript();
 		if (script != null && !script.eIsProxy()) {
@@ -307,17 +291,17 @@ public final class UserdataMapper {
 	private static final Splitter splitter = Splitter.on(',').omitEmptyStrings();
 
 	/**
-	 * Reads the list of dependencies of the resource R represented by the given resource description from its user
-	 * data. Returns a list of strings, in which each string represents the URI of a resource D that is a direct
+	 * Reads the list of direct dependencies of the resource R represented by the given resource description from its
+	 * user data. Returns a list of strings, in which each string represents the URI of a resource D that is a direct
 	 * dependency of R (i.e. R depends on D).
 	 * <p>
-	 * Definition: a resource R <em>depends on</em> a resource D, if R's TModule might be affected by changes of D's
-	 * TModule. In this case, we also say D <em>is a dependency of</em> R.
+	 * Definition: a resource R <em>directly depends on</em> a resource D, if R imports an identifiable element from D.
+	 * In this case, we also say D <em>is a dependency of</em> R.
 	 *
 	 * Returns none if the information is missing in the resource description.
 	 */
 	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
-		// TODO use type and name computed from descrition uri
+		// TODO use type and name computed from description uri
 		final Iterable<IEObjectDescription> modules = description
 				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {

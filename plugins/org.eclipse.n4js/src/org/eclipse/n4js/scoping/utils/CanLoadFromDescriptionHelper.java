@@ -54,7 +54,7 @@ public class CanLoadFromDescriptionHelper {
 	 * @param resourceURI
 	 *            the URI of the to-be-loaded resource
 	 * @param resourceSet
-	 *            the target resource st
+	 *            the target resource set
 	 * @return true, if the resource can be loaded from source.
 	 */
 	public boolean canLoadFromDescription(URI resourceURI, ResourceSet resourceSet) {
@@ -64,14 +64,14 @@ public class CanLoadFromDescriptionHelper {
 	/**
 	 * Returns true if the given resourceURI points to a resource that is must be loaded from source into the given
 	 * resource set. A resource must be loaded from source if the resource set contains resources, that were loaded from
-	 * source and that are in the transitive closure of depenencies of the given resource.
+	 * source and that are in the transitive closure of dependencies of the given resource.
 	 *
 	 * This is the inverse operation to {@link #canLoadFromDescription(URI, ResourceSet)}.
 	 *
 	 * @param resourceURI
 	 *            the URI of the to-be-loaded resource
 	 * @param resourceSet
-	 *            the target resource st
+	 *            the target resource set
 	 * @return true, if the resource must be loaded from source.
 	 */
 	public boolean mustLoadFromSource(URI resourceURI, ResourceSet resourceSet) {
@@ -166,7 +166,7 @@ public class CanLoadFromDescriptionHelper {
 		}
 		// Keep track of all visited resources
 		final Set<URI> visited = Sets.newHashSet();
-		// breaths first search since it is more likely to find resources from the same project
+		// breadth first search since it is more likely to find resources from the same project
 		// in our own dependencies rather than in the transitive dependencies
 		final Queue<URI> queue = new ArrayDeque<>();
 		// the starting point. It is deliberately not added to the visited resources
@@ -174,7 +174,7 @@ public class CanLoadFromDescriptionHelper {
 		queue.add(thisURI);
 
 		while (!queue.isEmpty()) {
-			// try to find the direct dependencies for the next URI in the que
+			// try to find the direct dependencies for the next URI in the queue
 			Optional<List<String>> dependencies = readDirectDependencies(index, queue.poll());
 			if (!dependencies.isPresent()) {
 				// none found - be pessimistic and return false
@@ -202,7 +202,7 @@ public class CanLoadFromDescriptionHelper {
 						if (candidates.contains(dependencyURI)) {
 							return true;
 						}
-						// enque the dependency
+						// enqueue the dependency
 						queue.add(dependencyURI);
 					}
 				}
