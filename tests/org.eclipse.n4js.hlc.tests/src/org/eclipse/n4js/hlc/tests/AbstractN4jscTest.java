@@ -231,6 +231,7 @@ public abstract class AbstractN4jscTest {
 					if (file.getFileName().toString().endsWith(".js")) {
 						for (int j = 0; j < file.getNameCount() - 1; j++) {
 							if (SUBGENERATOR_PATH.equals(file.getName(j).toString())) {
+								System.out.println(">>> " + file.toAbsolutePath());
 								counter.incrementAndGet();
 								return FileVisitResult.CONTINUE;
 							}

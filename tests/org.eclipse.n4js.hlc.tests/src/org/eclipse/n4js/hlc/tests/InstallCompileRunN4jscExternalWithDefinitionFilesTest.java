@@ -25,8 +25,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
  * Downloads, installs, compiles and runs 'express' with N4JS definition file support.
  */
@@ -36,7 +34,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external_with_n4jsd", Predicates.alwaysTrue());
+		workspace = setupWorkspace("external_with_n4jsd");
 	}
 
 	/** Delete workspace. */

@@ -25,8 +25,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.base.Predicates;
-
 /**
  * Downloads, installs, compiles and runs 'express'.
  */
@@ -36,7 +34,7 @@ public class InstallCompileRunN4jscExternalTest extends BaseN4jscExternalTest {
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
-		workspace = setupWorkspace("external", Predicates.alwaysTrue());
+		workspace = setupWorkspace("external");
 	}
 
 	/** Delete workspace. */

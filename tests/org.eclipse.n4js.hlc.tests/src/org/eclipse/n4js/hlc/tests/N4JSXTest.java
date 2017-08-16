@@ -53,7 +53,7 @@ public class N4JSXTest extends AbstractN4jscTest {
 	@Test
 	public void testCombinedWithN4JS() throws ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		String p2Root = wsRoot + "/" + "P1";
+		String p2Root = wsRoot + "/" + "P2";
 
 		new N4jscBase().doMain("-pl", wsRoot, "-t", "projects", p2Root);
 		assertFilesCompiledToES(3, p2Root);
