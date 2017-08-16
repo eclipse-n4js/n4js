@@ -104,7 +104,7 @@ class N4JSValidator extends InternalTypeSystemValidator {
 	/**
 	 * Override to improve error message in case of abnormal termination of validation.
 	 */
-	     override MethodWrapperCancelable createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
+	override MethodWrapperCancelable createMethodWrapper(AbstractDeclarativeValidator instanceToUse, Method method) {
 		return new MethodWrapperCancelable(instanceToUse, method) {
 
 			override handleInvocationTargetException(Throwable targetException, State state) {

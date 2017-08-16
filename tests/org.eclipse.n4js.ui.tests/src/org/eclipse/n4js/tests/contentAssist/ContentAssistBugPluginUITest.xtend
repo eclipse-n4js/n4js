@@ -11,7 +11,6 @@
 package org.eclipse.n4js.tests.contentAssist
 
 import org.junit.Test
-import org.junit.Ignore
 
 class ContentAssistBugPluginUITest extends AbstractN4JSContentAssistTest {
 
@@ -33,7 +32,6 @@ class ContentAssistBugPluginUITest extends AbstractN4JSContentAssistTest {
 				'__proto__', 'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'valueOf');
 	}
 	
-	@Ignore
 	@Test def void testGB_39_03() throws Exception {
 		newBuilder().append(
 			"class A {}
@@ -43,7 +41,6 @@ class ContentAssistBugPluginUITest extends AbstractN4JSContentAssistTest {
 				'__proto__', 'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'valueOf');
 	}
 	
-	@Ignore
 	@Test def void testGB_39_04() throws Exception {
 		newBuilder().append(
 			"class A {}
