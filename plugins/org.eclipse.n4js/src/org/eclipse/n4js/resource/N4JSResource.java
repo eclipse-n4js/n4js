@@ -52,6 +52,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -233,8 +234,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private IN4JSCore n4jsCore;
 
+	@Inject
+	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
+
+	/*
+	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
+	 */
 	/**
-	 *
+	 * Public default constructor.
 	 */
 	public N4JSResource() {
 		super();
@@ -747,20 +754,27 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			if (N4JSGlobals.N4JS_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSD_FILE_EXTENSION.equals(targetFileExt)
 					|| N4JSGlobals.N4JSX_FILE_EXTENSION.equals(targetFileExt)) {
+
 				// proxy is pointing into an .n4js or .n4jsd file ...
-				final String targetFragment = targetUri.fragment();
-				final Resource targetResource = resSet.getResource(targetResourceUri, false);
-				// special handling #1:
-				// if targetResource is not loaded yet, try to load it from index first
-				if (targetResource == null) {
-					if (targetFragment != null && (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
-						// uri points to a TModule element in a resource not yet contained in our resource set
-						// --> try to load target resource from index
-						final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
-						final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
-						if (resDesc != null) {
-							// next line will add the new resource to resSet.resources
-							n4jsCore.loadModuleFromIndex(resSet, resDesc, false);
+				// check if we can work with the TModule from the index or if it is mandatory to load from source
+				if (canResolveFromDescription(targetUri)) {
+
+					final String targetFragment = targetUri.fragment();
+					final Resource targetResource = resSet.getResource(targetResourceUri, false);
+
+					// special handling #1:
+					// if targetResource is not loaded yet, try to load it from index first
+					if (targetResource == null) {
+						if (targetFragment != null
+								&& (targetFragment.equals("/1") || targetFragment.startsWith("/1/"))) {
+							// uri points to a TModule element in a resource not yet contained in our resource set
+							// --> try to load target resource from index
+							final IResourceDescriptions index = n4jsCore.getXtextIndex(resSet);
+							final IResourceDescription resDesc = index.getResourceDescription(targetResourceUri);
+							if (resDesc != null) {
+								// next line will add the new resource to resSet.resources
+								n4jsCore.loadModuleFromIndex(resSet, resDesc, false);
+							}
 						}
 					}
 				}
@@ -775,8 +789,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				if (targetObject != null && (this.isProcessing() || this.isFullyProcessed())) {
 					final Resource targetResource2 = targetObject.eResource();
 					if (targetResource2 instanceof N4JSResource) {
-						((N4JSResource) targetResource2)
-								.performPostProcessing(); // no harm done, if already running/completed
+						// no harm done, if already running/completed
+						((N4JSResource) targetResource2).performPostProcessing();
 					}
 				}
 				// return resolved target object
@@ -788,6 +802,15 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// b) targetUri points to an n4ts resource or some other, non-N4JS resource
 		// --> above special handling not required, so just apply EMF's default resolution behavior
 		return EcoreUtil.resolve(proxy, this);
+	}
+
+	/**
+	 * @param targetUri
+	 *            the uri to be resolved
+	 * @return true, if the referenced object may come from the the index TModule.
+	 */
+	private boolean canResolveFromDescription(URI targetUri) {
+		return canLoadFromDescriptionHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
 	}
 
 	/**
