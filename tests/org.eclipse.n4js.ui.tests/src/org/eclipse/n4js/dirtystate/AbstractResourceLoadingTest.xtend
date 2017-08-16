@@ -23,7 +23,7 @@ import org.eclipse.n4js.resource.N4JSResource
 /**
  * Base utility for 
  */
-class AbstractResourceLoadingTest extends AbstractBuilderParticipantTest {
+abstract class AbstractResourceLoadingTest extends AbstractBuilderParticipantTest {
 
 	def protected IFile getOutputFileForTestFile(IFile file) {
 		val name = file.name;
