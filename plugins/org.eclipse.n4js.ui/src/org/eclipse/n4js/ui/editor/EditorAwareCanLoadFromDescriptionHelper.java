@@ -14,7 +14,7 @@ import java.util.Collections;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.resource.ResourceSetContext;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.IDirtyStateManagerExtension;
@@ -24,10 +24,10 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
- * Dirty editor aware extension to the {@link LoadFromSourceHelper}.
+ * Dirty editor aware extension to the {@link CanLoadFromDescriptionHelper}.
  */
 @Singleton
-public class DirtyStateAwareLoadFromSourceHelper extends LoadFromSourceHelper {
+public class EditorAwareCanLoadFromDescriptionHelper extends CanLoadFromDescriptionHelper {
 
 	/*
 	 * Actually injected but we do not have a binding for the IDirtyStateManagerExtension thus we use a setter and do

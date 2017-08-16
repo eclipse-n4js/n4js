@@ -101,7 +101,7 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 	 * Factory method to produce a scope. The factory pattern allows to bypass the explicit object creation if the
 	 * produced scope would be empty.
 	 *
-	 * @param loadFromSourceHelper
+	 * @param canLoadFromDescriptionHelper
 	 *            utility to decide if a resource must be loaded from source or may be loaded from the index.
 	 */
 	public static IScope createScope(
@@ -110,30 +110,31 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			Predicate<IEObjectDescription> filter,
 			EClass type, boolean ignoreCase,
 			ResourceSet resourceSet,
-			LoadFromSourceHelper loadFromSourceHelper,
+			CanLoadFromDescriptionHelper canLoadFromDescriptionHelper,
 			IContainer container) {
 		if (selectable == null || selectable.isEmpty())
 			return outer;
 		IScope scope = new UserDataAwareScope(outer, selectable, filter, type, ignoreCase, resourceSet,
-				loadFromSourceHelper,
+				canLoadFromDescriptionHelper,
 				container);
 		return scope;
 	}
 
 	private final ResourceSet resourceSet;
 	/**
-	 * @see #createScope(IScope, ISelectable, Predicate, EClass, boolean, ResourceSet, LoadFromSourceHelper, IContainer)
+	 * @see #createScope(IScope, ISelectable, Predicate, EClass, boolean, ResourceSet, CanLoadFromDescriptionHelper,
+	 *      IContainer)
 	 */
-	private final LoadFromSourceHelper loadFromSourceHelper;
+	private final CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 	private final IContainer container;
 	private final EClass type;
 
 	UserDataAwareScope(IScope outer, ISelectable selectable, Predicate<IEObjectDescription> filter, EClass type,
-			boolean ignoreCase, ResourceSet resourceSet, LoadFromSourceHelper loadFromSourceHelper,
+			boolean ignoreCase, ResourceSet resourceSet, CanLoadFromDescriptionHelper canLoadFromDescriptionHelper,
 			IContainer container) {
 		super(outer, selectable, filter, type, ignoreCase);
 		this.resourceSet = resourceSet;
-		this.loadFromSourceHelper = loadFromSourceHelper;
+		this.canLoadFromDescriptionHelper = canLoadFromDescriptionHelper;
 		this.container = container;
 		this.type = type;
 	}
@@ -162,7 +163,8 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			if (resource != null && resource.isLoaded()) {
 				return original;
 			}
-			final boolean mustLoadFromSource = loadFromSourceHelper.mustLoadFromSource(resourceURI, resourceSet);
+			final boolean mustLoadFromSource = canLoadFromDescriptionHelper.mustLoadFromSource(resourceURI,
+					resourceSet);
 			UtilN4.tlog(resourceURI + ".mustLoadFromSource = " + mustLoadFromSource);
 			resource = resourceSet.getResource(resourceURI, mustLoadFromSource);
 			if (resource != null && resource.isLoaded()) {

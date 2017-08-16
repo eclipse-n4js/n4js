@@ -42,6 +42,7 @@ import org.eclipse.n4js.n4jsx.ui.organize.imports.N4JSXReferencesFilter
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.ts.findReferences.TargetURIKey
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey
 import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder
@@ -56,6 +57,7 @@ import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback
+import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider
@@ -127,8 +129,6 @@ import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider
 import org.eclipse.xtext.ui.shared.Access
 import org.eclipse.xtext.ui.util.IssueUtil
 import org.eclipse.xtext.validation.IResourceValidator
-import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper
-import org.eclipse.n4js.ui.editor.DirtyStateAwareLoadFromSourceHelper
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -563,9 +563,9 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	}
 	
 	/**
-	 * LoadFromSourceHelper specific to the interactive editor scenario.
+	 * CanLoadFromDescriptionHelper specific to the interactive editor scenario.
 	 */
-	def Class<? extends LoadFromSourceHelper> bindLoadFromSourceHelper() {
-		return DirtyStateAwareLoadFromSourceHelper;
+	def Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
+		return EditorAwareCanLoadFromDescriptionHelper;
 	}
 }

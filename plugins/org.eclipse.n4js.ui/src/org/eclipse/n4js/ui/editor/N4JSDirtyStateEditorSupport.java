@@ -20,7 +20,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Event;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -62,7 +62,7 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 	}
 
 	@Inject
-	private LoadFromSourceHelper loadFromSourceHelper;
+	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
 	@Inject
 	private IResourceDescriptions dirtyState;
@@ -123,7 +123,7 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 				} else if (candidate instanceof N4JSResource) {
 					// the candidate does depend on one of the changed resources
 					// schedule it for unloading
-					if (loadFromSourceHelper.dependsOnAny(candidate, deltaURIs)) {
+					if (canLoadFromDescriptionHelper.dependsOnAny(candidate, deltaURIs)) {
 						result.add(candidate);
 					}
 				}
@@ -158,7 +158,7 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 				// usually we ignore events from this resource itself, but when it is part
 				// of a dependency cylce, the event may affect other resources in the same
 				// resource set thus we schedule the event in that case
-				if (loadFromSourceHelper.isPartOfDependencyCycle(delta.getUri(), dirtyState)) {
+				if (canLoadFromDescriptionHelper.isPartOfDependencyCycle(delta.getUri(), dirtyState)) {
 					scheduleUpdateEditorJob(event);
 				}
 				return;

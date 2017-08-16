@@ -18,7 +18,7 @@ import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareIdentifiableScope;
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareTypeScope;
-import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.scoping.utils.UserDataAwareScope;
 import org.eclipse.n4js.ts.scoping.builtin.DefaultN4GlobalScopeProvider;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -43,7 +43,7 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 	private VariableVisibilityChecker varVisibilityChecker;
 
 	@Inject
-	private LoadFromSourceHelper loadFromSourceHelper;
+	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
 	@Override
 	protected IScope createContainerScope(IScope parent, IContainer container, Predicate<IEObjectDescription> filter,
@@ -92,7 +92,7 @@ public class N4JSGlobalScopeProvider extends DefaultN4GlobalScopeProvider {
 			if (container.hasResourceDescription(uriToFilter) && !isStaticPolyFiller(resource))
 				container = new FilterUriContainer(uriToFilter, container);
 			IScope result = UserDataAwareScope.createScope(parent, container, filter, type, ignoreCase,
-					resource.getResourceSet(), loadFromSourceHelper, container);
+					resource.getResourceSet(), canLoadFromDescriptionHelper, container);
 			return result;
 		}
 		return IScope.NULLSCOPE;

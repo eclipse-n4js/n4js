@@ -34,7 +34,7 @@ import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
 import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder;
@@ -50,7 +50,7 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
-import org.eclipse.n4js.ui.editor.DirtyStateAwareLoadFromSourceHelper;
+import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
@@ -641,7 +641,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/**
 	 * LoadFromSourceHelper specific to the interactive editor scenario.
 	 */
-	public Class<? extends LoadFromSourceHelper> bindLoadFromSourceHelper() {
-		return DirtyStateAwareLoadFromSourceHelper.class;
+	public Class<? extends CanLoadFromDescriptionHelper> bindcanLoadFromDescriptionHelper() {
+		return EditorAwareCanLoadFromDescriptionHelper.class;
 	}
 }

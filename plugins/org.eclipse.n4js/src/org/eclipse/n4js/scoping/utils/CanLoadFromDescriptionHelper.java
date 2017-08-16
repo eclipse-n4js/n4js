@@ -36,7 +36,7 @@ import com.google.inject.Singleton;
  * This is specialized in the UI context to consider the dirty state.
  */
 @Singleton
-public class LoadFromSourceHelper {
+public class CanLoadFromDescriptionHelper {
 
 	@Inject
 	private IN4JSCore n4jsCore;

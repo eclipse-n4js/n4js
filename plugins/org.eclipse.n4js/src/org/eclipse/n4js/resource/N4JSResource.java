@@ -52,7 +52,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
-import org.eclipse.n4js.scoping.utils.LoadFromSourceHelper;
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -235,7 +235,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private LoadFromSourceHelper loadFromSourceHelper;
+	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
 	/**
 	 *
@@ -807,7 +807,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * @return true, if the referenced object may come from the the index TModule.
 	 */
 	private boolean canResolveFromDescription(URI targetUri) {
-		return loadFromSourceHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
+		return canLoadFromDescriptionHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
 	}
 
 	/**
