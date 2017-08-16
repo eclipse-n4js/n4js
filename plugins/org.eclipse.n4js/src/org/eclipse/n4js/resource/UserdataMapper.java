@@ -301,7 +301,6 @@ public final class UserdataMapper {
 	 * Returns none if the information is missing in the resource description.
 	 */
 	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
-		// TODO use type and name computed from description uri
 		final Iterable<IEObjectDescription> modules = description
 				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
 		for (IEObjectDescription module : modules) {
