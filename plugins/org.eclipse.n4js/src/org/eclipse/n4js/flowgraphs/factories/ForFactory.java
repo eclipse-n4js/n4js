@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
@@ -35,17 +37,17 @@ class ForFactory {
 	private static ComplexNode buildForInOf(ForStatement forStmt, boolean forInSemantics) {
 		ComplexNode cNode = new ComplexNode(forStmt);
 
-		Node entryNode = new Node("entry", forStmt);
-		Node exitNode = new Node("exit", forStmt);
-		Node expressionNode = new Node("expression", forStmt.getExpression());
+		Node entryNode = new HelperNode("entry", forStmt);
+		Node exitNode = new HelperNode("exit", forStmt);
+		Node expressionNode = new DelegatingNode("expression", forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics)
-			getObjectKeysNode = new Node("getObjectKeys", forStmt);
-		Node getIteratorNode = new Node("getIterator", forStmt);
-		Node nextNode = new Node("next", forStmt);
+			getObjectKeysNode = new HelperNode("getObjectKeys", forStmt);
+		Node getIteratorNode = new HelperNode("getIterator", forStmt);
+		Node nextNode = new HelperNode("next", forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null)
-			bodyNode = new Node("body", forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", forStmt.getStatement());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(expressionNode);
@@ -88,19 +90,19 @@ class ForFactory {
 		Node conditionNode = null;
 		Node updatesNode = null;
 
-		Node entryNode = new Node("entry", forStmt);
-		Node exitNode = new Node("exit", forStmt);
+		Node entryNode = new HelperNode("entry", forStmt);
+		Node exitNode = new HelperNode("exit", forStmt);
 		if (forStmt.getInitExpr() != null) {
-			initsNode = new Node("inits", forStmt.getInitExpr());
+			initsNode = new DelegatingNode("inits", forStmt.getInitExpr());
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new Node("condition", forStmt.getExpression());
+			conditionNode = new DelegatingNode("condition", forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
-			bodyNode = new Node("body", forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", forStmt.getStatement());
 		}
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = new Node("updates", forStmt.getUpdateExpr());
+			updatesNode = new DelegatingNode("updates", forStmt.getUpdateExpr());
 		}
 
 		cNode.addNode(entryNode);

@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
@@ -23,26 +25,26 @@ class AbstractCaseClauseFactory {
 	static ComplexNode buildComplexNode(AbstractCaseClause stmt) {
 		ComplexNode cNode = new ComplexNode(stmt);
 
-		Node startNode = new Node("entry", stmt);
-		Node endNode = new Node("exit", stmt);
+		Node entryNode = new HelperNode("entry", stmt);
+		Node endNode = new DelegatingNode("exit", stmt);
 		Node comGroup = null;
 
 		if (stmt instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) stmt;
-			comGroup = new Node("condition", caseClause.getExpression());
+			comGroup = new DelegatingNode("condition", caseClause.getExpression());
 		}
 
-		cNode.addNode(startNode);
+		cNode.addNode(entryNode);
 		cNode.addNode(comGroup);
 		cNode.addNode(endNode);
 
 		List<Node> nodes = new LinkedList<>();
-		nodes.add(startNode);
+		nodes.add(entryNode);
 		nodes.add(comGroup);
 		nodes.add(endNode);
 		cNode.connectInternalSucc(nodes);
 
-		cNode.setEntryNode(startNode);
+		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(endNode);
 
 		return cNode;

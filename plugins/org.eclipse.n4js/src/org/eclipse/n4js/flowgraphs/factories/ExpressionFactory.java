@@ -14,7 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.Expression;
 
 class ExpressionFactory {
@@ -22,13 +25,13 @@ class ExpressionFactory {
 	static ComplexNode buildComplexNode(Expression expr) {
 		ComplexNode cNode = new ComplexNode(expr);
 
-		Node entryNode = new Node("entry", expr);
-		Node exitNode = new Node("exit", expr);
+		HelperNode entryNode = new HelperNode("entry", expr);
+		Node exitNode = new RepresentingNode("exit", expr);
 		List<Node> argumentNodes = new LinkedList<>();
 
 		List<Expression> args = ControlFlowChildren.get(expr);
 		for (Expression arg : args) {
-			Node argNode = new Node("arg_" + args.indexOf(arg), arg);
+			Node argNode = new DelegatingNode("arg_" + args.indexOf(arg), arg);
 			argumentNodes.add(argNode);
 		}
 

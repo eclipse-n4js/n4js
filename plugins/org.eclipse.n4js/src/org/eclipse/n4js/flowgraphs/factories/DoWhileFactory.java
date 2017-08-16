@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
@@ -24,10 +26,10 @@ class DoWhileFactory {
 	static ComplexNode buildComplexNode(DoStatement doStmt) {
 		ComplexNode cNode = new ComplexNode(doStmt);
 
-		Node entryNode = new Node("entry", doStmt);
-		Node exitNode = new Node("exit", doStmt);
-		Node conditionNode = new Node("condition", doStmt.getExpression());
-		Node bodyNode = new Node("body", doStmt.getStatement());
+		Node entryNode = new HelperNode("entry", doStmt);
+		Node exitNode = new DelegatingNode("exit", doStmt);
+		Node conditionNode = new DelegatingNode("condition", doStmt.getExpression());
+		Node bodyNode = new DelegatingNode("body", doStmt.getStatement());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);

@@ -14,9 +14,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -49,25 +52,25 @@ class JumpFactory {
 	static ComplexNode buildComplexNode(Statement stmt, Expression expr, JumpToken jumptoken) {
 		ComplexNode cNode = new ComplexNode(stmt);
 
-		Node startNode = new Node("entry", stmt);
-		Node endNode = new Node("exit", stmt);
+		Node entryNode = new HelperNode("entry", stmt);
+		Node endNode = new RepresentingNode("exit", stmt);
 		Node expression = null;
 
-		cNode.addNode(startNode);
+		cNode.addNode(entryNode);
 
 		if (expr != null) {
-			expression = new Node("expression", expr);
+			expression = new DelegatingNode("expression", expr);
 			cNode.addNode(expression);
 		}
 		cNode.addNode(endNode);
 
 		List<Node> cfs = new LinkedList<>();
-		cfs.add(startNode);
+		cfs.add(entryNode);
 		cfs.add(expression);
 		cfs.add(endNode);
 		cNode.connectInternalSucc(cfs);
 
-		cNode.setEntryNode(startNode);
+		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(endNode);
 
 		endNode.addJumpToken(jumptoken);

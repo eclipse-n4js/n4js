@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.WhileStatement;
@@ -24,13 +26,13 @@ class WhileFactory {
 	static ComplexNode buildComplexNode(WhileStatement whileStmt) {
 		ComplexNode cNode = new ComplexNode(whileStmt);
 
-		Node entryNode = new Node("entry", whileStmt);
-		Node exitNode = new Node("exit", whileStmt);
-		Node conditionNode = new Node("condition", whileStmt.getExpression());
+		Node entryNode = new HelperNode("entry", whileStmt);
+		Node exitNode = new HelperNode("exit", whileStmt);
+		Node conditionNode = new DelegatingNode("condition", whileStmt.getExpression());
 		Node bodyNode = null;
 
 		if (whileStmt.getStatement() != null) {
-			bodyNode = new Node("body", whileStmt.getStatement());
+			bodyNode = new DelegatingNode("body", whileStmt.getStatement());
 		}
 
 		cNode.addNode(entryNode);

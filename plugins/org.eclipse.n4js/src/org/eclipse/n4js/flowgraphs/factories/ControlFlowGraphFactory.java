@@ -52,25 +52,34 @@ public class ControlFlowGraphFactory {
 			if (eObj instanceof ControlFlowElement) {
 				ControlFlowElement cfe = (ControlFlowElement) eObj;
 				cfe = FactoryMapper.map(cfe);
-				ComplexNode cn = FactoryDispatcher.build(cfe);
-				cnMap.put(cfe, cn);
+				if (!cnMap.containsKey(cfe)) {
+					ComplexNode cn = FactoryDispatcher.build(cfe);
+					cnMap.put(cfe, cn);
+				}
 			}
 		}
 	}
 
 	static private void connectComplexNodes() {
 		for (ComplexNode cn : cnMap.values()) {
-			for (Node mNode : cn.getMiddleNodes()) {
-				ControlFlowElement subASTElem = mNode.getCFE();
-				ComplexNode subCN = cnMap.get(subASTElem);
-
-				EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
-
-				List<Node> internalSuccs = mNode.getInternalSuccessors();
-				for (Node internalSucc : internalSuccs) {
-					EdgeUtils.addEdgeCF(subCN.getExit(), internalSucc);
-				}
+			for (Node mNode : cn.getAllButExitNodes()) {
+				connectNode(mNode);
 			}
+		}
+	}
+
+	private static void connectNode(Node mNode) {
+		Node internalStartNode = mNode;
+		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
+		if (subASTElem != null) {
+			ComplexNode subCN = cnMap.get(subASTElem);
+			EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
+			internalStartNode = subCN.getExit();
+		}
+
+		List<Node> internalSuccs = mNode.getInternalSuccessors();
+		for (Node internalSucc : internalSuccs) {
+			EdgeUtils.addEdgeCF(internalStartNode, internalSucc);
 		}
 	}
 

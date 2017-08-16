@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
@@ -27,9 +29,9 @@ class SwitchFactory {
 	static ComplexNode buildComplexNode(SwitchStatement switchStmt) {
 		ComplexNode cNode = new ComplexNode(switchStmt);
 
-		Node entryNode = new Node("entry", switchStmt);
-		Node exitNode = new Node("exit", switchStmt);
-		Node pivotNode = new Node("pivot", switchStmt.getExpression());
+		Node entryNode = new HelperNode("entry", switchStmt);
+		Node exitNode = new HelperNode("exit", switchStmt);
+		Node pivotNode = new DelegatingNode("pivot", switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -39,10 +41,10 @@ class SwitchFactory {
 		for (AbstractCaseClause cc : switchStmt.getCases()) {
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = new Node("case_" + switchStmt.getCaseClauses().indexOf(cc), cc);
+				caseNode = new DelegatingNode("case_" + switchStmt.getCaseClauses().indexOf(cc), cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = new Node("default", cc);
+				caseNode = new DelegatingNode("default", cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);

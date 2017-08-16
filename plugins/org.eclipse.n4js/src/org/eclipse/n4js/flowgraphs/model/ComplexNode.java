@@ -22,7 +22,15 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
+import org.eclipse.n4js.n4JS.AbstractCaseClause;
+import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.SwitchStatement;
+import org.eclipse.n4js.n4JS.TryStatement;
+import org.eclipse.n4js.n4JS.WhileStatement;
 
 public class ComplexNode implements ControlFlowable {
 	final private ControlFlowElement astElement;
@@ -111,14 +119,41 @@ public class ComplexNode implements ControlFlowable {
 	}
 
 	/**
-	 * @return list of nodes containing neither entry nor exit nodes.
+	 * @return list of nodes not containing the exit node.
 	 */
-	public List<Node> getMiddleNodes() {
+	public List<Node> getAllButExitNodes() {
 		List<Node> mNodes = new LinkedList<>();
 		mNodes.addAll(nodeMap.values());
-		mNodes.remove(entry);
 		mNodes.remove(exit);
 		return mNodes;
+	}
+
+	/**
+	 * Returns true iff the represented {@link ControlFlowElement} is one of the following:
+	 * <ul>
+	 * <li>Block</li>
+	 * <li>IfStatement</li>
+	 * <li>ForStatement</li>
+	 * <li>DoStatement</li>
+	 * <li>WhileStatement</li>
+	 * <li>TryStatement</li>
+	 * <li>SwitchStatement</li>
+	 * <li>AbstractCaseClause</li>
+	 * </ul>
+	 */
+	public boolean isControlElement() {
+		ControlFlowElement cfe = getCFE();
+
+		boolean isControlElement = false;
+		isControlElement |= cfe instanceof Block;
+		isControlElement |= cfe instanceof IfStatement;
+		isControlElement |= cfe instanceof ForStatement;
+		isControlElement |= cfe instanceof DoStatement;
+		isControlElement |= cfe instanceof WhileStatement;
+		isControlElement |= cfe instanceof TryStatement;
+		isControlElement |= cfe instanceof SwitchStatement;
+		isControlElement |= cfe instanceof AbstractCaseClause;
+		return isControlElement;
 	}
 
 	@Override

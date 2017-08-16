@@ -16,7 +16,6 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -60,10 +59,7 @@ public class N4JSFlowAnalyses {
 	 */
 	public List<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<ControlFlowElement> cfElems = new LinkedList<>();
-		for (ControlFlowEdge cfEdge : cn.getExit().getPredecessors()) {
-			cfElems.add(cfEdge.start.getCFE());
-		}
+		List<ControlFlowElement> cfElems = cn.getExit().getPredecessors();
 		return cfElems;
 	}
 
@@ -72,20 +68,19 @@ public class N4JSFlowAnalyses {
 	 */
 	public List<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<ControlFlowElement> cfElems = new LinkedList<>();
-		for (ControlFlowEdge cfEdge : cn.getExit().getSuccessors()) {
-			cfElems.add(cfEdge.end.getCFE());
-		}
+		List<ControlFlowElement> cfElems = cn.getExit().getSuccessors();
 		return cfElems;
 	}
 
 	/**
-	 * @return collection of all {@link ControlFlowElement}s covered by the control flow analyses
+	 * @return collection of all non-control {@link ControlFlowElement}s covered by the control flow analyses
 	 */
 	public Collection<ControlFlowElement> getAllElements() {
 		List<ControlFlowElement> allCFEs = new LinkedList<>();
 		for (ComplexNode cn : cfg.getAllComplexNodes()) {
-			allCFEs.add(cn.getCFE());
+			if (!cn.isControlElement()) {
+				allCFEs.add(cn.getCFE());
+			}
 		}
 		return allCFEs;
 	}

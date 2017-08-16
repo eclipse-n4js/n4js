@@ -59,7 +59,8 @@ public class EdgeUtils {
 		return addEdgeDep(edgeType, n1, n2, symbol, false);
 	}
 
-	public static DependencyEdge addEdgeDep(EdgeType edgeType, Node n1, Node n2, Symbol symbol, boolean loopCarried) {
+	public static DependencyEdge addEdgeDep(EdgeType edgeType, Node n1, Node n2, Symbol symbol,
+			boolean loopCarried) {
 		assert (n1 != n2) : "Dep-Edge with same Start/End-Nodes";
 
 		DependencyEdge depEdge = new DependencyEdge(edgeType, n1, n2, symbol, loopCarried);

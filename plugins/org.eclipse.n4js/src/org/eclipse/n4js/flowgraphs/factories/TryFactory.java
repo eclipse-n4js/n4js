@@ -15,6 +15,8 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.CatchBlock;
@@ -25,25 +27,25 @@ class TryFactory {
 	static ComplexNode buildComplexNode(TryStatement tryStmt) {
 		ComplexNode cNode = new ComplexNode(tryStmt);
 
-		Node entryNode = new Node("entry", tryStmt);
-		Node exitNode = new Node("exit", tryStmt);
+		Node entryNode = new HelperNode("entry", tryStmt);
+		Node exitNode = new HelperNode("exit", tryStmt);
 		Node tryNode = null;
 		Node catchNode = null;
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = new Node("try", tryStmt.getBlock());
+			tryNode = new DelegatingNode("try", tryStmt.getBlock());
 		}
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(JumpType.Throw, catchClause.getCatchVariable());
-			catchNode = new Node("catch", catchClause.getBlock());
+			catchNode = new DelegatingNode("catch", catchClause.getBlock());
 			catchNode.getEntry().addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
-			finallyNode = new Node("finally", tryStmt.getFinally().getBlock());
+			finallyNode = new DelegatingNode("finally", tryStmt.getFinally().getBlock());
 		}
 
 		cNode.addNode(entryNode);

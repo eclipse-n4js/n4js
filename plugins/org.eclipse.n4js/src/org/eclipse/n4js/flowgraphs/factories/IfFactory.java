@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.IfStatement;
 
@@ -22,16 +24,16 @@ class IfFactory {
 	static ComplexNode buildComplexNode(IfStatement ifStmt) {
 		ComplexNode cNode = new ComplexNode(ifStmt);
 
-		Node entryNode = new Node("entry", ifStmt);
-		Node exitNode = new Node("exit", ifStmt);
-		Node conditionNode = new Node("condition", ifStmt.getExpression());
+		Node entryNode = new HelperNode("entry", ifStmt);
+		Node exitNode = new HelperNode("exit", ifStmt);
+		Node conditionNode = new DelegatingNode("condition", ifStmt.getExpression());
 		Node thenNode = null;
 		Node elseNode = null;
 
 		if (ifStmt.getIfStmt() != null)
-			thenNode = new Node("then", ifStmt.getIfStmt());
+			thenNode = new DelegatingNode("then", ifStmt.getIfStmt());
 		if (ifStmt.getElseStmt() != null)
-			elseNode = new Node("else", ifStmt.getElseStmt());
+			elseNode = new DelegatingNode("else", ifStmt.getElseStmt());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

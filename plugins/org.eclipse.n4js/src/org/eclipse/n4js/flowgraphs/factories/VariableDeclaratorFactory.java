@@ -14,7 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 class VariableDeclaratorFactory {
@@ -22,12 +25,12 @@ class VariableDeclaratorFactory {
 	static ComplexNode buildComplexNode(VariableDeclaration varDecl) {
 		ComplexNode cNode = new ComplexNode(varDecl);
 
-		Node entryNode = new Node("entry", varDecl);
-		Node exitNode = new Node("exit", varDecl);
+		Node entryNode = new HelperNode("entry", varDecl);
+		Node exitNode = new RepresentingNode("exit", varDecl);
 		Node initNode = null;
 
 		if (varDecl.getExpression() != null) {
-			initNode = new Node("initializer", varDecl.getExpression());
+			initNode = new DelegatingNode("initializer", varDecl.getExpression());
 		}
 
 		cNode.addNode(entryNode);

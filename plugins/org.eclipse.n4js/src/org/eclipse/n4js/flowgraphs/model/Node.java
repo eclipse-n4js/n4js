@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-public class Node implements ControlFlowable {
+abstract public class Node implements ControlFlowable {
 	final private ControlFlowElement cfeElem;
 	final public String name;
 	final public List<Node> internalSucc = new LinkedList<>();
@@ -41,13 +41,9 @@ public class Node implements ControlFlowable {
 
 	public Node(String name, ControlFlowElement cfeElem, int opPos, Node... internalSuccessors) {
 		this.name = name;
-		this.cfeElem = cfeElem;
 		this.opPos = opPos;
 		this.internalSucc.addAll(Arrays.asList(internalSuccessors));
-	}
-
-	public ControlFlowElement getCFE() {
-		return FactoryMapper.map(cfeElem);
+		this.cfeElem = cfeElem;
 	}
 
 	public int getOperandPosition() {
@@ -78,11 +74,11 @@ public class Node implements ControlFlowable {
 		return internalSucc;
 	}
 
-	public List<ControlFlowEdge> getSuccessors() {
+	public List<ControlFlowEdge> getSuccessorEdges() {
 		return succ;
 	}
 
-	public List<ControlFlowEdge> getPredecessors() {
+	public List<ControlFlowEdge> getPredecessorEdges() {
 		return pred;
 	}
 
@@ -100,6 +96,35 @@ public class Node implements ControlFlowable {
 
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
+	}
+
+	@Override
+	public ControlFlowElement getControlFlowElement() {
+		return FactoryMapper.map(cfeElem);
+	}
+
+	abstract public ControlFlowElement getDelegatedControlFlowElement();
+
+	abstract protected List<ControlFlowElement> getCFEOrSucceeding();
+
+	abstract protected List<ControlFlowElement> getCFEOrPreceeding();
+
+	public List<ControlFlowElement> getSuccessors() {
+		List<ControlFlowElement> succCFEs = new LinkedList<>();
+		for (ControlFlowEdge cfEdge : succ) {
+			List<ControlFlowElement> cfes = cfEdge.end.getCFEOrSucceeding();
+			succCFEs.addAll(cfes);
+		}
+		return succCFEs;
+	}
+
+	public List<ControlFlowElement> getPredecessors() {
+		List<ControlFlowElement> succCFEs = new LinkedList<>();
+		for (ControlFlowEdge cfEdge : pred) {
+			List<ControlFlowElement> cfes = cfEdge.end.getCFEOrPreceeding();
+			succCFEs.addAll(cfes);
+		}
+		return succCFEs;
 	}
 
 	/**
@@ -128,11 +153,6 @@ public class Node implements ControlFlowable {
 	@Override
 	public Node getExit() {
 		return this;
-	}
-
-	@Override
-	public ControlFlowElement getControlFlowElement() {
-		return cfeElem;
 	}
 
 	@Override

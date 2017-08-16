@@ -10,12 +10,14 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
+import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
@@ -26,15 +28,14 @@ class BlockFactory {
 	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.Block block) {
 		ComplexNode cNode = new ComplexNode(block);
 
-		Node entryNode = new Node("entry", block);
-		Node exitNode = new Node("exit", block);
+		Node entryNode = new HelperNode("entry", block);
+		Node exitNode = new HelperNode("exit", block);
 		List<Node> blockNodes = new LinkedList<>();
 
-		Iterator<Statement> stmtIt = block.getAllStatements();
-		Statement stmt;
-		for (int i = 0; stmtIt.hasNext(); i++) {
-			stmt = stmtIt.next();
-			Node blockNode = new Node("stmt_" + i, stmt);
+		EList<Statement> stmts = block.getStatements();
+		for (int i = 0; i < stmts.size(); i++) {
+			Statement stmt = stmts.get(i);
+			Node blockNode = new DelegatingNode("stmt_" + i, stmt);
 			blockNodes.add(blockNode);
 		}
 
