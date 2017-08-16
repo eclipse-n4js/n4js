@@ -18,7 +18,7 @@ import org.eclipse.n4js.generator.headless.N4JSHeadlessStandaloneSetup;
 import com.google.inject.Injector;
 
 /**
- *
+ * Factory that creates fully injected instance of the {@link N4HeadlessCompiler}. Convenience for some test setups.
  */
 public class HeadlessCompilerFactory {
 
