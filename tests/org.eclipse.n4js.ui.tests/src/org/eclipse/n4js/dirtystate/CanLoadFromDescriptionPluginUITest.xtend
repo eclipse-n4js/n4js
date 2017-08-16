@@ -16,9 +16,9 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
-import org.junit.Test
-import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.emf.common.util.URI
+import org.eclipse.ui.PlatformUI
+import org.junit.Test
 
 /**
  * 
@@ -27,9 +27,13 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 	/*
 	 * A1 -> B1 -> C -> D
 	 * |           ^
-	 * ---> B2 -----
-	 *      ^
-	 * A2 --- 
+	 * ----> B2 -----
+	 *       ^
+	 * A2 ----
+	 * |
+	 * ----> P -> Q
+	 *       ^    |
+	 *       ------ 
 	 */
 	 
 	private val sourceA1 = '''
@@ -43,9 +47,12 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 
 	private val sourceA2 = '''
 		import {b2} from "m/B2";
+		import {p, p2} from "m/P";
 		
 		var a2: string = b2;
-		a2; // avoid unused variable warning
+		var a2p: string = p;
+		var a2q: string = p2;
+		a2; a2p; a2q; // avoid unused variable warning
 	''';
 	
 	private val sourceB1 = '''
@@ -71,6 +78,18 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 		export public var d = '';
 	''';
 	
+	private val sourceP = '''
+		import {q} from "m/Q";
+		export public var p = '';
+		
+		export public var p2 = q;
+	''';
+	
+	private val sourceQ = '''
+		import {p} from "m/P";
+		export public var q = p;
+	''';
+	
 	private val sourceB1_modify_b1 = sourceB1.replace(
 		"b1 = c1",
 		'b1 = c1 || 1');
@@ -82,6 +101,14 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 	private val sourceD_modify_d = sourceD.replace(
 		"d = ''",
 		'd = 1');
+		
+	private val sourceP_modify_p = sourceP.replace(
+		"p = ''",
+		'p = 2');
+		
+	private val sourceQ_modify_q = sourceQ.replace(
+		"q = p",
+		'q = p || 1');
 	 
 	private var IProject project;
 	private var IFolder srcFolder;
@@ -92,6 +119,8 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 	private var IFile fileB2;
 	private var IFile fileC;
 	private var IFile fileD;
+	private var IFile fileP;
+	private var IFile fileQ;
 
 	def private void prepare(String projectName) {
 		project = createJSProject(projectName)
@@ -109,6 +138,8 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 			fileB2 = createTestFile(srcFolderM, "B2", sourceB2)
 			fileC = createTestFile(srcFolderM, "C", sourceC)
 			fileD = createTestFile(srcFolderM, "D", sourceD)
+			fileP = createTestFile(srcFolderM, "P", sourceP)
+			fileQ = createTestFile(srcFolderM, "Q", sourceQ)
 		]
 		ResourcesPlugin.workspace.run(runnable, new NullProgressMonitor)
 
@@ -130,32 +161,14 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 		val editorA1 = openAndGetXtextEditor(fileA1, page)
 		val errorsA1 = getEditorValidationErrors(editorA1)
 		assertEquals("editor for file A should not have any errors", #[], errorsA1)
-		editorA1.assertResource [ resource |
-			val resourceSet = resource.resourceSet;
-			resourceSet.resources.forEach [ other |
-				if (other !== resource) {
-					if (other instanceof N4JSResource) {
-						assertTrue(other.URI.toString + ' was loaded from source', other.isLoadedFromDescription)
-					}
-				}
-			]
-		]
+		editorA1.assertAllFromIndex
 
 		setDocumentContent("file A1", fileA1, editorA1, sourceA1 + ' ')
 		waitForUpdateEditorJob
 
 		val errorsA1_modified = getEditorValidationErrors(editorA1)
 		assertEquals("editor for file A should not have any errors", #[], errorsA1_modified)
-		editorA1.assertResource [ resource |
-			val resourceSet = resource.resourceSet;
-			resourceSet.resources.forEach [ other |
-				if (other !== resource) {
-					if (other instanceof N4JSResource) {
-						assertTrue(other.URI.toString + ' was loaded from source', other.isLoadedFromDescription)
-					}
-				}
-			]
-		]
+		editorA1.assertAllFromIndex
 	}
 	
 	@Test
@@ -202,7 +215,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 
 		val errorsA2_modified = getEditorValidationErrors(editorA2)
 		assertEquals("editor for file A2 should now have exactly 1 expected error", #[
-			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_D/src/m/A2.n4js line : 3 column : 18)"
+			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_D/src/m/A2.n4js line : 4 column : 18)"
 		].join('\n'), errorsA2_modified.map[toString].join('\n'))
 		
 		val expectedFromSource = #{
@@ -244,6 +257,76 @@ class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
 		].join('\n'), errorsA1_modified.map[toString].join('\n'))
 		
 		editorA1.assertAllFromIndex
+	}
+	
+	// FIXME: This is a poor fix for a race and insufficient cancellation handling
+	private def void withoutOutline(()=>void procedure) {
+		val activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+		activePage.hideView(activePage.findViewReference('org.eclipse.ui.views.ContentOutline'));	
+		try {
+			procedure.apply;
+		} finally {
+			activePage.showView('org.eclipse.ui.views.ContentOutline');
+		}
+	}
+	
+	@Test
+	def void test_inEditor_a2_p() {
+		withoutOutline [|
+			prepare("TestInEditorA2_P")
+
+			val page = getActivePage()
+			val editorA2 = openAndGetXtextEditor(fileA2, page)
+			val editorP = openAndGetXtextEditor(fileP, page)
+			val errorsA2 = getEditorValidationErrors(editorA2)
+			assertEquals("editor for file A should not have any errors", #[], errorsA2)
+			editorA2.assertAllFromIndex
+			
+			setDocumentContent("file P", fileP, editorP, sourceP_modify_p)
+			waitForUpdateEditorJob
+	
+			val errorsA2_modified = getEditorValidationErrors(editorA2)
+			assertEquals("editor for file A2 should now have exactly 2 expected errors", #[
+				"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_P/src/m/A2.n4js line : 5 column : 19)",
+				"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_P/src/m/A2.n4js line : 6 column : 19)"
+			].join('\n'), errorsA2_modified.map[toString].join('\n'))
+			
+			val expectedFromSource = #{
+				URI.createPlatformResourceURI('TestInEditorA2_P/src/m/A2.n4js', true),
+				URI.createPlatformResourceURI('TestInEditorA2_P/src/m/P.n4js', true),
+				URI.createPlatformResourceURI('TestInEditorA2_P/src/m/Q.n4js', true)
+			}
+			editorA2.assertFromSource(expectedFromSource)
+		]
+	}
+	
+	@Test
+	def void test_inEditor_a2_q() {
+		withoutOutline[|
+			prepare("TestInEditorA2_Q")
+	
+			val page = getActivePage()
+			val editorA2 = openAndGetXtextEditor(fileA2, page)
+			val editorQ = openAndGetXtextEditor(fileQ, page)
+			val errorsA2 = getEditorValidationErrors(editorA2)
+			assertEquals("editor for file A should not have any errors", #[], errorsA2)
+			editorA2.assertAllFromIndex
+			
+			setDocumentContent("file Q", fileQ, editorQ, sourceQ_modify_q)
+			waitForUpdateEditorJob
+	
+			val errorsA2_modified = getEditorValidationErrors(editorA2)
+			assertEquals("editor for file A2 should now have exactly 1 expected error", #[
+				"ERROR:union{int,string} is not a subtype of string. (platform:/resource/TestInEditorA2_Q/src/m/A2.n4js line : 6 column : 19)"
+			].join('\n'), errorsA2_modified.map[toString].join('\n'))
+			
+			val expectedFromSource = #{
+				URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/A2.n4js', true),
+				URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/P.n4js', true),
+				URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/Q.n4js', true)
+			}
+			editorA2.assertFromSource(expectedFromSource)
+		]
 	}
 
 }

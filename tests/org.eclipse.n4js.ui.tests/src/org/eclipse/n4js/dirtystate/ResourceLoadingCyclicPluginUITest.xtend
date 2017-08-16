@@ -17,6 +17,7 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.junit.Test
+import org.eclipse.emf.common.util.URI
 
 /**
  * Test build / editor behavior with multiple files and cyclic deps
@@ -318,9 +319,15 @@ class ResourceLoadingCyclicPluginUITest extends AbstractResourceLoadingTest {
 		val editorP = openAndGetXtextEditor(fileP, page)
 		val errorsP = getEditorValidationErrors(editorP)
 		assertEquals("editor for file P should not have any errors", #[], errorsP)
+		val expectedFromSource = #{
+			URI.createPlatformResourceURI('TestInEditorChangeP/src/m/P.n4js', true),
+			URI.createPlatformResourceURI('TestInEditorChangeP/src/m/Q.n4js', true)
+		}
+		editorP.assertFromSource(expectedFromSource)
 
 		setDocumentContent("file P", fileP, editorP, sourceP_modify_p)
 		waitForUpdateEditorJob
+		editorP.assertFromSource(expectedFromSource)
 
 		val errorsP_modified = getEditorValidationErrors(editorP)
 		assertEquals("editor for file P should now have exactly 1 expected error", #[
