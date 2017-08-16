@@ -11,6 +11,16 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.RuleEnvironment
+import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
+import java.util.List
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
@@ -121,17 +131,8 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
-import java.util.List
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -139,7 +140,6 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.xtext.naming.IQualifiedNameConverter
 
 /**
  */
@@ -1476,7 +1476,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
 		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess)
 		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
-		val member = memberDesc.getEObjectOrProxy();
+		val member = memberDesc?.getEObjectOrProxy();
 		val isNonExistentMember = member===null || member.eIsProxy;
 		if (isNonExistentMember) {
 			if (indexIsNumeric) {

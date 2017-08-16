@@ -69,6 +69,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 
 		// use a receiver type reference that is *NOT* contained in a resource
 		val receiverTypeRef = TypeUtils.copy(varDecl.declaredTypeRef);
+		assertNull(receiverTypeRef.eResource);
 		val member = performOrdinaryMemberScoping(receiverTypeRef, propAccess);
 		assertTrue("composed member should be contained in a resource", member.eResource!==null);
 		assertSame(resource, member.eResource);

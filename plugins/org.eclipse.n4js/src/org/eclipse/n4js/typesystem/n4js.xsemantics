@@ -198,6 +198,7 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 
@@ -699,7 +700,9 @@ from {
 			val checkVisibility = false // access modifiers checked in validation
 			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess)
 			val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
-			val member = memberDesc.getEObjectOrProxy();
+			val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) {
+				memberDesc.getEObjectOrProxy()
+			};
 			if(member instanceof TMember && !member.eIsProxy) {
 				G |- (member as TMember) : var TypeRef memberTypeRef
 				val G2 = G.wrap
