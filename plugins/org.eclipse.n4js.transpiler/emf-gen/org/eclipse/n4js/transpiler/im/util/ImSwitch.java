@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.GetterDeclaration;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.Literal;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4FieldAccessor;
@@ -194,6 +195,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseParameterizedPropertyAccessExpression(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseReferencingElementExpression_IM(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseExpression(parameterizedPropertyAccessExpression_IM);
+				if (result == null) result = caseMemberAccess(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseParameterizedAccess(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseReferencingElement_IM(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseTypableElement(parameterizedPropertyAccessExpression_IM);
@@ -735,6 +737,21 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseIdentifierRef(IdentifierRef object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Member Access</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Member Access</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMemberAccess(MemberAccess object) {
 		return null;
 	}
 

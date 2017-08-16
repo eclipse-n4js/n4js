@@ -319,13 +319,22 @@ public interface N4JSXPackage extends EPackage {
 	int JSX_PROPERTY_ATTRIBUTE = 6;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE = JSX_ATTRIBUTE_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Property</b></em>' reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_PROPERTY_ATTRIBUTE__PROPERTY = JSX_ATTRIBUTE_FEATURE_COUNT + 0;
+	int JSX_PROPERTY_ATTRIBUTE__PROPERTY = JSX_ATTRIBUTE_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Property As Text</b></em>' attribute.
@@ -334,7 +343,7 @@ public interface N4JSXPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_PROPERTY_ATTRIBUTE__PROPERTY_AS_TEXT = JSX_ATTRIBUTE_FEATURE_COUNT + 1;
+	int JSX_PROPERTY_ATTRIBUTE__PROPERTY_AS_TEXT = JSX_ATTRIBUTE_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Attribute Value</b></em>' containment reference.
@@ -343,7 +352,7 @@ public interface N4JSXPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_PROPERTY_ATTRIBUTE__JSX_ATTRIBUTE_VALUE = JSX_ATTRIBUTE_FEATURE_COUNT + 2;
+	int JSX_PROPERTY_ATTRIBUTE__JSX_ATTRIBUTE_VALUE = JSX_ATTRIBUTE_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>JSX Property Attribute</em>' class.
@@ -352,7 +361,7 @@ public interface N4JSXPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_PROPERTY_ATTRIBUTE_FEATURE_COUNT = JSX_ATTRIBUTE_FEATURE_COUNT + 3;
+	int JSX_PROPERTY_ATTRIBUTE_FEATURE_COUNT = JSX_ATTRIBUTE_FEATURE_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>JSX Property Attribute</em>' class.

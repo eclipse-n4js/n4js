@@ -26,7 +26,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.xtext.util.IAcceptor;
@@ -197,12 +196,6 @@ public class N4JSCrossReferenceComputer {
 	}
 
 	private void handleType(EObject from, IAcceptor<EObject> acceptor, Type to) {
-		if (to instanceof TMember && ((TMember) to).isComposed()) {
-			// TODO IDE-1253 / IDE-1806: handling of composed members in N4JSCrossReferenceComputer
-			if (to.eResource() == null) {
-				return; // quick fix: ignore this member (would lead to an exception below)
-			}
-		}
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 			acceptor.accept(to);
