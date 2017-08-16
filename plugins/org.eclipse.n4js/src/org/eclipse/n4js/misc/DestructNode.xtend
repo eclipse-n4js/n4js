@@ -119,8 +119,6 @@ public class DestructNode {
 				astElement.varDecl
 			BindingProperty case astElement.value!==null:
 				astElement.value.varDecl
-			BindingProperty:
-				astElement.varDecl
 		}
 	}
 

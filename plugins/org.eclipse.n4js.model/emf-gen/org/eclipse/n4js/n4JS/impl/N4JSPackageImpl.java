@@ -5945,15 +5945,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBindingProperty_VarDecl() {
-		return (EReference)bindingPropertyEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EOperation getBindingProperty__GetName() {
 		return bindingPropertyEClass.getEOperations().get(0);
 	}
@@ -6843,7 +6834,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		bindingPropertyEClass = createEClass(BINDING_PROPERTY);
 		createEReference(bindingPropertyEClass, BINDING_PROPERTY__VALUE);
-		createEReference(bindingPropertyEClass, BINDING_PROPERTY__VAR_DECL);
 		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___GET_NAME);
 		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___IS_VALID_NAME);
 
@@ -7932,7 +7922,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(bindingPropertyEClass, BindingProperty.class, "BindingProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBindingProperty_Value(), this.getBindingElement(), null, "value", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBindingProperty_VarDecl(), this.getVariableDeclaration(), null, "varDecl", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getBindingProperty__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 

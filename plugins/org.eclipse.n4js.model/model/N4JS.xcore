@@ -2111,7 +2111,6 @@ class ArrayBindingPattern extends BindingPattern {
 
 class BindingProperty extends PropertyNameOwner {
 	contains BindingElement value
-	contains VariableDeclaration varDecl // for single name binding (no declaredName in this case)
 	op String getName() {
 		super.getName() ?: value?.varDecl?.name
 	}

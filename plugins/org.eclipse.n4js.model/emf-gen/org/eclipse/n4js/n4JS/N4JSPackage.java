@@ -13882,22 +13882,13 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_PROPERTY__VALUE = PROPERTY_NAME_OWNER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Var Decl</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BINDING_PROPERTY__VAR_DECL = PROPERTY_NAME_OWNER_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Binding Property</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PROPERTY_FEATURE_COUNT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 2;
+	int BINDING_PROPERTY_FEATURE_COUNT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -19299,17 +19290,6 @@ public interface N4JSPackage extends EPackage {
 	EReference getBindingProperty_Value();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.BindingProperty#getVarDecl <em>Var Decl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Var Decl</em>'.
-	 * @see org.eclipse.n4js.n4JS.BindingProperty#getVarDecl()
-	 * @see #getBindingProperty()
-	 * @generated
-	 */
-	EReference getBindingProperty_VarDecl();
-
-	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.BindingProperty#getName() <em>Get Name</em>}' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -23845,14 +23825,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BINDING_PROPERTY__VALUE = eINSTANCE.getBindingProperty_Value();
-
-		/**
-		 * The meta object literal for the '<em><b>Var Decl</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BINDING_PROPERTY__VAR_DECL = eINSTANCE.getBindingProperty_VarDecl();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Name</b></em>' operation.
