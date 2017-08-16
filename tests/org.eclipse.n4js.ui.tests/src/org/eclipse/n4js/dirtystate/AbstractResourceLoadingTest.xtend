@@ -13,6 +13,12 @@ package org.eclipse.n4js.dirtystate
 import org.eclipse.core.resources.IFile
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.xtext.resource.XtextResource
+import org.eclipse.xtext.ui.editor.XtextEditor
+import org.eclipse.xtext.util.concurrent.IUnitOfWork
+import java.util.Set
+import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.resource.N4JSResource
 
 /**
  * Base utility for 
@@ -32,5 +38,34 @@ class AbstractResourceLoadingTest extends AbstractBuilderParticipantTest {
 			+ "/m/"
 			+ baseName + ".js"
 		);
-	}	
+	}
+	
+	/**
+	 * Returns validation errors in given Xtext editor.
+	 */
+	def protected void assertResource(XtextEditor editor, IUnitOfWork.Void<XtextResource> unit) {
+		editor.getDocument().readOnly(unit);
+	}
+	
+	def protected void assertFromSource(XtextEditor editor, Set<URI> uris) {
+		editor.assertResource [ resource |
+			val resourceSet = resource.resourceSet;
+			resourceSet.resources.forEach [ other |
+				if (other instanceof N4JSResource) {
+					assertEquals(other.URI.toString + ' was loaded from source', uris.contains(other.URI), !other.isLoadedFromDescription)	
+				}
+			]
+		]
+	}
+	
+	def protected void assertAllFromIndex(XtextEditor editor) {
+		editor.assertResource [ resource |
+			val resourceSet = resource.resourceSet;
+			resourceSet.resources.forEach [ other |
+				if (other instanceof N4JSResource) {
+					assertEquals(other.URI.toString + ' was loaded from source', other !== resource, other.isLoadedFromDescription)	
+				}
+			]
+		]
+	}
 }
