@@ -13,17 +13,23 @@ package org.eclipse.n4js.dirtystate
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IProject
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.ICoreRunnable
+import org.eclipse.core.runtime.NullProgressMonitor
 import org.junit.Test
 
 /**
- *
+ * Test build / editor behavior with multiple files and cyclic deps
  */
-class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
-
-	// X <- Y <- A <- B <- C <- D
-	//            ------------->
+class ResourceLoadingCyclicPluginUITest extends AbstractResourceLoadingTest {
+	/*
+	 * X <- Y <- A <- B <- C <- D
+	 *           |              ^
+	 *           ----------------
+	 * P -> Q
+	 * ^    | 
+	 * ------
+	 */
 
 	private val sourceX = '''
 		export public var x = "hello";
@@ -68,6 +74,20 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 		import {c} from "m/C";
 		export public var d = c;
 	''';
+	
+	private val sourceP = '''
+		import {q} from "m/Q";
+		export public var p = '';
+		
+		var p2: string = q;
+		
+		p2; // avoid unused warning
+	''';
+	
+	private val sourceQ = '''
+		import {p} from "m/P";
+		export public var q = p;
+	''';
 
 	// change inferred type of 'x' from string to number
 	private val sourceX_modify_x = sourceX.replace(
@@ -89,6 +109,11 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 	private val sourceA_modify_a = sourceA.replace(
 		'a = y;',
 		'a = 42;y;');
+		
+	// change the inferred type of variable p to int
+	private val sourceP_modify_p = sourceP.replace(
+		"p = ''",
+		'p = 1;');
 
 	private var IProject project;
 	private var IFolder srcFolder;
@@ -99,22 +124,29 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 	private var IFile fileB;
 	private var IFile fileC;
 	private var IFile fileD;
+	private var IFile fileP;
+	private var IFile fileQ;
 
 	def private void prepare(String projectName) {
 		project = createJSProject(projectName)
-		srcFolder = configureProjectWithXtext(project)
-		val manifest = project.getFile("manifest.n4mf")
-		assertMarkers("manifest should have no errors", manifest, 0)
-
-		srcFolderM = srcFolder.getFolder("m")
-		srcFolderM.create(true, true, null)
-
-		fileX = createTestFile(srcFolderM, "X", sourceX)
-		fileY = createTestFile(srcFolderM, "Y", sourceY)
-		fileA = createTestFile(srcFolderM, "A", sourceA)
-		fileB = createTestFile(srcFolderM, "B", sourceB)
-		fileC = createTestFile(srcFolderM, "C", sourceC)
-		fileD = createTestFile(srcFolderM, "D", sourceD)
+		val ICoreRunnable runnable = [
+			srcFolder = configureProjectWithXtext(project)
+			val manifest = project.getFile("manifest.n4mf")
+			assertMarkers("manifest should have no errors", manifest, 0)
+	
+			srcFolderM = srcFolder.getFolder("m")
+			srcFolderM.create(true, true, null)
+	
+			fileX = createTestFile(srcFolderM, "X", sourceX)
+			fileY = createTestFile(srcFolderM, "Y", sourceY)
+			fileA = createTestFile(srcFolderM, "A", sourceA)
+			fileB = createTestFile(srcFolderM, "B", sourceB)
+			fileC = createTestFile(srcFolderM, "C", sourceC)
+			fileD = createTestFile(srcFolderM, "D", sourceD)
+			fileP = createTestFile(srcFolderM, "P", sourceP)
+			fileQ = createTestFile(srcFolderM, "Q", sourceQ)
+		]
+		ResourcesPlugin.workspace.run(runnable, new NullProgressMonitor)
 
 		cleanBuild
 		waitForAutoBuild
@@ -125,6 +157,8 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 		assertMarkers("file B should have no errors", fileB, 0)
 		assertMarkers("file C should have no errors", fileC, 0)
 		assertMarkers("file D should have no errors", fileD, 0)
+		assertMarkers("file P should have no errors", fileP, 0)
+		assertMarkers("file Q should have no errors", fileQ, 0)
 	}
 
 	@Test
@@ -259,23 +293,45 @@ class ResourceLoadingCyclicPluginUITest extends AbstractBuilderParticipantTest {
 		assertTrue("output file of file C should NOT have been rebuilt", unchangedC);
 		assertTrue("output file of file D should NOT have been rebuilt", unchangedD);
 	}
+	
+	@Test
+	def void test_builder_changeP() {
+		prepare("TestBuilderChangeP")
 
+		changeTestFile(fileP, sourceP_modify_p)
+		waitForAutoBuild
 
-	// ======================================================================
-	// some utility methods
+		assertMarkers("file P should now have exactly 1 error", fileP, 1)
+		assertIssues(fileP, "line 4: int is not a subtype of string.")
 
-	def private static IFile getOutputFileForTestFile(IFile file) {
-		val name = file.name;
-		val idx = name.lastIndexOf('.');
-		val baseName = if(idx>=0) name.substring(0, idx) else name;
-		val project = file.project;
-		return project.getFile(
-			"src-gen/"
-			+ N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS
-			+ "/"
-			+ project.name
-			+ "/m/"
-			+ baseName + ".js"
-		);
+		changeTestFile(fileP, sourceP)
+		waitForAutoBuild
+
+		assertMarkers("file P should no longer have any errors", fileP, 0)
 	}
+	
+	@Test
+	def void test_inEditor_changeP() {
+		prepare("TestInEditorChangeP")
+
+		val page = getActivePage()
+		val editorP = openAndGetXtextEditor(fileP, page)
+		val errorsP = getEditorValidationErrors(editorP)
+		assertEquals("editor for file P should not have any errors", #[], errorsP)
+
+		setDocumentContent("file P", fileP, editorP, sourceP_modify_p)
+		waitForUpdateEditorJob
+
+		val errorsP_modified = getEditorValidationErrors(editorP)
+		assertEquals("editor for file P should now have exactly 1 expected error", #[
+			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorChangeP/src/m/P.n4js line : 4 column : 18)"
+		].join('\n'), errorsP_modified.map[toString].join('\n'))
+
+		setDocumentContent("file P", fileA, editorP, sourceP)
+		waitForUpdateEditorJob
+
+		val errorsP_backToOriginal = getEditorValidationErrors(editorP)
+		assertEquals("editor for file P should no longer have any errors", #[], errorsP_backToOriginal)
+	}
+
 }
