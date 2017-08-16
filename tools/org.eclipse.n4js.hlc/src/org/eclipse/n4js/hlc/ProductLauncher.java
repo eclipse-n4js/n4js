@@ -132,9 +132,15 @@ public class ProductLauncher {
 		ip.put("eclipse.ignoreApp", "true");
 		ip.put("eclipse.consoleLog", "true");
 		ip.put("eclipse.log.level", "ALL");
+
+		/*
+		 * http://help.eclipse.org/oxygen/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-
+		 * options.html
+		 */
+		// ip.put("osgi.debug", "");
+		// ip.put("osgi.debug.verbose", "true");
+
 		ip.put("osgi.clean", "true");
-		ip.put("osgi.debug", "true");
-		ip.put("osgi.debug.verbose", "true");
 		ip.put("osgi.framework.shape", "jar");
 		ip.put("osgi.configuration.area", osgiConfigurationArea.toAbsolutePath().toString());
 		ip.put("osgi.noShutdown", "false");
