@@ -14,30 +14,23 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 
 /**
- * Code more or less copied from Xtend's {code ShowSyntheticMembersContribution} and adjusted to toggle inherited/owned
- * members view. Has to be bound in UI module.
+ * Filters out static members.
  */
-public class N4JSShowInheritedMembersOutlineContribution extends AbstractN4JSFilterOutlineContribution {
+public class N4JSFilterStaticMembersOutlineContribution extends AbstractN4JSFilterOutlineContribution {
 
 	/**
 	 * Preference key to store default mode.
 	 */
-	public static final String PREFERENCE_KEY = "ui.outline.showInherited";
+	public static final String PREFERENCE_KEY = "ui.outline.filterStatic";
 
 	@Override
 	protected boolean apply(IOutlineNode node) {
 		if (node instanceof N4JSEObjectNode) {
 			N4JSEObjectNode n4jseObjectNode = (N4JSEObjectNode) node;
-			return !n4jseObjectNode.isInherited;
+			if (n4jseObjectNode.isMember) {
+				return !n4jseObjectNode.isStatic;
+			}
 		}
-		return true;
-	}
-
-	/**
-	 * Filter inherited members by default.
-	 */
-	@Override
-	public boolean filterByDefault() {
 		return true;
 	}
 
@@ -48,9 +41,9 @@ public class N4JSShowInheritedMembersOutlineContribution extends AbstractN4JSFil
 
 	@Override
 	protected void configureAction(Action action) {
-		action.setText("Show Inherited Members");
-		action.setDescription("Show Inherited Members");
-		action.setToolTipText("Show inherited, consumed, and polyfilled members");
-		action.setImageDescriptor(imageHelper.getImageDescriptor("inher_co.png"));
+		action.setText("Hide Static Members");
+		action.setDescription("Hide Static Members");
+		action.setToolTipText("Hide Static Fields and Methods");
+		action.setImageDescriptor(imageHelper.getImageDescriptor("static_co.png"));
 	}
 }
