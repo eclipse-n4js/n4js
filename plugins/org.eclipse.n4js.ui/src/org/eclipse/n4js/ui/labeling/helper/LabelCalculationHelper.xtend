@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -39,7 +39,7 @@ import org.eclipse.xtext.ui.label.AbstractLabelProvider
  * Xtend dispatch methods. Here the dispatch of labels to be shown e.g. in
  * the outline view is done. It is called in {@link N4JSLabelProvider#doGetText}.
  * <br /><br />
- * General pattern is to delegate from an AST element to the types elmenent
+ * General pattern is to delegate from an AST element to the types element
  * as in the types model the required information to calculate the name
  * is better provided.
  * <br /><br />
@@ -64,25 +64,26 @@ import org.eclipse.xtext.ui.label.AbstractLabelProvider
 class LabelCalculationHelper {
 
 	/* dispatchDoGetText AST -> delegates to types model, as information is easier to retrieve there */
-
 	def dispatch String dispatchDoGetText(Void _null) {
 		return "*null*";
 	}
 
-
 	def dispatch String dispatchDoGetText(EObjectWithContext objectWithContext) {
 		var label = dispatchDoGetText(objectWithContext.obj);
 
-		if (objectWithContext.obj instanceof N4MemberDeclaration) {
-			val TMember member = (objectWithContext.obj as N4MemberDeclaration).definedTypeElement;
-			if (member !== null && member.containingType !== null &&
-				member.containingType != objectWithContext.context) {
-				label += " from " + dispatchDoGetText(member.containingType);		
-			}
+		val TMember member = if (objectWithContext.obj instanceof N4MemberDeclaration) {
+				(objectWithContext.obj as N4MemberDeclaration).definedTypeElement
+			} else if (objectWithContext.obj instanceof TMember) {
+				objectWithContext.obj as TMember
+			} else
+				null;
+
+		if (member !== null && member.containingType !== null && member.containingType != objectWithContext.context) {
+			label += " from " + dispatchDoGetText(member.containingType);
 		}
-		
+
 		return label;
-		
+
 	}
 
 	def dispatch String dispatchDoGetText(Script script) {
@@ -93,15 +94,17 @@ class LabelCalculationHelper {
 	// e.g. imports from mypack/MyModule/A or imports from mypack/MyModule/A: A
 	def dispatch String dispatchDoGetText(ImportDeclaration importDelaration) {
 		return "imports from " + getModuleSpecifier(importDelaration.module) +
-			(if(importDelaration.importSpecifiers.size == 1 &&
+			(if (importDelaration.importSpecifiers.size == 1 &&
 				!(importDelaration.importSpecifiers.head instanceof NamespaceImportSpecifier))
-					": "  + importDelaration.importSpecifiers.head.dispatchDoGetText else "")
+				": " + importDelaration.importSpecifiers.head.dispatchDoGetText
+			else
+				"")
 	}
 
 	// name and if given alias, e.g. A as B
 	def dispatch String dispatchDoGetText(NamedImportSpecifier namedImportSpecifier) {
 		return namedImportSpecifier.importedElement?.name +
-			(if(namedImportSpecifier.alias !== null) " as " + namedImportSpecifier.alias else "")
+			(if (namedImportSpecifier.alias !== null) " as " + namedImportSpecifier.alias else "")
 	}
 
 	def dispatch String dispatchDoGetText(N4ClassifierDeclaration it) {
@@ -116,30 +119,37 @@ class LabelCalculationHelper {
 		return dispatchDoGetText(n4SetterDeclaration.definedSetter)
 	}
 
-	// comma separated list of all contained variable names
+	/** 
+	 * comma separated list of all contained variable names
+	 */
 	def dispatch String dispatchDoGetText(ExportedVariableStatement vs) {
-		 return vs.varDecl.map[name].join(", ")
+		return vs.varDecl.map[name].join(", ")
 	}
 
 	def dispatch String dispatchDoGetText(NamedElement namedElement) {
-		 namedElement.name
+		namedElement.name
 	}
 
-	/* dispatchDoGetText types model */
-
-	// the fully qualified module specifier, e.g. mypack/MyFile
+	/** 
+	 * dispatchDoGetText types model
+	 * the fully qualified module specifier, e.g. mypack/MyFile
+	 */
 	def dispatch String dispatchDoGetText(TModule tModule) {
 		return getModuleSpecifier(tModule)
 	}
 
-	// name + optional type variables, e.g. A<T, U>
+	/** 
+	 * name + optional type variables, e.g. A<T, U>
+	 */
 	def dispatch String dispatchDoGetText(TClassifier tClassifier) {
-		return tClassifier.name + handleTypeVars(tClassifier)
+		return tClassifier.name + getTypeVarDescriptions(tClassifier)
 	}
 
-	def private handleTypeVars(TClassifier tClassifier) {
-		if(tClassifier.typeVars.size > 0)
-				"<" + tClassifier.typeVars.map[name].join(", ") + ">" else ""
+	def private getTypeVarDescriptions(TClassifier tClassifier) {
+		if (tClassifier.typeVars.size > 0)
+			"<" + tClassifier.typeVars.map[name].join(", ") + ">"
+		else
+			""
 	}
 
 	def dispatch String dispatchDoGetText(TGetter tGetter) {
@@ -155,8 +165,8 @@ class LabelCalculationHelper {
 	}
 
 	def dispatch String dispatchDoGetText(IEObjectDescription d) {
-		if (TypesPackage.eINSTANCE.TN4Classifier.isSuperTypeOf(d.EClass)
-			|| TypesPackage.eINSTANCE.TEnum.isSuperTypeOf(d.EClass)) {
+		if (TypesPackage.eINSTANCE.TN4Classifier.isSuperTypeOf(d.EClass) ||
+			TypesPackage.eINSTANCE.TEnum.isSuperTypeOf(d.EClass)) {
 			return d.qualifiedName.lastSegment;
 		} else {
 			return "<unknown>"
@@ -169,6 +179,6 @@ class LabelCalculationHelper {
 	}
 
 	def private getModuleSpecifier(TModule tModule) {
-		if( tModule?.qualifiedName !== null) tModule.moduleSpecifier else "<unknown>"
+		if (tModule?.qualifiedName !== null) tModule.moduleSpecifier else "<unknown>"
 	}
 }

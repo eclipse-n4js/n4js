@@ -62,9 +62,6 @@ timestamps {
                     def nodeHome = tool(name: n4jsNodejsVersion, type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation')
                     def xvfbBin = tool(name: 'default', type: 'org.jenkinsci.plugins.xvfb.XvfbInstallation')
 
-
-                    String snapshotRepo = "${workspace}/${N4JS_SNAPSHOT_MAVEN_REPO_FOLDER_WSREL}"
-                    String snapshotProperty = "-Dlocal-snapshot-deploy-folder=${snapshotRepo}"
                     String targetPomFile = "--file ${workspace}/${n4jsDir}//pom.xml"
                     String commonOptions = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
 
@@ -89,7 +86,7 @@ timestamps {
                                        echo "==================================="
                                   """
 
-                                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean deploy ${targetPomFile} ${commonProfiles} ${snapshotProperty} ${commonOptions}"""
+                                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean verify ${targetPomFile} ${commonProfiles} ${commonOptions}"""
                             }
                         }
                     }
@@ -159,8 +156,8 @@ void sendEmail(String subject, String body) {
  * by passing {@code [[url: git@github.com:Profile/repo.git]]}
  *
  * @param checkoutDir string with directory name where to checkout, relative to the workspace
- * @param gitRemote scm object configuring remotes ({@code scm.userRemoteConfigs})
- * @param branch brach name to checkout (it is String but cannot infer from scm object)
+ * @param gitRemote scm object configuring remote ({@code scm.userRemoteConfigs})
+ * @param branch branch name to checkout (it is String but cannot infer from scm object)
  * @param refCache string with absolute location of the git reference cache to use
  */
 @NonCPS

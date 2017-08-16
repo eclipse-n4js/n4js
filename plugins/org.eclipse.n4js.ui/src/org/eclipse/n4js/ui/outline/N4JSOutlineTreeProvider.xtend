@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.utils.ContainerTypesHelper
@@ -147,17 +148,15 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	 * If not turned off, also inherited (and consumed or polyfilled) members are shown.
 	 */
 	def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
-
-		val t = classifierDefinition.definedType as TClassifier;
-		if (t !== null && showInherited) {
-			val members = containerTypesHelper.fromContext(classifierDefinition).members(t, false, true);
+		val tclassifier = classifierDefinition.definedType as TClassifier;
+		if (tclassifier !== null && showInherited) {
+			val members = containerTypesHelper.fromContext(tclassifier).members(tclassifier, false, true);
+			
 			for (tchild : members.filterNull) {
-				if (tchild.astElement !== null) {
-					val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild.astElement, t));
-					if (node instanceof N4JSEObjectNode && tchild.containingType !== null &&
-						tchild.containingType != t) {
-						(node as N4JSEObjectNode).isInherited = true;
-					}
+				val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild, tclassifier));
+				if (node instanceof N4JSEObjectNode && tchild.containingType !== null &&
+					tchild.containingType != tclassifier) {
+					(node as N4JSEObjectNode).isInherited = true;
 				}
 			}
 		} else {
@@ -230,22 +229,32 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		!script.eContents.exists[isInstanceOfExpectedScriptChildren]
 	}
 
-	/*
-	 * suppress + symbol in outline when classifier has no members
-	 * or we have a broken AST and the defined type of the classifier is not available yet
+	/**
+	 * Suppress + symbol in outline when classifier has no members
+	 * or we have a broken AST and the defined type of the classifier is not available yet.
+	 * 
+	 * This method directly works on AST, because the outline is called with the AST.
 	 */
 	def dispatch protected boolean isLeaf(N4ClassifierDefinition classifierDefinition) {
-		val t = classifierDefinition.definedType as TClassifier;
-		if (t === null) {
+		val tclassifier = classifierDefinition.definedType as TClassifier;
+		if (tclassifier === null) {
 			return true;
 		}
 		if (showInherited) {
-			val members = containerTypesHelper.fromContext(classifierDefinition).members(t, false, true);
+			val members = containerTypesHelper.fromContext(tclassifier).members(tclassifier, false, true);
 			return members.isNullOrEmpty;
 		} else {
 			return !classifierDefinition.eContents.exists[isInstanceOfExpectedClassifierChildren]
 		}
 	}
+	
+	/**
+	 * Type model members are always leaves. 
+	 */
+	def dispatch protected boolean isLeaf(TMember member) {
+		return true;
+	}
+
 
 	// fields should have never children
 	def dispatch protected boolean isLeaf(N4FieldDeclaration md) {
