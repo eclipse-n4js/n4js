@@ -64,7 +64,9 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.headless.ConfigurableHeadlessLogger;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
+import org.eclipse.n4js.generator.headless.IHeadlessLogger;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessGeneratorModule;
@@ -916,11 +918,15 @@ public class N4jscBase implements IApplication {
 		N4mfPackage.eINSTANCE.getNsURI();
 		XMLTypePackage.eINSTANCE.getNsURI();
 
-		final Module cliTesterModule = override(new TesterModule())
-				.with((Module) binder -> binder.bind(TestTreeTransformer.class).to(CliTestTreeTransformer.class));
-
-		final Module module = Modules.combine(new N4JSRuntimeModule(), cliTesterModule,
-				new N4JSHeadlessGeneratorModule(properties));
+		final Module module = override(
+				Modules.combine(new N4JSRuntimeModule(),
+						new TesterModule(),
+						new N4JSHeadlessGeneratorModule(properties)))
+								.with((Module) binder -> {
+									binder.bind(TestTreeTransformer.class).to(CliTestTreeTransformer.class);
+									binder.bind(IHeadlessLogger.class)
+											.toInstance(new ConfigurableHeadlessLogger(verbose, debug));
+								});
 
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
@@ -1297,8 +1303,6 @@ public class N4jscBase implements IApplication {
 		headless.setKeepOnCompiling(keepCompiling);
 		headless.setCompileSourceCode(!testonly);
 		headless.setProcessTestCode(!notests);
-		headless.setCreateDebugOutput(debug);
-		headless.setVerbose(verbose);
 		if (log) {
 			headless.setLogFile(logFile);
 		}
