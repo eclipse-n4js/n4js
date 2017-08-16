@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.headless;
+package org.eclipse.n4js.generator.headless.logging;
 
 import org.eclipse.xtext.validation.Issue;
 
@@ -18,8 +18,7 @@ import org.eclipse.xtext.validation.Issue;
 abstract class HeadlessAbstractLogger implements IHeadlessLogger {
 
 	/**
-	 * Prints the given debug message. Does not consider {@link #isCreateDebugOutput()}. This responsibility falls to
-	 * the caller.
+	 * Prints the given debug message (only if {@link #isCreateDebugOutput()} returns {@code true}).
 	 *
 	 * @param message
 	 *            the message to print
@@ -31,14 +30,15 @@ abstract class HeadlessAbstractLogger implements IHeadlessLogger {
 	}
 
 	/**
-	 * Prints the given info message.
+	 * Prints the given info message (only if {@link #isVerbose()} returns {@code true}).
 	 *
 	 * @param message
 	 *            the message to print
 	 */
 	@Override
 	public final void info(String message) {
-		println("INFO: " + message);
+		if (isVerbose())
+			println("INFO: " + message);
 	}
 
 	/**

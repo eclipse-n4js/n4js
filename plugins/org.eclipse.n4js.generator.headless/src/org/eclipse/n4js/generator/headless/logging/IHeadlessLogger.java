@@ -8,61 +8,35 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.headless;
+package org.eclipse.n4js.generator.headless.logging;
 
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.ImplementedBy;
 
 /**
- * Interfaces of the logger(s) used in the headless case.
+ * Interface for the logger used in the headless case.
  */
-@ImplementedBy(NoopHeadlessLogger.class)
+@ImplementedBy(SuppressedHeadlessLogger.class)
 public interface IHeadlessLogger {
 
-	/**
-	 * Prints the given debug message. Does not consider {@link #isCreateDebugOutput()}. This responsibility falls to
-	 * the caller.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
+	/** Prints the given debug message. */
 	public void debug(String message);
 
-	/**
-	 * Prints the given info message.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
+	/** Prints the given info message. */
 	public void info(String message);
 
-	/**
-	 * Prints the given issue.
-	 *
-	 * @param issue
-	 *            the issue to print
-	 */
+	/** Prints the given issue. */
 	public void issue(Issue issue);
 
-	/**
-	 * Prints the given warning.
-	 *
-	 * @param message
-	 *            the warning to print
-	 */
+	/** Prints the given warning. */
 	public void warn(String message);
 
-	/**
-	 * Prints the given error message.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
+	/** Prints the given error message. */
 	public void error(String message);
 
 	/**
-	 * Indicates whether or not debug information should be printed.
+	 * Indicates whether or not debug logging is enabled.
 	 */
 	public boolean isCreateDebugOutput();
 

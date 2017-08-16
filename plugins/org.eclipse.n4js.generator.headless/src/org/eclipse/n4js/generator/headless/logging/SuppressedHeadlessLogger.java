@@ -8,27 +8,22 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.headless;
+package org.eclipse.n4js.generator.headless.logging;
 
 import com.google.inject.Singleton;
 
 /**
- * Silent logger, that is not logging anything and returns false for any inquiry if a given logging is enabled.
+ * Suppressed logger, i.e. it is not logging anything and returns {@code false} for any inquiry if a given logging type
+ * is enabled.
  */
 @Singleton
-public final class NoopHeadlessLogger extends HeadlessAbstractLogger {
+public final class SuppressedHeadlessLogger extends HeadlessAbstractLogger {
 
-	/**
-	 * Indicates whether or not debug information should be printed.
-	 */
 	@Override
 	public boolean isCreateDebugOutput() {
 		return false;
 	}
 
-	/**
-	 * Indicates whether verbose logging is enabled.
-	 */
 	@Override
 	public boolean isVerbose() {
 		return false;
@@ -38,5 +33,4 @@ public final class NoopHeadlessLogger extends HeadlessAbstractLogger {
 	protected void println(String message) {
 		// Noop
 	}
-
 }

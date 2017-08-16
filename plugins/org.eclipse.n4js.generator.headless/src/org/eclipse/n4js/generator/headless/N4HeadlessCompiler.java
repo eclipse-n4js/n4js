@@ -39,6 +39,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.CompositeGenerator;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.GeneratorException;
+import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
@@ -1264,8 +1265,8 @@ public class N4HeadlessCompiler {
 	private void validateProject(MarkedProject markedProject, N4ProgressStateRecorder recorder,
 			IssueAcceptor issueAcceptor) throws N4JSCompileErrorException {
 
-		if (logger.isVerbose() || logger.isCreateDebugOutput())
-			logger.debug(" Validating project " + markedProject);
+		if (logger.isVerbose())
+			logger.info(" Validating project " + markedProject);
 		IssueCollector issueCollector = new IssueCollector();
 		IssueFilter issueFilter = new IssueFilter(issueCollector, issue -> issue.getSeverity() == Severity.ERROR);
 		issueAcceptor = new IssueAcceptorTee(issueAcceptor, issueFilter);
@@ -1285,7 +1286,7 @@ public class N4HeadlessCompiler {
 				if (!issues.isEmpty()) {
 					recorder.markResourceIssues(resource, issues);
 					issueAcceptor.acceptAll(issues);
-					printIssues(issues);
+					issues.stream().forEach(logger::issue);
 				}
 			}
 		}
@@ -1348,7 +1349,7 @@ public class N4HeadlessCompiler {
 		rec.markStartCompiling(markedProject);
 
 		final String projectId = markedProject.project.getProjectId();
-		if (logger.isVerbose() || logger.isCreateDebugOutput()) {
+		if (logger.isVerbose()) {
 			logger.info("Generating " + projectId);
 		}
 
@@ -1364,7 +1365,7 @@ public class N4HeadlessCompiler {
 				if (compile) {
 					try {
 						rec.markStartCompile(resource);
-						if (logger.isVerbose() || logger.isCreateDebugOutput()) {
+						if (logger.isVerbose()) {
 							logger.info("  Generating resource " + resource.getURI());
 						}
 						compositeGenerator.doGenerate(resource, fsa);
@@ -1375,7 +1376,7 @@ public class N4HeadlessCompiler {
 						if (isKeepOnCompiling()) {
 							collectedErrors.get().add(new N4JSCompileErrorException(e.getMessage(), projectId, e));
 							if (logger.isVerbose()) {
-								logger.error(e.getMessage());
+								logger.info(e.getMessage());
 							}
 						} else {
 							// fail fast
@@ -1567,16 +1568,6 @@ public class N4HeadlessCompiler {
 				logger.debug(msg.toString());
 			}
 		}
-	}
-
-	/**
-	 * Prints all issues in the given collection.
-	 *
-	 * @param issues
-	 *            the issues to print
-	 */
-	private void printIssues(Collection<Issue> issues) {
-		issues.stream().forEach(i -> logger.issue(i));
 	}
 
 	/**

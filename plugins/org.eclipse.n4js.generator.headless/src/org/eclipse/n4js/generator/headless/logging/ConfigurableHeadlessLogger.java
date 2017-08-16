@@ -8,12 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.headless;
+package org.eclipse.n4js.generator.headless.logging;
 
 import com.google.inject.Singleton;
 
 /**
- * Headless logger whose verbosity can be configured.
+ * Headless logger whose verbosity can be configured. Logs all messages to {@link System#out}.
  */
 @Singleton
 public final class ConfigurableHeadlessLogger extends HeadlessAbstractLogger {
@@ -23,10 +23,15 @@ public final class ConfigurableHeadlessLogger extends HeadlessAbstractLogger {
 	/** if set to true prints to standard out inform about what is currently processed. */
 	private final boolean createDebugOutput;
 
-	/** Configures behavior with passed parameters. */
+	/** Configures behavior with passed parameters. Debug level implies verbose. */
 	public ConfigurableHeadlessLogger(boolean verbose, boolean createDebugOutput) {
-		this.verbose = verbose;
-		this.createDebugOutput = createDebugOutput;
+		if (createDebugOutput) {
+			this.verbose = true;
+			this.createDebugOutput = true;
+		} else {
+			this.verbose = verbose;
+			this.createDebugOutput = createDebugOutput;
+		}
 	}
 
 	/**
