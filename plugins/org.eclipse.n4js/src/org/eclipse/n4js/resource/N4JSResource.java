@@ -237,8 +237,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
+	/*
+	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
+	 */
 	/**
-	 *
+	 * Public default constructor.
 	 */
 	public N4JSResource() {
 		super();
