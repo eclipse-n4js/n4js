@@ -140,14 +140,6 @@ class MemberScopingHelper {
 	}
 
 	/**
-	 * Is there a member (visible or not) in the given scope matching the given (name, staticAccess) combination?
-	 */
-	public def boolean isNonExistentMember(IScope scope, String memberName, boolean staticAccess) {
-		val descriptions = scope.getElements(QualifiedName.create(memberName))
-		return descriptions.isEmpty
-	}
-
-	/**
 	 * For the member given by (name, staticAccess) return the erroneous descriptions from the given scope.
 	 * <p>
 	 * Precondition: {@link #isNonExistentMember} has negative answer.
@@ -157,31 +149,6 @@ class MemberScopingHelper {
 		val descriptions = scope.getElements(QualifiedName.create(memberName))
 		val errorsOrNulls = descriptions.map[d|IEObjectDescriptionWithError.getDescriptionWithError(d)]
 		return errorsOrNulls.filterNull
-	}
-
-	/**
-	 * Look up all non-erroneous {@link TMember} in the given scope having the given name.
-	 */
-	public def Iterable<TMember> findMembersForName(IScope scope, String memberName, boolean staticAccess) {
-		val candidates = scope.getElements(QualifiedName.create(memberName)).filter [ description |
-			!(IEObjectDescriptionWithError.isErrorDescription(description))
-		]
-		val proxysOrInstances = candidates.map[description|description.getEObjectOrProxy()]
-		val tmembers = proxysOrInstances.filter [ proxyOrInstance |
-			proxyOrInstance !== null && !proxyOrInstance.eIsProxy() && (proxyOrInstance instanceof TMember)
-		]
-		return tmembers.map[m|m as TMember].filter[m|m.static == staticAccess]
-	}
-
-	/**
-	 * In case there's a single non-erroneous {@link TMember} in the given scope matching the given name, return it. Otherwise return null.
-	 */
-	public def TMember findUniqueMemberForName(IScope scope, String memberName, boolean staticAccess) {
-		val candidates = findMembersForName(scope, memberName, staticAccess)
-		if (candidates.size == 1) {
-			return candidates.head
-		}
-		return null
 	}
 
 	private def dispatch IScope members(TypeRef type, MemberScopeRequest request) {

@@ -23,7 +23,6 @@
 package org.eclipse.n4js.ts.typeRefs
 
 import org.eclipse.n4js.ts.types.AnyType
-import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction

@@ -139,6 +139,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.xtext.naming.IQualifiedNameConverter
 
 /**
  */
@@ -163,6 +164,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	@Inject private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
+
+	@Inject private IQualifiedNameConverter qualifiedNameConverter;
 
 	/**
 	 * NEEEDED
@@ -1471,19 +1474,23 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
-		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess,
-			checkVisibility, staticAccess)
-		if (memberScopingHelper.isNonExistentMember(scope, memberName, staticAccess)) {
+		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess)
+		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+		val member = memberDesc.getEObjectOrProxy();
+		val isNonExistentMember = member===null || member.eIsProxy;
+		if (isNonExistentMember) {
 			if (indexIsNumeric) {
 				addIssue(messageForEXP_INDEXED_ACCESS_FORBIDDEN, indexedAccess, EXP_INDEXED_ACCESS_FORBIDDEN);
 			} else {
 				addIssue(getMessageForEXP_INDEXED_ACCESS_COMPUTED_NOTFOUND(memberName), indexedAccess,
 					EXP_INDEXED_ACCESS_COMPUTED_NOTFOUND);
 			}
-			return
+			return;
 		}
-		val erroneous = memberScopingHelper.getErrorsForMember(scope, memberName, staticAccess)
-		erroneous.forEach[d|addIssue(d.message, indexedAccess, d.issueCode)]
+		val errorDesc = IEObjectDescriptionWithError.getDescriptionWithError(memberDesc);
+		if(errorDesc!==null) {
+			addIssue(errorDesc.message, indexedAccess, errorDesc.issueCode);
+		}
 	}
 
 	def private boolean internalCheckIndexedAccessWithSymbol(RuleEnvironment G,
