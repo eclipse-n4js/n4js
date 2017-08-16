@@ -74,7 +74,7 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 				c(param: type{I1}) {}
 				d(param: constructor{I1}) {}
 				e(param: {function(union{int, string}): int}): void {}
-				f(param: (intersection{I1<string, string, string>, I2}) => int) {}
+				f(param: (intersection{I1<string, string, string>, I2})=>int) {}
 			}
 			
 			function a(param: union{int, string}) {}
@@ -82,10 +82,10 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 			function c(param: type{I1}) {}
 			function d(param: constructor{I1}) {}
 			function e(param: {function(union{int, string}): int}) {}
-			function f(param: (union{int, string, intersection{number,int, string}, int}) => union{int, string, intersection{number,int, string}, int}): union{int, string, intersection{number,int, string}, int}{return 1;}
+			function f(param: (union{int, string, intersection{number,int, string}, int})=>union{int, string, intersection{number,int, string}, int}): union{int, string, intersection{number,int, string}, int}{return 1;}
 			function g(param: union{int, string, intersection{number,int, string}, int}): union{int, string, intersection{int, string, number}, int} { return 3; }
 			function g1(param: union{int, string, intersection{number,int, string},number}): union{int, string, intersection{int, string, number}, string} { return 3; }
-			function none(fct: () => void) {}
+			function none(fct: ()=>void) {}
 			export public var fct = 3;
 			export var c: constructor{? super OutlineTest}
 		'''
@@ -99,29 +99,29 @@ class N4JSOutlineWorkbenchPluginUITest extends AbstractOutlineWorkbenchTest {
 			"I1<T1, T2, T3>",
 			"I2",
 			"OutlineTest",
-			"a(union{int, string}): void",
-			"b(int, intersection{I1, I2}, number) <B>: void",
+			"a(int | string): void",
+			"b(int, I1<B,string | int,string> & I2, number)<B>: void",
 			"c(type{I1}): void",
 			"d(constructor{I1}): void",
-			"e((union{int, string}) => int): void",
-			"f((union{int, string, intersection{number, int, string},...}) => union{int, string, intersection{number, int, string},...}): union{int, string, intersection{number, int, string},...}",
-			"g(union{int, string, intersection{number, int, string},...}): union{int, string, intersection{int, string, number},...}",
-			"g1(union{int, string, intersection{number, int, string},...}): union{int, string, intersection{int, string, number},...}",
-			"none(() => void): void",
+			"e((int | string)=>int): void",
+			"f((int | string | (number & int & string) | …)=>int | string | (number & int & string) | …): int | string | (number & int & string) | …",
+			"g(int | string | (number & int & string) | …): int | string | (int & string & number) | …",
+			"g1(int | string | (number & int & string) | …): int | string | (int & string & number) | …",
+			"none(()=>void): void",
 			"fct: int",
 			"c: constructor{? super OutlineTest}"
 		]);
 
 		// test class level nodes
 		assertNodeChildrenText(documentNode.children.get(2), #[
-			"field: intersection{I1, I2}",
-			"fieldWithLongTypeDescription: union{int, intersection{int, union{int, string}}}",
-			"a(union{int, string}): void",
-			"b(intersection{I1, I2}): void",
+			"field: I1<int,int,int> & I2",
+			"fieldWithLongTypeDescription: int | (int & (int | string))",
+			"a(int | string): void",
+			"b(I1<int,int,int> & I2): void",
 			"c(type{I1}): void",
 			"d(constructor{I1}): void",
-			"e((union{int, string}) => int): void",
-			"f((intersection{I1, I2}) => int): void"
+			"e((int | string)=>int): void",
+			"f((I1<string,string,string> & I2)=>int): void"
 		])
 	}
 

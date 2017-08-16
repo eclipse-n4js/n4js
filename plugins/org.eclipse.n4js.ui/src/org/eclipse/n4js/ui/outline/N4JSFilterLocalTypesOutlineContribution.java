@@ -14,30 +14,23 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 
 /**
- * Code more or less copied from Xtend's {code ShowSyntheticMembersContribution} and adjusted to toggle inherited/owned
- * members view. Has to be bound in UI module.
+ * Filters out local (non-exported) types.
  */
-public class N4JSShowInheritedMembersOutlineContribution extends AbstractN4JSFilterOutlineContribution {
+public class N4JSFilterLocalTypesOutlineContribution extends AbstractN4JSFilterOutlineContribution {
 
 	/**
 	 * Preference key to store default mode.
 	 */
-	public static final String PREFERENCE_KEY = "ui.outline.showInherited";
+	public static final String PREFERENCE_KEY = "ui.outline.filterLocal";
 
 	@Override
 	protected boolean apply(IOutlineNode node) {
 		if (node instanceof N4JSEObjectNode) {
 			N4JSEObjectNode n4jseObjectNode = (N4JSEObjectNode) node;
-			return !n4jseObjectNode.isInherited;
+			if (!n4jseObjectNode.isMember) {
+				return !n4jseObjectNode.isLocal;
+			}
 		}
-		return true;
-	}
-
-	/**
-	 * Filter inherited members by default.
-	 */
-	@Override
-	public boolean filterByDefault() {
 		return true;
 	}
 
@@ -48,9 +41,9 @@ public class N4JSShowInheritedMembersOutlineContribution extends AbstractN4JSFil
 
 	@Override
 	protected void configureAction(Action action) {
-		action.setText("Show Inherited Members");
-		action.setDescription("Show Inherited Members");
-		action.setToolTipText("Show inherited, consumed, and polyfilled members");
-		action.setImageDescriptor(imageHelper.getImageDescriptor("inher_co.png"));
+		action.setText("Hide Local Types");
+		action.setDescription("Hide Local Types");
+		action.setToolTipText("Hide Local (not exported) types");
+		action.setImageDescriptor(imageHelper.getImageDescriptor("localtypes_co.png"));
 	}
 }
