@@ -22,12 +22,15 @@ import org.eclipse.xtext.serializer.analysis.SyntacticSequencerPDAProvider;
 import org.eclipse.xtext.util.formallang.Nfa;
 import org.eclipse.xtext.util.formallang.NfaToProduction;
 
+// TODO remove with Xtext 2.13
 /**
  * Patched {@link SyntacticSequencerPDAProvider} that yields a stable order of ambiguous syntaxes since the output is
  * sorted by occurrence in the grammar.
+ *
+ * This will become obsolete with Xtext 2.13.
  */
 @SuppressWarnings({ "restriction" })
-public class FixedSyntacticSequencerPDAProvider extends SyntacticSequencerPDAProvider {
+public class StableOrderSyntacticSequencerPDAProvider extends SyntacticSequencerPDAProvider {
 
 	/**
 	 * Patched transition.

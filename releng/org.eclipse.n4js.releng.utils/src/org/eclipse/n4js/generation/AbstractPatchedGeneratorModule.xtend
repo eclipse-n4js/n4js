@@ -16,8 +16,8 @@ import org.eclipse.n4js.antlr.N4JSAntlrGrammarGenerator
 import org.eclipse.xtext.xtext.generator.DefaultGeneratorModule
 import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrContentAssistGrammarGenerator
 import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenerator
-import org.eclipse.n4js.serializer.FixedSyntacticSequencerPDAProvider
 import org.eclipse.xtext.serializer.analysis.SyntacticSequencerPDAProvider
+import org.eclipse.n4js.serializer.StableOrderSyntacticSequencerPDAProvider
 
 /**
  * Abstract base module for the language generators 
@@ -33,7 +33,7 @@ abstract class AbstractPatchedGeneratorModule extends DefaultGeneratorModule {
 	}
 	
 	def configurePatchedSerializerGenerator(Binder binder) {
-		binder.bind(SyntacticSequencerPDAProvider).to(FixedSyntacticSequencerPDAProvider);
+		binder.bind(SyntacticSequencerPDAProvider).to(StableOrderSyntacticSequencerPDAProvider);
 	}
 	
 }
