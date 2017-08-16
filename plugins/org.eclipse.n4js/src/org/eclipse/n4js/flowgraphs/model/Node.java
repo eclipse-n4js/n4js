@@ -24,7 +24,7 @@ abstract public class Node implements ControlFlowable {
 	final public List<Node> internalSucc = new LinkedList<>();
 	final public int opPos;
 
-	private int nodePosition = -1;
+	private final int nodePosition = -1;
 
 	final public List<ControlFlowEdge> pred = new LinkedList<>();
 	final public List<ControlFlowEdge> succ = new LinkedList<>();
@@ -100,6 +100,8 @@ abstract public class Node implements ControlFlowable {
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
+		if (cfeElem == null)
+			return null; // can be missing when the AST is incomplete
 		return FactoryMapper.map(cfeElem);
 	}
 
@@ -121,28 +123,10 @@ abstract public class Node implements ControlFlowable {
 	public List<ControlFlowElement> getPredecessors() {
 		List<ControlFlowElement> succCFEs = new LinkedList<>();
 		for (ControlFlowEdge cfEdge : pred) {
-			List<ControlFlowElement> cfes = cfEdge.end.getCFEOrPreceeding();
+			List<ControlFlowElement> cfes = cfEdge.start.getCFEOrPreceeding();
 			succCFEs.addAll(cfes);
 		}
 		return succCFEs;
-	}
-
-	/**
-	 * Only works in PartialGraphs
-	 */
-	public int getNodePosition() {
-		if (nodePosition != -1)
-			return nodePosition;
-
-		nodePosition = getNodePositionRek();
-		return nodePosition;
-	}
-
-	private int getNodePositionRek() {
-		if (pred.isEmpty())
-			return 1;
-
-		return pred.get(0).start.getNodePosition();
 	}
 
 	@Override

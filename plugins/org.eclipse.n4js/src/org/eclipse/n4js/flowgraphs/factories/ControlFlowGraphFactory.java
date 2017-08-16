@@ -52,7 +52,7 @@ public class ControlFlowGraphFactory {
 			if (eObj instanceof ControlFlowElement) {
 				ControlFlowElement cfe = (ControlFlowElement) eObj;
 				cfe = FactoryMapper.map(cfe);
-				if (!cnMap.containsKey(cfe)) {
+				if (cfe != null && !cnMap.containsKey(cfe)) {
 					ComplexNode cn = FactoryDispatcher.build(cfe);
 					cnMap.put(cfe, cn);
 				}
@@ -72,9 +72,11 @@ public class ControlFlowGraphFactory {
 		Node internalStartNode = mNode;
 		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
 		if (subASTElem != null) {
-			ComplexNode subCN = cnMap.get(subASTElem);
-			EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
-			internalStartNode = subCN.getExit();
+			if (cnMap.containsKey(subASTElem)) { // can be missing when the AST is incomplete
+				ComplexNode subCN = cnMap.get(subASTElem);
+				EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
+				internalStartNode = subCN.getExit();
+			}
 		}
 
 		List<Node> internalSuccs = mNode.getInternalSuccessors();

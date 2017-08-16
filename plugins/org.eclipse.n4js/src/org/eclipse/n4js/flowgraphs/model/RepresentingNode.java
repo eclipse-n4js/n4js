@@ -10,10 +10,10 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.utils.collections.Collections2;
 
 /**
  *
@@ -30,12 +30,22 @@ public class RepresentingNode extends Node {
 
 	@Override
 	protected List<ControlFlowElement> getCFEOrSucceeding() {
-		return Collections2.newLinkedList(getControlFlowElement());
+		ControlFlowElement cfe = getControlFlowElement();
+		LinkedList<ControlFlowElement> cfeInAList = new LinkedList<>();
+		if (cfe != null) {
+			cfeInAList.add(cfe);
+		}
+		return cfeInAList;
 	}
 
 	@Override
 	protected List<ControlFlowElement> getCFEOrPreceeding() {
-		return Collections2.newLinkedList(getControlFlowElement());
+		ControlFlowElement cfe = getControlFlowElement();
+		LinkedList<ControlFlowElement> cfeInAList = new LinkedList<>();
+		if (cfe != null) {
+			cfeInAList.add(cfe);
+		}
+		return cfeInAList;
 	}
 
 	@Override

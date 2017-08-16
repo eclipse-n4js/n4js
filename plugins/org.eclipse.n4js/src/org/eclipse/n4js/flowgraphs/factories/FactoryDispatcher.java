@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IfStatement;
@@ -63,6 +64,10 @@ final public class FactoryDispatcher extends Dispatcher {
 
 	static ComplexNode _build(DoStatement feature) {
 		return DoWhileFactory.buildComplexNode(feature);
+	}
+
+	static ComplexNode _build(EmptyStatement feature) {
+		return EmptyStatementFactory.buildComplexNode(feature);
 	}
 
 	static ComplexNode _build(ForStatement feature) {
