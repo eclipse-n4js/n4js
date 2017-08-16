@@ -20,9 +20,9 @@ import org.junit.Test
 import org.eclipse.emf.common.util.URI
 
 /**
- * Test build / editor behavior with multiple files and cyclic deps
+ * Test builder / editor behavior with multiple files and cyclic dependencies.
  */
-class ResourceLoadingCyclicPluginUITest extends AbstractResourceLoadingTest {
+class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescriptionTest {
 	/*
 	 * X <- Y <- A <- B <- C <- D
 	 *           |              ^

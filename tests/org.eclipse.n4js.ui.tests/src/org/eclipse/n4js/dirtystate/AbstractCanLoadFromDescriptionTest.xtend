@@ -10,20 +10,21 @@
  */
 package org.eclipse.n4js.dirtystate
 
+import java.util.Set
 import org.eclipse.core.resources.IFile
+import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.concurrent.IUnitOfWork
-import java.util.Set
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.resource.N4JSResource
 
 /**
- * Base utility for 
+ * Base class for testing logic in {@link CanLoadFromDescriptionHelper}.
  */
-abstract class AbstractResourceLoadingTest extends AbstractBuilderParticipantTest {
+abstract class AbstractCanLoadFromDescriptionTest extends AbstractBuilderParticipantTest {
 
 	def protected IFile getOutputFileForTestFile(IFile file) {
 		val name = file.name;

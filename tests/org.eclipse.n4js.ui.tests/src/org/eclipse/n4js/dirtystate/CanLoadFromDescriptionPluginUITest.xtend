@@ -23,7 +23,7 @@ import org.junit.Test
 /**
  * 
  */
-class CanLoadFromDescriptionPluginUITest extends AbstractResourceLoadingTest {
+class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionTest {
 	/*
 	 * A1 -> B1 -> C -> D
 	 * |           ^
