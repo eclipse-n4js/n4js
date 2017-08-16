@@ -18,7 +18,6 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
-import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.AbstractEObjectDescription;
@@ -165,7 +164,6 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			}
 			final boolean mustLoadFromSource = canLoadFromDescriptionHelper.mustLoadFromSource(resourceURI,
 					resourceSet);
-			UtilN4.tlog(resourceURI + ".mustLoadFromSource = " + mustLoadFromSource);
 			resource = resourceSet.getResource(resourceURI, mustLoadFromSource);
 			if (resource != null && resource.isLoaded()) {
 				return original;
