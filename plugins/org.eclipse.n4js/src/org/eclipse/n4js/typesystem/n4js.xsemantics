@@ -174,6 +174,7 @@ import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructuralType
@@ -197,7 +198,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.naming.IQualifiedNameConverter
 
 import static org.eclipse.n4js.typesystem.TypeSystemErrorExtensions.PRIORITY_ERROR
 
@@ -217,6 +220,7 @@ inject JavaScriptVariantHelper jsVariantHelper
 inject VersionResolver versionResolver
 inject UnsupportedExpressionTypeHelper expressionTypeHelper
 inject ASTMetaInfoCacheHelper astMetaInfoCacheHelper
+inject IQualifiedNameConverter qualifiedNameConverter
 
 judgments {
 
@@ -694,10 +698,13 @@ from {
 			// indexing via constant computed-name, sub-cases: static or instance member, for the latter nominally-typed or structurally-typed receiver
 			val staticAccess = (targetTypeRef instanceof TypeTypeRef)
 			val checkVisibility = false // access modifiers checked in validation
-			val scope = memberScopingHelper.createMemberScopeFor(targetTypeRef, expr, checkVisibility, staticAccess)
-			val member = memberScopingHelper.findUniqueMemberForName(scope, memberName, staticAccess)
-			if(member !== null) {
-				G |- member : var TypeRef memberTypeRef
+			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess)
+			val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+			val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) {
+				memberDesc.getEObjectOrProxy()
+			};
+			if(member instanceof TMember && !member.eIsProxy) {
+				G |- (member as TMember) : var TypeRef memberTypeRef
 				val G2 = G.wrap
 				typeSystemHelper.addSubstitutions(G2,targetTypeRef)
 				G2.addThisType(targetTypeRef)
@@ -2360,7 +2367,7 @@ rule upperBoundUnionTypeExpression
 from {
 	T = TypeUtils.createNonSimplifiedUnionType(
 		U.typeRefs.map[var TypeRef E; G|~ it /\ E; E]
-	) => [ originalComposedTypeRef = U ]
+	)
 	TypeUtils.copyTypeModifiers(T,U)
 }
 
@@ -2370,7 +2377,7 @@ rule upperBoundIntersectionTypeExpression
 from {
 	T = TypeUtils.createNonSimplifiedIntersectionType(
 		I.typeRefs.map[var TypeRef E; G|~ it /\ E; E]
-	) => [ originalComposedTypeRef = I ]
+	)
 	TypeUtils.copyTypeModifiers(T,I)
 }
 
@@ -2589,8 +2596,6 @@ from {
 	}
 	if(haveReplacement) {
 		result = TypeUtils.copy(typeRef);
-		result.composedMemberCache = null;
-		result.originalComposedTypeRef = typeRef;
 		result.typeRefs.clear();
 		result.typeRefs.addAll(TypeUtils.copyAll(substTypeRefs));
 	}
