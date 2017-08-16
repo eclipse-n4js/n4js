@@ -139,6 +139,17 @@ public class GraphUtils {
 		return pp;
 	}
 
+	public static float[] arcReversed(GC gc, Point src, Point tgt) {
+		Path path = new Path(gc.getDevice());
+		int ydiff = (int) ((tgt.y - src.y) / 3);
+		path.moveTo((int) src.x, (int) src.y);
+		path.cubicTo((int) src.x, (int) src.y + ydiff, (int) tgt.x, (int) tgt.y - ydiff * 2, (int) tgt.x, (int) tgt.y);
+		gc.drawPath(path);
+
+		float[] pp = path.getPathData().points;
+		return pp;
+	}
+
 	public static Point pointOnRect(float x, float y, float minX, float minY, float maxX, float maxY) {
 		// assert minX <= maxX;
 		// assert minY <= maxY;

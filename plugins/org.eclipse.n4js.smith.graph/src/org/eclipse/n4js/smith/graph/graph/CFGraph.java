@@ -35,11 +35,11 @@ import org.eclipse.xtext.util.ITextRegion;
  * for layout, see method {@link #layout(GC)}.
  */
 public class CFGraph extends Graph<CFGraphProvider> {
-	ILocationInFileProvider locFileProvider;
-	XtextEditor editor;
-	StyledText styledText;
-
-	NavigableMap<ControlFlowElement, Node> nodeMap = new TreeMap<>(new CFEComparator());
+	final ILocationInFileProvider locFileProvider;
+	final XtextEditor editor;
+	final StyledText styledText;
+	final NavigableMap<ControlFlowElement, Node> nodeMap = new TreeMap<>(new CFEComparator());
+	CFGraphProvider gProvider;
 
 	/**
 	 *
@@ -53,13 +53,16 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	@Override
 	public void build(CFGraphProvider provider, Object input) {
 		clear();
-		Collection<ControlFlowElement> cfes = provider.getElements(input);
+		nodeMap.clear();
+		gProvider = provider;
+
+		Collection<ControlFlowElement> cfes = gProvider.getElements(input);
 		for (ControlFlowElement cfe : cfes) {
-			Node node = provider.getNode(cfe);
+			Node node = gProvider.getNode(cfe);
 			nodes.add(node);
 			nodeMap.put(cfe, node);
 
-			List<Edge> succs = provider.getConnectedEdges(node, null);
+			List<Edge> succs = gProvider.getConnectedEdges(node, null);
 			edges.addAll(succs);
 		}
 	}
@@ -98,13 +101,28 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	private class CFEComparator implements Comparator<ControlFlowElement> {
 		@Override
 		public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-			ITextRegion tr1 = locFileProvider.getSignificantTextRegion(cfe1);
-			ITextRegion tr2 = locFileProvider.getSignificantTextRegion(cfe2);
-			int offset = tr1.getOffset() - tr2.getOffset();
+			int line1 = getLine(cfe1);
+			int line2 = getLine(cfe2);
+			int offset = line1 - line2;
+
 			if (offset == 0) {
-				offset = tr1.getLength() - tr2.getLength();
+				boolean cfe1IsFirst = gProvider.isTransitiveSuccessor(cfe1, cfe2);
+				if (cfe1IsFirst)
+					return -1;
+
+				boolean cfe2IsFirst = gProvider.isTransitiveSuccessor(cfe2, cfe1);
+				if (cfe2IsFirst)
+					return 1;
+
+				ControlFlowElement commonSucc = gProvider.getCommonPredecessor(cfe1, cfe2);
+				String path1 = gProvider.getPathIdentifier(commonSucc, cfe1);
+				String path2 = gProvider.getPathIdentifier(commonSucc, cfe2);
+
+				return path1.compareTo(path2);
 			}
+
 			return offset;
 		}
 	}
+
 }

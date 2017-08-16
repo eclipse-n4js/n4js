@@ -59,34 +59,57 @@ public class CFEdge extends Edge {
 
 		Point src = srcN.getCenter();
 		Point tgt = tgtN.getCenter();
-		Point ctr = getArcControlPoint(src, tgt);
-
-		Point srcB = GraphUtils.pointOnRect(ctr.x, ctr.y, srcN.x - 2, srcN.y - 2, srcN.x + srcN.width + 1,
-				srcN.y + srcN.height + 1);
-		Point tgtB = GraphUtils.pointOnRect(ctr.x, ctr.y, tgtN.x - 2, tgtN.y - 2, tgtN.x + tgtN.width + 1,
-				tgtN.y + tgtN.height + 1);
-
-		GraphUtils.arc(gc, ctr, srcB, tgtB);
+		Point tgtB;
+		if (isReverseArc(src, tgt)) {
+			tgtB = paintReverseArc(gc, srcN, tgtN, src, tgt);
+		} else {
+			tgtB = paintArc(gc, srcN, tgtN, src, tgt);
+		}
 
 		drawArrowHead(gc, tgt, tgtB);
 	}
 
+	private Point paintArc(GC gc, Node srcN, Node tgtN, Point src, Point tgt) {
+		Point srcB, tgtB;
+		Point ctr = getArcControlPoint(src, tgt);
+
+		tgtB = GraphUtils.pointOnRect(ctr.x, ctr.y, tgtN.x - 2, tgtN.y - 2, tgtN.x + tgtN.width + 1,
+				tgtN.y + tgtN.height + 1);
+
+		srcB = GraphUtils.pointOnRect(ctr.x, ctr.y, srcN.x - 2, srcN.y - 2, srcN.x + srcN.width + 1,
+				srcN.y + srcN.height + 1);
+
+		GraphUtils.arc(gc, ctr, srcB, tgtB);
+		return tgtB;
+	}
+
+	private Point paintReverseArc(GC gc, Node srcN, Node tgtN, Point src, Point tgt) {
+		Point tgtB = new Point(tgt.x, tgt.y - tgtN.height / 2 - 2);
+		Point srcB = new Point(src.x, src.y + srcN.height / 2 + 1);
+		GraphUtils.arcReversed(gc, srcB, tgtB);
+		return tgtB;
+	}
+
 	/**
 	 * Given there is a connecting line from src to tgt, this method returns a point ctr that lies between src and tgt
-	 * points, moved perpendicular away from that connecting line to the left the side. If the flipping mode is active,
-	 * the point ctr will be moved to the right side.
+	 * points, moved perpendicular away from that connecting line to the left the side. If it is a reverse edge, the
+	 * point ctr will be moved to the right side.
 	 */
 	private Point getArcControlPoint(Point src, Point tgt) {
-		// when flipped, the control point is on the other side of the edge,
+		// when reversed, the control point is on the other side of the edge,
 		// so that the arc will bow counter clock wise
-		boolean flip = src.x > tgt.x && src.y < tgt.y;
-		float flipper = flip ? -1 : 1;
+		float reverser = isReverseArc(src, tgt) ? -1 : 1;
 		float diffX = (src.x - tgt.x) / 2;
 		float diffY = (src.y - tgt.y) / 2;
-		float ctrX = src.x - diffX - flipper * diffY / 2;
-		float ctrY = src.y - diffY + flipper * diffX / 2;
+		float ctrX = src.x - diffX - reverser * diffY / 2;
+		float ctrY = src.y - diffY + reverser * diffX / 2;
 		Point ctr = new Point(ctrX, ctrY);
 		return ctr;
+	}
+
+	private boolean isReverseArc(Point src, Point tgt) {
+		boolean isReverse = src.x > tgt.x && src.y < tgt.y;
+		return isReverse;
 	}
 
 	private void drawArrowHead(GC gc, Point tgt, Point tgtB) {

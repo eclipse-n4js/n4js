@@ -56,6 +56,27 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return edgesMap.get(cfe);
 	}
 
+	/**
+	 * see {@link N4JSFlowAnalyses#isTransitiveSuccessor(ControlFlowElement, ControlFlowElement)}
+	 */
+	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
+		return flowAnalyses.isTransitiveSuccessor(cfeFrom, cfeTo);
+	}
+
+	/**
+	 * see {@link N4JSFlowAnalyses#getCommonPredecessor(ControlFlowElement, ControlFlowElement)}
+	 */
+	public ControlFlowElement getCommonPredecessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+		return flowAnalyses.getCommonPredecessor(cfe1, cfe2);
+	}
+
+	/**
+	 * see {@link N4JSFlowAnalyses#getPathIdentifier(ControlFlowElement, ControlFlowElement)}
+	 */
+	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
+		return flowAnalyses.getPathIdentifier(cfeFrom, cfeTo);
+	}
+
 	private void init(Object input) {
 		nodeMap.clear();
 		performFlowAnalyses(input);
@@ -108,4 +129,5 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		String text = NodeModelUtils.getTokenText(actualNode);
 		return text;
 	}
+
 }
