@@ -104,21 +104,42 @@ public class ProductLauncher {
 		} finally {
 			log("finally");
 
-			log("working area exists : " + osgiConfigurationArea.toFile().exists());
-			FileDeleter.delete(osgiConfigurationArea);
-			log("working area exists : " + osgiConfigurationArea.toFile().exists());
+			String errors = "";
 
-			if (ThreadsUtil.getIdentifiedThredsCount(EQUINOX_THREAD_DESCRIPTION_TOKEN) > 0) {
-				log("There are still platform threads running:\n"
+			cleanupWorkArea(osgiConfigurationArea);
+			if (osgiConfigurationArea.toFile().exists())
+				errors += ("ERROR: Cannot cleanup working area : " + osgiConfigurationArea.toString() + "\n");
+
+			cleanupThreads();
+			if (ThreadsUtil.getIdentifiedThredsCount(EQUINOX_THREAD_DESCRIPTION_TOKEN) > 0)
+				errors += ("ERROR: There are still platform threads running:\n"
 						+ ThreadsUtil.getThreadsInfo(EQUINOX_THREAD_DESCRIPTION_TOKEN));
+
+			if (!errors.isEmpty())
+				System.err.println(errors);
+		}
+	}
+
+	private static void cleanupThreads() {
+		if (ThreadsUtil.getIdentifiedThredsCount(EQUINOX_THREAD_DESCRIPTION_TOKEN) > 0) {
+			log("There are still platform threads running:\n"
+					+ ThreadsUtil.getThreadsInfo(EQUINOX_THREAD_DESCRIPTION_TOKEN));
+			try {
 				shutdownPlatform();
-				if (ThreadsUtil.getIdentifiedThredsCount(EQUINOX_THREAD_DESCRIPTION_TOKEN) > 0) {
-					log("Failed to cleanup platform threads.");
-					log(ThreadsUtil.getThreadsInfo(EQUINOX_THREAD_DESCRIPTION_TOKEN));
-				}
+			} catch (Exception e) {
+				// log error
+				e.printStackTrace();
 			}
 		}
+	}
 
+	private static void cleanupWorkArea(Path path) {
+		log("working area exists : " + path.toFile().exists());
+		try {
+			FileDeleter.delete(path);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
