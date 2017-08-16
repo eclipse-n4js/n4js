@@ -11,6 +11,11 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import java.util.LinkedHashMap
+import java.util.List
+import java.util.Map
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -31,9 +36,9 @@ import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.UnaryExpression
-import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
@@ -41,31 +46,19 @@ import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
-import org.eclipse.n4js.ts.types.TModule
-import java.util.LinkedHashMap
-import java.util.List
-import java.util.Map
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtend.lib.annotations.Data
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
-
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 
 /**
  * Module/Script wrapping transformation.
- *
- * <p>Learned from this transformation
- * <ol>
- * <li>Accessible meta-information for System-JS internals are required. (See <code>ModuleWrappingTransformation#symbolFor_System()<code>)
- * </ol>
  */
 @ExcludesAfter(/* if present, must come before: */ DestructuringTransformation)
 class ModuleWrappingTransformation extends Transformation {
@@ -143,7 +136,7 @@ class ModuleWrappingTransformation extends Transformation {
 		// new Element system.
 		val call_System_dot_register_Expr = _CallExpr => [
 			target = _PropertyAccessExpr => [
-			  	target =  _IdentRef(steFor_System)
+				target =  _IdentRef(steFor_System)
 				property_IM = steFor_register
 			]; // "System.register"
 			arguments += _Argument(_ArrLit => [
@@ -169,7 +162,7 @@ class ModuleWrappingTransformation extends Transformation {
 						_ObjLit(
 							_PropertyNameValuePair("setters",
 								_ArrLit(
-								    importSetterMap.values.map[ importFE(it) ].map[ it._ArrayElement ]
+									importSetterMap.values.map[ importFE(it) ].map[ it._ArrayElement ]
 								)
 							),
 							_PropertyNameValuePair("execute",
@@ -612,7 +605,7 @@ class ModuleWrappingTransformation extends Transformation {
 		}
 	}
 
-	def static boolean isAppendableStatement(EObject container) {
+	def private static boolean isAppendableStatement(EObject container) {
 		return container instanceof Statement
 				&& !(container instanceof ReturnStatement )
 				&& !(container instanceof ThrowStatement);
@@ -687,7 +680,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 * Note: the code which will be wrapped usually is a non-stand-alone JS-snippet already referring to the parameters {@code require},
 	 * {@code exports} and {@code module} which are hereby introduced as formal parameters.
 	 */
-	public static def wrapPlainJSCode(CharSequence cs) {
+	def public static CharSequence wrapPlainJSCode(CharSequence cs) {
 		'''
 		(function(System) {
 			System.registerDynamic([], true, function(require, exports, module) {
@@ -698,7 +691,7 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 	/** patch the statement with commonJS-support */
-	def Statement doWrapInCJSpatch(ExpressionStatement statement) {
+	def private Statement doWrapInCJSpatch(ExpressionStatement statement) {
 
 		// (function(System) {
 		//     < ... statement ...>
