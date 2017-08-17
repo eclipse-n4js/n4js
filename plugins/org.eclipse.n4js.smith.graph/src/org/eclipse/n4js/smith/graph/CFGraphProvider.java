@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -32,6 +33,8 @@ import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 /**
+ * The graph provider creates {@link Node}s and {@link CFEdge}s for a given {@link Script}. Moreover, it provides some
+ * calls to the {@link N4JSFlowAnalyses} API by delegating to it.
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
 	N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
@@ -77,13 +80,14 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return flowAnalyses.getPathIdentifier(cfeFrom, cfeTo);
 	}
 
+	/** Triggers a control flow analyses and initialized the two maps {@link #nodeMap} and {@link #edgesMap}. */
 	private void init(Object input) {
 		nodeMap.clear();
 		performFlowAnalyses(input);
 
 		Collection<ControlFlowElement> allCFEs = flowAnalyses.getAllElements();
 		for (ControlFlowElement cfe : allCFEs) {
-			String label = getText(cfe);
+			String label = getTextLabel(cfe);
 			Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
 			nodeMap.put(cfe, node);
 		}
@@ -104,11 +108,16 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 	}
 
+	/** Finds a script for the given input and then triggers a control flow analyses. */
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
+		Objects.nonNull(script);
 		flowAnalyses.perform(script);
 	}
 
+	/**
+	 * Searches the script node in the given input.
+	 */
 	private Script findScript(Object input) {
 		if (input instanceof ResourceSet) {
 			ResourceSet rs = (ResourceSet) input;
@@ -124,7 +133,10 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return null;
 	}
 
-	private String getText(EObject eo) {
+	/**
+	 * @returns label text that is the actual text from the source code
+	 */
+	private String getTextLabel(EObject eo) {
 		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
 		String text = NodeModelUtils.getTokenText(actualNode);
 		return text;

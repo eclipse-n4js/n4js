@@ -129,6 +129,7 @@ public class GraphUtils {
 		}
 	}
 
+	/** Paints an arc from src to tgt using the given control point ctr. */
 	public static float[] arc(GC gc, Point ctr, Point src, Point tgt) {
 		Path path = new Path(gc.getDevice());
 		path.moveTo((int) src.x, (int) src.y);
@@ -139,6 +140,11 @@ public class GraphUtils {
 		return pp;
 	}
 
+	/**
+	 * Paints an arc from src to tgt.
+	 * <p/>
+	 * <b>Assumption:</b> The tgt is located below the src.
+	 */
 	public static float[] arcReversed(GC gc, Point src, Point tgt) {
 		Path path = new Path(gc.getDevice());
 		int ydiff = (int) ((tgt.y - src.y) / 3);
@@ -150,44 +156,49 @@ public class GraphUtils {
 		return pp;
 	}
 
-	public static Point pointOnRect(float x, float y, float minX, float minY, float maxX, float maxY) {
-		// assert minX <= maxX;
-		// assert minY <= maxY;
-		if ((minX < x && x < maxX) && (minY < y && y < maxY))
+	/**
+	 * For a given point p and a given rectangle r (minX,minY,maxX,maxY), the intersection point i of p with the
+	 * rectangle is calculated. In case p lies within r, <code>null</code> is returned.
+	 */
+	public static Point pointOnRect(Point p, Rectangle rect) {
+		float minX = rect.x;
+		float minY = rect.y;
+		float maxX = rect.x + rect.width;
+		float maxY = rect.y + rect.height;
+
+		if ((minX < p.x && p.x < maxX) && (minY < p.y && p.y < maxY))
 			return null;
 
 		float midX = (minX + maxX) / 2;
 		float midY = (minY + maxY) / 2;
-		// if (midX - x == 0) -> m == ±Inf -> minYx/maxYx == x (because value / ±Inf = ±0)
-		float m = (midY - y) / (midX - x);
+		float m = (midY - p.y) / (midX - p.x);
 
-		if (x <= midX) { // check "left" side
-			float minXy = m * (minX - x) + y;
+		if (p.x <= midX) { // left
+			float minXy = m * (minX - p.x) + p.y;
 			if (minY <= minXy && minXy <= maxY)
 				return new Point(minX, minXy);
 		}
 
-		if (x >= midX) { // check "right" side
-			float maxXy = m * (maxX - x) + y;
+		if (p.x >= midX) { // right
+			float maxXy = m * (maxX - p.x) + p.y;
 			if (minY <= maxXy && maxXy <= maxY)
 				return new Point(maxX, maxXy);
 		}
 
-		if (y <= midY) { // check "top" side
-			float minYx = (minY - y) / m + x;
+		if (p.y <= midY) { // top
+			float minYx = (minY - p.y) / m + p.x;
 			if (minX <= minYx && minYx <= maxX)
 				return new Point(minYx, minY);
 		}
 
-		if (y >= midY) { // check "bottom" side
-			float maxYx = (maxY - y) / m + x;
+		if (p.y >= midY) { // bottom
+			float maxYx = (maxY - p.y) / m + p.x;
 			if (minX <= maxYx && maxYx <= maxX)
 				return new Point(maxYx, maxY);
 		}
 
-		// edge case when finding midpoint intersection: m = 0/0 = NaN
-		if (x == midX && y == midY)
-			return new Point(x, y);
+		if (p.x == midX && p.y == midY)
+			return new Point(p.x, p.y);
 
 		return null;
 	}

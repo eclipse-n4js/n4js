@@ -17,25 +17,14 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 
 /**
- * An edge represents an n:m association in the graph.
- * <p>
- * An edge may have an optional <b>label</b>.
- * <p>
- * It may have 1 or more <b>start</b> nodes, 0 or more <b>end</b> nodes, and 0 or more so-called <b>external end</b>
- * nodes. External end nodes are nodes outside the current graph that are represented by a label string only and will
- * only be shown to the user under certain circumstances.
- * <p>
- * An edge is always <b>directed</b> from the start nodes to the end nodes and thus arrow heads will be drawn at the end
- * of the lines pointing to the end nodes. To realize an undirected association, simply create an Edge having only start
- * nodes.
- * <p>
- * Edges can be flagged as <b>cross-link</b> edges. Such edges are to be ignored by layout algorithms, will be drawn in
- * a different style, and will be presented to the user only under certain circumstances (e.g. if a node is hovered /
- * selected or if drawing of all cross-links is turned on).
+ * Control flow edges are 1:1 associations in the control flow graph. They are displayed using arcs to prevent that two
+ * edges lie on top of each other. Edges that point to the lower left are called <i>reverse arc</i> and displayed
+ * differently to improve to visual appearance w.r.t. crossings of other edges.
  */
 public class CFEdge extends Edge {
 
 	/**
+	 * Constructor
 	 */
 	public CFEdge(String label, Node startNode, Collection<? extends Node> endNodes) {
 		super(label, false, startNode, endNodes, Collections.emptyList());
@@ -48,11 +37,14 @@ public class CFEdge extends Edge {
 	public void paint(GC gc) {
 		Node start = startNodes.get(0);
 		for (Node endNode : endNodes) {
-			paintEdgeLine(gc, start, endNode);
+			paintEdge(gc, start, endNode);
 		}
 	}
 
-	void paintEdgeLine(GC gc, Node srcN, Node tgtN) {
+	/**
+	 * Paints an edge
+	 */
+	void paintEdge(GC gc, Node srcN, Node tgtN) {
 		Color c = GraphUtils.getColor(50, 50, 50);
 		gc.setForeground(c);
 		gc.setBackground(c);
@@ -69,20 +61,36 @@ public class CFEdge extends Edge {
 		drawArrowHead(gc, tgt, tgtB);
 	}
 
+	/**
+	 * Paints an arc for arbitrary, non-reverse edges starting at S and targeting T. The arc uses an control point C to
+	 * set the arc's bow direction. The control point is located at the half length of the line that connects S to T,
+	 * but shifted perpendicular to the left, like shown below:
+	 *
+	 * <pre>
+	 *       o C
+	 *       |
+	 *  o-------->o
+	 *  S         T
+	 * </pre>
+	 */
 	private Point paintArc(GC gc, Node srcN, Node tgtN, Point src, Point tgt) {
 		Point srcB, tgtB;
 		Point ctr = getArcControlPoint(src, tgt);
 
-		tgtB = GraphUtils.pointOnRect(ctr.x, ctr.y, tgtN.x - 2, tgtN.y - 2, tgtN.x + tgtN.width + 1,
-				tgtN.y + tgtN.height + 1);
+		Rectangle tgtR = new Rectangle(tgtN.x - 2, tgtN.y - 2, tgtN.width + 1, tgtN.height + 1);
+		tgtB = GraphUtils.pointOnRect(ctr, tgtR);
 
-		srcB = GraphUtils.pointOnRect(ctr.x, ctr.y, srcN.x - 2, srcN.y - 2, srcN.x + srcN.width + 1,
-				srcN.y + srcN.height + 1);
+		Rectangle srcR = new Rectangle(srcN.x - 2, srcN.y - 2, srcN.width + 1, srcN.height + 1);
+		srcB = GraphUtils.pointOnRect(ctr, srcR);
 
 		GraphUtils.arc(gc, ctr, srcB, tgtB);
 		return tgtB;
 	}
 
+	/**
+	 * Paints the reverse arc. Since reverse arcs always point downwards, the start and end points are simply located at
+	 * the lower/upper center of the source/target nodes.
+	 */
 	private Point paintReverseArc(GC gc, Node srcN, Node tgtN, Point src, Point tgt) {
 		Point tgtB = new Point(tgt.x, tgt.y - tgtN.height / 2 - 2);
 		Point srcB = new Point(src.x, src.y + srcN.height / 2 + 1);
@@ -107,15 +115,23 @@ public class CFEdge extends Edge {
 		return ctr;
 	}
 
+	/**
+	 * returns true iff the edge points to the lower left
+	 */
 	private boolean isReverseArc(Point src, Point tgt) {
 		boolean isReverse = src.x > tgt.x && src.y < tgt.y;
 		return isReverse;
 	}
 
+	/**
+	 * Draws the head of an arrow, that is two lines each starting at the target point of the edge. Depending on the
+	 * direction of the edge, the arrow head lines are calculated. Also, the arrow head lines have always a length of 7
+	 * pixel.
+	 */
 	private void drawArrowHead(GC gc, Point tgt, Point tgtB) {
+		// Based on the edge direction, the arrow line end points are calculated
 		float xx = (tgt.x - tgtB.x) / 2;
 		float yy = (tgt.y - tgtB.y) / 2;
-
 		float p1x = -yy - xx;
 		float p1y = +xx - yy;
 		float p2x = +yy - xx;
