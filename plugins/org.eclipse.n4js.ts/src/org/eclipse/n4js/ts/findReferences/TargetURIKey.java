@@ -63,7 +63,7 @@ public class TargetURIKey {
 			this.qualifiedNameProvider = qualifiedNameProvider;
 			this.valueStrings = Sets.newHashSet();
 			this.applicableTypes = Sets.newHashSet();
-			this.typesOrModulesToFind = Sets.newHashSet();
+			this.typesOrModulesToFind = Sets.newTreeSet();
 		}
 
 		/**

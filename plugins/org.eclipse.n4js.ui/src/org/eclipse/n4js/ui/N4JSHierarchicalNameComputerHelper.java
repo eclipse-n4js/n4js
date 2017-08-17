@@ -17,6 +17,9 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * This class provides helper methods for calculating hierarchical names of AST nodes.
@@ -59,7 +62,8 @@ public class N4JSHierarchicalNameComputerHelper {
 	public static boolean isShowable(EObject eobj) {
 		return eobj instanceof N4MemberDeclaration || eobj instanceof N4ClassifierDefinition
 				|| eobj instanceof FunctionDeclaration || eobj instanceof ExportedVariableDeclaration
-				|| eobj instanceof Script;
+				|| eobj instanceof Script || eobj instanceof TMember || eobj instanceof TClassifier
+				|| eobj instanceof TModule;
 	}
 
 }

@@ -25,13 +25,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.util.IAcceptor;
 
@@ -49,8 +46,6 @@ public class N4JSCrossReferenceComputer {
 
 	@Inject
 	private N4JSExternalReferenceChecker externalReferenceChecker;
-	@Inject
-	private TypeHelper th;
 
 	/**
 	 * Collects all Types, TVariables, TLiterals and IdentifiableElements that are directly referenced somewhere in the
@@ -86,7 +81,7 @@ public class N4JSCrossReferenceComputer {
 		EList<EReference> references = from.eClass().getEAllReferences();
 		for (EReference eReference : references) {
 			// We only follow cross references
-			if (!eReference.isContainment()) {
+			if (!eReference.isContainment() && !eReference.isContainer()) {
 				// Ignore references between AST element and its defined type and vice versa
 				if (eReference != N4JSPackage.Literals.TYPE_DEFINING_ELEMENT__DEFINED_TYPE
 						&& eReference != TypesPackage.Literals.SYNTAX_RELATED_TELEMENT__AST_ELEMENT) {
@@ -101,11 +96,7 @@ public class N4JSCrossReferenceComputer {
 							BasicEList<EObject> list = (BasicEList<EObject>) val;
 							// Since the cross type computer is called very frequently, we want to optimize *many*
 							// cases
-							if (TypeRefsPackage.Literals.TYPE_REF.isSuperTypeOf(eReference.getEReferenceType())) {
-								for (EObject to : list) {
-									handleTypeRef(resource, from, acceptor, (TypeRef) to);
-								}
-							} else if (TypesPackage.Literals.TYPE.isSuperTypeOf(eReference.getEReferenceType())) {
+							if (TypesPackage.Literals.TYPE.isSuperTypeOf(eReference.getEReferenceType())) {
 								for (EObject to : list) {
 									handleType(resource, from, acceptor, (Type) to);
 								}
@@ -134,9 +125,7 @@ public class N4JSCrossReferenceComputer {
 	 */
 	private void handleReferenceObject(Resource resource, EObject from,
 			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor, EObject to) {
-		if (to instanceof TypeRef) {
-			handleTypeRef(resource, from, acceptor, (TypeRef) to);
-		} else if (to instanceof Type) {
+		if (to instanceof Type) {
 			handleType(resource, from, acceptor, (Type) to);
 		} else if (to instanceof TMember) {
 			// Special handling of TMember because it can be a composed member
@@ -157,19 +146,6 @@ public class N4JSCrossReferenceComputer {
 		} else {
 			// Standard case
 			handleIdentifiableElement(resource, from, acceptor, Collections.singletonList(to));
-		}
-	}
-
-	/*
-	 * Extract declared type for the given type ref.
-	 */
-	private void handleTypeRef(Resource resource, EObject from,
-			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
-			TypeRef to) {
-		if (to != null) {
-			List<Type> toTypes = th.extractType(to);
-			for (Type toType : toTypes)
-				handleType(resource, from, acceptor, toType);
 		}
 	}
 

@@ -786,6 +786,15 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getComposedMemberCache_ComposedTypeRef() {
+		return (EReference)composedMemberCacheEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTypableElement() {
 		return typableElementEClass;
 	}
@@ -3054,6 +3063,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		composedMemberCacheEClass = createEClass(COMPOSED_MEMBER_CACHE);
 		createEReference(composedMemberCacheEClass, COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS);
+		createEReference(composedMemberCacheEClass, COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF);
 
 		typableElementEClass = createEClass(TYPABLE_ELEMENT);
 
@@ -3509,6 +3519,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(composedMemberCacheEClass, ComposedMemberCache.class, "ComposedMemberCache", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getComposedMemberCache_CachedComposedMembers(), this.getTMember(), null, "cachedComposedMembers", null, 0, -1, ComposedMemberCache.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComposedMemberCache_ComposedTypeRef(), theTypeRefsPackage.getTypeRef(), null, "composedTypeRef", null, 0, 1, ComposedMemberCache.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typableElementEClass, TypableElement.class, "TypableElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

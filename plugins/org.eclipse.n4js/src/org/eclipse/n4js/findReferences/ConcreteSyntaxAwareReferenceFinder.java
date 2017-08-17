@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.findReferences;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -70,16 +72,43 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 			return;
 		}
 		Iterable<QualifiedName> importedNames = resourceDescription.getImportedNames();
-		for (QualifiedName importedName : importedNames) {
-			if (typesOrModulesToFind.contains(importedName)) {
-				resourceAccess.readOnly(
-						resourceDescription.getURI(),
-						(resourceSet) -> {
-							findReferences(targetURIs, resourceSet.getResource(resourceDescription.getURI(), true),
-									acceptor, monitor);
-							return null;
-						});
-				return;
+		// scenario 1: imported names from index
+		// TODO check if imported names from editors are returned as a set?
+		// maybe we need another check for instanceof SortedSet<?>
+		if (importedNames instanceof List<?>) {
+			List<QualifiedName> sorted = (List<QualifiedName>) importedNames;
+			List<QualifiedName> searchMe = sorted;
+			for (QualifiedName typeOrModuleToFind : typesOrModulesToFind) {
+				int insertionIndex = Collections.binarySearch(searchMe, typeOrModuleToFind);
+				if (insertionIndex >= 0) {
+					resourceAccess.readOnly(
+							resourceDescription.getURI(),
+							(resourceSet) -> {
+								findReferences(targetURIs, resourceSet.getResource(resourceDescription.getURI(), true),
+										acceptor, monitor);
+								return null;
+							});
+					return;
+				} else {
+					int startFrom = -(insertionIndex + 1);
+					if (startFrom >= sorted.size()) {
+						return;
+					}
+					searchMe = sorted.subList(startFrom, sorted.size());
+				}
+			}
+		} else {
+			for (QualifiedName importedName : importedNames) {
+				if (typesOrModulesToFind.contains(importedName)) {
+					resourceAccess.readOnly(
+							resourceDescription.getURI(),
+							(resourceSet) -> {
+								findReferences(targetURIs, resourceSet.getResource(resourceDescription.getURI(), true),
+										acceptor, monitor);
+								return null;
+							});
+					return;
+				}
 			}
 		}
 	}

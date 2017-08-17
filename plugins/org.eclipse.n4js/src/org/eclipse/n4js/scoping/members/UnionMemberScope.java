@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.utils.TypeCompareHelper;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -30,8 +31,8 @@ public class UnionMemberScope extends ComposedMemberScope {
 	 * Constructor
 	 */
 	public UnionMemberScope(ComposedTypeRef composedTypeRef, MemberScopeRequest request, List<IScope> subScopes,
-			N4JSTypeSystem ts) {
-		super(composedTypeRef, request, subScopes, ts);
+			N4JSTypeSystem ts, TypeCompareHelper typeCompareHelper) {
+		super(composedTypeRef, request, subScopes, ts, typeCompareHelper);
 	}
 
 	@Override

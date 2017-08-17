@@ -55,6 +55,7 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
+import org.eclipse.n4js.ts.utils.TypeCompareHelper
 
 /**
  */
@@ -64,6 +65,7 @@ class MemberScopingHelper {
 	@Inject MemberScope.MemberScopeFactory memberScopeFactory
 	@Inject private MemberVisibilityChecker memberVisibilityChecker
 	@Inject	private JavaScriptVariantHelper jsVariantHelper;
+	@Inject private TypeCompareHelper typeCompareHelper;
 
 
 	/**
@@ -249,7 +251,7 @@ class MemberScopingHelper {
 		switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
 			case 0: return IScope.NULLSCOPE
 			case 1: return subScopes.get(0)
-			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts)
+			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts, typeCompareHelper)
 		}
 	}
 
@@ -263,7 +265,7 @@ class MemberScopingHelper {
 			return scope;
 		]
 
-		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts);
+		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts, typeCompareHelper);
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {

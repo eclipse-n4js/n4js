@@ -353,13 +353,22 @@ public interface TypesPackage extends EPackage {
 	int COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = 0;
 
 	/**
+	 * The feature id for the '<em><b>Composed Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF = 1;
+
+	/**
 	 * The number of structural features of the '<em>Composed Member Cache</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_MEMBER_CACHE_FEATURE_COUNT = 1;
+	int COMPOSED_MEMBER_CACHE_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Composed Member Cache</em>' class.
@@ -11996,6 +12005,17 @@ public interface TypesPackage extends EPackage {
 	EReference getComposedMemberCache_CachedComposedMembers();
 
 	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef <em>Composed Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Composed Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef()
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 */
+	EReference getComposedMemberCache_ComposedTypeRef();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14736,6 +14756,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = eINSTANCE.getComposedMemberCache_CachedComposedMembers();
+
+		/**
+		 * The meta object literal for the '<em><b>Composed Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF = eINSTANCE.getComposedMemberCache_ComposedTypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}' class.

@@ -50,6 +50,7 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
+import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
@@ -91,7 +92,6 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -107,9 +107,7 @@ import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
-import org.eclipse.xtext.ui.LanguageSpecific;
 import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
-import org.eclipse.xtext.ui.editor.IURIEditorOpener;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
@@ -120,6 +118,7 @@ import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
+import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
@@ -619,14 +618,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return ConcreteSyntaxAwareReferenceFinder.class;
 	}
 
-	/** Customization to deal with Cmd + click of composed members. */
-	@Override
-	public void configureLanguageSpecificURIEditorOpener(com.google.inject.Binder binder) {
-		if (PlatformUI.isWorkbenchRunning())
-			binder.bind(IURIEditorOpener.class).annotatedWith(LanguageSpecific.class)
-					.to(N4JSLanguageSpecificURIEditorOpener.class);
-	}
-
 	/**
 	 * Toggle showing static members or not.
 	 */
@@ -661,5 +652,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends CanLoadFromDescriptionHelper> bindcanLoadFromDescriptionHelper() {
 		return EditorAwareCanLoadFromDescriptionHelper.class;
+	}
+
+	/**
+	 * Provide multiple hyperlink for composed members.
+	 */
+	public Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
+		return ComposedMemberAwareHyperlinkHelper.class;
 	}
 }

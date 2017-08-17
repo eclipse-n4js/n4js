@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
@@ -62,7 +63,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private final IDefaultResourceDescriptionStrategy strategy;
 
-	private Iterable<QualifiedName> lazyImportedNames;
+	private SortedSet<QualifiedName> lazyImportedNames;
 
 	private final N4JSTypeSystem ts;
 
@@ -138,11 +139,13 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					// the scope provider registers every request in scoping so that by this
 					// also all names are collected that cannot be resolved
 					Iterable<QualifiedName> superImportedNames = super.getImportedNames();
-					Set<QualifiedName> importedNames = Sets.newHashSet();
+					// use sorted set to ensure order of items
+					final SortedSet<QualifiedName> importedNames;
 					if (superImportedNames != null) {
-						importedNames = Sets.newHashSet(superImportedNames);
+
+						importedNames = Sets.newTreeSet(superImportedNames);
 					} else {
-						importedNames = Sets.<QualifiedName> newHashSet();
+						importedNames = Sets.<QualifiedName> newTreeSet();
 					}
 					// import our own module name to get a proper change notification
 					Resource resource = getResource();
@@ -163,9 +166,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 							handleTEnumLiteral(importedNames, (TEnumLiteral) type);
 						}
 					}
-
 					this.lazyImportedNames = importedNames;
-
 				}
 			}
 		}
@@ -208,7 +209,6 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor = new IAcceptor<ImmutablePair<EObject, List<EObject>>>() {
 			@Override
 			public void accept(ImmutablePair<EObject, List<EObject>> pair) {
-				// GH-73: TODO Refactor this to make the logics clearer.
 				EObject from = pair.left;
 				if (from instanceof ParameterizedPropertyAccessExpression
 						&& from.eContainer() instanceof ParameterizedCallExpression) {
