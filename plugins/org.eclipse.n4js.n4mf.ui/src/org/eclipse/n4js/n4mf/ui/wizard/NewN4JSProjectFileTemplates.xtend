@@ -46,7 +46,7 @@ class NewN4JSProjectFileTemplates {
 	 * @param safeProjectName The name of the project transformed to be safe to use as class identifier
 	 */
 	static def getSourceFileWithTestGreeter(String safeProjectName) '''
-		import { Assert } from "n4/mangel/assert/Assert"
+		import { Assert } from "org/eclipse/n4js/mangelhaft/assert/Assert"
 
 		export public class Test_«safeProjectName» {
 
