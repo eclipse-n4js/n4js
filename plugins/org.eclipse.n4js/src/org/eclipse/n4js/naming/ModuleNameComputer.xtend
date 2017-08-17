@@ -75,6 +75,14 @@ class ModuleNameComputer {
 				}
 				return QualifiedName.create(relativeURI.segments)
 			}
+		} else if (uri.segmentCount == 1 && uri.fileExtension !== null) {
+			// Special case of synthesized test resources where we don't have a source container.
+			// In this case we deal with top-level test resources.
+			if (ResourceType.xtHidesOtherExtension(uri) ||
+				(N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
+				// if applicable, remove double-file-extension
+				return QualifiedName.create(uri.trimFileExtension.trimFileExtension.segments)
+			}
 		}
 		return uri.createDefaultQualifiedName
 	}
