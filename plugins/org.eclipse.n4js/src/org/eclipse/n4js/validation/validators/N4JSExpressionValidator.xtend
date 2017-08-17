@@ -11,6 +11,16 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.RuleEnvironment
+import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import java.util.ArrayList
+import java.util.Collections
+import java.util.Comparator
+import java.util.List
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.compileTime.CompileTimeEvaluationError
 import org.eclipse.n4js.compileTime.CompileTimeEvaluator.UnresolvedPropertyAccessError
@@ -121,17 +131,8 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.ValidatorMessageHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
-import java.util.List
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -163,6 +164,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	@Inject private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
+
+	@Inject private IQualifiedNameConverter qualifiedNameConverter;
 
 	/**
 	 * NEEEDED
@@ -692,8 +695,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				return;
 			}
 
-			val memberScope = memberScopingHelper.createMemberScopeFor(TypeUtils.createTypeRef(ctorClassifier),
-				expression, false, false); // always non-static
+			val memberScope = memberScopingHelper.createMemberScopeAllowingNonContainedMembers(
+				TypeUtils.createTypeRef(ctorClassifier), expression, false, false); // always non-static
 			val vacs = new VisibilityAwareCtorScope(memberScope, memberVisibilityChecker, ref, staticType, expression);
 			val scope = new TypingStrategyAwareMemberScope(vacs, ref, expression);
 
@@ -1471,19 +1474,23 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
-		val scope = memberScopingHelper.createMemberScopeFor(receiverTypeRef, indexedAccess,
-			checkVisibility, staticAccess)
-		if (memberScopingHelper.isNonExistentMember(scope, memberName, staticAccess)) {
+		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess)
+		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+		val member = memberDesc?.getEObjectOrProxy();
+		val isNonExistentMember = member===null || member.eIsProxy;
+		if (isNonExistentMember) {
 			if (indexIsNumeric) {
 				addIssue(messageForEXP_INDEXED_ACCESS_FORBIDDEN, indexedAccess, EXP_INDEXED_ACCESS_FORBIDDEN);
 			} else {
 				addIssue(getMessageForEXP_INDEXED_ACCESS_COMPUTED_NOTFOUND(memberName), indexedAccess,
 					EXP_INDEXED_ACCESS_COMPUTED_NOTFOUND);
 			}
-			return
+			return;
 		}
-		val erroneous = memberScopingHelper.getErrorsForMember(scope, memberName, staticAccess)
-		erroneous.forEach[d|addIssue(d.message, indexedAccess, d.issueCode)]
+		val errorDesc = IEObjectDescriptionWithError.getDescriptionWithError(memberDesc);
+		if(errorDesc!==null) {
+			addIssue(errorDesc.message, indexedAccess, errorDesc.issueCode);
+		}
 	}
 
 	def private boolean internalCheckIndexedAccessWithSymbol(RuleEnvironment G,

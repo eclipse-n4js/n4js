@@ -983,6 +983,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				IndexedAccessExpression indexedAccessExpression = (IndexedAccessExpression)theEObject;
 				T result = caseIndexedAccessExpression(indexedAccessExpression);
 				if (result == null) result = caseExpression(indexedAccessExpression);
+				if (result == null) result = caseMemberAccess(indexedAccessExpression);
 				if (result == null) result = caseTypableElement(indexedAccessExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
@@ -995,10 +996,17 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.MEMBER_ACCESS: {
+				MemberAccess memberAccess = (MemberAccess)theEObject;
+				T result = caseMemberAccess(memberAccess);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION: {
 				ParameterizedPropertyAccessExpression parameterizedPropertyAccessExpression = (ParameterizedPropertyAccessExpression)theEObject;
 				T result = caseParameterizedPropertyAccessExpression(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseExpression(parameterizedPropertyAccessExpression);
+				if (result == null) result = caseMemberAccess(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseTypableElement(parameterizedPropertyAccessExpression);
 				if (result == null) result = defaultCase(theEObject);
@@ -3128,6 +3136,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTaggedTemplateString(TaggedTemplateString object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Member Access</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Member Access</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMemberAccess(MemberAccess object) {
 		return null;
 	}
 

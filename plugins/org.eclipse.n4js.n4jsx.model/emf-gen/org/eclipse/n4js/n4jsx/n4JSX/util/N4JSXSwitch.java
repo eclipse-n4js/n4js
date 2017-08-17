@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.Switch;
 
 import org.eclipse.n4js.n4JS.Expression;
 
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4jsx.n4JSX.*;
 
 import org.eclipse.n4js.ts.types.TypableElement;
@@ -123,6 +124,7 @@ public class N4JSXSwitch<T> extends Switch<T> {
 				JSXPropertyAttribute jsxPropertyAttribute = (JSXPropertyAttribute)theEObject;
 				T result = caseJSXPropertyAttribute(jsxPropertyAttribute);
 				if (result == null) result = caseJSXAttribute(jsxPropertyAttribute);
+				if (result == null) result = caseMemberAccess(jsxPropertyAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -284,6 +286,21 @@ public class N4JSXSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseExpression(Expression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Member Access</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Member Access</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseMemberAccess(MemberAccess object) {
 		return null;
 	}
 

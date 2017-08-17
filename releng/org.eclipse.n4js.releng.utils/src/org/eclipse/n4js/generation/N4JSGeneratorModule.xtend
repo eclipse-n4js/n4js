@@ -13,33 +13,21 @@ package org.eclipse.n4js.generation
 import com.google.inject.Binder
 import com.google.inject.Inject
 import com.google.inject.Module
-import org.eclipse.n4js.antlr.N4JSAntlrContentAssistGrammarGenerator
-import org.eclipse.n4js.antlr.N4JSAntlrGrammarGenerator
 import org.eclipse.xtext.Grammar
-import org.eclipse.xtext.xtext.generator.DefaultGeneratorModule
 import org.eclipse.xtext.xtext.generator.XtextGeneratorNaming
 import org.eclipse.xtext.xtext.generator.model.TypeReference
 import org.eclipse.xtext.xtext.generator.model.project.IXtextProjectConfig
-import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrContentAssistGrammarGenerator
-import org.eclipse.xtext.xtext.generator.parser.antlr.AntlrGrammarGenerator
 
 /**
  * A Guice {@link Module Module} for injecting customizations
  * into the (new) Xtext language generator.
  */
-class N4JSGeneratorModule extends DefaultGeneratorModule {
+class N4JSGeneratorModule extends AbstractPatchedGeneratorModule {
 
 	def configureXtextGeneratorNaming(Binder binder) {
 		binder.bind(XtextGeneratorNaming).to(N4JSGeneratorNaming)
 	}
 
-	def configureAntlrGrammarGenerator(Binder binder) {
-		binder.bind(AntlrGrammarGenerator).to(N4JSAntlrGrammarGenerator)
-	}
-
-	def configureAntlrContentAssistGrammarGenerator(Binder binder) {
-		binder.bind(AntlrContentAssistGrammarGenerator).to(N4JSAntlrContentAssistGrammarGenerator)
-	}
 }
 
 /**

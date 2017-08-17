@@ -17,20 +17,19 @@ import org.eclipse.emf.common.CommonPlugin;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xtext.resource.IResourceDescription;
-
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
+import org.eclipse.n4js.n4mf.ModuleFilter;
+import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
+import org.eclipse.n4js.n4mf.validation.WildcardPathFilter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
-import org.eclipse.n4js.n4mf.validation.WildcardPathFilter;
+import org.eclipse.xtext.resource.IResourceDescription;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
 
 /**
  */
@@ -38,6 +37,16 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 
 	@Inject
 	private ExternalLibraryUriHelper externalLibraryUriHelper;
+
+	@Override
+	public boolean isInSameProject(URI nestedLocation1, URI nestedLocation2) {
+		final Optional<? extends IN4JSProject> project1 = findProject(nestedLocation1);
+		if (project1.isPresent()) {
+			final Optional<? extends IN4JSProject> project2 = findProject(nestedLocation2);
+			return project2.isPresent() && project1.get().equals(project2.get());
+		}
+		return false;
+	}
 
 	@Override
 	public boolean isNoValidate(URI nestedLocation) {

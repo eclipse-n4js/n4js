@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Assignment;
@@ -33,9 +35,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 /**
  * Runtime hook to rewrite token types based on consumed grammar elements. The mapping is populated once in the

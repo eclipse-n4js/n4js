@@ -14,6 +14,8 @@ import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.n4js.n4JS.MemberAccess
+
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
@@ -36,7 +38,6 @@ import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TObjectPrototype
 import org.eclipse.n4js.ts.types.TStructuralType
@@ -66,7 +67,8 @@ class MemberScopingHelper {
 
 
 	/**
-	 * Create a new member scope that filters using the given criteria (visibility, static access).
+	 * Create a new member scope that filters using the given criteria (visibility, static access). Members retrieved
+	 * via the scope returned by this method are guaranteed to be contained in a resource.
 	 * <p>
 	 * When choosing static scope, the {@code context} is inspected to determine read/write access
 	 * but only if it's a {@link ParameterizedPropertyAccessExpression} or a {@code IndexedAccessExpression}.
@@ -74,7 +76,8 @@ class MemberScopingHelper {
 	 * @param receiverTypeRef
 	 *               TypeRef for the value whose scope is of interest.
 	 * @param context
-	 *               AST node used for (a) obtaining context resource and (b) visibility checking.
+	 *               AST node used for (a) obtaining context resource, (b) visibility checking, and
+	 *               (c) caching composed members.
 	 * @param checkVisibility
 	 *               if true, the member scope will be wrapped in a {@link VisibilityAwareMemberScope}; if
 	 *               false, method {@link getPropertyTypeForNode(IScope,String)} will <b>never</b> return
@@ -82,10 +85,30 @@ class MemberScopingHelper {
 	 * @param staticAccess
 	 *               true: only static members are relevant; false: only non-static ones.
 	 */
-	public def IScope createMemberScopeFor(TypeRef receiverTypeRef, EObject context, boolean checkVisibility,
-		boolean staticAccess) {
+	public def IScope createMemberScope(TypeRef receiverTypeRef, MemberAccess context,
+		boolean checkVisibility, boolean staticAccess) {
 		return decoratedMemberScopeFor(receiverTypeRef,
-			new MemberScopeRequest(receiverTypeRef, context, checkVisibility, staticAccess));
+			new MemberScopeRequest(receiverTypeRef, context, true, checkVisibility, staticAccess));
+	}
+
+	/**
+	 * Same as {@link #createMemberScope(TypeRef, MemberAccess, boolean, boolean)}, but the returned scope <b><u>DOES
+	 * NOT</u></b> guarantee that members will be contained in a resource (in particular, composed members will not be
+	 * contained in a resource). In turn, this method does not require a context of type {@link MemberAccess}.
+	 * <p>
+	 * This method can be used if members are only used temporarily for a purpose that does not require proper
+	 * containment of the member, e.g. retrieving the type of a field for validation purposes. There are two reasons
+	 * for using this method:
+	 * <ol>
+	 * <li>client code is unable to provide a context of type {@link MemberAccess},
+	 * <li>client code wants to invoke {@link IScope#getAllElements()} or similar methods on the returned scope and
+	 *     wants to avoid unnecessary caching of all those members.
+	 * </ol>
+	 */
+	public def IScope createMemberScopeAllowingNonContainedMembers(TypeRef receiverTypeRef, EObject context,
+		boolean checkVisibility, boolean staticAccess) {
+		return decoratedMemberScopeFor(receiverTypeRef,
+			new MemberScopeRequest(receiverTypeRef, context, false, checkVisibility, staticAccess));
 	}
 
 	/**
@@ -122,14 +145,6 @@ class MemberScopingHelper {
 	}
 
 	/**
-	 * Is there a member (visible or not) in the given scope matching the given (name, staticAccess) combination?
-	 */
-	public def boolean isNonExistentMember(IScope scope, String memberName, boolean staticAccess) {
-		val descriptions = scope.getElements(QualifiedName.create(memberName))
-		return descriptions.isEmpty
-	}
-
-	/**
 	 * For the member given by (name, staticAccess) return the erroneous descriptions from the given scope.
 	 * <p>
 	 * Precondition: {@link #isNonExistentMember} has negative answer.
@@ -139,31 +154,6 @@ class MemberScopingHelper {
 		val descriptions = scope.getElements(QualifiedName.create(memberName))
 		val errorsOrNulls = descriptions.map[d|IEObjectDescriptionWithError.getDescriptionWithError(d)]
 		return errorsOrNulls.filterNull
-	}
-
-	/**
-	 * Look up all non-erroneous {@link TMember} in the given scope having the given name.
-	 */
-	public def Iterable<TMember> findMembersForName(IScope scope, String memberName, boolean staticAccess) {
-		val candidates = scope.getElements(QualifiedName.create(memberName)).filter [ description |
-			!(IEObjectDescriptionWithError.isErrorDescription(description))
-		]
-		val proxysOrInstances = candidates.map[description|description.getEObjectOrProxy()]
-		val tmembers = proxysOrInstances.filter [ proxyOrInstance |
-			proxyOrInstance !== null && !proxyOrInstance.eIsProxy() && (proxyOrInstance instanceof TMember)
-		]
-		return tmembers.map[m|m as TMember].filter[m|m.static == staticAccess]
-	}
-
-	/**
-	 * In case there's a single non-erroneous {@link TMember} in the given scope matching the given name, return it. Otherwise return null.
-	 */
-	public def TMember findUniqueMemberForName(IScope scope, String memberName, boolean staticAccess) {
-		val candidates = findMembersForName(scope, memberName, staticAccess)
-		if (candidates.size == 1) {
-			return candidates.head
-		}
-		return null
 	}
 
 	private def dispatch IScope members(TypeRef type, MemberScopeRequest request) {
@@ -259,9 +249,7 @@ class MemberScopingHelper {
 		switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
 			case 0: return IScope.NULLSCOPE
 			case 1: return subScopes.get(0)
-			default: {
-				return new UnionMemberScope(uniontypeexp, request.context, subScopes, ts)
-			}
+			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts)
 		}
 	}
 
@@ -275,7 +263,7 @@ class MemberScopingHelper {
 			return scope;
 		]
 
-		return new IntersectionMemberScope(intersectiontypeexp, request.context, subScopes, ts);
+		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts);
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {
