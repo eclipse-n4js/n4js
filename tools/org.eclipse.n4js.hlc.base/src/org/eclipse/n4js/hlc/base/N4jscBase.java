@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.base;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.inject.util.Modules.override;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CLEAN_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_COMPILE_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CONFIGURATION_ERROR;
@@ -68,6 +67,8 @@ import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessGeneratorModule;
+import org.eclipse.n4js.generator.headless.logging.ConfigurableHeadlessLogger;
+import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4jsx.N4JSXGlobals;
@@ -916,18 +917,24 @@ public class N4jscBase implements IApplication {
 		N4mfPackage.eINSTANCE.getNsURI();
 		XMLTypePackage.eINSTANCE.getNsURI();
 
-		final Module cliTesterModule = override(new TesterModule())
-				.with((Module) binder -> binder.bind(TestTreeTransformer.class).to(CliTestTreeTransformer.class));
-
-		final Module module = Modules.combine(new N4JSRuntimeModule(), cliTesterModule,
+		// combine all modules for N4JSC
+		final Module combinedModule = Modules.combine(new N4JSRuntimeModule(), new TesterModule(),
 				new N4JSHeadlessGeneratorModule(properties));
+
+		// override with customized bindings
+		final Module overridenModule = Modules.override(combinedModule).with(binder -> {
+			binder.bind(TestTreeTransformer.class)
+					.to(CliTestTreeTransformer.class);
+			binder.bind(IHeadlessLogger.class)
+					.toInstance(new ConfigurableHeadlessLogger(verbose, debug));
+		});
 
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
 		N4MFStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 
-		final Injector injector = Guice.createInjector(module);
+		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
 
@@ -1297,8 +1304,6 @@ public class N4jscBase implements IApplication {
 		headless.setKeepOnCompiling(keepCompiling);
 		headless.setCompileSourceCode(!testonly);
 		headless.setProcessTestCode(!notests);
-		headless.setCreateDebugOutput(debug);
-		headless.setVerbose(verbose);
 		if (log) {
 			headless.setLogFile(logFile);
 		}
