@@ -23,6 +23,8 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.utils.io.FileDeleter;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,6 +36,7 @@ import com.google.common.io.Files;
  * Tests for launching N4JS tests via the command line.
  */
 public class N4jscTestersTest extends AbstractN4jscTest {
+	File workspace;
 
 	private static Collection<String> REQUIRED_LIBS = ImmutableSet.<String> builder()
 			.add(N4JSGlobals.MANGELHAFT)
@@ -49,7 +52,13 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
-		setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.in(REQUIRED_LIBS));
+		workspace = setupWorkspace(TEST_DATA_SET__TESTERS, Predicates.in(REQUIRED_LIBS));
+	}
+
+	/** Delete workspace. */
+	@After
+	public void deleteWorkspace() throws IOException {
+		FileDeleter.delete(workspace.toPath(), true);
 	}
 
 	/**
@@ -60,9 +69,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_LaunchSingleTestFile() throws ExitCodeException {
-		System.out.println(logMethodname());
-
-		String proot = TARGET + "/" + WSP;
+		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -91,9 +98,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testCompile_And_LaunchSingleTestFile2() throws ExitCodeException {
-		System.out.println(logMethodname());
-
-		String proot = TARGET + "/" + WSP;
+		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
 		String projectDemoTest = "DemoTest";
@@ -120,10 +125,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileAllProjectsGenerateTestCatalog_absolutePath()
 			throws ExitCodeException, FileNotFoundException, IOException {
-		System.out.println(logMethodname());
+		String proot = workspace.getAbsolutePath().toString();
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
-		final String proot = TARGET + "/" + WSP;
 		final String[] args = { "-pl", proot,
 				"-t", "allprojects",
 				"-tc", tempDir + "/test-catalog.json",
@@ -145,8 +149,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileAllProjectsGenerateTestCatalog_relativePath()
 			throws ExitCodeException, FileNotFoundException, IOException {
-		System.out.println(logMethodname());
-		final String proot = TARGET + "/" + WSP;
+		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "-pl", proot,
 				"-t", "allprojects",
 				"-tc", "test-catalog.json",
@@ -168,13 +171,12 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	@Test
 	public void testCompileAllProjectsGenerateTestCatalog_existingRelativePath()
 			throws ExitCodeException, FileNotFoundException, IOException {
-		System.out.println(logMethodname());
+		String proot = workspace.getAbsolutePath().toString();
 
 		final File existingFile = new File("test-catalog.json");
 		existingFile.createNewFile();
 		existingFile.deleteOnExit();
 
-		final String proot = TARGET + "/" + WSP;
 		final String[] args = { "-pl", proot,
 				"-t", "allprojects",
 				"-tc", "test-catalog.json",
@@ -195,8 +197,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testInvalidTestCatalogLocation() {
-		System.out.println(logMethodname());
-		final String proot = TARGET + "/" + WSP;
+		String proot = workspace.getAbsolutePath().toString();
 		final String[] args = { "-pl", proot,
 				"-t", "allprojects",
 				"-tc", "some/fake/folder/test-catalog.json",
@@ -216,10 +217,9 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testDirectoryTestCatalogLocation() {
-		System.out.println(logMethodname());
+		String proot = workspace.getAbsolutePath().toString();
 		final File tempDir = Files.createTempDir();
 		tempDir.deleteOnExit();
-		final String proot = TARGET + "/" + WSP;
 		final String[] args = { "-pl", proot,
 				"-t", "allprojects",
 				"-tc", tempDir.toString(),

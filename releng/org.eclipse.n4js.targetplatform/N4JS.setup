@@ -523,7 +523,4 @@
       xsi:type="setup:ProjectCatalog"
       href="index:/org.eclipse.setup#//@projectCatalogs[name='com.github']"/>
   <description>N4JS provides an IDE for typed Javascript.</description>
-  <setupTask
-      xsi:type="projects_1.0:ProjectsBuildTask"
-      refresh="true"/>
 </setup:Project>

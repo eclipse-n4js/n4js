@@ -128,6 +128,9 @@ public final class ASTMetaInfoCache {
 		if (actualType == null) {
 			throw new IllegalArgumentException("actualType may not be null");
 		}
+		if (astNode.eResource() != resource) {
+			throw new IllegalArgumentException("astNode must be from this resource");
+		}
 		if (actualTypes.put(astNode, actualType) != null) {
 			throw UtilN4.reportError(new IllegalStateException(
 					"cache collision: multiple actual types put into cache for AST node: " + astNode +
@@ -148,6 +151,9 @@ public final class ASTMetaInfoCache {
 		if (!isProcessingInProgress()) {
 			throw new IllegalStateException();
 		}
+		if (callExpr.eResource() != resource) {
+			throw new IllegalArgumentException("astNode must be from this resource");
+		}
 		inferredTypeArgs.put(callExpr, Collections.unmodifiableList(new ArrayList<>(typeArgs)));
 	}
 
@@ -167,6 +173,9 @@ public final class ASTMetaInfoCache {
 	/* package */ void storeCompileTimeValue(Expression expr, CompileTimeValue evalResult) {
 		if (!isProcessingInProgress()) {
 			throw new IllegalStateException();
+		}
+		if (expr.eResource() != resource) {
+			throw new IllegalArgumentException("astNode must be from this resource");
 		}
 		if (compileTimeValue.put(expr, evalResult) != null) {
 			throw UtilN4.reportError(new IllegalStateException(
@@ -189,6 +198,9 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeLocalVariableReference(VariableDeclaration varDecl, EObject sourceNode) {
+		if (varDecl.eResource() != resource) {
+			throw new IllegalArgumentException("astNode must be from this resource");
+		}
 		if (localVariableReferences.containsKey(varDecl)) {
 			final List<EObject> references = localVariableReferences.get(varDecl);
 			references.add(sourceNode);
