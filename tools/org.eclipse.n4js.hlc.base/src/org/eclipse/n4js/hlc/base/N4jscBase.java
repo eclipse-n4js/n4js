@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.base;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.inject.util.Modules.override;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CLEAN_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_COMPILE_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CONFIGURATION_ERROR;
@@ -918,22 +917,24 @@ public class N4jscBase implements IApplication {
 		N4mfPackage.eINSTANCE.getNsURI();
 		XMLTypePackage.eINSTANCE.getNsURI();
 
-		final Module module = override(
-				Modules.combine(new N4JSRuntimeModule(),
-						new TesterModule(),
-						new N4JSHeadlessGeneratorModule(properties)))
-								.with((Module) binder -> {
-									binder.bind(TestTreeTransformer.class).to(CliTestTreeTransformer.class);
-									binder.bind(IHeadlessLogger.class)
-											.toInstance(new ConfigurableHeadlessLogger(verbose, debug));
-								});
+		// combine all modules for N4JSC
+		final Module combinedModule = Modules.combine(new N4JSRuntimeModule(), new TesterModule(),
+				new N4JSHeadlessGeneratorModule(properties));
+
+		// override with customized bindings
+		final Module overridenModule = Modules.override(combinedModule).with(binder -> {
+			binder.bind(TestTreeTransformer.class)
+					.to(CliTestTreeTransformer.class);
+			binder.bind(IHeadlessLogger.class)
+					.toInstance(new ConfigurableHeadlessLogger(verbose, debug));
+		});
 
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
 		N4MFStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 
-		final Injector injector = Guice.createInjector(module);
+		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
 
