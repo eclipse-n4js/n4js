@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4jsx.n4JSX.JSXText;
 import org.eclipse.n4js.n4jsx.n4JSX.N4JSXFactory;
 import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
@@ -144,6 +145,9 @@ public class N4JSXPackageImpl extends EPackageImpl implements N4JSXPackage {
 
 		// Initialize simple dependencies
 		N4JSPackage.eINSTANCE.eClass();
+		TypesPackage.eINSTANCE.eClass();
+		EcorePackage.eINSTANCE.eClass();
+		TypeRefsPackage.eINSTANCE.eClass();
 
 		// Create package meta-data objects
 		theN4JSXPackage.createPackageContents();

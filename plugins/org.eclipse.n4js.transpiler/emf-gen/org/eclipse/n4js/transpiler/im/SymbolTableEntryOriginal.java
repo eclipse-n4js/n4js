@@ -114,7 +114,7 @@ public interface SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * this element is exported by the remote resource and can be imported in the resource to compile.
 	 * <!-- end-model-doc -->
 	 * @model unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.n4js.ts.types.IdentifiableElement%> trgt = this.getOriginalTarget();\nif ((trgt instanceof <%org.eclipse.n4js.ts.types.TExportableElement%>))\n{\n\treturn ((<%org.eclipse.n4js.ts.types.TExportableElement%>)trgt).getExportedName();\n}\nreturn this.getOriginalTarget().getName();'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final &lt;%org.eclipse.n4js.ts.types.IdentifiableElement%&gt; trgt = this.getOriginalTarget();\nif ((trgt instanceof &lt;%org.eclipse.n4js.ts.types.TExportableElement%&gt;))\n{\n\treturn ((&lt;%org.eclipse.n4js.ts.types.TExportableElement%&gt;)trgt).getExportedName();\n}\nreturn this.getOriginalTarget().getName();'"
 	 * @generated
 	 */
 	String exportedName();
