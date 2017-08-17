@@ -27,6 +27,15 @@ abstract public class Dispatcher {
 	}
 
 	/**
+	 *
+	 */
+	public static class InvokationException extends RuntimeException {
+		InvokationException(Throwable t) {
+			super(t);
+		}
+	}
+
+	/**
 	 * Use with care.
 	 *
 	 * @throws NoDispatchMethodFoundException
@@ -52,14 +61,19 @@ abstract public class Dispatcher {
 			if (candidate) {
 				try {
 					result = (R) m.invoke(null, cfe);
-					// System.out.println("dispatch to " + name + "(" + pTypes[0].getSimpleName() + ")");
 					return result;
 				} catch (Exception e) {
-					e.printStackTrace();
+					if (e.getCause() instanceof RuntimeException)
+						throw (RuntimeException) e.getCause();
+
+					throw new InvokationException(e);
 				}
 			}
 		}
-		throw new NoDispatchMethodFoundException("No dispatch found for class " + cfe.getClass().getSimpleName());
+
+		String methodName = dispatcherClass.getSimpleName() + "." + name + "(" + cfe.getClass().getSimpleName() + ")";
+		String msg = "No dispatch found for " + methodName;
+		throw new NoDispatchMethodFoundException(msg);
 	}
 
 }

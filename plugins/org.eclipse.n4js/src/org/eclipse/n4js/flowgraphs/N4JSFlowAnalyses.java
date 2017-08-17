@@ -34,7 +34,9 @@ public class N4JSFlowAnalyses {
 	private FlowGraph cfg;
 
 	/**
-	 *
+	 * Performs the control flow analyses for all {@link ControlFlowElement}s in the given {@link Script}.
+	 * <p/>
+	 * Never completes abruptly, i.e. throws an exception.
 	 */
 	public void perform(Script script) {
 		Objects.requireNonNull(script);
@@ -54,14 +56,14 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 *
+	 * @returns the underlying control flow graph
 	 */
 	public FlowGraph getControlFlowGraph() {
 		return cfg;
 	}
 
 	/**
-	 *
+	 * @returns a list of all direct predecessors of cfe
 	 */
 	public List<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
 		Objects.requireNonNull(cfe);
@@ -72,7 +74,7 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 *
+	 * @returns a list of all direct successors of cfe
 	 */
 	public List<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
 		Objects.requireNonNull(cfe);
@@ -83,7 +85,7 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 *
+	 * @returns true iff cfeTo is a transitive successor of cfeFrom
 	 */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		Objects.requireNonNull(cfeFrom);
@@ -178,12 +180,14 @@ public class N4JSFlowAnalyses {
 		while (!curCFEs.isEmpty()) {
 			ControlFlowElement cfe = curCFEs.remove(0);
 			if (predSet.contains(cfe)) {
-				pathString += cfe.getClass().getSimpleName().toString() + "->";
 				List<ControlFlowElement> succs = getSuccessors(cfe);
 				curCFEs.addAll(succs);
+				String nameID = getNameID(cfe);
+				pathString += nameID + "->";
 			}
 		}
 
+		pathString = pathString.substring(0, pathString.length() - 2);
 		return pathString;
 	}
 
@@ -199,6 +203,19 @@ public class N4JSFlowAnalyses {
 			}
 		}
 		return allCFEs;
+	}
+
+	/**
+	 * Creates a readable but still unique name for a given {@link ControlFlowElement}.
+	 */
+	private String getNameID(ControlFlowElement cfe) {
+		String className = cfe.getClass().getSimpleName().toString();
+		int idx = className.lastIndexOf("Impl");
+		if (idx == className.length() - "Impl".length()) {
+			className = className.substring(0, idx);
+		}
+		String nameID = className + "#" + cfe.hashCode();
+		return nameID;
 	}
 
 }

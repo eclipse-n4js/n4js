@@ -132,7 +132,9 @@ final class ControlFlowChildren extends Dispatcher {
 
 	static List<Expression> _get(ParameterizedCallExpression pce) {
 		List<Expression> cfc = new LinkedList<>();
-		cfc.add(pce.getReceiver());
+		if (pce.getReceiver() != null)
+			cfc.add(pce.getReceiver());
+		cfc.add(pce.getTarget());
 		for (Argument arg : pce.getArguments())
 			cfc.add(arg.getExpression());
 		return cfc;
@@ -189,7 +191,8 @@ final class ControlFlowChildren extends Dispatcher {
 
 	static List<Expression> _get(YieldExpression ye) {
 		List<Expression> cfc = new LinkedList<>();
-		cfc.add(ye.getExpression());
+		if (ye.getExpression() != null)
+			cfc.add(ye.getExpression());
 		return cfc;
 	}
 
