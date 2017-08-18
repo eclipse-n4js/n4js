@@ -84,7 +84,7 @@ public class EditorOverlay implements PaintListener {
 	}
 
 	private int[] getConturePointArray() {
-		ITextRegion tr = locFileProvider.getSignificantTextRegion(currentSelection);
+		ITextRegion tr = locFileProvider.getFullTextRegion(currentSelection);
 		int lineHeight = styledText.getLineHeight(tr.getOffset());
 
 		// Calculate end points for each line

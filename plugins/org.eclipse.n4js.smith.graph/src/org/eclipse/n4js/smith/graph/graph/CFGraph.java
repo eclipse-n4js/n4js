@@ -96,19 +96,19 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 	/** @return offset of the source code region of the given {@link ControlFlowElement} */
 	private int getOffset(ControlFlowElement cfe) {
-		ITextRegion tr = locFileProvider.getSignificantTextRegion(cfe);
+		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
 		return tr.getOffset();
 	}
 
 	/** @return offset end of the source code region of the given {@link ControlFlowElement} */
 	private int getOffsetEnd(ControlFlowElement cfe) {
-		ITextRegion tr = locFileProvider.getSignificantTextRegion(cfe);
+		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
 		return tr.getOffset() + tr.getLength();
 	}
 
 	/** @return length of the source code region of the given {@link ControlFlowElement} */
 	private int getLength(ControlFlowElement cfe) {
-		ITextRegion tr = locFileProvider.getSignificantTextRegion(cfe);
+		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
 		return tr.getLength();
 	}
 
