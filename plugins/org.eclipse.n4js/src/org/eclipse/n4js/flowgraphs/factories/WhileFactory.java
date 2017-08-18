@@ -23,12 +23,14 @@ import org.eclipse.n4js.n4JS.WhileStatement;
 
 class WhileFactory {
 
+	static final String CONDITION_NODE_NAME = "condition";
+
 	static ComplexNode buildComplexNode(WhileStatement whileStmt) {
 		ComplexNode cNode = new ComplexNode(whileStmt);
 
 		Node entryNode = new HelperNode("entry", whileStmt);
 		Node exitNode = new HelperNode("exit", whileStmt);
-		Node conditionNode = new DelegatingNode("condition", whileStmt, whileStmt.getExpression());
+		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, whileStmt, whileStmt.getExpression());
 		Node bodyNode = null;
 
 		if (whileStmt.getStatement() != null) {

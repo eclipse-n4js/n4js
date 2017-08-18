@@ -84,4 +84,23 @@ public class EdgeUtils {
 			addEdgeCF(cf2.getExit(), cf1.getEntry());
 		}
 	}
+
+	/**
+	 * Applies {@link #remove(ControlFlowEdge)} for every entry in succEdges
+	 */
+	public static void removeAll(List<ControlFlowEdge> succEdges) {
+		for (ControlFlowEdge succEdge : succEdges) {
+			remove(succEdge);
+		}
+	}
+
+	/**
+	 * Removes the given edge from its start and end nodes
+	 */
+	public static void remove(ControlFlowEdge succEdge) {
+		Node start = succEdge.start;
+		Node end = succEdge.end;
+		start.succ.remove(succEdge);
+		end.pred.remove(succEdge);
+	}
 }

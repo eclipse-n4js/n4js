@@ -23,6 +23,8 @@ import org.eclipse.n4js.n4JS.ForStatement;
 
 class ForFactory {
 
+	static final String CONDITION_NODE_NAME = "condition";
+
 	static ComplexNode buildComplexNode(ForStatement forStmt) {
 		if (forStmt.isForIn())
 			return buildForInOf(forStmt, true);
@@ -44,6 +46,7 @@ class ForFactory {
 		if (forInSemantics)
 			getObjectKeysNode = new HelperNode("getObjectKeys", forStmt);
 		Node getIteratorNode = new HelperNode("getIterator", forStmt);
+		Node hasNextNode = new HelperNode(CONDITION_NODE_NAME, forStmt);
 		Node nextNode = new HelperNode("next", forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null)
@@ -53,6 +56,7 @@ class ForFactory {
 		cNode.addNode(expressionNode);
 		cNode.addNode(getObjectKeysNode);
 		cNode.addNode(getIteratorNode);
+		cNode.addNode(hasNextNode);
 		cNode.addNode(nextNode);
 		cNode.addNode(bodyNode);
 		cNode.addNode(exitNode);
@@ -62,6 +66,7 @@ class ForFactory {
 		nodes.add(expressionNode);
 		nodes.add(getObjectKeysNode);
 		nodes.add(getIteratorNode);
+		nodes.add(hasNextNode);
 		nodes.add(nextNode);
 		nodes.add(bodyNode);
 		cNode.connectInternalSucc(nodes);
@@ -76,7 +81,7 @@ class ForFactory {
 
 		String label = ASTUtils.getLabel(forStmt);
 		exitNode.addCatchToken(new CatchToken(JumpType.Break, label));
-		nextNode.addCatchToken(new CatchToken(JumpType.Continue, label));
+		hasNextNode.addCatchToken(new CatchToken(JumpType.Continue, label));
 
 		cNode.setLoopContainer(true);
 		return cNode;
@@ -96,7 +101,7 @@ class ForFactory {
 			initsNode = new DelegatingNode("inits", forStmt, forStmt.getInitExpr());
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode("condition", forStmt, forStmt.getExpression());
+			conditionNode = new DelegatingNode(CONDITION_NODE_NAME, forStmt, forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
 			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());

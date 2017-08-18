@@ -11,6 +11,9 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
@@ -29,4 +32,10 @@ class ASTUtils {
 		return null;
 	}
 
+	/** Returns a detailed string about the given node */
+	static String getNodeDetailString(Node node) {
+		ControlFlowElement nCFE = node.getControlFlowElement();
+		String edgeStr = FGUtils.getClassName(nCFE) + ":" + node.name + ":" + FGUtils.getTextLabel(nCFE);
+		return edgeStr;
+	}
 }

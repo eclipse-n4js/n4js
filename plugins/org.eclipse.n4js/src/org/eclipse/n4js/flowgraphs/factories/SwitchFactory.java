@@ -37,7 +37,7 @@ class SwitchFactory {
 		cNode.addNode(pivotNode);
 
 		List<Node> caseNodes = new LinkedList<>();
-		// Assumption: clauses are ordered like in the source code
+		// Assumption: clauses are ordered analog to the source code
 		List<AbstractCaseClause> caseClauses = switchStmt.getCases();
 		for (int i = 0; i < caseClauses.size(); i++) {
 			AbstractCaseClause cc = caseClauses.get(i);
@@ -58,13 +58,14 @@ class SwitchFactory {
 		cfs.add(pivotNode);
 		cNode.connectInternalSucc(cfs);
 
-		for (Node cnf : caseNodes)
+		for (Node cnf : caseNodes) {
 			cNode.connectInternalSucc(pivotNode, cnf);
+		}
 
 		cfs.clear();
 		cfs.addAll(caseNodes);
 		cfs.add(exitNode);
-		cNode.connectInternalSucc(cfs); // TODO: Consider break statements!
+		cNode.connectInternalSucc(cfs); // See {@link JumpFactory} how {@link BreakStatements} modify the control flow
 
 		if (switchStmt.getDefaultClause() == null)
 			cNode.connectInternalSucc(pivotNode, exitNode);

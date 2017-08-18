@@ -22,11 +22,29 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ContinueStatement;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
+import org.eclipse.n4js.n4JS.WhileStatement;
 
+/**
+ * Jumps are control flow edges that start at a {@link ControlFlowElement} and end at another
+ * {@link ControlFlowElement}. The loop control flow edge in loop statements, such as in {@link WhileStatement}s, is not
+ * considered as a jump, but a <i>loop carried</i> control flow edge.
+ * <p>
+ * Jump edges start at and end at (start --> end):<br/>
+ * <ul>
+ * <li/>BreakStatement.exitNode --> (LoopStatement | SwitchStatement).exitNode
+ * <li/>ContinueStatement.exitNode --> LoopStatement.conditionNode
+ * <li/>ReturnStatement.exitNode --> FunctionBlock.exitNode
+ * <li/>ThrowStatement.exitNode --> FunctionBlock.exitNode
+ * </ul>
+ * <p>
+ * Jumps that happen due to Break- or ContinueStatements can refer to a label. This must be respected when computing the
+ * end node of a jump edge. See {@link ControlFlowGraphFactory} for more details.
+ */
 class JumpFactory {
 
 	static ComplexNode buildComplexNode(BreakStatement stmt) {

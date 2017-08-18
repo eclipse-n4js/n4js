@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
@@ -157,7 +158,7 @@ public class ComplexNode implements ControlFlowable {
 
 	@Override
 	public String toString() {
-		return "CN[" + astElement.getClass().getSimpleName() + "]";
+		return "CN[" + FGUtils.getClassName(astElement) + "]";
 	}
 
 	public Set<DependencyEdge> getDependencyEdges() {

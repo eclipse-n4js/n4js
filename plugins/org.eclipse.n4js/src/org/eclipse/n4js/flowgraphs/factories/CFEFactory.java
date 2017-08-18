@@ -36,7 +36,7 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
  * Provides function {@link #build(ControlFlowElement)} to create instances of {@link ComplexNode} for given
  * {@link ControlFlowElement}s.
  */
-final public class FactoryDispatcher {
+final public class CFEFactory {
 
 	/**
 	 * Builds a {@link ComplexNode} from a given {@link ControlFlowElement}

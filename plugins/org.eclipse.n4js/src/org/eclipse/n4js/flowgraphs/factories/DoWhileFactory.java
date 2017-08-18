@@ -22,13 +22,14 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
 
 class DoWhileFactory {
+	static final String CONDITION_NODE_NAME = "condition";
 
 	static ComplexNode buildComplexNode(DoStatement doStmt) {
 		ComplexNode cNode = new ComplexNode(doStmt);
 
 		Node entryNode = new HelperNode("entry", doStmt);
 		Node exitNode = new DelegatingNode("exit", doStmt);
-		Node conditionNode = new DelegatingNode("condition", doStmt, doStmt.getExpression());
+		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, doStmt, doStmt.getExpression());
 		Node bodyNode = new DelegatingNode("body", doStmt, doStmt.getStatement());
 
 		cNode.addNode(entryNode);

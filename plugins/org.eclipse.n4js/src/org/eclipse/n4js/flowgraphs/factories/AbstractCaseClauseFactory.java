@@ -13,34 +13,47 @@ package org.eclipse.n4js.flowgraphs.factories;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
+import org.eclipse.n4js.n4JS.Statement;
 
 class AbstractCaseClauseFactory {
 
-	static ComplexNode buildComplexNode(AbstractCaseClause stmt) {
-		ComplexNode cNode = new ComplexNode(stmt);
+	static ComplexNode buildComplexNode(AbstractCaseClause abstrCaseClause) {
+		ComplexNode cNode = new ComplexNode(abstrCaseClause);
 
-		Node entryNode = new HelperNode("entry", stmt);
-		Node endNode = new DelegatingNode("exit", stmt);
-		Node comGroup = null;
+		Node entryNode = new HelperNode("entry", abstrCaseClause);
+		List<Node> stmtNodes = new LinkedList<>();
+		Node endNode = new DelegatingNode("exit", abstrCaseClause);
+		Node caseConditionNode = null;
 
-		if (stmt instanceof CaseClause) {
-			CaseClause caseClause = (CaseClause) stmt;
-			comGroup = new DelegatingNode("condition", stmt, caseClause.getExpression());
+		if (abstrCaseClause instanceof CaseClause) {
+			CaseClause caseClause = (CaseClause) abstrCaseClause;
+			caseConditionNode = new DelegatingNode("condition", caseClause, caseClause.getExpression());
+		}
+
+		EList<Statement> stmts = abstrCaseClause.getStatements();
+		for (int i = 0; i < stmts.size(); i++) {
+			Statement stmt = stmts.get(i);
+			Node blockNode = new DelegatingNode("stmt_" + i, abstrCaseClause, stmt);
+			stmtNodes.add(blockNode);
 		}
 
 		cNode.addNode(entryNode);
-		cNode.addNode(comGroup);
+		cNode.addNode(caseConditionNode);
+		for (Node blockNode : stmtNodes)
+			cNode.addNode(blockNode);
 		cNode.addNode(endNode);
 
 		List<Node> nodes = new LinkedList<>();
 		nodes.add(entryNode);
-		nodes.add(comGroup);
+		nodes.add(caseConditionNode);
+		nodes.addAll(stmtNodes);
 		nodes.add(endNode);
 		cNode.connectInternalSucc(nodes);
 
