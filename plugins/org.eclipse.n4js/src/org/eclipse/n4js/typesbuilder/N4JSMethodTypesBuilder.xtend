@@ -27,11 +27,31 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ts.types.TClassifier
 
 @Singleton
 package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package boolean linkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
+		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
+			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
+		}
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
+			return false
+		}
+		val methodType = classifier.ownedMembers.get(idx) as TMethod;
+		
+		
+		methodType.linkFormalParameters(methodDecl, preLinkingPhase)
+
+		// link
+		methodType.astElement = methodDecl
+		methodDecl.definedType = methodType
+
+		return true;
+	}
 
 	/**
 	 * Creates TMethod for the given method declaration (and links it to that method).

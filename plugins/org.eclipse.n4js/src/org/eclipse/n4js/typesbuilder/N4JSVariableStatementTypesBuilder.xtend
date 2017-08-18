@@ -14,19 +14,37 @@ import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TVariable
-import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.n4JS.NewExpression
 
 package class N4JSVariableStatementTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package int linkVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int start) {
+		return n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).fold(start) [ idx, decl |
+			if (decl.linkVariableType(target, idx)) {
+				return idx + 1;
+			}
+			return idx;
+		];
+	}
+	
+	def private boolean linkVariableType(ExportedVariableDeclaration n4VariableDeclaration, TModule target, int idx) {
+		if(n4VariableDeclaration.name === null) {
+			return false
+		}
+
+		val variable = target.variables.get(idx);
+		variable.astElement = n4VariableDeclaration
+		n4VariableDeclaration.definedVariable = variable;
+		return true
+	}
 
 	def package void createVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase) {
 		val variables = n4VariableStatement.createVariables(preLinkingPhase)
@@ -69,19 +87,14 @@ package class N4JSVariableStatementTypesBuilder {
 
 	def private setVariableType(TVariable variable, ExportedVariableDeclaration n4VariableDeclaration, boolean preLinkingPhase) {
 		if(n4VariableDeclaration.declaredTypeRef!==null) {
-			// type of field was declared explicitly
-			setCopyOfReference([TypeRef typeRef | variable.typeRef = typeRef], n4VariableDeclaration.declaredTypeRef, preLinkingPhase)
+			if (!preLinkingPhase)
+			// 	type of field was declared explicitly
+				variable.typeRef = TypeUtils.copyWithProxies(n4VariableDeclaration.declaredTypeRef);
 		}
 		else {
 			// in all other cases:
 			// leave it to the TypingASTWalker to infer the type (e.g. from the initializer expression, if given)
 			variable.typeRef = TypeUtils.createDeferredTypeRef
 		}
-	}
-
-	def private setTypeAccessModifier(TVariable variable, ExportedVariableStatement stmt) {
-		setTypeAccessModifier(stmt, [TypeAccessModifier modifier|
-			variable.declaredTypeAccessModifier = modifier], stmt.declaredModifiers,
-			getAllAnnotations(stmt))
 	}
 }

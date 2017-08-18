@@ -40,10 +40,10 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 
 	override protected enableUserDataCompare() {
 		// to check the complete AST just change false to true
-		false
-		//true
+//		false
+		true
 	}
-
+	
 	@Test
 	def test() {
 		val textFileName = "ClassWithSuperClassAndRoles.n4js"
@@ -69,7 +69,41 @@ class ClassWithSuperClassAndRolesTypesBuilderTest extends AbstractTypesBuilderTe
 
 	override getExpectedTypesSerialization() '''
 		TModule {
-
+		    ref EObject astElement ref: Script@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0)
+		    attr EString astMD5 '752c8770faa7f94d96cd74123d08cb8b'
+		    attr EString moduleSpecifier 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
+		    attr EString qualifiedName 'org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles'
+		    cref Type topLevelTypes [
+		        0: TClass {
+		            ref EObject astElement ref: N4ClassDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.0)
+		            attr EString name 'MyClass'
+		        }
+		        1: TInterface {
+		            ref EObject astElement ref: N4InterfaceDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.1)
+		            attr EString name 'Persistable'
+		        }
+		        2: TInterface {
+		            ref EObject astElement ref: N4InterfaceDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.2)
+		            attr EString name 'Comparable'
+		        }
+		        3: TClass {
+		            ref EObject astElement ref: N4ClassDeclaration@(unresolved proxy src/org/eclipse/n4js/tests/typesbuilder/ClassWithSuperClassAndRoles.n4js#/0/@scriptElements.3/@exportedElement)
+		            attr TypeAccessModifier declaredTypeAccessModifier 'publicInternal'
+		            attr EString exportedName 'MySubClass'
+		            cref ParameterizedTypeRef implementedInterfaceRefs [
+		                0: ParameterizedTypeRef {
+		                    ref Type declaredType ref: TInterface@(resource null)
+		                }
+		                1: ParameterizedTypeRef {
+		                    ref Type declaredType ref: TInterface@(resource null)
+		                }
+		            ]
+		            attr EString name 'MySubClass'
+		            cref ParameterizedTypeRef superClassRef ParameterizedTypeRef {
+		                ref Type declaredType ref: TClass@(resource null)
+		            }
+		        }
+		    ]
 		}'''
 
 	override assertExampleTypeStructure(String phase, Resource newN4jsResource) {

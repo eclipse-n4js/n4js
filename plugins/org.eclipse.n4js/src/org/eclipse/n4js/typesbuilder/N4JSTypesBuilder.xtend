@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.typesbuilder
 
+import com.google.common.base.Charsets
+import com.google.common.hash.Hashing
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
@@ -62,6 +64,10 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * will later be resolved either on demand or by calling {@link N4JSResource#flattenModule()}.
  */
 public class N4JSTypesBuilder {
+	
+	public static def md5Hex(String s) {
+		return Hashing.md5.hashString(s, Charsets.UTF_8).toString();
+	}
 
 	@Inject(optional=true) TypesFactory typesFactory = TypesFactory.eINSTANCE
 	@Inject extension N4JSTypesBuilderHelper
@@ -78,6 +84,35 @@ public class N4JSTypesBuilder {
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
 
+
+	def public void linkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
+		val parseResult = resource.getParseResult();
+		if (parseResult !== null) {
+
+			val script = parseResult.rootASTElement as Script;
+			
+			// TODO compare hex values
+			val TModule result = resource.contents.get(1) as TModule;
+			result.astMD5 = md5Hex(parseResult.rootNode.text);
+			
+			script.buildNamespacesTypesFromModuleImports(result,preLinkingPhase);
+
+			// create types for those TypeRefs that define a type if they play the role of an AST node
+			// (has to be done up-front, because in the rest of the types builder code we do not know
+			// where such a TypeRef shows up; to avoid having to check for them at every occurrence of
+			// a TypeRef, we do this here)
+			script.buildTypesFromTypeRefs(result, preLinkingPhase);
+
+			script.linkTypes(result,preLinkingPhase);
+
+			result.astElement = script;
+			script.module = result;
+//			UtilN4.takeSnapshotInGraphView("TB end (preLinking=="+preLinkingPhase+")",resource.resourceSet);
+
+		} else {
+			throw new IllegalStateException(resource.URI + " has no parse result.");
+		}
+	}
 
 	/**
 	 * This method is the single entry point for the types builder package. The only exception is the public method
@@ -101,6 +136,7 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule result = typesFactory.createTModule;
+			result.astMD5 = md5Hex(parseResult.rootNode.text);
 			var qualifiedModuleName = resource.qualifiedModuleName;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
@@ -191,6 +227,84 @@ public class N4JSTypesBuilder {
 				}
 			}
 		}
+	}
+	
+	def private void linkTypes(Script script, TModule target, boolean preLinkingPhase) {
+		var topLevelTypesIdx = 0;
+		var variableIndex = 0;
+		for (n : script.eAllContents.toIterable) {
+			switch n {
+				TypeDefiningElement: {
+					topLevelTypesIdx = n.linkType(target, preLinkingPhase, topLevelTypesIdx);
+				}
+				ExportedVariableStatement: {
+					variableIndex = n.linkType(target, preLinkingPhase, variableIndex)
+				}
+			}
+		}
+	}
+	
+	def protected dispatch int linkType(TypeDefiningElement other, TModule target, boolean preLinkingPhase, int idx) {
+		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: "+other?.eClass.name);
+	}
+
+	def protected dispatch int linkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase, int idx) {
+		// already handled up-front in #buildNamespacesTypesFromModuleImports()
+		return idx;
+	}
+
+	def protected dispatch int linkType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Class.linkTClass(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
+	def protected dispatch int linkType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase, int idx) {
+		n4Class.createTClass(target, preLinkingPhase)
+		// do not increment the index
+		return idx
+	}
+
+	def protected dispatch int linkType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Interface.linkTInterface(target, preLinkingPhase, idx)) {
+			return idx+1;
+		}
+		return idx;
+	}
+
+	def protected dispatch int linkType(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Enum.linkTEnum(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
+	def protected dispatch int linkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase, int idx) {
+		objectLiteral.createObjectLiteral(target, preLinkingPhase)
+		return idx;
+	}
+
+	def protected dispatch int linkType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase, int idx) {
+		// methods are handled in their containing class/interface -> ignore them here
+		return idx;
+	}
+
+	def protected dispatch int linkType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4FunctionDecl.linkTFunction(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
+	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
+	def protected dispatch int linkType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase, int idx) {
+		n4FunctionExpr.createTFunction(target, preLinkingPhase);
+		return idx;
+	}
+
+	def protected dispatch int linkType(ExportedVariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int idx) {
+		return n4VariableStatement.linkVariableTypes(target, preLinkingPhase, idx)
 	}
 
 	def private void buildTypes(Script script, TModule target, boolean preLinkingPhase) {

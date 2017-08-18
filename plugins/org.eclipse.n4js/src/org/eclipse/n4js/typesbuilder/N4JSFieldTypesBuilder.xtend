@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesbuilder
 import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
@@ -23,6 +22,17 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 package class N4JSFieldTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package boolean linkField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
+			return false;
+
+		val field = classifierType.ownedMembers.get(idx) as TField
+		field.astElement = n4Field;
+		n4Field.definedField = field
+
+		return true;
+	}
 
 	def package createField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase) {
 		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
@@ -51,14 +61,16 @@ package class N4JSFieldTypesBuilder {
 	}
 
 	def private setFieldType(TField field, N4FieldDeclaration n4Field, boolean preLinkingPhase) {
-		if(n4Field.declaredTypeRef!==null) {
-			// type of field was declared explicitly
-			setCopyOfReference([TypeRef typeRef | field.typeRef = typeRef], n4Field.declaredTypeRef, preLinkingPhase);
-		}
-		else {
-			// in all other cases:
-			// leave it to the TypingASTWalker to infer the type (e.g. from the initializer expression, if given)
-			field.typeRef = TypeUtils.createDeferredTypeRef;
+		if (!preLinkingPhase) {
+			if(n4Field.declaredTypeRef!==null) {
+				// type of field was declared explicitly
+				field.typeRef = TypeUtils.copyWithProxies(n4Field.declaredTypeRef)
+			}
+			else {
+				// in all other cases:
+				// leave it to the TypingASTWalker to infer the type (e.g. from the initializer expression, if given)
+				field.typeRef = TypeUtils.createDeferredTypeRef;
+			}
 		}
 	}
 

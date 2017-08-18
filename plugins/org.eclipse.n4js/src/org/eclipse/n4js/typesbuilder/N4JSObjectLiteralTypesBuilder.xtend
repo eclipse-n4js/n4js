@@ -18,7 +18,6 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TStructGetter
@@ -65,7 +64,9 @@ public class N4JSObjectLiteralTypesBuilder {
 		field.setMemberName(nameValuePair);
 		field.optional = nameValuePair.declaredOptional;
 		if (nameValuePair.declaredTypeRef !== null) {
-			setCopyOfReference([TypeRef typeRef | field.typeRef = typeRef], nameValuePair.declaredTypeRef, preLinkingPhase);
+			if (!preLinkingPhase) {
+				field.typeRef = TypeUtils.copyWithProxies(nameValuePair.declaredTypeRef)
+			}
 		}
 		else if(nameValuePair.expression !== null) {
 			field.typeRef = TypeUtils.createDeferredTypeRef;
@@ -93,7 +94,9 @@ public class N4JSObjectLiteralTypesBuilder {
 		getter.setMemberName(getterDecl);
 		getter.optional = getterDecl.declaredOptional;
 		if (getterDecl.declaredTypeRef !== null) {
-			setCopyOfReference([TypeRef typeRef | getter.declaredTypeRef = typeRef], getterDecl.declaredTypeRef, preLinkingPhase);
+			if (!preLinkingPhase) {
+				getter.declaredTypeRef = TypeUtils.copyWithProxies(getterDecl.declaredTypeRef)
+			}
 		} else {
 			getter.declaredTypeRef = TypeUtils.createDeferredTypeRef;
 		}
@@ -117,7 +120,9 @@ public class N4JSObjectLiteralTypesBuilder {
 			param.name = setterDecl.fpar.name
 			val fparDeclTypeRef = setterDecl.fpar.declaredTypeRef;
 			if(fparDeclTypeRef!==null) {
-				setCopyOfReference([TypeRef typeRef | param.typeRef = typeRef], fparDeclTypeRef, preLinkingPhase);
+				if (!preLinkingPhase) {
+					param.typeRef = TypeUtils.copyWithProxies(fparDeclTypeRef);
+				}
 			} else {
 				param.typeRef = TypeUtils.createDeferredTypeRef;
 			}
@@ -143,7 +148,9 @@ public class N4JSObjectLiteralTypesBuilder {
 		// method N4JSFormalParameterTypesBuilder#createFormalParameter() (for consistency with methods in classes)
 		result.fpars += methodDecl.fpars.map[createFormalParameter(builtInTypeScope, preLinkingPhase)];
 		if (methodDecl.returnTypeRef !== null) {
-			setCopyOfReference([TypeRef typeRef | result.returnTypeRef = typeRef], methodDecl.returnTypeRef, preLinkingPhase);
+			if (!preLinkingPhase) {
+				result.returnTypeRef = TypeUtils.copyWithProxies(methodDecl.returnTypeRef);
+			}
 		} else {
 			result.returnTypeRef = builtInTypeScope.voidTypeRef;
 		}

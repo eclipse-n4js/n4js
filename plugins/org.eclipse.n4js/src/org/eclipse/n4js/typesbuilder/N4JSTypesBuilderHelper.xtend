@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -12,10 +12,12 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.Collection
+import java.util.List
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Annotation
-import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument
 import org.eclipse.n4js.n4JS.ModifierUtils
@@ -38,88 +40,55 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.Collection
-import java.util.List
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.n4JS.ModifiableElement
+import org.eclipse.n4js.ts.types.AccessibleTypeElement
 
 @Singleton
 package class N4JSTypesBuilderHelper {
 
-	@Inject	private JavaScriptVariantHelper jsVariantHelper;
+	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
-	def package List<Annotation> getAllAnnotations(AnnotableElement annotableElement) {
-		val annotations = <Annotation>newArrayList
-		val parent = annotableElement.eContainer
-		if(parent instanceof ExportDeclaration) {
-			annotations += parent.annotations
-		}
-		annotations += annotableElement.annotations
-		annotations
-	}
-
-	def package void setTypeAccessModifier(EObject eo, (TypeAccessModifier)=>void typeAccessModifierAssignment,
-		Collection<? extends N4Modifier> modifiers, List<Annotation> annotations) {
-		val isPlainJS = jsVariantHelper.isPlainJS(eo);
+	def protected <T extends AnnotableElement & ModifiableElement> setTypeAccessModifier(
+		AccessibleTypeElement classifier, T definition) {
+		val isPlainJS = jsVariantHelper.isPlainJS(definition);
 		// IDEBUG-861 assume public visibility if plain JS
 		if (isPlainJS) {
-			typeAccessModifierAssignment.apply(TypeAccessModifier.PUBLIC);
+			classifier.declaredTypeAccessModifier = TypeAccessModifier.PUBLIC;
 		} else {
-			typeAccessModifierAssignment.apply(ModifierUtils.convertToTypeAccessModifier(modifiers, annotations));
+			classifier.declaredTypeAccessModifier = ModifierUtils.convertToTypeAccessModifier(
+				definition.declaredModifiers, definition.allAnnotations);
 		}
 	}
 
-	def package void setProvidedByRuntime(DeclaredTypeWithAccessModifier declaredType, AnnotableElement annotableElement, boolean preLinkingPhase) {
-		declaredType.declaredProvidedByRuntime = AnnotationDefinition.PROVIDED_BY_RUNTIME.hasAnnotation(annotableElement);
+	def package void setProvidedByRuntime(DeclaredTypeWithAccessModifier declaredType,
+		AnnotableElement annotableElement, boolean preLinkingPhase) {
+
+		declaredType.declaredProvidedByRuntime = AnnotationDefinition.PROVIDED_BY_RUNTIME.hasAnnotation(
+			annotableElement);
 	}
 
 	/**
 	 * Adds references to a feature (via the closure), but copies the references in order to avoid problems with containment relations.
 	 * The references are copied with proxies (see {@link TypeUtils#copyWithProxies(EObject)} in order to avoid
 	 * resolving of proxies here.
-	 *
+	 * 
 	 * @param typeListAssignment closure, actually adds the processed list
 	 * @param listToAssign the list with references, there must be no proxy in the list
 	 * @param preLinkingPhase if true, references are not set (they are only set in the linking phase)
 	 * @param <T> reference type, e.g., ParameterizedTypeRef
 	 */
-	def package <T extends EObject> addCopyOfReferences((List<T>) => void typeListAssignment, List<T> listToAssign, boolean preLinkingPhase) {
-		if (listToAssign===null || listToAssign.empty) {
+	def package <T extends EObject> addCopyOfReferences(List<? super T> target, List<T> values) {
+		if (values.isNullOrEmpty) {
 			return
 		}
-		if (!preLinkingPhase) { // not in prelinking
-			if(listToAssign.exists[it!==null && eIsProxy]) {
-				throw new IllegalStateException("There is a proxy in the list, cannot copy and set references");
-			}
-			// TODO this is a hack
-			if (listToAssign.exists[it===null]) {
-				return
-			}
-			// TODO maybe optimized with the usage of DelegatingTypeRefs
-			typeListAssignment.apply(listToAssign.map[if (it===null) it else TypeUtils.copyWithProxies(it)])
+		if (values.exists[it !== null && eIsProxy]) {
+			throw new IllegalStateException("There is a proxy in the list, cannot copy and set references");
 		}
-	}
-
-	/**
-	 * Adds copy of single cross references to a feature (via the closure) in order to avoid problems with containment relations.
-	 * The references are copied with proxies (see {@link TypeUtils#copyWithProxies(EObject)} in order to avoid
-	 * resolving of proxies here.
-	 *
-	 * @param typeAssignment closure, actually sets the reference (after having been copied)
-	 * @param typeToAssign the cross reference, must not be a proxy; may be null
-	 * @param preLinkingPhase if true, cross reference is not set (only set in the linking phase)
-	 * @param <T> cross reference type, e.g., ParameterizedTypeRef
-	 */
-	def package <T extends EObject> setCopyOfReference((T) => void typeAssignment, T typeToAssign, boolean preLinkingPhase) {
-		if (!preLinkingPhase) {
-			if (typeToAssign===null) {
-				typeAssignment.apply(null);
-			} else {
-				if (typeToAssign.eIsProxy) {
-					throw new IllegalStateException("Cannot set copy of proxy reference");
-				}
-				typeAssignment.apply(TypeUtils.copyWithProxies(typeToAssign))
-			}
+		// TODO this is a hack
+		if (values.exists[it === null]) {
+			return
 		}
+		target += values.map[TypeUtils.copyWithProxies(it)]
 	}
 
 	/**
@@ -135,14 +104,15 @@ package class N4JSTypesBuilderHelper {
 	/**
 	 * Translates AST related member access modifier (and annotation {@code @Interanl}) to type model related member access modifier.
 	 */
-	def package setMemberAccessModifier((MemberAccessModifier) => void memberAccessModifierAssignment, Collection<? extends N4Modifier> modifiers, List<Annotation> annotations) {
-		memberAccessModifierAssignment.apply(ModifierUtils.convertToMemberAccessModifier(modifiers,annotations));
+	def package setMemberAccessModifier((MemberAccessModifier)=>void memberAccessModifierAssignment,
+		Collection<? extends N4Modifier> modifiers, List<Annotation> annotations) {
+		memberAccessModifierAssignment.apply(ModifierUtils.convertToMemberAccessModifier(modifiers, annotations));
 	}
 
 	/** Returns newly created reference to built-in type <code>any</code>. */
 	def package createAnyTypeRef(EObject object) {
 		val rs = object?.eResource?.resourceSet
-		if(rs!==null)
+		if (rs !== null)
 			BuiltInTypeScope.get(rs).anyTypeRef
 		else
 			null
@@ -156,12 +126,12 @@ package class N4JSTypesBuilderHelper {
 	 * Since this mechanism is changed anyway, no type check (whether annotation is allowed for given element type) is
 	 * performed.
 	 */
-	def package void copyAnnotations(TAnnotableElement typeTarget, AnnotableElement astSource, boolean preLinkingPhase) {
-		astSource.annotations.filter[AnnotationDefinition.isInTypeModel(name)]
-			.forEach[
-				val ta = TypesFactory.eINSTANCE.createTAnnotation();
-				ta.name = it.name;
-				ta.args.addAll(args.map[switch(it) {
+	def package void copyAnnotations(TAnnotableElement typeTarget, AnnotableElement ast, boolean preLinkingPhase) {
+		typeTarget.annotations += ast.allAnnotations.filter[AnnotationDefinition.isInTypeModel(name)].map [
+			val ta = TypesFactory.eINSTANCE.createTAnnotation();
+			ta.name = it.name;
+			ta.args.addAll(args.map [
+				switch (it) {
 					LiteralAnnotationArgument: {
 						val arg = TypesFactory.eINSTANCE.createTAnnotationStringArgument();
 						arg.value = it.literal.valueAsString;
@@ -169,21 +139,19 @@ package class N4JSTypesBuilderHelper {
 					}
 					TypeRefAnnotationArgument: {
 						val arg = TypesFactory.eINSTANCE.createTAnnotationTypeRefArgument();
-						setCopyOfReference([TypeRef typeRefToSet|arg.typeRef = typeRefToSet], typeRef, preLinkingPhase)
+						arg.typeRef = TypeUtils.copyWithProxies(typeRef);
 						return arg;
 					}
-				}])
-				typeTarget.annotations.add(ta);
-			]
-		if (astSource.eContainer instanceof ExportDeclaration) {
-			copyAnnotations(typeTarget, astSource.eContainer as ExportDeclaration, preLinkingPhase);
-		}
+				}
+			])
+			return ta
+		]
 	}
 
 	/** Returns newly created reference to built-in type <code>any</code>. */
 	def package getObjectType(EObject object) {
 		val rs = object?.eResource?.resourceSet
-		if(rs!==null)
+		if (rs !== null)
 			BuiltInTypeScope.get(rs).objectType
 		else
 			null
@@ -191,22 +159,29 @@ package class N4JSTypesBuilderHelper {
 
 	/** @see TClassifier#isDeclaredCovariantConstructor() */
 	def package boolean isDeclaredCovariantConstructor(N4ClassifierDeclaration classifierDecl) {
-		if(AnnotationDefinition.COVARIANT_CONSTRUCTOR.hasAnnotation(classifierDecl)) {
+		if (AnnotationDefinition.COVARIANT_CONSTRUCTOR.hasAnnotation(classifierDecl)) {
 			return true;
 		}
 		val ctor = classifierDecl.ownedMembers.findFirst[isConstructor];
-		return ctor!==null && AnnotationDefinition.COVARIANT_CONSTRUCTOR.hasAnnotation(ctor);
+		return ctor !== null && AnnotationDefinition.COVARIANT_CONSTRUCTOR.hasAnnotation(ctor);
 	}
 
 	/** Handle optional "@This" annotation and set its argument as declared this type in types model element. */
 	def protected void setDeclaredThisTypeFromAnnotation(TFunction functionType, FunctionDefinition functionDef,
 		boolean preLinkingPhase) {
-		setCopyOfReference([TypeRef tr | functionType.declaredThisType = tr], internalGetDeclaredThisTypeFromAnnotation(functionDef), preLinkingPhase);
+		if (!preLinkingPhase)
+			functionType.declaredThisType = TypeUtils.copyWithProxies(
+				internalGetDeclaredThisTypeFromAnnotation(functionDef));
 	}
+
 	/** Handle optional "@This" annotation and set its argument as declared this type in types model element. */
-	def protected void setDeclaredThisTypeFromAnnotation(FieldAccessor accessorType, org.eclipse.n4js.n4JS.FieldAccessor accessorDecl, boolean preLinkingPhase) {
-		setCopyOfReference([TypeRef tr | accessorType.declaredThisType = tr], internalGetDeclaredThisTypeFromAnnotation(accessorDecl), preLinkingPhase);
+	def protected void setDeclaredThisTypeFromAnnotation(FieldAccessor accessorType,
+		org.eclipse.n4js.n4JS.FieldAccessor accessorDecl, boolean preLinkingPhase) {
+		if (!preLinkingPhase)
+			accessorType.declaredThisType = TypeUtils.copyWithProxies(
+				internalGetDeclaredThisTypeFromAnnotation(accessorDecl));
 	}
+
 	def private TypeRef internalGetDeclaredThisTypeFromAnnotation(AnnotableElement element) {
 		val annThis = AnnotationDefinition.THIS.getAnnotation(element);
 		return annThis?.args?.filter(TypeRefAnnotationArgument)?.head?.typeRef;
