@@ -32,7 +32,8 @@
 import { MyEnum } from "scoping/enums/MyEnum"
 /* XPECT scopeWithPosition at 'MyEnum.|ONE' ---
 	ONE - MyEnum.n4js:13,
-	THREE - Tproxy:MyEnum.n4js#/1/@topLevelTypes.0/@literals.2, TWO - Tproxy:MyEnum.n4js#/1/@topLevelTypes.0/@literals.1,
+	TWO - MyEnum.n4js:14,
+	THREE - MyEnum.n4js:15,
 	__proto__ - builtin_js.n4ts:44, constructor - builtin_js.n4ts:140, findLiteralByName - builtin_n4.n4ts:333,
 	findLiteralByValue - builtin_n4.n4ts:339, hasOwnProperty - builtin_js.n4ts:168, isPrototypeOf - builtin_js.n4ts:177,
 	literals - builtin_n4.n4ts:327, n4type - builtin_n4.n4ts:320, propertyIsEnumerable - builtin_js.n4ts:185,

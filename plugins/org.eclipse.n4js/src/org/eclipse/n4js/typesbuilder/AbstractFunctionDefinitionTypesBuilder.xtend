@@ -17,9 +17,9 @@ import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TGetter
+import org.eclipse.n4js.ts.utils.TypeUtils
 
 /**
  * Base class for functions and methods
@@ -29,6 +29,14 @@ package class AbstractFunctionDefinitionTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
 
+	def protected linkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
+		functionDef.fpars.fold(0) [ idx, fpar |
+			if (linkFormalParameter(fpar, functionType, preLinkingPhase, idx)) {
+				return idx + 1;
+			}
+			return idx;
+		]
+	}
 
 	def protected addFormalParameters(TFunction functionType, FunctionDefinition functionDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
@@ -40,40 +48,42 @@ package class AbstractFunctionDefinitionTypesBuilder {
 	 * Transforms type variables from declaration (MethodDeclaration of FunctionDeclaration) to TFunction's type variables.
 	 */
 	def protected addTypeVariables(TFunction functionType, GenericDeclaration genericDecl, boolean preLinkingPhase) {
-		addCopyOfReferences([params|functionType.typeVars += params], genericDecl.typeVars, preLinkingPhase)
+		addCopyOfReferences(functionType.typeVars, genericDecl.typeVars)
 	}
 
 	def protected setReturnType(TGetter getterType, N4GetterDeclaration getterDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
-		val inferredReturnTypeRef =
-			if (getterDef.declaredTypeRef === null) {
-				if (!preLinkingPhase) {
-					if(getterType.isAbstract) {
-						builtInTypeScope.anyTypeRef
-					} else {
-						inferReturnTypeFromReturnStatements(getterDef, builtInTypeScope)
+		if (!preLinkingPhase) {
+			val inferredReturnTypeRef =
+				if (getterDef.declaredTypeRef === null) {
+					if (!preLinkingPhase) {
+						if(getterType.isAbstract) {
+							builtInTypeScope.anyTypeRef
+						} else {
+							inferReturnTypeFromReturnStatements(getterDef, builtInTypeScope)
+						}
 					}
-				}
-			} else {
-				getterDef.declaredTypeRef
-			};
-		setCopyOfReference([TypeRef typeRef | getterType.declaredTypeRef = typeRef], inferredReturnTypeRef,
-			preLinkingPhase)
+				} else {
+					getterDef.declaredTypeRef
+				};
+			getterType.declaredTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
+		}
 	}
 
 	def protected setReturnType(TFunction functionType, FunctionDefinition functionDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
-		val inferredReturnTypeRef =
-			if (functionDef.returnTypeRef === null) {
-				if (!preLinkingPhase) {
-					inferReturnTypeFromReturnStatements(functionDef, builtInTypeScope)
-				}
-			} else {
-				functionDef.returnTypeRef
-			};
-		setCopyOfReference([TypeRef typeRef | functionType.returnTypeRef = typeRef], inferredReturnTypeRef,
-			preLinkingPhase);
-		// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()
+		if (!preLinkingPhase) {
+			val inferredReturnTypeRef =
+				if (functionDef.returnTypeRef === null) {
+					if (!preLinkingPhase) {
+						inferReturnTypeFromReturnStatements(functionDef, builtInTypeScope)
+					}
+				} else {
+					functionDef.returnTypeRef
+				};
+			functionType.returnTypeRef = TypeUtils.copyWithProxies(inferredReturnTypeRef);
+			// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()
+		}
 	}
 
 	/**

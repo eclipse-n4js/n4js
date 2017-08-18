@@ -274,10 +274,9 @@ class N4JSScopingTestWithIndexTest {
 		assertNotNull(ParameterizedCallExpression.target)
 		assertTrue(ParameterizedCallExpression.target instanceof ParameterizedPropertyAccessExpression)
 		val dotAccess = ParameterizedCallExpression.target as ParameterizedPropertyAccessExpression
-		val willBecomeProxy = dotAccess.eGet(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY,
-			false) as EObject
+		val wontBecomeAProxy = dotAccess.eGet(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY, false) as EObject
 
-		assertFalse("property should not be a proxy", willBecomeProxy.eIsProxy)
+		assertFalse("property should not be a proxy", wontBecomeAProxy.eIsProxy)
 
 		supplierResource = rs.getResource(supplierJS, false) as N4JSResource
 		assertNotNull(supplierResource)
@@ -285,13 +284,11 @@ class N4JSScopingTestWithIndexTest {
 		assertFalse(supplierResource.loaded)
 		assertEquals(2, supplierResource.contents.size)
 
-		// TODO check why this caused a ConcurrentModificationException
 		supplierResource.contents.head // trigger AST loading
 
-		assertTrue(willBecomeProxy.eIsProxy)
+		assertFalse("we still point to the very same instance", wontBecomeAProxy.eIsProxy)
 		assertTrue(supplierResource.loaded)
 
-		// TODO: Should have failed here
 		assertFalse("Proxy cannot be resolved, type deserialization not working", dotAccess.property.eIsProxy)
 		assertEquals("foo", dotAccess.property.name);
 

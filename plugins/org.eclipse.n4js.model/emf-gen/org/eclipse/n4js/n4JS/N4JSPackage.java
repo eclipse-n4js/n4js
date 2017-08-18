@@ -228,13 +228,22 @@ public interface N4JSPackage extends EPackage {
 	int SCRIPT___GET_ANNOTATIONS = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT___GET_ALL_ANNOTATIONS = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 1;
+
+	/**
 	 * The number of operations of the '<em>Script</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SCRIPT_OPERATION_COUNT = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 1;
+	int SCRIPT_OPERATION_COUNT = VARIABLE_ENVIRONMENT_ELEMENT_OPERATION_COUNT + 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ScriptElementImpl <em>Script Element</em>}' class.
@@ -293,13 +302,22 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTABLE_ELEMENT___GET_ANNOTATIONS = 0;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS = 1;
+
+	/**
 	 * The number of operations of the '<em>Annotable Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ANNOTABLE_ELEMENT_OPERATION_COUNT = 1;
+	int ANNOTABLE_ELEMENT_OPERATION_COUNT = 2;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableScriptElementImpl <em>Annotable Script Element</em>}' class.
@@ -328,6 +346,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_SCRIPT_ELEMENT___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -428,6 +455,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 6;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORT_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -611,6 +647,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int IMPORT_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int IMPORT_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -1154,6 +1199,15 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTABLE_EXPRESSION_FEATURE_COUNT = ANNOTABLE_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_EXPRESSION___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Is Valid Simple Assignment Target</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1603,6 +1657,15 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_OR_FIELD_ACCESSOR___GET_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_OR_FIELD_ACCESSOR___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1757,6 +1820,15 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_DEFINITION___GET_ANNOTATIONS = FUNCTION_OR_FIELD_ACCESSOR___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DEFINITION___GET_ALL_ANNOTATIONS = FUNCTION_OR_FIELD_ACCESSOR___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1891,6 +1963,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int FIELD_ACCESSOR___GET_ANNOTATIONS = FUNCTION_OR_FIELD_ACCESSOR___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR___GET_ALL_ANNOTATIONS = FUNCTION_OR_FIELD_ACCESSOR___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -2117,6 +2198,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int FUNCTION_DECLARATION_FEATURE_COUNT = ANNOTABLE_SCRIPT_ELEMENT_FEATURE_COUNT + 10;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_SCRIPT_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -2354,6 +2444,15 @@ public interface N4JSPackage extends EPackage {
 	int FUNCTION_EXPRESSION_FEATURE_COUNT = FUNCTION_DEFINITION_FEATURE_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FUNCTION_EXPRESSION___GET_ALL_ANNOTATIONS = FUNCTION_DEFINITION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -2569,6 +2668,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ARROW_FUNCTION_FEATURE_COUNT = FUNCTION_EXPRESSION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARROW_FUNCTION___GET_ALL_ANNOTATIONS = FUNCTION_EXPRESSION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -2886,6 +2994,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int FORMAL_PARAMETER___GET_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FORMAL_PARAMETER___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -3334,13 +3451,22 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_STATEMENT___IS_TOPLEVEL = VARIABLE_STATEMENT_OPERATION_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
+
+	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 5;
+	int EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS = VARIABLE_STATEMENT_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -3349,7 +3475,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 6;
+	int EXPORTED_VARIABLE_STATEMENT___IS_EXTERNAL = VARIABLE_STATEMENT_OPERATION_COUNT + 7;
 
 	/**
 	 * The number of operations of the '<em>Exported Variable Statement</em>' class.
@@ -3358,7 +3484,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 7;
+	int EXPORTED_VARIABLE_STATEMENT_OPERATION_COUNT = VARIABLE_STATEMENT_OPERATION_COUNT + 8;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VariableDeclarationOrBindingImpl <em>Variable Declaration Or Binding</em>}' class.
@@ -3599,13 +3725,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_DECLARATION___GET_ANNOTATIONS = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 1;
+	int VARIABLE_DECLARATION___GET_DECLARED_TYPE_REF = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -3614,7 +3749,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 2;
+	int VARIABLE_DECLARATION___GET_CONTAINING_MODULE = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -3623,7 +3758,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 3;
+	int VARIABLE_DECLARATION___GET_NAME = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Const</em>' operation.
@@ -3632,7 +3767,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 5;
+	int VARIABLE_DECLARATION___IS_CONST = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>Variable Declaration</em>' class.
@@ -3641,7 +3776,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 6;
+	int VARIABLE_DECLARATION_OPERATION_COUNT = VARIABLE_DECLARATION_OR_BINDING_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableDeclarationImpl <em>Exported Variable Declaration</em>}' class.
@@ -3733,6 +3868,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_DECLARATION___GET_ANNOTATIONS = VARIABLE_DECLARATION___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS = VARIABLE_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -5507,6 +5651,15 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_ASSIGNMENT___GET_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_ASSIGNMENT___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5744,6 +5897,15 @@ public interface N4JSPackage extends EPackage {
 	int ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT = PROPERTY_ASSIGNMENT_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_PROPERTY_ASSIGNMENT___GET_ALL_ANNOTATIONS = PROPERTY_ASSIGNMENT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -5853,13 +6015,22 @@ public interface N4JSPackage extends EPackage {
 	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_ANNOTATIONS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_ALL_ANNOTATIONS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -5868,7 +6039,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 3;
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -5877,7 +6048,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___HAS_COMPUTED_PROPERTY_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 4;
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___HAS_COMPUTED_PROPERTY_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Valid Name</em>' operation.
@@ -5886,7 +6057,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___IS_VALID_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___IS_VALID_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Defined Member</em>' operation.
@@ -5895,7 +6066,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_DEFINED_MEMBER = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST___GET_DEFINED_MEMBER = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
 
 	/**
 	 * The number of operations of the '<em>Property Assignment Annotation List</em>' class.
@@ -5904,7 +6075,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
+	int PROPERTY_ASSIGNMENT_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.PropertyNameValuePairImpl <em>Property Name Value Pair</em>}' class.
@@ -5987,6 +6158,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR___GET_ALL_ANNOTATIONS = ANNOTABLE_PROPERTY_ASSIGNMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -6150,6 +6330,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME_FEATURE_COUNT = PROPERTY_NAME_VALUE_PAIR_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_NAME_VALUE_PAIR_SINGLE_NAME___GET_ALL_ANNOTATIONS = PROPERTY_NAME_VALUE_PAIR___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -6349,6 +6538,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_PROPERTY_ASSIGNMENT_FEATURE_COUNT + 10;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_PROPERTY_ASSIGNMENT___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -6586,6 +6784,15 @@ public interface N4JSPackage extends EPackage {
 	int GETTER_DECLARATION___GET_ANNOTATIONS = FIELD_ACCESSOR___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int GETTER_DECLARATION___GET_ALL_ANNOTATIONS = FIELD_ACCESSOR___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -6774,6 +6981,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int SETTER_DECLARATION___GET_ANNOTATIONS = FIELD_ACCESSOR___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SETTER_DECLARATION___GET_ALL_ANNOTATIONS = FIELD_ACCESSOR___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -6973,6 +7189,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_GETTER_DECLARATION_FEATURE_COUNT = GETTER_DECLARATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_GETTER_DECLARATION___GET_ALL_ANNOTATIONS = GETTER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -7190,6 +7415,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int PROPERTY_SETTER_DECLARATION_FEATURE_COUNT = SETTER_DECLARATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PROPERTY_SETTER_DECLARATION___GET_ALL_ANNOTATIONS = SETTER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -9990,6 +10224,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_TYPE_DEFINITION___GET_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DEFINITION___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10061,6 +10304,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_TYPE_DECLARATION_FEATURE_COUNT = N4_TYPE_DEFINITION_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_TYPE_DECLARATION___GET_ALL_ANNOTATIONS = N4_TYPE_DEFINITION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -10215,6 +10467,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASSIFIER_DECLARATION_FEATURE_COUNT = N4_TYPE_DECLARATION_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DECLARATION___GET_ALL_ANNOTATIONS = N4_TYPE_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -10416,6 +10677,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASSIFIER_DEFINITION___GET_ANNOTATIONS = N4_TYPE_DEFINITION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASSIFIER_DEFINITION___GET_ALL_ANNOTATIONS = N4_TYPE_DEFINITION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10586,6 +10856,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASS_DEFINITION___GET_ANNOTATIONS = N4_CLASSIFIER_DEFINITION___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DEFINITION___GET_ALL_ANNOTATIONS = N4_CLASSIFIER_DEFINITION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Is External</em>' operation.
@@ -10803,6 +11082,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_CLASS_DECLARATION_FEATURE_COUNT = N4_CLASS_DEFINITION_FEATURE_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___GET_ALL_ANNOTATIONS = N4_CLASS_DEFINITION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Owned Members</em>' operation.
@@ -11058,6 +11346,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_EXPRESSION_FEATURE_COUNT = N4_CLASS_DEFINITION_FEATURE_COUNT + 2;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_EXPRESSION___GET_ALL_ANNOTATIONS = N4_CLASS_DEFINITION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Is External</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11284,6 +11581,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION_FEATURE_COUNT = N4_CLASSIFIER_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___GET_ALL_ANNOTATIONS = N4_CLASSIFIER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11508,6 +11814,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_ENUM_DECLARATION_FEATURE_COUNT = N4_TYPE_DECLARATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___GET_ALL_ANNOTATIONS = N4_TYPE_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Annotations</em>' operation.
@@ -11738,6 +12053,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_DECLARATION___GET_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11872,6 +12196,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT = N4_MEMBER_DECLARATION_FEATURE_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS = N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -12028,13 +12361,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_MEMBER_ANNOTATION_LIST___GET_ANNOTATIONS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 0;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 1;
+
+	/**
 	 * The operation id for the '<em>Is Declared Static</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 4;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
 
 	/**
 	 * The operation id for the '<em>Is Static</em>' operation.
@@ -12043,7 +12385,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 5;
+	int N4_MEMBER_ANNOTATION_LIST___IS_STATIC = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Is Declared Final</em>' operation.
@@ -12052,7 +12394,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 6;
+	int N4_MEMBER_ANNOTATION_LIST___IS_DECLARED_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
 
 	/**
 	 * The operation id for the '<em>Is Final</em>' operation.
@@ -12061,7 +12403,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 7;
+	int N4_MEMBER_ANNOTATION_LIST___IS_FINAL = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Is Constructor</em>' operation.
@@ -12070,7 +12412,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 8;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
 
 	/**
 	 * The operation id for the '<em>Is Callable Constructor</em>' operation.
@@ -12079,7 +12421,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 9;
+	int N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -12088,7 +12430,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 10;
+	int N4_MEMBER_ANNOTATION_LIST___GET_DEFINED_TYPE_ELEMENT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -12097,7 +12439,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 11;
+	int N4_MEMBER_ANNOTATION_LIST___GET_DECLARED_TYPE_REF = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
 
 	/**
 	 * The operation id for the '<em>Get Name</em>' operation.
@@ -12106,7 +12448,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 12;
+	int N4_MEMBER_ANNOTATION_LIST___GET_NAME = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
 
 	/**
 	 * The number of operations of the '<em>N4 Member Annotation List</em>' class.
@@ -12115,7 +12457,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 13;
+	int N4_MEMBER_ANNOTATION_LIST_OPERATION_COUNT = ABSTRACT_ANNOTATION_LIST_OPERATION_COUNT + 14;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4FieldDeclarationImpl <em>N4 Field Declaration</em>}' class.
@@ -12216,6 +12558,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_FIELD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 6;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
@@ -12478,6 +12829,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int METHOD_DECLARATION___GET_ANNOTATIONS = FUNCTION_DEFINITION___GET_ANNOTATIONS;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int METHOD_DECLARATION___GET_ALL_ANNOTATIONS = FUNCTION_DEFINITION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -12751,6 +13111,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_METHOD_DECLARATION_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 11;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13020,6 +13389,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_FIELD_ACCESSOR_FEATURE_COUNT = ANNOTABLE_N4_MEMBER_DECLARATION_FEATURE_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_FIELD_ACCESSOR___GET_ALL_ANNOTATIONS = ANNOTABLE_N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Defined Type Element</em>' operation.
@@ -13320,6 +13698,15 @@ public interface N4JSPackage extends EPackage {
 	int N4_GETTER_DECLARATION_FEATURE_COUNT = GETTER_DECLARATION_FEATURE_COUNT + 3;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_GETTER_DECLARATION___GET_ALL_ANNOTATIONS = GETTER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -13607,6 +13994,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int N4_SETTER_DECLARATION_FEATURE_COUNT = SETTER_DECLARATION_FEATURE_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_SETTER_DECLARATION___GET_ALL_ANNOTATIONS = SETTER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -14804,6 +15200,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getAnnotableElement__GetAnnotations();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.AnnotableElement#getAllAnnotations() <em>Get All Annotations</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get All Annotations</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.AnnotableElement#getAllAnnotations()
+	 * @generated
+	 */
+	EOperation getAnnotableElement__GetAllAnnotations();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.AnnotableScriptElement <em>Annotable Script Element</em>}'.
@@ -20132,6 +20538,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ANNOTABLE_ELEMENT___GET_ANNOTATIONS = eINSTANCE.getAnnotableElement__GetAnnotations();
+
+		/**
+		 * The meta object literal for the '<em><b>Get All Annotations</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS = eINSTANCE.getAnnotableElement__GetAllAnnotations();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.AnnotableScriptElementImpl <em>Annotable Script Element</em>}' class.

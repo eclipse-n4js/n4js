@@ -15,11 +15,21 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 
 package class N4JSEnumDeclarationTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package boolean linkTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Enum.name === null) {
+			return false;
+		}
+
+		val TEnum enumType = target.topLevelTypes.get(idx) as TEnum
+		enumType.astElement = n4Enum
+		n4Enum.definedType = enumType
+		return true;
+	}
 
 	def package void createTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
 		if (n4Enum.name === null) {
@@ -44,12 +54,6 @@ package class N4JSEnumDeclarationTypesBuilder {
 		enumType.exportedName = n4Enum.exportedName;
 		enumType.external = n4Enum.external;
 		enumType
-	}
-
-	def private setTypeAccessModifier(TEnum enumType, N4EnumDeclaration n4Enum) {
-		setTypeAccessModifier(n4Enum, [TypeAccessModifier modifier |
-			enumType.declaredTypeAccessModifier = modifier
-		], n4Enum.declaredModifiers, getAllAnnotations(n4Enum))
 	}
 
 	def private addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, boolean preLinkingPhase) {
