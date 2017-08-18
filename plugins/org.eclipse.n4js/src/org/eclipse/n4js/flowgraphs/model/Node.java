@@ -11,7 +11,6 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -22,9 +21,6 @@ abstract public class Node implements ControlFlowable {
 	final private ControlFlowElement cfeElem;
 	final public String name;
 	final public List<Node> internalSucc = new LinkedList<>();
-	final public int opPos;
-
-	private final int nodePosition = -1;
 
 	final public List<ControlFlowEdge> pred = new LinkedList<>();
 	final public List<ControlFlowEdge> succ = new LinkedList<>();
@@ -35,19 +31,9 @@ abstract public class Node implements ControlFlowable {
 	final public List<JumpToken> jumpToken = new ArrayList<>();
 	final public List<CatchToken> catchToken = new ArrayList<>();
 
-	public Node(String name, ControlFlowElement cfeElem, Node... internalSuccessors) {
-		this(name, cfeElem, -1, internalSuccessors);
-	}
-
-	public Node(String name, ControlFlowElement cfeElem, int opPos, Node... internalSuccessors) {
+	public Node(String name, ControlFlowElement cfeElem) {
 		this.name = name;
-		this.opPos = opPos;
-		this.internalSucc.addAll(Arrays.asList(internalSuccessors));
 		this.cfeElem = cfeElem;
-	}
-
-	public int getOperandPosition() {
-		return opPos;
 	}
 
 	public void addInternalSuccessors(Node node) {

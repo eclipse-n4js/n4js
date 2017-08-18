@@ -28,8 +28,8 @@ class DoWhileFactory {
 
 		Node entryNode = new HelperNode("entry", doStmt);
 		Node exitNode = new DelegatingNode("exit", doStmt);
-		Node conditionNode = new DelegatingNode("condition", doStmt.getExpression());
-		Node bodyNode = new DelegatingNode("body", doStmt.getStatement());
+		Node conditionNode = new DelegatingNode("condition", doStmt, doStmt.getExpression());
+		Node bodyNode = new DelegatingNode("body", doStmt, doStmt.getStatement());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);

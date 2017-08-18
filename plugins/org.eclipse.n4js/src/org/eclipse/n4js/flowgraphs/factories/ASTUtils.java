@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
 
@@ -18,6 +19,9 @@ class ASTUtils {
 
 	static String getLabel(Statement stmt) {
 		EObject container = stmt.eContainer();
+		if (container instanceof ExpressionStatement) {
+			container = container.eContainer();
+		}
 		if (container instanceof LabelledStatement) {
 			LabelledStatement lblStmt = (LabelledStatement) container;
 			return lblStmt.getName();

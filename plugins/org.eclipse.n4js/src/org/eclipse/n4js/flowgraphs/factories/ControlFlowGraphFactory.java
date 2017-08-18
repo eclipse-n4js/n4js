@@ -16,7 +16,9 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.EdgeUtils;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -24,28 +26,24 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
 /**
- *
+ * Factory to build control flow graphs.
  */
 public class ControlFlowGraphFactory {
-	static private Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
+	private final static boolean PRINT_EDGE_DETAILS = false;
 
 	/**
-	 *
+	 * Builds and returns a control flow graph from a given {@link Script}.
 	 */
 	static public FlowGraph build(Script script) {
-		init();
-		createComplexNodes(script);
-		connectComplexNodes();
+		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
+		createComplexNodes(cnMap, script);
+		connectComplexNodes(cnMap);
 
 		FlowGraph cfg = new FlowGraph(cnMap);
 		return cfg;
 	}
 
-	static private void init() {
-		cnMap.clear();
-	}
-
-	static private void createComplexNodes(Script script) {
+	static private void createComplexNodes(Map<ControlFlowElement, ComplexNode> cnMap, Script script) {
 		TreeIterator<EObject> tit = script.eAllContents();
 		while (tit.hasNext()) {
 			EObject eObj = tit.next();
@@ -60,29 +58,45 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	static private void connectComplexNodes() {
+	static private void connectComplexNodes(Map<ControlFlowElement, ComplexNode> cnMap) {
 		for (ComplexNode cn : cnMap.values()) {
 			for (Node mNode : cn.getAllButExitNodes()) {
-				connectNode(mNode);
+				connectNode(cnMap, mNode);
 			}
 		}
 	}
 
-	private static void connectNode(Node mNode) {
+	static private void connectNode(Map<ControlFlowElement, ComplexNode> cnMap, Node mNode) {
 		Node internalStartNode = mNode;
 		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
 		if (subASTElem != null) {
 			if (cnMap.containsKey(subASTElem)) { // can be missing when the AST is incomplete
 				ComplexNode subCN = cnMap.get(subASTElem);
-				EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
+				ControlFlowEdge e = EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
 				internalStartNode = subCN.getExit();
+				if (PRINT_EDGE_DETAILS)
+					printEdgeDetails(cnMap, e);
 			}
 		}
 
 		List<Node> internalSuccs = mNode.getInternalSuccessors();
 		for (Node internalSucc : internalSuccs) {
-			EdgeUtils.addEdgeCF(internalStartNode, internalSucc);
+			ControlFlowEdge e = EdgeUtils.addEdgeCF(internalStartNode, internalSucc);
+			if (PRINT_EDGE_DETAILS)
+				printEdgeDetails(cnMap, e);
 		}
+	}
+
+	/** Used for debugging purposes */
+	private static void printEdgeDetails(Map<ControlFlowElement, ComplexNode> cnMap, ControlFlowEdge e) {
+		ControlFlowElement sCFE = e.start.getControlFlowElement();
+		ControlFlowElement eCFE = e.end.getControlFlowElement();
+		sCFE = cnMap.get(sCFE).getControlFlowElement();
+		eCFE = cnMap.get(eCFE).getControlFlowElement();
+
+		String edgeStr = FGUtils.getClassName(sCFE) + ":" + e.start.name + ":" + FGUtils.getTextLabel(sCFE);
+		edgeStr += " --> " + FGUtils.getClassName(eCFE) + ":" + e.end.name + ":" + FGUtils.getTextLabel(eCFE);
+		System.out.println(edgeStr);
 	}
 
 }

@@ -59,7 +59,7 @@ class JumpFactory {
 		cNode.addNode(entryNode);
 
 		if (expr != null) {
-			expression = new DelegatingNode("expression", expr);
+			expression = new DelegatingNode("expression", stmt, expr);
 			cNode.addNode(expression);
 		}
 		cNode.addNode(endNode);

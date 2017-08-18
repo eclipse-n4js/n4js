@@ -26,14 +26,14 @@ class IfFactory {
 
 		Node entryNode = new HelperNode("entry", ifStmt);
 		Node exitNode = new HelperNode("exit", ifStmt);
-		Node conditionNode = new DelegatingNode("condition", ifStmt.getExpression());
+		Node conditionNode = new DelegatingNode("condition", ifStmt, ifStmt.getExpression());
 		Node thenNode = null;
 		Node elseNode = null;
 
 		if (ifStmt.getIfStmt() != null)
-			thenNode = new DelegatingNode("then", ifStmt.getIfStmt());
+			thenNode = new DelegatingNode("then", ifStmt, ifStmt.getIfStmt());
 		if (ifStmt.getElseStmt() != null)
-			elseNode = new DelegatingNode("else", ifStmt.getElseStmt());
+			elseNode = new DelegatingNode("else", ifStmt, ifStmt.getElseStmt());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

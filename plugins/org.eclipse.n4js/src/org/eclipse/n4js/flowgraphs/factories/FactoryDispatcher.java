@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
+import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ContinueStatement;
@@ -48,6 +49,10 @@ final public class FactoryDispatcher extends Dispatcher {
 
 	static ComplexNode _build(AbstractCaseClause feature) {
 		return AbstractCaseClauseFactory.buildComplexNode(feature);
+	}
+
+	static ComplexNode _build(AnnotationList feature) {
+		return EmptyStatementFactory.buildComplexNode(feature);
 	}
 
 	static ComplexNode _build(Block feature) {

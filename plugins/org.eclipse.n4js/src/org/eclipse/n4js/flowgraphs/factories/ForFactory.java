@@ -39,7 +39,7 @@ class ForFactory {
 
 		Node entryNode = new HelperNode("entry", forStmt);
 		Node exitNode = new HelperNode("exit", forStmt);
-		Node expressionNode = new DelegatingNode("expression", forStmt.getExpression());
+		Node expressionNode = new DelegatingNode("expression", forStmt, forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics)
 			getObjectKeysNode = new HelperNode("getObjectKeys", forStmt);
@@ -47,7 +47,7 @@ class ForFactory {
 		Node nextNode = new HelperNode("next", forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null)
-			bodyNode = new DelegatingNode("body", forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(expressionNode);
@@ -93,16 +93,16 @@ class ForFactory {
 		Node entryNode = new HelperNode("entry", forStmt);
 		Node exitNode = new HelperNode("exit", forStmt);
 		if (forStmt.getInitExpr() != null) {
-			initsNode = new DelegatingNode("inits", forStmt.getInitExpr());
+			initsNode = new DelegatingNode("inits", forStmt, forStmt.getInitExpr());
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode("condition", forStmt.getExpression());
+			conditionNode = new DelegatingNode("condition", forStmt, forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());
 		}
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = new DelegatingNode("updates", forStmt.getUpdateExpr());
+			updatesNode = new DelegatingNode("updates", forStmt, forStmt.getUpdateExpr());
 		}
 
 		cNode.addNode(entryNode);

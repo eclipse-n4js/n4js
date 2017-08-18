@@ -35,8 +35,9 @@ class ExpressionFactory {
 		List<Node> argumentNodes = new LinkedList<>();
 
 		List<Expression> args = ControlFlowChildren.get(expr);
-		for (Expression arg : args) {
-			Node argNode = new DelegatingNode("arg_" + args.indexOf(arg), arg);
+		for (int i = 0; i < args.size(); i++) {
+			Expression arg = args.get(i);
+			Node argNode = new DelegatingNode("arg_" + i, expr, arg);
 			argumentNodes.add(argNode);
 		}
 
@@ -62,9 +63,9 @@ class ExpressionFactory {
 
 		HelperNode entryNode = new HelperNode("entry", condExpr);
 		Node exitNode = new RepresentingNode("exit", condExpr);
-		Node conditionNode = new DelegatingNode("condition", condExpr.getExpression());
-		Node thenNode = new DelegatingNode("then", condExpr.getTrueExpression());
-		Node elseNode = new DelegatingNode("else", condExpr.getFalseExpression());
+		Node conditionNode = new DelegatingNode("condition", condExpr, condExpr.getExpression());
+		Node thenNode = new DelegatingNode("then", condExpr, condExpr.getTrueExpression());
+		Node elseNode = new DelegatingNode("else", condExpr, condExpr.getFalseExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

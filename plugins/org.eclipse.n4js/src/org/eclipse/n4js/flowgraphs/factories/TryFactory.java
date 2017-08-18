@@ -34,18 +34,18 @@ class TryFactory {
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = new DelegatingNode("try", tryStmt.getBlock());
+			tryNode = new DelegatingNode("try", tryStmt, tryStmt.getBlock());
 		}
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(JumpType.Throw, catchClause.getCatchVariable());
-			catchNode = new DelegatingNode("catch", catchClause.getBlock());
+			catchNode = new DelegatingNode("catch", tryStmt, catchClause.getBlock());
 			catchNode.getEntry().addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
-			finallyNode = new DelegatingNode("finally", tryStmt.getFinally().getBlock());
+			finallyNode = new DelegatingNode("finally", tryStmt, tryStmt.getFinally().getBlock());
 		}
 
 		cNode.addNode(entryNode);

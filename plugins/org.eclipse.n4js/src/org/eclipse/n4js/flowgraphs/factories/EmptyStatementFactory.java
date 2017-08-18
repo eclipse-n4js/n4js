@@ -13,10 +13,11 @@ package org.eclipse.n4js.flowgraphs.factories;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.Statement;
 
 class EmptyStatementFactory {
 
-	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.EmptyStatement empty) {
+	static ComplexNode buildComplexNode(Statement empty) {
 		ComplexNode cNode = new ComplexNode(empty);
 
 		Node entryAndExitNode = new HelperNode("entryAndExit", empty);

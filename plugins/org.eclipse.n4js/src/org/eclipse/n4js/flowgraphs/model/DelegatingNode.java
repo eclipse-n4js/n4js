@@ -12,19 +12,30 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.List;
 
+import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. However, it does not represent a CFE
+ * and thus does not return its {@link ControlFlowElement} when asked for it in {@link #getCFEOrSucceeding()} or
+ * {@link #getCFEOrPreceeding()}. Instead, it passes these calls to the successor or predecessor, respectively.
  */
 public class DelegatingNode extends Node {
+	final private ControlFlowElement cfeDelegate;
 
-	public DelegatingNode(String name, ControlFlowElement cfe, Node... internalSuccessors) {
-		this(name, cfe, -1, internalSuccessors);
+	/**
+	 * Constructor. Sets the delegated {@link ControlFlowElement} to cfe
+	 */
+	public DelegatingNode(String name, ControlFlowElement cfe) {
+		this(name, cfe, cfe);
 	}
 
-	public DelegatingNode(String name, ControlFlowElement cfe, int opPos, Node... internalSuccessors) {
-		super(name, cfe, opPos, internalSuccessors);
+	/**
+	 * Constructor
+	 */
+	public DelegatingNode(String name, ControlFlowElement cfe, ControlFlowElement cfeDelegate) {
+		super(name, cfe);
+		this.cfeDelegate = cfeDelegate;
 	}
 
 	@Override
@@ -39,7 +50,9 @@ public class DelegatingNode extends Node {
 
 	@Override
 	public ControlFlowElement getDelegatedControlFlowElement() {
-		return getControlFlowElement();
+		if (cfeDelegate == null)
+			return null; // can be missing when the AST is incomplete
+		return FactoryMapper.map(cfeDelegate);
 	}
 
 }

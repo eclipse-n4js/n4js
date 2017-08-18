@@ -30,7 +30,7 @@ class VariableDeclaratorFactory {
 		Node initNode = null;
 
 		if (varDecl.getExpression() != null) {
-			initNode = new DelegatingNode("initializer", varDecl.getExpression());
+			initNode = new DelegatingNode("initializer", varDecl, varDecl.getExpression());
 		}
 
 		cNode.addNode(entryNode);

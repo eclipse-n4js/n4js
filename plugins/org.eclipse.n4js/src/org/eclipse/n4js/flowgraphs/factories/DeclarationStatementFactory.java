@@ -32,7 +32,7 @@ class DeclarationStatementFactory {
 		List<Node> varDeclNodes = new LinkedList<>();
 		for (int i = 0; i < varDeclStmt.getVarDecl().size(); i++) {
 			VariableDeclaration varDecl2 = varDeclStmt.getVarDecl().get(i);
-			Node varDeclNode = new DelegatingNode("declaration_" + i, varDecl2);
+			Node varDeclNode = new DelegatingNode("declaration_" + i, varDeclStmt, varDecl2);
 			varDeclNodes.add(varDeclNode);
 		}
 

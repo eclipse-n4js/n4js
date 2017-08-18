@@ -28,11 +28,11 @@ class WhileFactory {
 
 		Node entryNode = new HelperNode("entry", whileStmt);
 		Node exitNode = new HelperNode("exit", whileStmt);
-		Node conditionNode = new DelegatingNode("condition", whileStmt.getExpression());
+		Node conditionNode = new DelegatingNode("condition", whileStmt, whileStmt.getExpression());
 		Node bodyNode = null;
 
 		if (whileStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", whileStmt.getStatement());
+			bodyNode = new DelegatingNode("body", whileStmt, whileStmt.getStatement());
 		}
 
 		cNode.addNode(entryNode);

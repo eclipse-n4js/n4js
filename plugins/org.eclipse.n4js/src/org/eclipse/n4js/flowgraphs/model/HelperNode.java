@@ -15,16 +15,17 @@ import java.util.List;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * The {@link HelperNode} does not provide a {@link ControlFlowElement} delegate. Moreover, it does not represent a CFE
+ * and thus does not return its {@link ControlFlowElement} when asked for it in {@link #getCFEOrSucceeding()} or
+ * {@link #getCFEOrPreceeding()}. Instead, it passes these calls to the successor or predecessor, respectively.
  */
 public class HelperNode extends Node {
 
-	public HelperNode(String name, ControlFlowElement cfe, Node... internalSuccessors) {
-		this(name, cfe, -1, internalSuccessors);
-	}
-
-	public HelperNode(String name, ControlFlowElement cfe, int opPos, Node... internalSuccessors) {
-		super(name, cfe, opPos, internalSuccessors);
+	/**
+	 * Constructor
+	 */
+	public HelperNode(String name, ControlFlowElement cfe) {
+		super(name, cfe);
 	}
 
 	@Override

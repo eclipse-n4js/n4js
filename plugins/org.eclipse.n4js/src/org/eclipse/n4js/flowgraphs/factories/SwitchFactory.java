@@ -31,20 +31,22 @@ class SwitchFactory {
 
 		Node entryNode = new HelperNode("entry", switchStmt);
 		Node exitNode = new HelperNode("exit", switchStmt);
-		Node pivotNode = new DelegatingNode("pivot", switchStmt.getExpression());
+		Node pivotNode = new DelegatingNode("pivot", switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
 
 		List<Node> caseNodes = new LinkedList<>();
 		// Assumption: clauses are ordered like in the source code
-		for (AbstractCaseClause cc : switchStmt.getCases()) {
+		List<AbstractCaseClause> caseClauses = switchStmt.getCases();
+		for (int i = 0; i < caseClauses.size(); i++) {
+			AbstractCaseClause cc = caseClauses.get(i);
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = new DelegatingNode("case_" + switchStmt.getCaseClauses().indexOf(cc), cc);
+				caseNode = new DelegatingNode("case_" + i, switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = new DelegatingNode("default", cc);
+				caseNode = new DelegatingNode("default", switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);

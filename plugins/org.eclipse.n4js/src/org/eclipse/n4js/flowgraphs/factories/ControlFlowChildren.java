@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Argument;
+import org.eclipse.n4js.n4JS.ArrayElement;
+import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
@@ -25,17 +27,28 @@ import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.FunctionExpression;
+import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.Literal;
+import org.eclipse.n4js.n4JS.MultiplicativeExpression;
+import org.eclipse.n4js.n4JS.N4ClassExpression;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
+import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.ParenExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
-import org.eclipse.n4js.n4JS.PrimaryExpression;
 import org.eclipse.n4js.n4JS.PromisifyExpression;
+import org.eclipse.n4js.n4JS.PropertyAssignment;
+import org.eclipse.n4js.n4JS.PropertyNameValuePair;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ShiftExpression;
+import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.TaggedTemplateString;
+import org.eclipse.n4js.n4JS.TemplateLiteral;
+import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.YieldExpression;
 
@@ -59,9 +72,16 @@ final class ControlFlowChildren extends Dispatcher {
 
 	static List<Expression> _get(AssignmentExpression ae) {
 		List<Expression> cfc = new LinkedList<>();
-		Expression lhs = ae.getLhs();
-		cfc.addAll(getCFChildren(lhs));
+		cfc.add(ae.getLhs());
 		cfc.add(ae.getRhs());
+		return cfc;
+	}
+
+	static List<Expression> _get(ArrayLiteral al) {
+		List<Expression> cfc = new LinkedList<>();
+		for (ArrayElement aElem : al.getElements()) {
+			cfc.add(aElem.getExpression());
+		}
 		return cfc;
 	}
 
@@ -112,6 +132,15 @@ final class ControlFlowChildren extends Dispatcher {
 		return cfc;
 	}
 
+	static List<Expression> _get(@SuppressWarnings("unused") FunctionExpression fe) {
+		List<Expression> cfc = new LinkedList<>();
+		return cfc;
+	}
+
+	static List<Expression> _get(@SuppressWarnings("unused") IdentifierRef al) {
+		return Collections.emptyList();
+	}
+
 	static List<Expression> _get(IndexedAccessExpression iae) {
 		List<Expression> cfc = new LinkedList<>();
 		cfc.add(iae.getTarget());
@@ -119,21 +148,54 @@ final class ControlFlowChildren extends Dispatcher {
 		return cfc;
 	}
 
+	static List<Expression> _get(@SuppressWarnings("unused") Literal lit) {
+		return Collections.emptyList();
+	}
+
+	static List<Expression> _get(MultiplicativeExpression me) {
+		List<Expression> cfc = new LinkedList<>();
+		cfc.add(me.getLhs());
+		cfc.add(me.getRhs());
+		return cfc;
+	}
+
+	static List<Expression> _get(@SuppressWarnings("unused") N4ClassExpression n4ce) {
+		// currently unsupported feature
+		return Collections.emptyList();
+	}
+
 	static List<Expression> _get(NewExpression ne) {
 		List<Expression> cfc = new LinkedList<>();
+		cfc.add(ne.getCallee());
 		for (Argument arg : ne.getArguments())
 			cfc.add(arg.getExpression());
 		return cfc;
 	}
 
 	static List<Expression> _get(@SuppressWarnings("unused") NewTarget nt) {
+		// currently unsupported feature
 		return Collections.emptyList();
+	}
+
+	static List<Expression> _get(ObjectLiteral ol) {
+		List<Expression> cfc = new LinkedList<>();
+		for (PropertyAssignment pa : ol.getPropertyAssignments()) {
+			if (pa instanceof PropertyNameValuePair) {
+				PropertyNameValuePair pnvp = (PropertyNameValuePair) pa;
+				cfc.add(pnvp.getExpression());
+			}
+		}
+		return cfc;
+	}
+
+	static List<Expression> _get(ParenExpression pe) {
+		List<Expression> cfc = new LinkedList<>();
+		cfc.add(pe.getExpression());
+		return cfc;
 	}
 
 	static List<Expression> _get(ParameterizedCallExpression pce) {
 		List<Expression> cfc = new LinkedList<>();
-		if (pce.getReceiver() != null)
-			cfc.add(pce.getReceiver());
 		cfc.add(pce.getTarget());
 		for (Argument arg : pce.getArguments())
 			cfc.add(arg.getExpression());
@@ -148,13 +210,8 @@ final class ControlFlowChildren extends Dispatcher {
 
 	static List<Expression> _get(PostfixExpression pe) {
 		List<Expression> cfc = new LinkedList<>();
-		Expression expr = pe.getExpression();
-		cfc.addAll(getCFChildren(expr));
+		cfc.add(pe.getExpression());
 		return cfc;
-	}
-
-	static List<Expression> _get(@SuppressWarnings("unused") PrimaryExpression pe) {
-		return Collections.emptyList();
 	}
 
 	static List<Expression> _get(PromisifyExpression pe) {
@@ -179,7 +236,23 @@ final class ControlFlowChildren extends Dispatcher {
 		return cfc;
 	}
 
+	static List<Expression> _get(@SuppressWarnings("unused") SuperLiteral sl) {
+		return Collections.emptyList();
+	}
+
 	static List<Expression> _get(@SuppressWarnings("unused") TaggedTemplateString tts) {
+		// currently unsupported feature
+		return Collections.emptyList();
+	}
+
+	static List<Expression> _get(TemplateLiteral tl) {
+		List<Expression> cfc = new LinkedList<>();
+		for (Expression segm : tl.getSegments())
+			cfc.add(segm);
+		return cfc;
+	}
+
+	static List<Expression> _get(@SuppressWarnings("unused") ThisLiteral tl) {
 		return Collections.emptyList();
 	}
 

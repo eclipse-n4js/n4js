@@ -182,7 +182,7 @@ public class N4JSFlowAnalyses {
 			if (predSet.contains(cfe)) {
 				List<ControlFlowElement> succs = getSuccessors(cfe);
 				curCFEs.addAll(succs);
-				String nameID = getNameID(cfe);
+				String nameID = FGUtils.getNameID(cfe);
 				pathString += nameID + "->";
 			}
 		}
@@ -198,24 +198,11 @@ public class N4JSFlowAnalyses {
 		List<ControlFlowElement> allCFEs = new LinkedList<>();
 		for (ComplexNode cn : cfg.getAllComplexNodes()) {
 			if (!cn.isControlElement()) {
-				ControlFlowElement cfe = cn.getCFE();
+				ControlFlowElement cfe = cn.getControlFlowElement();
 				allCFEs.add(cfe);
 			}
 		}
 		return allCFEs;
-	}
-
-	/**
-	 * Creates a readable but still unique name for a given {@link ControlFlowElement}.
-	 */
-	private String getNameID(ControlFlowElement cfe) {
-		String className = cfe.getClass().getSimpleName().toString();
-		int idx = className.lastIndexOf("Impl");
-		if (idx == className.length() - "Impl".length()) {
-			className = className.substring(0, idx);
-		}
-		String nameID = className + "#" + cfe.hashCode();
-		return nameID;
 	}
 
 }

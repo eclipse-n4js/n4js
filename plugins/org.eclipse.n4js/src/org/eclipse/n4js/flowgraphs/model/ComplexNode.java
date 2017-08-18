@@ -45,11 +45,6 @@ public class ComplexNode implements ControlFlowable {
 		this.astElement = astElement;
 	}
 
-	@Override
-	public ControlFlowElement getControlFlowElement() {
-		return astElement;
-	}
-
 	public void connectInternalSucc(Node... nodes) {
 		connectInternalSucc(false, Arrays.asList(nodes));
 	}
@@ -105,7 +100,8 @@ public class ComplexNode implements ControlFlowable {
 		this.exit = exitNode;
 	}
 
-	public ControlFlowElement getCFE() {
+	@Override
+	public ControlFlowElement getControlFlowElement() {
 		return FactoryMapper.map(astElement);
 	}
 
@@ -144,7 +140,7 @@ public class ComplexNode implements ControlFlowable {
 	 * </ul>
 	 */
 	public boolean isControlElement() {
-		ControlFlowElement cfe = getCFE();
+		ControlFlowElement cfe = getControlFlowElement();
 
 		boolean isControlElement = false;
 		isControlElement |= cfe instanceof Block;

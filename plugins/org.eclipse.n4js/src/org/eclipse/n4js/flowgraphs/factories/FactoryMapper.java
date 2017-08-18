@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.factories;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 
 /**
  *
@@ -20,9 +21,18 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration;
 public class FactoryMapper extends Dispatcher {
 
 	/**
-	 *
+	 * Maps the given {@link ControlFlowElement} as defined. Is invoked repeatedly until a fixpoint is reached.
 	 */
 	static public ControlFlowElement map(ControlFlowElement cfe) {
+		ControlFlowElement lastCFE = null;
+		while (cfe != null && lastCFE != cfe) {
+			lastCFE = cfe;
+			cfe = mapInternal(cfe);
+		}
+		return lastCFE;
+	}
+
+	static private ControlFlowElement mapInternal(ControlFlowElement cfe) {
 		try {
 			return dispatch("_map", cfe);
 		} catch (NoDispatchMethodFoundException e) {
@@ -32,6 +42,10 @@ public class FactoryMapper extends Dispatcher {
 
 	static ControlFlowElement _map(FunctionDeclaration feature) {
 		return feature.getBody();
+	}
+
+	static ControlFlowElement _map(LabelledStatement feature) {
+		return feature.getStatement();
 	}
 
 	static ControlFlowElement _map(ExpressionStatement feature) {

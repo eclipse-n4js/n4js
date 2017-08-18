@@ -31,7 +31,7 @@ class AbstractCaseClauseFactory {
 
 		if (stmt instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) stmt;
-			comGroup = new DelegatingNode("condition", caseClause.getExpression());
+			comGroup = new DelegatingNode("condition", stmt, caseClause.getExpression());
 		}
 
 		cNode.addNode(entryNode);

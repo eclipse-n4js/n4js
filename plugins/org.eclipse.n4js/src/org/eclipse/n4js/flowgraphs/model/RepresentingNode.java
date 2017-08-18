@@ -16,16 +16,17 @@ import java.util.List;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. Also, it does represents a CFE and
+ * thus returns its {@link ControlFlowElement} when asked for it in {@link #getCFEOrSucceeding()} or
+ * {@link #getCFEOrPreceeding()}.
  */
-public class RepresentingNode extends Node {
+public class RepresentingNode extends DelegatingNode {
 
-	public RepresentingNode(String name, ControlFlowElement cfe, Node... internalSuccessors) {
-		this(name, cfe, -1, internalSuccessors);
-	}
-
-	public RepresentingNode(String name, ControlFlowElement cfe, int opPos, Node... internalSuccessors) {
-		super(name, cfe, opPos, internalSuccessors);
+	/**
+	 * Constructor. Sets the delegated {@link ControlFlowElement} to cfe
+	 */
+	public RepresentingNode(String name, ControlFlowElement cfe) {
+		super(name, cfe, cfe);
 	}
 
 	@Override
@@ -46,11 +47,6 @@ public class RepresentingNode extends Node {
 			cfeInAList.add(cfe);
 		}
 		return cfeInAList;
-	}
-
-	@Override
-	public ControlFlowElement getDelegatedControlFlowElement() {
-		return getControlFlowElement();
 	}
 
 }
