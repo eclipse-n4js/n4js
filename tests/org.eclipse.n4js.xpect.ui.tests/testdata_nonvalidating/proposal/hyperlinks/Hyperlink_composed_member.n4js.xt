@@ -25,6 +25,12 @@ interface I {
 	public foo();
 }
 
+class B {
+	public join(separator: string = undefined): string() {
+		return null
+	}
+}
+
 
 class AI extends A implements I {}
 
@@ -39,3 +45,10 @@ let i : I;
 foo: "foo"(N4MethodDeclaration) in "I"(N4InterfaceDeclaration) in file Hyperlink_composed_member.n4js.xt
 ---
 i.foo();
+
+var b : Array<any> | B;
+// XPECT hyperlinks at 'join' ---
+join,
+join: "join"(N4MethodDeclaration) in "B"(N4ClassDeclaration) in file Hyperlink_composed_member.n4js.xt
+---
+b.join();
