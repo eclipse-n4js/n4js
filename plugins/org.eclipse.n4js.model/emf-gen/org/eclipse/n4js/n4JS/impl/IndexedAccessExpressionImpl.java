@@ -24,7 +24,10 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 
 /**
  * <!-- begin-user-doc -->
@@ -34,6 +37,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.IndexedAccessExpressionImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IndexedAccessExpressionImpl#getTarget <em>Target</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.IndexedAccessExpressionImpl#getIndex <em>Index</em>}</li>
  * </ul>
@@ -41,6 +45,16 @@ import org.eclipse.n4js.n4JS.N4JSPackage;
  * @generated
  */
 public class IndexedAccessExpressionImpl extends ExpressionImpl implements IndexedAccessExpression {
+	/**
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 * @ordered
+	 */
+	protected ComposedMemberCache composedMemberCache;
+
 	/**
 	 * The cached value of the '{@link #getTarget() <em>Target</em>}' containment reference.
 	 * <!-- begin-user-doc -->
@@ -78,6 +92,44 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSPackage.Literals.INDEXED_ACCESS_EXPRESSION;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
+		}
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -199,6 +251,9 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
 				return getTarget();
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
@@ -215,6 +270,9 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
+				return;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
 				setTarget((Expression)newValue);
 				return;
@@ -233,6 +291,9 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
+				return;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
 				setTarget((Expression)null);
 				return;
@@ -251,6 +312,8 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__TARGET:
 				return target != null;
 			case N4JSPackage.INDEXED_ACCESS_EXPRESSION__INDEX:
@@ -265,11 +328,48 @@ public class IndexedAccessExpressionImpl extends ExpressionImpl implements Index
 	 * @generated
 	 */
 	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (derivedFeatureID) {
+				case N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE: return N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE: return N4JSPackage.INDEXED_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == Expression.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET: return N4JSPackage.INDEXED_ACCESS_EXPRESSION___IS_VALID_SIMPLE_ASSIGNMENT_TARGET;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == MemberAccess.class) {
+			switch (baseOperationID) {
+				default: return -1;
 			}
 		}
 		return super.eDerivedOperationID(baseOperationID, baseClass);

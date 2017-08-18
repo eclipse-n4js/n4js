@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.base;
 
 import static com.google.common.base.Preconditions.checkState;
-import static com.google.inject.util.Modules.override;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CLEAN_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_COMPILE_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CONFIGURATION_ERROR;
@@ -45,6 +44,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
@@ -66,6 +67,8 @@ import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessGeneratorModule;
+import org.eclipse.n4js.generator.headless.logging.ConfigurableHeadlessLogger;
+import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4jsx.N4JSXGlobals;
@@ -113,7 +116,7 @@ import com.google.inject.util.Modules;
  * This code was moved here from class {@code N4jsc} to allow method {@link #doMain(String...)} to be called from OSGI
  * bundles (e.g. tests, MWE2 work flows).
  */
-public class N4jscBase {
+public class N4jscBase implements IApplication {
 
 	/**
 	 * Marker used to distinguish between compile-messages and runner output.
@@ -306,6 +309,29 @@ public class N4jscBase {
 	@Inject
 	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
 
+	@Override
+	public Object start(IApplicationContext context) throws Exception {
+		int exitCode;
+		try {
+			// TODO get args from application context, https://stackoverflow.com/a/17919860/52564
+			String[] args = new String[] { "--help" };
+			SuccessExitStatus success = new N4jscBase().doMain(args);
+			exitCode = success.code;
+		} catch (ExitCodeException e) {
+			exitCode = e.getExitCode();
+			System.err
+					.println(e.getMessage() + " exitcode: " + exitCode + e.explanationOfExitCode());
+		}
+		System.out.flush();
+		System.err.flush();
+		return new Integer(exitCode);
+	}
+
+	@Override
+	public void stop() {
+		// nothing to do
+	}
+
 	/**
 	 * POJO style entry point to start the compiler.
 	 *
@@ -338,7 +364,7 @@ public class N4jscBase {
 	 *            parameters from command-line
 	 * @throws ExitCodeException
 	 *             in case of errors.
-	 * 
+	 *
 	 * @return SuccessExitStatus {@link SuccessExitStatus#INSTANCE success status} when everything went fine
 	 */
 	public SuccessExitStatus doMain(String... args) throws ExitCodeException {
@@ -891,18 +917,24 @@ public class N4jscBase {
 		N4mfPackage.eINSTANCE.getNsURI();
 		XMLTypePackage.eINSTANCE.getNsURI();
 
-		final Module cliTesterModule = override(new TesterModule())
-				.with((Module) binder -> binder.bind(TestTreeTransformer.class).to(CliTestTreeTransformer.class));
-
-		final Module module = Modules.combine(new N4JSRuntimeModule(), cliTesterModule,
+		// combine all modules for N4JSC
+		final Module combinedModule = Modules.combine(new N4JSRuntimeModule(), new TesterModule(),
 				new N4JSHeadlessGeneratorModule(properties));
+
+		// override with customized bindings
+		final Module overridenModule = Modules.override(combinedModule).with(binder -> {
+			binder.bind(TestTreeTransformer.class)
+					.to(CliTestTreeTransformer.class);
+			binder.bind(IHeadlessLogger.class)
+					.toInstance(new ConfigurableHeadlessLogger(verbose, debug));
+		});
 
 		RegularExpressionStandaloneSetup.doSetup();
 		TypesStandaloneSetup.doSetup();
 		N4MFStandaloneSetup.doSetup();
 		TypeExpressionsStandaloneSetup.doSetup();
 
-		final Injector injector = Guice.createInjector(module);
+		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
 
@@ -1272,8 +1304,6 @@ public class N4jscBase {
 		headless.setKeepOnCompiling(keepCompiling);
 		headless.setCompileSourceCode(!testonly);
 		headless.setProcessTestCode(!notests);
-		headless.setCreateDebugOutput(debug);
-		headless.setVerbose(verbose);
 		if (log) {
 			headless.setLogFile(logFile);
 		}
@@ -1340,13 +1370,16 @@ public class N4jscBase {
 			checkFileIsDirAndWriteable(tpLoc);
 			retList.add(tpLoc);
 		}
+		System.out.println("N4jscBase.convertToFilesAddTargetPlatformAndCheckWritableDir() with");
 		if (!dirpaths.isEmpty()) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
 				checkFileIsDirAndWriteable(ret);
 				retList.add(ret);
+				System.out.println(" # " + dirpath);
 			}
 		}
+
 		return retList;
 	}
 

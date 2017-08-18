@@ -33,6 +33,7 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.NoopExternalLibraryWorkspace;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.n4mf.ExtendedRuntimeEnvironment;
 import org.eclipse.n4js.n4mf.ImplementedProjects;
@@ -411,6 +412,14 @@ public class N4JSModel {
 					sourceContainer.getRelativeLocation());
 		} else {
 			if (sourceContainer.getProject().isExternal() && Platform.isRunning()) {
+				// The `Platform.isRunning()` is not valid check for the OSGI headless compiler
+				// it may still be valid in some scenarios (maybe some test scenarios)
+				if (externalLibraryWorkspace instanceof NoopExternalLibraryWorkspace
+						&& workspace instanceof FileBasedWorkspace
+						&& workspace.findProjectWith(sourceContainer.getLocation()) != null) {
+					return workspace.getFolderIterator(sourceContainer.getLocation());
+				}
+
 				return externalLibraryWorkspace.getFolderIterator(sourceContainer.getLocation());
 			}
 			return workspace.getFolderIterator(sourceContainer.getLocation());

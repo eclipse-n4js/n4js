@@ -28,7 +28,7 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface IndexedAccessExpression extends Expression {
+public interface IndexedAccessExpression extends Expression, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Target</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

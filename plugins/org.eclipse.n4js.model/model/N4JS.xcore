@@ -24,9 +24,14 @@
 
 package org.eclipse.n4js.n4JS
 
+import java.util.Collections
+import java.util.Iterator
+import org.eclipse.emf.common.util.BasicEList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
@@ -51,10 +56,6 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.utils.EcoreUtilN4
-import java.util.Collections
-import java.util.Iterator
-import org.eclipse.emf.common.util.BasicEList
-import org.eclipse.emf.ecore.EObject
 
 type IteratorOfExpression wraps Iterator<Expression>
 type IteratorOfYieldExpression wraps Iterator<YieldExpression>
@@ -1366,7 +1367,7 @@ class Argument extends TypableElement {
 	contains Expression expression
 }
 
-class IndexedAccessExpression extends Expression {
+class IndexedAccessExpression extends Expression, MemberAccess {
 	contains Expression target
 	contains Expression index
 	/**
@@ -1386,7 +1387,22 @@ class TaggedTemplateString extends Expression {
 	contains TemplateLiteral template
 }
 
-class ParameterizedPropertyAccessExpression extends Expression, ParameterizedAccess {
+/*
+ * An AST node accessing the member of a ContainerType via member scoping. In the default case, member scoping will
+ * require an object of this type as 'context', cf. {@code MemberScopingHelper#createMemberScope()}.
+ */
+abstract class MemberAccess {
+	/*
+	 * This points to a cache of members that can be accessed via member access on union/intersection
+	 * types directly, because they are, for example, common to all types contained in a UnionTypeExpression.
+	 * These members are cached for two reasons: (1) performance, (2) TMembers have to be contained in a resource.
+	 * The cache will be filled lazily by ComposedMemberScope, so client code should usually not assume this
+	 * information to be complete and best not use it at all. Instead, access these members only via the scoping.
+	 */
+	refers transient ComposedMemberCache composedMemberCache
+}
+
+class ParameterizedPropertyAccessExpression extends Expression, MemberAccess, ParameterizedAccess {
 	/**
 	 * Target (aka receiver)
 	 */

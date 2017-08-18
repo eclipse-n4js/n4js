@@ -18,7 +18,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <asciidoctor.maven.plugin.version>1.5.3</asciidoctor.maven.plugin.version>
+        <asciidoctor.maven.plugin.version>1.5.5</asciidoctor.maven.plugin.version>
         <asciidoctorj.version>1.5.4</asciidoctorj.version>
         <jruby.version>1.7.21</jruby.version>
         <asciidoctorj.pdf.version>1.5.0-alpha.11</asciidoctorj.pdf.version>
@@ -134,11 +134,10 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                             <attributes> <!-- Individual attributes per conversion execution -->
                                 <doctype>book</doctype>
                                 <toc>false</toc> <!-- No embedded TOC -->
-                                <stylesdir>../res/styles</stylesdir>
-                                <reproducible>true</reproducible>
-                                <stylesheet>foundation.css</stylesheet>
+                                <stylesdir>../assets/styles</stylesdir>
+                                <stylesheet>foundation.min.css</stylesheet>
 								<docinfo1>true</docinfo1>
-                                <docinfodir>${basedir}/res/headers/eclipse</docinfodir>
+                                <docinfodir>${basedir}/assets/headers</docinfodir>
                                 <imagesdir></imagesdir>             
                                 <experimental>true</experimental>
                                 <commandkey>&#8984;</commandkey>
@@ -146,6 +145,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                                 <sectanchors>true</sectanchors>
                                 <sectlinks>true</sectlinks>
                                 <linkattrs>true</linkattrs>
+                                <reproducible>true</reproducible>
                             </attributes>
                         </configuration>
                     </execution>
@@ -197,11 +197,8 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                 </executions>
             </plugin>
 
+<!-- Plugin to copy the final output from the /target/ folder into the /dist/folder       -->
 
-<!-- 
-                Plugin to copy the final output from the /target/ folder into the /dist/folder  
-                
-                -->
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-resources-plugin</artifactId>
@@ -287,7 +284,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <plugin>
                         <groupId>org.eclipse.tycho</groupId>
                         <artifactId>tycho-packaging-plugin</artifactId>
-                        <version>${tycho.version}</version>
+                        <version>${tycho-version}</version>
                         <executions>
                             <execution> <id>default-build-qualifier</id> <phase /> </execution>
                             <execution> <id>default-validate-version</id> <phase /> </execution>
@@ -298,7 +295,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <plugin>
                         <groupId>org.eclipse.tycho</groupId>
                         <artifactId>tycho-compiler-plugin</artifactId>
-                        <version>${tycho.version}</version>
+                        <version>${tycho-version}</version>
                         <executions>
                             <execution> <id>default-compile</id> <phase /> </execution>
                         </executions>
@@ -306,7 +303,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
                     <plugin>
                         <groupId>org.eclipse.tycho</groupId>
                         <artifactId>tycho-p2-plugin</artifactId>
-                        <version>${tycho.version}</version>
+                        <version>${tycho-version}</version>
                         <executions>
                             <execution> <id>default-p2-metadata-default</id> <phase /> </execution>
                             <execution> <id>attach-p2-metadata</id> <phase /> </execution>
