@@ -1,0 +1,172 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowgraphTest END_SETUP */
+
+
+
+function Block1() {
+	// Block1 XPECT succs at '0' --> 1
+	0;
+	// Block1 XPECT succs at '1' --> 42
+	{
+		1
+	}
+	42;
+}
+
+function Block2() {
+	// Block2 XPECT succs at '0' --> 1
+	0;
+	// Block2 XPECT succs at '1' --> 2
+	// Block2 XPECT succs at '2' --> 42
+	{
+		1
+		{
+			2
+		}
+	}
+	42;
+}
+
+function Block3() {
+	// Block3 XPECT succs at '0' --> 1
+	0;
+	// Block3 XPECT succs at '1' --> 2
+	// Block3 XPECT succs at '2' --> 42
+	{
+		{
+			1
+		}
+		2
+	}
+	42;
+}
+
+function IfStatement1() {
+	// IfStatement1 XPECT succs at '0' --> 1
+	0;
+	// IfStatement1 XPECT succs at '1' --> 2,3
+	// IfStatement1 XPECT succs at '2' --> 42
+	// IfStatement1 XPECT succs at '3' --> 42
+	if (1) 2; else 3;
+	42;
+}
+
+function IfStatement2() {
+	// IfStatement2 XPECT succs at '0' --> 1
+	0;
+	// IfStatement2 XPECT succs at '1' --> 2,42
+	// IfStatement2 XPECT succs at '2' --> 42
+	if (1) 2;
+	42;
+}
+
+
+
+function SwitchCase1() {
+	0;
+	// SwitchCase1 XPECT succs at '1' --> 2
+	// SwitchCase1 XPECT succs at '1' --> 42
+	switch (1) {
+		// SwitchCase1 XPECT succs at '2' --> 3
+		// SwitchCase1 XPECT succs at '3' --> 42
+		case 2: 3;
+	}
+	42;
+}
+
+function SwitchCaseFallThrough() {
+	0;
+	// SwitchCaseFallThrough XPECT succs at '1' --> 2
+	// SwitchCaseFallThrough XPECT succs at '1' --> 4
+	// SwitchCaseFallThrough XPECT succs at '1' --> 42
+	switch (1) {
+		// SwitchCaseFallThrough XPECT succs at '2' --> 3
+		// SwitchCaseFallThrough XPECT succs at '3' --> 4
+		case 2: 3;
+		// SwitchCaseFallThrough XPECT succs at '4' --> 5
+		// SwitchCaseFallThrough XPECT succs at '5' --> 42
+		case 4: 5;
+	}
+	42;
+}
+
+function SwitchCaseBreak1() {
+	0;
+	// SwitchCaseBreak1 XPECT succs at '1' --> 2
+	// SwitchCaseBreak1 XPECT succs at '1' --> 4
+	// SwitchCaseBreak1 XPECT succs at '1' --> 42
+	switch (1) {
+		// SwitchCaseBreak1 XPECT succs at '2' --> 3
+		// SwitchCaseBreak1 XPECT succs at '3' --> break;
+		// SwitchCaseBreak1 XPECT succs at 'break;' --> 42
+		case 2: 3; break;
+		// SwitchCaseBreak1 XPECT succs at '3' --> 5
+		// SwitchCaseBreak1 XPECT succs at '5' --> break;
+		// SwitchCaseBreak1 XPECT succs at 'break;' --> 42
+		case 4: 5; break;
+	}
+	42;
+}
+
+function SwitchCaseDefault1() {
+	0;
+	// SwitchCaseDefault1 XPECT succs at '1' --> 2
+	// SwitchCaseDefault1 XPECT succs at '1' --> 5
+	switch (1) {
+		// SwitchCaseDefault1 XPECT succs at '2' --> 3
+		// SwitchCaseDefault1 XPECT succs at '3' --> 5
+		case 2: 3;
+		// SwitchCaseDefault1 XPECT succs at '5' --> 42
+		default: 5;
+	}
+	42;
+}
+
+function SwitchCaseDefault2() {
+	0;
+	// SwitchCaseDefault2 XPECT succs at '1' --> 2
+	// SwitchCaseDefault2 XPECT succs at '1' --> 5
+	switch (1) {
+		// SwitchCaseDefault2 XPECT succs at '2' --> break;
+		// SwitchCaseDefault2 XPECT succs at 'break;' --> 42
+		case 2: 5; break;
+		// SwitchCaseDefault2 XPECT succs at '5' --> 42
+		default: 5;
+	}
+	42;
+}
+
+function EmptyStatement() {
+	// EmptyStatement XPECT succs at '0' --> 42
+	0;
+	// EmptyStatement XPECT succs at ';' --> 42
+	;
+	42;
+}
+
+
+/*
+AnnotationList
+BreakStatement
+ContinueStatement
+DoStatement
+EmptyStatement
+ForStatement
+ReturnStatement
+ThrowStatement
+TryStatement
+VariableDeclaration
+VariableStatement
+WhileStatement
+ */

@@ -102,12 +102,12 @@ function CommaExpression() {
 function ConditionalExpression() {
 	// ConditionalExpression XPECT succs at '0' --> true
 	0;
-	// ConditionalExpression XPECT succs at 'true' --> 1,0
-	// ConditionalExpression XPECT succs at '1' --> true ? 1 : 0
-	// ConditionalExpression XPECT succs at '0' --> true ? 1 : 0
-	// ConditionalExpression XPECT succs at 'true ? 1 : 0' --> 42
+	// ConditionalExpression XPECT succs at 'true' --> 1,2
+	// ConditionalExpression XPECT succs at '1' --> true ? 1 : 2
+	// ConditionalExpression XPECT succs at '2' --> true ? 1 : 2
+	// ConditionalExpression XPECT succs at 'true ? 1 : 2' --> 42
 	// GH-151 ConditionalExpression XPECT FIXME warnings --> "Dispensable use of conditional expression. The expression 'true' always evaluates to true, so only the left-hand side will ever be evaluated." at "true"
-	true ? 1 : 0;
+	true ? 1 : 2;
 	42;
 }
 
