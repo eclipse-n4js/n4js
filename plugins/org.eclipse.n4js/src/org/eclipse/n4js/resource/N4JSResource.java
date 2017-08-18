@@ -13,9 +13,6 @@ package org.eclipse.n4js.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +30,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.SegmentSequence;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -52,25 +48,23 @@ import org.eclipse.n4js.conversion.RegExLiteralConverter;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
-import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
+import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IFragmentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -80,11 +74,9 @@ import org.eclipse.xtext.resource.XtextSyntaxDiagnosticWithRange;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
-import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Triple;
-import org.eclipse.xtext.util.Tuples;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
 /**
@@ -153,21 +145,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		}
 
 		/**
-		 * Don't announce any notification but keep the inverse references in sync.
-		 *
-		 * @param object
-		 *            the to-be-added object
-		 */
-		protected void sneakySet(int index, EObject object) {
-			if (index == size) {
-				sneakyAdd(object);
-			} else {
-				assign(index, validate(index, object));
-				inverseAdd(object, null);
-			}
-		}
-
-		/**
 		 * Creates a new array for the content. The calculation of its new size is optimized related to the last size
 		 * and the minimum required size. This method is called by {@link ModuleAwareContentsList#sneakyAdd(EObject)}
 		 * and {@link ModuleAwareContentsList#sneakyAdd(int, EObject)}.
@@ -232,6 +209,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			data = null;
 			size = 0;
 		}
+
 	}
 
 	private static final Logger logger = Logger.getLogger(N4JSResource.class);
@@ -260,6 +238,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
+
+	@Inject
+	private IDerivedStateComputer myDerivedStateComputer;
 
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
@@ -425,13 +406,17 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * @return the loaded/resolved object
 	 */
 	private EObject demandLoadResource(EObject object) {
-		List<EObject> discardedState = null;
+		TModule oldModule = null;
+		EObject oldScript = null;
+		ModuleAwareContentsList myContents = ((ModuleAwareContentsList) contents);
 		try {
-			discardedState = Lists.newArrayList(discardStateFromDescription());
-			if (contents != null && !contents.isEmpty()) {
-				discardedState.add(0, contents.basicGet(0));
-				((ModuleAwareContentsList) contents).sneakyClear();
+			oldModule = discardStateFromDescription(false);
+			if (!myContents.isEmpty()) {
+				oldScript = myContents.basicGet(0);
+				myContents.sneakyClear();
 			}
+			// now everything is removed from the resource and contents is empty
+			// stop sending notifications
 			eSetDeliver(false);
 
 			if (isLoaded) {
@@ -440,30 +425,30 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 			superLoad(null);
 
+			// manually send the notification
 			eSetDeliver(true);
 			EObject result = getParseResult().getRootASTElement();
-			if (contents != null && contents.isEmpty()) {
-				((ModuleAwareContentsList) contents).sneakyAdd(0, result);
+			if (myContents.isEmpty()) {
+				myContents.sneakyAdd(0, result);
+				myContents.sneakyAdd(oldModule);
 				forceInstallDerivedState(false);
 			} else {
-				installDerivedState(false);
-				if (wasASTresolvedFromIndexBasedTModule(discardedState)) {
-					TModule moduleFromIndex = (TModule) discardedState.get(1);
-					TModule moduleFromAST = (TModule) contents.basicGet(1);
-					rewireTModule(moduleFromAST, moduleFromIndex);
+				if (myContents.size() == 1) {
+					if (oldModule != null) {
+						myContents.sneakyAdd(oldModule);
+					}
 				}
+				installDerivedState(false);
 			}
-			for (int i = 0; i < discardedState.size(); i++) {
-				notifyProxyResolved(i, discardedState.get(i));
+			if (oldScript != null) {
+				notifyProxyResolved(0, oldScript);
 			}
-
 			fullyPostProcessed = false;
 			return result;
 		} catch (IOException | IllegalStateException ioe) {
-			if (discardedState != null) {
-				for (int i = 0; i < discardedState.size(); i++) {
-					((ModuleAwareContentsList) contents).sneakyAdd(i, discardedState.get(i));
-				}
+			if (myContents.isEmpty()) {
+				myContents.sneakyAdd(oldScript);
+				myContents.sneakyAdd(oldModule);
 			}
 			Throwable cause = ioe.getCause();
 			if (cause instanceof CoreException) {
@@ -474,122 +459,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 			logger.error("Error in demandLoadResource for " + getURI(), ioe);
 			return object;
-		}
-	}
-
-	private boolean wasASTresolvedFromIndexBasedTModule(List<EObject> discardedState) {
-		return
-		// TModule from index found
-		discardedState.size() > 1 && discardedState.get(1) instanceof TModule
-		// TModule derived from AST found
-				&& contents.size() > 1 && contents.basicGet(1) instanceof TModule;
-	}
-
-	/**
-	 * When loading an AST from a TModule (usually retrieved from the index) by calling
-	 * SyntaxRelatedTElement.astElement, this would cause a new TModule to be created again from the AST. That would
-	 * lead to an inconsistent state: Two different TModules which both link to the same AST, but the original TModule
-	 * (from the index) would not contained in any resource anymore (because it was removed from the resource and
-	 * replaced with the newly loaded one). Since the original one is detached from a resource, it cannot resolve
-	 * proxies anymore. This would lead to a lot of weird scenarios which are extremely hard to debug because the both
-	 * TModule instances look similar.
-	 *
-	 * This method adds a new rewire step after the AST has been loaded and a new TModule has been created. It first
-	 * compares the original TModule with the new one. If both were derived from the same AST (using a hashCode to
-	 * compare that), all links from the AST pointing to the new TModule are rewired to point to the old TModule (and
-	 * vice versa all astElements are set to the now loaded AST).
-	 *
-	 * If either the modules were derived from different ASTs or the rewiring fails for other reasons (information will
-	 * be logged), an {@link IllegalStateException} is thrown. In that case, the AST won't be linked to the old TModule
-	 * (and vice versa) at all.
-	 */
-	private void rewireTModule(TModule moduleFromAST, TModule moduleFromIndex) {
-
-		if (moduleFromAST == moduleFromIndex) {
-			return;
-		}
-		// This is the only expected error
-		if (!moduleFromAST.getAstMD5().equals(moduleFromIndex.getAstMD5())) {
-			throw new IllegalStateException(
-					"AST has changed since creation of TModule from index, cannot attach resolved AST to outdated TModule: "
-							+
-							moduleFromAST.getAstMD5() + " != " + moduleFromIndex.getAstMD5());
-		}
-		// From here on, there may be an exception thrown, but we actually do not expect that.
-		List<Pair<TypeDefiningElement, Type>> astToTypes = new ArrayList<>();
-		List<Pair<SyntaxRelatedTElement, EObject>> typesToAST = new ArrayList<>();
-		doRewire(moduleFromAST, moduleFromIndex, astToTypes, typesToAST);
-		for (Pair<SyntaxRelatedTElement, EObject> typeToAST : typesToAST) {
-			typeToAST.getFirst().setAstElement(typeToAST.getSecond());
-		}
-		for (Pair<TypeDefiningElement, Type> astToType : astToTypes) {
-			astToType.getFirst().setDefinedType(astToType.getSecond());
-		}
-		((Script) moduleFromAST.getAstElement()).setModule(moduleFromIndex);
-		((ModuleAwareContentsList) contents).sneakySet(1, moduleFromIndex);
-	}
-
-	/**
-	 * Helper method called by {@link #rewireTModule(TModule, TModule)} to do the rewiring recursively.
-	 */
-	@SuppressWarnings("rawtypes")
-	private void doRewire(EObject eobjFromAST, EObject eobjFromIndex,
-			List<Pair<TypeDefiningElement, Type>> astToTypes, List<Pair<SyntaxRelatedTElement, EObject>> typesToAST) {
-		if (eobjFromAST.getClass() != eobjFromIndex.getClass()) {
-			if (!(eobjFromAST instanceof DeferredTypeRef && eobjFromIndex instanceof TypeRef)) {
-				throw new IllegalStateException(
-						"Different types in model, index has " + eobjFromAST.getClass().getName()
-								+ " but AST derived model has " + eobjFromIndex.getClass().getName());
-			}
-		}
-
-		if (eobjFromAST instanceof SyntaxRelatedTElement) {
-			// from TModule to AST
-			EObject astElement = ((SyntaxRelatedTElement) eobjFromAST).getAstElement();
-			typesToAST.add(Tuples.pair((SyntaxRelatedTElement) eobjFromIndex, astElement));
-
-			if (astElement instanceof TypeDefiningElement) {
-				if (eobjFromAST != ((TypeDefiningElement) astElement).getDefinedType()) {
-					throw new IllegalStateException(
-							"Inconsistent AST: defined type does not reference expected element");
-				}
-				astToTypes.add(Tuples.create((TypeDefiningElement) astElement, (Type) eobjFromIndex));
-			}
-		}
-
-		EClass eclass = eobjFromAST.eClass();
-		for (EReference containmentRef : eclass.getEAllContainments()) {
-			if (!(containmentRef.isTransient() || containmentRef.isDerived())) {
-				Object elementFromAst = eobjFromAST.eGet(containmentRef);
-				Object elementFromIndex = eobjFromIndex.eGet(containmentRef);
-				if (elementFromAst instanceof Iterable) {
-					@SuppressWarnings("unchecked")
-					Iterator<EObject> iterRefsFromAST = ((Iterable<EObject>) elementFromAst).iterator();
-					@SuppressWarnings("unchecked")
-					Iterator<EObject> iterRefsFromIndex = ((Iterable<EObject>) elementFromIndex).iterator();
-					while (iterRefsFromAST.hasNext() && iterRefsFromIndex.hasNext()) {
-						doRewire(iterRefsFromAST.next(), iterRefsFromIndex.next(), astToTypes, typesToAST);
-					}
-					if (iterRefsFromAST.hasNext()) { // we allow the index model to contain more data, which may be
-														// added during post-processing
-						throw new IllegalStateException(
-								"Inconsistent TModules, contained attributes " + containmentRef.getName()
-										+ " derived from same AST have different sizes: index model is " +
-										((Collection) elementFromIndex).size() + ", ast model is "
-										+ ((Collection) elementFromAst).size());
-					}
-				} else {
-					if (elementFromIndex != elementFromAst) {
-						if (elementFromIndex == null || elementFromAst == null) {
-							throw new IllegalStateException(
-									"Inconsistent TModules, contained attribute " + containmentRef.getName()
-											+ " is null in " + (elementFromIndex == null ? "index" : "AST derived")
-											+ " model");
-						}
-						doRewire((EObject) elementFromAst, (EObject) elementFromIndex, astToTypes, typesToAST);
-					}
-				}
-			}
 		}
 	}
 
@@ -645,15 +514,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Overridden to make sure that the cache is initialized during {@link #isLoading() loading}.
+	 * Overridden to make sure that we add the root AST element sneakily to the resource list to make sure that no
+	 * accidental proxy resolution happens and that we do not increment the modification counter of the contents list.
 	 */
 	@Override
 	protected void updateInternalState(IParseResult newParseResult) {
 		setParseResult(newParseResult);
-		if (newParseResult.getRootASTElement() != null && !getContents().contains(newParseResult.getRootASTElement())) {
-			sneakyAddToContent(newParseResult.getRootASTElement());
+		EObject newRootAstElement = newParseResult.getRootASTElement();
+		if (newRootAstElement != null && !getContents().contains(newRootAstElement)) {
+			// do not increment the modification counter here
+			sneakyAddToContent(newRootAstElement);
 		}
-		reattachModificationTracker(newParseResult.getRootASTElement());
+		reattachModificationTracker(newRootAstElement);
 		clearErrorsAndWarnings();
 		addSyntaxErrors();
 		doLinking();
@@ -681,8 +553,10 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
-		if (contents != null && !contents.isEmpty())
-			discardStateFromDescription();
+		if (contents != null && !contents.isEmpty()) {
+			//
+			discardStateFromDescription(true);
+		}
 		super.doLoad(inputStream, options);
 	}
 
@@ -764,7 +638,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Sends a is loaded notification if the content is not empty and sets the resource being fully initialized but do
+	 * Sends a is loaded notification if the content is not empty and sets the resource being fully initialized but does
 	 * not actually invoke load. Load is only called when the content is empty. This behavior prevents loading the
 	 * resource when e.g. calling EcoreUtil.resolve which would try to load the resource as its first slot is marked as
 	 * proxy.
@@ -843,18 +717,85 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Unloads the {@link TModule} slot (second slot in resource).
+	 * Returns the {@link TModule} from the contents list and optionally proxifies the instance. Robust against broken
+	 * state of the resource, e.g. can handle cases where the second element in the list is not of type TModule.
 	 *
-	 * @return list of unloaded slots, will be only one element as now all types are aggregated under TModule.
+	 * @param unload
+	 *            set to true if the module should be proxified.
+	 * @return the module at index 1 of the contents list (if any). Otherwise null.
+	 * @throws IllegalStateException
+	 *             if the contents list has more than two elements.
 	 */
-	protected List<EObject> discardStateFromDescription() {
+	protected TModule discardStateFromDescription(boolean unload) {
 		ModuleAwareContentsList theContents = (ModuleAwareContentsList) contents;
-		if (contents != null && !theContents.isEmpty()) {
-			List<EObject> toBeUnloaded = theContents.subList(1, theContents.size());
-			unloadElements(toBeUnloaded);
-			return toBeUnloaded;
+		if (theContents != null && !theContents.isEmpty()) {
+			if (theContents.size() == 2) {
+				EObject eObject = theContents.get(1);
+				if (eObject instanceof TModule) {
+					TModule module = (TModule) eObject;
+					if (unload) {
+						getUnloader().unloadRoot(module);
+					}
+					return module;
+				}
+				getUnloader().unloadRoot(eObject);
+				return null;
+			} else if (theContents.size() > 2) {
+				throw new IllegalStateException("Unexpected size: " + theContents);
+			}
+
 		}
-		return Collections.emptyList();
+		return null;
+	}
+
+	/**
+	 * Specialized to allow reconcilation of the TModule. We need to handle invocations of
+	 * {@link #installDerivedState(boolean)} where the contents list does already contain two elements.
+	 */
+	@SuppressWarnings("restriction")
+	@Override
+	public void installDerivedState(boolean preIndexingPhase) {
+		if (!isLoaded)
+			throw new IllegalStateException("The resource must be loaded, before installDerivedState can be called.");
+		if (!fullyInitialized && !isInitializing && !isLoadedFromStorage()) {
+			// set fully initialized to true, so we don't try initializing again on error.
+			boolean newFullyInitialized = true;
+			try {
+				isInitializing = true;
+				if (myDerivedStateComputer != null) {
+					EList<EObject> roots = doGetContents();
+					// change is here, the super class has a check that there is no derived state yet
+					// but we want to reconcile it thus we need to allow two root elements
+					if (roots.size() > 2) {
+						throw new IllegalStateException(
+								"The resource should not have more than two root elements, but: " + roots);
+					}
+					try {
+						myDerivedStateComputer.installDerivedState(this, preIndexingPhase);
+					} catch (Throwable e) {
+						if (operationCanceledManager.isOperationCanceledException(e)) {
+							doDiscardDerivedState();
+							// on cancellation we should try to initialize again next time
+							newFullyInitialized = false;
+							operationCanceledManager.propagateAsErrorIfCancelException(e);
+						}
+						throw Throwables.propagate(e);
+					}
+				}
+			} catch (RuntimeException e) {
+				getErrors().add(new ExceptionDiagnostic(e));
+				throw e;
+			} finally {
+				fullyInitialized = newFullyInitialized;
+				isInitializing = false;
+				try {
+					getCache().clear(this);
+				} catch (RuntimeException e) {
+					// don't rethrow as there might have been an exception in the try block.
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
 	}
 
 	private void unloadElements(List<EObject> toBeUnloaded) {
@@ -956,6 +897,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * @return true, if the referenced object may come from the the index TModule.
 	 */
 	private boolean canResolveFromDescription(URI targetUri) {
+		if (targetUri.fragment().startsWith("/0")) {
+			return false;
+		}
 		return canLoadFromDescriptionHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
 	}
 

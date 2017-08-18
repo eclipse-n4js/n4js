@@ -16,10 +16,8 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 
@@ -32,6 +30,23 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 	@Inject extension N4JSFormalParameterTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package boolean linkTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase, int idx) {
+		if (functionDecl.definedType !== null && ! functionDecl.definedType.eIsProxy) {
+			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
+		}
+
+		if (functionDecl.name === null) {
+			return false;
+		}
+
+		val TFunction functionType = target.topLevelTypes.get(idx) as TFunction
+
+		functionType.linkFormalParameters(functionDecl, preLinkingPhase)
+		functionType.astElement = functionDecl
+		functionDecl.definedType = functionType
+		return true;
+	}
 
 	/**
 	 * Creates TFunction for the given function declaration and adds it to the modules top level types
@@ -64,11 +79,6 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 
 		// set container
 		target.topLevelTypes += functionType
-	}
-
-	def private setTypeAccessModifier(TFunction fun, FunctionDeclaration funDecl) {
-		setTypeAccessModifier(funDecl, [TypeAccessModifier modifier|fun.declaredTypeAccessModifier = modifier], funDecl.declaredModifiers,
-			getAllAnnotations(funDecl))
 	}
 
 	/**
@@ -129,18 +139,12 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 */
 	def private setReturnTypeWithInferredType(TFunction functionType, FunctionExpression functionExpr,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
-		val inferredReturnTypeRef =
-			if (functionExpr.returnTypeRef === null) {
-				/*
-				 * TODO IDE-1579 this branch skips makePromiseIfAsync.
-				 * Question: could this result in 'void' as inferred return type (for an async method)?
-				 */
-				TypeUtils.createDeferredTypeRef //TypeUtils.createComputedTypeRef([resolveAllComputedTypeRefsInTFunction(functionType,functionExpr,builtInTypeScope)])
-			} else {
-				functionExpr.returnTypeRef
-			};
-		setCopyOfReference([TypeRef typeRef | functionType.returnTypeRef = typeRef], inferredReturnTypeRef,
-			preLinkingPhase)
+		if (!preLinkingPhase)
+			/*
+			 * TODO IDE-1579 this branch skips makePromiseIfAsync.
+			 * Question: could this result in 'void' as inferred return type (for an async method)?
+			 */
+			functionType.returnTypeRef = TypeUtils.copyWithProxies(functionExpr.returnTypeRef) ?: TypeUtils.createDeferredTypeRef		
 		// note: handling of the return type of async functions not done here, see TypeProcessor#handleAsyncFunctionDeclaration()
 	}
 

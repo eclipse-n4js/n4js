@@ -163,6 +163,15 @@ public interface ImPackage extends EPackage {
 	int SCRIPT_IM___GET_ANNOTATIONS = N4JSPackage.SCRIPT___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int SCRIPT_IM___GET_ALL_ANNOTATIONS = N4JSPackage.SCRIPT___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The number of operations of the '<em>Script IM</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1742,6 +1751,15 @@ public interface ImPackage extends EPackage {
 	int DELEGATING_MEMBER___GET_ANNOTATIONS = N4JSPackage.N4_MEMBER_DECLARATION___GET_ANNOTATIONS;
 
 	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_MEMBER___GET_ALL_ANNOTATIONS = N4JSPackage.N4_MEMBER_DECLARATION___GET_ALL_ANNOTATIONS;
+
+	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -1975,6 +1993,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_GETTER_DECLARATION_FEATURE_COUNT = N4JSPackage.N4_GETTER_DECLARATION_FEATURE_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_GETTER_DECLARATION___GET_ALL_ANNOTATIONS = N4JSPackage.N4_GETTER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -2300,6 +2327,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_SETTER_DECLARATION_FEATURE_COUNT = N4JSPackage.N4_SETTER_DECLARATION_FEATURE_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_SETTER_DECLARATION___GET_ALL_ANNOTATIONS = N4JSPackage.N4_SETTER_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
@@ -2670,6 +2706,15 @@ public interface ImPackage extends EPackage {
 	 * @ordered
 	 */
 	int DELEGATING_METHOD_DECLARATION_FEATURE_COUNT = N4JSPackage.N4_METHOD_DECLARATION_FEATURE_COUNT + 4;
+
+	/**
+	 * The operation id for the '<em>Get All Annotations</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int DELEGATING_METHOD_DECLARATION___GET_ALL_ANNOTATIONS = N4JSPackage.N4_METHOD_DECLARATION___GET_ALL_ANNOTATIONS;
 
 	/**
 	 * The operation id for the '<em>Get Declared Type Ref</em>' operation.

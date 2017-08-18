@@ -27,6 +27,16 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 	@Inject extension N4JSTypesBuilderHelper
 
+	def package boolean linkGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+		if (n4Getter.name === null && !n4Getter.hasComputedPropertyName) {
+			return false
+		}
+		val getterType = classifierType.ownedMembers.get(idx) as TGetter;
+		getterType.astElement = n4Getter
+		n4Getter.definedGetter = getterType
+		return true
+	}
+
 	def package TGetter createGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase) {
 		if (n4Getter.name === null && !n4Getter.hasComputedPropertyName) {
 			return null

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -17,6 +19,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -181,6 +184,23 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 			_elvis = _emptyEList;
 		}
 		return _elvis;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<Annotation> getAllAnnotations() {
+		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
+		final EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			EList<Annotation> _annotations = ((ExportDeclaration)parent).getAnnotations();
+			Iterables.<Annotation>addAll(result, _annotations);
+		}
+		EList<Annotation> _annotations_1 = this.getAnnotations();
+		Iterables.<Annotation>addAll(result, _annotations_1);
+		return result;
 	}
 
 	/**
@@ -416,6 +436,7 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 		if (baseClass == AnnotableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS;
+				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS: return N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS;
 				default: return -1;
 			}
 		}
@@ -445,6 +466,8 @@ public class ExportedVariableStatementImpl extends VariableStatementImpl impleme
 				return isExternal();
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ANNOTATIONS:
 				return getAnnotations();
+			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___GET_ALL_ANNOTATIONS:
+				return getAllAnnotations();
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED:
 				return isExported();
 			case N4JSPackage.EXPORTED_VARIABLE_STATEMENT___IS_EXPORTED_AS_DEFAULT:
