@@ -26,13 +26,14 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TEnum;
 import org.eclipse.n4js.ts.types.TEnumLiteral;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
@@ -65,7 +66,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private SortedSet<QualifiedName> lazyImportedNames;
 
-	private final N4JSTypeSystem ts;
+	// private final N4JSTypeSystem ts;
 
 	/**
 	 * Creates a new description for the given resource.
@@ -81,7 +82,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		this.qualifiedNameProvider = qualifiedNameProvider;
 		this.typeHelper = typeHelper;
 		this.strategy = strategy;
-		this.ts = ts;
+		// this.ts = ts;
 	}
 
 	@Override
@@ -216,7 +217,6 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					from = from.eContainer();
 				}
 				List<EObject> tos = pair.right;
-				boolean isComposedMemberCase = tos.size() > 1;
 
 				for (EObject to : tos) {
 					if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
@@ -235,19 +235,19 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 						// these
 						// type arguments are not resolved! We really need to clearly define what the 'transitive
 						// closure of dependencies' really means.
-						if (from instanceof TypableElement && !isComposedMemberCase) {
-							TypeRef typeRef = ts.tau((TypableElement) from);
-							crossRefTypes.add(typeRef.getDeclaredType());
-						} else {
-							if (to instanceof TFunction) {
-								TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
-								crossRefTypes.add(returnTypeRef.getDeclaredType());
-							} else {
-								TypeRef typeRef = ((TField) to).getTypeRef();
-								crossRefTypes.add(typeRef.getDeclaredType());
-							}
 
+						if (to instanceof TFunction) {
+							TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
+							crossRefTypes.add(returnTypeRef.getDeclaredType());
+						} else {
+							TypeRef typeRef = ((TField) to).getTypeRef();
+							crossRefTypes.add(typeRef.getDeclaredType());
 						}
+					}
+					if (to instanceof TMember) {
+						TMember casted = (TMember) to;
+						ContainerType<?> declaringType = casted.getContainingType();
+						crossRefTypes.add(declaringType);
 					}
 				}
 			}

@@ -60,7 +60,7 @@ public class N4JSCrossReferenceComputer {
 	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor) {
 		TreeIterator<EObject> allASTContentsIter;
 		if (resource instanceof N4JSResource) {
-			Script script = (Script) ((N4JSResource) resource).getContents().get(0);
+			Script script = ((N4JSResource) resource).getScript();
 			// We traverse the AST but not the TModule tree
 			allASTContentsIter = N4JSLanguageUtils.getAllContents(script);
 		} else {
@@ -152,8 +152,7 @@ public class N4JSCrossReferenceComputer {
 	private void handleType(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
 			Type to) {
 		if (to != null) {
-			if (!N4Scheme.isFromResourceWithN4Scheme(to) &&
-					externalReferenceChecker.isResolvedAndExternal(resource, to)) {
+			if (isLocatedInOtherResource(resource, to)) {
 				acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from, Collections.singletonList(to)));
 			}
 		}
@@ -165,12 +164,12 @@ public class N4JSCrossReferenceComputer {
 		if (tos != null) {
 			// Filter those in 'tos' that are located in other resources
 			acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from,
-					tos.stream().filter(to -> isLocatedInOtherResources(resource, to))
+					tos.stream().filter(to -> isLocatedInOtherResource(resource, to))
 							.collect(Collectors.toList())));
 		}
 	}
 
-	private boolean isLocatedInOtherResources(Resource resource, EObject eobj) {
+	private boolean isLocatedInOtherResource(Resource resource, EObject eobj) {
 		if (eobj == null || eobj.eResource() == null)
 			return false;
 

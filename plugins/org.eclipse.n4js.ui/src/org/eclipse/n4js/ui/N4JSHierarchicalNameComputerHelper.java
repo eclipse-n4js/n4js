@@ -24,7 +24,7 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 
 /**
- * This class provides helper methods for calculating hierarchical names of AST nodes.
+ * This class provides helper methods for calculating hierarchical names of AST/TModule nodes.
  */
 public class N4JSHierarchicalNameComputerHelper {
 
