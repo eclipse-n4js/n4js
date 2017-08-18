@@ -32,7 +32,11 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
+import org.eclipse.egit.core.project.GitProjectData;
+import org.eclipse.egit.core.project.RepositoryMapping;
+import org.eclipse.egit.core.project.RepositoryMappingChangeListener;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
@@ -44,8 +48,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
-
-import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 
 /**
  * Working set manager based on Git repositories.
@@ -96,20 +98,8 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl i
 					}
 
 				}
-
-				discardWorkingSetCaches();
-				saveState(new NullProgressMonitor());
-
-				WorkingSetManagerBroker workingSetManagerBroker = getWorkingSetManagerBroker();
-				if (workingSetManagerBroker.isWorkingSetTopLevel()) {
-					final WorkingSetManager activeManager = workingSetManagerBroker.getActiveManager();
-					if (activeManager != null) {
-						if (activeManager.getId().equals(getId())) {
-							workingSetManagerBroker.refreshNavigator();
-						}
-					}
-				}
-
+				// trigger a reload based on new repository information
+				reload();
 			}
 
 			private MapDifference<String, String> calculateDifference(PreferenceChangeEvent event) {
@@ -139,6 +129,14 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl i
 			}
 
 		});
+
+		GitProjectData.addRepositoryChangeListener(new RepositoryMappingChangeListener() {
+			@Override
+			public void repositoryChanged(RepositoryMapping which) {
+				reload();
+			}
+		});
+
 	}
 
 	@Override
@@ -179,6 +177,24 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl i
 		restoreState(new NullProgressMonitor());
 
 		return deferredInitializerSucceeded;
+	}
+
+	/**
+	 * Reloads the working set manager by invalidating its cache and re-triggering the initialization logic.
+	 */
+	private void reload() {
+		discardWorkingSetCaches();
+		saveState(new NullProgressMonitor());
+
+		WorkingSetManagerBroker workingSetManagerBroker = getWorkingSetManagerBroker();
+		if (workingSetManagerBroker.isWorkingSetTopLevel()) {
+			final WorkingSetManager activeManager = workingSetManagerBroker.getActiveManager();
+			if (activeManager != null) {
+				if (activeManager.getId().equals(getId())) {
+					workingSetManagerBroker.refreshNavigator();
+				}
+			}
+		}
 	}
 
 	/**
