@@ -12,26 +12,346 @@
 
 /* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowgraphTest END_SETUP */
 
-function fn1() {
-	// XPECT succs at 'let x = 0' --> x++
-	let x = 0;
+
+
+function AdditiveExpression() {
+	// AdditiveExpression XPECT succs at '0' --> 1
+	0;
+	// AdditiveExpression XPECT succs at '1' --> 2
+	// AdditiveExpression XPECT succs at '2' --> 1 + 2
+	// AdditiveExpression XPECT succs at '1 + 2' --> 42
+	1 + 2;
+	42;
+}
+
+function Argument() {
+	// tbd
+}
+
+function ArrayLiteral() {
+	// ArrayLiteral XPECT succs at '0' --> 1
+	0;
+	// ArrayLiteral XPECT succs at '1' --> 2
+	// ArrayLiteral XPECT succs at '2' --> 3
+	// ArrayLiteral XPECT succs at '3' --> [1\,2\,3]
+	// ArrayLiteral XPECT succs at '[1,2,3]' --> 42
+	[1,2,3];
+	42;
+}
+
+function AssignmentExpression(x:int) {
+	// AssignmentExpression XPECT succs at '0' --> x
+	0;
+	// AssignmentExpression XPECT succs at 'x' --> 0
+	// AssignmentExpression XPECT succs at '0' --> x = 0
+	// AssignmentExpression XPECT succs at 'x = 0' --> 42
+	x = 0;
+	42;
+}
+
+async function AwaitExpression() {
+	// AwaitExpression XPECT succs at '0' --> null
+	0;
+	// AwaitExpression XPECT warnings --> "await should not be used on 'null' since it has no effect here." at "await null"
+	// AwaitExpression XPECT succs at 'null' --> await null
+	// AwaitExpression XPECT succs at 'await null' --> 42
+	await null;
+	42;
+}
+
+function BinaryBitwiseExpression() {
+	// BinaryBitwiseExpression XPECT succs at '0' --> 1
+	0;
+	// BinaryBitwiseExpression XPECT succs at '1' --> 2
+	// BinaryBitwiseExpression XPECT succs at '2' --> 1 & 2
+	// BinaryBitwiseExpression XPECT succs at '1 & 2' --> 42
+	1 & 2;
+	42;
+}
+
+function BinaryLogicalExpression() {
+	// BinaryLogicalExpression XPECT succs at '0' --> 1
+	0;
+	// BinaryLogicalExpression XPECT succs at '1' --> 2
+	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
+	// BinaryLogicalExpression XPECT succs at '1 && 2' --> 42
+	1 && 2;
+	42;
+}
+
+function CastExpression() {
+	// CastExpression XPECT succs at '0' --> 4
+	0;
+	// CastExpression XPECT warnings --> "Unnecessary cast from int to int" at "4 as int"
+	// CastExpression XPECT succs at '4' --> 4 as int
+	// CastExpression XPECT succs at '4 as int' --> 42
+	4 as int;
+	42;
+}
+
+function CommaExpression() {
+	// CommaExpression XPECT succs at '0' --> 4
+	0;
+	// CommaExpression XPECT succs at '4' --> 5
+	// CommaExpression XPECT succs at '5' --> 4\,5
+	// CommaExpression XPECT succs at '4,5' --> 42
+	4,5;
+	42;
+}
+
+function ConditionalExpression() {
+	// ConditionalExpression XPECT succs at '0' --> true
+	0;
+	// ConditionalExpression XPECT succs at 'true' --> 1,0
+	// ConditionalExpression XPECT succs at '1' --> true ? 1 : 0
+	// ConditionalExpression XPECT succs at '0' --> true ? 1 : 0
+	// ConditionalExpression XPECT succs at 'true ? 1 : 0' --> 42
+	// GH-151 ConditionalExpression XPECT FIXME warnings --> "Dispensable use of conditional expression. The expression 'true' always evaluates to true, so only the left-hand side will ever be evaluated." at "true"
+	true ? 1 : 0;
+	42;
+}
+
+function EqualityExpression() {
+	// EqualityExpression XPECT succs at '0' --> 1
+	0;
+	// EqualityExpression XPECT succs at '1' --> 2
+	// EqualityExpression XPECT succs at '2' --> 1 == 2
+	// EqualityExpression XPECT succs at '1 == 2' --> 42
+	1 == 2;
+	42;
+}
+
+function FunctionExpression() {
+	// FunctionExpression XPECT succs at '0' --> function() { }
+	0;
+	// FunctionExpression XPECT succs at 'function() { }' --> (function() { })
+	// FunctionExpression XPECT succs at '(function() { })' --> 42
+	(function() { });
+	42;
+}
+
+function IdentifierRef(i) {
+	// IndexedAccessExpression XPECT succs at '0' --> i
+	0;
+	// IndexedAccessExpression XPECT succs at 'i' --> 42
+	i;
+	42;
+}
+
+function IndexedAccessExpression(a : Array<?>) {
+	// IndexedAccessExpression XPECT succs at '0' --> a
+	0;
+	// IndexedAccessExpression XPECT succs at 'a' --> 1
+	// IndexedAccessExpression XPECT succs at '1' --> a[1]
+	// IndexedAccessExpression XPECT succs at 'a[1]' --> 42
+	a[1];
+	42;
+}
+
+function Literal() {
+	// Literal XPECT succs at '0' --> "string literal"
+	0;
+	// Literal XPECT succs at '"string literal"' --> 42
+	"string literal";
+	42;
+}
+
+function MultiplicativeExpression() {
+	// MultiplicativeExpression XPECT succs at '0' --> 47
+	0;
+	// MultiplicativeExpression XPECT succs at '47' --> 11
+	// MultiplicativeExpression XPECT succs at '11' --> 47 * 11
+	// MultiplicativeExpression XPECT succs at '47 * 11' --> 42
+	47 * 11;
+	42;
+}
+
+function N4ClassExpression() {
+	0;
+	// currently unsupported feature
+	42;
+}
+
+function NewExpression() {
+	// NewExpression XPECT succs at '0' --> Object
+	0;
+	// NewExpression XPECT succs at 'Object' --> new Object()
+	// NewExpression XPECT succs at 'new Object()' --> 42
+	new Object();
+	42;
+}
+
+function NewTarget() {
+	0;
+	// currently unsupported feature
+	42;
+}
+
+function ObjectLiteral() {
+	// ObjectLiteral XPECT succs at '0' --> 1
+	0;
+	// ObjectLiteral XPECT succs at '1' --> "string"
+	// ObjectLiteral XPECT succs at '"string"' --> function(){}
+	// ObjectLiteral XPECT succs at 'function(){}' --> { a : 1 \, b : "string" \, fn : function(){} \, m() {} }
+	// ObjectLiteral XPECT succs at '{ a : 1 , b : "string" , fn : function(){} , m() {} }' --> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} })
+	// ObjectLiteral XPECT succs at '({ a : 1 , b : "string" , fn : function(){} , m() {} })' --> 42
+	({ a : 1 , b : "string" , fn : function(){} , m() {} });
+	42;
+}
+
+function ParameterizedCallExpression() {
+	// ParameterizedCallExpression XPECT succs at '0' --> Object
+	0;
+	// ParameterizedCallExpression XPECT succs at 'Object' --> Object.call
+	// ParameterizedCallExpression XPECT succs at 'Object.call' --> 1
+	// ParameterizedCallExpression XPECT succs at '1' --> 2
+	// ParameterizedCallExpression XPECT succs at '2' --> Object.call(1\,2)
+	// ParameterizedCallExpression XPECT succs at 'Object.call(1,2)' --> 42
+	Object.call(1,2);
+	42;
+}
+
+function ParameterizedPropertyAccessExpression() {
+	// ParameterizedPropertyAccessExpression XPECT succs at '0' --> Object
+	0;
+	// ParameterizedPropertyAccessExpression XPECT succs at 'Object' --> Object.call
+	// ParameterizedPropertyAccessExpression XPECT succs at 'Object.call' --> 42
+	Object.call;
+	42;
+}
+
+function PostfixExpression(x : int) {
+	// PostfixExpression XPECT succs at '0' --> x
+	0;
+	// PostfixExpression XPECT succs at 'x' --> x++
+	// PostfixExpression XPECT succs at 'x++' --> 42
 	x++;
+	42;
+}
+
+function PrimaryExpression() {
+	0;
+	// tbd
+	42;
+}
+
+function PromisifyExpression() {
+	0;
+	// tbd
+	42;
+}
+
+function RelationalExpression() {
+	// RelationalExpression XPECT succs at '0' --> 1
+	0;
+	// RelationalExpression XPECT succs at '1' --> 73
+	// RelationalExpression XPECT succs at '73' --> 1 > 73
+	// RelationalExpression XPECT succs at '1 > 73' --> 42
+	1 > 73;
+	42;
+}
+
+function ShiftExpression() {
+	// ShiftExpression XPECT succs at '0' --> 847
+	0;
+	// ShiftExpression XPECT succs at '847' --> 2
+	// ShiftExpression XPECT succs at '2' --> 847 >> 2
+	// ShiftExpression XPECT succs at '847 >> 2' --> 42
+	847 >> 2;
+	42;
+}
+
+class ClassSuperLiteral {
+	// SuperLiteral XPECT warnings --> "Method names should start with lower case letter." at "SuperLiteral"
+	SuperLiteral() {
+		// SuperLiteral XPECT succs at '0' --> super
+		0;
+		// SuperLiteral XPECT errors --> "Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+		// SuperLiteral XPECT succs at 'super' --> 42
+		super;
+		42;
+	}
+}
+
+function TaggedTemplateString() {
+	0;
+	// currently unsupported feature
+	42;
+}
+
+function TemplateExpression() {
+	// TemplateExpression XPECT succs at '0' --> `a ${
+	0;
+	// TemplateExpression XPECT succs at 'a ${' --> "b"
+	// TemplateExpression XPECT succs at '"b"' -->  c`
+	// TemplateExpression XPECT succs at ' c`' --> `a ${"b"} c`
+	// TemplateExpression XPECT succs at '`a ${"b"} c`' --> 42
+	`a ${"b"} c`;
+	42;
+}
+
+function ThisExpression() {
+	// ThisExpression XPECT succs at '0' --> this
+	0;
+	// ThisExpression XPECT succs at 'this' --> 42
+	this;
+	42;
+}
+
+
+function UnaryExpression() {
+	// UnaryExpression XPECT succs at '0' --> true
+	0;
+	// UnaryExpression XPECT succs at 'true' --> !true
+	// UnaryExpression XPECT succs at '!true' --> 42
+	!true;
+	42;
+}
+
+function * YieldExpression(i) {
+	// YieldExpression XPECT succs at '0' --> i
+	0;
+	// YieldExpression XPECT succs at 'i' --> 1
+	// YieldExpression XPECT succs at '1' --> yield 1
+	// YieldExpression XPECT succs at 'yield 1' --> i = yield 1
+	// YieldExpression XPECT succs at 'i = yield 1' --> 42
+	i = yield 1;
+	42;
+}
+
+
+
+
+
+
+
+
+function fn1() {
+	// XPECT succs at 'let xx = 0' --> xx
+	let xx = 0;
+	xx++;
 }
 
 function fn2() {
-	// XPECT succs at 'console.log("Hallo")' --> console.log("Welt")
+	// XPECT succs at 'console.log("Hallo")' --> console
 	console.log("Hallo");
 	console.log("Welt");
 }
 
 function fn3() {
-	// XPECT succs at 'console' --> "Hallo"
+	// XPECT succs at 'console' --> console.log
 	console.log("Hallo");
 	let x = 0;
 }
 
 function fn4() {
+	// XPECT succs at 'console.log' --> "Hallo"
+	console.log("Hallo");
+	let xx = 0;
+}
+
+function fn5() {
 	// XPECT succs at '"Hallo"' --> console.log("Hallo")
 	console.log("Hallo");
-	let x = 0;
+	let xx = 0;
 }
