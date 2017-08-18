@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.hlc.base.N4jscBase;
+import org.eclipse.n4js.utils.io.FileDeleter;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +41,7 @@ import org.junit.runners.Parameterized.Parameters;
 @RunWith(Parameterized.class)
 public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 
+	static File WORKSPACE;
 	static String WS_ORDER_TEST = "N4jscArgumentOrderTest";
 
 	static String[] args;
@@ -48,8 +51,8 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	 */
 	@BeforeClass
 	public static void setupWorkspace() throws IOException {
-		File f = setupWorkspace(WS_ORDER_TEST);
-		String currentPath = f.getAbsolutePath().toString();
+		WORKSPACE = setupWorkspace(WS_ORDER_TEST);
+		String currentPath = WORKSPACE.getAbsolutePath().toString();
 		System.out.println("just for reference base-path is: " + currentPath);
 
 		// @formatter:off
@@ -70,6 +73,12 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 		};
 		// @formatter:on
 
+	}
+
+	/** Cleanup. */
+	@AfterClass
+	public static void deleteWorkspace() throws IOException {
+		FileDeleter.delete(WORKSPACE.toPath(), true);
 	}
 
 	// @formatter:off
@@ -107,7 +116,6 @@ public class N4jscArgumentOrderTest extends AbstractN4jscTest {
 	 */
 	@Test
 	public void testDifferentArgumentOrder() {
-		System.out.println(logMethodname());
 
 		String[] shuffledArgs = shuffleArgs(shuffleOrder);
 

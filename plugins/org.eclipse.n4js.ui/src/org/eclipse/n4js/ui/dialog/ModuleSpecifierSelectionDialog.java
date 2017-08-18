@@ -36,15 +36,14 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardValidatorUtils;
+import org.eclipse.n4js.utils.OSInfo;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.model.IWorkbenchAdapter;
-
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.ui.wizard.workspace.WorkspaceWizardValidatorUtils;
-import org.eclipse.n4js.utils.OSInfo;
 
 /**
  * Browse dialog to select and create module folders inside of a given source folder location.
@@ -633,7 +632,7 @@ public class ModuleSpecifierSelectionDialog extends CustomElementSelectionDialog
 				return "The module name must not be empty.";
 			}
 
-			if (!isValidFolderName(newText)) {
+			if (!isValidFolderName(path.removeFileExtension().toString())) {
 				return "The module name is not a valid file system name.";
 			}
 
