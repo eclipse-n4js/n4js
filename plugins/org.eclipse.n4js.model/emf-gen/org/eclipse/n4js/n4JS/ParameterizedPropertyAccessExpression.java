@@ -30,7 +30,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * @model
  * @generated
  */
-public interface ParameterizedPropertyAccessExpression extends Expression, ParameterizedAccess {
+public interface ParameterizedPropertyAccessExpression extends Expression, MemberAccess, ParameterizedAccess {
 	/**
 	 * Returns the value of the '<em><b>Target</b></em>' containment reference.
 	 * <!-- begin-user-doc -->

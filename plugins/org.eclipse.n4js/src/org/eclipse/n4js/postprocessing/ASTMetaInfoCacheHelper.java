@@ -13,12 +13,6 @@ package org.eclipse.n4js.postprocessing;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.util.IResourceScopeCache;
-import org.eclipse.xtext.util.OnChangeEvictingCache;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -27,6 +21,12 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+import org.eclipse.xtext.util.IResourceScopeCache;
+import org.eclipse.xtext.util.OnChangeEvictingCache;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleEnvironment;
 
@@ -90,13 +90,16 @@ public final class ASTMetaInfoCacheHelper {
 						+ " (on resource " + Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ")");
 				((OnChangeEvictingCache) resourceScopeCacheHelper).getOrCreate(res).addCacheListener((cacheAdapter) -> {
 					if (!newCache.isEmpty()) {
-						System.out.println("!!!! clearing non-empty cache " + newCacheId);
+						System.out.println("!!!! clearing non-empty cache " + newCacheId + " (on resource "
+								+ Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
 					} else {
-						System.out.println("!!!! clearing empty cache " + newCacheId);
+						System.out.println("!!!! clearing empty cache " + newCacheId + " (on resource "
+								+ Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
 					}
 					if (newCache.isProcessingInProgress()) {
 						// DEBUG: good place for a break point when hunting down an accidental cache clear
-						System.out.println("!!!! WARNING suspicious cache clear (cache " + newCacheId + ")");
+						System.out.println("!!!! WARNING suspicious cache clear (cache " + newCacheId + " (on resource "
+								+ Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
 					}
 				});
 			}

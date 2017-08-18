@@ -55,6 +55,9 @@ import.gif									- https://github.com/eclipse/webtools.sourceediting.xsl/blob/
 ## other
 reorder.gif									- https://github.com/eclipse/eclipse.pde.ui/blob/master/ui/org.eclipse.pde.ui/icons/elcl16/refresh.png
 inher_co.gif								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/inher_co.png
+public_co.gif								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/public_co.png
+static_co.gif								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/static_co.png
+localtypes_co.gif							- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/localtypes_co.png
 
 # overlays
 ## abstract overlay for methods and classifiers

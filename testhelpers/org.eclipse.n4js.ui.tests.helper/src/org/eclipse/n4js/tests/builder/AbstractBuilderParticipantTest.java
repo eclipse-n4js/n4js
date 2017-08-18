@@ -180,6 +180,16 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		return file;
 	}
 
+	/**
+	 * Changes content of an existing file to the given {@link CharSequence}.
+	 */
+	@SuppressWarnings("resource")
+	protected IFile changeTestFile(IFile file, CharSequence newContent) throws CoreException {
+		assertTrue("test file should exist", file.exists());
+		file.setContents(new StringInputStream(newContent.toString()), true, true, monitor());
+		return file;
+	}
+
 	/***/
 	protected IFolder createFolder(IFolder superFolder, String path) throws CoreException {
 		IFolder folder = superFolder.getFolder(path);

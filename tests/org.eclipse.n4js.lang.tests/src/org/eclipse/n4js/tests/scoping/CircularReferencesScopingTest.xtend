@@ -12,37 +12,38 @@ package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.ArrayList
+import java.util.Collection
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSInjectorProviderWithIndex
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesPackage
-import java.util.Collection
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IResourceDescriptions
+import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.containers.FlatResourceSetBasedAllContainersState
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.util.OnChangeEvictingCache
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.ts.scoping.builtin.N4Scheme
-import org.eclipse.xtext.util.OnChangeEvictingCache
-import org.eclipse.xtext.resource.XtextResource
-import java.util.ArrayList
 
 /**
  * @see N4JSScopeProvider
@@ -116,10 +117,16 @@ class CircularReferencesScopingTest implements N4Scheme {
 		assertEquals(brother.errors.toString,  0, brother.errors.size)
 		assertEquals(3, rs.resources.filter[!resourceWithN4Scheme].size)
 
-		val sister = rs.getResource(sisterURI, false)
+		val sister = rs.getResource(sisterURI, false) as N4JSResource
+		val child = rs.getResource(childURI, false) as N4JSResource
 		assertNotNull(sister)
-		assertFalse(sister.loaded)
+		assertNotNull(child)
+		assertTrue(sister.loaded) // due to cyclic dependency, sister must be loaded from disk (not index)
+		assertFalse(sister.script.eIsProxy)
+		assertFalse(child.loaded) // no cyclic dependency, so child can be loaded from index (not from disk)
+		assertTrue(child.script.eIsProxy)
 		assertEquals(2, sister.contents.size)
+		assertEquals(2, child.contents.size)
 
 		sister.contents.head // use an iterator here internally to check for concurrent modifications on the contents list
 		assertEquals(2, sister.contents.size)

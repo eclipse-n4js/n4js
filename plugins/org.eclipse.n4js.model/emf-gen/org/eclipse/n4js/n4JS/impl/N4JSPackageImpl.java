@@ -105,6 +105,7 @@ import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -893,6 +894,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass taggedTemplateStringEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass memberAccessEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -4217,6 +4225,24 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getMemberAccess() {
+		return memberAccessEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getMemberAccess_ComposedMemberCache() {
+		return (EReference)memberAccessEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getParameterizedPropertyAccessExpression() {
 		return parameterizedPropertyAccessExpressionEClass;
 	}
@@ -6584,6 +6610,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(taggedTemplateStringEClass, TAGGED_TEMPLATE_STRING__TARGET);
 		createEReference(taggedTemplateStringEClass, TAGGED_TEMPLATE_STRING__TEMPLATE);
 
+		memberAccessEClass = createEClass(MEMBER_ACCESS);
+		createEReference(memberAccessEClass, MEMBER_ACCESS__COMPOSED_MEMBER_CACHE);
+
 		parameterizedPropertyAccessExpressionEClass = createEClass(PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION);
 		createEReference(parameterizedPropertyAccessExpressionEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__TARGET);
 		createEReference(parameterizedPropertyAccessExpressionEClass, PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY);
@@ -7033,8 +7062,10 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		parameterizedCallExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
 		argumentEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		indexedAccessExpressionEClass.getESuperTypes().add(this.getExpression());
+		indexedAccessExpressionEClass.getESuperTypes().add(this.getMemberAccess());
 		taggedTemplateStringEClass.getESuperTypes().add(this.getExpression());
 		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getExpression());
+		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getMemberAccess());
 		parameterizedPropertyAccessExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
 		awaitExpressionEClass.getESuperTypes().add(this.getExpression());
 		promisifyExpressionEClass.getESuperTypes().add(this.getExpression());
@@ -7609,6 +7640,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(taggedTemplateStringEClass, TaggedTemplateString.class, "TaggedTemplateString", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTaggedTemplateString_Target(), this.getExpression(), null, "target", null, 0, 1, TaggedTemplateString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getTaggedTemplateString_Template(), this.getTemplateLiteral(), null, "template", null, 0, 1, TaggedTemplateString.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(memberAccessEClass, MemberAccess.class, "MemberAccess", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getMemberAccess_ComposedMemberCache(), theTypesPackage.getComposedMemberCache(), null, "composedMemberCache", null, 0, 1, MemberAccess.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(parameterizedPropertyAccessExpressionEClass, ParameterizedPropertyAccessExpression.class, "ParameterizedPropertyAccessExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getParameterizedPropertyAccessExpression_Target(), this.getExpression(), null, "target", null, 0, 1, ParameterizedPropertyAccessExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

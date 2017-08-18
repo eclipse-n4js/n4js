@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -40,6 +39,7 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.CompositeGenerator;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.GeneratorException;
+import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
 import org.eclipse.n4js.internal.N4JSBrokenProjectException;
@@ -79,7 +79,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Provider;
 
 /**
@@ -129,6 +128,9 @@ public class N4HeadlessCompiler {
 	private IN4JSCore n4jsCore;
 
 	@Inject
+	private IHeadlessLogger logger;
+
+	@Inject
 	private N4FilebasedWorkspaceResourceSetContainerState rsbAcs;
 
 	/** provider to create correct ResourceSet instances */
@@ -154,40 +156,11 @@ public class N4HeadlessCompiler {
 	/** if set to false all source-containers of type 'source' are not passed to the generator */
 	private boolean compileSourceCode = true;
 
-	/** if set to true prints out processed files to standard out */
-	private boolean verbose = false;
-
-	/** if set to true suppresses all output to standard out */
-	private boolean suppressOutput = false;
-
-	/** if set to true prints to standard out inform about what is currently processed. */
-	private boolean createDebugOutput = false;
-
 	/** if set additional log will be written to this filename */
 	private String logFile = null;
 
 	/**
-	 * Reference to the injector creating this instance. Will be set when an instance of this class is created by
-	 * calling {@link #injectAndSetup(Properties)}
-	 */
-	private Injector injector;
-
-	/**
-	 * Construct a {@link N4HeadlessCompiler} instance based on preferences stored in the given properties.
-	 *
-	 * @param properties
-	 *            preferences.
-	 */
-	public static N4HeadlessCompiler injectAndSetup(Properties properties) {
-		Injector localinjector = new N4JSHeadlessStandaloneSetup(properties).createInjectorAndDoEMFRegistration();
-		N4HeadlessCompiler instance = localinjector.getInstance(N4HeadlessCompiler.class);
-		instance.injector = localinjector;
-		return instance;
-	}
-
-	/**
-	 * Private constructor to prevent accidental instantiation. Use
-	 * {@link N4HeadlessCompiler#injectAndSetup(Properties)} to create instances.
+	 * Private constructor to prevent accidental instantiation.
 	 */
 	@Inject
 	private N4HeadlessCompiler(CompositeGenerator compositeGenerator, JavaIoFileSystemAccess fsa) {
@@ -1030,13 +1003,14 @@ public class N4HeadlessCompiler {
 
 		recorder.markStartLoading(markedProject);
 
-		if (isCreateDebugOutput()) {
-			printDebug("Loading project " + markedProject.project.getProjectId());
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Loading project " + markedProject.project.getProjectId());
 		}
 
 		collectResources(markedProject, resSet, recorder);
 		loadResources(markedProject, recorder);
 		indexResources(markedProject, resSet);
+		postProcessResources(markedProject);
 	}
 
 	/**
@@ -1057,15 +1031,15 @@ public class N4HeadlessCompiler {
 		for (IN4JSSourceContainer container : markedProject.project.getSourceContainers()) {
 			// Conditionally filter test resources if not desired
 			if (shouldLoadSourceContainer(container)) {
-				if (isCreateDebugOutput()) {
-					printDebug("Collecting resources from source container " + container.getLocation());
+				if (logger.isCreateDebugOutput()) {
+					logger.debug("Collecting resources from source container " + container.getLocation());
 				}
 
 				Iterables.filter(container, uri -> shouldLoadResource(uri)).forEach(uri -> {
 					Resource resource = resourceSet.createResource(uri);
 					if (resource != null) {
-						if (isCreateDebugOutput()) {
-							printDebug("  Creating resource " + resource.getURI());
+						if (logger.isCreateDebugOutput()) {
+							logger.debug("  Creating resource " + resource.getURI());
 						}
 
 						markedProject.resources.add(resource);
@@ -1079,7 +1053,7 @@ public class N4HeadlessCompiler {
 						}
 					} else {
 						recorder.markFailedCreateResource(uri);
-						warn("  Could not create resource for " + uri);
+						logger.warn("  Could not create resource for " + uri);
 					}
 				});
 			}
@@ -1128,14 +1102,14 @@ public class N4HeadlessCompiler {
 	 */
 	private void loadResources(MarkedProject markedProject, N4ProgressStateRecorder recorder)
 			throws N4JSCompileErrorException {
-		if (isCreateDebugOutput()) {
-			printDebug("Loading resources for project " + markedProject.project.getProjectId());
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Loading resources for project " + markedProject.project.getProjectId());
 		}
 
 		for (Resource resource : markedProject.resources) {
 			try {
-				if (isCreateDebugOutput()) {
-					printDebug("  Loading resource " + resource.getURI());
+				if (logger.isCreateDebugOutput()) {
+					logger.debug("  Loading resource " + resource.getURI());
 				}
 
 				resource.load(Collections.EMPTY_MAP);
@@ -1145,7 +1119,7 @@ public class N4HeadlessCompiler {
 				if (!isKeepOnCompiling()) {
 					throw new N4JSCompileErrorException(message, markedProject.project.getProjectId(), e);
 				}
-				warn(message);
+				logger.warn(message);
 			}
 		}
 	}
@@ -1163,8 +1137,8 @@ public class N4HeadlessCompiler {
 		ResourceDescriptionsData index = ResourceDescriptionsData.ResourceSetAdapter
 				.findResourceDescriptionsData(resourceSet);
 
-		if (isCreateDebugOutput()) {
-			printDebug("Indexing project " + markedProject.project.getProjectId());
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Indexing project " + markedProject.project.getProjectId());
 		}
 
 		for (Resource resource : markedProject.resources) {
@@ -1212,8 +1186,8 @@ public class N4HeadlessCompiler {
 			IResourceDescription resourceDescription = resourceDescriptionManager.getResourceDescription(resource);
 
 			if (resourceDescription != null) {
-				if (isCreateDebugOutput()) {
-					printDebug("  Indexing resource " + uri);
+				if (logger.isCreateDebugOutput()) {
+					logger.debug("  Indexing resource " + uri);
 				}
 
 				index.addDescription(uri, resourceDescription);
@@ -1234,6 +1208,37 @@ public class N4HeadlessCompiler {
 
 		// We only want to index raw JS files if they are contained in an N4JS source container.
 		return resourceType != ResourceType.JS || n4jsCore.findN4JSSourceContainer(uri).isPresent();
+	}
+
+	/*
+	 * ===============================================================================================================
+	 *
+	 * PROJECT POST-PROCESSING
+	 *
+	 * ===============================================================================================================
+	 */
+
+	/**
+	 * Post processing on the whole project. While validations can trigger post processing in a lazy way, they do not
+	 * guarantee that all resources will be fully processed. This is an issue in larger project graphs. Unlike in the
+	 * IDE which can at any point load AST on demand based on the TModel, the HLC does not allow to access AST after
+	 * unloading therefore we explicitly post process all N4JS resources in the given project.
+	 *
+	 * @param markedProject
+	 *            project to trigger post process.
+	 */
+	private void postProcessResources(MarkedProject markedProject) {
+		if (logger.isCreateDebugOutput())
+			logger.debug(" PostProcessing " + markedProject);
+		Iterables.filter(markedProject.resources, resource -> resource.isLoaded()).forEach(resource -> {
+			if (resource instanceof N4JSResource) {
+				N4JSResource n4jsResource = (N4JSResource) resource;
+
+				// Make sure the resource is fully postprocessed before unloading the AST. Otherwise, resolving
+				// cross references to the elements inside the resources from dependent projects will fail.
+				n4jsResource.performPostProcessing();
+			}
+		});
 	}
 
 	/*
@@ -1260,6 +1265,8 @@ public class N4HeadlessCompiler {
 	private void validateProject(MarkedProject markedProject, N4ProgressStateRecorder recorder,
 			IssueAcceptor issueAcceptor) throws N4JSCompileErrorException {
 
+		if (logger.isVerbose())
+			logger.info(" Validating project " + markedProject);
 		IssueCollector issueCollector = new IssueCollector();
 		IssueFilter issueFilter = new IssueFilter(issueCollector, issue -> issue.getSeverity() == Severity.ERROR);
 		issueAcceptor = new IssueAcceptorTee(issueAcceptor, issueFilter);
@@ -1270,6 +1277,8 @@ public class N4HeadlessCompiler {
 					(!n4jsCore.isNoValidate(resource.getURI())) && // is validating
 					(!markedProject.externalResources.contains(resource)) // not in external folder
 			) {
+				if (logger.isCreateDebugOutput())
+					logger.debug("   Validating resource " + resource.getURI());
 				XtextResource xtextResource = (XtextResource) resource;
 				IResourceValidator validator = xtextResource.getResourceServiceProvider().getResourceValidator();
 				List<Issue> issues = validator.validate(xtextResource, CheckMode.ALL, CancelIndicator.NullImpl);
@@ -1277,7 +1286,7 @@ public class N4HeadlessCompiler {
 				if (!issues.isEmpty()) {
 					recorder.markResourceIssues(resource, issues);
 					issueAcceptor.acceptAll(issues);
-					printIssues(issues);
+					issues.stream().forEach(logger::issue);
 				}
 			}
 		}
@@ -1340,8 +1349,8 @@ public class N4HeadlessCompiler {
 		rec.markStartCompiling(markedProject);
 
 		final String projectId = markedProject.project.getProjectId();
-		if (isVerbose() || isCreateDebugOutput()) {
-			info("Generating " + projectId);
+		if (logger.isVerbose()) {
+			logger.info("Generating " + projectId);
 		}
 
 		Lazy<N4JSCompoundCompileException> collectedErrors = Lazy.create(() -> {
@@ -1356,8 +1365,8 @@ public class N4HeadlessCompiler {
 				if (compile) {
 					try {
 						rec.markStartCompile(resource);
-						if (isVerbose() || isCreateDebugOutput()) {
-							info("  Generating resource " + resource.getURI());
+						if (logger.isVerbose()) {
+							logger.info("  Generating resource " + resource.getURI());
 						}
 						compositeGenerator.doGenerate(resource, fsa);
 						rec.markEndCompile(resource);
@@ -1366,8 +1375,8 @@ public class N4HeadlessCompiler {
 
 						if (isKeepOnCompiling()) {
 							collectedErrors.get().add(new N4JSCompileErrorException(e.getMessage(), projectId, e));
-							if (verbose) {
-								error(e.getMessage());
+							if (logger.isVerbose()) {
+								logger.info(e.getMessage());
 							}
 						} else {
 							// fail fast
@@ -1416,8 +1425,8 @@ public class N4HeadlessCompiler {
 			loaded.remove(markedProject.project);
 
 			if (!loaded.hasMarkers()) {
-				if (createDebugOutput) {
-					printDebug("Unloading project " + loaded.project);
+				if (logger.isCreateDebugOutput()) {
+					logger.debug("Unloading project " + loaded.project);
 				}
 
 				loaded.unload(resourceSet, recorder);
@@ -1499,8 +1508,8 @@ public class N4HeadlessCompiler {
 	 */
 
 	/**
-	 * Prints out some debug information about the user-provided compilation arguments (only if
-	 * {@link #isCreateDebugOutput()} is <code>true</code>.
+	 * Prints out some debug information about the user-provided compilation arguments (only if {@link #logger} is
+	 * configured in debug mode.
 	 *
 	 * @param searchPaths
 	 *            where to search for dependent projects.
@@ -1510,23 +1519,23 @@ public class N4HeadlessCompiler {
 	 *            if non-empty limit compilation to the sources files listed here
 	 */
 	private void printCompileArguments(List<File> searchPaths, List<File> projectPaths, List<File> singleSourceFiles) {
-		if (isCreateDebugOutput()) {
-			printDebug("Starting compilation with the following arguments");
-			printDebug("  Search paths: " + Joiner.on(", ").join(searchPaths));
-			printDebug("  Projects    : " + Joiner.on(", ").join(projectPaths));
-			printDebug("  Source files: " + Joiner.on(", ").join(singleSourceFiles));
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Starting compilation with the following arguments");
+			logger.debug("  Search paths: " + Joiner.on(", ").join(searchPaths));
+			logger.debug("  Projects    : " + Joiner.on(", ").join(projectPaths));
+			logger.debug("  Source files: " + Joiner.on(", ").join(singleSourceFiles));
 		}
 	}
 
 	/**
-	 * Prints the build order (only if {@link #isCreateDebugOutput()} is <code>true</code>).
+	 * Prints the build order (only if {@link #logger} is configured in debug mode).
 	 *
 	 * @param buildOrder
 	 *            the build order
 	 */
 	private void printBuildOrder(List<MarkedProject> buildOrder) {
-		if (isCreateDebugOutput()) {
-			printDebug("Building " + buildOrder.size() + " projects in the following order");
+		if (logger.isCreateDebugOutput()) {
+			logger.debug("Building " + buildOrder.size() + " projects in the following order");
 
 			long generated = buildOrder.stream().filter(mp -> mp.hasMarkers()).count();
 			int decimals = Long.toString(generated).length();
@@ -1556,81 +1565,8 @@ public class N4HeadlessCompiler {
 				msg.append(" Project ").append(mp.project);
 				msg.append(" used by [").append(Joiner.on(", ").join(mp.markers)).append("]");
 
-				printDebug(msg.toString());
+				logger.debug(msg.toString());
 			}
-		}
-	}
-
-	/**
-	 * Prints all issues in the given collection.
-	 *
-	 * @param issues
-	 *            the issues to print
-	 */
-	private void printIssues(Collection<Issue> issues) {
-		issues.stream().forEach(i -> issue(i));
-	}
-
-	/**
-	 * Prints the given debug message. Does not consider {@link #isCreateDebugOutput()}. This responsibility falls to
-	 * the caller.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
-	private void printDebug(String message) {
-		println("DEBUG: " + message);
-	}
-
-	/**
-	 * Prints the given info message.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
-	private void info(String message) {
-		println(" INFO: " + message);
-	}
-
-	/**
-	 * Prints the given issue.
-	 *
-	 * @param issue
-	 *            the issue to print
-	 */
-	private void issue(Issue issue) {
-		println("@issue: " + issue);
-	}
-
-	/**
-	 * Prints the given warning.
-	 *
-	 * @param message
-	 *            the warning to print
-	 */
-	private void warn(String message) {
-		println(" WARN:  " + message);
-	}
-
-	/**
-	 * Prints the given error message.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
-	private void error(String message) {
-		println("ERROR: " + message);
-	}
-
-	/**
-	 * Prints the given message unless {@link #suppressOutput} is <code>true</code>.
-	 *
-	 * @param message
-	 *            the message to print
-	 */
-	private void println(String message) {
-		if (!isOutputSuppressed()) {
-			System.out.println(message);
 		}
 	}
 
@@ -1677,48 +1613,6 @@ public class N4HeadlessCompiler {
 	}
 
 	/**
-	 * Indicates whether or not debug information should be printed.
-	 */
-	public boolean isCreateDebugOutput() {
-		return createDebugOutput;
-	}
-
-	/**
-	 * Specifies whether or not debug information should be printed.
-	 */
-	public void setCreateDebugOutput(boolean createDebugOutput) {
-		this.createDebugOutput = createDebugOutput;
-	}
-
-	/**
-	 * Indicates whether or not to suppress all output to standard out.
-	 */
-	public boolean isOutputSuppressed() {
-		return suppressOutput;
-	}
-
-	/**
-	 * Specifies whether or not to suppress all output to standard out.
-	 */
-	public void setOutputSuppressed(boolean suppressOutput) {
-		this.suppressOutput = suppressOutput;
-	}
-
-	/**
-	 * Indicates whether verbose logging is enabled.
-	 */
-	public boolean isVerbose() {
-		return verbose;
-	}
-
-	/**
-	 * Specifies whether verbose logging is enabled.
-	 */
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-	}
-
-	/**
 	 * Returns the log file name to use for progress logging.
 	 *
 	 * @return Returns the log file name or <code>null</code> if no log file name has been set
@@ -1735,13 +1629,6 @@ public class N4HeadlessCompiler {
 	 */
 	public void setLogFile(String logFile) {
 		this.logFile = logFile;
-	}
-
-	/**
-	 * Reference to the creating Injector.
-	 */
-	public Injector getInjector() {
-		return injector;
 	}
 
 	/*
@@ -1922,9 +1809,6 @@ public class N4HeadlessCompiler {
 				if (resource instanceof N4JSResource) {
 					N4JSResource n4jsResource = (N4JSResource) resource;
 
-					// Make sure the resource is fully postprocessed before unloading the AST. Otherwise, resolving
-					// cross references to the elements inside the resources from dependent projects will fail.
-					n4jsResource.performPostProcessing();
 					n4jsResource.unloadAST();
 				}
 			});

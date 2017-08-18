@@ -421,7 +421,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		val staticAccess = typeRef instanceof TypeTypeRef;
 		val checkVisibility = true;
-		return memberScopingHelper.createMemberScopeFor(typeRef, propertyAccess, checkVisibility, staticAccess);
+		return memberScopingHelper.createMemberScope(typeRef, propertyAccess, checkVisibility, staticAccess);
 	}
 
 	/**
