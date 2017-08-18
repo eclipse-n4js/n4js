@@ -44,11 +44,9 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	@Test
 	def void testNoDuplicateCacheNoDuplicateMemberCreatedForSameMembersOfEquivalentComposedTypeRefs() {
 		val script = '''
-			let a: Array<any> | Array<string>;
-			let b: Array<string> ;
-			let v1 = (1==1)? [] : b;
-			v1.join();
-			v1.join();
+			let v : Array<any> | Array<string> = (1==1)? [] : ["Hi"];
+			v.join();
+			v.join();
 	'''.parse;
 		val varDecl = script.eAllContents.filter(VariableDeclaration).head;
 		val receiverType = varDecl.declaredTypeRef
@@ -65,9 +63,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	@Test
 	def void testNoDuplicateCacheCreatedForEquivalentComposedTypeRefs() {
 		val script = '''
-			let a: Array<any> | Array<string>;
-			let b: Array<string> ;
-			let v1 = (1==1)? [] : b;
+			let v : Array<any> | Array<string> = (1==1)? [] : ["Hi"];
 			v1.join();
 			v1.filter(null);
 	'''.parse;
@@ -86,11 +82,8 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	@Test
 	def void testDifferentCachesCreatedForNonEquivalentComposedTypeRef() {
 		val script = '''
-			let a: Array<any> | Array<string>;
-			let b: Array<any> | Array<int>;
-			let c: Array<string> ;
-			let v1 = (1==1)? [] : b;
-			let v2 = (1==1)? [2] : a;
+			let v1: Array<any> | Array<int> = (1==1)? [] : [42];
+			let v2 : Array<any> | Array<string> = (1==1)? [] : ["Hello"];
 			v1.join();
 			v2.join();
 	'''.parse;
