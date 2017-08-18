@@ -15,6 +15,7 @@ import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BreakStatement;
+import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
@@ -29,90 +30,111 @@ import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
 /**
- *
+ * Provides function {@link #build(ControlFlowElement)} to create instances of {@link ComplexNode} for given
+ * {@link ControlFlowElement}s.
  */
-final public class FactoryDispatcher extends Dispatcher {
+final public class FactoryDispatcher {
 
 	/**
-	 *
+	 * Builds a {@link ComplexNode} from a given {@link ControlFlowElement}
 	 */
 	static public ComplexNode build(ControlFlowElement cfe) {
-		try {
-			return dispatch("_build", cfe);
-		} catch (NoDispatchMethodFoundException e) {
-			System.err.println(e.getMessage());
-			return null;
+		return new InternalFactoryDispatcher().doSwitch(cfe);
+	}
+
+	static private class InternalFactoryDispatcher extends N4JSSwitch<ComplexNode> {
+		@Override
+		public ComplexNode caseAbstractCaseClause(AbstractCaseClause feature) {
+			return AbstractCaseClauseFactory.buildComplexNode(feature);
 		}
-	}
 
-	static ComplexNode _build(AbstractCaseClause feature) {
-		return AbstractCaseClauseFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseAnnotationList(AnnotationList feature) {
+			return EmptyStatementFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(AnnotationList feature) {
-		return EmptyStatementFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseBlock(Block feature) {
+			return BlockFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(Block feature) {
-		return BlockFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseBreakStatement(BreakStatement feature) {
+			return JumpFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(BreakStatement feature) {
-		return JumpFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseContinueStatement(ContinueStatement feature) {
+			return JumpFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(ContinueStatement feature) {
-		return JumpFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseDoStatement(DoStatement feature) {
+			return DoWhileFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(DoStatement feature) {
-		return DoWhileFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseEmptyStatement(EmptyStatement feature) {
+			return EmptyStatementFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(EmptyStatement feature) {
-		return EmptyStatementFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseForStatement(ForStatement feature) {
+			return ForFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(ForStatement feature) {
-		return ForFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseIfStatement(IfStatement feature) {
+			return IfFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(IfStatement feature) {
-		return IfFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseReturnStatement(ReturnStatement feature) {
+			return JumpFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(ReturnStatement feature) {
-		return JumpFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseSwitchStatement(SwitchStatement feature) {
+			return SwitchFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(SwitchStatement feature) {
-		return SwitchFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseThrowStatement(ThrowStatement feature) {
+			return JumpFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(ThrowStatement feature) {
-		return JumpFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseTryStatement(TryStatement feature) {
+			return TryFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(TryStatement feature) {
-		return TryFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseVariableStatement(VariableStatement feature) {
+			return DeclarationStatementFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(VariableStatement feature) {
-		return DeclarationStatementFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseWhileStatement(WhileStatement feature) {
+			return WhileFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(WhileStatement feature) {
-		return WhileFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseConditionalExpression(ConditionalExpression feature) {
+			return ConditionalExpressionFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(Expression feature) {
-		return ExpressionFactory.buildComplexNode(feature);
-	}
+		@Override
+		public ComplexNode caseExpression(Expression feature) {
+			return ExpressionFactory.buildComplexNode(feature);
+		}
 
-	static ComplexNode _build(VariableDeclaration feature) {
-		return VariableDeclaratorFactory.buildComplexNode(feature);
+		@Override
+		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
+			return VariableDeclaratorFactory.buildComplexNode(feature);
+		}
 	}
 
 }

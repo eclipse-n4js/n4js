@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.Block;
@@ -102,7 +102,7 @@ public class ComplexNode implements ControlFlowable {
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		return FactoryMapper.map(astElement);
+		return CFEMapper.map(astElement);
 	}
 
 	@Override

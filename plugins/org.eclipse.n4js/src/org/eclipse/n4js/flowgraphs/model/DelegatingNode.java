@@ -12,7 +12,7 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -52,7 +52,7 @@ public class DelegatingNode extends Node {
 	public ControlFlowElement getDelegatedControlFlowElement() {
 		if (cfeDelegate == null)
 			return null; // can be missing when the AST is incomplete
-		return FactoryMapper.map(cfeDelegate);
+		return CFEMapper.map(cfeDelegate);
 	}
 
 }

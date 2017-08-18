@@ -18,32 +18,35 @@ import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
-import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ConditionalExpression;
 
-class ExpressionFactory {
+class ConditionalExpressionFactory {
 
-	static ComplexNode buildComplexNode(Expression expr) {
-		ComplexNode cNode = new ComplexNode(expr);
+	static ComplexNode buildComplexNode(ConditionalExpression condExpr) {
+		ComplexNode cNode = new ComplexNode(condExpr);
 
-		HelperNode entryNode = new HelperNode("entry", expr);
-		Node exitNode = new RepresentingNode("exit", expr);
-		List<Node> argumentNodes = new LinkedList<>();
-
-		List<Expression> args = ExpressionChildren.get(expr);
-		for (int i = 0; i < args.size(); i++) {
-			Expression arg = args.get(i);
-			Node argNode = new DelegatingNode("arg_" + i, expr, arg);
-			argumentNodes.add(argNode);
-		}
+		HelperNode entryNode = new HelperNode("entry", condExpr);
+		Node exitNode = new RepresentingNode("exit", condExpr);
+		Node conditionNode = new DelegatingNode("condition", condExpr, condExpr.getExpression());
+		Node thenNode = new DelegatingNode("then", condExpr, condExpr.getTrueExpression());
+		Node elseNode = new DelegatingNode("else", condExpr, condExpr.getFalseExpression());
 
 		cNode.addNode(entryNode);
-		for (Node arg : argumentNodes)
-			cNode.addNode(arg);
+		cNode.addNode(conditionNode);
+		cNode.addNode(thenNode);
+		cNode.addNode(elseNode);
 		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
 		nodes.add(entryNode);
-		nodes.addAll(argumentNodes);
+		nodes.add(conditionNode);
+		nodes.add(thenNode);
+		nodes.add(exitNode);
+		cNode.connectInternalSucc(nodes);
+
+		nodes.clear();
+		nodes.add(conditionNode);
+		nodes.add(elseNode);
 		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 

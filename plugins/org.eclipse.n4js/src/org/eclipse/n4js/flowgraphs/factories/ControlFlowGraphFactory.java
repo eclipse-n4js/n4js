@@ -49,7 +49,7 @@ public class ControlFlowGraphFactory {
 			EObject eObj = tit.next();
 			if (eObj instanceof ControlFlowElement) {
 				ControlFlowElement cfe = (ControlFlowElement) eObj;
-				cfe = FactoryMapper.map(cfe);
+				cfe = CFEMapper.map(cfe);
 				if (cfe != null && !cnMap.containsKey(cfe)) {
 					ComplexNode cn = FactoryDispatcher.build(cfe);
 					cnMap.put(cfe, cn);

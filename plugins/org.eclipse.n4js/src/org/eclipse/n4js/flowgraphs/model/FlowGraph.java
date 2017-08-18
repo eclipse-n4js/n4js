@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -54,7 +54,7 @@ public class FlowGraph {
 	}
 
 	public ComplexNode getComplexNode(ControlFlowElement cfe) {
-		cfe = FactoryMapper.map(cfe);
+		cfe = CFEMapper.map(cfe);
 		if (!cnMap.containsKey(cfe))
 			return null;
 		return cnMap.get(cfe);

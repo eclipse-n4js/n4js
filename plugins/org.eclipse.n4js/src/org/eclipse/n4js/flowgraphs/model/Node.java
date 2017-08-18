@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.factories.FactoryMapper;
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 abstract public class Node implements ControlFlowable {
@@ -88,7 +88,7 @@ abstract public class Node implements ControlFlowable {
 	public ControlFlowElement getControlFlowElement() {
 		if (cfeElem == null)
 			return null; // can be missing when the AST is incomplete
-		return FactoryMapper.map(cfeElem);
+		return CFEMapper.map(cfeElem);
 	}
 
 	abstract public ControlFlowElement getDelegatedControlFlowElement();
