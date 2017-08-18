@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareMemberScope
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError
@@ -57,7 +58,6 @@ class DestructureHelper {
 	@Inject private TypeSystemHelper tsh;
 	@Inject private ContainerTypesHelper containerTypesHelper;
 	@Inject private MemberScopingHelper memberScopingHelper;
-
 
 	/**
 	 * Infers the type of a variable declaration within a destructuring pattern from the value to be
@@ -151,6 +151,8 @@ class DestructureHelper {
 		}
 		else {
 			// non-positional
+			// TODO: Consider implementing scoping for binding pattern's properties or use other validation instead of
+			// creating scope here
 			val memberScope = createMemberScopeForPropertyAccess(valueTypeRef, contextObj, false); // do not check visibility
 			for(currNode : nodes) {
 				val currValueTypeRef = getPropertyTypeForNode(G, valueTypeRef, memberScope, currNode.propName, null);
