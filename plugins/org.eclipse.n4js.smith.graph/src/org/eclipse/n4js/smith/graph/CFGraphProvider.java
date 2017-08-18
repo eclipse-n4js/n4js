@@ -21,6 +21,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -29,8 +30,6 @@ import org.eclipse.n4js.smith.graph.graph.Edge;
 import org.eclipse.n4js.smith.graph.graph.GraphProvider;
 import org.eclipse.n4js.smith.graph.graph.Node;
 import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 /**
  * The graph provider creates {@link Node}s and {@link CFEdge}s for a given {@link Script}. Moreover, it provides some
@@ -87,7 +86,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		Collection<ControlFlowElement> allCFEs = flowAnalyses.getAllElements();
 		for (ControlFlowElement cfe : allCFEs) {
-			String label = getTextLabel(cfe);
+			String label = FGUtils.getTextLabel(cfe);
 			Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
 			nodeMap.put(cfe, node);
 		}
@@ -101,8 +100,13 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 				List<Node> eNodes = new LinkedList<>();
 				Node eNode = nodeMap.get(succ);
 				eNodes.add(eNode);
-				Edge edge = new CFEdge("CF", sNode, eNodes);
-				edges.add(edge);
+
+				if (sNode != eNode) {
+					Edge edge = new CFEdge("CF", sNode, eNodes);
+					edges.add(edge);
+				} else {
+					System.err.println("Skipping self edge on node: " + sNode.getTitle());
+				}
 			}
 			edgesMap.put(cfe, edges);
 		}
@@ -131,15 +135,6 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			}
 		}
 		return null;
-	}
-
-	/**
-	 * @returns label text that is the actual text from the source code
-	 */
-	private String getTextLabel(EObject eo) {
-		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
-		String text = NodeModelUtils.getTokenText(actualNode);
-		return text;
 	}
 
 }
