@@ -10,12 +10,6 @@
  */
 package org.eclipse.n4js.resource;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.TreeIterator;
@@ -57,7 +51,7 @@ public class N4JSCrossReferenceComputer {
 	 * @param acceptor
 	 *            the logic that collects the passed EObject found in a cross reference
 	 */
-	public void computeCrossRefs(Resource resource, IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor) {
+	public void computeCrossRefs(Resource resource, IAcceptor<EObject> acceptor) {
 		TreeIterator<EObject> allASTContentsIter;
 		if (resource instanceof N4JSResource) {
 			Script script = ((N4JSResource) resource).getScript();
@@ -77,7 +71,7 @@ public class N4JSCrossReferenceComputer {
 	 * defined type and vice versa.
 	 */
 	private void computeCrossRefs(Resource resource, EObject from,
-			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor) {
+			IAcceptor<EObject> acceptor) {
 		EList<EReference> references = from.eClass().getEAllReferences();
 		for (EReference eReference : references) {
 			// We only follow cross references
@@ -90,7 +84,7 @@ public class N4JSCrossReferenceComputer {
 						// Handle both toOne and toMany cases
 						if (!eReference.isMany()) {
 							EObject to = (EObject) val;
-							handleReferenceObject(resource, from, acceptor, to);
+							handleReferenceObject(resource, acceptor, to);
 						} else {
 							@SuppressWarnings("unchecked")
 							BasicEList<EObject> list = (BasicEList<EObject>) val;
@@ -98,18 +92,18 @@ public class N4JSCrossReferenceComputer {
 							// cases
 							if (TypesPackage.Literals.TYPE.isSuperTypeOf(eReference.getEReferenceType())) {
 								for (EObject to : list) {
-									handleType(resource, from, acceptor, (Type) to);
+									handleType(resource, acceptor, (Type) to);
 								}
 							} else if (TypesPackage.Literals.IDENTIFIABLE_ELEMENT
 									.isSuperTypeOf(eReference.getEReferenceType())) {
 								for (EObject to : list) {
-									handleIdentifiableElement(resource, from, acceptor,
-											Collections.singletonList((IdentifiableElement) to));
+									handleIdentifiableElement(resource, acceptor,
+											(IdentifiableElement) to);
 								}
 							} else {
 								// Handle all other cases
 								for (EObject to : list) {
-									handleReferenceObject(resource, from, acceptor, to);
+									handleReferenceObject(resource, acceptor, to);
 								}
 							}
 						}
@@ -123,49 +117,42 @@ public class N4JSCrossReferenceComputer {
 	 * Collect references to type references, types and identifiable element (direct or as part of and property access
 	 * expression):
 	 */
-	private void handleReferenceObject(Resource resource, EObject from,
-			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor, EObject to) {
+	private void handleReferenceObject(Resource resource, IAcceptor<EObject> acceptor, EObject to) {
 		if (to instanceof Type) {
-			handleType(resource, from, acceptor, (Type) to);
+			handleType(resource, acceptor, (Type) to);
 		} else if (to instanceof TMember) {
 			// Special handling of TMember because it can be a composed member
-			handleTMember(resource, from, acceptor, (TMember) to);
+			handleTMember(resource, acceptor, (TMember) to);
 		} else if (to instanceof IdentifiableElement) {
-			handleIdentifiableElement(resource, from, acceptor, Collections.singletonList((IdentifiableElement) to));
+			handleIdentifiableElement(resource, acceptor, (IdentifiableElement) to);
 		}
 	}
 
-	private void handleTMember(Resource resource, EObject from,
-			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor, TMember to) {
+	private void handleTMember(Resource resource, IAcceptor<EObject> acceptor, TMember to) {
 		if (to.isComposed()) {
 			// If the member is a composed member, handle the constituent members instead
-			List<IdentifiableElement> constituentMembers = new ArrayList<>();
 			for (TMember constituentMember : to.getConstituentMembers())
-				constituentMembers.add(constituentMember);
-			handleIdentifiableElement(resource, from, acceptor, constituentMembers);
+				handleIdentifiableElement(resource, acceptor, constituentMember);
 		} else {
 			// Standard case
-			handleIdentifiableElement(resource, from, acceptor, Collections.singletonList(to));
+			handleIdentifiableElement(resource, acceptor, to);
 		}
 	}
 
-	private void handleType(Resource resource, EObject from, IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
+	private void handleType(Resource resource, IAcceptor<EObject> acceptor,
 			Type to) {
 		if (to != null) {
 			if (isLocatedInOtherResource(resource, to)) {
-				acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from, Collections.singletonList(to)));
+				acceptor.accept(to);
 			}
 		}
 	}
 
-	private void handleIdentifiableElement(Resource resource, EObject from,
-			IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor,
-			List<IdentifiableElement> tos) {
-		if (tos != null) {
-			// Filter those in 'tos' that are located in other resources
-			acceptor.accept(new ImmutablePair<EObject, List<EObject>>(from,
-					tos.stream().filter(to -> isLocatedInOtherResource(resource, to))
-							.collect(Collectors.toList())));
+	private void handleIdentifiableElement(Resource resource, IAcceptor<EObject> acceptor, IdentifiableElement to) {
+		if (to != null) {
+			if (isLocatedInOtherResource(resource, to)) {
+				acceptor.accept(to);
+			}
 		}
 	}
 

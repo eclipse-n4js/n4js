@@ -19,12 +19,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.TEnum;
@@ -36,7 +33,6 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.utils.TypeHelper;
-import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -76,13 +72,12 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 			IQualifiedNameProvider qualifiedNameProvider,
 			Resource resource,
 			N4JSResourceDescriptionStrategy strategy,
-			IResourceScopeCache cache, N4JSTypeSystem ts) {
+			IResourceScopeCache cache) {
 		super(resource, strategy, cache);
 		this.crossReferenceComputer = crossReferenceComputer;
 		this.qualifiedNameProvider = qualifiedNameProvider;
 		this.typeHelper = typeHelper;
 		this.strategy = strategy;
-		// this.ts = ts;
 	}
 
 	@Override
@@ -156,7 +151,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 						importedNames.add(qualifiedNameProvider.getFullyQualifiedName(module));
 					}
 					final Set<EObject> crossRefTypes = Sets.newHashSet();
-					IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
+					IAcceptor<EObject> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
 					crossReferenceComputer.computeCrossRefs(resource, acceptor);
 					for (EObject type : crossRefTypes) {
 						if (type instanceof Type) {
@@ -206,49 +201,29 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		}
 	}
 
-	private IAcceptor<ImmutablePair<EObject, List<EObject>>> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
-		IAcceptor<ImmutablePair<EObject, List<EObject>>> acceptor = new IAcceptor<ImmutablePair<EObject, List<EObject>>>() {
+	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
+		IAcceptor<EObject> acceptor = new IAcceptor<EObject>() {
 			@Override
-			public void accept(ImmutablePair<EObject, List<EObject>> pair) {
-				EObject from = pair.left;
-				if (from instanceof ParameterizedPropertyAccessExpression
-						&& from.eContainer() instanceof ParameterizedCallExpression) {
-					// The return type of a method/function is the type of the call expression
-					from = from.eContainer();
+			public void accept(EObject to) {
+				if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
+					crossRefTypes.add(to);
 				}
-				List<EObject> tos = pair.right;
+				// Add return type of function/method to cross ref types. Note that setters/getters are methods.
+				// Add declared type of a field to cross ref types
+				if (to instanceof TFunction) {
+					TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
+					crossRefTypes.add(returnTypeRef.getDeclaredType());
+				}
+				if (to instanceof TField) {
+					TypeRef typeRef = ((TField) to).getTypeRef();
+					crossRefTypes.add(typeRef.getDeclaredType());
+				}
 
-				for (EObject to : tos) {
-					if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
-						crossRefTypes.add(to);
-					}
-
-					// Add return type of function/method to cross ref types. Note that setters/getters are methods.
-					// Add declared type of a field to cross ref types
-					if (to instanceof TFunction || to instanceof TField) {
-						// We only ask the type system to calculate the type of the AST node 'from' if we are not
-						// dealing with composed members because the AST node is normally a ParameterizedPropertyAccess
-						// which is not actually
-						// the corresponding AST of the reference 'to'.
-						// GH-73 TODO: BUT it means that if the type of constituent members contain type arguments e.g.
-						// I<T>,
-						// these
-						// type arguments are not resolved! We really need to clearly define what the 'transitive
-						// closure of dependencies' really means.
-
-						if (to instanceof TFunction) {
-							TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
-							crossRefTypes.add(returnTypeRef.getDeclaredType());
-						} else {
-							TypeRef typeRef = ((TField) to).getTypeRef();
-							crossRefTypes.add(typeRef.getDeclaredType());
-						}
-					}
-					if (to instanceof TMember) {
-						TMember casted = (TMember) to;
-						ContainerType<?> declaringType = casted.getContainingType();
-						crossRefTypes.add(declaringType);
-					}
+				// In case of TMember, add the containing type as well
+				if (to instanceof TMember) {
+					TMember casted = (TMember) to;
+					ContainerType<?> declaringType = casted.getContainingType();
+					crossRefTypes.add(declaringType);
 				}
 			}
 		};
