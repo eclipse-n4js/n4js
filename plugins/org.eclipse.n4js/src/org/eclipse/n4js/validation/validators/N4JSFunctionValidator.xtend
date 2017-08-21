@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
+import org.eclipse.n4js.n4JS.ContinueStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
@@ -445,6 +446,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 				ThrowStatement: 'throw'
 				ReturnStatement: 'return'
 				BreakStatement: 'break'
+				ContinueStatement: 'continue'
 				default: db.lastExecutedStmt.eClass.name
 			}
 
