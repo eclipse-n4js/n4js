@@ -39,8 +39,8 @@ import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -94,9 +94,6 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 	override transform() {
-		// necessary preparation:
-		convertDestructBindingsIntoDestructAssignments();
-
 	/* Target-trafo:
 			System.register([%imp%], function($n4Export) {
 				// %vars%
@@ -408,16 +405,16 @@ class ModuleWrappingTransformation extends Transformation {
 		val Iterable<VariableDeclaration> allHoisted = scriptContent.map[ scriptElement |
 			val Iterable<VariableDeclaration> ret = switch( scriptElement ) {
 				VariableStatement : {
-					val pairsOfDeclarationAndInitialsers = scriptElement.varDecl.toHoistDeclaration;
+					val pairsOfDeclarationAndInitialsers = scriptElement.varDeclsOrBindings.toHoistDeclarations;
 					val listOfInitExpressionStmts = pairsOfDeclarationAndInitialsers.map[it.value].filterNull.toList;
 					if( !listOfInitExpressionStmts.empty ) mapVarStatement2replacer.put( scriptElement, listOfInitExpressionStmts );
-					pairsOfDeclarationAndInitialsers.map[it.key]
+					pairsOfDeclarationAndInitialsers.map[it.key].flatten
 				}
 				ImportDeclaration : scriptElement.toHoistDeclaration
 				default : null
 			};
 			return ret;
-		].filterNull.flatten
+		].filterNull.flatten.toList
 
 		val VariableStatement varStmtHoistedVariables = _VariableStatement => [
 			varDeclsOrBindings += allHoisted
@@ -459,16 +456,24 @@ class ModuleWrappingTransformation extends Transformation {
 
 	/** Decouples VarDeclarations and their initializer expressions. Returns them as a Pair. Value kann be {@null}
 	 */
-	private def Iterable<Pair<VariableDeclaration,ExpressionStatement>> toHoistDeclaration(List<VariableDeclaration> varDecl) {
-		varDecl.map[
-			entry | entry.hoistEntry
-		]
+	private def Iterable<Pair<List<VariableDeclaration>,ExpressionStatement>> toHoistDeclarations(List<VariableDeclarationOrBinding> varDeclsOrBindings) {
+		return varDeclsOrBindings.map[entry|
+			switch(entry) {
+				VariableDeclaration:
+					entry.hoistEntry
+				VariableBinding:
+					entry.hoistEntry
+				default:
+					throw new IllegalStateException("unknown subclass of " + VariableDeclarationOrBinding.simpleName
+						+ ": " + entry.class.simpleName)
+			}
+		];
 	}
 
 	/** Decouple Variabledeclaration and initialiser.
 	 * If an initialiser is given it will be wrapped into a new ExpressionStatement.
 	 */
-	private def Pair<VariableDeclaration,ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
+	private def Pair<List<VariableDeclaration>,ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
 
 		// extract exression:
 		val exprStmt = if( vDeclIM.expression !== null) {
@@ -491,7 +496,11 @@ class ModuleWrappingTransformation extends Transformation {
 			stmt;
 		};
 
-		return vDeclIM -> exprStmt;
+		return #[vDeclIM] -> exprStmt;
+	}
+
+	private def Pair<List<VariableDeclaration>, ExpressionStatement> hoistEntry(VariableBinding binding) {
+		return binding.variableDeclarations -> binding.convertDestructBindingToDestructAssignment;
 	}
 
 	/** Creates a list of VariableDeclarations without initialisers. Used in hoisting. */
@@ -728,33 +737,24 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 
-	def private void convertDestructBindingsIntoDestructAssignments() {
-		collectNodes(state.im, VariableStatement, true).forEach[
-			convertDestructBindingsIntoDestructAssignments(it)
-		];
-	}
-
 	// FIXME API doc
-	def private void convertDestructBindingsIntoDestructAssignments(VariableStatement varStmnt) {
-		val bindings = varStmnt.varDeclsOrBindings.filter(VariableBinding).toList;
-		// (1) for each destructuring binding in varStmnt, add an equivalent destructuring assignment after varStmnt
-		val assignmentStmnts = bindings.map[binding|
-			val patternConverted = destructuringAssistant.convertBindingPatternToArrayOrObjectLiteral(binding.pattern);
-			val assignmentExpr = _AssignmentExpr(patternConverted, binding.expression);
+	def private ExpressionStatement convertDestructBindingToDestructAssignment(VariableBinding binding) {
+		val patternConverted = destructuringAssistant.convertBindingPatternToArrayOrObjectLiteral(binding.pattern);
+		val assignmentExpr = _AssignmentExpr(patternConverted, binding.expression);
+		val assignmentStmnt = _ExprStmnt(
 			if(patternConverted instanceof ObjectLiteral) {
 				_Parenthesis(assignmentExpr) // object destructuring must be wrapped into a ParenExpression
 			} else {
 				assignmentExpr
 			}
-		].map[_ExprStmnt];
-		insertAfter(varStmnt, assignmentStmnts);
-		// (2) below varStmnt, replace each destructuring binding by its contained variable declarations
-		for(binding : bindings) {
-			replace(binding, binding.variableDeclarations);
+		);
+		// update hoisting info in information registry
+		if(binding.variableDeclarations.exists[state.info.isToHoist(it)]) {
+			binding.variableDeclarations.forEach[state.info.markAsToHoist(it)]; // if one is hoisted, all need to be hoisted
+			state.info.markAsInitializerOfHoistedVariable(assignmentStmnt);
 		}
-		// (3) if we do this for 'const', we have to change it to 'let', because we removed the initializer expression
-		if (varStmnt.varStmtKeyword===VariableStatementKeyword.CONST) {
-			varStmnt.varStmtKeyword = VariableStatementKeyword.LET;
-		}
+		// tracing
+		state.tracer.copyTrace(binding, assignmentStmnt);
+		return assignmentStmnt;
 	}
 }
