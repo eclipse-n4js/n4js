@@ -10,15 +10,20 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import java.util.Iterator;
+
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Interface that provides the method {@link #getComplexNode(ControlFlowElement)}.
+ * Interface that provides the method {@link #get(ControlFlowElement)}.
  */
 public interface ComplexNodeProvider {
 
+	/** Returns an {@link Iterator} over all {@link ComplexNode}s */
+	public Iterable<ComplexNode> getAll();
+
 	/** Returns the {@link ComplexNode} that represents the {@link ControlFlowElement} in the flow graph */
-	public ComplexNode getComplexNode(ControlFlowElement cfe);
+	public ComplexNode get(ControlFlowElement cfe);
 
 }

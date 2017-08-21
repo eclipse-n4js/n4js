@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.ComplexNodeProvider;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.EdgeUtils;
@@ -35,16 +36,16 @@ public class ControlFlowGraphFactory {
 	 * Builds and returns a control flow graph from a given {@link Script}.
 	 */
 	static public FlowGraph build(Script script) {
-		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
-		createComplexNodes(cnMap, script);
-		connectComplexNodes(cnMap);
-		createJumpEdges(cnMap);
+		CNProvider cnProvider = createComplexNodes(script);
+		connectComplexNodes(cnProvider);
+		createJumpEdges(cnProvider);
 
-		FlowGraph cfg = new FlowGraph(cnMap);
+		FlowGraph cfg = new FlowGraph(cnProvider.getMap());
 		return cfg;
 	}
 
-	static private void createComplexNodes(Map<ControlFlowElement, ComplexNode> cnMap, Script script) {
+	static private CNProvider createComplexNodes(Script script) {
+		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 		TreeIterator<EObject> tit = script.eAllContents();
 		while (tit.hasNext()) {
 			EObject eObj = tit.next();
@@ -57,22 +58,24 @@ public class ControlFlowGraphFactory {
 				}
 			}
 		}
+		CNProvider cnProvider = new CNProvider(cnMap);
+		return cnProvider;
 	}
 
-	static private void connectComplexNodes(Map<ControlFlowElement, ComplexNode> cnMap) {
-		for (ComplexNode cn : cnMap.values()) {
+	static private void connectComplexNodes(CNProvider cnProvider) {
+		for (ComplexNode cn : cnProvider.getAll()) {
 			for (Node mNode : cn.getAllButExitNodes()) {
-				connectNode(cnMap, mNode);
+				connectNode(cnProvider, mNode);
 			}
 		}
 	}
 
-	static private void connectNode(Map<ControlFlowElement, ComplexNode> cnMap, Node mNode) {
+	static private void connectNode(CNProvider cnProvider, Node mNode) {
 		Node internalStartNode = mNode;
 		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
 		if (subASTElem != null) {
-			if (cnMap.containsKey(subASTElem)) { // can be missing when the AST is incomplete
-				ComplexNode subCN = cnMap.get(subASTElem);
+			ComplexNode subCN = cnProvider.get(subASTElem);
+			if (subCN != null) { // can be missing when the AST is incomplete
 				ControlFlowEdge e = EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
 				internalStartNode = subCN.getExit();
 				if (PRINT_EDGE_DETAILS)
@@ -92,12 +95,13 @@ public class ControlFlowGraphFactory {
 	 * This methods searches for {@link ComplexNode}s that cause jumps. The outgoing edge is then replaced by a new jump
 	 * edge that targets the catch node.
 	 */
-	private static void createJumpEdges(Map<ControlFlowElement, ComplexNode> cnMap) {
-		for (ComplexNode cn : cnMap.values()) {
+	private static void createJumpEdges(CNProvider cnProvider) {
+		for (ComplexNode cn : cnProvider.getAll()) {
 			Node cnJumpNode = cn.getExit();
 			for (JumpToken jumpToken : cnJumpNode.jumpToken) {
 				EdgeUtils.removeAll(cnJumpNode.getSuccessorEdges());
-				Node catchNode = CatchNodeFinder.find(jumpToken, cnJumpNode);
+				Node catchNode = null;
+				catchNode = CatchNodeFinder.find(jumpToken, cnJumpNode, cnProvider);
 				if (catchNode == null) {
 					String jumpTokenStr = getJumpTokenDetailString(jumpToken, cnJumpNode);
 					System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
@@ -108,12 +112,27 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	/** Prints detailed information of control flow edges. Used for debugging purposes */
-	private static void printEdgeDetails(ControlFlowEdge e) {
-		String sNode = ASTUtils.getNodeDetailString(e.start);
-		String eNode = ASTUtils.getNodeDetailString(e.end);
-		String edgeStr = sNode + " --> " + eNode;
-		System.out.println(edgeStr);
+	private static class CNProvider implements ComplexNodeProvider {
+		final private Map<ControlFlowElement, ComplexNode> cnMap;
+
+		CNProvider(Map<ControlFlowElement, ComplexNode> cnMap) {
+			this.cnMap = cnMap;
+		}
+
+		@Override
+		public ComplexNode get(ControlFlowElement cfe) {
+			return cnMap.get(cfe);
+		}
+
+		@Override
+		public Iterable<ComplexNode> getAll() {
+			return cnMap.values();
+		}
+
+		Map<ControlFlowElement, ComplexNode> getMap() {
+			return cnMap;
+		}
+
 	}
 
 	/** Prints detailed information of jump nodes */
@@ -121,6 +140,14 @@ public class ControlFlowGraphFactory {
 		String jNode = ASTUtils.getNodeDetailString(jumpNode);
 		String jmpStr = jNode + " >> " + jumpToken.toString();
 		return jmpStr;
+	}
+
+	/** Prints detailed information of control flow edges. Used for debugging purposes */
+	private static void printEdgeDetails(ControlFlowEdge e) {
+		String sNode = ASTUtils.getNodeDetailString(e.start);
+		String eNode = ASTUtils.getNodeDetailString(e.end);
+		String edgeStr = sNode + " --> " + eNode;
+		System.out.println(edgeStr);
 	}
 
 }
