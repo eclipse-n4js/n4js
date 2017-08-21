@@ -12,11 +12,14 @@ package org.eclipse.n4js.hlc.tests;
 
 import static org.eclipse.n4js.hlc.tests.IncompleteApiImplementationTest.runCaptureOut;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
-import org.junit.BeforeClass;
+import org.eclipse.n4js.utils.io.FileDeleter;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -24,29 +27,38 @@ import org.junit.Test;
  */
 public class AT_IDEBUG_695_CannotSetFinalFieldInCtorForStaticPolyfillsTest extends AbstractN4jscTest {
 
+	File workspace;
 	static String WS_IDEBUG_695 = "IDEBUG-695";
 
 	/**
 	 * Setup workspace.
 	 */
-	@BeforeClass
-	public static void setupWorkspace() throws IOException, ExitCodeException {
-		setupWorkspace(WS_IDEBUG_695);
-		final String wsRoot = TARGET + "/" + WSP;
-		// Compile
-		final String[] args = { "-pl", wsRoot,
-				"-t", "allprojects",
-				"-v"
-		};
-		new N4jscBase().doMain(args);
+	@Before
+	public void setupWorkspace() throws IOException {
+		workspace = setupWorkspace(WS_IDEBUG_695);
+
+	}
+
+	/** Delete workspace. */
+	@After
+	public void deleteWorkspace() throws IOException {
+		FileDeleter.delete(workspace.toPath(), true);
 	}
 
 	/***/
 	@Test
 	public void compileCheckFinalFieldCanBeSetInInheritedCtor_ExpectCanBeSet() throws ExitCodeException, IOException {
-		System.out.println(logMethodname());
 
-		final String wsRoot = TARGET + "/" + WSP;
+		// pre compile
+		final String wsRoot = workspace.getAbsolutePath().toString();
+		// Compile
+		final String[] args_precompile = { "-pl", wsRoot,
+				"-t", "allprojects",
+				"-v"
+		};
+		new N4jscBase().doMain(args_precompile);
+
+		// run without compile
 		final String fileToRun = wsRoot + "/IDEBUG-695/src/Main.n4js";
 		final String[] args = { "-pl", wsRoot,
 				"-t", "dontcompile",

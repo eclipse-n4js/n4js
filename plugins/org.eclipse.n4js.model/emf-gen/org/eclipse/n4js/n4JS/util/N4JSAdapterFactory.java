@@ -473,6 +473,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createTaggedTemplateStringAdapter();
 			}
 			@Override
+			public Adapter caseMemberAccess(MemberAccess object) {
+				return createMemberAccessAdapter();
+			}
+			@Override
 			public Adapter caseParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression object) {
 				return createParameterizedPropertyAccessExpressionAdapter();
 			}
@@ -2113,6 +2117,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTaggedTemplateStringAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.MemberAccess <em>Member Access</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.MemberAccess
+	 * @generated
+	 */
+	public Adapter createMemberAccessAdapter() {
 		return null;
 	}
 

@@ -26,8 +26,6 @@ import java.util.Map.Entry;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TestName;
 
 /**
  * Base test class for checking the external/third party project capabilities in the headless mode.
@@ -36,12 +34,6 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 
 	private File targetPlatformInstallLocation;
 	private File targetPlatformFile;
-
-	/**
-	 * Rule for getting the name of the currently executed test.
-	 */
-	@Rule
-	public TestName name = new TestName();
 
 	/**
 	 * Initializes the target platform install location and the target platform file with the desired dependencies.
@@ -54,7 +46,7 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 		checkState(null == targetPlatformFile);
 
 		final Path tempRoot = createTempDirectory();
-		final String tempFolderName = name.getMethodName() + "-time-" + System.currentTimeMillis();
+		final String tempFolderName = description.getMethodName() + "-time-" + System.currentTimeMillis();
 		targetPlatformInstallLocation = createDirectory(tempRoot, tempFolderName).toFile();
 		final TargetPlatformModel model = new TargetPlatformModel();
 		for (final Entry<String, String> dependencyEntry : getNpmDependencies().entrySet()) {
