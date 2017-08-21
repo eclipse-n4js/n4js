@@ -11,8 +11,11 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -20,7 +23,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 abstract public class Node implements ControlFlowable {
 	final private ControlFlowElement cfeElem;
 	final public String name;
-	final public List<Node> internalSucc = new LinkedList<>();
+	final public Map<Node, SuccessorEdgeDescription> internalSucc = new HashMap<>();
 
 	final public List<ControlFlowEdge> pred = new LinkedList<>();
 	final public List<ControlFlowEdge> succ = new LinkedList<>();
@@ -37,7 +40,12 @@ abstract public class Node implements ControlFlowable {
 	}
 
 	public void addInternalSuccessors(Node node) {
-		internalSucc.add(node);
+		addInternalSuccessors(node, ControlFlowType.Successor);
+	}
+
+	public void addInternalSuccessors(Node node, ControlFlowType cfType) {
+		SuccessorEdgeDescription sed = new SuccessorEdgeDescription(node, cfType);
+		internalSucc.put(sed.endNode, sed);
 	}
 
 	public void addSuccessor(ControlFlowEdge cfEdge) {
@@ -56,8 +64,16 @@ abstract public class Node implements ControlFlowable {
 		endEdges.add(depEdge);
 	}
 
-	public List<Node> getInternalSuccessors() {
-		return internalSucc;
+	public Set<Node> getInternalSuccessors() {
+		return internalSucc.keySet();
+	}
+
+	public ControlFlowType getInternalSuccessorControlFlowType(Node endNode) {
+		if (internalSucc.containsKey(endNode)) {
+			SuccessorEdgeDescription sed = internalSucc.get(endNode);
+			return sed.cfType;
+		}
+		return null;
 	}
 
 	public List<ControlFlowEdge> getSuccessorEdges() {
@@ -93,26 +109,56 @@ abstract public class Node implements ControlFlowable {
 
 	abstract public ControlFlowElement getDelegatedControlFlowElement();
 
-	abstract protected List<ControlFlowElement> getCFEOrSucceeding();
+	abstract public ControlFlowElement getRepresentedControlFlowElement();
 
-	abstract protected List<ControlFlowElement> getCFEOrPreceeding();
+	abstract protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges);
 
-	public List<ControlFlowElement> getSuccessors() {
-		List<ControlFlowElement> succCFEs = new LinkedList<>();
+	abstract protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges);
+
+	public List<RepresentingNode> getSuccessors() {
+		return getSuccessors(new LinkedList<>());
+	}
+
+	protected List<RepresentingNode> getSuccessors(List<ControlFlowEdge> loopEdges) {
+		List<RepresentingNode> succCFEs = new LinkedList<>();
 		for (ControlFlowEdge cfEdge : succ) {
-			List<ControlFlowElement> cfes = cfEdge.end.getCFEOrSucceeding();
-			succCFEs.addAll(cfes);
+			if (!loopEdges.contains(cfEdge)) {
+				loopEdges.add(cfEdge);
+				List<RepresentingNode> cfes = cfEdge.end.getRepresentingOrSucceeding(loopEdges);
+				succCFEs.addAll(cfes);
+			}
 		}
 		return succCFEs;
 	}
 
-	public List<ControlFlowElement> getPredecessors() {
-		List<ControlFlowElement> succCFEs = new LinkedList<>();
+	public List<RepresentingNode> getPredecessors() {
+		return getPredecessors(new LinkedList<>());
+	}
+
+	protected List<RepresentingNode> getPredecessors(List<ControlFlowEdge> loopEdges) {
+		List<RepresentingNode> succCFEs = new LinkedList<>();
 		for (ControlFlowEdge cfEdge : pred) {
-			List<ControlFlowElement> cfes = cfEdge.start.getCFEOrPreceeding();
-			succCFEs.addAll(cfes);
+			if (!loopEdges.contains(cfEdge)) {
+				loopEdges.add(cfEdge);
+				List<RepresentingNode> cfes = cfEdge.start.getRepresentingOrPreceeding(loopEdges);
+				succCFEs.addAll(cfes);
+			}
 		}
 		return succCFEs;
+	}
+
+	public boolean isTransitiveSuccessor(ControlFlowElement cfeTo, List<ControlFlowEdge> loopEdges) {
+		if (getRepresentedControlFlowElement() == cfeTo) {
+			return true;
+		}
+
+		List<RepresentingNode> succNodes = getSuccessors(loopEdges);
+		for (Node succNode : succNodes) {
+			if (succNode.isTransitiveSuccessor(cfeTo, loopEdges)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -129,4 +175,15 @@ abstract public class Node implements ControlFlowable {
 	public String toString() {
 		return name;
 	}
+
+	private class SuccessorEdgeDescription {
+		final ControlFlowType cfType;
+		final Node endNode;
+
+		SuccessorEdgeDescription(Node endNode, ControlFlowType cfType) {
+			this.endNode = endNode;
+			this.cfType = cfType;
+		}
+	}
+
 }

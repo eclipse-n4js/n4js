@@ -18,7 +18,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.Statement;
@@ -54,8 +54,8 @@ class BlockFactory {
 		cNode.setExitNode(exitNode);
 
 		if (block.eContainer() instanceof GenericDeclaration) {
-			exitNode.addCatchToken(new CatchToken(JumpType.Return));
-			exitNode.addCatchToken(new CatchToken(JumpType.CatchesRuntimeExceptions));
+			exitNode.addCatchToken(new CatchToken(ControlFlowType.Return));
+			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesRuntimeExceptions));
 		}
 
 		return cNode;

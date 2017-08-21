@@ -47,22 +47,22 @@ public class ComplexNode implements ControlFlowable {
 	}
 
 	public void connectInternalSucc(Node... nodes) {
-		connectInternalSucc(false, Arrays.asList(nodes));
+		connectInternalSucc(ControlFlowType.Successor, Arrays.asList(nodes));
 	}
 
 	public void connectInternalSuccLC(Node... nodes) {
-		connectInternalSucc(true, Arrays.asList(nodes));
+		connectInternalSucc(ControlFlowType.Loop, Arrays.asList(nodes));
 	}
 
 	public void connectInternalSucc(List<Node> nodes) {
-		connectInternalSucc(false, nodes);
+		connectInternalSucc(ControlFlowType.Successor, nodes);
 	}
 
 	public void connectInternalSuccLC(List<Node> nodes) {
-		connectInternalSucc(true, nodes);
+		connectInternalSucc(ControlFlowType.Loop, nodes);
 	}
 
-	private void connectInternalSucc(boolean loopCarried, List<Node> nodes) {
+	private void connectInternalSucc(ControlFlowType cfType, List<Node> nodes) {
 		nodes = ListUtils.filterNulls(nodes);
 
 		Iterator<Node> it = nodes.iterator();
@@ -76,7 +76,7 @@ public class ComplexNode implements ControlFlowable {
 
 			Node n2 = n1;
 			n1 = it.next();
-			n2.addInternalSuccessors(n1);
+			n2.addInternalSuccessors(n1, cfType);
 		}
 
 		if (!nodeMap.values().contains(n1))

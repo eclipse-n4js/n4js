@@ -17,7 +17,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.TryStatement;
@@ -39,7 +39,7 @@ class TryFactory {
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
-			CatchToken ct = new CatchToken(JumpType.Throw, catchClause.getCatchVariable());
+			CatchToken ct = new CatchToken(ControlFlowType.Throw, catchClause.getCatchVariable());
 			catchNode = new DelegatingNode("catch", tryStmt, catchClause.getBlock());
 			catchNode.getEntry().addCatchToken(ct);
 		}

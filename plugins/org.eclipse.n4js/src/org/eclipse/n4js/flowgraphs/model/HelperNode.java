@@ -16,8 +16,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * The {@link HelperNode} does not provide a {@link ControlFlowElement} delegate. Moreover, it does not represent a CFE
- * and thus does not return its {@link ControlFlowElement} when asked for it in {@link #getCFEOrSucceeding()} or
- * {@link #getCFEOrPreceeding()}. Instead, it passes these calls to the successor or predecessor, respectively.
+ * and thus does not return its {@link ControlFlowElement} when asked for it in
+ * {@link #getRepresentingOrSucceeding(List)} or {@link #getRepresentingOrPreceeding(List)}. Instead, it passes these
+ * calls to the successor or predecessor, respectively.
  */
 public class HelperNode extends Node {
 
@@ -29,17 +30,22 @@ public class HelperNode extends Node {
 	}
 
 	@Override
-	protected List<ControlFlowElement> getCFEOrSucceeding() {
-		return getSuccessors();
+	protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges) {
+		return getSuccessors(loopEdges);
 	}
 
 	@Override
-	protected List<ControlFlowElement> getCFEOrPreceeding() {
-		return getPredecessors();
+	protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges) {
+		return getPredecessors(loopEdges);
 	}
 
 	@Override
 	public ControlFlowElement getDelegatedControlFlowElement() {
+		return null;
+	}
+
+	@Override
+	public ControlFlowElement getRepresentedControlFlowElement() {
 		return null;
 	}
 

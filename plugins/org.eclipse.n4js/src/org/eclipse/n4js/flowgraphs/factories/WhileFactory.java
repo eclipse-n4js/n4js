@@ -17,7 +17,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
@@ -56,8 +56,8 @@ class WhileFactory {
 		cNode.setExitNode(exitNode);
 
 		String label = ASTUtils.getLabel(whileStmt);
-		exitNode.addCatchToken(new CatchToken(JumpType.Break, label));
-		conditionNode.addCatchToken(new CatchToken(JumpType.Continue, label));
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
+		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
 		cNode.setLoopContainer(true);
 
 		return cNode;

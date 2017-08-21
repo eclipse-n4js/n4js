@@ -17,7 +17,7 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.BreakStatement;
@@ -48,22 +48,22 @@ import org.eclipse.n4js.n4JS.WhileStatement;
 class JumpFactory {
 
 	static ComplexNode buildComplexNode(BreakStatement stmt) {
-		JumpToken jumptoken = new JumpToken(JumpType.Break, stmt.getLabel());
+		JumpToken jumptoken = new JumpToken(ControlFlowType.Break, stmt.getLabel());
 		return buildComplexNode(stmt, null, jumptoken);
 	}
 
 	static ComplexNode buildComplexNode(ContinueStatement stmt) {
-		JumpToken jumptoken = new JumpToken(JumpType.Continue, stmt.getLabel());
+		JumpToken jumptoken = new JumpToken(ControlFlowType.Continue, stmt.getLabel());
 		return buildComplexNode(stmt, null, jumptoken);
 	}
 
 	static ComplexNode buildComplexNode(ReturnStatement stmt) {
-		JumpToken jumptoken = new JumpToken(JumpType.Return);
+		JumpToken jumptoken = new JumpToken(ControlFlowType.Return);
 		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
 	}
 
 	static ComplexNode buildComplexNode(ThrowStatement stmt) {
-		JumpToken jumptoken = new JumpToken(JumpType.Throw, stmt.getExpression());
+		JumpToken jumptoken = new JumpToken(ControlFlowType.Throw, stmt.getExpression());
 		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
 	}
 

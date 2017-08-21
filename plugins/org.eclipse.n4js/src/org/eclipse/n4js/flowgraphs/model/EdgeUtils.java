@@ -21,24 +21,22 @@ public class EdgeUtils {
 		addEdgeCF(cf1.getExit(), cf2.getEntry());
 	}
 
-	static public ControlFlowEdge addEdgeCF(Node n1, Node n2) {
-		assert (n1 != n2) : "CF-Edge with same Start/End-Nodes";
-
-		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2);
-		n1.addSuccessor(cfEdge);
-		n2.addPredecessor(cfEdge);
-
-		return cfEdge;
-	}
-
 	public static void connectLC(ControlFlowable conditionNode, ControlFlowable whileBlock) {
 		addEdgeCFLC(conditionNode.getExit(), whileBlock.getEntry());
 	}
 
-	public static ControlFlowEdge addEdgeCFLC(Node n1, Node n2) {
-		assert (n1 != n2) : "CFLC-Edge with same Start/End-Nodes";
+	static public ControlFlowEdge addEdgeCF(Node n1, Node n2) {
+		return addEdgeCF(n1, n2, ControlFlowType.Successor);
+	}
 
-		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, true, false);
+	public static ControlFlowEdge addEdgeCFLC(Node n1, Node n2) {
+		return addEdgeCF(n1, n2, ControlFlowType.Loop);
+	}
+
+	static public ControlFlowEdge addEdgeCF(Node n1, Node n2, ControlFlowType cfType) {
+		assert (n1 != n2) : "CF-Edge with same Start/End-Nodes";
+
+		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, cfType);
 		n1.addSuccessor(cfEdge);
 		n2.addPredecessor(cfEdge);
 

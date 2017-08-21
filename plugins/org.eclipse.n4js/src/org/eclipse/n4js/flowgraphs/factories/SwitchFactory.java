@@ -17,7 +17,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
@@ -74,7 +74,7 @@ class SwitchFactory {
 		cNode.setExitNode(exitNode);
 
 		String label = ASTUtils.getLabel(switchStmt);
-		exitNode.addCatchToken(new CatchToken(JumpType.Break, label));
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
 
 		return cNode;
 	}

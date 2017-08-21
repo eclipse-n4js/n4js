@@ -17,8 +17,8 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. Also, it does represents a CFE and
- * thus returns its {@link ControlFlowElement} when asked for it in {@link #getCFEOrSucceeding()} or
- * {@link #getCFEOrPreceeding()}.
+ * thus returns its {@link ControlFlowElement} when asked for it in {@link #getRepresentingOrSucceeding(List)} or
+ * {@link #getRepresentingOrPreceeding(List)}.
  */
 public class RepresentingNode extends DelegatingNode {
 
@@ -30,23 +30,22 @@ public class RepresentingNode extends DelegatingNode {
 	}
 
 	@Override
-	protected List<ControlFlowElement> getCFEOrSucceeding() {
-		ControlFlowElement cfe = getControlFlowElement();
-		LinkedList<ControlFlowElement> cfeInAList = new LinkedList<>();
-		if (cfe != null) {
-			cfeInAList.add(cfe);
-		}
+	protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges) {
+		LinkedList<RepresentingNode> cfeInAList = new LinkedList<>();
+		cfeInAList.add(this);
 		return cfeInAList;
 	}
 
 	@Override
-	protected List<ControlFlowElement> getCFEOrPreceeding() {
-		ControlFlowElement cfe = getControlFlowElement();
-		LinkedList<ControlFlowElement> cfeInAList = new LinkedList<>();
-		if (cfe != null) {
-			cfeInAList.add(cfe);
-		}
+	protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges) {
+		LinkedList<RepresentingNode> cfeInAList = new LinkedList<>();
+		cfeInAList.add(this);
 		return cfeInAList;
+	}
+
+	@Override
+	public ControlFlowElement getRepresentedControlFlowElement() {
+		return getDelegatedControlFlowElement();
 	}
 
 }

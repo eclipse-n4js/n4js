@@ -17,7 +17,7 @@ import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
 
@@ -80,8 +80,8 @@ class ForFactory {
 		cNode.setExitNode(exitNode);
 
 		String label = ASTUtils.getLabel(forStmt);
-		exitNode.addCatchToken(new CatchToken(JumpType.Break, label));
-		hasNextNode.addCatchToken(new CatchToken(JumpType.Continue, label));
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
+		hasNextNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
 
 		cNode.setLoopContainer(true);
 		return cNode;
@@ -91,6 +91,7 @@ class ForFactory {
 		ComplexNode cNode = new ComplexNode(forStmt);
 
 		Node initsNode = null;
+		Node prebodyNode = new HelperNode("prebody", forStmt);
 		Node bodyNode = null;
 		Node conditionNode = null;
 		Node updatesNode = null;
@@ -114,6 +115,7 @@ class ForFactory {
 		cNode.addNode(exitNode);
 		cNode.addNode(initsNode);
 		cNode.addNode(conditionNode);
+		cNode.addNode(prebodyNode);
 		cNode.addNode(bodyNode);
 		cNode.addNode(updatesNode);
 
@@ -121,6 +123,7 @@ class ForFactory {
 		nodes.add(entryNode);
 		nodes.add(initsNode);
 		nodes.add(conditionNode);
+		nodes.add(prebodyNode);
 		nodes.add(bodyNode);
 		nodes.add(updatesNode);
 		cNode.connectInternalSucc(nodes);
@@ -128,12 +131,14 @@ class ForFactory {
 		if (conditionNode != null)
 			cNode.connectInternalSucc(conditionNode, exitNode);
 
-		LinkedList<Node> parts = ListUtils.filterNulls(updatesNode, bodyNode, conditionNode);
-		if (!parts.isEmpty()) {
-			Node loopSrc = parts.getFirst();
-			Node loopTgt = parts.getLast();
-			if (loopSrc != null && loopTgt != null)
+		LinkedList<Node> loopCycle = ListUtils.filterNulls(conditionNode, prebodyNode, bodyNode, updatesNode);
+		// LinkedList<Node> parts = ListUtils.filterNulls(updatesNode, bodyNode, conditionNode);
+		if (!loopCycle.isEmpty()) {
+			Node loopSrc = loopCycle.getLast();
+			Node loopTgt = loopCycle.getFirst();
+			if (loopSrc != null && loopTgt != null) {
 				cNode.connectInternalSuccLC(loopSrc, loopTgt);
+			}
 		}
 
 		cNode.setEntryNode(entryNode);
@@ -142,12 +147,12 @@ class ForFactory {
 		cNode.setLoopContainer(true);
 
 		String label = ASTUtils.getLabel(forStmt);
-		exitNode.addCatchToken(new CatchToken(JumpType.Break, label));
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
 
-		parts = ListUtils.filterNulls(conditionNode, bodyNode, updatesNode);
-		if (!parts.isEmpty()) {
-			Node contNode = parts.getFirst();
-			contNode.addCatchToken(new CatchToken(JumpType.Continue, label));
+		// parts = ListUtils.filterNulls(conditionNode, prebodyNode, bodyNode, updatesNode);
+		if (!loopCycle.isEmpty()) {
+			Node contNode = loopCycle.getFirst();
+			contNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
 		}
 
 		return cNode;

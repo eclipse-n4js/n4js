@@ -15,7 +15,7 @@ import org.eclipse.n4js.flowgraphs.ComplexNodeProvider;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
-import org.eclipse.n4js.flowgraphs.model.JumpType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
@@ -50,7 +50,7 @@ public class CatchNodeFinder {
 	}
 
 	private static CatchEvaluator getCatchEvaluator(JumpToken jumpToken) {
-		switch (jumpToken.type) {
+		switch (jumpToken.cfType) {
 		case Break:
 			return catchBreakEvaluator;
 		case Continue:
@@ -85,7 +85,7 @@ public class CatchNodeFinder {
 		ComplexNode cnCFE = cnProvider.get(cfe);
 		for (Node node : cnCFE.getNodes()) {
 			for (CatchToken cToken : node.catchToken) {
-				if (cToken.type == JumpType.CatchesAll) {
+				if (cToken.cfType == ControlFlowType.CatchesAll) {
 					return node;
 				}
 			}

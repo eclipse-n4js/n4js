@@ -11,14 +11,15 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ComplexNodeProvider;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.EdgeUtils;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -83,9 +84,10 @@ public class ControlFlowGraphFactory {
 			}
 		}
 
-		List<Node> internalSuccs = mNode.getInternalSuccessors();
+		Set<Node> internalSuccs = mNode.getInternalSuccessors();
 		for (Node internalSucc : internalSuccs) {
-			ControlFlowEdge e = EdgeUtils.addEdgeCF(internalStartNode, internalSucc);
+			ControlFlowType cfType = mNode.getInternalSuccessorControlFlowType(internalSucc);
+			ControlFlowEdge e = EdgeUtils.addEdgeCF(internalStartNode, internalSucc, cfType);
 			if (PRINT_EDGE_DETAILS)
 				printEdgeDetails(e);
 		}
@@ -106,7 +108,7 @@ public class ControlFlowGraphFactory {
 					String jumpTokenStr = getJumpTokenDetailString(jumpToken, cnJumpNode);
 					System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
 				} else {
-					EdgeUtils.addEdgeCF(cnJumpNode, catchNode);
+					EdgeUtils.addEdgeCF(cnJumpNode, catchNode, jumpToken.cfType);
 				}
 			}
 		}
@@ -132,7 +134,6 @@ public class ControlFlowGraphFactory {
 		Map<ControlFlowElement, ComplexNode> getMap() {
 			return cnMap;
 		}
-
 	}
 
 	/** Prints detailed information of jump nodes */
@@ -146,7 +147,7 @@ public class ControlFlowGraphFactory {
 	private static void printEdgeDetails(ControlFlowEdge e) {
 		String sNode = ASTUtils.getNodeDetailString(e.start);
 		String eNode = ASTUtils.getNodeDetailString(e.end);
-		String edgeStr = sNode + " --> " + eNode;
+		String edgeStr = sNode + ":" + e.toString() + ":" + eNode;
 		System.out.println(edgeStr);
 	}
 

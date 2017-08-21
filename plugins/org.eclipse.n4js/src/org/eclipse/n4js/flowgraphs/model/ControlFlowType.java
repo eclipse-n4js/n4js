@@ -14,7 +14,7 @@ package org.eclipse.n4js.flowgraphs.model;
  *
  */
 @SuppressWarnings("javadoc")
-public enum JumpType {
-	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions
+public enum ControlFlowType {
+	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Loop
 
 }

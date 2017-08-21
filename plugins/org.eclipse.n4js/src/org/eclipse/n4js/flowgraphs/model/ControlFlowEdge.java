@@ -11,38 +11,45 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 public class ControlFlowEdge extends AbstractEdge {
-	public final boolean isLoop;
-	public final boolean isJump;
+	public final ControlFlowType cfType;
 	public final boolean isNested;
 
 	public ControlFlowEdge(Node start, Node end) {
-		this(start, end, false, false, false);
+		this(start, end, ControlFlowType.Successor);
 	}
 
-	public ControlFlowEdge(Node start, Node end, boolean isLoop) {
-		this(start, end, isLoop, false, false);
+	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
+		this(start, end, cfType, false);
 	}
 
-	public ControlFlowEdge(Node start, Node end, boolean isLoop, boolean isBreak) {
-		this(start, end, isLoop, isBreak, false);
-	}
-
-	public ControlFlowEdge(Node start, Node end, boolean isLoop, boolean isBreak, boolean nested) {
+	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType, boolean nested) {
 		super(start, end);
-		this.isLoop = isLoop;
-		this.isJump = isBreak;
+		this.cfType = cfType;
 		this.isNested = nested;
 	}
 
 	@Override
 	public String toString() {
 		String s = " (" + start + ") ";
-		if (isLoop)
-			s += "-lc";
-		if (isJump)
-			s += "-bc";
+		if (cfType != ControlFlowType.Successor) {
+			s += "-" + cfType.name();
+		}
 		s += "-> ";
 		s += "(" + end + ")";
 		return s;
 	}
+
+	/**
+	 * @return true iff {@link #cfType} is either {@literal ControlFlowType.Continue} or {@literal ControlFlowType.Loop}
+	 */
+	public boolean isLoopCarried() {
+		switch (cfType) {
+		case Continue:
+		case Loop:
+			return true;
+		default:
+			return false;
+		}
+	}
+
 }

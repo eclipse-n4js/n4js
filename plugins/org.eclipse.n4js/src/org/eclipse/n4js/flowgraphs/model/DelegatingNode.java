@@ -17,8 +17,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. However, it does not represent a CFE
- * and thus does not return its {@link ControlFlowElement} when asked for it in {@link #getCFEOrSucceeding()} or
- * {@link #getCFEOrPreceeding()}. Instead, it passes these calls to the successor or predecessor, respectively.
+ * and thus does not return its {@link ControlFlowElement} when asked for it in
+ * {@link #getRepresentingOrSucceeding(List)} or {@link #getRepresentingOrPreceeding(List)}. Instead, it passes these
+ * calls to the successor or predecessor, respectively.
  */
 public class DelegatingNode extends Node {
 	final private ControlFlowElement cfeDelegate;
@@ -39,13 +40,13 @@ public class DelegatingNode extends Node {
 	}
 
 	@Override
-	protected List<ControlFlowElement> getCFEOrSucceeding() {
-		return getSuccessors();
+	protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges) {
+		return getSuccessors(loopEdges);
 	}
 
 	@Override
-	protected List<ControlFlowElement> getCFEOrPreceeding() {
-		return getPredecessors();
+	protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges) {
+		return getPredecessors(loopEdges);
 	}
 
 	@Override
@@ -53,6 +54,11 @@ public class DelegatingNode extends Node {
 		if (cfeDelegate == null)
 			return null; // can be missing when the AST is incomplete
 		return CFEMapper.map(cfeDelegate);
+	}
+
+	@Override
+	public ControlFlowElement getRepresentedControlFlowElement() {
+		return null;
 	}
 
 }

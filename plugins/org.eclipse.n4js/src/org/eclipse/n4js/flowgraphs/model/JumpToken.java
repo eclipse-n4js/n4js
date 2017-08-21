@@ -11,15 +11,15 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 public class JumpToken {
-	final public JumpType type;
+	final public ControlFlowType cfType;
 	final public Object id;
 
-	public JumpToken(JumpType type) {
+	public JumpToken(ControlFlowType type) {
 		this(type, null);
 	}
 
-	public JumpToken(JumpType type, Object id) {
-		this.type = type;
+	public JumpToken(ControlFlowType type, Object id) {
+		this.cfType = type;
 		this.id = id;
 	}
 
@@ -30,14 +30,14 @@ public class JumpToken {
 		JumpToken jt = (JumpToken) o;
 
 		boolean equals = true;
-		equals &= type == jt.type;
+		equals &= cfType == jt.cfType;
 		equals &= id == jt.id;
 		return equals;
 	}
 
 	@Override
 	public String toString() {
-		String s = type.name();
+		String s = cfType.name();
 		if (id != null)
 			s += " " + id;
 		return s;

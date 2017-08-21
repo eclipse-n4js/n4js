@@ -12,11 +12,11 @@ package org.eclipse.n4js.flowgraphs.model;
 
 public class CatchToken extends JumpToken {
 
-	public CatchToken(JumpType type) {
+	public CatchToken(ControlFlowType type) {
 		this(type, null);
 	}
 
-	public CatchToken(JumpType type, Object id) {
+	public CatchToken(ControlFlowType type, Object id) {
 		super(type, id);
 	}
 

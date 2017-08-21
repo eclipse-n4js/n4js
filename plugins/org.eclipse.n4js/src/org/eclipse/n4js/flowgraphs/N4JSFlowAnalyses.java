@@ -20,7 +20,9 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
@@ -69,7 +71,11 @@ public class N4JSFlowAnalyses {
 		Objects.requireNonNull(cfe);
 
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<ControlFlowElement> cfElems = cn.getExit().getPredecessors();
+		List<RepresentingNode> repNodes = cn.getExit().getPredecessors();
+		List<ControlFlowElement> cfElems = new LinkedList<>();
+		for (RepresentingNode rNode : repNodes) {
+			cfElems.add(rNode.getRepresentedControlFlowElement());
+		}
 		return cfElems;
 	}
 
@@ -80,7 +86,11 @@ public class N4JSFlowAnalyses {
 		Objects.requireNonNull(cfe);
 
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<ControlFlowElement> cfElems = cn.getExit().getSuccessors();
+		List<RepresentingNode> repNodes = cn.getExit().getSuccessors();
+		List<ControlFlowElement> cfElems = new LinkedList<>();
+		for (RepresentingNode rNode : repNodes) {
+			cfElems.add(rNode.getRepresentedControlFlowElement());
+		}
 		return cfElems;
 	}
 
@@ -91,17 +101,16 @@ public class N4JSFlowAnalyses {
 		Objects.requireNonNull(cfeFrom);
 		Objects.requireNonNull(cfeTo);
 
-		if (cfeFrom == cfeTo) {
-			return true;
-		}
+		ComplexNode cn = cfg.getComplexNode(cfeFrom);
+		boolean isTransitiveSuccessor = cn.getExit().isTransitiveSuccessor(cfeTo, new LinkedList<>());
+		return isTransitiveSuccessor;
+	}
 
-		List<ControlFlowElement> cfElems = getSuccessors(cfeFrom);
-		for (ControlFlowElement cfe : cfElems) {
-			if (isTransitiveSuccessor(cfe, cfeTo)) {
-				return true;
-			}
-		}
-		return false;
+	/**
+	 * @returns the {@link ControlFlowType} that happens between the two direct successors cfe and cfeSucc
+	 */
+	public ControlFlowType getControlFlowTypeToSuccessor(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
+		return cfg.getControlFlowTypeToSuccessor(cfe, cfeSucc);
 	}
 
 	/**
