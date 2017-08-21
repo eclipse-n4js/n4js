@@ -66,7 +66,7 @@ public class VisibilityAwareCtorScope extends FilterWithErrorMarkerScope {
 				TClassifier ctorClassifier = (TClassifier) proxyOrInstance;
 				// If the class is found, check if the visibility of the constructor is valid
 				TMethod usedCtor = containerTypesHelper.fromContext(context).findConstructor(ctorClassifier);
-				if (usedCtor.isConstructor()) {
+				if (usedCtor != null && usedCtor.isConstructor()) {
 					return checker.isConstructorVisible(context, TypeUtils.createTypeRef(ctorClassifier), usedCtor);
 				}
 			}
