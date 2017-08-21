@@ -26,6 +26,7 @@ import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
+import org.eclipse.n4js.n4JS.ArrayBindingPattern;
 import org.eclipse.n4js.n4JS.ArrayElement;
 import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.ArrayPadding;
@@ -34,6 +35,8 @@ import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
+import org.eclipse.n4js.n4JS.BindingElement;
+import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
 import org.eclipse.n4js.n4JS.BreakStatement;
@@ -51,6 +54,7 @@ import org.eclipse.n4js.n4JS.DoubleLiteral;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportedVariableBinding;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -77,6 +81,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
+import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.OctalIntLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -108,6 +113,7 @@ import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
+import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
@@ -399,6 +405,22 @@ import org.eclipse.xtext.EcoreUtil2;
 	}
 
 	@Override
+	public Boolean caseVariableBinding(VariableBinding original) {
+		process(original.getPattern());
+		if (original.getExpression() != null) {
+			write(" = ");
+			process(original.getExpression());
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
+		caseExportedVariableBinding(original);
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseEmptyStatement(EmptyStatement original) {
 		write(';');
 		return DONE;
@@ -640,7 +662,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 	@Override
 	public Boolean caseArrayLiteral(ArrayLiteral original) {
-		processBlockLike(original.getElements(), '[', ",", null, ']');
+		final List<ArrayElement> elements = original.getElements();
+		final boolean lastIsPadding = !elements.isEmpty() && elements.get(elements.size() - 1) instanceof ArrayPadding;
+		final String lastLineEnd = lastIsPadding || original.isTrailingComma() ? "," : null;
+		processBlockLike(original.getElements(), '[', ",", lastLineEnd, ']');
 		return DONE;
 	}
 
@@ -685,6 +710,10 @@ import org.eclipse.xtext.EcoreUtil2;
 	@Override
 	public Boolean casePropertyNameValuePairSingleName(PropertyNameValuePairSingleName original) {
 		process(original.getIdentifierRef());
+		if (original.getExpression() != null) {
+			write(" = ");
+			process(original.getExpression());
+		}
 		return DONE;
 	}
 
@@ -1002,6 +1031,56 @@ import org.eclipse.xtext.EcoreUtil2;
 	public Boolean caseAwaitExpression(AwaitExpression original) {
 		write("await ");
 		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseObjectBindingPattern(ObjectBindingPattern original) {
+		processBlockLike(original.getProperties(), '{', ",", null, '}');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseArrayBindingPattern(ArrayBindingPattern original) {
+		final List<BindingElement> elements = original.getElements();
+		final BindingElement last = !elements.isEmpty() ? elements.get(elements.size() - 1) : null;
+		final boolean lastIsElision = last != null && last.isElision();
+		final String lastLineEnd = lastIsElision ? "," : null;
+		processBlockLike(original.getElements(), '[', ",", lastLineEnd, ']');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseBindingProperty(BindingProperty original) {
+		if (original.getDeclaredName() == null) {
+			// single-name binding
+			process(original.getValue().getVarDecl());
+		} else {
+			write(original.getName());
+			write(": ");
+			process(original.getValue());
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseBindingElement(BindingElement original) {
+		if (original.isRest()) {
+			write("... ");
+		}
+		if (original.getNestedPattern() != null) {
+			process(original.getNestedPattern());
+			if (original.getExpression() != null) {
+				write(" = ");
+				process(original.getExpression());
+			}
+		} else if (original.getVarDecl() != null) {
+			process(original.getVarDecl());
+		} else {
+			// elision:
+			// nothing to emit here (separators are taken care of in #caseArrayBindingPattern())
+			// (similar as with ArrayPadding elements)
+		}
 		return DONE;
 	}
 

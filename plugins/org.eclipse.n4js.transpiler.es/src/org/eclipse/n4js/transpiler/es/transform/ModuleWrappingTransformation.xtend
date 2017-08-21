@@ -40,6 +40,7 @@ import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -728,15 +729,16 @@ class ModuleWrappingTransformation extends Transformation {
 
 
 	def private void convertDestructBindingsIntoDestructAssignments() {
-		collectNodes(state.im, VariableStatement, false).forEach[
+		collectNodes(state.im, VariableStatement, true).forEach[
 			convertDestructBindingsIntoDestructAssignments(it)
 		];
 	}
 
 	// FIXME API doc
 	def private void convertDestructBindingsIntoDestructAssignments(VariableStatement varStmnt) {
+		val bindings = varStmnt.varDeclsOrBindings.filter(VariableBinding).toList;
 		// (1) for each destructuring binding in varStmnt, add an equivalent destructuring assignment after varStmnt
-		val assignmentStmnts = varStmnt.varDeclsOrBindings.filter(VariableBinding).map[binding|
+		val assignmentStmnts = bindings.map[binding|
 			val patternConverted = destructuringAssistant.convertBindingPatternToArrayOrObjectLiteral(binding.pattern);
 			val assignmentExpr = _AssignmentExpr(patternConverted, binding.expression);
 			if(patternConverted instanceof ObjectLiteral) {
@@ -747,8 +749,12 @@ class ModuleWrappingTransformation extends Transformation {
 		].map[_ExprStmnt];
 		insertAfter(varStmnt, assignmentStmnts);
 		// (2) below varStmnt, replace each destructuring binding by its contained variable declarations
-		collectNodes(varStmnt, VariableBinding, true).forEach[binding|
+		for(binding : bindings) {
 			replace(binding, binding.variableDeclarations);
-		];
+		}
+		// (3) if we do this for 'const', we have to change it to 'let', because we removed the initializer expression
+		if (varStmnt.varStmtKeyword===VariableStatementKeyword.CONST) {
+			varStmnt.varStmtKeyword = VariableStatementKeyword.LET;
+		}
 	}
 }

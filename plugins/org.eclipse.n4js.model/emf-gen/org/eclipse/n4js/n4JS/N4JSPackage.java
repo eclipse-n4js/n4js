@@ -14037,13 +14037,22 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_ELEMENT_FEATURE_COUNT = 4;
 
 	/**
+	 * The operation id for the '<em>Is Elision</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINDING_ELEMENT___IS_ELISION = 0;
+
+	/**
 	 * The number of operations of the '<em>Binding Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT_OPERATION_COUNT = 0;
+	int BINDING_ELEMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.
@@ -19440,6 +19449,16 @@ public interface N4JSPackage extends EPackage {
 	EReference getBindingElement_Expression();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.BindingElement#isElision() <em>Is Elision</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Elision</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.BindingElement#isElision()
+	 * @generated
+	 */
+	EOperation getBindingElement__IsElision();
+
+	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -23977,6 +23996,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BINDING_ELEMENT__EXPRESSION = eINSTANCE.getBindingElement_Expression();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Elision</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation BINDING_ELEMENT___IS_ELISION = eINSTANCE.getBindingElement__IsElision();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.

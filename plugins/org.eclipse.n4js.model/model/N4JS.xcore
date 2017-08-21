@@ -2141,4 +2141,8 @@ class BindingElement {
 	contains VariableDeclaration varDecl
 	contains BindingPattern nestedPattern
 	contains Expression expression
+
+	op boolean isElision() {
+		return varDecl===null && nestedPattern===null;
+	}
 }

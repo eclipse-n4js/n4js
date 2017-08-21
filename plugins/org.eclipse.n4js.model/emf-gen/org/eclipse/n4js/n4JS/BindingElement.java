@@ -135,4 +135,13 @@ public interface BindingElement extends EObject {
 	 */
 	void setExpression(Expression value);
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getVarDecl() == null) && (this.getNestedPattern() == null));'"
+	 * @generated
+	 */
+	boolean isElision();
+
 } // BindingElement
