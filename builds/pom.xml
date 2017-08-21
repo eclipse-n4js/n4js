@@ -25,6 +25,7 @@ Contributors:
 
 	<modules>
 		<module>org.eclipse.n4js.product.build</module>
+		<module>org.eclipse.n4js.headless.product.build</module>
 	</modules>
 
 </project>

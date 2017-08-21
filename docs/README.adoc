@@ -27,32 +27,33 @@ Generate Eclipse Help::
 +
 [source,bash]
 ----
-cd docs/org.eclipse.n4js.doc
+cd docs
 mvn -Dtycho.mode=maven verify
 ----
 
 HTML for Web: ::
-(Requires **http://asciidoctor.org/[AsciiDoctor]** RubyGem)
 +
 [source,bash,subs=quotes]
 ----
-cd docs/org.eclipse.n4js.doc/src
-./build.sh
+cd docs/www
+./buildweb.sh
 
-# Running the script with the `-p` flag opens the pages in a browser:
-./build.sh -p
+# The Asciidoctor Docker image may be used instead of the Asciidoctor gem:
+./buildweb.sh --docker
 ----
 
 Language Specification: ::
-(Requires *https://github.com/NumberFour/asciispec[AsciiSpec]* custom tool)
 +
 [source,bash,subs=quotes]
 ----
-cd docs/org.eclipse.n4js.spec
-./build.sh
+cd docs/www
+./buildspec.sh
 
-# Running the script with the `-p` flag opens the pages in a browser:
-./build.sh -p
+# Passing `--launch` opens the HTML in a browser:
+./buildspec.sh --launch
+
+# Passing `--pdf` will generate a PDF
+./buildspec.sh --pdf
 ----
 
 = N4JS IDE Documentation

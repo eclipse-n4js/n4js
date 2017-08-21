@@ -11,6 +11,9 @@
 package org.eclipse.n4js.utils
 
 import com.google.common.base.Optional
+import java.util.Comparator
+import java.util.Iterator
+import java.util.NoSuchElementException
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TField
@@ -20,9 +23,6 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TStructField
 import org.eclipse.n4js.ts.types.TypingStrategy
-import java.util.Comparator
-import java.util.Iterator
-import java.util.NoSuchElementException
 
 import static org.eclipse.n4js.ts.types.TypingStrategy.*
 import static org.eclipse.n4js.utils.StructuralMembersPredicates.*
@@ -207,10 +207,10 @@ class MembersByNameTypeAndAccessComparator implements Comparator<TMember> {
 	 */
 	override compare(TMember m1, TMember m2) {
 
-		if (m1 === null) {
+		if (m1 === null || m1.name === null) {
 			return 1;
 		}
-		if (m2 === null) {
+		if (m2 === null || m2.name === null) {
 			return -1;
 		}
 

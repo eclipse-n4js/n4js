@@ -267,7 +267,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     ('[' ']') | ('{' '}')
+	 *     ('{' '}') | ('[' ']')
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) (rule start)
@@ -278,7 +278,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     '(' | ('{' 'function' '(')
+	 *     ('{' 'function' '(') | '('
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) '('* (ambiguity) fpars+=TAnonymousFormalParameter
@@ -290,7 +290,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'extends' | 'implements'
+	 *     'implements' | 'extends'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superClassRef=ParameterizedTypeRefNominal (ambiguity) implementedInterfaceRefs+=ParameterizedTypeRefNominal
@@ -301,7 +301,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'implements' | 'extends' | ','
+	 *     ',' | 'implements' | 'extends'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     implementedInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) implementedInterfaceRefs+=ParameterizedTypeRefNominal
@@ -365,7 +365,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'extends' | ',' | 'implements'
+	 *     ',' | 'implements' | 'extends'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     superInterfaceRefs+=ParameterizedTypeRefNominal (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
@@ -376,7 +376,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     'implements' | 'extends'
+	 *     'extends' | 'implements'
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
@@ -495,7 +495,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' (rule start)
 	 *     (rule start) (ambiguity) '{' 'function' '(' ')' '}' followedByQuestionMark?='?'
 	 *     (rule start) (ambiguity) '{' 'function' '<' ownedTypeVars+=TypeVariable
-	 *     (rule start) (ambiguity) ('(' | ('{' 'function' '(')) fpars+=TAnonymousFormalParameter
+	 *     (rule start) (ambiguity) (('{' 'function' '(') | '(') fpars+=TAnonymousFormalParameter
 	 *     (rule start) (ambiguity) arrayTypeLiteral?='['
 	 *     (rule start) (ambiguity) constructorRef?='constructor'
 	 *     (rule start) (ambiguity) declaredType=[Type|TypeReferenceName]

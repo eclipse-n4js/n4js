@@ -23,6 +23,11 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.n4js.HeadlessCompilerFactory;
+import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
+import org.eclipse.n4js.generator.headless.N4JSCompileException;
+import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -31,11 +36,6 @@ import org.junit.runners.MethodSorters;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
-
-import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
-import org.eclipse.n4js.generator.headless.N4JSCompileException;
-import org.eclipse.n4js.utils.io.FileDeleter;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 /**
  * Test data is organized in txt-files (content concatenated) under "/testdata".
@@ -117,7 +117,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario01BuildAllProjects() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario01");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1"), // A, NotAProject
@@ -147,7 +147,7 @@ public class ScenarioTest {
 	 */
 	@Test(expected = N4JSCompileException.class)
 	public void testScenario02brokenManifest() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario02");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
@@ -161,7 +161,7 @@ public class ScenarioTest {
 	 */
 	@Test(expected = N4JSCompileException.class)
 	public void testScenario03brokenN4jsSyntax() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario03");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
@@ -174,7 +174,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario04BuildSingleProjectsWithManyProjectsOnPath() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario04");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1"), // A, NotAProject
@@ -208,7 +208,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario05BuildSingleProjectsWithoutProjectroot() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario05");
 
 		List<File> toCompile = Arrays.asList(//
@@ -233,7 +233,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario06NoModuleWrapFilter() throws N4JSCompileException, IOException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario06");
 
 		List<File> toCompile = Arrays.asList(//
@@ -262,7 +262,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario06bNoModuleWrapFilter() throws N4JSCompileException, IOException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario06b");
 
 		List<File> toCompile = Arrays.asList(//
@@ -290,7 +290,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario07TestOnlyCompilation() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario07");
 
 		List<File> toCompile = Arrays.asList(//
@@ -319,7 +319,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario08NotTestCompilation() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario08");
 
 		List<File> toCompile = Arrays.asList(//
@@ -346,7 +346,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario09BuildSingleFilesWithoutProjectRoot() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario09");
 
 		List<File> toCompile = Arrays.asList(//
@@ -371,7 +371,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario10BuildSingleFileWithProjectRootAndDependency() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario10");
 
 		List<File> toCompile = Arrays.asList(//
@@ -400,7 +400,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario11FailDueToInvisbleProject() {
-		N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
+		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario11");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1"));
