@@ -26,7 +26,6 @@ import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.ContainerType
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TFunction
-import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TN4Classifier
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructuralType
@@ -288,20 +287,6 @@ abstract class BaseTypeRef extends StaticBaseTypeRef {
  * {@link UnionTypeExpression} and {@link IntersectionTypeExpression}.
  */
 abstract class ComposedTypeRef extends StaticBaseTypeRef {
-	/*
-	 * These are the members that can be accessed via property access on the union/intersection
-	 * type directly, because they are common to all types contained in the ComposedTypeRef.
-	 * This cache will be filled lazily by ComposedMemberScope, so client code should
-	 * usually not assume this information is complete and best not use it at all.
-	 */
-	contains transient TMember[] cachedComposedMembers
-	/*
-	 * During type variable substitution, type references may be copied. Whenever this happens
-	 * to a ComposedTypeRef, Xsemantics rule 'substTypeVariablesInComposedTypeRef' will let this
-	 * property point to the original ComposedTypeRef. This is required for caching composed
-	 * members, see {@link ComposedMemberScope#getCacheHolder(ComposedTypeRef)}.
-	 */
-	refers transient ComposedTypeRef originalComposedTypeRef
 	/*
 	 * Union type cannot be marked as dynamic
 	 */

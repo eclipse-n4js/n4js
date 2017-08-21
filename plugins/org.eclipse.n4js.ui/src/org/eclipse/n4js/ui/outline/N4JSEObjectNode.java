@@ -27,6 +27,31 @@ public class N4JSEObjectNode extends EObjectNode {
 	public boolean isInherited = false;
 
 	/**
+	 * True iff node represents a member.
+	 */
+	public boolean isMember = false;
+
+	/**
+	 * True iff node represents a static member.
+	 */
+	public boolean isStatic = false;
+
+	/**
+	 * True iff node represents a public member.
+	 */
+	public boolean isPublic = false;
+
+	/**
+	 * True iff node represents a local type.
+	 */
+	public boolean isLocal = false;
+
+	/**
+	 * True iff node represents a constuctor method.
+	 */
+	public boolean isConstructor;
+
+	/**
 	 * Creates this node, required for super call.
 	 */
 	public N4JSEObjectNode(EObject eObject, IOutlineNode parent, ImageDescriptor imageDescriptor, Object text,

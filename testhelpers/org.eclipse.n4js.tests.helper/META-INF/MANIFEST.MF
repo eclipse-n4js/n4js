@@ -22,7 +22,8 @@ Require-Bundle: org.eclipse.n4js,
  com.google.guava,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.runner,
- org.eclipse.n4js.runner.nodejs
+ org.eclipse.n4js.runner.nodejs,
+ org.eclipse.n4js.generator.headless
 Export-Package: org.eclipse.n4js,
  org.eclipse.n4js.analysis,
  org.eclipse.n4js.csv,

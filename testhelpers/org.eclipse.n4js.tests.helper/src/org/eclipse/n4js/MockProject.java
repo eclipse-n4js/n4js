@@ -11,7 +11,6 @@
 package org.eclipse.n4js;
 
 import org.eclipse.emf.common.util.URI;
-
 import org.eclipse.n4js.internal.N4JSProject;
 
 /**

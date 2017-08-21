@@ -12,6 +12,7 @@ package org.eclipse.n4js.n4jsx.n4JSX;
 
 import org.eclipse.n4js.n4JS.Expression;
 
+import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
@@ -32,7 +33,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * @model
  * @generated
  */
-public interface JSXPropertyAttribute extends JSXAttribute {
+public interface JSXPropertyAttribute extends JSXAttribute, MemberAccess {
 	/**
 	 * Returns the value of the '<em><b>Property</b></em>' reference.
 	 * <!-- begin-user-doc -->

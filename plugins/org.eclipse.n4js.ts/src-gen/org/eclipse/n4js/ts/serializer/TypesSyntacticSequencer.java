@@ -162,7 +162,7 @@ public class TypesSyntacticSequencer extends AbstractSyntacticSequencer {
 	
 	/**
 	 * Ambiguous syntax:
-	 *     (',' | ';')?
+	 *     (';' | ',')?
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     astStructuralMembers+=TStructMember (ambiguity) '}' (rule end)

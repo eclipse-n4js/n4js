@@ -12,6 +12,8 @@ package org.eclipse.n4js.ui.outline
 
 import com.google.inject.Inject
 import java.util.List
+import org.apache.log4j.Logger
+import org.eclipse.core.runtime.OperationCanceledException
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.jface.resource.ImageDescriptor
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -27,7 +29,9 @@ import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
+import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ui.labeling.EObjectWithContext
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider
 import org.eclipse.n4js.utils.ContainerTypesHelper
@@ -67,6 +71,8 @@ import org.eclipse.xtext.util.CancelIndicator
  */
 class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements IOutlineTreeProvider.ModeAware {
 
+	private static final Logger logger = Logger.getLogger(N4JSOutlineTreeProvider);
+
 	@Inject
 	ContainerTypesHelper containerTypesHelper
 
@@ -103,12 +109,20 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	override void createChildren(IOutlineNode parentNode, EObject modelElement) {
 		checkCanceled()
 		if (modelElement !== null && parentNode.hasChildren()) {
-			createChildren_(parentNode, modelElement);
+			try {
+				createChildren_(parentNode, modelElement);
+			} catch (Exception ex) {
+				// cancel this operation in case something went wrong
+				logger.error("Error creating nodes for children", ex);
+				throw new OperationCanceledException("Canceled due to internal error: " + ex);
+			}
 		}
 	}
 
+	/**
+	 * First entry should not dispatch but specifically create the root node
+	 */
 	def dispatch protected void createChildren_(DocumentRootNode parentNode, EObject modelElement) {
-		// First entry should not dispatch but specifically create the root node
 		super.createChildren(parentNode, modelElement)
 	}
 
@@ -118,26 +132,33 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		super.createChildren(parentNode, modelElement);
 	}
 
-	// only create entries on top level for elements listed in
-	// isInstanceOfExpectedScriptChildren - so not exported functions
-	// and not exported variables won't appear in the outline
-	// for variable statements with one element only create one node
+	/** 
+	 * only create entries on top level for elements listed in
+	 * isInstanceOfExpectedScriptChildren - so not exported functions
+	 * and not exported variables won't appear in the outline
+	 * for variable statements with one element only create one node
+	 */
 	def dispatch protected void createChildren_(IOutlineNode parentNode, Script script) {
 
+		var EObjectNode node = null
 		for (child : script.scriptElements.filterNull) {
+			node = null;
 			if (child instanceof ExportDeclaration) {
 				val exportedElement = child.exportedElement
 				if (exportedElement instanceof ExportedVariableStatement) {
 					if (exportedElement.varDecl.size == 1) {
-						parentNode.createNode(exportedElement.varDecl.head)
+						node = parentNode.createNode(exportedElement.varDecl.head)
 					} else {
-						parentNode.createNode(exportedElement)
+						node = parentNode.createNode(exportedElement)
 					}
 				} else if (exportedElement !== null) {
-					parentNode.createNode(exportedElement)
+					node = parentNode.createNode(exportedElement)
 				}
 			} else if (child.isInstanceOfExpectedScriptChildren && child.canCreateChildNode) {
-				parentNode.createNode(child)
+				node = parentNode.createNode(child);
+				if (node instanceof N4JSEObjectNode) {
+					node.isLocal = true;
+				}
 			}
 		}
 	}
@@ -147,18 +168,23 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 	 * If not turned off, also inherited (and consumed or polyfilled) members are shown.
 	 */
 	def dispatch protected void createChildren_(IOutlineNode parentNode, N4ClassifierDefinition classifierDefinition) {
+		val tclassifier = classifierDefinition.definedType as TClassifier;
+		if (tclassifier !== null && showInherited) {
+			val members = containerTypesHelper.fromContext(tclassifier).members(tclassifier, false, true);
 
-		val t = classifierDefinition.definedType as TClassifier;
-		if (t !== null && showInherited) {
-			val members = containerTypesHelper.fromContext(classifierDefinition).members(t, false, true);
-			for (tchild : members.filterNull) {
-				if (tchild.astElement !== null) {
-					val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild.astElement, t));
-					if (node instanceof N4JSEObjectNode && tchild.containingType !== null &&
-						tchild.containingType != t) {
-						(node as N4JSEObjectNode).isInherited = true;
+			for (TMember tchild : members.filterNull) {
+				val node = createNodeForObjectWithContext(parentNode, new EObjectWithContext(tchild, tclassifier));
+				if (node instanceof N4JSEObjectNode) {
+					if (tchild.containingType !== null && tchild.containingType != tclassifier) {
+						node.isInherited = true;
 					}
+					node.isMember = true;
+					node.isStatic = tchild.isStatic;
+					node.isPublic = tchild.memberAccessModifier == MemberAccessModifier.PUBLIC ||
+						tchild.memberAccessModifier == MemberAccessModifier.PUBLIC_INTERNAL
+					node.isConstructor = tchild.isConstructor;
 				}
+
 			}
 		} else {
 			for (child : classifierDefinition.eContents.filterNull) {
@@ -169,7 +195,10 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		}
 
 	}
-
+	
+	/**
+	 * Creates a node with context to be able to distinguish between owned and inherited/consumed members
+	 */
 	def EObjectNode createNodeForObjectWithContext(IOutlineNode parentNode, EObjectWithContext objectWithContext) {
 		checkCanceled();
 		val Object text = getText(objectWithContext);
@@ -180,7 +209,9 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		return getOutlineNodeFactory().createEObjectNode(parentNode, objectWithContext.obj, image, text, isLeaf);
 	}
 
-	// create nodes for literals
+	/**
+	 * create nodes for literals
+	 */
 	def dispatch protected void createChildren_(IOutlineNode parentNode, N4EnumDeclaration ed) {
 		for (literal : ed.literals.filterNull) {
 			parentNode.createNode(literal)
@@ -195,7 +226,9 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		null !== definedType
 	}
 
-	// top level elements in outline view
+	/**
+	 * top level elements in outline view
+	 */
 	def private boolean isInstanceOfExpectedScriptChildren(EObject child) {
 		isInstanceOfOneOfTheTypes(
 			child,
@@ -230,21 +263,30 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 		!script.eContents.exists[isInstanceOfExpectedScriptChildren]
 	}
 
-	/*
-	 * suppress + symbol in outline when classifier has no members
-	 * or we have a broken AST and the defined type of the classifier is not available yet
+	/**
+	 * Suppress + symbol in outline when classifier has no members
+	 * or we have a broken AST and the defined type of the classifier is not available yet.
+	 * 
+	 * This method directly works on AST, because the outline is called with the AST.
 	 */
 	def dispatch protected boolean isLeaf(N4ClassifierDefinition classifierDefinition) {
-		val t = classifierDefinition.definedType as TClassifier;
-		if (t === null) {
+		val tclassifier = classifierDefinition.definedType as TClassifier;
+		if (tclassifier === null) {
 			return true;
 		}
 		if (showInherited) {
-			val members = containerTypesHelper.fromContext(classifierDefinition).members(t, false, true);
+			val members = containerTypesHelper.fromContext(tclassifier).members(tclassifier, false, true);
 			return members.isNullOrEmpty;
 		} else {
 			return !classifierDefinition.eContents.exists[isInstanceOfExpectedClassifierChildren]
 		}
+	}
+
+	/**
+	 * Type model members are always leaves. 
+	 */
+	def dispatch protected boolean isLeaf(TMember member) {
+		return true;
 	}
 
 	// fields should have never children

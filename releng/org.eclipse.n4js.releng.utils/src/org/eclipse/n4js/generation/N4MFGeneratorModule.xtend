@@ -13,7 +13,9 @@ package org.eclipse.n4js.generation
 import com.google.inject.Binder
 import com.google.inject.Inject
 import com.google.inject.Module
+import org.eclipse.n4js.serializer.StableOrderSyntacticSequencerPDAProvider
 import org.eclipse.xtext.Grammar
+import org.eclipse.xtext.serializer.analysis.SyntacticSequencerPDAProvider
 import org.eclipse.xtext.xtext.generator.DefaultGeneratorModule
 import org.eclipse.xtext.xtext.generator.XtextGeneratorNaming
 import org.eclipse.xtext.xtext.generator.model.TypeReference
@@ -28,6 +30,11 @@ class N4MFGeneratorModule extends DefaultGeneratorModule {
 	def configureXtextGeneratorNaming(Binder binder) {
 		binder.bind(XtextGeneratorNaming).to(N4MFGeneratorNaming)
 	}
+	
+	def configurePatchedSerializerGenerator(Binder binder) {
+		binder.bind(SyntacticSequencerPDAProvider).to(StableOrderSyntacticSequencerPDAProvider);
+	}
+	
 }
 
 class N4MFGeneratorNaming extends XtextGeneratorNaming {

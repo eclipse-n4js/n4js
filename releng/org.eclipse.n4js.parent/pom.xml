@@ -26,87 +26,28 @@ Contributors:
 	<packaging>pom</packaging>
 
 	<properties>
-		<!-- tycho version -->
-		<!-- as there are still problems with tycho 0.21.0 we still stick to 0.20.0 -->
-		<!-- see also https://bugs.eclipse.org/bugs/show_bug.cgi?id=444793 -->
-		<!-- see also http://wiki.eclipse.org/Tycho/Release_Notes/0.21 -->
-		<!-- see also https://bugs.eclipse.org/bugs/show_bug.cgi?id=436617#c11 -->
-		<tycho.version>0.24.0</tycho.version>
-		<!-- tycho 20 by default is using Kepler jdt compiler -->
-		<!--  we are forcing Luna jdt compiler, see http://dev.eclipse.org/mhonarc/lists/tycho-user/msg05619.html -->
-		<!-- TODO: remove after switching to tycho 0.21.0-->
-<!-- 		<cbi-jdt-version>3.10.0.v20140604-1726</cbi-jdt-version> -->
-
-		<!-- encoding -->
-		<project.encoding>UTF-8</project.encoding>
-		<file.encoding>${project.encoding}</file.encoding>
-		<project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
-
-		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
-		<lowMemoryArgs>-Xms64M -Xmx320M -XX:+HeapDumpOnOutOfMemoryError</lowMemoryArgs>
-		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
-
-		<!-- Maven POJO versions -->
-		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
-		<maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
-		<maven-antrun-plugin.version>1.7</maven-antrun-plugin.version>
-		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
-		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
-		<maven-site-plugin.version>3.3</maven-site-plugin.version>
-		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
-		<maven-scm-plugin.version>1.9.1</maven-scm-plugin.version>
-		<maven-assembly-plugin.version>2.4.1</maven-assembly-plugin.version>
-		<maven-release-plugin.version>2.5</maven-release-plugin.version>
-		<maven-jxr-plugin.version>2.4</maven-jxr-plugin.version>
-		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
-		<codehaus-exec-maven-plugin.version>1.4.0</codehaus-exec-maven-plugin.version>
-		<codehaus-buildnumber-maven-plugin.version>1.4</codehaus-buildnumber-maven-plugin.version>
-		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-		<maven-verifier-plugin.version>1.0</maven-verifier-plugin.version>
-		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
-		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
-		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
-		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
-		<maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
-
-
-		<!-- code analysis, coding conventions -->
-		<maven-pmd-plugin.version>3.2</maven-pmd-plugin.version>
-
-		<!-- for adding paths to classpath -->
-		<build-helper-maven-plugin.version>1.9</build-helper-maven-plugin.version>
-		<!-- <eclipse-signing-maven-plugin.version>1.0.5</eclipse-signing-maven-plugin.version> -->
-
-		<!-- current xtext version -->
-		<xtext.version>2.12.0</xtext.version>
-		<mwe2-version>2.9.0.201605261059</mwe2-version>
-		<!-- compile xtend files to java -->
-<!-- 		<xtend-maven-plugin.version>${xtext.version}-SNAPSHOT</xtend-maven-plugin.version> -->
-		<xtend-maven-plugin.version>${xtext.version}</xtend-maven-plugin.version>
-		<xtend-library.version>${xtend-maven-plugin.version}</xtend-library.version>
-		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
-
 		<!-- java version -->
 		<java-compile-version>8.0</java-compile-version>
 		<jdk-version>1.8</jdk-version>
 		<maven.compiler.source>${jdk-version}</maven.compiler.source>
 		<maven.compiler.target>${jdk-version}</maven.compiler.target>
+	
+		<!-- encoding -->
+		<project.encoding>UTF-8</project.encoding>
+		<file.encoding>${project.encoding}</file.encoding>
+		<project.build.sourceEncoding>${project.encoding}</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>${project.encoding}</project.reporting.outputEncoding>
+		
+		<!-- tycho -->
+		<tycho-version>0.24.0</tycho-version>
 
-		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
-		<java-compiler-arguments></java-compiler-arguments>
-
-		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
-		<hlc.name>n4jsc</hlc.name>
-		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
-
-
-		<!-- xtend runtime dependencies start -->
-		<xtext-version>${xtend-maven-plugin.version}</xtext-version>
-		<org.eclipse.xtext.builder.standalone-version>[${xtend-maven-plugin.version}]</org.eclipse.xtext.builder.standalone-version>
-		<org.eclipse.xtext.common.types-version>[${xtend-maven-plugin.version}]</org.eclipse.xtext.common.types-version>
-		<org.eclipse.xtext.xtext-version>[${xtend-maven-plugin.version}]</org.eclipse.xtext.xtext-version>
-		<org.eclipse.xtext.xbase-version>[${xtend-maven-plugin.version}]</org.eclipse.xtext.xbase-version>
+		<!-- Xtext, Xtend and their runtime -->
+		<xtext-version>2.12.0</xtext-version>
+		<mwe2-version>2.9.0.201605261059</mwe2-version>
+		<org.eclipse.xtext.builder.standalone-version>[${xtext-version}]</org.eclipse.xtext.builder.standalone-version>
+		<org.eclipse.xtext.common.types-version>[${xtext-version}]</org.eclipse.xtext.common.types-version>
+		<org.eclipse.xtext.xtext-version>[${xtext-version}]</org.eclipse.xtext.xtext-version>
+		<org.eclipse.xtext.xbase-version>[${xtext-version}]</org.eclipse.xtext.xbase-version>
 		<org.osgi.core-version>4.3.1</org.osgi.core-version>
 		<org.eclipse.core.resources-version>3.11.1</org.eclipse.core.resources-version>
 		<org.eclipse.text-version>3.5.101</org.eclipse.text-version>
@@ -116,10 +57,46 @@ Contributors:
 		<org.eclipse.emf.ecore-version>[2.11.1-v20150805-0538]</org.eclipse.emf.ecore-version>
 		<org.eclipse.emf.ecore.xcore-version>[1.3.1]</org.eclipse.emf.ecore.xcore-version>
 		<org.eclipse.emf.ecore.xcore.lib-version>[1.1.100]</org.eclipse.emf.ecore.xcore.lib-version>
-		<!-- xtend runtime dependencies end -->
 
-		<!-- folder for local deployments, either absolute or relative to project-root -->
-		<!-- local-snapshot-deploy-folder>builds/org.eclipse.n4js.product.build/target/mvn-repository</local-snapshot-deploy-folder -->
+		<!-- maven plugins -->
+		<build-helper-maven-plugin.version>1.9</build-helper-maven-plugin.version>
+		<codehaus-buildnumber-maven-plugin.version>1.4</codehaus-buildnumber-maven-plugin.version>
+		<codehaus-exec-maven-plugin.version>1.4.0</codehaus-exec-maven-plugin.version>
+		<codehaus-copy-rename-maven-plugin.version>1.0</codehaus-copy-rename-maven-plugin.version>
+		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
+		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
+		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
+		<maven-assembly-plugin.version>2.4.1</maven-assembly-plugin.version>
+		<maven-clean-plugin.version>2.5</maven-clean-plugin.version>
+		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
+		<maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
+		<maven-deploy-plugin.version>2.8.2</maven-deploy-plugin.version>
+		<maven-enforcer-plugin.version>1.3.1</maven-enforcer-plugin.version>
+		<maven-failsafe-plugin.version>2.17</maven-failsafe-plugin.version>
+		<maven-install-plugin.version>2.5.2</maven-install-plugin.version>
+		<maven-javadoc-plugin.version>2.9.1</maven-javadoc-plugin.version>
+		<maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
+		<maven-jxr-plugin.version>2.4</maven-jxr-plugin.version>
+		<maven-pmd-plugin.version>3.2</maven-pmd-plugin.version>
+		<maven-release-plugin.version>2.5</maven-release-plugin.version>
+		<maven-resources-plugin.version>2.7</maven-resources-plugin.version>
+		<maven-scm-plugin.version>1.9.1</maven-scm-plugin.version>
+		<maven-site-plugin.version>3.3</maven-site-plugin.version>
+		<maven-surefire-plugin.version>2.17</maven-surefire-plugin.version>
+		<maven-verifier-plugin.version>1.0</maven-verifier-plugin.version>
+		<xslt-generator-maven-plugin.version>1.8</xslt-generator-maven-plugin.version>
+
+		<!-- Flags for the java compiler, e.g. -g For debug-information (see http://docs.oracle.com/javase/8/docs/technotes/tools/windows/javac.html) -->
+		<java-compiler-arguments></java-compiler-arguments>
+
+		<!-- headless compiler options, used in tools/org.eclipse.n4js.hlc -->
+		<hlc.name>n4jsc</hlc.name>
+		<hlc.jar-shortname>${hlc.name}.jar</hlc.jar-shortname>
+		
+		<!-- some memory -->
+		<memoryArgs>-Xms256M -Xmx1324M -XX:+HeapDumpOnOutOfMemoryError</memoryArgs>
+		<lowMemoryArgs>-Xms64M -Xmx320M -XX:+HeapDumpOnOutOfMemoryError</lowMemoryArgs>
+		<encodingArgs>-Dfile.encoding=${file.encoding}</encodingArgs>
 
 		<!-- Test related dependency path tragets. -->
 		<classes-unpacked>classes-unpacked</classes-unpacked>
@@ -133,13 +110,13 @@ Contributors:
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-maven-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>tycho-source-plugin</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<executions>
 					<execution>
 						<id>attach-source</id>
@@ -159,7 +136,7 @@ Contributors:
 				-->
 				<groupId>org.eclipse.tycho</groupId>
 				<artifactId>target-platform-configuration</artifactId>
-				<version>${tycho.version}</version>
+				<version>${tycho-version}</version>
 				<configuration>
 					<resolver>p2</resolver>
 					<target>
@@ -192,30 +169,6 @@ Contributors:
 					</environments>
 				</configuration>
 			</plugin>
-			<!--
-			The following will deploy this artifact to a temporary maven repository (aka "local build repo").
-			This be used by the N4JS IDE extensions builds to obtain dependencies of the MWE2 workflows. There are several
-			other cases like this; search for "Enable deploy:". THIS IS TEMPORARY AND SHOULD BE CLEANED-UP!
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>${maven-deploy-plugin.version}</version>
-				<!-- Enable deploy: -->
-					<executions>
-						<execution>
-							<id>deploy-to-local-build-repo</id>
-							<!-- rebind to default phase 'deploy' -->
-							<phase>deploy</phase>
-							<goals>
-								<goal>deploy</goal>
-							</goals>
-							<configuration>
-								<altDeploymentRepository>local-build-repo::default::file:${local-snapshot-deploy-folder}</altDeploymentRepository>
-							</configuration>
-						</execution>
-					</executions>
-			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -223,7 +176,7 @@ Contributors:
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-compiler-plugin</artifactId>
-					<version>${tycho.version}</version>
+					<version>${tycho-version}</version>
 					<dependencies>
 <!-- 						<dependency> -->
 <!-- 						force specific (Luna) JDT compiler -->
@@ -265,13 +218,13 @@ Contributors:
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-repository-plugin</artifactId>
-					<version>${tycho.version}</version>
+					<version>${tycho-version}</version>
 				</plugin>
 				<!-- enable source feature generation (next two plug-ins required) -->
 				<plugin>
 					<groupId>org.eclipse.tycho.extras</groupId>
 					<artifactId>tycho-source-feature-plugin</artifactId>
-					<version>${tycho.version}</version>
+					<version>${tycho-version}</version>
 					<executions>
 						<execution>
 							<id>source-feature</id>
@@ -285,7 +238,7 @@ Contributors:
 				<plugin>
 					<groupId>org.eclipse.tycho</groupId>
 					<artifactId>tycho-p2-plugin</artifactId>
-					<version>${tycho.version}</version>
+					<version>${tycho-version}</version>
 					<executions>
 						<execution>
 							<id>attach-p2-metadata</id>
@@ -314,36 +267,6 @@ Contributors:
 					-->
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
-					<version>${maven-antrun-plugin.version}</version>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-deploy-plugin</artifactId>
-					<version>${maven-deploy-plugin.version}</version>
-					<!-- Disable deploy -->
-						<executions>
-							<execution>
-								<id>default-deploy</id>
-								<!-- rebind to none -->
-								<phase />
-							</execution>
-						</executions>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-install-plugin</artifactId>
-					<version>${maven-install-plugin.version}</version>
-					<!-- Disable install: -->
-						<executions>
-							<execution>
-								<id>default-install</id>
-								<!-- rebind to none -->
-								<!-- IDE-2368 some plugins are enabled specifically in their own poms:
-									* releng/org.eclipse.n4js.releng.utils
-								 -->
-								<phase />
-							</execution>
-						</executions>
 				</plugin>
 				<plugin>
 					<!--
@@ -453,7 +376,7 @@ Contributors:
 				<plugin>
 					<groupId>org.eclipse.xtend</groupId>
 					<artifactId>xtend-maven-plugin</artifactId>
-					<version>${xtend-maven-plugin.version}</version>
+					<version>${xtext-version}</version>
 					<executions>
 						<execution>
 							<goals>
@@ -468,7 +391,7 @@ Contributors:
 						<dependency>
 							<groupId>org.eclipse.xtend</groupId>
 							<artifactId>org.eclipse.xtend.lib</artifactId>
-							<version>${xtend-library.version}</version>
+							<version>${xtext-version}</version>
 							<type>pom</type>
 						</dependency>
 					</dependencies>
@@ -544,7 +467,7 @@ Contributors:
 			<dependency>
 				<groupId>org.eclipse.xtend</groupId>
 				<artifactId>org.eclipse.xtend.lib</artifactId>
-				<version>${xtend-library.version}</version>
+				<version>${xtext-version}</version>
 				<type>pom</type>
 			</dependency>
 		</dependencies>
