@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PostfixExpression
@@ -36,6 +37,7 @@ import org.eclipse.n4js.n4JS.ScriptElement
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.UnaryExpression
+import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
@@ -43,6 +45,7 @@ import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
+import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -69,6 +72,9 @@ class ModuleWrappingTransformation extends Transformation {
 	extension QualifiedNameComputer qnameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
+	@Inject
+	private DestructuringAssistant destructuringAssistant;
+
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -79,9 +85,6 @@ class ModuleWrappingTransformation extends Transformation {
 	override assertPreConditions() {
 		assertTrue("every import declaration should have an imported module",
 			state.im.eAllContents.filter(ImportDeclaration).forall[state.info.getImportedModule(it)!==null]);
-// FIXME reconsider!!
-//		assertFalse("intermediate model must not contain variable bindings",
-//			state.im.eAllContents.exists[it instanceof VariableBinding]);
 	}
 
 	override assertPostConditions() {
@@ -90,6 +93,9 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 	override transform() {
+		// necessary preparation:
+		convertDestructBindingsIntoDestructAssignments();
+
 	/* Target-trafo:
 			System.register([%imp%], function($n4Export) {
 				// %vars%
@@ -718,5 +724,31 @@ class ModuleWrappingTransformation extends Transformation {
 			) // Conditional
 		));
 		return ret;
+	}
+
+
+	def private void convertDestructBindingsIntoDestructAssignments() {
+		collectNodes(state.im, VariableStatement, false).forEach[
+			convertDestructBindingsIntoDestructAssignments(it)
+		];
+	}
+
+	// FIXME API doc
+	def private void convertDestructBindingsIntoDestructAssignments(VariableStatement varStmnt) {
+		// (1) for each destructuring binding in varStmnt, add an equivalent destructuring assignment after varStmnt
+		val assignmentStmnts = varStmnt.varDeclsOrBindings.filter(VariableBinding).map[binding|
+			val patternConverted = destructuringAssistant.convertBindingPatternToArrayOrObjectLiteral(binding.pattern);
+			val assignmentExpr = _AssignmentExpr(patternConverted, binding.expression);
+			if(patternConverted instanceof ObjectLiteral) {
+				_Parenthesis(assignmentExpr) // object destructuring must be wrapped into a ParenExpression
+			} else {
+				assignmentExpr
+			}
+		].map[_ExprStmnt];
+		insertAfter(varStmnt, assignmentStmnts);
+		// (2) below varStmnt, replace each destructuring binding by its contained variable declarations
+		collectNodes(varStmnt, VariableBinding, true).forEach[binding|
+			replace(binding, binding.variableDeclarations);
+		];
 	}
 }

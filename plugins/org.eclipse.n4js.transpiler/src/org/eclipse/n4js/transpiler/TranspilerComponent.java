@@ -13,11 +13,6 @@ package org.eclipse.n4js.transpiler;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
@@ -36,8 +31,10 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Statement;
+import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM;
@@ -52,7 +49,10 @@ import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper;
+import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Abstract base class for {@link Transformation}s and {@link TransformationAssistant}s, containing convenience delegate
@@ -148,6 +148,11 @@ public abstract class TranspilerComponent {
 	@SuppressWarnings("javadoc")
 	protected void replace(VariableStatement varStmnt, Statement... newStmnts) {
 		TranspilerStateOperations.replace(state, varStmnt, newStmnts);
+	}
+
+	@SuppressWarnings("javadoc")
+	protected void replace(VariableBinding varBinding, VariableDeclaration... varDecls) {
+		TranspilerStateOperations.replace(state, varBinding, varDecls);
 	}
 
 	@SuppressWarnings("javadoc")

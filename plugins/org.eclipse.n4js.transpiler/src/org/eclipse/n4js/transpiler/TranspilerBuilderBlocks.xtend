@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.transpiler
 
+import java.math.BigDecimal
+import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AdditiveExpression
 import org.eclipse.n4js.n4JS.AdditiveOperator
@@ -19,6 +21,7 @@ import org.eclipse.n4js.n4JS.AnnotationList
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
+import org.eclipse.n4js.n4JS.ArrayPadding
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression
@@ -55,6 +58,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.NewExpression
+import org.eclipse.n4js.n4JS.NullLiteral
 import org.eclipse.n4js.n4JS.NumericLiteral
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
@@ -90,9 +94,6 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.utils.TypeUtils
-import java.math.BigDecimal
-import java.util.List
-import org.eclipse.n4js.n4JS.NullLiteral
 
 /**
  * Builder methods for intermediate elements.
@@ -431,6 +432,10 @@ public class TranspilerBuilderBlocks
  		result.expression = expression;
  		return result;
  	}
+	public static def ArrayPadding _ArrayPadding() {
+		val result = N4JSFactory.eINSTANCE.createArrayPadding;
+		return result;
+	}
 
 	public static def FunctionDeclaration _FunDecl(String name, Statement... statements) {
 		return _FunDecl(name, #[], statements);
