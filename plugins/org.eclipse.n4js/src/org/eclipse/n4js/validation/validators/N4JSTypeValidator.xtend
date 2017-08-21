@@ -11,6 +11,13 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.Result
+import it.xsemantics.runtime.RuleEnvironment
+import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import java.util.LinkedList
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.Expression
@@ -73,13 +80,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
-import java.util.LinkedList
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -233,9 +233,9 @@ class N4JSTypeValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkThisTypeRef(ThisTypeRef thisTypeRef) {
 		if (thisTypeRef instanceof BoundThisTypeRef) {
-			// normally, BoundThisTypeRefs never appear in the AST; however, in certain special cases they might appear
-			// as the type of a TMember contained in the 'cachedComposedMembers' property of a ComposedTypeRef
-			// -> back off!
+			// the below validations do not apply to BoundThisTypeRefs
+			// (note: normally, BoundThisTypeRefs should never appear in the AST, anyway; but asserting this to be true
+			// is not the job of this validation)
 			return;
 		}
 		if (!(thisTypeRef.isUsedStructurallyAsFormalParametersInTheConstructor

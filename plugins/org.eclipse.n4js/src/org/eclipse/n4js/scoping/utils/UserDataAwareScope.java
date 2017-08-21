@@ -16,6 +16,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.AbstractEObjectDescription;
@@ -29,9 +31,6 @@ import org.eclipse.xtext.scoping.IScope;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
 
 /**
  * A scope that provides access to types stored in user data of {@link EObjectDescription} of JS resources.
@@ -100,6 +99,9 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 	/**
 	 * Factory method to produce a scope. The factory pattern allows to bypass the explicit object creation if the
 	 * produced scope would be empty.
+	 *
+	 * @param canLoadFromDescriptionHelper
+	 *            utility to decide if a resource must be loaded from source or may be loaded from the index.
 	 */
 	public static IScope createScope(
 			IScope outer,
@@ -107,21 +109,31 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			Predicate<IEObjectDescription> filter,
 			EClass type, boolean ignoreCase,
 			ResourceSet resourceSet,
+			CanLoadFromDescriptionHelper canLoadFromDescriptionHelper,
 			IContainer container) {
 		if (selectable == null || selectable.isEmpty())
 			return outer;
-		IScope scope = new UserDataAwareScope(outer, selectable, filter, type, ignoreCase, resourceSet, container);
+		IScope scope = new UserDataAwareScope(outer, selectable, filter, type, ignoreCase, resourceSet,
+				canLoadFromDescriptionHelper,
+				container);
 		return scope;
 	}
 
 	private final ResourceSet resourceSet;
+	/**
+	 * @see #createScope(IScope, ISelectable, Predicate, EClass, boolean, ResourceSet, CanLoadFromDescriptionHelper,
+	 *      IContainer)
+	 */
+	private final CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 	private final IContainer container;
 	private final EClass type;
 
 	UserDataAwareScope(IScope outer, ISelectable selectable, Predicate<IEObjectDescription> filter, EClass type,
-			boolean ignoreCase, ResourceSet resourceSet, IContainer container) {
+			boolean ignoreCase, ResourceSet resourceSet, CanLoadFromDescriptionHelper canLoadFromDescriptionHelper,
+			IContainer container) {
 		super(outer, selectable, filter, type, ignoreCase);
 		this.resourceSet = resourceSet;
+		this.canLoadFromDescriptionHelper = canLoadFromDescriptionHelper;
 		this.container = container;
 		this.type = type;
 	}
@@ -144,10 +156,21 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 	private IEObjectDescription resolve(IEObjectDescription original) {
 		if (original != null && original.getEObjectOrProxy().eIsProxy()
 				&& EcoreUtil2.isAssignableFrom(type, original.getEClass())) {
-			URI objectURI = original.getEObjectURI();
+			final URI objectURI = original.getEObjectURI();
 			final URI resourceURI = objectURI.trimFragment();
 			Resource resource = resourceSet.getResource(resourceURI, false);
 			if (resource != null && resource.isLoaded()) {
+				return original;
+			}
+			final boolean mustLoadFromSource = canLoadFromDescriptionHelper.mustLoadFromSource(resourceURI,
+					resourceSet);
+			resource = resourceSet.getResource(resourceURI, mustLoadFromSource);
+			if (resource != null && resource.isLoaded()) {
+				return original;
+			}
+			if (mustLoadFromSource) {
+				// error case: forced loading failed
+				// --> still avoid loading from index; instead simply return 'original' as in other error cases
 				return original;
 			}
 			if (resource == null) {

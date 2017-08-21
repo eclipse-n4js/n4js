@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.n4js.HeadlessCompilerFactory;
 import org.eclipse.n4js.csv.CSVData;
 import org.eclipse.n4js.csv.CSVParser;
 import org.eclipse.n4js.csv.CSVRecord;
@@ -627,8 +628,7 @@ public class AccessControlTest {
 	private static Collection<Issue> compile(MemberType memberType) {
 		IssueCollector issueCollector = new IssueCollector();
 		try {
-			N4HeadlessCompiler hlc = N4HeadlessCompiler.injectAndSetup(null);
-			hlc.setOutputSuppressed(true);
+			N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 
 			final File projectRoot = Paths.get(FIXTURE_ROOT, memberType.name()).toFile();
 			hlc.compileAllProjects(Arrays.asList(projectRoot), issueCollector);

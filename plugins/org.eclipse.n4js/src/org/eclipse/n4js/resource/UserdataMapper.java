@@ -14,10 +14,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
@@ -28,15 +29,23 @@ import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.emf.ecore.xmi.impl.URIHandlerImpl;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceImpl;
 import org.eclipse.emf.ecore.xml.type.XMLTypeFactory;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
-
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.util.IAcceptor;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Sets;
 
 /**
  * The user data for exported modules contains a serialized representation of the module's content. This allows to
@@ -56,6 +65,11 @@ public final class UserdataMapper {
 	 * The key in the user data map of the module's description.
 	 */
 	public final static String USERDATA_KEY_SERIALIZED_SCRIPT = "serializedScript";
+
+	/**
+	 * Comma-separated list of URIs of resource URIs this resource directly depends on.
+	 */
+	public final static String USERDATA_KEY_DEPENDENCIES = "dependencies";
 
 	/**
 	 * The key in the user data map of static-polyfill contents-hash
@@ -166,7 +180,9 @@ public final class UserdataMapper {
 		} else {
 			timestamp = System.currentTimeMillis();
 		}
-		return Collections.singletonMap(USERDATA_KEY_TIMESTAMP, String.valueOf(timestamp));
+		final HashMap<String, String> result = new HashMap<>();
+		result.put(USERDATA_KEY_TIMESTAMP, String.valueOf(timestamp));
+		return result;
 	}
 
 	private static Map<Object, Object> getOptions(URI resourceURI, Boolean binary) {
@@ -240,4 +256,60 @@ public final class UserdataMapper {
 	public static boolean hasSerializedModule(IEObjectDescription eObjectDescription) {
 		return eObjectDescription.getUserData(USERDATA_KEY_SERIALIZED_SCRIPT) != null;
 	}
+
+	private static Joiner joiner = Joiner.on(",");
+
+	/**
+	 * Computes list of dependencies of given resource and stores the list in the given user data. For details, see
+	 * {@link #readDependenciesFromDescription(IResourceDescription)}.
+	 */
+	public static void writeDependenciesToUserData(N4JSResource resource, Map<String, String> userData) {
+		final Set<URI> dependencies = Sets.newLinkedHashSet();
+		computeCrossRefs(resource, targetObj -> {
+			final Resource targetRes = targetObj.eResource();
+			if (targetRes != null) {
+				dependencies.add(targetRes.getURI());
+			}
+		});
+		userData.put(USERDATA_KEY_DEPENDENCIES, joiner.join(dependencies));
+	}
+
+	private static void computeCrossRefs(N4JSResource resource, IAcceptor<TModule> acceptor) {
+		final Script script = resource.getScript();
+		if (script != null && !script.eIsProxy()) {
+			for (ScriptElement elem : script.getScriptElements()) {
+				if (elem instanceof ImportDeclaration) {
+					final TModule module = ((ImportDeclaration) elem).getModule();
+					if (module != null && !module.eIsProxy()) {
+						acceptor.accept(module);
+					}
+				}
+			}
+		}
+	}
+
+	private static final Splitter splitter = Splitter.on(',').omitEmptyStrings();
+
+	/**
+	 * Reads the list of direct dependencies of the resource R represented by the given resource description from its
+	 * user data. Returns a list of strings, in which each string represents the URI of a resource D that is a direct
+	 * dependency of R (i.e. R depends on D).
+	 * <p>
+	 * Definition: a resource R <em>directly depends on</em> a resource D, if R imports an identifiable element from D.
+	 * In this case, we also say D <em>is a dependency of</em> R.
+	 *
+	 * Returns none if the information is missing in the resource description.
+	 */
+	public static Optional<List<String>> readDependenciesFromDescription(IResourceDescription description) {
+		final Iterable<IEObjectDescription> modules = description
+				.getExportedObjectsByType(TypesPackage.Literals.TMODULE);
+		for (IEObjectDescription module : modules) {
+			final String dependenciesStr = module.getUserData(USERDATA_KEY_DEPENDENCIES);
+			if (dependenciesStr != null) {
+				return Optional.of(splitter.splitToList(dependenciesStr));
+			}
+		}
+		return Optional.empty();
+	}
+
 }

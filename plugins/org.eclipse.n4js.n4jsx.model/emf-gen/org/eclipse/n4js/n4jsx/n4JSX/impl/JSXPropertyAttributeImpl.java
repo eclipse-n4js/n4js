@@ -20,9 +20,12 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.Expression;
 
+import org.eclipse.n4js.n4JS.MemberAccess;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
 import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage;
 
+import org.eclipse.n4js.ts.types.ComposedMemberCache;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**
@@ -33,6 +36,7 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link org.eclipse.n4js.n4jsx.n4JSX.impl.JSXPropertyAttributeImpl#getComposedMemberCache <em>Composed Member Cache</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4jsx.n4JSX.impl.JSXPropertyAttributeImpl#getProperty <em>Property</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4jsx.n4JSX.impl.JSXPropertyAttributeImpl#getPropertyAsText <em>Property As Text</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4jsx.n4JSX.impl.JSXPropertyAttributeImpl#getJsxAttributeValue <em>Jsx Attribute Value</em>}</li>
@@ -41,6 +45,16 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
  * @generated
  */
 public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPropertyAttribute {
+	/**
+	 * The cached value of the '{@link #getComposedMemberCache() <em>Composed Member Cache</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 * @ordered
+	 */
+	protected ComposedMemberCache composedMemberCache;
+
 	/**
 	 * The cached value of the '{@link #getProperty() <em>Property</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -98,6 +112,44 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	@Override
 	protected EClass eStaticClass() {
 		return N4JSXPackage.Literals.JSX_PROPERTY_ATTRIBUTE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache getComposedMemberCache() {
+		if (composedMemberCache != null && composedMemberCache.eIsProxy()) {
+			InternalEObject oldComposedMemberCache = (InternalEObject)composedMemberCache;
+			composedMemberCache = (ComposedMemberCache)eResolveProxy(oldComposedMemberCache);
+			if (composedMemberCache != oldComposedMemberCache) {
+				if (eNotificationRequired())
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
+			}
+		}
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public ComposedMemberCache basicGetComposedMemberCache() {
+		return composedMemberCache;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setComposedMemberCache(ComposedMemberCache newComposedMemberCache) {
+		ComposedMemberCache oldComposedMemberCache = composedMemberCache;
+		composedMemberCache = newComposedMemberCache;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE, oldComposedMemberCache, composedMemberCache));
 	}
 
 	/**
@@ -224,6 +276,9 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
+			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE:
+				if (resolve) return getComposedMemberCache();
+				return basicGetComposedMemberCache();
 			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__PROPERTY:
 				if (resolve) return getProperty();
 				return basicGetProperty();
@@ -243,6 +298,9 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
+			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)newValue);
+				return;
 			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__PROPERTY:
 				setProperty((IdentifiableElement)newValue);
 				return;
@@ -264,6 +322,9 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
+			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE:
+				setComposedMemberCache((ComposedMemberCache)null);
+				return;
 			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__PROPERTY:
 				setProperty((IdentifiableElement)null);
 				return;
@@ -285,6 +346,8 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
+			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE:
+				return composedMemberCache != null;
 			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__PROPERTY:
 				return property != null;
 			case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__PROPERTY_AS_TEXT:
@@ -293,6 +356,38 @@ public class JSXPropertyAttributeImpl extends JSXAttributeImpl implements JSXPro
 				return jsxAttributeValue != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (derivedFeatureID) {
+				case N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE: return N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
+		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == MemberAccess.class) {
+			switch (baseFeatureID) {
+				case N4JSPackage.MEMBER_ACCESS__COMPOSED_MEMBER_CACHE: return N4JSXPackage.JSX_PROPERTY_ATTRIBUTE__COMPOSED_MEMBER_CACHE;
+				default: return -1;
+			}
+		}
+		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**

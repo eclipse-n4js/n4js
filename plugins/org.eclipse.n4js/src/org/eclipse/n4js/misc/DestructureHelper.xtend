@@ -12,6 +12,10 @@ package org.eclipse.n4js.misc
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Map
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.VariableBinding
@@ -36,10 +40,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Map
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 
@@ -162,7 +162,12 @@ class DestructureHelper {
 	}
 
 	/**
-	 * Create a new member scope for use with method {@link getPropertyTypeForNode(IScope,String)}.
+	 * Create a new member scope for use with method {@link #getPropertyTypeForNode(RuleEnvironment, TypeRef, IScope,
+	 * String, StringBuffer) #getPropertyTypeForNode()}. Do not use the scope returned by this method for any other
+	 * purpose (use methods in {@link MemberScopingHelper} instead)!
+	 * <p>
+	 * This is only provided as a separate method to avoid creating the same member scope over and over in case of
+	 * multiple invocations of {@code #getPropertyTypeForNode()}.
 	 *
 	 * @param valueTypeRef
 	 *               type of the value to be destructured.
@@ -173,8 +178,8 @@ class DestructureHelper {
 	 *               false, method {@link getPropertyTypeForNode(IScope,String)} will <b>never</b> return
 	 *               {@link #INVISIBLE_MEMBER}.
 	 */
-	public def IScope createMemberScopeForPropertyAccess(TypeRef receiverTypeRef, EObject propertyAccess, boolean checkVisibility) {
-		return memberScopingHelper.createMemberScopeFor(receiverTypeRef,propertyAccess,checkVisibility,false)
+	public def IScope createMemberScopeForPropertyAccess(TypeRef receiverTypeRef, EObject contextObj, boolean checkVisibility) {
+		return memberScopingHelper.createMemberScopeAllowingNonContainedMembers(receiverTypeRef, contextObj, checkVisibility, false);
 	}
 
 	/**
