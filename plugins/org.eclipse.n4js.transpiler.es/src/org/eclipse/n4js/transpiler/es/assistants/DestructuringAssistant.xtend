@@ -16,6 +16,7 @@ import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.BindingElement
 import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.BindingProperty
+import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PrimaryExpression
@@ -52,27 +53,28 @@ class DestructuringAssistant extends TransformationAssistant {
 	private def ArrayElement convertBindingElementToArrayElement(BindingElement element) {
 		val nestedPattern = element.nestedPattern;
 		val varDecl = element.varDecl;
+
+		var Expression lhs;
+		var Expression rhs;
 		if(nestedPattern!==null) {
-			return _ArrayElement(
-				element.rest,
-				convertBindingPatternToArrayOrObjectLiteral(nestedPattern)
-			);
+			lhs = convertBindingPatternToArrayOrObjectLiteral(nestedPattern);
+			rhs = element.expression; // may be null (which is ok, see below)
 		} else if(varDecl!==null) {
 			val ste_varDecl = findSymbolTableEntryForElement(varDecl, true);
-			return _ArrayElement(
-				element.rest,
-				if(varDecl.expression!==null) {
-					_AssignmentExpr(
-						_IdentRef(ste_varDecl),
-						varDecl.expression
-					)
-				} else {
-					_IdentRef(ste_varDecl)
-				}
-			);
+			lhs = _IdentRef(ste_varDecl);
+			rhs = varDecl.expression; // may be null (which is ok, see below)
 		} else {
 			return _ArrayPadding();
 		}
+
+		return _ArrayElement(
+			element.rest,
+			if(rhs!==null) {
+				_AssignmentExpr(lhs, rhs)
+			} else {
+				lhs
+			}
+		);
 	}
 
 	private def PropertyNameValuePair convertBindingPropertyToPropertyNameValuePair(BindingProperty property) {
