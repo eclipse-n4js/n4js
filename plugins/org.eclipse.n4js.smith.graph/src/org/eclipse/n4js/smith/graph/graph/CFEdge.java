@@ -10,11 +10,15 @@
  */
 package org.eclipse.n4js.smith.graph.graph;
 
-import java.util.Collection;
 import java.util.Collections;
 
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.widgets.Display;
+
+import com.google.common.collect.Lists;
 
 /**
  * Control flow edges are 1:1 associations in the control flow graph. They are displayed using arcs to prevent that two
@@ -22,17 +26,17 @@ import org.eclipse.swt.graphics.GC;
  * differently to improve to visual appearance w.r.t. crossings of other edges.
  */
 public class CFEdge extends Edge {
+	final ControlFlowType cfType;
 
 	/**
 	 * Constructor
 	 */
-	public CFEdge(String label, Node startNode, Collection<? extends Node> endNodes) {
-		super(label, false, startNode, endNodes, Collections.emptyList());
+	public CFEdge(String label, Node startNode, Node endNode, ControlFlowType cfType) {
+		super(label, false, startNode, Lists.newArrayList(endNode), Collections.emptyList());
+		this.cfType = cfType;
 	}
 
-	/**
-	 * Paint edge to given GC.
-	 */
+	/** Paint edge to given GC. */
 	@Override
 	public void paint(GC gc) {
 		Node start = startNodes.get(0);
@@ -41,13 +45,9 @@ public class CFEdge extends Edge {
 		}
 	}
 
-	/**
-	 * Paints an edge
-	 */
+	/** Paints an edge */
 	void paintEdge(GC gc, Node srcN, Node tgtN) {
-		Color c = GraphUtils.getColor(50, 50, 50);
-		gc.setForeground(c);
-		gc.setBackground(c);
+		setColor(gc);
 
 		Point src = srcN.getCenter();
 		Point tgt = tgtN.getCenter();
@@ -59,6 +59,29 @@ public class CFEdge extends Edge {
 		}
 
 		drawArrowHead(gc, tgt, tgtB);
+	}
+
+	/** Sets the color of the {@link GC} depending on the edge type. */
+	void setColor(GC gc) {
+		Display displ = Display.getCurrent();
+		Color color = null;
+
+		switch (cfType) {
+		case Loop:
+		case Continue:
+			color = displ.getSystemColor(SWT.COLOR_GREEN);
+			break;
+		case Break:
+		case Return:
+			color = displ.getSystemColor(SWT.COLOR_BLUE);
+			break;
+		case Throw:
+			color = displ.getSystemColor(SWT.COLOR_RED);
+			break;
+		default:
+			color = GraphUtils.getColor(50, 50, 50);
+		}
+		gc.setForeground(color);
 	}
 
 	/**
@@ -83,7 +106,9 @@ public class CFEdge extends Edge {
 		Rectangle srcR = new Rectangle(srcN.x - 2, srcN.y - 2, srcN.width + 1, srcN.height + 1);
 		srcB = GraphUtils.pointOnRect(ctr, srcR);
 
+		drawLabel(gc, ctr);
 		GraphUtils.arc(gc, ctr, srcB, tgtB);
+
 		return tgtB;
 	}
 
@@ -94,7 +119,11 @@ public class CFEdge extends Edge {
 	private Point paintReverseArc(GC gc, Node srcN, Node tgtN, Point src, Point tgt) {
 		Point tgtB = new Point(tgt.x, tgt.y - tgtN.height / 2 - 2);
 		Point srcB = new Point(src.x, src.y + srcN.height / 2 + 1);
+		Point tgtL = new Point(tgtB.x, tgtB.y - 20);
+
+		drawLabel(gc, tgtL);
 		GraphUtils.arcReversed(gc, srcB, tgtB);
+
 		return tgtB;
 	}
 
@@ -115,9 +144,7 @@ public class CFEdge extends Edge {
 		return ctr;
 	}
 
-	/**
-	 * returns true iff the edge points to the lower left
-	 */
+	/** @returns true iff the edge points to the lower left */
 	private boolean isReverseArc(Point src, Point tgt) {
 		boolean isReverse = src.x > tgt.x && src.y < tgt.y;
 		return isReverse;
@@ -148,6 +175,26 @@ public class CFEdge extends Edge {
 		Point arrP2 = new Point(tgtB.x + p2x, tgtB.y + p2y);
 		gc.drawLine((int) tgtB.x, (int) tgtB.y, (int) arrP1.x, (int) arrP1.y);
 		gc.drawLine((int) tgtB.x, (int) tgtB.y, (int) arrP2.x, (int) arrP2.y);
+	}
+
+	/** Draws the label between jumping control flow elements. */
+	void drawLabel(GC gc, Point p) {
+		switch (cfType) {
+		case Break:
+		case Continue:
+		case Return:
+		case Throw:
+		case Loop:
+			break;
+		default:
+			return;
+		}
+
+		String title = cfType.name();
+		org.eclipse.swt.graphics.Point size = gc.stringExtent(title);
+		float x = p.x - size.x / 2;
+		float y = p.y - size.y / 2;
+		GraphUtils.drawString(gc, title, x, y);
 	}
 
 }

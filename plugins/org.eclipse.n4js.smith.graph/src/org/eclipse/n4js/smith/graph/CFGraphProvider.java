@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.graph.graph.CFEdge;
@@ -97,12 +98,11 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			Node sNode = nodeMap.get(cfe);
 
 			for (ControlFlowElement succ : succs) {
-				List<Node> eNodes = new LinkedList<>();
 				Node eNode = nodeMap.get(succ);
-				eNodes.add(eNode);
 
 				if (sNode != eNode) {
-					Edge edge = new CFEdge("CF", sNode, eNodes);
+					ControlFlowType cfType = flowAnalyses.getControlFlowTypeToSuccessor(cfe, succ);
+					Edge edge = new CFEdge("CF", sNode, eNode, cfType);
 					edges.add(edge);
 				} else {
 					System.err.println("Skipping self edge on node: " + sNode.getTitle());
