@@ -19,7 +19,7 @@ function Block1() {
 	"start";
 	// Block1 XPECT succs at '1' --> "end"
 	{
-		1
+		1;
 	}
 	"end";
 }
@@ -30,9 +30,9 @@ function Block2() {
 	// Block2 XPECT succs at '1' --> 2
 	// Block2 XPECT succs at '2' --> "end"
 	{
-		1
+		1;
 		{
-			2
+			2;
 		}
 	}
 	"end";
@@ -45,9 +45,9 @@ function Block3() {
 	// Block3 XPECT succs at '2' --> "end"
 	{
 		{
-			1
+			1;
 		}
-		2
+		2;
 	}
 	"end";
 }
@@ -68,12 +68,12 @@ function DoStatementBreak1() {
 	"start";
 	do {
 		// DoStatementBreak1 XPECT succs at '1' --> break;
-		1
+		1;
 		// DoStatementBreak1 XPECT succs at 'break;' --> "end"
 		break;
-		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "2 "
+		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "2;"
 		// DoStatementBreak1 XPECT succs at '2' --> 3
-		2
+		2;
 		// DoStatementBreak1 XPECT succs at '3' --> 1, "end"
 	} while (3);
 	"end";
@@ -84,14 +84,22 @@ function DoStatementContinue1() {
 	"start";
 	do {
 		// DoStatementContinue1 XPECT succs at '1' --> continue;
-		1
+		1;
 		// DoStatementContinue1 XPECT succs at 'continue;' --> 3
 		continue;
-		// DoStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "2 "
+		// DoStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "2;"
 		// DoStatementContinue1 XPECT succs at '2' --> 3
-		2
+		2;
 		// DoStatementContinue1 XPECT succs at '3' --> 1, "end"
 	} while (3);
+	"end";
+}
+
+function ForStatement1() {
+	// EmptyStatement XPECT succs at '"start"' --> "end"
+	"start";
+	// EmptyStatement XPECT succs at ';' --> "end"
+	for (;;);
 	"end";
 }
 
@@ -206,12 +214,12 @@ function WhileStatementBreak1() {
 	// WhileStatementBreak1 XPECT succs at '1' --> 2, "end"
 	while (1) {
 		// WhileStatementBreak1 XPECT succs at '2' --> break;
-		2
+		2;
 		// WhileStatementBreak1 XPECT succs at 'break;' --> "end"
 		break;
-		// WhileStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "3 "
+		// WhileStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "3;"
 		// WhileStatementBreak1 XPECT succs at '3' --> 1
-		3
+		3;
 	}
 	"end";
 }
@@ -222,12 +230,12 @@ function WhileStatementContinue1() {
 	// WhileStatementContinue1 XPECT succs at '1' --> 2, "end"
 	while (1) {
 		// WhileStatementContinue1 XPECT succs at '2' --> continue;
-		2
+		2;
 		// WhileStatementContinue1 XPECT succs at 'continue;' --> 1
 		continue;
-		// WhileStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "3 "
+		// WhileStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "3;"
 		// WhileStatementContinue1 XPECT succs at '3' --> 1
-		3
+		3;
 	}
 	"end";
 }
@@ -245,7 +253,6 @@ function EmptyStatement() {
 AnnotationList
 BreakStatement
 ContinueStatement
-EmptyStatement
 ForStatement
 ReturnStatement
 ThrowStatement
