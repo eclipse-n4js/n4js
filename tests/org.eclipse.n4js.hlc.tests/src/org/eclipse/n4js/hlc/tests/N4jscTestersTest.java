@@ -11,7 +11,6 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -114,7 +113,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jscBase().doMain(args);
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
 
 		// TODO add proper assertion that test was actually executed properly!!!
 	}
@@ -204,12 +203,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		try {
-			new N4jscBase().doMain(args);
-			fail("Expecting exit code: " + ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue());
-		} catch (final ExitCodeException e) {
-			assertEquals(ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue(), e.getExitCode());
-		}
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 	}
 
 	/**
@@ -226,12 +220,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		try {
-			new N4jscBase().doMain(args);
-			fail("Expecting exit code: " + ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue());
-		} catch (final ExitCodeException e) {
-			assertEquals(ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue(), e.getExitCode());
-		}
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 	}
 
 	/*
