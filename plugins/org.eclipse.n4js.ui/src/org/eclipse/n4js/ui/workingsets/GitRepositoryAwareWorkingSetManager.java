@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.workingsets;
 
-import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.toMap;
 import static com.google.common.collect.Sets.newHashSet;
@@ -22,6 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -33,8 +33,6 @@ import org.eclipse.egit.core.Activator;
 import org.eclipse.egit.core.RepositoryCache;
 import org.eclipse.egit.core.RepositoryUtil;
 import org.eclipse.egit.core.project.GitProjectData;
-import org.eclipse.egit.core.project.RepositoryMapping;
-import org.eclipse.egit.core.project.RepositoryMappingChangeListener;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
@@ -53,12 +51,14 @@ import com.google.common.collect.Maps;
  * Working set manager based on Git repositories.
  */
 @SuppressWarnings("restriction")
-public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl implements IDeferredInitializer {
+public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl {
 
 	private final RepositoryCache repositoryCache;
 	private final IPreferenceChangeListener repositoryChangeListener;
 
-	private boolean deferredInitializerSucceeded = false;
+	// Keeps track of existing working sets for repositories.
+	// Might be {@code null} if this manager is uninitialized
+	private Set<Repository> knownRepositories;
 
 	/**
 	 * Sole constructor for creating the working set manager. Internally initializes the cache for repositories.
@@ -75,6 +75,8 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl i
 						&& !RepositoryUtil.PREFS_DIRECTORIES.equals(event.getKey())) {
 					return;
 				}
+
+				System.out.println("Repository preference value changed to " + event.toString());
 
 				if (!orderedWorkingSetIds.isEmpty() && !visibleWorkingSetIds.isEmpty()) {
 
@@ -130,13 +132,20 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl i
 
 		});
 
-		GitProjectData.addRepositoryChangeListener(new RepositoryMappingChangeListener() {
-			@Override
-			public void repositoryChanged(RepositoryMapping which) {
+		GitProjectData.addRepositoryChangeListener(which -> {
+			if (null != knownRepositories
+					&& !knownRepositories.contains(which.getRepository())) {
+				// only reload, if the mapping change introduced an up-to-now unknown repository
 				reload();
 			}
 		});
 
+	}
+
+	@Override
+	protected void discardWorkingSetCaches() {
+		this.knownRepositories = null;
+		super.discardWorkingSetCaches();
 	}
 
 	@Override
@@ -153,30 +162,12 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl i
 	protected List<WorkingSet> initializeWorkingSets() {
 		final Collection<Repository> repositories = newArrayList(repositoryCache.getAllRepositories());
 
-		// we cannot query the cache about its state
-		// so if we get no repository at all, we assume it has not been initialized yet
-		deferredInitializerSucceeded = !repositories.isEmpty();
+		// keep track of which repositories are currently represented in terms of git repository working sets
+		knownRepositories = newHashSet(repositories);
 
 		repositories.add(null); // For 'Other Projects'.
-		return newArrayList(from(repositories)
-				.transform(repository -> new GitRepositoryWorkingSet(repository, this)));
-	}
 
-	@Override
-	public boolean isInitializationRequired() {
-		return !deferredInitializerSucceeded;
-	}
-
-	@Override
-	public boolean lateInit() {
-
-		if (deferredInitializerSucceeded) {
-			return true;
-		}
-
-		restoreState(new NullProgressMonitor());
-
-		return deferredInitializerSucceeded;
+		return repositories.stream().map(r -> new GitRepositoryWorkingSet(r, this)).collect(Collectors.toList());
 	}
 
 	/**
