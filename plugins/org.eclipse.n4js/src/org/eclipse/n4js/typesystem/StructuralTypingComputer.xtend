@@ -46,6 +46,7 @@ import static org.eclipse.n4js.utils.StructuralMembersPredicates.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.ts.types.PrimitiveType
 
 /**
  */
@@ -90,7 +91,13 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 						right.typeRefAsString + '.');
 			}
 		}
-
+		
+		// check if we are dealing with structural primitive types
+		val primitiveSubtypingResult = isPrimitiveStructuralSubtype(G, left, right);
+		if (null !== primitiveSubtypingResult) {
+			return primitiveSubtypingResult;
+		}
+		
 		// recursion guard (see method #isStructuralSubtypingInProgressFor() for details)
 		if (G.isStructuralSubtypingInProgressFor(left, right)) {
 			return result(left, right, emptyList, emptyList);
@@ -107,6 +114,44 @@ class StructuralTypingComputer extends TypeSystemHelperStrategy {
 		}
 
 		return result(left, right, info.missingMembers, info.wrongMembers);
+	}
+	
+	/** 
+	 * Special handling for primitive-structural types. 
+	 * 
+	 * <p>Note that this method only returns a non-null {@link StructuralTypingResult} if primitive structural subtyping is 
+	 * applicable for the given operands {@code left} and {@code right}.</p>
+	 * 
+	 * @returns A {@link StructuralTypingResult} if primitive structural typing is applicable. {@code null} otherwise.
+	 */
+	def StructuralTypingResult isPrimitiveStructuralSubtype(RuleEnvironment G, TypeRef left, TypeRef right) {
+		// check if we're dealing with structural primitive types
+		val rightIsPrimitive = right.declaredType instanceof PrimitiveType;
+		val leftIsPrimitive = left.declaredType instanceof PrimitiveType
+		
+		// primitive type on the right and non-primitive on the left
+		if (rightIsPrimitive && !leftIsPrimitive) { 
+			return failure(left.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+		}
+		// primitive type on the left and non-primitive on the right
+		else if (leftIsPrimitive && !rightIsPrimitive) { 
+			return failure(left.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+		} 
+		// primitive types on both sides
+		else if (leftIsPrimitive && rightIsPrimitive) {
+			return if (left.declaredType == right.declaredType) {
+				// types must match nominally
+				result(left, right, emptyList, emptyList);
+			} else {
+				failure(left.typeRefAsString + " is not a subtype of " + right.typeRefAsString);
+			}
+			
+		} 
+		// neither left nor right is primitive
+		else {
+			// shouldn't be handled by this method
+			return null;
+		}
 	}
 
 	def private void checkMembers(TypeRef leftTypeRef, StructuralMembersTriple triple, StructTypingInfo info) {
