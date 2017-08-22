@@ -54,9 +54,9 @@
 					},
 					remove: {
 						value: function remove___n4(listener, context) {
-							var listenerIdx = this.listeners.findIndex((function(elem, index, array) {
+							var listenerIdx = this.listeners.findIndex((elem, index, array)=>{
 								return ((elem !== null) && (elem.listener === listener) && (elem.context === context));
-							}).bind(this));
+							});
 							if (listenerIdx >= 0) {
 								this.removeListenerAt(listenerIdx);
 							}
@@ -84,22 +84,20 @@
 						}
 					},
 					dispatch: {
-						value: function dispatch___n4(params) {
-							return $spawn(function *() {
-								this.isDispatching = true;
-								var listeners = this.getListOfListeners();
-								for(var i = 0;i < listeners.length;i++) {
-									var current = listeners[i];
-									if (!this.shouldHalt) {
-										(yield current.listener.apply(this, params));
-										if (current.applyOnlyOnce) {
-											this.remove(current.listener, current.listenerContext);
-										}
+						value: async function dispatch___n4(params) {
+							this.isDispatching = true;
+							var listeners = this.getListOfListeners();
+							for(var i = 0;i < listeners.length;i++) {
+								var current = listeners[i];
+								if (!this.shouldHalt) {
+									await current.listener.apply(this, params);
+									if (current.applyOnlyOnce) {
+										this.remove(current.listener, current.listenerContext);
 									}
 								}
-								this.isDispatching = false;
-								this.shouldHalt = false;
-							}.apply(this, arguments));
+							}
+							this.isDispatching = false;
+							this.shouldHalt = false;
 						}
 					},
 					getListOfListeners: {

@@ -41,139 +41,119 @@
 					ITestReporter
 				], {
 					send: {
-						value: function send___n4(uri, method, headers, body) {
-							return $spawn(function *() {
-								let ret, bodyStr;
-								try {
-									bodyStr = JSON.stringify(body, (function(key, value) {
-										if (key === "description") {
-											value = undefined;
-										}
-										return value;
-									}).bind(this), 2);
-									ret = (yield Promise.resolve(this.fetch.call(null, this.endpoint + uri, {
-										method: method,
-										headers: headers,
-										body: bodyStr
-									})));
-								} catch(er) {
-									let err = er;
-									console.error(err);
-									console.error(err.stack);
-								}
-								if (ret) {
-									if (Math.floor(ret.status / 100) != 2) {
-										console.error("STATUS:", ret.status, ret.statusText, uri);
-										if (bodyStr) {
-											console.error("BODY:" + bodyStr);
-										}
+						value: async function send___n4(uri, method, headers, body) {
+							let ret, bodyStr;
+							try {
+								bodyStr = JSON.stringify(body, (key, value)=>{
+									if (key === "description") {
+										value = undefined;
+									}
+									return value;
+								}, 2);
+								ret = await Promise.resolve(this.fetch.call(null, this.endpoint + uri, {
+									method: method,
+									headers: headers,
+									body: bodyStr
+								}));
+							} catch(er) {
+								let err = er;
+								console.error(err);
+								console.error(err.stack);
+							}
+							if (ret) {
+								if (Math.floor(ret.status / 100) != 2) {
+									console.error("STATUS:", ret.status, ret.statusText, uri);
+									if (bodyStr) {
+										console.error("BODY:" + bodyStr);
 									}
 								}
-								return ret;
-							}.apply(this, arguments));
+							}
+							return ret;
 						}
 					},
 					register: {
-						value: function register___n4() {
-							return $spawn(function *() {
-								let that = this, sessionId = null, inParameterized = false;
-								;
-								var handleTestingStart = function handleTestingStart(numAllGroups, sid, numAllTests) {
-									return $spawn(function *() {
-										sessionId = sid;
-										let response = (yield that.send([
-											"/n4js/testing/sessions",
-											sessionId,
-											"start"
-										].join("/"), 'POST', {
-											'Content-Type': "application/vnd.n4js.start_session_req.tm+json",
-											Accept: "application/json"
-										}, undefined));
-										return response;
-									}.apply(this, arguments));
-								};
-								this.spy.testingStarted.add(handleTestingStart);
-								this.spy.parameterizedGroupsStarted.add((function(test) {
-									return inParameterized = true;
-								}).bind(this));
-								var handleTestStart = function handleTestStart(groupName, testName, timeout) {
-									return $spawn(function *() {
-										if (inParameterized) {
-											return;
-										}
-										if (!sessionId) {
-											throw new Error("Test start sent before session start");
-										}
-										(yield that.send([
-											"/n4js/testing/sessions",
-											sessionId,
-											"tests",
-											groupName + "%23" + testName,
-											"start"
-										].join("/"), 'POST', {
-											'Content-Type': "application/vnd.n4js.start_test_req.tm+json",
-											Accept: "application/json"
-										}, {
-											timeout: timeout + that.timeoutBuffer
-										}));
-									}.apply(this, arguments));
-								};
-								this.spy.testStarted.add((function(group, test) {
-									return $spawn(function *() {
-										(yield handleTestStart(group.name, test.name, test.timeout));
-									}.apply(this, arguments));
-								}).bind(this));
-								var handleTestFinished = function handleTestFinished(groupName, testName, testResult) {
-									return $spawn(function *() {
-										if (inParameterized) {
-											return;
-										}
-										if (!sessionId) {
-											throw new Error("Test end sent outside active session");
-										}
-										(yield that.send([
-											"/n4js/testing/sessions",
-											sessionId,
-											"tests",
-											groupName + "%23" + testName,
-											"end"
-										].join("/"), 'POST', {
-											'Content-Type': "application/vnd.n4js.end_test_req.tm+json",
-											Accept: "application/json"
-										}, testResult));
-									}.apply(this, arguments));
-								};
-								this.spy.testFinished.add((function(group, test, testResult) {
-									return $spawn(function *() {
-										(yield handleTestFinished(group.name, test.name, testResult));
-									}.apply(this, arguments));
-								}).bind(this));
-								this.spy.parameterizedGroupsFinished.add((function(resultGroups) {
-									return $spawn(function *() {
-										inParameterized = false;
-										let resultGroup = resultGroups.aggregate();
-										for(let testResult of resultGroup.testResults) {
-											(yield handleTestStart(resultGroup.description, testResult.description, 100));
-											(yield handleTestFinished(resultGroup.description, testResult.description, testResult));
-										}
-									}.apply(this, arguments));
-								}).bind(this));
-								var handleTestingFinished = function handleTestingFinished(resultGroups) {
-									return $spawn(function *() {
-										let response = (yield that.send([
-											"/n4js/testing/sessions",
-											sessionId,
-											"end"
-										].join("/"), 'POST', {
-											'Content-Type': "application/vnd.n4js.end_session_req.tm+json",
-											Accept: "application/json"
-										}, undefined));
-										return response;
-									}.apply(this, arguments));
-								};
-								this.spy.testingFinished.add(handleTestingFinished);
-								return this;
-							}.apply(this, arguments));
+						value: async function register___n4() {
+							let that = this, sessionId = null, inParameterized = false;
+							;
+							var handleTestingStart = async function handleTestingStart(numAllGroups, sid, numAllTests) {
+								sessionId = sid;
+								let response = await that.send([
+									"/n4js/testing/sessions",
+									sessionId,
+									"start"
+								].join("/"), 'POST', {
+									'Content-Type': "application/vnd.n4js.start_session_req.tm+json",
+									Accept: "application/json"
+								}, undefined);
+								return response;
+							};
+							this.spy.testingStarted.add(handleTestingStart);
+							this.spy.parameterizedGroupsStarted.add((test)=>inParameterized = true);
+							var handleTestStart = async function handleTestStart(groupName, testName, timeout) {
+								if (inParameterized) {
+									return;
+								}
+								if (!sessionId) {
+									throw new Error("Test start sent before session start");
+								}
+								await that.send([
+									"/n4js/testing/sessions",
+									sessionId,
+									"tests",
+									groupName + "%23" + testName,
+									"start"
+								].join("/"), 'POST', {
+									'Content-Type': "application/vnd.n4js.start_test_req.tm+json",
+									Accept: "application/json"
+								}, {
+									timeout: timeout + that.timeoutBuffer
+								});
+							};
+							this.spy.testStarted.add(async(group, test)=>{
+								await handleTestStart(group.name, test.name, test.timeout);
+							});
+							var handleTestFinished = async function handleTestFinished(groupName, testName, testResult) {
+								if (inParameterized) {
+									return;
+								}
+								if (!sessionId) {
+									throw new Error("Test end sent outside active session");
+								}
+								await that.send([
+									"/n4js/testing/sessions",
+									sessionId,
+									"tests",
+									groupName + "%23" + testName,
+									"end"
+								].join("/"), 'POST', {
+									'Content-Type': "application/vnd.n4js.end_test_req.tm+json",
+									Accept: "application/json"
+								}, testResult);
+							};
+							this.spy.testFinished.add(async(group, test, testResult)=>{
+								await handleTestFinished(group.name, test.name, testResult);
+							});
+							this.spy.parameterizedGroupsFinished.add(async(resultGroups)=>{
+								inParameterized = false;
+								let resultGroup = resultGroups.aggregate();
+								for(let testResult of resultGroup.testResults) {
+									await handleTestStart(resultGroup.description, testResult.description, 100);
+									await handleTestFinished(resultGroup.description, testResult.description, testResult);
+								}
+							});
+							var handleTestingFinished = async function handleTestingFinished(resultGroups) {
+								let response = await that.send([
+									"/n4js/testing/sessions",
+									sessionId,
+									"end"
+								].join("/"), 'POST', {
+									'Content-Type': "application/vnd.n4js.end_session_req.tm+json",
+									Accept: "application/json"
+								}, undefined);
+								return response;
+							};
+							this.spy.testingFinished.add(handleTestingFinished);
+							return this;
 						}
 					},
 					endpoint: {
