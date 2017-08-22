@@ -191,7 +191,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest.OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest.OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T.T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A.A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B.B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1.CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2.CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
+		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 		assertEquals(expected, actual);
 	}
 
@@ -213,7 +213,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest.OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest.OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T.T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A.A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B.B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1.CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2.CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
+		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 		assertEquals(expected, actual);
 	}
 
@@ -240,7 +240,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest.OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest.OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T.T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A.A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B.B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1.CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2.CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
+		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 		assertEquals(expected, actual);
 	}
 

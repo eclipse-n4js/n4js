@@ -26,7 +26,7 @@ class B1<T> extends A1 {
 // structural as return value XPECT noerrors -->
 function g1 () : ~A1 { return {a: 2}; }
 
-// structural as return value: function call XPECT errors --> "~A1 is not a subtype of string." at "g1()"
+// structural as return value: function call XPECT errors --> "Structural type ~A1 is not a subtype of non-structural type string." at "g1()"
 var g1v : string = g1();
 
 // structural as return value 2 XPECT noerrors -->

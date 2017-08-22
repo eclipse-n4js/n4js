@@ -522,6 +522,11 @@ class RuleEnvironmentExtensions {
 		G.getPredefinedTypes().builtInTypeScope.functionType
 	}
 
+ 	/* Returns newly created structural reference to built-in type {@code Function} */
+ 	public def static structuralFunctionTypeRef(RuleEnvironment G) {
+ 		G.functionType.createTypeRef(TypingStrategy.STRUCTURAL)
+ 	}
+
 	/* 	Returns newly created reference to built-in type {@code Function} */
 	public def static functionTypeRef(RuleEnvironment G) {
 		G.functionType.createTypeRef

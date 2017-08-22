@@ -45,7 +45,7 @@ var a3 : A2 = {a: 2};
 // correct assignment XPECT noerrors -->
 var a4 : A2 = {a: 2, f: function () {} };
 
-// non-structural extends structural XPECT errors --> "~Object with { a: int; s: string } is not a subtype of B1." at "{ a: 2, s: "s" }"
+// non-structural extends structural XPECT errors --> "Structural type ~Object with { a: int; s: string } is not a subtype of non-structural type B1." at "{ a: 2, s: "s" }"
 var b1 : B1 = { a: 2, s: "s" };
 
 // primitive parameter XPECT noerrors -->

@@ -62,7 +62,7 @@ var nDec9r : number = --
 nDec9
 var nDec10r : number = -- nDec10
 var nDec11r : number = --
-// XPECT errors --> "~Object is not a subtype of number." at "nDec11"
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "nDec11"
 nDec11
 var nDec12r : number = -- nDec12
 var nDec13r : number = --

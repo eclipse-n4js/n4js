@@ -40,7 +40,7 @@ var nNeg8 : number = - - 255; //
 // XPECT errors --> "string is not a subtype of number." at ""4""
 var nNeg9 : number = - "4";
 var nNeg10 : number = - Infinity; //
-// XPECT errors --> "~Object is not a subtype of number." at "{}"
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "{}"
 var nNeg11 : number = - {};
 var nNeg11b : number = - NaN; // NaN
 // XPECT errors --> "boolean is not a subtype of number." at "true"
