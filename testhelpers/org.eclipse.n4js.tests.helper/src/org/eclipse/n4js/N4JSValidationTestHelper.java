@@ -66,7 +66,7 @@ public class N4JSValidationTestHelper extends ValidationTestHelper {
 			final EObject currObj = iter.next();
 			if (currObj != null && !currObj.eIsProxy()) {
 				for (EReference currRef : currObj.eClass().getEAllReferences()) {
-					if (!currRef.isContainment() && currRef.getEOpposite() == null) {
+					if (!currRef.isContainment() && !currRef.isContainer() && currRef.getEOpposite() == null) {
 						if (currRef.isMany()) {
 							@SuppressWarnings("unchecked")
 							final EList<? extends EObject> targets = (EList<? extends EObject>) currObj.eGet(currRef,

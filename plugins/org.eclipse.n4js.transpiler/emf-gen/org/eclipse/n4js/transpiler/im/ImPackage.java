@@ -694,6 +694,15 @@ public interface ImPackage extends EPackage {
 	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM = 9;
 
 	/**
+	 * The feature id for the '<em><b>Composed Member Cache</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION_IM__COMPOSED_MEMBER_CACHE = N4JSPackage.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__COMPOSED_MEMBER_CACHE;
+
+	/**
 	 * The feature id for the '<em><b>Type Args</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

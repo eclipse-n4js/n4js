@@ -66,10 +66,11 @@ class N4JSXUnsupportedExpressionTypeHelper extends DefaultUnsupportedExpressionT
 		if (container instanceof JSXPropertyAttribute) {
 			val jsxElem = (container.eContainer) as JSXElement;
 			val propsType = jsxElem.propsType;
-			//Reason for using tau: Consider type arguments by calculating the property of within the context of "props" type
-			return ts.tau(container.property, propsType);
+			if (propsType !== null) {
+				//Reason for using tau: Consider type arguments by calculating the property of within the context of "props" type
+				return ts.tau(container.property, propsType);	
+			}
 		}
-
 		return super.expectedExpressionTypeInEObject(container, expression, G);
 
 	}

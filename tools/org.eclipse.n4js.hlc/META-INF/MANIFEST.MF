@@ -2,8 +2,11 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-Vendor: %providerName
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.0.1.qualifier
 Bundle-SymbolicName: org.eclipse.n4js.hlc
 Export-Package: org.eclipse.n4js.hlc
-Require-Bundle: org.eclipse.n4js.hlc.base
+Require-Bundle: org.eclipse.n4js.hlc.base,
+ org.eclipse.platform,
+ org.eclipse.osgi,
+ org.eclipse.n4js.utils
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

@@ -12,14 +12,13 @@ package org.eclipse.n4js.projectModel;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.n4mf.ModuleFilter;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
 import com.google.common.base.Optional;
-
-import org.eclipse.n4js.n4mf.ModuleFilter;
-import org.eclipse.n4js.ts.types.TModule;
 
 /**
  * The runtime facade for the n4js model containing the core (UI-free) support for n4js projects.
@@ -49,6 +48,11 @@ public interface IN4JSCore {
 	 * @return the n4js project corresponding to the given project.
 	 */
 	Optional<? extends IN4JSProject> findProject(URI nestedLocation);
+
+	/**
+	 * Tells if the two given nested locations are contained in the same N4JS project.
+	 */
+	boolean isInSameProject(URI nestedLocation1, URI nestedLocation2);
 
 	/**
 	 * Returns list of the N4JS projects that are in current working scope (IWorkspace or registered projects).

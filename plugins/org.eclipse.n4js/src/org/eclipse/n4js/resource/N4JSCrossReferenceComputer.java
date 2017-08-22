@@ -17,13 +17,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.InternalEList;
-import org.eclipse.xtext.util.IAcceptor;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.scoping.members.ComposedMemberScope;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
@@ -31,9 +26,11 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 import org.eclipse.n4js.ts.typeRefs.Wildcard;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.xtext.util.IAcceptor;
+
+import com.google.inject.Inject;
 
 /**
  * Collects all Types, TVariables, TLiterals and IdentifiableElements referenced within the AST of a given fully
@@ -199,12 +196,6 @@ public class N4JSCrossReferenceComputer {
 	}
 
 	private void handleType(EObject from, IAcceptor<EObject> acceptor, Type to) {
-		if (to instanceof TMember && ComposedMemberScope.isComposedMember((TMember) to)) {
-			// TODO IDE-1253 / IDE-1806: handling of composed members in N4JSCrossReferenceComputer
-			if (to.eResource() == null) {
-				return; // quick fix: ignore this member (would lead to an exception below)
-			}
-		}
 		if (to != null && !N4Scheme.isFromResourceWithN4Scheme(to)
 				&& externalReferenceChecker.isResolvedAndExternal(from, to)) {
 			acceptor.accept(to);

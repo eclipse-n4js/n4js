@@ -11,7 +11,10 @@
 package org.eclipse.n4js.n4jsx.helpers
 
 import com.google.inject.Inject
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSGlobals
+import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -24,9 +27,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.XtextUtilN4
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.util.IResourceScopeCache
 
@@ -54,7 +54,9 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
 	def public TClassifier lookUpReactElement(EObject context) {
-		return lookUpReactClassifier(context, REACT_ELEMENT);
+		val uri = lookUpReactClassifier(context, REACT_ELEMENT)
+		if (uri !== null) return context.eResource.resourceSet.getEObject(uri, true) as TClassifier;
+		return null;
 	}
 
 	/**
@@ -63,7 +65,9 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
 	def public TClassifier lookUpReactComponent(EObject context) {
-		return lookUpReactClassifier(context, REACT_COMPONENT);
+		val uri = lookUpReactClassifier(context, REACT_COMPONENT);
+		if (uri !== null) return context.eResource.resourceSet.getEObject(uri, true) as TClassifier;
+		return null;
 	}
 
 	/**
@@ -72,24 +76,14 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React classifiers.
 	 * @param reactClassifierName the name of React classifier.
 	 */
-	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
+	def private URI lookUpReactClassifier(EObject context, String reactClassifierName) {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, context.eResource, [
 			// Retrieve all visible object descriptions of type TClass that are visible from 'context'
 			val descs = context.getVisibleEObjectDescriptions(TypesPackage::eINSTANCE.TClass);
 			val String reactClassifierFQNSuffix = REACT_MODULE + "." + reactClassifierName;
 			val eod = descs.findFirst[ desc | desc.isReactClassifierDescription(reactClassifierFQNSuffix) ]
-
-			if (eod === null) return null;
-			var classifier = eod.EObjectOrProxy;
-			if (classifier.eIsProxy) {
-				classifier = EcoreUtil2.resolve(classifier, context.eResource)
-			}
-			if (classifier.eIsProxy) {
-				return null;
-			} else {
-				return (classifier as TClassifier);
-			}
+			return eod?.getEObjectURI();
 		])
 	}
 
@@ -130,12 +124,14 @@ class ReactHelper {
 		if (exprTypeRef instanceof TypeTypeRef && (exprTypeRef as TypeTypeRef).constructorRef) {
 			// The JSX elements refers to a class
 			val tclass = tsh.getStaticType(G, exprTypeRef as TypeTypeRef);
-			val tComponentClassifier = lookUpReactClassifier(jsxElem,
-				ReactHelper.REACT_COMPONENT);
+			val tComponentClassifierURI = lookUpReactClassifier(jsxElem, ReactHelper.REACT_COMPONENT);
+			if (tComponentClassifierURI === null) {
+				return null;
+			}
+			val tComponentClassifier = jsxElem.eResource.resourceSet.getEObject(tComponentClassifierURI, true) as TClassifier;
 			if (tComponentClassifier === null || tComponentClassifier.typeVars.isEmpty) {
 				return null;
 			}
-
 			val reactComponentProps = tComponentClassifier.typeVars.get(0);
 			// Add type variable -> type argument mappings from the current and all super types
 			tsh.addSubstitutions(G, TypeUtils.createTypeRef(tclass));

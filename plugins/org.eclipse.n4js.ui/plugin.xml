@@ -1201,12 +1201,12 @@ Contributors:
             pageImage="icons/newprj_wiz.png"
             wizardID="org.eclipse.n4js.ui.example.N4JSTasksExampleWizard">
          <projectDescriptor
-               contentURI="contents/n4js.example.tasks.zip"
+               contentURI="examples/tasksExample/n4js.example.tasks.zip"
                description="N4JS project for demonstrating the main capabilities of the language through a simple example. After creating the projects each third party npm dependencies used by this example should be installed automatically."
                name="n4js.example.tasks">
          </projectDescriptor>
          <projectDescriptor
-               contentURI="contents/n4js.example.tasks.tests.zip"
+               contentURI="examples/tasksExample/n4js.example.tasks.tests.zip"
                description="Test project for the Tasks Example N4JS project. This project is indented to exhibit the runtime and tooling support of testing framework."
                name="n4js.example.tasks.tests">
          </projectDescriptor>
