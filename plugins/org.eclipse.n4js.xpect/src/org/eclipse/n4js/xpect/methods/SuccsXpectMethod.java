@@ -12,11 +12,14 @@ package org.eclipse.n4js.xpect.methods;
 
 import static org.junit.Assert.fail;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.ts.types.TMember;
@@ -24,8 +27,6 @@ import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
-import org.eclipse.xtext.nodemodel.ICompositeNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.xpect.XpectImport;
 import org.xpect.parameter.ParameterParser;
 import org.xpect.runner.Xpect;
@@ -45,44 +46,57 @@ public class SuccsXpectMethod {
 	 * {@link ParameterizedPropertyAccessExpression}, the xpect methods returns their explicit or implicit declared
 	 * accessibility such as {@code public} or {@code private}.
 	 */
-	@ParameterParser(syntax = "('at' arg1=OFFSET)?")
+	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
 	@Xpect
-	public void succs(
-			@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset) {
+	public void succs(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			String type, IEObjectCoveringRegion offset) {
 
-		EObject context = offset.getEObject();
-		if (!(context instanceof ControlFlowElement)) {
-			fail("Element '" + getText(context) + "' is not a control flow element");
-		}
-
-		ControlFlowElement cfe = (ControlFlowElement) context;
+		ControlFlowType cfType = getControlFlowType(type);
+		ControlFlowElement cfe = getControlFlowElement(offset);
 		List<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+		filterByControlFlowType(cfe, succs, cfType);
 
-		// for (ControlFlowElement node : succs) {
-		// ICompositeNode actNode = NodeModelUtils.findActualNodeFor(node);
-		// String text = actNode.getText().trim();
-		// text = NodeModelUtils.getTokenText(actNode);
-		// System.out.println(text);
-		// System.out.println("#########");
-		// }
-
-		if (succs.isEmpty()) {
-			fail("Element '" + getText(context) + "' has no successors");
-		} else {
-			List<String> succTexts = new LinkedList<>();
-			for (ControlFlowElement succ : succs) {
-				String succText = getText(succ);
-				succTexts.add(succText);
-			}
-			expectation.assertEquals(succTexts);
+		List<String> succTexts = new LinkedList<>();
+		for (ControlFlowElement succ : succs) {
+			String succText = FGUtils.getTextLabel(succ);
+			succTexts.add(succText);
 		}
+		expectation.assertEquals(succTexts);
 	}
 
-	String getText(EObject eo) {
-		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
-		String text = NodeModelUtils.getTokenText(actualNode);
-		return text;
+	private ControlFlowType getControlFlowType(String type) {
+		ControlFlowType cfType = null;
+		if (type != null && !type.isEmpty()) {
+			cfType = ControlFlowType.valueOf(type);
+			if (cfType == null) {
+				fail("Type '" + type + "' is not a control flow type");
+				return null;
+			}
+		}
+		return cfType;
+	}
+
+	private ControlFlowElement getControlFlowElement(IEObjectCoveringRegion offset) {
+		EObject context = offset.getEObject();
+		if (!(context instanceof ControlFlowElement)) {
+			fail("Element '" + FGUtils.getTextLabel(context) + "' is not a control flow element");
+		}
+		ControlFlowElement cfe = (ControlFlowElement) context;
+		return cfe;
+	}
+
+	private void filterByControlFlowType(ControlFlowElement start, List<ControlFlowElement> succList,
+			ControlFlowType cfType) {
+
+		if (cfType == null)
+			return;
+
+		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
+			ControlFlowType currCFType = flowAnalyses.getControlFlowTypeToSuccessor(start, succIt.next());
+			if (cfType != currCFType) {
+				succIt.remove();
+			}
+		}
 	}
 
 }
