@@ -203,7 +203,7 @@
 				}, {
 					escapeGroupName: {
 						value: function escapeGroupName___n4(groupName) {
-							return groupName.replace("/", "$");
+							return groupName.replace(/\//g, "$");
 						}
 					}
 				}, function(instanceProto, staticProto) {
