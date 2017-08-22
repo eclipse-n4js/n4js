@@ -1050,15 +1050,13 @@ public class N4jscBase implements IApplication {
 	 *             signaling compile-errors.
 	 */
 	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
-		// check files exist and are readable:
-		checkAllFilesAreSourcesAndReadable(srcFiles);
+		srcFiles.stream().forEach(this::isExistingReadibleFile);
 
-		if (projectLocations == null) {
+		if (projectLocations == null)
 			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
-		} else {
+		else
 			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
 					srcFiles);
-		}
 	}
 
 	/**
@@ -1070,12 +1068,11 @@ public class N4jscBase implements IApplication {
 	 *             in error cases
 	 */
 	private void compileArgumentsAsProjects() throws ExitCodeException, N4JSCompileException {
-		if (projectLocations == null) {
+		if (projectLocations == null)
 			headless.compileProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
-		} else {
+		else
 			headless.compileProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
 					srcFiles);
-		}
 	}
 
 	/**
@@ -1160,24 +1157,6 @@ public class N4jscBase implements IApplication {
 	}
 
 	/**
-	 * Ensure plain, readable files.
-	 *
-	 * @param files
-	 *            to check
-	 * @throws RuntimeException
-	 *             if any file is not existent or not plain or not readable
-	 */
-	private void checkAllFilesAreSourcesAndReadable(List<File> files) {
-		files.stream().forEach(
-				f -> {
-					if (!(f.exists() && f.canRead() && f.isFile())) {
-						throw new RuntimeException("File '" + f.getAbsolutePath()
-								+ "' is not a valid source file. (Base is " + new File(".").getAbsolutePath() + ")");
-					}
-				});
-	}
-
-	/**
 	 * @param dirpaths
 	 *            one or more paths separated by {@link File#pathSeparatorChar} OR empty string if no paths given.
 	 */
@@ -1185,13 +1164,13 @@ public class N4jscBase implements IApplication {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
 			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-			checkFileIsDirAndWriteable(tpLoc);
+			isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}
 		if (!dirpaths.isEmpty()) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
-				checkFileIsDirAndWriteable(ret);
+				isExistingWriteableDir(ret);
 				retList.add(ret);
 			}
 		}
@@ -1199,16 +1178,43 @@ public class N4jscBase implements IApplication {
 		return retList;
 	}
 
-	private void checkFileIsDirAndWriteable(File f) {
-		if (!f.exists()) {
-			throw new RuntimeException("File " + f + " doesn't exist.");
-		}
-		if (!f.canWrite()) {
-			throw new RuntimeException("File " + f + " is not writable.");
-		}
-		if (!f.isDirectory()) {
-			throw new RuntimeException("File " + f + " is not a directory.");
-		}
+	/**
+	 * Ensure given file is plain, existing and readable file.
+	 *
+	 * @param file
+	 *            to check
+	 * @throws RuntimeException
+	 *             if any file is not existent or not plain or not readable
+	 */
+	private void isExistingWriteableDir(File file) {
+		if (!file.exists())
+			throw new RuntimeException("File " + file + " doesn't exist.");
+
+		if (!file.isDirectory())
+			throw new RuntimeException("File " + file + " is not a directory.");
+
+		if (!file.canWrite())
+			throw new RuntimeException("File " + file + " is not writable.");
+
+	}
+
+	/**
+	 * Ensure given file is plain, existing and readable file.
+	 *
+	 * @param file
+	 *            to check
+	 * @throws RuntimeException
+	 *             if any file is not existent or not plain or not readable
+	 */
+	private void isExistingReadibleFile(File file) {
+		if (!file.exists())
+			throw new RuntimeException("File does not exist: " + file.getAbsolutePath());
+
+		if (!file.isFile())
+			throw new RuntimeException("Not a file: " + file.getAbsolutePath());
+
+		if (!file.canRead())
+			throw new RuntimeException("File is not readable: " + file.getAbsolutePath());
 	}
 
 	private static URI fileToURI(File file) {
