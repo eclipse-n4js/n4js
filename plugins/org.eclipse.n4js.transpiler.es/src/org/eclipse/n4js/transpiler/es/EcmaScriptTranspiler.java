@@ -40,6 +40,7 @@ import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation;
+import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -66,6 +67,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	private Provider<StaticPolyfillTransformation> staticPolyfillTransformationProvider;
 	@Inject
 	private Provider<SuperLiteralTransformation> superLiteralTransformationProvider;
+	@Inject
+	private Provider<TemplateStringTransformation> templateStringTransformationProvider;
 	@Inject
 	private Provider<ExpressionTransformation> expressionTransformationProvider;
 	@Inject
@@ -125,6 +128,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				apiImplStubGenerationTransformationProvider.get(),
 				destructuringTransformation.get(),
 				superLiteralTransformationProvider.get(),
+				templateStringTransformationProvider.get(),
 				expressionTransformationProvider.get(),
 				enumAccessTransformationProvider.get(),
 				dependencyInjectionTransformation.get(),

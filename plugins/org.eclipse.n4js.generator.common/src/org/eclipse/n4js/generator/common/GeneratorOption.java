@@ -39,7 +39,17 @@ public enum GeneratorOption {
 	//
 	NodeCurrent(/* no included options at this time */);
 
+	/**
+	 * Generator options used by default. Most importantly, the main transpiler generating the output code in the output
+	 * folders uses these options.
+	 */
 	public static final GeneratorOption[] DEFAULT_OPTIONS = { NodeCurrent };
+
+	/**
+	 * Generator options that activate as many optional transpiler transformations as possible. This is used as an
+	 * additional scenario for testing (in addition to {@link #DEFAULT_OPTIONS}).
+	 */
+	public static final GeneratorOption[] MAX_TRANSPILE_OPTIONS = { ES5plus };
 
 	private final GeneratorOption[] includedOptions;
 
