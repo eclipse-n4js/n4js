@@ -69,7 +69,7 @@ function DoStatementBreak1() {
 	do {
 		// DoStatementBreak1 XPECT succs at '1' --> break;
 		1;
-		// DoStatementBreak1 XPECT succs at 'break;' --> "end"
+		// DoStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 		break;
 		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "2;"
 		// DoStatementBreak1 XPECT succs at '2' --> 3
@@ -85,7 +85,7 @@ function DoStatementContinue1() {
 	do {
 		// DoStatementContinue1 XPECT succs at '1' --> continue;
 		1;
-		// DoStatementContinue1 XPECT succs at 'continue;' --> 3
+		// DoStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
 		continue;
 		// DoStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "2;"
 		// DoStatementContinue1 XPECT succs at '2' --> 3
@@ -96,12 +96,158 @@ function DoStatementContinue1() {
 }
 
 function ForStatement1() {
-	// EmptyStatement XPECT succs at '"start"' --> "end"
+	// ForStatement1 XPECT succs at '"start"' -->
 	"start";
-	// EmptyStatement XPECT succs at ';' --> "end"
-	for (;;);
+	// ForStatement1 XPECT succs at ' ;' -->
+	for (;;) ;
 	"end";
 }
+
+function ForStatement2() {
+	// ForStatement2 XPECT succs at '"start"' --> 5
+	"start";
+	// ForStatement2 XPECT succs at '5' --> 5
+	for (;;) 5;
+	"end";
+}
+
+function ForStatement3() {
+	// ForStatement3 XPECT succs at '"start"' --> 1
+	"start";
+	// ForStatement3 XPECT succs at '1' --> 2
+	// ForStatement3 XPECT succs at '2' --> 5, "end"
+	// ForStatement3 XPECT succs at '5' --> 3
+	// ForStatement3 XPECT succs type 'Loop' at '3' --> 2
+	for (1;2;3) 5;
+	"end";
+}
+
+function ForStatement4() {
+	// ForStatement4 XPECT succs at '"start"' --> 1
+	"start";
+	// ForStatement4 XPECT succs at '1' --> 5
+	// ForStatement4 XPECT succs at '5' --> 3
+	// ForStatement4 XPECT succs type 'Loop' at '3' --> 5
+	for (1;;3) 5;
+	"end";
+}
+
+function ForStatement5() {
+	// ForStatement5 XPECT succs at '"start"' --> 1
+	"start";
+	// ForStatement5 XPECT succs at '1' --> 2
+	// ForStatement5 XPECT succs at '2' --> 5, "end"
+	// ForStatement5 XPECT succs type 'Loop' at '5' --> 2
+	for (1;2;) 5;
+	"end";
+}
+
+function ForStatement6() {
+	// ForStatement6 XPECT succs at '"start"' --> 2
+	"start";
+	// ForStatement6 XPECT succs at '2' --> 5, "end"
+	// ForStatement6 XPECT succs at '5' --> 3
+	// ForStatement6 XPECT succs type 'Loop' at '3' --> 2
+	for (;2;3) 5;
+	"end";
+}
+
+function ForStatement7() {
+	// ForStatement7 XPECT succs at '"start"' --> 5
+	"start";
+	// ForStatement7 XPECT succs at '5' --> 3
+	// ForStatement7 XPECT succs type 'Loop' at '3' --> 5
+	for (;;3) 5;
+	"end";
+}
+
+function ForStatement8() {
+	// ForStatement8 XPECT succs at '"start"' --> 2
+	"start";
+	// ForStatement8 XPECT succs at '2' --> 5, "end"
+	// ForStatement8 XPECT succs type 'Loop' at '5' --> 2
+	for (;2;) 5;
+	"end";
+}
+
+function ForStatement9() {
+	// ForStatement9 XPECT succs at '"start"' --> 1
+	"start";
+	// ForStatement9 XPECT succs at '1' --> 5
+	// ForStatement9 XPECT succs type 'Loop' at '5' --> 5
+	for (1;;) 5;
+	"end";
+}
+
+function ForStatementVarDecl1() {
+	// ForStatementVarDecl1 XPECT succs at '"start"' --> 0
+	"start";
+	// ForStatementVarDecl1 XPECT succs at '0' --> i=0
+	// ForStatementVarDecl1 XPECT succs at 'i=0' --> 1
+	// ForStatementVarDecl1 XPECT succs at '1' --> 5, "end"
+	// ForStatementVarDecl1 XPECT succs at '5' --> 2
+	// ForStatementVarDecl1 XPECT succs type 'Loop' at '2' --> 1
+	for (var i=0; 1; 2) 5;
+	"end";
+}
+
+function ForStatementVarDecl2() {
+	// ForStatementVarDecl2 XPECT succs at '"start"' --> 0
+	"start";
+	// ForStatementVarDecl2 XPECT succs at '0' --> i=0
+	// ForStatementVarDecl2 XPECT succs at 'i=0' --> 1
+	// ForStatementVarDecl2 XPECT succs at '1' --> j=1
+	// ForStatementVarDecl2 XPECT succs at 'j=1' --> 2
+	// ForStatementVarDecl2 XPECT succs at '2' --> 5, "end"
+	// ForStatementVarDecl2 XPECT succs at '5' --> 3
+	// ForStatementVarDecl2 XPECT succs type 'Loop' at '3' --> 2
+	for (var i=0, j=1; 2; 3) 5;
+	"end";
+}
+
+function ForStatementBreak1() {
+	// ForStatementBreak1 XPECT succs at '"start"' --> 1
+	"start";
+	// ForStatementBreak1 XPECT succs at '1' --> 2
+	// ForStatementBreak1 XPECT succs at '2' --> break;, "end"
+	// ForStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// ForStatementBreak1 XPECT succs type 'Loop' at '3' --> 2
+	for (1;2;3) break;
+	"end";
+}
+
+function ForStatementContinue1() {
+	// ForStatementContinue1 XPECT succs at '"start"' --> 1
+	"start";
+	// ForStatementContinue1 XPECT succs at '1' --> 2
+	// ForStatementContinue1 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
+	// ForStatementContinue1 XPECT succs type 'Loop' at '3' --> 2
+	for (1;2;3) continue;
+	"end";
+}
+
+function ForStatementContinue2() {
+	// ForStatementContinue2 XPECT succs at '"start"' --> 2
+	"start";
+	// ForStatementContinue2 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue2 XPECT succs type 'Continue' at 'continue;' --> 3
+	// ForStatementContinue2 XPECT succs type 'Loop' at '3' --> 2
+	for (;2;3) continue;
+	"end";
+}
+
+function ForStatementContinue3() {
+	// ForStatementContinue3 XPECT succs at '"start"' --> 2
+	"start";
+	// ForStatementContinue3 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue3 XPECT succs type 'Continue' at 'continue;' --> 2
+	// ForStatementContinue3 XPECT succs type 'Loop' at 'continue;' --> 2
+	for (;2;) continue;
+	"end";
+}
+
+
 
 function IfStatement1() {
 	// IfStatement1 XPECT succs at '"start"' --> 1
@@ -158,11 +304,11 @@ function SwitchCaseBreak1() {
 	switch (1) {
 		// SwitchCaseBreak1 XPECT succs at '2' --> 3
 		// SwitchCaseBreak1 XPECT succs at '3' --> break;
-		// SwitchCaseBreak1 XPECT succs at 'break;' --> "end"
+		// SwitchCaseBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 		case 2: 3; break;
 		// SwitchCaseBreak1 XPECT succs at '3' --> 5
 		// SwitchCaseBreak1 XPECT succs at '5' --> break;
-		// SwitchCaseBreak1 XPECT succs at 'break;' --> "end"
+		// SwitchCaseBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 		case 4: 5; break;
 	}
 	"end";
@@ -189,7 +335,7 @@ function SwitchCaseDefault2() {
 	switch (1) {
 		// SwitchCaseDefault2 XPECT succs at '2' --> 5
 		// SwitchCaseDefault2 XPECT succs at '5' --> break;
-		// SwitchCaseDefault2 XPECT succs at 'break;' --> "end"
+		// SwitchCaseDefault2 XPECT succs type 'Break' at 'break;' --> "end"
 		case 2: 5; break;
 		// SwitchCaseDefault2 XPECT succs at '5' --> "end"
 		default: 5;
@@ -215,7 +361,7 @@ function WhileStatementBreak1() {
 	while (1) {
 		// WhileStatementBreak1 XPECT succs at '2' --> break;
 		2;
-		// WhileStatementBreak1 XPECT succs at 'break;' --> "end"
+		// WhileStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 		break;
 		// WhileStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "3;"
 		// WhileStatementBreak1 XPECT succs at '3' --> 1
@@ -231,7 +377,7 @@ function WhileStatementContinue1() {
 	while (1) {
 		// WhileStatementContinue1 XPECT succs at '2' --> continue;
 		2;
-		// WhileStatementContinue1 XPECT succs at 'continue;' --> 1
+		// WhileStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 1
 		continue;
 		// WhileStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "3;"
 		// WhileStatementContinue1 XPECT succs at '3' --> 1
