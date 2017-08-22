@@ -14,8 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ComplexNodeProvider;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
@@ -161,7 +161,7 @@ public class CatchNodeFinder {
 			}
 			if (cfe instanceof ForStatement) {
 				ComplexNode cn = cnProvider.get(cfe);
-				Node conditionNode = cn.getNode(ForFactory.CONDITION_NODE_NAME);
+				Node conditionNode = cn.getNode(ForFactory.LOOPCATCH_NODE_NAME);
 				return conditionNode.getEntry();
 			}
 			if (cfe instanceof WhileStatement) {

@@ -15,15 +15,17 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 
 class ForFactory {
 
-	static final String CONDITION_NODE_NAME = "condition";
+	static final String LOOPCATCH_NODE_NAME = "loopCatch";
 
 	static ComplexNode buildComplexNode(ForStatement forStmt) {
 		if (forStmt.isForIn())
@@ -46,7 +48,7 @@ class ForFactory {
 		if (forInSemantics)
 			getObjectKeysNode = new HelperNode("getObjectKeys", forStmt);
 		Node getIteratorNode = new HelperNode("getIterator", forStmt);
-		Node hasNextNode = new HelperNode(CONDITION_NODE_NAME, forStmt);
+		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, forStmt);
 		Node nextNode = new HelperNode("next", forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null)
@@ -78,6 +80,7 @@ class ForFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
+		cNode.setRepresentNode(exitNode);
 
 		String label = ASTUtils.getLabel(forStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
@@ -90,19 +93,30 @@ class ForFactory {
 	private static ComplexNode buildForPlain(ForStatement forStmt) {
 		ComplexNode cNode = new ComplexNode(forStmt);
 
-		Node initsNode = null;
-		Node prebodyNode = new HelperNode("prebody", forStmt);
-		Node bodyNode = null;
+		List<Node> initNodes = new LinkedList<>();
 		Node conditionNode = null;
+		Node bodyNode = null;
+		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, forStmt);
 		Node updatesNode = null;
-
 		Node entryNode = new HelperNode("entry", forStmt);
 		Node exitNode = new HelperNode("exit", forStmt);
+
+		if (forStmt.getVarDeclsOrBindings() != null) {
+			int i = 0;
+			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
+				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
+					Node initNode = new DelegatingNode("init_" + i, forStmt, varDecl);
+					initNodes.add(initNode);
+					i++;
+				}
+			}
+		}
 		if (forStmt.getInitExpr() != null) {
-			initsNode = new DelegatingNode("inits", forStmt, forStmt.getInitExpr());
+			Node initNode = new DelegatingNode("inits", forStmt, forStmt.getInitExpr());
+			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode(CONDITION_NODE_NAME, forStmt, forStmt.getExpression());
+			conditionNode = new DelegatingNode("condition", forStmt, forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
 			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());
@@ -113,26 +127,26 @@ class ForFactory {
 
 		cNode.addNode(entryNode);
 		cNode.addNode(exitNode);
-		cNode.addNode(initsNode);
+		for (Node initNode : initNodes)
+			cNode.addNode(initNode);
 		cNode.addNode(conditionNode);
-		cNode.addNode(prebodyNode);
 		cNode.addNode(bodyNode);
+		cNode.addNode(loopCatchNode);
 		cNode.addNode(updatesNode);
 
 		List<Node> nodes = new LinkedList<>();
 		nodes.add(entryNode);
-		nodes.add(initsNode);
+		nodes.addAll(initNodes);
 		nodes.add(conditionNode);
-		nodes.add(prebodyNode);
 		nodes.add(bodyNode);
+		nodes.add(loopCatchNode);
 		nodes.add(updatesNode);
 		cNode.connectInternalSucc(nodes);
 
 		if (conditionNode != null)
 			cNode.connectInternalSucc(conditionNode, exitNode);
 
-		LinkedList<Node> loopCycle = ListUtils.filterNulls(conditionNode, prebodyNode, bodyNode, updatesNode);
-		// LinkedList<Node> parts = ListUtils.filterNulls(updatesNode, bodyNode, conditionNode);
+		LinkedList<Node> loopCycle = ListUtils.filterNulls(conditionNode, bodyNode, loopCatchNode, updatesNode);
 		if (!loopCycle.isEmpty()) {
 			Node loopSrc = loopCycle.getLast();
 			Node loopTgt = loopCycle.getFirst();
@@ -143,17 +157,13 @@ class ForFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
+		cNode.setRepresentNode(exitNode);
 
 		cNode.setLoopContainer(true);
 
 		String label = ASTUtils.getLabel(forStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
-
-		// parts = ListUtils.filterNulls(conditionNode, prebodyNode, bodyNode, updatesNode);
-		if (!loopCycle.isEmpty()) {
-			Node contNode = loopCycle.getFirst();
-			contNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
-		}
+		loopCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
 
 		return cNode;
 	}

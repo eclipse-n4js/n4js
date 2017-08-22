@@ -16,9 +16,9 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.Statement;
@@ -52,6 +52,7 @@ class BlockFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
+		cNode.setRepresentNode(exitNode);
 
 		if (block.eContainer() instanceof GenericDeclaration) {
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.Return));

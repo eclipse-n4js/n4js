@@ -38,7 +38,7 @@ public class ComplexNode implements ControlFlowable {
 	final private ControlFlowElement astElement;
 	final private Map<String, Node> nodeMap = new HashMap<>();
 
-	private Node entry, exit;
+	private Node entry, exit, represent;
 	private boolean isLoopContainer = false;
 	private boolean hasOuterBlockUse = false;
 
@@ -101,6 +101,12 @@ public class ComplexNode implements ControlFlowable {
 		this.exit = exitNode;
 	}
 
+	public void setRepresentNode(Node representNode) {
+		if (!nodeMap.values().contains(representNode))
+			throw new IllegalArgumentException("Node not child of complex node");
+		this.represent = representNode;
+	}
+
 	@Override
 	public ControlFlowElement getControlFlowElement() {
 		return CFEMapper.map(astElement);
@@ -114,6 +120,10 @@ public class ComplexNode implements ControlFlowable {
 	@Override
 	public Node getExit() {
 		return exit;
+	}
+
+	public Node getRepresent() {
+		return represent;
 	}
 
 	/**

@@ -15,6 +15,19 @@ package org.eclipse.n4js.flowgraphs.model;
  */
 @SuppressWarnings("javadoc")
 public enum ControlFlowType {
-	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Loop
+	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Loop;
 
+	static public final ControlFlowType[] NonLoopTypes = { Successor, Break, Throw, Return };
+
+	public boolean isInOrEmpty(ControlFlowType[] flowTypes) {
+		if (flowTypes == null || flowTypes.length == 0) {
+			return true;
+		}
+		for (ControlFlowType cft : flowTypes) {
+			if (this == cft) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

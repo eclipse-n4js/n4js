@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -67,11 +68,11 @@ public class N4JSFlowAnalyses {
 	/**
 	 * @returns a list of all direct predecessors of cfe
 	 */
-	public List<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
+	public List<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		Objects.requireNonNull(cfe);
 
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<RepresentingNode> repNodes = cn.getExit().getPredecessors();
+		List<RepresentingNode> repNodes = cn.getRepresent().getPredecessors(followEdges);
 		List<ControlFlowElement> cfElems = new LinkedList<>();
 		for (RepresentingNode rNode : repNodes) {
 			cfElems.add(rNode.getRepresentedControlFlowElement());
@@ -82,11 +83,11 @@ public class N4JSFlowAnalyses {
 	/**
 	 * @returns a list of all direct successors of cfe
 	 */
-	public List<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
+	public List<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		Objects.requireNonNull(cfe);
 
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<RepresentingNode> repNodes = cn.getExit().getSuccessors();
+		List<RepresentingNode> repNodes = cn.getRepresent().getSuccessors(followEdges);
 		List<ControlFlowElement> cfElems = new LinkedList<>();
 		for (RepresentingNode rNode : repNodes) {
 			cfElems.add(rNode.getRepresentedControlFlowElement());
@@ -102,7 +103,7 @@ public class N4JSFlowAnalyses {
 		Objects.requireNonNull(cfeTo);
 
 		ComplexNode cn = cfg.getComplexNode(cfeFrom);
-		boolean isTransitiveSuccessor = cn.getExit().isTransitiveSuccessor(cfeTo, new LinkedList<>());
+		boolean isTransitiveSuccessor = cn.getRepresent().isTransitiveSuccessor(cfeTo, new LinkedList<>());
 		return isTransitiveSuccessor;
 	}
 
@@ -111,6 +112,13 @@ public class N4JSFlowAnalyses {
 	 */
 	public ControlFlowType getControlFlowTypeToSuccessor(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
 		return cfg.getControlFlowTypeToSuccessor(cfe, cfeSucc);
+	}
+
+	/**
+	 * @returns all the {@link ControlFlowType}s that happen between the two direct successors cfe and cfeSucc
+	 */
+	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
+		return cfg.getControlFlowTypeToSuccessors(cfe, cfeSucc);
 	}
 
 	/**
@@ -137,7 +145,7 @@ public class N4JSFlowAnalyses {
 		while (!curCFEs.isEmpty()) {
 			ControlFlowElement cfe = curCFEs.remove(0);
 			marked.add(cfe);
-			List<ControlFlowElement> preds = getPredecessors(cfe);
+			List<ControlFlowElement> preds = getPredecessors(cfe, ControlFlowType.NonLoopTypes);
 			curCFEs.addAll(preds);
 		}
 
@@ -149,7 +157,7 @@ public class N4JSFlowAnalyses {
 			if (marked.contains(cfe)) {
 				return cfe;
 			}
-			List<ControlFlowElement> preds = getPredecessors(cfe);
+			List<ControlFlowElement> preds = getPredecessors(cfe, ControlFlowType.NonLoopTypes);
 			curCFEs.addAll(preds);
 		}
 
@@ -179,7 +187,7 @@ public class N4JSFlowAnalyses {
 		while (!curCFEs.isEmpty()) {
 			ControlFlowElement cfe = curCFEs.remove(0);
 			predSet.add(cfe);
-			List<ControlFlowElement> preds = getPredecessors(cfe);
+			List<ControlFlowElement> preds = getPredecessors(cfe, ControlFlowType.NonLoopTypes);
 			curCFEs.addAll(preds);
 		}
 
@@ -189,7 +197,7 @@ public class N4JSFlowAnalyses {
 		while (!curCFEs.isEmpty()) {
 			ControlFlowElement cfe = curCFEs.remove(0);
 			if (predSet.contains(cfe)) {
-				List<ControlFlowElement> succs = getSuccessors(cfe);
+				List<ControlFlowElement> succs = getSuccessors(cfe, ControlFlowType.NonLoopTypes);
 				curCFEs.addAll(succs);
 				String nameID = FGUtils.getNameID(cfe);
 				pathString += nameID + "->";

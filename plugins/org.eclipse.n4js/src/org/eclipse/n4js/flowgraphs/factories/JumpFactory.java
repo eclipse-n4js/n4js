@@ -14,10 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.BreakStatement;
@@ -71,7 +71,7 @@ class JumpFactory {
 		ComplexNode cNode = new ComplexNode(stmt);
 
 		Node entryNode = new HelperNode("entry", stmt);
-		Node endNode = new RepresentingNode("exit", stmt);
+		Node exitNode = new RepresentingNode("exit", stmt);
 		Node expression = null;
 
 		cNode.addNode(entryNode);
@@ -80,18 +80,19 @@ class JumpFactory {
 			expression = new DelegatingNode("expression", stmt, expr);
 			cNode.addNode(expression);
 		}
-		cNode.addNode(endNode);
+		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();
 		cfs.add(entryNode);
 		cfs.add(expression);
-		cfs.add(endNode);
+		cfs.add(exitNode);
 		cNode.connectInternalSucc(cfs);
 
 		cNode.setEntryNode(entryNode);
-		cNode.setExitNode(endNode);
+		cNode.setExitNode(exitNode);
+		cNode.setRepresentNode(exitNode);
 
-		endNode.addJumpToken(jumptoken);
+		exitNode.addJumpToken(jumptoken);
 
 		return cNode;
 	}

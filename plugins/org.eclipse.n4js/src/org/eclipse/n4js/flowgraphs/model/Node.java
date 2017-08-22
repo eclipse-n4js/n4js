@@ -111,40 +111,42 @@ abstract public class Node implements ControlFlowable {
 
 	abstract public ControlFlowElement getRepresentedControlFlowElement();
 
-	abstract protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges);
+	abstract protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges,
+			ControlFlowType... followEdges);
 
-	abstract protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges);
+	abstract protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges,
+			ControlFlowType... followEdges);
 
-	public List<RepresentingNode> getSuccessors() {
-		return getSuccessors(new LinkedList<>());
+	public List<RepresentingNode> getSuccessors(ControlFlowType... followEdges) {
+		return getSuccessors(new LinkedList<>(), followEdges);
 	}
 
-	protected List<RepresentingNode> getSuccessors(List<ControlFlowEdge> loopEdges) {
+	protected List<RepresentingNode> getSuccessors(List<ControlFlowEdge> loopEdges, ControlFlowType... followEdges) {
 		List<RepresentingNode> succCFEs = new LinkedList<>();
 		for (ControlFlowEdge cfEdge : succ) {
-			if (!loopEdges.contains(cfEdge)) {
+			if (cfEdge.cfType.isInOrEmpty(followEdges) && !loopEdges.contains(cfEdge)) {
 				loopEdges.add(cfEdge);
-				List<RepresentingNode> cfes = cfEdge.end.getRepresentingOrSucceeding(loopEdges);
+				List<RepresentingNode> cfes = cfEdge.end.getRepresentingOrSucceeding(loopEdges, followEdges);
 				succCFEs.addAll(cfes);
 			}
 		}
 		return succCFEs;
 	}
 
-	public List<RepresentingNode> getPredecessors() {
-		return getPredecessors(new LinkedList<>());
+	public List<RepresentingNode> getPredecessors(ControlFlowType... followEdges) {
+		return getPredecessors(new LinkedList<>(), followEdges);
 	}
 
-	protected List<RepresentingNode> getPredecessors(List<ControlFlowEdge> loopEdges) {
-		List<RepresentingNode> succCFEs = new LinkedList<>();
+	protected List<RepresentingNode> getPredecessors(List<ControlFlowEdge> loopEdges, ControlFlowType... followEdges) {
+		List<RepresentingNode> predCFEs = new LinkedList<>();
 		for (ControlFlowEdge cfEdge : pred) {
-			if (!loopEdges.contains(cfEdge)) {
+			if (cfEdge.cfType.isInOrEmpty(followEdges) && !loopEdges.contains(cfEdge)) {
 				loopEdges.add(cfEdge);
-				List<RepresentingNode> cfes = cfEdge.start.getRepresentingOrPreceeding(loopEdges);
-				succCFEs.addAll(cfes);
+				List<RepresentingNode> cfes = cfEdge.start.getRepresentingOrPreceeding(loopEdges, followEdges);
+				predCFEs.addAll(cfes);
 			}
 		}
-		return succCFEs;
+		return predCFEs;
 	}
 
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeTo, List<ControlFlowEdge> loopEdges) {

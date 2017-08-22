@@ -31,7 +31,7 @@ import org.eclipse.n4js.n4JS.Script;
  * Factory to build control flow graphs.
  */
 public class ControlFlowGraphFactory {
-	private final static boolean PRINT_EDGE_DETAILS = true;
+	private final static boolean PRINT_EDGE_DETAILS = false;
 
 	/**
 	 * Builds and returns a control flow graph from a given {@link Script}.
@@ -123,7 +123,7 @@ public class ControlFlowGraphFactory {
 
 		@Override
 		public ComplexNode get(ControlFlowElement cfe) {
-			return cnMap.get(cfe);
+			return cnMap.get(CFEMapper.map(cfe));
 		}
 
 		@Override

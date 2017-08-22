@@ -15,9 +15,9 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
 
@@ -48,6 +48,7 @@ class DoWhileFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
+		cNode.setRepresentNode(exitNode);
 
 		String label = ASTUtils.getLabel(doStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));

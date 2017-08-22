@@ -29,7 +29,7 @@ class AbstractCaseClauseFactory {
 
 		Node entryNode = new HelperNode("entry", abstrCaseClause);
 		List<Node> stmtNodes = new LinkedList<>();
-		Node endNode = new DelegatingNode("exit", abstrCaseClause);
+		Node exitNode = new DelegatingNode("exit", abstrCaseClause);
 		Node caseConditionNode = null;
 
 		if (abstrCaseClause instanceof CaseClause) {
@@ -48,17 +48,18 @@ class AbstractCaseClauseFactory {
 		cNode.addNode(caseConditionNode);
 		for (Node blockNode : stmtNodes)
 			cNode.addNode(blockNode);
-		cNode.addNode(endNode);
+		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
 		nodes.add(entryNode);
 		nodes.add(caseConditionNode);
 		nodes.addAll(stmtNodes);
-		nodes.add(endNode);
+		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 
 		cNode.setEntryNode(entryNode);
-		cNode.setExitNode(endNode);
+		cNode.setExitNode(exitNode);
+		cNode.setRepresentNode(exitNode);
 
 		return cNode;
 	}
