@@ -27,6 +27,10 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.smith.graph.graph.Edge;
+import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.GraphUtils;
+import org.eclipse.n4js.smith.graph.graph.Node;
 import org.eclipse.xtext.TerminalRule;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.ILeafNode;
@@ -34,11 +38,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterators;
-
-import org.eclipse.n4js.smith.graph.graph.Edge;
-import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
-import org.eclipse.n4js.smith.graph.graph.GraphUtils;
-import org.eclipse.n4js.smith.graph.graph.Node;
 
 /**
  * Creates nodes and edges from an EMF {@link ResourceSet} as input.
