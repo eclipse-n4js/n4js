@@ -59,7 +59,7 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	protected EList<TMember> cachedComposedMembers;
 
 	/**
-	 * The cached value of the '{@link #getComposedTypeRef() <em>Composed Type Ref</em>}' reference.
+	 * The cached value of the '{@link #getComposedTypeRef() <em>Composed Type Ref</em>}' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @see #getComposedTypeRef()
@@ -105,14 +105,6 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	 * @generated
 	 */
 	public TypeRef getComposedTypeRef() {
-		if (composedTypeRef != null && composedTypeRef.eIsProxy()) {
-			InternalEObject oldComposedTypeRef = (InternalEObject)composedTypeRef;
-			composedTypeRef = (TypeRef)eResolveProxy(oldComposedTypeRef);
-			if (composedTypeRef != oldComposedTypeRef) {
-				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF, oldComposedTypeRef, composedTypeRef));
-			}
-		}
 		return composedTypeRef;
 	}
 
@@ -121,8 +113,14 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public TypeRef basicGetComposedTypeRef() {
-		return composedTypeRef;
+	public NotificationChain basicSetComposedTypeRef(TypeRef newComposedTypeRef, NotificationChain msgs) {
+		TypeRef oldComposedTypeRef = composedTypeRef;
+		composedTypeRef = newComposedTypeRef;
+		if (eNotificationRequired()) {
+			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF, oldComposedTypeRef, newComposedTypeRef);
+			if (msgs == null) msgs = notification; else msgs.add(notification);
+		}
+		return msgs;
 	}
 
 	/**
@@ -131,10 +129,17 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 	 * @generated
 	 */
 	public void setComposedTypeRef(TypeRef newComposedTypeRef) {
-		TypeRef oldComposedTypeRef = composedTypeRef;
-		composedTypeRef = newComposedTypeRef;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF, oldComposedTypeRef, composedTypeRef));
+		if (newComposedTypeRef != composedTypeRef) {
+			NotificationChain msgs = null;
+			if (composedTypeRef != null)
+				msgs = ((InternalEObject)composedTypeRef).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF, null, msgs);
+			if (newComposedTypeRef != null)
+				msgs = ((InternalEObject)newComposedTypeRef).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF, null, msgs);
+			msgs = basicSetComposedTypeRef(newComposedTypeRef, msgs);
+			if (msgs != null) msgs.dispatch();
+		}
+		else if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF, newComposedTypeRef, newComposedTypeRef));
 	}
 
 	/**
@@ -147,6 +152,8 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 		switch (featureID) {
 			case TypesPackage.COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS:
 				return ((InternalEList<?>)getCachedComposedMembers()).basicRemove(otherEnd, msgs);
+			case TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF:
+				return basicSetComposedTypeRef(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -162,8 +169,7 @@ public class ComposedMemberCacheImpl extends ProxyResolvingEObjectImpl implement
 			case TypesPackage.COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS:
 				return getCachedComposedMembers();
 			case TypesPackage.COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF:
-				if (resolve) return getComposedTypeRef();
-				return basicGetComposedTypeRef();
+				return getComposedTypeRef();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}

@@ -46,8 +46,7 @@ Require-Bundle: org.eclipse.n4js;visibility:=reexport,
  com.fasterxml.jackson.core.jackson-core,
  com.fasterxml.jackson.core.jackson-databind,
  org.eclipse.n4js.utils.ui,
- com.ibm.icu,
- org.eclipse.search
+ com.ibm.icu
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.ui,
  org.eclipse.n4js.ui.building,

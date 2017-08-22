@@ -162,7 +162,7 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 class ComposedMemberCache {
 	contains transient TMember[] cachedComposedMembers
 	// The compose type ref of the member being cached
-	refers transient TypeRef composedTypeRef
+	contains transient TypeRef composedTypeRef
 }
 
 /*

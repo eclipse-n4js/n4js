@@ -353,7 +353,7 @@ public interface TypesPackage extends EPackage {
 	int COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = 0;
 
 	/**
-	 * The feature id for the '<em><b>Composed Type Ref</b></em>' reference.
+	 * The feature id for the '<em><b>Composed Type Ref</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
@@ -12005,10 +12005,10 @@ public interface TypesPackage extends EPackage {
 	EReference getComposedMemberCache_CachedComposedMembers();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef <em>Composed Type Ref</em>}'.
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef <em>Composed Type Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Composed Type Ref</em>'.
+	 * @return the meta object for the containment reference '<em>Composed Type Ref</em>'.
 	 * @see org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef()
 	 * @see #getComposedMemberCache()
 	 * @generated
@@ -14758,7 +14758,7 @@ public interface TypesPackage extends EPackage {
 		EReference COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = eINSTANCE.getComposedMemberCache_CachedComposedMembers();
 
 		/**
-		 * The meta object literal for the '<em><b>Composed Type Ref</b></em>' reference feature.
+		 * The meta object literal for the '<em><b>Composed Type Ref</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated

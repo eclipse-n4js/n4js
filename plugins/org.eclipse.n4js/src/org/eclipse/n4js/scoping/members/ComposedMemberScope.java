@@ -240,7 +240,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final MemberAccess contextCasted = //
 					(MemberAccess) request.context; // cast is valid, see MemberScopeRequest#provideContainedMembers
 			final ComposedMemberCache cache = contextCasted.getComposedMemberCache();
-			if (cache != null) {
+			if (cache != null && !TypeCompareUtils.isEqual(cache.getComposedTypeRef(), this.composedTypeRef)) {
 				return cache;
 			}
 			// does not exist yet -> create new composed member cache in TModule:
@@ -256,7 +256,8 @@ public abstract class ComposedMemberScope extends AbstractScope {
 
 				final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
 				EcoreUtilN4.doWithDeliver(false, () -> {
-					cacheNew.setComposedTypeRef(composedTypeRef);
+					// Order important due to notification!
+					cacheNew.setComposedTypeRef(TypeUtils.copyIfContained(composedTypeRef));
 					module.getComposedMemberCaches().add(cacheNew);
 					contextCasted.setComposedMemberCache(cacheNew);
 				}, module, contextCasted);
