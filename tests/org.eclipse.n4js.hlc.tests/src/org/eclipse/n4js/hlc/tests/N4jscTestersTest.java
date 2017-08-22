@@ -61,13 +61,13 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Simple test of compiling a project and launching <u>a single test file</u>.
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
 	 *
 	 * @throws ExitCodeException
 	 *             in error cases ( not expected )
 	 */
 	@Test
-	public void testCompile_And_LaunchSingleTestFile() throws ExitCodeException {
+	public void testCompile_And_LaunchSinglePassingTestFile() throws ExitCodeException {
 		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
@@ -90,13 +90,41 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Simple test of compiling a project and launching <u>a single test file</u>.
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
 	 *
 	 * @throws ExitCodeException
 	 *             in error cases ( not expected )
 	 */
 	@Test
-	public void testCompile_And_LaunchSingleTestFile2() throws ExitCodeException {
+	public void testCompile_And_LaunchSingleIgnoredTestFile() throws ExitCodeException {
+		String proot = workspace.getAbsolutePath().toString();
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+
+		// absolute src filename
+		String fileFooTest = pathToDemoTest + "/test/BazTest.n4js";
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
+				"--test", fileFooTest,
+				"-v"
+		};
+
+		new N4jscBase().doMain(args);
+
+		// TODO add proper assertion that test was actually executed properly!!!
+	}
+
+	/**
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
+	 * <p>
+	 * (negative test, it is expected to see error output)
+	 */
+	@Test
+	public void testCompile_And_LaunchSingleFailingTestFile() {
 		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
@@ -110,6 +138,31 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-t", "allprojects",
 				"-tw", "nodejs_mangelhaft",
 				"--test", fileFooTest,
+				"-v"
+		};
+
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
+
+		// TODO add proper assertion that test was actually executed properly!!!
+	}
+
+	/**
+	 * Simple test of compiling a project and execute tests from <u>whole test project</u>.
+	 * <p>
+	 * (negative test, it is expected to see error output)
+	 */
+	@Test
+	public void testCompile_And_TestProject() {
+		String proot = workspace.getAbsolutePath().toString();
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
+				"--test", pathToDemoTest,
 				"-v"
 		};
 
@@ -223,13 +276,4 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 	}
 
-	/*
-	 * TODO more tests for launching testers from command-line
-	 *
-	 * Some ideas:
-	 *
-	 * - simple tests for launching a folder or project containing tests (instead of a file)
-	 *
-	 * - negative tests (e.g. launch folder that contains no tests, launch tests without compiling first, ...)
-	 */
 }

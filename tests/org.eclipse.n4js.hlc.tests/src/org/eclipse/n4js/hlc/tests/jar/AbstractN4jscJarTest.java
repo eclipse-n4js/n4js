@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.junit.After;
-import org.junit.Before;
 import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.junit.After;
+import org.junit.Before;
 
 /**
  */
@@ -57,7 +57,7 @@ public abstract class AbstractN4jscJarTest {
 		File wsp = new File(TARGET, WSP);
 		File fixtureFile = new File(fixture);
 
-		System.out.println("BEFORE: 			  current root " + new File(".").getAbsolutePath());
+		System.out.println("BEFORE: 	current root " + new File(".").getAbsolutePath());
 		System.out.println("BEFORE: current workspace would be " + wsp.getAbsolutePath());
 
 		// clean
