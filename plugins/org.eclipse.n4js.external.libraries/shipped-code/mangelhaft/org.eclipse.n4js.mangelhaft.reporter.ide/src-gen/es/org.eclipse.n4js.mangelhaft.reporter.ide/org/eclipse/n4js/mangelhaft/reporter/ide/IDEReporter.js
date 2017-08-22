@@ -108,7 +108,7 @@
 											"/n4js/testing/sessions",
 											sessionId,
 											"tests",
-											groupName + "%23" + testName,
+											IDEReporter.escapeGroupName(groupName) + "%23" + testName,
 											"start"
 										].join("/"), 'POST', {
 											'Content-Type': "application/vnd.n4js.start_test_req.tm+json",
@@ -135,7 +135,7 @@
 											"/n4js/testing/sessions",
 											sessionId,
 											"tests",
-											groupName + "%23" + testName,
+											IDEReporter.escapeGroupName(groupName) + "%23" + testName,
 											"end"
 										].join("/"), 'POST', {
 											'Content-Type': "application/vnd.n4js.end_test_req.tm+json",
@@ -200,7 +200,13 @@
 						value: undefined,
 						writable: true
 					}
-				}, {}, function(instanceProto, staticProto) {
+				}, {
+					escapeGroupName: {
+						value: function escapeGroupName___n4(groupName) {
+							return groupName.replace("/", "$");
+						}
+					}
+				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'IDEReporter',
 						origin: 'org.eclipse.n4js.mangelhaft.reporter.ide',
@@ -263,6 +269,12 @@
 								name: 'register',
 								isStatic: false,
 								jsFunction: instanceProto['register'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'escapeGroupName',
+								isStatic: true,
+								jsFunction: staticProto['escapeGroupName'],
 								annotations: []
 							})
 						],

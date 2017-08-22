@@ -87,7 +87,7 @@ export public class TestController {
           , moduleName: string
         ;
 
-        parts = info.fqn.split("\.");
+        parts = info.fqn.split("/");
         ctorName = parts.pop();
         moduleName = parts.join("/");
         try {
