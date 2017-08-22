@@ -287,18 +287,20 @@ abstract class AbstractTranspilerTest {
 		return state
 	}
 
-		/* Helper method for transpiler checking */
+	/* Helper method for transpiler checking */
 	def assertCompileResult(Script scriptNode, String expectedTranspilerText ) throws AssertionError {
+		assertCompileResult(scriptNode, GENERATOR_OPTIONS, expectedTranspilerText);
+	}
+
+	/* Helper method for transpiler checking */
+	def assertCompileResult(Script scriptNode, GeneratorOption[] options, String expectedTranspilerText ) throws AssertionError {
 
 		// As long as Pretty print is not here, we get a dump of the structure
-		val generatedResult = esSubGen.getCompileResultAsText(scriptNode, GENERATOR_OPTIONS);
+		val generatedResult = esSubGen.getCompileResultAsText(scriptNode, options);
 
 		// ignoring pretty printing, we want to compare:
 		AbstractTranspilerTest.assertSameExceptWhiteSpace ( expectedTranspilerText, generatedResult );
 	}
-
-
-
 
 	/* ensures string-equality when all whitespaces are removed on {@code expected} and {@code actual} parameter*/
 	static def assertSameExceptWhiteSpace( String expected, String actual) throws AssertionError {
