@@ -11,6 +11,7 @@
 package org.eclipse.n4js.smith.graph.graph;
 
 import java.util.Collections;
+import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.swt.SWT;
@@ -26,23 +27,22 @@ import com.google.common.collect.Lists;
  * differently to improve to visual appearance w.r.t. crossings of other edges.
  */
 public class CFEdge extends Edge {
-	final ControlFlowType cfType;
+	final TreeSet<ControlFlowType> cfTypes;
 
 	/**
 	 * Constructor
 	 */
-	public CFEdge(String label, Node startNode, Node endNode, ControlFlowType cfType) {
+	public CFEdge(String label, Node startNode, Node endNode, TreeSet<ControlFlowType> cfTypes) {
 		super(label, false, startNode, Lists.newArrayList(endNode), Collections.emptyList());
-		this.cfType = cfType;
+		this.cfTypes = cfTypes;
 	}
 
 	/** Paint edge to given GC. */
 	@Override
 	public void paint(GC gc) {
-		Node start = startNodes.get(0);
-		for (Node endNode : endNodes) {
-			paintEdge(gc, start, endNode);
-		}
+		Node startNode = startNodes.get(0);
+		Node endNode = endNodes.get(0);
+		paintEdge(gc, startNode, endNode);
 	}
 
 	/** Paints an edge */
@@ -52,7 +52,10 @@ public class CFEdge extends Edge {
 		Point src = srcN.getCenter();
 		Point tgt = tgtN.getCenter();
 		Point tgtB;
-		if (isReverseArc(src, tgt)) {
+
+		if (srcN == tgtN) {
+			tgtB = paintSelfArc(gc, tgtN, tgt);
+		} else if (isReverseArc(src, tgt)) {
 			tgtB = paintReverseArc(gc, srcN, tgtN, src, tgt);
 		} else {
 			tgtB = paintArc(gc, srcN, tgtN, src, tgt);
@@ -66,6 +69,7 @@ public class CFEdge extends Edge {
 		Display displ = Display.getCurrent();
 		Color color = null;
 
+		ControlFlowType cfType = cfTypes.first();
 		switch (cfType) {
 		case Loop:
 		case Continue:
@@ -108,6 +112,21 @@ public class CFEdge extends Edge {
 
 		drawLabel(gc, ctr);
 		GraphUtils.arc(gc, ctr, srcB, tgtB);
+
+		return tgtB;
+	}
+
+	/**
+	 * Paints the reverse arc. Since reverse arcs always point downwards, the start and end points are simply located at
+	 * the lower/upper center of the source/target nodes.
+	 */
+	private Point paintSelfArc(GC gc, Node tgtN, Point tgt) {
+		Point srcB = new Point(tgt.x + tgtN.width / 2 + 2, tgt.y);
+		Point tgtB = new Point(tgt.x, tgt.y - tgtN.height / 2 - 2);
+		Point tgtL = new Point(tgtB.x, tgtB.y - 20);
+
+		drawLabel(gc, tgtL);
+		GraphUtils.arcSelf(gc, srcB, tgtB);
 
 		return tgtB;
 	}
@@ -179,22 +198,26 @@ public class CFEdge extends Edge {
 
 	/** Draws the label between jumping control flow elements. */
 	void drawLabel(GC gc, Point p) {
-		switch (cfType) {
-		case Break:
-		case Continue:
-		case Return:
-		case Throw:
-		case Loop:
-			break;
-		default:
-			return;
+		label = "";
+		for (ControlFlowType cfType : cfTypes) {
+			switch (cfType) {
+			case Break:
+			case Continue:
+			case Return:
+			case Throw:
+			case Loop:
+				if (!label.isEmpty())
+					label += "|";
+				label += cfType.name();
+				break;
+			default:
+			}
 		}
 
-		String title = cfType.name();
-		org.eclipse.swt.graphics.Point size = gc.stringExtent(title);
+		org.eclipse.swt.graphics.Point size = gc.stringExtent(label);
 		float x = p.x - size.x / 2;
 		float y = p.y - size.y / 2;
-		GraphUtils.drawString(gc, title, x, y);
+		GraphUtils.drawString(gc, label, x, y);
 	}
 
 }

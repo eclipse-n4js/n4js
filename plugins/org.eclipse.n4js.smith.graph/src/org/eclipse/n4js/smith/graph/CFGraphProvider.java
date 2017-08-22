@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.TreeSet;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -99,14 +100,9 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 			for (ControlFlowElement succ : succs) {
 				Node eNode = nodeMap.get(succ);
-
-				if (sNode != eNode) {
-					ControlFlowType cfType = flowAnalyses.getControlFlowTypeToSuccessor(cfe, succ);
-					Edge edge = new CFEdge("CF", sNode, eNode, cfType);
-					edges.add(edge);
-				} else {
-					System.err.println("Skipping self edge on node: " + sNode.getTitle());
-				}
+				TreeSet<ControlFlowType> cfTypes = flowAnalyses.getControlFlowTypeToSuccessors(cfe, succ);
+				Edge edge = new CFEdge("CF", sNode, eNode, cfTypes);
+				edges.add(edge);
 			}
 			edgesMap.put(cfe, edges);
 		}

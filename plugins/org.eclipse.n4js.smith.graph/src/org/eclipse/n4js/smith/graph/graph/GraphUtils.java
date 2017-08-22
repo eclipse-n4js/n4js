@@ -143,13 +143,34 @@ public class GraphUtils {
 	/**
 	 * Paints an arc from src to tgt.
 	 * <p/>
-	 * <b>Assumption:</b> The tgt is located below the src.
+	 * <b>Assumption:</b> The tgt is located below of the src.
 	 */
 	public static float[] arcReversed(GC gc, Point src, Point tgt) {
 		Path path = new Path(gc.getDevice());
 		int ydiff = (int) ((tgt.y - src.y) / 3);
 		path.moveTo((int) src.x, (int) src.y);
 		path.cubicTo((int) src.x, (int) src.y + ydiff, (int) tgt.x, (int) tgt.y - ydiff * 2, (int) tgt.x, (int) tgt.y);
+		gc.drawPath(path);
+
+		float[] pp = path.getPathData().points;
+		return pp;
+	}
+
+	/**
+	 * Paints an looping arc from scr to tgt.
+	 * <p/>
+	 * <b>Assumption:</b> The tgt is located right/below of the src.
+	 */
+	public static float[] arcSelf(GC gc, Point src, Point tgt) {
+		Path path = new Path(gc.getDevice());
+		int diffH = 10;
+		int diff = diffH * 3;
+		path.moveTo((int) src.x, (int) src.y);
+		path.cubicTo(
+				(int) src.x + diff, (int) src.y - diffH,
+				(int) tgt.x + diffH, (int) tgt.y - diff,
+				(int) tgt.x, (int) tgt.y);
+
 		gc.drawPath(path);
 
 		float[] pp = path.getPathData().points;
