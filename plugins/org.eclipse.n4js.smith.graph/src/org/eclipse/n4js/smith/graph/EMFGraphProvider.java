@@ -166,8 +166,7 @@ public class EMFGraphProvider implements GraphProvider {
 									targetNodesExternal.add(EcoreUtil.getURI((EObject) currTarget).toString());
 							}
 							if (!targetNodes.isEmpty() || !targetNodesExternal.isEmpty())
-								result.add(new Edge(currRef.getName(),
-										(!currRef.isContainment() && !currRef.isContainer()), node, targetNodes,
+								result.add(new Edge(currRef.getName(), !currRef.isContainment(), node, targetNodes,
 										targetNodesExternal));
 						}
 					} else {
@@ -182,7 +181,7 @@ public class EMFGraphProvider implements GraphProvider {
 							if (targetNode != null || targetNodeExternal != null) {
 								result.add(new Edge(
 										currRef.getName(),
-										(!currRef.isContainment() && !currRef.isContainer()),
+										!currRef.isContainment(),
 										node,
 										asCollection(targetNode),
 										asCollection(targetNodeExternal)));
