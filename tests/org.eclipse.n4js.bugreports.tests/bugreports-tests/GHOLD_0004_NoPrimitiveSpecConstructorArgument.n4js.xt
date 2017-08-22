@@ -11,15 +11,30 @@
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
-// example provided by Joe:
-
-function ensureErrorStack(error : ~Error with {stack?: Array<string>; line?: string;}): ~Error {
-    if (typeof error.stack === 'undefined') {
-        if (typeof error.line !== 'undefined') {
-            error.stack = ['test line' + error.line];
-        } else {
-            error.stack = ['no stacktrace provided'];
-        }
+class A {
+    constructor(@Spec spec : ~i~this) {
     }
-    return error;
 }
+
+// XPECT errors --> "string is not a subtype of ~i~A." at ""hello""
+new A("hello"); // should be an error
+
+class C {
+	public s?: int = 42;
+}
+
+// XPECT noerrors -> 
+var c1: ~C = {};
+// XPECT errors --> "int is not a subtype of C." at "2" 
+var c2: C = 2;
+
+c1;c2;
+
+class D {
+	public s: int;
+}
+
+// XPECT errors --> "int is not a subtype of ~D." at "42"
+var d1: ~D = 42;
+
+d1;

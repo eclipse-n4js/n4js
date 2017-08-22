@@ -332,6 +332,8 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 			return true;
 		if(typeRef instanceof FunctionTypeExprOrRef)
 			return true;
+		if (ts.subtypeSucceeded(G, typeRef, G.structuralFunctionTypeRef))
+			return true;
 		if(ts.subtypeSucceeded(G, typeRef, G.functionTypeRef))
 			return true;
 		if(typeRef.dynamic && ts.subtypeSucceeded(G, G.functionTypeRef, typeRef))
