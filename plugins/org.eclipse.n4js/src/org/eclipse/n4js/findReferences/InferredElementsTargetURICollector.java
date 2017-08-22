@@ -38,7 +38,7 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 	private ProjectUtils projectUtils;
 
 	@Override
-	protected void doAdd(EObject primaryTarget, TargetURIs targetURIs) {
+	protected void doAdd(EObject primaryTarget, TargetURIs targetURIsAddHere) {
 		Resource resource = primaryTarget.eResource();
 		// If the target is not contained in a resource, we cannot do anything but return.
 		if (resource == null)
@@ -50,21 +50,21 @@ public class InferredElementsTargetURICollector extends TargetURICollector {
 			// In case of composed member, add the constituent members instead.
 			List<TMember> constituentMembers = ((TMember) primaryTarget).getConstituentMembers();
 			for (TMember constituentMember : constituentMembers) {
-				super.doAdd(constituentMember, targetURIs);
+				super.doAdd(constituentMember, targetURIsAddHere);
 			}
 		} else {
 			if (primaryTarget instanceof TStructMember) {
 				TStructMember crossRefStructMember = ((TStructMember) primaryTarget).getDefinedMember();
 				if (crossRefStructMember != null)
 					// If this TStructMember is an AST, also add the defined member located in the TModule
-					super.doAdd(((TStructMember) primaryTarget).getDefinedMember(), targetURIs);
+					super.doAdd(((TStructMember) primaryTarget).getDefinedMember(), targetURIsAddHere);
 			}
-			super.doAdd(primaryTarget, targetURIs);
+			super.doAdd(primaryTarget, targetURIsAddHere);
 		}
 
 		inferredElements.collectInferredElements(primaryTarget, (object) -> {
 			if (object != null) {
-				super.doAdd(object, targetURIs);
+				super.doAdd(object, targetURIsAddHere);
 			}
 		}, projectUtils);
 	}

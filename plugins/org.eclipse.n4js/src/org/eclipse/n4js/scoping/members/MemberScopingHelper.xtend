@@ -15,7 +15,6 @@ import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.MemberAccess
-
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.StaticWriteAccessFilterScope
@@ -55,7 +54,6 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.Scopes
-import org.eclipse.n4js.ts.utils.TypeCompareHelper
 
 /**
  */
@@ -65,8 +63,6 @@ class MemberScopingHelper {
 	@Inject MemberScope.MemberScopeFactory memberScopeFactory
 	@Inject private MemberVisibilityChecker memberVisibilityChecker
 	@Inject	private JavaScriptVariantHelper jsVariantHelper;
-	@Inject private TypeCompareHelper typeCompareHelper;
-
 
 	/**
 	 * Create a new member scope that filters using the given criteria (visibility, static access). Members retrieved
@@ -251,7 +247,7 @@ class MemberScopingHelper {
 		switch (subScopes.size) { // only create union scope if really necessary, remember this optimization in test, since union{A} tests scope of A only!
 			case 0: return IScope.NULLSCOPE
 			case 1: return subScopes.get(0)
-			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts, typeCompareHelper)
+			default: return new UnionMemberScope(uniontypeexp, request, subScopes, ts)
 		}
 	}
 
@@ -265,7 +261,7 @@ class MemberScopingHelper {
 			return scope;
 		]
 
-		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts, typeCompareHelper);
+		return new IntersectionMemberScope(intersectiontypeexp, request, subScopes, ts);
 	}
 
 	private def dispatch IScope members(FunctionTypeRef ftExpr, MemberScopeRequest request) {

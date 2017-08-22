@@ -150,8 +150,6 @@ class DestructureHelper {
 		}
 		else {
 			// non-positional
-			// TODO: Consider implementing scoping for binding pattern's properties or use other validation instead of
-			// creating scope here
 			val memberScope = createMemberScopeForPropertyAccess(valueTypeRef, contextObj, false); // do not check visibility
 			for(currNode : nodes) {
 				val currValueTypeRef = getPropertyTypeForNode(G, valueTypeRef, memberScope, currNode.propName, null);

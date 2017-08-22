@@ -84,9 +84,8 @@ public class FindReferencesXpectMethod {
 		// eObject!
 		// Do NOT use EObject arg1!
 		EObject context = offset.getEObject();
-		// Get the cross-referenced element at the offset.
 		EObject argEObj = offsetHelper
-				.resolveCrossReferencedElementAt((XtextResource) context.eResource(), offset.getOffset());
+				.resolveElementAt((XtextResource) context.eResource(), offset.getOffset());
 		// If not a cross-reference element, use context instead
 		if (argEObj == null)
 			argEObj = context;

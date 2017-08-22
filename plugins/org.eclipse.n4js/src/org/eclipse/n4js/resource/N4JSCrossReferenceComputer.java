@@ -23,15 +23,14 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
-import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.xtext.util.IAcceptor;
 
 import com.google.inject.Inject;
 
 /**
- * Collects all Types,TVariables,TLiterals and IdentifiableElements referenced within the AST of a given fully*resolved
- * resource,when they aren'tcontained in this resource,fully resolved and no built-in type.Additional*checks can be
- * performed by the passed acceptor.*
+ * Collects all Types, TVariables, TLiterals and IdentifiableElements referenced within the AST of a given fully
+ * *resolved* resource, when they aren't contained in this resource, fully resolved and no built-in type. Additional
+ * checks can be performed by the passed acceptor.
  * <p>
  * Helper for{@link N4JSResourceDescription}.
  *
@@ -56,7 +55,7 @@ public class N4JSCrossReferenceComputer {
 		if (resource instanceof N4JSResource) {
 			Script script = ((N4JSResource) resource).getScript();
 			// We traverse the AST but not the TModule tree
-			allASTContentsIter = N4JSLanguageUtils.getAllContents(script);
+			allASTContentsIter = script.eAllContents();
 		} else {
 			allASTContentsIter = resource.getAllContents();
 		}

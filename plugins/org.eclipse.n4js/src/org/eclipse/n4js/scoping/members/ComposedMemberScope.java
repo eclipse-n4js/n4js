@@ -32,7 +32,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
-import org.eclipse.n4js.ts.utils.TypeCompareHelper;
+import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.EcoreUtilN4;
@@ -68,8 +68,6 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	final N4JSTypeSystem ts;
 	final boolean writeAccess;
 
-	final TypeCompareHelper typeCompareHelper;
-
 	/**
 	 * Check if the elements of the subScopes cause errors. Handle these errors according to union/intersection types.
 	 */
@@ -90,7 +88,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 	 * etc.)
 	 */
 	public ComposedMemberScope(ComposedTypeRef composedTypeRef, MemberScopeRequest request, List<IScope> subScopes,
-			N4JSTypeSystem ts, TypeCompareHelper typeCompareHelper) {
+			N4JSTypeSystem ts) {
 
 		super(IScope.NULLSCOPE, false);
 
@@ -99,7 +97,6 @@ public abstract class ComposedMemberScope extends AbstractScope {
 		this.ts = ts;
 		this.request = request;
 		this.writeAccess = ExpressionExtensions.isLeftHandSide(request.context);
-		this.typeCompareHelper = typeCompareHelper;
 	}
 
 	/**
@@ -252,8 +249,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			if (module != null) {
 				// Search in the module for composed member cache containing equivalent composed type ref
 				for (ComposedMemberCache existingCache : module.getComposedMemberCaches()) {
-					if (typeCompareHelper.getTypeRefComparator().compare(existingCache.getComposedTypeRef(),
-							composedTypeRef) == 0) {
+					if (TypeCompareUtils.isEqual(existingCache.getComposedTypeRef(), composedTypeRef)) {
 						return existingCache;
 					}
 				}

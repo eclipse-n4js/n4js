@@ -62,8 +62,6 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private SortedSet<QualifiedName> lazyImportedNames;
 
-	// private final N4JSTypeSystem ts;
-
 	/**
 	 * Creates a new description for the given resource.
 	 */
@@ -201,29 +199,29 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 		}
 	}
 
-	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
+	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypesAddHere) {
 		IAcceptor<EObject> acceptor = new IAcceptor<EObject>() {
 			@Override
 			public void accept(EObject to) {
 				if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
-					crossRefTypes.add(to);
+					crossRefTypesAddHere.add(to);
 				}
 				// Add return type of function/method to cross ref types. Note that setters/getters are methods.
 				// Add declared type of a field to cross ref types
 				if (to instanceof TFunction) {
 					TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
-					crossRefTypes.add(returnTypeRef.getDeclaredType());
+					crossRefTypesAddHere.add(returnTypeRef.getDeclaredType());
 				}
 				if (to instanceof TField) {
 					TypeRef typeRef = ((TField) to).getTypeRef();
-					crossRefTypes.add(typeRef.getDeclaredType());
+					crossRefTypesAddHere.add(typeRef.getDeclaredType());
 				}
 
 				// In case of TMember, add the containing type as well
 				if (to instanceof TMember) {
 					TMember casted = (TMember) to;
 					ContainerType<?> declaringType = casted.getContainingType();
-					crossRefTypes.add(declaringType);
+					crossRefTypesAddHere.add(declaringType);
 				}
 			}
 		};

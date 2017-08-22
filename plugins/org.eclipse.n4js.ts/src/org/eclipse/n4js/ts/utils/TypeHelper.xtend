@@ -11,22 +11,14 @@
 package org.eclipse.n4js.ts.utils
 
 import com.google.inject.Inject
-import java.util.Collections
 import java.util.Iterator
 import java.util.List
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
-import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.Type
 
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
-import static extension java.util.Collections.singletonList
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 
 /**
@@ -198,48 +190,5 @@ public class TypeHelper {
 			i = i+1;
 		}
 		return -1;
-	}
-
-
-	/**
-	 * Extracts the type(s) referenced by a type ref.
-	 * @param typeRef
-	 *  		the type ref, from which the type should be extracted.
-	 * @return
-	 * 			the list of extracted types. There can be multiple returned types due to composed type refs.
-	 */
-	public def List<Type> extractType(TypeArgument typeArg) {
-		if (typeArg === null) {
-			return Collections.emptyList();
-		}
-		switch (typeArg) {
-			Wildcard: {
-				// In case of wildcard, extract types in lower bound and upper bound
-				val ret = typeArg.declaredLowerBound.extractType
-				ret.addAll(typeArg.declaredUpperBound.extractType)
-				return ret
-			}
-			ParameterizedTypeRef:
-				return extractType_ParameterizedTypeRef(typeArg).singletonList
-			FunctionTypeExpression:
-				return extractType_FunctionTypeExpression(typeArg)
-			ComposedTypeRef:
-				return typeArg.typeRefs.map[extractType].flatten.toList
-			TypeTypeRef:
-				// Add type arguments of the constructor type
-				return typeArg.typeArgs.map[extractType].flatten.toList
-			default:
-				// Otherwise, no type can be extracted
-				return Collections.emptyList()
-		}
-	}
-
-	private def Type extractType_ParameterizedTypeRef (ParameterizedTypeRef parameterizedTypeRef) {
-		return parameterizedTypeRef.declaredType;
-	}
-
-	private def List<Type> extractType_FunctionTypeExpression (FunctionTypeExpression functionTypeExpression) {
-		 val returnTypeRef = functionTypeExpression.getReturnTypeRef();
-		 return extractType(returnTypeRef);
 	}
 }

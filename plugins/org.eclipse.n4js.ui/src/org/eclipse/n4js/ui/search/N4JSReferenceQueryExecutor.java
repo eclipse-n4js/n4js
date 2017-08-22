@@ -33,7 +33,7 @@ import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 /**
- * Adds more filter criteria to the UI find references represenation.
+ * Adds more filter criteria to the UI find references presentation.
  */
 public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor {
 	@Inject

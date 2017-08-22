@@ -39,5 +39,4 @@ public class N4JSXReferenceQueryExecutor extends N4JSReferenceQueryExecutor {
 			return super.isRelevantToUser(referenceDescription);
 		}
 	}
-	
 }

@@ -3519,7 +3519,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEClass(composedMemberCacheEClass, ComposedMemberCache.class, "ComposedMemberCache", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getComposedMemberCache_CachedComposedMembers(), this.getTMember(), null, "cachedComposedMembers", null, 0, -1, ComposedMemberCache.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getComposedMemberCache_ComposedTypeRef(), theTypeRefsPackage.getTypeRef(), null, "composedTypeRef", null, 0, 1, ComposedMemberCache.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getComposedMemberCache_ComposedTypeRef(), theTypeRefsPackage.getTypeRef(), null, "composedTypeRef", null, 0, 1, ComposedMemberCache.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(typableElementEClass, TypableElement.class, "TypableElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
