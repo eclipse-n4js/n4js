@@ -13,6 +13,7 @@ package org.eclipse.n4js.transpiler;
 import java.io.Writer;
 import java.nio.file.Path;
 
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -134,10 +135,11 @@ public abstract class AbstractTranspiler {
 	 * @param optSourceMapInfo
 	 *            meta-info including the writer to create source-maps. If absent do not create source-maps.
 	 */
-	public void transpile(N4JSResource resource, Writer outCode, Optional<SourceMapInfo> optSourceMapInfo) {
+	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
+			Optional<SourceMapInfo> optSourceMapInfo) {
 
 		// step 1: create initial transpiler state (i.e. create intermediate model, etc.)
-		final TranspilerState state = prepare(resource);
+		final TranspilerState state = prepare(resource, options);
 
 		// step 2: execute all transformations on the transpiler state
 		transform(state);
@@ -150,12 +152,12 @@ public abstract class AbstractTranspiler {
 	/**
 	 * First step during transpilation. Creates initial transpiler state.
 	 */
-	protected TranspilerState prepare(N4JSResource resource) {
+	protected TranspilerState prepare(N4JSResource resource, GeneratorOption[] options) {
 		final Script script = resource.getScript();
 		if (script == null || script.eIsProxy()) {
 			throw new IllegalArgumentException("given N4JSResource does not contain a script or script is a proxy");
 		}
-		return preparationStep.prepare(script);
+		return preparationStep.prepare(script, options);
 	}
 
 	/**
@@ -232,8 +234,8 @@ public abstract class AbstractTranspiler {
 	/**
 	 * Performs preparation step. Only intended for testing.
 	 */
-	public TranspilerState testPrepare(N4JSResource resource) {
-		return prepare(resource);
+	public TranspilerState testPrepare(N4JSResource resource, GeneratorOption[] options) {
+		return prepare(resource, options);
 	}
 
 	/**

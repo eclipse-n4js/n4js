@@ -19,14 +19,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.Arrays;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.inject.Inject;
-
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -42,6 +35,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Variable;
+import org.eclipse.n4js.n4jsx.n4JSX.JSXElementName;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -59,7 +53,13 @@ import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElementName;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.util.Arrays;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.inject.Inject;
 
 /**
  */
@@ -73,14 +73,14 @@ public class PreparationStep {
 	 * the original AST with some modifications (esp. rewiring of cross-references to ensure intermediate model is
 	 * self-contained).
 	 */
-	public TranspilerState prepare(Script script) {
+	public TranspilerState prepare(Script script, GeneratorOption[] options) {
 		final N4JSResource resource = (N4JSResource) script.eResource();
 		final ContainerTypesHelper.MemberCollector memberCollector = containerTypesHelper.fromContext(resource);
 		final Tracer tracer = new Tracer();
 		final InformationRegistry info = new InformationRegistry();
 		final STECache steCache = createIM(script, tracer, info);
 
-		return new TranspilerState(resource, memberCollector, steCache.im, steCache, tracer, info);
+		return new TranspilerState(resource, options, memberCollector, steCache.im, steCache, tracer, info);
 	}
 
 	private STECache createIM(Script script, Tracer tracer, InformationRegistry info) {

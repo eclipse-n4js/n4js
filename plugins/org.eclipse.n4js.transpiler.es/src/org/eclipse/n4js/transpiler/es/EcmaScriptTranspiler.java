@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
@@ -146,11 +147,12 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 * General entry-point. Overridden to handle plain-JS-wrapping without transforming.
 	 */
 	@Override
-	public void transpile(N4JSResource resource, Writer outCode, Optional<SourceMapInfo> optSourceMapInfo) {
+	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
+			Optional<SourceMapInfo> optSourceMapInfo) {
 		if (noTranspile(resource)) {
 			doWrapAndWrite(resource, outCode);
 		} else {
-			super.transpile(resource, outCode, optSourceMapInfo);
+			super.transpile(resource, options, outCode, optSourceMapInfo);
 		}
 	}
 

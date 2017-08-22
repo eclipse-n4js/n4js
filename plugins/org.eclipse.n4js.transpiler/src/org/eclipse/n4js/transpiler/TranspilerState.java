@@ -10,10 +10,9 @@
  */
 package org.eclipse.n4js.transpiler;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Set;
 
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.im.Script_IM;
@@ -36,12 +35,12 @@ import it.xsemantics.runtime.RuleEnvironment;
 @TransformationScoped
 public class TranspilerState {
 
-	public final Set<Class<? extends TranspilerOption>> options;
-
 	/**
 	 * The original resource to transpile. Should <b>never</b> be modified in any way from within the transpiler.
 	 */
 	public final N4JSResource resource;
+
+	public final GeneratorOption[] options;
 
 	/**
 	 * An empty rule environment for the {@link #resource original resource to compile}. Client-code should not change
@@ -82,11 +81,10 @@ public class TranspilerState {
 	/**
 	 * Creates a new transpiler state.
 	 */
-	public TranspilerState(N4JSResource resource, MemberCollector memberCollector, Script_IM im, STECache steCache,
-			Tracer tracer,
-			InformationRegistry info) {
-		this.options = Collections.emptySet();
+	public TranspilerState(N4JSResource resource, GeneratorOption[] options, MemberCollector memberCollector,
+			Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
 		this.resource = resource;
+		this.options = options;
 		this.G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
 		this.memberCollector = memberCollector;
 		this.im = im;

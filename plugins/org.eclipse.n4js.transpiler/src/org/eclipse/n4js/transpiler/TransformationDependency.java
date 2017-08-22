@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.base.Joiner;
@@ -35,7 +35,7 @@ public abstract class TransformationDependency {
 	@Target({ TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	public static @interface Optional {
-		public Class<? extends TranspilerOption>[] value();
+		public GeneratorOption[] value();
 	}
 
 	/**
@@ -108,17 +108,15 @@ public abstract class TransformationDependency {
 		public Class<? extends Transformation>[] value();
 	}
 
-	public static final boolean isActive(Transformation transformation,
-			Set<Class<? extends TranspilerOption>> activeOptions) {
+	public static final boolean isActiveIn(Transformation transformation,
+			GeneratorOption[] activeOptions) {
 		final Optional ann = transformation.getClass().getAnnotation(Optional.class);
 		if (ann != null) {
 			// at least one of the options given in the annotation must be a super type of any of the active options
-			final Class<? extends TranspilerOption>[] annOptions = ann.value();
-			for (Class<? extends TranspilerOption> annOption : annOptions) {
-				for (Class<? extends TranspilerOption> activeOption : activeOptions) {
-					if (annOption.isAssignableFrom(activeOption)) { // is annOption a super type of activeOption?
-						return true;
-					}
+			final GeneratorOption[] annOptions = ann.value();
+			for (GeneratorOption annOption : annOptions) {
+				if (GeneratorOption.isActiveIn(annOption, activeOptions)) {
+					return true;
 				}
 			}
 			return false;
@@ -127,8 +125,8 @@ public abstract class TransformationDependency {
 	}
 
 	public static final Transformation[] filterByTranspilerOptions(Transformation[] transformations,
-			Set<Class<? extends TranspilerOption>> options) {
-		return Stream.of(transformations).filter(t -> isActive(t, options)).toArray(len -> new Transformation[len]);
+			GeneratorOption[] options) {
+		return Stream.of(transformations).filter(t -> isActiveIn(t, options)).toArray(len -> new Transformation[len]);
 	}
 
 	/**
@@ -211,6 +209,7 @@ public abstract class TransformationDependency {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static final Class<? extends Transformation>[] getValue(Annotation ann) {
 		if (ann instanceof Requires)
 			return ((Requires) ann).value();
@@ -224,6 +223,8 @@ public abstract class TransformationDependency {
 			return ((ExcludesBefore) ann).value();
 		if (ann instanceof ExcludesAfter)
 			return ((ExcludesAfter) ann).value();
+		if (ann instanceof Optional)
+			return new Class[0];
 		throw new IllegalArgumentException("unknown transformation dependency annotation: " + ann);
 	}
 

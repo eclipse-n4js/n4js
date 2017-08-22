@@ -15,7 +15,6 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional
-import org.eclipse.n4js.transpiler.es.EcmaScriptTranspilerOptions.AsyncAwait
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 

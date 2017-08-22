@@ -16,6 +16,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
+import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
 import org.xpect.expectation.IStringExpectation;
@@ -28,17 +33,15 @@ import org.xpect.xtext.lib.setup.ThisResource;
 
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
-import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
-
 /**
  * Provides execution output xpect test methods. Provided resource compiled on the fly and executed, captured output is
  * compared against provided expectations.
  */
 @SuppressWarnings("restriction")
 public class OutputXpectMethod {
+
+	// FIXME replace this!!
+	private static final GeneratorOption[] TEMP_OPTIONS = GeneratorOption.DEFAULT_OPTIONS;
 
 	@Inject
 	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
@@ -75,9 +78,8 @@ public class OutputXpectMethod {
 
 		ConsumerX<SystemLoaderInfo> func = (loader) -> {
 
-			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init,
-					fileSetupContext,
-					true, null, loader);
+			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init, fileSetupContext,
+					true, null, TEMP_OPTIONS, loader);
 			try {
 				expectation.assertEquals(executionResult);
 			} catch (Throwable th) {
@@ -120,7 +122,7 @@ public class OutputXpectMethod {
 		ConsumerX<SystemLoaderInfo> func = (loader) -> {
 
 			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init, fileSetupContext,
-					true, null, loader);
+					true, null, TEMP_OPTIONS, loader);
 			AbstractExpectation abstractEexpectation = (AbstractExpectation) expectation;
 
 			String escapedActual = abstractEexpectation.getTargetSyntaxLiteral().escape(executionResult);
@@ -170,7 +172,7 @@ public class OutputXpectMethod {
 		StringBuilder compileResultSb = new StringBuilder();
 		StringBuilder errorResultSb = new StringBuilder();
 		if (xpectN4JSES5TranpilerHelper.isCompilable(resource, errorResultSb)) {
-			compileResultSb.append(xpectN4JSES5TranpilerHelper.compile(root, replaceQuotes));
+			compileResultSb.append(xpectN4JSES5TranpilerHelper.compile(root, TEMP_OPTIONS, replaceQuotes));
 		}
 		String compileResult = "";
 		if (errorResultSb.length() > 0) {

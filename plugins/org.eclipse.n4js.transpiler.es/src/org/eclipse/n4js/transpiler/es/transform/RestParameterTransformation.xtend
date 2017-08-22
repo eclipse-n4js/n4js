@@ -18,7 +18,6 @@ import org.eclipse.n4js.transpiler.TransformationDependency.RequiresBefore
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.transpiler.es.EcmaScriptTranspilerOptions.ES5plus
 
 /**
  * Transforms ES2015 rest parameters to a ES5 equivalent.

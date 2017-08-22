@@ -36,6 +36,25 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.AnnotationDefinition;
+import org.eclipse.n4js.generator.common.AbstractSubGenerator;
+import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.runner.IExecutor;
+import org.eclipse.n4js.runner.RunConfiguration;
+import org.eclipse.n4js.runner.RunnerFrontEnd;
+import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.runner.extension.RunnerRegistry;
+import org.eclipse.n4js.runner.nodejs.NodeRunner;
+import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
+import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
+import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.xpect.common.DuplicateResourceAwareFileSetupContext;
+import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -54,25 +73,6 @@ import org.xpect.xtext.lib.setup.workspace.Workspace;
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.generator.common.AbstractSubGenerator;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.runner.IExecutor;
-import org.eclipse.n4js.runner.RunConfiguration;
-import org.eclipse.n4js.runner.RunnerFrontEnd;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.runner.extension.RunnerRegistry;
-import org.eclipse.n4js.runner.nodejs.NodeRunner;
-import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
-import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
-import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.n4js.xpect.common.DuplicateResourceAwareFileSetupContext;
-import org.eclipse.n4js.xpect.common.ResourceTweaker;
 
 /**
  * Xpect helper that allows to compile and execute resources on demand in xpect tests. Uses
@@ -246,8 +246,7 @@ public class XpectN4JSES5TranspilerHelper {
 	 */
 	public String doCompileAndExecute(final XtextResource resource, org.xpect.setup.ISetupInitializer<Object> init,
 			FileSetupContext fileSetupContext, boolean decorateStdStreams, ResourceTweaker resourceTweaker,
-			SystemLoaderInfo systemLoader)
-			throws IOException {
+			GeneratorOption[] options, SystemLoaderInfo systemLoader) throws IOException {
 
 		// Apply some modification to the resource here.
 		if (resourceTweaker != null) {
@@ -272,7 +271,7 @@ public class XpectN4JSES5TranspilerHelper {
 			// errors and hence no generated JS code is available for execution.
 			// Then sneak in the path to the generated JS code.
 			Script script = (Script) resource.getContents().get(0);
-			createTempJsFileWithScript(script, replaceQuotes); // IDE-2094 use a specific temp-folder
+			createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder
 			runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
 					(implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
 					systemLoader.getId(),
@@ -288,10 +287,11 @@ public class XpectN4JSES5TranspilerHelper {
 			// replace n4jsd resource with provided js resource
 			for (final Resource dep : from(dependencies).filter(r -> !r.getURI().equals(resource.getURI()))) {
 				if ("n4jsd".equalsIgnoreCase(dep.getURI().fileExtension())) {
-					compileImplementationOfN4JSDFile(errorResult, dep, replaceQuotes);
+					compileImplementationOfN4JSDFile(errorResult, dep, options, replaceQuotes);
 				} else if (isCompilable(dep, errorResult)) {
 					final Script script = (Script) dep.getContents().get(0);
-					createTempJsFileWithScript(script, replaceQuotes); // IDE-2094 use a specific temp-folder here!
+					createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder
+																				// here!
 				}
 			}
 
@@ -302,7 +302,7 @@ public class XpectN4JSES5TranspilerHelper {
 			// No error so far
 			// determine module to run
 			Script script = (Script) resource.getContents().get(0);
-			createTempJsFileWithScript(script, replaceQuotes); // IDE-2094 use a specific temp-folder here!
+			createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder here!
 			String fileToRun = jsModulePathToRun(script);
 
 			// Not in UI case, hence manually set up the resources
@@ -431,15 +431,17 @@ public class XpectN4JSES5TranspilerHelper {
 	 *
 	 * @param depRoot
 	 *            script to transpile
+	 * @param options
+	 *            the {@link GeneratorOption}s to use during compilation.
 	 * @param replaceQuotes
 	 *            should replace quotes (only for windows)
 	 * @return string representation of compilation result
 	 */
-	public String compile(Script depRoot, boolean replaceQuotes) {
+	public String compile(Script depRoot, GeneratorOption[] options, boolean replaceQuotes) {
 		final Resource resource = depRoot.eResource();
 		EcoreUtil2.resolveLazyCrossReferences(resource, CancelIndicator.NullImpl);
 		final AbstractSubGenerator generator = getGeneratorForResource(resource);
-		String compileResultStr = generator.getCompileResultAsText(depRoot);
+		String compileResultStr = generator.getCompileResultAsText(depRoot, options);
 		if (replaceQuotes) {
 			// Windows Node.js has problems with " as it interprets it as ending of script to execute
 			compileResultStr = compileResultStr.replace("\"", "'");
@@ -503,7 +505,8 @@ public class XpectN4JSES5TranspilerHelper {
 		return hasErrors;
 	}
 
-	private void compileImplementationOfN4JSDFile(StringBuilder errorResult, Resource dep, boolean replaceQuotes) {
+	private void compileImplementationOfN4JSDFile(StringBuilder errorResult, Resource dep, GeneratorOption[] options,
+			boolean replaceQuotes) {
 
 		Script script = (Script) dep.getContents().get(0);
 		if (AnnotationDefinition.PROVIDED_BY_RUNTIME.hasAnnotation(script)) {
@@ -530,7 +533,7 @@ public class XpectN4JSES5TranspilerHelper {
 							Resource externalDep = dep.getResourceSet().getResource(potentialExternalSourceURI, true);
 							script = (Script) externalDep.getContents().get(0);
 							if (isCompilable(externalDep, errorResult)) {
-								createTempJsFileWithScript(script, replaceQuotes);
+								createTempJsFileWithScript(script, options, replaceQuotes);
 							}
 						} catch (Exception e) {
 							throw new RuntimeException("Couldn't load " + potentialExternalSourceURI + ".", e);
@@ -541,9 +544,10 @@ public class XpectN4JSES5TranspilerHelper {
 		}
 	}
 
-	private File createTempJsFileWithScript(final Script script, final boolean replaceQuotes) throws IOException {
+	private File createTempJsFileWithScript(final Script script, GeneratorOption[] options, final boolean replaceQuotes)
+			throws IOException {
 		// Compile script to get file content.
-		final String content = compile(script, replaceQuotes);
+		final String content = compile(script, options, replaceQuotes);
 
 		final String projectId = getProjectId(script);
 		Path parentPath = createDirectory(getTempFolder(), projectId); // TODO IDE-

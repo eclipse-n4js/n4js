@@ -12,8 +12,15 @@ package org.eclipse.n4js.transpiler.es.tests
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import java.util.regex.Pattern
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.common.util.WrappedException
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSParseHelper
+import org.eclipse.n4js.generator.common.GeneratorOption
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedElement
@@ -34,17 +41,11 @@ import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.JavaScriptVariant
-import java.util.regex.Pattern
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.common.util.WrappedException
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtend.lib.annotations.Data
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.util.ResourceHelper
 import org.eclipse.xtext.testing.validation.ValidationTestHelper
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.util.CancelIndicator
 
 import static org.junit.Assert.*
@@ -52,6 +53,8 @@ import static org.junit.Assert.*
 /**
  */
 abstract class AbstractTranspilerTest {
+
+	protected static final GeneratorOption[] GENERATOR_OPTIONS = #[ GeneratorOption.ES5plus ];
 
 	@Inject private Provider<XtextResourceSet> resourceSetProvider;
 	@Inject private extension ResourceHelper;
@@ -224,7 +227,7 @@ abstract class AbstractTranspilerTest {
 		val script = if(resourceSet!==null) code.createScript(resourceSet) else code.createScript;
 		val issues = script.validate;
 		assertEquals("code should have no errors or warnings", 0, issues.size);
-		val state = preparationStep.prepare(script);
+		val state = preparationStep.prepare(script, GENERATOR_OPTIONS);
 		return state;
 	}
 
@@ -273,7 +276,7 @@ abstract class AbstractTranspilerTest {
 
 
 	def protected TranspilerState prepareAndTransform(N4JSResource resourceToTranspile) {
-		val state = esTranspiler.testPrepare(resourceToTranspile);
+		val state = esTranspiler.testPrepare(resourceToTranspile, GENERATOR_OPTIONS);
 		esTranspiler.testTransform(state);
 		return state;
 	}
@@ -288,7 +291,7 @@ abstract class AbstractTranspilerTest {
 	def assertCompileResult(Script scriptNode, String expectedTranspilerText ) throws AssertionError {
 
 		// As long as Pretty print is not here, we get a dump of the structure
-		val generatedResult = esSubGen.getCompileResultAsText(scriptNode);
+		val generatedResult = esSubGen.getCompileResultAsText(scriptNode, GENERATOR_OPTIONS);
 
 		// ignoring pretty printing, we want to compare:
 		AbstractTranspilerTest.assertSameExceptWhiteSpace ( expectedTranspilerText, generatedResult );
@@ -364,14 +367,14 @@ abstract class AbstractTranspilerTest {
 
 	/** assert to match the pattern in the compiled output. */
 	def assertCompileResultMatches(Script scriptNode, Pattern pattern) throws AssertionError {
-		val generatedResult = esSubGen.getCompileResultAsText(scriptNode);
+		val generatedResult = esSubGen.getCompileResultAsText(scriptNode, GENERATOR_OPTIONS);
 		val matcher = pattern.matcher(generatedResult);
 		if( ! matcher.find ) throw new AssertionError("The generated output doesn't match the pattern "+pattern.toString );
 	}
 
 	/** assert to <b>NOT</b> match the pattern in the compiled output. */
 	def assertCompileResultDoesNotMatch(Script scriptNode, Pattern pattern) throws AssertionError {
-		val generatedResult = esSubGen.getCompileResultAsText(scriptNode);
+		val generatedResult = esSubGen.getCompileResultAsText(scriptNode, GENERATOR_OPTIONS);
 		val matcher = pattern.matcher(generatedResult);
 		if( matcher.find ) throw new AssertionError("The generated output unexpectedly matches the pattern "+pattern.toString );
 	}

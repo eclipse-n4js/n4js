@@ -18,7 +18,6 @@ import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 import org.eclipse.n4js.transpiler.es.assistants.BlockAssistant
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.transpiler.es.EcmaScriptTranspilerOptions.ES5plus
 
 /**
  */

@@ -20,7 +20,6 @@ import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional
-import org.eclipse.n4js.transpiler.es.EcmaScriptTranspilerOptions.TemplateStringLiterals
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
