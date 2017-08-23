@@ -10,32 +10,24 @@
  */
 package org.eclipse.n4js.scoping.accessModifiers;
 
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import org.eclipse.n4js.ts.typeRefs.TypeTypeRef;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * Error-Description of invisible constructor-access
  */
 public class InvisibleCtorDescription extends InvisibleMemberDescription {
 
-	@SuppressWarnings("unused")
-	private final TypeTypeRef typeRef;
 	private final Type staticType;
 
 	/**
 	 * @param delegate
 	 *            the constructor
-	 * @param typeRef
-	 *            reference to the constructor - used for better error messages.
-	 * @param staticType
-	 *            the static type for the given TypeTypeRef
 	 */
-	public InvisibleCtorDescription(IEObjectDescription delegate, TypeTypeRef typeRef, Type staticType) {
+	public InvisibleCtorDescription(IEObjectDescription delegate, Type staticType) {
 		super(delegate);
-		this.typeRef = typeRef;
+
 		this.staticType = staticType;
 	}
 

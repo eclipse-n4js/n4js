@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
@@ -22,6 +23,7 @@ import org.eclipse.n4js.transpiler.TranspilerState;
 import org.eclipse.n4js.transpiler.es.transform.ApiImplStubGenerationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part1_Transformation;
 import org.eclipse.n4js.transpiler.es.transform.ArrowFunction_Part2_Transformation;
+import org.eclipse.n4js.transpiler.es.transform.AsyncAwaitTransformation;
 import org.eclipse.n4js.transpiler.es.transform.BlockTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.DependencyInjectionTransformation;
@@ -29,15 +31,16 @@ import org.eclipse.n4js.transpiler.es.transform.DestructuringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumAccessTransformation;
 import org.eclipse.n4js.transpiler.es.transform.EnumDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ExpressionTransformation;
-import org.eclipse.n4js.transpiler.es.transform.FormalParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.FunctionDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.InterfaceDeclarationTransformation;
 import org.eclipse.n4js.transpiler.es.transform.JSXTransformation;
 import org.eclipse.n4js.transpiler.es.transform.MemberPatchingTransformation;
 import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation;
+import org.eclipse.n4js.transpiler.es.transform.RestParameterTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SanitizeImportsTransformation;
 import org.eclipse.n4js.transpiler.es.transform.StaticPolyfillTransformation;
 import org.eclipse.n4js.transpiler.es.transform.SuperLiteralTransformation;
+import org.eclipse.n4js.transpiler.es.transform.TemplateStringTransformation;
 import org.eclipse.n4js.transpiler.es.transform.TrimTransformation;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -65,6 +68,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<SuperLiteralTransformation> superLiteralTransformationProvider;
 	@Inject
+	private Provider<TemplateStringTransformation> templateStringTransformationProvider;
+	@Inject
 	private Provider<ExpressionTransformation> expressionTransformationProvider;
 	@Inject
 	private Provider<EnumAccessTransformation> enumAccessTransformationProvider;
@@ -87,7 +92,9 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	@Inject
 	private Provider<BlockTransformation> blockTransformationProvider;
 	@Inject
-	private Provider<FormalParameterTransformation> formalParameterTransformationProvider;
+	private Provider<AsyncAwaitTransformation> asyncAwaitTransformationProvider;
+	@Inject
+	private Provider<RestParameterTransformation> restParameterTransformationProvider;
 	@Inject
 	private Provider<ArrowFunction_Part1_Transformation> arrowFunction_Part1_TransformationProvider;
 	@Inject
@@ -121,6 +128,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				apiImplStubGenerationTransformationProvider.get(),
 				destructuringTransformation.get(),
 				superLiteralTransformationProvider.get(),
+				templateStringTransformationProvider.get(),
 				expressionTransformationProvider.get(),
 				enumAccessTransformationProvider.get(),
 				dependencyInjectionTransformation.get(),
@@ -130,7 +138,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				functionDeclarationTransformationProvider.get(),
 				arrowFunction_Part1_TransformationProvider.get(),
 				blockTransformationProvider.get(),
-				formalParameterTransformationProvider.get(),
+				asyncAwaitTransformationProvider.get(),
+				restParameterTransformationProvider.get(),
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
@@ -142,11 +151,12 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 * General entry-point. Overridden to handle plain-JS-wrapping without transforming.
 	 */
 	@Override
-	public void transpile(N4JSResource resource, Writer outCode, Optional<SourceMapInfo> optSourceMapInfo) {
+	public void transpile(N4JSResource resource, GeneratorOption[] options, Writer outCode,
+			Optional<SourceMapInfo> optSourceMapInfo) {
 		if (noTranspile(resource)) {
 			doWrapAndWrite(resource, outCode);
 		} else {
-			super.transpile(resource, outCode, optSourceMapInfo);
+			super.transpile(resource, options, outCode, optSourceMapInfo);
 		}
 	}
 

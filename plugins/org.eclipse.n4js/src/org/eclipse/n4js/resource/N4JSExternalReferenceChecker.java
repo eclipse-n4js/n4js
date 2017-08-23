@@ -13,6 +13,7 @@ package org.eclipse.n4js.resource;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.linking.lazy.LazyURIEncoder;
 
@@ -51,5 +52,30 @@ public class N4JSExternalReferenceChecker {
 		}
 		return !uriEncoder
 				.isCrossLinkFragment(from.eResource(), ((InternalEObject) to).eProxyURI().fragment());
+	}
+
+	/**
+	 * Checks if the second EObject is resolved and contained in a different resource than the first given resource.If
+	 * the second EObject is a proxy than its proxy URI fragment is used to check. The first resource is expected to be
+	 * already resolved.
+	 *
+	 * @param resource
+	 *            the resource
+	 * @param to
+	 *            The EObject that should be checked if it is located in a resource other than the given resource
+	 * @return true, if the EObject is resolved and not in the same resource.
+	 */
+	public boolean isResolvedAndExternal(Resource resource, EObject to) {
+		if (to == null)
+			return false;
+		if (!to.eIsProxy()) {
+			if (to.eResource() == null) {
+				LOG.error("The target is not contained in a resource.");
+				return false;
+			}
+			return resource != to.eResource();
+		}
+		return !uriEncoder
+				.isCrossLinkFragment(resource, ((InternalEObject) to).eProxyURI().fragment());
 	}
 }

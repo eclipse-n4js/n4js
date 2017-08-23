@@ -11,11 +11,11 @@
 package org.eclipse.n4js.ts.utils
 
 import com.google.inject.Inject
+import java.util.Iterator
+import java.util.List
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.PrimitiveType
 import org.eclipse.n4js.ts.types.Type
-import java.util.Iterator
-import java.util.List
 
 import static org.eclipse.n4js.ts.utils.SuperTypesList.*
 
@@ -29,8 +29,6 @@ public class TypeHelper {
 
 	@Inject
 	extension TypeCompareHelper
-
-
 
 	/*
 	 * Collects all declared super types of a type referenced by a type references, recognizing cyclic dependencies in
@@ -193,5 +191,4 @@ public class TypeHelper {
 		}
 		return -1;
 	}
-
 }

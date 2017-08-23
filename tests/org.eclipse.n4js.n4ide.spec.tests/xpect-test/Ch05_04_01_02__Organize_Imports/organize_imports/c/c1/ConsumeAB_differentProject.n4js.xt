@@ -62,7 +62,6 @@ var a : A = new A();
 /* XPECT errors ---
 "The constructor of B is not visible." at "B"
 "The type B is not visible." at "B"
-"The type B is not visible." at "B"
 --- */
 var b : B = new B();
 

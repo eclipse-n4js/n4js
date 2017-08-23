@@ -11,15 +11,10 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import org.eclipse.n4js.n4JS.ArrowFunction
-import org.eclipse.n4js.n4JS.AwaitExpression
-import org.eclipse.n4js.n4JS.Block
-import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor
 import org.eclipse.n4js.transpiler.Transformation
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-
-import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  */
@@ -28,25 +23,21 @@ class BlockTransformation extends Transformation {
 	/** Name for capturing local-arguments-environment in distinct variable on entering a block.*/
 	public static final String $CAPTURE_ARGS = "$capturedArgs";
 
-	override analyze() {
-
-	}
 
 	override assertPreConditions() {
-
+		// true
 	}
 
 	override assertPostConditions() {
-		"No async function-likes left in IM".assertTrue(
-		collectNodes(state.im, Block, true).map[it.eContainer]
-											.filter(FunctionDefinition)
-											.filter[it.isAsync()]
-											.toList.size == 0);
+		// true
+	}
+
+	override analyze() {
+		// ignore
 	}
 
 	override transform() {
 		collectNodes(state.im, FunctionOrFieldAccessor, true).toList.forEach[transformArguments];
-		collectNodes(state.im, Block, true).forEach[transformBlockAsync];
 	}
 
 	/** capture arguments-variable to be accessible in re-written arrow-functions  */
@@ -93,70 +84,4 @@ class BlockTransformation extends Transformation {
 			))
 		);
 	}
-
-	/** handle async functions. Includes processing of await -> yield. */
-	private def void transformBlockAsync(Block block) {
-
-		// TODO do we support asynchronous getter / setter ?
-		if( ! ( block.eContainer instanceof FunctionOrFieldAccessor) ) return;
-		val eConFA = block.eContainer as FunctionOrFieldAccessor;
-
-		if( ! eConFA.isAsync ) return;
-
-		if (eConFA instanceof FunctionDefinition) {
-			eConFA.declaredAsync = false;
-		}
-
-		// Dealing with async:
-		// NOTE in former implementations it was necessary to analyze fall-off cases where some execution paths did not
-		// end in return-statements. Henc, the following code-snippet was used:
-		//	//		val fallOffCase = (eConFA instanceof FunctionDefinition)
-		//	//				&& blockAssistant.hasBodyWhereExecutionFallsOff(eConFA as FunctionDefinition)
-		// This is not necessary any more.
-
-		// case 1: return;   		 =>   return;  // NTD
-		// case 2: return expr; 	 =>   return expr; // NTD
-		// case 3: return await expr; =>   return expr;     --> remove await
-
-		// all existing returns must be replaced with
-		val existingRets = block.allReturnStatements.toList
-		existingRets.forEach[
-			val expR = it.expression;
-			if( expR instanceof AwaitExpression ) {
-				// case 3: remove await.
-				// it.expression = it.expression.expression
-				// detach:
-				val innerExpr =expR.expression;
-				expR.expression = null;
-				replace( expression, innerExpr )
-			}
-		]
-
-		val ret = _ReturnStmnt( _CallExpr(
-			_IdentRef( steFor_$spawn),
-			_CallExpr(
-				_PropertyAccessExpr(
-					_FunExpr(false)=>[
-						it.generator = true;
-						it.body.statements += block.statements
-					],
-					getSymbolTableEntryForMember(state.G.functionType, "apply", false, false, true)
-				),
-				_ThisLiteral,
-				_IdentRef( steFor_arguments() )
-			) // end Call function*()
-			) // end Call $spawn
-		);
-
-		block.statements += ret;
-
-		// now replace "await expression" with "yield expression"
-		val allAwaits = collectNodes( block, AwaitExpression, true).toList;
-
-		allAwaits.forEach[
-			replace( it, _YieldExpr(it.expression) )
-		]
-		// Done
-	}
-
 }

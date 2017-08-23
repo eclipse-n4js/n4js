@@ -127,9 +127,7 @@ public class TypeXpectMethod {
 				 * // XPECT type of 'len' --> number
 				 * var {length:len} = "hello";
 				 */
-				if (((BindingProperty) eobject).getVarDecl() != null) {
-					eobject = ((BindingProperty) eobject).getVarDecl();
-				} else if (((BindingProperty) eobject).getValue() != null
+				if (((BindingProperty) eobject).getValue() != null
 						&& ((BindingProperty) eobject).getValue().getVarDecl() != null) {
 					eobject = ((BindingProperty) eobject).getValue().getVarDecl();
 				}

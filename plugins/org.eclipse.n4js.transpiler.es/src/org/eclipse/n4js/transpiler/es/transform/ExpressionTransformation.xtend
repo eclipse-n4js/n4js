@@ -11,20 +11,16 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AwaitExpression
 import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.ParameterizedAccess
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
-import org.eclipse.n4js.n4JS.PrimaryExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
-import org.eclipse.n4js.n4JS.TemplateLiteral
-import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
@@ -35,7 +31,6 @@ import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.PromisifyHelper
-import java.util.ArrayList
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -43,7 +38,15 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  * Some expressions need special handling, this is done in this transformation.
+ * <p>
+ * Dependencies:
+ * <ul>
+ * <li>ExcludesBefore: AsyncAwaitTransformation<br>
+ *     otherwise the 'await' expressions have already be converted to 'yield', but we need to find them in order to
+ *     support auto-promisify after 'await'; see method {@link #transformExpression(AwaitExpression)}
+ * </ul>
  */
+@ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
 	@Inject private QualifiedNameComputer qualifiedNameComputer;
@@ -109,11 +112,11 @@ class ExpressionTransformation extends Transformation {
 	 * Changes
 	 * <pre>await cls.meth(a, b)</pre>
 	 * to
-	 * <pre>$n4promisifyMethod(cls, 'meth', [a, b])</pre>
+	 * <pre>await $n4promisifyMethod(cls, 'meth', [a, b])</pre>
 	 * OR
 	 * <pre>await fun(a, b)</pre>
 	 * to
-	 * <pre>$n4promisifyFunction(fun, [a, b])</pre>
+	 * <pre>await $n4promisifyFunction(fun, [a, b])</pre>
 	 * assuming that method 'meth' and function 'fun' are annotated with <code>@Promisifiable</code>.
 	 */
 	def private dispatch void transformExpression(AwaitExpression awaitExpr) {
@@ -186,40 +189,5 @@ class ExpressionTransformation extends Transformation {
 		}
 		// if anything goes awry, we just return callExpr as replacement, which means we simply remove the @Promisify
 		return callExpr;
-	}
-
-	def private dispatch void transformExpression(TemplateLiteral template) {
-		val replacement = switch(template.segments.size) {
-			case 0:
-				_StringLiteral("")
-			case 1:
-				template.segments.get(0)
-			default:
-				_Parenthesis(
-					_AdditiveExpression(AdditiveOperator.ADD, template.segments.wrapIfRequired)
-				)
-		};
-		replace(template, replacement);
-	}
-	def private dispatch void transformExpression(TemplateSegment segment) {
-		replace(segment, _StringLiteral(segment.valueAsString, segment.rawValue.wrapAndQuote));
-	}
-
-
-	def private static Iterable<Expression> wrapIfRequired(Iterable<Expression> expressions) {
-		val copy = new ArrayList(expressions.toList); // required due to possible concurrent modification (see below)
-		return copy.map[expr|
-			val boolean needParentheses = !(expr instanceof PrimaryExpression || expr instanceof ParameterizedAccess);
-			if(needParentheses) {
-				return _Parenthesis(expr) // this might change iterable 'expressions' (if an EMF containment reference was passed in)
-			} else {
-				return expr
-			}
-		];
-	}
-
-	/** put raw into double quote and escape all existing double-quotes {@code '"' -> '\"' } and newlines {@code '\n' -> '\\n'}. */
-	def private static String wrapAndQuote(String raw){
-		'"'+raw.replace('"','\\"').replace('\n','\\n')+'"'
 	}
 }

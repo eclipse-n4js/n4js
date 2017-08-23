@@ -21,7 +21,6 @@ package org.eclipse.n4js.n4JS;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.BindingProperty#getValue <em>Value</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.BindingProperty#getVarDecl <em>Var Decl</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getBindingProperty()
@@ -54,32 +53,6 @@ public interface BindingProperty extends PropertyNameOwner {
 	 * @generated
 	 */
 	void setValue(BindingElement value);
-
-	/**
-	 * Returns the value of the '<em><b>Var Decl</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Var Decl</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Var Decl</em>' containment reference.
-	 * @see #setVarDecl(VariableDeclaration)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getBindingProperty_VarDecl()
-	 * @model containment="true"
-	 * @generated
-	 */
-	VariableDeclaration getVarDecl();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.BindingProperty#getVarDecl <em>Var Decl</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Var Decl</em>' containment reference.
-	 * @see #getVarDecl()
-	 * @generated
-	 */
-	void setVarDecl(VariableDeclaration value);
 
 	/**
 	 * <!-- begin-user-doc -->

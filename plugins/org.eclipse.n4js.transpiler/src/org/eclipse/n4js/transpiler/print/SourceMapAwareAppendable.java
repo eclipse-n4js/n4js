@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Stack;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 
@@ -89,6 +88,20 @@ import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 	 */
 	public void newLine() throws IOException {
 		out.newLine();
+	}
+
+	/**
+	 * @see LineColTrackingAppendable#getIndentLevel()
+	 */
+	public int getIndentLevel() {
+		return out.getIndentLevel();
+	}
+
+	/**
+	 * @see LineColTrackingAppendable#setIndentLevel(int)
+	 */
+	public void setIndentLevel(int indentLevel) {
+		out.setIndentLevel(indentLevel);
 	}
 
 	/**

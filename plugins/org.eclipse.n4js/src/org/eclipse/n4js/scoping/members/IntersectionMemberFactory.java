@@ -15,6 +15,8 @@ import static org.eclipse.n4js.ts.types.MemberType.GETTER;
 import static org.eclipse.n4js.ts.types.MemberType.METHOD;
 import static org.eclipse.n4js.ts.types.MemberType.SETTER;
 
+import java.util.List;
+
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TMember;
 
@@ -91,6 +93,11 @@ public class IntersectionMemberFactory extends ComposedMemberFactory {
 		if (specialMemberFactory == null)
 			return false;
 		return specialMemberFactory.isValid();
+	}
+
+	@Override
+	public List<TMember> getConstituentMembers() {
+		return cmi.getConstituentMembers();
 	}
 
 }

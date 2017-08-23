@@ -502,7 +502,10 @@
 							}
 							let pairInjectorBinding = this.findBinding(ctor);
 							if (pairInjectorBinding) {
-								let $destruct0 = $sliceToArrayForDestruct((pairInjectorBinding), 2), injector = $destruct0[0], binder = $destruct0[1];
+								let [
+									injector,
+									binder
+								] = pairInjectorBinding;
 								if (binder && injector) {
 									return injector.createFromBinder(ctor, binder, delegate, cachedInstances);
 								}
@@ -529,11 +532,7 @@
 							}
 							for(let bx of this.explicitBindings.values()) {
 								let binderMeta = getBinderMeta(bx.constructor);
-								if (binderMeta.bindings.some((function(b) {
-									return b.to === ctor;
-								}).bind(this)) || binderMeta.methodBindings.some((function(m) {
-									return m.to === ctor;
-								}).bind(this))) {
+								if (binderMeta.bindings.some((b)=>b.to === ctor) || binderMeta.methodBindings.some((m)=>m.to === ctor)) {
 									return true;
 								}
 							}
@@ -607,9 +606,7 @@
 					createFromBinder: {
 						value: function createFromBinder___n4(ctor, binder, delegate, cachedInstances) {
 							let bm = getBinderMeta(binder.constructor);
-							let annotationMappings = bm.bindings.filter((function(k) {
-								return k.from === ctor;
-							}).bind(this));
+							let annotationMappings = bm.bindings.filter((k)=>k.from === ctor);
 							if (annotationMappings.length > 1) {
 								throw new Error("too many mappings for" + ctor);
 							}
@@ -625,9 +622,7 @@
 								}
 								return delegate.internalCreate(target, delegate, cachedInstances);
 							}
-							let methodMappings = bm.methodBindings.filter((function(k) {
-								return k.to === ctor;
-							}).bind(this));
+							let methodMappings = bm.methodBindings.filter((k)=>k.to === ctor);
 							if (methodMappings.length > 1) {
 								throw new Error("too many mappings for" + ctor);
 							}
@@ -681,9 +676,7 @@
 							if (this.scopedInstances.has(ofqn)) {
 								return this.scopedInstances.get(ofqn);
 							}
-							let ctorParams = this.getInjectorParams(ctor).map((function(fp) {
-								return delegate.createFromInjectedTypeMeta(fp, delegate, new Map(cachedInstances));
-							}).bind(this));
+							let ctorParams = this.getInjectorParams(ctor).map((fp)=>delegate.createFromInjectedTypeMeta(fp, delegate, new Map(cachedInstances)));
 							let instance = this.createNew(ctor, ctorParams);
 							cachedInstances.set(ofqn, instance);
 							delegate.injectDataFields(instance, ctor, new Set(), delegate, cachedInstances);
@@ -711,13 +704,13 @@
 						value: function injectDataFields___n4(instance, type, usedNames, delegate, cachedInstances) {
 							if (hasDIMeta(type)) {
 								let meta = getInjectedClassMeta(type);
-								meta.fieldsInjectedTypes.forEach((function(f) {
+								meta.fieldsInjectedTypes.forEach((f)=>{
 									if (!usedNames.has(f.name)) {
 										usedNames.add(f.name);
 										let instanceObj = instance;
 										instanceObj[f.name] = delegate.createFromInjectedTypeMeta(f, delegate, new Map(cachedInstances));
 									}
-								}).bind(this));
+								});
 								if (meta.superType) {
 									delegate.injectDataFields(instance, meta.superType, usedNames, delegate, cachedInstances);
 								}
@@ -726,9 +719,7 @@
 					},
 					createProvided: {
 						value: function createProvided___n4(binder, info, delegate, cachedInstances) {
-							let params = info.args.map((function(e) {
-								return this.createFromInjectedTypeMeta(e, delegate, cachedInstances);
-							}).bind(this));
+							let params = info.args.map((e)=>this.createFromInjectedTypeMeta(e, delegate, cachedInstances));
 							let binderObj = binder;
 							return (binderObj[info.name]).apply(binder, params);
 						}
@@ -793,10 +784,8 @@
 							let bindings = [];
 							if (expectedBindersTypes) {
 								let expectedBindersMap = new Map();
-								expectedBindersTypes.forEach((function(eb) {
-									return expectedBindersMap.set(getOFQN(eb), eb);
-								}).bind(this));
-								providedBinders.forEach((function(bi) {
+								expectedBindersTypes.forEach((eb)=>expectedBindersMap.set(getOFQN(eb), eb));
+								providedBinders.forEach((bi)=>{
 									if (bi) {
 										let biType = bi.constructor;
 										if (!expectedBindersMap.has(getOFQN(biType))) {
@@ -805,25 +794,21 @@
 										bindings.push(bi);
 										expectedBindersMap.delete(getOFQN(bi.constructor));
 									}
-								}).bind(this));
-								expectedBindersMap.forEach((function(bt) {
+								});
+								expectedBindersMap.forEach((bt)=>{
 									let _b = Reflect.construct(bt, []);
 									bindings.push(_b);
-								}).bind(this));
+								});
 							}
 							let bindingsMap = new Map();
-							bindings.forEach((function(binder) {
+							bindings.forEach((binder)=>{
 								let binderType = binder.constructor;
 								if (hasDIMeta(binderType)) {
 									let meta = getBinderMeta(binderType);
-									meta.bindings.forEach((function(b) {
-										return bindingsMap.set(getOFQN(b.from), binder);
-									}).bind(this));
-									meta.methodBindings.forEach((function(b) {
-										return bindingsMap.set(getOFQN(b.to), binder);
-									}).bind(this));
+									meta.bindings.forEach((b)=>bindingsMap.set(getOFQN(b.from), binder));
+									meta.methodBindings.forEach((b)=>bindingsMap.set(getOFQN(b.to), binder));
 								}
-							}).bind(this));
+							});
 							return bindingsMap;
 						}
 					},
@@ -865,8 +850,7 @@
 						}
 					},
 					of: {
-						value: function of___n4(type, parent) {
-							var providedBinders = Array.prototype.slice.call(arguments, 2);
+						value: function of___n4(type, parent, ...providedBinders) {
 							let dicMeta = N4Injector.getMetaData(type);
 							N4Injector.checkParent(type, parent);
 							let bindings = N4Injector.prepareBindingsMap(providedBinders, dicMeta.binders);

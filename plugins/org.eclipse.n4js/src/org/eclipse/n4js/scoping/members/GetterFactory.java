@@ -16,6 +16,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TGetter;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 
@@ -68,6 +69,11 @@ abstract class GetterFactory implements MemberFactory {
 			List<TypeRef> typeRefs = cma.getTypeRefsOfMemberType(MemberType.GETTER, MemberType.FIELD);
 			return cma.getTypeSystem().createSimplifiedIntersection(typeRefs, cma.getResource());
 		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to implement logic with regard to getters in {@code Union Types}. */
@@ -85,6 +91,11 @@ abstract class GetterFactory implements MemberFactory {
 		TypeRef getReturnTypeRefComposition() {
 			List<TypeRef> typeRefs = cma.getTypeRefsOfMemberType(MemberType.GETTER, MemberType.FIELD);
 			return cma.getTypeSystem().createSimplifiedUnion(typeRefs, cma.getResource());
+		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
 		}
 	}
 

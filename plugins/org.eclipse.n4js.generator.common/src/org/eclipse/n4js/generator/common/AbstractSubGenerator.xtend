@@ -98,7 +98,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			genMarkerSupport.deleteMarker(input)
 
 			updateOutputPath(fsa, getCompilerID, input);
-			internalDoGenerate(input, fsa);
+			internalDoGenerate(input, GeneratorOption.DEFAULT_OPTIONS, fsa);
 		} catch (Exception e) {
 
 			// special case: cancellation during transpilation
@@ -194,7 +194,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	/**
 	 * Actual generation to be overridden by subclasses.
 	 */
-	def protected void internalDoGenerate(Resource resource, IFileSystemAccess access)
+	def protected void internalDoGenerate(Resource resource, GeneratorOption[] options, IFileSystemAccess access)
 
 	/**
 	 * Returns the name of the target file (without path) to which the source is to be compiled to.

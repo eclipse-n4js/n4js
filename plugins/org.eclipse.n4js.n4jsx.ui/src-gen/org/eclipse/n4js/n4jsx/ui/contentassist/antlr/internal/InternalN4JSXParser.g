@@ -65511,9 +65511,9 @@ rule__ObjectBindingPattern__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0()); }
+	{ before(grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0()); }
 	()
-	{ after(grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0()); }
+	{ after(grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0()); }
 )
 ;
 finally {
@@ -65727,9 +65727,9 @@ norm1_ObjectBindingPattern__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0()); }
+	{ before(grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0()); }
 	()
-	{ after(grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0()); }
+	{ after(grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0()); }
 )
 ;
 finally {
@@ -65943,9 +65943,9 @@ rule__ArrayBindingPattern__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0()); }
+	{ before(grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0()); }
 	()
-	{ after(grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0()); }
+	{ after(grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0()); }
 )
 ;
 finally {
@@ -66294,9 +66294,9 @@ norm1_ArrayBindingPattern__Group__0__Impl
 	}
 :
 (
-	{ before(grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0()); }
+	{ before(grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0()); }
 	()
-	{ after(grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0()); }
+	{ after(grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0()); }
 )
 ;
 finally {

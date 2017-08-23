@@ -17,10 +17,22 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.types.ContainerType;
+import org.eclipse.n4js.ts.types.TEnum;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TField;
+import org.eclipse.n4js.ts.types.TFunction;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.utils.TypeHelper;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy;
@@ -31,15 +43,6 @@ import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.util.IResourceScopeCache;
 
 import com.google.common.collect.Sets;
-
-import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.types.TEnum;
-import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TFunction;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.TVariable;
-import org.eclipse.n4js.ts.types.Type;
-import org.eclipse.n4js.ts.utils.TypeHelper;
 
 /**
  * A description for N4JS resources. It enriches the list of imported names with the names of the super types of
@@ -57,7 +60,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private final IDefaultResourceDescriptionStrategy strategy;
 
-	private Iterable<QualifiedName> lazyImportedNames;
+	private SortedSet<QualifiedName> lazyImportedNames;
 
 	/**
 	 * Creates a new description for the given resource.
@@ -123,22 +126,19 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	@Override
 	public Iterable<QualifiedName> getImportedNames() {
-
 		if (null == lazyImportedNames) {
 			synchronized (this) {
 				if (null == lazyImportedNames) {
-
-					// System.out.println("######\t" + getURI());
-
 					// get imported names collected during global scoping
 					// the scope provider registers every request in scoping so that by this
 					// also all names are collected that cannot be resolved
 					Iterable<QualifiedName> superImportedNames = super.getImportedNames();
-					Set<QualifiedName> importedNames = Sets.newHashSet();
+					// use sorted set to ensure order of items
+					final SortedSet<QualifiedName> importedNames;
 					if (superImportedNames != null) {
-						importedNames = Sets.newHashSet(superImportedNames);
+						importedNames = Sets.newTreeSet(superImportedNames);
 					} else {
-						importedNames = Sets.<QualifiedName> newHashSet();
+						importedNames = Sets.<QualifiedName> newTreeSet();
 					}
 					// import our own module name to get a proper change notification
 					Resource resource = getResource();
@@ -151,18 +151,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					IAcceptor<EObject> acceptor = getCrossRefTypeAcceptor(crossRefTypes);
 					crossReferenceComputer.computeCrossRefs(resource, acceptor);
 					for (EObject type : crossRefTypes) {
-						// TODO TS handle also generics (later with working type system)
-						if (type instanceof TFunction) {
-							// TODO TS work around for not yet inferred return types of methods and functions
-							// later for all expressions the types have to be calculated and for those types
-							// all super types have to be collected as well
-							// for methods and functions: -> declaredType != returnType (as returnType is
-							// inferred at runtime)
-							TypeRef returnTypeRef = ((TFunction) type).getReturnTypeRef();
-							if (returnTypeRef != null) {
-								handleType(importedNames, returnTypeRef.getDeclaredType());
-							}
-						} else if (type instanceof Type) {
+						if (type instanceof Type) {
 							handleType(importedNames, type);
 						} else if (type instanceof TVariable) {
 							handleTVariable(importedNames, (TVariable) type);
@@ -170,9 +159,7 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 							handleTEnumLiteral(importedNames, (TEnumLiteral) type);
 						}
 					}
-
 					this.lazyImportedNames = importedNames;
-
 				}
 			}
 		}
@@ -206,17 +193,34 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 
 	private void collectAsImportedName(Set<QualifiedName> importedNames, EObject eObject) {
 		QualifiedName importedName = qualifiedNameProvider.getFullyQualifiedName(eObject);
-		importedNames.add(importedName);
+		if (importedName != null) {
+			importedNames.add(importedName);
+		}
 	}
 
-	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypes) {
+	private IAcceptor<EObject> getCrossRefTypeAcceptor(final Set<EObject> crossRefTypesAddHere) {
 		IAcceptor<EObject> acceptor = new IAcceptor<EObject>() {
-
 			@Override
-			public void accept(EObject t) {
-				// TODO TS later use the type inferencer here (and do not work with types but with type references)
-				if (t instanceof Type || t instanceof TVariable || t instanceof TEnumLiteral) {
-					crossRefTypes.add(t);
+			public void accept(EObject to) {
+				if (to instanceof Type || to instanceof TVariable || to instanceof TEnumLiteral) {
+					crossRefTypesAddHere.add(to);
+				}
+				// Add return type of function/method to cross ref types. Note that setters/getters are methods.
+				// Add declared type of a field to cross ref types
+				if (to instanceof TFunction) {
+					TypeRef returnTypeRef = ((TFunction) to).getReturnTypeRef();
+					crossRefTypesAddHere.add(returnTypeRef.getDeclaredType());
+				}
+				if (to instanceof TField) {
+					TypeRef typeRef = ((TField) to).getTypeRef();
+					crossRefTypesAddHere.add(typeRef.getDeclaredType());
+				}
+
+				// In case of TMember, add the containing type as well
+				if (to instanceof TMember) {
+					TMember casted = (TMember) to;
+					ContainerType<?> declaringType = casted.getContainingType();
+					crossRefTypesAddHere.add(declaringType);
 				}
 			}
 		};

@@ -12,28 +12,27 @@ package org.eclipse.n4js.tests.findReferences
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.findReferences.HeadlessReferenceFinder
+import org.eclipse.n4js.n4JS.AssignmentExpression
+import org.eclipse.n4js.n4JS.ExportDeclaration
+import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
+import org.eclipse.n4js.n4JS.ExportedVariableStatement
+import org.eclipse.n4js.n4JS.ExpressionStatement
+import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.xtext.resource.XtextResourceSet
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4JS.ExportDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
-import org.eclipse.n4js.n4JS.ExportedVariableStatement
-import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.ExpressionStatement
-import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 
 /**
  */
@@ -56,10 +55,8 @@ class HeadlessReferenceFinderTest extends Assert {
 		val a = e.literals.head
 		val references = a.findReferencesTo
 		val resourceSet = script.eResource.resourceSet
-		assertEquals(3, references.size)
+		assertEquals(1, references.size)
 		val set = references.map[ resourceSet.getEObject(sourceEObjectUri, false) ].toSet
-		assertTrue(set.contains(a)) // reference into the type model
-		assertTrue(set.contains(a.definedLiteral)) // reference into the ast model
 		val varStmt = script.scriptElements.last as VariableStatement
 		var varDecl = varStmt.varDecl.head
 		var expr = varDecl.expression as ParameterizedPropertyAccessExpression
@@ -78,13 +75,10 @@ class HeadlessReferenceFinderTest extends Assert {
 		'''.parse(URI.createURI('b.js'), resourceSet)
 		val aModule = scriptA.module
 		val references = aModule.findReferencesTo
-		assertEquals(3, references.size)
+		assertEquals(1, references.size)
 		val set = references.map[ resourceSet.getEObject(sourceEObjectUri, false) ].toSet
-		assertTrue(set.contains(scriptA)) // reference into the type model
 		val imp = scriptB.scriptElements.head as ImportDeclaration
 		assertTrue(set.contains(imp))
-		val namespace = scriptB.module.internalTypes.filter(ModuleNamespaceVirtualType).filter["N".equals(name)].head
-		assertTrue(set.contains(namespace)) // reference to target module
 	}
 
 	@Test def void test_03() {
@@ -99,15 +93,12 @@ class HeadlessReferenceFinderTest extends Assert {
 		'''.parse(URI.createURI('b.js'), resourceSet)
 		val a = (scriptA.scriptElements.head as ExportDeclaration).exportedElement as N4ClassDeclaration
 		val references = a.findReferencesTo
-		assertEquals(4, references.size)
+		assertEquals(1, references.size)
 		val set = references.map[ resourceSet.getEObject(sourceEObjectUri, false) ].toSet
-		assertTrue(set.contains(a))
-		assertTrue(set.contains(a.definedType))
 		val varStmt = (scriptB.scriptElements.last as ExportDeclaration).exportedElement as ExportedVariableStatement
 		val varDecl = varStmt.varDecl.head as ExportedVariableDeclaration
 		val typeRef = varDecl.declaredTypeRef
 		assertTrue(set.contains(typeRef))
-		assertTrue(set.contains(varDecl.definedVariable.typeRef))
 	}
 
 	@Test def void test_04() {
@@ -126,10 +117,8 @@ class HeadlessReferenceFinderTest extends Assert {
 		val a = (scriptA.scriptElements.head as ExportDeclaration).exportedElement as N4ClassDeclaration
 		val setter = a.ownedSetters.head
 		val references = setter.findReferencesTo
-		assertEquals(3, references.size)
+		assertEquals(1, references.size)
 		val set = references.map[ resourceSet.getEObject(sourceEObjectUri, false) ].toSet
-		assertTrue(set.contains(setter))
-		assertTrue(set.contains(setter.definedSetter))
 		val assignment = (scriptB.scriptElements.last as ExpressionStatement).expression as AssignmentExpression
 		val propertyAccess = assignment.lhs as ParameterizedPropertyAccessExpression
 		assertTrue(set.contains(propertyAccess))

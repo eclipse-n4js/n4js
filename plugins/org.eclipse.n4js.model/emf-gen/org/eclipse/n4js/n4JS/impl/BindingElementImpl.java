@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
+
+import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -267,6 +271,15 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isElision() {
+		return ((this.getVarDecl() == null) && (this.getNestedPattern() == null));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -366,6 +379,20 @@ public class BindingElementImpl extends ProxyResolvingEObjectImpl implements Bin
 				return expression != null;
 		}
 		return super.eIsSet(featureID);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	@Override
+	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
+		switch (operationID) {
+			case N4JSPackage.BINDING_ELEMENT___IS_ELISION:
+				return isElision();
+		}
+		return super.eInvoke(operationID, arguments);
 	}
 
 	/**
