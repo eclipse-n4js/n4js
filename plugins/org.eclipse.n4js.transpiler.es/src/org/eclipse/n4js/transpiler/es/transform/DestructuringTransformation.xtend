@@ -55,7 +55,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * <p>
  * For details on destructuring patterns, see documentation of class {@link DestructNode}.
  */
-@Optional(ES5plus)
+@Optional(Destructuring)
 @ExcludesAfter(StaticPolyfillTransformation) // otherwise destructuring patterns from filling module won't be processed!
 class DestructuringTransformation extends Transformation {
 

@@ -22,7 +22,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 /**
  * Part 2 of {@link ArrowFunction_Part1_Transformation}.
  */
-@Optional(ES5plus)
+@Optional(ArrowFunctions)
 @Requires(ArrowFunction_Part1_Transformation)
 class ArrowFunction_Part2_Transformation extends Transformation {
 

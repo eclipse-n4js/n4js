@@ -134,7 +134,7 @@ public abstract class TransformationDependency {
 	public static final boolean isActiveIn(Transformation transformation, GeneratorOption[] activeOptions) {
 		final Optional ann = transformation.getClass().getAnnotation(Optional.class);
 		if (ann != null) {
-			// at least one of the options given in the annotation must be a super type of any of the active options
+			// at least one of the options given in the annotation must be active, based on the given 'activeOptions'
 			final GeneratorOption[] annOptions = ann.value();
 			for (GeneratorOption annOption : annOptions) {
 				if (GeneratorOption.isActiveIn(annOption, activeOptions)) {

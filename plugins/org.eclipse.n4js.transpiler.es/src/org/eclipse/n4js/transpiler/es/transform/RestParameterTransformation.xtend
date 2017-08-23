@@ -34,7 +34,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  *     is to execute BlockTransformation before this transformation.
  * </ul>
  */
-@Optional(ES5plus)
+@Optional(RestParameters)
 @RequiresBefore(ArrowFunction_Part1_Transformation, BlockTransformation)
 class RestParameterTransformation extends Transformation {
 

@@ -22,7 +22,7 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 /**
  * Transforms ES2015 arrow functions to an ES5 equivalent, using ordinary function expressions.
  */
-@Optional(ES5plus)
+@Optional(ArrowFunctions)
 class ArrowFunction_Part1_Transformation extends Transformation {
 
 	@Inject BlockAssistant blockAssistant;

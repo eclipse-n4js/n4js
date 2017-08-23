@@ -60,7 +60,7 @@ class AsyncAwaitTransformation extends Transformation {
 
 	private def void transformAsyncFunction(FunctionDefinition funDef) {
 		if(!funDef.isAsync) {
-			throw new IllegalStateException();
+			throw new IllegalArgumentException("given function definition must be asynchronous");
 		}
 
 		funDef.declaredAsync = false;
