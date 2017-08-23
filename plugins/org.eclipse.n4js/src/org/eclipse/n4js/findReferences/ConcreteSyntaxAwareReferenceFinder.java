@@ -78,6 +78,7 @@ public class ConcreteSyntaxAwareReferenceFinder extends ReferenceFinder {
 		if (importedNames instanceof List<?>) {
 			List<QualifiedName> sorted = (List<QualifiedName>) importedNames;
 			List<QualifiedName> searchMe = sorted;
+			// Optimize search
 			for (QualifiedName typeOrModuleToFind : typesOrModulesToFind) {
 				int insertionIndex = Collections.binarySearch(searchMe, typeOrModuleToFind);
 				if (insertionIndex >= 0) {

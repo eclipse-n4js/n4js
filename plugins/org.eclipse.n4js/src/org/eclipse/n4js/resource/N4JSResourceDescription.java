@@ -136,7 +136,6 @@ public class N4JSResourceDescription extends DefaultResourceDescription {
 					// use sorted set to ensure order of items
 					final SortedSet<QualifiedName> importedNames;
 					if (superImportedNames != null) {
-
 						importedNames = Sets.newTreeSet(superImportedNames);
 					} else {
 						importedNames = Sets.<QualifiedName> newTreeSet();

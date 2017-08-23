@@ -12,6 +12,7 @@ package org.eclipse.n4js.ts.findReferences;
 
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
@@ -53,7 +54,9 @@ public class TargetURIKey {
 	public static class Data {
 		private final Set<String> valueStrings;
 		private final Set<EClass> applicableTypes;
-		private final Set<QualifiedName> typesOrModulesToFind;
+		// Use sorted set to ensure the order of elements. Will be used for optimizing find references in {@link
+		// ConcreteSyntaxAwareReferenceFinder}
+		private final SortedSet<QualifiedName> typesOrModulesToFind;
 		private final IQualifiedNameProvider qualifiedNameProvider;
 
 		/**
