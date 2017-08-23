@@ -63731,7 +63731,7 @@ public class InternalN4JSXParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
-              					grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0(),
+              					grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0(),
               					current);
               			
             }
@@ -63896,7 +63896,7 @@ public class InternalN4JSXParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
-              					grammarAccess.getObjectBindingPatternAccess().getBindingPatternAction_0(),
+              					grammarAccess.getObjectBindingPatternAccess().getObjectBindingPatternAction_0(),
               					current);
               			
             }
@@ -64101,7 +64101,7 @@ public class InternalN4JSXParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
-              					grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0(),
+              					grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0(),
               					current);
               			
             }
@@ -64432,7 +64432,7 @@ public class InternalN4JSXParser extends AbstractInternalAntlrParser {
             if ( state.backtracking==0 ) {
 
               				current = forceCreateModelElement(
-              					grammarAccess.getArrayBindingPatternAccess().getBindingPatternAction_0(),
+              					grammarAccess.getArrayBindingPatternAccess().getArrayBindingPatternAction_0(),
               					current);
               			
             }

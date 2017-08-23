@@ -20,15 +20,43 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
+
+import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.base.Joiner;
-
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Contains some annotation classes for declaring dependencies between {@link Transformation}s.
  */
 public abstract class TransformationDependency {
+
+	/**
+	 * Declares a transformation to be optional and activate if and only if at least one of the given
+	 * {@link GeneratorOption generator options} was specified when transpilation was started.
+	 * <p>
+	 * Notes:
+	 * <ol>
+	 * <li>removing inactive optional transformations from a set of transformations is implemented in
+	 * {@link TransformationDependency#filterByTranspilerOptions(Transformation[], GeneratorOption[])
+	 * #filterByTranspilerOptions()},
+	 * <li>validation of all other transformation dependencies happens <em>after</em> removal of inactive optional
+	 * transformations, see step 1 in {@link AbstractTranspiler#transform(TranspilerState)},
+	 * <li>at time of writing, generator options are not made available for the end user and can only be set internally
+	 * for testing purposes. The main transpilation in production will always run with the options defined in
+	 * {@link GeneratorOption#DEFAULT_OPTIONS}.
+	 * </ol>
+	 */
+	@Target({ TYPE })
+	@Retention(RetentionPolicy.RUNTIME)
+	public static @interface Optional {
+		/**
+		 * The {@link GeneratorOption generator options} of which at least one is required for this transformation to
+		 * become active during transpilation.
+		 */
+		public GeneratorOption[] value();
+	}
 
 	/**
 	 * Declares that a {@link Transformation} {@code T} requires one or more other transformations {@code T1...Tn} to be
@@ -98,6 +126,34 @@ public abstract class TransformationDependency {
 	public static @interface ExcludesAfter {
 		/** Lists the excluded other transformations. */
 		public Class<? extends Transformation>[] value();
+	}
+
+	/**
+	 * Tells if the given transformation is active, based on the given {@link GeneratorOption generator options}.
+	 */
+	public static final boolean isActiveIn(Transformation transformation, GeneratorOption[] activeOptions) {
+		final Optional ann = transformation.getClass().getAnnotation(Optional.class);
+		if (ann != null) {
+			// at least one of the options given in the annotation must be active, based on the given 'activeOptions'
+			final GeneratorOption[] annOptions = ann.value();
+			for (GeneratorOption annOption : annOptions) {
+				if (GeneratorOption.isActiveIn(annOption, activeOptions)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Returns a new array of transformations with all given transformations except those that are {@link Optional} and
+	 * are {@link #isActiveIn(Transformation, GeneratorOption[]) inactive}, based on the given {@link GeneratorOption
+	 * generator options}.
+	 */
+	public static final Transformation[] filterByTranspilerOptions(Transformation[] transformations,
+			GeneratorOption[] options) {
+		return Stream.of(transformations).filter(t -> isActiveIn(t, options)).toArray(len -> new Transformation[len]);
 	}
 
 	/**
@@ -180,6 +236,7 @@ public abstract class TransformationDependency {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static final Class<? extends Transformation>[] getValue(Annotation ann) {
 		if (ann instanceof Requires)
 			return ((Requires) ann).value();
@@ -193,6 +250,8 @@ public abstract class TransformationDependency {
 			return ((ExcludesBefore) ann).value();
 		if (ann instanceof ExcludesAfter)
 			return ((ExcludesAfter) ann).value();
+		if (ann instanceof Optional)
+			return new Class[0];
 		throw new IllegalArgumentException("unknown transformation dependency annotation: " + ann);
 	}
 

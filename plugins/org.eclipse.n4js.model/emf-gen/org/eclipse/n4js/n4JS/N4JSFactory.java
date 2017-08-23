@@ -1029,15 +1029,6 @@ public interface N4JSFactory extends EFactory {
 	N4SetterDeclaration createN4SetterDeclaration();
 
 	/**
-	 * Returns a new object of class '<em>Binding Pattern</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Binding Pattern</em>'.
-	 * @generated
-	 */
-	BindingPattern createBindingPattern();
-
-	/**
 	 * Returns a new object of class '<em>Object Binding Pattern</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

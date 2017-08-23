@@ -10,6 +10,12 @@
  */
 package org.eclipse.n4js.transpiler.operations
 
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.emf.ecore.util.EObjectContainmentEList
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -25,6 +31,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Statement
+import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.transpiler.Transformation
@@ -35,12 +42,6 @@ import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.n4js.transpiler.im.ReferencingElement_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
-import org.eclipse.emf.ecore.util.EObjectContainmentEList
-import org.eclipse.emf.ecore.util.EcoreUtil
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
@@ -165,6 +166,10 @@ class TranspilerStateOperations {
 
 	def public static void replace(TranspilerState state, VariableStatement varStmnt, Statement... newStmnts) {
 		state.replaceWithoutRewire(varStmnt, newStmnts);
+	}
+
+	def public static void replace(TranspilerState state, VariableBinding varBinding, VariableDeclaration... varDecls) {
+		state.replaceWithoutRewire(varBinding, varDecls);
 	}
 
 	def public static void replace(TranspilerState state, Expression exprOld, Expression exprNew) {

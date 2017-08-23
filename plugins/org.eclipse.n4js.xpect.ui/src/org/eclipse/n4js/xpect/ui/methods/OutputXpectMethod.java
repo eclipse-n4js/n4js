@@ -11,11 +11,14 @@
 package org.eclipse.n4js.xpect.ui.methods;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
+import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
 import org.xpect.expectation.IStringExpectation;
@@ -26,12 +29,8 @@ import org.xpect.runner.Xpect;
 import org.xpect.xtext.lib.setup.FileSetupContext;
 import org.xpect.xtext.lib.setup.ThisResource;
 
+import com.google.common.base.Joiner;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
-import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 
 /**
  * Provides execution output xpect test methods. Provided resource compiled on the fly and executed, captured output is
@@ -40,11 +39,15 @@ import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 @SuppressWarnings("restriction")
 public class OutputXpectMethod {
 
+	/** {@link TestConfig Test configurations} used for output tests which do not specify a module loader. */
+	private final static TestConfig[] DEFAULT_CONFIGS = {
+			new TestConfig(SystemLoaderInfo.COMMON_JS, GeneratorOption.MAX_TRANSPILE_OPTIONS),
+			new TestConfig(SystemLoaderInfo.SYSTEM_JS, GeneratorOption.MAX_TRANSPILE_OPTIONS),
+			new TestConfig(SystemLoaderInfo.SYSTEM_JS, GeneratorOption.DEFAULT_OPTIONS)
+	};
+
 	@Inject
 	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
-
-	private final static List<SystemLoaderInfo> loaders = Arrays.asList(SystemLoaderInfo.SYSTEM_JS,
-			SystemLoaderInfo.COMMON_JS);
 
 	/**
 	 * Compile provided then execute and compare execution output to provided expectation. During compilation
@@ -73,11 +76,10 @@ public class OutputXpectMethod {
 			String systemLoader // arg4
 	) throws IOException {
 
-		ConsumerX<SystemLoaderInfo> func = (loader) -> {
+		TestExecutor func = (config) -> {
 
-			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init,
-					fileSetupContext,
-					true, null, loader);
+			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init, fileSetupContext,
+					true, null, config.options, config.loader);
 			try {
 				expectation.assertEquals(executionResult);
 			} catch (Throwable th) {
@@ -85,7 +87,9 @@ public class OutputXpectMethod {
 				// (SYSTEM_JS, COMMON_JS, ...) to help during debugging:
 				expectation.assertEquals("======================================================================\n"
 						+ "Kind information from OutputXpectMethod:\n"
-						+ "following output was produced using module loader \"" + loader + "\"\n"
+						+ "following output was produced using "
+						+ "generator options \"" + Joiner.on(", ").join(config.options)
+						+ "\" and module loader \"" + config.loader + "\"\n"
 						+ "======================================================================\n"
 						+ executionResult);
 			}
@@ -93,7 +97,6 @@ public class OutputXpectMethod {
 		};
 
 		runWithAppropriateLoader(systemLoader, func);
-
 	}
 
 	/**
@@ -117,10 +120,10 @@ public class OutputXpectMethod {
 			String systemLoader // arg4
 	) throws IOException {
 
-		ConsumerX<SystemLoaderInfo> func = (loader) -> {
+		TestExecutor func = (config) -> {
 
 			String executionResult = xpectN4JSES5TranpilerHelper.doCompileAndExecute(resource, init, fileSetupContext,
-					true, null, loader);
+					true, null, config.options, config.loader);
 			AbstractExpectation abstractEexpectation = (AbstractExpectation) expectation;
 
 			String escapedActual = abstractEexpectation.getTargetSyntaxLiteral().escape(executionResult);
@@ -135,6 +138,7 @@ public class OutputXpectMethod {
 						regexToString(expected), regexToString(executionResult));
 
 		};
+
 		runWithAppropriateLoader(systemLoader, func);
 	}
 
@@ -170,7 +174,8 @@ public class OutputXpectMethod {
 		StringBuilder compileResultSb = new StringBuilder();
 		StringBuilder errorResultSb = new StringBuilder();
 		if (xpectN4JSES5TranpilerHelper.isCompilable(resource, errorResultSb)) {
-			compileResultSb.append(xpectN4JSES5TranpilerHelper.compile(root, replaceQuotes));
+			compileResultSb.append(xpectN4JSES5TranpilerHelper.compile(root, GeneratorOption.MAX_TRANSPILE_OPTIONS,
+					replaceQuotes));
 		}
 		String compileResult = "";
 		if (errorResultSb.length() > 0) {
@@ -231,29 +236,45 @@ public class OutputXpectMethod {
 	// Helper to execute with different loader.
 
 	/**
-	 * If {@code systemLoader} is given, then runs with this particular runner, if {@code null} the test will be run
-	 * with all known loaders sequentially.
+	 * If {@code systemLoader} is given, then runs with this particular load (and default generator options), if
+	 * {@code null} or not a known system load ID, the test will be run with all test configurations defined in
+	 * {@link #DEFAULT_CONFIGS}, sequentially.
 	 */
-	private void runWithAppropriateLoader(String systemLoader /* nullable */, ConsumerX<SystemLoaderInfo> func)
+	private void runWithAppropriateLoader(String systemLoader /* nullable */, TestExecutor func)
 			throws IOException {
 		SystemLoaderInfo systemLoaderInfo = SystemLoaderInfo.fromString(systemLoader);
 		if (systemLoaderInfo != null) {
-			func.accept(systemLoaderInfo);
+			// tests that explicitly specify a module loader are only run with default generator options
+			func.accept(new TestConfig(systemLoaderInfo, GeneratorOption.DEFAULT_OPTIONS));
 		} else {
-			withAllLoaders(func);
+			runWithDefaultConfigs(func);
 		}
 	}
 
-	/** Runs the passed in code with all loaders defined in {@link #loaders} */
-	private static void withAllLoaders(ConsumerX<SystemLoaderInfo> func) throws IOException {
+	/** Runs the passed in code with all test configurations defined in {@link #DEFAULT_CONFIGS}. */
+	private static void runWithDefaultConfigs(TestExecutor func) throws IOException {
 		// Support for multiple system-loader, we do need to run the test multiple times, unfortunately.
-		for (SystemLoaderInfo loader : loaders) {
-			func.accept(loader);
+		for (TestConfig config : DEFAULT_CONFIGS) {
+			func.accept(config);
+		}
+	}
+
+	/**
+	 * A test configuration comprises {@link GeneratorOption}s to use during compilation and a {@link SystemLoaderInfo
+	 * module loader} to use when running the code.
+	 */
+	private static final class TestConfig {
+		GeneratorOption[] options;
+		SystemLoaderInfo loader;
+
+		public TestConfig(SystemLoaderInfo loader, GeneratorOption... options) {
+			this.options = options;
+			this.loader = loader;
 		}
 	}
 
 	@FunctionalInterface
-	private static interface ConsumerX<T> {
-		void accept(T t) throws IOException;
+	private static interface TestExecutor {
+		void accept(TestConfig config) throws IOException;
 	}
 }

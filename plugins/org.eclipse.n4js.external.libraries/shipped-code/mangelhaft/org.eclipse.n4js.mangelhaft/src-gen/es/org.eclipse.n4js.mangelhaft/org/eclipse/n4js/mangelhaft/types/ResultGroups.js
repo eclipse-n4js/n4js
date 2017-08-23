@@ -87,8 +87,7 @@
 						}
 					},
 					concat: {
-						value: function concat___n4() {
-							var resultGroups = Array.prototype.slice.call(arguments, 0);
+						value: function concat___n4(...resultGroups) {
 							return this.concatArray(resultGroups);
 						}
 					},
