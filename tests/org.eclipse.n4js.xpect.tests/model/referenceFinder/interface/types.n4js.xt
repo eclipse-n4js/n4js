@@ -11,10 +11,18 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at T -->  T - 10, T - 16
+/* XPECT findReferences at T ---
+	referenceFinder/interface/types - T - 29,
+	referenceFinder/interface/types - T - 39,
+---
+*/
 class T {}
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at J -->  J - 12, T - 19
+/* XPECT findReferences at J ---
+	referenceFinder/interface/types - J - 31,
+	referenceFinder/interface/types - J - 46
+---
+*/
 interface J {}
 
 
@@ -23,10 +31,18 @@ T;
 J;
 
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at E -->  E - 21, E - 23
+/* XPECT findReferences at E ---
+	referenceFinder/interface/types - E - 48,
+	referenceFinder/interface/types - E - 50
+---
+*/
 class E extends T {}
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at I -->  I - 21, I - 23
+/* XPECT findReferences at I ---
+   referenceFinder/interface/types - I - 48,
+   referenceFinder/interface/types - I - 50
+---
+*/
 interface I extends J {}
 
 function foo1(e : E) : I { return null; }

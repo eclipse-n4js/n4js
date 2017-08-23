@@ -11,19 +11,18 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
    ResourceSet {
-   	ThisFile {}
-   	Resource "importClassPropertiesImp.n4js" { }
+	ThisFile {}
+	Resource "ImportFunctionImp.n4js" {}
    }
 END_SETUP
  */
 
+/* XPECT findReferences at function ---
+	referenceFinder/functions/ImportFunctionExp- zzz - 28,
+	referenceFinder/functions/ImportFunctionImp - zzz - 26,
+	referenceFinder/functions/ImportFunctionImp - zzz - 28
+---
+*/
+export function zzz() {}
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at T --> T - 14, T - 15, T - 6
-export public class T {
-// IDE-1662 XPECT FIXME findReferences at a --> t.a - 17, t.a - 18
-	a : T;
-// IDE-1662 XPECT FIXME findReferences at i --> t.i - 20, t.i - 21
-	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> t.foo - 23
-	foo(){};
-}
+zzz();

@@ -5,29 +5,25 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors:
+ * Contributors:pe
  *   NumberFour AG - Initial API and implementation
  */
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-class T {
-// IDE-1662 XPECT FIXME findReferences at a --> this.a - 18
-	a : T;
-// IDE-1662 XPECT FIXME findReferences at i --> this.i - 20
-	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> super.foo - 16
+interface I {
 	foo(){};
 }
 
-class S extends T {
-	@Override
-// IDE-1662 XPECT FIXME findReferences at foo -->
-	foo() {
-		super.foo();
-
-		this.a;
-
-		this.i = 0;
-	}
+class C implements I {
+	
 }
+// C is not considered as a reference to I even though it implements I
+/* XPECT findReferences at I --- 
+referenceFinder/class/subclassesNotConsideredAsReference - I - 18,
+referenceFinder/class/subclassesNotConsideredAsReference - I - 27
+---
+*/
+var j : I;
+j.foo();
+

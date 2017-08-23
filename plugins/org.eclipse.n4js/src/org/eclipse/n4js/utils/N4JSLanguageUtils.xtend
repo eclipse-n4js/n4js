@@ -60,6 +60,7 @@ import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ExistentialTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -95,7 +96,6 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 
 /**
  * Intended for small, static utility methods that

@@ -42,8 +42,10 @@ import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
+import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
+import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.scoping.utils.DynamicPseudoScope
@@ -60,6 +62,7 @@ import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
+import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
@@ -124,6 +127,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject extension ProjectUtils;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
+
+	@Inject MemberVisibilityChecker checker;
+
+	@Inject ContainerTypesHelper containerTypesHelper;
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -280,6 +287,13 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	private def IScope scope_IdentifierRef_id(IdentifierRef identifierRef, EReference ref) {
 		val VariableEnvironmentElement vee = identifierRef.ancestor(VariableEnvironmentElement);
+		val scope = getLexicalEnvironmentScope(vee, identifierRef, ref);
+		// Handle constructor visibility
+		if (identifierRef.eContainer instanceof NewExpression) {
+			val newExpr = identifierRef.eContainer as NewExpression
+			val vacs = new VisibilityAwareCtorScope(scope, checker, containerTypesHelper, newExpr);
+			return vacs;
+		}
 		return getLexicalEnvironmentScope(vee, identifierRef, ref);
 	}
 

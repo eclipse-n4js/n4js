@@ -9,18 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
+import { X1 } from "org/eclipse/n4js/tests/resource/X"
+import { X2 } from "org/eclipse/n4js/tests/resource/X"
 
-
-// IDE-1662 XPECT FIXME findReferences at x --> x - 7, x - 11
-function x () : void {}
-
-x();
-
-class C {
-	constructor() {
-		x();
-	}
-
-	x : {function():void} = function () {return;};
-}
+let x1ux2: X1 | X2;
+x1ux2.foo; 

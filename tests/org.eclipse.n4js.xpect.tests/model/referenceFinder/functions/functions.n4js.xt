@@ -11,24 +11,25 @@
 
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
-// Bug of x-pect. Ask Moritz, he knows. IDE-1662 XPECT FIXME findReferences at T --> T - 14, T - 15, T - 6
-interface T {
-// IDE-1662 XPECT FIXME findReferences at a --> t.a - 17, t.a - 18
-	a : T;
-// IDE-1662 XPECT FIXME findReferences at i --> t.i - 20, t.i - 21
-	i : int;
-// IDE-1662 XPECT FIXME findReferences at foo --> t.foo - 23
-	foo(){};
+
+/* XPECT findReferences at x ---
+	referenceFinder/functions/functions - x - 22,
+	referenceFinder/functions/functions - x - 30
+	---
+	*/
+function x () : void {}
+
+x();
+
+class C {
+	/* XPECT findReferences at param ---
+	referenceFinder/functions/functions - param - 31
+	---
+	*/
+	constructor(param :int) {
+		x();
+		console.log(param);
+	}
+
+	x : {function():void} = function () {return;};
 }
-
-
-T;
-var t : T;
-
-t.a;
-t.a = null;
-
-t.i;
-t.i = 0;
-
-t.foo();

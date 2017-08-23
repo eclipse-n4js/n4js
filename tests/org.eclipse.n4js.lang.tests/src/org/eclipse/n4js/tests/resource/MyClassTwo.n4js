@@ -9,20 +9,14 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+import { MyInterfaceFour } from "org/eclipse/n4js/tests/resource/MyInterfaceFour";
+import { MyRoleLikeInterface } from "org/eclipse/n4js/tests/resource/MyRoleLikeInterface";
 
+export class MyClassTwo {
+	myAttributeTwo : {function (param:string) : MyInterfaceFour};
 
-
-
-
-
-
-
-
-
-
-
-// start at line after last line in 'importFunctionExp'
-
-import {zzz} from "referenceFinder/importFunctionExp";
-
-zzz();
+    myMethodTwo() : MyRoleLikeInterface<MyInterfaceFour> {
+        return null;
+    }
+}
+ 

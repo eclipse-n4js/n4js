@@ -9,16 +9,8 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest
-   ResourceSet {
-   	ThisFile {}
-   	Resource "importFunctionImp.n4js" {}
-   }
-END_SETUP
- */
+export public class C<T> {
+	public foo: int = 42;
+}
 
-// Bug of x-pect. Ask Moritz, he knows. (Regarding 'function' as Offset indicator)
-// IDE-1662, IDE-1699 XPECT FIXME findReferences at function --> zzz - 13, zzz - 16, zzz - 18
-export function zzz() {}
-
-zzz();
+export public class Z { }

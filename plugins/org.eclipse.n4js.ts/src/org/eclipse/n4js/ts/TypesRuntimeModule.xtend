@@ -10,22 +10,21 @@
  */
 package org.eclipse.n4js.ts
 
-import org.eclipse.n4js.ts.findReferences.ConcreteSyntaxAwareReferenceFinder
-import org.eclipse.xtext.naming.IQualifiedNameProvider
-import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypesGlobalScopeProvider
-import org.eclipse.xtext.conversion.IValueConverterService
-import org.eclipse.xtext.scoping.IGlobalScopeProvider
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
-import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme
-import org.eclipse.xtext.linking.lazy.LazyLinkingResource
+import org.eclipse.n4js.ts.conversions.TypesValueConverterService
 import org.eclipse.n4js.ts.naming.N4TSQualifiedNameConverter
+import org.eclipse.n4js.ts.resource.BuiltInSchemeAwareResource
 import org.eclipse.n4js.ts.resource.TypesResourceDescriptionStrategy
-import org.eclipse.xtext.findReferences.IReferenceFinder
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypesGlobalScopeProvider
+import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme
+import org.eclipse.xtext.conversion.IValueConverterService
+import org.eclipse.xtext.linking.lazy.LazyLinkingResource
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.naming.IQualifiedNameProvider
 import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy
 import org.eclipse.xtext.resource.XtextResourceSet
-import org.eclipse.xtext.naming.IQualifiedNameConverter
-import org.eclipse.n4js.ts.conversions.TypesValueConverterService
-import org.eclipse.n4js.ts.resource.BuiltInSchemeAwareResource
+import org.eclipse.xtext.scoping.IGlobalScopeProvider
+import org.eclipse.xtext.service.DefaultRuntimeModule
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -35,7 +34,7 @@ class TypesRuntimeModule extends AbstractTypesRuntimeModule {
 	/**
 	 * We add a special {@link TypesValueConverterService} here.
 	 *
-	 * @see org.eclipse.xtext.service.DefaultRuntimeModule#bindIValueConverterService()
+	 * @see DefaultRuntimeModule#bindIValueConverterService()
 	 */
 	override Class<? extends IValueConverterService> bindIValueConverterService() {
 		return TypesValueConverterService;
@@ -72,10 +71,6 @@ class TypesRuntimeModule extends AbstractTypesRuntimeModule {
 		return N4TSQualifiedNameProvider;
 	}
 
-	/***/
-	def Class<? extends IReferenceFinder> bindReferenceFinder() {
-		return ConcreteSyntaxAwareReferenceFinder;
-	}
 
 	/***/
 	def Class<? extends LazyLinkingResource> bindBuiltInSchemeAwareResource() {
