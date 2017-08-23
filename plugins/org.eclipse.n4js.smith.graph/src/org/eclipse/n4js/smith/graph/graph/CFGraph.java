@@ -19,6 +19,9 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.smith.graph.CFGraphProvider;
 import org.eclipse.swt.custom.StyledText;
@@ -38,7 +41,8 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	final XtextEditor editor;
 	final StyledText styledText;
 	final NavigableMap<ControlFlowElement, Node> nodeMap = new TreeMap<>(new CFEComparator());
-	CFGraphProvider gProvider;
+	private CFGraphProvider gProvider;
+	private N4JSFlowAnalyses flowAnalyses;
 
 	/**
 	 * Constructor
@@ -54,6 +58,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		clear();
 		nodeMap.clear();
 		gProvider = provider;
+		flowAnalyses = provider.getFlowAnalyses();
 
 		Collection<ControlFlowElement> cfes = gProvider.getElements(input);
 		for (ControlFlowElement cfe : cfes) {
@@ -136,20 +141,37 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			int offset = line1 - line2;
 
 			if (offset == 0) {
-				boolean cfe1IsFirst = gProvider.isTransitiveSuccessor(cfe1, cfe2);
-				if (cfe1IsFirst)
+				if (flowAnalyses.isSuccessor(cfe1, cfe2))
 					return -1;
 
-				boolean cfe2IsFirst = gProvider.isTransitiveSuccessor(cfe2, cfe1);
-				if (cfe2IsFirst)
+				if (flowAnalyses.isSuccessor(cfe2, cfe1))
 					return 1;
 
-				ControlFlowElement commonSucc = gProvider.getCommonPredecessor(cfe1, cfe2);
-				if (commonSucc != null) {
-					String path1 = gProvider.getPathIdentifier(commonSucc, cfe1);
-					String path2 = gProvider.getPathIdentifier(commonSucc, cfe2);
+				if (flowAnalyses.isTransitiveSuccessor(cfe1, cfe2))
+					return -1;
 
-					offset = path1.compareTo(path2);
+				if (flowAnalyses.isTransitiveSuccessor(cfe2, cfe1))
+					return 1;
+
+				Collection<ControlFlowType> cfts1 = flowAnalyses.getSuccessorsControlFlowTypes(cfe1);
+				Collection<ControlFlowType> cfts2 = flowAnalyses.getSuccessorsControlFlowTypes(cfe2);
+				cfts1 = ControlFlowType.filter(cfts1, ControlFlowType.LoopTypes);
+				cfts2 = ControlFlowType.filter(cfts2, ControlFlowType.LoopTypes);
+
+				if (FGUtils.getTextLabel(cfe1).equals("  ")) {
+					System.out.println();
+				}
+
+				offset = cfts1.size() - cfts2.size();
+
+				if (offset == 0) {
+					ControlFlowElement commonSucc = flowAnalyses.getCommonPredecessor(cfe1, cfe2);
+					if (commonSucc != null) {
+						String path1 = flowAnalyses.getPathIdentifier(commonSucc, cfe1);
+						String path2 = flowAnalyses.getPathIdentifier(commonSucc, cfe2);
+
+						offset = path1.compareTo(path2);
+					}
 				}
 			}
 			if (offset == 0) {

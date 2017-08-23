@@ -61,24 +61,10 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	}
 
 	/**
-	 * see {@link N4JSFlowAnalyses#isTransitiveSuccessor(ControlFlowElement, ControlFlowElement)}
+	 * @return a reference to {@link N4JSFlowAnalyses} of the current {@link Script}
 	 */
-	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return flowAnalyses.isTransitiveSuccessor(cfeFrom, cfeTo);
-	}
-
-	/**
-	 * see {@link N4JSFlowAnalyses#getCommonPredecessor(ControlFlowElement, ControlFlowElement)}
-	 */
-	public ControlFlowElement getCommonPredecessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-		return flowAnalyses.getCommonPredecessor(cfe1, cfe2);
-	}
-
-	/**
-	 * see {@link N4JSFlowAnalyses#getPathIdentifier(ControlFlowElement, ControlFlowElement)}
-	 */
-	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return flowAnalyses.getPathIdentifier(cfeFrom, cfeTo);
+	public N4JSFlowAnalyses getFlowAnalyses() {
+		return flowAnalyses;
 	}
 
 	/** Triggers a control flow analyses and initialized the two maps {@link #nodeMap} and {@link #edgesMap}. */
