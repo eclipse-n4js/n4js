@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -63,9 +64,19 @@ public class HeadlessRunner {
 		IRunnerDescriptor runnerDescriptor = checkRunner(runner);
 		logger.info("Using runner :" + runnerDescriptor.getId());
 
+		RunConfiguration runConfiguration = null;
 		try {
-			Process process = runnerFrontEnd.run(runnerDescriptor.getId(), implementationId, systemLoader,
+			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
+					systemLoader,
 					locationToRun);
+		} catch (java.lang.IllegalStateException e2) {
+			logger.error(Throwables.getStackTraceAsString(e2));
+			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
+					"Cannot create run configuration.", e2);
+		}
+
+		try {
+			Process process = runnerFrontEnd.run(runConfiguration);
 
 			int exit = process.waitFor();
 

@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFacade;
 import org.eclipse.n4js.tester.TesterFrontEnd;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
@@ -68,10 +69,19 @@ public class HeadlessTester {
 		ITesterDescriptor testerDescriptor = checkTester(tester);
 		logger.info("Using tester :" + testerDescriptor.getId());
 
+		TestConfiguration testConfiguration = null;
+		try {
+			testConfiguration = testerFrontEnd.createConfiguration(testerDescriptor.getId(),
+					implementationId, locationToTest);
+		} catch (java.lang.IllegalStateException e2) {
+			logger.error(Throwables.getStackTraceAsString(e2));
+			throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+					"Cannot create test configuration.", e2);
+		}
+
 		try {
 			testListener.startListening();
-			Process process = testerFrontEnd.test(testerDescriptor.getId(),
-					implementationId, locationToTest);
+			Process process = testerFrontEnd.test(testConfiguration);
 
 			int exit = process.waitFor();
 
