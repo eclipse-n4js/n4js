@@ -67,8 +67,7 @@ public class HeadlessRunner {
 		RunConfiguration runConfiguration = null;
 		try {
 			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
-					systemLoader,
-					locationToRun);
+					systemLoader, locationToRun);
 		} catch (java.lang.IllegalStateException e2) {
 			logger.error(Throwables.getStackTraceAsString(e2));
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
