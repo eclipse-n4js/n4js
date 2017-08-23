@@ -240,7 +240,7 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final MemberAccess contextCasted = //
 					(MemberAccess) request.context; // cast is valid, see MemberScopeRequest#provideContainedMembers
 			final ComposedMemberCache cache = contextCasted.getComposedMemberCache();
-			if (cache != null && !TypeCompareUtils.isEqual(cache.getComposedTypeRef(), this.composedTypeRef)) {
+			if (cache != null && TypeCompareUtils.isEqual(cache.getComposedTypeRef(), this.composedTypeRef)) {
 				return cache;
 			}
 			// does not exist yet -> create new composed member cache in TModule:
