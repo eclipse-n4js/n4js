@@ -93,11 +93,11 @@ public class FlowGraph {
 		LinkedList<LinkedList<ControlFlowEdge>> allPaths = new LinkedList<>();
 		for (ControlFlowEdge dSucc : startNode.getSuccessorEdges()) {
 			LinkedList<ControlFlowEdge> path = new LinkedList<>();
+			path.add(dSucc);
 			if (dSucc.end == endNode) {
 				return path; // direct edge from startNode to endNode due to dSucc
 			}
 			allPaths.add(path);
-			path.add(dSucc);
 		}
 
 		while (!allPaths.isEmpty()) {

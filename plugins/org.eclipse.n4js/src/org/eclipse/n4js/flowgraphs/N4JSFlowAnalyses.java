@@ -80,9 +80,7 @@ public class N4JSFlowAnalyses {
 		return cfElems;
 	}
 
-	/**
-	 * @returns a list of all direct successors of cfe
-	 */
+	/** @returns a list of all direct successors of cfe */
 	public List<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		Objects.requireNonNull(cfe);
 
@@ -95,9 +93,19 @@ public class N4JSFlowAnalyses {
 		return cfElems;
 	}
 
-	/**
-	 * @returns true iff cfeTo is a transitive successor of cfeFrom
-	 */
+	/** @returns true iff cfe2 is a direct successor of cfe1 */
+	public boolean isSuccessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+		List<ControlFlowElement> succs = getSuccessors(cfe1);
+		return succs.contains(cfe2);
+	}
+
+	/** @returns true iff cfe2 is a direct predecessor of cfe1 */
+	public boolean isPredecessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+		List<ControlFlowElement> preds = getPredecessors(cfe1);
+		return preds.contains(cfe2);
+	}
+
+	/** @returns true iff cfeTo is a transitive successor of cfeFrom */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		Objects.requireNonNull(cfeFrom);
 		Objects.requireNonNull(cfeTo);
@@ -119,6 +127,32 @@ public class N4JSFlowAnalyses {
 	 */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
 		return cfg.getControlFlowTypeToSuccessors(cfe, cfeSucc);
+	}
+
+	/**
+	 * @returns a set of {@link ControlFlowType}s to the successors of cfe
+	 */
+	public TreeSet<ControlFlowType> getSuccessorsControlFlowTypes(ControlFlowElement cfe) {
+		List<ControlFlowElement> succs = getSuccessors(cfe);
+		TreeSet<ControlFlowType> succsCFTs = new TreeSet<>();
+		for (ControlFlowElement succ : succs) {
+			TreeSet<ControlFlowType> succCFTs = getControlFlowTypeToSuccessors(cfe, succ);
+			succsCFTs.addAll(succCFTs);
+		}
+		return succsCFTs;
+	}
+
+	/**
+	 * @returns a set of {@link ControlFlowType}s to the predecessors of cfe
+	 */
+	public TreeSet<ControlFlowType> getPredecessorsControlFlowTypes(ControlFlowElement cfe) {
+		List<ControlFlowElement> preds = getPredecessors(cfe);
+		TreeSet<ControlFlowType> predsCFTs = new TreeSet<>();
+		for (ControlFlowElement pred : preds) {
+			TreeSet<ControlFlowType> predCFTs = getControlFlowTypeToSuccessors(pred, cfe);
+			predsCFTs.addAll(predCFTs);
+		}
+		return predsCFTs;
 	}
 
 	/**
