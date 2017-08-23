@@ -21,16 +21,26 @@ import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PrimaryExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.transpiler.TransformationAssistant
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
- * FIXME API doc
+ * A {@link TransformationAssistant} providing helper functionality for dealing with ES2015 destructuring.
  */
 class DestructuringAssistant extends TransformationAssistant {
 
 
+	/**
+	 * Converts the given array or object binding pattern into an array or object literal that, if used on the
+	 * right-hand side of an assignment expression, performs the equivalent destructuring operation.
+	 * <p>
+	 * Expression for default values are removed from the given binding, so the given binding is incomplete after this
+	 * method returns. It is only guaranteed that (1) the given binding is not removed from its contained and (2) it
+	 * will still include the same variable declarations as before, which can be retrieved via
+	 * {@link VariableDeclarationOrBinding#getVariableDeclarations()} on the containing variable binding.
+	 */
 	public def PrimaryExpression convertBindingPatternToArrayOrObjectLiteral(BindingPattern binding) {
 		return switch(binding) {
 			ArrayBindingPattern: convertArrayBindingPatternToArrayLiteral(binding)
@@ -38,12 +48,20 @@ class DestructuringAssistant extends TransformationAssistant {
 		};
 	}
 
+	/**
+	 * Same as {@link #convertBindingPatternToArrayOrObjectLiteral(BindingPattern)}, but only for array binding
+	 * patterns.
+	 */
 	public def ArrayLiteral convertArrayBindingPatternToArrayLiteral(ArrayBindingPattern binding) {
 		return _ArrLit(
 			binding.elements.map[convertBindingElementToArrayElement]
 		);
 	}
 
+	/**
+	 * Same as {@link #convertBindingPatternToArrayOrObjectLiteral(BindingPattern)}, but only for object binding
+	 * patterns.
+	 */
 	public def ObjectLiteral convertObjectBindingPatternToObjectLiteral(ObjectBindingPattern binding) {
 		return _ObjLit(
 			binding.properties.map[convertBindingPropertyToPropertyNameValuePair]

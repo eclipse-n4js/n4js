@@ -15,6 +15,7 @@ import java.util.HashMap;
 import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.transpiler.TransformationDependency.Optional;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
@@ -40,6 +41,10 @@ public class TranspilerState {
 	 */
 	public final N4JSResource resource;
 
+	/**
+	 * The {@link GeneratorOption}s that were specified for configuration purposes when transpilation was initiated.
+	 * Mainly used to control activation of {@link Optional optional transformations}.
+	 */
 	public final GeneratorOption[] options;
 
 	/**

@@ -473,7 +473,7 @@ class ModuleWrappingTransformation extends Transformation {
 	/** Decouple Variabledeclaration and initialiser.
 	 * If an initialiser is given it will be wrapped into a new ExpressionStatement.
 	 */
-	private def Pair<List<VariableDeclaration>,ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
+	private def Pair<List<VariableDeclaration>, ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
 
 		// extract exression:
 		val exprStmt = if( vDeclIM.expression !== null) {
@@ -737,7 +737,28 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 
-	// FIXME API doc
+	/**
+	 * Given a destructuring binding, this method returns a destructuring assignment that performs the equivalent
+	 * destructuring operation.
+	 * <p>
+	 * For example, given an array destructuring binding (i.e. the code between the 'let' and the '=') as in
+	 * <pre>
+	 * let [a,b] = [1,2];
+	 * </pre>
+	 * this method will return the following assignment expression
+	 * <pre>
+	 * [a,b] = [1,2]
+	 * </pre>
+	 * and given an object destructuring binding (again, the code between the 'let' and the '=') as in
+	 * <pre>
+	 * let {prop1: x, prop2: y} = {prop1: 1, prop2: 2};
+	 * </pre>
+	 * this method will return the following assignment expression
+	 * <pre>
+	 * ({prop1: x, prop2: y} = {prop1: 1, prop2: 2})
+	 * </pre>
+	 * (wrapped in a parenthesis expression).
+	 */
 	def private ExpressionStatement convertDestructBindingToDestructAssignment(VariableBinding binding) {
 		val patternConverted = destructuringAssistant.convertBindingPatternToArrayOrObjectLiteral(binding.pattern);
 		val assignmentExpr = _AssignmentExpr(patternConverted, binding.expression);

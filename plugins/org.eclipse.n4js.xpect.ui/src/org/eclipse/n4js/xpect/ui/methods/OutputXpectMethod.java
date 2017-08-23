@@ -259,6 +259,10 @@ public class OutputXpectMethod {
 		}
 	}
 
+	/**
+	 * A test configuration comprises {@link GeneratorOption}s to use during compilation and a {@link SystemLoaderInfo
+	 * module loader} to use when running the code.
+	 */
 	private static final class TestConfig {
 		GeneratorOption[] options;
 		SystemLoaderInfo loader;

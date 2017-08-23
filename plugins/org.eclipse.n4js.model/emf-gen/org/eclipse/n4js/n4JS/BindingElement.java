@@ -138,6 +138,10 @@ public interface BindingElement extends EObject {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * Tells if this {@link BindingElement} is an "empty" element, corresponding to an {@link ArrayPadding} element in
+	 * an {@link ArrayLiteral}.
+	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
 	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((this.getVarDecl() == null) && (this.getNestedPattern() == null));'"
 	 * @generated

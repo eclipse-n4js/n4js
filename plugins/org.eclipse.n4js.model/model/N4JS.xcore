@@ -2117,10 +2117,24 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 abstract class BindingPattern {
 }
 
+/*
+ * A binding pattern used for object destructuring within a variable declaration statement, produced by code such as
+ * <pre>
+ * let {prop: myVar} = {prop: 'hello'};
+ * </pre>
+ * where the <code>{prop: myVar}</code> part will be represented in the AST as an {@code ObjectBindingPattern}.
+ */
 class ObjectBindingPattern extends BindingPattern {
 	contains BindingProperty[] properties
 }
 
+/*
+ * A binding pattern used for array destructuring within a variable declaration statement, produced by code such as
+ * <pre>
+ * let [myVar] = ['hello'];
+ * </pre>
+ * where the <code>[myVar]</code> part will be represented in the AST as an {@code ArrayBindingPattern}.
+ */
 class ArrayBindingPattern extends BindingPattern {
 	contains BindingElement[] elements
 }
@@ -2142,6 +2156,10 @@ class BindingElement {
 	contains BindingPattern nestedPattern
 	contains Expression expression
 
+	/* 
+	 * Tells if this {@link BindingElement} is an "empty" element, corresponding to an {@link ArrayPadding} element in
+	 * an {@link ArrayLiteral}.
+	 */
 	op boolean isElision() {
 		return varDecl===null && nestedPattern===null;
 	}

@@ -32,9 +32,29 @@ import com.google.common.base.Joiner;
  */
 public abstract class TransformationDependency {
 
+	/**
+	 * Declares a transformation to be optional and activate if and only if at least one of the given
+	 * {@link GeneratorOption generator options} was specified when transpilation was started.
+	 * <p>
+	 * Notes:
+	 * <ol>
+	 * <li>removing inactive optional transformations from a set of transformations is implemented in
+	 * {@link TransformationDependency#filterByTranspilerOptions(Transformation[], GeneratorOption[])
+	 * #filterByTranspilerOptions()},
+	 * <li>validation of all other transformation dependencies happens <em>after</em> removal of inactive optional
+	 * transformations, see step 1 in {@link AbstractTranspiler#transform(TranspilerState)},
+	 * <li>at time of writing, generator options are not made available for the end user and can only be set internally
+	 * for testing purposes. The main transpilation in production will always run with the options defined in
+	 * {@link GeneratorOption#DEFAULT_OPTIONS}.
+	 * </ol>
+	 */
 	@Target({ TYPE })
 	@Retention(RetentionPolicy.RUNTIME)
 	public static @interface Optional {
+		/**
+		 * The {@link GeneratorOption generator options} of which at least one is required for this transformation to
+		 * become active during transpilation.
+		 */
 		public GeneratorOption[] value();
 	}
 
@@ -108,8 +128,10 @@ public abstract class TransformationDependency {
 		public Class<? extends Transformation>[] value();
 	}
 
-	public static final boolean isActiveIn(Transformation transformation,
-			GeneratorOption[] activeOptions) {
+	/**
+	 * Tells if the given transformation is active, based on the given {@link GeneratorOption generator options}.
+	 */
+	public static final boolean isActiveIn(Transformation transformation, GeneratorOption[] activeOptions) {
 		final Optional ann = transformation.getClass().getAnnotation(Optional.class);
 		if (ann != null) {
 			// at least one of the options given in the annotation must be a super type of any of the active options
@@ -124,6 +146,11 @@ public abstract class TransformationDependency {
 		return true;
 	}
 
+	/**
+	 * Returns a new array of transformations with all given transformations except those that are {@link Optional} and
+	 * are {@link #isActiveIn(Transformation, GeneratorOption[]) inactive}, based on the given {@link GeneratorOption
+	 * generator options}.
+	 */
 	public static final Transformation[] filterByTranspilerOptions(Transformation[] transformations,
 			GeneratorOption[] options) {
 		return Stream.of(transformations).filter(t -> isActiveIn(t, options)).toArray(len -> new Transformation[len]);

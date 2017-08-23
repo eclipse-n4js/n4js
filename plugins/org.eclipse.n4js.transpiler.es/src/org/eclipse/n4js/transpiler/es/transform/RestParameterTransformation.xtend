@@ -20,7 +20,7 @@ import org.eclipse.xtext.EcoreUtil2
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
- * Transforms ES2015 rest parameters to a ES5 equivalent.
+ * Transforms ES2015 rest parameters to an ES5 equivalent.
  *
  * Dependencies:
  * <ul>

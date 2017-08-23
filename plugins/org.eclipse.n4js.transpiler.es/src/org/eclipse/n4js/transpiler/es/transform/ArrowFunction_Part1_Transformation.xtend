@@ -20,6 +20,7 @@ import org.eclipse.n4js.transpiler.es.assistants.BlockAssistant
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
+ * Transforms ES2015 arrow functions to an ES5 equivalent, using ordinary function expressions.
  */
 @Optional(ES5plus)
 class ArrowFunction_Part1_Transformation extends Transformation {

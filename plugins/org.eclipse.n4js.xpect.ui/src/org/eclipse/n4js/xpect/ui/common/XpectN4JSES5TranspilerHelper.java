@@ -290,8 +290,7 @@ public class XpectN4JSES5TranspilerHelper {
 					compileImplementationOfN4JSDFile(errorResult, dep, options, replaceQuotes);
 				} else if (isCompilable(dep, errorResult)) {
 					final Script script = (Script) dep.getContents().get(0);
-					createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder
-																				// here!
+					createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder!
 				}
 			}
 

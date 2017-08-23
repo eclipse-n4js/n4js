@@ -17,6 +17,14 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Array Binding Pattern</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A binding pattern used for array destructuring within a variable declaration statement, produced by code such as
+ * <pre>
+ * let [myVar] = ['hello'];
+ * </pre>
+ * where the <code>[myVar]</code> part will be represented in the AST as an {@code ArrayBindingPattern}.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

@@ -17,6 +17,14 @@ import org.eclipse.emf.common.util.EList;
  * A representation of the model object '<em><b>Object Binding Pattern</b></em>'.
  * <!-- end-user-doc -->
  *
+ * <!-- begin-model-doc -->
+ * A binding pattern used for object destructuring within a variable declaration statement, produced by code such as
+ * <pre>
+ * let {prop: myVar} = {prop: 'hello'};
+ * </pre>
+ * where the <code>{prop: myVar}</code> part will be represented in the AST as an {@code ObjectBindingPattern}.
+ * <!-- end-model-doc -->
+ *
  * <p>
  * The following features are supported:
  * </p>

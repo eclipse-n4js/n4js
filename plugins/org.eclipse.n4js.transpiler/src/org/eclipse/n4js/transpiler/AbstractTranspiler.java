@@ -130,6 +130,8 @@ public abstract class AbstractTranspiler {
 	 *
 	 * @param resource
 	 *            the resource to transpile.
+	 * @param options
+	 *            the {@link GeneratorOption generator options} to use during generation.
 	 * @param outCode
 	 *            the writer where the generated output code should be sent.
 	 * @param optSourceMapInfo
@@ -151,6 +153,9 @@ public abstract class AbstractTranspiler {
 
 	/**
 	 * First step during transpilation. Creates initial transpiler state.
+	 *
+	 * @param options
+	 *            the {@link GeneratorOption generator options} to use during generation.
 	 */
 	protected TranspilerState prepare(N4JSResource resource, GeneratorOption[] options) {
 		final Script script = resource.getScript();
@@ -233,6 +238,9 @@ public abstract class AbstractTranspiler {
 
 	/**
 	 * Performs preparation step. Only intended for testing.
+	 *
+	 * @param options
+	 *            the {@link GeneratorOption generator options} to use during generation.
 	 */
 	public TranspilerState testPrepare(N4JSResource resource, GeneratorOption[] options) {
 		return prepare(resource, options);

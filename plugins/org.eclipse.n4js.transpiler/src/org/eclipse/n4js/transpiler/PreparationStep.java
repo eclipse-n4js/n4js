@@ -72,6 +72,9 @@ public class PreparationStep {
 	 * Creates and initializes the transpiler state. In particular, this will create the intermediate model as a copy of
 	 * the original AST with some modifications (esp. rewiring of cross-references to ensure intermediate model is
 	 * self-contained).
+	 *
+	 * @param options
+	 *            the {@link GeneratorOption generator options} to use during generation.
 	 */
 	public TranspilerState prepare(Script script, GeneratorOption[] options) {
 		final N4JSResource resource = (N4JSResource) script.eResource();

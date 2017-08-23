@@ -44,6 +44,8 @@ public interface ISubGenerator extends IGenerator {
 	 *
 	 * @param root
 	 *            the root AST element
+	 * @param options
+	 *            the {@link GeneratorOption generator options} to use during generation.
 	 * @return the compiled result as String
 	 */
 	public String getCompileResultAsText(Script root, GeneratorOption[] options);
