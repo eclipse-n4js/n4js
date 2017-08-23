@@ -699,7 +699,9 @@ from {
 			val staticAccess = (targetTypeRef instanceof TypeTypeRef)
 			val checkVisibility = false // access modifiers checked in validation
 			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess)
-			val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+			val memberDesc = if(memberName!==null && !memberName.isEmpty()) {
+				scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
+			};
 			val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) {
 				memberDesc.getEObjectOrProxy()
 			};
