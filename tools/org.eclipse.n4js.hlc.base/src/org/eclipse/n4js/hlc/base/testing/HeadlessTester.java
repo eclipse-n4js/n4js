@@ -21,10 +21,8 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
-import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterFacade;
 import org.eclipse.n4js.tester.TesterFrontEnd;
-import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 
@@ -71,11 +69,9 @@ public class HeadlessTester {
 		logger.info("Using tester :" + testerDescriptor.getId());
 
 		try {
-			TestConfiguration testConfig = testerFrontEnd.createConfiguration(testerDescriptor.getId(),
-					implementationId, locationToTest);
-			TestTree testTree = testConfig.getTestTree();
 			testListener.startListening();
-			Process process = testerFrontEnd.test(testConfig);
+			Process process = testerFrontEnd.test(testerDescriptor.getId(),
+					implementationId, locationToTest);
 
 			int exit = process.waitFor();
 
