@@ -15,6 +15,7 @@ import static org.junit.Assert.fail;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FGUtils;
@@ -92,8 +93,8 @@ public class SuccsXpectMethod {
 			return;
 
 		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			ControlFlowType currCFType = flowAnalyses.getControlFlowTypeToSuccessor(start, succIt.next());
-			if (cfType != currCFType) {
+			Set<ControlFlowType> currCFTypes = flowAnalyses.getControlFlowTypeToSuccessors(start, succIt.next());
+			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
 			}
 		}
