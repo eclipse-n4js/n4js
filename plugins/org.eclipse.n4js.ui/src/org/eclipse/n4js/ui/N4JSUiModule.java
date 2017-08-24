@@ -613,11 +613,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 				N4JSShowInheritedMembersOutlineContribution.class);
 	}
 
-	/***/
-	public Class<? extends IReferenceFinder> bindReferenceFinder() {
-		return ConcreteSyntaxAwareReferenceFinder.class;
-	}
-
 	/**
 	 * Toggle showing static members or not.
 	 */
@@ -659,5 +654,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
 		return ComposedMemberAwareHyperlinkHelper.class;
+	}
+
+	/***/
+	public Class<? extends IReferenceFinder> bindReferenceFinder() {
+		return ConcreteSyntaxAwareReferenceFinder.class;
 	}
 }
