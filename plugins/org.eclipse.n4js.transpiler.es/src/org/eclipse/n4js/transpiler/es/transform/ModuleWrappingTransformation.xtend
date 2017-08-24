@@ -11,6 +11,11 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import java.util.LinkedHashMap
+import java.util.List
+import java.util.Map
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -23,6 +28,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PostfixExpression
@@ -33,39 +39,30 @@ import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
+import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
-import org.eclipse.n4js.ts.types.TModule
-import java.util.LinkedHashMap
-import java.util.List
-import java.util.Map
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtend.lib.annotations.Data
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
-
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 
 /**
  * Module/Script wrapping transformation.
- *
- * <p>Learned from this transformation
- * <ol>
- * <li>Accessible meta-information for System-JS internals are required. (See <code>ModuleWrappingTransformation#symbolFor_System()<code>)
- * </ol>
  */
 @ExcludesAfter(/* if present, must come before: */ DestructuringTransformation)
 class ModuleWrappingTransformation extends Transformation {
@@ -76,6 +73,9 @@ class ModuleWrappingTransformation extends Transformation {
 	extension QualifiedNameComputer qnameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
+	@Inject
+	private DestructuringAssistant destructuringAssistant;
+
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -86,8 +86,6 @@ class ModuleWrappingTransformation extends Transformation {
 	override assertPreConditions() {
 		assertTrue("every import declaration should have an imported module",
 			state.im.eAllContents.filter(ImportDeclaration).forall[state.info.getImportedModule(it)!==null]);
-		assertFalse("intermediate model must not contain variable bindings",
-			state.im.eAllContents.exists[it instanceof VariableBinding]);
 	}
 
 	override assertPostConditions() {
@@ -142,7 +140,7 @@ class ModuleWrappingTransformation extends Transformation {
 		// new Element system.
 		val call_System_dot_register_Expr = _CallExpr => [
 			target = _PropertyAccessExpr => [
-			  	target =  _IdentRef(steFor_System)
+				target =  _IdentRef(steFor_System)
 				property_IM = steFor_register
 			]; // "System.register"
 			arguments += _Argument(_ArrLit => [
@@ -168,7 +166,7 @@ class ModuleWrappingTransformation extends Transformation {
 						_ObjLit(
 							_PropertyNameValuePair("setters",
 								_ArrLit(
-								    importSetterMap.values.map[ importFE(it) ].map[ it._ArrayElement ]
+									importSetterMap.values.map[ importFE(it) ].map[ it._ArrayElement ]
 								)
 							),
 							_PropertyNameValuePair("execute",
@@ -407,16 +405,16 @@ class ModuleWrappingTransformation extends Transformation {
 		val Iterable<VariableDeclaration> allHoisted = scriptContent.map[ scriptElement |
 			val Iterable<VariableDeclaration> ret = switch( scriptElement ) {
 				VariableStatement : {
-					val pairsOfDeclarationAndInitialsers = scriptElement.varDecl.toHoistDeclaration;
+					val pairsOfDeclarationAndInitialsers = scriptElement.varDeclsOrBindings.toHoistDeclarations;
 					val listOfInitExpressionStmts = pairsOfDeclarationAndInitialsers.map[it.value].filterNull.toList;
 					if( !listOfInitExpressionStmts.empty ) mapVarStatement2replacer.put( scriptElement, listOfInitExpressionStmts );
-					pairsOfDeclarationAndInitialsers.map[it.key]
+					pairsOfDeclarationAndInitialsers.map[it.key].flatten
 				}
 				ImportDeclaration : scriptElement.toHoistDeclaration
 				default : null
 			};
 			return ret;
-		].filterNull.flatten
+		].filterNull.flatten.toList
 
 		val VariableStatement varStmtHoistedVariables = _VariableStatement => [
 			varDeclsOrBindings += allHoisted
@@ -458,16 +456,24 @@ class ModuleWrappingTransformation extends Transformation {
 
 	/** Decouples VarDeclarations and their initializer expressions. Returns them as a Pair. Value kann be {@null}
 	 */
-	private def Iterable<Pair<VariableDeclaration,ExpressionStatement>> toHoistDeclaration(List<VariableDeclaration> varDecl) {
-		varDecl.map[
-			entry | entry.hoistEntry
-		]
+	private def Iterable<Pair<List<VariableDeclaration>,ExpressionStatement>> toHoistDeclarations(List<VariableDeclarationOrBinding> varDeclsOrBindings) {
+		return varDeclsOrBindings.map[entry|
+			switch(entry) {
+				VariableDeclaration:
+					entry.hoistEntry
+				VariableBinding:
+					entry.hoistEntry
+				default:
+					throw new IllegalStateException("unknown subclass of " + VariableDeclarationOrBinding.simpleName
+						+ ": " + entry.class.simpleName)
+			}
+		];
 	}
 
 	/** Decouple Variabledeclaration and initialiser.
 	 * If an initialiser is given it will be wrapped into a new ExpressionStatement.
 	 */
-	private def Pair<VariableDeclaration,ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
+	private def Pair<List<VariableDeclaration>, ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
 
 		// extract exression:
 		val exprStmt = if( vDeclIM.expression !== null) {
@@ -490,7 +496,11 @@ class ModuleWrappingTransformation extends Transformation {
 			stmt;
 		};
 
-		return vDeclIM -> exprStmt;
+		return #[vDeclIM] -> exprStmt;
+	}
+
+	private def Pair<List<VariableDeclaration>, ExpressionStatement> hoistEntry(VariableBinding binding) {
+		return binding.variableDeclarations -> binding.convertDestructBindingToDestructAssignment;
 	}
 
 	/** Creates a list of VariableDeclarations without initialisers. Used in hoisting. */
@@ -611,7 +621,7 @@ class ModuleWrappingTransformation extends Transformation {
 		}
 	}
 
-	def static boolean isAppendableStatement(EObject container) {
+	def private static boolean isAppendableStatement(EObject container) {
 		return container instanceof Statement
 				&& !(container instanceof ReturnStatement )
 				&& !(container instanceof ThrowStatement);
@@ -686,7 +696,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 * Note: the code which will be wrapped usually is a non-stand-alone JS-snippet already referring to the parameters {@code require},
 	 * {@code exports} and {@code module} which are hereby introduced as formal parameters.
 	 */
-	public static def wrapPlainJSCode(CharSequence cs) {
+	def public static CharSequence wrapPlainJSCode(CharSequence cs) {
 		'''
 		(function(System) {
 			System.registerDynamic([], true, function(require, exports, module) {
@@ -697,7 +707,7 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 	/** patch the statement with commonJS-support */
-	def Statement doWrapInCJSpatch(ExpressionStatement statement) {
+	def private Statement doWrapInCJSpatch(ExpressionStatement statement) {
 
 		// (function(System) {
 		//     < ... statement ...>
@@ -724,5 +734,48 @@ class ModuleWrappingTransformation extends Transformation {
 			) // Conditional
 		));
 		return ret;
+	}
+
+
+	/**
+	 * Given a destructuring binding, this method returns a destructuring assignment that performs the equivalent
+	 * destructuring operation.
+	 * <p>
+	 * For example, given an array destructuring binding (i.e. the code between the 'let' and the '=') as in
+	 * <pre>
+	 * let [a,b] = [1,2];
+	 * </pre>
+	 * this method will return the following assignment expression
+	 * <pre>
+	 * [a,b] = [1,2]
+	 * </pre>
+	 * and given an object destructuring binding (again, the code between the 'let' and the '=') as in
+	 * <pre>
+	 * let {prop1: x, prop2: y} = {prop1: 1, prop2: 2};
+	 * </pre>
+	 * this method will return the following assignment expression
+	 * <pre>
+	 * ({prop1: x, prop2: y} = {prop1: 1, prop2: 2})
+	 * </pre>
+	 * (wrapped in a parenthesis expression).
+	 */
+	def private ExpressionStatement convertDestructBindingToDestructAssignment(VariableBinding binding) {
+		val patternConverted = destructuringAssistant.convertBindingPatternToArrayOrObjectLiteral(binding.pattern);
+		val assignmentExpr = _AssignmentExpr(patternConverted, binding.expression);
+		val assignmentStmnt = _ExprStmnt(
+			if(patternConverted instanceof ObjectLiteral) {
+				_Parenthesis(assignmentExpr) // object destructuring must be wrapped into a ParenExpression
+			} else {
+				assignmentExpr
+			}
+		);
+		// update hoisting info in information registry
+		if(binding.variableDeclarations.exists[state.info.isToHoist(it)]) {
+			binding.variableDeclarations.forEach[state.info.markAsToHoist(it)]; // if one is hoisted, all need to be hoisted
+			state.info.markAsInitializerOfHoistedVariable(assignmentStmnt);
+		}
+		// tracing
+		state.tracer.copyTrace(binding, assignmentStmnt);
+		return assignmentStmnt;
 	}
 }

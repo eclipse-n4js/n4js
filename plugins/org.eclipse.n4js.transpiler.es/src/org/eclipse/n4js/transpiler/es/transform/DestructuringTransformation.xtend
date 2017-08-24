@@ -39,6 +39,7 @@ import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.n4JS.WithStatement
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
+import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.xtext.EcoreUtil2
@@ -54,6 +55,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * <p>
  * For details on destructuring patterns, see documentation of class {@link DestructNode}.
  */
+@Optional(Destructuring)
 @ExcludesAfter(StaticPolyfillTransformation) // otherwise destructuring patterns from filling module won't be processed!
 class DestructuringTransformation extends Transformation {
 

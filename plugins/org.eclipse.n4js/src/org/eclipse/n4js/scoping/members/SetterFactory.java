@@ -18,6 +18,7 @@ import org.eclipse.n4js.scoping.members.MethodFactory.FParFactory;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.MemberType;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
 
@@ -82,6 +83,11 @@ abstract class SetterFactory implements MemberFactory {
 			List<TypeRef> typeRefs = cma.getTypeRefsOfMemberType(MemberType.SETTER, MemberType.FIELD);
 			return cma.getTypeSystem().createSimplifiedUnion(typeRefs, cma.getResource());
 		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to implement logic with regard to setters in {@code Union Types}. */
@@ -106,6 +112,10 @@ abstract class SetterFactory implements MemberFactory {
 			return cma.getTypeSystem().createSimplifiedIntersection(typeRefs, cma.getResource());
 		}
 
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to create formal parameters of setters. */

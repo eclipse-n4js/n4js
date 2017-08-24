@@ -76,7 +76,7 @@
 					},
 					getTestMethodDescriptors: {
 						value: function getTestMethodDescriptors___n4(meths, tftype) {
-							return meths.map((function(methodDescriptor) {
+							return meths.map((methodDescriptor)=>{
 								const desc = methodDescriptor.anyAnnotation("Description"), fixmeAnnotation = methodDescriptor.anyAnnotation("Fixme"), ignoreAnnotation = this.classIgnoreAnnotation ? this.classIgnoreAnnotation : methodDescriptor.anyAnnotation("Ignore"), timeoutAnnotation = methodDescriptor.anyAnnotation("Timeout"), details = desc ? desc.details : [];
 								;
 								return new TestMethodDescriptor({
@@ -90,7 +90,7 @@
 									value: methodDescriptor.jsFunction,
 									type: tftype
 								});
-							}).bind(this));
+							});
 						}
 					},
 					setTestObject: {
@@ -197,9 +197,11 @@
 						value: function getParameterizedFields___n4(testClass) {
 							let parameterizedFields = new Map();
 							for(let field of testClass.n4type.dataFieldsWithAnnotation("Parameter", true, true, false)) {
-								let $destruct0 = $sliceToArrayForDestruct((field.anyAnnotation("Parameter").details || [
+								let [
+									indexStr
+								] = field.anyAnnotation("Parameter").details || [
 									""
-								]), 1), indexStr = $destruct0[0];
+								];
 								let argNum = Number.parseInt(indexStr) || 0;
 								parameterizedFields.set(argNum, field.name);
 							}
@@ -222,14 +224,14 @@
 										}
 										++jj;
 									}
-									let parameterizedName = nameTemplate.replace(/{(index|[0-9]*)}/g, (function(match, item) {
+									let parameterizedName = nameTemplate.replace(/{(index|[0-9]*)}/g, (match, item)=>{
 										if (item === "index") {
 											return ii;
 										} else {
 											let paramNumber = Number.parseInt(item);
 											return pGroup[paramNumber] || "";
 										}
-									}).bind(this));
+									});
 									tests.push(new InstrumentedTest(testClass, info, testObject, parameterizedName));
 									++ii;
 								}
@@ -246,14 +248,11 @@
 							let pMeth = testClass.n4type.methodsWithAnnotation("Parameters", true, true, true).pop();
 							if (pMeth) {
 								let anno = pMeth.anyAnnotation("Parameters");
-								(function($destructParam0) {
-									var $destruct0;
-									$destruct0 = $sliceToArrayForDestruct(($destructParam0), 1);
-									nameTemplate = $destruct0[0];
-									return $destruct0;
-								})(anno.details || [
+								[
+									nameTemplate
+								] = anno.details || [
 									""
-								]);
+								];
 								parameters = pMeth.jsFunction.call(testClass);
 							}
 							let parameterizedTests;

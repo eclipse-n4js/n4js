@@ -71,10 +71,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
-import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
-import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
-import org.eclipse.n4js.scoping.members.TypingStrategyAwareMemberScope
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -157,7 +154,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject ContainerTypesHelper containerTypesHelper;
 
 	@Inject private MemberScopingHelper memberScopingHelper;
-	@Inject private MemberVisibilityChecker memberVisibilityChecker
 
 	@Inject private PromisifyHelper promisifyHelper;
 
@@ -644,8 +640,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// success case; but perform some further checks
-		val TypeTypeRef ctorTypeRef = typeRef as TypeTypeRef;
-		internalCheckCtorVisibility(newExpression, ctorTypeRef, staticType)
 		internalCheckTypeArguments(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
 		internalCheckNewParameters(newExpression, staticType as TClassifier);
@@ -671,42 +665,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	private def issueNotACtor(TypeRef typeRef, NewExpression newExpression) {
 		val message = IssueCodes.getMessageForEXP_NEW_NOT_A_CTOR(typeRef.typeRefAsString);
 		addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.EXP_NEW_NOT_A_CTOR)
-	}
-
-	/**
-	 * Checks visibility of the cTor.
-	 * Cf. Spec: "Table 3.2.: Member Access Control"
-	 */
-	def internalCheckCtorVisibility(NewExpression expression, TypeTypeRef ref, Type staticType) {
-
-		if (staticType instanceof TypeVariable) {
-			/* cannot check, back out */
-			// TODO is it possible to create an accessibility-check here ?
-			return;
-		}
-
-		val Type ctorClassifier = staticType
-		if (ctorClassifier instanceof TClassifier) {
-
-			val usedCtor = containerTypesHelper.fromContext(expression).findConstructor(ctorClassifier)
-
-			if (usedCtor === null) {
-				// case of broken AST / Typesystem
-				return;
-			}
-
-			val memberScope = memberScopingHelper.createMemberScopeAllowingNonContainedMembers(
-				TypeUtils.createTypeRef(ctorClassifier), expression, false, false); // always non-static
-			val vacs = new VisibilityAwareCtorScope(memberScope, memberVisibilityChecker, ref, staticType, expression);
-			val scope = new TypingStrategyAwareMemberScope(vacs, ref, expression);
-
-			val ele = scope.getSingleElement(usedCtor)
-			if (IEObjectDescriptionWithError.isErrorDescription(ele)) {
-				val errDescr = IEObjectDescriptionWithError.getDescriptionWithError(ele)
-				addIssue(errDescr.message, expression, N4JSPackage.eINSTANCE.newExpression_Callee,
-					errDescr.issueCode)
-			}
-		}
 	}
 
 	/**
@@ -1475,7 +1433,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
 		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess)
-		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+		val memberDesc = if(memberName!==null && !memberName.empty) {
+			scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
+		};
 		val member = memberDesc?.getEObjectOrProxy();
 		val isNonExistentMember = member===null || member.eIsProxy;
 		if (isNonExistentMember) {

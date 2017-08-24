@@ -24,17 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IRegion;
-import org.eclipse.ui.part.FileEditorInput;
-import org.eclipse.xtext.nodemodel.ILeafNode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.resource.XtextResource;
-import org.eclipse.xtext.ui.editor.model.IXtextDocument;
-import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
-import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.documentation.N4JSDocumentationProvider;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -46,6 +35,16 @@ import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.n4js.ui.changes.Replacement;
 import org.eclipse.n4js.ui.organize.imports.BreakException.UserCanceledBreakException;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.xtext.nodemodel.ILeafNode;
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
+import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.model.IXtextDocument;
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
+import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+
+import com.google.common.collect.Lists;
+import com.google.inject.Inject;
 
 /**
  * This helper will analyze imports section of the provided document, and rewrite it with new computed state.

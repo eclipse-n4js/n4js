@@ -2470,8 +2470,17 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EOperation getArrowFunction__ImplicitReturnExpr() {
+	public EOperation getArrowFunction__GetSingleExpression() {
 		return arrowFunctionEClass.getEOperations().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getArrowFunction__ImplicitReturnExpr() {
+		return arrowFunctionEClass.getEOperations().get(3);
 	}
 
 	/**
@@ -5908,24 +5917,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getBindingPattern_Properties() {
-		return (EReference)bindingPatternEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBindingPattern_Elements() {
-		return (EReference)bindingPatternEClass.getEStructuralFeatures().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getObjectBindingPattern() {
 		return objectBindingPatternEClass;
 	}
@@ -5935,8 +5926,26 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getObjectBindingPattern_Properties() {
+		return (EReference)objectBindingPatternEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getArrayBindingPattern() {
 		return arrayBindingPatternEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getArrayBindingPattern_Elements() {
+		return (EReference)arrayBindingPatternEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -5955,15 +5964,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	public EReference getBindingProperty_Value() {
 		return (EReference)bindingPropertyEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBindingProperty_VarDecl() {
-		return (EReference)bindingPropertyEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -6027,6 +6027,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	public EReference getBindingElement_Expression() {
 		return (EReference)bindingElementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getBindingElement__IsElision() {
+		return bindingElementEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -6349,6 +6358,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(arrowFunctionEClass, ARROW_FUNCTION__HAS_BRACES_AROUND_BODY);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IS_ARROW_FUNCTION);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN);
+		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___GET_SINGLE_EXPRESSION);
 		createEOperation(arrowFunctionEClass, ARROW_FUNCTION___IMPLICIT_RETURN_EXPR);
 
 		localArgumentsVariableEClass = createEClass(LOCAL_ARGUMENTS_VARIABLE);
@@ -6853,16 +6863,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4SetterDeclarationEClass, N4_SETTER_DECLARATION___GET_DEFINED_TYPE_ELEMENT);
 
 		bindingPatternEClass = createEClass(BINDING_PATTERN);
-		createEReference(bindingPatternEClass, BINDING_PATTERN__PROPERTIES);
-		createEReference(bindingPatternEClass, BINDING_PATTERN__ELEMENTS);
 
 		objectBindingPatternEClass = createEClass(OBJECT_BINDING_PATTERN);
+		createEReference(objectBindingPatternEClass, OBJECT_BINDING_PATTERN__PROPERTIES);
 
 		arrayBindingPatternEClass = createEClass(ARRAY_BINDING_PATTERN);
+		createEReference(arrayBindingPatternEClass, ARRAY_BINDING_PATTERN__ELEMENTS);
 
 		bindingPropertyEClass = createEClass(BINDING_PROPERTY);
 		createEReference(bindingPropertyEClass, BINDING_PROPERTY__VALUE);
-		createEReference(bindingPropertyEClass, BINDING_PROPERTY__VAR_DECL);
 		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___GET_NAME);
 		createEOperation(bindingPropertyEClass, BINDING_PROPERTY___IS_VALID_NAME);
 
@@ -6871,6 +6880,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(bindingElementEClass, BINDING_ELEMENT__VAR_DECL);
 		createEReference(bindingElementEClass, BINDING_ELEMENT__NESTED_PATTERN);
 		createEReference(bindingElementEClass, BINDING_ELEMENT__EXPRESSION);
+		createEOperation(bindingElementEClass, BINDING_ELEMENT___IS_ELISION);
 
 		// Create enums
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
@@ -7327,6 +7337,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getArrowFunction__IsArrowFunction(), theEcorePackage.getEBoolean(), "isArrowFunction", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getArrowFunction__IsSingleExprImplicitReturn(), theEcorePackage.getEBoolean(), "isSingleExprImplicitReturn", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getArrowFunction__GetSingleExpression(), this.getExpression(), "getSingleExpression", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getArrowFunction__ImplicitReturnExpr(), this.getExpression(), "implicitReturnExpr", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -7944,17 +7956,16 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4SetterDeclaration__GetDefinedTypeElement(), theTypesPackage.getTMember(), "getDefinedTypeElement", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
-		initEClass(bindingPatternEClass, BindingPattern.class, "BindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBindingPattern_Properties(), this.getBindingProperty(), null, "properties", null, 0, -1, BindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBindingPattern_Elements(), this.getBindingElement(), null, "elements", null, 0, -1, BindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(bindingPatternEClass, BindingPattern.class, "BindingPattern", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(objectBindingPatternEClass, ObjectBindingPattern.class, "ObjectBindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getObjectBindingPattern_Properties(), this.getBindingProperty(), null, "properties", null, 0, -1, ObjectBindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(arrayBindingPatternEClass, ArrayBindingPattern.class, "ArrayBindingPattern", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getArrayBindingPattern_Elements(), this.getBindingElement(), null, "elements", null, 0, -1, ArrayBindingPattern.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(bindingPropertyEClass, BindingProperty.class, "BindingProperty", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getBindingProperty_Value(), this.getBindingElement(), null, "value", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getBindingProperty_VarDecl(), this.getVariableDeclaration(), null, "varDecl", null, 0, 1, BindingProperty.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getBindingProperty__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -7965,6 +7976,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getBindingElement_VarDecl(), this.getVariableDeclaration(), null, "varDecl", null, 0, 1, BindingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBindingElement_NestedPattern(), this.getBindingPattern(), null, "nestedPattern", null, 0, 1, BindingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getBindingElement_Expression(), this.getExpression(), null, "expression", null, 0, 1, BindingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getBindingElement__IsElision(), theEcorePackage.getEBoolean(), "isElision", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");

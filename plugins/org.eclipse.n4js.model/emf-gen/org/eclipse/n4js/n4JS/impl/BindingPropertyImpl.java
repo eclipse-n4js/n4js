@@ -38,7 +38,6 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.impl.BindingPropertyImpl#getValue <em>Value</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.BindingPropertyImpl#getVarDecl <em>Var Decl</em>}</li>
  * </ul>
  *
  * @generated
@@ -53,16 +52,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 	 * @ordered
 	 */
 	protected BindingElement value;
-
-	/**
-	 * The cached value of the '{@link #getVarDecl() <em>Var Decl</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #getVarDecl()
-	 * @generated
-	 * @ordered
-	 */
-	protected VariableDeclaration varDecl;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -131,49 +120,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public VariableDeclaration getVarDecl() {
-		return varDecl;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public NotificationChain basicSetVarDecl(VariableDeclaration newVarDecl, NotificationChain msgs) {
-		VariableDeclaration oldVarDecl = varDecl;
-		varDecl = newVarDecl;
-		if (eNotificationRequired()) {
-			ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, N4JSPackage.BINDING_PROPERTY__VAR_DECL, oldVarDecl, newVarDecl);
-			if (msgs == null) msgs = notification; else msgs.add(notification);
-		}
-		return msgs;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setVarDecl(VariableDeclaration newVarDecl) {
-		if (newVarDecl != varDecl) {
-			NotificationChain msgs = null;
-			if (varDecl != null)
-				msgs = ((InternalEObject)varDecl).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.BINDING_PROPERTY__VAR_DECL, null, msgs);
-			if (newVarDecl != null)
-				msgs = ((InternalEObject)newVarDecl).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - N4JSPackage.BINDING_PROPERTY__VAR_DECL, null, msgs);
-			msgs = basicSetVarDecl(newVarDecl, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.BINDING_PROPERTY__VAR_DECL, newVarDecl, newVarDecl));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public String getName() {
 		String _elvis = null;
 		String _name = super.getName();
@@ -213,8 +159,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 		switch (featureID) {
 			case N4JSPackage.BINDING_PROPERTY__VALUE:
 				return basicSetValue(null, msgs);
-			case N4JSPackage.BINDING_PROPERTY__VAR_DECL:
-				return basicSetVarDecl(null, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -229,8 +173,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 		switch (featureID) {
 			case N4JSPackage.BINDING_PROPERTY__VALUE:
 				return getValue();
-			case N4JSPackage.BINDING_PROPERTY__VAR_DECL:
-				return getVarDecl();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -245,9 +187,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 		switch (featureID) {
 			case N4JSPackage.BINDING_PROPERTY__VALUE:
 				setValue((BindingElement)newValue);
-				return;
-			case N4JSPackage.BINDING_PROPERTY__VAR_DECL:
-				setVarDecl((VariableDeclaration)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -264,9 +203,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 			case N4JSPackage.BINDING_PROPERTY__VALUE:
 				setValue((BindingElement)null);
 				return;
-			case N4JSPackage.BINDING_PROPERTY__VAR_DECL:
-				setVarDecl((VariableDeclaration)null);
-				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -281,8 +217,6 @@ public class BindingPropertyImpl extends PropertyNameOwnerImpl implements Bindin
 		switch (featureID) {
 			case N4JSPackage.BINDING_PROPERTY__VALUE:
 				return value != null;
-			case N4JSPackage.BINDING_PROPERTY__VAR_DECL:
-				return varDecl != null;
 		}
 		return super.eIsSet(featureID);
 	}

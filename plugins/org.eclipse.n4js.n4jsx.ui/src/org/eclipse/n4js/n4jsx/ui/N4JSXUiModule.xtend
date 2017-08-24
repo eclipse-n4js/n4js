@@ -39,13 +39,13 @@ import org.eclipse.n4js.n4jsx.ui.contentassist.ContentAssistContextFactory
 import org.eclipse.n4js.n4jsx.ui.contentassist.CustomN4JSXParser
 import org.eclipse.n4js.n4jsx.ui.editor.syntaxcoloring.ParserBasedDocumentTokenSource
 import org.eclipse.n4js.n4jsx.ui.organize.imports.N4JSXReferencesFilter
+import org.eclipse.n4js.n4jsx.ui.search.N4JSXReferenceQueryExecutor
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.ts.findReferences.TargetURIKey
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey
-import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder
 import org.eclipse.n4js.ui.N4JSEditor
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant
@@ -81,7 +81,7 @@ import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore
 import org.eclipse.n4js.ui.quickfix.N4JSIssue
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider
-import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor
+import org.eclipse.n4js.ui.search.LabellingReferenceFinder
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker
@@ -183,7 +183,7 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	 * Bind the {@link ReferenceQueryExecutor} that maps to types.
 	 */
 	def Class<? extends ReferenceQueryExecutor> bindReferenceQueryExecutor() {
-		return N4JSReferenceQueryExecutor;
+		return N4JSXReferenceQueryExecutor;
 	}
 
 	/**

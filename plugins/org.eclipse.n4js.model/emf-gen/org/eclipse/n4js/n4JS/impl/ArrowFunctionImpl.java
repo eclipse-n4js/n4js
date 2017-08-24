@@ -27,6 +27,8 @@ import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Statement;
 
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
+
 /**
  * <!-- begin-user-doc -->
  * An implementation of the model object '<em><b>Arrow Function</b></em>'.
@@ -118,7 +120,17 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 	public boolean isSingleExprImplicitReturn() {
 		return ((((this.isArrowFunction() && 
 			(!this.isHasBracesAroundBody())) && (this.getBody() != null)) && 
-			(!this.getBody().getStatements().isEmpty())) && (this.getBody().getStatements().get(0) instanceof ExpressionStatement));
+			(!this.getBody().getStatements().isEmpty())) && (IterableExtensions.<Statement>head(this.getBody().getStatements()) instanceof ExpressionStatement));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public Expression getSingleExpression() {
+		Statement _head = IterableExtensions.<Statement>head(this.getBody().getStatements());
+		return ((ExpressionStatement) _head).getExpression();
 	}
 
 	/**
@@ -225,6 +237,8 @@ public class ArrowFunctionImpl extends FunctionExpressionImpl implements ArrowFu
 				return isArrowFunction();
 			case N4JSPackage.ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN:
 				return isSingleExprImplicitReturn();
+			case N4JSPackage.ARROW_FUNCTION___GET_SINGLE_EXPRESSION:
+				return getSingleExpression();
 			case N4JSPackage.ARROW_FUNCTION___IMPLICIT_RETURN_EXPR:
 				return implicitReturnExpr();
 		}

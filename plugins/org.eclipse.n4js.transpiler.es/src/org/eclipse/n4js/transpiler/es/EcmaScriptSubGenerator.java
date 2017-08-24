@@ -18,20 +18,20 @@ import java.nio.file.Paths;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.generator.common.AbstractSubGenerator;
+import org.eclipse.n4js.generator.common.CompilerDescriptor;
+import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.CancelIndicatorBaseExtractor;
-import org.eclipse.n4js.generator.common.AbstractSubGenerator;
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.transpiler.AbstractTranspiler.SourceMapInfo;
 
 /**
  * Sub generator for the EcmaScript transpiler.
@@ -79,7 +79,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	}
 
 	@Override
-	protected void internalDoGenerate(Resource resource, IFileSystemAccess fsa) {
+	protected void internalDoGenerate(Resource resource, GeneratorOption[] options, IFileSystemAccess fsa) {
 		if (!(resource instanceof N4JSResource)) {
 			if (IN4JSProject.N4MF_MANIFEST.equals(resource.getURI().lastSegment())) {
 				return;
@@ -142,7 +142,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 						optSourceMapData = Optional.of(sourceMapDataInstance);
 					}
 
-					ecmaScriptTranspiler.transpile(resourceCasted, buffCode, optSourceMapData);
+					ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, optSourceMapData);
 					fsa.generateFile(filename, COMPILER_ID, buffCode.toString());
 
 					if (createSourceMap) {
@@ -156,7 +156,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 
 	// note: following method is only used for testing
 	@Override
-	public String getCompileResultAsText(Script root) {
+	public String getCompileResultAsText(Script root, GeneratorOption[] options) {
 		final Resource resource = root.eResource();
 		if (!(resource instanceof N4JSResource)) {
 			throw new IllegalArgumentException("given script must be contained in an N4JSResource");
@@ -164,7 +164,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		final N4JSResource resourceCasted = (N4JSResource) resource;
 
 		final Writer buffCode = new StringWriter();
-		ecmaScriptTranspiler.transpile(resourceCasted, buffCode, Optional.absent());
+		ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, Optional.absent());
 		return buffCode.toString();
 	}
 }

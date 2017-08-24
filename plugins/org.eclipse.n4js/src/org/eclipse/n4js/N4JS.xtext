@@ -1413,13 +1413,13 @@ BindingPattern <Yield>:
 	| ArrayBindingPattern<Yield>
 ;
 
-ObjectBindingPattern <Yield> returns BindingPattern:
-	{BindingPattern}
+ObjectBindingPattern <Yield> returns ObjectBindingPattern:
+	{ObjectBindingPattern}
 	'{' (properties+=BindingProperty<Yield,AllowType=false> (',' properties+=BindingProperty<Yield,AllowType=false>)*)?	'}'
 ;
 
-ArrayBindingPattern <Yield> returns BindingPattern:
-	{BindingPattern}
+ArrayBindingPattern <Yield> returns ArrayBindingPattern:
+	{ArrayBindingPattern}
 	'['
 		elements+=Elision* (
 			elements+=BindingRestElement<Yield>

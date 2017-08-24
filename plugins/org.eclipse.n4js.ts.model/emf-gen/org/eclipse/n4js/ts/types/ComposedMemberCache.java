@@ -14,6 +14,8 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.n4js.ts.typeRefs.TypeRef;
+
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Composed Member Cache</b></em>'.
@@ -30,6 +32,7 @@ import org.eclipse.emf.ecore.EObject;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getCachedComposedMembers <em>Cached Composed Members</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef <em>Composed Type Ref</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.ts.types.TypesPackage#getComposedMemberCache()
@@ -52,5 +55,31 @@ public interface ComposedMemberCache extends EObject {
 	 * @generated
 	 */
 	EList<TMember> getCachedComposedMembers();
+
+	/**
+	 * Returns the value of the '<em><b>Composed Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Composed Type Ref</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Composed Type Ref</em>' containment reference.
+	 * @see #setComposedTypeRef(TypeRef)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getComposedMemberCache_ComposedTypeRef()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	TypeRef getComposedTypeRef();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef <em>Composed Type Ref</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Composed Type Ref</em>' containment reference.
+	 * @see #getComposedTypeRef()
+	 * @generated
+	 */
+	void setComposedTypeRef(TypeRef value);
 
 } // ComposedMemberCache

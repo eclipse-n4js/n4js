@@ -80,10 +80,26 @@ import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
 	 */
 	public void newLine() throws IOException {
 		out.append('\n');
-		for (int n = 0; n < currentIndentLevel; n++)
+		for (int n = 0; n < currentIndentLevel; n++) {
 			out.append(indent);
+		}
 		currentLine++;
 		currentCol = currentIndentLevel * indent.length();
+	}
+
+	/**
+	 * Returns the current indent level.
+	 */
+	public int getIndentLevel() {
+		return currentIndentLevel;
+	}
+
+	/**
+	 * Changes the current indent level to the given value. Most clients should use methods {@link #indent()} and
+	 * {@link #undent()}, instead.
+	 */
+	public void setIndentLevel(int indentLevel) {
+		this.currentIndentLevel = indentLevel;
 	}
 
 	/**

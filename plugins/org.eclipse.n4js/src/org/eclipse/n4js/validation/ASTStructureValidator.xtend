@@ -12,13 +12,17 @@ package org.eclipse.n4js.validation
 
 import com.google.common.collect.Sets
 import com.google.inject.Inject
+import java.util.Set
+import org.eclipse.emf.ecore.EAttribute
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.AbstractCaseClause
+import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BindingElement
-import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.CatchBlock
@@ -81,10 +85,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
-import java.util.Set
-import org.eclipse.emf.ecore.EAttribute
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtend.lib.annotations.ToString
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
@@ -92,12 +92,12 @@ import org.eclipse.xtext.diagnostics.IDiagnosticConsumer
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
+import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringForStatement
-import static extension org.eclipse.n4js.validation.helper.FunctionValidationHelper.*;
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -1515,7 +1515,7 @@ class ASTStructureValidator {
 	def private void validateRestInBindingPattern(BindingElement elem, ASTStructureDiagnosticProducer producer) {
 		if(elem!==null && elem.rest) {
 			val pattern = elem.eContainer;
-			if(pattern instanceof BindingPattern) {
+			if(pattern instanceof ArrayBindingPattern) {
 				// note: the grammar ensures that BindingElement with rest===true will only appear
 				// within an array binding pattern; we only have to assert that it appears at the end
 				if(pattern.elements.last!==elem) {

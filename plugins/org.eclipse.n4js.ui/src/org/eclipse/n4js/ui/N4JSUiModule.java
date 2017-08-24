@@ -27,6 +27,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
+import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
@@ -37,7 +38,6 @@ import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
-import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
 import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
@@ -50,6 +50,7 @@ import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer;
 import org.eclipse.n4js.ui.contentassist.PatchedRequiredRuleNameComputer;
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder;
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
+import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
@@ -84,6 +85,7 @@ import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
+import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
@@ -94,6 +96,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
+import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
@@ -115,6 +118,7 @@ import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
+import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
@@ -609,6 +613,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 				N4JSShowInheritedMembersOutlineContribution.class);
 	}
 
+	/***/
+	public Class<? extends IReferenceFinder> bindReferenceFinder() {
+		return ConcreteSyntaxAwareReferenceFinder.class;
+	}
+
 	/**
 	 * Toggle showing static members or not.
 	 */
@@ -643,5 +652,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 */
 	public Class<? extends CanLoadFromDescriptionHelper> bindcanLoadFromDescriptionHelper() {
 		return EditorAwareCanLoadFromDescriptionHelper.class;
+	}
+
+	/**
+	 * Provide multiple hyperlink for composed members.
+	 */
+	public Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
+		return ComposedMemberAwareHyperlinkHelper.class;
 	}
 }

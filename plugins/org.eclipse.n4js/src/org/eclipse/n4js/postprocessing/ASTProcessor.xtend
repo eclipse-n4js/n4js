@@ -503,8 +503,8 @@ public class ASTProcessor extends AbstractProcessor {
 	}
 
 	def private void resolveAndProcessReferencesInNode(EObject astNode, ASTMetaInfoCache cache) {
-		for(eRef : astNode.eClass.EReferences) {
-			if(!eRef.isContainment) { // only cross-references have proxies (in our case)
+		for(eRef : astNode.eClass.EAllReferences) {
+			if(!eRef.isContainment && !eRef.isContainer) { // only cross-references have proxies (in our case)
 				val node = astNode.eGet(eRef, true);
 
 				if (node instanceof EObject) {

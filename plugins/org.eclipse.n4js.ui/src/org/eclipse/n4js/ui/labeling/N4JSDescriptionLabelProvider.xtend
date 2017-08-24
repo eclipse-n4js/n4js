@@ -10,9 +10,9 @@
  */
 package org.eclipse.n4js.ui.labeling
 
-import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
-import org.eclipse.xtext.resource.IEObjectDescription
+import com.google.inject.Inject
 import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
+import org.eclipse.xtext.ui.label.DefaultDescriptionLabelProvider
 
 /**
  * Provides labels for a IEObjectDescriptions and IResourceDescriptions.
@@ -24,19 +24,25 @@ import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription
  */
 class N4JSDescriptionLabelProvider extends DefaultDescriptionLabelProvider {
 
-	override text(IEObjectDescription ele) {
-		ele.name.toString
+	@Inject
+	private N4JSLabelProvider labelProvider;
+
+	override text(Object obj) {
+		println(obj);
 	}
 
+	/**
+	 * Custom label for labeled reference description.
+	 */
 	def text(LabelledReferenceDescription description) {
-		return description.getLabel
+		val text = description.label + " : line number " + description.line
+		return text;
 	}
-
-//	override text(IEObjectDescription ele) {
-//		ele.name.toString
-//	}
-//
-//	override image(IEObjectDescription ele) {
-//		ele.EClass.name + '.gif'
-//	}
+	/**
+	 * Custom image for labeled reference description. Reuse N4JSLabelProvider used by the outline view.
+	 */
+	def image(LabelledReferenceDescription element) {
+		val image = labelProvider.getImage(element.displayEObject)
+		return image;
+	}
 }

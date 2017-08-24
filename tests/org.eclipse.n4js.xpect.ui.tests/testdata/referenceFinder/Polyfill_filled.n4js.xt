@@ -30,10 +30,23 @@
 
 @@StaticPolyfillAware
 
-// IDE-1662 XPECT FIXME findReferences at Polyfill --> Polyfill - 30, Polyfill - 5
+/* XPECT findReferences at Polyfill ---
+	Poly - Polyfill - 33,
+	Poly - Polyfill - 52
+---
+*/
 export public class Polyfill {
-// IDE-1662 XPECT FIXME findReferences at x --> x - 30
+	// XPECT findReferences at x --> Poly - p.x - 54
 	x : int;
+
+	/* XPECT findReferences at m ---
+	Poly - p.m - 58,
+	Poly - p.m - 60
+	---
+	*/
+	public m(): void {
+		console.log("I am in the polyfillable type");
+	}
 }
 
 var p : Polyfill;
@@ -41,3 +54,7 @@ var p : Polyfill;
 p.x;
 
 p.z;
+
+p.m();
+
+p.m(5);

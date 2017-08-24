@@ -14,12 +14,15 @@ import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 import org.eclipse.n4js.transpiler.es.assistants.BlockAssistant
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
+ * Transforms ES2015 arrow functions to an ES5 equivalent, using ordinary function expressions.
  */
+@Optional(ArrowFunctions)
 class ArrowFunction_Part1_Transformation extends Transformation {
 
 	@Inject BlockAssistant blockAssistant;
