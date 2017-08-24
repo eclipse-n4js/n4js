@@ -142,6 +142,8 @@ import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider
 import org.eclipse.xtext.ui.shared.Access
 import org.eclipse.xtext.ui.util.IssueUtil
 import org.eclipse.xtext.validation.IResourceValidator
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory
+import org.eclipse.n4js.ui.outline.N4JSOutlineNodeFactory
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
