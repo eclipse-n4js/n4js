@@ -76,8 +76,6 @@ public class GitRepositoryAwareWorkingSetManager extends WorkingSetManagerImpl {
 					return;
 				}
 
-				System.out.println("Repository preference value changed to " + event.toString());
-
 				if (!orderedWorkingSetIds.isEmpty() && !visibleWorkingSetIds.isEmpty()) {
 
 					MapDifference<String, String> diff = calculateDifference(event);
