@@ -1,25 +1,28 @@
 /**
- * Copyright (c) 2017 Marcus Mews.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
  * Contributors:
- *   Marcus Mews - Initial API and implementation
+ *   NumberFour AG - Initial API and implementation
  */
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 
-public class CatchToken extends JumpToken {
+/**
+ *
+ */
+public interface IGraphPathWalker {
 
-	public CatchToken(ControlFlowType type) {
-		this(type, null);
-	}
+	public void init();
 
-	public CatchToken(ControlFlowType type, Object id) {
-		super(type, id);
-	}
+	public void finish();
+
+	public void visitNode(Node node);
+
+	public void visitEdge(Node start, Node end, ControlFlowType cfType);
 
 }

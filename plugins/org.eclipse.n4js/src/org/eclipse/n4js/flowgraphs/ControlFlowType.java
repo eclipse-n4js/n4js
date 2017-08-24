@@ -8,7 +8,7 @@
  * Contributors:
  *   Marcus Mews - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.model;
+package org.eclipse.n4js.flowgraphs;
 
 import java.util.LinkedList;
 import java.util.List;

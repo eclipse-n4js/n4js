@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+
 public class JumpToken {
 	final public ControlFlowType cfType;
 	final public Object id;

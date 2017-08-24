@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.model;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 
 public class EdgeUtils {

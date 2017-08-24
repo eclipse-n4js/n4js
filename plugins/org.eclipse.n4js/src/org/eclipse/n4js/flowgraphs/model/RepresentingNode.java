@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**

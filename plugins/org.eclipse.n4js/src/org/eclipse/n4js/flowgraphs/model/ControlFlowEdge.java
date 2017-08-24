@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+
 public class ControlFlowEdge extends AbstractEdge {
 	public final ControlFlowType cfType;
 	public final boolean isNested;

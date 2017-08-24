@@ -12,15 +12,14 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.Path;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
+import org.eclipse.n4js.flowgraphs.factories.PathFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-
-import com.google.common.collect.Lists;
 
 /**
  *
@@ -70,60 +69,24 @@ public class FlowGraph {
 	}
 
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
+		Path path = getPath(cfe, cfeSucc);
+		if (path.isConnecting()) {
+			return path.getControlFlowTypes();
+		} else {
+			throw new IllegalArgumentException("No path found between given ControlFlowElements");
+		}
+	}
+
+	/**
+	 * @return the path from cfe to cfeSucc
+	 */
+	public Path getPath(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
 		ComplexNode cnStart = getComplexNode(cfe);
 		ComplexNode cnEnd = getComplexNode(cfeSucc);
 		Node nStart = cnStart.getRepresent();
 		Node nEnd = cnEnd.getRepresent();
-
-		List<ControlFlowEdge> path = findPath(nStart, nEnd);
-		if (path != null && !path.isEmpty()) {
-			TreeSet<ControlFlowType> nonSuccessorTypes = new TreeSet<>();
-			for (ControlFlowEdge cfEdge : path) {
-				nonSuccessorTypes.add(cfEdge.cfType);
-			}
-			if (!nonSuccessorTypes.isEmpty()) {
-				return nonSuccessorTypes;
-			}
-		}
-
-		throw new IllegalArgumentException("No path found between given ControlFlowElements");
+		Path path = PathFactory.buildPath(nStart, nEnd);
+		return path;
 	}
 
-	private LinkedList<ControlFlowEdge> findPath(Node startNode, Node endNode) {
-		LinkedList<LinkedList<ControlFlowEdge>> allPaths = new LinkedList<>();
-		for (ControlFlowEdge dSucc : startNode.getSuccessorEdges()) {
-			LinkedList<ControlFlowEdge> path = new LinkedList<>();
-			path.add(dSucc);
-			if (dSucc.end == endNode) {
-				return path; // direct edge from startNode to endNode due to dSucc
-			}
-			allPaths.add(path);
-		}
-
-		while (!allPaths.isEmpty()) {
-			LinkedList<ControlFlowEdge> firstPath = allPaths.removeFirst();
-			LinkedList<LinkedList<ControlFlowEdge>> ch = getPaths(firstPath);
-			for (LinkedList<ControlFlowEdge> chPath : ch) {
-				if (chPath.getLast().end == endNode) {
-					return chPath;
-				}
-			}
-			allPaths.addAll(ch);
-		}
-		return null;
-	}
-
-	private LinkedList<LinkedList<ControlFlowEdge>> getPaths(LinkedList<ControlFlowEdge> path) {
-		LinkedList<LinkedList<ControlFlowEdge>> resultPaths = new LinkedList<>();
-		ControlFlowEdge e = path.getLast();
-		List<ControlFlowEdge> successorEdges = e.end.getSuccessorEdges();
-		for (ControlFlowEdge succEdge : successorEdges) {
-			LinkedList<ControlFlowEdge> pathCopy = path;
-			if (successorEdges.size() > 1)
-				pathCopy = Lists.newLinkedList(pathCopy);
-			pathCopy.add(succEdge);
-			resultPaths.add(path);
-		}
-		return resultPaths;
-	}
 }

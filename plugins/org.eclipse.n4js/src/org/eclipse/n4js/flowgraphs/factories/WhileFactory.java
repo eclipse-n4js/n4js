@@ -13,9 +13,9 @@ package org.eclipse.n4js.flowgraphs.factories;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -54,7 +54,6 @@ class WhileFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-		cNode.setRepresentNode(exitNode);
 
 		String label = ASTUtils.getLabel(whileStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
