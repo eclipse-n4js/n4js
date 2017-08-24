@@ -185,7 +185,7 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 					node.isPublic = tchild.memberAccessModifier == MemberAccessModifier.PUBLIC ||
 						tchild.memberAccessModifier == MemberAccessModifier.PUBLIC_INTERNAL
 					node.isConstructor = tchild.isConstructor;
-					// GH-174: Add the text region information to the outline tree node because {@link OutlineWithEditorLinker} uses this text region information
+					// GH-174: Store the text region information in the outline tree node because {@link OutlineWithEditorLinker} uses this piece of information
 					// to link editor with the outline view.
 					val nodeModel = NodeModelUtils.getNode(tchild.astElement);
 					if (nodeModel !== null)
