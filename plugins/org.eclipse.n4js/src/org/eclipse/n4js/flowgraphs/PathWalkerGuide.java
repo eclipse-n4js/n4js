@@ -12,7 +12,7 @@ package org.eclipse.n4js.flowgraphs;
 
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.model.GraphPathWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphPathWalker;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

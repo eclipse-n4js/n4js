@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.factories.ASTUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
@@ -36,6 +37,7 @@ import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
 public class ComplexNode implements ControlFlowable {
+	final private ControlFlowElement container;
 	final private ControlFlowElement astElement;
 	final private Map<String, Node> nodeMap = new HashMap<>();
 
@@ -44,6 +46,7 @@ public class ComplexNode implements ControlFlowable {
 	private boolean hasOuterBlockUse = false;
 
 	public ComplexNode(ControlFlowElement astElement) {
+		this.container = ASTUtils.getCFContainer(astElement);
 		this.astElement = astElement;
 	}
 
@@ -106,6 +109,10 @@ public class ComplexNode implements ControlFlowable {
 		if (!nodeMap.values().contains(representNode))
 			throw new IllegalArgumentException("Node not child of complex node");
 		this.represent = representNode;
+	}
+
+	public ControlFlowElement getControlFlowContainer() {
+		return CFEMapper.map(container);
 	}
 
 	@Override

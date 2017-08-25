@@ -20,70 +20,52 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Collects all reachable nodes.
  */
 public class DeadCodePredicateWalker extends GraphWalker {
+	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
+	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
+	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
+	Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
+
+	DeadCodePredicateWalker() {
+		super(Direction.Forward, Direction.Backward, Direction.Islands);
+	}
 
 	@Override
-	protected boolean isBackwards() {
-		return false;
+	protected void init() {
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-		if (flowAnalyses.isTop(cfe)) {
-			super.activate(new DeadCodeActivatedPathPredicate());
+		switch (getCurrentDirection()) {
+		case Forward:
+			allForwardCFEs.add(cfe);
+			break;
+		case Backward:
+			allBackwardCFEs.add(cfe);
+			break;
+		case Islands:
+			allIslandsCFEs.add(cfe);
+			break;
 		}
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
+	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 		// nothing
 	}
 
-	private class DeadCodeActivatedPathPredicate extends ActivatedPathPredicate {
-		Set<ControlFlowElement> allCFEs = new HashSet<>();
+	@Override
+	protected void terminate() {
+		unreachableCFEs.addAll(allBackwardCFEs);
+		unreachableCFEs.removeAll(allForwardCFEs);
+		unreachableCFEs.addAll(allIslandsCFEs);
+	}
 
-		@Override
-		protected void init() {
+	public Set<ControlFlowElement> getReachableCFEs() {
+		return allForwardCFEs;
+	}
 
-		}
-
-		@Override
-		protected DeadCodeActivePath first() {
-			return new DeadCodeActivePath();
-		}
-
-		@Override
-		protected void terminate() {
-
-		}
-
-		private class DeadCodeActivePath extends ActivePath {
-
-			@Override
-			protected void init() {
-
-			}
-
-			@Override
-			protected void visit(ControlFlowElement cfe) {
-				allCFEs.add(cfe);
-			}
-
-			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
-
-			}
-
-			@Override
-			protected DeadCodeActivePath fork() {
-				return null;
-			}
-
-			@Override
-			protected void terminate() {
-
-			}
-
-		}
+	public Set<ControlFlowElement> getUnreachableCFEs() {
+		return unreachableCFEs;
 	}
 
 }

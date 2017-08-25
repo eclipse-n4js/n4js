@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.factories;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -37,16 +38,23 @@ public class ControlFlowGraphFactory {
 	 * Builds and returns a control flow graph from a given {@link Script}.
 	 */
 	static public FlowGraph build(Script script) {
-		CNProvider cnProvider = createComplexNodes(script);
+		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>();
+		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
+
+		createComplexNodes(script, cfContainers, cnMap);
+		CNProvider cnProvider = new CNProvider(cnMap);
+
 		connectComplexNodes(cnProvider);
 		createJumpEdges(cnProvider);
 
-		FlowGraph cfg = new FlowGraph(cnProvider.getMap());
+		FlowGraph cfg = new FlowGraph(cfContainers, cnMap);
 		return cfg;
 	}
 
-	static private CNProvider createComplexNodes(Script script) {
-		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
+	static private void createComplexNodes(Script script,
+			TreeSet<ControlFlowElement> cfContainers,
+			Map<ControlFlowElement, ComplexNode> cnMap) {
+
 		TreeIterator<EObject> tit = script.eAllContents();
 		while (tit.hasNext()) {
 			EObject eObj = tit.next();
@@ -54,13 +62,13 @@ public class ControlFlowGraphFactory {
 				ControlFlowElement cfe = (ControlFlowElement) eObj;
 				cfe = CFEMapper.map(cfe);
 				if (cfe != null && !cnMap.containsKey(cfe)) {
+					ControlFlowElement cfContainer = ASTUtils.getCFContainer(cfe);
+					cfContainers.add(cfContainer);
 					ComplexNode cn = CFEFactory.build(cfe);
 					cnMap.put(cfe, cn);
 				}
 			}
 		}
-		CNProvider cnProvider = new CNProvider(cnMap);
-		return cnProvider;
 	}
 
 	static private void connectComplexNodes(CNProvider cnProvider) {

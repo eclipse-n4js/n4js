@@ -13,7 +13,7 @@ package org.eclipse.n4js.smith.graph.graph;
 import java.util.Collections;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;

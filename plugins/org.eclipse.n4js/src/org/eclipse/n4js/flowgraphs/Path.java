@@ -14,9 +14,9 @@ import java.util.LinkedList;
 import java.util.Objects;
 import java.util.TreeSet;
 
+import org.eclipse.n4js.flowgraphs.analyses.GraphPathWalker;
+import org.eclipse.n4js.flowgraphs.analyses.IGraphPathWalker;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
-import org.eclipse.n4js.flowgraphs.model.GraphPathWalker;
-import org.eclipse.n4js.flowgraphs.model.IGraphPathWalker;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

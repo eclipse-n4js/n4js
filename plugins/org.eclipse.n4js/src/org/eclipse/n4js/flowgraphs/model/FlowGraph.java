@@ -12,26 +12,32 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.Path;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerGuide;
+import org.eclipse.n4js.flowgraphs.analyses.PathFactory;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
-import org.eclipse.n4js.flowgraphs.factories.PathFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  *
  */
 public class FlowGraph {
+	final private TreeSet<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private Map<String, ControlFlowEdge> cfEdgeMap = new HashMap<>();
 
 	/**
 	 *
 	 */
-	public FlowGraph(Map<ControlFlowElement, ComplexNode> cnMap) {
+	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap) {
+		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
 		init();
 	}
@@ -46,6 +52,27 @@ public class FlowGraph {
 					cfEdgeMap.put(cfEdge.toString(), cfEdge);
 				}
 			}
+		}
+	}
+
+	public void analyze(Collection<GraphWalker> graphWalkers) {
+		GraphWalkerGuide guide = new GraphWalkerGuide(graphWalkers);
+		Set<ControlFlowElement> allCFEs = new HashSet<>(cnMap.keySet());
+		Set<ControlFlowElement> visitedCFEs;
+		for (ControlFlowElement container : cfContainers) {
+			ComplexNode cnContainer = cnMap.get(container);
+			visitedCFEs = guide.walkthroughForward(cnContainer);
+			allCFEs.removeAll(visitedCFEs);
+			visitedCFEs = guide.walkthroughBackward(cnContainer);
+			allCFEs.removeAll(visitedCFEs);
+		}
+
+		while (!allCFEs.isEmpty()) {
+			ControlFlowElement unvisitedCFE = allCFEs.iterator().next();
+			ComplexNode cnUnvisited = cnMap.get(unvisitedCFE);
+
+			visitedCFEs = guide.walkthroughIsland(cnUnvisited);
+			allCFEs.removeAll(visitedCFEs);
 		}
 	}
 

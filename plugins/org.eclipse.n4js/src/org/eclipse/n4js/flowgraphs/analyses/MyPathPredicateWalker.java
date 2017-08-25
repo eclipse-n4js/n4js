@@ -10,35 +10,40 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Set;
+
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker.ActivatedPathPredicate;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker.ActivatedPathPredicate.ActivePath;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  *
  */
 public class MyPathPredicateWalker extends GraphWalker {
+
+	MyPathPredicateWalker() {
+		super(Direction.Forward);
+	}
+
 	@Override
-	protected boolean isBackwards() {
-		return false;
+	protected void init() {
+	}
+
+	@Override
+	protected void terminate() {
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
-
+	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 	}
 
 	class MyActivatedPathPredicate extends ActivatedPathPredicate {
 
-		@Override
-		protected void init() {
-
+		MyActivatedPathPredicate() {
+			super(PredicateType.ForAllPaths);
 		}
 
 		@Override
@@ -46,26 +51,18 @@ public class MyPathPredicateWalker extends GraphWalker {
 			return new MyActivePath();
 		}
 
-		@Override
-		protected void terminate() {
-
-		}
-
 		class MyActivePath extends ActivePath {
 
 			@Override
 			protected void init() {
-
 			}
 
 			@Override
 			protected void visit(ControlFlowElement cfe) {
-
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
-
+			protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 			}
 
 			@Override
@@ -75,7 +72,6 @@ public class MyPathPredicateWalker extends GraphWalker {
 
 			@Override
 			protected void terminate() {
-
 			}
 
 		}

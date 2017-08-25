@@ -8,9 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analyses;
 
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import java.util.Set;
+
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -30,43 +32,41 @@ public class TypeGuardPathPredicate extends GraphWalker {
 	final ControlFlowElement cfElem;
 
 	TypeGuardPathPredicate(N4JSTypeSystem ts, TypeRef reqTypeRef, ControlFlowElement cfElem) {
+		super(Direction.Backward);
 		this.ts = ts;
 		this.reqTypeRef = reqTypeRef;
 		this.cfElem = cfElem;
 	}
 
 	@Override
-	protected boolean isBackwards() {
-		return true;
+	protected void init() {
+	}
+
+	@Override
+	protected void terminate() {
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfElem == cfe) {
-			super.activate(new TypeGuardActivatedPathPredicate());
+			super.requestActivation(new TypeGuardActivatedPathPredicate());
 		}
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
+	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 		// nothing
 	}
 
 	class TypeGuardActivatedPathPredicate extends ActivatedPathPredicate {
 
-		@Override
-		protected void init() {
-
+		TypeGuardActivatedPathPredicate() {
+			super(PredicateType.ForAllPaths);
 		}
 
 		@Override
 		protected TypeGuardActivePath first() {
 			return new TypeGuardActivePath();
-		}
-
-		@Override
-		protected void terminate() {
-
 		}
 
 		class TypeGuardActivePath extends ActivePath {
@@ -92,7 +92,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
+			protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 
 			}
 

@@ -19,9 +19,9 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.smith.graph.CFGraphProvider;
 import org.eclipse.swt.custom.StyledText;

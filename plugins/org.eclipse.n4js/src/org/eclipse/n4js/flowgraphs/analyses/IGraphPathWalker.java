@@ -8,9 +8,10 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.model;
+package org.eclipse.n4js.flowgraphs.analyses;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
  *

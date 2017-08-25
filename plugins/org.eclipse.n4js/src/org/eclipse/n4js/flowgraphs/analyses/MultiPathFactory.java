@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.factories;
+package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class MultiPathFactory extends NextEdgesProvider {
 
 	private static MultiPath toNext(Node start, boolean forwards) {
 		LinkedList<ControlFlowEdge> loopEdges = new LinkedList<>();
-		List<ControlFlowEdge> nextEdges = getNextEdges(start, forwards, loopEdges);
+		List<ControlFlowEdge> nextEdges = getNextEdges(start, loopEdges);
 
 		for (ControlFlowEdge nextEdge : nextEdges) {
 

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Set;
+
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -19,34 +21,36 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
  *
  */
 public class NeverUsedPredicateWalker extends GraphWalker {
+
+	NeverUsedPredicateWalker() {
+		super(Direction.Forward);
+	}
+
 	@Override
-	protected boolean isBackwards() {
-		return false;
+	protected void init() {
+	}
+
+	@Override
+	protected void terminate() {
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof IdentifierRef && cfe.eContainer() instanceof VariableDeclaration) {
-			super.activate(new NeverUsedActivatedPathPredicate((IdentifierRef) cfe));
+			super.requestActivation(new NeverUsedActivatedPathPredicate((IdentifierRef) cfe));
 		}
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
-
+	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 	}
 
 	private class NeverUsedActivatedPathPredicate extends ActivatedPathPredicate {
 		final IdentifierRef idRef;
-		private final boolean usedSomewhere;
 
 		public NeverUsedActivatedPathPredicate(IdentifierRef idRef) {
+			super(PredicateType.ForOnePath);
 			this.idRef = idRef;
-			usedSomewhere = false;
-		}
-
-		@Override
-		protected void init() {
 		}
 
 		@Override
@@ -54,39 +58,32 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 			return new NeverUsedActivePath();
 		}
 
-		@Override
-		protected void terminate() {
-
-		}
-
 		private class NeverUsedActivePath extends ActivePath {
 
 			@Override
 			protected void init() {
-
 			}
 
 			@Override
 			protected void visit(ControlFlowElement cfe) {
-				if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe)) {
-					usedSomewhere = true;
+				if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
+					pass();
 					deactivateAll();
 				}
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, ControlFlowType cfType) {
-
+			protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 			}
 
 			@Override
 			protected NeverUsedActivePath fork() {
-				return null;
+				return new NeverUsedActivePath();
 			}
 
 			@Override
 			protected void terminate() {
-
+				fail();
 			}
 
 		}

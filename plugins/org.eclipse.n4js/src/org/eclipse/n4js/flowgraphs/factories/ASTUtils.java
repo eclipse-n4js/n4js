@@ -13,14 +13,16 @@ package org.eclipse.n4js.flowgraphs.factories;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
 
-class ASTUtils {
+public class ASTUtils {
 
-	static String getLabel(Statement stmt) {
+	public static String getLabel(Statement stmt) {
 		EObject container = stmt.eContainer();
 		if (container instanceof ExpressionStatement) {
 			container = container.eContainer();
@@ -33,9 +35,30 @@ class ASTUtils {
 	}
 
 	/** Returns a detailed string about the given node */
-	static String getNodeDetailString(Node node) {
+	public static String getNodeDetailString(Node node) {
 		ControlFlowElement nCFE = node.getControlFlowElement();
 		String edgeStr = FGUtils.getClassName(nCFE) + ":" + node.name + ":" + FGUtils.getTextLabel(nCFE);
 		return edgeStr;
+	}
+
+	public static ControlFlowElement getCFContainer(ControlFlowElement cfe) {
+		ControlFlowElement curCFE = cfe;
+		while (curCFE != null) {
+			if (isCFContainer(curCFE)) {
+				return curCFE;
+			}
+			EObject eObj = curCFE.eContainer();
+			if (!(eObj instanceof ControlFlowElement)) {
+				return null;
+			}
+			curCFE = (ControlFlowElement) eObj;
+		}
+		return null;
+	}
+
+	public static boolean isCFContainer(ControlFlowElement cfe) {
+		boolean isCFContainer = false;
+		isCFContainer |= cfe instanceof Block && cfe.eContainer() instanceof FunctionDeclaration;
+		return isCFContainer;
 	}
 }

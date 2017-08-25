@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.factories;
+package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -24,10 +24,10 @@ import com.google.common.collect.Lists;
 /**
  *
  */
-public class PathFactory extends NextEdgesProvider {
+public class PathFactory {
 
 	public static Path buildPath(Node start, Node end) {
-		LinkedList<ControlFlowEdge> pathEdges = findPath(start, end, true);
+		LinkedList<ControlFlowEdge> pathEdges = findPath(start, end, new NextEdgesProvider.Forward());
 		Path path = null;
 		if (pathEdges != null) {
 			path = new Path(start, end, pathEdges, true);
@@ -37,21 +37,20 @@ public class PathFactory extends NextEdgesProvider {
 		return path;
 	}
 
-	static private LinkedList<ControlFlowEdge> findPath(Node startNode, Node endNode, boolean forwards,
+	static private LinkedList<ControlFlowEdge> findPath(Node startNode, Node endNode, NextEdgesProvider edgeProvider,
 			ControlFlowType... cfTypes) {
 
 		if (startNode == endNode) {
 			return Lists.newLinkedList();
 		}
 
-		LinkedList<ControlFlowEdge> loopEdges = new LinkedList<>();
 		LinkedList<LinkedList<ControlFlowEdge>> allPaths = new LinkedList<>();
 
-		List<ControlFlowEdge> nextEdges = getNextEdges(startNode, forwards, loopEdges, cfTypes);
+		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(startNode, cfTypes);
 		for (ControlFlowEdge nextEdge : nextEdges) {
 			LinkedList<ControlFlowEdge> path = new LinkedList<>();
 			path.add(nextEdge);
-			if (isEndNode(endNode, nextEdge, forwards)) {
+			if (edgeProvider.isEndNode(endNode, nextEdge)) {
 				return path; // direct edge from startNode to endNode due to nextEdge
 			}
 			allPaths.add(path);
@@ -59,9 +58,9 @@ public class PathFactory extends NextEdgesProvider {
 
 		while (!allPaths.isEmpty()) {
 			LinkedList<ControlFlowEdge> firstPath = allPaths.removeFirst();
-			LinkedList<LinkedList<ControlFlowEdge>> ch = getPaths(firstPath, forwards, loopEdges, cfTypes);
+			LinkedList<LinkedList<ControlFlowEdge>> ch = edgeProvider.getPaths(firstPath, cfTypes);
 			for (LinkedList<ControlFlowEdge> chPath : ch) {
-				if (isEndNode(endNode, chPath.getLast(), forwards)) {
+				if (edgeProvider.isEndNode(endNode, chPath.getLast())) {
 					return chPath;
 				}
 			}
