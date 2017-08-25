@@ -28,6 +28,8 @@ import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.n4js.tester.server.resources.HttpMethod.equalsWithMethod;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collection;
 
 import javax.servlet.ServletException;
@@ -36,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.tester.UrlDecoderService;
 import org.eclipse.n4js.tester.server.resources.service.TestCatalogAssemblerResource;
 import org.eclipse.n4js.tester.server.resources.sessions.EndSessionResource;
 import org.eclipse.n4js.tester.server.resources.sessions.PingSessionResource;
@@ -90,14 +91,15 @@ public class ResourceRouterServlet extends HttpServlet {
 	@Inject
 	private ResourceProvider resourceProvider;
 
-	@Inject
-	private UrlDecoderService urlDecoder;
-
 	@Override
 	protected void service(final HttpServletRequest req, final HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		final String pathInfo = urlDecoder.decode(req.getPathInfo());
+		// Make sure that we do not un-escape the pathInfo here since otherwise FQNs might
+		// be mistaken for URI segments
+		String pathInfo = getEscapedPathInfo(req);
+
+		// try to find a matching resource
 		final Optional<ResourceDescriptor> opt = tryFind(RESOURCE_DESCRIPTORS.get(),
 				desc -> desc.matchesWithPathInfo(pathInfo));
 
@@ -122,17 +124,34 @@ public class ResourceRouterServlet extends HttpServlet {
 		}
 		try {
 			final BaseResource resource = resourceProvider.createResource(desc.getClazz());
-			resource.doHandle(req, resp);
+			resource.doHandle(req, resp, pathInfo);
 			resp.setContentType(desc.getResponseContentType());
 			if (SC_OK == resp.getStatus()) {
-				resource.handleStatusOk(req, resp);
+				resource.handleStatusOk(req, resp, pathInfo);
 			}
+			System.out.println("Handled " + req.getRequestURL() + " without any disturbances.");
 		} catch (final ClientResourceException e) {
 			resp.reset();
 			resp.setStatus(e.getStatusCode());
 		} catch (final Exception e) {
 			LOGGER.error("Unexpected error while trying to serve request.\nPath info: '" + req.getPathInfo() + "'.", e);
 		}
+	}
+
+	/**
+	 * Returns the un-escaped path info of the given request.
+	 */
+	private String getEscapedPathInfo(final HttpServletRequest req) throws ServletException {
+		// we need to recover the escaped path info manually, since req.getPathInfo() is un-escaped automatically.
+		URI escapedPathInfoURI;
+		try {
+			escapedPathInfoURI = new URI(req.getContextPath() + CONTEXT_PATH).relativize(
+					new URI(req.getRequestURI()));
+		} catch (URISyntaxException e) {
+			throw new ServletException("Failed to extract un-escaped path info from request.", e);
+		}
+
+		return "/" + escapedPathInfoURI.toString();
 	}
 
 }
