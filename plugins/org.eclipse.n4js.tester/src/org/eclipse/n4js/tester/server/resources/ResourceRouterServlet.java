@@ -129,7 +129,6 @@ public class ResourceRouterServlet extends HttpServlet {
 			if (SC_OK == resp.getStatus()) {
 				resource.handleStatusOk(req, resp, pathInfo);
 			}
-			System.out.println("Handled " + req.getRequestURL() + " without any disturbances.");
 		} catch (final ClientResourceException e) {
 			resp.reset();
 			resp.setStatus(e.getStatusCode());
