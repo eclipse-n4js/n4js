@@ -88,12 +88,12 @@ true = true
 true = true
 { foo: 'quux', lumpy: 'woof' }
 TypeError: Cannot redefine property: foo
-TypeError: Can't add property quaxxor, object is not extensible
+TypeError: Cannot add property quaxxor, object is not extensible
 TypeError: Cannot delete property 'foo' of #<Object>
 unchanged: {"foo":"quux","lumpy":"woof"}
 TypeError: Cannot delete property 'foo' of #<Object>
-TypeError: Can't add property sparky, object is not extensible
-TypeError: Cannot define property:ohai, object is not extensible.
+TypeError: Cannot add property sparky, object is not extensible
+TypeError: Cannot define property ohai, object is not extensible
 eit
 stderr:
 ==>
