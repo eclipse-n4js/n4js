@@ -2778,13 +2778,22 @@ public interface N4JSPackage extends EPackage {
 	int ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN = FUNCTION_EXPRESSION_OPERATION_COUNT + 1;
 
 	/**
+	 * The operation id for the '<em>Get Single Expression</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int ARROW_FUNCTION___GET_SINGLE_EXPRESSION = FUNCTION_EXPRESSION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Implicit Return Expr</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARROW_FUNCTION___IMPLICIT_RETURN_EXPR = FUNCTION_EXPRESSION_OPERATION_COUNT + 2;
+	int ARROW_FUNCTION___IMPLICIT_RETURN_EXPR = FUNCTION_EXPRESSION_OPERATION_COUNT + 3;
 
 	/**
 	 * The number of operations of the '<em>Arrow Function</em>' class.
@@ -2793,7 +2802,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ARROW_FUNCTION_OPERATION_COUNT = FUNCTION_EXPRESSION_OPERATION_COUNT + 3;
+	int ARROW_FUNCTION_OPERATION_COUNT = FUNCTION_EXPRESSION_OPERATION_COUNT + 4;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.LocalArgumentsVariableImpl <em>Local Arguments Variable</em>}' class.
@@ -14204,31 +14213,13 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_PATTERN = 154;
 
 	/**
-	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BINDING_PATTERN__PROPERTIES = 0;
-
-	/**
-	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BINDING_PATTERN__ELEMENTS = 1;
-
-	/**
 	 * The number of structural features of the '<em>Binding Pattern</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PATTERN_FEATURE_COUNT = 2;
+	int BINDING_PATTERN_FEATURE_COUNT = 0;
 
 	/**
 	 * The number of operations of the '<em>Binding Pattern</em>' class.
@@ -14256,16 +14247,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OBJECT_BINDING_PATTERN__PROPERTIES = BINDING_PATTERN__PROPERTIES;
-
-	/**
-	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int OBJECT_BINDING_PATTERN__ELEMENTS = BINDING_PATTERN__ELEMENTS;
+	int OBJECT_BINDING_PATTERN__PROPERTIES = BINDING_PATTERN_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Object Binding Pattern</em>' class.
@@ -14274,7 +14256,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int OBJECT_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 0;
+	int OBJECT_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Object Binding Pattern</em>' class.
@@ -14296,22 +14278,13 @@ public interface N4JSPackage extends EPackage {
 	int ARRAY_BINDING_PATTERN = 156;
 
 	/**
-	 * The feature id for the '<em><b>Properties</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int ARRAY_BINDING_PATTERN__PROPERTIES = BINDING_PATTERN__PROPERTIES;
-
-	/**
 	 * The feature id for the '<em><b>Elements</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int ARRAY_BINDING_PATTERN__ELEMENTS = BINDING_PATTERN__ELEMENTS;
+	int ARRAY_BINDING_PATTERN__ELEMENTS = BINDING_PATTERN_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of structural features of the '<em>Array Binding Pattern</em>' class.
@@ -14320,7 +14293,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int ARRAY_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 0;
+	int ARRAY_BINDING_PATTERN_FEATURE_COUNT = BINDING_PATTERN_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of operations of the '<em>Array Binding Pattern</em>' class.
@@ -14360,22 +14333,13 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_PROPERTY__VALUE = PROPERTY_NAME_OWNER_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Var Decl</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int BINDING_PROPERTY__VAR_DECL = PROPERTY_NAME_OWNER_FEATURE_COUNT + 1;
-
-	/**
 	 * The number of structural features of the '<em>Binding Property</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PROPERTY_FEATURE_COUNT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 2;
+	int BINDING_PROPERTY_FEATURE_COUNT = PROPERTY_NAME_OWNER_FEATURE_COUNT + 1;
 
 	/**
 	 * The operation id for the '<em>Has Computed Property Name</em>' operation.
@@ -14469,13 +14433,22 @@ public interface N4JSPackage extends EPackage {
 	int BINDING_ELEMENT_FEATURE_COUNT = 4;
 
 	/**
+	 * The operation id for the '<em>Is Elision</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int BINDING_ELEMENT___IS_ELISION = 0;
+
+	/**
 	 * The number of operations of the '<em>Binding Element</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT_OPERATION_COUNT = 0;
+	int BINDING_ELEMENT_OPERATION_COUNT = 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.
@@ -15767,6 +15740,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getArrowFunction__IsSingleExprImplicitReturn();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ArrowFunction#getSingleExpression() <em>Get Single Expression</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Single Expression</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.ArrowFunction#getSingleExpression()
+	 * @generated
+	 */
+	EOperation getArrowFunction__GetSingleExpression();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.ArrowFunction#implicitReturnExpr() <em>Implicit Return Expr</em>}' operation.
@@ -19735,28 +19718,6 @@ public interface N4JSPackage extends EPackage {
 	EClass getBindingPattern();
 
 	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.BindingPattern#getProperties <em>Properties</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Properties</em>'.
-	 * @see org.eclipse.n4js.n4JS.BindingPattern#getProperties()
-	 * @see #getBindingPattern()
-	 * @generated
-	 */
-	EReference getBindingPattern_Properties();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.BindingPattern#getElements <em>Elements</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Elements</em>'.
-	 * @see org.eclipse.n4js.n4JS.BindingPattern#getElements()
-	 * @see #getBindingPattern()
-	 * @generated
-	 */
-	EReference getBindingPattern_Elements();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ObjectBindingPattern <em>Object Binding Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19767,6 +19728,17 @@ public interface N4JSPackage extends EPackage {
 	EClass getObjectBindingPattern();
 
 	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.ObjectBindingPattern#getProperties <em>Properties</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Properties</em>'.
+	 * @see org.eclipse.n4js.n4JS.ObjectBindingPattern#getProperties()
+	 * @see #getObjectBindingPattern()
+	 * @generated
+	 */
+	EReference getObjectBindingPattern_Properties();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ArrayBindingPattern <em>Array Binding Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -19775,6 +19747,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EClass getArrayBindingPattern();
+
+	/**
+	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.ArrayBindingPattern#getElements <em>Elements</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference list '<em>Elements</em>'.
+	 * @see org.eclipse.n4js.n4JS.ArrayBindingPattern#getElements()
+	 * @see #getArrayBindingPattern()
+	 * @generated
+	 */
+	EReference getArrayBindingPattern_Elements();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.BindingProperty <em>Binding Property</em>}'.
@@ -19796,17 +19779,6 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getBindingProperty_Value();
-
-	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.BindingProperty#getVarDecl <em>Var Decl</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Var Decl</em>'.
-	 * @see org.eclipse.n4js.n4JS.BindingProperty#getVarDecl()
-	 * @see #getBindingProperty()
-	 * @generated
-	 */
-	EReference getBindingProperty_VarDecl();
 
 	/**
 	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.BindingProperty#getName() <em>Get Name</em>}' operation.
@@ -19881,6 +19853,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getBindingElement_Expression();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.BindingElement#isElision() <em>Is Elision</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Is Elision</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.BindingElement#isElision()
+	 * @generated
+	 */
+	EOperation getBindingElement__IsElision();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}'.
@@ -21008,6 +20990,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation ARROW_FUNCTION___IS_SINGLE_EXPR_IMPLICIT_RETURN = eINSTANCE.getArrowFunction__IsSingleExprImplicitReturn();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Single Expression</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation ARROW_FUNCTION___GET_SINGLE_EXPRESSION = eINSTANCE.getArrowFunction__GetSingleExpression();
 
 		/**
 		 * The meta object literal for the '<em><b>Implicit Return Expr</b></em>' operation.
@@ -24310,22 +24300,6 @@ public interface N4JSPackage extends EPackage {
 		EClass BINDING_PATTERN = eINSTANCE.getBindingPattern();
 
 		/**
-		 * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BINDING_PATTERN__PROPERTIES = eINSTANCE.getBindingPattern_Properties();
-
-		/**
-		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BINDING_PATTERN__ELEMENTS = eINSTANCE.getBindingPattern_Elements();
-
-		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ObjectBindingPatternImpl <em>Object Binding Pattern</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -24336,6 +24310,14 @@ public interface N4JSPackage extends EPackage {
 		EClass OBJECT_BINDING_PATTERN = eINSTANCE.getObjectBindingPattern();
 
 		/**
+		 * The meta object literal for the '<em><b>Properties</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference OBJECT_BINDING_PATTERN__PROPERTIES = eINSTANCE.getObjectBindingPattern_Properties();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ArrayBindingPatternImpl <em>Array Binding Pattern</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -24344,6 +24326,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EClass ARRAY_BINDING_PATTERN = eINSTANCE.getArrayBindingPattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Elements</b></em>' containment reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference ARRAY_BINDING_PATTERN__ELEMENTS = eINSTANCE.getArrayBindingPattern_Elements();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.BindingPropertyImpl <em>Binding Property</em>}' class.
@@ -24362,14 +24352,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BINDING_PROPERTY__VALUE = eINSTANCE.getBindingProperty_Value();
-
-		/**
-		 * The meta object literal for the '<em><b>Var Decl</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference BINDING_PROPERTY__VAR_DECL = eINSTANCE.getBindingProperty_VarDecl();
 
 		/**
 		 * The meta object literal for the '<em><b>Get Name</b></em>' operation.
@@ -24428,6 +24410,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference BINDING_ELEMENT__EXPRESSION = eINSTANCE.getBindingElement_Expression();
+
+		/**
+		 * The meta object literal for the '<em><b>Is Elision</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation BINDING_ELEMENT___IS_ELISION = eINSTANCE.getBindingElement__IsElision();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.

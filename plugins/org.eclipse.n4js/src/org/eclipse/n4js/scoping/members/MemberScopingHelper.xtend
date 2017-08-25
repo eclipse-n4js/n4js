@@ -64,7 +64,6 @@ class MemberScopingHelper {
 	@Inject private MemberVisibilityChecker memberVisibilityChecker
 	@Inject	private JavaScriptVariantHelper jsVariantHelper;
 
-
 	/**
 	 * Create a new member scope that filters using the given criteria (visibility, static access). Members retrieved
 	 * via the scope returned by this method are guaranteed to be contained in a resource.

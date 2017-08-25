@@ -17,6 +17,7 @@ import org.eclipse.n4js.scoping.members.ComposedMemberInfo.ComposedFParInfo;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
 import org.eclipse.n4js.ts.types.TFormalParameter;
+import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.utils.TypeUtils;
@@ -277,6 +278,11 @@ abstract class MethodFactory implements MemberFactory {
 				return false;
 			}
 		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
+		}
 	}
 
 	/** Class to implement logic with regard to methods in {@code Union Types}. */
@@ -328,6 +334,11 @@ abstract class MethodFactory implements MemberFactory {
 
 				return false;
 			}
+		}
+
+		@Override
+		public List<TMember> getConstituentMembers() {
+			return cma.getConstituentMembers();
 		}
 	}
 

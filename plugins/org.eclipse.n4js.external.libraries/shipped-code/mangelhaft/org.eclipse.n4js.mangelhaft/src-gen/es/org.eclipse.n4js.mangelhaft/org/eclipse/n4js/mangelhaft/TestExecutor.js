@@ -61,37 +61,31 @@
 						}
 					},
 					callAll: {
-						value: function callAll___n4(instrumentedTest, testMethodDescriptors) {
-							return $spawn(function *() {
-								let results = [];
-								var runTest = function runTest(testMethodDescriptor) {
-									return $spawn(function *() {
-										let timeoutId, testResult;
-										function doPromise(resolve, reject) {
-											return $spawn(function *() {
-												let res;
-												timeoutId = setTimeout(function() {
-													reject(new Error("Test object " + testMethodDescriptor.name + " timed out after " + testMethodDescriptor.timeout + " milliseconds"));
-												}, testMethodDescriptor.timeout);
-												try {
-													res = (yield Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject)));
-												} catch(error) {
-													reject(error);
-												} finally {
-													clearTimeout(timeoutId);
-												}
-												resolve(res);
-											}.apply(this, arguments));
-										}
-										testResult = (yield new Promise(doPromise));
-										return testResult;
-									}.apply(this, arguments));
-								};
-								if (testMethodDescriptors) {
-									results = ((yield Promise.all(testMethodDescriptors.map(runTest))));
+						value: async function callAll___n4(instrumentedTest, testMethodDescriptors) {
+							let results = [];
+							var runTest = async function runTest(testMethodDescriptor) {
+								let timeoutId, testResult;
+								async function doPromise(resolve, reject) {
+									let res;
+									timeoutId = setTimeout(function() {
+										reject(new Error("Test object " + testMethodDescriptor.name + " timed out after " + testMethodDescriptor.timeout + " milliseconds"));
+									}, testMethodDescriptor.timeout);
+									try {
+										res = await Promise.resolve(testMethodDescriptor.value.call(instrumentedTest.testObject));
+									} catch(error) {
+										reject(error);
+									} finally {
+										clearTimeout(timeoutId);
+									}
+									resolve(res);
 								}
-								return results;
-							}.apply(this, arguments));
+								testResult = await new Promise(doPromise);
+								return testResult;
+							};
+							if (testMethodDescriptors) {
+								results = (await Promise.all(testMethodDescriptors.map(runTest)));
+							}
+							return results;
 						}
 					},
 					getAncestorTestMethods: {
@@ -112,154 +106,144 @@
 						}
 					},
 					runTestAsync: {
-						value: function runTestAsync___n4(instrumentedTest) {
-							return $spawn(function *() {
-								return this.runTestsAsync([
-									instrumentedTest
-								]);
-							}.apply(this, arguments));
+						value: async function runTestAsync___n4(instrumentedTest) {
+							return await this.runTestsAsync([
+								instrumentedTest
+							]);
 						}
 					},
 					runGroup: {
-						value: function runGroup___n4(iTest) {
-							return $spawn(function *() {
-								let rg, testObject, testRes, testResults = [], beforeAlls = this.getAncestorTestMethods(iTest, "beforeAlls"), befores = this.getAncestorTestMethods(iTest, "befores"), afters = this.getAncestorTestMethods(iTest, "afters").reverse(), afterAlls = this.getAncestorTestMethods(iTest, "afterAlls").reverse(), numTests, ii, start, end;
-								;
-								(yield this.spy.groupStarted.dispatch([
-									iTest
-								]));
-								if (iTest.error) {
-									testResults = (yield this.errorTests(iTest, iTest.error));
-								} else {
-									try {
-										(yield this.callAll(iTest, beforeAlls));
-										numTests = iTest.tests.length;
-										for(ii = 0;ii < numTests;++ii) {
-											testObject = iTest.tests[ii];
-											try {
-												(yield this.spy.testStarted.dispatch([
-													iTest,
-													testObject
-												]));
-												start = new Date().getTime();
-												if (testObject.ignore) {
+						value: async function runGroup___n4(iTest) {
+							let rg, testObject, testRes, testResults = [], beforeAlls = this.getAncestorTestMethods(iTest, "beforeAlls"), befores = this.getAncestorTestMethods(iTest, "befores"), afters = this.getAncestorTestMethods(iTest, "afters").reverse(), afterAlls = this.getAncestorTestMethods(iTest, "afterAlls").reverse(), numTests, ii, start, end;
+							;
+							await this.spy.groupStarted.dispatch([
+								iTest
+							]);
+							if (iTest.error) {
+								testResults = await this.errorTests(iTest, iTest.error);
+							} else {
+								try {
+									await this.callAll(iTest, beforeAlls);
+									numTests = iTest.tests.length;
+									for(ii = 0;ii < numTests;++ii) {
+										testObject = iTest.tests[ii];
+										try {
+											await this.spy.testStarted.dispatch([
+												iTest,
+												testObject
+											]);
+											start = new Date().getTime();
+											if (testObject.ignore) {
+												testRes = new TestResult({
+													testStatus: 'SKIPPED_IGNORE',
+													message: testObject.ignoreReason,
+													description: testObject.name
+												});
+											} else {
+												try {
+													await this.callAll(iTest, befores);
+													await this.callAll(iTest, [
+														testObject
+													]);
 													testRes = new TestResult({
-														testStatus: 'SKIPPED_IGNORE',
-														message: testObject.ignoreReason,
+														testStatus: 'PASSED',
 														description: testObject.name
 													});
-												} else {
-													try {
-														(yield this.callAll(iTest, befores));
-														(yield this.callAll(iTest, [
-															testObject
-														]));
-														testRes = new TestResult({
-															testStatus: 'PASSED',
-															description: testObject.name
-														});
-													} finally {
-														(yield this.callAll(iTest, afters));
-													}
+												} finally {
+													await this.callAll(iTest, afters);
 												}
-												end = new Date().getTime();
-											} catch(er) {
-												let err = er;
-												end = new Date().getTime();
-												testRes = TestExecutor.generateFailureTestResult(err, testObject.name);
 											}
-											testRes.elapsedTime = end - start;
-											testRes = this.handleFixme(testObject, testRes);
-											(yield this.spy.testFinished.dispatch([
-												iTest,
-												testObject,
-												testRes,
-												(function() {
-													return $spawn(function *() {
-														let allTests = iTest.tests;
-														;
-														iTest.tests = [
-															testObject
-														];
-														try {
-															(yield this.runTestsAsync([
-																iTest
-															]));
-														} finally {
-															iTest.tests = allTests;
-														}
-													}.apply(this, arguments));
-												}).bind(this)
-											]));
-											testResults.push(testRes);
+											end = new Date().getTime();
+										} catch(er) {
+											let err = er;
+											end = new Date().getTime();
+											testRes = TestExecutor.generateFailureTestResult(err, testObject.name);
 										}
-										(yield this.callAll(iTest, afterAlls));
-									} catch(error) {
-										let results = (yield this.errorTests(iTest, error));
-										testResults = testResults.concat(results);
+										testRes.elapsedTime = end - start;
+										testRes = this.handleFixme(testObject, testRes);
+										await this.spy.testFinished.dispatch([
+											iTest,
+											testObject,
+											testRes,
+											async()=>{
+												let allTests = iTest.tests;
+												;
+												iTest.tests = [
+													testObject
+												];
+												try {
+													await this.runTestsAsync([
+														iTest
+													]);
+												} finally {
+													iTest.tests = allTests;
+												}
+											}
+										]);
+										testResults.push(testRes);
 									}
+									await this.callAll(iTest, afterAlls);
+								} catch(error) {
+									let results = await this.errorTests(iTest, error);
+									testResults = testResults.concat(results);
 								}
-								rg = new ResultGroup(testResults, ("" + iTest.name + ""));
-								(yield this.spy.groupFinished.dispatch([
-									iTest,
-									rg
-								]));
-								return rg;
-							}.apply(this, arguments));
+							}
+							rg = new ResultGroup(testResults, `${iTest.name}`);
+							await this.spy.groupFinished.dispatch([
+								iTest,
+								rg
+							]);
+							return rg;
 						}
 					},
 					runTestsAsync: {
-						value: function runTestsAsync___n4(instrumentedTests) {
-							return $spawn(function *() {
-								let results = [];
-								for(let test of instrumentedTests) {
-									if (test) {
-										if (test.hasParameterizedTests) {
-											let pResults = [];
-											(yield this.spy.parameterizedGroupsStarted.dispatch([
-												test
-											]));
-											for(let ptest of test.parameterizedTests) {
-												let testRes = (yield this.runGroup(ptest));
-												pResults.push(testRes);
-												results.push(testRes);
-											}
-											(yield this.spy.parameterizedGroupsFinished.dispatch([
-												new ResultGroups(pResults)
-											]));
-										} else {
-											let testRes = (yield this.runGroup(test));
+						value: async function runTestsAsync___n4(instrumentedTests) {
+							let results = [];
+							for(let test of instrumentedTests) {
+								if (test) {
+									if (test.hasParameterizedTests) {
+										let pResults = [];
+										await this.spy.parameterizedGroupsStarted.dispatch([
+											test
+										]);
+										for(let ptest of test.parameterizedTests) {
+											let testRes = await this.runGroup(ptest);
+											pResults.push(testRes);
 											results.push(testRes);
 										}
+										await this.spy.parameterizedGroupsFinished.dispatch([
+											new ResultGroups(pResults)
+										]);
+									} else {
+										let testRes = await this.runGroup(test);
+										results.push(testRes);
 									}
 								}
-								let resultGroups = new ResultGroups(results);
-								return resultGroups;
-							}.apply(this, arguments));
+							}
+							let resultGroups = new ResultGroups(results);
+							return resultGroups;
 						}
 					},
 					errorTests: {
-						value: function errorTests___n4(instrumentedTest, error) {
-							return $spawn(function *() {
-								let len = instrumentedTest.tests.length, testResult, testResults = [], test, ii;
-								;
-								for(ii = 0;ii < len;++ii) {
-									test = instrumentedTest.tests[ii];
-									(yield this.spy.testStarted.dispatch([
-										instrumentedTest,
-										test
-									]));
-									testResult = TestExecutor.generateFailureTestResult(error, test.name);
-									testResult.elapsedTime = 0;
-									(yield this.spy.testFinished.dispatch([
-										instrumentedTest,
-										test,
-										testResult
-									]));
-									testResults.push(testResult);
-								}
-								return testResults;
-							}.apply(this, arguments));
+						value: async function errorTests___n4(instrumentedTest, error) {
+							let len = instrumentedTest.tests.length, testResult, testResults = [], test, ii;
+							;
+							for(ii = 0;ii < len;++ii) {
+								test = instrumentedTest.tests[ii];
+								await this.spy.testStarted.dispatch([
+									instrumentedTest,
+									test
+								]);
+								testResult = TestExecutor.generateFailureTestResult(error, test.name);
+								testResult.elapsedTime = 0;
+								await this.spy.testFinished.dispatch([
+									instrumentedTest,
+									test,
+									testResult
+								]);
+								testResults.push(testResult);
+							}
+							return testResults;
 						}
 					},
 					spy: {
@@ -290,7 +274,7 @@
 							let e = ex instanceof AssertionError ? ex : ex, reason = e.toString(), tr, status, trace;
 							;
 							if (reason.charAt(0) === "[") {
-								reason = e.name ? ("" + e.name + " : " + description + "") : description;
+								reason = e.name ? `${e.name} : ${description}` : description;
 							}
 							if (ex instanceof AssertionError) {
 								status = 'FAILED';

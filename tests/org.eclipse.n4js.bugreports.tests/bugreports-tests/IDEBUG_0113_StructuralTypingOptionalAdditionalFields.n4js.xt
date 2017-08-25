@@ -13,7 +13,7 @@
 
 // example provided by Joe:
 
-function ensureErrorStack(error : ~Error with {stack?: Array<string>; line?: string;}): Error {
+function ensureErrorStack(error : ~Error with {stack?: Array<string>; line?: string;}): ~Error {
     if (typeof error.stack === 'undefined') {
         if (typeof error.line !== 'undefined') {
             error.stack = ['test line' + error.line];

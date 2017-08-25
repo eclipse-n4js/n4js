@@ -17,15 +17,15 @@ import static com.google.common.collect.Iterables.isEmpty;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.ABSTRACT_KEY;
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.EXPORTED_CLASS_KEY;
-import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.TEST_CLASS_KEY;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.valueOf;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.UUID.randomUUID;
+import static org.eclipse.n4js.AnnotationDefinition.TEST_METHOD;
+import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.ABSTRACT_KEY;
+import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.EXPORTED_CLASS_KEY;
+import static org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy.TEST_CLASS_KEY;
 import static org.eclipse.xtext.EcoreUtil2.getContainerOfType;
 
 import java.util.Collection;
@@ -40,14 +40,6 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.HashMultimap;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
@@ -67,6 +59,13 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.HashMultimap;
+import com.google.inject.Inject;
 
 /**
  * Helper to collect all tests in a given N4JS project, sub-folder, or file.
@@ -371,12 +370,7 @@ public class TestDiscoveryHelper {
 	 * this purpose.
 	 */
 	private String getClassName(final TClass clazz) {
-		return qualifiedNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(clazz); // intended for external use,
-																							// so return the FQN with
-																							// legacy support for the
-																							// time being (i.e. using
-																							// "." instead of "/" as
-																							// delimiter; IDE-2227)
+		return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
 	}
 
 	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris, final IResourceDescriptions index,

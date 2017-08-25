@@ -31,7 +31,7 @@
 			;
 			try {
 				if (!(spec.actual == null && spec.expected == null && spec.operator == null)) {
-					msg += (" (" + String(spec.actual) + " not " + String(spec.operator) + " " + String(spec.expected) + " )");
+					msg += ` (${String(spec.actual)} not ${String(spec.operator)} ${String(spec.expected)} )`;
 				}
 			} catch(e) {}
 			var err = new Error(msg);

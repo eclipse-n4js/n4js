@@ -11,10 +11,9 @@
 package org.eclipse.n4js.generator.common;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.util.CancelIndicator;
-
-import org.eclipse.n4js.n4JS.Script;
 
 /**
  * This interface has to be implemented by all concrete N4JS transpilers.
@@ -45,7 +44,9 @@ public interface ISubGenerator extends IGenerator {
 	 *
 	 * @param root
 	 *            the root AST element
+	 * @param options
+	 *            the {@link GeneratorOption generator options} to use during generation.
 	 * @return the compiled result as String
 	 */
-	public String getCompileResultAsText(Script root);
+	public String getCompileResultAsText(Script root, GeneratorOption[] options);
 }

@@ -16,7 +16,7 @@
 stdout:
 [ 'Walter', 'Werner' ]
 [ 'Wim', 'Wendelin' ]
-[ , ,  ]
+[ <3 empty items> ]
 undefined
 stderr:
 ==>

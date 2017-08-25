@@ -8893,7 +8893,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	public class ObjectBindingPatternElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ObjectBindingPattern");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cBindingPatternAction_0 = (Action)cGroup.eContents().get(0);
+		private final Action cObjectBindingPatternAction_0 = (Action)cGroup.eContents().get(0);
 		private final Keyword cLeftCurlyBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Group cGroup_2 = (Group)cGroup.eContents().get(2);
 		private final Assignment cPropertiesAssignment_2_0 = (Assignment)cGroup_2.eContents().get(0);
@@ -8904,18 +8904,18 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cPropertiesBindingPropertyParserRuleCall_2_1_1_0 = (RuleCall)cPropertiesAssignment_2_1_1.eContents().get(0);
 		private final Keyword cRightCurlyBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
-		//ObjectBindingPattern <Yield BindingPattern:
-		//	{BindingPattern}
+		//ObjectBindingPattern <Yield>:
+		//	{ObjectBindingPattern}
 		//	'{' (properties+=BindingProperty<Yield,AllowType=false> (',' properties+=BindingProperty<Yield,AllowType=false>)*)?
 		//	'}';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{BindingPattern} '{' (properties+=BindingProperty<Yield,AllowType=false> (','
+		//{ObjectBindingPattern} '{' (properties+=BindingProperty<Yield,AllowType=false> (','
 		//properties+=BindingProperty<Yield,AllowType=false>)*)? '}'
 		public Group getGroup() { return cGroup; }
 		
-		//{BindingPattern}
-		public Action getBindingPatternAction_0() { return cBindingPatternAction_0; }
+		//{ObjectBindingPattern}
+		public Action getObjectBindingPatternAction_0() { return cObjectBindingPatternAction_0; }
 		
 		//'{'
 		public Keyword getLeftCurlyBracketKeyword_1() { return cLeftCurlyBracketKeyword_1; }
@@ -8947,7 +8947,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	public class ArrayBindingPatternElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ArrayBindingPattern");
 		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Action cBindingPatternAction_0 = (Action)cGroup.eContents().get(0);
+		private final Action cArrayBindingPatternAction_0 = (Action)cGroup.eContents().get(0);
 		private final Keyword cLeftSquareBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cElementsAssignment_2 = (Assignment)cGroup.eContents().get(2);
 		private final RuleCall cElementsElisionParserRuleCall_2_0 = (RuleCall)cElementsAssignment_2.eContents().get(0);
@@ -8966,20 +8966,20 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cElementsElisionParserRuleCall_3_2_1_0 = (RuleCall)cElementsAssignment_3_2_1.eContents().get(0);
 		private final Keyword cRightSquareBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
 		
-		//ArrayBindingPattern <Yield BindingPattern:
-		//	{BindingPattern}
+		//ArrayBindingPattern <Yield>:
+		//	{ArrayBindingPattern}
 		//	'['
 		//	elements+=Elision* (elements+=BindingRestElement<Yield> (',' elements+=Elision* elements+=BindingRestElement<Yield>)*
 		//	(',' elements+=Elision*)?)?
 		//	']';
 		@Override public ParserRule getRule() { return rule; }
 		
-		//{BindingPattern} '[' elements+=Elision* (elements+=BindingRestElement<Yield> (',' elements+=Elision*
+		//{ArrayBindingPattern} '[' elements+=Elision* (elements+=BindingRestElement<Yield> (',' elements+=Elision*
 		//elements+=BindingRestElement<Yield>)* (',' elements+=Elision*)?)? ']'
 		public Group getGroup() { return cGroup; }
 		
-		//{BindingPattern}
-		public Action getBindingPatternAction_0() { return cBindingPatternAction_0; }
+		//{ArrayBindingPattern}
+		public Action getArrayBindingPatternAction_0() { return cArrayBindingPatternAction_0; }
 		
 		//'['
 		public Keyword getLeftSquareBracketKeyword_1() { return cLeftSquareBracketKeyword_1; }
@@ -12585,8 +12585,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getBindingPatternAccess().getRule();
 	}
 	
-	//ObjectBindingPattern <Yield BindingPattern:
-	//	{BindingPattern}
+	//ObjectBindingPattern <Yield>:
+	//	{ObjectBindingPattern}
 	//	'{' (properties+=BindingProperty<Yield,AllowType=false> (',' properties+=BindingProperty<Yield,AllowType=false>)*)?
 	//	'}';
 	public ObjectBindingPatternElements getObjectBindingPatternAccess() {
@@ -12597,8 +12597,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getObjectBindingPatternAccess().getRule();
 	}
 	
-	//ArrayBindingPattern <Yield BindingPattern:
-	//	{BindingPattern}
+	//ArrayBindingPattern <Yield>:
+	//	{ArrayBindingPattern}
 	//	'['
 	//	elements+=Elision* (elements+=BindingRestElement<Yield> (',' elements+=Elision* elements+=BindingRestElement<Yield>)*
 	//	(',' elements+=Elision*)?)?

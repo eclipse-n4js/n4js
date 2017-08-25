@@ -10,21 +10,20 @@
  */
 package org.eclipse.n4js.ui.editor
 
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.GenericDeclaration
-import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.ts.types.TypeVariable
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.resource.DefaultLocationInFileProvider
 import org.eclipse.xtext.resource.ILocationInFileProviderExtension
-import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
-import org.eclipse.n4js.n4JS.PropertyNameOwner
-import org.eclipse.n4js.n4JS.N4JSPackage
 
 /**
  */
@@ -80,7 +79,7 @@ class N4JSLocationInFileProvider extends DefaultLocationInFileProvider {
 				element
 			TStructMember case element.astElement === null:
 				element
-			TMember case element.eContainer instanceof ComposedTypeRef:
+			TMember case element.composed:
 				element
 			SyntaxRelatedTElement: {
 				if (element.astElement === null)

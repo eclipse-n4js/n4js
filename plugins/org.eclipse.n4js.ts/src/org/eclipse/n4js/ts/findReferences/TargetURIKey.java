@@ -10,10 +10,17 @@
  */
 package org.eclipse.n4js.ts.findReferences;
 
+import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TEnumLiteral;
+import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
 import org.eclipse.xtext.findReferences.IReferenceFinder.IResourceAccess;
@@ -25,11 +32,6 @@ import org.eclipse.xtext.util.SimpleAttributeResolver;
 import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.ts.types.TEnumLiteral;
-import org.eclipse.n4js.ts.types.TMember;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ts.types.Type;
-
 /**
  * Access to the n4 specific cached data during a find references operation.
  */
@@ -39,7 +41,8 @@ public class TargetURIKey {
 	/**
 	 * The key that is used to obtain the cache.
 	 */
-	static final TargetURIs.Key<Data> KEY = TargetURIs.Key.from("org.eclipse.n4js.ts.findReferences.TargetURIKey",
+	public static final TargetURIs.Key<Data> KEY = TargetURIs.Key.from(
+			"org.eclipse.n4js.ts.findReferences.TargetURIKey",
 			Data.class);
 
 	@Inject
@@ -51,7 +54,9 @@ public class TargetURIKey {
 	public static class Data {
 		private final Set<String> valueStrings;
 		private final Set<EClass> applicableTypes;
-		private final Set<QualifiedName> typesOrModulesToFind;
+		// Use sorted set to ensure the order of elements. Will be used for optimizing find references in {@link
+		// ConcreteSyntaxAwareReferenceFinder}
+		private final SortedSet<QualifiedName> typesOrModulesToFind;
 		private final IQualifiedNameProvider qualifiedNameProvider;
 
 		/**
@@ -61,7 +66,7 @@ public class TargetURIKey {
 			this.qualifiedNameProvider = qualifiedNameProvider;
 			this.valueStrings = Sets.newHashSet();
 			this.applicableTypes = Sets.newHashSet();
-			this.typesOrModulesToFind = Sets.newHashSet();
+			this.typesOrModulesToFind = Sets.newTreeSet();
 		}
 
 		/**
@@ -74,6 +79,18 @@ public class TargetURIKey {
 			this.applicableTypes.add(object.eClass());
 			this.valueStrings.add(SimpleAttributeResolver.NAME_RESOLVER.apply(object));
 
+			// Handle composed members
+			if (object instanceof TMember && ((TMember) object).isComposed()) {
+				List<TMember> constituentMembers = ((TMember) object).getConstituentMembers();
+				for (TMember constituentMember : constituentMembers) {
+					addFQNs(constituentMember);
+				}
+			} else {
+				addFQNs(object);
+			}
+		}
+
+		private void addFQNs(EObject object) {
 			if (object instanceof TMember || object instanceof TEnumLiteral) {
 				Type t = EcoreUtil2.getContainerOfType(object.eContainer(), Type.class);
 				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(t));
@@ -81,6 +98,11 @@ public class TargetURIKey {
 				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(object));
 			} else if (object instanceof TModule) {
 				typesOrModulesToFind.add(qualifiedNameProvider.getFullyQualifiedName(object));
+			}
+
+			if (object instanceof IdentifiableElement) {
+				typesOrModulesToFind.add(qualifiedNameProvider
+						.getFullyQualifiedName(((IdentifiableElement) object).getContainingModule()));
 			}
 		}
 
@@ -125,6 +147,7 @@ public class TargetURIKey {
 			}
 			return false;
 		}
+
 	}
 
 	/**

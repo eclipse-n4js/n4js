@@ -58,7 +58,7 @@ var nInc8r : number = ++ nInc8
 //var number nInc9r = ++ nInc9  should work
 var nInc10r : number = ++ nInc10
 var nInc11r : number = ++
-// XPECT errors --> "~Object is not a subtype of number." at "nInc11"
+// XPECT errors --> "Structural type ~Object is not a subtype of non-structural type number." at "nInc11"
 nInc11
 var nInc12r : number = ++ nInc12
 var nInc13r : number = ++

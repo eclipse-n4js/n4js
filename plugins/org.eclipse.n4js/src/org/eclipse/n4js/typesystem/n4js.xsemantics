@@ -699,7 +699,9 @@ from {
 			val staticAccess = (targetTypeRef instanceof TypeTypeRef)
 			val checkVisibility = false // access modifiers checked in validation
 			val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess)
-			val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+			val memberDesc = if(memberName!==null && !memberName.isEmpty()) {
+				scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
+			};
 			val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) {
 				memberDesc.getEObjectOrProxy()
 			};
@@ -1356,12 +1358,10 @@ from {
 			}
 		}
 		if (! structuralTyping) { // do nominal, right is not a structural type
+			// enforce that ~T !<: S except for S = Object and T <: Object and for primitive types on the left
 			if( (left.isUseSiteStructuralTyping || left.isDefSiteStructuralTyping)
-				&&
-				! (leftDeclType instanceof TypeVariable || rightDeclType instanceof TypeVariable)
-				&&
-				{G |- right <: G.n4ObjectTypeRef}
-				)
+				&& !(rightDeclType == G.objectType && leftDeclType instanceof TClassifier)
+				&& !(leftDeclType instanceof PrimitiveType))
 			{
 				fail
 					error "Structural type " + left.typeRefAsString + " is not a subtype of non-structural type " + right.typeRefAsString

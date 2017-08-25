@@ -42,31 +42,29 @@
 			execute: function() {
 				$makeClass(IDENodeTestRunner, N4Object, [], {
 					run: {
-						value: function run___n4() {
-							return $spawn(function *() {
-								try {
-									let testCatalog, catalogDef = n4.runtimeOptions["test-catalog"];
-									if (typeof catalogDef === "string") {
-										let req = (yield fetch(catalogDef, {
-											headers: {
-												'Content-Type': "application/vnd.n4js.assemble_test_catalog_req.tm+json"
-											}
-										}));
-										testCatalog = ((yield req.json()));
-									} else {
-										testCatalog = catalogDef;
-									}
-									this.reporter.endpoint = testCatalog.endpoint;
-									this.controller.reporters = [
-										this.reporter
-									];
-									(yield this.controller.runGroups(testCatalog, 100));
-								} catch(err) {
-									let errObj = err;
-									console.error(err + "\nstack: " + errObj.stack.replace(/^Error:?\s*/, ""));
-									throw err;
+						value: async function run___n4() {
+							try {
+								let testCatalog, catalogDef = n4.runtimeOptions["test-catalog"];
+								if (typeof catalogDef === "string") {
+									let req = await fetch(catalogDef, {
+										headers: {
+											'Content-Type': "application/vnd.n4js.assemble_test_catalog_req.tm+json"
+										}
+									});
+									testCatalog = (await req.json());
+								} else {
+									testCatalog = catalogDef;
 								}
-							}.apply(this, arguments));
+								this.reporter.endpoint = testCatalog.endpoint;
+								this.controller.reporters = [
+									this.reporter
+								];
+								await this.controller.runGroups(testCatalog, 100);
+							} catch(err) {
+								let errObj = err;
+								console.error(err + "\nstack: " + errObj.stack.replace(/^Error:?\s*/, ""));
+								throw err;
+							}
 						}
 					},
 					controller: {

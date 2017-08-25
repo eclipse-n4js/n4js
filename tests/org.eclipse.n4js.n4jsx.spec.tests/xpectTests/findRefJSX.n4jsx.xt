@@ -1,0 +1,56 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest
+
+	ResourceSet {
+		ThisFile {}
+		File "reactFiles/react.n4jsd" { from = "reactFiles/react.n4jsd"}
+	}
+
+	END_SETUP
+*/
+
+import * as React from "reactFiles/react";
+
+/* XPECT findReferences at MyComponent ---
+findRefJSX - MyComponent - 44,
+findRefJSX - MyComponent - 44,
+---
+*/
+class MyComponent extends
+
+	/* XPECT findReferences at aProp ---
+	findRefJSX - aProp="Blah" - 44
+	---
+	*/
+	React.Component<~React.ComponentProps with {aProp: string}, String> {
+
+	@Override
+	public render(): React.Element {
+		const constText = "some text";
+		/* XPECT findReferences at aProp ---
+		findRefJSX - aProp="Blah" - 44
+		---
+		*/
+		return (<MyComponent aProp="Blah">{constText}</MyComponent>
+		);
+	}
+}
+
+
+// XPECT findReferences at MyReactFuncComponent --> findRefJSX - MyReactFuncComponent - 56
+function MyReactFuncComponent(props: ~React.ComponentProps with {myProp: string}): React.Element {
+	return (<div>{props.myProp}</div>);
+}
+
+// XPECT findReferences at myProp --> findRefJSX - myProp="My prop" - 56, findRefJSX - props.myProp - 52
+<MyReactFuncComponent myProp="My prop"/>

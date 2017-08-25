@@ -28,6 +28,20 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.fileextensions.FileExtensionType;
+import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.internal.FileBasedWorkspace;
+import org.eclipse.n4js.n4jsx.N4JSXGlobals;
+import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
+import org.eclipse.n4js.tester.TestDiscoveryHelper;
+import org.eclipse.n4js.tester.TesterModule;
+import org.eclipse.n4js.tester.domain.TestSuite;
+import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.tester.tests.InjectedModules;
+import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
+import org.eclipse.n4js.tester.tests.WithParentInjector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,20 +50,6 @@ import com.google.common.base.Function;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.fileextensions.FileExtensionType;
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.tester.TestDiscoveryHelper;
-import org.eclipse.n4js.tester.TesterModule;
-import org.eclipse.n4js.tester.domain.TestSuite;
-import org.eclipse.n4js.tester.domain.TestTree;
-import org.eclipse.n4js.tester.tests.InjectedModules;
-import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
-import org.eclipse.n4js.tester.tests.WithParentInjector;
-import org.eclipse.n4js.n4jsx.N4JSXGlobals;
-import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
-
 /**
  * Class for testing the behavior of the {@link TestDiscoveryHelper} in headless mode.
  */
@@ -57,8 +57,9 @@ import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
 @InjectedModules(baseModules = { TesterModule.class }, overrides = {})
 public class HeadlessTestDiscoveryTest {
 
+	private static final String FQN_DELIMITER = N4JSQualifiedNameConverter.DELIMITER;
 	private static final String RESOURCES_FOLDER = "resources";
-	private static final String TEST_SRC_STRUCTURE = "path.to.the.source";
+	private static final String TEST_SRC_STRUCTURE = createFqn("path", "to", "the", "source");
 	private static final String TEST_PROJECT_NAME = "test.discovery.example.project";
 	private static final String TEST_PROJECT_NAME_IDEBUG_572 = "test.discovery.example.project.idebug.572";
 	private static final String TEST_CLASS_1 = "TestClass_1";
@@ -140,13 +141,13 @@ public class HeadlessTestDiscoveryTest {
 		final TestTree actual = helper.collectTests(toURI(TEST_CLASS_FILE));
 		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"));
 		assertTestCaseCount(actual, 4);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A", 2);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C", 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"), 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"), 1);
 	}
 
 	/***/
@@ -155,13 +156,13 @@ public class HeadlessTestDiscoveryTest {
 		final TestTree actual = helper.collectTests(toURI(TEST_PROJECT));
 		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"));
 		assertTestCaseCount(actual, 4);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A", 2);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C", 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"), 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"), 1);
 	}
 
 	/***/
@@ -170,13 +171,13 @@ public class HeadlessTestDiscoveryTest {
 		final TestTree actual = helper.collectTests(toURI(TEST_CLASS_FILE), toURI(TEST_CLASS_FILE));
 		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"));
 		assertTestCaseCount(actual, 4);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A", 2);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C", 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"), 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"), 1);
 	}
 
 	/***/
@@ -185,13 +186,13 @@ public class HeadlessTestDiscoveryTest {
 		final TestTree actual = helper.collectTests(toURI(TEST_PROJECT), toURI(TEST_CLASS_FILE));
 		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"));
 		assertTestCaseCount(actual, 4);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A", 2);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C", 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"), 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"), 1);
 	}
 
 	/***/
@@ -201,11 +202,11 @@ public class HeadlessTestDiscoveryTest {
 				toURI(TEST_PROJECT_IDEBUG_572), toURI(TEST_SRC_FOLDER_IDEBUG_572), toURI(TEST_CLASS_FILE_IDEBUG_572));
 		assertTestSuiteCount(actual, 2);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".C",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".F");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "C"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "F"));
 		assertTestCaseCount(actual, 3);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".C", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".F", 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "C"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "F"), 2);
 	}
 
 	/***/
@@ -215,11 +216,11 @@ public class HeadlessTestDiscoveryTest {
 				toURI(TEST_CLASS_FILE_IDEBUG_572));
 		assertTestSuiteCount(actual, 2);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".C",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".F");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "C"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "F"));
 		assertTestCaseCount(actual, 3);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".C", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".F", 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "C"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "F"), 2);
 	}
 
 	/***/
@@ -228,11 +229,11 @@ public class HeadlessTestDiscoveryTest {
 		final TestTree actual = helper.collectTests(toURI(TEST_PROJECT_IDEBUG_572), toURI(TEST_CLASS_FILE_IDEBUG_572));
 		assertTestSuiteCount(actual, 2);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".C",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".F");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "C"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "F"));
 		assertTestCaseCount(actual, 3);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".C", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_2 + ".F", 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "C"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_2, "F"), 2);
 	}
 
 	/***/
@@ -242,13 +243,13 @@ public class HeadlessTestDiscoveryTest {
 				toURI(TEST_PROJECT), toURI(TEST_SRC_FOLDER), toURI(TEST_CLASS_FILE));
 		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B",
-				TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C");
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"));
 		assertTestCaseCount(actual, 4);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".A", 2);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".B", 1);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_CLASS_1 + ".C", 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "A"), 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "B"), 1);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_CLASS_1, "C"), 1);
 	}
 
 	/** N4JSX test discovery tests */
@@ -263,12 +264,12 @@ public class HeadlessTestDiscoveryTest {
 		final TestTree actual = helper.collectTests(toURI(TEST_N4JSX_PROJECT));
 		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
-				TEST_SRC_STRUCTURE + "." + TEST_N4JSX_CLASS_3 + ".D",
-				TEST_SRC_STRUCTURE + "." + TEST_N4JSX_CLASS_3 + ".E",
-				TEST_SRC_STRUCTURE + "." + TEST_N4JSX_CLASS_4 + ".F");
+				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E"),
+				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_4, "F"));
 		assertTestCaseCount(actual, 7);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_N4JSX_CLASS_3 + ".D", 2);
-		assertTestCaseCountForSuite(actual, TEST_SRC_STRUCTURE + "." + TEST_N4JSX_CLASS_3 + ".E", 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D"), 2);
+		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E"), 2);
 	}
 
 	private void assertTestSuiteCount(final TestTree actual, final int expected) {
@@ -314,5 +315,9 @@ public class HeadlessTestDiscoveryTest {
 
 	private static final URI toURI(File file) {
 		return URI.createFileURI(file.getAbsolutePath());
+	}
+
+	private static final String createFqn(String... segments) {
+		return String.join(FQN_DELIMITER, segments);
 	}
 }

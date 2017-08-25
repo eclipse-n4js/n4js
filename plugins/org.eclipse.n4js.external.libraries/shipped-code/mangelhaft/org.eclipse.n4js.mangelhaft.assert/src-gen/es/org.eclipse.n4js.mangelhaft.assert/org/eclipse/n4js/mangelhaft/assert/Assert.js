@@ -275,37 +275,33 @@
 						}
 					},
 					throwsAsync: {
-						value: function throwsAsync___n4(testFunction, expectedErrorType, message) {
-							return $spawn(function *() {
-								let actual, threw = false;
-								try {
-									(yield Promise.resolve(testFunction()));
-								} catch(e) {
-									threw = true;
-									actual = e;
-								}
-								if (!threw) {
-									this.fail_(null, null, message, "Did not throw any exception");
-								}
-								return this.thrownCheck(true, actual, expectedErrorType, message, "throws");
-							}.apply(this, arguments));
+						value: async function throwsAsync___n4(testFunction, expectedErrorType, message) {
+							let actual, threw = false;
+							try {
+								await Promise.resolve(testFunction());
+							} catch(e) {
+								threw = true;
+								actual = e;
+							}
+							if (!threw) {
+								this.fail_(null, null, message, "Did not throw any exception");
+							}
+							return this.thrownCheck(true, actual, expectedErrorType, message, "throws");
 						}
 					},
 					doesNotThrowAsync: {
-						value: function doesNotThrowAsync___n4(testFunction, error, message) {
-							return $spawn(function *() {
-								let actual, threw = false;
-								try {
-									(yield Promise.resolve(testFunction()));
-								} catch(e) {
-									threw = true;
-									actual = e;
-									this.rethrowIfSpecialError(actual, error);
-								}
-								if (threw) {
-									this.fail_(actual, null, message, "does not throw");
-								}
-							}.apply(this, arguments));
+						value: async function doesNotThrowAsync___n4(testFunction, error, message) {
+							let actual, threw = false;
+							try {
+								await Promise.resolve(testFunction());
+							} catch(e) {
+								threw = true;
+								actual = e;
+								this.rethrowIfSpecialError(actual, error);
+							}
+							if (threw) {
+								this.fail_(actual, null, message, "does not throw");
+							}
 						}
 					},
 					waitForCondition: {
@@ -341,11 +337,11 @@
 							if (expected) {
 								let ctorFn = ((expected));
 								if (ctorFn.name) {
-									msg = (" (" + ctorFn.name + ").");
+									msg = ` (${ctorFn.name}).`;
 								}
 							}
 							if (message) {
-								msg += (" " + message + "");
+								msg += ` ${message}`;
 							} else {
 								msg += ".";
 							}

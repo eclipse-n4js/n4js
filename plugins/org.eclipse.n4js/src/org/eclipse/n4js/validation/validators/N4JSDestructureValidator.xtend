@@ -11,8 +11,12 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Map
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.misc.DestructNode
 import org.eclipse.n4js.misc.DestructureHelper
+import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.BindingPattern
@@ -20,6 +24,7 @@ import org.eclipse.n4js.n4JS.BindingProperty
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.ObjectBindingPattern
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName
@@ -33,9 +38,6 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Map
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -71,7 +73,11 @@ class N4JSDestructureValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def public void checkNoEmptyPattern_Binding(BindingPattern pattern) {
-		if(pattern.elements.empty && pattern.properties.empty) {
+		val isEmpty = switch(pattern) {
+			ArrayBindingPattern: pattern.elements.empty
+			ObjectBindingPattern: pattern.properties.empty
+		};
+		if(isEmpty) {
 			val message = IssueCodes.messageForDESTRUCT_EMPTY_PATTERN;
 			addIssue(message, pattern, IssueCodes.DESTRUCT_EMPTY_PATTERN);
 		}

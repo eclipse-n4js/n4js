@@ -16,24 +16,27 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.EcoreUtil2;
-
 import org.eclipse.n4js.conversion.N4JSStringValueConverter;
 import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
+import org.eclipse.n4js.n4JS.ArrayBindingPattern;
 import org.eclipse.n4js.n4JS.ArrayElement;
 import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.ArrayPadding;
 import org.eclipse.n4js.n4JS.ArrowFunction;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
+import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
+import org.eclipse.n4js.n4JS.BindingElement;
+import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
 import org.eclipse.n4js.n4JS.BreakStatement;
@@ -51,6 +54,7 @@ import org.eclipse.n4js.n4JS.DoubleLiteral;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportedVariableBinding;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -77,6 +81,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
+import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.OctalIntLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -89,6 +94,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration;
 import org.eclipse.n4js.n4JS.PropertyNameKind;
 import org.eclipse.n4js.n4JS.PropertyNameOwner;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration;
 import org.eclipse.n4js.n4JS.RegularExpressionLiteral;
 import org.eclipse.n4js.n4JS.RelationalExpression;
@@ -100,11 +106,14 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.StringLiteral;
 import org.eclipse.n4js.n4JS.SuperLiteral;
 import org.eclipse.n4js.n4JS.SwitchStatement;
+import org.eclipse.n4js.n4JS.TemplateLiteral;
+import org.eclipse.n4js.n4JS.TemplateSegment;
 import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.UnaryOperator;
+import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
@@ -123,6 +132,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * Traverses an intermediate model and serializes it to a {@link SourceMapAwareAppendable}. Client code should only use
@@ -234,6 +244,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 			processModifiers(original.getDeclaredModifiers());
 			write(' ');
 		}
+		if (original.isAsync()) {
+			write("async ");
+		}
 		write("function ");
 		if (!original.getTypeVars().isEmpty()) {
 			processTypeParams(original.getTypeVars());
@@ -257,6 +270,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 	@Override
 	public Boolean caseFunctionExpression(FunctionExpression original) {
 		processAnnotations(original.getAnnotations());
+		if (original.isAsync()) {
+			write("async ");
+		}
 		write("function");
 		if (!original.getTypeVars().isEmpty()) {
 			write(' ');
@@ -282,7 +298,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 	@Override
 	public Boolean caseArrowFunction(ArrowFunction original) {
-		throwUnsupportedSyntax();
 		if (original.isAsync()) {
 			write("async");
 		}
@@ -294,7 +309,12 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 		if (original.isHasBracesAroundBody()) {
 			process(original.getBody());
 		} else {
-			process(original.getBody().getStatements().get(0));
+			if (!original.isSingleExprImplicitReturn()) {
+				throw new IllegalStateException(
+						"arrow function without braces must be a valid single-expression arrow function");
+			}
+			final Expression singleExpr = original.getSingleExpression();
+			process(singleExpr);
 		}
 		return DONE;
 	}
@@ -308,6 +328,9 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 	@Override
 	public Boolean caseFormalParameter(FormalParameter original) {
 		processAnnotations(original.getAnnotations(), false);
+		if (original.isVariadic()) {
+			write("...");
+		}
 		write(original.getName());
 		processTypeRef(original.getDeclaredTypeRef());
 		if (original.getInitializer() != null) {
@@ -378,6 +401,22 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 	@Override
 	public Boolean caseExportedVariableDeclaration(ExportedVariableDeclaration original) {
 		caseVariableDeclaration(original);
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseVariableBinding(VariableBinding original) {
+		process(original.getPattern());
+		if (original.getExpression() != null) {
+			write(" = ");
+			process(original.getExpression());
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseExportedVariableBinding(ExportedVariableBinding original) {
+		caseExportedVariableBinding(original);
 		return DONE;
 	}
 
@@ -623,7 +662,10 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 	@Override
 	public Boolean caseArrayLiteral(ArrayLiteral original) {
-		processBlockLike(original.getElements(), '[', ",", null, ']');
+		final List<ArrayElement> elements = original.getElements();
+		final boolean lastIsPadding = !elements.isEmpty() && elements.get(elements.size() - 1) instanceof ArrayPadding;
+		final String lastLineEnd = lastIsPadding || original.isTrailingComma() ? "," : null;
+		processBlockLike(original.getElements(), '[', ",", lastLineEnd, ']');
 		return DONE;
 	}
 
@@ -655,9 +697,23 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 
 	@Override
 	public Boolean casePropertyNameValuePair(PropertyNameValuePair original) {
-		processPropertyName(original);
-		write(": ");
+		if (original.getDeclaredName() != null) {
+			processPropertyName(original);
+			write(": ");
+		} else {
+			// FIXME PNVP without name only legal in destructuring pattern!!
+		}
 		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
+	public Boolean casePropertyNameValuePairSingleName(PropertyNameValuePairSingleName original) {
+		process(original.getIdentifierRef());
+		if (original.getExpression() != null) {
+			write(" = ");
+			process(original.getExpression());
+		}
 		return DONE;
 	}
 
@@ -829,6 +885,52 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 	}
 
 	@Override
+	public Boolean caseTemplateLiteral(TemplateLiteral original) {
+		final int indentLevelOLD = out.getIndentLevel();
+		try {
+			out.setIndentLevel(0);
+			for (Expression segment : original.getSegments()) {
+				process(segment);
+			}
+		} finally {
+			out.setIndentLevel(indentLevelOLD);
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseTemplateSegment(TemplateSegment original) {
+		if (out.getIndentLevel() != 0) {
+			// note: if the segment contains new line characters, the indent level must be 0 because otherwise 'out'
+			// would add incorrect indentation inside the template segment; we could reset it to 0 here, but since
+			// TemplateSegments may only appear as children of TemplateLiterals and #caseTemplateLiteral() is also
+			// resetting the indent level, we can here simply rely on our parent having already done this.
+			throw new IllegalStateException("parent TemplateLiteral did not reset the indent level to 0");
+		}
+		final TemplateLiteral parent = (TemplateLiteral) original.eContainer();
+		final List<Expression> segments = parent.getSegments();
+		final int len = segments.size();
+		final Expression first = segments.get(0);
+		final Expression last = segments.get(len - 1);
+		if (original == first) {
+			write("`");
+		} else {
+			write("}");
+		}
+		if (original.getRawValue() != null) {
+			write(original.getRawValue());
+		} else {
+			write(quote(original.getValueAsString()));
+		}
+		if (original == last) {
+			write("`");
+		} else {
+			write("${");
+		}
+		return DONE;
+	}
+
+	@Override
 	public Boolean caseRegularExpressionLiteral(RegularExpressionLiteral original) {
 		write(original.getValueAsString());
 		return DONE;
@@ -922,6 +1024,63 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils;
 	@Override
 	public Boolean caseCommaExpression(CommaExpression original) {
 		process(original.getExprs(), ", ");
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseAwaitExpression(AwaitExpression original) {
+		write("await ");
+		process(original.getExpression());
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseObjectBindingPattern(ObjectBindingPattern original) {
+		processBlockLike(original.getProperties(), '{', ",", null, '}');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseArrayBindingPattern(ArrayBindingPattern original) {
+		final List<BindingElement> elements = original.getElements();
+		final BindingElement last = !elements.isEmpty() ? elements.get(elements.size() - 1) : null;
+		final boolean lastIsElision = last != null && last.isElision();
+		final String lastLineEnd = lastIsElision ? "," : null;
+		processBlockLike(original.getElements(), '[', ",", lastLineEnd, ']');
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseBindingProperty(BindingProperty original) {
+		if (original.getDeclaredName() == null) {
+			// single-name binding
+			process(original.getValue().getVarDecl());
+		} else {
+			write(original.getName());
+			write(": ");
+			process(original.getValue());
+		}
+		return DONE;
+	}
+
+	@Override
+	public Boolean caseBindingElement(BindingElement original) {
+		if (original.isRest()) {
+			write("... ");
+		}
+		if (original.getNestedPattern() != null) {
+			process(original.getNestedPattern());
+			if (original.getExpression() != null) {
+				write(" = ");
+				process(original.getExpression());
+			}
+		} else if (original.getVarDecl() != null) {
+			process(original.getVarDecl());
+		} else {
+			// elision:
+			// nothing to emit here (separators are taken care of in #caseArrayBindingPattern())
+			// (similar as with ArrayPadding elements)
+		}
 		return DONE;
 	}
 

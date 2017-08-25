@@ -97,8 +97,9 @@ public class HyperlinkXpectMethod {
 
 	private String getTargetDescription(XtextResource resource, IHyperlink hyperlink) {
 		final StringBuffer sb = new StringBuffer();
-		// append hyperlink text
-		final String hyperlinkText = hyperlink.getHyperlinkText();
+		// append hyperlink text. Only consider the element name and ignore the qualified part.
+		String hyperlinkText = hyperlink.getHyperlinkText();
+		hyperlinkText = hyperlinkText.substring(hyperlinkText.lastIndexOf('.') + 1);
 		if (hyperlinkText != null)
 			sb.append(hyperlinkText);
 		else

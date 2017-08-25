@@ -12,8 +12,10 @@ package org.eclipse.n4js.transpiler;
 
 import java.util.HashMap;
 
+import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.transpiler.TransformationDependency.Optional;
 import org.eclipse.n4js.transpiler.im.Script_IM;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
@@ -24,6 +26,7 @@ import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
+
 import it.xsemantics.runtime.RuleEnvironment;
 
 /**
@@ -37,6 +40,12 @@ public class TranspilerState {
 	 * The original resource to transpile. Should <b>never</b> be modified in any way from within the transpiler.
 	 */
 	public final N4JSResource resource;
+
+	/**
+	 * The {@link GeneratorOption}s that were specified for configuration purposes when transpilation was initiated.
+	 * Mainly used to control activation of {@link Optional optional transformations}.
+	 */
+	public final GeneratorOption[] options;
 
 	/**
 	 * An empty rule environment for the {@link #resource original resource to compile}. Client-code should not change
@@ -77,10 +86,10 @@ public class TranspilerState {
 	/**
 	 * Creates a new transpiler state.
 	 */
-	public TranspilerState(N4JSResource resource, MemberCollector memberCollector, Script_IM im, STECache steCache,
-			Tracer tracer,
-			InformationRegistry info) {
+	public TranspilerState(N4JSResource resource, GeneratorOption[] options, MemberCollector memberCollector,
+			Script_IM im, STECache steCache, Tracer tracer, InformationRegistry info) {
 		this.resource = resource;
+		this.options = options;
 		this.G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
 		this.memberCollector = memberCollector;
 		this.im = im;
@@ -106,7 +115,7 @@ public class TranspilerState {
 	/** The internal cache of STEs managed by {@link SymbolTableManagement} */
 	public static class STECache {
 
-		/** Map identifeable to original STE */
+		/** Map identifiable element to original STE */
 		public final HashMap<IdentifiableElement, SymbolTableEntryOriginal> mapOriginal = new HashMap<>();
 
 		/** Map name to internal STE */
