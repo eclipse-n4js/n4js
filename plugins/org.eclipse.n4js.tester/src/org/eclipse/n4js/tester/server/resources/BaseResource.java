@@ -46,8 +46,8 @@ public abstract class BaseResource {
 	 *            the HTTP servlet request.
 	 * @param resp
 	 *            the HTTP servlet response.
-	 * @param escapedPathInfo
-	 *            the escaped path info of the requested resource
+	 * @param pathInfo
+	 *            the path info of the requested resource
 	 * @throws IOException
 	 *             if processing the HTTP request fails.
 	 * @throws ServletException
