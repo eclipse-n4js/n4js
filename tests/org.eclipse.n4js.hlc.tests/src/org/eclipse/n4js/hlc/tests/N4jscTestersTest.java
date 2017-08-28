@@ -43,6 +43,8 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 			"[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
 			",{\"origin\":\"DemoTest\",\"fqn\":\"BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}" +
 			",{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]}" +
+			",{\"origin\":\"DemoTest\",\"fqn\":\"subfolder/SubFolderModule/SubFolderTest\",\"testMethods\":[\"testPass\"]}"
+			+
 			",{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]}" +
 			",{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]}" +
 			",{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]}" +
@@ -199,6 +201,11 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 		assertTrue(content.contains(
 				"<testsuite name=\"FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+
+		assertTrue(content.contains(
+				"\"subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+		assertTrue(content.contains(
+				"<testcase name=\"testPass\" classname=\"subfolder/SubFolderModule/SubFolderTest\""));
 
 		// TODO add proper assertion that test was actually executed properly!!!
 	}

@@ -43,7 +43,7 @@ extended: {"a":5}
 not extensible = true
 not extended: {}
 not extensible = true
-TypeError: Can't add property b, object is not extensible
+TypeError: Cannot add property b, object is not extensible
 not extended: {}
 stderr:
 ==>

@@ -27,16 +27,8 @@ stdout:
 stderr:
 \(SystemJS\) Maximum call stack size exceeded
 	RangeError: Maximum call stack size exceeded
-	    at new B (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/B.js:9:17\)
-	    at new A (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/A.js:10:13\)
-	    at new B (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/B.js:10:13\)
-	    at new A (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/A.js:10:13\)
-	    at new B (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/B.js:10:13\)
-	    at new A (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/A.js:10:13\)
-	    at new B (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/B.js:10:13\)
-	    at new A (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/A.js:10:13\)
-	    at new B (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/B.js:10:13\)
-	    at new A (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/A.js:10:13\)
+	    at new (A|B) (.)+/org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/(A|B).js:(\d)+:(\d)+\)
+(.|\n)*
 	Error loading org.eclipse.n4js.transpiler.es5.tests/circularDependency/req_03/Main
 ==>
 --- */

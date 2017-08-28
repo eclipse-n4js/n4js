@@ -102,7 +102,7 @@ public class InstallCompileRunN4jscExternalMainModuleTest extends BaseN4jscExter
 		};
 		final String actual = runCaptureOut(args);
 		StringBuilder expected = new StringBuilder()
-				.append("\\(node:(\\d)+\\) DeprecationWarning: sys is deprecated\\. Use util instead\\.")
+				.append("\\(node:(\\d)+\\) \\[DEP0025\\] DeprecationWarning: sys is deprecated\\. Use util instead\\.")
 				.append("express imported").append("\n")
 				.append("jade imported").append("\n")
 				.append("lodash imported").append("\n")
