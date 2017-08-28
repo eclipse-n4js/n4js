@@ -566,13 +566,6 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	def Class<? extends IReferenceFilter> bindContentReferenceFilter() {
 		return N4JSXReferencesFilter;
 	}
-	
-	/**
-	 * CanLoadFromDescriptionHelper specific to the interactive editor scenario.
-	 */
-	def Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
-		return EditorAwareCanLoadFromDescriptionHelper;
-	}
 
 	/**
 	 * Bind the {@link IReferenceFinder} that find references solely to types (and
@@ -580,6 +573,13 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 -    */
 	def Class<? extends IReferenceFinder> bindIReferenceFinder() {
 		return LabellingReferenceFinder;
+	}
+
+	/**
+	 * CanLoadFromDescriptionHelper specific to the interactive editor scenario.
+	 */
+	def Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
+		return EditorAwareCanLoadFromDescriptionHelper;
 	}
 
 	/**
