@@ -46,7 +46,7 @@ public class TestCatalogAssemblerResource extends BaseResource {
 	}
 
 	@Override
-	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp)
+	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp, String escapdPathInfo)
 			throws ServletException {
 
 		try {

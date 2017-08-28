@@ -166,6 +166,6 @@ export public class IDEReporter implements ITestReporter {
      * by the IDE. 
      */
     private static escapeGroupName(groupName: string) : string {
-	    	return groupName.replace(/\//g, "$");
+	    	return groupName.replace(/\//g, "%2F");
     }
 }
