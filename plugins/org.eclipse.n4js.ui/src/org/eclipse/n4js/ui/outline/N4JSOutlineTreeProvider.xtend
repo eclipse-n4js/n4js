@@ -186,12 +186,14 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 						tchild.memberAccessModifier == MemberAccessModifier.PUBLIC_INTERNAL
 					node.isConstructor = tchild.isConstructor;
 					// GH-174: Store the text region information in the outline tree node because {@link OutlineWithEditorLinker} uses this piece of information
-					// to link editor with the outline view.
-					val nodeModel = NodeModelUtils.getNode(tchild.astElement);
-					if (nodeModel !== null)
-						node.textRegion = new TextRegion(nodeModel.offset, nodeModel.length);
+					// to link editor with outline view.
+					if (tchild.eResource == tclassifier.eResource) {
+						// Only call astElement iff we are in the same resource because in that case the AST already exists (we do not want to resolve AST proxy).
+						val nodeModel = NodeModelUtils.getNode(tchild.astElement);
+						if (nodeModel !== null)
+							node.textRegion = new TextRegion(nodeModel.offset, nodeModel.length);
+					}
 				}
-
 			}
 		} else {
 			for (child : classifierDefinition.eContents.filterNull) {
