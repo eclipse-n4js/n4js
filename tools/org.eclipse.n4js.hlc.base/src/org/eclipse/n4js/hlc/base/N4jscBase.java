@@ -212,6 +212,10 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--test", /* aliases = "-t", */metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
 	File testThisLocation = null;
 
+	@Option(name = "--testReportRoot", required = false, usage = "when provided, it is expected to be directory in which test report will be written."
+			+ "If test report already exists in that location it is removed overwritten. If not provided, test report generation is skipped.")
+	File testReportRoot;
+
 	@Option(name = "--testWith", aliases = "-tw", metaVar = "testerId", usage = "ID of tester to use, last segment is sufficient, e.g. nodejs_mangelhaft")
 	String tester = "nodejs_mangelhaft";
 
@@ -987,7 +991,7 @@ public class N4jscBase implements IApplication {
 			if (buildtype != BuildType.dontcompile) {
 				flushAndIinsertMarkerInOutputs();
 			}
-			headlessTester.runTests(tester, implementationId, checkLocationToTest());
+			headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
 		}
 
 		if (runThisFile != null) {

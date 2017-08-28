@@ -11,12 +11,14 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Scanner;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
@@ -152,6 +154,51 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		};
 
 		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
+
+		// TODO add proper assertion that test was actually executed properly!!!
+	}
+
+	/**
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
+	 * <p>
+	 * (negative test, it is expected to see error output)
+	 *
+	 */
+	@Test
+	public void testCompile_And_RunTests_And_GenerateTestReport() throws FileNotFoundException {
+		String proot = workspace.getAbsolutePath().toString();
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+		String testReportRoot = pathToDemoTest + "/src-gen";
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
+				"--test", pathToDemoTest,
+				"--testReportRoot", testReportRoot,
+				"-v"
+		};
+
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
+
+		File report = new File(testReportRoot + "/test-report.xml");
+		assertTrue("Test report not found", report.exists());
+
+		@SuppressWarnings("resource")
+		String content = new Scanner(report).useDelimiter("\\Z").next();
+		System.out.println("REPORT::\n" + content);
+		assertTrue(content.contains(
+				"<testsuite name=\"BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
+		assertTrue(content.contains(
+				"<error message=\"AssertionError: Invalid OS detected. (detected os :: fakeOsName not == fakeOsName )\">"));
+
+		assertTrue(content.contains(
+				"<testsuite name=\"BazTest/OsInspectorTest3\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"1\""));
+
+		assertTrue(content.contains(
+				"<testsuite name=\"FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
 
 		// TODO add proper assertion that test was actually executed properly!!!
 	}

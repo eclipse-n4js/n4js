@@ -15,61 +15,67 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TESTER_STOPPED_WI
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.tester.TesterEventBus;
-import org.eclipse.n4js.tester.domain.TestStatus;
+import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.events.SessionEndedEvent;
 import org.eclipse.n4js.tester.events.SessionFailedEvent;
 import org.eclipse.n4js.tester.events.SessionFinishedEvent;
 import org.eclipse.n4js.tester.events.SessionPingedEvent;
 import org.eclipse.n4js.tester.events.SessionStartedEvent;
 import org.eclipse.n4js.tester.events.TestEndedEvent;
+import org.eclipse.n4js.tester.events.TestEndedEventDispatcher;
 import org.eclipse.n4js.tester.events.TestEvent;
+import org.eclipse.n4js.tester.events.TestEventDispatcher;
 import org.eclipse.n4js.tester.events.TestPingedEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
 
 import com.google.common.eventbus.AllowConcurrentEvents;
 import com.google.common.eventbus.Subscribe;
-import com.google.inject.Inject;
 
 /**
  * Listens for the {@link TestEvent}s on the {@link TesterEventBus}. Individual events are logged with the
- * {@link IHeadlessLogger}. Additionally they might be captured in the {@link TestResults} object to allow callers to
- * take additional actions.
+ * {@link IHeadlessLogger}. Additionally {@link TestTree} is updated with the results of the capture events.
  *
  * In general case there can be multiple test sessions running in parallel, in which case the {@link TesterEventBus}
- * will contain {@link TestEvent}s for <b>all</b> of them. Normally listeners use {@link TestEvent#getSessionId()
- * session ID} to filter what they process. This naive implementation assumes that in the headless case there is only
- * one test session running and simply captures all test events.
- *
- * <p>
- * Due to interactions with the independently running subsystems (i.e. {@link TesterEventBus}) this object requires to
- * explicitly manage its internal lifecycle through {@link #startListening()} and {@link #stopListening()} methods. Note
- * that {@link #getCollcetedResults()} returns meaningful results only in between mentioned methods.
+ * will contain {@link TestEvent}s for <b>all</b> of them. This listener is using {@link TestTree#getSessionId() session
+ * ID} to filter events to handle.
  *
  */
 public class LoggingTestListener {
-	private TestResults collectedResults = null;
 
-	@Inject
-	private TesterEventBus testerEventBus;
+	private final TestEventDispatcher<ExitCodeException> dispatchTestEvent = new TestEventDispatcher<>(
+			this::handleSessionStarted,
+			this::handleSessionFinished,
+			this::handleSessionFailed,
+			this::handleSessionPinged,
+			this::handleSessionEnded,
+			this::handleTestPinged,
+			this::handleTestStarted,
+			this::handleTestEndedEvent,
+			this::handleUnmatchedTestEvent);
+	private final TestEndedEventDispatcher<ExitCodeException> dispatchTestEndedEvent = new TestEndedEventDispatcher<>(
+			this::handleTestPassed,
+			this::handleTestSkipped,
+			this::handleTestFailed,
+			this::handleUnmatchedStatus);
 
-	@Inject
-	private IHeadlessLogger logger;
+	private TestTree testTree = null;
 
-	/** Registers this listener to the {@link TesterEventBus}, and starts listening to the {@link TestEvent}s. */
-	public void startListening() {
-		collectedResults = new TestResults();
-		testerEventBus.register(this);
-	}
+	/** Convenience flag, allows caller to easily examine if tests had no errors or failures. */
+	private boolean testsOK = true; // assume positive
+	/** Convenience flag, allows caller to easily examine if test session had no errors. */
+	private boolean sessionOK = true;// assume positive
+	/** Convenience flag, allows caller to easily examine if test session finished. */
+	private boolean sessionFinished = false;// only if
 
-	/** Unregisters this listener to the {@link TesterEventBus}, and stops listening to the {@link TestEvent}s. */
-	public void stopListening() {
-		collectedResults = null;
-		testerEventBus.unregister(this);
-	}
+	private final TesterEventBus testerEventBus;
 
-	/** Returns collected test results. */
-	public TestResults getCollcetedResults() {
-		return this.collectedResults;
+	private final IHeadlessLogger logger;
+
+	/** Creates instance and automatically registers it to the provide {@link TesterEventBus} */
+	public LoggingTestListener(TesterEventBus testerEventBus, IHeadlessLogger logger, TestTree tree) {
+		this.testerEventBus = testerEventBus;
+		this.logger = logger;
+		startListening(tree);
 	}
 
 	/**
@@ -83,100 +89,99 @@ public class LoggingTestListener {
 	@Subscribe
 	@AllowConcurrentEvents
 	public void onTestEvent(TestEvent ev) throws ExitCodeException {
-		handleTestEvent(ev);
+		if (this.testTree.getSessionId().toString().equals(ev.getSessionId()))
+			handleTestEvent(ev);
 	}
 
 	/**
-	 * Update UI according to given {@link TestEvent}.
-	 *
-	 * @throws ExitCodeException
-	 *             in case of unhandled test event
+	 * Convenience method indicating if session indicating if all events for the {@link TestTree#getSessionId()} have
+	 * been received.
 	 */
-	public void handleTestEvent(TestEvent event) throws ExitCodeException {
-		if (event instanceof TestStartedEvent) {
-			logger.debug(event.toString());
-			return;
-		}
-		if (event instanceof TestEndedEvent) {
-			handleTestEndedEvent((TestEndedEvent) event);
-			return;
-		}
-		if (event instanceof TestPingedEvent) {
-			logger.debug(event.toString());
-			return;
-		}
+	public boolean finished() {
+		return sessionFinished;
+	}
 
-		if (event instanceof SessionStartedEvent) {
-			logger.info(event.toString());
-			return;
-		}
-
-		if (event instanceof SessionEndedEvent) {
-			logger.info(event.toString());
-			return;
-		}
-		if (event instanceof SessionFinishedEvent) {
-			logger.info(event.toString());
-			return;
-		}
-		if (event instanceof SessionFailedEvent) {
-			logger.info(event.toString());
-			return;
-		}
-		if (event instanceof SessionPingedEvent) {
-			logger.info(event.toString());
-			return;
-		}
-
-		throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
-				" unhandled event " + event);
+	/** Convenience method indicating there were no tests with errors or failures and no session errors. */
+	public boolean isOK() {
+		return sessionFinished && sessionOK && testsOK;
 	}
 
 	private void handleTestEndedEvent(TestEndedEvent tee) throws ExitCodeException {
-		TestStatus testStatus = tee.getResult().getTestStatus();
-		switch (testStatus) {
-		case PASSED:
-			logger.info(tee.toString() + " => " + testStatus.toString());
-			collectedResults.register(tee);
-			return;
-
-		case SKIPPED:
-			handleSkipped(tee);
-			return;
-		case SKIPPED_NOT_IMPLEMENTED:
-			handleSkipped(tee);
-			return;
-		case SKIPPED_PRECONDITION:
-			handleSkipped(tee);
-			return;
-		case SKIPPED_IGNORE:
-			handleSkipped(tee);
-			return;
-		case SKIPPED_FIXME:
-			handleSkipped(tee);
-			return;
-
-		case FAILED:
-			handleFailed(tee);
-			return;
-		case ERROR:
-			handleFailed(tee);
-			return;
-
-		default:
-			throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
-					"unhandled status " + tee.toString() + " => " + testStatus.toString());
-		}
+		testTree.getTestCase(tee.getTestId()).setResult(tee.getResult());
+		dispatchTestEndedEvent.accept(tee);
 	}
 
-	private void handleSkipped(TestEndedEvent tee) {
-		collectedResults.registerSkipped(tee);
+	private void handleTestEvent(TestEvent event) throws ExitCodeException {
+		dispatchTestEvent.accept(event);
+	}
+
+	private void handleSessionPinged(SessionPingedEvent event) {
+		logger.debug(event.toString());
+	}
+
+	private void handleSessionFailed(SessionFailedEvent event) {
+		logger.error(event.toString());
+		sessionOK = false;
+	}
+
+	private void handleSessionFinished(SessionFinishedEvent event) {
+		logger.info(event.toString());
+		sessionFinished = true;
+		stopListening();
+	}
+
+	private void handleSessionEnded(SessionEndedEvent event) {
+		logger.info(event.toString());
+		sessionOK = true;
+	}
+
+	private void handleSessionStarted(SessionStartedEvent event) {
+		logger.info(event.toString());
+	}
+
+	private void handleUnmatchedTestEvent(TestEvent te) throws ExitCodeException {
+		throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+				"unhandled test event " + te);
+	}
+
+	private void handleTestPinged(TestPingedEvent event) {
+		logger.debug(event.toString());
+	}
+
+	private void handleTestStarted(TestStartedEvent event) {
+		logger.info(event.toString());
+	}
+
+	private void handleTestPassed(TestEndedEvent tee) {
+		logger.info(tee.toString() + " => " + tee.getResult().toString());
+	}
+
+	private void handleTestSkipped(TestEndedEvent tee) {
 		logger.warn(tee.toString() + " => " + tee.getResult().getTestStatus());
 	}
 
-	private void handleFailed(TestEndedEvent tee) {
-		collectedResults.registerFailed(tee);
+	private void handleTestFailed(TestEndedEvent tee) {
+		testsOK = false;
 		logger.error(tee.toString() + " => " + tee.getResult().getTestStatus());
+	}
+
+	private void handleUnmatchedStatus(TestEndedEvent tee) throws ExitCodeException {
+		throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+				"unhandled test ended status " + tee + " => " + tee.getResult().getTestStatus());
+	}
+
+	/** Unregisters this listener to the {@link TesterEventBus}, and stops listening to the {@link TestEvent}s. */
+	private void stopListening() {
+		testerEventBus.unregister(this);
+		this.testTree = null;
+	}
+
+	/**
+	 * Registers this listener to the {@link TesterEventBus}, and starts listening to the {@link TestEvent}s.
+	 */
+	private void startListening(TestTree tree) {
+		testerEventBus.register(this);
+		this.testTree = tree;
 	}
 
 }

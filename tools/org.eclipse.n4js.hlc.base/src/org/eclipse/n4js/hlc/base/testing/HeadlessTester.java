@@ -13,19 +13,24 @@ package org.eclipse.n4js.hlc.base.testing;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TESTER_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.tester.CliTestTreeXMLTransformer;
 import org.eclipse.n4js.tester.TestConfiguration;
+import org.eclipse.n4js.tester.TesterEventBus;
 import org.eclipse.n4js.tester.TesterFacade;
 import org.eclipse.n4js.tester.TesterFrontEnd;
+import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
+import org.eclipse.n4js.utils.io.FileDeleter;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
@@ -35,11 +40,11 @@ import com.google.inject.Inject;
  * Headless tester creates external process that executes tests in the provided location.
  */
 public class HeadlessTester {
-	@Inject
-	private TesterFrontEnd testerFrontEnd;
+	/** Name of the generated report file. */
+	private static final String TEST_REPORT_NAME = "test-report.xml";
 
 	@Inject
-	LoggingTestListener testListener;
+	private TesterFrontEnd testerFrontEnd;
 
 	@Inject
 	private TesterFacade testerFacade;
@@ -48,7 +53,13 @@ public class HeadlessTester {
 	private TesterRegistry testerRegistry;
 
 	@Inject
+	private TesterEventBus testerEventBus;
+
+	@Inject
 	private IHeadlessLogger logger;
+
+	@Inject
+	private CliTestTreeXMLTransformer testTreeXmlTransformer;
 
 	/**
 	 * Actually start the requested tester to test provided location. Workspace from headlesCompiler should be
@@ -63,7 +74,7 @@ public class HeadlessTester {
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
-	public void runTests(String tester, String implementationId, URI locationToTest)
+	public void runTests(String tester, String implementationId, URI locationToTest, File testReportRoot)
 			throws ExitCodeException {
 
 		ITesterDescriptor testerDescriptor = checkTester(tester);
@@ -80,7 +91,9 @@ public class HeadlessTester {
 		}
 
 		try {
-			testListener.startListening();
+			TestTree testTree = testConfiguration.getTestTree();
+
+			LoggingTestListener testListener = new LoggingTestListener(testerEventBus, logger, testTree);
 			Process process = testerFrontEnd.test(testConfiguration);
 
 			int exit = process.waitFor();
@@ -92,13 +105,43 @@ public class HeadlessTester {
 						+ "' exited with code=" + exit + "\n";
 			}
 
-			TestResults results = testListener.getCollcetedResults();
+			if (testReportRoot != null) {
+				if (testReportRoot.isDirectory() && testReportRoot.canWrite()) {
+					File report = new File(testReportRoot, TEST_REPORT_NAME);
+					if (report.exists()) {
+						try {
+							FileDeleter.delete(report);
+						} catch (IOException e) {
+							throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+									"Test report location cannot be cleared at: "
+											+ report.getAbsolutePath() + ".",
+									e);
+						}
+					}
+					if (testListener.finished()) {
+						TestReport testReport = new TestReport((StringBuilder) testTreeXmlTransformer.apply(testTree));
+						try {
+							testReport.dump(report);
+						} catch (IOException e) {
+							throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+									"Test report location cannot be generated at: "
+											+ report.getAbsolutePath() + ".",
+									e);
+						}
+						System.out.println("_____________");
+					} else {
+						// thread.sleep to wait for the test event busy?
+						errors += "test session still in progress.\n";
+					}
+				} else {
+					// thread.sleep to wait for the test event busy?
+					errors += "cannot write test report to " + testReportRoot + "\n";
+				}
 
-			if (!results.getFailed().isEmpty()) {
-				StringJoiner sj = new StringJoiner("\n");
-				sj.add("There were test issues.");
-				results.getFailed().forEach(te -> sj.add(te.getTestId() + " " + te.getResult().getTestStatus()));
-				errors += sj.toString();
+			}
+
+			if (!testListener.isOK()) {
+				errors += "There were test errors, see console logs and/or test report for details.\n";
 			}
 
 			if (!errors.isEmpty()) {
@@ -111,7 +154,6 @@ public class HeadlessTester {
 			throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
 					"The spawned tester exited by throwing an exception", e1);
 		} finally {
-			testListener.stopListening();
 			testerFacade.shutdownFramework();
 		}
 	}
