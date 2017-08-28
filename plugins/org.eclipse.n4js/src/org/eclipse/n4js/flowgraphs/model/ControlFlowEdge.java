@@ -54,4 +54,16 @@ public class ControlFlowEdge extends AbstractEdge {
 		}
 	}
 
+	/**
+	 * @return true iff {@link #cfType} is {@literal ControlFlowType.Repeat}
+	 */
+	public boolean isRepeat() {
+		switch (cfType) {
+		case Repeat:
+			return true;
+		default:
+			return false;
+		}
+	}
+
 }

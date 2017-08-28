@@ -69,14 +69,11 @@ class ForFactory {
 		nodes.add(getObjectKeysNode);
 		nodes.add(getIteratorNode);
 		nodes.add(hasNextNode);
-		nodes.add(nextNode);
-		nodes.add(bodyNode);
+		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
-		cNode.connectInternalSucc(nextNode, exitNode);
-
-		if (bodyNode != null) {
-			cNode.connectInternalSuccLC(bodyNode, nextNode);
-		}
+		cNode.connectInternalSucc(ControlFlowType.Repeat, hasNextNode, nextNode);
+		cNode.connectInternalSucc(nextNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.Loop, bodyNode, hasNextNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
@@ -137,21 +134,20 @@ class ForFactory {
 		nodes.add(entryNode);
 		nodes.addAll(initNodes);
 		nodes.add(conditionNode);
-		nodes.add(bodyNode);
-		nodes.add(loopCatchNode);
-		nodes.add(updatesNode);
+		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 
-		if (conditionNode != null)
-			cNode.connectInternalSucc(conditionNode, exitNode);
+		if (conditionNode != null) {
+			cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode);
 
-		LinkedList<Node> loopCycle = ListUtils.filterNulls(conditionNode, bodyNode, loopCatchNode, updatesNode);
-		if (!loopCycle.isEmpty()) {
+		} else {
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
+
+			LinkedList<Node> loopCycle = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();
 			Node loopTgt = loopCycle.getFirst();
-			if (loopSrc != null && loopTgt != null) {
-				cNode.connectInternalSuccLC(loopSrc, loopTgt);
-			}
+			cNode.connectInternalSucc(ControlFlowType.Repeat, loopSrc, loopTgt);
 		}
 
 		cNode.setEntryNode(entryNode);

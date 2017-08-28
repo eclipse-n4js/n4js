@@ -17,6 +17,7 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
 
@@ -47,18 +48,26 @@ public class ASTUtils {
 			if (isCFContainer(curCFE)) {
 				return curCFE;
 			}
-			EObject eObj = curCFE.eContainer();
-			if (!(eObj instanceof ControlFlowElement)) {
-				return null;
-			}
+
+			EObject eObj = curCFE;
+			do {
+				eObj = eObj.eContainer();
+			} while (eObj != null && !(eObj instanceof ControlFlowElement));
+
 			curCFE = (ControlFlowElement) eObj;
 		}
-		return null;
+		throw new IllegalArgumentException("Could not find Container for: " + cfe.toString());
 	}
 
 	public static boolean isCFContainer(ControlFlowElement cfe) {
+		EObject cfeContainer = cfe.eContainer();
+
+		boolean isBlock = cfe instanceof Block;
+		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
+		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
+
 		boolean isCFContainer = false;
-		isCFContainer |= cfe instanceof Block && cfe.eContainer() instanceof FunctionDeclaration;
+		isCFContainer |= isBlock && (containerIsFunctionDeclaration || containerIsFunctionDefinition);
 		return isCFContainer;
 	}
 }

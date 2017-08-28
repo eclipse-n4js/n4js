@@ -27,8 +27,8 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
  */
+@SuppressWarnings("javadoc")
 public class GraphWalkerGuide {
 	final Collection<GraphWalker> walkers;
 
@@ -51,7 +51,7 @@ public class GraphWalkerGuide {
 	private Set<ControlFlowElement> walkthrough(ComplexNode cn, Direction direction) {
 		for (GraphWalker walker : walkers) {
 			walker.setCurrentDirection(direction);
-			walker.init();
+			walker.callInit();
 		}
 
 		Set<ControlFlowElement> allVisitedCFEs = new HashSet<>();
@@ -62,7 +62,7 @@ public class GraphWalkerGuide {
 		}
 
 		for (GraphWalker walker : walkers) {
-			walker.terminate();
+			walker.callTerminate();
 		}
 		return allVisitedCFEs;
 	}
@@ -85,7 +85,7 @@ public class GraphWalkerGuide {
 				allVisitedCFEs.add(lastVisitCFE);
 			}
 
-			nextDEdges = getNextDecoratedEdges(edgeProvider, currDEdge, nextNode);
+			nextDEdges = getNextDecoratedEdges(currDEdge, nextNode);
 			currDEdges.addAll(nextDEdges);
 		}
 
@@ -116,6 +116,18 @@ public class GraphWalkerGuide {
 			Set<ControlFlowType> edgeTypesFromLastVisitCFE,
 			DecoratedEdge currDEdge, ControlFlowElement visitCFE) {
 
+		for (GraphWalker walker : walkers) {
+			switch (callVisit) {
+			case OnNode:
+				walker.callVisit(visitCFE);
+				break;
+			case OnEdge:
+				walker.callVisit(lastVisitCFE, visitCFE, edgeTypesFromLastVisitCFE);
+				break;
+			}
+			List<ActivePath> activatedPaths = walker.activate();
+			currDEdge.activePaths.addAll(activatedPaths);
+		}
 		for (Iterator<ActivePath> actPathIt = currDEdge.activePaths.iterator(); actPathIt.hasNext();) {
 			ActivePath activePath = actPathIt.next();
 			switch (callVisit) {
@@ -130,36 +142,27 @@ public class GraphWalkerGuide {
 				actPathIt.remove();
 			}
 		}
-		for (GraphWalker walker : walkers) {
-			switch (callVisit) {
-			case OnNode:
-				walker.callVisit(visitCFE);
-				break;
-			case OnEdge:
-				walker.callVisit(lastVisitCFE, visitCFE, edgeTypesFromLastVisitCFE);
-				break;
-			}
-			List<ActivePath> activatedPaths = walker.activate();
-			currDEdge.activePaths.addAll(activatedPaths);
-		}
 	}
 
 	private List<DecoratedEdge> getFirstDecoratedEdges(ComplexNode cn, NextEdgesProvider edgeProvider) {
+		Set<ActivePath> activatedPaths = new HashSet<>();
+		for (GraphWalker walker : walkers) {
+			activatedPaths.addAll(walker.activate());
+		}
+
 		List<DecoratedEdge> nextDEdges = new LinkedList<>();
 		Node node = edgeProvider.getStartNode(cn);
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(node);
 		for (ControlFlowEdge nextEdge : nextEdges) {
-			DecoratedEdge eF = new DecoratedEdge(nextEdge);
+			DecoratedEdge eF = new DecoratedEdge(edgeProvider.copy(), nextEdge, activatedPaths);
 			nextDEdges.add(eF);
 		}
 		return nextDEdges;
 	}
 
-	private List<DecoratedEdge> getNextDecoratedEdges(NextEdgesProvider edgeProvider, DecoratedEdge currDEdge,
-			Node nextNode) {
-
+	private List<DecoratedEdge> getNextDecoratedEdges(DecoratedEdge currDEdge, Node nextNode) {
 		List<DecoratedEdge> nextDEdges = new LinkedList<>();
-		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(nextNode);
+		List<ControlFlowEdge> nextEdges = currDEdge.getNextEdges(nextNode);
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
 		if (nextEdgeIt.hasNext()) {
@@ -168,14 +171,15 @@ public class GraphWalkerGuide {
 			nextDEdges.add(currDEdge);
 		}
 
-		for (ControlFlowEdge nextEdge = nextEdgeIt.next(); nextEdgeIt.hasNext(); nextEdge = nextEdgeIt.next()) {
+		while (nextEdgeIt.hasNext()) {
+			ControlFlowEdge nextEdge = nextEdgeIt.next();
 			Set<ActivePath> forkedPaths = new HashSet<>();
 			for (ActivePath aPath : currDEdge.activePaths) {
 				ActivePath forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 
-			DecoratedEdge dEdge = new DecoratedEdge(nextEdge, forkedPaths);
+			DecoratedEdge dEdge = new DecoratedEdge(currDEdge.edgeProvider.copy(), nextEdge, forkedPaths);
 			nextDEdges.add(dEdge);
 		}
 
@@ -206,16 +210,22 @@ public class GraphWalkerGuide {
 	}
 
 	private class DecoratedEdge {
+		final NextEdgesProvider edgeProvider;
 		ControlFlowEdge edge;
 		final Set<ActivePath> activePaths = new HashSet<>();
 
-		public DecoratedEdge(ControlFlowEdge edge) {
+		public DecoratedEdge(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
+			this.edgeProvider = edgeProvider;
 			this.edge = edge;
 		}
 
-		public DecoratedEdge(ControlFlowEdge edge, Set<ActivePath> activePaths) {
-			this(edge);
-			activePaths.addAll(activePaths);
+		public DecoratedEdge(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<ActivePath> activePaths) {
+			this(edgeProvider, edge);
+			this.activePaths.addAll(activePaths);
+		}
+
+		List<ControlFlowEdge> getNextEdges(Node nextNode) {
+			return edgeProvider.getNextEdges(nextNode);
 		}
 
 	}

@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
+import org.eclipse.n4js.xpect.methods.AllPathsXpectMethod;
 import org.eclipse.n4js.xpect.methods.ElementKeywordXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
@@ -36,6 +37,7 @@ import org.xpect.xtext.lib.tests.ValidationTest;
  */
 @XpectSuiteClasses({
 		SuccsXpectMethod.class,
+		AllPathsXpectMethod.class,
 		AccessModifierXpectMethod.class,
 		LinkingTest.class,
 		ReturnXpectMethod.class,

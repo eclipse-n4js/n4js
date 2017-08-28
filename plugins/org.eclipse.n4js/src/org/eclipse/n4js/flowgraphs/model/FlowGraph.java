@@ -19,8 +19,8 @@ import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.Path;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerGuide;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerGuideInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.PathFactory;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -55,10 +55,13 @@ public class FlowGraph {
 		}
 	}
 
-	public void analyze(Collection<GraphWalker> graphWalkers) {
-		GraphWalkerGuide guide = new GraphWalkerGuide(graphWalkers);
-		Set<ControlFlowElement> allCFEs = new HashSet<>(cnMap.keySet());
-		Set<ControlFlowElement> visitedCFEs;
+	public void analyze(Collection<GraphWalkerInternal> graphWalkers) {
+		GraphWalkerGuideInternal guide = new GraphWalkerGuideInternal(graphWalkers);
+		Set<Node> allCFEs = new HashSet<>();
+		for (ComplexNode cn : cnMap.values())
+			allCFEs.addAll(cn.getNodes());
+
+		Set<Node> visitedCFEs;
 		for (ControlFlowElement container : cfContainers) {
 			ComplexNode cnContainer = cnMap.get(container);
 			visitedCFEs = guide.walkthroughForward(cnContainer);
@@ -68,11 +71,14 @@ public class FlowGraph {
 		}
 
 		while (!allCFEs.isEmpty()) {
-			ControlFlowElement unvisitedCFE = allCFEs.iterator().next();
+			Node unvisitedCFE = allCFEs.iterator().next();
 			ComplexNode cnUnvisited = cnMap.get(unvisitedCFE);
-
-			visitedCFEs = guide.walkthroughIsland(cnUnvisited);
-			allCFEs.removeAll(visitedCFEs);
+			if (cnUnvisited.isControlElement()) {
+				allCFEs.remove(unvisitedCFE);
+			} else {
+				visitedCFEs = guide.walkthroughIsland(cnUnvisited);
+				allCFEs.removeAll(visitedCFEs);
+			}
 		}
 	}
 

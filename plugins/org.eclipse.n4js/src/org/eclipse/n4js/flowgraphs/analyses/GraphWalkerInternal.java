@@ -17,20 +17,20 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker.ActivatedPathPredicate.ActivePath;
-import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
+import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
  *
  */
 @SuppressWarnings("javadoc")
-abstract public class GraphWalker {
+abstract public class GraphWalkerInternal {
 	protected final N4JSFlowAnalyses flowAnalyses = null;
-	private final List<ActivatedPathPredicate> activationRequests = new LinkedList<>();
-	private final List<ActivatedPathPredicate> activatedPredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicate> activePredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicate> failedPredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicate> passedPredicates = new LinkedList<>();
+	private final List<ActivatedPathPredicateInternal> activationRequests = new LinkedList<>();
+	private final List<ActivatedPathPredicateInternal> activatedPredicates = new LinkedList<>();
+	private final List<ActivatedPathPredicateInternal> activePredicates = new LinkedList<>();
+	private final List<ActivatedPathPredicateInternal> failedPredicates = new LinkedList<>();
+	private final List<ActivatedPathPredicateInternal> passedPredicates = new LinkedList<>();
 	protected final Direction[] directions;
 	private Direction curDirection;
 	private boolean activeDirection = false;
@@ -40,7 +40,7 @@ abstract public class GraphWalker {
 	}
 
 	/** Default direction is {@literal Direction.Forward} */
-	protected GraphWalker(Direction... directions) {
+	protected GraphWalkerInternal(Direction... directions) {
 		if (directions.length == 0) {
 			directions = new Direction[] { Direction.Forward };
 		}
@@ -49,9 +49,9 @@ abstract public class GraphWalker {
 
 	abstract protected void init();
 
-	abstract protected void visit(ControlFlowElement cfe);
+	abstract protected void visit(Node node);
 
-	abstract protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes);
+	abstract protected void visit(Node start, Node end, ControlFlowType cfType);
 
 	abstract protected void terminate();
 
@@ -67,15 +67,15 @@ abstract public class GraphWalker {
 		}
 	}
 
-	final void callVisit(ControlFlowElement cfe) {
+	final void callVisit(Node cfe) {
 		if (activeDirection) {
 			visit(cfe);
 		}
 	}
 
-	final void callVisit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+	final void callVisit(Node start, Node end, ControlFlowType cfType) {
 		if (activeDirection) {
-			visit(start, end, cfTypes);
+			visit(start, end, cfType);
 		}
 	}
 
@@ -94,11 +94,11 @@ abstract public class GraphWalker {
 		return getActivatedPredicates().size();
 	}
 
-	final protected List<ActivatedPathPredicate> getActivatedPredicates() {
+	final protected List<ActivatedPathPredicateInternal> getActivatedPredicates() {
 		return activatedPredicates;
 	}
 
-	final protected List<ActivatedPathPredicate> getActivePredicates() {
+	final protected List<ActivatedPathPredicateInternal> getActivePredicates() {
 		return activePredicates;
 	}
 
@@ -118,14 +118,14 @@ abstract public class GraphWalker {
 		return failedPredicates;
 	}
 
-	final protected void requestActivation(ActivatedPathPredicate app) {
+	final protected void requestActivation(ActivatedPathPredicateInternal app) {
 		activationRequests.add(app);
 	}
 
-	final List<ActivePath> activate() {
-		List<ActivePath> activatedPaths = new LinkedList<>();
-		for (ActivatedPathPredicate app : activationRequests) {
-			ActivePath activePath = app.first();
+	final List<ActivePathInternal> activate() {
+		List<ActivePathInternal> activatedPaths = new LinkedList<>();
+		for (ActivatedPathPredicateInternal app : activationRequests) {
+			ActivePathInternal activePath = app.first();
 			app.activePaths.add(activePath);
 			app.allPaths.add(activePath);
 			activePath.init();
@@ -141,22 +141,22 @@ abstract public class GraphWalker {
 		ForAllPaths, ForOnePath
 	}
 
-	abstract public class ActivatedPathPredicate {
-		private final Set<ActivePath> activePaths = new HashSet<>();
-		private final List<ActivePath> passedPaths = new LinkedList<>();
-		private final List<ActivePath> failedPaths = new LinkedList<>();
-		private final List<ActivePath> allPaths = new LinkedList<>();
+	abstract public class ActivatedPathPredicateInternal {
+		private final Set<ActivePathInternal> activePaths = new HashSet<>();
+		private final List<ActivePathInternal> passedPaths = new LinkedList<>();
+		private final List<ActivePathInternal> failedPaths = new LinkedList<>();
+		private final List<ActivePathInternal> allPaths = new LinkedList<>();
 		protected final PredicateType predicateType;
 
-		protected ActivatedPathPredicate(PredicateType predicateType) {
+		protected ActivatedPathPredicateInternal(PredicateType predicateType) {
 			this.predicateType = predicateType;
 		}
 
-		abstract protected ActivePath first();
+		abstract protected ActivePathInternal first();
 
 		final protected void deactivateAll() {
 			while (!activePaths.isEmpty()) {
-				ActivePath aPath = activePaths.iterator().next();
+				ActivePathInternal aPath = activePaths.iterator().next();
 				aPath.deactivate();
 			}
 			checkPredicateDeactivation();
@@ -179,39 +179,36 @@ abstract public class GraphWalker {
 			}
 		}
 
-		final protected List<ActivePath> getAllPaths() {
+		final protected List<ActivePathInternal> getAllPaths() {
 			return allPaths;
 		}
 
-		abstract public class ActivePath {
+		abstract public class ActivePathInternal {
 
 			abstract protected void init();
 
-			abstract protected void visit(ControlFlowElement cfe);
+			abstract protected void visit(Node cfe);
 
-			abstract protected void visit(ControlFlowElement start, ControlFlowElement end,
-					Set<ControlFlowType> cfTypes);
+			abstract protected void visit(Node start, Node end, ControlFlowType cfType);
 
-			abstract protected ActivePath fork();
+			abstract protected ActivePathInternal fork();
 
 			abstract protected void terminate();
 
-			final protected void callVisit(ControlFlowElement cfe) {
+			final protected void callVisit(Node cfe) {
 				if (activeDirection) {
 					visit(cfe);
 				}
 			}
 
-			final protected void callVisit(ControlFlowElement start, ControlFlowElement end,
-					Set<ControlFlowType> cfTypes) {
-
+			final protected void callVisit(Node start, Node end, ControlFlowType cfType) {
 				if (activeDirection) {
-					visit(start, end, cfTypes);
+					visit(start, end, cfType);
 				}
 			}
 
-			final ActivePath callFork() {
-				ActivePath forkedPath = fork();
+			final ActivePathInternal callFork() {
+				ActivePathInternal forkedPath = fork();
 				allPaths.add(forkedPath);
 				activePaths.add(forkedPath);
 				forkedPath.init();

@@ -18,7 +18,7 @@ import java.util.List;
  */
 @SuppressWarnings("javadoc")
 public enum ControlFlowType {
-	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Loop;
+	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Loop, Repeat;
 
 	static public final ControlFlowType[] LoopTypes = { Loop, Continue };
 	static public final ControlFlowType[] NonLoopTypes = { Successor, Break, Throw, Return };

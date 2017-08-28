@@ -10,11 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -27,9 +27,16 @@ import com.google.common.collect.Lists;
  *
  */
 abstract class NextEdgesProvider {
-	private final Set<ControlFlowEdge> loopEdges = new HashSet<>();
+	private final Map<ControlFlowEdge, Integer> repeatEdges = new HashMap<>();
 
 	static class Forward extends NextEdgesProvider {
+		Forward() {
+		}
+
+		Forward(Map<ControlFlowEdge, Integer> repeatEdges) {
+			super.repeatEdges.putAll(repeatEdges);
+		}
+
 		@Override
 		protected Node getStartNode(ComplexNode cn) {
 			return cn.getEntry();
@@ -41,13 +48,25 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
-		protected List<ControlFlowEdge> getNextEdges(Node nextNode) {
+		protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
 			List<ControlFlowEdge> nextEdges = nextNode.getSuccessorEdges();
 			return nextEdges;
+		}
+
+		@Override
+		protected Forward copy() {
+			return new Forward(new HashMap<>(super.repeatEdges));
 		}
 	}
 
 	static class Backward extends NextEdgesProvider {
+		Backward() {
+		}
+
+		Backward(Map<ControlFlowEdge, Integer> repeatEdges) {
+			super.repeatEdges.putAll(repeatEdges);
+		}
+
 		@Override
 		protected Node getStartNode(ComplexNode cn) {
 			return cn.getExit();
@@ -59,24 +78,31 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
-		protected List<ControlFlowEdge> getNextEdges(Node nextNode) {
+		protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
 			List<ControlFlowEdge> nextEdges = nextNode.getPredecessorEdges();
 			return nextEdges;
+		}
+
+		@Override
+		protected Backward copy() {
+			return new Backward(new HashMap<>(super.repeatEdges));
 		}
 	}
 
 	protected void reset() {
-		loopEdges.clear();
+		repeatEdges.clear();
 	}
+
+	abstract protected NextEdgesProvider copy();
 
 	abstract protected Node getStartNode(ComplexNode cn);
 
 	abstract protected Node getNextNode(ControlFlowEdge edge);
 
-	abstract protected List<ControlFlowEdge> getNextEdges(Node nextNode);
+	abstract protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode);
 
 	protected List<ControlFlowEdge> getNextEdges(Node nextNode, ControlFlowType... cfTypes) {
-		List<ControlFlowEdge> nextEdges = getNextEdges(nextNode);
+		List<ControlFlowEdge> nextEdges = getPlainNextEdges(nextNode);
 		filter(nextEdges, cfTypes);
 		return nextEdges;
 	}
@@ -109,14 +135,31 @@ abstract class NextEdgesProvider {
 
 			boolean removeEdge = false;
 			removeEdge |= !edge.cfType.isInOrEmpty(cfTypes);
-			removeEdge |= loopEdges.contains(edge);
+			removeEdge |= getOccurences(edge) >= 2;
 			if (removeEdge) {
 				edgeIt.remove();
 			}
-			if (edge.isLoopCarried()) {
-				loopEdges.add(edge);
+			if (edge.isRepeat()) {
+				incrOccurence(edge);
 			}
 		}
 	}
 
+	private int getOccurences(ControlFlowEdge edge) {
+		if (!repeatEdges.containsKey(edge)) {
+			return 0;
+		} else {
+			Integer count = repeatEdges.get(edge);
+			return count;
+		}
+	}
+
+	private void incrOccurence(ControlFlowEdge edge) {
+		if (!repeatEdges.containsKey(edge)) {
+			repeatEdges.put(edge, 0);
+		}
+		Integer count = repeatEdges.get(edge);
+		count++;
+		repeatEdges.put(edge, count);
+	}
 }

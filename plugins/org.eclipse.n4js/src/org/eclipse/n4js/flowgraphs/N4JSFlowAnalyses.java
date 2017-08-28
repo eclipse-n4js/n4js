@@ -19,6 +19,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -26,6 +27,7 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
+import com.google.common.collect.Lists;
 import com.google.inject.Singleton;
 
 /**
@@ -85,19 +87,6 @@ public class N4JSFlowAnalyses {
 
 		ComplexNode cn = cfg.getComplexNode(cfe);
 		List<RepresentingNode> repNodes = cn.getRepresent().getSuccessors(followEdges);
-		List<ControlFlowElement> cfElems = new LinkedList<>();
-		for (RepresentingNode rNode : repNodes) {
-			cfElems.add(rNode.getRepresentedControlFlowElement());
-		}
-		return cfElems;
-	}
-
-	/** @returns a list of all direct successors of cfe */
-	public MultiPath getSuccessors2(ControlFlowElement cfe) {
-		Objects.requireNonNull(cfe);
-
-		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<RepresentingNode> repNodes = cn.getRepresent().getSuccessors();
 		List<ControlFlowElement> cfElems = new LinkedList<>();
 		for (RepresentingNode rNode : repNodes) {
 			cfElems.add(rNode.getRepresentedControlFlowElement());
@@ -269,6 +258,11 @@ public class N4JSFlowAnalyses {
 			}
 		}
 		return allCFEs;
+	}
+
+	public void performAnalyzes(GraphWalkerInternal... graphWalkers) {
+		List<GraphWalkerInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
+		cfg.analyze(graphWalkerList);
 	}
 
 }

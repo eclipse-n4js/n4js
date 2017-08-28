@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class ControlFlowGraphFactory {
 	 * Builds and returns a control flow graph from a given {@link Script}.
 	 */
 	static public FlowGraph build(Script script) {
-		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>();
+		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(new CFEComparator());
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		createComplexNodes(script, cfContainers, cnMap);
@@ -119,6 +120,13 @@ public class ControlFlowGraphFactory {
 					EdgeUtils.addEdgeCF(cnJumpNode, catchNode, jumpToken.cfType);
 				}
 			}
+		}
+	}
+
+	private static final class CFEComparator implements Comparator<ControlFlowElement> {
+		@Override
+		public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+			return cfe1.hashCode() - cfe2.hashCode();
 		}
 	}
 
