@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.eclipse.n4js.tester.UrlDecoderService;
 import org.eclipse.n4js.tester.fsm.TestFsmRegistry;
 
 import com.google.inject.Inject;
@@ -39,9 +38,6 @@ public abstract class BaseResource {
 	@Inject
 	private TestFsmRegistry fsmRegistry;
 
-	@Inject
-	private UrlDecoderService urlDecoder;
-
 	/**
 	 * Handles the HTTP method. In case of supported request media type it reads the request body and delegates to
 	 * {@link #doHandle(String, String)} method. sets the response status code and the response body.
@@ -50,16 +46,16 @@ public abstract class BaseResource {
 	 *            the HTTP servlet request.
 	 * @param resp
 	 *            the HTTP servlet response.
+	 * @param pathInfo
+	 *            the path info of the requested resource
 	 * @throws IOException
 	 *             if processing the HTTP request fails.
 	 * @throws ServletException
 	 *             if processing the HTTP request fails.
 	 */
-	public void doHandle(final HttpServletRequest req, final HttpServletResponse resp)
+	public void doHandle(final HttpServletRequest req, final HttpServletResponse resp, String pathInfo)
 			throws IOException, ServletException {
-
 		final String body = getRequestBody(req);
-		final String pathInfo = urlDecoder.decode(req.getPathInfo());
 		resp.setStatus(doHandle(body, pathInfo));
 	}
 
@@ -126,10 +122,12 @@ public abstract class BaseResource {
 	 *            the HTTP request.
 	 * @param resp
 	 *            the HTTP servlet.
+	 * @param escapedPathInfo
+	 *            the escaped path info of the requested resource
 	 * @throws ServletException
 	 *             if the request-response post processing fails.
 	 */
-	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp)
+	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp, String escapedPathInfo)
 			throws ServletException {
 		// Does nothing by default.
 	}
