@@ -30,8 +30,27 @@ package class N4JSEnumDeclarationTypesBuilder {
 		val TEnum enumType = target.topLevelTypes.get(idx) as TEnum
 		ensureEqualName(n4Enum, enumType);
 
+		relinkTEnumLiterals(n4Enum, enumType, preLinkingPhase);
+
 		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
+		return true;
+	}
+
+	def private int relinkTEnumLiterals(N4EnumDeclaration n4Enum, TEnum tEnum, boolean preLinkingPhase) {
+		return n4Enum.literals.fold(0) [ idx, n4EnumLit |
+			if (relinkTEnumLiteral(n4EnumLit, tEnum, preLinkingPhase, idx)) {
+				return idx + 1;
+			}
+			return idx;
+		]
+	}
+
+	def private boolean relinkTEnumLiteral(N4EnumLiteral n4EnumLit, TEnum tEnum, boolean preLinkingPhase, int idx) {
+		val tEnumLit = tEnum.literals.get(idx);
+		ensureEqualName(n4EnumLit, tEnumLit);
+		tEnumLit.astElement = n4EnumLit;
+		n4EnumLit.definedLiteral = tEnumLit;
 		return true;
 	}
 
