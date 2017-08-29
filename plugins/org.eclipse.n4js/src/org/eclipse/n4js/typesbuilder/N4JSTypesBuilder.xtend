@@ -98,7 +98,7 @@ public class N4JSTypesBuilder {
 	 * MD5 hash, or the rewiring fails for other reasons, an {@link IllegalStateException} is thrown. In that case, the
 	 * state of the AST and TModule are undefined (i.e. linking may have taken place partially).
 	 */
-	def public void linkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
+	def public void relinkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 		val parseResult = resource.getParseResult();
 		if (parseResult !== null) {
 
@@ -114,7 +114,7 @@ public class N4JSTypesBuilder {
 
 			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
-			script.linkTypes(module,preLinkingPhase);
+			script.relinkTypes(module,preLinkingPhase);
 
 			module.astElement = script;
 			script.module = module;
@@ -242,82 +242,82 @@ public class N4JSTypesBuilder {
 		}
 	}
 
-	def private void linkTypes(Script script, TModule target, boolean preLinkingPhase) {
+	def private void relinkTypes(Script script, TModule target, boolean preLinkingPhase) {
 		var topLevelTypesIdx = 0;
 		var variableIndex = 0;
 		for (n : script.eAllContents.toIterable) {
 			switch n {
 				TypeDefiningElement: {
-					topLevelTypesIdx = n.linkType(target, preLinkingPhase, topLevelTypesIdx);
+					topLevelTypesIdx = n.relinkType(target, preLinkingPhase, topLevelTypesIdx);
 				}
 				ExportedVariableStatement: {
-					variableIndex = n.linkType(target, preLinkingPhase, variableIndex)
+					variableIndex = n.relinkType(target, preLinkingPhase, variableIndex)
 				}
 			}
 		}
 	}
 
-	def protected dispatch int linkType(TypeDefiningElement other, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(TypeDefiningElement other, TModule target, boolean preLinkingPhase, int idx) {
 		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: "+other?.eClass.name);
 	}
 
-	def protected dispatch int linkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase, int idx) {
 		// already handled up-front in #buildNamespacesTypesFromModuleImports()
 		return idx;
 	}
 
-	def protected dispatch int linkType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
-		if (n4Class.linkTClass(target, preLinkingPhase, idx)) {
+	def protected dispatch int relinkType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Class.relinkTClass(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
 		return idx;
 	}
 
-	def protected dispatch int linkType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase, int idx) {
 		n4Class.createTClass(target, preLinkingPhase)
 		// do not increment the index
 		return idx
 	}
 
-	def protected dispatch int linkType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
-		if (n4Interface.linkTInterface(target, preLinkingPhase, idx)) {
+	def protected dispatch int relinkType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Interface.relinkTInterface(target, preLinkingPhase, idx)) {
 			return idx+1;
 		}
 		return idx;
 	}
 
-	def protected dispatch int linkType(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
-		if (n4Enum.linkTEnum(target, preLinkingPhase, idx)) {
+	def protected dispatch int relinkType(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Enum.relinkTEnum(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
 		return idx;
 	}
 
-	def protected dispatch int linkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase, int idx) {
 		objectLiteral.createObjectLiteral(target, preLinkingPhase)
 		return idx;
 	}
 
-	def protected dispatch int linkType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase, int idx) {
 		// methods are handled in their containing class/interface -> ignore them here
 		return idx;
 	}
 
-	def protected dispatch int linkType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase, int idx) {
-		if (n4FunctionDecl.linkTFunction(target, preLinkingPhase, idx)) {
+	def protected dispatch int relinkType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4FunctionDecl.relinkTFunction(target, preLinkingPhase, idx)) {
 			return idx + 1;
 		}
 		return idx;
 	}
 
 	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
-	def protected dispatch int linkType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase, int idx) {
+	def protected dispatch int relinkType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase, int idx) {
 		n4FunctionExpr.createTFunction(target, preLinkingPhase);
 		return idx;
 	}
 
-	def protected dispatch int linkType(ExportedVariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int idx) {
-		return n4VariableStatement.linkVariableTypes(target, preLinkingPhase, idx)
+	def protected dispatch int relinkType(ExportedVariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int idx) {
+		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
 
 	def private void buildTypes(Script script, TModule target, boolean preLinkingPhase) {

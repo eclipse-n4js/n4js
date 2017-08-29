@@ -19,9 +19,10 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 
 package class N4JSEnumDeclarationTypesBuilder {
+
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean linkTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
+	def package boolean relinkTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
 		if (n4Enum.name === null) {
 			return false;
 		}

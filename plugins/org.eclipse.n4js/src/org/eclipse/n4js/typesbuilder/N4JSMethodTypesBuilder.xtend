@@ -34,7 +34,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean linkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
+	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
 		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
@@ -44,7 +44,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		val methodType = classifier.ownedMembers.get(idx) as TMethod;
 		ensureEqualName(methodDecl, methodType);
 
-		methodType.linkFormalParameters(methodDecl, preLinkingPhase)
+		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link
 		methodType.astElement = methodDecl

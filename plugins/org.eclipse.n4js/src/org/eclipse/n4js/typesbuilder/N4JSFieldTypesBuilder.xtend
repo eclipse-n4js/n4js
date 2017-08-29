@@ -23,7 +23,7 @@ package class N4JSFieldTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean linkField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase, int idx) {
 		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
 			return false;
 

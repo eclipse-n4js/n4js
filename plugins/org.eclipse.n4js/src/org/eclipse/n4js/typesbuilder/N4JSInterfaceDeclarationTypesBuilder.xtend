@@ -18,13 +18,13 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 
 package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
 	
-	def package boolean linkTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
+	def package boolean relinkTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
 		if (n4Interface.name === null) { // may be null due to syntax errors
 			return false;
 		}
 
 		val TInterface interfaceType = target.topLevelTypes.get(idx) as TInterface
-		interfaceType.linkClassifierAndMembers(n4Interface, preLinkingPhase);
+		interfaceType.relinkClassifierAndMembers(n4Interface, preLinkingPhase);
 		return true;
 	}
 

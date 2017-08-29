@@ -24,14 +24,14 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
 
-	def protected boolean linkTClass(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
+	def protected boolean relinkTClass(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
 		if (n4Class.name === null) { // may be null due to syntax errors
 			return false;
 		}
 
 		val TClass tclass = target.topLevelTypes.get(idx) as TClass
 
-		tclass.linkClassifierAndMembers(n4Class, preLinkingPhase);
+		tclass.relinkClassifierAndMembers(n4Class, preLinkingPhase);
 		return true;
 	}
 

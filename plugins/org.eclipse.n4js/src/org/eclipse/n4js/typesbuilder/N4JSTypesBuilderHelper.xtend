@@ -192,8 +192,8 @@ package class N4JSTypesBuilderHelper {
 
 
 	/**
-	 * Used during {@link N4JSTypesBuilder#linkTModuleToSource(DerivedStateAwareResource, boolean) linking}, to ensure
-	 * consistency of named elements between newly loaded AST and original TModule.
+	 * Used during {@link N4JSTypesBuilder#relinkTModuleToSource(org.eclipse.xtext.resource.DerivedStateAwareResource,
+	 * boolean) relinking}, to ensure consistency of named elements between newly loaded AST and original TModule.
 	 */
 	def protected void ensureEqualName(NamedElement astNode, IdentifiableElement moduleElement) {
 		val nameInAST = astNode.eResource;

@@ -29,9 +29,9 @@ package class AbstractFunctionDefinitionTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
 
-	def protected void linkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
+	def protected void relinkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
 		functionDef.fpars.fold(0) [ idx, fpar |
-			if (linkFormalParameter(fpar, functionType, preLinkingPhase, idx)) {
+			if (relinkFormalParameter(fpar, functionType, preLinkingPhase, idx)) {
 				return idx + 1;
 			}
 			return idx;

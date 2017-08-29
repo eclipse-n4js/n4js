@@ -31,7 +31,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	@Inject extension N4JSFormalParameterTypesBuilder
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean linkTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase, int idx) {
+	def package boolean relinkTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase, int idx) {
 		if (functionDecl.definedType !== null && ! functionDecl.definedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
 		}
@@ -43,7 +43,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		val TFunction functionType = target.topLevelTypes.get(idx) as TFunction
 		ensureEqualName(functionDecl, functionType);
 
-		functionType.linkFormalParameters(functionDecl, preLinkingPhase)
+		functionType.relinkFormalParameters(functionDecl, preLinkingPhase)
 		functionType.astElement = functionDecl
 		functionDecl.definedType = functionType
 		return true;

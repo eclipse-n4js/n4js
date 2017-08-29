@@ -35,7 +35,7 @@ public class N4JSDerivedStateComputer implements IDerivedStateComputer {
 		} else if (contents.size == 1) {
 			typesBuilder.createTModuleFromSource(resource, preLinkingPhase);
 		} else if (contents.size == 2) {
-			typesBuilder.linkTModuleToSource(resource, preLinkingPhase);
+			typesBuilder.relinkTModuleToSource(resource, preLinkingPhase);
 		} else {
 			throw new IllegalStateException("resource with more than two roots");
 		}

@@ -25,7 +25,7 @@ package class N4JSSetterTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
 
-	def package boolean linkSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
 		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
 			return false
 		}

@@ -27,7 +27,7 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean linkGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
 		if (n4Getter.name === null && !n4Getter.hasComputedPropertyName) {
 			return false
 		}

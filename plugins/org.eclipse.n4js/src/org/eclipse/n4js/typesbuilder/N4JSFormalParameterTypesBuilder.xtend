@@ -22,7 +22,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 package class N4JSFormalParameterTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package boolean linkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, boolean preLinkingPhase, int idx) {
+	def package boolean relinkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, boolean preLinkingPhase, int idx) {
 		val formalParameterType = functionType.fpars.get(idx);
 		ensureEqualName(astFormalParameter, formalParameterType);
 

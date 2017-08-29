@@ -26,16 +26,16 @@ package class N4JSVariableStatementTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package int linkVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int start) {
+	def package int relinkVariableTypes(VariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int start) {
 		return n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).fold(start) [ idx, decl |
-			if (decl.linkVariableType(target, idx)) {
+			if (decl.relinkVariableType(target, idx)) {
 				return idx + 1;
 			}
 			return idx;
 		];
 	}
 
-	def private boolean linkVariableType(ExportedVariableDeclaration n4VariableDeclaration, TModule target, int idx) {
+	def private boolean relinkVariableType(ExportedVariableDeclaration n4VariableDeclaration, TModule target, int idx) {
 		if(n4VariableDeclaration.name === null) {
 			return false
 		}
