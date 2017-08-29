@@ -11,6 +11,7 @@
 package org.eclipse.n4js.smith.graph.graph;
 
 import java.util.Collections;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
@@ -32,9 +33,9 @@ public class CFEdge extends Edge {
 	/**
 	 * Constructor
 	 */
-	public CFEdge(String label, Node startNode, Node endNode, TreeSet<ControlFlowType> cfTypes) {
+	public CFEdge(String label, Node startNode, Node endNode, Set<ControlFlowType> cfTypes) {
 		super(label, false, startNode, Lists.newArrayList(endNode), Collections.emptyList());
-		this.cfTypes = cfTypes;
+		this.cfTypes = new TreeSet<>(cfTypes);
 	}
 
 	/** Paint edge to given GC. */

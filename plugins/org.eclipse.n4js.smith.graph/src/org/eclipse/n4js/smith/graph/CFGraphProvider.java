@@ -11,12 +11,13 @@
 package org.eclipse.n4js.smith.graph;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.TreeSet;
+import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -25,6 +26,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker2;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.graph.graph.CFEdge;
@@ -41,6 +43,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
 	Map<ControlFlowElement, Node> nodeMap = new HashMap<>();
 	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
+	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
 
 	@Override
 	public Collection<ControlFlowElement> getElements(Object input) {
@@ -57,7 +60,11 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	@Override
 	public List<Edge> getConnectedEdges(Node node, List<Node> allNodes) {
 		ControlFlowElement cfe = (ControlFlowElement) node.getElement();
-		return edgesMap.get(cfe);
+		List<Edge> succs = edgesMap.get(cfe);
+		if (succs == null) {
+			return Collections.emptyList();
+		}
+		return succs;
 	}
 
 	/**
@@ -69,29 +76,31 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 	/** Triggers a control flow analyses and initialized the two maps {@link #nodeMap} and {@link #edgesMap}. */
 	private void init(Object input) {
-		nodeMap.clear();
 		performFlowAnalyses(input);
-
-		Collection<ControlFlowElement> allCFEs = flowAnalyses.getAllElements();
-		for (ControlFlowElement cfe : allCFEs) {
-			String label = FGUtils.getTextLabel(cfe);
-			Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
-			nodeMap.put(cfe, node);
-		}
-		edgesMap.clear();
-		for (ControlFlowElement cfe : allCFEs) {
-			List<Edge> edges = new LinkedList<>();
-			Collection<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
-			Node sNode = nodeMap.get(cfe);
-
-			for (ControlFlowElement succ : succs) {
-				Node eNode = nodeMap.get(succ);
-				TreeSet<ControlFlowType> cfTypes = flowAnalyses.getControlFlowTypeToSuccessors(cfe, succ);
-				Edge edge = new CFEdge("CF", sNode, eNode, cfTypes);
-				edges.add(edge);
-			}
-			edgesMap.put(cfe, edges);
-		}
+		flowAnalyses.performAnalyzes(nodesEdgesCollector);
+		// nodeMap.clear();
+		// performFlowAnalyses(input);
+		//
+		// Collection<ControlFlowElement> allCFEs = flowAnalyses.getAllElements();
+		// for (ControlFlowElement cfe : allCFEs) {
+		// String label = FGUtils.getTextLabel(cfe);
+		// Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
+		// nodeMap.put(cfe, node);
+		// }
+		// edgesMap.clear();
+		// for (ControlFlowElement cfe : allCFEs) {
+		// List<Edge> edges = new LinkedList<>();
+		// Collection<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+		// Node sNode = nodeMap.get(cfe);
+		//
+		// for (ControlFlowElement succ : succs) {
+		// Node eNode = nodeMap.get(succ);
+		// TreeSet<ControlFlowType> cfTypes = flowAnalyses.getControlFlowTypeToSuccessors(cfe, succ);
+		// Edge edge = new CFEdge("CF", sNode, eNode, cfTypes);
+		// edges.add(edge);
+		// }
+		// edgesMap.put(cfe, edges);
+		// }
 	}
 
 	/** Finds a script for the given input and then triggers a control flow analyses. */
@@ -119,4 +128,46 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return null;
 	}
 
+	private class NodesEdgesCollector extends GraphWalker2 {
+
+		@Override
+		protected void init2() {
+			nodeMap.clear();
+			edgesMap.clear();
+
+		}
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+		}
+
+		@Override
+		protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+			addNode(start);
+			addNode(end);
+			Node sNode = nodeMap.get(start);
+			Node eNode = nodeMap.get(end);
+			Edge edge = new CFEdge("CF", sNode, eNode, cfTypes);
+
+			if (!edgesMap.containsKey(start)) {
+				edgesMap.put(start, new LinkedList<>());
+			}
+			List<Edge> edges = edgesMap.get(start);
+			edges.add(edge);
+		}
+
+		private void addNode(ControlFlowElement cfe) {
+			if (!nodeMap.containsKey(cfe)) {
+				String label = FGUtils.getTextLabel(cfe);
+				Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
+				nodeMap.put(cfe, node);
+			}
+		}
+
+		@Override
+		protected void terminate() {
+			// nothing to do
+		}
+
+	}
 }

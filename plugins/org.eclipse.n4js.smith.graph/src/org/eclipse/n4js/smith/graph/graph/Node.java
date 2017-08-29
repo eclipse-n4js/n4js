@@ -186,4 +186,10 @@ public class Node implements Paintable {
 
 		gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 	}
+
+	@Override
+	public String toString() {
+		String toString = (title != null) ? title : super.toString();
+		return toString;
+	}
 }
