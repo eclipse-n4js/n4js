@@ -16,12 +16,12 @@ import java.util.LinkedList;
 /**
  * Naive helper to keep build text indentation.
  */
-class IndendLevel {
+class IndentLevel {
 	private final LinkedList<String> indedation = new LinkedList<>();
 	private final String indend;
 	private int index = 0;
 
-	IndendLevel(String indend) {
+	IndentLevel(String indend) {
 		this.indend = indend;
 		indedation.add("");
 	}

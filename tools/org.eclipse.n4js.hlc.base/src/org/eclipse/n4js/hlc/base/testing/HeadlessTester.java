@@ -15,13 +15,12 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TESTER_STOPPED_WI
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
+import org.eclipse.n4js.hlc.base.running.RunnableLookupHelper;
 import org.eclipse.n4js.tester.CliTestTreeXMLTransformer;
 import org.eclipse.n4js.tester.TestConfiguration;
 import org.eclipse.n4js.tester.TesterEventBus;
@@ -60,6 +59,9 @@ public class HeadlessTester {
 
 	@Inject
 	private CliTestTreeXMLTransformer testTreeXmlTransformer;
+
+	@Inject
+	RunnableLookupHelper runnerLookup;
 
 	/**
 	 * Actually start the requested tester to test provided location. Workspace from headlesCompiler should be
@@ -159,7 +161,9 @@ public class HeadlessTester {
 	}
 
 	private ITesterDescriptor checkTester(String tester) throws ExitCodeException {
-		final List<ITesterDescriptor> matchingTesterDescs = findTesterById(tester);
+		final List<ITesterDescriptor> matchingTesterDescs = runnerLookup.<ITesterDescriptor> findRunnableById(
+				tester,
+				testerRegistry.getDescriptors());
 
 		if (matchingTesterDescs.isEmpty()) {
 			throw new ExitCodeException(EXITCODE_TESTER_NOT_FOUND, "no tester found for id: " + tester);
@@ -169,34 +173,6 @@ public class HeadlessTester {
 		}
 
 		return matchingTesterDescs.get(0);
-	}
-
-	private List<ITesterDescriptor> findTesterById(String testerId) {
-		if (testerId == null || testerId.trim().isEmpty())
-			return Collections.emptyList();
-		// 1st attempt: look for exact match
-		final ITesterDescriptor td = testerRegistry.getDescriptors().get(testerId);
-		if (td != null)
-			return Collections.singletonList(td);
-
-		logger.warn("Could not find tester by ID: " + testerId + ", switching to fuzzy search.");
-
-		// 2nd attempt: look for sloppy match (but full segments required!)
-		final int t_len = testerId.length();
-		final List<ITesterDescriptor> matchingTDs = testerRegistry.getDescriptors().values().stream()
-				.map(descriptor -> descriptor.getId())
-				.filter(id -> {
-					final int id_len = id.length();
-					return id_len >= t_len
-							// a) id ends with runnerId (ignore case)
-							&& id.substring(id_len - t_len, id_len).equalsIgnoreCase(testerId)
-					// b) full segment match (either full string or previous char is .)
-							&& (id_len == t_len || id.charAt(id_len - t_len - 1) == '.');
-				})
-				.peek(id -> logger.debug("Candidate tester ID: " + id))
-				.map(id -> testerRegistry.getDescriptor(id))
-				.collect(Collectors.toList());
-		return matchingTDs;
 	}
 
 }

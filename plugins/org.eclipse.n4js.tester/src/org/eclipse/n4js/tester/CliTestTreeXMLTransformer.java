@@ -63,7 +63,7 @@ public class CliTestTreeXMLTransformer implements TestTreeTransformer {
 
 	@Override
 	public Object apply(final TestTree tree, final Map<String, Object> properties) {
-		final IndendLevel indendLevel = new IndendLevel("\t");
+		final IndentLevel indendLevel = new IndentLevel("\t");
 		final StringBuilder sb = new StringBuilder();
 
 		// custom properties, behavior as in mangelhaft junit reporter
@@ -82,7 +82,7 @@ public class CliTestTreeXMLTransformer implements TestTreeTransformer {
 		return sb;
 	}
 
-	private StringBuilder stringifyTestSuite(TestSuite testSuite, IndendLevel indendLevel, String n4TestName,
+	private StringBuilder stringifyTestSuite(TestSuite testSuite, IndentLevel indendLevel, String n4TestName,
 			String n4TestPackage) {
 		StringBuilder sb = new StringBuilder();
 		String name = (n4TestName == null || n4TestName.isEmpty()) ? testSuite.getName() : n4TestName;
@@ -145,7 +145,7 @@ public class CliTestTreeXMLTransformer implements TestTreeTransformer {
 		return sb;
 	}
 
-	private StringBuilder stringifyTestCase(TestCase testCase, IndendLevel indendLevel) {
+	private StringBuilder stringifyTestCase(TestCase testCase, IndentLevel indendLevel) {
 		StringBuilder sb = new StringBuilder();
 		TestResult result = testCase.getResult();
 		TestStatus status = result.getTestStatus();

@@ -13,9 +13,7 @@ package org.eclipse.n4js.hlc.base.running;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_NOT_FOUND;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
@@ -42,6 +40,9 @@ public class HeadlessRunner {
 
 	@Inject
 	private IHeadlessLogger logger;
+
+	@Inject
+	RunnableLookupHelper runnerLookup;
 
 	/**
 	 * Actually start the requested file with the chosen runner. Workspace from headlesCompiler should be configured
@@ -101,7 +102,9 @@ public class HeadlessRunner {
 	 *             in Error cases
 	 */
 	private IRunnerDescriptor checkRunner(String runner) throws ExitCodeException {
-		final List<IRunnerDescriptor> matchingRunnerDescs = findRunnerById(runner);
+		final List<IRunnerDescriptor> matchingRunnerDescs = runnerLookup.<IRunnerDescriptor> findRunnableById(
+				runner,
+				runnerRegistry.getDescriptors());
 
 		if (matchingRunnerDescs.isEmpty()) {
 			throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no runner found for id: " + runner);
@@ -111,34 +114,6 @@ public class HeadlessRunner {
 		}
 
 		return matchingRunnerDescs.get(0);
-	}
-
-	private List<IRunnerDescriptor> findRunnerById(String runnerId) {
-		if (runnerId == null || runnerId.trim().isEmpty())
-			return Collections.emptyList();
-		// 1st attempt: look for exact match
-		final IRunnerDescriptor rd = runnerRegistry.getDescriptors().get(runnerId);
-		if (rd != null)
-			return Collections.singletonList(rd);
-
-		logger.warn("Could not find runner by ID: " + runnerId + ", switching to fuzzy search.");
-
-		// 2nd attempt: look for sloppy match (but full segments required!)
-		final int r_len = runnerId.length();
-		final List<IRunnerDescriptor> matchingRDs = runnerRegistry.getDescriptors().values().stream()
-				.map(descriptor -> descriptor.getId())
-				.filter(id -> {
-					final int id_len = id.length();
-					return id_len >= r_len
-							// a) id ends with runnerId (ignore case)
-							&& id.substring(id_len - r_len, id_len).equalsIgnoreCase(runnerId)
-					// b) full segment match (either full string or previous char is .)
-							&& (id_len == r_len || id.charAt(id_len - r_len - 1) == '.');
-				})
-				.peek(id -> logger.debug("Candidate runner ID: " + id))
-				.map(id -> runnerRegistry.getDescriptor(id))
-				.collect(Collectors.toList());
-		return matchingRDs;
 	}
 
 }
