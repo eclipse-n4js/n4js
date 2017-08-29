@@ -100,56 +100,21 @@ public class HeadlessTester {
 
 			int exit = process.waitFor();
 
-			String errors = "";
-
-			if (exit != 0) {
-				errors += "The spawned tester '" + testerDescriptor.getId()
-						+ "' exited with code=" + exit + "\n";
-			}
-
-			if (testReportRoot != null) {
-				if (testReportRoot.isDirectory() && testReportRoot.canWrite()) {
-					File report = new File(testReportRoot, TEST_REPORT_NAME);
-					if (report.exists()) {
-						try {
-							FileDeleter.delete(report);
-						} catch (IOException e) {
-							throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
-									"Test report location cannot be cleared at: "
-											+ report.getAbsolutePath() + ".",
-									e);
-						}
-					}
-					if (testListener.finished()) {
-						TestReport testReport = new TestReport((StringBuilder) testTreeXmlTransformer.apply(testTree));
-						try {
-							testReport.dump(report);
-						} catch (IOException e) {
-							throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
-									"Test report location cannot be generated at: "
-											+ report.getAbsolutePath() + ".",
-									e);
-						}
-						System.out.println("_____________");
-					} else {
-						// thread.sleep to wait for the test event busy?
-						errors += "test session still in progress.\n";
-					}
-				} else {
-					// thread.sleep to wait for the test event busy?
-					errors += "cannot write test report to " + testReportRoot + "\n";
-				}
-
-			}
-
-			if (!testListener.isOK()) {
-				errors += "There were test errors, see console logs and/or test report for details.\n";
-			}
-
-			if (!errors.isEmpty()) {
+			if (testListener.finished())
 				throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
-						errors);
-			}
+						"Test session has not finished.");
+
+			if (testReportRoot != null)
+				createTestReport(testReportRoot, testTree);
+
+			if (!testListener.isOK())
+				throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+						"There were test errors, see console logs and/or test report for details.");
+
+			if (exit != 0)
+				throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+						"The spawned tester '" + testerDescriptor.getId()
+								+ "' exited with code=" + exit);
 
 		} catch (InterruptedException e1) {
 			logger.error(Throwables.getStackTraceAsString(e1));
@@ -175,4 +140,20 @@ public class HeadlessTester {
 		return matchingTesterDescs.get(0);
 	}
 
+	private void createTestReport(File testReportRoot, TestTree testTree) throws ExitCodeException {
+		if (!(testReportRoot.isDirectory() && testReportRoot.canWrite()))
+			throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+					"cannot write test report to " + testReportRoot.getAbsolutePath() + ".");
+
+		File report = new File(testReportRoot, TEST_REPORT_NAME);
+		try {
+			if (report.exists())
+				FileDeleter.delete(report);
+			TestReport testReport = new TestReport((StringBuilder) testTreeXmlTransformer.apply(testTree));
+			testReport.dump(report);
+		} catch (IOException e) {
+			throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
+					"Cannot generate test report at: " + report.getAbsolutePath() + ".", e);
+		}
+	}
 }
