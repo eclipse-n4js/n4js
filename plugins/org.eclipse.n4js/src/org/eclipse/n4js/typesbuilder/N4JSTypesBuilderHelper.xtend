@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.Collection
 import java.util.List
+import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
@@ -50,6 +51,9 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper
 package class N4JSTypesBuilderHelper {
 
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
+
+	private static Logger logger = Logger.getLogger(N4JSTypesBuilderHelper);
+
 
 	def protected <T extends AnnotableElement & ModifiableElement> void setTypeAccessModifier(
 		AccessibleTypeElement classifier, T definition) {
@@ -200,10 +204,12 @@ package class N4JSTypesBuilderHelper {
 		val nameInModule = moduleElement.name;
 		if (nameInAST !== null) { // note: no check if no name available in AST (don't fiddle with computed property names, etc.)
 			if (!nameInAST.equals(nameInModule)) {
-				throw new IllegalStateException("inconsistency between newly loaded AST and to-be-linked TModule: "
+				val msg = "inconsistency between newly loaded AST and to-be-linked TModule: "
 					+ "nameInAST=" + nameInAST + ", "
 					+ "nameInModule=" + nameInModule + ", "
-					+ "in: " + astNode.eResource?.URI);
+					+ "in: " + astNode.eResource?.URI;
+				logger.error(msg);
+				throw new IllegalStateException(msg);
 			}
 		}
 	}
