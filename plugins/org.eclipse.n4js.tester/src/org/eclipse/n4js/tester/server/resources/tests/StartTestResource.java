@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.tester.server.resources.tests;
 
-import static com.google.common.base.Splitter.on;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.ImmutableMap.builder;
 import static com.google.common.collect.Lists.newArrayList;
@@ -20,7 +19,6 @@ import static java.lang.String.valueOf;
 import static java.text.MessageFormat.format;
 import static java.util.Collections.singletonMap;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static org.eclipse.n4js.tester.server.HttpConstants.SC_UNPROCESSABLE_ENTITY;
 import static org.eclipse.n4js.tester.server.resources.ContentType.START_TEST;
 import static org.eclipse.n4js.tester.server.resources.HttpMethod.POST;
@@ -28,7 +26,6 @@ import static org.eclipse.n4js.tester.server.resources.HttpMethod.POST;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -36,7 +33,6 @@ import java.util.function.Consumer;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.eclipse.n4js.tester.UrlDecoderService;
 import org.eclipse.n4js.tester.events.TestEvent;
 import org.eclipse.n4js.tester.events.TestStartedEvent;
 import org.eclipse.n4js.tester.server.resources.ClientResourceException;
@@ -60,9 +56,6 @@ public class StartTestResource extends TestResource {
 
 	@Inject
 	private ObjectMapper mapper;
-
-	@Inject
-	private UrlDecoderService urlDecoder;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -111,20 +104,15 @@ public class StartTestResource extends TestResource {
 	}
 
 	@Override
-	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp)
+	protected void handleStatusOk(final HttpServletRequest req, final HttpServletResponse resp, String escapedPathInfo)
 			throws ClientResourceException {
 
-		final List<String> pathValues = newArrayList(on("/").omitEmptyStrings().split(
-				urlDecoder.decode(req.getPathInfo())));
-		if (4 != pathValues.size()) { // sessionID, tests, testId, ${operation}
-			throw new ClientResourceException(SC_NOT_FOUND);
-		}
+		TestResourceParameters parameters = getParametersFromPathInfo(escapedPathInfo);
 
-		final String sessionId = pathValues.get(0);
-		final String testId = pathValues.get(2);
-		if (!isNullOrEmpty(sessionId) && !isNullOrEmpty(testId)) {
+		if (null != parameters && !isNullOrEmpty(parameters.sessionId) && !isNullOrEmpty(parameters.testId)) {
 			try {
-				final String body = mapper.writeValueAsString(new StartTestResponse(sessionId, testId).data);
+				final String body = mapper
+						.writeValueAsString(new StartTestResponse(parameters.sessionId, parameters.testId).data);
 				try (final OutputStream os = resp.getOutputStream();
 						final OutputStreamWriter osw = new OutputStreamWriter(os)) {
 					osw.write(body);
