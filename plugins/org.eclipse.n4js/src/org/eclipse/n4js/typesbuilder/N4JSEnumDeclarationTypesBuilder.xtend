@@ -14,6 +14,7 @@ import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4EnumLiteral
 import org.eclipse.n4js.ts.types.TEnum
+import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 
@@ -48,7 +49,7 @@ package class N4JSEnumDeclarationTypesBuilder {
 		target.topLevelTypes += enumType
 	}
 
-	def private createTEnum(N4EnumDeclaration n4Enum) {
+	def private TEnum createTEnum(N4EnumDeclaration n4Enum) {
 		val enumType = TypesFactory::eINSTANCE.createTEnum();
 		enumType.name = n4Enum.name;
 		enumType.exportedName = n4Enum.exportedName;
@@ -56,11 +57,11 @@ package class N4JSEnumDeclarationTypesBuilder {
 		enumType
 	}
 
-	def private addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, boolean preLinkingPhase) {
+	def private void addLiterals(TEnum enumType, N4EnumDeclaration n4Enum, boolean preLinkingPhase) {
 		enumType.literals.addAll(n4Enum.literals.filter(typeof(N4EnumLiteral)).map [createEnumLiteral(preLinkingPhase)]);
 	}
 
-	def private createEnumLiteral(N4EnumLiteral it, boolean preLinkingPhase) {
+	def private TEnumLiteral createEnumLiteral(N4EnumLiteral it, boolean preLinkingPhase) {
 		val enumLiteral = TypesFactory::eINSTANCE.createTEnumLiteral();
 		enumLiteral.name = it.name;
 		enumLiteral.value = it.value;

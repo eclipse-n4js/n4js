@@ -34,7 +34,7 @@ package class N4JSFieldTypesBuilder {
 		return true;
 	}
 
-	def package createField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase) {
+	def package TField createField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase) {
 		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
 			return null;
 
@@ -60,7 +60,7 @@ package class N4JSFieldTypesBuilder {
 		return field;
 	}
 
-	def private setFieldType(TField field, N4FieldDeclaration n4Field, boolean preLinkingPhase) {
+	def private void setFieldType(TField field, N4FieldDeclaration n4Field, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			if(n4Field.declaredTypeRef!==null) {
 				// type of field was declared explicitly
@@ -74,7 +74,7 @@ package class N4JSFieldTypesBuilder {
 		}
 	}
 
-	def private setMemberAccessModifier(TField fieldType, N4FieldDeclaration n4Field) {
+	def private void setMemberAccessModifier(TField fieldType, N4FieldDeclaration n4Field) {
 		setMemberAccessModifier([MemberAccessModifier modifier | fieldType.declaredMemberAccessModifier = modifier],
 			n4Field.declaredModifiers, n4Field.annotations)
 	}

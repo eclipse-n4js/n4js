@@ -85,32 +85,52 @@ public class N4JSTypesBuilder {
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
 
 
+	/**
+	 * When demand-loading an AST for a resource that already has a TModule (usually retrieved from the index) by
+	 * calling SyntaxRelatedTElement#getAstElement(), we are facing a challenge: we could simply replace the original
+	 * TModule by a new TModule created in the same way as in the standard case of loading an empty resource from
+	 * source, i.e. with method {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource, boolean)
+	 * #createTModuleFromSource()}. However, this would lead to the issue of all existing references to the original,
+	 * now replaced TModule to now have an invalid target object (not contained in a resource anymore, proxy resolution
+	 * impossible, etc.).
+	 * <p>
+	 * As a solution, this method provides a 2nd mode of the types builder in which not a new TModule is created from
+	 * the AST, but an existing TModule is reused, i.e. the types builder does not create anything but simply creates
+	 * the bidirectional links between AST nodes and TModule elements.
+	 * <p>
+	 * This method should be called after the AST has been loaded, with the original TModule at second position in the
+	 * resource's contents. If the AST and TModule were created from different versions of the source, checked via an
+	 * MD5 hash, or the rewiring fails for other reasons, an {@link IllegalStateException} is thrown. In that case, the
+	 * state of the AST and TModule are undefined (i.e. linking may have taken place partially).
+	 */
 	def public void linkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 		val parseResult = resource.getParseResult();
 		if (parseResult !== null) {
 
 			val script = parseResult.rootASTElement as Script;
-			
-			// TODO compare hex values
-			val TModule result = resource.contents.get(1) as TModule;
-			result.astMD5 = md5Hex(parseResult.rootNode.text);
-			
-			script.buildNamespacesTypesFromModuleImports(result,preLinkingPhase);
+
+			val TModule module = resource.contents.get(1) as TModule;
+			val astMD5New = md5Hex(parseResult.rootNode.text);
+			if(astMD5New!==module.astMD5) {
+				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
+			}
+
+			script.buildNamespacesTypesFromModuleImports(module,preLinkingPhase);
 
 			// create types for those TypeRefs that define a type if they play the role of an AST node
 			// (has to be done up-front, because in the rest of the types builder code we do not know
 			// where such a TypeRef shows up; to avoid having to check for them at every occurrence of
 			// a TypeRef, we do this here)
-			script.buildTypesFromTypeRefs(result, preLinkingPhase);
+			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
-			script.linkTypes(result,preLinkingPhase);
+			script.linkTypes(module,preLinkingPhase);
 
-			result.astElement = script;
-			script.module = result;
+			module.astElement = script;
+			script.module = module;
 //			UtilN4.takeSnapshotInGraphView("TB end (preLinking=="+preLinkingPhase+")",resource.resourceSet);
 
 		} else {
-			throw new IllegalStateException(resource.URI + " has no parse result.");
+			throw new IllegalStateException("resource has no parse result: " + resource.URI);
 		}
 	}
 
@@ -165,10 +185,6 @@ public class N4JSTypesBuilder {
 			result.staticPolyfillModule = result.isContainedInStaticPolyfillModule;
 			result.staticPolyfillAware = result.isContainedInStaticPolyfillAware;
 
-			// create types for those TypeRefs that define a type if they play the role of an AST node
-			// (has to be done up-front, because in the rest of the types builder code we do not know
-			// where such a TypeRef shows up; to avoid having to check for them at every occurrence of
-			// a TypeRef, we do this here)
 			script.buildTypesFromTypeRefs(result,preLinkingPhase);
 
 			script.buildTypes(result,preLinkingPhase);
@@ -208,6 +224,13 @@ public class N4JSTypesBuilder {
 		}
 	}
 
+	/**
+	 * Create types for those TypeRefs that define a type if they play the role of an AST node.
+	 * <p>
+	 * This has to be done up-front, because in the rest of the types builder code we do not know where such a TypeRef
+	 * shows up; to avoid having to check for them at every occurrence of a TypeRef, we do this ahead of the main types
+	 * builder phase.
+	 */
 	def private void buildTypesFromTypeRefs(Script script, TModule target, boolean preLinkingPhase) {
 		if(!preLinkingPhase) {
 			// important to do the following in bottom-up order!
@@ -228,7 +251,7 @@ public class N4JSTypesBuilder {
 			}
 		}
 	}
-	
+
 	def private void linkTypes(Script script, TModule target, boolean preLinkingPhase) {
 		var topLevelTypesIdx = 0;
 		var variableIndex = 0;
@@ -243,7 +266,7 @@ public class N4JSTypesBuilder {
 			}
 		}
 	}
-	
+
 	def protected dispatch int linkType(TypeDefiningElement other, TModule target, boolean preLinkingPhase, int idx) {
 		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: "+other?.eClass.name);
 	}

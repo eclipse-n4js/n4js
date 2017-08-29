@@ -11,13 +11,13 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.AnnotationDefinition
 
 /**
  */
@@ -66,12 +66,12 @@ package class N4JSSetterTypesBuilder {
 		setterType;
 	}
 
-	def private setMemberAccessModifier(TSetter setterType, N4SetterDeclaration n4Setter) {
+	def private void setMemberAccessModifier(TSetter setterType, N4SetterDeclaration n4Setter) {
 		setMemberAccessModifier([MemberAccessModifier modifier|setterType.declaredMemberAccessModifier = modifier],
 			n4Setter.declaredModifiers, n4Setter.annotations)
 	}
 
-	def private addFormalParameters(TSetter setterType, N4SetterDeclaration n4Setter, BuiltInTypeScope builtInTypeScope,
+	def private void addFormalParameters(TSetter setterType, N4SetterDeclaration n4Setter, BuiltInTypeScope builtInTypeScope,
 		boolean preLinkingPhase) {
 		if (n4Setter.fpar !== null)
 			setterType.fpar = n4Setter.fpar.createFormalParameter(builtInTypeScope, preLinkingPhase);

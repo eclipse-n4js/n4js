@@ -36,7 +36,7 @@ public class N4JSObjectLiteralTypesBuilder {
 	@Inject extension N4JSFormalParameterTypesBuilder
 
 
-	def package createObjectLiteral(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase) {
+	def package void createObjectLiteral(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase) {
 		val builtInTypeScope = BuiltInTypeScope.get(objectLiteral.eResource.resourceSet)
 		val TStructuralType structType = TypesFactory.eINSTANCE.createTStructuralType
 		objectLiteral.propertyAssignments.filter[name!==null || hasComputedPropertyName].forEach [

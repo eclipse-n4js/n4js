@@ -31,9 +31,10 @@ package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclara
 		return true;
 	}
 
-	def package createTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
-		if (n4Interface.name === null)
-			return null
+	def package void createTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
+		if (n4Interface.name === null) {
+			return;
+		}
 
 		val interfaceType = createTInterface(n4Interface);
 		interfaceType.setTypeAccessModifier(n4Interface)
@@ -73,9 +74,8 @@ package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclara
 		interfaceType
 	}
 
-	def private addExtendedInterfaces(TInterface interfaceType, N4InterfaceDeclaration c, boolean preLinkingPhase) {
+	def private void addExtendedInterfaces(TInterface interfaceType, N4InterfaceDeclaration c, boolean preLinkingPhase) {
 		if (!preLinkingPhase)
 			addCopyOfReferences(interfaceType.superInterfaceRefs, c.superInterfaceRefs)
 	}
-	
 }

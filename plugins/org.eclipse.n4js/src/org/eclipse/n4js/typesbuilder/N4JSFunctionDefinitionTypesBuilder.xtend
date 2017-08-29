@@ -123,7 +123,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * Same as {@link AbstractFunctionDefinitionTypesBuilder#addFormalParameters(TFunction,FunctionDefinition,BuiltInTypeScope,boolean)},
 	 * but uses a ComputedTypeRef as the fpar's type if the type has to be inferred.
 	 */
-	def private addFormalParametersWithInferredType(TFunction functionType, FunctionExpression functionExpr,
+	def private void addFormalParametersWithInferredType(TFunction functionType, FunctionExpression functionExpr,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		functionType.fpars.addAll(
 			functionExpr.fpars.map[it.createFormalParameter(
@@ -137,7 +137,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * Same as {@link AbstractFunctionDefinitionTypesBuilder#setReturnType(TFunction,FunctionDefinition,BuiltInTypeScope,boolean)},
 	 * but uses a ComputedTypeRef as the return type if the type has to be inferred.
 	 */
-	def private setReturnTypeWithInferredType(TFunction functionType, FunctionExpression functionExpr,
+	def private void setReturnTypeWithInferredType(TFunction functionType, FunctionExpression functionExpr,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase)
 			/*

@@ -51,7 +51,7 @@ package class N4JSVariableStatementTypesBuilder {
 		target.variables += variables
 	}
 
-	def private createVariables(VariableStatement n4VariableStatement, boolean preLinkingPhase) {
+	def private Iterable<TVariable> createVariables(VariableStatement n4VariableStatement, boolean preLinkingPhase) {
 		n4VariableStatement.varDecl.filter(ExportedVariableDeclaration).map[createVariable(n4VariableStatement, preLinkingPhase)].filterNull
 	}
 
@@ -85,7 +85,7 @@ package class N4JSVariableStatementTypesBuilder {
 		return variable
 	}
 
-	def private setVariableType(TVariable variable, ExportedVariableDeclaration n4VariableDeclaration, boolean preLinkingPhase) {
+	def private void setVariableType(TVariable variable, ExportedVariableDeclaration n4VariableDeclaration, boolean preLinkingPhase) {
 		if(n4VariableDeclaration.declaredTypeRef!==null) {
 			if (!preLinkingPhase)
 			// 	type of field was declared explicitly

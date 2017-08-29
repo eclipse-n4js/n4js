@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Annotation
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument
+import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4Modifier
@@ -28,7 +29,9 @@ import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
 import org.eclipse.n4js.postprocessing.ComputedNameProcessor
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
 import org.eclipse.n4js.ts.types.FieldAccessor
 import org.eclipse.n4js.ts.types.MemberAccessModifier
@@ -40,15 +43,13 @@ import org.eclipse.n4js.ts.types.TypeAccessModifier
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.n4JS.ModifiableElement
-import org.eclipse.n4js.ts.types.AccessibleTypeElement
 
 @Singleton
 package class N4JSTypesBuilderHelper {
 
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
-	def protected <T extends AnnotableElement & ModifiableElement> setTypeAccessModifier(
+	def protected <T extends AnnotableElement & ModifiableElement> void setTypeAccessModifier(
 		AccessibleTypeElement classifier, T definition) {
 		val isPlainJS = jsVariantHelper.isPlainJS(definition);
 		// IDEBUG-861 assume public visibility if plain JS
@@ -77,7 +78,7 @@ package class N4JSTypesBuilderHelper {
 	 * @param preLinkingPhase if true, references are not set (they are only set in the linking phase)
 	 * @param <T> reference type, e.g., ParameterizedTypeRef
 	 */
-	def package <T extends EObject> addCopyOfReferences(List<? super T> target, List<T> values) {
+	def package <T extends EObject> void addCopyOfReferences(List<? super T> target, List<T> values) {
 		if (values.isNullOrEmpty) {
 			return
 		}
@@ -104,13 +105,13 @@ package class N4JSTypesBuilderHelper {
 	/**
 	 * Translates AST related member access modifier (and annotation {@code @Interanl}) to type model related member access modifier.
 	 */
-	def package setMemberAccessModifier((MemberAccessModifier)=>void memberAccessModifierAssignment,
+	def package void setMemberAccessModifier((MemberAccessModifier)=>void memberAccessModifierAssignment,
 		Collection<? extends N4Modifier> modifiers, List<Annotation> annotations) {
 		memberAccessModifierAssignment.apply(ModifierUtils.convertToMemberAccessModifier(modifiers, annotations));
 	}
 
 	/** Returns newly created reference to built-in type <code>any</code>. */
-	def package createAnyTypeRef(EObject object) {
+	def package ParameterizedTypeRef createAnyTypeRef(EObject object) {
 		val rs = object?.eResource?.resourceSet
 		if (rs !== null)
 			BuiltInTypeScope.get(rs).anyTypeRef
@@ -149,7 +150,7 @@ package class N4JSTypesBuilderHelper {
 	}
 
 	/** Returns newly created reference to built-in type <code>any</code>. */
-	def package getObjectType(EObject object) {
+	def package TClassifier getObjectType(EObject object) {
 		val rs = object?.eResource?.resourceSet
 		if (rs !== null)
 			BuiltInTypeScope.get(rs).objectType

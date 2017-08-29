@@ -28,35 +28,16 @@ public class N4JSDerivedStateComputer implements IDerivedStateComputer {
 	/**
 	 * Creates an {@link TModule} on the second slot of the resource. when the resource contents is not empty.
 	 */
-	override installDerivedState(DerivedStateAwareResource resource, boolean preLinkingPhase) {
+	override void installDerivedState(DerivedStateAwareResource resource, boolean preLinkingPhase) {
 		val contents = resource.contents;
 		if (contents.nullOrEmpty) {
-			throw new IllegalStateException
+			throw new IllegalStateException("cannot install derived state in resource without AST")
 		} else if (contents.size == 1) {
 			typesBuilder.createTModuleFromSource(resource, preLinkingPhase);
 		} else if (contents.size == 2) {
-			/* TODO adjust comments 
-			 * 
-			 * When loading an AST from a TModule (usually retrieved from the index) by calling
-			 * SyntaxRelatedTElement.astElement, this would cause a new TModule to be created again from the AST. That would
-			 * lead to an inconsistent state: Two different TModules which both link to the same AST, but the original TModule
-			 * (from the index) would not contained in any resource anymore (because it was removed from the resource and
-			 * replaced with the newly loaded one). Since the original one is detached from a resource, it cannot resolve
-			 * proxies anymore. This would lead to a lot of weird scenarios which are extremely hard to debug because the both
-			 * TModule instances look similar.
-			 * 
-			 * This method adds a new rewire step after the AST has been loaded and a new TModule has been created. It first
-			 * compares the original TModule with the new one. If both were derived from the same AST (using a hashCode to
-			 * compare that), all links from the AST pointing to the new TModule are rewired to point to the old TModule (and
-			 * vice versa all astElements are set to the now loaded AST).
-			 * 
-			 * If either the modules were derived from different ASTs or the rewiring fails for other reasons (information will
-			 * be logged), an {@link IllegalStateException} is thrown. In that case, the AST won't be linked to the old TModule
-			 * (and vice versa) at all.
-			 */
 			typesBuilder.linkTModuleToSource(resource, preLinkingPhase);
 		} else {
-			throw new IllegalStateException;
+			throw new IllegalStateException("resource with more than two roots");
 		}
 	}
 

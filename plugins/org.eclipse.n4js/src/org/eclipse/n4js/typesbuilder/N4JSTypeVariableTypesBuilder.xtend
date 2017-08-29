@@ -15,9 +15,10 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 
 package class N4JSTypeVariableTypesBuilder {
 
-	def package createTypeVariable(TypeVariable typeVariableFromN4, boolean preLinkingPhase) {
-		if (typeVariableFromN4.name === null)
-			return null
-		TypeUtils.copyWithProxies(typeVariableFromN4)
+	def package void createTypeVariable(TypeVariable typeVariableFromN4, boolean preLinkingPhase) {
+		if (typeVariableFromN4.name === null) {
+			return;
+		}
+		TypeUtils.copyWithProxies(typeVariableFromN4);
 	}
 }

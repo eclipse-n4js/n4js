@@ -554,7 +554,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
 		if (contents != null && !contents.isEmpty()) {
-			//
 			discardStateFromDescription(true);
 		}
 		super.doLoad(inputStream, options);
@@ -749,7 +748,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Specialized to allow reconcilation of the TModule. We need to handle invocations of
+	 * Specialized to allow reconciliation of the TModule. We need to handle invocations of
 	 * {@link #installDerivedState(boolean)} where the contents list does already contain two elements.
 	 */
 	@SuppressWarnings("restriction")
@@ -844,7 +843,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source
-				if (canResolveFromDescription(targetUri)) {
+				final boolean canLoadFromDescription = !targetUri.fragment().startsWith("/0")
+						&& canLoadFromDescriptionHelper.canLoadFromDescription(targetResourceUri, getResourceSet());
+				if (canLoadFromDescription) {
 
 					final String targetFragment = targetUri.fragment();
 					final Resource targetResource = resSet.getResource(targetResourceUri, false);
@@ -892,18 +893,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * @param targetUri
-	 *            the uri to be resolved
-	 * @return true, if the referenced object may come from the the index TModule.
-	 */
-	private boolean canResolveFromDescription(URI targetUri) {
-		if (targetUri.fragment().startsWith("/0")) {
-			return false;
-		}
-		return canLoadFromDescriptionHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
-	}
-
-	/**
 	 * Copied from {@link ResourceImpl#getEObjectForURIFragmentRootSegment(String)} only differs, that instead of
 	 * getContent contents is accessed directly.
 	 */
@@ -923,10 +912,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// avoid invocation of getContent
 				if (position < contents.size() && position >= 1) {
 					return contents.get(position);
-				}
-				if (position == 0 && contents.size() > 1) {
-					// we have a proxified AST, but a TModule loaded from the index
-
 				}
 				if (position >= 1 && isLoaded && isASTProxy(contents.basicGet(0)) && contents.size() == 1) {
 					// requested position exceeds contents length

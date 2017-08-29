@@ -31,34 +31,34 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 	@Inject protected extension N4JSGetterTypesBuilder
 	@Inject protected extension N4JSSetterTypesBuilder
 	
-	def protected addFields(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
+	def protected void addFields(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
 		val n4Fields = definition.ownedMembers.filter(N4FieldDeclaration);
 		val fields = n4Fields.map[createField(classifier, preLinkingPhase)].filterNull
 		classifier.ownedMembers.addAll(fields);
 	}
 	
-	def protected addMethods(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
+	def protected void addMethods(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
 		val n4Methods = definition.ownedMembers.filter(N4MethodDeclaration);
 		val methods = n4Methods.map[createMethod(preLinkingPhase)].filterNull; 
 		classifier.ownedMembers.addAll(methods);
 		classifier.callableCtor = definition.ownedCallableCtor?.createMethod(preLinkingPhase);
 	}
 	
-	def protected addGetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
+	def protected void addGetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
 		// create also getters for all non private fields without explicit getter
 		val n4Getters = definition.ownedMembers.filter(N4GetterDeclaration)
 		val getters = n4Getters.map[createGetter(classifier, preLinkingPhase)].filterNull
 		classifier.ownedMembers.addAll(getters);
 	}
 
-	def protected addSetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
+	def protected void addSetters(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
 		// create also getters for all non private fields without explicit getter
 		val n4Setters = definition.ownedMembers.filter(N4SetterDeclaration)
 		val setters = n4Setters.map[createSetter(classifier, preLinkingPhase)].filterNull
 		classifier.ownedMembers.addAll(setters);
 	}
 	
-	def protected addTypeParameters(TClassifier classifier, GenericDeclaration definition, boolean preLinkingPhase) {
+	def protected void addTypeParameters(TClassifier classifier, GenericDeclaration definition, boolean preLinkingPhase) {
 		addCopyOfReferences(classifier.typeVars, definition.typeVars)
 	}
 	
