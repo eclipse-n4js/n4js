@@ -569,8 +569,8 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 
 	/**
 	 * Bind the {@link IReferenceFinder} that find references solely to types (and
--    * TVariables, IdentifiableElement and TEnumLiterals).
--    */
+	 * TVariables, IdentifiableElement and TEnumLiterals).
+	 */
 	def Class<? extends IReferenceFinder> bindIReferenceFinder() {
 		return LabellingReferenceFinder;
 	}
