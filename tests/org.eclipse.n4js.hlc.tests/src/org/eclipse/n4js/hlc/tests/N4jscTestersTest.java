@@ -190,7 +190,6 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 
 		@SuppressWarnings("resource")
 		String content = new Scanner(report).useDelimiter("\\Z").next();
-		System.out.println("REPORT::\n" + content);
 		assertTrue(content.contains(
 				"<testsuite name=\"BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
 		assertTrue(content.contains(
@@ -206,8 +205,6 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"\"subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
 		assertTrue(content.contains(
 				"<testcase name=\"testPass\" classname=\"subfolder/SubFolderModule/SubFolderTest\""));
-
-		// TODO add proper assertion that test was actually executed properly!!!
 	}
 
 	/**
