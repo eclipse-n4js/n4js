@@ -101,6 +101,7 @@ Contributors:
             default="true"
             extensions="n4js,js,n4jsd"
             id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">
         </editor>
     </extension>
