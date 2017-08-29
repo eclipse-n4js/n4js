@@ -100,7 +100,7 @@ public class HeadlessTester {
 
 			int exit = process.waitFor();
 
-			if (testListener.finished())
+			if (!testListener.finished())
 				throw new ExitCodeException(EXITCODE_TESTER_STOPPED_WITH_ERROR,
 						"Test session has not finished.");
 
