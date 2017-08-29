@@ -42,8 +42,8 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 			return false
 		}
 		val methodType = classifier.ownedMembers.get(idx) as TMethod;
-		
-		
+		ensureEqualName(methodDecl, methodType);
+
 		methodType.linkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link

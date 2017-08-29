@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.typesbuilder
 
-import com.google.common.base.Charsets
-import com.google.common.hash.Hashing
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.ExportableElement
 import org.eclipse.n4js.n4JS.ExportedVariableStatement
@@ -23,6 +21,7 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -64,10 +63,6 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * will later be resolved either on demand or by calling {@link N4JSResource#flattenModule()}.
  */
 public class N4JSTypesBuilder {
-	
-	public static def md5Hex(String s) {
-		return Hashing.md5.hashString(s, Charsets.UTF_8).toString();
-	}
 
 	@Inject(optional=true) TypesFactory typesFactory = TypesFactory.eINSTANCE
 	@Inject extension N4JSTypesBuilderHelper
@@ -110,24 +105,19 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule module = resource.contents.get(1) as TModule;
-			val astMD5New = md5Hex(parseResult.rootNode.text);
-			if(astMD5New!==module.astMD5) {
+			val astMD5New = N4JSASTUtils.md5Hex(resource);
+			if (astMD5New !== module.astMD5) {
 				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
 			}
 
 			script.buildNamespacesTypesFromModuleImports(module,preLinkingPhase);
 
-			// create types for those TypeRefs that define a type if they play the role of an AST node
-			// (has to be done up-front, because in the rest of the types builder code we do not know
-			// where such a TypeRef shows up; to avoid having to check for them at every occurrence of
-			// a TypeRef, we do this here)
 			script.buildTypesFromTypeRefs(module, preLinkingPhase);
 
 			script.linkTypes(module,preLinkingPhase);
 
 			module.astElement = script;
 			script.module = module;
-//			UtilN4.takeSnapshotInGraphView("TB end (preLinking=="+preLinkingPhase+")",resource.resourceSet);
 
 		} else {
 			throw new IllegalStateException("resource has no parse result: " + resource.URI);
@@ -156,7 +146,7 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule result = typesFactory.createTModule;
-			result.astMD5 = md5Hex(parseResult.rootNode.text);
+			result.astMD5 = N4JSASTUtils.md5Hex(resource);
 			var qualifiedModuleName = resource.qualifiedModuleName;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;

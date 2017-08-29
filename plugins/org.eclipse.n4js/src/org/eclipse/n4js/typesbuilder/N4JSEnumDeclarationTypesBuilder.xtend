@@ -27,6 +27,8 @@ package class N4JSEnumDeclarationTypesBuilder {
 		}
 
 		val TEnum enumType = target.topLevelTypes.get(idx) as TEnum
+		ensureEqualName(n4Enum, enumType);
+
 		enumType.astElement = n4Enum
 		n4Enum.definedType = enumType
 		return true;

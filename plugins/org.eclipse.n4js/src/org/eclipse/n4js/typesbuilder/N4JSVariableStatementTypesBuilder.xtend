@@ -34,13 +34,14 @@ package class N4JSVariableStatementTypesBuilder {
 			return idx;
 		];
 	}
-	
+
 	def private boolean linkVariableType(ExportedVariableDeclaration n4VariableDeclaration, TModule target, int idx) {
 		if(n4VariableDeclaration.name === null) {
 			return false
 		}
 
 		val variable = target.variables.get(idx);
+		ensureEqualName(n4VariableDeclaration, variable);
 		variable.astElement = n4VariableDeclaration
 		n4VariableDeclaration.definedVariable = variable;
 		return true

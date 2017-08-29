@@ -24,9 +24,6 @@ package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclara
 		}
 
 		val TInterface interfaceType = target.topLevelTypes.get(idx) as TInterface
-		if (interfaceType.name != n4Interface.name) {
-			throw new IllegalStateException('name mismatch: ' + interfaceType.name + ' vs ' + n4Interface.name);
-		}
 		interfaceType.linkClassifierAndMembers(n4Interface, preLinkingPhase);
 		return true;
 	}

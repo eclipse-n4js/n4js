@@ -29,7 +29,7 @@ package class AbstractFunctionDefinitionTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
 
-	def protected linkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
+	def protected void linkFormalParameters(TFunction functionType, FunctionDefinition functionDef, boolean preLinkingPhase) {
 		functionDef.fpars.fold(0) [ idx, fpar |
 			if (linkFormalParameter(fpar, functionType, preLinkingPhase, idx)) {
 				return idx + 1;
@@ -38,7 +38,7 @@ package class AbstractFunctionDefinitionTypesBuilder {
 		]
 	}
 
-	def protected addFormalParameters(TFunction functionType, FunctionDefinition functionDef,
+	def protected void addFormalParameters(TFunction functionType, FunctionDefinition functionDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		functionType.fpars.addAll(
 			functionDef.fpars.map[createFormalParameter(builtInTypeScope, preLinkingPhase)].filterNull);
@@ -47,11 +47,11 @@ package class AbstractFunctionDefinitionTypesBuilder {
 	/*
 	 * Transforms type variables from declaration (MethodDeclaration of FunctionDeclaration) to TFunction's type variables.
 	 */
-	def protected addTypeVariables(TFunction functionType, GenericDeclaration genericDecl, boolean preLinkingPhase) {
+	def protected void addTypeVariables(TFunction functionType, GenericDeclaration genericDecl, boolean preLinkingPhase) {
 		addCopyOfReferences(functionType.typeVars, genericDecl.typeVars)
 	}
 
-	def protected setReturnType(TGetter getterType, N4GetterDeclaration getterDef,
+	def protected void setReturnType(TGetter getterType, N4GetterDeclaration getterDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
@@ -70,7 +70,7 @@ package class AbstractFunctionDefinitionTypesBuilder {
 		}
 	}
 
-	def protected setReturnType(TFunction functionType, FunctionDefinition functionDef,
+	def protected void setReturnType(TFunction functionType, FunctionDefinition functionDef,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (!preLinkingPhase) {
 			val inferredReturnTypeRef =
@@ -111,7 +111,7 @@ package class AbstractFunctionDefinitionTypesBuilder {
 		}
 	}
 
-	private def isSingleExprArrowFunction(FunctionDefinition definition) {
+	private def boolean isSingleExprArrowFunction(FunctionDefinition definition) {
 		switch definition {
 			ArrowFunction: definition.isSingleExprImplicitReturn
 			default: false

@@ -31,6 +31,7 @@ package class N4JSSetterTypesBuilder {
 		}
 
 		val setterType = classifierType.ownedMembers.get(idx) as TSetter;
+		ensureEqualName(n4Setter, setterType);
 		setterType.linkFormalParameters(n4Setter, preLinkingPhase)
 
 		setterType.astElement = n4Setter
@@ -82,6 +83,7 @@ package class N4JSSetterTypesBuilder {
 			return false;
 		}
 		val formalParameterType = setterType.fpar;
+		ensureEqualName(n4Setter.fpar, formalParameterType);
 		formalParameterType.astElement = n4Setter.fpar;
 		n4Setter.fpar.definedTypeElement = formalParameterType;
 		return true;

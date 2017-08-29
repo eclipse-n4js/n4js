@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.ModifiableElement
 import org.eclipse.n4js.n4JS.ModifierUtils
 import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4Modifier
+import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.PropertyNameKind
 import org.eclipse.n4js.n4JS.PropertyNameOwner
 import org.eclipse.n4js.n4JS.TypeRefAnnotationArgument
@@ -34,6 +35,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.AccessibleTypeElement
 import org.eclipse.n4js.ts.types.DeclaredTypeWithAccessModifier
 import org.eclipse.n4js.ts.types.FieldAccessor
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TAnnotableElement
 import org.eclipse.n4js.ts.types.TClassifier
@@ -186,5 +188,23 @@ package class N4JSTypesBuilderHelper {
 	def private TypeRef internalGetDeclaredThisTypeFromAnnotation(AnnotableElement element) {
 		val annThis = AnnotationDefinition.THIS.getAnnotation(element);
 		return annThis?.args?.filter(TypeRefAnnotationArgument)?.head?.typeRef;
+	}
+
+
+	/**
+	 * Used during {@link N4JSTypesBuilder#linkTModuleToSource(DerivedStateAwareResource, boolean) linking}, to ensure
+	 * consistency of named elements between newly loaded AST and original TModule.
+	 */
+	def protected void ensureEqualName(NamedElement astNode, IdentifiableElement moduleElement) {
+		val nameInAST = astNode.eResource;
+		val nameInModule = moduleElement.name;
+		if (nameInAST !== null) { // note: no check if no name available in AST (don't fiddle with computed property names, etc.)
+			if (!nameInAST.equals(nameInModule)) {
+				throw new IllegalStateException("inconsistency between newly loaded AST and to-be-linked TModule: "
+					+ "nameInAST=" + nameInAST + ", "
+					+ "nameInModule=" + nameInModule + ", "
+					+ "in: " + astNode.eResource?.URI);
+			}
+		}
 	}
 }

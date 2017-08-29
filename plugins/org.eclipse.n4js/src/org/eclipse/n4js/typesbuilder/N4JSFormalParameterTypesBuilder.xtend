@@ -13,17 +13,18 @@ package org.eclipse.n4js.typesbuilder
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.TFormalParameter
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.ts.types.TFunction
 
 package class N4JSFormalParameterTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean linkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, boolean preLinkingPhase, int idx) {
 		val formalParameterType = functionType.fpars.get(idx);
+		ensureEqualName(astFormalParameter, formalParameterType);
 
 		formalParameterType.astElement = astFormalParameter;
 		astFormalParameter.definedTypeElement = formalParameterType;

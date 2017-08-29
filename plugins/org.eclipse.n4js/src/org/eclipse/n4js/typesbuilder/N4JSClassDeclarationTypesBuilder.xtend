@@ -30,9 +30,6 @@ public class N4JSClassDeclarationTypesBuilder extends N4JSClassifierDeclarationT
 		}
 
 		val TClass tclass = target.topLevelTypes.get(idx) as TClass
-		if (tclass.name != n4Class.name) {
-			throw new IllegalStateException('name mismatch: ' + tclass.name + ' vs ' + n4Class.name);
-		}
 
 		tclass.linkClassifierAndMembers(n4Class, preLinkingPhase);
 		return true;

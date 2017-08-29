@@ -12,6 +12,7 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.GenericDeclaration
+import org.eclipse.n4js.n4JS.N4ClassifierDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
@@ -58,22 +59,23 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		classifier.ownedMembers.addAll(setters);
 	}
 	
-	def protected void addTypeParameters(TClassifier classifier, GenericDeclaration definition, boolean preLinkingPhase) {
-		addCopyOfReferences(classifier.typeVars, definition.typeVars)
+	def protected void addTypeParameters(TClassifier classifier, GenericDeclaration decl, boolean preLinkingPhase) {
+		addCopyOfReferences(classifier.typeVars, decl.typeVars)
 	}
 	
-	def package void linkClassifierAndMembers(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase) {
-		// members
-		var memberIdx = classifier.linkFields(definition, preLinkingPhase, 0);
-		memberIdx = classifier.linkMethods(definition, preLinkingPhase, memberIdx);
-		memberIdx = classifier.linkGetters(definition, preLinkingPhase, memberIdx);
-		memberIdx = classifier.linkSetters(definition, preLinkingPhase, memberIdx);
+	def package void linkClassifierAndMembers(TClassifier classifier, N4ClassifierDeclaration declaration, boolean preLinkingPhase) {
+		ensureEqualName(declaration, classifier);
 
+		// members
+		var memberIdx = classifier.linkFields(declaration, preLinkingPhase, 0);
+		memberIdx = classifier.linkMethods(declaration, preLinkingPhase, memberIdx);
+		memberIdx = classifier.linkGetters(declaration, preLinkingPhase, memberIdx);
+		memberIdx = classifier.linkSetters(declaration, preLinkingPhase, memberIdx);
 
 		// TODO proxy resolve vs setter invocation?
-		classifier.astElement = definition;
+		classifier.astElement = declaration;
 		// setter is ok here
-		definition.definedType = classifier;
+		declaration.definedType = classifier;
 	}
 	
 	def protected int linkFields(TClassifier classifier, N4ClassifierDefinition definition, boolean preLinkingPhase, int start) {

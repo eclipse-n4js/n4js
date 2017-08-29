@@ -41,6 +41,7 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 		}
 
 		val TFunction functionType = target.topLevelTypes.get(idx) as TFunction
+		ensureEqualName(functionDecl, functionType);
 
 		functionType.linkFormalParameters(functionDecl, preLinkingPhase)
 		functionType.astElement = functionDecl

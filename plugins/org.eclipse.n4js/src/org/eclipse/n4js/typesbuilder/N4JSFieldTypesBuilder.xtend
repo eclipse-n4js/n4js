@@ -28,6 +28,7 @@ package class N4JSFieldTypesBuilder {
 			return false;
 
 		val field = classifierType.ownedMembers.get(idx) as TField
+		ensureEqualName(n4Field, field);
 		field.astElement = n4Field;
 		n4Field.definedField = field
 

@@ -32,6 +32,7 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 			return false
 		}
 		val getterType = classifierType.ownedMembers.get(idx) as TGetter;
+		ensureEqualName(n4Getter, getterType);
 		getterType.astElement = n4Getter
 		n4Getter.definedGetter = getterType
 		return true
