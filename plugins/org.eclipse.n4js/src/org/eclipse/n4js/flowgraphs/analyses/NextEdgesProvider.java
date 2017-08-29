@@ -103,7 +103,7 @@ abstract class NextEdgesProvider {
 
 	protected List<ControlFlowEdge> getNextEdges(Node nextNode, ControlFlowType... cfTypes) {
 		List<ControlFlowEdge> nextEdges = getPlainNextEdges(nextNode);
-		filter(nextEdges, cfTypes);
+		nextEdges = filter(nextEdges, cfTypes);
 		return nextEdges;
 	}
 
@@ -129,8 +129,9 @@ abstract class NextEdgesProvider {
 		return getNextNode(edge) == node;
 	}
 
-	protected void filter(Iterable<ControlFlowEdge> edges, ControlFlowType... cfTypes) {
-		for (Iterator<ControlFlowEdge> edgeIt = edges.iterator(); edgeIt.hasNext();) {
+	protected List<ControlFlowEdge> filter(Iterable<ControlFlowEdge> edges, ControlFlowType... cfTypes) {
+		List<ControlFlowEdge> filteredEdges = Lists.newLinkedList(edges);
+		for (Iterator<ControlFlowEdge> edgeIt = filteredEdges.iterator(); edgeIt.hasNext();) {
 			ControlFlowEdge edge = edgeIt.next();
 
 			boolean removeEdge = false;
@@ -143,6 +144,7 @@ abstract class NextEdgesProvider {
 				incrOccurence(edge);
 			}
 		}
+		return filteredEdges;
 	}
 
 	private int getOccurences(ControlFlowEdge edge) {

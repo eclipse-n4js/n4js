@@ -15,9 +15,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
@@ -51,7 +51,7 @@ abstract public class GraphWalkerInternal {
 
 	abstract protected void visit(Node node);
 
-	abstract protected void visit(Node start, Node end, ControlFlowType cfType);
+	abstract protected void visit(ControlFlowEdge edge);
 
 	abstract protected void terminate();
 
@@ -73,9 +73,9 @@ abstract public class GraphWalkerInternal {
 		}
 	}
 
-	final void callVisit(Node start, Node end, ControlFlowType cfType) {
+	final void callVisit(ControlFlowEdge edge) {
 		if (activeDirection) {
-			visit(start, end, cfType);
+			visit(edge);
 		}
 	}
 
@@ -189,7 +189,7 @@ abstract public class GraphWalkerInternal {
 
 			abstract protected void visit(Node cfe);
 
-			abstract protected void visit(Node start, Node end, ControlFlowType cfType);
+			abstract protected void visit(ControlFlowEdge edge);
 
 			abstract protected ActivePathInternal fork();
 
@@ -201,9 +201,9 @@ abstract public class GraphWalkerInternal {
 				}
 			}
 
-			final protected void callVisit(Node start, Node end, ControlFlowType cfType) {
+			final protected void callVisit(ControlFlowEdge edge) {
 				if (activeDirection) {
-					visit(start, end, cfType);
+					visit(edge);
 				}
 			}
 

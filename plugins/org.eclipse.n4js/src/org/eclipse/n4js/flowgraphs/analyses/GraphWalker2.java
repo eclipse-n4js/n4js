@@ -12,8 +12,10 @@ package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Stack;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -23,8 +25,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  */
 @SuppressWarnings("javadoc")
 abstract public class GraphWalker2 extends GraphWalkerInternal {
-	ControlFlowElement lastCFE;
-	Set<ControlFlowType> edgeTypes = new HashSet<>();
+	final private Stack<ControlFlowEdge> edgeStack = new Stack<>();
+	private Node lastNode;
+	private ControlFlowElement lastCFE;
 
 	/** Default direction is {@literal Direction.Forward} */
 	protected GraphWalker2(Direction... directions) {
@@ -35,22 +38,52 @@ abstract public class GraphWalker2 extends GraphWalkerInternal {
 	final protected void visit(Node node) {
 		if (node instanceof RepresentingNode) {
 			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
-			if (lastCFE != null) {
-				visit(lastCFE, cfe, edgeTypes);
-				edgeTypes.clear();
-			}
 			visit(cfe);
-			lastCFE = cfe;
 		}
 	}
 
 	@Override
-	final protected void visit(Node start, Node end, ControlFlowType cfType) {
-		edgeTypes.add(cfType);
+	final protected void visit(ControlFlowEdge edge) {
+		// backtrack
+		while (!edgeStack.isEmpty() && edgeStack.peek().end != edge.start) {
+			edgeStack.pop();
+		}
+
+		// call visit
+		if (edge.end instanceof RepresentingNode) {
+			Set<ControlFlowType> edgeTypes = new HashSet<>();
+			edgeTypes.add(edge.cfType);
+			Node startNode = getStartNodeAndEdgeTypes(edgeTypes);
+			if (startNode != null) {
+				ControlFlowElement startCFE = startNode.getRepresentedControlFlowElement();
+				ControlFlowElement endECFE = edge.end.getRepresentedControlFlowElement();
+				visit(startCFE, endECFE, edgeTypes);
+			}
+		}
+
+		// push new edge
+		edgeStack.push(edge);
+	}
+
+	private Node getStartNodeAndEdgeTypes(Set<ControlFlowType> edgeTypes) {
+		for (int i = edgeStack.size() - 1; i >= 0; i--) {
+			ControlFlowEdge e = edgeStack.get(i);
+			if (e.end instanceof RepresentingNode) {
+				return e.end;
+			}
+			edgeTypes.add(e.cfType);
+		}
+		return null;
 	}
 
 	@Override
-	abstract protected void init();
+	final protected void init() {
+		lastCFE = null;
+		edgeStack.clear();
+		init2();
+	}
+
+	abstract protected void init2();
 
 	abstract protected void visit(ControlFlowElement cfe);
 
@@ -86,8 +119,8 @@ abstract public class GraphWalker2 extends GraphWalkerInternal {
 			}
 
 			@Override
-			final protected void visit(Node start, Node end, ControlFlowType cfType) {
-				pEdgeTypes.add(cfType);
+			final protected void visit(ControlFlowEdge edge) {
+				pEdgeTypes.add(edge.cfType);
 			}
 
 			@Override

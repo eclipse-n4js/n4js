@@ -33,7 +33,7 @@ public class AllPathPrintWalker extends GraphWalker2 {
 	}
 
 	@Override
-	protected void init() {
+	protected void init2() {
 		if (startElement == null) {
 			super.requestActivation(new AllPathPrintPredicate());
 		}
@@ -41,12 +41,12 @@ public class AllPathPrintWalker extends GraphWalker2 {
 
 	@Override
 	protected void terminate() {
-		System.out.println("AllPathPrintWalker finished.");
+		// System.out.println("AllPathPrintWalker finished.");
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-		System.out.println("Walker at: " + FGUtils.getTextLabel(cfe) + ", " + getCurrentDirection());
+		// System.out.println("Walker at: " + FGUtils.getTextLabel(cfe) + ", " + getCurrentDirection());
 		if (startElement != null && startElement == cfe && getActivatedPredicateCount() == 0) {
 			super.requestActivation(new AllPathPrintPredicate());
 		}

@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -28,7 +27,9 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  */
 @SuppressWarnings("javadoc")
 public class GraphWalkerGuideInternal {
-	final Collection<GraphWalkerInternal> walkers;
+	private final Collection<GraphWalkerInternal> walkers;
+	private final Set<Node> walkerVisitedNodes = new HashSet<>();
+	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
 
 	public GraphWalkerGuideInternal(Collection<GraphWalkerInternal> walkers) {
 		this.walkers = walkers;
@@ -47,6 +48,9 @@ public class GraphWalkerGuideInternal {
 	}
 
 	private Set<Node> walkthrough(ComplexNode cn, Direction direction) {
+		walkerVisitedNodes.clear();
+		walkerVisitedEdges.clear();
+
 		for (GraphWalkerInternal walker : walkers) {
 			walker.setCurrentDirection(direction);
 			walker.callInit();
@@ -72,49 +76,47 @@ public class GraphWalkerGuideInternal {
 		currDEdges.addAll(nextDEdges);
 
 		Node lastVisitNode = null;
-		Set<ControlFlowType> edgeTypesFromLastVisitCFE = new HashSet<>();
-
 		while (!currDEdges.isEmpty()) {
 			DecoratedEdgeInternal currDEdge = currDEdges.removeFirst();
 
-			Node nextNode = edgeProvider.getNextNode(currDEdge.edge);
-			lastVisitNode = visitRepresentingNode(lastVisitNode, edgeTypesFromLastVisitCFE, currDEdge, nextNode);
+			lastVisitNode = visitNode(lastVisitNode, currDEdge);
 			allVisitedNodes.add(lastVisitNode);
 
-			nextDEdges = getNextDecoratedEdges(currDEdge, nextNode);
-			currDEdges.addAll(nextDEdges);
+			nextDEdges = getNextDecoratedEdges(currDEdge);
+			currDEdges.addAll(0, nextDEdges); // adding to the front: deep search / to the back: bread search
 		}
 
 		return allVisitedNodes;
 	}
 
-	private Node visitRepresentingNode(Node lastVisitNode,
-			Set<ControlFlowType> edgeTypesFromLastVisitCFE, DecoratedEdgeInternal currDEdge, Node visitNode) {
-
+	private Node visitNode(Node lastVisitNode, DecoratedEdgeInternal currDEdge) {
+		Node visitNode = currDEdge.getNextNode();
 		if (lastVisitNode != null) {
-			callVisit(CallVisit.OnEdge, lastVisitNode, currDEdge, visitNode);
-			edgeTypesFromLastVisitCFE.clear();
+			callVisit(CallVisit.OnEdge, currDEdge, visitNode);
 		}
 
-		edgeTypesFromLastVisitCFE.add(currDEdge.edge.cfType);
-		lastVisitNode = visitNode;
-
-		callVisit(CallVisit.OnNode, lastVisitNode, currDEdge, visitNode);
-		return lastVisitNode;
+		callVisit(CallVisit.OnNode, currDEdge, visitNode);
+		return visitNode;
 	}
 
 	enum CallVisit {
 		OnNode, OnEdge
 	}
 
-	private void callVisit(CallVisit callVisit, Node lastVisitNode, DecoratedEdgeInternal currDEdge, Node visitNode) {
+	private void callVisit(CallVisit callVisit, DecoratedEdgeInternal currDEdge, Node visitNode) {
 		for (GraphWalkerInternal walker : walkers) {
 			switch (callVisit) {
 			case OnNode:
-				walker.callVisit(visitNode);
+				if (!walkerVisitedNodes.contains(visitNode)) {
+					walker.callVisit(visitNode);
+				}
+				walkerVisitedNodes.add(visitNode);
 				break;
 			case OnEdge:
-				walker.callVisit(lastVisitNode, visitNode, currDEdge.edge.cfType);
+				if (!walkerVisitedEdges.contains(currDEdge.edge)) {
+					walker.callVisit(currDEdge.edge);
+				}
+				walkerVisitedEdges.add(currDEdge.edge);
 				break;
 			}
 			List<ActivePathInternal> activatedPaths = walker.activate();
@@ -127,7 +129,7 @@ public class GraphWalkerGuideInternal {
 				activePath.callVisit(visitNode);
 				break;
 			case OnEdge:
-				activePath.callVisit(lastVisitNode, visitNode, currDEdge.edge.cfType);
+				activePath.callVisit(currDEdge.edge);
 				break;
 			}
 			if (!activePath.isActive()) {
@@ -152,9 +154,9 @@ public class GraphWalkerGuideInternal {
 		return nextDEdges;
 	}
 
-	private List<DecoratedEdgeInternal> getNextDecoratedEdges(DecoratedEdgeInternal currDEdge, Node nextNode) {
+	private List<DecoratedEdgeInternal> getNextDecoratedEdges(DecoratedEdgeInternal currDEdge) {
 		List<DecoratedEdgeInternal> nextDEdges = new LinkedList<>();
-		List<ControlFlowEdge> nextEdges = currDEdge.getNextEdges(nextNode);
+		List<ControlFlowEdge> nextEdges = currDEdge.getNextEdges();
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
 		if (nextEdgeIt.hasNext()) {
@@ -219,8 +221,12 @@ public class GraphWalkerGuideInternal {
 			this.activePaths.addAll(activePaths);
 		}
 
-		List<ControlFlowEdge> getNextEdges(Node nextNode) {
-			return edgeProvider.getNextEdges(nextNode);
+		Node getNextNode() {
+			return edgeProvider.getNextNode(edge);
+		}
+
+		List<ControlFlowEdge> getNextEdges() {
+			return edgeProvider.getNextEdges(getNextNode());
 		}
 
 	}

@@ -57,27 +57,30 @@ public class FlowGraph {
 
 	public void analyze(Collection<GraphWalkerInternal> graphWalkers) {
 		GraphWalkerGuideInternal guide = new GraphWalkerGuideInternal(graphWalkers);
-		Set<Node> allCFEs = new HashSet<>();
-		for (ComplexNode cn : cnMap.values())
-			allCFEs.addAll(cn.getNodes());
-
-		Set<Node> visitedCFEs;
-		for (ControlFlowElement container : cfContainers) {
-			ComplexNode cnContainer = cnMap.get(container);
-			visitedCFEs = guide.walkthroughForward(cnContainer);
-			allCFEs.removeAll(visitedCFEs);
-			visitedCFEs = guide.walkthroughBackward(cnContainer);
-			allCFEs.removeAll(visitedCFEs);
+		Set<Node> allNodes = new HashSet<>();
+		for (ComplexNode cn : cnMap.values()) {
+			if (!cn.isControlElement()) {
+				allNodes.addAll(cn.getNodes());
+			}
 		}
 
-		while (!allCFEs.isEmpty()) {
-			Node unvisitedCFE = allCFEs.iterator().next();
-			ComplexNode cnUnvisited = cnMap.get(unvisitedCFE);
+		Set<Node> visitedNodes;
+		for (ControlFlowElement container : cfContainers) {
+			ComplexNode cnContainer = cnMap.get(container);
+			visitedNodes = guide.walkthroughForward(cnContainer);
+			allNodes.removeAll(visitedNodes);
+			visitedNodes = guide.walkthroughBackward(cnContainer);
+			allNodes.removeAll(visitedNodes);
+		}
+
+		while (!allNodes.isEmpty()) {
+			Node unvisitedNode = allNodes.iterator().next();
+			ComplexNode cnUnvisited = cnMap.get(unvisitedNode.getControlFlowElement());
 			if (cnUnvisited.isControlElement()) {
-				allCFEs.remove(unvisitedCFE);
+				allNodes.remove(unvisitedNode);
 			} else {
-				visitedCFEs = guide.walkthroughIsland(cnUnvisited);
-				allCFEs.removeAll(visitedCFEs);
+				visitedNodes = guide.walkthroughIsland(cnUnvisited);
+				allNodes.removeAll(visitedNodes);
 			}
 		}
 	}

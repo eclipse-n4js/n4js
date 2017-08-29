@@ -134,15 +134,18 @@ class ForFactory {
 		nodes.add(entryNode);
 		nodes.addAll(initNodes);
 		nodes.add(conditionNode);
-		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 
 		if (conditionNode != null) {
 			cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode, exitNode);
 
 		} else {
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
+			nodes.clear();
+			nodes.add(entryNode);
+			nodes.addAll(initNodes);
+			Node beforeBodyNode = ListUtils.filterNulls(nodes).getLast();
+			cNode.connectInternalSucc(beforeBodyNode, bodyNode, loopCatchNode, updatesNode);
 
 			LinkedList<Node> loopCycle = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();

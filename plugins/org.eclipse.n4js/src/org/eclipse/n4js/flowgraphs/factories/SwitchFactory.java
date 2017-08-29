@@ -72,7 +72,6 @@ class SwitchFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-		cNode.setRepresentNode(exitNode);
 
 		String label = ASTUtils.getLabel(switchStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));

@@ -29,7 +29,6 @@ import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
-import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
@@ -168,7 +167,6 @@ public class ComplexNode implements ControlFlowable {
 		isControlElement |= cfe instanceof TryStatement;
 		isControlElement |= cfe instanceof SwitchStatement;
 		isControlElement |= cfe instanceof AbstractCaseClause;
-		isControlElement |= cfe instanceof EmptyStatement;
 		return isControlElement;
 	}
 
