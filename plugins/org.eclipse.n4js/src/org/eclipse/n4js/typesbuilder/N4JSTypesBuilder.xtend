@@ -106,7 +106,7 @@ public class N4JSTypesBuilder {
 
 			val TModule module = resource.contents.get(1) as TModule;
 			val astMD5New = N4JSASTUtils.md5Hex(resource);
-			if (astMD5New !== module.astMD5) {
+			if (astMD5New != module.astMD5) {
 				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
 			}
 
