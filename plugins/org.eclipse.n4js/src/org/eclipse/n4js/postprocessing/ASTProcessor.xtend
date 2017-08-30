@@ -217,8 +217,8 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 			return;
 		}
-		try {
 
+		try {
 			// process node itself - part 1 (before child processing)
 			processNode_preChildren(G, node, cache, indentLevel);
 
