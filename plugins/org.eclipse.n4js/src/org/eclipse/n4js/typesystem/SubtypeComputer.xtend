@@ -26,7 +26,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.service.OperationCanceledManager
-import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -65,7 +64,7 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 			// rationale: if there exists a valid binding of left's type variables
 			// so that bound(left) <: right, then left <: right
 
-			val infCtx = new InferenceContext(ts, tsh, operationCanceledManager, CancelIndicator.NullImpl, G); // start with no inference variables
+			val infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G); // start with no inference variables
 			val left_withInfVars = infCtx.newInferenceVariablesFor(left); // create an inference variable for each type param in left
 			// assuming 'left' was {function<T>(T):T}, then left_withInfVars is now: {function(α):α} (non-generic!)
 			infCtx.addConstraint(left_withInfVars, right, Variance.CO);

@@ -115,8 +115,8 @@ public final class InferenceContext {
 
 	private final N4JSTypeSystem ts;
 	private final TypeSystemHelper tsh;
-	private final OperationCanceledManager operationCanceledManager;
-	private final CancelIndicator cancelIndicator;
+	private final OperationCanceledManager operationCanceledManager; // may be null
+	private final CancelIndicator cancelIndicator; // may be null
 	private final RuleEnvironment G;
 
 	/**
@@ -144,7 +144,8 @@ public final class InferenceContext {
 	private Map<InferenceVariable, TypeRef> solution = null;
 
 	/**
-	 * Creates a new, empty inference context for the given inference variables.
+	 * Creates a new, empty inference context for the given inference variables. The cancellation manager and indicator
+	 * may be <code>null</code>.
 	 *
 	 * @param G
 	 *            a rule environment used for subtype checking, etc. during constraint resolution. This rule environment
@@ -157,8 +158,6 @@ public final class InferenceContext {
 			CancelIndicator cancelIndicator, RuleEnvironment G, InferenceVariable... inferenceVariables) {
 		Objects.requireNonNull(ts);
 		Objects.requireNonNull(tsh);
-		Objects.requireNonNull(operationCanceledManager);
-		Objects.requireNonNull(cancelIndicator);
 		Objects.requireNonNull(G);
 		this.ts = ts;
 		this.tsh = tsh;
@@ -190,7 +189,9 @@ public final class InferenceContext {
 	 * care to that, throwing an {@link OperationCanceledException} when appropriate.
 	 */
 	public boolean isDoomed() {
-		operationCanceledManager.checkCanceled(cancelIndicator);
+		if (operationCanceledManager != null && cancelIndicator != null) {
+			operationCanceledManager.checkCanceled(cancelIndicator);
+		}
 		return currentBounds.hasBoundFALSE();
 	}
 
