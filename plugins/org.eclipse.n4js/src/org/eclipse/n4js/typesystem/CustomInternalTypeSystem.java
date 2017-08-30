@@ -10,12 +10,6 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import org.eclipse.emf.common.util.WrappedException;
-import org.eclipse.xtext.xbase.lib.Exceptions;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
@@ -23,7 +17,10 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
-import it.xsemantics.runtime.ErrorInformation;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleApplicationTrace;
 import it.xsemantics.runtime.RuleEnvironment;
@@ -71,94 +68,24 @@ public class CustomInternalTypeSystem extends InternalTypeSystem {
 		}
 	}
 
+	/** Overridden to add null-safety. */
 	@Override
-	public void throwForExplicitFail() {
-		Exceptions.sneakyThrow(new RuleFailedExceptionWithoutStacktrace());
-	}
-
-	@Override
-	public RuleFailedException newRuleFailedException(String message,
-			String issue, Throwable t, ErrorInformation... errorInformations) {
-		final RuleFailedException ruleFailedException = new RuleFailedExceptionWithoutStacktrace(
-				failed(message), issue, t);
-		ruleFailedException.addErrorInformations(errorInformations);
-		return ruleFailedException;
-	}
-
-	@Override
-	public RuleFailedException extractRuleFailedException(Exception e) {
-		if (e instanceof WrappedException) {
-			WrappedException wrappedException = (WrappedException) e;
-			Exception exception = wrappedException.exception();
-			if (exception instanceof RuleFailedException) {
-				RuleFailedException ruleFailedException = (RuleFailedException) exception;
-				return ruleFailedException;
-			}
-		} else if (e instanceof RuleFailedException) {
-			return (RuleFailedException) e;
-		}
-		return newRuleFailedException(e);
-	}
-
-	@Override
-	public void checkAssignableTo(Object result, Class<?> destinationClass)
-			throws RuleFailedException {
+	public void checkAssignableTo(Object result, Class<?> destinationClass) {
 		if (result == null || !isResultAssignableTo(result, destinationClass)) {
-			throw new RuleFailedExceptionWithoutStacktrace(stringRep(result)
+			throw newRuleFailedException(stringRep(result)
 					+ " cannot be assigned to " + stringRep(destinationClass));
 		}
 	}
 
 	@Override
-	public void checkNotNull(Object object) throws RuleFailedException {
-		if (object == null)
-			throw new RuleFailedExceptionWithoutStacktrace("passed null object to system");
-	}
-
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> T environmentAccess(RuleEnvironment environment, Object key,
-			Class<? extends T> clazz) throws RuleFailedException {
-		if (environment == null)
-			throw new RuleFailedExceptionWithoutStacktrace("access to null environment");
-		Object value = environment.get(key);
-		if (value == null)
-			throw new RuleFailedExceptionWithoutStacktrace("no mapping in the environment for: "
-					+ stringRep(key));
-		if (clazz.isAssignableFrom(value.getClass()))
-			return (T) value;
-		else
-			throw new RuleFailedExceptionWithoutStacktrace("mapped value " + stringRep(value)
-					+ " cannot be assigned to " + stringRep(clazz));
-	}
-
-	@Override
-	protected RuleFailedException noSuchMethodException(
-			final String judgmentSymbol,
-			final Iterable<String> relationSymbols, Object... params) {
-		return new RuleFailedExceptionWithoutStacktrace("cannot find a rule for "
-				+ judgmentSymbol + " "
-				+ stringRepForParams(params, relationSymbols));
-	}
-
-	@Override
-	protected RuleFailedException noSuchMethodException(final String name,
-			Object... params) {
-		return new RuleFailedExceptionWithoutStacktrace("cannot find an implementation for "
-				+ name + "(" + stringRepForParams(params) + ")");
-	}
-
-	@Override
-	public void throwForExplicitFail(String message,
-			ErrorInformation errorInformation) {
-		final RuleFailedException ex = new RuleFailedExceptionWithoutStacktrace(message);
-		ex.addErrorInformation(errorInformation);
-		Exceptions.sneakyThrow(ex);
-	}
-
-	@Override
 	protected RuleFailedException createRuleFailedException(String message, String issue, Throwable t) {
 		return new RuleFailedExceptionWithoutStacktrace(message, issue, t);
+	}
+
+	/** Overridden to avoid excessive string conversions. */
+	@Override
+	protected String stringRepForEnv(RuleEnvironment ruleEnvironment) {
+		return "[...]";
 	}
 
 	/**
@@ -188,10 +115,5 @@ public class CustomInternalTypeSystem extends InternalTypeSystem {
 	public Result<TypeRef> use_type_judgment_from_PostProcessors(RuleEnvironment _environment_,
 			RuleApplicationTrace _trace_, TypableElement expression) {
 		return super.typeInternal(_environment_, _trace_, expression);
-	}
-
-	@Override
-	protected String stringRepForEnv(RuleEnvironment ruleEnvironment) {
-		return "[...]";
 	}
 }
