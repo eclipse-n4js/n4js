@@ -52,7 +52,7 @@ public class GraphWalkerGuideInternal {
 		walkerVisitedEdges.clear();
 
 		for (GraphWalkerInternal walker : walkers) {
-			walker.setCurrentDirection(direction);
+			walker.setContainerAndDirection(cn.getControlFlowElement(), direction);
 			walker.callInit();
 		}
 
@@ -83,7 +83,7 @@ public class GraphWalkerGuideInternal {
 			allVisitedNodes.add(lastVisitNode);
 
 			nextDEdges = getNextDecoratedEdges(currDEdge);
-			currDEdges.addAll(0, nextDEdges); // adding to the front: deep search / to the back: bread search
+			currDEdges.addAll(0, nextDEdges); // adding to the front: deep search / to the back: breadth search
 		}
 
 		return allVisitedNodes;
@@ -173,8 +173,8 @@ public class GraphWalkerGuideInternal {
 				forkedPaths.add(forkedPath);
 			}
 
-			DecoratedEdgeInternal dEdge = new DecoratedEdgeInternal(currDEdge.edgeProvider.copy(), nextEdge,
-					forkedPaths);
+			NextEdgesProvider edgeProviderCopy = currDEdge.edgeProvider.copy();
+			DecoratedEdgeInternal dEdge = new DecoratedEdgeInternal(edgeProviderCopy, nextEdge, forkedPaths);
 			nextDEdges.add(dEdge);
 		}
 

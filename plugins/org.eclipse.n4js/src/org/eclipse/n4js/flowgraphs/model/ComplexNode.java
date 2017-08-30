@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.factories.ASTUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
@@ -45,7 +44,7 @@ public class ComplexNode implements ControlFlowable {
 	private boolean hasOuterBlockUse = false;
 
 	public ComplexNode(ControlFlowElement astElement) {
-		this.container = ASTUtils.getCFContainer(astElement);
+		this.container = FGUtils.getCFContainer(astElement);
 		this.astElement = astElement;
 	}
 

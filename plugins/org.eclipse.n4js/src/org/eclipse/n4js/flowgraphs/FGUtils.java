@@ -11,7 +11,10 @@
 package org.eclipse.n4js.flowgraphs;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
@@ -48,4 +51,34 @@ public class FGUtils {
 		}
 		return className;
 	}
+
+	public static ControlFlowElement getCFContainer(ControlFlowElement cfe) {
+		ControlFlowElement curCFE = cfe;
+		while (curCFE != null) {
+			if (isCFContainer(curCFE)) {
+				return curCFE;
+			}
+
+			EObject eObj = curCFE;
+			do {
+				eObj = eObj.eContainer();
+			} while (eObj != null && !(eObj instanceof ControlFlowElement));
+
+			curCFE = (ControlFlowElement) eObj;
+		}
+		throw new IllegalArgumentException("Could not find Container for: " + cfe.toString());
+	}
+
+	public static boolean isCFContainer(ControlFlowElement cfe) {
+		EObject cfeContainer = cfe.eContainer();
+
+		boolean isBlock = cfe instanceof Block;
+		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
+		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
+
+		boolean isCFContainer = false;
+		isCFContainer |= isBlock && (containerIsFunctionDeclaration || containerIsFunctionDefinition);
+		return isCFContainer;
+	}
+
 }

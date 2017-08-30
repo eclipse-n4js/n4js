@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -40,20 +41,26 @@ public class AllPathPrintWalker extends GraphWalker2 {
 	}
 
 	@Override
+	protected void init(Direction direction) {
+	}
+
+	@Override
+	protected void terminate(Direction direction) {
+	}
+
+	@Override
 	protected void terminate() {
-		// System.out.println("AllPathPrintWalker finished.");
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-		// System.out.println("Walker at: " + FGUtils.getTextLabel(cfe) + ", " + getCurrentDirection());
 		if (startElement != null && startElement == cfe && getActivatedPredicateCount() == 0) {
 			super.requestActivation(new AllPathPrintPredicate());
 		}
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+	protected void visit(FlowEdge edge) {
 	}
 
 	public List<String> getPathStrings() {
@@ -87,7 +94,6 @@ public class AllPathPrintWalker extends GraphWalker2 {
 
 			@Override
 			protected void init() {
-				// System.out.println(this.hashCode() + ">> New Path!");
 			}
 
 			@Override
@@ -102,13 +108,11 @@ public class AllPathPrintWalker extends GraphWalker2 {
 
 			@Override
 			protected AllPathPrintPath fork2() {
-				// System.out.println(this.hashCode() + ">> Fork with: " + currString);
 				return new AllPathPrintPath(currString);
 			}
 
 			@Override
 			protected void terminate() {
-				// System.out.println(this.hashCode() + ">> Terminate: " + currString);
 			}
 
 		}

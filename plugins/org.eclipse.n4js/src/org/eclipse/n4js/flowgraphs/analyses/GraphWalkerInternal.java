@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  *
@@ -31,7 +32,9 @@ abstract public class GraphWalkerInternal {
 	private final List<ActivatedPathPredicateInternal> activePredicates = new LinkedList<>();
 	private final List<ActivatedPathPredicateInternal> failedPredicates = new LinkedList<>();
 	private final List<ActivatedPathPredicateInternal> passedPredicates = new LinkedList<>();
+	protected final ControlFlowElement container;
 	protected final Direction[] directions;
+	private ControlFlowElement curContainer;
 	private Direction curDirection;
 	private boolean activeDirection = false;
 
@@ -41,28 +44,43 @@ abstract public class GraphWalkerInternal {
 
 	/** Default direction is {@literal Direction.Forward} */
 	protected GraphWalkerInternal(Direction... directions) {
+		this(null, directions);
+	}
+
+	protected GraphWalkerInternal(ControlFlowElement container, Direction... directions) {
 		if (directions.length == 0) {
 			directions = new Direction[] { Direction.Forward };
 		}
 		this.directions = directions;
+		this.container = container;
 	}
 
 	abstract protected void init();
+
+	abstract protected void init(Direction direction);
 
 	abstract protected void visit(Node node);
 
 	abstract protected void visit(ControlFlowEdge edge);
 
+	abstract protected void terminate(Direction direction);
+
 	abstract protected void terminate();
 
 	final protected void callInit() {
-		if (activeDirection) {
+		if (getCurrentDirection() == Direction.Forward) {
 			init();
+		}
+		if (activeDirection) {
+			init(getCurrentDirection());
 		}
 	}
 
 	final protected void callTerminate() {
 		if (activeDirection) {
+			terminate(getCurrentDirection());
+		}
+		if (getCurrentDirection() == Direction.Islands) {
 			terminate();
 		}
 	}
@@ -79,13 +97,22 @@ abstract public class GraphWalkerInternal {
 		}
 	}
 
-	final void setCurrentDirection(Direction curDirection) {
+	final void setContainerAndDirection(ControlFlowElement curContainer, Direction curDirection) {
+		this.curContainer = curContainer;
 		this.curDirection = curDirection;
+		checkActive();
+	}
+
+	private void checkActive() {
 		activeDirection = false;
-		for (Direction dir : directions) {
-			if (dir == curDirection) {
-				activeDirection = true;
-				break;
+		boolean containerActive = (container == null || container == curContainer);
+
+		if (containerActive) {
+			for (Direction dir : directions) {
+				if (dir == curDirection) {
+					activeDirection = true;
+					break;
+				}
 			}
 		}
 	}

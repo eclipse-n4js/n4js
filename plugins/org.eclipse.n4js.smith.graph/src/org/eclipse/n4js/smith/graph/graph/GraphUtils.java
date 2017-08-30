@@ -168,7 +168,7 @@ public class GraphUtils {
 		path.moveTo((int) src.x, (int) src.y);
 		path.cubicTo(
 				(int) src.x + diff, (int) src.y - diffH,
-				(int) tgt.x + diffH, (int) tgt.y - diff,
+				(int) tgt.x, (int) tgt.y - diff,
 				(int) tgt.x, (int) tgt.y);
 
 		gc.drawPath(path);

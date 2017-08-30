@@ -17,14 +17,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalker2;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -130,6 +129,10 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 	private class NodesEdgesCollector extends GraphWalker2 {
 
+		NodesEdgesCollector() {
+			super(Direction.Forward, Direction.Backward, Direction.Islands);
+		}
+
 		@Override
 		protected void init2() {
 			nodeMap.clear();
@@ -138,22 +141,27 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void visit(ControlFlowElement cfe) {
+		protected void init(Direction direction) {
 		}
 
 		@Override
-		protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-			addNode(start);
-			addNode(end);
-			Node sNode = nodeMap.get(start);
-			Node eNode = nodeMap.get(end);
-			Edge edge = new CFEdge("CF", sNode, eNode, cfTypes);
+		protected void visit(ControlFlowElement cfe) {
+			addNode(cfe);
+		}
 
-			if (!edgesMap.containsKey(start)) {
-				edgesMap.put(start, new LinkedList<>());
+		@Override
+		protected void visit(FlowEdge edge) {
+			addNode(edge.start);
+			addNode(edge.end);
+			Node sNode = nodeMap.get(edge.start);
+			Node eNode = nodeMap.get(edge.end);
+			Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
+
+			if (!edgesMap.containsKey(edge.start)) {
+				edgesMap.put(edge.start, new LinkedList<>());
 			}
-			List<Edge> edges = edgesMap.get(start);
-			edges.add(edge);
+			List<Edge> cfEdges = edgesMap.get(edge.start);
+			cfEdges.add(cfEdge);
 		}
 
 		private void addNode(ControlFlowElement cfe) {
@@ -162,6 +170,10 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 				Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
 				nodeMap.put(cfe, node);
 			}
+		}
+
+		@Override
+		protected void terminate(Direction direction) {
 		}
 
 		@Override

@@ -20,6 +20,7 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ComplexNodeProvider;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.EdgeUtils;
@@ -63,7 +64,7 @@ public class ControlFlowGraphFactory {
 				ControlFlowElement cfe = (ControlFlowElement) eObj;
 				cfe = CFEMapper.map(cfe);
 				if (cfe != null && !cnMap.containsKey(cfe)) {
-					ControlFlowElement cfContainer = ASTUtils.getCFContainer(cfe);
+					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
 					cfContainers.add(cfContainer);
 					ComplexNode cn = CFEFactory.build(cfe);
 					cnMap.put(cfe, cn);
