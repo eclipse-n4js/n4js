@@ -15,6 +15,12 @@
 
 
 function AdditiveExpression() {
+	/* AdditiveExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 + 2,
+		1 + 2 --> "end"
+	--- */
 	// AdditiveExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 + 2 -> "end"
 	// AdditiveExpression XPECT succs at '"start"' --> 1
 	"start";
@@ -30,6 +36,13 @@ function Argument() {
 }
 
 function ArrayLiteral() {
+	/* ArrayLiteral XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 3,
+		3 --> [1\,2\,3],
+		[1\,2\,3] --> "end"
+	--- */
 	// ArrayLiteral XPECT allPaths --> "start" -> 1 -> 2 -> 3 -> [1\,2\,3] -> "end"
 	// ArrayLiteral XPECT succs at '"start"' --> 1
 	"start";
@@ -42,6 +55,12 @@ function ArrayLiteral() {
 }
 
 function AssignmentExpression(x:int) {
+	/* AssignmentExpression XPECT allEdges ---
+		"start" --> x,
+		x --> 1,
+		1 --> x = 1,
+		x = 1 --> "end"
+	--- */
 	// AssignmentExpression XPECT allPaths --> "start" -> x -> 1 -> x = 1 -> "end"
 	// AssignmentExpression XPECT succs at '"start"' --> x
 	"start";
@@ -53,6 +72,11 @@ function AssignmentExpression(x:int) {
 }
 
 async function AwaitExpression() {
+	/* AwaitExpression XPECT allEdges ---
+		"start" --> null,
+		null --> await null,
+		await null --> "end"
+	--- */
 	// AwaitExpression XPECT allPaths --> "start" -> null -> await null -> "end"
 	// AwaitExpression XPECT succs at '"start"' --> null
 	"start";
@@ -64,6 +88,12 @@ async function AwaitExpression() {
 }
 
 function BinaryBitwiseExpression() {
+	/* BinaryBitwiseExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 & 2,
+		1 & 2 --> "end"
+	--- */
 	// BinaryBitwiseExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 & 2 -> "end"
 	// BinaryBitwiseExpression XPECT succs at '"start"' --> 1
 	"start";
@@ -75,6 +105,12 @@ function BinaryBitwiseExpression() {
 }
 
 function BinaryLogicalExpression() {
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 && 2,
+		1 && 2 --> "end"
+	--- */
 	// BinaryLogicalExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 && 2 -> "end"
 	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
 	"start";
@@ -86,6 +122,11 @@ function BinaryLogicalExpression() {
 }
 
 function CastExpression() {
+	/* CastExpression XPECT allEdges ---
+		"start" --> 4 ,
+		4 --> 4 as int,
+		4 as int --> "end"
+	--- */
 	// CastExpression XPECT allPaths --> "start" -> 4 -> 4 as int -> "end"
 	// CastExpression XPECT succs at '"start"' --> 4
 	"start";
@@ -97,6 +138,12 @@ function CastExpression() {
 }
 
 function CommaExpression() {
+	/* CommaExpression XPECT allEdges ---
+	"start" --> 4,
+	4 --> 5,
+	5 --> 4\,5,
+	4\,5 --> "end"
+	--- */
 	// CommaExpression XPECT allPaths --> "start" -> 4 -> 5 -> 4\,5 -> "end"
 	// CommaExpression XPECT succs at '"start"' --> 4
 	"start";
@@ -108,6 +155,14 @@ function CommaExpression() {
 }
 
 function ConditionalExpression() {
+	/* ConditionalExpression XPECT allEdges ---
+		"start" --> true,
+		true --> 1,
+		true --> 2,
+		1 --> true ? 1 : 2,
+		2 --> true ? 1 : 2,
+		true ? 1 : 2 --> "end"
+	--- */
 	// ConditionalExpression XPECT allPaths --> "start" -> true -> 1 -> true ? 1 : 2 -> "end", "start" -> true -> 2 -> true ? 1 : 2 -> "end"
 	// ConditionalExpression XPECT succs at '"start"' --> true
 	"start";
@@ -121,6 +176,12 @@ function ConditionalExpression() {
 }
 
 function EqualityExpression() {
+	/* EqualityExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 == 2,
+		1 == 2 --> "end"
+	--- */
 	// EqualityExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 == 2 -> "end"
 	// EqualityExpression XPECT succs at '"start"' --> 1
 	"start";
@@ -132,6 +193,11 @@ function EqualityExpression() {
 }
 
 function FunctionExpression() {
+	/* FunctionExpression XPECT allEdges ---
+		"start" --> function() { },
+		function() { } --> (function() { }),
+		(function() { }) --> "end"
+	--- */
 	// FunctionExpression XPECT allPaths --> "start" -> function() { } -> (function() { }) -> "end"
 	// FunctionExpression XPECT succs at '"start"' --> function() { }
 	"start";
@@ -142,6 +208,10 @@ function FunctionExpression() {
 }
 
 function IdentifierRef(i) {
+	/* IdentifierRef XPECT allEdges ---
+		"start" --> i,
+		i --> "end"
+	--- */
 	// IdentifierRef XPECT allPaths --> "start" -> i -> "end"
 	// IdentifierRef XPECT succs at '"start"' --> i
 	"start";
@@ -151,6 +221,12 @@ function IdentifierRef(i) {
 }
 
 function IndexedAccessExpression(a : Array<?>) {
+	/* IndexedAccessExpression XPECT allEdges ---
+		"start" --> a,
+		a --> 1,
+		1 --> a[1],
+		a[1] --> "end"
+	--- */
 	// IndexedAccessExpression XPECT allPaths --> "start" -> a -> 1 -> a[1] -> "end"
 	// IndexedAccessExpression XPECT succs at '"start"' --> a
 	"start";
@@ -162,6 +238,10 @@ function IndexedAccessExpression(a : Array<?>) {
 }
 
 function Literal() {
+	/* Literal XPECT allEdges ---
+		"start" --> "string literal",
+		"string literal" --> "end"
+	--- */
 	// Literal XPECT allPaths --> "start" -> "string literal" -> "end"
 	// Literal XPECT succs at '"start"' --> "string literal"
 	"start";
@@ -171,6 +251,12 @@ function Literal() {
 }
 
 function MultiplicativeExpression() {
+	/* MultiplicativeExpression XPECT allEdges ---
+		"start" --> 47,
+		47 --> 11,
+		11 --> 47 * 11,
+		47 * 11 --> "end"
+	--- */
 	// MultiplicativeExpression XPECT allPaths --> "start" -> 47 -> 11 -> 47 * 11 -> "end"
 	// MultiplicativeExpression XPECT succs at '"start"' --> 47
 	"start";
@@ -188,6 +274,11 @@ function N4ClassExpression() {
 }
 
 function NewExpression() {
+	/* NewExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> new Object(),
+		new Object() --> "end"
+	--- */
 	// NewExpression XPECT allPaths --> "start" -> Object -> new Object() -> "end"
 	// NewExpression XPECT succs at '"start"' --> Object
 	"start";
@@ -204,6 +295,14 @@ function NewTarget() {
 }
 
 function ObjectLiteral() {
+	/* ObjectLiteral XPECT allEdges ---
+		"start" --> 1,
+		1 --> "string",
+		"string" --> function(){},
+		function(){} --> { a : 1 \, b : "string" \, fn : function(){} \, m() {} },
+		{ a : 1 \, b : "string" \, fn : function(){} \, m() {} } --> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }),
+		({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }) --> "end"
+	--- */
 	/* ObjectLiteral XPECT allPaths ---
 	   "start" -> 1 -> "string"
 		-> function(){}
@@ -223,6 +322,14 @@ function ObjectLiteral() {
 }
 
 function ParameterizedCallExpression() {
+	/* ParameterizedCallExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> Object.call,
+		Object.call --> 1,
+		1 --> 2,
+		2 --> Object.call(1\,2),
+		Object.call(1\,2) --> "end"
+	--- */
 	// ParameterizedCallExpression XPECT allPaths --> "start" -> Object -> Object.call -> 1 -> 2 -> Object.call(1\,2) -> "end"
 	// ParameterizedCallExpression XPECT succs at '"start"' --> Object
 	"start";
@@ -236,6 +343,11 @@ function ParameterizedCallExpression() {
 }
 
 function ParameterizedPropertyAccessExpression() {
+	/* ParameterizedPropertyAccessExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> Object.call,
+		Object.call --> "end"
+	--- */
 	// ParameterizedPropertyAccessExpression XPECT allPaths --> "start" -> Object -> Object.call -> "end"
 	// ParameterizedPropertyAccessExpression XPECT succs at '"start"' --> Object
 	"start";
@@ -246,6 +358,11 @@ function ParameterizedPropertyAccessExpression() {
 }
 
 function PostfixExpression(x : int) {
+	/* PostfixExpression XPECT allEdges ---
+		"start" --> x,
+		x --> x++,
+		x++ --> "end"
+	--- */
 	// PostfixExpression XPECT allPaths --> "start" -> x -> x++ -> "end"
 	// PostfixExpression XPECT succs at '"start"' --> x
 	"start";
@@ -268,6 +385,12 @@ function PromisifyExpression() {
 }
 
 function RelationalExpression() {
+	/* RelationalExpression XPECT allEdges ---
+	"start" --> 1,
+	1 --> 73,
+	73 --> 1 > 73,
+	1 > 73 --> "end"
+	--- */
 	// RelationalExpression XPECT allPaths --> "start" -> 1 -> 73 -> 1 > 73 -> "end"
 	// RelationalExpression XPECT succs at '"start"' --> 1
 	"start";
@@ -279,6 +402,12 @@ function RelationalExpression() {
 }
 
 function ShiftExpression() {
+	/* ShiftExpression XPECT allEdges ---
+		"start" --> 847,
+		847 --> 2,
+		2 --> 847 >> 2,
+		847 >> 2 --> "end"
+	--- */
 	// ShiftExpression XPECT allPaths --> "start" -> 847 -> 2 -> 847 >> 2 -> "end"
 	// ShiftExpression XPECT succs at '"start"' --> 847
 	"start";
@@ -292,6 +421,10 @@ function ShiftExpression() {
 class ClassSuperLiteral {
 	// SuperLiteral XPECT warnings --> "Method names should start with lower case letter." at "SuperLiteral"
 	SuperLiteral() {
+		/* SuperLiteral XPECT allEdges ---
+			"start" --> super,
+			super --> "end"
+		--- */
 		// SuperLiteral XPECT allPaths --> "start" -> super -> "end"
 		// SuperLiteral XPECT succs at '"start"' --> super
 		"start";
@@ -309,6 +442,13 @@ function TaggedTemplateString() {
 }
 
 function TemplateExpression() {
+	/* TemplateExpression XPECT allEdges ---
+		"start" --> `a ${,
+		`a ${ --> "b",
+		"b" --> c`,
+		c` --> `a ${"b"} c`,
+		`a ${"b"} c` --> "end"
+	--- */
 	// TemplateExpression XPECT allPaths --> "start" -> `a ${ -> "b" -> c` -> `a ${"b"} c` -> "end"
 	// TemplateExpression XPECT succs at '"start"' --> `a ${
 	"start";
@@ -321,6 +461,10 @@ function TemplateExpression() {
 }
 
 function ThisExpression() {
+	/* ThisExpression XPECT allEdges ---
+		"start" --> this,
+		this --> "end"
+	--- */
 	// ThisExpression XPECT allPaths --> "start" -> this -> "end"
 	// ThisExpression XPECT succs at '"start"' --> this
 	"start";
@@ -331,6 +475,11 @@ function ThisExpression() {
 
 
 function UnaryExpression() {
+	/* UnaryExpression XPECT allEdges ---
+	"start" --> true,
+		true --> !true,
+		!true --> "end"
+	--- */
 	// UnaryExpression XPECT allPaths --> "start" -> true -> !true -> "end"
 	// UnaryExpression XPECT succs at '"start"' --> true
 	"start";
@@ -341,6 +490,13 @@ function UnaryExpression() {
 }
 
 function * YieldExpression(i) {
+	/* YieldExpression XPECT allEdges ---
+		"start" --> i,
+		i --> 1,
+		1 --> yield 1,
+		yield 1 --> i = yield 1,
+		i = yield 1 --> "end"
+	--- */
 	// YieldExpression XPECT allPaths --> "start" -> i -> 1 -> yield 1 -> i = yield 1 -> "end"
 	// YieldExpression XPECT succs at '"start"' --> i
 	"start";

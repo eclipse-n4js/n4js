@@ -21,9 +21,9 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.analyses.AllNodesAndEdgesPrintWalker;
+import org.eclipse.n4js.flowgraphs.analyses.AllPathPrintWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
@@ -37,15 +37,14 @@ import com.google.inject.Inject;
 /**
  */
 @XpectImport(N4JSOffsetAdapter.class)
-public class SuccsXpectMethod {
+public class FlowgraphsXpectMethod {
 
 	@Inject
 	N4JSFlowAnalyses flowAnalyses;
 
 	/**
-	 * This xpect method can evaluate the accessibility of {@link TMember}s. For example, given a field of a class or a
-	 * {@link ParameterizedPropertyAccessExpression}, the xpect methods returns their explicit or implicit declared
-	 * accessibility such as {@code public} or {@code private}.
+	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
+	 * specifying the edge type.
 	 */
 	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
 	@Xpect
@@ -77,15 +76,6 @@ public class SuccsXpectMethod {
 		return cfType;
 	}
 
-	private ControlFlowElement getControlFlowElement(IEObjectCoveringRegion offset) {
-		EObject context = offset.getEObject();
-		if (!(context instanceof ControlFlowElement)) {
-			fail("Element '" + FGUtils.getTextLabel(context) + "' is not a control flow element");
-		}
-		ControlFlowElement cfe = (ControlFlowElement) context;
-		return cfe;
-	}
-
 	private void filterByControlFlowType(ControlFlowElement start, List<ControlFlowElement> succList,
 			ControlFlowType cfType) {
 
@@ -98,6 +88,56 @@ public class SuccsXpectMethod {
 				succIt.remove();
 			}
 		}
+	}
+
+	/**
+	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
+	 * the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
+	@Xpect
+	public void allPaths(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset) {
+
+		ControlFlowElement cfe = null;
+		if (offset != null) {
+			cfe = getControlFlowElement(offset);
+		}
+		AllPathPrintWalker appw = new AllPathPrintWalker(cfe);
+		flowAnalyses.performAnalyzes(appw);
+		List<String> pathStrings = appw.getPathStrings();
+
+		expectation.assertEquals(pathStrings);
+	}
+
+	/**
+	 * This xpect method can evaluate all edges of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
+	@Xpect
+	public void allEdges(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset) {
+
+		ControlFlowElement cfe = null;
+		if (offset != null) {
+			cfe = getControlFlowElement(offset);
+		}
+		cfe = FGUtils.getCFContainer(cfe);
+
+		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(cfe);
+		flowAnalyses.performAnalyzes(anaepw);
+		List<String> pathStrings = anaepw.getAllEdgeStrings();
+
+		expectation.assertEquals(pathStrings);
+	}
+
+	private ControlFlowElement getControlFlowElement(IEObjectCoveringRegion offset) {
+		EObject context = offset.getEObject();
+		if (!(context instanceof ControlFlowElement)) {
+			fail("Element '" + FGUtils.getTextLabel(context) + "' is not a control flow element");
+		}
+		ControlFlowElement cfe = (ControlFlowElement) context;
+		return cfe;
 	}
 
 }
