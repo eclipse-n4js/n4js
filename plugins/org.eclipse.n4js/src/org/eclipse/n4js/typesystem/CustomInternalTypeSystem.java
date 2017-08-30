@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.typesystem;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
@@ -17,10 +18,12 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.xtext.service.OperationCanceledManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import it.xsemantics.runtime.ErrorInformation;
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleApplicationTrace;
 import it.xsemantics.runtime.RuleEnvironment;
@@ -37,6 +40,8 @@ public class CustomInternalTypeSystem extends InternalTypeSystem {
 
 	@Inject
 	private TypeProcessor typeProcessor;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	@SuppressWarnings("javadoc")
 	public static class RuleFailedExceptionWithoutStacktrace extends RuleFailedException {
@@ -77,6 +82,48 @@ public class CustomInternalTypeSystem extends InternalTypeSystem {
 		}
 	}
 
+	/**
+	 * Overridden to avoid {@link OperationCanceledException}s being suppressed by Xsemantics.
+	 * <p>
+	 * Note that this method is also invoked in case of or-blocks. For example, the following Xsemantics source
+	 *
+	 * <pre>
+	 * {
+	 * 	doSomethingThatThrowsCancelException();
+	 * } or {
+	 * 	println("WILL NOT GET HERE!!!")
+	 * }
+	 * </pre>
+	 *
+	 * compiles to the following Java code:
+	 *
+	 * <pre>
+	 * RuleFailedException previousFailure = null;
+	 * try {
+	 * 	doSomethingThatThrowsCancelException();
+	 * } catch (Exception e) {
+	 * 	previousFailure = extractRuleFailedException(e);
+	 * 	InputOutput.<String> println("WILL NOT GET HERE!!!");
+	 * }
+	 * </pre>
+	 *
+	 * Without the call to <code>#propagateIfCancelException()</code> in this override, the cancel exception would be
+	 * suppressed by Xsemantics and the <code>println()</code> would be executed.
+	 */
+	@Override
+	public RuleFailedException extractRuleFailedException(Exception e) {
+		operationCanceledManager.propagateIfCancelException(e);
+		return super.extractRuleFailedException(e);
+	}
+
+	/** Overridden to avoid {@link OperationCanceledException}s being suppressed by Xsemantics. */
+	@Override
+	public void throwRuleFailedException(String message, String issue, Throwable t,
+			ErrorInformation... errorInformations) {
+		operationCanceledManager.propagateIfCancelException(t);
+		super.throwRuleFailedException(message, issue, t, errorInformations);
+	}
+
 	@Override
 	protected RuleFailedException createRuleFailedException(String message, String issue, Throwable t) {
 		return new RuleFailedExceptionWithoutStacktrace(message, issue, t);
@@ -106,7 +153,7 @@ public class CustomInternalTypeSystem extends InternalTypeSystem {
 	}
 
 	/**
-	 * <b>!!! This method must never be invoked, except from {@link ASTProcessor} and related classes !!!</b>
+	 * <b>!!! This method must never be invoked, except from {@code AbstractProcessor#askXsemanticsForType()} !!!</b>
 	 * <p>
 	 * This method may be called to actually use the 'type' judgment in Xsemantics. It is used by {@link ASTProcessor}
 	 * while traversing the entire AST (during post-processing) to obtain the type of nodes that have not yet been

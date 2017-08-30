@@ -147,7 +147,8 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 *
 	 * @param cancelIndicator
 	 *            a cancel indicator to use or <code>null</code> if none is available. If <code>null</code> this method
-	 *            will obtain a cancel indicator from Xtext.
+	 *            will try to obtain a cancel indicator from Xtext (if that fails, processing will proceed without the
+	 *            use of a cancel indicator).
 	 */
 	public void performPostProcessing(CancelIndicator cancelIndicator) {
 		if (fullyPostProcessed)

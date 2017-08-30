@@ -25,12 +25,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.eclipse.xtext.util.CancelIndicator;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ContiguousSet;
-import com.google.common.collect.Range;
-
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -44,6 +39,13 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.CharDiscreteDomain;
+import org.eclipse.xtext.service.OperationCanceledManager;
+import org.eclipse.xtext.util.CancelIndicator;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ContiguousSet;
+import com.google.common.collect.Range;
+
 import it.xsemantics.runtime.RuleEnvironment;
 
 /**
@@ -113,6 +115,7 @@ public final class InferenceContext {
 
 	private final N4JSTypeSystem ts;
 	private final TypeSystemHelper tsh;
+	private final OperationCanceledManager operationCanceledManager;
 	private final CancelIndicator cancelIndicator;
 	private final RuleEnvironment G;
 
@@ -150,14 +153,16 @@ public final class InferenceContext {
 	 * @param inferenceVariables
 	 *            the meta variables to be inferred.
 	 */
-	public InferenceContext(N4JSTypeSystem ts, TypeSystemHelper tsh, CancelIndicator cancelIndicator,
-			RuleEnvironment G, InferenceVariable... inferenceVariables) {
+	public InferenceContext(N4JSTypeSystem ts, TypeSystemHelper tsh, OperationCanceledManager operationCanceledManager,
+			CancelIndicator cancelIndicator, RuleEnvironment G, InferenceVariable... inferenceVariables) {
 		Objects.requireNonNull(ts);
 		Objects.requireNonNull(tsh);
+		Objects.requireNonNull(operationCanceledManager);
 		Objects.requireNonNull(cancelIndicator);
 		Objects.requireNonNull(G);
 		this.ts = ts;
 		this.tsh = tsh;
+		this.operationCanceledManager = operationCanceledManager;
 		this.cancelIndicator = cancelIndicator;
 		this.G = G;
 		addInferenceVariables(false, inferenceVariables);
@@ -180,9 +185,13 @@ public final class InferenceContext {
 	 * Note that this method is not guaranteed to always return true if the constraint system is unsolvable; it just
 	 * reports about easy to detect special cases (i.e. after the type bound FALSE has been added to
 	 * {@link #currentBounds}) to allow for performance tweaks.
+	 * <p>
+	 * Since this method is invoked at places that are also suitable for cancellation checking, this method also takes
+	 * care to that, throwing an {@link OperationCanceledException} when appropriate.
 	 */
 	public boolean isDoomed() {
-		return currentBounds.hasBoundFALSE() || cancelIndicator.isCanceled();
+		operationCanceledManager.checkCanceled(cancelIndicator);
+		return currentBounds.hasBoundFALSE();
 	}
 
 	/**
