@@ -72,8 +72,7 @@ class ForFactory {
 		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 		cNode.connectInternalSucc(ControlFlowType.Repeat, hasNextNode, nextNode);
-		cNode.connectInternalSucc(nextNode, bodyNode);
-		cNode.connectInternalSucc(ControlFlowType.Loop, bodyNode, hasNextNode);
+		cNode.connectInternalSucc(nextNode, bodyNode, hasNextNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
@@ -82,7 +81,6 @@ class ForFactory {
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
 		hasNextNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
 
-		cNode.setLoopContainer(true);
 		return cNode;
 	}
 
@@ -155,8 +153,6 @@ class ForFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-
-		cNode.setLoopContainer(true);
 
 		String label = ASTUtils.getLabel(forStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));

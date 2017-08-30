@@ -56,7 +56,6 @@ class WhileFactory {
 		String label = ASTUtils.getLabel(whileStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
 		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
-		cNode.setLoopContainer(true);
 
 		return cNode;
 	}

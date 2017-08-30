@@ -40,8 +40,6 @@ public class ComplexNode implements ControlFlowable {
 	final private Map<String, Node> nodeMap = new HashMap<>();
 
 	private Node entry, exit, represent;
-	private boolean isLoopContainer = false;
-	private boolean hasOuterBlockUse = false;
 
 	public ComplexNode(ControlFlowElement astElement) {
 		this.container = FGUtils.getCFContainer(astElement);
@@ -191,22 +189,6 @@ public class ComplexNode implements ControlFlowable {
 
 	public Node getNode(String name) {
 		return nodeMap.get(name);
-	}
-
-	public void setLoopContainer(boolean loopContainer) {
-		this.isLoopContainer = loopContainer;
-	}
-
-	public boolean isLoopContainer() {
-		return isLoopContainer;
-	}
-
-	public boolean hasOuterBlockUse() {
-		return hasOuterBlockUse;
-	}
-
-	public void setHasOuterBlockUses(boolean b) {
-		this.hasOuterBlockUse = b;
 	}
 
 }

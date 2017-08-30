@@ -42,19 +42,6 @@ public class ControlFlowEdge extends AbstractEdge {
 	}
 
 	/**
-	 * @return true iff {@link #cfType} is either {@literal ControlFlowType.Continue} or {@literal ControlFlowType.Loop}
-	 */
-	public boolean isLoopCarried() {
-		switch (cfType) {
-		case Continue:
-		case Loop:
-			return true;
-		default:
-			return false;
-		}
-	}
-
-	/**
 	 * @return true iff {@link #cfType} is {@literal ControlFlowType.Repeat}
 	 */
 	public boolean isRepeat() {

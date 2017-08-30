@@ -19,8 +19,6 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.smith.graph.CFGraphProvider;
@@ -152,17 +150,6 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 				if (flowAnalyses.isTransitiveSuccessor(cfe2, cfe1))
 					return 1;
-
-				Collection<ControlFlowType> cfts1 = flowAnalyses.getSuccessorsControlFlowTypes(cfe1);
-				Collection<ControlFlowType> cfts2 = flowAnalyses.getSuccessorsControlFlowTypes(cfe2);
-				cfts1 = ControlFlowType.filter(cfts1, ControlFlowType.LoopTypes);
-				cfts2 = ControlFlowType.filter(cfts2, ControlFlowType.LoopTypes);
-
-				if (FGUtils.getTextLabel(cfe1).equals("  ")) {
-					System.out.println();
-				}
-
-				offset = cfts1.size() - cfts2.size();
 
 				if (offset == 0) {
 					ControlFlowElement commonSucc = flowAnalyses.getCommonPredecessor(cfe1, cfe2);

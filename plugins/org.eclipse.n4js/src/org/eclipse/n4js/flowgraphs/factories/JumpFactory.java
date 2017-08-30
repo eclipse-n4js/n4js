@@ -32,12 +32,12 @@ import org.eclipse.n4js.n4JS.WhileStatement;
 /**
  * Jumps are control flow edges that start at a {@link ControlFlowElement} and end at another
  * {@link ControlFlowElement}. The loop control flow edge in loop statements, such as in {@link WhileStatement}s, is not
- * considered as a jump, but a <i>loop carried</i> control flow edge.
+ * considered as a jump.
  * <p>
  * Jump edges start at and end at (start --> end):<br/>
  * <ul>
  * <li/>BreakStatement.exitNode --> (LoopStatement | SwitchStatement).exitNode
- * <li/>ContinueStatement.exitNode --> LoopStatement.conditionNode
+ * <li/>ContinueStatement.exitNode --> LoopStatement.conditionNode or ForStatement.updateNode
  * <li/>ReturnStatement.exitNode --> FunctionBlock.exitNode
  * <li/>ThrowStatement.exitNode --> FunctionBlock.exitNode
  * </ul>

@@ -17,11 +17,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.Path;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerGuideInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.PathFactory;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -98,31 +95,6 @@ public class FlowGraph {
 		if (!cnMap.containsKey(cfe))
 			return null;
 		return cnMap.get(cfe);
-	}
-
-	public ControlFlowType getControlFlowTypeToSuccessor(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
-		return getControlFlowTypeToSuccessors(cfe, cfeSucc).first();
-	}
-
-	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
-		Path path = getPath(cfe, cfeSucc);
-		if (path.isConnecting()) {
-			return path.getControlFlowTypes();
-		} else {
-			throw new IllegalArgumentException("No path found between given ControlFlowElements");
-		}
-	}
-
-	/**
-	 * @return the path from cfe to cfeSucc
-	 */
-	public Path getPath(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
-		ComplexNode cnStart = getComplexNode(cfe);
-		ComplexNode cnEnd = getComplexNode(cfeSucc);
-		Node nStart = cnStart.getRepresent();
-		Node nEnd = cnEnd.getRepresent();
-		Path path = PathFactory.buildPath(nStart, nEnd);
-		return path;
 	}
 
 }

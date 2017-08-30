@@ -10,20 +10,17 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathAnalyses;
+import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
-import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
-import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
@@ -36,6 +33,8 @@ import com.google.inject.Singleton;
 @Singleton
 public class N4JSFlowAnalyses {
 	private FlowGraph cfg;
+	private SuccessorPredecessorAnalysis spa;
+	private PathAnalyses pa;
 
 	/**
 	 * Performs the control flow analyses for all {@link ControlFlowElement}s in the given {@link Script}.
@@ -45,9 +44,7 @@ public class N4JSFlowAnalyses {
 	public void perform(Script script) {
 		Objects.requireNonNull(script);
 
-		/*
-		 * Protect ASTPostprocessing from failures of flow analyses.
-		 */
+		// Protect ASTPostprocessing from failures of flow analyses.
 		try {
 			_perform(script);
 		} catch (Throwable t) {
@@ -57,6 +54,8 @@ public class N4JSFlowAnalyses {
 
 	private void _perform(Script script) {
 		cfg = ControlFlowGraphFactory.build(script);
+		spa = new SuccessorPredecessorAnalysis(cfg);
+		pa = new PathAnalyses(cfg);
 	}
 
 	/**
@@ -69,94 +68,35 @@ public class N4JSFlowAnalyses {
 	/**
 	 * @returns a list of all direct predecessors of cfe
 	 */
-	public List<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		Objects.requireNonNull(cfe);
-
-		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<RepresentingNode> repNodes = cn.getRepresent().getPredecessors(followEdges);
-		List<ControlFlowElement> cfElems = new LinkedList<>();
-		for (RepresentingNode rNode : repNodes) {
-			cfElems.add(rNode.getRepresentedControlFlowElement());
-		}
-		return cfElems;
+	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
+		return spa.getPredecessors(cfe, followEdges);
 	}
 
 	/** @returns a list of all direct successors of cfe */
-	public List<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		Objects.requireNonNull(cfe);
-
-		ComplexNode cn = cfg.getComplexNode(cfe);
-		List<RepresentingNode> repNodes = cn.getRepresent().getSuccessors(followEdges);
-		List<ControlFlowElement> cfElems = new LinkedList<>();
-		for (RepresentingNode rNode : repNodes) {
-			cfElems.add(rNode.getRepresentedControlFlowElement());
-		}
-		return cfElems;
+	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
+		return spa.getSuccessors(cfe, followEdges);
 	}
 
 	/** @returns true iff cfe2 is a direct successor of cfe1 */
 	public boolean isSuccessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-		List<ControlFlowElement> succs = getSuccessors(cfe1);
-		return succs.contains(cfe2);
+		return spa.isSuccessor(cfe1, cfe2);
 	}
 
 	/** @returns true iff cfe2 is a direct predecessor of cfe1 */
 	public boolean isPredecessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-		List<ControlFlowElement> preds = getPredecessors(cfe1);
-		return preds.contains(cfe2);
+		return spa.isPredecessor(cfe1, cfe2);
 	}
 
 	/** @returns true iff cfeTo is a transitive successor of cfeFrom */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		Objects.requireNonNull(cfeFrom);
-		Objects.requireNonNull(cfeTo);
-
-		Path path = cfg.getPath(cfeFrom, cfeTo);
-		return path.isConnecting();
-
-		// ComplexNode cn = cfg.getComplexNode(cfeFrom);
-		// boolean isTransitiveSuccessor = cn.getRepresent().isTransitiveSuccessor(cfeTo, new LinkedList<>());
-		// return isTransitiveSuccessor;
-	}
-
-	/**
-	 * @returns the {@link ControlFlowType} that happens between the two direct successors cfe and cfeSucc
-	 */
-	public ControlFlowType getControlFlowTypeToSuccessor(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
-		return cfg.getControlFlowTypeToSuccessor(cfe, cfeSucc);
+		return pa.isTransitiveSuccessor(cfeFrom, cfeTo);
 	}
 
 	/**
 	 * @returns all the {@link ControlFlowType}s that happen between the two direct successors cfe and cfeSucc
 	 */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
-		return cfg.getControlFlowTypeToSuccessors(cfe, cfeSucc);
-	}
-
-	/**
-	 * @returns a set of {@link ControlFlowType}s to the successors of cfe
-	 */
-	public TreeSet<ControlFlowType> getSuccessorsControlFlowTypes(ControlFlowElement cfe) {
-		List<ControlFlowElement> succs = getSuccessors(cfe);
-		TreeSet<ControlFlowType> succsCFTs = new TreeSet<>();
-		for (ControlFlowElement succ : succs) {
-			TreeSet<ControlFlowType> succCFTs = getControlFlowTypeToSuccessors(cfe, succ);
-			succsCFTs.addAll(succCFTs);
-		}
-		return succsCFTs;
-	}
-
-	/**
-	 * @returns a set of {@link ControlFlowType}s to the predecessors of cfe
-	 */
-	public TreeSet<ControlFlowType> getPredecessorsControlFlowTypes(ControlFlowElement cfe) {
-		List<ControlFlowElement> preds = getPredecessors(cfe);
-		TreeSet<ControlFlowType> predsCFTs = new TreeSet<>();
-		for (ControlFlowElement pred : preds) {
-			TreeSet<ControlFlowType> predCFTs = getControlFlowTypeToSuccessors(pred, cfe);
-			predsCFTs.addAll(predCFTs);
-		}
-		return predsCFTs;
+		return pa.getControlFlowTypeToSuccessors(cfe, cfeSucc);
 	}
 
 	/**
@@ -173,33 +113,7 @@ public class N4JSFlowAnalyses {
 	 * supposed to be the common predecessor of cfeA and cfeB.
 	 */
 	public ControlFlowElement getCommonPredecessor(ControlFlowElement cfeA, ControlFlowElement cfeB) {
-		Objects.requireNonNull(cfeA);
-		Objects.requireNonNull(cfeB);
-
-		// step 1: traverse all predecessors, beginning from cfeA: mark each
-		Set<ControlFlowElement> marked = new HashSet<>();
-		List<ControlFlowElement> curCFEs = new LinkedList<>();
-		curCFEs.add(cfeA);
-		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
-			marked.add(cfe);
-			List<ControlFlowElement> preds = getPredecessors(cfe, ControlFlowType.NonLoopTypes);
-			curCFEs.addAll(preds);
-		}
-
-		// step 2: traverse all predecessors, beginning from cfeB: find mark (this is the common pred.)
-		curCFEs.clear();
-		curCFEs.add(cfeB);
-		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
-			if (marked.contains(cfe)) {
-				return cfe;
-			}
-			List<ControlFlowElement> preds = getPredecessors(cfe, ControlFlowType.NonLoopTypes);
-			curCFEs.addAll(preds);
-		}
-
-		return null;
+		return pa.getCommonPredecessor(cfeA, cfeB);
 	}
 
 	/**
@@ -215,51 +129,15 @@ public class N4JSFlowAnalyses {
 	 * that second traversion are part of the path identifier iff they are contained in P.
 	 */
 	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		Objects.requireNonNull(cfeFrom);
-		Objects.requireNonNull(cfeTo);
-
-		LinkedHashSet<ControlFlowElement> predSet = new LinkedHashSet<>();
-
-		List<ControlFlowElement> curCFEs = new LinkedList<>();
-		curCFEs.add(cfeTo);
-		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
-			predSet.add(cfe);
-			List<ControlFlowElement> preds = getPredecessors(cfe, ControlFlowType.NonLoopTypes);
-			curCFEs.addAll(preds);
-		}
-
-		String pathString = "";
-		curCFEs.clear();
-		curCFEs.add(cfeFrom);
-		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
-			if (predSet.contains(cfe)) {
-				List<ControlFlowElement> succs = getSuccessors(cfe, ControlFlowType.NonLoopTypes);
-				curCFEs.addAll(succs);
-				String nameID = FGUtils.getNameID(cfe);
-				pathString += nameID + "->";
-			}
-		}
-
-		pathString = pathString.substring(0, pathString.length() - 2);
-		return pathString;
+		return pa.getPathIdentifier(cfeFrom, cfeTo);
 	}
 
 	/**
-	 * @return collection of all non-control {@link ControlFlowElement}s covered by the control flow analyses
+	 * Performs all given {@link GraphWalker}s in a single run. The single run will traverse the control flow graph in
+	 * the following manner. First forward beginning from the entries of every source container, then backward beginning
+	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
+	 * then backward beginning from an arbitrary element.
 	 */
-	public Collection<ControlFlowElement> getAllElements() {
-		List<ControlFlowElement> allCFEs = new LinkedList<>();
-		for (ComplexNode cn : cfg.getAllComplexNodes()) {
-			if (!cn.isControlElement()) {
-				ControlFlowElement cfe = cn.getControlFlowElement();
-				allCFEs.add(cfe);
-			}
-		}
-		return allCFEs;
-	}
-
 	public void performAnalyzes(GraphWalkerInternal... graphWalkers) {
 		List<GraphWalkerInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
 		cfg.analyze(graphWalkerList);

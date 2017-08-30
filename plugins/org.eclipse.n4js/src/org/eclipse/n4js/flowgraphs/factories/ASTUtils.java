@@ -18,6 +18,7 @@ import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
 
+/** Utilities for factory classes. */
 public class ASTUtils {
 
 	/** Returns a detailed string about the given node */
@@ -27,6 +28,9 @@ public class ASTUtils {
 		return edgeStr;
 	}
 
+	/**
+	 * @returns the label of a statement, or an expression that is the direct child of an {@link ExpressionStatement}.
+	 */
 	public static String getLabel(Statement stmt) {
 		EObject container = stmt.eContainer();
 		if (container instanceof ExpressionStatement) {

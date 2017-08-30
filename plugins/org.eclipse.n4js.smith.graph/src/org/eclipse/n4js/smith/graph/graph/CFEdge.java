@@ -72,11 +72,11 @@ public class CFEdge extends Edge {
 
 		ControlFlowType cfType = cfTypes.first();
 		switch (cfType) {
-		case Loop:
-		case Continue:
+		case Repeat:
 			color = displ.getSystemColor(SWT.COLOR_GREEN);
 			break;
 		case Break:
+		case Continue:
 		case Return:
 			color = displ.getSystemColor(SWT.COLOR_BLUE);
 			break;
@@ -206,7 +206,7 @@ public class CFEdge extends Edge {
 			case Continue:
 			case Return:
 			case Throw:
-			case Loop:
+			case Repeat:
 				if (!label.isEmpty())
 					label += "|";
 				label += cfType.name();

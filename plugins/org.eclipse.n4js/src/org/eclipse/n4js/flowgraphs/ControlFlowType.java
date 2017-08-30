@@ -18,10 +18,9 @@ import java.util.List;
  */
 @SuppressWarnings("javadoc")
 public enum ControlFlowType {
-	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Loop, Repeat;
+	Return, Throw, Break, Continue, CatchesAll, CatchesRuntimeExceptions, Successor, Repeat;
 
-	static public final ControlFlowType[] LoopTypes = { Loop, Continue };
-	static public final ControlFlowType[] NonLoopTypes = { Successor, Break, Throw, Return };
+	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return };
 
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {
 		List<ControlFlowType> result = new LinkedList<>();

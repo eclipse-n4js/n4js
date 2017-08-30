@@ -22,16 +22,8 @@ public class EdgeUtils {
 		addEdgeCF(cf1.getExit(), cf2.getEntry());
 	}
 
-	public static void connectLC(ControlFlowable conditionNode, ControlFlowable whileBlock) {
-		addEdgeCFLC(conditionNode.getExit(), whileBlock.getEntry());
-	}
-
 	static public ControlFlowEdge addEdgeCF(Node n1, Node n2) {
 		return addEdgeCF(n1, n2, ControlFlowType.Successor);
-	}
-
-	public static ControlFlowEdge addEdgeCFLC(Node n1, Node n2) {
-		return addEdgeCF(n1, n2, ControlFlowType.Loop);
 	}
 
 	static public ControlFlowEdge addEdgeCF(Node n1, Node n2, ControlFlowType cfType) {

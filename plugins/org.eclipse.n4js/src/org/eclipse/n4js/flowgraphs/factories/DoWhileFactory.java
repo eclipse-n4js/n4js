@@ -53,7 +53,6 @@ class DoWhileFactory {
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
 		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
 
-		cNode.setLoopContainer(true);
 		return cNode;
 	}
 
