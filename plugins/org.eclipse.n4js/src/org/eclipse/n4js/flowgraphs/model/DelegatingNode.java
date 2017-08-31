@@ -10,18 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-import java.util.List;
-
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. However, it does not represent a CFE
  * and thus does not return its {@link ControlFlowElement} when asked for it in
- * {@link #getRepresentingOrSucceeding(List, ControlFlowType...)} or
- * {@link #getRepresentingOrPreceeding(List, ControlFlowType...)}. Instead, it passes these calls to the successor or
- * predecessor, respectively.
+ * {@link #getRepresentedControlFlowElement()}.
  */
 public class DelegatingNode extends Node {
 	final private ControlFlowElement cfeDelegate;
@@ -39,20 +34,6 @@ public class DelegatingNode extends Node {
 	public DelegatingNode(String name, ControlFlowElement cfe, ControlFlowElement cfeDelegate) {
 		super(name, cfe);
 		this.cfeDelegate = cfeDelegate;
-	}
-
-	@Override
-	protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges,
-			ControlFlowType... followEdges) {
-
-		return getSuccessors(loopEdges, followEdges);
-	}
-
-	@Override
-	protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges,
-			ControlFlowType... followEdges) {
-
-		return getPredecessors(loopEdges, followEdges);
 	}
 
 	@Override

@@ -46,9 +46,9 @@ public class GraphList extends Composite {
 	protected static class ListEntry {
 		public final String label;
 		public final GraphType type;
-		public final Graph graph;
+		public final Graph<?> graph;
 
-		public ListEntry(String label, GraphType type, Graph graph) {
+		public ListEntry(String label, GraphType type, Graph<?> graph) {
 			this.label = label;
 			this.type = type;
 			this.graph = graph;
@@ -115,7 +115,7 @@ public class GraphList extends Composite {
 		return canvas;
 	}
 
-	public void addGraph(String label, Graph graph, GraphType graphType, boolean select) {
+	public void addGraph(String label, Graph<?> graph, GraphType graphType, boolean select) {
 		addEntry(new ListEntry(label, graphType, graph), select);
 	}
 

@@ -142,6 +142,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		@Override
 		protected void init(Direction curDirection, ControlFlowElement curContainer) {
+			// nothing to do
 		}
 
 		@Override
@@ -174,6 +175,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		@Override
 		protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+			// nothing to do
 		}
 
 		@Override

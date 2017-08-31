@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+/** Marker interface */
 public interface GraphElement {
-
+	// nothing to declare
 }

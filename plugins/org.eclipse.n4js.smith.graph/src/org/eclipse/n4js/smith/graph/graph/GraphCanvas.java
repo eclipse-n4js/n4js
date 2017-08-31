@@ -153,7 +153,7 @@ public class GraphCanvas extends Canvas {
 		toolTip.setText("Hello tool tip!");
 	}
 
-	public Graph getGraph() {
+	public Graph<?> getGraph() {
 		return graph;
 	}
 
@@ -161,7 +161,7 @@ public class GraphCanvas extends Canvas {
 		setGraph(null);
 	}
 
-	public void setGraph(Graph graph) {
+	public void setGraph(Graph<?> graph) {
 		if (graph != this.graph) {
 			clearSelection();
 			if (this.graph == null || graph == null) {

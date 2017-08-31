@@ -12,12 +12,16 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
+/** Abstraction of {@link Node}s and {@link ComplexNode}s. Used in {@link EdgeUtils}. */
 public interface ControlFlowable extends GraphElement {
 
+	/** @returns the entry node */
 	public Node getEntry();
 
+	/** @returns the exit node */
 	public Node getExit();
 
+	/** @returns the {@link ControlFlowElement} of this instance */
 	public ControlFlowElement getControlFlowElement();
 
 }

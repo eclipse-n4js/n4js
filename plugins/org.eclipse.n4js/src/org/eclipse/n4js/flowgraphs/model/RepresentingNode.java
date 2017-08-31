@@ -10,17 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. Also, it does represents a CFE and
- * thus returns its {@link ControlFlowElement} when asked for it in
- * {@link #getRepresentingOrSucceeding(List, ControlFlowType...)} or
- * {@link #getRepresentingOrPreceeding(List, ControlFlowType...)}.
+ * thus returns its {@link ControlFlowElement} when asked for it in {@link #getRepresentedControlFlowElement()}.
  */
 public class RepresentingNode extends DelegatingNode {
 
@@ -29,24 +23,6 @@ public class RepresentingNode extends DelegatingNode {
 	 */
 	public RepresentingNode(String name, ControlFlowElement cfe) {
 		super(name, cfe, cfe);
-	}
-
-	@Override
-	protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges,
-			ControlFlowType... followEdges) {
-
-		LinkedList<RepresentingNode> cfeInAList = new LinkedList<>();
-		cfeInAList.add(this);
-		return cfeInAList;
-	}
-
-	@Override
-	protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges,
-			ControlFlowType... followEdges) {
-
-		LinkedList<RepresentingNode> cfeInAList = new LinkedList<>();
-		cfeInAList.add(this);
-		return cfeInAList;
 	}
 
 	@Override

@@ -10,17 +10,12 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-import java.util.List;
-
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * The {@link HelperNode} does not provide a {@link ControlFlowElement} delegate. Moreover, it does not represent a CFE
  * and thus does not return its {@link ControlFlowElement} when asked for it in
- * {@link #getRepresentingOrSucceeding(List, ControlFlowType...)} or
- * {@link #getRepresentingOrPreceeding(List, ControlFlowType...)}. Instead, it passes these calls to the successor or
- * predecessor, respectively.
+ * {@link #getRepresentedControlFlowElement()}.
  */
 public class HelperNode extends Node {
 
@@ -29,20 +24,6 @@ public class HelperNode extends Node {
 	 */
 	public HelperNode(String name, ControlFlowElement cfe) {
 		super(name, cfe);
-	}
-
-	@Override
-	protected List<RepresentingNode> getRepresentingOrSucceeding(List<ControlFlowEdge> loopEdges,
-			ControlFlowType... followEdges) {
-
-		return getSuccessors(loopEdges, followEdges);
-	}
-
-	@Override
-	protected List<RepresentingNode> getRepresentingOrPreceeding(List<ControlFlowEdge> loopEdges,
-			ControlFlowType... followEdges) {
-
-		return getPredecessors(loopEdges, followEdges);
 	}
 
 	@Override
