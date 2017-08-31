@@ -21,6 +21,7 @@ Contributors:
             default="true"
             extensions="regex"
             id="org.eclipse.n4js.regex.RegularExpression"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="RegularExpression Editor">
         </editor>
     </extension>

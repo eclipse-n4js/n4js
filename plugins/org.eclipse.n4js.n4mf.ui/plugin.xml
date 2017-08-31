@@ -21,6 +21,7 @@ Contributors:
             default="true"
             extensions="n4mf"
             id="org.eclipse.n4js.n4mf.N4MF"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4MF Editor">
         </editor>
     </extension>
