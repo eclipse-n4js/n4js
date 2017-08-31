@@ -91,6 +91,7 @@ import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
+import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
@@ -659,5 +660,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/***/
 	public Class<? extends IReferenceFinder> bindReferenceFinder() {
 		return ConcreteSyntaxAwareReferenceFinder.class;
+	}
+
+	/** */
+	public Class<? extends WorkspaceRepositoriesProvider> bindWorkspaceRepositoryProvider() {
+		return WorkspaceRepositoriesProvider.class;
 	}
 }

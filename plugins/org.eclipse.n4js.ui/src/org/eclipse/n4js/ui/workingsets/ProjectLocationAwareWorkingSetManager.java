@@ -12,21 +12,19 @@ package org.eclipse.n4js.ui.workingsets;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.n4js.ui.workingsets.WorkingSet.OTHERS_WORKING_SET_ID;
-import static java.util.Arrays.asList;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
+import static org.eclipse.n4js.ui.workingsets.WorkingSet.OTHERS_WORKING_SET_ID;
 
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.egit.core.Activator;
-import org.eclipse.egit.core.RepositoryCache;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -34,26 +32,27 @@ import com.google.common.base.Optional;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Multimap;
-
-import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
+import com.google.inject.Inject;
 
 /**
  * Manager for project location aware working sets.
  */
-@SuppressWarnings("restriction")
-public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl implements IDeferredInitializer {
+public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl {
+	private final WorkspaceRepositoriesProvider repositoriesProvider;
 
 	private static final Path WS_ROOT_PATH = getWorkspace().getRoot().getLocation().toFile().toPath();
-
 	private final Multimap<String, IProject> projectLocations;
-
-	private boolean deferredInitializerSucceeded = false;
 
 	/**
 	 * Sole constructor for creating a new working set manager instance.
 	 */
-	public ProjectLocationAwareWorkingSetManager() {
+	@Inject
+	public ProjectLocationAwareWorkingSetManager(WorkspaceRepositoriesProvider repositoriesProvider) {
+		this.repositoriesProvider = repositoriesProvider;
 		projectLocations = initProjectLocation();
+
+		// reload on workspace repository changes
+		this.repositoriesProvider.addWorkspaceRepositoriesChangedListener(repos -> this.reload());
 	}
 
 	@Override
@@ -75,8 +74,8 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 	}
 
 	@Override
-	protected void discardWorkingSetState() {
-		super.discardWorkingSetState();
+	protected void discardWorkingSetCaches() {
+		super.discardWorkingSetCaches();
 		projectLocations.clear();
 	}
 
@@ -87,12 +86,6 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 		for (final IProject project : projects) {
 			final String pair = getWorkingSetId(project);
 			locations.put(pair, project);
-		}
-
-		if (!deferredInitializerSucceeded) // only once ever.
-		{
-			// assume not properly initialized if only "other projects" is available as key.
-			deferredInitializerSucceeded = locations.keySet().size() > 1;
 		}
 
 		return locations;
@@ -109,8 +102,8 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 			return parentPath.toFile().getName();
 		}
 
-		final Collection<Path> repositoryPaths = from(asList(getRepositoryCache().getAllRepositories()))
-				.transform(r -> r.getDirectory().getParentFile().toPath()).toSet();
+		final Collection<Path> repositoryPaths = repositoriesProvider.getWorkspaceRepositories().stream()
+				.map(r -> r.getDirectory().getParentFile().toPath()).collect(Collectors.toSet());
 
 		for (final Path repositoryPath : repositoryPaths) {
 			if (repositoryPath.equals(projectPath)) {
@@ -121,28 +114,6 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 		}
 
 		return OTHERS_WORKING_SET_ID;
-	}
-
-	private RepositoryCache getRepositoryCache() {
-		return Activator.getDefault().getRepositoryCache();
-	}
-
-	@Override
-	public boolean isInitializationRequired() {
-		return !deferredInitializerSucceeded;
-	}
-
-	@Override
-	public boolean lateInit() {
-
-		if (deferredInitializerSucceeded) {
-			return true;
-		}
-
-		discardWorkingSetState();
-		restoreState(new NullProgressMonitor());
-
-		return deferredInitializerSucceeded;
 	}
 
 	/**
