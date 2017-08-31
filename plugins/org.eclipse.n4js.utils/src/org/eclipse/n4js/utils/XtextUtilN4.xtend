@@ -12,6 +12,7 @@ package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import java.util.Collections
 import java.util.List
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
@@ -68,6 +69,10 @@ class XtextUtilN4 {
 	def private List<IContainer> getVisibleContainers(EObject o) {
 		val index = resourceDescriptionsProvider.getResourceDescriptions((o.eResource));
 		val resourceDescription = index.getResourceDescription(o.eResource.URI)
-		containerManager.getVisibleContainers(resourceDescription, index);
+		if (resourceDescription === null) {
+			Collections.emptyList;
+		} else {
+			containerManager.getVisibleContainers(resourceDescription, index);
+		}
 	}
 }
