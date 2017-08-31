@@ -13,11 +13,11 @@ package org.eclipse.n4js.flowgraphs.analyses;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Collects all reachable nodes.
+ * Collects all reachable nodes and hence finds all unreachable nodes, alias <i>dead code</i>.
  */
 public class DeadCodePredicateWalker extends GraphWalker {
 	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
@@ -25,12 +25,19 @@ public class DeadCodePredicateWalker extends GraphWalker {
 	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
 	Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
 
-	DeadCodePredicateWalker() {
+	/** Constructor */
+	public DeadCodePredicateWalker() {
 		super(Direction.Forward, Direction.Backward, Direction.Islands);
 	}
 
 	@Override
-	protected void init() {
+	protected void initAll() {
+		// nothing to do
+	}
+
+	@Override
+	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
 	}
 
 	@Override
@@ -49,21 +56,28 @@ public class DeadCodePredicateWalker extends GraphWalker {
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-		// nothing
+	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate() {
+	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
+	}
+
+	@Override
+	protected void terminateAll() {
 		unreachableCFEs.addAll(allBackwardCFEs);
 		unreachableCFEs.removeAll(allForwardCFEs);
 		unreachableCFEs.addAll(allIslandsCFEs);
 	}
 
+	/** @returns all reachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getReachableCFEs() {
 		return allForwardCFEs;
 	}
 
+	/** @returns all unreachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getUnreachableCFEs() {
 		return unreachableCFEs;
 	}

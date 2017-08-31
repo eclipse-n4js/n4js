@@ -12,12 +12,24 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 
+/**
+ * Represents the ability to catch {@link JumpToken}s of and can be added to {@link Node}s. The {@link CatchToken} can
+ * be specialized by giving a specific Object as an identifier.
+ */
 public class CatchToken extends JumpToken {
 
+	/**
+	 * Constructor.<br/>
+	 * Catches the given {@link ControlFlowType}.
+	 */
 	public CatchToken(ControlFlowType type) {
 		this(type, null);
 	}
 
+	/**
+	 * Constructor.<br/>
+	 * Catches the given {@link ControlFlowType} iff the given id matches the id from the {@link JumpToken}.
+	 */
 	public CatchToken(ControlFlowType type, Object id) {
 		super(type, id);
 	}

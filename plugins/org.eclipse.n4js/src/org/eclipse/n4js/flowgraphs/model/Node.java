@@ -21,54 +21,78 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
+/** Represents a part of a {@link ControlFlowElement}. */
 abstract public class Node implements ControlFlowable {
 	final private ControlFlowElement cfeElem;
+	/** Name of the node */
 	final public String name;
+
+	/** Maps from a successor node to an {@link SuccessorEdgeDescription} */
 	final public Map<Node, SuccessorEdgeDescription> internalSucc = new HashMap<>();
-
+	/** List of all preceding {@link ControlFlowEdge}s */
 	final public List<ControlFlowEdge> pred = new LinkedList<>();
+	/** List of all succeeding {@link ControlFlowEdge}s */
 	final public List<ControlFlowEdge> succ = new LinkedList<>();
-
+	/** List of all {@link DependencyEdge}s starting at this node */
 	final public List<DependencyEdge> startEdges = new LinkedList<>();
+	/** List of all {@link DependencyEdge}s ending at this node */
 	final public List<DependencyEdge> endEdges = new LinkedList<>();
-
+	/** List of all {@link JumpToken}s of this node */
 	final public List<JumpToken> jumpToken = new ArrayList<>();
+	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
 
+	/**
+	 * Constructor.<br/>
+	 * Creates a node with the given name and {@link ControlFlowElement}.
+	 */
 	public Node(String name, ControlFlowElement cfeElem) {
 		this.name = name;
 		this.cfeElem = cfeElem;
 	}
 
+	/**
+	 * Adds an internal successor with edge type {@literal ControlFlowType.Successor} to this node. It used when the
+	 * control flow graph is created.
+	 */
 	public void addInternalSuccessors(Node node) {
 		addInternalSuccessors(node, ControlFlowType.Successor);
 	}
 
+	/**
+	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
+	 */
 	public void addInternalSuccessors(Node node, ControlFlowType cfType) {
 		SuccessorEdgeDescription sed = new SuccessorEdgeDescription(node, cfType);
 		internalSucc.put(sed.endNode, sed);
 	}
 
-	public void addSuccessor(ControlFlowEdge cfEdge) {
+	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
+	void addSuccessor(ControlFlowEdge cfEdge) {
 		succ.add(cfEdge);
 	}
 
-	public void addPredecessor(ControlFlowEdge cfEdge) {
+	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
+	void addPredecessor(ControlFlowEdge cfEdge) {
 		pred.add(cfEdge);
 	}
 
-	public void addOutgoingDependency(DependencyEdge depEdge) {
+	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
+	void addOutgoingDependency(DependencyEdge depEdge) {
 		startEdges.add(depEdge);
 	}
 
-	public void addIncomingDependency(DependencyEdge depEdge) {
+	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
+	void addIncomingDependency(DependencyEdge depEdge) {
 		endEdges.add(depEdge);
 	}
 
+	/** @returns set of all internal successors. */
 	public Set<Node> getInternalSuccessors() {
 		return internalSucc.keySet();
 	}
 
+	/** @returns the {@link ControlFlowType} of a given internal successor. */
 	public ControlFlowType getInternalSuccessorControlFlowType(Node endNode) {
 		if (internalSucc.containsKey(endNode)) {
 			SuccessorEdgeDescription sed = internalSucc.get(endNode);
@@ -77,26 +101,32 @@ abstract public class Node implements ControlFlowable {
 		return null;
 	}
 
+	/** @returns set of all successor edges. */
 	public List<ControlFlowEdge> getSuccessorEdges() {
 		return succ;
 	}
 
+	/** @returns set of all predecessor edges. */
 	public List<ControlFlowEdge> getPredecessorEdges() {
 		return pred;
 	}
 
+	/** @returns the given name. */
 	public String getName() {
-		return toString();
+		return name;
 	}
 
+	/** Adds a {@link JumpToken} to this node. */
 	public void addJumpToken(JumpToken jt) {
 		jumpToken.add(jt);
 	}
 
+	/** Adds a {@link CatchToken} to this node. */
 	public void addCatchToken(CatchToken ct) {
 		catchToken.add(ct);
 	}
 
+	/** @returns true, iff this node has at least one jump token. */
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
 	}
@@ -176,7 +206,7 @@ abstract public class Node implements ControlFlowable {
 
 	@Override
 	public String toString() {
-		return name;
+		return getName();
 	}
 
 	private class SuccessorEdgeDescription {

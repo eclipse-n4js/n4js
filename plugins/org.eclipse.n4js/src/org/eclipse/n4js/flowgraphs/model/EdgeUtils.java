@@ -10,23 +10,28 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 
+/**
+ * Used to connect two {@link Node}s by {@link ControlFlowEdge}s. The functions take care about
+ * registering/de-registering the edge at/from the nodes.
+ */
 public class EdgeUtils {
 
+	/** Adds a {@link ControlFlowEdge} from cf1 to cf2 with {@literal ControlFlowType.Successor}. */
 	public static void connectCF(ControlFlowable cf1, ControlFlowable cf2) {
-		addEdgeCF(cf1.getExit(), cf2.getEntry());
+		connectCF(cf1.getExit(), cf2.getEntry());
 	}
 
-	static public ControlFlowEdge addEdgeCF(Node n1, Node n2) {
-		return addEdgeCF(n1, n2, ControlFlowType.Successor);
+	/** Adds a {@link ControlFlowEdge} from n1 to n2 with {@literal ControlFlowType.Successor}. */
+	static public ControlFlowEdge connectCF(Node n1, Node n2) {
+		return connectCF(n1, n2, ControlFlowType.Successor);
 	}
 
-	static public ControlFlowEdge addEdgeCF(Node n1, Node n2, ControlFlowType cfType) {
+	/** Adds a {@link ControlFlowEdge} from n1 to n2 with the given {@link ControlFlowType}. */
+	static public ControlFlowEdge connectCF(Node n1, Node n2, ControlFlowType cfType) {
 		assert (n1 != n2) : "CF-Edge with same Start/End-Nodes";
 
 		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, cfType);
@@ -36,21 +41,39 @@ public class EdgeUtils {
 		return cfEdge;
 	}
 
-	public static DependencyEdge addEdgeDep(EdgeType edgeType, Node n1, Node n2) {
-		assert (n1 != n2) : "Dep-Edge with same Start/End-Nodes";
-
-		DependencyEdge depEdge = new DependencyEdge(edgeType, n1, n2);
-		n1.addOutgoingDependency(depEdge);
-		n2.addIncomingDependency(depEdge);
-
-		return depEdge;
+	/** Applies {@link #removeCF(ControlFlowEdge)} for every entry in succEdges */
+	public static void removeAllCF(List<ControlFlowEdge> succEdges) {
+		for (ControlFlowEdge succEdge : succEdges) {
+			removeCF(succEdge);
+		}
 	}
 
-	public static DependencyEdge addEdgeDep(EdgeType edgeType, Node n1, Node n2, Symbol symbol) {
-		return addEdgeDep(edgeType, n1, n2, symbol, false);
+	/** Removes the given edge from its start and end nodes */
+	public static void removeCF(ControlFlowEdge succEdge) {
+		Node start = succEdge.start;
+		Node end = succEdge.end;
+		start.succ.remove(succEdge);
+		end.pred.remove(succEdge);
 	}
 
-	public static DependencyEdge addEdgeDep(EdgeType edgeType, Node n1, Node n2, Symbol symbol,
+	/** Adds a {@link DependencyEdge} from n1 to n2 with the given {@link DependencyEdgeType}. */
+	@Deprecated
+	public static DependencyEdge connectDep(DependencyEdgeType edgeType, Node n1, Node n2) {
+		return connectDep(edgeType, n1, n2, null, false);
+	}
+
+	/** Adds a {@link DependencyEdge} from n1 to n2 with the given {@link DependencyEdgeType} and {@link Symbol}. */
+	@Deprecated
+	public static DependencyEdge connectDep(DependencyEdgeType edgeType, Node n1, Node n2, Symbol symbol) {
+		return connectDep(edgeType, n1, n2, symbol, false);
+	}
+
+	/**
+	 * Adds a {@link DependencyEdge} from n1 to n2 with the given {@link DependencyEdgeType}, {@link Symbol} and
+	 * loop-carried property.
+	 */
+	@Deprecated
+	public static DependencyEdge connectDep(DependencyEdgeType edgeType, Node n1, Node n2, Symbol symbol,
 			boolean loopCarried) {
 		assert (n1 != n2) : "Dep-Edge with same Start/End-Nodes";
 
@@ -61,37 +84,4 @@ public class EdgeUtils {
 		return depEdge;
 	}
 
-	public static void connectCF(List<ControlFlowable> cfs) {
-		cfs = ListUtils.filterNulls(cfs);
-
-		Iterator<ControlFlowable> it = cfs.iterator();
-		if (!it.hasNext())
-			return;
-
-		ControlFlowable cf1 = it.next();
-		while (it.hasNext()) {
-			ControlFlowable cf2 = cf1;
-			cf1 = it.next();
-			addEdgeCF(cf2.getExit(), cf1.getEntry());
-		}
-	}
-
-	/**
-	 * Applies {@link #remove(ControlFlowEdge)} for every entry in succEdges
-	 */
-	public static void removeAll(List<ControlFlowEdge> succEdges) {
-		for (ControlFlowEdge succEdge : succEdges) {
-			remove(succEdge);
-		}
-	}
-
-	/**
-	 * Removes the given edge from its start and end nodes
-	 */
-	public static void remove(ControlFlowEdge succEdge) {
-		Node start = succEdge.start;
-		Node end = succEdge.end;
-		start.succ.remove(succEdge);
-		end.pred.remove(succEdge);
-	}
 }

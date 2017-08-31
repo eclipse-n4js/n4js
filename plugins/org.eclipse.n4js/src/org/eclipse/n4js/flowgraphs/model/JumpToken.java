@@ -11,15 +11,30 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 
+/**
+ * Represents the ability to jump at a {@link Node}, which can be added to {@link Node}s. The {@link JumpToken} can be
+ * specialized by giving a specific Object as an identifier.
+ */
 public class JumpToken {
+	/** Specifies the control flow type that invokes the jump */
 	final public ControlFlowType cfType;
+	/** Specifies an identifier, such as a label in a {@link LabelledStatement}. */
 	final public Object id;
 
+	/**
+	 * Constructor.<br/>
+	 * Jumps due to the given {@link ControlFlowType}.
+	 */
 	public JumpToken(ControlFlowType type) {
 		this(type, null);
 	}
 
+	/**
+	 * Constructor.<br/>
+	 * Jumps due to the given {@link ControlFlowType} with a specific jump identifier.
+	 */
 	public JumpToken(ControlFlowType type, Object id) {
 		this.cfType = type;
 		this.id = id;
@@ -35,6 +50,15 @@ public class JumpToken {
 		equals &= cfType == jt.cfType;
 		equals &= id == jt.id;
 		return equals;
+	}
+
+	@Override
+	public int hashCode() {
+		long hashCode = cfType.hashCode();
+		if (id != null) {
+			hashCode += id.hashCode();
+		}
+		return (int) (hashCode % Integer.MAX_VALUE);
 	}
 
 	@Override

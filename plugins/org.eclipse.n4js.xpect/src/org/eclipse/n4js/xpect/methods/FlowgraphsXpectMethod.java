@@ -12,6 +12,7 @@ package org.eclipse.n4js.xpect.methods;
 
 import static org.junit.Assert.fail;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,11 +22,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.AllNodesAndEdgesPrintWalker;
-import org.eclipse.n4js.flowgraphs.analyses.AllPathPrintWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
+import org.eclipse.n4js.xpect.methods.flowgraphs.AllNodesAndEdgesPrintWalker;
+import org.eclipse.n4js.xpect.methods.flowgraphs.AllPathPrintWalker;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.xpect.XpectImport;
@@ -53,7 +54,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		List<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+		Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
 		filterByControlFlowType(cfe, succs, cfType);
 
 		List<String> succTexts = new LinkedList<>();
@@ -76,7 +77,7 @@ public class FlowgraphsXpectMethod {
 		return cfType;
 	}
 
-	private void filterByControlFlowType(ControlFlowElement start, List<ControlFlowElement> succList,
+	private void filterByControlFlowType(ControlFlowElement start, Collection<ControlFlowElement> succList,
 			ControlFlowType cfType) {
 
 		if (cfType == null)

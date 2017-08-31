@@ -8,73 +8,104 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.LinkedList;
 import java.util.Objects;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.analyses.GraphPathWalker;
-import org.eclipse.n4js.flowgraphs.analyses.IGraphPathWalker;
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * A path connects two nodes by a set of subsequent edges. Paths where start=end that have no edges are also valid
+ * paths. A path that does not connect two nodes can be created using {@link NoPath}.
  */
 public class Path {
 	final Node start;
 	final Node end;
-	final boolean forward;
+	final NextEdgesProvider nextEdgesProvider;
 	final private LinkedList<ControlFlowEdge> edges;
 	final private TreeSet<ControlFlowType> edgeTypes = new TreeSet<>();
 	private String toString;
 
-	public Path(Node start, Node end, LinkedList<ControlFlowEdge> edges, boolean forward) {
+	/** Constructor */
+	public Path(Node start, Node end, LinkedList<ControlFlowEdge> edges, NextEdgesProvider nextEdgesProvider) {
 		Objects.requireNonNull(edges);
 		this.start = start;
 		this.end = end;
 		this.edges = edges;
-		this.forward = forward;
+		this.nextEdgesProvider = nextEdgesProvider;
 		init();
 	}
 
+	/** @returns true, iff start and end nodes are connected by this path. */
 	public boolean isConnecting() {
 		return true;
 	}
 
+	/** @returns true, iff start and end nodes are the same node. */
 	public boolean isSelfReturning() {
 		return start == end;
 	}
 
+	/** @returns true, iff either start or end node is a node that is not representing a {@link ControlFlowElement}. */
 	public boolean isInternal() {
 		return !(start instanceof RepresentingNode) || !(end instanceof RepresentingNode);
 	}
 
+	/** @returns the start {@link ControlFlowElement}. */
 	public ControlFlowElement getStart() {
 		return start.getRepresentedControlFlowElement();
 	}
 
+	/** @returns the end {@link ControlFlowElement}. */
 	public ControlFlowElement getEnd() {
 		return end.getRepresentedControlFlowElement();
 	}
 
+	/** @returns true, iff this path has no edges. */
 	public boolean isEmpty() {
 		return edges.isEmpty();
 	}
 
+	/** @returns the set of all edge types on the path. */
 	public TreeSet<ControlFlowType> getControlFlowTypes() {
 		return edgeTypes;
 	}
 
+	/** @returns the number of edges. */
 	public int getLength() {
 		return edges.size();
 	}
 
+	/** @returns a unique identifier for this path */
 	public Comparable<?> getIdentifier() {
 		return toString;
+	}
+
+	/** Traverses the given path walker over this path. */
+	public void accept(IPathWalker walker) {
+		PathWalkerGuide walkerGuide = new PathWalkerGuide(walker);
+		walkMe(walkerGuide);
+	}
+
+	private void init() {
+		InitPathWalker initWalker = new InitPathWalker();
+		walkMe(initWalker);
+	}
+
+	private void walkMe(IPathWalkerInternal walker) {
+		walker.visitNode(start);
+		for (ControlFlowEdge edge : edges) {
+			Node bNode = nextEdgesProvider.getPrevNode(edge);
+			Node fNode = nextEdgesProvider.getNextNode(edge);
+			walker.visitEdge(bNode, fNode, edge);
+			walker.visitNode(fNode);
+		}
 	}
 
 	@Override
@@ -82,47 +113,7 @@ public class Path {
 		return toString;
 	}
 
-	public void accept(IPathWalker walker) {
-		PathWalkerGuide walkerGuide = new PathWalkerGuide(walker);
-		accept(walkerGuide);
-	}
-
-	void accept(IGraphPathWalker walker) {
-		walkMe(walker);
-	}
-
-	private void init() {
-		InitPathWalker initWalker = new InitPathWalker();
-		accept(initWalker);
-	}
-
-	private void walkMe(IGraphPathWalker walker) {
-		walker.visitNode(start);
-		for (ControlFlowEdge edge : edges) {
-			Node fNode = getForwardNode(edge);
-			Node bNode = getBackwardNode(edge);
-			walker.visitEdge(bNode, fNode, edge.cfType);
-			walker.visitNode(fNode);
-		}
-	}
-
-	private Node getForwardNode(ControlFlowEdge edge) {
-		if (forward) {
-			return edge.end;
-		} else {
-			return edge.start;
-		}
-	}
-
-	private Node getBackwardNode(ControlFlowEdge edge) {
-		if (forward) {
-			return edge.start;
-		} else {
-			return edge.end;
-		}
-	}
-
-	private class InitPathWalker extends GraphPathWalker {
+	private class InitPathWalker implements IPathWalkerInternal {
 		@Override
 		public void init() {
 			toString = "";
@@ -136,9 +127,14 @@ public class Path {
 
 		@SuppressWarnings("hiding")
 		@Override
-		public void visitEdge(Node start, Node end, ControlFlowType cfType) {
-			toString += " -" + cfType.name() + "-> ";
-			edgeTypes.add(cfType);
+		public void visitEdge(Node start, Node end, ControlFlowEdge edge) {
+			toString += " -" + edge.cfType.name() + "-> ";
+			edgeTypes.add(edge.cfType);
+		}
+
+		@Override
+		public void finish() {
+			// nothing to do
 		}
 	}
 

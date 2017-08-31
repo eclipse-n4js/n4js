@@ -15,9 +15,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerAnalysis;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.PathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -33,8 +33,9 @@ import com.google.inject.Singleton;
 @Singleton
 public class N4JSFlowAnalyses {
 	private FlowGraph cfg;
+	private DirectPathAnalyses dpa;
+	private GraphWalkerAnalysis gwa;
 	private SuccessorPredecessorAnalysis spa;
-	private PathAnalyses pa;
 
 	/**
 	 * Performs the control flow analyses for all {@link ControlFlowElement}s in the given {@link Script}.
@@ -54,8 +55,9 @@ public class N4JSFlowAnalyses {
 
 	private void _perform(Script script) {
 		cfg = ControlFlowGraphFactory.build(script);
+		dpa = new DirectPathAnalyses(cfg);
+		gwa = new GraphWalkerAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
-		pa = new PathAnalyses(cfg);
 	}
 
 	/**
@@ -89,14 +91,14 @@ public class N4JSFlowAnalyses {
 
 	/** @returns true iff cfeTo is a transitive successor of cfeFrom */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return pa.isTransitiveSuccessor(cfeFrom, cfeTo);
+		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo);
 	}
 
 	/**
 	 * @returns all the {@link ControlFlowType}s that happen between the two direct successors cfe and cfeSucc
 	 */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
-		return pa.getControlFlowTypeToSuccessors(cfe, cfeSucc);
+		return dpa.getControlFlowTypeToSuccessors(cfe, cfeSucc);
 	}
 
 	/**
@@ -113,7 +115,7 @@ public class N4JSFlowAnalyses {
 	 * supposed to be the common predecessor of cfeA and cfeB.
 	 */
 	public ControlFlowElement getCommonPredecessor(ControlFlowElement cfeA, ControlFlowElement cfeB) {
-		return pa.getCommonPredecessor(cfeA, cfeB);
+		return dpa.getCommonPredecessor(cfeA, cfeB);
 	}
 
 	/**
@@ -129,18 +131,18 @@ public class N4JSFlowAnalyses {
 	 * that second traversion are part of the path identifier iff they are contained in P.
 	 */
 	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return pa.getPathIdentifier(cfeFrom, cfeTo);
+		return dpa.getPathIdentifier(cfeFrom, cfeTo);
 	}
 
 	/**
-	 * Performs all given {@link GraphWalker}s in a single run. The single run will traverse the control flow graph in
-	 * the following manner. First forward beginning from the entries of every source container, then backward beginning
-	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
-	 * then backward beginning from an arbitrary element.
+	 * Performs all given {@link GraphWalkerInternal}s in a single run. The single run will traverse the control flow
+	 * graph in the following manner. First forward beginning from the entries of every source container, then backward
+	 * beginning from the exit of every source container. Finally, all remaining code elements are traversed first
+	 * forward and then backward beginning from an arbitrary element.
 	 */
 	public void performAnalyzes(GraphWalkerInternal... graphWalkers) {
 		List<GraphWalkerInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
-		cfg.analyze(graphWalkerList);
+		gwa.analyseScript(this, graphWalkerList);
 	}
 
 }

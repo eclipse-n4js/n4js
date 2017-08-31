@@ -8,19 +8,23 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.TreeSet;
-
+import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * Callback methods to traverse a path.
  */
 public interface IPathWalker {
 
+	/** Called for each node in direction of a path. */
 	public void visitNode(ControlFlowElement cfe);
 
-	public void visitEdge(ControlFlowElement start, ControlFlowElement end, TreeSet<ControlFlowType> cfTypes);
+	/**
+	 * Called for each edge in direction of a path. The edge direction is aligned to the traversing direction, i.e. the
+	 * start node was traversed before the end node of the edge.
+	 */
+	public void visitEdge(FlowEdge edge);
 
 }

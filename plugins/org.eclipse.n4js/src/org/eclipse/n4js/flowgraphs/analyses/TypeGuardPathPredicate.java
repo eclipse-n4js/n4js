@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.Set;
-
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -24,7 +22,7 @@ import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import it.xsemantics.runtime.RuleEnvironment;
 
 /**
- * Collects all reachable nodes.
+ * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
  */
 public class TypeGuardPathPredicate extends GraphWalker {
 	final N4JSTypeSystem ts;
@@ -39,11 +37,23 @@ public class TypeGuardPathPredicate extends GraphWalker {
 	}
 
 	@Override
-	protected void init() {
+	protected void initAll() {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate() {
+	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
+	}
+
+	@Override
+	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
+	}
+
+	@Override
+	protected void terminateAll() {
+		// nothing to do
 	}
 
 	@Override
@@ -54,8 +64,8 @@ public class TypeGuardPathPredicate extends GraphWalker {
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-		// nothing
+	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+		// nothing to do
 	}
 
 	class TypeGuardActivatedPathPredicate extends ActivatedPathPredicate {
@@ -65,7 +75,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 		}
 
 		@Override
-		protected TypeGuardActivePath first() {
+		protected TypeGuardActivePath firstPath() {
 			return new TypeGuardActivePath();
 		}
 
@@ -73,7 +83,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 
 			@Override
 			protected void init() {
-
+				// nothing to do
 			}
 
 			@Override
@@ -92,12 +102,12 @@ public class TypeGuardPathPredicate extends GraphWalker {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-
+			protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+				// nothing to do
 			}
 
 			@Override
-			protected TypeGuardActivePath fork() {
+			protected TypeGuardActivePath forkPath() {
 				return new TypeGuardActivePath();
 			}
 

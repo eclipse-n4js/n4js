@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -27,11 +28,13 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  */
 @SuppressWarnings("javadoc")
 public class GraphWalkerGuideInternal {
+	private final N4JSFlowAnalyses flowAnalyses;
 	private final Collection<GraphWalkerInternal> walkers;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
 	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
 
-	public GraphWalkerGuideInternal(Collection<GraphWalkerInternal> walkers) {
+	public GraphWalkerGuideInternal(N4JSFlowAnalyses flowAnalyses, Collection<GraphWalkerInternal> walkers) {
+		this.flowAnalyses = flowAnalyses;
 		this.walkers = walkers;
 	}
 
@@ -52,6 +55,7 @@ public class GraphWalkerGuideInternal {
 		walkerVisitedEdges.clear();
 
 		for (GraphWalkerInternal walker : walkers) {
+			walker.setFlowAnalyses(flowAnalyses);
 			walker.setContainerAndDirection(cn.getControlFlowElement(), direction);
 			walker.callInit();
 		}
@@ -92,10 +96,10 @@ public class GraphWalkerGuideInternal {
 	private Node visitNode(Node lastVisitNode, DecoratedEdgeInternal currDEdge) {
 		Node visitNode = currDEdge.getNextNode();
 		if (lastVisitNode != null) {
-			callVisit(CallVisit.OnEdge, currDEdge, visitNode);
+			callVisit(CallVisit.OnEdge, lastVisitNode, currDEdge, visitNode);
 		}
 
-		callVisit(CallVisit.OnNode, currDEdge, visitNode);
+		callVisit(CallVisit.OnNode, lastVisitNode, currDEdge, visitNode);
 		return visitNode;
 	}
 
@@ -103,7 +107,7 @@ public class GraphWalkerGuideInternal {
 		OnNode, OnEdge
 	}
 
-	private void callVisit(CallVisit callVisit, DecoratedEdgeInternal currDEdge, Node visitNode) {
+	private void callVisit(CallVisit callVisit, Node lastVisitNode, DecoratedEdgeInternal currDEdge, Node visitNode) {
 		for (GraphWalkerInternal walker : walkers) {
 			switch (callVisit) {
 			case OnNode:
@@ -114,7 +118,7 @@ public class GraphWalkerGuideInternal {
 				break;
 			case OnEdge:
 				if (!walkerVisitedEdges.contains(currDEdge.edge)) {
-					walker.callVisit(currDEdge.edge);
+					walker.callVisit(lastVisitNode, visitNode, currDEdge.edge);
 				}
 				walkerVisitedEdges.add(currDEdge.edge);
 				break;
@@ -129,7 +133,7 @@ public class GraphWalkerGuideInternal {
 				activePath.callVisit(visitNode);
 				break;
 			case OnEdge:
-				activePath.callVisit(currDEdge.edge);
+				activePath.callVisit(lastVisitNode, visitNode, currDEdge.edge);
 				break;
 			}
 			if (!activePath.isActive()) {

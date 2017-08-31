@@ -10,15 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.Set;
-
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- *
+ * Checks if a local variable is never used.
  */
 public class NeverUsedPredicateWalker extends GraphWalker {
 
@@ -27,11 +25,23 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 	}
 
 	@Override
-	protected void init() {
+	protected void initAll() {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate() {
+	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
+	}
+
+	@Override
+	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
+	}
+
+	@Override
+	protected void terminateAll() {
+		// nothing to do
 	}
 
 	@Override
@@ -42,7 +52,8 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+		// nothing to do
 	}
 
 	private class NeverUsedActivatedPathPredicate extends ActivatedPathPredicate {
@@ -54,7 +65,7 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 		}
 
 		@Override
-		protected NeverUsedActivePath first() {
+		protected NeverUsedActivePath firstPath() {
 			return new NeverUsedActivePath();
 		}
 
@@ -62,6 +73,7 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 
 			@Override
 			protected void init() {
+				// nothing to do
 			}
 
 			@Override
@@ -73,11 +85,12 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+			protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+				// nothing to do
 			}
 
 			@Override
-			protected NeverUsedActivePath fork() {
+			protected NeverUsedActivePath forkPath() {
 				return new NeverUsedActivePath();
 			}
 

@@ -306,21 +306,6 @@ final class ExpressionChildren {
 			return cfc;
 		}
 
-		private static List<Expression> getCFChildren(Expression accessExpr) {
-			List<Expression> cfChildren = new LinkedList<>();
-			if (accessExpr instanceof ParameterizedPropertyAccessExpression) {
-				ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) accessExpr;
-				cfChildren.add(ppae.getTarget());
-
-			} else if (accessExpr instanceof IndexedAccessExpression) {
-				IndexedAccessExpression iae = (IndexedAccessExpression) accessExpr;
-				cfChildren.add(iae.getTarget());
-				cfChildren.add(iae.getIndex());
-
-			} else {
-				cfChildren.add(accessExpr);
-			}
-			return cfChildren;
-		}
 	}
+
 }

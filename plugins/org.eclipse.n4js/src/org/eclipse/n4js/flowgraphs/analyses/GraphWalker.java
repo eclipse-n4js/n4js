@@ -11,232 +11,240 @@
 package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker.ActivatedPathPredicate.ActivePath;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
+import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
+import com.google.common.collect.Sets;
+
 /**
- *
+ * see {@link GraphWalkerInternal}
  */
-@SuppressWarnings("javadoc")
-abstract public class GraphWalker {
-	protected final N4JSFlowAnalyses flowAnalyses = null;
-	private final List<ActivatedPathPredicate> activationRequests = new LinkedList<>();
-	private final List<ActivatedPathPredicate> activatedPredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicate> activePredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicate> failedPredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicate> passedPredicates = new LinkedList<>();
-	protected final Direction[] directions;
-	private Direction curDirection;
-	private boolean activeDirection = false;
+abstract public class GraphWalker extends GraphWalkerInternal {
+	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
+	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
-	protected enum Direction {
-		Forward, Backward, Islands
-	}
-
-	/** Default direction is {@literal Direction.Forward} */
+	/** see {@link GraphWalkerInternal#GraphWalkerInternal(Direction...)} */
 	protected GraphWalker(Direction... directions) {
-		if (directions.length == 0) {
-			directions = new Direction[] { Direction.Forward };
-		}
-		this.directions = directions;
+		this(null, directions);
 	}
 
-	abstract protected void init();
-
-	abstract protected void visit(ControlFlowElement cfe);
-
-	abstract protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes);
-
-	abstract protected void terminate();
-
-	final protected void callInit() {
-		if (activeDirection) {
-			init();
-		}
+	/** see {@link GraphWalkerInternal#GraphWalkerInternal(ControlFlowElement, Direction...)} */
+	public GraphWalker(ControlFlowElement container, Direction... directions) {
+		super(container, directions);
 	}
 
-	final protected void callTerminate() {
-		if (activeDirection) {
-			terminate();
-		}
-	}
-
-	final void callVisit(ControlFlowElement cfe) {
-		if (activeDirection) {
+	@Override
+	final protected void visit(Node node) {
+		if (node instanceof RepresentingNode) {
+			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
 			visit(cfe);
 		}
 	}
 
-	final void callVisit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-		if (activeDirection) {
-			visit(start, end, cfTypes);
-		}
-	}
-
-	final void setCurrentDirection(Direction curDirection) {
-		this.curDirection = curDirection;
-		activeDirection = false;
-		for (Direction dir : directions) {
-			if (dir == curDirection) {
-				activeDirection = true;
-				break;
+	@Override
+	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
+		visitedEdgesInternal.add(edge);
+		Set<FlowEdge> newConnections = getNewConnections(edge);
+		for (FlowEdge dEdge : newConnections) {
+			if (!visitedEdges.contains(dEdge)) {
+				visitedEdges.add(dEdge);
+				ControlFlowElement startCFE = getStartCFE(dEdge);
+				ControlFlowElement endCFE = getEndCFE(dEdge);
+				visit(startCFE, endCFE, dEdge);
 			}
 		}
 	}
 
-	final protected int getActivatedPredicateCount() {
-		return getActivatedPredicates().size();
-	}
+	/**
+	 * A half edge consists only of one end of the edge and some (maybe all) of its control flow types. Two
+	 * {@link HalfFlowEdge}s can be merged to a single {@link FlowEdge}.
+	 */
+	private static class HalfFlowEdge {
+		final ControlFlowElement node;
+		final Set<ControlFlowType> cfTypes;
 
-	final protected List<ActivatedPathPredicate> getActivatedPredicates() {
-		return activatedPredicates;
-	}
-
-	final protected List<ActivatedPathPredicate> getActivePredicates() {
-		return activePredicates;
-	}
-
-	final protected int getActivePredicateCount() {
-		return getActivePredicates().size();
-	}
-
-	final protected Direction getCurrentDirection() {
-		return curDirection;
-	}
-
-	final public List<?> getPassed() {
-		return passedPredicates;
-	}
-
-	final public List<?> getFailed() {
-		return failedPredicates;
-	}
-
-	final protected void requestActivation(ActivatedPathPredicate app) {
-		activationRequests.add(app);
-	}
-
-	final List<ActivePath> activate() {
-		List<ActivePath> activatedPaths = new LinkedList<>();
-		for (ActivatedPathPredicate app : activationRequests) {
-			ActivePath activePath = app.first();
-			app.activePaths.add(activePath);
-			app.allPaths.add(activePath);
-			activePath.init();
-			activatedPaths.add(activePath);
+		HalfFlowEdge(ControlFlowElement node, Set<ControlFlowType> cfTypes) {
+			this.node = node;
+			this.cfTypes = cfTypes;
 		}
-		activatedPredicates.addAll(activationRequests);
-		activePredicates.addAll(activationRequests);
-		activationRequests.clear();
-		return activatedPaths;
 	}
 
-	protected enum PredicateType {
-		ForAllPaths, ForOnePath
+	/**
+	 * From a given edge, all preceding {@link RepresentingNode}s Prn and all succeeding {@link RepresentingNode}s Srn
+	 * are searched. For every such node, an {@link HalfFlowEdge}s are created, called Phfe and Shfe, that store the end
+	 * nodes and all {@link ControlFlowType} which occurred on the way to their end node. Then, all Phfe are merged with
+	 * all Shfe to create {@link FlowEdge}s FE. These flow edges are then visited, if not already done so. Note, that
+	 * while searching for Prn and Srn, only already found {@link ControlFlowEdge}s are followed.
+	 */
+	private Set<FlowEdge> getNewConnections(ControlFlowEdge edge) {
+		Set<HalfFlowEdge> startHalfs = new HashSet<>();
+		Set<HalfFlowEdge> endHalfs = new HashSet<>();
+		Set<FlowEdge> directNeighbours = new HashSet<>();
+
+		NextEdgesProvider forwardEP = new NextEdgesProvider.Forward();
+		endHalfs = findDirectNeighbours(edge, forwardEP, new HashSet<>());
+
+		NextEdgesProvider backwardEP = new NextEdgesProvider.Backward();
+		startHalfs = findDirectNeighbours(edge, backwardEP, new HashSet<>());
+
+		for (HalfFlowEdge startHalf : startHalfs) {
+			for (HalfFlowEdge endHalf : endHalfs) {
+				Set<ControlFlowType> cfTypes = new HashSet<>();
+				cfTypes.addAll(startHalf.cfTypes);
+				cfTypes.addAll(endHalf.cfTypes);
+				FlowEdge flowEdge = new FlowEdge(startHalf.node, endHalf.node, cfTypes);
+				directNeighbours.add(flowEdge);
+			}
+		}
+
+		return directNeighbours;
 	}
 
-	abstract public class ActivatedPathPredicate {
-		private final Set<ActivePath> activePaths = new HashSet<>();
-		private final List<ActivePath> passedPaths = new LinkedList<>();
-		private final List<ActivePath> failedPaths = new LinkedList<>();
-		private final List<ActivePath> allPaths = new LinkedList<>();
-		protected final PredicateType predicateType;
+	private Set<HalfFlowEdge> findDirectNeighbours(ControlFlowEdge edge, NextEdgesProvider edgeProvider,
+			Set<ControlFlowType> cfTypes) {
 
+		cfTypes.add(edge.cfType);
+		Node nextNode = edgeProvider.getNextNode(edge);
+		if (nextNode instanceof RepresentingNode) {
+			ControlFlowElement endCFE = nextNode.getRepresentedControlFlowElement();
+			HalfFlowEdge flowEdge = new HalfFlowEdge(endCFE, cfTypes);
+			return Sets.newHashSet(flowEdge);
+		}
+
+		Set<HalfFlowEdge> directNeighbours = new HashSet<>();
+		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(nextNode);
+		for (ControlFlowEdge nextEdge : nextEdges) {
+			if (visitedEdgesInternal.contains(nextEdge)) {
+				HashSet<ControlFlowType> cftCopy = Sets.newHashSet(cfTypes);
+				Set<HalfFlowEdge> someDirectNeighbours = findDirectNeighbours(nextEdge, edgeProvider, cftCopy);
+				directNeighbours.addAll(someDirectNeighbours);
+			}
+		}
+
+		return directNeighbours;
+	}
+
+	private ControlFlowElement getStartCFE(FlowEdge dEdge) {
+		switch (getCurrentDirection()) {
+		case Forward:
+		case Islands:
+			return dEdge.start;
+		default:
+			return dEdge.end;
+		}
+	}
+
+	private ControlFlowElement getEndCFE(FlowEdge dEdge) {
+		switch (getCurrentDirection()) {
+		case Forward:
+		case Islands:
+			return dEdge.end;
+		default:
+			return dEdge.start;
+		}
+	}
+
+	@Override
+	final protected void init() {
+		visitedEdgesInternal.clear();
+		initAll();
+	}
+
+	/** see {@link GraphWalkerInternal#init()} */
+	abstract protected void initAll();
+
+	@Override
+	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
+
+	/** Analog to {@link GraphWalkerInternal#visit(Node)} */
+	abstract protected void visit(ControlFlowElement cfe);
+
+	/** Analog to {@link GraphWalkerInternal#visit(Node, Node, ControlFlowEdge)} */
+	abstract protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge);
+
+	@Override
+	abstract protected void terminate(Direction curDirection, ControlFlowElement curContainer);
+
+	@Override
+	abstract protected void terminateAll();
+
+	/** see {@link GraphWalkerInternal.ActivatedPathPredicateInternal} */
+	abstract public class ActivatedPathPredicate extends ActivatedPathPredicateInternal {
+
+		/**
+		 * see {@link GraphWalkerInternal.ActivatedPathPredicateInternal#ActivatedPathPredicateInternal(PredicateType)}
+		 */
 		protected ActivatedPathPredicate(PredicateType predicateType) {
-			this.predicateType = predicateType;
+			super(predicateType);
 		}
 
-		abstract protected ActivePath first();
-
-		final protected void deactivateAll() {
-			while (!activePaths.isEmpty()) {
-				ActivePath aPath = activePaths.iterator().next();
-				aPath.deactivate();
-			}
-			checkPredicateDeactivation();
+		/**
+		 * see
+		 * {@link GraphWalkerInternal.ActivatedPathPredicateInternal#ActivatedPathPredicateInternal(PredicateType, boolean)}
+		 */
+		protected ActivatedPathPredicate(PredicateType predicateType, boolean passAsDefault) {
+			super(predicateType, passAsDefault);
 		}
 
-		private void checkPredicateDeactivation() {
-			if (activePaths.isEmpty()) {
-				activePredicates.remove(this);
+		@Override
+		abstract protected ActivePath firstPath();
 
-				if (!passedPaths.isEmpty()) {
-					boolean predicatePassed = false;
-					predicatePassed |= predicateType == PredicateType.ForOnePath;
-					predicatePassed |= predicateType == PredicateType.ForAllPaths && failedPaths.isEmpty();
-					if (predicatePassed) {
-						passedPredicates.add(this);
-					} else {
-						failedPredicates.add(this);
+		/** see {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal} */
+		abstract public class ActivePath extends ActivePathInternal {
+			ControlFlowElement pLastCFE;
+			Set<ControlFlowType> pEdgeTypes = new HashSet<>();
+
+			@Override
+			final protected void visit(Node node) {
+				if (node instanceof RepresentingNode) {
+					ControlFlowElement cfe = node.getRepresentedControlFlowElement();
+					if (pLastCFE != null) {
+						FlowEdge edge = new FlowEdge(pLastCFE, cfe, pEdgeTypes);
+						visit(pLastCFE, cfe, edge);
+						pEdgeTypes.clear();
 					}
+					visit(cfe);
+					pLastCFE = cfe;
 				}
 			}
-		}
 
-		final protected List<ActivePath> getAllPaths() {
-			return allPaths;
-		}
+			@Override
+			final protected void visit(Node start, Node end, ControlFlowEdge edge) {
+				pEdgeTypes.add(edge.cfType);
+			}
 
-		abstract public class ActivePath {
-
+			@Override
 			abstract protected void init();
 
+			/** Analog to {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal#visit(Node)} */
 			abstract protected void visit(ControlFlowElement cfe);
 
-			abstract protected void visit(ControlFlowElement start, ControlFlowElement end,
-					Set<ControlFlowType> cfTypes);
+			/**
+			 * Analog to
+			 * {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal#visit(Node, Node, ControlFlowEdge)}
+			 */
+			abstract protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge);
 
-			abstract protected ActivePath fork();
+			/** see {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal#fork()} */
+			abstract protected ActivePath forkPath();
 
+			@Override
+			final protected ActivePath fork() {
+				ActivePath ap2 = forkPath();
+				ap2.pLastCFE = pLastCFE;
+				ap2.pEdgeTypes.addAll(pEdgeTypes);
+				return ap2;
+			}
+
+			@Override
 			abstract protected void terminate();
-
-			final protected void callVisit(ControlFlowElement cfe) {
-				if (activeDirection) {
-					visit(cfe);
-				}
-			}
-
-			final protected void callVisit(ControlFlowElement start, ControlFlowElement end,
-					Set<ControlFlowType> cfTypes) {
-
-				if (activeDirection) {
-					visit(start, end, cfTypes);
-				}
-			}
-
-			final ActivePath callFork() {
-				ActivePath forkedPath = fork();
-				allPaths.add(forkedPath);
-				activePaths.add(forkedPath);
-				forkedPath.init();
-				return forkedPath;
-			}
-
-			final protected void pass() {
-				passedPaths.add(this);
-				deactivate();
-			}
-
-			final protected void fail() {
-				failedPaths.add(this);
-				deactivate();
-			}
-
-			final boolean isActive() {
-				return activePaths.contains(this);
-			}
-
-			final protected void deactivate() {
-				activePaths.remove(this);
-				terminate();
-				checkPredicateDeactivation();
-			}
 
 		}
 	}

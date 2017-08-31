@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-public enum EdgeType {
+public enum DependencyEdgeType {
 
 	op, ad, fd, se, dod, od, cd, io, init
 

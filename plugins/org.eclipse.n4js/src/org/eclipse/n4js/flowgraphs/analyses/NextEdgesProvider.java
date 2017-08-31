@@ -38,13 +38,18 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
-		protected Node getStartNode(ComplexNode cn) {
-			return cn.getEntry();
+		protected Node getPrevNode(ControlFlowEdge edge) {
+			return edge.start;
 		}
 
 		@Override
 		protected Node getNextNode(ControlFlowEdge edge) {
 			return edge.end;
+		}
+
+		@Override
+		protected Node getStartNode(ComplexNode cn) {
+			return cn.getEntry();
 		}
 
 		@Override
@@ -59,7 +64,7 @@ abstract class NextEdgesProvider {
 		}
 	}
 
-	static class Backward extends NextEdgesProvider {
+	static public class Backward extends NextEdgesProvider {
 		Backward() {
 		}
 
@@ -68,13 +73,18 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
-		protected Node getStartNode(ComplexNode cn) {
-			return cn.getExit();
+		protected Node getPrevNode(ControlFlowEdge edge) {
+			return edge.end;
 		}
 
 		@Override
 		protected Node getNextNode(ControlFlowEdge edge) {
 			return edge.start;
+		}
+
+		@Override
+		protected Node getStartNode(ComplexNode cn) {
+			return cn.getExit();
 		}
 
 		@Override
@@ -89,17 +99,19 @@ abstract class NextEdgesProvider {
 		}
 	}
 
-	protected void reset() {
-		repeatEdges.clear();
-	}
+	abstract protected Node getNextNode(ControlFlowEdge edge);
+
+	abstract protected Node getPrevNode(ControlFlowEdge edge);
 
 	abstract protected NextEdgesProvider copy();
 
 	abstract protected Node getStartNode(ComplexNode cn);
 
-	abstract protected Node getNextNode(ControlFlowEdge edge);
-
 	abstract protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode);
+
+	protected void reset() {
+		repeatEdges.clear();
+	}
 
 	protected List<ControlFlowEdge> getNextEdges(Node nextNode, ControlFlowType... cfTypes) {
 		List<ControlFlowEdge> nextEdges = getPlainNextEdges(nextNode);

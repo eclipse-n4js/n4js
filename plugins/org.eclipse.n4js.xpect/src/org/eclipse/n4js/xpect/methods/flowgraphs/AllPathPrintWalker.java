@@ -8,48 +8,56 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.xpect.methods.flowgraphs;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.xpect.methods.flowgraphs.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
 
 /**
- *
+ * Finds all control flow paths beginning from a given start element.
  */
-@SuppressWarnings("javadoc")
-public class AllPathPrintWalker extends GraphWalker2 {
+public class AllPathPrintWalker extends GraphWalker {
 	final ControlFlowElement startElement;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param startElement
+	 *            if not null, all paths are found beginning at the startElement. Otherwise, all paths are found
+	 *            beginning from the first element of one of the containers in the script.
+	 */
 	public AllPathPrintWalker(ControlFlowElement startElement) {
 		super(Direction.Forward);
 		this.startElement = startElement;
 	}
 
 	@Override
-	protected void init2() {
+	protected void initAll() {
 		if (startElement == null) {
 			super.requestActivation(new AllPathPrintPredicate());
 		}
 	}
 
 	@Override
-	protected void init(Direction direction) {
+	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate(Direction direction) {
+	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate() {
+	protected void terminateAll() {
+		// nothing to do
 	}
 
 	@Override
@@ -60,9 +68,11 @@ public class AllPathPrintWalker extends GraphWalker2 {
 	}
 
 	@Override
-	protected void visit(FlowEdge edge) {
+	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+		// nothing to do
 	}
 
+	/** @returns all found paths as strings */
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
 		for (ActivatedPathPredicateInternal app : getActivatedPredicates()) {
@@ -74,18 +84,18 @@ public class AllPathPrintWalker extends GraphWalker2 {
 		return pathStrings;
 	}
 
-	class AllPathPrintPredicate extends ActivatedPathPredicate2 {
+	class AllPathPrintPredicate extends ActivatedPathPredicate {
 
 		AllPathPrintPredicate() {
 			super(PredicateType.ForAllPaths);
 		}
 
 		@Override
-		protected AllPathPrintPath first() {
+		protected AllPathPrintPath firstPath() {
 			return new AllPathPrintPath("");
 		}
 
-		class AllPathPrintPath extends ActivePath2 {
+		class AllPathPrintPath extends ActivePath {
 			String currString = "";
 
 			AllPathPrintPath(String initString) {
@@ -94,6 +104,7 @@ public class AllPathPrintWalker extends GraphWalker2 {
 
 			@Override
 			protected void init() {
+				// nothing to do
 			}
 
 			@Override
@@ -102,17 +113,18 @@ public class AllPathPrintWalker extends GraphWalker2 {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+			protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
 				currString += " -> ";
 			}
 
 			@Override
-			protected AllPathPrintPath fork2() {
+			protected AllPathPrintPath forkPath() {
 				return new AllPathPrintPath(currString);
 			}
 
 			@Override
 			protected void terminate() {
+				// nothing to do
 			}
 
 		}

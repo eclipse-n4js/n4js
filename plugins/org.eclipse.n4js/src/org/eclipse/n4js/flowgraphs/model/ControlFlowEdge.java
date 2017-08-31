@@ -12,33 +12,26 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 
+/** Represents the control flow between two nodes. */
 public class ControlFlowEdge extends AbstractEdge {
+	/** The type of the control flow */
 	public final ControlFlowType cfType;
-	public final boolean isNested;
 
+	/**
+	 * Constructor.<br/>
+	 * Creates a control flow edge from start to end.
+	 */
 	public ControlFlowEdge(Node start, Node end) {
 		this(start, end, ControlFlowType.Successor);
 	}
 
+	/**
+	 * Constructor.<br/>
+	 * Creates a control flow edge from start to end of the given {@link ControlFlowType}.
+	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
-		this(start, end, cfType, false);
-	}
-
-	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType, boolean nested) {
 		super(start, end);
 		this.cfType = cfType;
-		this.isNested = nested;
-	}
-
-	@Override
-	public String toString() {
-		String s = " (" + start + ") ";
-		if (cfType != ControlFlowType.Successor) {
-			s += "-" + cfType.name();
-		}
-		s += "-> ";
-		s += "(" + end + ")";
-		return s;
 	}
 
 	/**
@@ -53,4 +46,14 @@ public class ControlFlowEdge extends AbstractEdge {
 		}
 	}
 
+	@Override
+	public String toString() {
+		String s = " (" + start + ") ";
+		if (cfType != ControlFlowType.Successor) {
+			s += "-" + cfType.name();
+		}
+		s += "-> ";
+		s += "(" + end + ")";
+		return s;
+	}
 }

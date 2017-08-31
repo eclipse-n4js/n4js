@@ -8,41 +8,55 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.xpect.methods.flowgraphs;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Script;
 
 /**
- *
+ * Finds all elements of a control flow graph of a given {@link Script}: Nodes (i.e. {@link ControlFlowElement}s) and
+ * {@link ControlFlowEdge}s. If a {@link ControlFlowElement} called 'container' passed in the constructor is not null,
+ * only those elements in this container are found.
  */
-@SuppressWarnings("javadoc")
-public class AllNodesAndEdgesPrintWalker extends GraphWalker2 {
+public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 	final List<ControlFlowElement> allNodes = new LinkedList<>();
 	final List<FlowEdge> allEdges = new LinkedList<>();
 
+	/**
+	 * Constructor.
+	 *
+	 * @param container
+	 *            if not null, only graph elements within (transitive) are found, otherwise all elements of the script
+	 */
 	public AllNodesAndEdgesPrintWalker(ControlFlowElement container) {
 		super(container, Direction.Forward, Direction.Backward, Direction.Islands);
 	}
 
 	@Override
-	protected void init2() {
+	protected void initAll() {
+		// nothing to do
 	}
 
 	@Override
-	protected void init(Direction direction) {
+	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate(Direction direction) {
+	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+		// nothing to do
 	}
 
 	@Override
-	protected void terminate() {
+	protected void terminateAll() {
+		// nothing to do
 	}
 
 	@Override
@@ -51,10 +65,11 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker2 {
 	}
 
 	@Override
-	protected void visit(FlowEdge edge) {
+	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
 		allEdges.add(edge);
 	}
 
+	/** @returns all found {@link ControlFlowElement}s as Strings */
 	public List<String> getAllNodeStrings() {
 		List<String> nodeStrings = new LinkedList<>();
 		for (ControlFlowElement node : allNodes) {
@@ -63,6 +78,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker2 {
 		return nodeStrings;
 	}
 
+	/** @returns all found {@link ControlFlowEdge}s as Strings */
 	public List<String> getAllEdgeStrings() {
 		List<String> edgeStrings = new LinkedList<>();
 		for (FlowEdge edge : allEdges) {

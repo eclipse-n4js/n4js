@@ -18,7 +18,6 @@ import java.util.TreeSet;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.ComplexNodeProvider;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -36,15 +35,13 @@ import org.eclipse.n4js.n4JS.Script;
 public class ControlFlowGraphFactory {
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
-	/**
-	 * Builds and returns a control flow graph from a given {@link Script}.
-	 */
+	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
 		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(new CFEComparator());
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		createComplexNodes(script, cfContainers, cnMap);
-		CNProvider cnProvider = new CNProvider(cnMap);
+		ComplexNodeProvider cnProvider = new CNProvider(cnMap);
 
 		connectComplexNodes(cnProvider);
 		createJumpEdges(cnProvider);
@@ -53,8 +50,8 @@ public class ControlFlowGraphFactory {
 		return cfg;
 	}
 
-	static private void createComplexNodes(Script script,
-			TreeSet<ControlFlowElement> cfContainers,
+	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
+	static private void createComplexNodes(Script script, TreeSet<ControlFlowElement> cfContainers,
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		TreeIterator<EObject> tit = script.eAllContents();
@@ -73,7 +70,7 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	static private void connectComplexNodes(CNProvider cnProvider) {
+	static private void connectComplexNodes(ComplexNodeProvider cnProvider) {
 		for (ComplexNode cn : cnProvider.getAll()) {
 			for (Node mNode : cn.getAllButExitNodes()) {
 				connectNode(cnProvider, mNode);
@@ -81,13 +78,20 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	static private void connectNode(CNProvider cnProvider, Node mNode) {
+	/**
+	 * Connects all nodes based on
+	 * <ul>
+	 * <li/>the delegating nodes, and
+	 * <li/>the internal successor information of each node.
+	 * </ul>
+	 */
+	static private void connectNode(ComplexNodeProvider cnProvider, Node mNode) {
 		Node internalStartNode = mNode;
 		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
 		if (subASTElem != null) {
 			ComplexNode subCN = cnProvider.get(subASTElem);
 			if (subCN != null) { // can be missing when the AST is incomplete
-				ControlFlowEdge e = EdgeUtils.addEdgeCF(mNode, subCN.getEntry());
+				ControlFlowEdge e = EdgeUtils.connectCF(mNode, subCN.getEntry());
 				internalStartNode = subCN.getExit();
 				if (PRINT_EDGE_DETAILS)
 					printEdgeDetails(e);
@@ -97,7 +101,7 @@ public class ControlFlowGraphFactory {
 		Set<Node> internalSuccs = mNode.getInternalSuccessors();
 		for (Node internalSucc : internalSuccs) {
 			ControlFlowType cfType = mNode.getInternalSuccessorControlFlowType(internalSucc);
-			ControlFlowEdge e = EdgeUtils.addEdgeCF(internalStartNode, internalSucc, cfType);
+			ControlFlowEdge e = EdgeUtils.connectCF(internalStartNode, internalSucc, cfType);
 			if (PRINT_EDGE_DETAILS)
 				printEdgeDetails(e);
 		}
@@ -107,18 +111,18 @@ public class ControlFlowGraphFactory {
 	 * This methods searches for {@link ComplexNode}s that cause jumps. The outgoing edge is then replaced by a new jump
 	 * edge that targets the catch node.
 	 */
-	private static void createJumpEdges(CNProvider cnProvider) {
+	private static void createJumpEdges(ComplexNodeProvider cnProvider) {
 		for (ComplexNode cn : cnProvider.getAll()) {
 			Node cnJumpNode = cn.getExit();
 			for (JumpToken jumpToken : cnJumpNode.jumpToken) {
-				EdgeUtils.removeAll(cnJumpNode.getSuccessorEdges());
+				EdgeUtils.removeAllCF(cnJumpNode.getSuccessorEdges());
 				Node catchNode = null;
 				catchNode = CatchNodeFinder.find(jumpToken, cnJumpNode, cnProvider);
 				if (catchNode == null) {
 					String jumpTokenStr = getJumpTokenDetailString(jumpToken, cnJumpNode);
 					System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
 				} else {
-					EdgeUtils.addEdgeCF(cnJumpNode, catchNode, jumpToken.cfType);
+					EdgeUtils.connectCF(cnJumpNode, catchNode, jumpToken.cfType);
 				}
 			}
 		}
@@ -146,10 +150,6 @@ public class ControlFlowGraphFactory {
 		@Override
 		public Iterable<ComplexNode> getAll() {
 			return cnMap.values();
-		}
-
-		Map<ControlFlowElement, ComplexNode> getMap() {
-			return cnMap;
 		}
 	}
 

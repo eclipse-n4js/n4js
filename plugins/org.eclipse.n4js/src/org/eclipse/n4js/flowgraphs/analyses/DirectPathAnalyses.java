@@ -21,8 +21,6 @@ import java.util.TreeSet;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.NoPath;
-import org.eclipse.n4js.flowgraphs.Path;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -32,14 +30,14 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import com.google.common.collect.Lists;
 
 /**
- *
+ * Contains algorithms to reason about single paths between two {@link ControlFlowElement}s.
  */
-public class PathAnalyses {
+public class DirectPathAnalyses {
 	private final FlowGraph cfg;
 	private final SuccessorPredecessorAnalysis spa;
 
 	/** Constructor */
-	public PathAnalyses(FlowGraph cfg) {
+	public DirectPathAnalyses(FlowGraph cfg) {
 		this.cfg = cfg;
 		this.spa = new SuccessorPredecessorAnalysis(cfg);
 	}
@@ -138,12 +136,13 @@ public class PathAnalyses {
 	}
 
 	private Path buildPath(Node start, Node end) {
-		LinkedList<ControlFlowEdge> pathEdges = findPath(start, end, new NextEdgesProvider.Forward());
+		NextEdgesProvider.Forward forwardEdgeProvider = new NextEdgesProvider.Forward();
+		LinkedList<ControlFlowEdge> pathEdges = findPath(start, end, forwardEdgeProvider);
 		Path path = null;
 		if (pathEdges != null) {
-			path = new Path(start, end, pathEdges, true);
+			path = new Path(start, end, pathEdges, forwardEdgeProvider);
 		} else {
-			path = new NoPath(start, end, true);
+			path = new NoPath(start, end, forwardEdgeProvider);
 		}
 		return path;
 	}

@@ -25,7 +25,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker2;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.graph.graph.CFEdge;
@@ -127,21 +127,21 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return null;
 	}
 
-	private class NodesEdgesCollector extends GraphWalker2 {
+	private class NodesEdgesCollector extends GraphWalker {
 
 		NodesEdgesCollector() {
 			super(Direction.Forward, Direction.Backward, Direction.Islands);
 		}
 
 		@Override
-		protected void init2() {
+		protected void initAll() {
 			nodeMap.clear();
 			edgesMap.clear();
 
 		}
 
 		@Override
-		protected void init(Direction direction) {
+		protected void init(Direction curDirection, ControlFlowElement curContainer) {
 		}
 
 		@Override
@@ -150,7 +150,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void visit(FlowEdge edge) {
+		protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
 			addNode(edge.start);
 			addNode(edge.end);
 			Node sNode = nodeMap.get(edge.start);
@@ -173,11 +173,11 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void terminate(Direction direction) {
+		protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
 		}
 
 		@Override
-		protected void terminate() {
+		protected void terminateAll() {
 			// nothing to do
 		}
 

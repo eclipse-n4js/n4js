@@ -17,13 +17,21 @@ import java.util.Set;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * Connects two {@link ControlFlowElement}s from {@link #start} to {@link #end}. The flow type is defined in
+ * {@link #cfTypes}. It is possible, that there are multiple edges connecting the same nodes (called parallel edges).
+ * <p/>
+ * <b>Attention:</b> Two edges are equal and have equal hashes, iff their {@link #start} and {@link #end} nodes, and
+ * their {@link #cfTypes}s are the same.
  */
 public class FlowEdge implements Comparable<FlowEdge> {
+	/** Source node of the edge */
 	final public ControlFlowElement start;
+	/** Target node of the edge */
 	final public ControlFlowElement end;
+	/** Flow types that connect {@link #start} and {@link #end} */
 	final public Set<ControlFlowType> cfTypes;
 
+	/** Constructor */
 	public FlowEdge(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 		this.start = start;
 		this.end = end;

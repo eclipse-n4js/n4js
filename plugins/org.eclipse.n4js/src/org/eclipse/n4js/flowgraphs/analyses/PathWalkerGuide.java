@@ -8,11 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.analyses.GraphPathWalker;
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -20,12 +22,13 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  *
  */
-public class PathWalkerGuide extends GraphPathWalker {
+public class PathWalkerGuide implements IPathWalkerInternal {
 	final IPathWalker walker;
 	final TreeSet<ControlFlowType> cfTypes = new TreeSet<>();
 	private Node lastVisitedNode = null;
 
-	PathWalkerGuide(IPathWalker walker) {
+	/** Constructor */
+	public PathWalkerGuide(IPathWalker walker) {
 		this.walker = walker;
 	}
 
@@ -35,7 +38,8 @@ public class PathWalkerGuide extends GraphPathWalker {
 			ControlFlowElement cfeEnd = node.getRepresentedControlFlowElement();
 			if (lastVisitedNode != null) {
 				ControlFlowElement cfeStart = lastVisitedNode.getRepresentedControlFlowElement();
-				walker.visitEdge(cfeStart, cfeEnd, cfTypes);
+				FlowEdge edge = new FlowEdge(cfeStart, cfeEnd, cfTypes);
+				walker.visitEdge(edge);
 			}
 
 			cfTypes.clear();
@@ -45,8 +49,18 @@ public class PathWalkerGuide extends GraphPathWalker {
 	}
 
 	@Override
-	public void visitEdge(Node start, Node end, ControlFlowType cfType) {
-		cfTypes.add(cfType);
+	public void visitEdge(Node start, Node end, ControlFlowEdge edge) {
+		cfTypes.add(edge.cfType);
+	}
+
+	@Override
+	public void init() {
+		// nothing to do
+	}
+
+	@Override
+	public void finish() {
+		// nothing to do
 	}
 
 }

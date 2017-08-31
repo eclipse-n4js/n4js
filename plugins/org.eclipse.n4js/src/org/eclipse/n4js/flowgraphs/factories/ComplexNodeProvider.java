@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs;
+package org.eclipse.n4js.flowgraphs.factories;
 
 import java.util.Iterator;
 
@@ -18,12 +18,12 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * Interface that provides the method {@link #get(ControlFlowElement)}.
  */
-public interface ComplexNodeProvider {
+interface ComplexNodeProvider {
 
 	/** Returns an {@link Iterator} over all {@link ComplexNode}s */
-	public Iterable<ComplexNode> getAll();
+	Iterable<ComplexNode> getAll();
 
 	/** Returns the {@link ComplexNode} that represents the {@link ControlFlowElement} in the flow graph */
-	public ComplexNode get(ControlFlowElement cfe);
+	ComplexNode get(ControlFlowElement cfe);
 
 }

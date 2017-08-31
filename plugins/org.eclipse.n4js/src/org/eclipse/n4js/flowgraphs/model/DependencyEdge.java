@@ -11,15 +11,15 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 public class DependencyEdge extends AbstractEdge {
-	public final EdgeType type;
+	public final DependencyEdgeType type;
 	public final Symbol symbol;
 	public final boolean loopCarried;
 
-	public DependencyEdge(EdgeType type, Node start, Node end) {
+	public DependencyEdge(DependencyEdgeType type, Node start, Node end) {
 		this(type, start, end, null, false);
 	}
 
-	public DependencyEdge(EdgeType type, Node start, Node end, Symbol symbol, boolean loopCarried) {
+	public DependencyEdge(DependencyEdgeType type, Node start, Node end, Symbol symbol, boolean loopCarried) {
 		super(start, end);
 		this.type = type;
 		this.symbol = symbol;

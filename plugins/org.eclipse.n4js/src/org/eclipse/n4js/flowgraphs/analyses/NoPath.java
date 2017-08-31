@@ -8,19 +8,29 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analyses;
 
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 import com.google.common.collect.Lists;
 
 /**
- *
+ * Instances of {@link NoPath} represent non-existing paths between two nodes.
  */
 public class NoPath extends Path {
 
-	public NoPath(Node start, Node end, boolean forward) {
-		super(start, end, Lists.newLinkedList(), forward);
+	/**
+	 * Constructor
+	 *
+	 * @param start
+	 *            start node of the path
+	 * @param end
+	 *            end node of the path
+	 * @param nextEdgesProvider
+	 *            of the path
+	 */
+	public NoPath(Node start, Node end, NextEdgesProvider nextEdgesProvider) {
+		super(start, end, Lists.newLinkedList(), nextEdgesProvider);
 	}
 
 	@Override

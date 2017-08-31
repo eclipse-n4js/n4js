@@ -12,27 +12,23 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerGuideInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Script;
 
 /**
- *
+ * Stores information about all control flow graphs of one {@link Script}.
  */
 public class FlowGraph {
 	final private TreeSet<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private Map<String, ControlFlowEdge> cfEdgeMap = new HashMap<>();
 
-	/**
-	 *
-	 */
+	/** Constructor. */
 	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap) {
 		this.cfContainers = cfContainers;
 		this.cnMap = cnMap;
@@ -52,49 +48,30 @@ public class FlowGraph {
 		}
 	}
 
-	public void analyze(Collection<GraphWalkerInternal> graphWalkers) {
-		GraphWalkerGuideInternal guide = new GraphWalkerGuideInternal(graphWalkers);
-		Set<Node> allNodes = new HashSet<>();
-		for (ComplexNode cn : cnMap.values()) {
-			if (!cn.isControlElement()) {
-				allNodes.addAll(cn.getNodes());
-			}
-		}
-
-		Set<Node> visitedNodes;
-		for (ControlFlowElement container : cfContainers) {
-			ComplexNode cnContainer = cnMap.get(container);
-			visitedNodes = guide.walkthroughForward(cnContainer);
-			allNodes.removeAll(visitedNodes);
-			visitedNodes = guide.walkthroughBackward(cnContainer);
-			allNodes.removeAll(visitedNodes);
-		}
-
-		while (!allNodes.isEmpty()) {
-			Node unvisitedNode = allNodes.iterator().next();
-			ComplexNode cnUnvisited = cnMap.get(unvisitedNode.getControlFlowElement());
-			if (cnUnvisited.isControlElement()) {
-				allNodes.remove(unvisitedNode);
-			} else {
-				visitedNodes = guide.walkthroughIsland(cnUnvisited);
-				allNodes.removeAll(visitedNodes);
-			}
-		}
-	}
-
+	/** @returns all {@link ComplexNode}s of the script. */
 	public Collection<ComplexNode> getAllComplexNodes() {
 		return cnMap.values();
 	}
 
+	/** @returns all {@link ControlFlowEdge}s of the script. */
 	public Collection<ControlFlowEdge> getAllControlFlowEdges() {
 		return cfEdgeMap.values();
 	}
 
+	/** @returns the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */
 	public ComplexNode getComplexNode(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 		if (!cnMap.containsKey(cfe))
 			return null;
 		return cnMap.get(cfe);
+	}
+
+	/**
+	 * @returns all {@link ControlFlowElement}s that are containers in the {@link Script}. See
+	 *          {@link FGUtils#isCFContainer(ControlFlowElement)}
+	 */
+	public TreeSet<ControlFlowElement> getContainers() {
+		return cfContainers;
 	}
 
 }
