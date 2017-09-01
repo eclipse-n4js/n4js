@@ -26,17 +26,19 @@ import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 import org.eclipse.xtext.util.ITextRegion;
 
 /**
- *
+ * Draws an overlay over the editor view. The overlay draws a frame around a specific {@link EObject}, i.e. a source
+ * code element. In case the editor contents changes (by user key inputs), no overlay is drawn since the position data
+ * is invalidated.
  */
 public class EditorOverlay implements PaintListener {
-	ILocationInFileProvider locFileProvider;
-	XtextEditor editor;
-	StyledText styledText;
+	final private ILocationInFileProvider locFileProvider;
+	final private XtextEditor editor;
+	final private StyledText styledText;
 
-	EObject currentSelection;
+	private EObject currentSelection;
 
 	/**
-	 *
+	 * Constructor
 	 */
 	public EditorOverlay() {
 		locFileProvider = new DefaultLocationInFileProvider();
@@ -44,19 +46,17 @@ public class EditorOverlay implements PaintListener {
 		styledText = editor.getInternalSourceViewer().getTextWidget();
 	}
 
-	/**
-	 * Sets the highlighted element in the editor view
-	 */
+	/** Sets the highlighted element in the editor view */
 	public void setSelection(EObject currentSelection) {
 		this.currentSelection = currentSelection;
 		draw();
 	}
 
 	private void draw() {
-		if (currentSelection == null) {
-			clear();
-		} else {
+		if (currentSelection != null) {
 			drawSelection();
+		} else {
+			clear();
 		}
 	}
 
@@ -70,30 +70,22 @@ public class EditorOverlay implements PaintListener {
 		styledText.redraw();
 	}
 
-	@Override
-	public void paintControl(PaintEvent e) {
-		if (currentSelection == null)
-			return;
-
-		Color green = new Color(e.display, 20, 200, 20);
-		e.gc.setForeground(green);
-		e.gc.setBackground(green);
-
-		int[] pointArray = getConturePointArray();
-		e.gc.drawPolygon(pointArray);
-	}
-
+	/** Computes an array of points that create a frame around the selected element. */
 	private int[] getConturePointArray() {
 		ITextRegion tr = locFileProvider.getFullTextRegion(currentSelection);
-		int lineHeight = styledText.getLineHeight(tr.getOffset());
+		int trOffset = tr.getOffset();
+		if (trOffset == 0) {
+			return null;
+		}
+		int lineHeight = styledText.getLineHeight(trOffset);
 
 		// Calculate end points for each line
 		List<Point> points = new LinkedList<>();
-		Point sPoint = styledText.getLocationAtOffset(tr.getOffset());
+		Point sPoint = styledText.getLocationAtOffset(trOffset);
 		Point lPoint = sPoint;
 		int minX = sPoint.x;
 		for (int i = 1; i <= tr.getLength(); i++) {
-			Point p = styledText.getLocationAtOffset(tr.getOffset() + i);
+			Point p = styledText.getLocationAtOffset(trOffset + i);
 			minX = Math.min(minX, p.x);
 			if (p.y != lPoint.y) {
 				points.add(lPoint);
@@ -124,5 +116,21 @@ public class EditorOverlay implements PaintListener {
 		}
 
 		return pointArray;
+	}
+
+	/////////////////////// PaintListener ///////////////////////
+
+	@Override
+	public void paintControl(PaintEvent e) {
+		if (currentSelection == null)
+			return;
+
+		int[] pointArray = getConturePointArray();
+		if (pointArray != null) {
+			Color green = new Color(e.display, 20, 200, 20);
+			e.gc.setForeground(green);
+			e.gc.setBackground(green);
+			e.gc.drawPolygon(pointArray);
+		}
 	}
 }

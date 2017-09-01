@@ -8,12 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**

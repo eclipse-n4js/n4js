@@ -43,7 +43,7 @@ abstract public class GraphWalkerInternal {
 	private boolean activeDirection = false;
 
 	/** Specifies the traverse direction of a {@link GraphWalkerInternal} instance. */
-	protected enum Direction {
+	public enum Direction {
 		/** Forward edge-direction begins from the entry node of a given container. */
 		Forward,
 		/** Backward edge-direction begins from the exit node of a given container. */
@@ -269,7 +269,7 @@ abstract public class GraphWalkerInternal {
 	}
 
 	/** The {@link PredicateType} defines under which condition a path predicate fails or passes. */
-	protected enum PredicateType {
+	public enum PredicateType {
 		/** The path predicate passes iff all paths pass. */
 		ForAllPaths,
 		/** The path predicate passes if at least one path passes. */

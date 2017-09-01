@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xpect.methods.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.LinkedList;
 import java.util.List;

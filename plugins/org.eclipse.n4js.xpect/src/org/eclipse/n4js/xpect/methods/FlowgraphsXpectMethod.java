@@ -22,11 +22,11 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
+import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
-import org.eclipse.n4js.xpect.methods.flowgraphs.AllNodesAndEdgesPrintWalker;
-import org.eclipse.n4js.xpect.methods.flowgraphs.AllPathPrintWalker;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.xpect.XpectImport;
@@ -88,6 +88,31 @@ public class FlowgraphsXpectMethod {
 			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
 			}
+		}
+	}
+
+	/**
+	 * This xpect method can evaluate if the tested element is a transitive predecessor of the given element.
+	 */
+	@ParameterParser(syntax = "('from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)?")
+	@Xpect
+	public void transitiveSuccs(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
+			IEObjectCoveringRegion notToOffset) {
+
+		ControlFlowElement fromCFE = getControlFlowElement(fromOffset);
+		ControlFlowElement toCFE = getControlFlowElement(toOffset);
+		ControlFlowElement notToCFE = getControlFlowElement(notToOffset);
+
+		if (fromCFE == null) {
+			fail("Element 'from' could not be found");
+		}
+		if (toCFE == null && notToCFE == null) {
+			fail("Element 'to' could not be found");
+		}
+
+		boolean isTransitiveSuccs = flowAnalyses.isTransitiveSuccessor(fromCFE, toCFE);
+		if (!isTransitiveSuccs) {
+			fail("Elements are no transitive successors");
 		}
 	}
 

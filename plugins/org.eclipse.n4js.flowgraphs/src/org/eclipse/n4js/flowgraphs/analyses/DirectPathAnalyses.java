@@ -99,6 +99,7 @@ public class DirectPathAnalyses {
 
 		LinkedHashSet<ControlFlowElement> predSet = new LinkedHashSet<>();
 
+		// step 1: traverse all predecessors, beginning from cfeTo: mark each
 		List<ControlFlowElement> curCFEs = new LinkedList<>();
 		curCFEs.add(cfeTo);
 		while (!curCFEs.isEmpty()) {
@@ -108,6 +109,7 @@ public class DirectPathAnalyses {
 			curCFEs.addAll(preds);
 		}
 
+		// step 2: traverse all successors, beginning from cfeFrom. All revisited are part of the identifier.
 		String pathString = "";
 		curCFEs.clear();
 		curCFEs.add(cfeFrom);
@@ -156,6 +158,7 @@ public class DirectPathAnalyses {
 
 		LinkedList<LinkedList<ControlFlowEdge>> allPaths = new LinkedList<>();
 
+		// initialization
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(startNode, cfTypes);
 		for (ControlFlowEdge nextEdge : nextEdges) {
 			LinkedList<ControlFlowEdge> path = new LinkedList<>();
@@ -166,6 +169,7 @@ public class DirectPathAnalyses {
 			allPaths.add(path);
 		}
 
+		// explore all paths, terminate when endNode is found
 		while (!allPaths.isEmpty()) {
 			LinkedList<ControlFlowEdge> firstPath = allPaths.removeFirst();
 			LinkedList<LinkedList<ControlFlowEdge>> ch = edgeProvider.getPaths(firstPath, cfTypes);

@@ -20,6 +20,7 @@ function Block1() {
 		1 --> "end"
 	--- */
 	// Block1 XPECT allPaths --> "start" -> 1 -> "end"
+	// Block1 XPECT transitiveSuccs from '"start"' to '"end"' -->
 	// Block1 XPECT succs at '"start"' --> 1
 	"start";
 	// Block1 XPECT succs at '1' --> "end"

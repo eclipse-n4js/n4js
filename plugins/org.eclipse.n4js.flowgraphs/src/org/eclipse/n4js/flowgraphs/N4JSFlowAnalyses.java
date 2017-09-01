@@ -104,10 +104,6 @@ public class N4JSFlowAnalyses {
 	/**
 	 * Returns the common predecessor of two {@link ControlFlowElement}s.
 	 * <p/>
-	 * Time: O(N)<br/>
-	 * Space: O(N)<br/>
-	 * N - Number of {@link ControlFlowElement}s connected to cfeA or cfeB
-	 * <p/>
 	 * The common predecessor is computed as follows. First, the CF graph is traversed beginning from cfeA backwards
 	 * until an element is reached which has no predecessor. All elements that were visited during that traversion are
 	 * marked. Second, analogous the CF graph is now traversed beginning from cfeB backwards until an element is reached
@@ -120,10 +116,6 @@ public class N4JSFlowAnalyses {
 
 	/**
 	 * Returns an identifier for all paths between two {@link ControlFlowElement}s.
-	 * <p/>
-	 * Time: O(N)<br/>
-	 * Space: O(N)<br/>
-	 * N - Number of {@link ControlFlowElement}s connected to cfeA or cfeB
 	 * <p/>
 	 * The path identifier is computed as follows. First, the CF graph is traversed beginning from cfeB backwards until
 	 * an element is reached which has no predecessor. All elements that were visited during that traversion are saved

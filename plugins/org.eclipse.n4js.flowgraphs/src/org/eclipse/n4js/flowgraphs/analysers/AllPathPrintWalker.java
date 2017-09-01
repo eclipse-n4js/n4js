@@ -8,17 +8,17 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.xpect.methods.flowgraphs;
+package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.xpect.methods.flowgraphs.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
 
 /**
  * Finds all control flow paths beginning from a given start element.
