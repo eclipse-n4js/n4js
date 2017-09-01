@@ -20,7 +20,8 @@ function Block1() {
 		1 --> "end"
 	--- */
 	// Block1 XPECT allPaths --> "start" -> 1 -> "end"
-	// Block1 XPECT transitiveSuccs from '"start"' to '"end"' -->
+	// Block1 XPECT path from '"start"' to '"end"' -->
+	// Block1 XPECT commonPreds of '1' and '"start"' --> "start"
 	// Block1 XPECT succs at '"start"' --> 1
 	"start";
 	// Block1 XPECT succs at '1' --> "end"
@@ -37,6 +38,8 @@ function Block2() {
 		2 --> "end"
 	--- */
 	// Block2 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// Block2 XPECT path from '"start"' to '"end"' -->
+	// Block2 XPECT commonPreds of '"start"' and '2' --> "start"
 	// Block2 XPECT succs at '"start"' --> 1
 	"start";
 	// Block2 XPECT succs at '1' --> 2
@@ -57,6 +60,8 @@ function Block3() {
 		2 --> "end"
 	--- */
 	// Block3 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// Block3 XPECT path from '"start"' to '"end"' -->
+	// Block3 XPECT commonPreds of '"end"' and '"start"' --> "start"
 	// Block3 XPECT succs at '"start"' --> 1
 	"start";
 	// Block3 XPECT succs at '1' --> 2
@@ -82,6 +87,9 @@ function DoStatement1() {
 	"start" -> 1 -> 2 -> 1 -> 2 -> "end",
 	"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> 2 -> "end"
 	--- */
+	// DoStatement1 XPECT path from '"start"' to '"end"' -->
+	// DoStatement1 XPECT path from '2' to '1' -->
+	// DoStatement1 XPECT commonPreds of '1' and '"end"' --> 1, 2
 	// DoStatement1 XPECT succs at '"start"' --> 1
 	"start";
 	do {
@@ -102,6 +110,11 @@ function DoStatementBreak1() {
 		break; -Break-> "end"
 	--- */
 	// DoStatementBreak1 XPECT allPaths --> "start" -> 1 -> break; -> "end"
+	// DoStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// DoStatementBreak1 XPECT path from '"start"' notTo '2' -->
+	// DoStatementBreak1 XPECT path from 'break;' notTo '1' -->
+	// DoStatementBreak1 XPECT commonPreds of '1' and '2' --> 2
+	// DoStatementBreak1 XPECT commonPreds of 'break' and '1' --> 1
 	// DoStatementBreak1 XPECT succs at '"start"' --> 1
 	"start";
 	do {
@@ -131,6 +144,11 @@ function DoStatementContinue1() {
 	"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end",
 	"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end"
 	--- */
+	// DoStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// DoStatementContinue1 XPECT path from '"start"' notTo '2' -->
+	// DoStatementContinue1 XPECT path from 'continue;' to '1' -->
+	// DoStatementContinue1 XPECT commonPreds of '1' and '2' --> 2
+	// DoStatementContinue1 XPECT commonPreds of '1' and '3' --> 1, 3
 	// DoStatementContinue1 XPECT succs at '"start"' --> 1
 	"start";
 	do {
@@ -152,6 +170,11 @@ function ForStatement1() {
 		; -Repeat-> ;
 	--- */
 	// ForStatement1 XPECT allPaths --> "start" -> ; -> ; -> ;
+	// ForStatement1 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement1 XPECT path from '"start"' to ' ;' -->
+	// ForStatement1 XPECT path from ' ;' to ' ;' -->
+	// ForStatement1 XPECT commonPreds of ' ;' and '"end"' -->
+	// ForStatement1 XPECT commonPreds of ' ;' and '"start"' --> "start"
 	// ForStatement1 XPECT succs at '"start"' --> ;
 	"start";
 	// ForStatement1 XPECT succs at ' ;' --> ;
@@ -165,6 +188,11 @@ function ForStatement2() {
 		5 -Repeat-> 5
 	--- */
 	// ForStatement2 XPECT allPaths --> "start" -> 5 -> 5 -> 5
+	// ForStatement2 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement2 XPECT path from '"start"' to '5' -->
+	// ForStatement2 XPECT path from '5' to '5' -->
+	// ForStatement2 XPECT commonPreds of '5' and '"end"' -->
+	// ForStatement2 XPECT commonPreds of '5' and '"start"' --> "start"
 	// ForStatement2 XPECT succs at '"start"' --> 5
 	"start";
 	// ForStatement2 XPECT succs at '5' --> 5
@@ -186,6 +214,10 @@ function ForStatement3() {
 	"start" -> 1 -> 2 -> 5 -> 3 -> 2 -> "end",
 	"start" -> 1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
 	--- */
+	// ForStatement3 XPECT path from '"start"' to '"end"' -->
+	// ForStatement3 XPECT path from '3' to '2' -->
+	// ForStatement3 XPECT commonPreds of '5' and '"end"' --> 2, 5
+	// ForStatement3 XPECT commonPreds of '2' and '3' --> 2, 3
 	// ForStatement3 XPECT succs at '"start"' --> 1
 	"start";
 	// ForStatement3 XPECT succs at '1' --> 2
@@ -205,6 +237,11 @@ function ForStatement4() {
 		3 -Repeat-> 5
 	--- */
 	// ForStatement4 XPECT allPaths --> "start" -> 1 -> 5 -> 3 -> 5 -> 3 -> 5 -> 3
+	// ForStatement4 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement4 XPECT path from '3' to '5' -->
+	// ForStatement4 XPECT commonPreds of '1' and '3' --> 1
+	// ForStatement4 XPECT commonPreds of '5' and '3' --> 3, 5
+	// ForStatement4 XPECT commonPreds of '5' and '"end"' -->
 	// ForStatement4 XPECT succs at '"start"' --> 1
 	"start";
 	// ForStatement4 XPECT succs at '1' --> 5
@@ -227,6 +264,10 @@ function ForStatement5() {
 	"start" -> 1 -> 2 -> 5 -> 2 -> "end",
 	"start" -> 1 -> 2 -> 5 -> 2 -> 5 -> 2 -> "end"
 	--- */
+	// ForStatement5 XPECT path from '"start"' to '"end"' -->
+	// ForStatement5 XPECT path from '5' to '"end"' -->
+	// ForStatement5 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement5 XPECT commonPreds of '"end"' and '5' --> 2, 5
 	// ForStatement5 XPECT succs at '"start"' --> 1
 	"start";
 	// ForStatement5 XPECT succs at '1' --> 2
@@ -250,6 +291,10 @@ function ForStatement6() {
 	"start" -> 2 -> 5 -> 3 -> 2 -> "end",
 	"start" -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
 	--- */
+	// ForStatement6 XPECT path from '"start"' to '"end"' -->
+	// ForStatement6 XPECT path from '2' to '3' -->
+	// ForStatement6 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement6 XPECT commonPreds of '"end"' and '5' --> 2, 5
 	// ForStatement6 XPECT succs at '"start"' --> 2
 	"start";
 	// ForStatement6 XPECT succs at '2' --> 5, "end"
@@ -267,6 +312,9 @@ function ForStatement7() {
 		3 -Repeat-> 5
 	--- */
 	// ForStatement7 XPECT allPaths --> "start" -> 5 -> 3 -> 5 -> 3 -> 5 -> 3
+	// ForStatement7 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement7 XPECT path from '5' notTo '"end"' -->
+	// ForStatement7 XPECT commonPreds of '5' and '3' --> 3, 5
 	// ForStatement7 XPECT succs at '"start"' --> 5
 	"start";
 	// ForStatement7 XPECT succs at '5' --> 3
@@ -287,6 +335,9 @@ function ForStatement8() {
 	"start" -> 2 -> 5 -> 2 -> "end",
 	"start" -> 2 -> 5 -> 2 -> 5 -> 2 -> "end"
 	--- */
+	// ForStatement8 XPECT path from '"start"' to '"end"' -->
+	// ForStatement8 XPECT path from '5' to '"end"' -->
+	// ForStatement8 XPECT commonPreds of '2' and '5' --> 2, 5
 	// ForStatement8 XPECT succs at '"start"' --> 2
 	"start";
 	// ForStatement8 XPECT succs at '2' --> 5, "end"
@@ -303,6 +354,11 @@ function ForStatement9() {
 		5 -Repeat-> 5
 	--- */
 	// ForStatement9 XPECT allPaths --> "start" -> 1 -> 5 -> 5 -> 5
+	// ForStatement9 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement9 XPECT path from '5' notTo '"end"' -->
+	// ForStatement9 XPECT commonPreds of '1' and '5' --> 1
+	// ForStatement9 XPECT commonPreds of '1' and '1' --> 1
+	// ForStatement9 XPECT commonPreds of '5' and '5' --> 5
 	// ForStatement9 XPECT succs at '"start"' --> 1
 	"start";
 	// ForStatement9 XPECT succs at '1' --> 5
@@ -326,6 +382,9 @@ function ForStatementVarDecl1() {
 	"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> "end",
 	"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
 	--- */
+	// ForStatementVarDecl1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementVarDecl1 XPECT path from 'i=0' to '3' -->
+	// ForStatementVarDecl1 XPECT commonPreds of 'i=0' and '2' --> i=0
 	// ForStatementVarDecl1 XPECT succs at '"start"' --> 0
 	"start";
 	// ForStatementVarDecl1 XPECT succs at '0' --> i=0
@@ -355,6 +414,9 @@ function ForStatementVarDecl2() {
 	"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> "end",
 	"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
 	--- */
+	// ForStatementVarDecl2 XPECT path from '"start"' to '"end"' -->
+	// ForStatementVarDecl2 XPECT path from 'i=0' to 'j=1' -->
+	// ForStatementVarDecl2 XPECT commonPreds of 'j=1' and 'i=0' --> i=0
 	// ForStatementVarDecl2 XPECT succs at '"start"' --> 0
 	"start";
 	// ForStatementVarDecl2 XPECT succs at '0' --> i=0
@@ -382,6 +444,12 @@ function ForStatementBreak1() {
 	"start" -> 1 -> 2 -> "end",
 	"start" -> 1 -> 2 -> break; -> "end"
 	--- */
+	// ForStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementBreak1 XPECT path from '3' to '"end"' -->
+	// ForStatementBreak1 XPECT path from '"start"' notTo '3' -->
+	// ForStatementBreak1 XPECT commonPreds of '3' and '2' --> 3
+	// ForStatementBreak1 XPECT commonPreds of 'break;' and '2' --> 2
+	// ForStatementBreak1 XPECT commonPreds of '"end"' and '3' --> 3
 	// ForStatementBreak1 XPECT succs at '"start"' --> 1
 	"start";
 	// ForStatementBreak1 XPECT succs at '1' --> 2
@@ -407,6 +475,12 @@ function ForStatementContinue1() {
 	"start" -> 1 -> 2 -> continue; -> 3 -> 2 -> "end",
 	"start" -> 1 -> 2 -> continue; -> 3 -> 2 -> continue; -> 3 -> 2 -> "end"
 	--- */
+	// ForStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue1 XPECT path from '3' to '"end"' -->
+	// ForStatementContinue1 XPECT path from '"start"' to '3' -->
+	// ForStatementContinue1 XPECT commonPreds of '3' and '2' --> 2, 3
+	// ForStatementContinue1 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue1 XPECT commonPreds of '"end"' and '3' --> 2, 3
 	// ForStatementContinue1 XPECT succs at '"start"' --> 1
 	"start";
 	// ForStatementContinue1 XPECT succs at '1' --> 2
@@ -431,6 +505,12 @@ function ForStatementContinue2() {
 	"start" -> 2 -> continue; -> 3 -> 2 -> "end",
 	"start" -> 2 -> continue; -> 3 -> 2 -> continue; -> 3 -> 2 -> "end"
 	--- */
+	// ForStatementContinue2 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue2 XPECT path from '3' to '"end"' -->
+	// ForStatementContinue2 XPECT path from '"start"' to '3' -->
+	// ForStatementContinue2 XPECT commonPreds of '3' and '2' --> 2, 3
+	// ForStatementContinue2 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue2 XPECT commonPreds of '"end"' and '3' --> 2, 3
 	// ForStatementContinue2 XPECT succs at '"start"' --> 2
 	"start";
 	// ForStatementContinue2 XPECT succs at '2' --> continue;, "end"
@@ -453,6 +533,10 @@ function ForStatementContinue3() {
 	"start" -> 2 -> continue; -> 2 -> "end",
 	"start" -> 2 -> continue; -> 2 -> continue; -> 2 -> "end"
 	--- */
+	// ForStatementContinue3 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue3 XPECT path from 'continue;' to '"end"' -->
+	// ForStatementContinue3 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue3 XPECT commonPreds of '"end"' and 'continue;' --> 2, continue;
 	// ForStatementContinue3 XPECT succs at '"start"' --> 2
 	"start";
 	// ForStatementContinue3 XPECT succs at '2' --> continue;, "end"
@@ -460,6 +544,25 @@ function ForStatementContinue3() {
 	// ForStatementContinue3 XPECT succs type 'Continue' at 'continue;' --> 2
 	// ForStatementContinue3 XPECT succs at 'continue;' --> 2
 	for (;2;) continue;
+	"end";
+}
+
+function ForStatementContinue4() {
+	/* ForStatementContinue4 XPECT allEdges ---
+		"start" --> continue;,
+		continue; -Continue|Repeat-> continue;
+	--- */
+	/* ForStatementContinue4 XPECT allPaths ---
+	"start" -> continue; -> continue; -> continue;
+	--- */
+	// ForStatementContinue4 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatementContinue4 XPECT path from 'continue;' to 'continue;' -->
+	// ForStatementContinue4 XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementContinue4 XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForStatementContinue4 XPECT succs at '"start"' --> continue;
+	"start";
+	// ForStatementContinue4 XPECT succs at 'continue;' --> continue;
+	for (;;) continue;
 	"end";
 }
 
@@ -477,6 +580,13 @@ function IfStatement1() {
 	"start" -> 1 -> 2 -> "end",
 	"start" -> 1 -> 3 -> "end"
 	--- */
+	// IfStatement1 XPECT path from '"start"' to '"end"' -->
+	// IfStatement1 XPECT path from '"start"' to '2' -->
+	// IfStatement1 XPECT path from '"start"' to '3' -->
+	// IfStatement1 XPECT path from '2' notTo '3' -->
+	// IfStatement1 XPECT commonPreds of '2' and '3' --> 1
+	// IfStatement1 XPECT commonPreds of '"end"' and '2' --> 2, 1
+	// IfStatement1 XPECT commonPreds of '"end"' and '3' --> 3, 1
 	// IfStatement1 XPECT succs at '"start"' --> 1
 	"start";
 	// IfStatement1 XPECT succs at '1' --> 2,3
@@ -497,6 +607,11 @@ function IfStatement2() {
 	"start" -> 1 -> 2 -> "end",
 	"start" -> 1 -> "end"
 	--- */
+	// IfStatement2 XPECT path from '"start"' to '"end"' -->
+	// IfStatement2 XPECT path from '"start"' to '2' -->
+	// IfStatement2 XPECT path from '2' to '"end"' -->
+	// IfStatement2 XPECT commonPreds of '1' and '2' --> 1
+	// IfStatement2 XPECT commonPreds of '"end"' and '2' --> 1, 2
 	// IfStatement2 XPECT succs at '"start"' --> 1
 	"start";
 	// IfStatement2 XPECT succs at '1' --> 2,"end"
@@ -519,6 +634,9 @@ function SwitchCase1() {
 	"start" -> 1 -> 2 -> 3 -> "end",
 	"start" -> 1 -> "end"
 	---	*/
+	// SwitchCase1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCase1 XPECT commonPreds of '"end"' and '3' --> 1, 3
+	// SwitchCase1 XPECT commonPreds of '2' and '3' --> 2
 	// SwitchCase1 XPECT succs at '"start"' --> 1
 	"start";
 	// SwitchCase1 XPECT succs at '1' --> 2 , "end"
@@ -546,6 +664,11 @@ function SwitchCaseFallThrough() {
 	"start" -> 1 -> 4 -> 5 -> "end",
 	"start" -> 1 -> "end"
 	--- */
+	// SwitchCaseFallThrough XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseFallThrough XPECT path from '3' to '5' -->
+	// SwitchCaseFallThrough XPECT commonPreds of '"end"' and '3' --> 1, 3
+	// SwitchCaseFallThrough XPECT commonPreds of '5' and '3' --> 1, 3
+	// SwitchCaseFallThrough XPECT commonPreds of '5' and '"end"' --> 1, 5
 	// SwitchCaseFallThrough XPECT succs at '"start"' --> 1
 	"start";
 	// SwitchCaseFallThrough XPECT succs at '1' --> 2, 4, "end"
@@ -578,6 +701,11 @@ function SwitchCaseBreak1() {
 	"start" -> 1 -> 4 -> 5 -> break; -> "end",
 	"start" -> 1 -> "end"
 	--- */
+	// SwitchCaseBreak1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseBreak1 XPECT path from '3' notTo '5' -->
+	// SwitchCaseBreak1 XPECT commonPreds of '3' and '5' --> 1
+	// SwitchCaseBreak1 XPECT commonPreds of '3' and '"end"' --> 1, 3
+	// SwitchCaseBreak1 XPECT commonPreds of '5' and '"end"' --> 1, 5
 	// SwitchCaseBreak1 XPECT succs at '"start"' --> 1
 	"start";
 	// SwitchCaseBreak1 XPECT succs at '1' --> 2, 4, "end"
@@ -607,6 +735,11 @@ function SwitchCaseDefault1() {
 	"start" -> 1 -> 2 -> 3 -> 5 -> "end",
 	"start" -> 1 -> 5 -> "end"
 	--- */
+	// SwitchCaseDefault1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseDefault1 XPECT path from '3' to '5' -->
+	// SwitchCaseDefault1 XPECT commonPreds of '3' and '5' --> 1, 3
+	// SwitchCaseDefault1 XPECT commonPreds of '3' and '"end"' --> 1, 3
+	// SwitchCaseDefault1 XPECT commonPreds of '5' and '"end"' --> 5
 	// SwitchCaseDefault1 XPECT succs at '"start"' --> 1
 	"start";
 	// SwitchCaseDefault1 XPECT succs at '1' --> 2, 5
@@ -634,6 +767,11 @@ function SwitchCaseDefault2() {
 	"start" -> 1 -> 2 -> 3 -> break; -> "end",
 	"start" -> 1 -> 5 -> "end"
 	--- */
+	// SwitchCaseDefault2 XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseDefault2 XPECT path from '3' notTo '5' -->
+	// SwitchCaseDefault2 XPECT commonPreds of '3' and '5' --> 1
+	// SwitchCaseDefault2 XPECT commonPreds of '3' and '"end"' --> 1, 3
+	// SwitchCaseDefault2 XPECT commonPreds of '5' and '"end"' --> 1, 5
 	// SwitchCaseDefault2 XPECT succs at '"start"' --> 1
 	"start";
 	// SwitchCaseDefault2 XPECT succs at '1' --> 2, 5
@@ -660,6 +798,10 @@ function WhileStatement1() {
 	"start" -> 1 -> 2 -> 1 -> "end",
 	"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> "end"
 	--- */
+	// WhileStatement1 XPECT path from '"start"' to '"end"' -->
+	// WhileStatement1 XPECT path from '2' to '"end"' -->
+	// WhileStatement1 XPECT commonPreds of '1' and '2' --> 1, 2
+	// WhileStatement1 XPECT commonPreds of '1' and '"end"' --> 1
 	// WhileStatement1 XPECT succs at '"start"' --> 1
 	"start";
 	// WhileStatement1 XPECT succs at '1' --> 2, "end"
@@ -684,6 +826,15 @@ function WhileStatementBreak1() {
 	"start" -> 1 -> "end",
 	"start" -> 1 -> 2 -> break; -> "end"
 	--- */
+	// WhileStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// WhileStatementBreak1 XPECT path from '"start"' notTo '3' -->
+	// WhileStatementBreak1 XPECT path from '2' notTo '1' -->
+	// WhileStatementBreak1 XPECT path from '3' to '2' -->
+	// WhileStatementBreak1 XPECT commonPreds of '1' and '2' --> 1
+	// WhileStatementBreak1 XPECT commonPreds of '1' and '"end"' --> 1
+	// WhileStatementBreak1 XPECT commonPreds of 'break;' and '"end"' --> 1, break;
+	// WhileStatementBreak1 XPECT commonPreds of 'break;' and '3' --> 3
+	// WhileStatementBreak1 XPECT commonPreds of '2' and '"end"' --> 1, 2
 	// WhileStatementBreak1 XPECT succs at '"start"' --> 1
 	"start";
 	// WhileStatementBreak1 XPECT succs at '1' --> 2, "end"
@@ -714,6 +865,15 @@ function WhileStatementContinue1() {
 	"start" -> 1 -> 2 -> continue; -> 1 -> "end",
 	"start" -> 1 -> 2 -> continue; -> 1 -> 2 -> continue; -> 1 -> "end"
 	--- */
+	// WhileStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// WhileStatementContinue1 XPECT path from '"start"' notTo '3' -->
+	// WhileStatementContinue1 XPECT path from '2' to '1' -->
+	// WhileStatementContinue1 XPECT path from '3' to '2' -->
+	// WhileStatementContinue1 XPECT commonPreds of '1' and '2' --> 1, 2
+	// WhileStatementContinue1 XPECT commonPreds of '1' and '"end"' --> 1
+	// WhileStatementContinue1 XPECT commonPreds of 'continue;' and '"end"' --> 1, continue;
+	// WhileStatementContinue1 XPECT commonPreds of 'continue;' and '3' --> 3
+	// WhileStatementContinue1 XPECT commonPreds of '2' and '"end"' --> 1, 2
 	// WhileStatementContinue1 XPECT succs at '"start"' --> 1
 	"start";
 	// WhileStatementContinue1 XPECT succs at '1' --> 2, "end"
@@ -736,10 +896,12 @@ function EmptyStatement() {
 		; --> "end"
 	--- */
 	// EmptyStatement XPECT allPaths --> "start" -> ; -> "end"
+	// EmptyStatement XPECT path from '"start"' to '"end"' -->
+	// EmptyStatement XPECT commonPreds of ' ;' and '"end"' -->  ;
 	// EmptyStatement XPECT succs at '"start"' --> ;
 	"start";
 	// EmptyStatement XPECT succs at ';' --> "end"
-	;
+	 ;
 	"end";
 }
 

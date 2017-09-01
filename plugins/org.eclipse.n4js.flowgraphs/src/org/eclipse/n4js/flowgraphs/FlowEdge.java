@@ -13,8 +13,11 @@ package org.eclipse.n4js.flowgraphs;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.SortedSet;
 
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+
+import com.google.common.collect.Sets;
 
 /**
  * Connects two {@link ControlFlowElement}s from {@link #start} to {@link #end}. The flow type is defined in
@@ -29,13 +32,13 @@ public class FlowEdge implements Comparable<FlowEdge> {
 	/** Target node of the edge */
 	final public ControlFlowElement end;
 	/** Flow types that connect {@link #start} and {@link #end} */
-	final public Set<ControlFlowType> cfTypes;
+	final public SortedSet<ControlFlowType> cfTypes;
 
 	/** Constructor */
 	public FlowEdge(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
 		this.start = start;
 		this.end = end;
-		this.cfTypes = Collections.unmodifiableSet(cfTypes);
+		this.cfTypes = Collections.unmodifiableSortedSet(Sets.newTreeSet(cfTypes));
 	}
 
 	@Override
@@ -87,7 +90,7 @@ public class FlowEdge implements Comparable<FlowEdge> {
 		for (Iterator<ControlFlowType> cftIt = cfTypes.iterator(); cftIt.hasNext();) {
 			ControlFlowType cft = cftIt.next();
 			if (cft != ControlFlowType.Successor) {
-				if (!firstCFT && cftIt.hasNext()) {
+				if (!firstCFT) {
 					toString += "|";
 				}
 				firstCFT = false;

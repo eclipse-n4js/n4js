@@ -55,7 +55,7 @@ class BlockFactory {
 
 		if (block.eContainer() instanceof GenericDeclaration) {
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.Return));
-			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesRuntimeExceptions));
+			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesErrors));
 		}
 
 		return cNode;

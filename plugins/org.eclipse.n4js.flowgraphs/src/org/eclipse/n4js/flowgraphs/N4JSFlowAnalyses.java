@@ -95,6 +95,8 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
+	 * <b>Attention:</b> On self loops, an empty set of successor types is returned!
+	 *
 	 * @returns all the {@link ControlFlowType}s that happen between the two direct successors cfe and cfeSucc
 	 */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
@@ -109,9 +111,11 @@ public class N4JSFlowAnalyses {
 	 * marked. Second, analogous the CF graph is now traversed beginning from cfeB backwards until an element is reached
 	 * which has no predecessor. If an already marked element can be found during that traversion, this element is
 	 * supposed to be the common predecessor of cfeA and cfeB.
+	 * <p>
+	 * The described algorithm is repeated for swapped cfeA and cfeB.
 	 */
-	public ControlFlowElement getCommonPredecessor(ControlFlowElement cfeA, ControlFlowElement cfeB) {
-		return dpa.getCommonPredecessor(cfeA, cfeB);
+	public Set<ControlFlowElement> getCommonPredecessors(ControlFlowElement cfeA, ControlFlowElement cfeB) {
+		return dpa.getCommonPredecessors(cfeA, cfeB);
 	}
 
 	/**

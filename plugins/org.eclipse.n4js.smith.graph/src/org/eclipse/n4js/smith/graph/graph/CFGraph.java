@@ -152,10 +152,11 @@ public class CFGraph extends Graph<CFGraphProvider> {
 					return 1;
 
 				if (offset == 0) {
-					ControlFlowElement commonSucc = flowAnalyses.getCommonPredecessor(cfe1, cfe2);
-					if (commonSucc != null) {
-						String path1 = flowAnalyses.getPathIdentifier(commonSucc, cfe1);
-						String path2 = flowAnalyses.getPathIdentifier(commonSucc, cfe2);
+					Set<ControlFlowElement> commonPreds = flowAnalyses.getCommonPredecessors(cfe1, cfe2);
+					if (!commonPreds.isEmpty()) {
+						ControlFlowElement oneCommonPred = commonPreds.iterator().next();
+						String path1 = flowAnalyses.getPathIdentifier(oneCommonPred, cfe1);
+						String path2 = flowAnalyses.getPathIdentifier(oneCommonPred, cfe2);
 
 						offset = path1.compareTo(path2);
 					}

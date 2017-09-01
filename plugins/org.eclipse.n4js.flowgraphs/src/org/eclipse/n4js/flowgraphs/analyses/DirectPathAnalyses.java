@@ -61,10 +61,20 @@ public class DirectPathAnalyses {
 		return path.isConnecting();
 	}
 
-	/** see {@link N4JSFlowAnalyses#getCommonPredecessor(ControlFlowElement , ControlFlowElement)}. */
-	public ControlFlowElement getCommonPredecessor(ControlFlowElement cfeA, ControlFlowElement cfeB) {
+	/** see {@link N4JSFlowAnalyses#getCommonPredecessors(ControlFlowElement , ControlFlowElement)}. */
+	public Set<ControlFlowElement> getCommonPredecessors(ControlFlowElement cfeA, ControlFlowElement cfeB) {
 		Objects.requireNonNull(cfeA);
 		Objects.requireNonNull(cfeB);
+
+		LinkedHashSet<ControlFlowElement> commonPredSet = new LinkedHashSet<>();
+		commonPredSet.addAll(getSomeCommonPredecessors(cfeA, cfeB));
+		commonPredSet.addAll(getSomeCommonPredecessors(cfeB, cfeA));
+
+		return commonPredSet;
+	}
+
+	private Set<ControlFlowElement> getSomeCommonPredecessors(ControlFlowElement cfeA, ControlFlowElement cfeB) {
+		LinkedHashSet<ControlFlowElement> commonPredSet = new LinkedHashSet<>();
 
 		// step 1: traverse all predecessors, beginning from cfeA: mark each
 		Set<ControlFlowElement> marked = new HashSet<>();
@@ -72,24 +82,31 @@ public class DirectPathAnalyses {
 		curCFEs.add(cfeA);
 		while (!curCFEs.isEmpty()) {
 			ControlFlowElement cfe = curCFEs.remove(0);
-			marked.add(cfe);
-			Set<ControlFlowElement> preds = spa.getPredecessors(cfe, ControlFlowType.NonRepeatTypes);
-			curCFEs.addAll(preds);
+			if (!marked.contains(cfe)) {
+				marked.add(cfe);
+				Set<ControlFlowElement> preds = spa.getPredecessors(cfe);
+				curCFEs.addAll(preds);
+			}
 		}
 
-		// step 2: traverse all predecessors, beginning from cfeB: find mark (this is the common pred.)
+		// step 2: traverse all predecessors, beginning from cfeB: find mark (this is a common pred.)
+		Set<ControlFlowElement> visited = new HashSet<>();
 		curCFEs.clear();
 		curCFEs.add(cfeB);
 		while (!curCFEs.isEmpty()) {
 			ControlFlowElement cfe = curCFEs.remove(0);
 			if (marked.contains(cfe)) {
-				return cfe;
+				commonPredSet.add(cfe);
+			} else {
+				if (!visited.contains(cfe)) {
+					visited.add(cfe);
+					Set<ControlFlowElement> preds = spa.getPredecessors(cfe);
+					curCFEs.addAll(preds);
+				}
 			}
-			Set<ControlFlowElement> preds = spa.getPredecessors(cfe, ControlFlowType.NonRepeatTypes);
-			curCFEs.addAll(preds);
 		}
 
-		return null;
+		return commonPredSet;
 	}
 
 	/** see {@link N4JSFlowAnalyses#getPathIdentifier(ControlFlowElement , ControlFlowElement)}. */

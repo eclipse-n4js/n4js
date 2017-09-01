@@ -26,6 +26,7 @@ import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
+import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegion;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
@@ -46,6 +47,8 @@ public class FlowgraphsXpectMethod {
 	/**
 	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
 	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
 	 */
 	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
 	@Xpect
@@ -91,28 +94,44 @@ public class FlowgraphsXpectMethod {
 		}
 	}
 
-	/**
-	 * This xpect method can evaluate if the tested element is a transitive predecessor of the given element.
-	 */
-	@ParameterParser(syntax = "('from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)?")
+	/** This xpect method can evaluate if the tested element is a transitive predecessor of the given element. */
+	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
 	@Xpect
-	public void transitiveSuccs(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
-			IEObjectCoveringRegion notToOffset) {
+	public void path(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
+			IEObjectCoveringRegion notToOffset, IEObjectCoveringRegion referenceOffset) {
+
+		EObjectCoveringRegion toOffsetImpl = (EObjectCoveringRegion) toOffset;
+		EObjectCoveringRegion notToOffsetImpl = (EObjectCoveringRegion) notToOffset;
+		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
 
 		ControlFlowElement fromCFE = getControlFlowElement(fromOffset);
-		ControlFlowElement toCFE = getControlFlowElement(toOffset);
-		ControlFlowElement notToCFE = getControlFlowElement(notToOffset);
+		ControlFlowElement toCFE = null;
+		if (referenceOffsetImpl.getOffset() < toOffsetImpl.getOffset()) {
+			toCFE = getControlFlowElement(toOffset);
+		}
+		ControlFlowElement notToCFE = null;
+		if (referenceOffsetImpl.getOffset() < notToOffsetImpl.getOffset()) {
+			notToCFE = getControlFlowElement(notToOffsetImpl);
+		}
 
 		if (fromCFE == null) {
 			fail("Element 'from' could not be found");
 		}
 		if (toCFE == null && notToCFE == null) {
-			fail("Element 'to' could not be found");
+			fail("Element 'to' or 'notTo' could not be found or before 'from'");
 		}
 
-		boolean isTransitiveSuccs = flowAnalyses.isTransitiveSuccessor(fromCFE, toCFE);
-		if (!isTransitiveSuccs) {
-			fail("Elements are no transitive successors");
+		if (toCFE != null) {
+			boolean isTransitiveSuccs = flowAnalyses.isTransitiveSuccessor(fromCFE, toCFE);
+			if (!isTransitiveSuccs) {
+				fail("Elements are no transitive successors");
+			}
+		}
+		if (notToCFE != null) {
+			boolean isTransitiveSuccs = flowAnalyses.isTransitiveSuccessor(fromCFE, notToCFE);
+			if (isTransitiveSuccs) {
+				fail("Elements are transitive successors");
+			}
 		}
 	}
 
@@ -136,9 +155,7 @@ public class FlowgraphsXpectMethod {
 		expectation.assertEquals(pathStrings);
 	}
 
-	/**
-	 * This xpect method can evaluate all edges of the containing function.
-	 */
+	/** This xpect method can evaluate all edges of the containing function. */
 	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
 	@Xpect
 	public void allEdges(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
@@ -155,6 +172,25 @@ public class FlowgraphsXpectMethod {
 		List<String> pathStrings = anaepw.getAllEdgeStrings();
 
 		expectation.assertEquals(pathStrings);
+	}
+
+	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
+	@ParameterParser(syntax = "'of' arg1=OFFSET 'and' arg2=OFFSET")
+	@Xpect
+	public void commonPreds(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion a, IEObjectCoveringRegion b) {
+
+		ControlFlowElement aCFE = getControlFlowElement(a);
+		ControlFlowElement bCFE = getControlFlowElement(b);
+
+		Set<ControlFlowElement> commonPreds = flowAnalyses.getCommonPredecessors(aCFE, bCFE);
+		List<String> commonPredStrs = new LinkedList<>();
+		for (ControlFlowElement commonPred : commonPreds) {
+			String commonPredStr = FGUtils.getTextLabel(commonPred);
+			commonPredStrs.add(commonPredStr);
+		}
+
+		expectation.assertEquals(commonPredStrs);
 	}
 
 	private ControlFlowElement getControlFlowElement(IEObjectCoveringRegion offset) {
