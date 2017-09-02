@@ -1570,13 +1570,18 @@ enum AdditiveOperator: add='+' | sub='-';
 
 For a given additive expression the following constraints must hold in N4JS mode:
 
-* The types of the operands must be subtypes of number if the operator is not ’+’, otherwise, any type could be used:
+* The types of the operands must be subtypes of number or boolean if the operator is not ’+’, otherwise, any type could be used:
 
 [math]
 ++++
-\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \type{number}}{e.op \neq AdditiveOperator.ADD}
+\beginalign
+\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \union{number,boolean,null}}{e.op \neq AdditiveOperator.ADD} \\
+\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \type{any}}{e.op =  AdditiveOperator.ADD}
+\endalign
 ++++
 --
+
+In JavaScript it is possible to subtract two non-strings, leading to `NaN`. In N4JS this is an error -- with the same argument `TypeError` could be an excuse for not doing any static type checks.
 
 ==== Type Inference [[type-inference-10]]
 
@@ -1590,10 +1595,16 @@ We first define two helper rules to simplify the addition operator condition:
 [math]
 ++++
 \beginalign
-\inferRule{nb}{nb(T)}{T = \type{number} \lor T = \type{boolean}}
-\inferRule{nb}{nb(expr)}{nb\tee expr} \\
-\inferRule{un}{un(T)}{T = \type{undefined} \lor T = \type{null}}
-\inferRule{un}{un(expr)}{un\tee expr.lhs \lor un\tee expr.rhs}
+\inferRule{nb}{nb(T)}{T \subtype = \type{number} \lor\ T \subtype \type{boolean}} \\
+\inferRule{un}{un(T)}{T = \type{undefined} \lor\ T = \type{null}} \\
+\inferRule{mnb}{mnb(T)}{nb(T) \lor\  (\mu(T)=\type{Union}\ \land\  \exists\  t\in T.typeRefs: mnb(t) } \\
+\inferRule{mun}{mun(T)}{un(T) \lor\  (\mu(T)=\type{Union}\ \land\  \exists\  t\in T.typeRefs: un(T)} \\
+
+\inferRule{toNum}{toNum(expr)}
+    {\tee e.lhs: L \spc \tee e.rhs: R \spc (nb(L) \land\  nb(R)) \lor\  (((un(L) \lor\  un(R)) \land\  (nb(L) \lor\  nb(R) ))))} \\
+\inferRule{mayNum}{mayNum(expr)}
+    {\tee e.lhs: L \spc \tee e.rhs: R \spc (mnb(L) \land\  mnb(R)) \lor\  (((mun(L) \lor\  mun(R)) \land\  (mnb(L) \lor\  mnb(R) ))))}
+
 \endalign
 ++++
 
@@ -1602,10 +1613,15 @@ The type of an additive expression $e$ is inferred as follows:
 [math]
 ++++
 \beginalign
-\infer{\tee e: \type{string}}{e.op='+' \spc   \lnot(nb(e.lhs)\land nb(e.rhs)) \spc   \lnot(un(e) \land (nb(e.lhs)\lor nb(e.rhs))}\\
-\spc  \infer{\tee e: \type{number}}{}\\
+\infer{\tee e: \type{string}}{e.op='+' \spc \lnot toNum(e) \spc \lnot mayNum(e)} \\
+\infer{\tee e: \union{number, string}}{e.op='+' \spc \lnot toNum(e) \spc mayNum(e)} \\
+\infer{\tee e: \type{number}}{e.op='+' \spc toNum(e)} \\ 
+\infer{\tee e: \type{number}}{e.op \leq '+'}
 \endalign
 ++++
+
+
+Note: Adding two integers (int) leads to a number, since the result may not be represented as an (JavaScript) int anymore.
 
 .Type of addition expression
 [example]
@@ -1737,9 +1753,11 @@ or an enum type reference.
 
 [math]
 ++++
+\beginalign
 \spc\infer{\tee  lhs\ \lstnfbnf{'instanceof'}\  rhs\  \expectType\ rhs: \type{Function}}{} \\
 \spc\infer{\tee  lhs\ \lstnfbnf{'instanceof'}\  rhs\  \expectType\ rhs: \type{type}\{ \type{Object}\}}{} \\
 \spc\infer{\tee  lhs\ \lstnfbnf{'instanceof'}\  rhs\  \expectType\ rhs: \type{type}\{ \type{N4Enum}\}}{}
+\endalign
 ++++
 
 The type of a definition site structural classifier $C$ is not of type `C`.
@@ -1817,7 +1835,7 @@ The type of a relational expression always is `boolean`;
 
 [math]
 ++++
-\spc\infer{\tee lhs\ \lstnfbnf{('<'|'<='|'>'|'>='|'instanceof'|'in')}\ rhs\ : \type{boolean}}{}
+\spc\infer{\tee lhs\ (\lstnfbnf{'<'}|\lstnfbnf{'<='}|\lstnfbnf{'>'}|\lstnfbnf{'>='}|\lstnfbnf{'instanceof'}|\lstnfbnf{'in'})\ rhs\ : \type{boolean}}{}
 ++++
 
 
@@ -1875,13 +1893,11 @@ This is why the upper bounds are to be used.
 
 
 
-In N4JSmode, using the non-strict equality operators `'=='|'!='` is only allowed for internal developers.
-External developers have to use the strict equality operators `'==='|'!=='`.
 The inferred type of an equality expression always is `boolean`.
 
 [math]
 ++++
-\spc\infer{\tee lhs\ \lstnfbnf{('=='|'!='|'==='|'!==')}\ rhs\ : \type{boolean}}{}
+\spc\infer{\tee lhs\ (\lstnfbnf{'=='}|\lstnfbnf{'!='}|\lstnfbnf{'==='}|\lstnfbnf{'!=='}) \ rhs\ : \type{boolean}}{}
 ++++
 
 === Binary Bitwise Expression

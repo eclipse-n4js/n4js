@@ -958,10 +958,9 @@ from {
 		if (lunknown && runknown) {
 			T = r
 		} else {
-			val lnum = l.declaredType == G.booleanType || G.isNumeric(l.declaredType);
-			val rnum = r.declaredType == G.booleanType || G.isNumeric(r.declaredType);
-			val undef =  l.declaredType == G.undefinedType  || l.declaredType == G.nullType
-					|| r.declaredType == G.undefinedType || r.declaredType == G.nullType;
+			val lnum = G.isNumericOrBoolean(l);
+			val rnum = G.isNumericOrBoolean(r);
+			val undef = G.isUndefOrNull(l) || G.isUndefOrNull(r);
 
 			if ((lnum && rnum) || ((undef && (lnum || rnum)))) {
 				T = G.numberTypeRef
@@ -969,7 +968,16 @@ from {
 				if ( (lunknown || runknown) && (lnum || rnum || undef)  ) {
 					T = if (lunknown) l else r
 				} else {
-					T = G.stringTypeRef
+					val lMayNum = lnum || G.containsNumericOrBoolean(l);
+					val rMayNum = rnum || G.containsNumericOrBoolean(r);
+					val mayUndef = undef || G.containsUndefOrNull(r) || G.containsUndefOrNull(l);
+					
+					if ((lMayNum && rMayNum) || ((mayUndef && (lMayNum || rMayNum)))) {
+						T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
+					}		
+					else {					
+						T = G.stringTypeRef
+					}
 				}
 			}
 		}
@@ -2019,7 +2027,7 @@ rule expectedTypeInAdditiveExpression
 	G |- AdditiveExpression e |> Expression expression : TypeRef T
 from {
 	if (e.op != AdditiveOperator.ADD && jsVariantHelper.isTypeAware(e)) {
-		T = G.numberTypeRef
+		T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.booleanTypeRef, G.nullTypeRef);
 	} else {
 		T = G.anyTypeRef
 	}

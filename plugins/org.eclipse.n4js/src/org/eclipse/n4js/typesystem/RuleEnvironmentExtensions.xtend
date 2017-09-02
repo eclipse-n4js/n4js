@@ -13,6 +13,15 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Collection
+import java.util.Collections
+import java.util.List
+import java.util.Map
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
@@ -28,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -45,15 +55,6 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Collection
-import java.util.Collections
-import java.util.List
-import java.util.Map
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
@@ -665,15 +666,88 @@ class RuleEnvironmentExtensions {
 	public def static boolean isNumeric(RuleEnvironment G, Type type) {
 		G.predefinedTypes.builtInTypeScope.isNumeric(type)
 	}
-
+	
 	/**
 	 * Returns true if the given type reference points to one of the {@link BuiltInTypeScope#isNumeric(Type) numeric}
 	 * primitive built-in types.
 	 */
 	public def static boolean isNumeric(RuleEnvironment G, TypeRef typeRef) {
-		typeRef?.declaredType!==null && G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)
+		if (typeRef===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)) {
+			return true;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isNumeric(G, e)];
+		}
+		if (typeRef instanceof IntersectionTypeExpression) {
+			return typeRef.typeRefs.exists[e|isNumeric(G, e)];
+		}
+		return false;
 	}
-
+	
+	/**
+	 * Returns true if the given type reference points to undefined or null type, 
+	 * or is a union type containing only undefined and null.
+	 */
+	public def static boolean isUndefOrNull(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isUndefOrNull(G, e)];
+		}
+		val type = typeRef.declaredType;
+		if (type===null) {
+			return false;
+		}
+		return type==G.undefinedType || type==G.nullType;
+	}
+	
+	/** 
+	 * Returns true iff typeRef is a union type expression and
+	 * one of its elements is undefined or null, or contains a undefined or null. 
+	 */
+	public def static boolean containsUndefOrNull(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.exists[e | isUndefOrNull(G, e) ||containsUndefOrNull(G, e) ]
+		}
+		return false;
+	}
+	
+	/**
+	 * Returns true if typeRef is a union type and one if its elements
+	 * contains a numeric or boolean or is a numeric or boolean itself.
+	 */
+	public def static boolean containsNumericOrBoolean(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.exists[e | isNumericOrBoolean(G, e) ||containsNumericOrBoolean(G, e) ]
+		}
+		return false;		
+	}
+	
+	/**
+	 * Returns true if the given type reference is a subtype of number or boolean.
+	 */
+	public def static boolean isNumericOrBoolean(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType) 
+			|| G.predefinedTypes.builtInTypeScope.booleanType == typeRef.declaredType
+		) {
+			return true;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isNumericOrBoolean(G, e)];
+		}
+		if (typeRef instanceof IntersectionTypeExpression) {
+			return typeRef.typeRefs.exists[e|isNumericOrBoolean(G, e)];
+		}
+		return false;
+	}
+	
 	/**
 	 * Same as {@link TypeUtils#wrapInTypeRef(BuiltInTypeScope,Type,TypeArgument...)}, but will obtain
 	 * the required {@code BuiltInTypeScope} from the given rule environment.

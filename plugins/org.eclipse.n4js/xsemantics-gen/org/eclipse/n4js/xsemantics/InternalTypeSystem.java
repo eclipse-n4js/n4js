@@ -2805,9 +2805,9 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if ((lunknown && runknown)) {
         T = r;
       } else {
-        final boolean lnum = (Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, l.getDeclaredType()));
-        final boolean rnum = (Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, r.getDeclaredType()));
-        final boolean undef = (((Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G)) || Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.nullType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.nullType(G)));
+        final boolean lnum = RuleEnvironmentExtensions.isNumericOrBoolean(G, l);
+        final boolean rnum = RuleEnvironmentExtensions.isNumericOrBoolean(G, r);
+        final boolean undef = (RuleEnvironmentExtensions.isUndefOrNull(G, l) || RuleEnvironmentExtensions.isUndefOrNull(G, r));
         if (((lnum && rnum) || (undef && (lnum || rnum)))) {
           T = RuleEnvironmentExtensions.numberTypeRef(G);
         } else {
@@ -2820,7 +2820,14 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
             }
             T = _xifexpression;
           } else {
-            T = RuleEnvironmentExtensions.stringTypeRef(G);
+            final boolean lMayNum = (lnum || RuleEnvironmentExtensions.containsNumericOrBoolean(G, l));
+            final boolean rMayNum = (rnum || RuleEnvironmentExtensions.containsNumericOrBoolean(G, r));
+            final boolean mayUndef = ((undef || RuleEnvironmentExtensions.containsUndefOrNull(G, r)) || RuleEnvironmentExtensions.containsUndefOrNull(G, l));
+            if (((lMayNum && rMayNum) || (mayUndef && (lMayNum || rMayNum)))) {
+              T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
+            } else {
+              T = RuleEnvironmentExtensions.stringTypeRef(G);
+            }
           }
         }
       }
@@ -5140,7 +5147,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   protected Result<TypeRef> applyRuleExpectedTypeInAdditiveExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final AdditiveExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
     if (((!Objects.equal(e.getOp(), AdditiveOperator.ADD)) && this.jsVariantHelper.isTypeAware(e))) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
+      T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.booleanTypeRef(G), RuleEnvironmentExtensions.nullTypeRef(G));
     } else {
       T = RuleEnvironmentExtensions.anyTypeRef(G);
     }

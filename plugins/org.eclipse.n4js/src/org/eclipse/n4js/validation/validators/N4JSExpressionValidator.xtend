@@ -888,7 +888,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			if (tlhs === null) {
 				return; // corrupt AST (e.g., while editing)
 			}
-			if (tlhs.declaredType === bits.nullType || tlhs.declaredType === bits.undefinedType)
+			if (tlhs.declaredType === bits.undefinedType)
 				issueNotANumberType(tlhs.declaredType.name, ae.lhs);
 
 			val trhs = ts.tau(ae.rhs)
@@ -896,7 +896,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				return; // corrupt AST (e.g., while editing)
 			}
 
-			if (trhs.declaredType === bits.nullType || trhs.declaredType === bits.undefinedType)
+			if (trhs.declaredType === bits.undefinedType)
 				issueNotANumberType(trhs.declaredType.name, ae.rhs);
 
 		}
