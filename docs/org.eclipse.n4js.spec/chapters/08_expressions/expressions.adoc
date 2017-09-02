@@ -1570,7 +1570,7 @@ enum AdditiveOperator: add='+' | sub='-';
 
 For a given additive expression the following constraints must hold in N4JS mode:
 
-* The types of the operands must be subtypes of number or boolean if the operator is not ’+’, otherwise, any type could be used:
+* If the operator is not ’+’ the types of the operands must be subtypes of number, boolean or null; otherwise any type could be used:
 
 [math]
 ++++
