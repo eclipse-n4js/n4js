@@ -958,21 +958,20 @@ from {
 		if (lunknown && runknown) {
 			T = r
 		} else {
-			val lnum = G.isNumericOrBoolean(l);
-			val rnum = G.isNumericOrBoolean(r);
-			val undef = G.isUndefOrNull(l) || G.isUndefOrNull(r);
-
-			if ((lnum && rnum) || ((undef && (lnum || rnum)))) {
+			val lnum = G.isNumericOperand(l);
+			val rnum = G.isNumericOperand(r);
+			
+			if (lnum && rnum) {
 				T = G.numberTypeRef
 			} else {
-				if ( (lunknown || runknown) && (lnum || rnum || undef)  ) {
-					T = if (lunknown) l else r
+				if ( (lunknown || runknown) && (lnum || rnum)  ) {
+					// one is numeric, the other unknown --> 
+					T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 				} else {
-					val lMayNum = lnum || G.containsNumericOrBoolean(l);
-					val rMayNum = rnum || G.containsNumericOrBoolean(r);
-					val mayUndef = undef || G.containsUndefOrNull(r) || G.containsUndefOrNull(l);
+					val lMayNum = lnum || G.containsNumericOperand(l);
+					val rMayNum = rnum || G.containsNumericOperand(r);
 					
-					if ((lMayNum && rMayNum) || ((mayUndef && (lMayNum || rMayNum)))) {
+					if (lMayNum && rMayNum) {
 						T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 					}		
 					else {					
@@ -2015,33 +2014,21 @@ from {
 rule expectedTypeInMultiplicativeExpression
 	G |- MultiplicativeExpression e |> Expression expression : TypeRef T
 from {
-	if (jsVariantHelper.isTypeAware(e)) {
-		T = G.numberTypeRef
-	} else {
-		T = G.anyTypeRef
-	}
+	T = G.anyTypeRef
 }
 
 /* @see [N4JS] 6.1.14 Additive Expression */
 rule expectedTypeInAdditiveExpression
 	G |- AdditiveExpression e |> Expression expression : TypeRef T
 from {
-	if (e.op != AdditiveOperator.ADD && jsVariantHelper.isTypeAware(e)) {
-		T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.booleanTypeRef, G.nullTypeRef);
-	} else {
-		T = G.anyTypeRef
-	}
+	T = G.anyTypeRef
 }
 
 /* @see [N4JS] 6.1.15. Shift Expression */
 rule expectedTypeInShiftExpression
 	G |- ShiftExpression e |> Expression expression : TypeRef T
 from {
-	if (jsVariantHelper.isTypeAware(e)) {
-		T = G.numberTypeRef
-	} else {
-		T = G.anyTypeRef
-	}
+	T = G.anyTypeRef
 }
 
 /* @see [N4JS] 6.1.16. Relational Expression */

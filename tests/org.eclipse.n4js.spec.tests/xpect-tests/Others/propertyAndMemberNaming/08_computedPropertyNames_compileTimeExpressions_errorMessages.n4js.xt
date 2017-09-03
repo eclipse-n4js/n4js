@@ -45,10 +45,8 @@ class C {
 	// TODO consider getting rid of duplicate error messages
 	// XPECT errors ---
 	// "Not a compile-time expression: a call expression is never a compile-time expression." at "foo()"
-	// "Not a compile-time expression: right operand must be a number." at "'hello'"
 	// "Not a compile-time expression: left operand must be a number." at "'world'"
-	// "string is not a subtype of number." at "'hello'"
-	// "string is not a subtype of number." at "'world'"
+	// "Not a compile-time expression: right operand must be a number." at "'hello'"
 	// ---
 	[foo() ? 3-'hello' : 'world'-2] = 'some value';
 

@@ -18,115 +18,111 @@
 // '<<' - SHL
 // Constraint 74
 ////////
-class A {
-	public num : number = 2;
-}
 
-class B extends A {
-	s : string = "a";
-	b : boolean = true;
-	m() : void { return;  }
-}
-
-var erg = new Array<number>();
+var n: number = 1;
+var n1: number = 2;
+var i: int = 1;
+var s: string = "x";
+var b: boolean = true;
+var o: Object = {};
 
 //////////////
-// SHR
+// SHL (SHR and USHR similar)
 //////////////
 
-// OK
-erg[0] = 1 << 2;
-
-// ACTIVATE: X-PECT errors --> "null is not a number." at "null"
-erg[1] = null << 2;
-// ACTIVATE: X-PECT --> "null is not a number." at "null"
-erg[2] = 1 << null;
-// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
-erg[3] = undefined << 2;
-// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
-erg[4] = 1 << undefined;
-
-// XPECT errors --> "string is not a subtype of number." at ""1""
-erg[5] = "1" << 2;
-// XPECT errors --> "string is not a subtype of number." at ""2""
-erg[6] = 1 << "2";
-// XPECT errors --> "boolean is not a subtype of number." at "false"
-erg[7] = false << 2;
-// XPECT errors --> "boolean is not a subtype of number." at "true"
-erg[8] = 1 << true;
-// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
-erg[9] = 3 << /ab+c/;
-// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
-erg[10] = /ab+c/ << 3 ;
-// XPECT errors --> "void is not a subtype of number." at "new B().m()"
-erg[11] = new B().m() << 3 ;
-// XPECT errors --> "void is not a subtype of number." at "new B().m()"
-erg[12] = 1 << new B().m() ;
+// XPECT type of n>>>n --> number
+n>>>n;
+// XPECT type of n<<n --> number
+n<<n;
 
 
-//////////////
-// SHL
-//////////////
-
-// OK
-erg[0] = 1 >> 2;
-
-// ACTIVATE: X-PECT errors --> "null is not a number." at "null"
-erg[1] = null >> 2;
-// ACTIVATE: X-PECT --> "null is not a number." at "null"
-erg[2] = 1 >> null;
-// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
-erg[3] = undefined >> 2;
-// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
-erg[4] = 1 >> undefined;
-
-// XPECT errors --> "string is not a subtype of number." at ""1""
-erg[5] = "1" >> 2;
-// XPECT errors --> "string is not a subtype of number." at ""2""
-erg[6] = 1 >> "2";
-// XPECT errors --> "boolean is not a subtype of number." at "false"
-erg[7] = false >> 2;
-// XPECT errors --> "boolean is not a subtype of number." at "true"
-erg[8] = 1 >> true;
-// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
-erg[9] = 3 >> /ab+c/;
-// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
-erg[10] = /ab+c/ >> 3 ;
-// XPECT errors --> "void is not a subtype of number." at "new B().m()"
-erg[11] = new B().m() >> 3 ;
-// XPECT errors --> "void is not a subtype of number." at "new B().m()"
-erg[12] = 1 >> new B().m() ;
+// XPECT type of n>>n --> number
+n>>n;
+// XPECT type of n>>b --> number
+n>>b;
+// XPECT type of n>>i --> number
+n>>i;
+// XPECT type of n>>s --> number
+n>>s;
+// XPECT type of n>>o --> number
+n>>o;
+// XPECT type of n>>null --> number
+n>>null;
+// XPECT type of n>>undefined --> number
+n>>undefined;
 
 
-//////////////
-// USHR
-//////////////
+// XPECT type of i>>i --> number
+i>>i;
+// XPECT type of i>>b --> number
+i>>b;
+// XPECT type of i>>n --> number
+i>>n;
+// XPECT type of i>>s --> number
+i>>s;
+// XPECT type of i>>o --> number
+i>>o;
+// XPECT type of i>>null --> number
+i>>null;
+// XPECT type of i>>undefined --> number
+i>>undefined;
 
-// OK
-erg[0] = 1 >>> 2;
+// XPECT type of b>>b --> number
+b>>b;
+// XPECT type of b>>i --> number
+b>>i;
+// XPECT type of b>>n --> number
+b>>n;
+// XPECT type of b>>s --> number
+b>>s;
+// XPECT type of b>>o --> number
+b>>o;
+// XPECT type of b>>null --> number
+b>>null;
+// XPECT type of b>>undefined --> number
+b>>undefined;
 
-// ACTIVATE: X-PECT errors --> "null is not a number." at "null"
-erg[1] = null >>> 2;
-// ACTIVATE: X-PECT --> "null is not a number." at "null"
-erg[2] = 1 >>> null;
-// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
-erg[3] = undefined >>> 2;
-// ACTIVATE: X-PECT --> "undefined is not a number." at "undefined"
-erg[4] = 1 >>> undefined;
+// XPECT type of s>>s --> number
+s>>s;
+// XPECT type of s>>i --> number
+s>>i;
+// XPECT type of s>>n --> number
+s>>n;
+// XPECT type of s>>b --> number
+s>>b;
+// XPECT type of s>>o --> number
+s>>o;
+// XPECT type of s>>null --> number
+s>>null;
+// XPECT type of s>>undefined --> number
+s>>undefined;
 
-// XPECT errors --> "string is not a subtype of number." at ""1""
-erg[5] = "1" >>> 2;
-// XPECT errors --> "string is not a subtype of number." at ""2""
-erg[6] = 1 >>> "2";
-// XPECT errors --> "boolean is not a subtype of number." at "false"
-erg[7] = false >>> 2;
-// XPECT errors --> "boolean is not a subtype of number." at "true"
-erg[8] = 1 >>> true;
-// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
-erg[9] = 3 >>> /ab+c/;
-// XPECT errors --> "RegExp is not a subtype of number." at "/ab+c/"
-erg[10] = /ab+c/ >>> 3 ;
-// XPECT errors --> "void is not a subtype of number." at "new B().m()"
-erg[11] = new B().m() >>> 3 ;
-// XPECT errors --> "void is not a subtype of number." at "new B().m()"
-erg[12] = 1 >>> new B().m() ;
+// XPECT type of null>>null --> number
+null>>null;
+// XPECT type of null>>i --> number
+null>>i;
+// XPECT type of null>>n --> number
+null>>n;
+// XPECT type of null>>b --> number
+null>>b;
+// XPECT type of null>>o --> number
+null>>o;
+// XPECT type of null>>s --> number
+null>>s;
+// XPECT type of null>>undefined --> number
+null>>undefined;
+
+// XPECT type of undefined>>undefined --> number
+undefined>>undefined;
+// XPECT type of undefined>>i --> number
+undefined>>i;
+// XPECT type of undefined>>n --> number
+undefined>>n;
+// XPECT type of undefined>>b --> number
+undefined>>b;
+// XPECT type of undefined>>o --> number
+undefined>>o;
+// XPECT type of undefined>>s --> number
+undefined>>s;
+// XPECT type of undefined>>null --> number
+undefined>>null;

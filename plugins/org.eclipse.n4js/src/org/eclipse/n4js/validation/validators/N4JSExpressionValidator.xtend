@@ -46,6 +46,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -137,6 +138,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.MultiplicativeOperator
 
 /**
  */
@@ -874,38 +876,51 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkAdditiveExpressionForNonADDs(AdditiveExpression ae) {
+		if (ae.op == AdditiveOperator.SUB) {
+			doCheckMathOperands(ae, ae.rhs, ae.lhs, "substraction");
+		}
+	}
+	
+	def doCheckMathOperands(Expression expr, Expression lhs, Expression rhs, String mathExpr) {
+		if (rhs === null || lhs === null) {
+			return; // corrupt AST (e.g., while editing)
+		}
+		
+		// The types of the operands must be subtypes of number if the operator is not ’+’
+		val bits = BuiltInTypeScope.get(expr.eResource.resourceSet)
 
-		if (ae.rhs === null || ae.lhs === null) {
+		val tlhs = ts.tau(lhs)
+		if (tlhs === null) {
+			return; // corrupt AST (e.g., while editing)
+		}
+		if (tlhs.declaredType === bits.undefinedType)
+			issueResultIsNaN(tlhs.declaredType.name, mathExpr, lhs);
+
+		val trhs = ts.tau(rhs)
+		if (trhs === null) {
 			return; // corrupt AST (e.g., while editing)
 		}
 
-		if (ae.op !== AdditiveOperator.ADD) {
-
-			// The types of the operands must be subtypes of number if the operator is not ’+’
-			val bits = BuiltInTypeScope.get(ae.eResource.resourceSet)
-
-			val tlhs = ts.tau(ae.lhs)
-			if (tlhs === null) {
-				return; // corrupt AST (e.g., while editing)
-			}
-			if (tlhs.declaredType === bits.undefinedType)
-				issueNotANumberType(tlhs.declaredType.name, ae.lhs);
-
-			val trhs = ts.tau(ae.rhs)
-			if (trhs === null) {
-				return; // corrupt AST (e.g., while editing)
-			}
-
-			if (trhs.declaredType === bits.undefinedType)
-				issueNotANumberType(trhs.declaredType.name, ae.rhs);
-
-		}
-
+		if (trhs.declaredType === bits.undefinedType)
+			issueResultIsNaN(trhs.declaredType.name, mathExpr, rhs);
 	}
+	
+	@Check
+	def checkMultiplicativeExpression(MultiplicativeExpression me) {
+		doCheckMathOperands(me, me.rhs, me.lhs, 
+			if (me.op==MultiplicativeOperator.DIV) "division"
+			else if (me.op==MultiplicativeOperator.TIMES) "multiplication"
+			else "modulus"
+		);	
+	}
+	
 
-	def issueNotANumberType(String typeString, Expression expression) {
-		addIssue(IssueCodes.getMessageForEXP_IS_NOT_A_VALID_NUMBER(typeString), expression,
-			IssueCodes.EXP_IS_NOT_A_VALID_NUMBER);
+	def issueResultIsNaN(String typeString, String mathExpr, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_RESULT_IS_NAN(typeString, mathExpr),
+			location,
+			IssueCodes.EXP_RESULT_IS_NAN);
+			
+			
 	}
 
 	/**

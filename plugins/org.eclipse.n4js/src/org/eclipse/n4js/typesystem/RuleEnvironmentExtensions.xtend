@@ -687,63 +687,42 @@ class RuleEnvironmentExtensions {
 		return false;
 	}
 	
-	/**
-	 * Returns true if the given type reference points to undefined or null type, 
-	 * or is a union type containing only undefined and null.
-	 */
-	public def static boolean isUndefOrNull(RuleEnvironment G, TypeRef typeRef) {
-		if (typeRef===null) {
-			return false;
-		}
-		if (typeRef instanceof UnionTypeExpression) {
-			return typeRef.typeRefs.forall[e|isUndefOrNull(G, e)];
-		}
-		val type = typeRef.declaredType;
-		if (type===null) {
-			return false;
-		}
-		return type==G.undefinedType || type==G.nullType;
-	}
 	
-	/** 
-	 * Returns true iff typeRef is a union type expression and
-	 * one of its elements is undefined or null, or contains a undefined or null. 
-	 */
-	public def static boolean containsUndefOrNull(RuleEnvironment G, TypeRef typeRef) {
-		if (typeRef instanceof UnionTypeExpression) {
-			return typeRef.typeRefs.exists[e | isUndefOrNull(G, e) ||containsUndefOrNull(G, e) ]
-		}
-		return false;
-	}
 	
 	/**
-	 * Returns true if typeRef is a union type and one if its elements
-	 * contains a numeric or boolean or is a numeric or boolean itself.
+	 * Returns true iff typeRef is a union type and one if its elements
+	 * is numeric, boolean, null or undefined or contains one of these types.
+	 * Note that this method returns false for number types -- the
+	 * typeref needs to be a union type!
 	 */
-	public def static boolean containsNumericOrBoolean(RuleEnvironment G, TypeRef typeRef) {
+	public def static boolean containsNumericOperand(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef instanceof UnionTypeExpression) {
-			return typeRef.typeRefs.exists[e | isNumericOrBoolean(G, e) ||containsNumericOrBoolean(G, e) ]
+			return typeRef.typeRefs.exists[e | 
+				G.predefinedTypes.builtInTypeScope.isNumericOperand(e.declaredType)
+				|| containsNumericOperand(G, e)
+			]
 		}
 		return false;		
 	}
 	
 	/**
-	 * Returns true if the given type reference is a subtype of number or boolean.
+	 * Returns true if the given type reference can be used in a numeric
+	 * operation as operand leading to a numeric result. This is true for
+	 * number, int, boolean, null, or even undefined, for unions of these types,
+	 * and for intersections containing any of these types.
 	 */
-	public def static boolean isNumericOrBoolean(RuleEnvironment G, TypeRef typeRef) {
+	public def static boolean isNumericOperand(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef===null) {
 			return false;
 		}
-		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType) 
-			|| G.predefinedTypes.builtInTypeScope.booleanType == typeRef.declaredType
-		) {
+		if (G.predefinedTypes.builtInTypeScope.isNumericOperand(typeRef.declaredType)) {
 			return true;
 		}
 		if (typeRef instanceof UnionTypeExpression) {
-			return typeRef.typeRefs.forall[e|isNumericOrBoolean(G, e)];
+			return typeRef.typeRefs.forall[e|isNumericOperand(G, e)];
 		}
 		if (typeRef instanceof IntersectionTypeExpression) {
-			return typeRef.typeRefs.exists[e|isNumericOrBoolean(G, e)];
+			return typeRef.typeRefs.exists[e|isNumericOperand(G, e)];
 		}
 		return false;
 	}
