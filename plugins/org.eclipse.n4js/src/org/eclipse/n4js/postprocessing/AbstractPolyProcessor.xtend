@@ -40,7 +40,6 @@ import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -76,7 +75,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 				// NOTE: in next line, we do not propagate the cancel indicator; however, this is not required, because
 				// all we do with the newly created rule environment is to type a backward(!) reference, so we can be
 				// sure that no significant processing will be triggered by the type judgment invocation below
-				val G = RuleEnvironmentExtensions.newRuleEnvironment(obj);
+				val G = obj.newRuleEnvironment;
 				val TypeRef targetTypeRef = ts.type(G, obj.target).value; // this is a backward reference (because we type obj's child)
 				if (targetTypeRef instanceof FunctionTypeExprOrRef) {
 					targetTypeRef.generic && obj.typeArgs.size < targetTypeRef.typeVars.size

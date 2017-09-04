@@ -21,9 +21,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
-import org.eclipse.xtext.service.OperationCanceledManager;
 
-import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 /**
@@ -31,9 +29,6 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class GeneratorMarkerSupport implements IGeneratorMarkerSupport {
-
-	@Inject
-	private OperationCanceledManager operationCanceledManager;
 
 	private final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
@@ -91,16 +86,6 @@ public class GeneratorMarkerSupport implements IGeneratorMarkerSupport {
 			GeneratorUiActivator.getInstance().getLog().log(e.getStatus());
 		}
 		return false;
-	}
-
-	@Override
-	public boolean isOperationCanceledException(Throwable th) {
-		return operationCanceledManager.isOperationCanceledException(th);
-	}
-
-	@Override
-	public void propagateIfCancelException(Throwable th) {
-		operationCanceledManager.propagateIfCancelException(th);
 	}
 
 	private IFile toIFile(Resource res) {

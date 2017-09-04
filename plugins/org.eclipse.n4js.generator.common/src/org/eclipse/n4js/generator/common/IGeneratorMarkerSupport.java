@@ -45,16 +45,6 @@ public interface IGeneratorMarkerSupport {
 		public boolean hasMarker(Resource res) {
 			return false;
 		}
-
-		@Override
-		public boolean isOperationCanceledException(Throwable th) {
-			return false;
-		}
-
-		@Override
-		public void propagateIfCancelException(Throwable th) {
-			// do nothing
-		}
 	}
 
 	/** Marker type as used in plugin.xml of *.n4js.ui plug-in. */
@@ -68,15 +58,4 @@ public interface IGeneratorMarkerSupport {
 
 	/** @return true if marker is present. */
 	public boolean hasMarker(Resource res);
-
-	/**
-	 * Tells whether the given throwable is of a type that is thrown when cancellation occurs. See
-	 * {@code OperationCanceledManager#isOperationCanceledException(Throwable)}.
-	 */
-	public boolean isOperationCanceledException(Throwable th);
-
-	/**
-	 * See {@code OperationCanceledManager#propagateIfCancelException(Throwable)}.
-	 */
-	public void propagateIfCancelException(Throwable th);
 }

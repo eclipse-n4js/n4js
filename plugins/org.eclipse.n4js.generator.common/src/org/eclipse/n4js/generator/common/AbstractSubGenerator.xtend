@@ -29,6 +29,7 @@ import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
+import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
@@ -60,6 +61,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	@Inject
 	IGeneratorMarkerSupport genMarkerSupport
+
+	@Inject
+	OperationCanceledManager operationCanceledManager;
 
 	@Inject
 	extension ExceptionHandler
@@ -101,8 +105,8 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			internalDoGenerate(input, GeneratorOption.DEFAULT_OPTIONS, fsa);
 		} catch (Exception e) {
 
-			// cancellation is not an error case, so simply propagate as usually
-			genMarkerSupport.propagateIfCancelException(e);
+			// cancellation is not an error case, so simply propagate as usual
+			operationCanceledManager.propagateIfCancelException(e);
 
 			// issue error marker
 			val target = if (input instanceof N4JSResource) input.module.moduleSpecifier else input.URI;
