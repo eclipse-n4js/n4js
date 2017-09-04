@@ -376,7 +376,8 @@ public class ASTProcessor extends AbstractProcessor {
 
 		// actually perform the forward processing
 		log(0, "===START of identifiable sub-tree below " + node.objectInfo);
-		val G_fresh = G.newRuleEnvironment; // use a new, empty environment here (but derived from G, to retain cancelIndicator, etc.!)
+		val G_fresh = G.newRuleEnvironment; // use a new, empty environment here
+		G_fresh.addCancelIndicator(G.cancelIndicator); // but retain cancelIndicator!
 		processSubtree(G_fresh, node, cache, 0); // note how we reset the indent level
 		cache.forwardProcessedSubTrees.add(node);
 		log(0, "===END of identifiable sub-tree below " + node.objectInfo);
