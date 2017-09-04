@@ -43,6 +43,7 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
+import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -150,7 +151,6 @@ class DocumentImportsOrganizer {
 							}
 						}
 					});
-
 		}
 	}
 
@@ -168,6 +168,10 @@ class DocumentImportsOrganizer {
 
 			@Override
 			public List<IChange> exec(XtextResource xtextResource) throws Exception {
+				Stopwatch sw = Stopwatch.createUnstarted();
+
+				System.out.println("\n\u250F prepareImportsChanges " + xtextResource.getURI());
+				sw.start();
 				InsertionPoint insertionPoint = hImportsRegion.getImportRegion(xtextResource);
 
 				if (insertionPoint.offset != -1) {
@@ -178,13 +182,19 @@ class DocumentImportsOrganizer {
 
 						final String organizedImportSection = importsComputer
 								.getOrganizedImportSection(xtextResource, NL, interaction);
+
 						// remove old imports
 						changes.addAll(
 								ImportsRemovalChangesComputer.getImportDeletionChanges(xtextResource, document));
 						// ImportsRemovalChangesComputer2.getImportDeletionChanges(xtextResource, document));
+
 						// insert new imports
 						changes.addAll(getImportInsertionChanges(document, xtextResource, insertionPoint, NL,
 								organizedImportSection));
+
+						sw.stop();
+						System.out.println("\u2517 prepareImportsChanges :: " + sw);
+						sw.reset();
 						return changes;
 					} catch (UserCanceledBreakException e) {
 						return null; // user-triggered cancellation, nothing to report.
@@ -193,6 +203,10 @@ class DocumentImportsOrganizer {
 						throw e;
 					}
 				}
+
+				sw.stop();
+				System.out.println("\u2517 prepareImportsChanges :: " + sw);
+				sw.reset();
 				return null;
 			}
 		};

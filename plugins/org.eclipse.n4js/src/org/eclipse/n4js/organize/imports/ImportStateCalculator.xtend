@@ -11,15 +11,15 @@
 package org.eclipse.n4js.organize.imports
 
 import com.google.common.collect.ArrayListMultimap
+import java.util.List
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
-import java.util.List
 
 import static extension org.eclipse.n4js.organize.imports.ScriptDependencyResolver.*
 
@@ -85,7 +85,7 @@ class ImportStateCalculator {
 			val mod = scriptDep.dependencyModule
 			val pM2IPE = lM2IPE.findFirst[it.key == mod]
 			if(pM2IPE !== null){
-				pM2IPE.value.filter[it.actualName == scriptDep.actualName && it.localname == scriptDep.localName ].forEach[ it.markUsed];
+				pM2IPE.value.filter[it.exportedName == scriptDep.actualName && it.localname == scriptDep.localName ].forEach[ it.markUsed];
 			}
 		}
 
@@ -109,9 +109,9 @@ class ImportStateCalculator {
 
 			// find duplicates in actual name, report them as duplicateImport
 			val actname2Import = ArrayListMultimap.create
-			for (ipe : fromMod) {
-				actname2Import.put(ipe.actualName, ipe)
-			}
+			for (ipe : fromMod)
+				actname2Import.put(ipe.exportedName, ipe)
+
 			for (act : actname2Import.keySet) {
 				val v = actname2Import.get(act).toList
 				val x = v
@@ -119,16 +119,17 @@ class ImportStateCalculator {
 				.filter[internalIPE|
 					val specifier = internalIPE.importSpec;
 					if(specifier instanceof NamespaceImportSpecifier){
-						internalIPE.actualName != computeNamespaceActualName(specifier)
+						internalIPE.exportedName != computeNamespaceActualName(specifier)
 					}else{
 						true
 					}
 				].toList
-				if (x.size > 1) reg.registerDuplicateImportsOfSameElement(act, pair.key, x)
+				if (x.size > 1) 
+					reg.registerDuplicateImportsOfSameElement(act, pair.key, x)
 			}
 		}
 	}
-
+	
 	/**
 	 * Registers conflicting or duplicate (based on local name checks) imports in the provided {@link RecordingImportState}
 	 */
@@ -153,12 +154,12 @@ class ImportStateCalculator {
 							//add import provided element for a namespace itself
 							importProvidedElements.add( new ImportProvidedElement(specifier.alias, computeNamespaceActualName(specifier), specifier))
 
-							val topIdentifiables = specifier.importedModule.topLevelTypes.filter[isExported]
-								+ specifier.importedModule.variables.filter[it.isExported];
+							val topExported = specifier.importedModule.topLevelTypes.filter[isExported].map[it as TExportableElement]
+								+ specifier.importedModule.variables.filter[it.isExported].map[it as TExportableElement];
 
-							topIdentifiables.forEach[type|
-								importProvidedElements.add(new ImportProvidedElement(specifier.usedName(type), type.name, specifier as ImportSpecifier))]
-								return importProvidedElements
+							topExported.forEach[type|
+								importProvidedElements.add(new ImportProvidedElement(specifier.importedElementName(type), type.exportedName, specifier as ImportSpecifier))]
+							return importProvidedElements
 						} else {
 							emptyList
 						}
@@ -185,8 +186,15 @@ class ImportStateCalculator {
 		}
 	}
 
-	private def importedElementName(NamedImportSpecifier it) {
-		importedElement?.name ?: "<unknown>"
+	/**
+	 * Computes exported name of the element imported by this specifier.
+	 */
+	private def String importedElementName(NamedImportSpecifier specifier) {
+		val element = specifier.importedElement
+		if(element === null)
+			return "<unkown>"
+		
+		return element.exportedName
 	}
 
 	/** returns locally used name of element imported via {@link NamedImportSpecifier} */
@@ -195,8 +203,8 @@ class ImportStateCalculator {
 	}
 
 	/** returns locally used name of element imported via {@link NamespaceImportSpecifier} */
-	private def usedName(NamespaceImportSpecifier is, IdentifiableElement element) {
-		is.alias + "." + element.name
+	private def importedElementName(NamespaceImportSpecifier is, TExportableElement element) {
+		is.alias + "." + element.exportedName
 	}
 
 	private def importedModule(ImportSpecifier it) {
@@ -254,7 +262,7 @@ class ImportStateCalculator {
 								namedImportSpecifier.importedElement.name == otherNamedImportSpecifier.importedElement.name
 							]
 					]){
-						duplicates.add(id)
+							duplicates.add(id)
 					}
 				}
 			}

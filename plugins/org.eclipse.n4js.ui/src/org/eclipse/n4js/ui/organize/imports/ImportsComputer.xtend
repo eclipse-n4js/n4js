@@ -10,23 +10,10 @@
  */
 package org.eclipse.n4js.ui.organize.imports;
 
+import com.google.common.base.Stopwatch
 import com.google.common.collect.LinkedHashMultimap
 import com.google.common.collect.Multimap
 import com.google.inject.Inject
-import org.eclipse.n4js.n4JS.DefaultImportSpecifier
-import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.NamedImportSpecifier
-import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.organize.imports.ImportStateCalculator
-import org.eclipse.n4js.scoping.N4JSScopeProvider
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
-import org.eclipse.n4js.ui.contentassist.N4JSCandidateFilter
-import org.eclipse.n4js.ui.organize.imports.BreakException.UserCanceledBreakException
-import org.eclipse.n4js.ui.utils.ImportSpacerUserPreferenceHelper
-import org.eclipse.n4js.utils.UtilN4
-import org.eclipse.n4js.utils.collections.Multimaps3
 import java.util.ArrayList
 import java.util.Collection
 import java.util.HashSet
@@ -38,6 +25,25 @@ import org.eclipse.emf.common.notify.impl.AdapterImpl
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.jface.viewers.ILabelProvider
 import org.eclipse.jface.window.Window
+import org.eclipse.n4js.n4JS.DefaultImportSpecifier
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.MemberAccess
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.organize.imports.ImportStateCalculator
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.scoping.N4JSScopeProvider
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
+import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ui.contentassist.N4JSCandidateFilter
+import org.eclipse.n4js.ui.organize.imports.BreakException.UserCanceledBreakException
+import org.eclipse.n4js.ui.utils.ImportSpacerUserPreferenceHelper
+import org.eclipse.n4js.utils.UtilN4
+import org.eclipse.n4js.utils.collections.Multimaps3
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.ILeafNode
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage
@@ -53,6 +59,7 @@ import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.EXPORT_DE
 import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
 
 import static extension org.eclipse.n4js.ui.organize.imports.UnresolveProxyCrossRefUtil.*
+import org.eclipse.emf.ecore.EObject
 
 /**
  * Computes imports required by the given resource. In principle removes unused imports, adds missing imports, sorts imports - all in one go.
@@ -83,7 +90,10 @@ public class ImportsComputer {
 
 	@Inject
 	private N4JSCandidateFilter candidateFilter;
-
+	
+	@Inject
+	private IN4JSCore core;
+	
 
 	/**
 	 * Calculate the real content of the new import section in the file header.
@@ -144,51 +154,37 @@ public class ImportsComputer {
 	/** Calculate new Imports. */
 	private def ArrayList<ImportDeclaration> resolveMissingImports(Script script, Set<String> namesThatWeBroke,
 		Interaction interaction) throws BreakException {
+			println("\u2503\t\u250F resolveMissingImports  ")
+			val sw = Stopwatch.createStarted();
+			
+			
+			val prj = core.findProject(script.eResource.URI).orNull
 
-		val scopeTypeRef = scopeProvider.getScope(script,
-			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
+		val scopeTypeRef = scopeProvider.getScope(script, TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 		val scopeIdRef = scopeProvider.getScopeForContentAssist(script, N4JSPackage.Literals.IDENTIFIER_REF__ID);
+		
+		println("\u2503\t\u2503\t\u250F createResolutionsFromSopes  ")
+		val sw3 = Stopwatch.createStarted();
+		val Multimap<String, ImportableObject> resolutions = createResolutionsForUnresolvedCrossRefs(script, scopeIdRef, scopeTypeRef)
+		sw3.stop();
+		println("\u2503\t\u2503\t\u2517 createResolutionsFromSopes took " + sw3)
+		
 
-		// the following are named imports, that did not resolve. The issue lies in the Project-configuration and
-		// cannot be solved here. Candidate for quick fix.
-		val Iterable<ReferenceProxyInfo> unresolved = script.findProxyCrossRefInfo.filter[referenceFilter.test(it)]
-
-		val Multimap<String, ImportableObject> resolution = LinkedHashMultimap.create();
-		val alreadyProcessedIdRef = new HashSet<String>
-		val alreadyProcessedTypeRef = new HashSet<String>
-
-		unresolved.forEach [ proxyInfo |
-			val String usedName = proxyInfo.name
-			// in situations like "new A()" at the position of A an IdentifierRef is unresolved.
-			// The solution is provided as a TypeRef. So TypeRef-solutions can be used in places where an IDref is desired.
-			// --> obj IdRef :  scopeIdRef & scopeTypeRef
-			// --> obj TypeRef : only TypeRef
-			if (proxyInfo.eobject instanceof IdentifierRef) {
-				if (alreadyProcessedIdRef.add(usedName)) {
-					resolution.addResolutionFromScope(scopeIdRef, usedName);
-				}
-			}
-
-			// Query for IdRef and TypeRef
-			if (alreadyProcessedTypeRef.add(usedName)) {
-				resolution.addResolutionFromScope(scopeTypeRef, usedName);
-			}
-		]
-
-		val solutions = resolution.asMap.filter[p1, p2|p2.size == 1]
+		val solutions = resolutions.asMap.filter[p1, p2|p2.size == 1]
 
 		val ret = <ImportDeclaration>newArrayList();
 
 		solutions.forEach [ name, importable |
 			val imp = importable.head;
-			ret.add(importsFactory.createImport(imp, nodelessMarker));
+			ret.add(importsFactory.createImport(imp, prj,nodelessMarker));
 		]
 
 		// ignore broken names, for which imports will be added due to unresolved refs
 		namesThatWeBroke.removeAll(solutions.keySet)
 
 		// Ask user to disambiguate things:
-		val Map<String, Collection<ImportableObject>> ambiguousSolution = resolution.asMap.filter[p1, p2|p2.size > 1];
+		val Map<String, Collection<ImportableObject>> ambiguousSolution = resolutions.asMap.filter[p1, p2|p2.size > 1];
+		
 		val Multimap<String, ImportableObject> forDisambiguation = LinkedHashMultimap.create();
 		ambiguousSolution.forEach[p1, p2|forDisambiguation.putAll(p1, p2)];
 
@@ -196,22 +192,78 @@ public class ImportsComputer {
 		namesThatWeBroke.forEach [ brokenName |
 			// if there is disambiguation pending for a given name, don't duplicate solutions
 			if (!forDisambiguation.keySet.contains(brokenName)) {
-				val idSolutions = newLinkedHashSet(); // newArrayList();
-				// TODO how to decide on which we use?
-				/*
-				 * Should we add both, or pick one? Or add other if the first one did not find anything?
-				 */
+				val idSolutions = new HashSet<ImportableObject>();
 				idSolutions.addAll(scopeIdRef.mapToImportableObjects(brokenName));
 				idSolutions.addAll(scopeTypeRef.mapToImportableObjects(brokenName));
-				forDisambiguation.putAll(brokenName, idSolutions);
+				//nothing to disambiguate if there is only one solution
+				if(idSolutions.size == 1)
+					ret.add(importsFactory.createImport(idSolutions.head, prj,nodelessMarker))
+				else
+					forDisambiguation.putAll(brokenName, idSolutions);
 			}
 		];
 
 		val chosenSolutions = disambiguate(forDisambiguation, interaction);
 
-		chosenSolutions.forEach[ret.add(importsFactory.createImport(it, nodelessMarker))];
+		chosenSolutions.forEach[ret.add(importsFactory.createImport(it, prj, nodelessMarker))];
 
+		sw.stop();
+		println("\u2503\t\u2517 resolveMissingImports took " + sw)
 		return ret;
+	}
+	
+	/** Finds unresolved cross references in this script and finds candidate imports based on the provided scopes. */
+	private def Multimap<String, ImportableObject> createResolutionsForUnresolvedCrossRefs(Script script,
+		IScope scopeIdRef, IScope scopeTypeRef) {
+		val Multimap<String, ImportableObject> resolutions = LinkedHashMultimap.create();
+		
+		
+		val Iterable<ReferenceProxyInfo> unresolvedS = script.findProxyCrossRefInfo.filter[referenceFilter.test(it)]
+		unresolvedS.forEach[if(it.eobject instanceof MemberAccess === true)
+			println(it.name  + " -> " + it.eobject)
+		]
+		
+		// the following are named imports, that did not resolve. The issue lies in the Project-configuration and
+		// cannot be solved here. Candidate for quick fix.
+		val Iterable<ReferenceProxyInfo> unresolved = script.findProxyCrossRefInfo.filter[referenceFilter.test(it)].filter[it.eobject instanceof MemberAccess === false]
+		val Iterable<ReferenceProxyInfo> unresolvedIdRefs = unresolved.filter[it.eobject instanceof IdentifierRef]
+		
+		// in situations like "new A()" at the position of A an IdentifierRef is unresolved.
+		// The solution is provided as a TypeRef. So TypeRef-solutions can be used in places where an IDref is desired.
+		// --> obj IdRef :  scopeIdRef & scopeTypeRef
+		// --> obj TypeRef : only TypeRef
+		addResolutionsFromScope(resolutions, scopeIdRef, unresolvedIdRefs);
+		addResolutionsFromScope(resolutions, scopeTypeRef, unresolved);
+
+		return resolutions
+
+	}
+	
+	private def void addResolutionsFromScope(Multimap<String, ImportableObject> resolution, IScope scope,
+		Iterable<ReferenceProxyInfo> unresolved) {
+		if (!unresolved.empty) {
+			val unprocessedIDRefNames = new HashSet<String>
+			unresolved.forEach[unprocessedIDRefNames.add(it.name)]
+			val idscopeIter = scope.allElements.iterator
+			while (idscopeIter.hasNext) {
+				val ieod = idscopeIter.next
+				println("# " + ieod)
+				//cannot compute imports from proxies
+				if (ieod.EObjectOrProxy.eIsProxy){
+					//consider trying to resolve the proxy
+					//In batch mode user with have interaction dialog
+					//TODO add interaction in the editor mode 
+					throw new RuntimeException("Cannot resolve imports from eProxy " + ieod.EObjectOrProxy)
+				}
+				unresolved.forEach [ proxyInfo |
+					val String usedName = proxyInfo.name
+					if (isCandidate(ieod, usedName) && candidateFilter.apply(ieod)) {
+						println("add " + usedName + " >> " + ieod)
+						resolution.add(usedName, ieod)
+					}
+				]
+			}
+		}
 	}
 
 	/** Filters scope by given name and maps result to importable objects. */
@@ -220,32 +272,64 @@ public class ImportsComputer {
 			.allElements
 			.filter[candidateFilter.apply(it)]
 			.filter[it.name.lastSegment == brokenName]
-			.map[new ImportableObject(brokenName, it, false)]
+			.map[new ImportableObject(brokenName, it, it.isDefaultExport)]
 	}
 
-	/** Filters scope by the provided name and adds mapped results to the accumulator collection. */
-	private def void addResolutionFromScope(Multimap<String, ImportableObject> resolution, IScope scopeTypeRef, String usedName) {
-		scopeTypeRef
-			.allElements
-			.filter[candidateFilter.apply(it)]
-			.filter[isCandidate(it, usedName)]
-			.forEach[resolution.add(usedName, it)]
-	}
 
 	/** Creates {@link ImportableObject} from provided name and object description. Result is added to the collection. */
-	private def boolean add(Multimap<String, ImportableObject> resolution, String usedName, IEObjectDescription ieoDescription) {
-		resolution.put(usedName, new ImportableObject(usedName, ieoDescription, ieoDescription.isDefaultExport))
+	private def boolean add(Multimap<String, ImportableObject> resolution, String usedName,
+		IEObjectDescription ieoDescription) {
+		// potential match via namespace
+		if (usedName.contains(".")) {
+			val segments = usedName.split("\\.")
+			// 2 segments, potential namespace access
+			if (segments.size == 2) {
+				println(13123);
+				val eo = ieoDescription.EObjectOrProxy;
+				checkNotProxy(eo)
+				if (eo instanceof TExportableElement) {
+					if (eo.exportedName == segments.last) {
+						return resolution.put(
+							segments.head,
+							new ImportableObject(segments.head, ieoDescription, ieoDescription.isDefaultExport, true)
+						)
+					}
+				}
+			}
+		}
+		return resolution.put(usedName, new ImportableObject(usedName, ieoDescription, ieoDescription.isDefaultExport))
 	}
 
 	private def boolean isDefaultExport(IEObjectDescription description) {
-		description.name.lastSegment == EXPORT_DEFAULT_NAME
+		val eo = description.getEObjectOrProxy;
+		if(eo instanceof TExportableElement)
+			return eo.exportedName  == EXPORT_DEFAULT_NAME
+		return false
+		
 	}
 
-	/** return true if {@code description} is a possible candidate for an element with name {@code name}. */
-	private def boolean isCandidate(IEObjectDescription description, String name) {
+	/** return true if {@code description} is a possible candidate for an element with name {@code usedName}. */
+	private def boolean isCandidate(IEObjectDescription description, String usedName) {
 		val qName = description.name;
-		return qName.lastSegment == name || ( qName.lastSegment == EXPORT_DEFAULT_NAME && qName.segmentCount > 1 &&
-			qName.getSegment(qName.segmentCount - 2) == name);
+		
+		val sQN = qName.toString
+		
+		if(sQN.contains('.') && usedName.contains('.'))
+			println(312)
+		
+		//normal match
+		if(qName.lastSegment == usedName)
+			return true
+		
+		//potential match via namespace
+		if(usedName.contains(".")){
+			val segments = usedName.split("\\.")
+			// 2 segments, potential namespace access
+			if(segments.size  == 2 && (segments.last == qName.lastSegment))
+				return true
+		}
+		
+		return qName.lastSegment == EXPORT_DEFAULT_NAME && qName.segmentCount > 1 && qName.getSegment(qName.segmentCount - 2) == usedName
 	}
 
 	/** Extracts the token text for existing import-declaration or creates new textual representation for
@@ -262,7 +346,11 @@ public class ImportsComputer {
 
 			if (impSpec.size === 1) {
 				// create own string. from single Named Adapter:
-				val namedSpec = impSpec.get(0) as NamedImportSpecifier
+				val onlyImpSpec = impSpec.get(0)
+				if(onlyImpSpec instanceof NamespaceImportSpecifier){
+					return '''import * as «onlyImpSpec.alias» from "«module»";'''
+				}
+				val namedSpec = onlyImpSpec as NamedImportSpecifier
 				if (namedSpec instanceof DefaultImportSpecifier) {
 					'''import «namedSpec.importedElement.name» from "«module»";'''
 
@@ -273,11 +361,26 @@ public class ImportsComputer {
 				// more then one, sort them:
 				ImportsSorter.sortByName(impSpec)
 				val defImp = impSpec.filter(DefaultImportSpecifier).head; // only one is possible
-				val defaultImport = if (defImp === null) "" else '''«defImp.importedElement.name», ''';
+				val nameImp = impSpec.filter(NamespaceImportSpecifier).head; // only one is possible
+				val rest = impSpec.filter[it instanceof DefaultImportSpecifier === false].filter[it instanceof NamespaceImportSpecifier === false]
+				val normalImports = !rest.isEmpty
+				val defaultImport = if (defImp === null) "" else '''«defImp.importedElement.name»''';
+				val spacerDefName = '''«IF defImp !== null && nameImp !== null», «ENDIF»'''
+				val namespaceImport = if (nameImp === null) "" else '''* as «nameImp.alias»''';
 
-				'''import «defaultImport»{«spacer»«FOR a : impSpec SEPARATOR ', '»«(a as NamedImportSpecifier).importedElement.name»«
-					IF ((a as NamedImportSpecifier).alias !== null)» as « (a as NamedImportSpecifier).alias »«
-					ENDIF»«ENDFOR»«spacer»} from "«module»";'''
+				'''import «
+						defaultImport»«
+						spacerDefName»«
+						namespaceImport»«
+						IF normalImports
+							»{«spacer»«
+								FOR a : impSpec SEPARATOR ', '»«
+									(a as NamedImportSpecifier).importedElement.name»«
+										IF ((a as NamedImportSpecifier).alias !== null)» as « (a as NamedImportSpecifier).alias »«
+										ENDIF»«
+								ENDFOR»«spacer
+							»}«
+						ENDIF» from "«module»";'''
 			}
 		} else {
 			val importNode = findActualNodeFor(declaration);
@@ -411,5 +514,20 @@ public class ImportsComputer {
 			throw new UserCanceledBreakException("User canceled.");
 		}
 		return result;
+	}
+	
+	/**
+	 * In most cases we cannot compute imports from proxy objects, as essential information like declared name, exported name etc.
+	 * are not available.
+	 * This method will throw exception that:
+	 *  - in case of user using OrganizeImports should be handled in dialogs presented to the user
+	 *  - in case of transpiler should break compilation process
+	 */
+	private def checkNotProxy(EObject eo){
+		//TODO add interaction in the editor mode 
+		// (not here, in the document organizer which will call this class)
+		if (eo.eIsProxy)
+			//TODO consider trying to resolve the proxy?
+			throw new RuntimeException("Cannot resolve imports from eProxy " + eo)
 	}
 }

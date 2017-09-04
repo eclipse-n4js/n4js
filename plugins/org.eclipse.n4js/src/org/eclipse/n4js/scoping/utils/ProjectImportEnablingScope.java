@@ -21,6 +21,11 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -29,15 +34,6 @@ import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4mf.ProjectDescription;
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 
 /**
  * Normally we import from a module by only supplying the module specifier without the project ID of the containing
@@ -86,9 +82,9 @@ public class ProjectImportEnablingScope implements IScope {
 	 * such cases; however, project imports will not be available in such tests.
 	 */
 	public static IScope create(IN4JSCore n4jsCore, ImportDeclaration importDecl, IScope parent, IScope delegate) {
-		if (n4jsCore == null || importDecl == null || parent == null) {
-			throw new IllegalArgumentException("none of the arguments may be null");
-		}
+		// if (n4jsCore == null || importDecl == null || parent == null) {
+		// throw new IllegalArgumentException("none of the arguments may be null");
+		// }
 		final Resource resource = importDecl.eResource();
 		if (resource == null) {
 			throw new IllegalArgumentException("given import declaration must be contained in a resource");
@@ -193,7 +189,7 @@ public class ProjectImportEnablingScope implements IScope {
 		case PROJECT_IMPORT:
 			final String firstSegment = name.getFirstSegment();
 			final IN4JSProject targetProject = findProject(firstSegment, contextProject);
-			return getElementsWithDesiredProjectID(getMainModuleOfProject(targetProject),
+			return getElementsWithDesiredProjectID(ImportSpecifierUtil.getMainModuleOfProject(targetProject),
 					name.getFirstSegment());
 		case COMPLETE_IMPORT:
 			return getElementsWithDesiredProjectID(name.skipFirst(1), name.getFirstSegment());
@@ -218,48 +214,6 @@ public class ProjectImportEnablingScope implements IScope {
 	@Override
 	public Iterable<IEObjectDescription> getAllElements() {
 		return parent.getAllElements();
-	}
-
-	/**
-	 * Internal Distinction of different import types.
-	 *
-	 * Although in the AST we don't make distinction, internally we need to handle different types of import.
-	 */
-	private static enum ImportType {
-		/** import specifies only target project name, we expect to import from main module */
-		PROJECT_IMPORT,
-		/** import specifies target project name and concrete module, we expect to import from that particular module */
-		COMPLETE_IMPORT,
-		/** import specifies no target project name, we expect to import some module */
-		SIMPLE_IMPORT,
-		/**
-		 * Error case : it looked like {@link ImportType#PROJECT_IMPORT} but target project has no
-		 * {@link ProjectDescription#getMainModule()}
-		 */
-		PROJECT_IMPORT_NO_MAIN;
-	}
-
-	/** Custom {@link IEObjectDescriptionWithError} for nicer user message */
-	public static class InvalidImportTargetModuleDescription extends AbstractDescriptionWithError {
-		private final String message;
-		private final String issueCode;
-
-		@SuppressWarnings("javadoc")
-		public InvalidImportTargetModuleDescription(IEObjectDescription delegate, String message, String issueCode) {
-			super(delegate);
-			this.issueCode = issueCode;
-			this.message = message;
-		}
-
-		@Override
-		public String getMessage() {
-			return this.message;
-		}
-
-		@Override
-		public String getIssueCode() {
-			return this.issueCode;
-		}
 	}
 
 	/**
@@ -295,50 +249,14 @@ public class ProjectImportEnablingScope implements IScope {
 		return null;
 	}
 
-	/** convininence method over {@link #computeImportType(QualifiedName, boolean, IN4JSProject)} */
+	/**
+	 * Convenience method over {@link ImportSpecifierUtil#computeImportType(QualifiedName, boolean, IN4JSProject)}
+	 */
 	private ImportType computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
 		final IN4JSProject targetProject = findProject(firstSegment, project);
 		final boolean firstSegmentIsProjectId = targetProject != null;
-		return computeImportType(name, firstSegmentIsProjectId, targetProject);
+		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectId, targetProject);
 	}
 
-	private ImportType computeImportType(QualifiedName name, boolean firstSegmentIsProjectId,
-			IN4JSProject targetProject) {
-		if (firstSegmentIsProjectId) {
-			// PRIORITY 1: 'name' is a complete module specifier, i.e. projectId+'/'+moduleSpecifier
-			// -> search all Xtext index entries that match moduleSpecifier and filter by projectId
-			final QualifiedName moduleSpecifier;
-			if (name.getSegmentCount() == 1) {
-				// special case: no module specifier given (only a project ID), i.e. we have a pure project import
-				// -> interpret this as an import of the target project's main module
-				moduleSpecifier = getMainModuleOfProject(targetProject);
-				if (moduleSpecifier == null) {
-					// error: we have a project import to a project that does not define a main module via
-					// the 'MainModule' property in the manifest -> unresolved reference error
-					return ImportType.PROJECT_IMPORT_NO_MAIN;
-				} else {
-					return ImportType.PROJECT_IMPORT;
-				}
-			} else {
-				return ImportType.COMPLETE_IMPORT;
-			}
-		}
-		// PRIORITY 2: interpret 'name' as a plain module specifier (i.e. without project ID)
-		// -> simplest case, because this is exactly how elements are identified within the Xtext index,
-		// so we can simply forward this request to the parent scope
-		return ImportType.SIMPLE_IMPORT;
-	}
-
-	private QualifiedName getMainModuleOfProject(IN4JSProject project) {
-		if (project != null) {
-			final String mainModuleSpec = project.getMainModule();
-			if (mainModuleSpec != null) {
-				final QualifiedName mainModuleQN = QualifiedName.create(
-						mainModuleSpec.split(N4JSQualifiedNameConverter.DELIMITER));
-				return mainModuleQN;
-			}
-		}
-		return null;
-	}
 }

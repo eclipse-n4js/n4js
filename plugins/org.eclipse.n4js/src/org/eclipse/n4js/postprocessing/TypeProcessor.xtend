@@ -261,6 +261,7 @@ public class TypeProcessor extends AbstractProcessor {
 					// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
 					// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
 					// debug code in ASTMetaInfoCacheHelper to track creation/deletion of typing caches to investigate this)
+					println(">>>>>>>>>> " + res.URI)
 					val e = new IllegalStateException("typing of entire AST not initiated yet (hint: this is often caused by an accidental cache clear!!)")
 					e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
 					throw e;

@@ -2825,7 +2825,7 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//QualifiedTypeReferenceName:
-	//	IDENTIFIER ('.' IDENTIFIER)?;
+	//	IDENTIFIER ('.' (IDENTIFIER | 'default'))?;
 	public N4JSGrammarAccess.QualifiedTypeReferenceNameElements getQualifiedTypeReferenceNameAccess() {
 		return gaN4JS.getQualifiedTypeReferenceNameAccess();
 	}

@@ -35,8 +35,19 @@ class UnresolveProxyCrossRefUtil {
 		switch (obj) {
 			IdentifierRef:
 				obj.findIdentifierName
-			ParameterizedTypeRef:
-				obj.findTypeName
+			ParameterizedTypeRef:{
+				val name = obj.findTypeName
+				if(!obj.isParameterized)
+					return name
+				else{
+					val index = name.indexOf('<')
+						if(index > -1)
+							return name.substring(0, index)
+						else
+							return name
+				}
+			}
+				
 			default:
 				obj.node.tokenText
 		}

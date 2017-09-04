@@ -30,6 +30,8 @@ import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.n4js.organize.imports.FileContainerFilter;
+import org.eclipse.n4js.organize.imports.FileExtensionFilter;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -39,9 +41,6 @@ import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.utils.EditorUtils;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.organize.imports.FileContainerFilter;
-import org.eclipse.n4js.organize.imports.FileExtensionFilter;
 
 /**
  * Handler used for two cases: Mass updates on files/folders in selection or organizing the current N4JS Editor.

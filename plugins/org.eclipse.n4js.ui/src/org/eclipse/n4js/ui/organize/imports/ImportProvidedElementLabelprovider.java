@@ -12,16 +12,17 @@ package org.eclipse.n4js.ui.organize.imports;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.organize.imports.ImportProvidedElement;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.organize.imports.ImportProvidedElement;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 
 /**
  */
@@ -31,6 +32,8 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 	private N4JSLabelProvider n4Labelprovider;
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
+	@Inject
+	private IN4JSCore core;
 
 	@Override
 	public void addListener(ILabelProviderListener listener) {
@@ -62,7 +65,16 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 	public String getText(Object element) {
 		if (element instanceof ImportableObject) {
 			ImportableObject io = (ImportableObject) element;
-			return getText(io.getEobj());
+			IEObjectDescription eobj = io.getEobj();
+			if (!io.isExportedAsDefault())
+				return getText(eobj);
+
+			IN4JSProject findProject = core.findProject(eobj.getEObjectURI()).orNull();
+			String projectName = findProject != null ? findProject.getProjectId()
+					: (eobj.getEObjectURI().isPlatform() ? eobj.getEObjectURI().toPlatformString(true)
+							: eobj.getEObjectURI().toString());
+			return io.getName() + " from " + projectName + " (exported as default)";
+
 		} else if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);
 			// return n4Labelprovider.getText( ele.ambiguityList.get(0) );

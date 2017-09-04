@@ -50,10 +50,10 @@ class RefNameUtil {
 				}
 			}
 
+			// handle A?
 			if(ref.isFollowedByQuestionMark && nodeText.endsWith('?')) {
 				suffixLen = 1;
 			}
-
 
 			return nodeText.substring(prefixLen, nodeText.length - suffixLen)
 		} else {

@@ -34,6 +34,18 @@ public final class ImportableObject {
 	String name;
 	IEObjectDescription eobj;
 	boolean exportedAsDefault;
+	boolean asNamespace;
+	
+	new(String name, IEObjectDescription eobj, boolean asDefault) {
+		this( name,  eobj,  asDefault,  false)
+	}
+	
+	new(String name, IEObjectDescription eobj, boolean asDefault, boolean asNamespace) {
+		this.name = name;
+		this.eobj = eobj;
+		this.exportedAsDefault = asDefault;
+		this.asNamespace = asNamespace
+	}
 
 	override equals(Object o) {
 		if (o instanceof ImportableObject) {
@@ -46,4 +58,5 @@ public final class ImportableObject {
 	override hashCode() {
 		return name.hashCode + (if (exportedAsDefault) 13 else 7) + eobj.EObjectURI.hashCode;
 	}
+
 }
