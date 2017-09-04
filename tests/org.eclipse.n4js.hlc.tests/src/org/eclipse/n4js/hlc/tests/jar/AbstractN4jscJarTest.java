@@ -23,6 +23,10 @@ import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 
 /**
  */
@@ -48,6 +52,25 @@ public abstract class AbstractN4jscJarTest {
 	protected AbstractN4jscJarTest(String fixture) {
 		this.fixture = fixture;
 	}
+
+	/** Description object of the currently running test. */
+	protected Description description;
+	/** Logs test name that is executed. */
+	@Rule
+	public TestRule watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description desc) {
+			description = desc;
+			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+		}
+
+		@Override
+		protected void finished(Description desc) {
+			description = null;
+			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+		}
+
+	};
 
 	/**
 	 * Copy a fresh fixture to the workspace area.
