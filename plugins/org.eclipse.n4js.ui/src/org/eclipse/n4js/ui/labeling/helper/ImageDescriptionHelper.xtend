@@ -142,11 +142,11 @@ class ImageDescriptionHelper {
 	 * <p>
 	 * The cache is invalidated upon semantic change in the resource.
 	 */
-	def private Optional<Severity> getMaxSeverityAtOrBelow(EObject eo, CancelIndicator monitor) {
+	def private Optional<Severity> getMaxSeverityAtOrBelow(EObject eo, CancelIndicator cancelIndicator) {
 		if (!isN4Resource(eo.eResource) || !isCompletelyLoaded(eo.eResource as N4JSResource)) {
 			return Optional.empty
 		}
-		val summary = getOrElseUpdateSummary(eo, monitor)
+		val summary = getOrElseUpdateSummary(eo, cancelIndicator)
 		return summary.getMaxSeverityAtOrBelow(eo)
 	}
 
@@ -162,12 +162,12 @@ class ImageDescriptionHelper {
 	 * During an activation of this method the cache lock is held, ie the transpiler can't get issues in the meantime.
 	 * Same goes in the other direction.
 	 */
-	def private IssueSummary getOrElseUpdateSummary(EObject eo, CancelIndicator monitor) {
+	def private IssueSummary getOrElseUpdateSummary(EObject eo, CancelIndicator cancelIndicator) {
 		val res = eo.eResource
 		synchronized(cache) {
-			val issues = cache.getOrElseUpdateIssues(resourceValidator, res, monitor)
-			if ((null === issues) || monitor.isCanceled) {
-				// due to cancelation the list of issues may be incomplete, thus don't store in the cache
+			val issues = cache.getOrElseUpdateIssues(resourceValidator, res, cancelIndicator)
+			if ((null === issues) || cancelIndicator.isCanceled) {
+				// due to cancellation the list of issues may be incomplete, thus don't store in the cache
 				return IssueSummary.EMPTY_SUMMARY
 			}
 			val summary = cache.get("ImageDescriptionHelper-IssueSummary", res, [| IssueSummary.create(issues)])

@@ -173,9 +173,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					// in next line: call on 'super' because the method in 'this' forwards here!!
 					super.resolveLazyCrossReferences(cancelIndicator);
 				}
-				if (!cancelIndicator.isCanceled()) {
-					postProcessor.performPostProcessing(this, cancelIndicator);
-				}
+				postProcessor.performPostProcessing(this, cancelIndicator);
 			} finally {
 				isPostProcessing = false;
 				// note: doesn't matter if processing succeeded, failed or was canceled
