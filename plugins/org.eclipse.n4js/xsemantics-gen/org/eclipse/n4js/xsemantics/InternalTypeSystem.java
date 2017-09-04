@@ -2805,22 +2805,21 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       if ((lunknown && runknown)) {
         T = r;
       } else {
-        final boolean lnum = (Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, l.getDeclaredType()));
-        final boolean rnum = (Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, r.getDeclaredType()));
-        final boolean undef = (((Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G)) || Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.nullType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.nullType(G)));
-        if (((lnum && rnum) || (undef && (lnum || rnum)))) {
+        final boolean lnum = RuleEnvironmentExtensions.isNumericOperand(G, l);
+        final boolean rnum = RuleEnvironmentExtensions.isNumericOperand(G, r);
+        if ((lnum && rnum)) {
           T = RuleEnvironmentExtensions.numberTypeRef(G);
         } else {
-          if (((lunknown || runknown) && ((lnum || rnum) || undef))) {
-            TypeRef _xifexpression = null;
-            if (lunknown) {
-              _xifexpression = l;
-            } else {
-              _xifexpression = r;
-            }
-            T = _xifexpression;
+          if (((lunknown || runknown) && (lnum || rnum))) {
+            T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
           } else {
-            T = RuleEnvironmentExtensions.stringTypeRef(G);
+            final boolean lMayNum = (lnum || RuleEnvironmentExtensions.containsNumericOperand(G, l));
+            final boolean rMayNum = (rnum || RuleEnvironmentExtensions.containsNumericOperand(G, r));
+            if ((lMayNum && rMayNum)) {
+              T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
+            } else {
+              T = RuleEnvironmentExtensions.stringTypeRef(G);
+            }
           }
         }
       }
@@ -5109,12 +5108,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInMultiplicativeExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final MultiplicativeExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
-    if (_isTypeAware) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
-    } else {
-      T = RuleEnvironmentExtensions.anyTypeRef(G);
-    }
+    T = RuleEnvironmentExtensions.anyTypeRef(G);
     return new Result<TypeRef>(T);
   }
   
@@ -5139,11 +5133,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInAdditiveExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final AdditiveExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    if (((!Objects.equal(e.getOp(), AdditiveOperator.ADD)) && this.jsVariantHelper.isTypeAware(e))) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
-    } else {
-      T = RuleEnvironmentExtensions.anyTypeRef(G);
-    }
+    T = RuleEnvironmentExtensions.anyTypeRef(G);
     return new Result<TypeRef>(T);
   }
   
@@ -5168,12 +5158,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInShiftExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ShiftExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
-    if (_isTypeAware) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
-    } else {
-      T = RuleEnvironmentExtensions.anyTypeRef(G);
-    }
+    T = RuleEnvironmentExtensions.anyTypeRef(G);
     return new Result<TypeRef>(T);
   }
   

@@ -136,6 +136,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createUnionType(G,elements)
 	}
+	
 	def TypeRef createIntersectionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createIntersectionType(G,elements)
 	}
