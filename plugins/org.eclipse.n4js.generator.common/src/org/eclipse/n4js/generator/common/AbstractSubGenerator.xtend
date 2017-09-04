@@ -11,6 +11,10 @@
 package org.eclipse.n4js.generator.common
 
 import com.google.inject.Inject
+import java.nio.file.Path
+import java.nio.file.Paths
+import org.eclipse.emf.common.EMFPlugin
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
@@ -18,13 +22,10 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceType
-import java.nio.file.Path
-import java.nio.file.Paths
-import org.eclipse.emf.common.EMFPlugin
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
@@ -33,7 +34,6 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 
 /**
  */
@@ -101,25 +101,14 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			internalDoGenerate(input, GeneratorOption.DEFAULT_OPTIONS, fsa);
 		} catch (Exception e) {
 
-			// special case: cancellation during transpilation
-			val isCanceled = genMarkerSupport.isOperationCanceledException(e);
+			// cancellation is not an error case, so simply propagate as usually
+			genMarkerSupport.propagateIfCancelException(e);
 
 			// issue error marker
 			val target = if (input instanceof N4JSResource) input.module.moduleSpecifier else input.URI;
-			val severity = if(isCanceled) Severity.ERROR else Severity.ERROR; // keep severity in cancel case on error, for now (can later be reduced to warning)
-			val msgMarker = if (isCanceled) {
-				"Build canceled while transpiling module " + target + ". Generated target file might be invalid."
-			} else {
-				"Severe error occurred while transpiling module " + target + ". Check error log for details about the failure."
-			};
-			genMarkerSupport.createMarker(input, msgMarker, severity);
-
-			if (isCanceled) {
-				// in this case 'e' is of type OperationCanceledException
-				// -> simply re-throw without wrapping it into a GeneratorException to give client code a chance to
-				// recognize that this is only a cancellation, not an actual error
-				throw e as RuntimeException; // OperationCanceledException <: RuntimeException
-			}
+			val msgMarker = "Severe error occurred while transpiling module " + target
+				+ ". Check error log for details about the failure.";
+			genMarkerSupport.createMarker(input, msgMarker, Severity.ERROR);
 
 			// re-throw as GeneratorException to have the frameworks notify the error.
 			if (e instanceof GeneratorException) {
