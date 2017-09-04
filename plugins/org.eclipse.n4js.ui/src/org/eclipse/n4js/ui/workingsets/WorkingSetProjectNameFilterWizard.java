@@ -21,14 +21,12 @@ import java.util.regex.PatternSyntaxException;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.n4js.ui.workingsets.ProjectNameFilterAwareWorkingSetManager.ProjectNameFilterWorkingSet;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 import com.google.common.base.Optional;
-
-import org.eclipse.n4js.ui.workingsets.ProjectNameFilterAwareWorkingSetManager.ProjectNameFilterWorkingSet;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Wizard for creating and editing project name filter based working sets.
@@ -108,7 +106,7 @@ public class WorkingSetProjectNameFilterWizard extends WorkingSetEditWizard {
 				if (errorMessage == null) {
 					if (!name.equals(originalName.get())
 							// This case ID and name are equal. Intentionally name.
-							&& Arrays2.transform(manager.getAllWorkingSets(), ws -> ws.getName()).contains(name)) {
+							&& getAllWorkingSets().stream().anyMatch(ws -> ws.getName().equals(name))) {
 						errorMessage = "A working set already exists with name '" + name + "'.";
 					}
 				}

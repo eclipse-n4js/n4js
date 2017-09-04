@@ -43,6 +43,8 @@ import org.eclipse.xtext.ui.editor.outline.impl.DocumentRootNode
 import org.eclipse.xtext.ui.editor.outline.impl.EObjectNode
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineMode
 import org.eclipse.xtext.util.CancelIndicator
+import org.eclipse.xtext.util.TextRegion
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
 /**
  * Customization of the default outline structure.
@@ -183,8 +185,15 @@ class N4JSOutlineTreeProvider extends BackgroundOutlineTreeProvider implements I
 					node.isPublic = tchild.memberAccessModifier == MemberAccessModifier.PUBLIC ||
 						tchild.memberAccessModifier == MemberAccessModifier.PUBLIC_INTERNAL
 					node.isConstructor = tchild.isConstructor;
+					// GH-174: Store the text region information in the outline tree node because {@link OutlineWithEditorLinker} uses this piece of information
+					// to link editor with outline view.
+					if (tchild.eResource == tclassifier.eResource) {
+						// Only call astElement iff we are in the same resource because in that case the AST already exists (we do not want to resolve AST proxy).
+						val nodeModel = NodeModelUtils.getNode(tchild.astElement);
+						if (nodeModel !== null)
+							node.textRegion = new TextRegion(nodeModel.offset, nodeModel.length);
+					}
 				}
-
 			}
 		} else {
 			for (child : classifierDefinition.eContents.filterNull) {
