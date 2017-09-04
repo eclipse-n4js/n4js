@@ -83,6 +83,6 @@ class N6_1_13_AdditiveExpressionTypesystemTest extends AbstractOperatorExpressio
 	def void testExpectedType_Sub() {
 		assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1-n2");
 		assertBinaryOperatorExpectedType(strict, "any", "any", "n1-n2");
-		assertBinaryOperatorExpectedType(n4js, "number", "number", "n1-n2");
+		assertBinaryOperatorExpectedType(n4js, "any", "any", "n1-n2");
 	}
 }

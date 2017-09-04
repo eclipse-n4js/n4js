@@ -46,7 +46,7 @@ class N6_1_12_MultiplicativeExpressionTypesystemTest extends AbstractOperatorExp
 	def void testExpectedType() {
 		assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1*n2");
 		assertBinaryOperatorExpectedType(strict, "any", "any", "n1*n2");
-		assertBinaryOperatorExpectedType(n4js, "number", "number", "n1*n2");
+		assertBinaryOperatorExpectedType(n4js, "any", "any", "n1*n2");
 	}
 
 }
