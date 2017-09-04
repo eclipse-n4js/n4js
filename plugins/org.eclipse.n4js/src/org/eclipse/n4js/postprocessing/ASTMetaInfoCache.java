@@ -227,20 +227,6 @@ public final class ASTMetaInfoCache {
 		return isFullyProcessed;
 	}
 
-	// /* package */ CancelIndicator getCancelIndicator() {
-	// return cancelIndicator;
-	// }
-	//
-	// /**
-	// * <b>IMPORTANT:</b><br>
-	// * use this only for rare special cases (e.g. logging); ordinary cancellation handling should be done via the
-	// * {@link OperationCanceledManager}, using the convenience method
-	// * {@link AbstractProcessor#checkCanceled(ASTMetaInfoCache)}.
-	// */
-	// /* package */ boolean isCanceled() {
-	// return cancelIndicator != null && cancelIndicator.isCanceled();
-	// }
-
 	/* package */ boolean isEmpty() {
 		// only used for debugging to spot a suspicious cache clear (see ASTMetaInfoCacheHelper)
 		return actualTypes.isEmpty() && inferredTypeArgs.isEmpty();
