@@ -145,15 +145,17 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns a new {@code RuleEnvironment} for the same predefined types and resource as the given rule environment.
+	 * Returns a new {@code RuleEnvironment} for the same predefined types, resource, and cancel indicator as the given
+	 * rule environment.
 	 * <p>
-	 * IMPORTANT: key/value pairs from G will not be available in the returned rule environment! Compare this with
+	 * IMPORTANT: other key/value pairs from G will not be available in the returned rule environment! Compare this with
 	 * method {@link #wrap(RuleEnvironment)}.
 	 */
 	public def static RuleEnvironment newRuleEnvironment(RuleEnvironment G) {
 		var Gnew = new RuleEnvironment();
 		Gnew.setPredefinedTypes(G.getPredefinedTypes());
-		Gnew.add(Resource,G.get(Resource));
+		Gnew.add(Resource, G.get(Resource));
+		Gnew.addCancelIndicator(G.getCancelIndicator());
 		return Gnew;
 	}
 

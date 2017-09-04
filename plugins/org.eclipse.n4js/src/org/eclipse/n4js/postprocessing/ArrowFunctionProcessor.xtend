@@ -81,7 +81,6 @@ class ArrowFunctionProcessor {
 
 	def private FunctionTypeExprOrRef expectedTypeForArrowFunction(RuleEnvironment G, ArrowFunction fe) {
 		val G_new = G.newRuleEnvironment;
-		G_new.addCancelIndicator(G.cancelIndicator);
 		val tr = ts.expectedTypeIn(G_new, fe.eContainer(), fe).value;
 		if (tr instanceof FunctionTypeExprOrRef) {
 			return tr;
