@@ -27,6 +27,17 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 	@Inject extension N4JSTypesBuilderHelper
 
+	def package boolean relinkGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+		if (n4Getter.name === null && !n4Getter.hasComputedPropertyName) {
+			return false
+		}
+		val getterType = classifierType.ownedMembers.get(idx) as TGetter;
+		ensureEqualName(n4Getter, getterType);
+		getterType.astElement = n4Getter
+		n4Getter.definedGetter = getterType
+		return true
+	}
+
 	def package TGetter createGetter(N4GetterDeclaration n4Getter, TClassifier classifierType, boolean preLinkingPhase) {
 		if (n4Getter.name === null && !n4Getter.hasComputedPropertyName) {
 			return null
@@ -56,7 +67,7 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		getterType;
 	}
 
-	def private setMemberAccessModifier(TGetter getterType, N4GetterDeclaration n4Getter) {
+	def private void setMemberAccessModifier(TGetter getterType, N4GetterDeclaration n4Getter) {
 		setMemberAccessModifier([MemberAccessModifier modifier |
 			getterType.declaredMemberAccessModifier = modifier
 		], n4Getter.declaredModifiers, n4Getter.annotations)
@@ -66,7 +77,7 @@ package class N4JSGetterTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * Sets the return type. If the declared return type is 'this', a ComputedTypeRef will
 	 * be created to generate a bound this type.
 	 */
-	def private setReturnTypeConsideringThis(TGetter getterType, N4GetterDeclaration getterDecl,
+	def private void setReturnTypeConsideringThis(TGetter getterType, N4GetterDeclaration getterDecl,
 				BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		// TODO: explicitly differentiate between declared and inferred type
 		if(getterDecl.declaredTypeRef instanceof ThisTypeRef) {

@@ -10,14 +10,21 @@
  */
 package org.eclipse.n4js.n4JS.impl;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+
+import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -65,11 +72,30 @@ public abstract class AnnotableElementImpl extends ProxyResolvingEObjectImpl imp
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Annotation> getAllAnnotations() {
+		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
+		final EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			EList<Annotation> _annotations = ((ExportDeclaration)parent).getAnnotations();
+			Iterables.<Annotation>addAll(result, _annotations);
+		}
+		EList<Annotation> _annotations_1 = this.getAnnotations();
+		Iterables.<Annotation>addAll(result, _annotations_1);
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS:
 				return getAnnotations();
+			case N4JSPackage.ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS:
+				return getAllAnnotations();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
