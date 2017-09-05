@@ -35,7 +35,6 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TStructGetter
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructuralType
-import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
@@ -109,29 +108,24 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	) {
 		for (pa : objLit.propertyAssignments) {
 			if (pa !== null) {
-				var tMember = if (pa.definedMember!==null) {
-					TypeUtils.copy(pa.definedMember);
+				var TStructMember tMember = null;
+				if (pa.definedMember !== null) {
+					tMember = TypeUtils.copy(pa.definedMember);
+					tMembers += tMember;
 				} else {
-					// GH-197: If TMember does not exist, we are likely to be dealing with null computed name
-					// In case of null computed name, pa does not have an associated TStructField in TModule, we recreates a dummy TStructField.
-					val field = TypesFactory.eINSTANCE.createTStructField()
-					field.name = null
-					field.typeRef = TypeUtils.createDeferredTypeRef;
-//					if (pa instanceof PropertyNameValuePair) {
-//						field.optional = pa.declaredOptional
-//					}
-					field
+					// this happens if member name in AST was null (bad syntax in code; types builder won't
+					// create a TMember in that case) or in case of an invalid computed name (not a compile-time
+					// expression, unresolved reference, etc.; ComputedNameProcessor will remote TMember for
+					// consistency with first case); this is an error case, but we still have to continue
+					// processing, because nested expression must still be typed as usual.
 				}
-					if (tMember !== null) {
-						tMembers += tMember;
 
-						if (pa.isPoly) {
-							if (!(tMember instanceof TMethod)) {
-								processNonMethodProperties(G, cache, infCtx, tMember, pa,
-									quickMode, props2InfVarOrFallbackType);
-							}
-						}
+				if (pa.isPoly) {
+					if (!(tMember instanceof TMethod)) {
+						processNonMethodProperties(G, cache, infCtx, tMember, pa,
+							quickMode, props2InfVarOrFallbackType);
 					}
+				}
 			}
 		}
 	}
@@ -141,50 +135,60 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 *  a) introduce a new inference variable representing the property's type (except for methods)
 	 *  b) add a constraint: expressionTypeRef <: iv
 	 *  c) create a TStructMember to be used in the structural result type reference
+	 * 
+	 * @param tMember  may be null in case of invalid members.
 	 */
 	def private void processNonMethodProperties(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
 		TStructMember tMember, PropertyAssignment propAssignm,
 		boolean quickMode, List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType
 	) {
-		val originalMemberType = tMember.typeOfMember;
+		if(tMember!==null) {
+			val originalMemberType = tMember.typeOfMember;
 
-		assertTrueIfRigid(cache, "type of " + propAssignm.eClass.name + " in TModule should be a DeferredTypeRef",
-			originalMemberType instanceof DeferredTypeRef);
+			assertTrueIfRigid(cache, "type of " + propAssignm.eClass.name + " in TModule should be a DeferredTypeRef",
+				originalMemberType instanceof DeferredTypeRef);
 
-		if (originalMemberType instanceof DeferredTypeRef) {
-			if (!quickMode) {
-				// standard mode:
-				// create new inference variable for the to-be-inferred type of this property
-				val iv = infCtx.newInferenceVariable;
-				// set it as type in tMember
-				tMember.typeOfMember = TypeUtils.createTypeRef(iv);
-				// add a constraint for the initializer expression (if any)
-				if (propAssignm instanceof PropertyNameValuePair) {
-					if (propAssignm.expression !== null) {
-						val exprTypeRef = polyProcessor.processExpr(G, propAssignm.expression, TypeUtils.createTypeRef(iv), infCtx, cache);
-						infCtx.addConstraint(exprTypeRef, TypeUtils.createTypeRef(iv), Variance.CO); // exprTypeRef <: iv
-					}
-				}
-				// remember for later
-				props2InfVarOrFallbackType += propAssignm -> iv;
-			} else {
-				// quick mode:
-				// compute a fall-back type
-				val fallbackType = switch (propAssignm) {
-					PropertyNameValuePair case propAssignm.expression !== null:
-						polyProcessor.processExpr(G, propAssignm.expression, null, infCtx, cache)
-					PropertyGetterDeclaration:
-						propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
-					PropertySetterDeclaration:
-						propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
-					default:
-						G.anyTypeRef
-				};
-				// set it as type in tMember
-				tMember.typeOfMember = TypeUtils.copy(fallbackType);
-				// remember for later
-				props2InfVarOrFallbackType += propAssignm -> fallbackType;
+			if (!(originalMemberType instanceof DeferredTypeRef)) {
+				return; // if rigid assertions are turned off, we fail safe (should never happen)
 			}
+		}
+
+		if (!quickMode) {
+			// standard mode:
+			// create new inference variable for the to-be-inferred type of this property
+			val iv = infCtx.newInferenceVariable;
+			// set it as type in tMember
+			if (tMember !== null) {
+				tMember.typeOfMember = TypeUtils.createTypeRef(iv);
+			}
+			// add a constraint for the initializer expression (if any)
+			if (propAssignm instanceof PropertyNameValuePair) {
+				if (propAssignm.expression !== null) {
+					val exprTypeRef = polyProcessor.processExpr(G, propAssignm.expression, TypeUtils.createTypeRef(iv), infCtx, cache);
+					infCtx.addConstraint(exprTypeRef, TypeUtils.createTypeRef(iv), Variance.CO); // exprTypeRef <: iv
+				}
+			}
+			// remember for later
+			props2InfVarOrFallbackType += propAssignm -> iv;
+		} else {
+			// quick mode:
+			// compute a fall-back type
+			val fallbackType = switch (propAssignm) {
+				PropertyNameValuePair case propAssignm.expression !== null:
+					polyProcessor.processExpr(G, propAssignm.expression, null, infCtx, cache)
+				PropertyGetterDeclaration:
+					propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
+				PropertySetterDeclaration:
+					propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
+				default:
+					G.anyTypeRef
+			};
+			// set it as type in tMember
+			if (tMember !== null) {
+				tMember.typeOfMember = TypeUtils.copy(fallbackType);
+			}
+			// remember for later
+			props2InfVarOrFallbackType += propAssignm -> fallbackType;
 		}
 	}
 
@@ -242,14 +246,15 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		for (propPair : props2InfVarOrFallbackType) {
-			val memberType = getMemberType(G, solution, quickMode, propPair);
-			val memberTypeSane = tsh.sanitizeTypeOfVariableFieldProperty(G, memberType);
 			val propAssignm = propPair.key;
 			val memberInTModule = propAssignm.definedMember;
-			EcoreUtilN4.doWithDeliver(false, [
-				if (memberInTModule !== null)
+			if (memberInTModule !== null) {
+				val memberType = getMemberType(G, solution, quickMode, propPair);
+				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldProperty(G, memberType);
+				EcoreUtilN4.doWithDeliver(false, [
 					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
-			], memberInTModule);
+				], memberInTModule);
+			}
 		}
 
 		val resultFinal = TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL,
