@@ -69,10 +69,6 @@ class XtextUtilN4 {
 	def private List<IContainer> getVisibleContainers(EObject o) {
 		val index = resourceDescriptionsProvider.getResourceDescriptions((o.eResource));
 		val resourceDescription = index.getResourceDescription(o.eResource.URI)
-		if (resourceDescription === null) {
-			Collections.emptyList;
-		} else {
-			containerManager.getVisibleContainers(resourceDescription, index);
-		}
+		containerManager.getVisibleContainers(resourceDescription, index);
 	}
 }
