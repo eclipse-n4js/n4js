@@ -39,7 +39,6 @@ import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
-import org.eclipse.n4js.typesbuilder.N4JSObjectLiteralTypesBuilder
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext

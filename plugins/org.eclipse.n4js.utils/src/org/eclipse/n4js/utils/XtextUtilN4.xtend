@@ -12,7 +12,6 @@ package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import java.util.Collections
 import java.util.List
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
