@@ -24,8 +24,7 @@ import org.junit.Before;
  */
 public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 
-	private File targetPlatformInstallLocation;
-	private File targetPlatformFile;
+	private TargetPlatformFiles platformFiles;
 
 	/**
 	 * Initializes the target platform install location and the target platform file with the desired dependencies.
@@ -33,7 +32,7 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void beforeTest() throws IOException {
-		ExternalsUtiities.setupExternals(targetPlatformInstallLocation, targetPlatformFile, description.getMethodName(),
+		ExternalsUtiities.setupExternals(platformFiles, description.getMethodName(),
 				getNpmDependencies());
 	}
 
@@ -42,7 +41,7 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 */
 	@After
 	public void afterTest() {
-		ExternalsUtiities.cleanupExternals(targetPlatformInstallLocation, targetPlatformFile);
+		ExternalsUtiities.cleanupExternals(platformFiles);
 	}
 
 	/**
@@ -60,14 +59,14 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 * Returns with the target platform file.
 	 */
 	protected File getTargetPlatformFile() {
-		return targetPlatformFile;
+		return platformFiles.targetPlatformFile;
 	}
 
 	/**
 	 * Returns with the target platform install location.
 	 */
 	protected File getTargetPlatformInstallLocation() {
-		return targetPlatformInstallLocation;
+		return platformFiles.targetPlatformInstallLocation;
 	}
 
 }

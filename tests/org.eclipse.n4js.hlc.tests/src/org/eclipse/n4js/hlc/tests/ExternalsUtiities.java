@@ -33,23 +33,23 @@ public class ExternalsUtiities {
 	 * Initializes the target platform install location and the target platform file with the desired dependencies.
 	 * Performs a sanity check, neither install location, nor the target platform file should exist.
 	 */
-	public static void setupExternals(File targetPlatformInstallLocation,
-			File targetPlatformFile, String tmpPrefix, Map<String, String> getNpmDependencies) throws IOException {
-		checkState(null == targetPlatformInstallLocation);
-		checkState(null == targetPlatformFile);
+	public static void setupExternals(TargetPlatformFiles platformFiles, String tmpPrefix,
+			Map<String, String> getNpmDependencies) throws IOException {
+		checkState(null == platformFiles.targetPlatformInstallLocation);
+		checkState(null == platformFiles.targetPlatformFile);
 
 		final Path tempRoot = createTempDirectory();
 		final String tempFolderName = tmpPrefix + "-time-" + System.currentTimeMillis();
-		targetPlatformInstallLocation = createDirectory(tempRoot, tempFolderName).toFile();
+		platformFiles.targetPlatformInstallLocation = createDirectory(tempRoot, tempFolderName).toFile();
 		final TargetPlatformModel model = new TargetPlatformModel();
 		for (final Entry<String, String> dependencyEntry : getNpmDependencies.entrySet()) {
 			model.addNpmDependency(dependencyEntry.getKey(), dependencyEntry.getValue());
 		}
 
-		targetPlatformFile = new File(tempRoot.toFile(), TP_FILE_NAME);
-		targetPlatformFile.createNewFile();
+		platformFiles.targetPlatformFile = new File(tempRoot.toFile(), TP_FILE_NAME);
+		platformFiles.targetPlatformFile.createNewFile();
 
-		try (FileWriter fw = new FileWriter(targetPlatformFile)) {
+		try (FileWriter fw = new FileWriter(platformFiles.targetPlatformFile)) {
 			fw.write(model.toString());
 			fw.flush();
 		}
@@ -58,15 +58,14 @@ public class ExternalsUtiities {
 	/**
 	 * Cleans up the target platform install location and the actual target platform file.
 	 */
-	public static void cleanupExternals(File targetPlatformInstallLocation,
-			File targetPlatformFile) {
-		if (null != targetPlatformFile) {
-			targetPlatformFile.delete();
-			targetPlatformFile = null;
+	public static void cleanupExternals(TargetPlatformFiles platformFiles) {
+		if (null != platformFiles.targetPlatformFile) {
+			platformFiles.targetPlatformFile.delete();
+			platformFiles.targetPlatformFile = null;
 		}
-		if (null != targetPlatformInstallLocation) {
-			targetPlatformInstallLocation.delete();
-			targetPlatformInstallLocation = null;
+		if (null != platformFiles.targetPlatformInstallLocation) {
+			platformFiles.targetPlatformInstallLocation.delete();
+			platformFiles.targetPlatformInstallLocation = null;
 		}
 	}
 
