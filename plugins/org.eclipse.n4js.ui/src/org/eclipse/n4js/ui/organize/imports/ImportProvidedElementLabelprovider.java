@@ -73,7 +73,7 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 			String projectName = findProject != null ? findProject.getProjectId()
 					: (eobj.getEObjectURI().isPlatform() ? eobj.getEObjectURI().toPlatformString(true)
 							: eobj.getEObjectURI().toString());
-			return io.getName() + " from " + projectName + " (exported as default)";
+			return io.getEobj() + " in project " + projectName;
 
 		} else if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);

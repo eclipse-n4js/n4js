@@ -41,7 +41,6 @@
 var placeholder:string;
 
 /* XPECT errors ---
-"Couldn't resolve reference to Type 'namespace'." at "namespace.default"
-"mismatched input 'default' expecting RULE_IDENTIFIER" at "default"
+"Couldn't resolve reference to Type 'namespace.default'." at "namespace.default"
 --- */
 let r : namespace.default;
