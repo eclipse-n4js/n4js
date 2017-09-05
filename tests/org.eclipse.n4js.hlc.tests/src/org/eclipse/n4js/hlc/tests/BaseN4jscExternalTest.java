@@ -24,7 +24,7 @@ import org.junit.Before;
  */
 public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 
-	private TargetPlatformFiles platformFiles;
+	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
 
 	/**
 	 * Initializes the target platform install location and the target platform file with the desired dependencies.

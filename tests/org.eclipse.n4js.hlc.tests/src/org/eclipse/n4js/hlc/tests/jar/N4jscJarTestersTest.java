@@ -32,7 +32,7 @@ import org.junit.Test;
  */
 public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 
-	private TargetPlatformFiles platformFiles;
+	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
 
 	/***/
 	public N4jscJarTestersTest() {
