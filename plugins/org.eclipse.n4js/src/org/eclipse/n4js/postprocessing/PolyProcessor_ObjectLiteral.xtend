@@ -13,6 +13,9 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.List
+import java.util.Map
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
@@ -20,6 +23,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.Versionable
@@ -31,19 +35,17 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TStructGetter
 import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TStructuralType
+import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.typesbuilder.N4JSObjectLiteralTypesBuilder
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.EcoreUtilN4
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.List
-import java.util.Map
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -107,18 +109,30 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		boolean quickMode, List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType
 	) {
 		for (pa : objLit.propertyAssignments) {
-			if (pa !== null && pa.definedMember!==null) {
-				val tMember = TypeUtils.copy(pa.definedMember);
-				if (tMember !== null) {
-					tMembers += tMember;
+			if (pa !== null) {
+				var tMember = if (pa.definedMember!==null) {
+					TypeUtils.copy(pa.definedMember);
+				} else {
+					// GH-197: If TMember does not exist, we are likely to be dealing with null computed name
+					// In case of null computed name, pa does not have an associated TStructField in TModule, we recreates a dummy TStructField.
+					val field = TypesFactory.eINSTANCE.createTStructField()
+					field.name = null
+					field.typeRef = TypeUtils.createDeferredTypeRef;
+//					if (pa instanceof PropertyNameValuePair) {
+//						field.optional = pa.declaredOptional
+//					}
+					field
+				}
+					if (tMember !== null) {
+						tMembers += tMember;
 
-					if (pa.isPoly) {
-						if (!(tMember instanceof TMethod)) {
-							processNonMethodProperties(G, cache, infCtx, tMember, pa,
-								quickMode, props2InfVarOrFallbackType);
+						if (pa.isPoly) {
+							if (!(tMember instanceof TMethod)) {
+								processNonMethodProperties(G, cache, infCtx, tMember, pa,
+									quickMode, props2InfVarOrFallbackType);
+							}
 						}
 					}
-				}
 			}
 		}
 	}
@@ -232,9 +246,10 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 			val memberType = getMemberType(G, solution, quickMode, propPair);
 			val memberTypeSane = tsh.sanitizeTypeOfVariableFieldProperty(G, memberType);
 			val propAssignm = propPair.key;
-			val memberInTModule = propAssignm.definedMember; // we know this is non-null, because pa's without defined member were not added to props2InfVarOrFallbackType
+			val memberInTModule = propAssignm.definedMember;
 			EcoreUtilN4.doWithDeliver(false, [
-				memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
+				if (memberInTModule !== null)
+					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
 			], memberInTModule);
 		}
 

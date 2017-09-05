@@ -11,12 +11,22 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Singleton
-import it.xsemantics.runtime.RuleEnvironment
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.N4FieldDeclaration
+import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
+import org.eclipse.n4js.n4JS.N4SetterDeclaration
+import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
+import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.n4JS.PropertySetterDeclaration
+import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
+import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.EcoreUtil2
 
 /**
  * Processing of {@link LiteralOrComputedPropertyName}s that have a computed property name, mainly setting property
@@ -68,10 +78,48 @@ class ComputedNameProcessor {
 				// (note: we have to do this for consistency with how the types builder handles elements that are
 				// unnamed (usually due to a broken AST): in those cases, the types builder does not create a TModule
 				// element)
-				// Bug fix GH-197: No, we cannot remove this type model element from TModule because this would cause bug GH-197
-				// TODO: We need to decide if we do not remove type model element here or refactor poly processor for object literals
-				// to handle computed names correctly
+				val owner = nameDecl.eContainer;
+				discardTypeModelElement(owner);
 			}
 		}
+	}
+
+	/**
+	 * Discards the types model element corresponding to the given AST node. Throws exception is given AST node does not
+	 * have a corresponding types model element.
+	 */
+	def private void discardTypeModelElement(EObject astNode) {
+		val elem = N4JSASTUtils.getCorrespondingTypeModelElement(astNode);
+		if (elem === null) {
+			throw new IllegalArgumentException(
+				"given AST node does not have a corresponding type model element to discard");
+		}
+		if (elem instanceof SyntaxRelatedTElement) {
+			elem.astElement = null;
+		}
+		EcoreUtilN4.doWithDeliver(false, [
+			switch (astNode) {
+				TypeDefiningElement:
+					astNode.definedType = null
+				N4FieldDeclaration:
+					astNode.definedField = null
+				N4GetterDeclaration:
+					astNode.definedGetter = null
+				N4SetterDeclaration:
+					astNode.definedSetter = null
+				PropertyNameValuePair:
+					astNode.definedField = null
+				PropertyGetterDeclaration:
+					astNode.definedGetter = null
+				PropertySetterDeclaration:
+					astNode.definedSetter = null
+				// note: PropertyMethodDeclaration is a TypeDefiningElement (handled above)
+				default:
+					throw new UnsupportedOperationException("switch case missing for: " + astNode)
+			};
+		], astNode);
+		EcoreUtilN4.doWithDeliver(false, [
+			EcoreUtil2.remove(elem);
+		], elem.eContainer);
 	}
 }
