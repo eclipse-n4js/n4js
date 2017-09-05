@@ -92,6 +92,12 @@ class PostProcessingTriggerTest extends AbstractN4JSTest {
 	}
 
 
+	@Test
+	def void ensureValidSnippet() {
+		snippet.parseAndValidateSuccessfully;
+	}
+
+
 	def private void assertTriggering(BiConsumer<N4JSResource, Script> trigger) {
 		val script = snippet.parse;
 		val res = script.eResource as N4JSResource;
