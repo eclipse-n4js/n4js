@@ -26,6 +26,7 @@ import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.eclipse.n4js.hlc.tests.TargetPlatformFiles;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -75,6 +76,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	 *             in Error cases
 	 */
 	@Test
+	@Ignore("https://github.com/NumberFour/n4js/issues/167")
 	public void testCompileAllAndRunWithNodeWithOutput() throws Exception {
 		logFile();
 
@@ -117,6 +119,7 @@ public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 	 *             in Error cases
 	 */
 	@Test
+	@Ignore("https://github.com/NumberFour/n4js/issues/167")
 	public void testCompileAllAndRunWithNodeWithReport() throws Exception {
 		logFile();
 
