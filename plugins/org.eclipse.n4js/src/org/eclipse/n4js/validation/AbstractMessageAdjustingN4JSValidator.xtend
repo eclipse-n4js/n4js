@@ -10,15 +10,15 @@
  */
 package org.eclipse.n4js.validation;
 
-import org.eclipse.n4js.AnnotationDefinition
-import org.eclipse.n4js.n4JS.AnnotableElement
-import org.eclipse.n4js.utils.validation.DelegatingValidationMessageAcceptor
-import org.eclipse.n4js.validation.validators.IDEBUGValidator
 import java.lang.reflect.Method
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.AnnotableElement
+import org.eclipse.n4js.utils.validation.DelegatingValidationMessageAcceptor
+import org.eclipse.n4js.validation.validators.IDEBUGValidator
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.util.CancelIndicator
@@ -39,24 +39,21 @@ public class AbstractMessageAdjustingN4JSValidator extends AbstractN4JSValidator
 		}
 
 		/**
-		 * Does the {@link CancelIndicator} tracked by the current {@link State} indicate a cancel-request has been made?
+		 * Returns the {@link CancelIndicator} tracked by the current {@link State}.
 		 * <p>
-		 * Before calling a validation method, this method is used to check for pending cancelation requests.
+		 * Before calling a validation method, this method is used to check for pending cancellation requests.
 		 * To keep the UI responsive, such request may be serviced by
 		 * (a) skipping validation; or (b) throwing a {@code OperationCanceledException} or {@code OperationCanceledError}.
-		 *
-		 * @see AbstractMessageAdjustingN4JSValidator#isCanceled()
 		 */
-		protected def boolean isCanceled(State state) {
+		protected def CancelIndicator getCancelIndicator(State state) {
 			if (null !== state.context) {
-				val monitor = state.context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
-				if (null !== monitor) {
-					return monitor.isCanceled();
+				val cancelIndicator = state.context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
+				if (null !== cancelIndicator) {
+					return cancelIndicator;
 				}
 			}
-			return false;
+			return null;
 		}
-
 	}
 
 
@@ -116,23 +113,5 @@ public class AbstractMessageAdjustingN4JSValidator extends AbstractN4JSValidator
 		val List<EPackage> result = super.EPackages;
 		result.add(EPackage.Registry.INSTANCE.getEPackage("http://www.eclipse.org/n4js/utils/Validation"));
 		return result;
-	}
-
-	/**
-	 * Does the current {@link CancelIndicator} that's tracked by the context indicate a cancel-request has been made?
-	 * <p>
-	 * The main use case are long-running validation methods, which should check periodically for pending cancelation requests
-	 * to keep the UI responsive.
-	 * <p>
-	 * @see AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable#isCanceled()
-	 */
-	public final def boolean isCanceled() {
-		if (null !== context) {
-			val monitor = context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
-			if (null !== monitor) {
-				return monitor.isCanceled
-			}
-		}
-		return false
 	}
 }

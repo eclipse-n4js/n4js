@@ -290,6 +290,20 @@ abstract class AnnotableElement {
 	 * annotations only via AnnotationDefinition and use type model annotation (or fields) if ever possible.
 	 */
 	op Annotation[] getAnnotations()
+	
+	/**
+	 * Returns the effective annotations of this annotable element. This includes the {@link #getAnnotations()}
+	 * and the annotations on the containing ExportDeclaration, if any.
+	 */
+	op Annotation[] getAllAnnotations() {
+		val result = <Annotation>newBasicEList()
+		val parent = eContainer
+		if(parent instanceof ExportDeclaration) {
+			result += parent.annotations
+		}
+		result += annotations
+		return result
+	}
 }
 
 abstract class AnnotableScriptElement extends AnnotableElement, ScriptElement {

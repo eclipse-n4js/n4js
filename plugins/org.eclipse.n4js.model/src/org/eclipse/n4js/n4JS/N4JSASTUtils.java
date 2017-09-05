@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.EcoreUtil2;
-
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.ContainerType;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -21,11 +19,19 @@ import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClass;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TStructMember;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.nodemodel.INode;
+import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.resource.XtextResource;
+
+import com.google.common.base.Charsets;
+import com.google.common.hash.Hashing;
 
 /**
  * General helpers for navigating in the AST. Some of these are used by convenience methods in N4JS model classes.
@@ -507,5 +513,20 @@ public abstract class N4JSASTUtils {
 			astNode = expr;
 		}
 		return astNode;
+	}
+
+	/**
+	 * Computes an MD5 hash from the given resource's source code (the actual source text), as stored in
+	 * {@link TModule#getAstMD5()}. Will fail with an exception if the given resource does not have a valid
+	 * {@link XtextResource#getParseResult() parse result}, as created by Xtext during parsing.
+	 */
+	public static String md5Hex(XtextResource resource) {
+		final IParseResult parseResult = resource.getParseResult();
+		final INode rootNode = parseResult != null ? parseResult.getRootNode() : null;
+		final String source = rootNode != null ? rootNode.getText() : null;
+		if (source == null) {
+			throw new IllegalStateException("resource does not have a valid parse result: " + resource.getURI());
+		}
+		return Hashing.md5().hashString(source, Charsets.UTF_8).toString();
 	}
 }

@@ -12,6 +12,8 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -21,6 +23,7 @@ import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
+import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TypableElement
@@ -31,9 +34,9 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import it.xsemantics.runtime.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
+import org.eclipse.xtext.service.OperationCanceledManager
+
+import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -59,6 +62,8 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
@@ -136,7 +141,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	def package void inferType(RuleEnvironment G, Expression rootPoly, ASTMetaInfoCache cache) {
 
 		// create a new constraint system
-		val InferenceContext infCtx = new InferenceContext(ts, tsh, cache.cancelIndicator, G);
+		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G);
 
 		// in plain JS files, we want to avoid searching for a solution (to avoid performance problems in some JS files
 		// with extremely large array/object literals) but to avoid having to deal with this case with additional code,

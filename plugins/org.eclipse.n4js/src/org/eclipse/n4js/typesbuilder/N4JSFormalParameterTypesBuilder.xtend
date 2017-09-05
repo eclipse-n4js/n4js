@@ -13,13 +13,24 @@ package org.eclipse.n4js.typesbuilder
 import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
-import org.eclipse.n4js.ts.types.TFormalParameter
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.TFormalParameter
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 
 package class N4JSFormalParameterTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package boolean relinkFormalParameter(FormalParameter astFormalParameter, TFunction functionType, boolean preLinkingPhase, int idx) {
+		val formalParameterType = functionType.fpars.get(idx);
+		ensureEqualName(astFormalParameter, formalParameterType);
+
+		formalParameterType.astElement = astFormalParameter;
+		astFormalParameter.definedTypeElement = formalParameterType;
+
+		return true;
+	}
 
 	def package TFormalParameter createFormalParameter(FormalParameter n4FormalParameter, BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		return createFormalParameter(n4FormalParameter, null, builtInTypeScope, preLinkingPhase);
@@ -57,25 +68,19 @@ package class N4JSFormalParameterTypesBuilder {
 	def private void setFormalParameterType(TFormalParameter formalParameterType, FormalParameter astFormalParameter,
 				TypeRef defaultTypeRef, BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase
 	) {
-		setCopyOfReference(
-			[ TypeRef copyOfDeclaredTypeRef |
-				formalParameterType.typeRef = copyOfDeclaredTypeRef.orDefaultParameterType(defaultTypeRef, astFormalParameter, builtInTypeScope)
-			], astFormalParameter.declaredTypeRef, preLinkingPhase)
+		if (!preLinkingPhase)
+			formalParameterType.typeRef = TypeUtils.copyWithProxies(astFormalParameter.declaredTypeRef) ?: getDefaultParameterType(defaultTypeRef, astFormalParameter, builtInTypeScope)
 	}
 
-	def private TypeRef orDefaultParameterType(TypeRef copyOfDeclaredTypeRef, TypeRef defaultTypeRef,
+	def private TypeRef getDefaultParameterType(TypeRef defaultTypeRef,
 		FormalParameter astFormalParameter, BuiltInTypeScope builtInTypeScope
 	) {
-		if (copyOfDeclaredTypeRef === null) {
-			if (astFormalParameter.initializer !== null) {
-				TypeUtils.createDeferredTypeRef
-			} else if (defaultTypeRef === null) {
-				builtInTypeScope.anyTypeRef
-			} else {
-				TypeUtils.copy(defaultTypeRef)
-			}
+		if (astFormalParameter.initializer !== null) {
+			TypeUtils.createDeferredTypeRef
+		} else if (defaultTypeRef === null) {
+			builtInTypeScope.anyTypeRef
 		} else {
-			copyOfDeclaredTypeRef
+			TypeUtils.copy(defaultTypeRef)
 		}
 	}
 }

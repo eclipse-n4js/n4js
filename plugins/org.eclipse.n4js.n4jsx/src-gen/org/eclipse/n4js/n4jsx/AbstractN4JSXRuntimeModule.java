@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.n4jsx;
 
+import com.google.inject.Binder;
+import com.google.inject.Provider;
+import com.google.inject.name.Names;
 import java.util.Properties;
-
 import org.eclipse.n4js.n4jsx.formatting2.N4JSXFormatter;
 import org.eclipse.n4js.n4jsx.parser.antlr.N4JSXAntlrTokenFileProvider;
 import org.eclipse.n4js.n4jsx.parser.antlr.N4JSXParser;
@@ -51,10 +53,6 @@ import org.eclipse.xtext.serializer.sequencer.ISyntacticSequencer;
 import org.eclipse.xtext.service.DefaultRuntimeModule;
 import org.eclipse.xtext.service.SingletonBinding;
 
-import com.google.inject.Binder;
-import com.google.inject.Provider;
-import com.google.inject.name.Names;
-
 /**
  * Manual modifications go to {@link N4JSXRuntimeModule}.
  */
@@ -68,131 +66,117 @@ public abstract class AbstractN4JSXRuntimeModule extends DefaultRuntimeModule {
 		properties = tryBindProperties(binder, "org/eclipse/n4js/n4jsx/N4JSX.properties");
 		super.configure(binder);
 	}
-
+	
 	public void configureLanguageName(Binder binder) {
-		binder.bind(String.class).annotatedWith(Names.named(Constants.LANGUAGE_NAME))
-				.toInstance("org.eclipse.n4js.n4jsx.N4JSX");
+		binder.bind(String.class).annotatedWith(Names.named(Constants.LANGUAGE_NAME)).toInstance("org.eclipse.n4js.n4jsx.N4JSX");
 	}
-
+	
 	public void configureFileExtensions(Binder binder) {
 		if (properties == null || properties.getProperty(Constants.FILE_EXTENSIONS) == null)
-			// Also register n4ts file extension to {@link FileExtensionProvider} as file extto make find references for
-			// primitive work correctly
-			binder.bind(String.class).annotatedWith(Names.named(Constants.FILE_EXTENSIONS))
-					.toInstance("n4jsx,jsx,n4jd,n4ts");
+			binder.bind(String.class).annotatedWith(Names.named(Constants.FILE_EXTENSIONS)).toInstance("n4jsx,jsx");
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.grammarAccess.GrammarAccessFragment2
 	public ClassLoader bindClassLoaderToInstance() {
 		return getClass().getClassLoader();
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.grammarAccess.GrammarAccessFragment2
 	public Class<? extends IGrammarAccess> bindIGrammarAccess() {
 		return N4JSXGrammarAccess.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.serializer.SerializerFragment2
-	@Override
 	public Class<? extends ISemanticSequencer> bindISemanticSequencer() {
 		return N4JSXSemanticSequencer.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.serializer.SerializerFragment2
 	public Class<? extends ISyntacticSequencer> bindISyntacticSequencer() {
 		return N4JSXSyntacticSequencer.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.serializer.SerializerFragment2
-	@Override
 	public Class<? extends ISerializer> bindISerializer() {
 		return Serializer.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
 	public Class<? extends IParser> bindIParser() {
 		return N4JSXParser.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	@Override
 	public Class<? extends ITokenToStringConverter> bindITokenToStringConverter() {
 		return AntlrTokenToStringConverter.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
 	public Class<? extends IAntlrTokenFileProvider> bindIAntlrTokenFileProvider() {
 		return N4JSXAntlrTokenFileProvider.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
 	public Class<? extends Lexer> bindLexer() {
 		return InternalN4JSXLexer.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
-	@Override
 	public Class<? extends ITokenDefProvider> bindITokenDefProvider() {
 		return AntlrTokenDefProvider.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
 	public Provider<? extends InternalN4JSXLexer> provideInternalN4JSXLexer() {
 		return LexerProvider.create(InternalN4JSXLexer.class);
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.parser.antlr.XtextAntlrGeneratorFragment2
 	public void configureRuntimeLexer(Binder binder) {
 		binder.bind(Lexer.class)
-				.annotatedWith(Names.named(LexerBindings.RUNTIME))
-				.to(InternalN4JSXLexer.class);
+			.annotatedWith(Names.named(LexerBindings.RUNTIME))
+			.to(InternalN4JSXLexer.class);
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.validation.ValidatorFragment2
-	@SingletonBinding(eager = true)
+	@SingletonBinding(eager=true)
 	public Class<? extends N4JSXValidator> bindN4JSXValidator() {
 		return N4JSXValidator.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.exporting.SimpleNamesFragment2
-	@Override
 	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
 		return SimpleNameProvider.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	@Override
 	public Class<? extends IContainer.Manager> bindIContainer$Manager() {
 		return StateBasedContainerManager.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
 	public Class<? extends IAllContainersState.Provider> bindIAllContainersState$Provider() {
 		return ResourceSetBasedAllContainersStateProvider.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
-	@Override
 	public void configureIResourceDescriptions(Binder binder) {
 		binder.bind(IResourceDescriptions.class).to(ResourceSetBasedResourceDescriptions.class);
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.builder.BuilderIntegrationFragment2
 	public void configureIResourceDescriptionsPersisted(Binder binder) {
-		binder.bind(IResourceDescriptions.class)
-				.annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS))
-				.to(ResourceSetBasedResourceDescriptions.class);
+		binder.bind(IResourceDescriptions.class).annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS)).to(ResourceSetBasedResourceDescriptions.class);
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
 	public Class<? extends IFormatter2> bindIFormatter2() {
 		return N4JSXFormatter.class;
 	}
-
+	
 	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
 	public void configureFormatterPreferences(Binder binder) {
-		binder.bind(IPreferenceValuesProvider.class).annotatedWith(FormatterPreferences.class)
-				.to(FormatterPreferenceValuesProvider.class);
+		binder.bind(IPreferenceValuesProvider.class).annotatedWith(FormatterPreferences.class).to(FormatterPreferenceValuesProvider.class);
 	}
-
+	
 }

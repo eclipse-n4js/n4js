@@ -12,6 +12,7 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.FunctionDeclaration
@@ -22,16 +23,35 @@ import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
+import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
-import org.eclipse.emf.ecore.EObject
 
 @Singleton
 package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
+
+	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
+		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
+			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
+		}
+		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
+			return false
+		}
+		val methodType = classifier.ownedMembers.get(idx) as TMethod;
+		ensureEqualName(methodDecl, methodType);
+
+		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
+
+		// link
+		methodType.astElement = methodDecl
+		methodDecl.definedType = methodType
+
+		return true;
+	}
 
 	/**
 	 * Creates TMethod for the given method declaration (and links it to that method).
@@ -39,7 +59,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * @param methodDecl declaration for which the TMethod is created, must not be linked to a TMethod yet (i.e. its defined type must be null).
 	 * @param preLinkingPhase
 	 */
-	def package createMethod(N4MethodDeclaration methodDecl, boolean preLinkingPhase) {
+	def package TMethod createMethod(N4MethodDeclaration methodDecl, boolean preLinkingPhase) {
 		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
@@ -79,7 +99,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		return methodType;
 	}
 
-	def private setMemberAccessModifier(TMethod methodType, N4MethodDeclaration n4Method) {
+	def private void setMemberAccessModifier(TMethod methodType, N4MethodDeclaration n4Method) {
 		setMemberAccessModifier([MemberAccessModifier modifier|methodType.declaredMemberAccessModifier = modifier],
 			n4Method.declaredModifiers, n4Method.annotations)
 	}
@@ -88,7 +108,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * Sets the return type. If the declared return type is 'this', a ComputedTypeRef will
 	 * be created to generate a bound this type.
 	 */
-	def private setReturnTypeConsideringThis(TMethod methodType, N4MethodDeclaration methodDecl,
+	def private void setReturnTypeConsideringThis(TMethod methodType, N4MethodDeclaration methodDecl,
 		BuiltInTypeScope builtInTypeScope, boolean preLinkingPhase) {
 		if (methodDecl.isConstructor || methodDecl.returnTypeRef instanceof ThisTypeRef) {
 			// special case: TypeDeferredProcessor will create a BoundThisTypeRef via Xsemantics judgment 'thisTypeRef'
@@ -99,7 +119,7 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		}
 	}
 
-	private def hasNonNullBody(Block body) {
+	private def boolean hasNonNullBody(Block body) {
 		(null !== body) &&
 		(null !== body.allStatements)
 	}
@@ -111,19 +131,18 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * <p>
 	 * Static methods refer to static members via ThisLiteral.
 	 */
-	private def containsThisOrSuperUsage(Block body) {
+	private def boolean containsThisOrSuperUsage(Block body) {
 		body.allStatements.exists[ stmt |
 			isThisOrSuperUsage(stmt) ||
 			EcoreUtilN4.getAllContentsFiltered(stmt, [!isFnDefOrDecl(it)]).exists[isThisOrSuperUsage(it)];
 		]
 	}
 
-	private def isFnDefOrDecl(EObject ast) {
+	private def boolean isFnDefOrDecl(EObject ast) {
 		ast instanceof FunctionDeclaration || ast instanceof FunctionDefinition
 	}
 
-	private def isThisOrSuperUsage(EObject expr) {
+	private def boolean isThisOrSuperUsage(EObject expr) {
 		expr instanceof SuperLiteral || expr instanceof ThisLiteral
 	}
-
 }

@@ -1984,6 +1984,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getAnnotableElement__GetAllAnnotations() {
+		return annotableElementEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getAnnotableScriptElement() {
 		return annotableScriptElementEClass;
 	}
@@ -6289,6 +6298,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		annotableElementEClass = createEClass(ANNOTABLE_ELEMENT);
 		createEOperation(annotableElementEClass, ANNOTABLE_ELEMENT___GET_ANNOTATIONS);
+		createEOperation(annotableElementEClass, ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS);
 
 		annotableScriptElementEClass = createEClass(ANNOTABLE_SCRIPT_ELEMENT);
 		createEReference(annotableScriptElementEClass, ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST);
@@ -7246,6 +7256,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(annotableElementEClass, AnnotableElement.class, "AnnotableElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getAnnotableElement__GetAnnotations(), this.getAnnotation(), "getAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getAnnotableElement__GetAllAnnotations(), this.getAnnotation(), "getAllAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(annotableScriptElementEClass, AnnotableScriptElement.class, "AnnotableScriptElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAnnotableScriptElement_AnnotationList(), this.getAnnotationList(), null, "annotationList", null, 0, 1, AnnotableScriptElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -11,22 +11,22 @@
 package org.eclipse.n4js.tests.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.tests.typesbuilder.extensions.ASTStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.extensions.TypesStructureAssertionExtension
 import org.eclipse.n4js.tests.typesbuilder.utils.AbstractTypesBuilderTest
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TEnum
-import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.ts.types.TInterface
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.ts.types.TInterface
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
@@ -48,20 +48,20 @@ class ClassWithMethodsTypesBuilderTest extends AbstractTypesBuilderTest {
 	def test() {
 		val textFileName = "ClassWithMethods.n4js"
 		val expectedTypesNamePairs = #[
-			typeof(TClass) -> "MySuperClass",
-			typeof(TClass) -> "MyInterface",
-			typeof(TEnum) -> "Storage",
-			typeof(TClass) -> "MyClass"
+			TClass -> "MySuperClass",
+			TClass -> "MyInterface",
+			TEnum -> "Storage",
+			TClass -> "MyClass"
 		]
 
 		// currently everything is exported to user data and Xtext index, e.g. to be able to
 		// use in IDE "Open Type"
 		val expectedExportedTypeToNamePairsOnIndex = #[
-			typeof(TModule) -> qualifiedNamePrefix + "ClassWithMethods",
-			typeof(TClass) -> "MySuperClass",
-			typeof(TInterface) -> "MyInterface",
-			typeof(TEnum) -> "Storage",
-			typeof(TClass) -> "MyClass"
+			TModule -> qualifiedNamePrefix + "ClassWithMethods",
+			TClass -> "MySuperClass",
+			TInterface -> "MyInterface",
+			TEnum -> "Storage",
+			TClass -> "MyClass"
 		]
 		val expectedTypesCount = expectedTypesNamePairs.size
 		val expectedExportedElementsCount = expectedExportedTypeToNamePairsOnIndex.size

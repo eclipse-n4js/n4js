@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
@@ -45,6 +46,8 @@ public class N4JSPostProcessor implements PostProcessor {
 
 	@Inject
 	private ASTProcessor astProcessor;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	@Override
 	public boolean expectsLazyLinkResolution() {
@@ -60,6 +63,7 @@ public class N4JSPostProcessor implements PostProcessor {
 			// we assume this will not be called for other PostProcessingAwareResource than N4JSResource
 			postProcessN4JSResource((N4JSResource) resource, cancelIndicator);
 		} catch (Throwable th) {
+			operationCanceledManager.propagateIfCancelException(th);
 			if (hasBrokenAST) {
 				// swallow exception, AST is broken due to parse error anyway
 			} else {

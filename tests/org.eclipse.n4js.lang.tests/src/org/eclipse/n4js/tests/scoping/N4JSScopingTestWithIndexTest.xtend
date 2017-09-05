@@ -62,7 +62,7 @@ class N4JSScopingTestWithIndexTest {
 			"src/org/eclipse/n4js/tests/scoping/Client.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/Supplier" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS" astMD5="7db65ac965ae43f2b3673735d7296d9b">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="Supplier" exportedName="Supplier">
 				    <ownedMembers xsi:type="types:TMethod" name="foo" hasNoBody="true" declaredMemberAccessModifier="public">
@@ -85,7 +85,7 @@ class N4JSScopingTestWithIndexTest {
 			"SupplierWithBuiltIn", "src/org/eclipse/n4js/tests/scoping/ClientWithBuiltIn.n4js",
 			'''
 				<?xml version="1.0" encoding="ASCII"?>
-				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS">
+				<types:TModule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:typeRefs="http://www.eclipse.org/n4js/ts/TypeRefs" xmlns:types="http://www.eclipse.org/n4js/ts/Types" qualifiedName="org/eclipse/n4js/tests/scoping/SupplierWithBuiltIn" projectId="org.eclipse.n4js.lang.tests" vendorID="org.eclipse.n4js" moduleLoader="N4JS" astMD5="7a7bda036db41c8e954e99535f496cff">
 				  <astElement href="#/0"/>
 				  <topLevelTypes xsi:type="types:TClass" name="SupplierWithBuiltIn" exportedName="SupplierWithBuiltIn">
 				    <ownedMembers xsi:type="types:TField" name="s" declaredMemberAccessModifier="public">
@@ -274,10 +274,9 @@ class N4JSScopingTestWithIndexTest {
 		assertNotNull(ParameterizedCallExpression.target)
 		assertTrue(ParameterizedCallExpression.target instanceof ParameterizedPropertyAccessExpression)
 		val dotAccess = ParameterizedCallExpression.target as ParameterizedPropertyAccessExpression
-		val willBecomeProxy = dotAccess.eGet(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY,
-			false) as EObject
+		val wontBecomeAProxy = dotAccess.eGet(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY, false) as EObject
 
-		assertFalse("property should not be a proxy", willBecomeProxy.eIsProxy)
+		assertFalse("property should not be a proxy", wontBecomeAProxy.eIsProxy)
 
 		supplierResource = rs.getResource(supplierJS, false) as N4JSResource
 		assertNotNull(supplierResource)
@@ -285,13 +284,11 @@ class N4JSScopingTestWithIndexTest {
 		assertFalse(supplierResource.loaded)
 		assertEquals(2, supplierResource.contents.size)
 
-		// TODO check why this caused a ConcurrentModificationException
 		supplierResource.contents.head // trigger AST loading
 
-		assertTrue(willBecomeProxy.eIsProxy)
+		assertFalse("we still point to the very same instance", wontBecomeAProxy.eIsProxy)
 		assertTrue(supplierResource.loaded)
 
-		// TODO: Should have failed here
 		assertFalse("Proxy cannot be resolved, type deserialization not working", dotAccess.property.eIsProxy)
 		assertEquals("foo", dotAccess.property.name);
 

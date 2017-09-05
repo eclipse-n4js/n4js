@@ -12,6 +12,12 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.Result
+import it.xsemantics.runtime.RuleApplicationTrace
+import it.xsemantics.runtime.RuleEnvironment
+import it.xsemantics.runtime.RuleFailedException
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
 import org.eclipse.n4js.n4JS.N4ClassExpression
@@ -37,12 +43,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleApplicationTrace
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.RuleFailedException
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
+import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
@@ -66,6 +67,8 @@ public class TypeProcessor extends AbstractProcessor {
 	private DestructureProcessor destructureProcessor;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 
 	/**
@@ -142,11 +145,13 @@ public class TypeProcessor extends AbstractProcessor {
 
 				// in this case, we are responsible for storing the type in the cache
 				// (Xsemantics does not know of the cache)
+				checkCanceled(G);
 				cache.storeType(node, resultAdjusted);
 			}
 		} catch (RuleFailedException e) {
 			cache.storeType(node, new Result(e));
 		} catch (Throwable th) {
+			operationCanceledManager.propagateIfCancelException(th);
 			th.printStackTrace
 			cache.storeType(node,
 				new Result(new RuleFailedException("error while asking Xsemantics: " + th.message, "YYY", th)));
@@ -241,7 +246,7 @@ public class TypeProcessor extends AbstractProcessor {
 			}
 
 			// make sure post-processing on the containing N4JS resource is initiated
-			res.performPostProcessing
+			res.performPostProcessing(G.cancelIndicator);
 
 			if (obj.isTypeModelElement) {
 				// for type model elements, we by-pass all caching ...

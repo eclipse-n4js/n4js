@@ -12,10 +12,16 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.common.base.Throwables
 import com.google.inject.Inject
+import it.xsemantics.runtime.Result
+import it.xsemantics.runtime.RuleApplicationTrace
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.function.BooleanSupplier
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -27,16 +33,11 @@ import org.eclipse.n4js.typesystem.CustomInternalTypeSystem
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.xsemantics.InternalTypeSystem
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleApplicationTrace
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.function.BooleanSupplier
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 
 /**
  * Provides some common base functionality used across all processors (e.g. logging). See {@link ASTProcessor} for more
@@ -50,6 +51,18 @@ package abstract class AbstractProcessor {
 
 	@Inject
 	private InternalTypeSystem ts_internal;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
+
+
+	/**
+	 * Convenience method. Same as {@link OperationCanceledManager#checkCanceled(CancelIndicator)}, using the cancel
+	 * indicator of the given rule environment.
+	 */
+	def protected void checkCanceled(RuleEnvironment G) {
+		operationCanceledManager.checkCanceled(G.cancelIndicator);
+	}
+
 
 	/**
 	 * Processors can call this method to directly invoke the 'type' judgment of the internal, Xsemantics-generated type

@@ -13,6 +13,15 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Collection
+import java.util.Collections
+import java.util.List
+import java.util.Map
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
@@ -45,16 +54,9 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Collection
-import java.util.Collections
-import java.util.List
-import java.util.Map
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.service.OperationCanceledManager
+import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 
@@ -63,6 +65,14 @@ import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
  * retrieving build in types.
  */
 class RuleEnvironmentExtensions {
+
+	/**
+	 * Key used for storing a cancel indicator in a rule environment. Client code should not use this constant
+	 * directly, but instead use methods
+	 * {@link RuleEnvironmentExtensions#addCancelIndicator(RuleEnvironment,CancelIndicator)} and
+	 * {@link RuleEnvironmentExtensions#getCancelIndicator(RuleEnvironment)}.
+	 */
+	private static final String KEY__CANCEL_INDICATOR = "cancelIndicator";
 
 	/**
 	 * Key used for storing a 'this' binding in a rule environment. Client code should not use this constant
@@ -135,15 +145,17 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns a new {@code RuleEnvironment} for the same predefined types and resource as the given rule environment.
+	 * Returns a new {@code RuleEnvironment} for the same predefined types, resource, and cancel indicator as the given
+	 * rule environment.
 	 * <p>
-	 * IMPORTANT: key/value pairs from G will not be available in the returned rule environment! Compare this with
+	 * IMPORTANT: other key/value pairs from G will not be available in the returned rule environment! Compare this with
 	 * method {@link #wrap(RuleEnvironment)}.
 	 */
 	public def static RuleEnvironment newRuleEnvironment(RuleEnvironment G) {
 		var Gnew = new RuleEnvironment();
 		Gnew.setPredefinedTypes(G.getPredefinedTypes());
-		Gnew.add(Resource,G.get(Resource));
+		Gnew.add(Resource, G.get(Resource));
+		Gnew.addCancelIndicator(G.getCancelIndicator());
 		return Gnew;
 	}
 
@@ -198,6 +210,33 @@ class RuleEnvironmentExtensions {
 	 */
 	public def static Resource getContextResource(RuleEnvironment G) {
 		return G.get(Resource) as Resource;
+	}
+
+	/**
+	 * Add a cancel indicator to the given rule environment.
+	 */
+	def static void addCancelIndicator(RuleEnvironment G, CancelIndicator cancelIndicator) {
+		G.add(KEY__CANCEL_INDICATOR, cancelIndicator);
+	}
+
+	/**
+	 * Returns the cancel indicator of this rule environment or <code>null</code> if none has been added, yet.
+	 */
+	def static CancelIndicator getCancelIndicator(RuleEnvironment G) {
+		return G.get(KEY__CANCEL_INDICATOR) as CancelIndicator;
+	}
+
+	/**
+	 * <b>IMPORTANT:</b><br>
+	 * use this only for rare special cases (e.g. logging); ordinary cancellation handling should be done by invoking
+	 * {@link OperationCanceledManager#checkCanceled(CancelIndicator)} with the cancel indicator returned by
+	 * {@link #getCancelIndicator(RuleEnvironment)}!
+	 * <p>
+	 * Tells if the given rule environment has a cancel indicator AND that indicator is canceled.
+	 */
+	def static boolean isCanceled(RuleEnvironment G) {
+		val cancelIndicator = G.getCancelIndicator;
+		return cancelIndicator!==null && cancelIndicator.isCanceled();
 	}
 
 	/*
