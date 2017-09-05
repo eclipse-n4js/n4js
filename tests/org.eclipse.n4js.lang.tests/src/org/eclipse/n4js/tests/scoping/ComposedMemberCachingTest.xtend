@@ -14,12 +14,14 @@ import com.google.inject.Inject
 import org.eclipse.n4js.AbstractN4JSTest
 import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.utils.TypeUtils
+import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.junit.Test
 
@@ -47,7 +49,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 			let v : Array<any> | Array<string> = (1==1)? [] : ["Hi"];
 			v.join();
 			v.join();
-	'''.parse;
+		'''.parseAndPostProcessAndDeleteCachedComposedMembers;
 		val varDecl = script.eAllContents.filter(VariableDeclaration).head;
 		val receiverType = varDecl.declaredTypeRef
 		val propertyAccesses = script.eAllContents.filter(ParameterizedPropertyAccessExpression)
@@ -64,9 +66,9 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	def void testNoDuplicateCacheCreatedForEquivalentComposedTypeRefs() {
 		val script = '''
 			let v : Array<any> | Array<string> = (1==1)? [] : ["Hi"];
-			v1.join();
-			v1.filter(null);
-	'''.parse;
+			v.join();
+			v.filter(null);
+		'''.parseAndPostProcessAndDeleteCachedComposedMembers;
 		val varDecl = script.eAllContents.filter(VariableDeclaration).head;
 		val receiverType = varDecl.declaredTypeRef
 		val propertyAccesses = script.eAllContents.filter(ParameterizedPropertyAccessExpression)
@@ -86,7 +88,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 			let v2 : Array<any> | Array<string> = (1==1)? [] : ["Hello"];
 			v1.join();
 			v2.join();
-	'''.parse;
+		'''.parseAndPostProcessAndDeleteCachedComposedMembers;
 		val varDecls = script.eAllContents.filter(VariableDeclaration)
 		val varDecl1 = varDecls.next;
 		val varDecl2 = varDecls.next;
@@ -108,7 +110,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 
 	@Test
 	def void testContainedMemberWhenUsingContainedTypeRef() {
-		val script = snippet.parse; // do not validate!
+		val script = snippet.parseAndPostProcessAndDeleteCachedComposedMembers;
 		val resource = script.eResource as N4JSResource;
 
 		val varDecl = script.eAllContents.filter(VariableDeclaration).head;
@@ -123,7 +125,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 
 	@Test
 	def void testContainedMemberWhenUsingNonContainedTypeRef() {
-		val script = snippet.parse; // do not validate!
+		val script = snippet.parseAndPostProcessAndDeleteCachedComposedMembers;
 		val resource = script.eResource as N4JSResource;
 
 		val varDecl = script.eAllContents.filter(VariableDeclaration).head;
@@ -139,7 +141,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 
 	@Test
 	def void testNoCachingHappensWhenAllowingNonContainedMembers() {
-		val script = snippet.parse; // do not validate!
+		val script = snippet.parseAndPostProcessAndDeleteCachedComposedMembers;
 
 		val varDecl = script.eAllContents.filter(VariableDeclaration).head;
 		val propAccess = script.eAllContents.filter(ParameterizedPropertyAccessExpression).head;
@@ -150,7 +152,7 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 		scope.getAllElements();
 		assertTrue("scoping should not have added anything to composed member cache",
 			script.module.composedMemberCaches.empty);
-		
+
 		// only for completeness, we test the counter example using ordinary member scoping:
 		val scope2 = memberScopingHelper.createMemberScope(receiverTypeRef, propAccess, false, true);
 		scope2.getAllElements();
@@ -158,11 +160,31 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 			script.module.composedMemberCaches.head.cachedComposedMembers.size>1); // at time of writing, 16 members were added (but exact count might change over time)
 	}
 
+	def private Script parseAndPostProcessAndDeleteCachedComposedMembers(CharSequence code) {
+		val script = code.parseAndValidateSuccessfully;
+		assertTrue((script.eResource as N4JSResource).isFullyProcessed); // ensure validation did trigger post-processing
+		// While resolving the proxies during validation, composed members will have been added to the composed member
+		// cache in the TModule; however, during the above tests, we want to test this behavior on a more fine-grained
+		// level. Therefore, we now clear the composed member cache.
+
+		script.eAllContents.filter(MemberAccess).forEach[memberAccess|
+			EcoreUtilN4.doWithDeliver(false, [
+				memberAccess.composedMemberCache = null;
+			], memberAccess);
+		];
+
+		val module = script.module;
+		EcoreUtilN4.doWithDeliver(false, [
+			module.composedMemberCaches.clear;
+		], module);
+
+		return script;
+	}
+
 	def private TMember performOrdinaryMemberScoping(String memberName, TypeRef receiverTypeRef, MemberAccess context) {
 		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, context, false, true);
 		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
 		val member = memberDesc.getEObjectOrProxy() as TMember;
-		assertFalse((context.eResource as N4JSResource).isFullyProcessed); // ensure scoping did not trigger post-processing
 		assertNotNull(member);
 		assertFalse(member.eIsProxy);
 		assertTrue(member.isComposed);
