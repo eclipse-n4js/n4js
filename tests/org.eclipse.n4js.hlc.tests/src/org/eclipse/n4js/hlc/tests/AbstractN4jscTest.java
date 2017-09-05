@@ -139,14 +139,13 @@ public abstract class AbstractN4jscTest {
 	 * Convince method to call compiler with provided arguments and assert given exception with given exit code is
 	 * thrown. Since it handles thrown error, allow callers to do further assertions.
 	 *
-	 * @return the {@link ExitCodeException} thrown by the compiler.
 	 */
-	protected static ExitCodeException expectCompilerException(String[] args, ErrorExitCode expectedExitCode) {
+	protected static void expectCompilerException(String[] args, ErrorExitCode expectedExitCode) {
 		try {
 			new N4jscBase().doMain(args);
 		} catch (ExitCodeException excpetion) {
 			assertEquals("Wrong exit code", expectedExitCode.getExitCodeValue(), excpetion.getExitCode());
-			return excpetion;
+			return;
 		}
 		fail("Compiler did not throw exception for " + String.join(",", args));
 		throw new RuntimeException("Should never be reached.");

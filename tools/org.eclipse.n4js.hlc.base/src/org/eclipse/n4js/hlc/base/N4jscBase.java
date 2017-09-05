@@ -15,8 +15,6 @@ import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CLEAN_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_COMPILE_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_CONFIGURATION_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_MODULE_TO_RUN_NOT_FOUND;
-import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_NOT_FOUND;
-import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_RUNNER_STOPPED_WITH_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR;
 import static org.eclipse.n4js.hlc.base.ErrorExitCode.EXITCODE_WRONG_CMDLINE_OPTIONS;
 import static org.eclipse.n4js.utils.git.GitUtils.hardReset;
@@ -30,13 +28,12 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
@@ -69,6 +66,8 @@ import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessGeneratorModule;
 import org.eclipse.n4js.generator.headless.logging.ConfigurableHeadlessLogger;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
+import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
+import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4jsx.N4JSXGlobals;
@@ -76,18 +75,13 @@ import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
-import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
-import org.eclipse.n4js.tester.TesterFacade;
-import org.eclipse.n4js.tester.TesterFrontEnd;
 import org.eclipse.n4js.tester.TesterModule;
-import org.eclipse.n4js.tester.extension.ITesterDescriptor;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
@@ -218,6 +212,10 @@ public class N4jscBase implements IApplication {
 	@Option(name = "--test", /* aliases = "-t", */metaVar = "path", usage = "path must point to a project, folder, or file containing tests.")
 	File testThisLocation = null;
 
+	@Option(name = "--testReportRoot", required = false, usage = "when provided, it is expected to be directory in which test report will be written."
+			+ "If test report already exists in that location it is removed overwritten. If not provided, test report generation is skipped.")
+	File testReportRoot;
+
 	@Option(name = "--testWith", aliases = "-tw", metaVar = "testerId", usage = "ID of tester to use, last segment is sufficient, e.g. nodejs_mangelhaft")
 	String tester = "nodejs_mangelhaft";
 
@@ -252,16 +250,13 @@ public class N4jscBase implements IApplication {
 	private N4HeadlessCompiler headless;
 
 	@Inject
-	private RunnerFrontEnd runnerFrontEnd;
+	private HeadlessRunner headlessRunner;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
 
 	@Inject
-	private TesterFrontEnd testerFrontEnd;
-
-	@Inject
-	private TesterFacade testerFacade;
+	private HeadlessTester headlessTester;
 
 	@Inject
 	private TesterRegistry testerRegistry;
@@ -532,7 +527,7 @@ public class N4jscBase implements IApplication {
 				clean();
 			} else {
 				// run and dispatch.
-				compileAndExecute();
+				doCompileAndTestAndRun();
 			}
 		} catch (ExitCodeException e) {
 			dumpThrowable(e);
@@ -848,21 +843,14 @@ public class N4jscBase implements IApplication {
 	 *            stream to print to
 	 */
 	private void printAvailableRunners(PrintStream out) {
-		List<String> runnerIds = determineAvailableRunnerIds();
-		if (runnerIds.isEmpty()) {
+		if (testerRegistry.getDescriptors().isEmpty())
 			out.println("No runners found.");
-		} else {
-			out.println("Available runners are: \n\t" + Joiner.on("\n\t").join(runnerIds));
+		else {
+			StringJoiner sj = new StringJoiner("\n\t");
+			sj.add("Available runners are:");
+			testerRegistry.getDescriptors().values().forEach(td -> sj.add(td.getId()));
+			out.println(sj);
 		}
-	}
-
-	/**
-	 * @return list of runner-IDs available.
-	 */
-	private List<String> determineAvailableRunnerIds() {
-		return runnerRegistry.getDescriptors().values().stream()
-				.map(a -> a.getId())
-				.collect(Collectors.toList());
 	}
 
 	/**
@@ -872,21 +860,14 @@ public class N4jscBase implements IApplication {
 	 *            stream to print to
 	 */
 	private void printAvailableTesters(PrintStream out) {
-		List<String> testerIds = determineAvailableTesterIds();
-		if (testerIds.isEmpty()) {
+		if (testerRegistry.getDescriptors().isEmpty())
 			out.println("No testers found.");
-		} else {
-			out.println("Available testers are: \n\t" + Joiner.on("\n\t").join(testerIds));
+		else {
+			StringJoiner sj = new StringJoiner("\n\t");
+			sj.add("Available testers are:");
+			testerRegistry.getDescriptors().values().forEach(td -> sj.add(td.getId()));
+			out.println(sj);
 		}
-	}
-
-	/**
-	 * @return list of tester-IDs available.
-	 */
-	private List<String> determineAvailableTesterIds() {
-		return testerRegistry.getDescriptors().values().stream()
-				.map(a -> a.getId())
-				.collect(Collectors.toList());
 	}
 
 	/**
@@ -964,12 +945,12 @@ public class N4jscBase implements IApplication {
 	}
 
 	/**
-	 * Core algorithm to call the compiler followed initiating the runner or tester.
+	 * Core algorithm to call the invoke compilation testing and running.
 	 *
 	 * @throws ExitCodeException
 	 *             in error cases.
 	 */
-	private void compileAndExecute() throws ExitCodeException {
+	private void doCompileAndTestAndRun() throws ExitCodeException {
 		if (debug) {
 			System.out.println("N4JS compiling...");
 		}
@@ -1006,17 +987,18 @@ public class N4jscBase implements IApplication {
 			}
 		}
 
-		// / Starting the runner
+		if (testThisLocation != null) {
+			if (buildtype != BuildType.dontcompile) {
+				flushAndIinsertMarkerInOutputs();
+			}
+			headlessTester.runTests(tester, implementationId, checkLocationToTest(), testReportRoot);
+		}
+
 		if (runThisFile != null) {
 			if (buildtype != BuildType.dontcompile) {
 				flushAndIinsertMarkerInOutputs();
 			}
-			startRunner();
-		} else if (testThisLocation != null) {
-			if (buildtype != BuildType.dontcompile) {
-				flushAndIinsertMarkerInOutputs();
-			}
-			startTester();
+			headlessRunner.startRunner(runner, implementationId, systemLoader, checkFileToRun());
 		}
 
 		if (debug) {
@@ -1035,263 +1017,100 @@ public class N4jscBase implements IApplication {
 	}
 
 	/**
-	 * Actually start the requested file with the chosen runner. Workspace from headlesCompiler should be configured
-	 * before calling this method.
-	 *
-	 * @throws ExitCodeException
-	 *             in cases of errors
-	 */
-	private void startRunner() throws ExitCodeException {
-
-		// 1. check if the file (and it's compiled counterpart) is in place.
-		checkFileToRun();
-
-		// 2. check if the chosen runner is available
-		IRunnerDescriptor rd = checkRunner();
-
-		try {
-			Process process = runnerFrontEnd.run(rd.getId(), implementationId, systemLoader, fileToURI(runThisFile));
-
-			int exit = process.waitFor();
-
-			if (exit != 0) {
-				throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR, "The spawned runner '" + rd.getId()
-						+ "' exited with code=" + exit);
-			}
-
-		} catch (Exception e1) {
-			dumpThrowable(e1);
-			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
-					"The spawned runner exited by throwing an exception", e1);
-		}
-	}
-
-	private void startTester() throws ExitCodeException {
-
-		// 1. check if the file (and it's compiled counterpart) is in place.
-		checkLocationToTest();
-
-		// 2. check if the chosen tester is available
-		ITesterDescriptor td = checkTester();
-
-		try {
-			Process process = testerFrontEnd.test(td.getId(), implementationId, fileToURI(testThisLocation));
-
-			int exit = process.waitFor();
-
-			if (exit != 0) {
-				throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR, "The spawned tester '" + td.getId()
-						+ "' exited with code=" + exit);
-			}
-
-		} catch (Exception e1) {
-			dumpThrowable(e1);
-			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
-					"The spawned tester exited by throwing an exception", e1);
-		} finally {
-			testerFacade.shutdownFramework();
-		}
-	}
-
-	/**
-	 * Reads the runner name/ID from the --runWith command line option and checks for validity and, if successful,
-	 * returns the {@link IRunnerDescriptor} for the given name/ID. Otherwise, an {@link ExitCodeException} is thrown.
-	 *
-	 * @return descriptor of runner selected via command line option --runWith
-	 * @throws ExitCodeException
-	 *             in Error cases
-	 */
-	private IRunnerDescriptor checkRunner() throws ExitCodeException {
-		try {
-			final List<IRunnerDescriptor> matchingRunnerDescs = findRunnerById(runner);
-
-			if (matchingRunnerDescs.isEmpty()) {
-				throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no runner found for id: " + runner);
-			} else if (matchingRunnerDescs.size() > 1) {
-				throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "several runners match given id \"" + runner
-						+ "\":\n\t" + Joiner.on("\n\t").join(matchingRunnerDescs));
-			}
-
-			return matchingRunnerDescs.get(0);
-		} catch (IllegalArgumentException e) {
-			// internally the registry throws IllegalArgumentExceptions if an runnerId is invalid.
-			dumpThrowable(e); // dump problem, to help localize it. (it is really a rare case not expected to
-			// happen.)
-			throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no runner found for id: " + runner
-					+ " Root cause is " + e.getMessage());
-		}
-	}
-
-	private ITesterDescriptor checkTester() throws ExitCodeException {
-		try {
-			final List<ITesterDescriptor> matchingTesterDescs = findTesterById(tester);
-
-			if (matchingTesterDescs.isEmpty()) {
-				throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no tester found for id: " + tester);
-			} else if (matchingTesterDescs.size() > 1) {
-				throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "several testers match given id \"" + tester
-						+ "\":\n\t" + Joiner.on("\n\t").join(matchingTesterDescs));
-			}
-
-			return matchingTesterDescs.get(0);
-		} catch (IllegalArgumentException e) {
-			// internally the registry throws IllegalArgumentExceptions if an testerId is invalid.
-			dumpThrowable(e); // dump problem, to help localize it. (it is really a rare case not expected to
-			// happen.)
-			throw new ExitCodeException(EXITCODE_RUNNER_NOT_FOUND, "no tester found for id: " + tester
-					+ " Root cause is " + e.getMessage());
-		}
-	}
-
-	private List<IRunnerDescriptor> findRunnerById(String runnerId) {
-		if (runnerId == null || runnerId.trim().isEmpty())
-			return Collections.emptyList();
-		// 1st attempt: look for exact match
-		final IRunnerDescriptor rd = runnerRegistry.getDescriptors().get(runnerId);
-		if (rd != null)
-			return Collections.singletonList(rd);
-		// 2nd attempt: look for sloppy match (but full segments required!)
-		final int r_len = runnerId.length();
-		final List<IRunnerDescriptor> matchingRDs = determineAvailableRunnerIds().stream()
-				.filter(id -> {
-					final int id_len = id.length();
-					return id_len >= r_len
-							// a) id ends with runnerId (ignore case)
-							&& id.substring(id_len - r_len, id_len).equalsIgnoreCase(runnerId)
-					// b) full segment match (either full string or previous char is .)
-							&& (id_len == r_len || id.charAt(id_len - r_len - 1) == '.');
-				})
-				.map(id -> runnerRegistry.getDescriptor(id))
-				.collect(Collectors.toList());
-		return matchingRDs;
-	}
-
-	private List<ITesterDescriptor> findTesterById(String testerId) {
-		if (testerId == null || testerId.trim().isEmpty())
-			return Collections.emptyList();
-		// 1st attempt: look for exact match
-		final ITesterDescriptor td = testerRegistry.getDescriptors().get(testerId);
-		if (td != null)
-			return Collections.singletonList(td);
-		// 2nd attempt: look for sloppy match (but full segments required!)
-		final int t_len = testerId.length();
-		final List<ITesterDescriptor> matchingTDs = determineAvailableTesterIds().stream()
-				.filter(id -> {
-					final int id_len = id.length();
-					return id_len >= t_len
-							// a) id ends with runnerId (ignore case)
-							&& id.substring(id_len - t_len, id_len).equalsIgnoreCase(testerId)
-					// b) full segment match (either full string or previous char is .)
-							&& (id_len == t_len || id.charAt(id_len - t_len - 1) == '.');
-				})
-				.map(id -> testerRegistry.getDescriptor(id))
-				.collect(Collectors.toList());
-		return matchingTDs;
-	}
-
-	/**
 	 * Check if the file is there.
 	 *
+	 * @return URI of the location to be executed
 	 * @throws ExitCodeException
 	 *             if module is missing
 	 */
-	private void checkFileToRun() throws ExitCodeException {
+	private URI checkFileToRun() throws ExitCodeException {
 		if (runThisFile == null || !runThisFile.exists()) {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
+
+		return fileToURI(runThisFile);
 	}
 
 	/**
 	 * Check if the project, folder, or file is there.
 	 *
+	 * @return URI of the location to be tested
 	 * @throws ExitCodeException
 	 *             if missing
 	 */
-	private void checkLocationToTest() throws ExitCodeException {
+	private URI checkLocationToTest() throws ExitCodeException {
 		if (testThisLocation == null || !testThisLocation.exists()) {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
+		return fileToURI(testThisLocation);
 	}
 
 	/**
 	 * Compile type: single listed files.
-	 *
-	 * @return the headless compiler to be used in subsequent steps.
 	 *
 	 * @throws ExitCodeException
 	 *             in cases of wrong configuration
 	 * @throws N4JSCompileException
 	 *             signaling compile-errors.
 	 */
-	private N4HeadlessCompiler compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
-		// check files exist and are readable:
-		checkAllFilesAreSourcesAndReadable(srcFiles);
+	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
+		srcFiles.stream().forEach(this::isExistingReadibleFile);
 
-		if (projectLocations == null) {
+		if (projectLocations == null)
 			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
-		} else {
+		else
 			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
 					srcFiles);
-		}
-		return headless;
 	}
 
 	/**
 	 * Compile type: single projects
-	 *
-	 * @return the headless compiler to be used in subsequent steps.
 	 *
 	 * @throws ExitCodeException
 	 *             in cases of wrong configuration
 	 * @throws N4JSCompileException
 	 *             in error cases
 	 */
-	private N4HeadlessCompiler compileArgumentsAsProjects() throws ExitCodeException, N4JSCompileException {
-		if (projectLocations == null) {
+	private void compileArgumentsAsProjects() throws ExitCodeException, N4JSCompileException {
+		if (projectLocations == null)
 			headless.compileProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
-		} else {
+		else
 			headless.compileProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
 					srcFiles);
-		}
-
-		return headless;
 	}
 
 	/**
 	 * Compile type: all projects.
-	 *
-	 * @return the headless compiler to be used in subsequent steps.
 	 *
 	 * @throws N4JSCompileException
 	 *             in error cases
 	 * @throws ExitCodeException
 	 *             indicating cmdline parameters
 	 */
-	private N4HeadlessCompiler compileAllProjects() throws N4JSCompileException, ExitCodeException {
-		if (projectLocations == null) {
+	private void compileAllProjects() throws N4JSCompileException, ExitCodeException {
+		if (projectLocations == null)
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
 					"Require option for projectlocations to compile all projects.");
-		} else {
-			if (!srcFiles.isEmpty()) {
-				warn("The list of source files is obsolete for built all projects. The following will be ignored: "
-						+ Joiner.on(", ").join(srcFiles));
-			}
-			headless.compileAllProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations));
+
+		if (!srcFiles.isEmpty()) {
+			warn("The list of source files is obsolete for built all projects. The following will be ignored: "
+					+ Joiner.on(", ").join(srcFiles));
 		}
-		return headless;
+		headless.compileAllProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations));
+
 	}
 
 	/**
 	 * Configure the injected file based workspace in order to run (called if no compile precedes the run)
 	 */
 	private void registerProjects() throws ExitCodeException, N4JSCompileException {
-		if (projectLocations == null) {
+		if (projectLocations == null)
 			throw new ExitCodeException(EXITCODE_WRONG_CMDLINE_OPTIONS,
 					"Require option for projectlocations.");
-		} else {
-			HeadlessHelper.registerProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-					fbWorkspace);
-		}
+
+		HeadlessHelper.registerProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
+				fbWorkspace);
+
 	}
 
 	/**
@@ -1342,24 +1161,6 @@ public class N4jscBase implements IApplication {
 	}
 
 	/**
-	 * Ensure plain, readable files.
-	 *
-	 * @param files
-	 *            to check
-	 * @throws RuntimeException
-	 *             if any file is not existent or not plain or not readable
-	 */
-	private void checkAllFilesAreSourcesAndReadable(List<File> files) {
-		files.stream().forEach(
-				f -> {
-					if (!(f.exists() && f.canRead() && f.isFile())) {
-						throw new RuntimeException("File '" + f.getAbsolutePath()
-								+ "' is not a valid source file. (Base is " + new File(".").getAbsolutePath() + ")");
-					}
-				});
-	}
-
-	/**
 	 * @param dirpaths
 	 *            one or more paths separated by {@link File#pathSeparatorChar} OR empty string if no paths given.
 	 */
@@ -1367,32 +1168,57 @@ public class N4jscBase implements IApplication {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
 			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-			checkFileIsDirAndWriteable(tpLoc);
+			isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}
-		System.out.println("N4jscBase.convertToFilesAddTargetPlatformAndCheckWritableDir() with");
 		if (!dirpaths.isEmpty()) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
-				checkFileIsDirAndWriteable(ret);
+				isExistingWriteableDir(ret);
 				retList.add(ret);
-				System.out.println(" # " + dirpath);
 			}
 		}
 
 		return retList;
 	}
 
-	private void checkFileIsDirAndWriteable(File f) {
-		if (!f.exists()) {
-			throw new RuntimeException("File " + f + " doesn't exist.");
-		}
-		if (!f.canWrite()) {
-			throw new RuntimeException("File " + f + " is not writable.");
-		}
-		if (!f.isDirectory()) {
-			throw new RuntimeException("File " + f + " is not a directory.");
-		}
+	/**
+	 * Ensure given file is plain, existing and readable file.
+	 *
+	 * @param file
+	 *            to check
+	 * @throws RuntimeException
+	 *             if any file is not existent or not plain or not readable
+	 */
+	private void isExistingWriteableDir(File file) {
+		if (!file.exists())
+			throw new RuntimeException("File " + file + " doesn't exist.");
+
+		if (!file.isDirectory())
+			throw new RuntimeException("File " + file + " is not a directory.");
+
+		if (!file.canWrite())
+			throw new RuntimeException("File " + file + " is not writable.");
+
+	}
+
+	/**
+	 * Ensure given file is plain, existing and readable file.
+	 *
+	 * @param file
+	 *            to check
+	 * @throws RuntimeException
+	 *             if any file is not existent or not plain or not readable
+	 */
+	private void isExistingReadibleFile(File file) {
+		if (!file.exists())
+			throw new RuntimeException("File does not exist: " + file.getAbsolutePath());
+
+		if (!file.isFile())
+			throw new RuntimeException("Not a file: " + file.getAbsolutePath());
+
+		if (!file.canRead())
+			throw new RuntimeException("File is not readable: " + file.getAbsolutePath());
 	}
 
 	private static URI fileToURI(File file) {
@@ -1428,26 +1254,6 @@ public class N4jscBase implements IApplication {
 		sb.append("Current execution directory = " + new File(".").getAbsolutePath());
 
 		System.out.println(sb.toString());
-	}
-
-	/**
-	 * Denoting the build-type.
-	 */
-	public static enum BuildType {
-		/** Single file compile */
-		singlefile("Build only single given file"),
-		/** Compile given projects */
-		projects("Compile given projects"),
-		/** Compile all projects in project-locations folder */
-		allprojects("Compile all projects in project-locations folder"),
-		/** Default case */
-		dontcompile("Do not compile");
-
-		BuildType(String description) {
-			this.description = description;
-		}
-
-		String description = "";
 	}
 
 	/**
