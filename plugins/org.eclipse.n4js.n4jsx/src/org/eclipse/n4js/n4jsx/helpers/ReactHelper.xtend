@@ -86,10 +86,14 @@ class ReactHelper {
 					}
 				}
 			}
+
+			if (reactURI === null) {
+				return null;
+			}
 			// Look up React classifier in the TModule
 			val tmodule = context.eResource.resourceSet.getEObject(reactURI.appendFragment("/1"), true);
 			val reactClassifier = tmodule.eAllContents.filter(TClassifier).findFirst[name == reactClassifierName]
-			reactClassifier
+			return reactClassifier
 		])
 	}
 
