@@ -40,6 +40,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IterationStatement
+import org.eclipse.n4js.n4JS.LabelRef
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
@@ -66,7 +67,6 @@ import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.StrictModeRelevant
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
@@ -1192,7 +1192,7 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_CONTINUE,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_CONTINUE), IssueCodes.AST_INVALID_CONTINUE))
 		} else {
-			validateLabel(model, model.label, producer, validLabels)
+			validateLabelRef(model, producer, validLabels)
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -1215,7 +1215,7 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_BREAK,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_BREAK), IssueCodes.AST_INVALID_BREAK))
 		} else {
-			validateLabel(model, model.label, producer, validLabels)
+			validateLabelRef(model, producer, validLabels)
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -1225,9 +1225,11 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private void validateLabel(Statement model, LabelledStatement label, ASTStructureDiagnosticProducer producer,
-		Set<LabelledStatement> validLabels) {
-		if (label !== null && !label.eIsProxy && !validLabels.contains(label)) {
+	def private void validateLabelRef(LabelRef model, ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels
+	) {
+		val labelAsText = model.labelAsText; // cannot use model.label, because we aren't allowed to resolve proxies in this phase!
+		if (labelAsText !== null && !validLabels.exists[it.name==labelAsText]) {
 			val target = NodeModelUtils.findActualNodeFor(model)
 			producer.node = target
 			producer.addDiagnostic(

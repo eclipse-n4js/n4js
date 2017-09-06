@@ -17,26 +17,27 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
-import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
+import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
+
 /**
  * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Break Statement</b></em>'.
+ * An implementation of the model object '<em><b>Label Ref</b></em>'.
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.BreakStatementImpl#getLabel <em>Label</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.impl.BreakStatementImpl#getLabelAsText <em>Label As Text</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.LabelRefImpl#getLabel <em>Label</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.impl.LabelRefImpl#getLabelAsText <em>Label As Text</em>}</li>
  * </ul>
  *
  * @generated
  */
-public class BreakStatementImpl extends StatementImpl implements BreakStatement {
+public abstract class LabelRefImpl extends ProxyResolvingEObjectImpl implements LabelRef {
 	/**
 	 * The cached value of the '{@link #getLabel() <em>Label</em>}' reference.
 	 * <!-- begin-user-doc -->
@@ -72,7 +73,7 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	protected BreakStatementImpl() {
+	protected LabelRefImpl() {
 		super();
 	}
 
@@ -83,7 +84,7 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	 */
 	@Override
 	protected EClass eStaticClass() {
-		return N4JSPackage.Literals.BREAK_STATEMENT;
+		return N4JSPackage.Literals.LABEL_REF;
 	}
 
 	/**
@@ -97,7 +98,7 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 			label = (LabelledStatement)eResolveProxy(oldLabel);
 			if (label != oldLabel) {
 				if (eNotificationRequired())
-					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.BREAK_STATEMENT__LABEL, oldLabel, label));
+					eNotify(new ENotificationImpl(this, Notification.RESOLVE, N4JSPackage.LABEL_REF__LABEL, oldLabel, label));
 			}
 		}
 		return label;
@@ -121,7 +122,7 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 		LabelledStatement oldLabel = label;
 		label = newLabel;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.BREAK_STATEMENT__LABEL, oldLabel, label));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.LABEL_REF__LABEL, oldLabel, label));
 	}
 
 	/**
@@ -142,7 +143,7 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 		String oldLabelAsText = labelAsText;
 		labelAsText = newLabelAsText;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT, oldLabelAsText, labelAsText));
+			eNotify(new ENotificationImpl(this, Notification.SET, N4JSPackage.LABEL_REF__LABEL_AS_TEXT, oldLabelAsText, labelAsText));
 	}
 
 	/**
@@ -153,10 +154,10 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case N4JSPackage.BREAK_STATEMENT__LABEL:
+			case N4JSPackage.LABEL_REF__LABEL:
 				if (resolve) return getLabel();
 				return basicGetLabel();
-			case N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT:
+			case N4JSPackage.LABEL_REF__LABEL_AS_TEXT:
 				return getLabelAsText();
 		}
 		return super.eGet(featureID, resolve, coreType);
@@ -170,10 +171,10 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case N4JSPackage.BREAK_STATEMENT__LABEL:
+			case N4JSPackage.LABEL_REF__LABEL:
 				setLabel((LabelledStatement)newValue);
 				return;
-			case N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT:
+			case N4JSPackage.LABEL_REF__LABEL_AS_TEXT:
 				setLabelAsText((String)newValue);
 				return;
 		}
@@ -188,10 +189,10 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.BREAK_STATEMENT__LABEL:
+			case N4JSPackage.LABEL_REF__LABEL:
 				setLabel((LabelledStatement)null);
 				return;
-			case N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT:
+			case N4JSPackage.LABEL_REF__LABEL_AS_TEXT:
 				setLabelAsText(LABEL_AS_TEXT_EDEFAULT);
 				return;
 		}
@@ -206,46 +207,12 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case N4JSPackage.BREAK_STATEMENT__LABEL:
+			case N4JSPackage.LABEL_REF__LABEL:
 				return label != null;
-			case N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT:
+			case N4JSPackage.LABEL_REF__LABEL_AS_TEXT:
 				return LABEL_AS_TEXT_EDEFAULT == null ? labelAsText != null : !LABEL_AS_TEXT_EDEFAULT.equals(labelAsText);
 		}
 		return super.eIsSet(featureID);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == LabelRef.class) {
-			switch (derivedFeatureID) {
-				case N4JSPackage.BREAK_STATEMENT__LABEL: return N4JSPackage.LABEL_REF__LABEL;
-				case N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT: return N4JSPackage.LABEL_REF__LABEL_AS_TEXT;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	@Override
-	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == LabelRef.class) {
-			switch (baseFeatureID) {
-				case N4JSPackage.LABEL_REF__LABEL: return N4JSPackage.BREAK_STATEMENT__LABEL;
-				case N4JSPackage.LABEL_REF__LABEL_AS_TEXT: return N4JSPackage.BREAK_STATEMENT__LABEL_AS_TEXT;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
 	}
 
 	/**
@@ -264,4 +231,4 @@ public class BreakStatementImpl extends StatementImpl implements BreakStatement 
 		return result.toString();
 	}
 
-} //BreakStatementImpl
+} //LabelRefImpl
