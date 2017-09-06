@@ -46,8 +46,10 @@ n>>i;
 n>>s;
 // XPECT type of n>>o --> number
 n>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of n>>null --> number
 n>>null;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of n>>undefined --> number
 n>>undefined;
 
@@ -62,8 +64,10 @@ i>>n;
 i>>s;
 // XPECT type of i>>o --> number
 i>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of i>>null --> number
 i>>null;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of i>>undefined --> number
 i>>undefined;
 
@@ -77,8 +81,10 @@ b>>n;
 b>>s;
 // XPECT type of b>>o --> number
 b>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of b>>null --> number
 b>>null;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of b>>undefined --> number
 b>>undefined;
 
@@ -92,37 +98,65 @@ s>>n;
 s>>b;
 // XPECT type of s>>o --> number
 s>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of s>>null --> number
 s>>null;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of s>>undefined --> number
 s>>undefined;
 
+/* XPECT warnings ---
+"Operand of type null will be interpreted as 0." at "null"
+"Operand of type null will be interpreted as 0." at "null"
+--- */
 // XPECT type of null>>null --> number
 null>>null;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of null>>i --> number
 null>>i;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of null>>n --> number
 null>>n;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of null>>b --> number
 null>>b;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of null>>o --> number
 null>>o;
+// XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of null>>s --> number
 null>>s;
+/* XPECT warnings ---
+"Operand of type null will be interpreted as 0." at "null"
+"Operand undefined will always result in NaN." at "undefined"
+--- */
 // XPECT type of null>>undefined --> number
 null>>undefined;
 
+/* XPECT warnings ---
+"Operand undefined will always result in NaN." at "undefined"
+"Operand undefined will always result in NaN." at "undefined"
+--- */
 // XPECT type of undefined>>undefined --> number
 undefined>>undefined;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of undefined>>i --> number
 undefined>>i;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of undefined>>n --> number
 undefined>>n;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of undefined>>b --> number
 undefined>>b;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of undefined>>o --> number
 undefined>>o;
+// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
 // XPECT type of undefined>>s --> number
 undefined>>s;
+/* XPECT warnings ---
+"Operand of type null will be interpreted as 0." at "null"
+"Operand undefined will always result in NaN." at "undefined"
+--- */
 // XPECT type of undefined>>null --> number
 undefined>>null;
