@@ -21,14 +21,14 @@ import org.eclipse.xtext.naming.QualifiedName;
  */
 public class ImportSpecifierUtil {
 
-	public static IN4JSProject findProject(String projectId, IN4JSProject project) {
-		if (Objects.equals(project.getProjectId(), projectId)) {
+	/** Returns provided project or one of its dependencies with matching project ID. */
+	public static IN4JSProject getDependencyWithID(String projectId, IN4JSProject project) {
+		if (Objects.equals(project.getProjectId(), projectId))
 			return project;
-		}
+
 		for (IN4JSProject p : project.getDependencies()) {
-			if (Objects.equals(p.getProjectId(), projectId)) {
+			if (Objects.equals(p.getProjectId(), projectId))
 				return p;
-			}
 		}
 		return null;
 	}
@@ -38,7 +38,7 @@ public class ImportSpecifierUtil {
 	 */
 	public static ImportType computeImportType(QualifiedName name, IN4JSProject project) {
 		final String firstSegment = name.getFirstSegment();
-		final IN4JSProject targetProject = findProject(firstSegment, project);
+		final IN4JSProject targetProject = getDependencyWithID(firstSegment, project);
 		final boolean firstSegmentIsProjectId = targetProject != null;
 		return ImportSpecifierUtil.computeImportType(name, firstSegmentIsProjectId, targetProject);
 	}

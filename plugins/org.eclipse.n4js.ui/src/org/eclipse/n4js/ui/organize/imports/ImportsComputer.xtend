@@ -50,6 +50,7 @@ import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.EXPORT_DEFAULT_NAME
 
 import static extension org.eclipse.n4js.ui.organize.imports.UnresolveProxyCrossRefUtil.*
+import org.eclipse.n4js.projectModel.IN4JSProject
 
 /**
  * Computes imports required by the given resource. In principle removes unused imports, adds missing imports, sorts imports - all in one go.
@@ -62,7 +63,7 @@ public class ImportsComputer {
 	private ImportStateCalculator importStateCalculator;
 
 	@Inject
-	private ImportsFactory importsFactory;
+	private ImportsFactory2 importsFactory;
 
 	@Inject
 	private IReferenceFilter referenceFilter;
@@ -151,10 +152,10 @@ public class ImportsComputer {
 		Interaction interaction) throws BreakException {
 		val sw1 = new StopWatchPrintUtil("resolveMissingImports", 2, 100);
 
-		val prj = core.findProject(script.eResource.URI).orNull
+		val contextProject = core.findProject(script.eResource.URI).orNull
 
 		val sw2 =  new StopWatchPrintUtil("createResolutionsForBrokenNames", 3, 100);
-		val Multimap<String, ImportableObject> resolutions = createResolutionsForBrokenNames(script, namesThatWeBroke);
+		val Multimap<String, ImportableObject> resolutions = createResolutionsForBrokenNames(script, contextProject, namesThatWeBroke);
 		sw2.stop();
 
 		val solutions = resolutions.asMap.filter[p1, p2|p2.size == 1]
@@ -163,7 +164,7 @@ public class ImportsComputer {
 
 		solutions.forEach [ name, importable |
 			val imp = importable.head;
-			ret.add(importsFactory.createImport(imp, prj, nodelessMarker));
+			ret.add(importsFactory.createImport(imp, contextProject, nodelessMarker));
 		]
 
 		// ignore broken names, for which imports will be added due to unresolved refs
@@ -181,7 +182,7 @@ public class ImportsComputer {
 			val multiSolutions = forDisambiguation.get(key);
 			val containsOnlyNamespaces = multiSolutions.filter[!it.asNamespace].empty
 			if (containsOnlyNamespaces) {
-				ret.add(importsFactory.createImport(multiSolutions.head, prj, nodelessMarker))
+				ret.add(importsFactory.createImport(multiSolutions.head, contextProject, nodelessMarker))
 				resolved.add(key)
 			}
 		]
@@ -189,10 +190,11 @@ public class ImportsComputer {
 			forDisambiguation.removeAll(key)
 		]
 
+		//automatic / semi-automatic / or user only disambiguation
 		val chosenSolutions = DisambiguateUtil.disambiguate(forDisambiguation, interaction,
 			importProvidedElementLabelprovider);
 
-		chosenSolutions.forEach[ret.add(importsFactory.createImport(it, prj, nodelessMarker))];
+		chosenSolutions.forEach[ret.add(importsFactory.createImport(it, contextProject, nodelessMarker))];
 
 		sw1.stop();
 		return ret;
@@ -202,36 +204,35 @@ public class ImportsComputer {
 	 * @returns list of resolutions for all broken names.
 	 */
 	private def Multimap<String, ImportableObject> createResolutionsForBrokenNames(Script script,
-		Set<String> namesThatWeBroke) {
-		val Multimap<String, ImportableObject> resolutions2 = LinkedHashMultimap.create();
+		IN4JSProject contextProject, Set<String> namesThatWeBroke) {
+		val Multimap<String, ImportableObject> resolutions = LinkedHashMultimap.create();
 
 		val Iterable<ReferenceProxyInfo> unresolved = script.findProxyCrossRefInfo.filter[referenceFilter.test(it)].
 			filter[it.eobject instanceof MemberAccess === false]
-
+			
 		val brokenNames = new HashSet<String>();
 		brokenNames.addAll(namesThatWeBroke)
 		brokenNames.addAll(unresolved.map[it.name]);
 
-		addResolutionsFromIndex(resolutions2, brokenNames, script.eResource);
+		addResolutionsFromIndex(resolutions, contextProject, brokenNames, script.eResource);
 
-		return resolutions2
+		return resolutions
 	}
 
 	/**
 	 * Obtains index for based on the provided resource. Matches all broken names against object descriptions in the index.
 	 * Those that pass checks are added to the resolutions map as potential solutions.
 	 */
-	private def void addResolutionsFromIndex(Multimap<String, ImportableObject> resolution,
+	private def void addResolutionsFromIndex(Multimap<String, ImportableObject> resolution,IN4JSProject contextProject,
 		Iterable<String> brokenNames, Resource contextResource) {
 		val sw = new StopWatchPrintUtil( "index", 4, 100);
 
-		val contextProject = core.findProject(contextResource.URI).orNull
 		val resourceSet = core.createResourceSet(Optional.fromNullable(contextProject))
 		val resources = core.getXtextIndex(resourceSet).allResourceDescriptions
 		resources.forEach [ res |
 			val candidateProject = core.findProject(res.URI).orNull
 			if (candidateProject !== null) {
-				val isInDeps = ImportSpecifierUtil.findProject(candidateProject.projectId, contextProject) !== null
+				val isInDeps = ImportSpecifierUtil.getDependencyWithID(candidateProject.projectId, contextProject) !== null
 				if (isInDeps) {
 					val exportedIEODs = res.exportedObjects.iterator
 					while (exportedIEODs.hasNext) {

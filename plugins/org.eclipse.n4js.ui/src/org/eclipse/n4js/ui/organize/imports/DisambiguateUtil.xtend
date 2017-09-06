@@ -31,23 +31,30 @@ class DisambiguateUtil {
 	 */
 	static def <T> List<T> disambiguate(Multimap<String, T> multiMapName2Candidates, Interaction interaction,
 		ILabelProvider importProvidedElementLabelprovider) throws BreakException {
-		// for each name exactly one solution must be picked:
-		val result = <T>newArrayList();
-		if (multiMapName2Candidates.empty) return result;
+		
+		if (multiMapName2Candidates.empty) 
+			return <T>newArrayList();
 
+		// for each name exactly one solution must be picked: 
 		switch (interaction) {
-			case breakBuild: {
+			case breakBuild:
 				throw new BreakException("Cannot automatically disambiguate the imports of " +
 					multiMapName2Candidates.keySet.toList)
-			}
-			case takeFirst: {
-				return takefirst(multiMapName2Candidates);
-			}
+			case takeFirst:
+				return takefirst(multiMapName2Candidates)
 			case queryUser: {
-			} // follows
+				return askUser(multiMapName2Candidates, importProvidedElementLabelprovider)
+			}
+			default:
+				throw new RuntimeException("Unsupported interaction " + interaction)
 		}
+	}
+	
+	/** Takes first result available.  */
+	private static def <T> List<T> askUser(Multimap<String, T> multimap, ILabelProvider importProvidedElementLabelprovider) throws UserCanceledBreakException {
+		val result = <T>newArrayList();
 
-		val Object[][] openChoices = Multimaps3.createOptions(multiMapName2Candidates);
+		val Object[][] openChoices = Multimaps3.createOptions(multimap);
 		val MultiElementListSelectionDialog dialog = new MultiElementListSelectionDialog(null,
 			importProvidedElementLabelprovider);
 
@@ -60,24 +67,21 @@ class DisambiguateUtil {
 
 			for (var int i = 0; i < res.length; i++) {
 				val Object[] array = res.get(i) as Object[];
-				if (array.length > 0) {
+				if (array.length > 0)
 					result.add(array.get(0) as T)
-				}
 			}
-		} else {
+		} else 
 			throw new UserCanceledBreakException("User canceled.");
-		}
+
 		return result;
 	}
 
+	/** Takes first result available.  */
 	private static def <T> List<T> takefirst(Multimap<String, T> multimap) {
 		val result = <T>newArrayList();
 
 		for (name : multimap.keySet) {
-
-			// TODO the first must be actually determined from the error-state-list given by the scoping, see {@link ImportProvidedElement#ambiguityList}
-			// The first Identifiable in there is bound to the first thing the scoping encountered. For the time being, lets take any:
-			result += multimap.get(name).get(0)
+			result += multimap.get(name).head
 		}
 
 		return result;

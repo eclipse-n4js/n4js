@@ -38,6 +38,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
+import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 
 /**
  */
@@ -119,21 +120,6 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		handleUnusedImports(reg.unusedImports, eObjectToIssueCode)
 
 		handleNotImportedTypeRefs(script, eObjectToIssueCode.keySet.filter(ImportSpecifier).toList, eObjectToIssueCode)
-	}
-
-	private def importedElementName(NamedImportSpecifier it) {
-		if (importedElement !== null && !importedElement.eIsProxy) {
-			importedElement?.name ?: "<unknown>"
-		} else
-			"<unknown (proxy)>"
-	}
-
-	private def usedName(NamedImportSpecifier it) {
-		alias ?: importedElementName
-	}
-
-	def private importedModule(ImportSpecifier it) {
-		(eContainer as ImportDeclaration).module
 	}
 
 	/** Create issue (warning) 'unused import' if  import doesn't contribute to referenced Types.
@@ -298,10 +284,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 			imports.tail.forEach [ dupe |
 				val duplicateImportSpecifier = dupe.importSpec
-				val isLegalCombinationDefaultNamespaceImport =
-					firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier;
-				if (isLegalCombinationDefaultNamespaceImport) {
-					return;
+				if (firstImportIsDefault && duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
+					addIssueDuplicate(firstImportSpecifier, entryName, entryModule, firstImportName, eObjectToIssueCode)
 				}
 				if (firstImportSpecifier instanceof NamespaceImportSpecifier &&
 					duplicateImportSpecifier instanceof NamespaceImportSpecifier) {
@@ -346,59 +330,6 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def String typeRefUsedName(ParameterizedTypeRef ref) {
 		NodeModelUtils.getTokenText(NodeModelUtils.findActualNodeFor(ref))
-	}
-
-	/** TODO refactor
-	 * COPY FROM ImportStateCalculator, refactor
-	 */
-	private def List<ImportProvidedElement> mapToImportProvidedElements(List<ImportSpecifier> importSpecifiers) {
-		importSpecifiers.map(
-			specifier |
-				switch (specifier) {
-					NamespaceImportSpecifier:
-						if (specifier.importedModule !== null) {
-							val importProvidedElements = newArrayList
-							// add import provided element for a namespace itself
-							importProvidedElements.add(
-								new ImportProvidedElement(specifier.alias, computeNamespaceActualName(specifier),
-									specifier))
-
-							val topIdentifiables = specifier.importedModule.topLevelTypes.filter[isExported] +
-								specifier.importedModule.variables.filter[it.isExported];
-
-							topIdentifiables.forEach [ type |
-								importProvidedElements.add(
-									new ImportProvidedElement(specifier.alias + "." + type.name, type.name,
-										specifier as ImportSpecifier))
-							]
-							return importProvidedElements
-						} else {
-							emptyList
-						}
-					NamedImportSpecifier:
-						newArrayList(
-							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
-								specifier as ImportSpecifier))
-					default:
-						emptyList
-				}
-		).flatten.toList
-	}
-
-	/** TODO refactor
-	 * COPY FROM ImportStateCalculator, refactor
-	 *
-	 * Computes 'actual' name of the namespace for {@link ImportProvidedElement} entry.
-	 * If processed namespace refers to unresolved module, will return dummy name,
-	 * otherwise returns artificial name composed of prefix and target module qualified name
-	 *
-	 */
-	private def String computeNamespaceActualName(NamespaceImportSpecifier specifier) {
-		if (specifier.importedModule.eIsProxy) {
-			ImportProvidedElement.NAMESPACE_PREFIX + specifier.hashCode
-		} else {
-			ImportProvidedElement.NAMESPACE_PREFIX + specifier.importedModule.qualifiedName.toString
-		}
 	}
 
 	/**

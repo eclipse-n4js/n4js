@@ -21,13 +21,14 @@ import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.naming.QualifiedName
 
 /**
  * Helper for creating imports declarations.
  */
 class ImportsFactory {
 	private final static N4JSFactory N4JS_FACTORY = N4JSFactory::eINSTANCE;
-	private final static TypesFactory TYPES_FACTORY = TypesFactory.eINSTANCE;
+	private final static TypesFactory TYPES_FACTORY = TypesFactory::eINSTANCE;
 
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
@@ -52,7 +53,9 @@ class ImportsFactory {
 		
 		val qn = qualifiedNameConverter.toQualifiedName(moduleQN)
 		val firstSegment = qn.getFirstSegment();
-		val project = ImportSpecifierUtil.findProject(firstSegment, contextProject)
+		val project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject)
+		
+		createImportDeclaration(qn, name, project, nodelessMarker)
 
 		val considerProjectID = project !== null;
 		switch (ImportSpecifierUtil.computeImportType( qn, considerProjectID, project)) {
@@ -67,25 +70,22 @@ class ImportsFactory {
 			default:
 				throw new RuntimeException("Cannot resolve default import for " + name)
 		}
-
 	}
-
-	/** Creates a new named import of 'name' from 'moduleName'*/
-	private def ImportDeclaration createNamedImport(String name, String moduleName, Adapter nodelessMarker) {
-		val ret = N4JS_FACTORY.createImportDeclaration
-
-		val namedImportSpec = N4JS_FACTORY.createNamedImportSpecifier
-		val tmodule = TYPES_FACTORY.createTModule
-		tmodule.qualifiedName = moduleName
-		val idfEle = TYPES_FACTORY.createTExportableElement
-		idfEle.name = name
-		namedImportSpec.importedElement = idfEle
-
-		ret.importSpecifiers.add(namedImportSpec)
-		ret.eAdapters.add(nodelessMarker)
-		ret.module = tmodule
-
-		return ret
+	
+	private def ImportDeclaration createImportDeclaration(QualifiedName qn, String usedName, IN4JSProject fromProject,
+		Adapter nodelessMarker) {
+		val considerProjectID = fromProject !== null;
+		switch (ImportSpecifierUtil.computeImportType( qn, considerProjectID, fromProject)) {
+			case PROJECT_IMPORT:
+				return createNamedImport(usedName, fromProject.projectId, nodelessMarker)
+			case SIMPLE_IMPORT:
+				return createNamedImport(usedName, qualifiedNameConverter.toString(qn), nodelessMarker)
+			case COMPLETE_IMPORT:
+				return createNamedImport(usedName, fromProject.projectId + N4JSQualifiedNameConverter.DELIMITER +
+					qualifiedNameConverter.toString(qn), nodelessMarker)
+			default:
+				throw new RuntimeException("Cannot resolve default import for " + usedName)
+		}
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
@@ -96,7 +96,7 @@ class ImportsFactory {
 
 		
 		val firstSegment = qn.getFirstSegment();
-		val project = ImportSpecifierUtil.findProject(firstSegment, contextProject)
+		val project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject)
 
 
 		val considerProjectID = project !== null;
@@ -112,28 +112,9 @@ class ImportsFactory {
 			default:
 				throw new RuntimeException("Cannot resolve default import for " + name)
 		}
-
 	}
 
-	/** Creates a new default import with name 'name' from 'moduleName'*/
-	private def ImportDeclaration createDefaultImport(String name, String moduleName, Adapter nodelessMarker) {
-		val ret = N4JS_FACTORY.createImportDeclaration
-
-		val defaultImportSpec = N4JS_FACTORY.createDefaultImportSpecifier
-		val tmodule = TYPES_FACTORY.createTModule
-		tmodule.qualifiedName = moduleName
-		val idfEle = TYPES_FACTORY.createTExportableElement
-		idfEle.name = name
-		defaultImportSpec.importedElement = idfEle
-
-		ret.importSpecifiers.add(defaultImportSpec)
-		ret.eAdapters.add(nodelessMarker)
-		ret.module = tmodule
-
-		return ret
-	}
-	
-		/** Creates a new default import with name 'name' from object description. */
+	/** Creates a new default import with name 'name' from object description. */
 	private def ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject, TExportableElement te, Adapter nodelessMarker) {
 		val moduleQN = te.containingModule.qualifiedName
 		
@@ -141,8 +122,8 @@ class ImportsFactory {
 		val firstSegment = qn.getFirstSegment();
 		
 		var  IN4JSProject project = null;
-		val projectByNamespace = ImportSpecifierUtil.findProject(name, contextProject)
-		val projectByFirstSegment = ImportSpecifierUtil.findProject(firstSegment, contextProject)
+		val projectByNamespace = ImportSpecifierUtil.getDependencyWithID(name, contextProject)
+		val projectByFirstSegment = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject)
 		val projectByEObject = core.findProject(te.eResource.URI).orNull
 		
 		if(projectByFirstSegment !== null){
@@ -166,7 +147,42 @@ class ImportsFactory {
 			default:
 				throw new RuntimeException("Cannot resolve default import for " + name)
 		}
+	}
+	
+	/** Creates a new named import of 'name' from 'moduleName'*/
+	private def ImportDeclaration createNamedImport(String name, String moduleName, Adapter nodelessMarker) {
+		val ret = N4JS_FACTORY.createImportDeclaration
 
+		val namedImportSpec = N4JS_FACTORY.createNamedImportSpecifier
+		val tmodule = TYPES_FACTORY.createTModule
+		tmodule.qualifiedName = moduleName
+		val idfEle = TYPES_FACTORY.createTExportableElement
+		idfEle.name = name
+		namedImportSpec.importedElement = idfEle
+
+		ret.importSpecifiers.add(namedImportSpec)
+		ret.eAdapters.add(nodelessMarker)
+		ret.module = tmodule
+
+		return ret
+	}
+	
+	/** Creates a new default import with name 'name' from 'moduleName'*/
+	private def ImportDeclaration createDefaultImport(String name, String moduleName, Adapter nodelessMarker) {
+		val ret = N4JS_FACTORY.createImportDeclaration
+
+		val defaultImportSpec = N4JS_FACTORY.createDefaultImportSpecifier
+		val tmodule = TYPES_FACTORY.createTModule
+		tmodule.qualifiedName = moduleName
+		val idfEle = TYPES_FACTORY.createTExportableElement
+		idfEle.name = name
+		defaultImportSpec.importedElement = idfEle
+
+		ret.importSpecifiers.add(defaultImportSpec)
+		ret.eAdapters.add(nodelessMarker)
+		ret.module = tmodule
+
+		return ret
 	}
 	
 	/** Creates a new named import of 'name' from 'moduleName'*/
@@ -186,5 +202,4 @@ class ImportsFactory {
 
 		return ret
 	}
-
 }

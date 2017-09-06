@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -33,14 +33,15 @@ import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
  * Helper for creating representation of the {@link ImportDeclaration} as string with N4JS code.
  */
 class ImportDeclarationTextHelper {
-	
+
 	@Inject
 	private ImportSpacerUserPreferenceHelper spacerPreference;
-	
-	/** Extracts the token text for existing import-declaration or creates new textual representation for
+
+	/** 
+	 * Extracts the token text for existing import-declaration or creates new textual representation for
 	 * a new generated import declaration.
 	 */
-	 def String extractPureText(ImportDeclaration declaration, XtextResource resource,  Adapter nodelessMarker) {
+	def String extractPureText(ImportDeclaration declaration, XtextResource resource, Adapter nodelessMarker) {
 		// formatting decision: curly braces with whitespace
 		val spacer = spacerPreference.getSpacingPreference(resource)
 
@@ -52,59 +53,52 @@ class ImportDeclarationTextHelper {
 			if (impSpec.size === 1) {
 				// create own string. from single Named Adapter:
 				val onlyImpSpec = impSpec.get(0)
-				if(onlyImpSpec instanceof NamespaceImportSpecifier){
+				if (onlyImpSpec instanceof NamespaceImportSpecifier)
 					return '''import * as «onlyImpSpec.alias» from "«module»";'''
-				}
-				val namedSpec = onlyImpSpec as NamedImportSpecifier
-				if (namedSpec instanceof DefaultImportSpecifier) {
-					'''import «namedSpec.importedElement.name» from "«module»";'''
 
-				} else {
+				val namedSpec = onlyImpSpec as NamedImportSpecifier
+				if (namedSpec instanceof DefaultImportSpecifier)
+					'''import «namedSpec.importedElement.name» from "«module»";'''
+				else
 					'''import {«spacer»«namedSpec.importedElement.name»«IF (namedSpec.alias !== null)» as «namedSpec.alias»«ENDIF»«spacer»} from "«module»";'''
-				}
 			} else {
 				// more then one, sort them:
 				ImportsSorter.sortByName(impSpec)
 				val defImp = impSpec.filter(DefaultImportSpecifier).head; // only one is possible
 				val nameImp = impSpec.filter(NamespaceImportSpecifier).head; // only one is possible
-				val rest = impSpec.filter[it instanceof DefaultImportSpecifier === false].filter[it instanceof NamespaceImportSpecifier === false]
+				val rest = impSpec.filter[it instanceof DefaultImportSpecifier === false].filter [
+					it instanceof NamespaceImportSpecifier === false
+				]
 				val normalImports = !rest.isEmpty
 				val defaultImport = if (defImp === null) "" else '''«defImp.importedElement.name»''';
 				val spacerDefName = '''«IF defImp !== null && nameImp !== null», «ENDIF»'''
 				val namespaceImport = if (nameImp === null) "" else '''* as «nameImp.alias»''';
 
-				'''import «
-						defaultImport»«
-						spacerDefName»«
-						namespaceImport»«
-						IF normalImports
+				'''import «defaultImport»«spacerDefName»«namespaceImport»«IF normalImports
 							»{«spacer»«
 								FOR a : impSpec SEPARATOR ', '»«
 									(a as NamedImportSpecifier).importedElement.name»«
 										IF ((a as NamedImportSpecifier).alias !== null)» as « (a as NamedImportSpecifier).alias »«
 										ENDIF»«
 								ENDFOR»«spacer
-							»}«
-						ENDIF» from "«module»";'''
+							»}«ENDIF» from "«module»";'''
 			}
-		} else {
-			val importNode = findActualNodeFor(declaration);
-			return rewriteTokenText(importNode, spacer, SEMICOLON_INSERTED);
-		}
+		} else
+			return rewriteTokenText(findActualNodeFor(declaration), spacer, SEMICOLON_INSERTED);
 	}
-		/**
+
+	/**
 	 * Rewrites the node-content without comments.
-	 *
+	 * 
 	 * Inspired by {@link NodeModelUtils#getTokenText(INode)} but can treat any {@link LeafNodeWithSyntaxError syntax error}
 	 * nodes as a hidden one and reformats White-space after opening and before closing curly brace according to spacer-policy
-	 *
+	 * 
 	 * @param node the node to reformat.
 	 * @param spacer append after "{" and prepend before "}" can be empty string, then no white-space is inserted after
 	 * @param ignoredSyntaxErrorIssues - nodes of type LeafNodeWithSyntaxError having one of this issues are treated as ignored/hidden leafs
 	 * @returns modified textual form.
 	 */
-	private static def String rewriteTokenText(ICompositeNode node, String spacer,
-		String... ignoredSyntaxErrorIssues) {
+	private static def String rewriteTokenText(ICompositeNode node, String spacer, String... ignoredSyntaxErrorIssues) {
 		val StringBuilder builder = new StringBuilder(Math.max(node.getTotalLength(), 1));
 
 		var boolean hiddenSeen = false;
@@ -112,7 +106,7 @@ class ImportDeclarationTextHelper {
 		var boolean fixedASI = false;
 
 		for (ILeafNode leaf : node.getLeafNodes()) {
-			if(UtilN4.isIgnoredSyntaxErrorNode(leaf, SEMICOLON_INSERTED)){
+			if (UtilN4.isIgnoredSyntaxErrorNode(leaf, SEMICOLON_INSERTED)) {
 				fixedASI = true
 			}
 			if (!isHiddenOrIgnoredSyntaxError(leaf, ignoredSyntaxErrorIssues)) {
@@ -142,12 +136,12 @@ class ImportDeclarationTextHelper {
 			}
 		}
 
-		if(fixedASI) builder.append(";");
+		if (fixedASI) builder.append(";");
 
 		return builder.toString();
 	}
-	
-		/**
+
+	/**
 	 * Returns with {@code true} if the leaf node argument is either hidden, or represents a
 	 * {@link LeafNodeWithSyntaxError syntax error} where the {@link SyntaxErrorMessage#getIssueCode() issue code} of
 	 * the syntax error matches with any of the given ignored syntax error issue codes. Otherwise returns with
