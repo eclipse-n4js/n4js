@@ -54,9 +54,9 @@ s-null
 // XPECT warnings --> "Operand of type null will be interpreted as 0." at "null"
 // XPECT type of null-s --> number
 null-s
-// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
 // XPECT type of n-undefined --> number
 n-undefined;
-// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
 // XPECT type of undefined-n --> number
 undefined-n;

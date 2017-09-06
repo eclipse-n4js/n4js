@@ -905,10 +905,10 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
 		
 		if (tlhs.declaredType === bits.undefinedType) {
-			issueMathResultIsConstant("undefined", "NaN", lhs);
+			issueMathResultIsConstant("of type undefined", "NaN", lhs);
 		}
 		if (trhs.declaredType === bits.undefinedType) {
-			issueMathResultIsConstant("undefined", "NaN", rhs);
+			issueMathResultIsConstant("of type undefined", "NaN", rhs);
 		}
 		
 		if (tlhs.declaredType===bits.nullType) {

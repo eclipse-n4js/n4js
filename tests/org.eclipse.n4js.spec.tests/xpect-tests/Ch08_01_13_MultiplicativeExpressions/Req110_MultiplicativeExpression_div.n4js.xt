@@ -79,16 +79,16 @@ i/null;
 // XPECT type of s/null --> number
 s/null;
 
-// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
 // XPECT type of b/undefined --> number
 b/undefined;
-// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
 // XPECT type of n/undefined --> number
 n/undefined;
-// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
 // XPECT type of i/undefined --> number
 i/undefined;
-// XPECT warnings --> "Operand undefined will always result in NaN." at "undefined"
+// XPECT warnings --> "Operand of type undefined will always result in NaN." at "undefined"
 // XPECT type of s/undefined --> number
 s/undefined;
 
