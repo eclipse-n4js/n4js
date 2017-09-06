@@ -862,12 +862,15 @@ class ForStatement extends VariableDeclarationContainer, IterationStatement, Var
 	}
 }
 
-class ContinueStatement extends Statement {
+abstract class LabelRef {
 	refers LabelledStatement label
+	transient String labelAsText
 }
 
-class BreakStatement extends Statement {
-	refers LabelledStatement label
+class ContinueStatement extends Statement, LabelRef {
+}
+
+class BreakStatement extends Statement, LabelRef {
 }
 
 class ReturnStatement extends Statement {
