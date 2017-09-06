@@ -668,14 +668,23 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns true if the given type is one of the {@link BuiltInTypeScope#isNumeric(Type) numeric} primitive
-	 * built-in types.
+	 * Returns true if the given type is any.
 	 */
 	public def static boolean isAny(RuleEnvironment G, TypeRef typeRef) {
 		if (typeRef===null) {
 			return false
 		}
 		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.anyType
+	}
+
+	/**
+	 * Returns true if the given type is symbol.
+	 */
+	public def static boolean isSymbol(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false
+		}
+		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.symbolType
 	}
 	
 	/**

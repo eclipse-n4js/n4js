@@ -956,7 +956,7 @@ from {
 		val runknown = r instanceof UnknownTypeRef
 
 		if (lunknown && runknown) {
-			T = r
+			T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 		} else {
 			val lnum = G.isNumericOperand(l);
 			val rnum = G.isNumericOperand(r);
@@ -968,8 +968,8 @@ from {
 					// one is numeric, the other unknown --> 
 					T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 				} else {
-					val lMayNum = lnum || G.containsNumericOperand(l) || G.isAny(l);
-					val rMayNum = rnum || G.containsNumericOperand(r) || G.isAny(r);
+					val lMayNum = lnum || G.containsNumericOperand(l) || G.isAny(l) || G.isSymbol(l);
+					val rMayNum = rnum || G.containsNumericOperand(r) || G.isAny(r) || G.isSymbol(r);
 					
 					if (lMayNum && rMayNum) {
 						T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
@@ -2010,21 +2010,27 @@ from {
 	}
 }
 
-/* @see [N4JS] 6.1.13. Multiplicative Expression */
+/* @see [N4JS] 6.1.13. Multiplicative Expression 
+ * Note: symbol type is not allowed, this is checked in validation
+ */
 rule expectedTypeInMultiplicativeExpression
 	G |- MultiplicativeExpression e |> Expression expression : TypeRef T
 from {
 	T = G.anyTypeRef
 }
 
-/* @see [N4JS] 6.1.14 Additive Expression */
+/* @see [N4JS] 6.1.14 Additive Expression 
+ * Note: symbol type is not allowed, this is checked in validation
+ */
 rule expectedTypeInAdditiveExpression
 	G |- AdditiveExpression e |> Expression expression : TypeRef T
 from {
 	T = G.anyTypeRef
 }
 
-/* @see [N4JS] 6.1.15. Shift Expression */
+/* @see [N4JS] 6.1.15. Shift Expression 
+ * Note: symbol type is not allowed, this is checked in validation 
+ * */
 rule expectedTypeInShiftExpression
 	G |- ShiftExpression e |> Expression expression : TypeRef T
 from {

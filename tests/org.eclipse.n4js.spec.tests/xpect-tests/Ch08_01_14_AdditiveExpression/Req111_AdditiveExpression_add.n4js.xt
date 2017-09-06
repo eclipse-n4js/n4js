@@ -65,3 +65,17 @@ null+null
 a+n
 // XPECT type of a+s --> string
 a+s
+
+let sym: symbol = Symbol.iterator;
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of n+sym --> union{number,string}
+n+sym
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of sym+n --> union{number,string}
+sym+n
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of s+sym --> string
+s+sym
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of sym+s --> string
+sym+s

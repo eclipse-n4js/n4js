@@ -2803,7 +2803,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       final boolean lunknown = (l instanceof UnknownTypeRef);
       final boolean runknown = (r instanceof UnknownTypeRef);
       if ((lunknown && runknown)) {
-        T = r;
+        T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
       } else {
         final boolean lnum = RuleEnvironmentExtensions.isNumericOperand(G, l);
         final boolean rnum = RuleEnvironmentExtensions.isNumericOperand(G, r);
@@ -2813,8 +2813,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           if (((lunknown || runknown) && (lnum || rnum))) {
             T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
           } else {
-            final boolean lMayNum = ((lnum || RuleEnvironmentExtensions.containsNumericOperand(G, l)) || RuleEnvironmentExtensions.isAny(G, l));
-            final boolean rMayNum = ((rnum || RuleEnvironmentExtensions.containsNumericOperand(G, r)) || RuleEnvironmentExtensions.isAny(G, r));
+            final boolean lMayNum = (((lnum || RuleEnvironmentExtensions.containsNumericOperand(G, l)) || RuleEnvironmentExtensions.isAny(G, l)) || RuleEnvironmentExtensions.isSymbol(G, l));
+            final boolean rMayNum = (((rnum || RuleEnvironmentExtensions.containsNumericOperand(G, r)) || RuleEnvironmentExtensions.isAny(G, r)) || RuleEnvironmentExtensions.isSymbol(G, r));
             if ((lMayNum && rMayNum)) {
               T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
             } else {

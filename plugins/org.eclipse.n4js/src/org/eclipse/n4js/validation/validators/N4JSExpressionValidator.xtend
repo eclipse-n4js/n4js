@@ -878,6 +878,8 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkAdditiveExpressionForNonADDs(AdditiveExpression ae) {
 		if (ae.op == AdditiveOperator.SUB) {
 			doCheckMathOperandTypes(ae.lhs, ae.rhs);
+		} else {
+			doCheckMathOperandTypeSymbol(ae.lhs, ae.rhs)
 		}
 	}
 			
@@ -917,6 +919,28 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		if (trhs.declaredType===bits.nullType) {
 			issueMathOperandIsConstant("null", "0", rhs);
 		}
+		if (tlhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", lhs);
+		}
+		if (trhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", rhs);
+		}
+	}
+		
+	def doCheckMathOperandTypeSymbol(Expression lhs, Expression rhs) {	
+		if (lhs===null || rhs===null) return;	
+		val tlhs = ts.tau(lhs)
+		if (tlhs===null) return;
+		val trhs = ts.tau(rhs)
+		if (trhs===null) return;
+		
+		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
+		if (tlhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", lhs);
+		}
+		if (trhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", rhs);
+		}
 	}
 	
 
@@ -931,6 +955,15 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 			location,
 			IssueCodes.EXP_MATH_OPERAND_IS_CONSTANT);
 	}
+
+	def issueMathOperandTypeNotPermitted(String operandType, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_TYPE_NOT_PERMITTED(operandType),
+			location,
+			IssueCodes.EXP_MATH_TYPE_NOT_PERMITTED);
+	}
+	
+	
+	
 	
 	/**
 	 * IDE-731 / IDE-773

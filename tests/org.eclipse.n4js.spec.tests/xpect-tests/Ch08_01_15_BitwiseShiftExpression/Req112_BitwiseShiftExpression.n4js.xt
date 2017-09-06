@@ -160,3 +160,12 @@ undefined>>s;
 --- */
 // XPECT type of undefined>>null --> number
 undefined>>null;
+
+
+let sym: symbol = Symbol.iterator;
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of n<<sym --> number
+n<<sym
+// XPECT errors --> "Operand of type symbol cannot be converted to number." at "sym"
+// XPECT type of sym<<n --> number
+sym<<n
