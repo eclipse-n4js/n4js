@@ -15,13 +15,12 @@ import org.eclipse.emf.common.notify.Adapter
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4JSFactory
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
+import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil
 import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.xtext.naming.IQualifiedNameConverter
-import org.eclipse.xtext.resource.IEObjectDescription
-import org.eclipse.n4js.projectModel.IN4JSCore
 
 /**
  * Helper for creating imports declarations.
@@ -39,17 +38,19 @@ class ImportsFactory {
 	def createImport(ImportableObject imp, IN4JSProject contextProject, Adapter nodelessMarker) {
 		//can be namespace and default, check order :: namespace -> default -> named
 		if(imp.asNamespace)
-			return createNamespaceImport(imp.name, contextProject, imp.eobj, nodelessMarker)
+			return createNamespaceImport(imp.name, contextProject, imp.te, nodelessMarker)
 		if (imp.isExportedAsDefault)
-			return createDefaultImport(imp.name, contextProject, imp.eobj, nodelessMarker)
+			return createDefaultImport(imp.name, contextProject, imp.te, nodelessMarker)
 		
-		return createNamedImport(imp.name, contextProject, imp.eobj, nodelessMarker)
+		return createNamedImport(imp.name, contextProject, imp.te, nodelessMarker)
 	}
+	
 
 	/** Creates a new named import of 'name' from 'module'*/
-	private def ImportDeclaration createNamedImport(String name, IN4JSProject contextProject, IEObjectDescription ieod, Adapter nodelessMarker) {
+	private def ImportDeclaration createNamedImport(String name, IN4JSProject contextProject, TExportableElement te, Adapter nodelessMarker) {
+		val moduleQN = te.containingModule.qualifiedName
 		
-		val qn = ieod.qualifiedName
+		val qn = qualifiedNameConverter.toQualifiedName(moduleQN)
 		val firstSegment = qn.getFirstSegment();
 		val project = ImportSpecifierUtil.findProject(firstSegment, contextProject)
 
@@ -58,11 +59,11 @@ class ImportsFactory {
 			case PROJECT_IMPORT:
 				return createNamedImport(name, project.projectId, nodelessMarker)
 			case SIMPLE_IMPORT:
-				return createNamedImport(name, qualifiedNameConverter.toString(ieod.qualifiedName.skipLast(1)), nodelessMarker)
+				return createNamedImport(name, qualifiedNameConverter.toString(qn), nodelessMarker)
 			case COMPLETE_IMPORT:
 				return createNamedImport(name,
 					project.projectId + N4JSQualifiedNameConverter.DELIMITER +
-						qualifiedNameConverter.toString(ieod.qualifiedName.skipLast(1)), nodelessMarker)
+						qualifiedNameConverter.toString(qn), nodelessMarker)
 			default:
 				throw new RuntimeException("Cannot resolve default import for " + name)
 		}
@@ -88,17 +89,11 @@ class ImportsFactory {
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
-	private def ImportDeclaration createDefaultImport(String name, IN4JSProject contextProject, IEObjectDescription ieod, Adapter nodelessMarker) {
+	private def ImportDeclaration createDefaultImport(String name, IN4JSProject contextProject, TExportableElement te, Adapter nodelessMarker) {
+		val moduleQN = te.containingModule.qualifiedName
 		
+		val qn = qualifiedNameConverter.toQualifiedName(moduleQN)
 
-		val eo = ieod.EObjectOrProxy
-
-		if (eo instanceof TExportableElement === false)
-			throw new RuntimeException("Expected exported object to be  " + TExportableElement.canonicalName + " was " +
-				eo.class.canonicalName)
-				
-		val qn = qualifiedNameConverter.toQualifiedName((eo as TExportableElement).containingModule.qualifiedName)
-		
 		
 		val firstSegment = qn.getFirstSegment();
 		val project = ImportSpecifierUtil.findProject(firstSegment, contextProject)
@@ -109,11 +104,11 @@ class ImportsFactory {
 			case PROJECT_IMPORT:
 				return createDefaultImport(name, project.projectId, nodelessMarker)
 			case SIMPLE_IMPORT:
-				return createDefaultImport(name, qualifiedNameConverter.toString(ieod.qualifiedName.skipLast(1)), nodelessMarker)
+				return createDefaultImport(name, qualifiedNameConverter.toString(qn), nodelessMarker)
 			case COMPLETE_IMPORT:
 				return createDefaultImport(name,
 					project.projectId + N4JSQualifiedNameConverter.DELIMITER +
-						qualifiedNameConverter.toString(ieod.qualifiedName.skipLast(1)), nodelessMarker)
+						qualifiedNameConverter.toString(qn), nodelessMarker)
 			default:
 				throw new RuntimeException("Cannot resolve default import for " + name)
 		}
@@ -139,14 +134,16 @@ class ImportsFactory {
 	}
 	
 		/** Creates a new default import with name 'name' from object description. */
-	private def ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject, IEObjectDescription ieod, Adapter nodelessMarker) {
-		val qn = ieod.qualifiedName
+	private def ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject, TExportableElement te, Adapter nodelessMarker) {
+		val moduleQN = te.containingModule.qualifiedName
+		
+		val qn = qualifiedNameConverter.toQualifiedName(moduleQN)
 		val firstSegment = qn.getFirstSegment();
 		
 		var  IN4JSProject project = null;
 		val projectByNamespace = ImportSpecifierUtil.findProject(name, contextProject)
 		val projectByFirstSegment = ImportSpecifierUtil.findProject(firstSegment, contextProject)
-		val projectByEObject = core.findProject(ieod.EObjectURI).orNull
+		val projectByEObject = core.findProject(te.eResource.URI).orNull
 		
 		if(projectByFirstSegment !== null){
 			project = projectByFirstSegment
@@ -156,16 +153,16 @@ class ImportsFactory {
 			}
 		}
 		
-	val considerProjectID = project !== null;
+		val considerProjectID = project !== null;
 		switch (ImportSpecifierUtil.computeImportType( qn, considerProjectID, project)) {
 			case PROJECT_IMPORT:
 				return createNamespaceImport(name, project.projectId, nodelessMarker)
 			case SIMPLE_IMPORT:
-				return createNamespaceImport(name, qualifiedNameConverter.toString(ieod.qualifiedName.skipLast(1)), nodelessMarker)
+				return createNamespaceImport(name, qualifiedNameConverter.toString(qn), nodelessMarker)
 			case COMPLETE_IMPORT:
 				return createNamespaceImport(name,
 					project.projectId + N4JSQualifiedNameConverter.DELIMITER +
-						qualifiedNameConverter.toString(ieod.qualifiedName.skipLast(1)), nodelessMarker)
+						qualifiedNameConverter.toString(qn), nodelessMarker)
 			default:
 				throw new RuntimeException("Cannot resolve default import for " + name)
 		}

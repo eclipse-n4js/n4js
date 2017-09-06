@@ -16,6 +16,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.organize.imports.ImportProvidedElement;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -25,6 +26,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import com.google.inject.Inject;
 
 /**
+ * Provides labels used in imports disambiguation dialog.
  */
 public class ImportProvidedElementLabelprovider implements ILabelProvider {
 
@@ -65,15 +67,15 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 	public String getText(Object element) {
 		if (element instanceof ImportableObject) {
 			ImportableObject io = (ImportableObject) element;
-			IEObjectDescription eobj = io.getEobj();
+			TExportableElement eobj = io.getTe();
 			if (!io.isExportedAsDefault())
 				return getText(eobj);
 
-			IN4JSProject findProject = core.findProject(eobj.getEObjectURI()).orNull();
+			IN4JSProject findProject = core.findProject(eobj.eResource().getURI()).orNull();
 			String projectName = findProject != null ? findProject.getProjectId()
-					: (eobj.getEObjectURI().isPlatform() ? eobj.getEObjectURI().toPlatformString(true)
-							: eobj.getEObjectURI().toString());
-			return io.getEobj() + " in project " + projectName;
+					: (eobj.eResource().getURI().isPlatform() ? eobj.eResource().getURI().toPlatformString(true)
+							: eobj.eResource().getURI().toString());
+			return io.getTe() + " in project " + projectName;
 
 		} else if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);
@@ -85,6 +87,10 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 			IEObjectDescription ieO = (IEObjectDescription) element;
 			return ieO.getName().getLastSegment() + " from "
 					+ qualifiedNameConverter.toString(ieO.getName().skipLast(1));
+		} else if (element instanceof TExportableElement) {
+			TExportableElement te = (TExportableElement) element;
+			return te.getName() + " (exported as " + te.getExportedName() + ") from "
+					+ te.getContainingModule().getQualifiedName() + " in " + te.getContainingModule().getProjectId();
 		}
 
 		return n4Labelprovider.getText(element);

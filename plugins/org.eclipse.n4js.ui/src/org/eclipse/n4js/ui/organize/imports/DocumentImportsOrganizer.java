@@ -34,6 +34,7 @@ import org.eclipse.n4js.ui.changes.IAtomicChange;
 import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.n4js.ui.changes.Replacement;
 import org.eclipse.n4js.ui.organize.imports.BreakException.UserCanceledBreakException;
+import org.eclipse.n4js.utils.StopWatchPrintUtil;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.xtext.nodemodel.ILeafNode;
@@ -43,7 +44,6 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
-import com.google.common.base.Stopwatch;
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
@@ -168,10 +168,7 @@ class DocumentImportsOrganizer {
 
 			@Override
 			public List<IChange> exec(XtextResource xtextResource) throws Exception {
-				Stopwatch sw = Stopwatch.createUnstarted();
-
-				System.out.println("\n\u250F prepareImportsChanges " + xtextResource.getURI());
-				sw.start();
+				StopWatchPrintUtil sw0 = new StopWatchPrintUtil("prepareImportsChanges", 0, 100);
 				InsertionPoint insertionPoint = hImportsRegion.getImportRegion(xtextResource);
 
 				if (insertionPoint.offset != -1) {
@@ -192,21 +189,19 @@ class DocumentImportsOrganizer {
 						changes.addAll(getImportInsertionChanges(document, xtextResource, insertionPoint, NL,
 								organizedImportSection));
 
-						sw.stop();
-						System.out.println("\u2517 prepareImportsChanges :: " + sw);
-						sw.reset();
+						sw0.stop();
 						return changes;
 					} catch (UserCanceledBreakException e) {
+						sw0.stop();
 						return null; // user-triggered cancellation, nothing to report.
 					} catch (BreakException e) {
+						sw0.stop();
 						LOGGER.warn("Organize imports broke:", e);
 						throw e;
 					}
 				}
 
-				sw.stop();
-				System.out.println("\u2517 prepareImportsChanges :: " + sw);
-				sw.reset();
+				sw0.stop();
 				return null;
 			}
 		};
