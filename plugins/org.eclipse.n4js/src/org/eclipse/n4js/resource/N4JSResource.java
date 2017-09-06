@@ -252,6 +252,20 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		super();
 	}
 
+	/**
+	 * Tells if this resource had its AST loaded from source after its TModule was created and has thus an AST that was
+	 * reconciled with a pre-existing TModule. This can happen when
+	 * <ol>
+	 * <li>an AST is loaded from source after the TModule was loaded from the index (usually triggered by client code
+	 * via <code>#getContents(0)</code> or {@link SyntaxRelatedTElement#getAstElement()}).
+	 * <li>an AST is re-loaded after it was loaded from source and then unloaded via {@link #unloadAST()}.
+	 * </ol>
+	 */
+	public boolean isReconciled() {
+		final TModule module = getModule();
+		return module != null && module.isReconciled();
+	}
+
 	@Override
 	protected URIConverter getURIConverter() {
 		return getResourceSet() == null ? createNewURIConverter() : getResourceSet().getURIConverter();
@@ -578,6 +592,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * <li>All errors and warnings are cleared.</li>
 	 * <li>The flags are set as follows:
 	 * <ul>
+	 * <li><code>reconciled</code> is <code>false</code></li>
 	 * <li><code>fullyInitialized</code> remains unchanged</li>
 	 * <li><code>fullyPostProcessed</code> is set to the same value as <code>fullyInitialized</code></li>
 	 * <li><code>aboutToBeUnloaded</code> is <code>false</code></li>
@@ -634,6 +649,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		// These are cleared when linking takes place., but we eagerly clear them here as a memory optimization.
 		clearLazyProxyInformation();
+
+		// clear flag 'reconciled' in TModule (if required)
+		final TModule module = getModule();
+		if (module != null && module.isReconciled()) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.setReconciled(false);
+			}, module);
+		}
 	}
 
 	/**
