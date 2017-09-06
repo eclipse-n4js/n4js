@@ -66,19 +66,16 @@ let l = x => { return x }; // one argument
 --- */
 let l=x=>{return x} // one argument
 
-// found during IDE-1852: XPECT FIXME noerrors
 /* XPECT formattedLines 1 ---
 let m = (x, y) => { return x * y }; // several arguments
 --- */
 let m=(x,y)=>{return x*y} // several arguments
 
-// found during IDE-1852: XPECT FIXME noerrors
 /* XPECT formattedLines 1 ---
 let n = x => { return x * x }; // block
 --- */
 let n=x=>{return x*x}  // block
 
-// found during IDE-1852: XPECT FIXME noerrors
 /* XPECT formattedLines 1 ---
 let o = x => x * x; // expression, equivalent to previous line
 --- */
