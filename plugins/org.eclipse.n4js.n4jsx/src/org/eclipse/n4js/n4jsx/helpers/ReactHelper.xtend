@@ -80,10 +80,7 @@ class ReactHelper {
 			for (sourceContainer : project.sourceContainers) {
 				if (reactURI === null) {
 					// srcContainer is an iterable URIs
-					val ret = sourceContainer.findFirst[trimFragment.lastSegment == REACT_DEFINITION_FILE]
-					if (ret !== null) {
-						reactURI = ret
-					}
+					reactURI = sourceContainer.findFirst[trimFragment.lastSegment == REACT_DEFINITION_FILE]
 				}
 			}
 
