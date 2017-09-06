@@ -40,15 +40,13 @@ class N4JSXUnsupportedExpressionTypeHelper extends DefaultUnsupportedExpressionT
 	override public typeExpression(Expression expression, RuleEnvironment G) {
 		if (expression instanceof JSXElement) {
 			val classifierReactElement = reactLookupHelper.lookUpReactElement(expression);
-
-			if (classifierReactElement === null) {
-				throw new IllegalStateException(ReactHelper.REACT_MODULE + "." + ReactHelper.REACT_ELEMENT +  " not found");
+			if (classifierReactElement !== null) {
+				val typeRef = TypeUtils.createTypeRef(classifierReactElement)
+				return typeRef
 			}
-			val typeRef = TypeUtils.createTypeRef(classifierReactElement)
-			return typeRef
-		} else {
-			return super.typeExpression(expression, G)
 		}
+		// Otherwise, standard behavior
+		return super.typeExpression(expression, G)
 	}
 
 	/**
@@ -72,6 +70,5 @@ class N4JSXUnsupportedExpressionTypeHelper extends DefaultUnsupportedExpressionT
 			}
 		}
 		return super.expectedExpressionTypeInEObject(container, expression, G);
-
 	}
 }
