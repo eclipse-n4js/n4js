@@ -22,6 +22,7 @@ Contributors:
             default="true"
             extensions="n4ts"
             id="org.eclipse.n4js.ts.Types"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="Types Editor">
         </editor>
     </extension>

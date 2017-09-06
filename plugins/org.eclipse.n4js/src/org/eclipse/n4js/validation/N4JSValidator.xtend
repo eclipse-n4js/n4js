@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.validation
 
+import com.google.inject.Inject
+import java.lang.reflect.Method
+import org.eclipse.emf.common.util.BasicDiagnostic
+import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
@@ -40,9 +44,7 @@ import org.eclipse.n4js.validation.validators.N4JSTypeValidator
 import org.eclipse.n4js.validation.validators.N4JSVariableValidator
 import org.eclipse.n4js.validation.validators.UnsupportedFeatureValidator
 import org.eclipse.n4js.xsemantics.validation.InternalTypeSystemValidator
-import java.lang.reflect.Method
-import org.eclipse.emf.common.util.BasicDiagnostic
-import org.eclipse.emf.common.util.Diagnostic
+import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 import org.eclipse.xtext.validation.ComposedChecks
@@ -100,6 +102,9 @@ import org.eclipse.xtext.validation.ComposedChecks
 @Log
 class N4JSValidator extends InternalTypeSystemValidator {
 
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
+
 	// validations are defined in composed validator classes
 	/**
 	 * Override to improve error message in case of abnormal termination of validation.
@@ -120,11 +125,11 @@ class N4JSValidator extends InternalTypeSystemValidator {
 			// catch exceptions and create better error message as org.eclipse.xtext.validation.CompositeEValidator.validate(EClass, EObject, DiagnosticChain, Map<Object, Object>)
 			// note: cannot override validate method directly because it is final
 			override void invoke(State state) {
+				operationCanceledManager.checkCanceled(getCancelIndicator(state));
 				try {
-					if (!isCanceled(state)) {
-						super.invoke(state);
-					}
+					super.invoke(state);
 				} catch (Exception e) {
+					operationCanceledManager.propagateIfCancelException(e);
 					logger.error("Error executing EValidator", e);
 					state.chain.add(
 						new BasicDiagnostic(Diagnostic.ERROR, state.currentObject.toString(), 0, e.message, #[e]));

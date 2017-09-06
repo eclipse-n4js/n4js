@@ -42,12 +42,16 @@ abstract class AbstractCanLoadFromDescriptionTest extends AbstractBuilderPartici
 	}
 	
 	/**
-	 * Returns validation errors in given Xtext editor.
+	 * Execute the given unit of work with the resource of the given editor.
 	 */
 	def protected void assertResource(XtextEditor editor, IUnitOfWork.Void<XtextResource> unit) {
 		editor.getDocument().readOnly(unit);
 	}
 	
+	/**
+	 * Assert that the resources denoted by their URIs are loaded from source in the resource set of 
+	 * the given editor.
+	 */
 	def protected void assertFromSource(XtextEditor editor, Set<URI> uris) {
 		editor.assertResource [ resource |
 			val resourceSet = resource.resourceSet;
@@ -59,6 +63,9 @@ abstract class AbstractCanLoadFromDescriptionTest extends AbstractBuilderPartici
 		]
 	}
 	
+	/**
+	 * Assert that all but the primary resource in the editors resource set are loaded from the index.
+	 */
 	def protected void assertAllFromIndex(XtextEditor editor) {
 		editor.assertResource [ resource |
 			val resourceSet = resource.resourceSet;

@@ -10,28 +10,13 @@
  */
 package org.eclipse.n4js.tester.extension;
 
-import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.runner.extension.IRunnableDescriptor;
 import org.eclipse.n4js.tester.ITester;
 
 /**
  * Describes a tester registered via the 'testers' extension point (UI case) or directly via
  */
-public interface ITesterDescriptor {
-
-	/**
-	 * Returns the unique identifier of this tester.
-	 */
-	public String getId();
-
-	/**
-	 * Returns the human-readable name of this tester.
-	 */
-	public String getName();
-
-	/**
-	 * Returns the runtime environment supported by this tester.
-	 */
-	public RuntimeEnvironment getEnvironment();
+public interface ITesterDescriptor extends IRunnableDescriptor {
 
 	/**
 	 * Returns the actual tester.

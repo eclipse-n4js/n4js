@@ -11,6 +11,12 @@
 package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import java.lang.reflect.Method
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
@@ -60,15 +66,10 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
-import java.lang.reflect.Method
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.nodemodel.ICompositeNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 
@@ -99,6 +100,8 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 	private TypeSystemHelper tsh;
 	@Inject
 	private IN4JSCore n4jsCore;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	/**
 	 * @since 2.6
@@ -110,6 +113,7 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 		return new MethodWrapperCancelable(instanceToUse, method) {
 
 			override invoke(State state) {
+				operationCanceledManager.checkCanceled(getCancelIndicator(state));
 				if (shouldInvoke(state)) {
 					super.invoke(state)
 				}
@@ -120,15 +124,12 @@ public class AbstractN4JSDeclarativeValidator extends AbstractMessageAdjustingN4
 			 * <ul>
 			 * <li>no resource associated to the current object</li>
 			 * <li>the resource in question shouldn't be validated</li>
-			 * <li>a cancellation request is in effect</li>
 			 * </ul>
 			 */
 			private def boolean shouldInvoke(State state) {
 				if (state.currentObject?.eResource !== null) {
 					if (!n4jsCore.isNoValidate(state.currentObject.eResource.getURI())) {
-						if (!isCanceled(state)) {
-							return true
-						}
+						return true;
 					}
 				}
 				return false;

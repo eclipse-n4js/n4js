@@ -12,22 +12,22 @@ package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.List
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TFormalParameter
+import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TypeVariable
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.List
-import org.eclipse.xtext.util.CancelIndicator
+import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.types.TFunction
 
 /**
  * Contains some helper methods to compute if type A is a subtype of type B.
@@ -42,6 +42,8 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	/**
 	 * Returns true iff function/method 'left' is a subtype of function/method 'right'.
@@ -62,7 +64,7 @@ class SubtypeComputer extends TypeSystemHelperStrategy {
 			// rationale: if there exists a valid binding of left's type variables
 			// so that bound(left) <: right, then left <: right
 
-			val infCtx = new InferenceContext(ts, tsh, CancelIndicator.NullImpl, G); // start with no inference variables
+			val infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G); // start with no inference variables
 			val left_withInfVars = infCtx.newInferenceVariablesFor(left); // create an inference variable for each type param in left
 			// assuming 'left' was {function<T>(T):T}, then left_withInfVars is now: {function(α):α} (non-generic!)
 			infCtx.addConstraint(left_withInfVars, right, Variance.CO);

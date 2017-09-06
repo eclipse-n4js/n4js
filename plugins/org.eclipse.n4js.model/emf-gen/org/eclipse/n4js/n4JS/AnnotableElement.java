@@ -46,4 +46,18 @@ public interface AnnotableElement extends EObject {
 	 */
 	EList<Annotation> getAnnotations();
 
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * Returns the effective annotations of this annotable element. This includes the {@link #getAnnotations()}
+	 * and the annotations on the containing ExportDeclaration, if any.
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.emf.common.util.BasicEList%><<%org.eclipse.n4js.n4JS.Annotation%>> result = <%org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals%>.<<%org.eclipse.n4js.n4JS.Annotation%>>newBasicEList();\nfinal <%org.eclipse.emf.ecore.EObject%> parent = this.eContainer();\nif ((parent instanceof <%org.eclipse.n4js.n4JS.ExportDeclaration%>))\n{\n\t<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4JS.Annotation%>> _annotations = ((<%org.eclipse.n4js.n4JS.ExportDeclaration%>)parent).getAnnotations();\n\t<%com.google.common.collect.Iterables%>.<<%org.eclipse.n4js.n4JS.Annotation%>>addAll(result, _annotations);\n}\n<%org.eclipse.emf.common.util.EList%><<%org.eclipse.n4js.n4JS.Annotation%>> _annotations_1 = this.getAnnotations();\n<%com.google.common.collect.Iterables%>.<<%org.eclipse.n4js.n4JS.Annotation%>>addAll(result, _annotations_1);\nreturn result;'"
+	 * @generated
+	 */
+	EList<Annotation> getAllAnnotations();
+
 } // AnnotableElement

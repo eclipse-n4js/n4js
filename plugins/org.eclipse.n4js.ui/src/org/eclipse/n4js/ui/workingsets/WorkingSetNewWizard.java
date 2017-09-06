@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.ui.workingsets;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.graphics.Image;
 
@@ -25,6 +28,12 @@ public abstract class WorkingSetNewWizard extends Wizard {
 
 	@Inject
 	private WorkingSetManagerBroker workingSetManagerBroker;
+	
+	/**
+	 * Custom list of all workspace working sets to use in the wizard. If <code>null</code> use global list of working
+	 * sets. (See {@link #getAllWorkingSets()})
+	 */
+	private List<WorkingSet> customAllWorkingSets = null;
 
 	/**
 	 * Returns with the new working set created by the wizard. May return with an {@link Optional#absent() absent}
@@ -48,6 +57,27 @@ public abstract class WorkingSetNewWizard extends Wizard {
 	@Override
 	public Image getDefaultPageImage() {
 		return ImageRef.WORKING_SET_WIZBAN.asImage().orNull();
+	}
+
+	/**
+	 * Sets the list of all workspace working sets to use when validating input in this wizard.
+	 * 
+	 * For example when checking if the the name of a new working set is already taken.
+	 */
+	public void setAllWorkingSets(List<WorkingSet> allWorkingSets) {
+		this.customAllWorkingSets = allWorkingSets;
+	}
+
+	/**
+	 * Returns the list of all workspace working sets to use in this context.
+	 */
+	protected List<WorkingSet> getAllWorkingSets() {
+		if (null != customAllWorkingSets) {
+			return customAllWorkingSets;
+		} else {
+			// use global list of all working sets.
+			return Arrays.asList(getManager().getAllWorkingSets());
+		}
 	}
 
 }

@@ -21,7 +21,7 @@ import static org.junit.Assert.*
 /**
  */
 class UserdataAssertionsExtension {
-
+	
 	def assertSerializedUserdata(Iterable<IEObjectDescription> eoDescs, CharSequence expectedTypesSerialization, boolean enableUserDataCompare, N4JSResource resource) {
 		val syntaxEoDesc = eoDescs.head;
 

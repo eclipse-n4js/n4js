@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.validation;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +19,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.eclipse.emf.common.util.BasicDiagnostic;
 import org.eclipse.emf.common.util.DiagnosticChain;
+import org.eclipse.n4js.N4JSInjectorProvider;
+import org.eclipse.n4js.n4JS.N4ClassDeclaration;
+import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.n4js.validation.validators.N4JSClassifierValidator;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.testing.InjectWith;
 import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.testing.util.ParseHelper;
@@ -28,13 +36,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.n4JS.N4ClassDeclaration;
-import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.validation.IssueCodes;
-import org.eclipse.n4js.validation.validators.N4JSClassifierValidator;
 
 /**
  * Test whether a validation method runs only after a check for pending requests was made.
@@ -53,6 +54,9 @@ public class AutomaticCancelationTest {
 	@Inject
 	N4JSClassifierValidator v;
 
+	@Inject
+	OperationCanceledManager operationCanceledManager;
+
 	private static final AtomicBoolean wasChecked = new AtomicBoolean(false);
 
 	private static class TraceLeavingCancelIndicator implements CancelIndicator {
@@ -67,7 +71,7 @@ public class AutomaticCancelationTest {
 	}
 
 	@Test
-	public void testCancelIndicatorGetsInvokedAutomatically() {
+	public void testCancelIndicatorGetsInvokedAutomatically() throws Exception {
 		String program = " class X { \n\t a: any; \n\t a: any; } } ";
 		Script s;
 		try {
@@ -82,13 +86,16 @@ public class AutomaticCancelationTest {
 			// the cancel indicator in use sets a flag in case its isCanceled() was queried
 			assertTrue(!(wasChecked.get()));
 			DiagnosticChain chain = new BasicDiagnostic();
-			final boolean isValid01 = v.validate(clazz, chain, context);
+			try {
+				v.validate(clazz, chain, context);
+				fail("expected OperationCanceledException or OperationCanceledError was not thrown");
+			} catch (Throwable th) {
+				assertTrue(
+						"wrong kind of throwable; expected: OperationCanceledException or OperationCanceledError, actual: "
+								+ th.getClass().getSimpleName(),
+						operationCanceledManager.isOperationCanceledException(th));
+			}
 			assertTrue(wasChecked.get());
-
-			// besides making sure that isCanceled() was invoked automatically,
-			// make sure that no validation method has run
-			// (in our case, make sure the duplicate fields aren't detected)
-			assertTrue(isValid01);
 
 			// now validate with a cancel indicator that never cancels,
 			// upon which validation methods run and errors are recorded.
@@ -109,6 +116,7 @@ public class AutomaticCancelationTest {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 	}
 }

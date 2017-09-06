@@ -21,6 +21,7 @@ Contributors:
             default="true"
             extensions="n4jsx,jsx"
             id="org.eclipse.n4js.n4jsx.N4JSX"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JSX Editor">
         </editor>
     </extension>

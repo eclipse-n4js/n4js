@@ -209,6 +209,8 @@ public class OrderedEmfFormatter {
 
 	/***/
 	public static String objPath(EObject obj) {
+		if (obj == null)
+			return "null";
 		StringBuffer b = new StringBuffer();
 		objPath(b, obj);
 		return b.toString();

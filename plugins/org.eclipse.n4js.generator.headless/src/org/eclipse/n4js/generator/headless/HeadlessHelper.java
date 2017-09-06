@@ -90,7 +90,6 @@ public class HeadlessHelper {
 	static ArrayList<File> collectAllProjectPaths(List<File> absProjectRoots) {
 		ArrayList<File> pDir = new ArrayList<>();
 		for (File projectRoot : absProjectRoots) {
-			System.out.println("HeadlessHelper.collectAllProjectPaths() consider " + projectRoot);
 			Arrays.asList(projectRoot.listFiles(f -> {
 				return f.isDirectory(); // all directrories
 			}))//

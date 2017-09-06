@@ -12,6 +12,8 @@ package org.eclipse.n4js.n4JS.impl;
 
 import com.google.common.base.Objects;
 
+import com.google.common.collect.Iterables;
+
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
@@ -19,6 +21,7 @@ import java.util.Collection;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
@@ -30,8 +33,11 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EDataTypeEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
+
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -257,6 +263,23 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Annotation> getAllAnnotations() {
+		final BasicEList<Annotation> result = XcoreCollectionLiterals.<Annotation>newBasicEList();
+		final EObject parent = this.eContainer();
+		if ((parent instanceof ExportDeclaration)) {
+			EList<Annotation> _annotations = ((ExportDeclaration)parent).getAnnotations();
+			Iterables.<Annotation>addAll(result, _annotations);
+		}
+		EList<Annotation> _annotations_1 = this.getAnnotations();
+		Iterables.<Annotation>addAll(result, _annotations_1);
+		return result;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
@@ -461,6 +484,7 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 		if (baseClass == AnnotableElement.class) {
 			switch (baseOperationID) {
 				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_ANNOTATIONS;
+				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS: return N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS;
 				default: return -1;
 			}
 		}
@@ -527,6 +551,8 @@ public class N4MemberAnnotationListImpl extends AbstractAnnotationListImpl imple
 				return isConstructor();
 			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___IS_CALLABLE_CONSTRUCTOR:
 				return isCallableConstructor();
+			case N4JSPackage.N4_MEMBER_ANNOTATION_LIST___GET_ALL_ANNOTATIONS:
+				return getAllAnnotations();
 		}
 		return super.eInvoke(operationID, arguments);
 	}

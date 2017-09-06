@@ -76,11 +76,11 @@ abstract class AbstractTypesBuilderTest {
 			int expectedTypesCount, int expectedTypesOnIndexCount) {
 
 		val updatedResourceDescription = assertFullyLoadedResource(index, testResource, expectedTypesCount, expectedExportedTypeToNamePairs)
-
-		val newN4jsResource = assertUnloadedResource(index, testResource, updatedResourceDescription)
-
-		assertASTResolved(index, newN4jsResource)
-
+		
+		val newN4jsResource = unloadResourceAndReloadFromDescription(index, testResource, updatedResourceDescription)
+		
+		resolveASTandAssert(index, newN4jsResource)
+		
 		rerunUnloadLoadProcess(index, max, newN4jsResource, expectedExportedTypeToNamePairs, expectedTypesCount, expectedTypesOnIndexCount)
 	}
 
@@ -96,9 +96,10 @@ abstract class AbstractTypesBuilderTest {
 		resolve(testResource)
 
 		val resourceDescriptions = assertIndexHasBeenFilled(phase, testResource);
+		
 
 		val eoDescs = assertAllExportedElementAreOnIndex(phase, resourceDescriptions, expectedExportedTypeToNamePairs)
-
+		
 		assertExampleJSStructure(phase, testResource)
 
 		assertExampleTypeStructure(phase, testResource)
@@ -108,27 +109,28 @@ abstract class AbstractTypesBuilderTest {
 		return getResourceDescription(testResource)
 	}
 
-	def private assertUnloadedResource(int index, Resource testResource, IResourceDescription updatedResourceDescription) {
-
-		unloadResource(testResource)
-
-		val newN4jsResource = reloadResourceFromDescription(testResource, updatedResourceDescription)
-
+	/**
+	 * Unloads given resource and returns newly from description loaded resource.
+	 */
+	def private N4JSResource unloadResourceAndReloadFromDescription(int index, Resource testResource, IResourceDescription updatedResourceDescription) {
 		val phase = 2 + (3 * index) + ". step: load from resource description"
-
+		assertUserDataCreated(phase + ", before unload, by resource", testResource)
+		unloadResource(testResource)
+		assertUserDataCreated(phase + ", after unload, by descriptions", updatedResourceDescription)
+		val newN4jsResource = reloadResourceFromDescription(testResource, updatedResourceDescription)
+		
 		assertExampleTypeStructure(phase, newN4jsResource)
-
 		assertASTIsProxifed(phase, newN4jsResource)
-
 		return newN4jsResource;
 	}
 
-	def private assertASTResolved(int index, N4JSResource newN4jsResource) {
+	def private resolveASTandAssert(int index, N4JSResource newN4jsResource) {
 
 		val phase = 3 + (3 * index) + ". step: resolve AST of proxified resource"
 
 		resolveAST(phase, newN4jsResource)
-
+		assertUserDataCreated(phase + ", after resolving AST", newN4jsResource)
+		
 		assertASTResolved(phase, newN4jsResource)
 	}
 

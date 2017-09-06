@@ -11,6 +11,8 @@
 package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.N4JSASTUtils
@@ -19,8 +21,6 @@ import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.EcoreUtilN4
-import it.xsemantics.runtime.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -62,7 +62,7 @@ class ArrowFunctionProcessor {
 							// --> this would lead to a type error in N4JSTypeValidation, which we want to fix now
 							//     in case the outer type expectation for the containing arrow function has a
 							//     return type of 'void' OR there is no outer type expectation at all
-							val outerTypeExpectation = expectedTypeForArrowFunction(arrFun);
+							val outerTypeExpectation = expectedTypeForArrowFunction(G, arrFun);
 							val outerReturnTypeExpectation = outerTypeExpectation?.returnTypeRef;
 							if (outerTypeExpectation === null
 								|| (outerReturnTypeExpectation !== null && TypeUtils.isVoid(outerReturnTypeExpectation))) {
@@ -79,9 +79,9 @@ class ArrowFunctionProcessor {
 		}
 	}
 
-	def private FunctionTypeExprOrRef expectedTypeForArrowFunction(ArrowFunction fe) {
-		val G = fe.newRuleEnvironment;
-		val tr = ts.expectedTypeIn(G, fe.eContainer(), fe).value;
+	def private FunctionTypeExprOrRef expectedTypeForArrowFunction(RuleEnvironment G, ArrowFunction fe) {
+		val G_new = G.newRuleEnvironment;
+		val tr = ts.expectedTypeIn(G_new, fe.eContainer(), fe).value;
 		if (tr instanceof FunctionTypeExprOrRef) {
 			return tr;
 		}

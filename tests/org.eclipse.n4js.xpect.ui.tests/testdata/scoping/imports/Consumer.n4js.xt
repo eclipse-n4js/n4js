@@ -31,10 +31,10 @@
 /* XPECT scopeWithPosition at 'import { |Class1 } from' ---
 	!Class1 - T42,
 	Class1 - MultipleClasses.n4js:14,
-	Class2 - Tproxy:MultipleClasses.n4js#/1/@topLevelTypes.1,
-	Class3 - Tproxy:MultipleClasses.n4js#/1/@topLevelTypes.2,
-	Class4 - Tproxy:MultipleClasses.n4js#/1/@topLevelTypes.3,
-	MultipleClasses - Tproxy:MultipleClasses.n4js#/1/@topLevelTypes.4
+	Class2 - MultipleClasses.n4js:18,
+	Class3 - MultipleClasses.n4js:22,
+	Class4 - MultipleClasses.n4js:26,
+	MultipleClasses - MultipleClasses.n4js:30
 --- */
 import { Class1 } from "scoping/imports/MultipleClasses"
 

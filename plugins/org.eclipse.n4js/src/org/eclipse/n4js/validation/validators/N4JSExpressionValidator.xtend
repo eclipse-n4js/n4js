@@ -970,7 +970,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				// no subtype-relationship found, issue warning:
 				addIssue(
 					IssueCodes.
-						getMessageForEXP_WARN_CONSTANT_EQUALITY_TEST(warningNameOf(tdLhs), tdRhs.warningNameOf,
+						getMessageForEXP_WARN_CONSTANT_EQUALITY_TEST(tlhs.warningNameOf, trhs.warningNameOf,
 							ee.op === EqualityOperator::NSAME), ee, IssueCodes.EXP_WARN_CONSTANT_EQUALITY_TEST);
 			}
 		}
@@ -989,21 +989,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		t instanceof PrimitiveType || t instanceof TEnum || t instanceof BuiltInType || t instanceof TFunction
 	}
 
-// @SuppressWarnings("unused")
-// private def DEBUGPrint(Set<Type> tdLhs, Boolean leftSubOfRight, Boolean rightSubOfLeft, Set<Type> tdRhs,
-// TypeRef tlhs, TypeRef trhs, EqualityExpression ee) {
-// var leftText = NodeModelUtils.getNode(ee.lhs).text.lastLine
-// var rightText = NodeModelUtils.getNode(ee.rhs).text.lastLine
-//
-// println(
-// tdLhs.warningNameOf + (if (leftSubOfRight) " <: " else "") + "   öööö   " +
-// (if (rightSubOfLeft) " :> " else "") + tdRhs.warningNameOf + "  . . . . . .  " + tlhs.typeRefAsString +
-// "  äää  " + trhs.typeRefAsString + " << " + leftText + " ??? " + rightText + " >> ")
-// }
-// private def String lastLine(String s) {
-// if (!s.contains('\n')) return s;
-// '''...''' + s.substring(Math.min(s.lastIndexOf('\n') + 1, s.length))
-// }
 	private def boolean hasInterface(Set<Type> types) {
 		types.exists[hasInterface]
 	}
@@ -1015,6 +1000,16 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		return switch type {
 			TInterface: true
 			default: false
+		}
+	}
+
+	private def String warningNameOf(TypeRef typeRef) {
+
+		if (typeRef instanceof TypeTypeRef) {
+			typeRef.typeRefAsString
+		} else {
+			val typeS = typeRef.computeDeclaredTypeS
+			warningNameOf(typeS)
 		}
 	}
 

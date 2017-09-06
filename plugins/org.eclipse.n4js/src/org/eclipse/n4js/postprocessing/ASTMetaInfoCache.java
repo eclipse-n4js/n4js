@@ -33,14 +33,12 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.OnChangeEvictingCache.CacheAdapter;
 
 import it.xsemantics.runtime.Result;
@@ -106,13 +104,8 @@ public final class ASTMetaInfoCache {
 	public Result<TypeRef> getType(TypableElement astNode) {
 		final Result<TypeRef> result = getTypeFailSafe(astNode);
 		if (result == null) {
-			if (isCanceled()) {
-				return new Result<>(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
-			} else {
-				throw UtilN4.reportError(new IllegalStateException(
-						"cache miss: no actual type in cache for AST node: " + astNode
-								+ " in resource: " + resource.getURI()));
-			}
+			throw UtilN4.reportError(new IllegalStateException("cache miss: no actual type in cache for AST node: "
+					+ astNode + " in resource: " + resource.getURI()));
 		}
 		return result;
 	}
@@ -216,7 +209,6 @@ public final class ASTMetaInfoCache {
 
 	private boolean isProcessingInProgress = false;
 	private boolean isFullyProcessed = false;
-	/* package */ CancelIndicator cancelIndicator = null;
 
 	// @formatter:off
 
@@ -235,16 +227,12 @@ public final class ASTMetaInfoCache {
 		return isFullyProcessed;
 	}
 
-	/* package */ boolean isCanceled() {
-		return cancelIndicator != null && cancelIndicator.isCanceled();
-	}
-
 	/* package */ boolean isEmpty() {
 		// only used for debugging to spot a suspicious cache clear (see ASTMetaInfoCacheHelper)
 		return actualTypes.isEmpty() && inferredTypeArgs.isEmpty();
 	}
 
-	/* package */ void startProcessing(@SuppressWarnings("hiding") CancelIndicator cancelIndicator) {
+	/* package */ void startProcessing() {
 		if (isProcessingInProgress || isFullyProcessed) {
 			// this method should never be called more than once per N4JSResource
 			logger.error("*#*#*#*#* multiple invocation of method ASTMetaInfoCache#startProcessing()\n"
@@ -253,7 +241,6 @@ public final class ASTMetaInfoCache {
 					"multiple invocation of method ASTMetaInfoCache#startProcessing()"));
 		}
 		isProcessingInProgress = true;
-		this.cancelIndicator = cancelIndicator; // may be null
 	}
 
 	/* package */ void endProcessing() {
@@ -262,7 +249,6 @@ public final class ASTMetaInfoCache {
 		}
 		isFullyProcessed = true;
 		isProcessingInProgress = false;
-		cancelIndicator = null;
 		forwardProcessedSubTrees.clear();
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();
