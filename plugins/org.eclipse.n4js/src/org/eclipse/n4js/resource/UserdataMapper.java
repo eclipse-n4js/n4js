@@ -122,6 +122,9 @@ public final class UserdataMapper {
 		if (exportedModule.isPreLinkingPhase()) {
 			throw new AssertionError("Module may not be from the preLinkingPhase");
 		}
+		if (exportedModule.isReconciled()) {
+			throw new IllegalArgumentException("module must not be reconciled");
+		}
 		final Resource originalResourceUncasted = exportedModule.eResource();
 		if (!(originalResourceUncasted instanceof N4JSResource)) {
 			throw new IllegalArgumentException("module must be contained in an N4JSResource");
