@@ -10,14 +10,20 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import java.util.Objects;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.SwitchStatement;
@@ -41,10 +47,23 @@ public class CatchNodeFinder {
 			if (catchNode != null)
 				return catchNode;
 
-			EObject container = cfe.eContainer();
-			cfe = (container instanceof ControlFlowElement) ? (ControlFlowElement) container : null;
+			cfe = getContainer(cfe);
 		}
 
+		return null;
+	}
+
+	private static ControlFlowElement getContainer(ControlFlowElement cfe) {
+		EObject container = cfe.eContainer();
+		if (container instanceof ControlFlowElement) {
+			return (ControlFlowElement) container;
+		}
+		boolean getNextContainer = false;
+		getNextContainer |= container instanceof CatchBlock;
+		getNextContainer |= container instanceof FinallyBlock;
+		if (getNextContainer) {
+			return (ControlFlowElement) container.eContainer();
+		}
 		return null;
 	}
 
@@ -112,11 +131,7 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingType(ControlFlowElement cfe) {
-			boolean isCatchingBreakStatement = false;
-			isCatchingBreakStatement |= cfe instanceof DoStatement;
-			isCatchingBreakStatement |= cfe instanceof ForStatement;
-			isCatchingBreakStatement |= cfe instanceof SwitchStatement;
-			isCatchingBreakStatement |= cfe instanceof WhileStatement;
+			boolean isCatchingBreakStatement = FGUtils.isControlElement(cfe);
 			return isCatchingBreakStatement;
 		}
 
@@ -128,11 +143,20 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			if (jumpToken.id == null && catchToken.id == null) {
-				return true;
-			}
-			boolean isCatchingToken = jumpToken.id.equals(catchToken.id);
+			boolean needsLabel = needsCatchLabel(cfe);
+			boolean isCatchingToken = false;
+			isCatchingToken |= jumpToken.lblStmt != null && jumpToken.lblStmt == catchToken.lblStmt;
+			isCatchingToken |= jumpToken.lblStmt == null && !needsLabel;
 			return isCatchingToken;
+		}
+
+		boolean needsCatchLabel(ControlFlowElement cfe) {
+			boolean isControlElement = false;
+			isControlElement |= cfe instanceof ForStatement;
+			isControlElement |= cfe instanceof DoStatement;
+			isControlElement |= cfe instanceof WhileStatement;
+			isControlElement |= cfe instanceof SwitchStatement;
+			return !isControlElement;
 		}
 	}
 
@@ -173,10 +197,9 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			if (jumpToken.id == null && catchToken.id == null) {
-				return true;
-			}
-			boolean isCatchingToken = jumpToken.id.equals(catchToken.id);
+			boolean isCatchingToken = false;
+			isCatchingToken |= jumpToken.lblStmt != null && jumpToken.lblStmt == catchToken.lblStmt;
+			isCatchingToken |= jumpToken.lblStmt == null;
 			return isCatchingToken;
 		}
 	}
@@ -225,7 +248,11 @@ public class CatchNodeFinder {
 			EObject container = cfe.eContainer();
 			if (container instanceof TryStatement) {
 				TryStatement tryStmt = (TryStatement) container;
-				isCatchingThrowStatement |= tryStmt.getBlock() == cfe && tryStmt.getCatch() != null;
+				Block block = tryStmt.getBlock();
+				CatchBlock catcher = tryStmt.getCatch();
+				FinallyBlock finalizer = tryStmt.getFinally();
+
+				isCatchingThrowStatement |= block == cfe && (catcher != null || finalizer != null);
 			}
 			if (container instanceof FunctionDeclaration) {
 				FunctionDeclaration fncDecl = (FunctionDeclaration) container;
@@ -240,8 +267,16 @@ public class CatchNodeFinder {
 			EObject container = cfe.eContainer();
 			if (container instanceof TryStatement) {
 				TryStatement tryStmt = (TryStatement) container;
-				ComplexNode cnCatch = cnProvider.get(tryStmt.getCatch().getBlock());
-				return cnCatch.getEntry();
+				ComplexNode cnTryStmt = cnProvider.get(tryStmt);
+				Node catchNode = null;
+				if (tryStmt.getCatch() != null) {
+					catchNode = cnTryStmt.getNode(TryFactory.CATCH_NODE_NAME);
+				}
+				if (catchNode == null && tryStmt.getFinally() != null) {
+					catchNode = cnTryStmt.getNode(TryFactory.FINALLY_NODE_NAME);
+				}
+				Objects.requireNonNull(catchNode);
+				return catchNode;
 			}
 			if (container instanceof FunctionDeclaration) {
 				FunctionDeclaration fncDecl = (FunctionDeclaration) container;
@@ -256,5 +291,4 @@ public class CatchNodeFinder {
 			return true;
 		}
 	}
-
 }

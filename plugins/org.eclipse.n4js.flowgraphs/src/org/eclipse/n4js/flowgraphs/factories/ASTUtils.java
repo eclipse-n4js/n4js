@@ -13,8 +13,9 @@ package org.eclipse.n4js.flowgraphs.factories;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.BreakStatement;
+import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.Statement;
 
@@ -29,16 +30,22 @@ public class ASTUtils {
 	}
 
 	/**
-	 * @returns the label of a statement, or an expression that is the direct child of an {@link ExpressionStatement}.
+	 * @returns the {@link LabelledStatement} that the given stmt refers to or represents.
 	 */
-	public static String getLabel(Statement stmt) {
-		EObject container = stmt.eContainer();
-		if (container instanceof ExpressionStatement) {
-			container = container.eContainer();
+	public static LabelledStatement getLabelledStatement(Statement stmt) {
+		if (stmt instanceof LabelledStatement) {
+			return (LabelledStatement) stmt;
 		}
+		if (stmt instanceof BreakStatement) {
+			return ((BreakStatement) stmt).getLabel();
+		}
+		if (stmt instanceof ContinueStatement) {
+			return ((ContinueStatement) stmt).getLabel();
+		}
+		EObject container = stmt.eContainer();
 		if (container instanceof LabelledStatement) {
 			LabelledStatement lblStmt = (LabelledStatement) container;
-			return lblStmt.getName();
+			return lblStmt;
 		}
 		return null;
 	}

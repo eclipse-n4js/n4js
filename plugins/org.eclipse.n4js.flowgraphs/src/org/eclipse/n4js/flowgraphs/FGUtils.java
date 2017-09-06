@@ -11,10 +11,17 @@
 package org.eclipse.n4js.flowgraphs;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
+import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.SwitchStatement;
+import org.eclipse.n4js.n4JS.TryStatement;
+import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
@@ -78,4 +85,29 @@ public class FGUtils {
 		return isCFContainer;
 	}
 
+	/**
+	 * Returns true iff the represented {@link ControlFlowElement} is one of the following:
+	 * <ul>
+	 * <li>Block</li>
+	 * <li>IfStatement</li>
+	 * <li>ForStatement</li>
+	 * <li>DoStatement</li>
+	 * <li>WhileStatement</li>
+	 * <li>TryStatement</li>
+	 * <li>SwitchStatement</li>
+	 * <li>AbstractCaseClause</li>
+	 * </ul>
+	 */
+	public static boolean isControlElement(ControlFlowElement cfe) {
+		boolean isControlElement = false;
+		isControlElement |= cfe instanceof Block;
+		isControlElement |= cfe instanceof IfStatement;
+		isControlElement |= cfe instanceof ForStatement;
+		isControlElement |= cfe instanceof DoStatement;
+		isControlElement |= cfe instanceof WhileStatement;
+		isControlElement |= cfe instanceof TryStatement;
+		isControlElement |= cfe instanceof SwitchStatement;
+		isControlElement |= cfe instanceof AbstractCaseClause;
+		return isControlElement;
+	}
 }

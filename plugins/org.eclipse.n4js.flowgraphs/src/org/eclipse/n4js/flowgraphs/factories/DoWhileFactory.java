@@ -20,6 +20,7 @@ import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 
 class DoWhileFactory {
 	static final String CONDITION_NODE_NAME = "condition";
@@ -49,9 +50,9 @@ class DoWhileFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		String label = ASTUtils.getLabel(doStmt);
-		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
-		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
+		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(doStmt);
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
+		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}

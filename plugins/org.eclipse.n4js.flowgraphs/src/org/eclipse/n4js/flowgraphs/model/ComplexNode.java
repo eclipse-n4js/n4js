@@ -24,15 +24,7 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
-import org.eclipse.n4js.n4JS.AbstractCaseClause;
-import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.DoStatement;
-import org.eclipse.n4js.n4JS.ForStatement;
-import org.eclipse.n4js.n4JS.IfStatement;
-import org.eclipse.n4js.n4JS.SwitchStatement;
-import org.eclipse.n4js.n4JS.TryStatement;
-import org.eclipse.n4js.n4JS.WhileStatement;
 
 /** Represents a complete {@link ControlFlowElement}. */
 public class ComplexNode implements ControlFlowable {
@@ -182,31 +174,12 @@ public class ComplexNode implements ControlFlowable {
 	}
 
 	/**
-	 * Returns true iff the represented {@link ControlFlowElement} is one of the following:
-	 * <ul>
-	 * <li>Block</li>
-	 * <li>IfStatement</li>
-	 * <li>ForStatement</li>
-	 * <li>DoStatement</li>
-	 * <li>WhileStatement</li>
-	 * <li>TryStatement</li>
-	 * <li>SwitchStatement</li>
-	 * <li>AbstractCaseClause</li>
-	 * </ul>
+	 * Returns true iff the represented {@link ControlFlowElement} is a control element. See
+	 * {@link FGUtils#isControlElement(ControlFlowElement)}
 	 */
 	public boolean isControlElement() {
 		ControlFlowElement cfe = getControlFlowElement();
-
-		boolean isControlElement = false;
-		isControlElement |= cfe instanceof Block;
-		isControlElement |= cfe instanceof IfStatement;
-		isControlElement |= cfe instanceof ForStatement;
-		isControlElement |= cfe instanceof DoStatement;
-		isControlElement |= cfe instanceof WhileStatement;
-		isControlElement |= cfe instanceof TryStatement;
-		isControlElement |= cfe instanceof SwitchStatement;
-		isControlElement |= cfe instanceof AbstractCaseClause;
-		return isControlElement;
+		return FGUtils.isCFContainer(cfe);
 	}
 
 	/** @returns all {@link DependencyEdge}s that start or end at one of the nodes of this {@link ComplexNode}. */

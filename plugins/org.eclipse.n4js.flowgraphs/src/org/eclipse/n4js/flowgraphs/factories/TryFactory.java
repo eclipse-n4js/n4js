@@ -24,6 +24,9 @@ import org.eclipse.n4js.n4JS.TryStatement;
 
 class TryFactory {
 
+	static final String CATCH_NODE_NAME = "catch";
+	static final String FINALLY_NODE_NAME = "finally";
+
 	static ComplexNode buildComplexNode(TryStatement tryStmt) {
 		ComplexNode cNode = new ComplexNode(tryStmt);
 
@@ -39,13 +42,15 @@ class TryFactory {
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
-			CatchToken ct = new CatchToken(ControlFlowType.Throw, catchClause.getCatchVariable());
-			catchNode = new DelegatingNode("catch", tryStmt, catchClause.getBlock());
-			catchNode.getEntry().addCatchToken(ct);
+			CatchToken ct = new CatchToken(ControlFlowType.Throw);
+			catchNode = new DelegatingNode(CATCH_NODE_NAME, tryStmt, catchClause.getBlock());
+			catchNode.addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
-			finallyNode = new DelegatingNode("finally", tryStmt, tryStmt.getFinally().getBlock());
+			CatchToken ct = new CatchToken(ControlFlowType.Throw);
+			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, tryStmt, tryStmt.getFinally().getBlock());
+			finallyNode.addCatchToken(ct);
 		}
 
 		cNode.addNode(entryNode);

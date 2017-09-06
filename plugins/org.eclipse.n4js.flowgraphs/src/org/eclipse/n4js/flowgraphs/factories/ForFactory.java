@@ -20,6 +20,7 @@ import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 
@@ -77,9 +78,9 @@ class ForFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		String label = ASTUtils.getLabel(forStmt);
-		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
-		hasNextNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
+		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(forStmt);
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
+		hasNextNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}
@@ -154,9 +155,9 @@ class ForFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		String label = ASTUtils.getLabel(forStmt);
-		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
-		loopCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, label));
+		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(forStmt);
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
+		loopCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}

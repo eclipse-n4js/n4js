@@ -22,6 +22,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.DefaultClause;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 
 class SwitchFactory {
@@ -73,8 +74,8 @@ class SwitchFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		String label = ASTUtils.getLabel(switchStmt);
-		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, label));
+		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(switchStmt);
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
 
 		return cNode;
 	}

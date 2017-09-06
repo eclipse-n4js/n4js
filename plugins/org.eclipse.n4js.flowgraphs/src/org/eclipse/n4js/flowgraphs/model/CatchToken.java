@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.n4JS.LabelledStatement;
 
 /**
  * Represents the ability to catch {@link JumpToken}s of and can be added to {@link Node}s. The {@link CatchToken} can
@@ -30,8 +31,8 @@ public class CatchToken extends JumpToken {
 	 * Constructor.<br/>
 	 * Catches the given {@link ControlFlowType} iff the given id matches the id from the {@link JumpToken}.
 	 */
-	public CatchToken(ControlFlowType type, Object id) {
-		super(type, id);
+	public CatchToken(ControlFlowType type, LabelledStatement lblStmt) {
+		super(type, lblStmt);
 	}
 
 }

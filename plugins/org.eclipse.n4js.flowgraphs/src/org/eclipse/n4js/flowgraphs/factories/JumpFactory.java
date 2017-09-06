@@ -63,7 +63,7 @@ class JumpFactory {
 	}
 
 	static ComplexNode buildComplexNode(ThrowStatement stmt) {
-		JumpToken jumptoken = new JumpToken(ControlFlowType.Throw, stmt.getExpression());
+		JumpToken jumptoken = new JumpToken(ControlFlowType.Throw);
 		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
 	}
 

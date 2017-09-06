@@ -21,7 +21,7 @@ public class JumpToken {
 	/** Specifies the control flow type that invokes the jump */
 	final public ControlFlowType cfType;
 	/** Specifies an identifier, such as a label in a {@link LabelledStatement}. */
-	final public Object id;
+	final public LabelledStatement lblStmt;
 
 	/**
 	 * Constructor.<br/>
@@ -35,9 +35,9 @@ public class JumpToken {
 	 * Constructor.<br/>
 	 * Jumps due to the given {@link ControlFlowType} with a specific jump identifier.
 	 */
-	public JumpToken(ControlFlowType type, Object id) {
+	public JumpToken(ControlFlowType type, LabelledStatement lblStmt) {
 		this.cfType = type;
-		this.id = id;
+		this.lblStmt = lblStmt;
 	}
 
 	@Override
@@ -48,15 +48,15 @@ public class JumpToken {
 
 		boolean equals = true;
 		equals &= cfType == jt.cfType;
-		equals &= id == jt.id;
+		equals &= lblStmt == jt.lblStmt;
 		return equals;
 	}
 
 	@Override
 	public int hashCode() {
 		long hashCode = cfType.hashCode();
-		if (id != null) {
-			hashCode += id.hashCode();
+		if (lblStmt != null) {
+			hashCode += lblStmt.hashCode();
 		}
 		return (int) (hashCode % Integer.MAX_VALUE);
 	}
@@ -64,8 +64,8 @@ public class JumpToken {
 	@Override
 	public String toString() {
 		String s = cfType.name();
-		if (id != null)
-			s += " " + id;
+		if (lblStmt != null)
+			s += " " + lblStmt;
 		return s;
 	}
 
