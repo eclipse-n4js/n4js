@@ -14,7 +14,7 @@
 
 
 /**
- * Attention:
+ * Note:
  *
  * Tests in this file seem similar and redundant but are necessary
  * since all test methods rely on different algorithms. To very these
@@ -583,36 +583,3 @@ function * YieldExpression(i) {
 
 
 
-
-
-
-
-function fn1() {
-	// XPECT succs at 'let xx = 0' --> xx
-	let xx = 0;
-	xx++;
-}
-
-function fn2() {
-	// XPECT succs at 'console.log("Hallo")' --> console
-	console.log("Hallo");
-	console.log("Welt");
-}
-
-function fn3() {
-	// XPECT succs at 'console' --> console.log
-	console.log("Hallo");
-	let x = 0;
-}
-
-function fn4() {
-	// XPECT succs at 'console.log' --> "Hallo"
-	console.log("Hallo");
-	let xx = 0;
-}
-
-function fn5() {
-	// XPECT succs at '"Hallo"' --> console.log("Hallo")
-	console.log("Hallo");
-	let xx = 0;
-}
