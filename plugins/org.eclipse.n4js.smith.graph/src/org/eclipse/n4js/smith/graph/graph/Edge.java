@@ -39,7 +39,7 @@ import org.eclipse.swt.widgets.Display;
  * a different style, and will be presented to the user only under certain circumstances (e.g. if a node is hovered /
  * selected or if drawing of all cross-links is turned on).
  */
-public class Edge implements Paintable {
+public class Edge {
 
 	/**
 	 * @see Edge
@@ -173,7 +173,6 @@ public class Edge implements Paintable {
 	/**
 	 * Paint edge to given GC.
 	 */
-	@Override
 	public void paint(GC gc) {
 		if (startNodes.isEmpty() || endNodes.isEmpty())
 			return;

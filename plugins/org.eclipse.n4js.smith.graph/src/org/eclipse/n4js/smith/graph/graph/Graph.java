@@ -11,7 +11,6 @@
 package org.eclipse.n4js.smith.graph.graph;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.graphics.GC;
@@ -37,16 +36,6 @@ abstract public class Graph<P extends GraphProvider<?, ?>> {
 	 */
 	public List<Edge> getEdges() {
 		return edges;
-	}
-
-	/**
-	 * Returns a list of all paintable elements.
-	 */
-	public List<Paintable> getPaintables() {
-		List<Paintable> pntbls = new LinkedList<>();
-		pntbls.addAll(nodes);
-		pntbls.addAll(edges);
-		return pntbls;
 	}
 
 	/**
