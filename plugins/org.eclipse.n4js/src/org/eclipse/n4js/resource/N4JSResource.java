@@ -444,7 +444,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			EObject result = getParseResult().getRootASTElement();
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(0, result);
-				myContents.sneakyAdd(oldModule);
+				if (oldModule != null) {
+					myContents.sneakyAdd(oldModule);
+				}
 				forceInstallDerivedState(false);
 			} else {
 				if (myContents.size() == 1) {
@@ -486,7 +488,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			throw new IllegalStateException("The resource must be loaded, before installDerivedState can be called.");
 		fullyInitialized = false;
 		isInitializing = false;
-		super.installDerivedState(preIndexingPhase);
+		installDerivedState(preIndexingPhase);
 	}
 
 	/**
