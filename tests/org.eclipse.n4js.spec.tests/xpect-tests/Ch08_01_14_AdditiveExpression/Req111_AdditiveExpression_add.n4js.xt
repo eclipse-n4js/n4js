@@ -20,6 +20,7 @@
 let s: string ="x", s1: string="y";
 let b: boolean =true;
 let n: number = 1;
+let a: any = 5;
 
 // XPECT type of n+n --> number 
 n+n;
@@ -59,3 +60,8 @@ b+b
 undefined+undefined
 // XPECT type of null+null --> number
 null+null
+
+// XPECT type of a+n --> union{number,string}
+a+n
+// XPECT type of a+s --> string
+a+s

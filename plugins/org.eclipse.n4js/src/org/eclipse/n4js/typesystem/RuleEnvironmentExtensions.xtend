@@ -666,6 +666,17 @@ class RuleEnvironmentExtensions {
 	public def static boolean isNumeric(RuleEnvironment G, Type type) {
 		G.predefinedTypes.builtInTypeScope.isNumeric(type)
 	}
+
+	/**
+	 * Returns true if the given type is one of the {@link BuiltInTypeScope#isNumeric(Type) numeric} primitive
+	 * built-in types.
+	 */
+	public def static boolean isAny(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false
+		}
+		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.anyType
+	}
 	
 	/**
 	 * Returns true if the given type reference points to one of the {@link BuiltInTypeScope#isNumeric(Type) numeric}

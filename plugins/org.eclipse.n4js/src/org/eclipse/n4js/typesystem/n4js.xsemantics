@@ -968,8 +968,8 @@ from {
 					// one is numeric, the other unknown --> 
 					T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);
 				} else {
-					val lMayNum = lnum || G.containsNumericOperand(l);
-					val rMayNum = rnum || G.containsNumericOperand(r);
+					val lMayNum = lnum || G.containsNumericOperand(l) || G.isAny(l);
+					val rMayNum = rnum || G.containsNumericOperand(r) || G.isAny(r);
 					
 					if (lMayNum && rMayNum) {
 						T = typeSystemHelper.createUnionType(G, G.numberTypeRef, G.stringTypeRef);

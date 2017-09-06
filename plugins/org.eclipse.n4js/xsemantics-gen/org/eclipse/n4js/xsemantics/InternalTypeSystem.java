@@ -2813,8 +2813,8 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
           if (((lunknown || runknown) && (lnum || rnum))) {
             T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
           } else {
-            final boolean lMayNum = (lnum || RuleEnvironmentExtensions.containsNumericOperand(G, l));
-            final boolean rMayNum = (rnum || RuleEnvironmentExtensions.containsNumericOperand(G, r));
+            final boolean lMayNum = ((lnum || RuleEnvironmentExtensions.containsNumericOperand(G, l)) || RuleEnvironmentExtensions.isAny(G, l));
+            final boolean rMayNum = ((rnum || RuleEnvironmentExtensions.containsNumericOperand(G, r)) || RuleEnvironmentExtensions.isAny(G, r));
             if ((lMayNum && rMayNum)) {
               T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
             } else {
