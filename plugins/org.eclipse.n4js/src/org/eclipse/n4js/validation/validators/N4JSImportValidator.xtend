@@ -155,7 +155,14 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			// find AST for Message:
 			NodeModelUtils.findActualNodeFor(spec).text.trim
 		} else
-			return spec.importedElementName
+			spec.importedElementName
+	}
+	
+	private def importedElementName(NamedImportSpecifier it) {
+		if (importedElement !== null && !importedElement.eIsProxy) {
+			importedElement?.name ?: "<unknown>"
+		} else
+			"<unknown (proxy)>"
 	}
 
 	/**
