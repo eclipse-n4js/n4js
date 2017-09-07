@@ -34,7 +34,6 @@ import org.eclipse.n4js.ui.changes.IAtomicChange;
 import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.n4js.ui.changes.Replacement;
 import org.eclipse.n4js.ui.organize.imports.BreakException.UserCanceledBreakException;
-import org.eclipse.n4js.utils.StopWatchPrintUtil;
 import org.eclipse.n4js.utils.UtilN4;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.xtext.nodemodel.ILeafNode;
@@ -168,7 +167,6 @@ class DocumentImportsOrganizer {
 
 			@Override
 			public List<IChange> exec(XtextResource xtextResource) throws Exception {
-				StopWatchPrintUtil sw0 = new StopWatchPrintUtil("prepareImportsChanges", 0, 100);
 				InsertionPoint insertionPoint = hImportsRegion.getImportRegion(xtextResource);
 
 				if (insertionPoint.offset != -1) {
@@ -189,19 +187,15 @@ class DocumentImportsOrganizer {
 						changes.addAll(getImportInsertionChanges(document, xtextResource, insertionPoint, NL,
 								organizedImportSection));
 
-						sw0.stop();
 						return changes;
 					} catch (UserCanceledBreakException e) {
-						sw0.stop();
 						return null; // user-triggered cancellation, nothing to report.
 					} catch (BreakException e) {
-						sw0.stop();
 						LOGGER.warn("Organize imports broke:", e);
 						throw e;
 					}
 				}
 
-				sw0.stop();
 				return null;
 			}
 		};

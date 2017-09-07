@@ -100,7 +100,6 @@ public class ImportsComputer {
 	 */
 	public def String getOrganizedImportSection(XtextResource xtextResource, String lineEnding,
 		Interaction interaction) throws BreakException {
-		val sw0 = new StopWatchPrintUtil("getOrganizedImportSection", 1, 100);
 
 		val StringBuilder sb = new StringBuilder();
 		val Script script = getScript(xtextResource);
@@ -143,20 +142,16 @@ public class ImportsComputer {
 			sb.delete(length - lineEnding.length, length)
 		}
 
-		sw0.stop();
 		return sb.toString();
 	}
 
 	/** Calculate new Imports. */
 	private def ArrayList<ImportDeclaration> resolveMissingImports(Script script, Set<String> namesThatWeBroke,
 		Interaction interaction) throws BreakException {
-		val sw1 = new StopWatchPrintUtil("resolveMissingImports", 2, 100);
 
 		val contextProject = core.findProject(script.eResource.URI).orNull
 
-		val sw2 =  new StopWatchPrintUtil("createResolutionsForBrokenNames", 3, 100);
 		val Multimap<String, ImportableObject> resolutions = createResolutionsForBrokenNames(script, contextProject, namesThatWeBroke);
-		sw2.stop();
 
 		val solutions = resolutions.asMap.filter[p1, p2|p2.size == 1]
 
@@ -196,7 +191,6 @@ public class ImportsComputer {
 
 		chosenSolutions.forEach[ret.add(importsFactory.createImport(it, contextProject, nodelessMarker))];
 
-		sw1.stop();
 		return ret;
 	}
 
@@ -225,7 +219,6 @@ public class ImportsComputer {
 	 */
 	private def void addResolutionsFromIndex(Multimap<String, ImportableObject> resolution,IN4JSProject contextProject,
 		Iterable<String> brokenNames, Resource contextResource) {
-		val sw = new StopWatchPrintUtil( "index", 4, 100);
 
 		val resourceSet = core.createResourceSet(Optional.fromNullable(contextProject))
 		val resources = core.getXtextIndex(resourceSet).allResourceDescriptions
@@ -249,8 +242,6 @@ public class ImportsComputer {
 				}
 			}
 		]
-		
-		sw.stop
 	}
 
 	/** Creates {@link ImportableObject} from provided name and object description. Result is added to the collection. */
