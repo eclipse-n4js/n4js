@@ -77,29 +77,6 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	private void init(Object input) {
 		performFlowAnalyses(input);
 		flowAnalyses.performAnalyzes(nodesEdgesCollector);
-		// nodeMap.clear();
-		// performFlowAnalyses(input);
-		//
-		// Collection<ControlFlowElement> allCFEs = flowAnalyses.getAllElements();
-		// for (ControlFlowElement cfe : allCFEs) {
-		// String label = FGUtils.getTextLabel(cfe);
-		// Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
-		// nodeMap.put(cfe, node);
-		// }
-		// edgesMap.clear();
-		// for (ControlFlowElement cfe : allCFEs) {
-		// List<Edge> edges = new LinkedList<>();
-		// Collection<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
-		// Node sNode = nodeMap.get(cfe);
-		//
-		// for (ControlFlowElement succ : succs) {
-		// Node eNode = nodeMap.get(succ);
-		// TreeSet<ControlFlowType> cfTypes = flowAnalyses.getControlFlowTypeToSuccessors(cfe, succ);
-		// Edge edge = new CFEdge("CF", sNode, eNode, cfTypes);
-		// edges.add(edge);
-		// }
-		// edgesMap.put(cfe, edges);
-		// }
 	}
 
 	/** Finds a script for the given input and then triggers a control flow analyses. */
@@ -137,7 +114,6 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		protected void initAll() {
 			nodeMap.clear();
 			edgesMap.clear();
-
 		}
 
 		@Override

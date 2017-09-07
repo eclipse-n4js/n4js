@@ -38,8 +38,6 @@ public class DelegatingNode extends Node {
 
 	@Override
 	public ControlFlowElement getDelegatedControlFlowElement() {
-		if (cfeDelegate == null)
-			return null; // can be missing when the AST is incomplete
 		return CFEMapper.map(cfeDelegate);
 	}
 

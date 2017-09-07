@@ -139,8 +139,6 @@ abstract public class Node implements ControlFlowable {
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		if (cfeElem == null)
-			return null; // can be missing when the AST is incomplete
 		return CFEMapper.map(cfeElem);
 	}
 

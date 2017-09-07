@@ -154,6 +154,7 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	@Override
 	final protected void init() {
 		visitedEdgesInternal.clear();
+		visitedEdges.clear();
 		initAll();
 	}
 

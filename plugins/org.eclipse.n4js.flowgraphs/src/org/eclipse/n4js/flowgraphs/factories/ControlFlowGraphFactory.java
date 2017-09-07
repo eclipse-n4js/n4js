@@ -63,11 +63,14 @@ public class ControlFlowGraphFactory {
 			if (eObj instanceof ControlFlowElement) {
 				ControlFlowElement cfe = (ControlFlowElement) eObj;
 				cfe = CFEMapper.map(cfe);
+
 				if (cfe != null && !cnMap.containsKey(cfe)) {
 					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
 					cfContainers.add(cfContainer);
 					cn = CFEFactory.build(cfe);
-					cnMap.put(cfe, cn);
+					if (cn != null) {
+						cnMap.put(cfe, cn);
+					}
 				}
 			}
 		}
@@ -93,7 +96,7 @@ public class ControlFlowGraphFactory {
 		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
 		if (subASTElem != null) {
 			ComplexNode subCN = cnProvider.get(subASTElem);
-			if (subCN != null) { // can be missing when the AST is incomplete
+			if (subCN != null) { // can be null in case of malformed AST
 				ControlFlowEdge e = EdgeUtils.connectCF(mNode, subCN.getEntry());
 				internalStartNode = subCN.getExit();
 				if (PRINT_EDGE_DETAILS)
