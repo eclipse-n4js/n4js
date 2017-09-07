@@ -31,6 +31,7 @@ import org.eclipse.n4js.n4JS.MemberAccess
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.organize.imports.ImportStateCalculator
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
 import org.eclipse.n4js.scoping.utils.ImportSpecifierUtil
@@ -42,7 +43,6 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.contentassist.N4JSCandidateFilter
 import org.eclipse.n4js.utils.Log
-import org.eclipse.n4js.utils.StopWatchPrintUtil
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.resource.XtextResource
 
@@ -50,7 +50,6 @@ import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.EXPORT_DEFAULT_NAME
 
 import static extension org.eclipse.n4js.ui.organize.imports.UnresolveProxyCrossRefUtil.*
-import org.eclipse.n4js.projectModel.IN4JSProject
 
 /**
  * Computes imports required by the given resource. In principle removes unused imports, adds missing imports, sorts imports - all in one go.
