@@ -1292,9 +1292,22 @@ function ThrowTryCatchFinallyStatement1() {
 }
 
 
-/*
-AnnotationList
-TryStatement
-VariableDeclaration
-VariableStatement
- */
+function VariableStatement1() {
+	/* ThrowTryCatchFinallyStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> x = 1,
+		x = 1 --> let x = 1,
+		let x = 1 --> "end"
+	--- */
+	// VariableStatement1 XPECT allPaths --> "start" -> 1 -> x = 1 -> let x = 1 -> "end"
+	// VariableStatement1 XPECT path from '"start"' to '"end"' -->
+	// VariableStatement1 XPECT commonPreds of '1' and 'x = 1' --> 1
+	// VariableStatement1 XPECT succs at '"start"' --> 1
+	// VariableStatement1 XPECT succs at '1' --> x = 1
+	// VariableStatement1 XPECT succs at 'x = 1' --> let x = 1
+	// VariableStatement1 XPECT succs at 'let x = 1' --> "end"
+	// VariableStatement1 XPECT warnings --> "" at "x"
+	"start";
+	let x = 1;
+	"end";
+}

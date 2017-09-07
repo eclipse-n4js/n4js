@@ -14,7 +14,6 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -131,7 +130,11 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingType(ControlFlowElement cfe) {
-			boolean isCatchingBreakStatement = FGUtils.isControlElement(cfe);
+			boolean isCatchingBreakStatement = false;
+			isCatchingBreakStatement |= cfe instanceof DoStatement;
+			isCatchingBreakStatement |= cfe instanceof ForStatement;
+			isCatchingBreakStatement |= cfe instanceof WhileStatement;
+			isCatchingBreakStatement |= cfe instanceof SwitchStatement;
 			return isCatchingBreakStatement;
 		}
 
@@ -143,20 +146,10 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken) {
-			boolean needsLabel = needsCatchLabel(cfe);
 			boolean isCatchingToken = false;
 			isCatchingToken |= jumpToken.lblStmt != null && jumpToken.lblStmt == catchToken.lblStmt;
-			isCatchingToken |= jumpToken.lblStmt == null && !needsLabel;
+			isCatchingToken |= jumpToken.lblStmt == null;
 			return isCatchingToken;
-		}
-
-		boolean needsCatchLabel(ControlFlowElement cfe) {
-			boolean isControlElement = false;
-			isControlElement |= cfe instanceof ForStatement;
-			isControlElement |= cfe instanceof DoStatement;
-			isControlElement |= cfe instanceof WhileStatement;
-			isControlElement |= cfe instanceof SwitchStatement;
-			return !isControlElement;
 		}
 	}
 

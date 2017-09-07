@@ -264,12 +264,3 @@ function WhileStatementContinue5() {
 }
 
 
-
-function BlockBreak1() {
-	// BlockBreak1 XPECT succs type 'Break' at 'break;' --> "end"
-	"start";
-	LBL: {
-		break;
-	}
-	"end";
-}
