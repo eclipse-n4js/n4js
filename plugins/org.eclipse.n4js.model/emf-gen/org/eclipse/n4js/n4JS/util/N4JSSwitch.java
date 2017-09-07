@@ -456,6 +456,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING: {
 				VariableDeclarationOrBinding variableDeclarationOrBinding = (VariableDeclarationOrBinding)theEObject;
 				T result = caseVariableDeclarationOrBinding(variableDeclarationOrBinding);
+				if (result == null) result = caseControlFlowElement(variableDeclarationOrBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -463,6 +464,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				VariableBinding variableBinding = (VariableBinding)theEObject;
 				T result = caseVariableBinding(variableBinding);
 				if (result == null) result = caseVariableDeclarationOrBinding(variableBinding);
+				if (result == null) result = caseControlFlowElement(variableBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -471,6 +473,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseExportedVariableBinding(exportedVariableBinding);
 				if (result == null) result = caseVariableBinding(exportedVariableBinding);
 				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableBinding);
+				if (result == null) result = caseControlFlowElement(exportedVariableBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

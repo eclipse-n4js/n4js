@@ -784,7 +784,7 @@ class ExportedVariableStatement extends VariableStatement, ExportableElement, An
 	}
 }
 
-abstract class VariableDeclarationOrBinding {
+abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 
 	op VariableDeclaration[] getVariableDeclarations() {
 		switch(this) {
@@ -793,6 +793,8 @@ abstract class VariableDeclarationOrBinding {
 		default: #[].toEList
 		}
 	}
+
+	op Expression getExpression()
 }
 
 class VariableBinding extends VariableDeclarationOrBinding {
@@ -807,7 +809,7 @@ class ExportedVariableBinding extends VariableBinding {
 	refers transient TVariable definedVariable
 }
 
-class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable, ControlFlowElement  {
+class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable  {
 	contains Annotation[] annotations
 	contains Expression expression
 	/**

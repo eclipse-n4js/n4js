@@ -2819,6 +2819,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getVariableDeclarationOrBinding__GetExpression() {
+		return variableDeclarationOrBindingEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getVariableBinding() {
 		return variableBindingEClass;
 	}
@@ -6447,6 +6456,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		variableDeclarationOrBindingEClass = createEClass(VARIABLE_DECLARATION_OR_BINDING);
 		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS);
+		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_EXPRESSION);
 
 		variableBindingEClass = createEClass(VARIABLE_BINDING);
 		createEReference(variableBindingEClass, VARIABLE_BINDING__PATTERN);
@@ -7044,12 +7054,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		exportedVariableStatementEClass.getESuperTypes().add(this.getExportableElement());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getModifiableElement());
+		variableDeclarationOrBindingEClass.getESuperTypes().add(this.getControlFlowElement());
 		variableBindingEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
 		exportedVariableBindingEClass.getESuperTypes().add(this.getVariableBinding());
 		variableDeclarationEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
 		variableDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
 		variableDeclarationEClass.getESuperTypes().add(this.getVariable());
-		variableDeclarationEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportedVariableDeclarationEClass.getESuperTypes().add(this.getVariableDeclaration());
 		emptyStatementEClass.getESuperTypes().add(this.getStatement());
 		expressionStatementEClass.getESuperTypes().add(this.getStatement());
@@ -7456,6 +7466,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(variableDeclarationOrBindingEClass, VariableDeclarationOrBinding.class, "VariableDeclarationOrBinding", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getVariableDeclarationOrBinding__GetVariableDeclarations(), this.getVariableDeclaration(), "getVariableDeclarations", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVariableDeclarationOrBinding__GetExpression(), this.getExpression(), "getExpression", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(variableBindingEClass, VariableBinding.class, "VariableBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVariableBinding_Pattern(), this.getBindingPattern(), null, "pattern", null, 0, 1, VariableBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
