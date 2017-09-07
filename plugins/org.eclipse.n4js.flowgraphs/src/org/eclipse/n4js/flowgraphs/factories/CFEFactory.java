@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
+import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
@@ -132,8 +133,13 @@ final public class CFEFactory {
 		}
 
 		@Override
+		public ComplexNode caseVariableBinding(VariableBinding feature) {
+			return VariableBindingFactory.buildComplexNode(feature);
+		}
+
+		@Override
 		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
-			return VariableDeclaratorFactory.buildComplexNode(feature);
+			return VariableDeclarationFactory.buildComplexNode(feature);
 		}
 	}
 

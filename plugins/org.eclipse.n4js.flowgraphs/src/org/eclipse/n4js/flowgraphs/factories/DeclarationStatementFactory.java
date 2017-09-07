@@ -18,7 +18,7 @@ import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 
 class DeclarationStatementFactory {
@@ -30,9 +30,9 @@ class DeclarationStatementFactory {
 		Node exitNode = new RepresentingNode("exit", varDeclStmt);
 
 		List<Node> varDeclNodes = new LinkedList<>();
-		for (int i = 0; i < varDeclStmt.getVarDecl().size(); i++) {
-			VariableDeclaration varDecl2 = varDeclStmt.getVarDecl().get(i);
-			Node varDeclNode = new DelegatingNode("declaration_" + i, varDeclStmt, varDecl2);
+		for (int i = 0; i < varDeclStmt.getVarDeclsOrBindings().size(); i++) {
+			VariableDeclarationOrBinding varDOB = varDeclStmt.getVarDeclsOrBindings().get(i);
+			Node varDeclNode = new DelegatingNode("declaration_" + i, varDeclStmt, varDOB);
 			varDeclNodes.add(varDeclNode);
 		}
 

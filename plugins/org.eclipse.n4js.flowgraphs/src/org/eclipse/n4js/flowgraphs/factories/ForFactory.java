@@ -44,6 +44,17 @@ class ForFactory {
 
 		Node entryNode = new HelperNode("entry", forStmt);
 		Node exitNode = new HelperNode("exit", forStmt);
+		List<Node> declNodes = new LinkedList<>();
+		if (forStmt.getVarDeclsOrBindings() != null) {
+			int i = 0;
+			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
+				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
+					Node initNode = new DelegatingNode("decl_" + i, forStmt, varDecl);
+					declNodes.add(initNode);
+					i++;
+				}
+			}
+		}
 		Node expressionNode = new DelegatingNode("expression", forStmt, forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics)
@@ -56,6 +67,8 @@ class ForFactory {
 			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());
 
 		cNode.addNode(entryNode);
+		for (Node declNode : declNodes)
+			cNode.addNode(declNode);
 		cNode.addNode(expressionNode);
 		cNode.addNode(getObjectKeysNode);
 		cNode.addNode(getIteratorNode);
@@ -66,6 +79,7 @@ class ForFactory {
 
 		List<Node> nodes = new LinkedList<>();
 		nodes.add(entryNode);
+		nodes.addAll(declNodes);
 		nodes.add(expressionNode);
 		nodes.add(getObjectKeysNode);
 		nodes.add(getIteratorNode);

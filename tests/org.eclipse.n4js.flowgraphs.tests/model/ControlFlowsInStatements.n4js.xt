@@ -377,6 +377,72 @@ function ForStatement9() {
 	"end";
 }
 
+function ForOfStatement1() {
+	/* ForOfStatement1 XPECT allEdges ---
+		"start" --> i,
+		i --> 1,
+		1 --> 2,
+		2 --> [1\,2],
+		[1\,2] -Repeat-> 3,
+		[1\,2] --> "end",
+		3 -Repeat-> 3,
+		3 --> "end"
+	--- */
+	/* ForOfStatement1 XPECT allPaths ---
+		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
+	--- */
+	// ForOfStatement1 XPECT path from '"start"' to '"end"' -->
+	// ForOfStatement1 XPECT path from '3' to '3' -->
+	// ForOfStatement1 XPECT path from '3' notTo '[1,2]' -->
+	// ForOfStatement1 XPECT commonPreds of '3' and '"end"' --> 3, [1\,2]
+	// ForOfStatement1 XPECT commonPreds of '3' and '[1,2]' --> [1\,2]
+	// ForOfStatement1 XPECT succs at '"start"' --> i
+	// ForOfStatement1 XPECT succs at 'i' --> 1
+	// ForOfStatement1 XPECT succs at '1' --> 2
+	// ForOfStatement1 XPECT succs at '2' --> [1\,2]
+	// ForOfStatement1 XPECT succs type 'Repeat' at '[1,2]' --> 3
+	// ForOfStatement1 XPECT succs at '[1,2]' --> 3, "end"
+	// ForOfStatement1 XPECT succs at '3' --> 3, "end"
+	"start";
+	for (var i in [1,2]) 3;
+	"end";
+}
+
+function ForInStatement1() {
+	/* ForInStatement1 XPECT allEdges ---
+		"start" --> i,
+		i --> 1,
+		1 --> 2,
+		2 --> [1\,2],
+		[1\,2] -Repeat-> 3,
+		[1\,2] --> "end",
+		3 -Repeat-> 3,
+		3 --> "end"
+	--- */
+	/* ForInStatement1 XPECT allPaths ---
+		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
+	--- */
+	// ForInStatement1 XPECT path from '"start"' to '"end"' -->
+	// ForInStatement1 XPECT path from '3' to '3' -->
+	// ForInStatement1 XPECT path from '3' notTo '[1,2]' -->
+	// ForInStatement1 XPECT commonPreds of '3' and '"end"' --> 3, [1\,2]
+	// ForInStatement1 XPECT commonPreds of '3' and '[1,2]' --> [1\,2]
+	// ForInStatement1 XPECT succs at '"start"' --> i
+	// ForInStatement1 XPECT succs at 'i' --> 1
+	// ForInStatement1 XPECT succs at '1' --> 2
+	// ForInStatement1 XPECT succs at '2' --> [1\,2]
+	// ForInStatement1 XPECT succs type 'Repeat' at '[1,2]' --> 3
+	// ForInStatement1 XPECT succs at '[1,2]' --> 3, "end"
+	// ForInStatement1 XPECT succs at '3' --> 3, "end"
+	"start";
+	for (var i of [1,2]) 3;
+	"end";
+}
+
 function ForStatementVarDecl1() {
 	/* ForStatementVarDecl1 XPECT allEdges ---
 		"start" --> 0,
@@ -1293,21 +1359,39 @@ function ThrowTryCatchFinallyStatement1() {
 
 
 function VariableStatement1() {
-	/* ThrowTryCatchFinallyStatement1 XPECT allEdges ---
+	/* VariableStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
-		x = 1 --> let x = 1,
-		let x = 1 --> "end"
+		x = 1 --> let x = 1;,
+		let x = 1; --> "end"
 	--- */
-	// VariableStatement1 XPECT allPaths --> "start" -> 1 -> x = 1 -> let x = 1 -> "end"
+	// VariableStatement1 XPECT allPaths --> "start" -> 1 -> x = 1 -> let x = 1; -> "end"
 	// VariableStatement1 XPECT path from '"start"' to '"end"' -->
 	// VariableStatement1 XPECT commonPreds of '1' and 'x = 1' --> 1
 	// VariableStatement1 XPECT succs at '"start"' --> 1
 	// VariableStatement1 XPECT succs at '1' --> x = 1
-	// VariableStatement1 XPECT succs at 'x = 1' --> let x = 1
-	// VariableStatement1 XPECT succs at 'let x = 1' --> "end"
-	// VariableStatement1 XPECT warnings --> "" at "x"
+	// VariableStatement1 XPECT succs at 'x = 1' --> let x = 1;
+	// VariableStatement1 XPECT succs at 'let x = 1;' --> "end"
 	"start";
 	let x = 1;
+	"end";
+}
+
+function VariableStatement2() {
+	/* VariableStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> x = 1,
+		x = 1 --> var x = 1;,
+		var x = 1; --> "end"
+	--- */
+	// VariableStatement2 XPECT allPaths --> "start" -> 1 -> x = 1 -> var x = 1; -> "end"
+	// VariableStatement2 XPECT path from '"start"' to '"end"' -->
+	// VariableStatement2 XPECT commonPreds of '1' and 'x = 1' --> 1
+	// VariableStatement2 XPECT succs at '"start"' --> 1
+	// VariableStatement2 XPECT succs at '1' --> x = 1
+	// VariableStatement2 XPECT succs at 'x = 1' --> var x = 1;
+	// VariableStatement2 XPECT succs at 'var x = 1;' --> "end"
+	"start";
+	var x = 1;
 	"end";
 }
