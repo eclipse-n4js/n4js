@@ -357,11 +357,18 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case TypesPackage.TVERSIONABLE: {
+				TVersionable tVersionable = (TVersionable)theEObject;
+				T result = caseTVersionable(tVersionable);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case TypesPackage.TCLASSIFIER: {
 				TClassifier tClassifier = (TClassifier)theEObject;
 				T result = caseTClassifier(tClassifier);
 				if (result == null) result = caseContainerType(tClassifier);
 				if (result == null) result = caseSyntaxRelatedTElement(tClassifier);
+				if (result == null) result = caseTVersionable(tClassifier);
 				if (result == null) result = caseType(tClassifier);
 				if (result == null) result = caseTExportableElement(tClassifier);
 				if (result == null) result = caseTAnnotableElement(tClassifier);
@@ -379,6 +386,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseArrayLike(tObjectPrototype);
 				if (result == null) result = caseContainerType(tObjectPrototype);
 				if (result == null) result = caseSyntaxRelatedTElement(tObjectPrototype);
+				if (result == null) result = caseTVersionable(tObjectPrototype);
 				if (result == null) result = caseAccessibleTypeElement(tObjectPrototype);
 				if (result == null) result = caseType(tObjectPrototype);
 				if (result == null) result = caseTExportableElement(tObjectPrototype);
@@ -402,6 +410,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tn4Classifier);
 				if (result == null) result = caseContainerType(tn4Classifier);
 				if (result == null) result = caseSyntaxRelatedTElement(tn4Classifier);
+				if (result == null) result = caseTVersionable(tn4Classifier);
 				if (result == null) result = caseAccessibleTypeElement(tn4Classifier);
 				if (result == null) result = caseType(tn4Classifier);
 				if (result == null) result = caseTExportableElement(tn4Classifier);
@@ -420,6 +429,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tClass);
 				if (result == null) result = caseContainerType(tClass);
 				if (result == null) result = caseSyntaxRelatedTElement(tClass);
+				if (result == null) result = caseTVersionable(tClass);
 				if (result == null) result = caseAccessibleTypeElement(tClass);
 				if (result == null) result = caseType(tClass);
 				if (result == null) result = caseTExportableElement(tClass);
@@ -438,6 +448,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tInterface);
 				if (result == null) result = caseContainerType(tInterface);
 				if (result == null) result = caseSyntaxRelatedTElement(tInterface);
+				if (result == null) result = caseTVersionable(tInterface);
 				if (result == null) result = caseAccessibleTypeElement(tInterface);
 				if (result == null) result = caseType(tInterface);
 				if (result == null) result = caseTExportableElement(tInterface);
@@ -644,6 +655,7 @@ public class TypesSwitch<T> extends Switch<T> {
 				T result = caseTEnum(tEnum);
 				if (result == null) result = caseDeclaredTypeWithAccessModifier(tEnum);
 				if (result == null) result = caseSyntaxRelatedTElement(tEnum);
+				if (result == null) result = caseTVersionable(tEnum);
 				if (result == null) result = caseType(tEnum);
 				if (result == null) result = caseAccessibleTypeElement(tEnum);
 				if (result == null) result = caseTExportableElement(tEnum);
@@ -1110,6 +1122,21 @@ public class TypesSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTStructuralType(TStructuralType object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>TVersionable</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>TVersionable</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseTVersionable(TVersionable object) {
 		return null;
 	}
 
