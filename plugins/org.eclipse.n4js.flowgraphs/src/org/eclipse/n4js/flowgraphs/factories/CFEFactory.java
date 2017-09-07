@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.ReturnStatement;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.ThrowStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
@@ -120,6 +121,11 @@ final public class CFEFactory {
 		@Override
 		public ComplexNode caseWhileStatement(WhileStatement feature) {
 			return WhileFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseScript(Script feature) {
+			return ScriptFactory.buildComplexNode(feature);
 		}
 
 		@Override

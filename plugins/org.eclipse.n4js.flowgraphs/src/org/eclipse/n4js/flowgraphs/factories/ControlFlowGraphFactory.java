@@ -54,6 +54,9 @@ public class ControlFlowGraphFactory {
 	static private void createComplexNodes(Script script, TreeSet<ControlFlowElement> cfContainers,
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
+		ComplexNode cn = CFEFactory.build(script);
+		cnMap.put(script, cn);
+
 		TreeIterator<EObject> tit = script.eAllContents();
 		while (tit.hasNext()) {
 			EObject eObj = tit.next();
@@ -63,7 +66,7 @@ public class ControlFlowGraphFactory {
 				if (cfe != null && !cnMap.containsKey(cfe)) {
 					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
 					cfContainers.add(cfContainer);
-					ComplexNode cn = CFEFactory.build(cfe);
+					cn = CFEFactory.build(cfe);
 					cnMap.put(cfe, cn);
 				}
 			}

@@ -15,10 +15,13 @@ import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
@@ -76,12 +79,17 @@ public class FGUtils {
 	public static boolean isCFContainer(ControlFlowElement cfe) {
 		EObject cfeContainer = cfe.eContainer();
 
+		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
+		boolean isExpression = cfe instanceof Expression;
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
+		boolean containerIsFormalParameter = cfeContainer instanceof FormalParameter;
 
 		boolean isCFContainer = false;
+		isCFContainer |= isScript;
 		isCFContainer |= isBlock && (containerIsFunctionDeclaration || containerIsFunctionDefinition);
+		isCFContainer |= isExpression && containerIsFormalParameter;
 		return isCFContainer;
 	}
 

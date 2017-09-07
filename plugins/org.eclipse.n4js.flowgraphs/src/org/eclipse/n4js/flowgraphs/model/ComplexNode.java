@@ -179,7 +179,7 @@ public class ComplexNode implements ControlFlowable {
 	 */
 	public boolean isControlElement() {
 		ControlFlowElement cfe = getControlFlowElement();
-		return FGUtils.isCFContainer(cfe);
+		return FGUtils.isControlElement(cfe);
 	}
 
 	/** @returns all {@link DependencyEdge}s that start or end at one of the nodes of this {@link ComplexNode}. */
