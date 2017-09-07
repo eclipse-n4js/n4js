@@ -63,16 +63,13 @@ public class ImportsComputer {
 	private ImportStateCalculator importStateCalculator;
 
 	@Inject
-	private ImportsFactory2 importsFactory;
-
+	private ImportsFactory importsFactory;
+	
 	@Inject
 	private IReferenceFilter referenceFilter;
 
 	@Inject
 	private ImportProvidedElementLabelprovider importProvidedElementLabelprovider;
-
-	/** Adapter used to mark programmatically created AST-Elements without a corresponding parse tree node. */
-	private final Adapter nodelessMarker = new AdapterImpl();
 
 	@Inject
 	private N4JSCandidateFilter candidateFilter;
@@ -88,6 +85,9 @@ public class ImportsComputer {
 
 	@Inject
 	private VariableVisibilityChecker varVisibilityChecker;
+
+	/** Adapter used to mark programmatically created AST-Elements without a corresponding parse tree node. */
+	private final Adapter nodelessMarker = new AdapterImpl();
 
 	/**
 	 * Calculate the real content of the new import section in the file header.

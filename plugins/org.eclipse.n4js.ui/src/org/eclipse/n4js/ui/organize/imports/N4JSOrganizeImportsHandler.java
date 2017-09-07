@@ -71,9 +71,8 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 		if (haveActiveEditor && (fromTextContext || fromShortCut)) {
 			OrganizeImportsService.organizeImportsInEditor(editor, Interaction.queryUser);
 		} else if (nonEmptyStructuredSelection) {
-			// probably called on a tree-selection in the package-manager or whatever view shows the project-structure:
-			// organize files and folders:
-			// for each selection entry collect files:
+			// called on a tree-selection in the package-manager or whatever shows the project-structure,
+			// i.e. organize files and folders
 			SelectionFilesCollector filesCollector = new SelectionFilesCollector(this::filter);
 			List<IFile> collectedFiles = filesCollector.collectFiles((IStructuredSelection) selection);
 
@@ -104,10 +103,8 @@ public class N4JSOrganizeImportsHandler extends AbstractHandler {
 			} catch (InterruptedException e) {
 				// user cancelled, ok
 			} finally {
-				// restore state of auto-build
 				setAutobuild(wasAutobuilding);
 			}
-
 		}
 		return null;
 	}

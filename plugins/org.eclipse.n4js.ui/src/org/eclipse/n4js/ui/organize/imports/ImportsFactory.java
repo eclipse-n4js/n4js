@@ -34,7 +34,7 @@ import com.google.inject.Inject;
 /**
  * Helper for creating imports declarations.
  */
-public class ImportsFactory2 {
+public class ImportsFactory {
 	private final static N4JSFactory N4JS_FACTORY = N4JSFactory.eINSTANCE;
 	private final static TypesFactory TYPES_FACTORY = TypesFactory.eINSTANCE;
 
@@ -64,7 +64,7 @@ public class ImportsFactory2 {
 		String firstSegment = qn.getFirstSegment();
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
 
-		return createImportDeclaration(qn, name, project, nodelessMarker, this::createNamedImport, this::adapt);
+		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamedImport);
 
 	}
 
@@ -76,7 +76,7 @@ public class ImportsFactory2 {
 		String firstSegment = qn.getFirstSegment();
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
 
-		return createImportDeclaration(qn, name, project, nodelessMarker, this::createDefaultImport, this::adapt);
+		return createImportDeclaration(qn, name, project, nodelessMarker, this::addDefaultImport);
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
@@ -98,86 +98,66 @@ public class ImportsFactory2 {
 
 				project = projectByNamespace;
 		}
-		return createImportDeclaration(qn, name, project, nodelessMarker, this::createNamespaceImport, this::adapt);
+		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamespaceImport);
 	}
 
 	@SuppressWarnings("null")
 	/** If project is {@code null} then the we will use {@link #SIMPLE_IMPORT} which is not using project data. */
 	private ImportDeclaration createImportDeclaration(QualifiedName qn, String usedName, IN4JSProject fromProject,
 			Adapter nodelessMarker,
-			BiFunction<String, String, ImportDeclaration> factory,
-			BiFunction<ImportDeclaration, Adapter, ImportDeclaration> adapter) {
+			BiFunction<String, ImportDeclaration, ImportDeclaration> specifierFactory) {
 
 		boolean considerProjectID = fromProject != null;
 		switch (ImportSpecifierUtil.computeImportType(qn, considerProjectID, fromProject)) {
 		case PROJECT_IMPORT:
-			return adapter.apply(factory.apply(usedName, fromProject.getProjectId()), nodelessMarker);
+			return specifierFactory.apply(usedName,
+					createImportDeclaration(nodelessMarker, fromProject.getProjectId()));
 		case SIMPLE_IMPORT:
-			return adapter.apply(factory.apply(usedName, qualifiedNameConverter.toString(qn)), nodelessMarker);
+			return specifierFactory.apply(usedName,
+					createImportDeclaration(nodelessMarker, qualifiedNameConverter.toString(qn)));
 		case COMPLETE_IMPORT:
-			return adapter
-					.apply(factory.apply(usedName, fromProject.getProjectId() + N4JSQualifiedNameConverter.DELIMITER +
-							qualifiedNameConverter.toString(qn)), nodelessMarker);
+			return specifierFactory.apply(usedName, createImportDeclaration(nodelessMarker,
+					fromProject.getProjectId() + N4JSQualifiedNameConverter.DELIMITER +
+							qualifiedNameConverter.toString(qn)));
 		default:
 			throw new RuntimeException("Cannot resolve default import for " + usedName);
 		}
 	}
 
-	/** Adapts provided import declaration with the adapter and returns modified instance. */
-	private ImportDeclaration adapt(ImportDeclaration id, Adapter nodelessMarker) {
-		id.eAdapters().add(nodelessMarker);
-		return id;
+	private ImportDeclaration createImportDeclaration(Adapter nodelessMarker, String moduleName) {
+		ImportDeclaration ret = N4JS_FACTORY.createImportDeclaration();
+		TModule tmodule = TYPES_FACTORY.createTModule();
+		tmodule.setQualifiedName(moduleName);
+		ret.setModule(tmodule);
+		ret.eAdapters().add(nodelessMarker);
+		return ret;
 	}
 
-	/** Creates a new named import of 'name' from 'moduleName' */
-	private ImportDeclaration createNamedImport(String name, String moduleName) {
-		ImportDeclaration ret = N4JS_FACTORY.createImportDeclaration();
-
+	private ImportDeclaration addNamedImport(String name, ImportDeclaration importDeclaration) {
 		NamedImportSpecifier namedImportSpec = N4JS_FACTORY.createNamedImportSpecifier();
-		TModule tmodule = TYPES_FACTORY.createTModule();
-		tmodule.setQualifiedName(moduleName);
-		TExportableElement idfEle = TYPES_FACTORY.createTExportableElement();
-		idfEle.setExportedName(name);
-		namedImportSpec.setImportedElement(idfEle);
-
-		ret.getImportSpecifiers().add(namedImportSpec);
-		ret.setModule(tmodule);
-
-		return ret;
+		TExportableElement importetElement = TYPES_FACTORY.createTExportableElement();
+		importetElement.setName(name);
+		namedImportSpec.setImportedElement(importetElement);
+		importDeclaration.getImportSpecifiers().add(namedImportSpec);
+		return importDeclaration;
 	}
 
-	/** Creates a new default import with name 'name' from 'moduleName' */
-	private ImportDeclaration createDefaultImport(String name, String moduleName) {
-		ImportDeclaration ret = N4JS_FACTORY.createImportDeclaration();
-
+	private ImportDeclaration addDefaultImport(String name, ImportDeclaration importDeclaration) {
 		DefaultImportSpecifier defaultImportSpec = N4JS_FACTORY.createDefaultImportSpecifier();
-		TModule tmodule = TYPES_FACTORY.createTModule();
-		tmodule.setQualifiedName(moduleName);
-		TExportableElement idfEle = TYPES_FACTORY.createTExportableElement();
-		idfEle.setExportedName(name);
-		defaultImportSpec.setImportedElement(idfEle);
-
-		ret.getImportSpecifiers().add(defaultImportSpec);
-		ret.setModule(tmodule);
-
-		return ret;
+		TExportableElement importetElement = TYPES_FACTORY.createTExportableElement();
+		importetElement.setName(name);
+		defaultImportSpec.setImportedElement(importetElement);
+		importDeclaration.getImportSpecifiers().add(defaultImportSpec);
+		return importDeclaration;
 	}
 
-	/** Creates a new named import of 'name' from 'moduleName' */
-	private ImportDeclaration createNamespaceImport(String name, String moduleName) {
-		ImportDeclaration ret = N4JS_FACTORY.createImportDeclaration();
-
+	private ImportDeclaration addNamespaceImport(String name, ImportDeclaration importDeclaration) {
 		NamespaceImportSpecifier namespaceImportSpec = N4JS_FACTORY.createNamespaceImportSpecifier();
-		TModule tmodule = TYPES_FACTORY.createTModule();
-		tmodule.setQualifiedName(moduleName);
-		ModuleNamespaceVirtualType idfEle = TYPES_FACTORY.createModuleNamespaceVirtualType();
+		ModuleNamespaceVirtualType namespace = TYPES_FACTORY.createModuleNamespaceVirtualType();
 		namespaceImportSpec.setAlias(name);
-		namespaceImportSpec.setDefinedType(idfEle);
-
-		ret.getImportSpecifiers().add(namespaceImportSpec);
-		ret.setModule(tmodule);
-
-		return ret;
+		namespaceImportSpec.setDefinedType(namespace);
+		importDeclaration.getImportSpecifiers().add(namespaceImportSpec);
+		return importDeclaration;
 	}
 
 }

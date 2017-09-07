@@ -250,12 +250,29 @@ public class ParameterizedPropertyAccessExpression_IMImpl extends ParameterizedP
 			_xifexpression = this.getNameOfAnyPlusProperty();
 		}
 		else {
-			SymbolTableEntry _property_IM = this.getProperty_IM();
-			String _name = null;
-			if (_property_IM!=null) {
-				_name=_property_IM.getName();
+			final SymbolTableEntry e = this.getRewiredTarget();
+			if ((e instanceof SymbolTableEntryOriginal)) {
+				final String exName = ((SymbolTableEntryOriginal)e).exportedName();
+				if ((exName != null)) {
+					return exName;
+				}
+				else {
+					SymbolTableEntry _property_IM = this.getProperty_IM();
+					String _name = null;
+					if (_property_IM!=null) {
+						_name=_property_IM.getName();
+					}
+					return _name;
+				}
 			}
-			_xifexpression = _name;
+			else {
+				SymbolTableEntry _property_IM_1 = this.getProperty_IM();
+				String _name_1 = null;
+				if (_property_IM_1!=null) {
+					_name_1=_property_IM_1.getName();
+				}
+				return _name_1;
+			}
 		}
 		return _xifexpression;
 	}
