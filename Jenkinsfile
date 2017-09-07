@@ -93,7 +93,6 @@ timestamps {
                 }
 
                 stage('PostBuild') {
-                    junit '**/target/surefire-reports/*.xml'
                 }
                 //sendEmail("${env.JOB_NAME} (${env.BUILD_NUMBER}) succeeded", "${env.BUILD_URL} succeeded - ${env.JOB_NAME} (#${env.BUILD_NUMBER}).")
             } catch (exc) {
