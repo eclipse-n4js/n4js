@@ -45,6 +45,6 @@ class N6_1_14_BitwiseShiftExpressionTypesystemTest extends AbstractOperatorExpre
 	def void testExpectedType() {
 		assertBinaryOperatorExpectedType(unrestricted, "any", "any", "n1<<n2");
 		assertBinaryOperatorExpectedType(strict, "any", "any", "n1>>n2");
-		assertBinaryOperatorExpectedType(n4js, "number", "number", "n1>>>n2");
+		assertBinaryOperatorExpectedType(n4js, "any", "any", "n1>>>n2");
 	}
 }

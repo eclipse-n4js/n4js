@@ -1527,14 +1527,16 @@ enum MultiplicativeOperator: times='*' | div='/' | mod='%';
 --
 For a given multiplicative expression the following constraints must hold in N4JS mode :
 
-* The types of the operands must be subtypes of number:
+* The types of the operands may be any type:
 +
 [math]
 ++++
-\inferSup{\typeEnv \entails \type{MultiplicativeExpression} \expectType \type{Expression}: \type{number}}{}
+\inferSup{\typeEnv \entails \type{MultiplicativeExpression} \expectType \type{Expression}: \type{any}}{}
 ++++
 
 --
+
+If a non-numeric operand is used, the result may be `NaN` which actually is a number as well.
 
 [discrete]
 ==== Type Inference
@@ -1570,30 +1572,39 @@ enum AdditiveOperator: add='+' | sub='-';
 
 For a given additive expression the following constraints must hold in N4JS mode:
 
-* The types of the operands must be subtypes of number if the operator is not ’+’, otherwise, any type could be used:
+* The type of the operand can be any type:
 
 [math]
 ++++
-\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \type{number}}{e.op \neq AdditiveOperator.ADD}
+\beginalign
+\infer{\typeEnv \entails \type{AdditiveExpression}\ e \expectType \type{Expression}: \type{any}
+\endalign
 ++++
 --
+
+In JavaScript it is possible to subtract two non-numerics, leading to `NaN`. Also `undefined` or `null` may be used. The real difference is what type is to be returned (string or number, see below).
 
 ==== Type Inference [[type-inference-10]]
 
 
 [.language-n4js]
-The type of an additive expression is usually inferred to `number`.
-The result for the addition operator may only be a number if both operands are numbers, booleans, or one is boolean or number and the other is undefined or null.
+The type of an additive expression is usually inferred to `number`, except for addition which may lead to string as well.
+The result for the addition operator is only be a number if both operands are numbers, booleans, null, or undefined.
+Using `undefined` in an additive expression leads to `NaN` which actually is a number from the type system's point of view. Additional analysis may create errors in the latter case though.
 
 We first define two helper rules to simplify the addition operator condition:
 
 [math]
 ++++
 \beginalign
-\inferRule{nb}{nb(T)}{T = \type{number} \lor T = \type{boolean}}
-\inferRule{nb}{nb(expr)}{nb\tee expr} \\
-\inferRule{un}{un(T)}{T = \type{undefined} \lor T = \type{null}}
-\inferRule{un}{un(expr)}{un\tee expr.lhs \lor un\tee expr.rhs}
+\inferRule{nb}{nb(T)}{\exits N in \{\type{number, int, boolean, null, undefined}\}: T \subtype = N} \\
+\inferRule{mnb}{mnb(T)}{nb(T) \lor\  (\mu(T)=\type{Union}\ \land\  \exists\  E\in T.typeRefs: mnb(E) } \\
+
+\inferRule{toNum}{toNum(expr)}
+    {\tee e.lhs: L \spc \tee e.rhs: R \spc nb(L) \spc nb(R)} \\
+\inferRule{mayNum}{mayNum(expr)}
+    {\tee e.lhs: L \spc \tee e.rhs: R \spc mnb(L) \spc mnb(R)} \\
+
 \endalign
 ++++
 
@@ -1602,10 +1613,17 @@ The type of an additive expression $e$ is inferred as follows:
 [math]
 ++++
 \beginalign
-\infer{\tee e: \type{string}}{e.op='+' \spc   \lnot(nb(e.lhs)\land nb(e.rhs)) \spc   \lnot(un(e) \land (nb(e.lhs)\lor nb(e.rhs))}\\
-\spc  \infer{\tee e: \type{number}}{}\\
+\infer{\tee e: \type{string}}{e.op='+' \spc \lnot toNum(e) \spc \lnot mayNum(e)} \\
+\infer{\tee e: \union{number, string}}{e.op='+' \spc \lnot toNum(e) \spc mayNum(e)} \\
+\infer{\tee e: \type{number}}{e.op='+' \spc toNum(e)} \\ 
+\infer{\tee e: \type{number}}{e.op \leq '+'}
 \endalign
 ++++
+
+That is, if both operands are number, int, boolean, null, or even undefined, then the 'plus' is interpreted as 
+mathematical addition and the result is a number. In other cases the 'plus' is interpreted as string concatenation and the result is a string. In case of union types, the result may be a union of number and string.
+
+Adding two integers (int) leads to a number, since the result may not be represented as an (JavaScript) int anymore.
 
 .Type of addition expression
 [example]
@@ -1626,6 +1644,11 @@ false+1;        // number 1
 ----
 
 ====
+
+[.todo]
+--
+Support new `Symbol.toPrimitive`.
+--
 
 === Bitwise Shift Expression
 
@@ -1653,11 +1676,11 @@ ShiftOperator returns ShiftOperator:
 [req,id=IDE-112,version=1]
 --
 For a given bitwise shift expression $e$ the following constraints must hold in N4JS mode:
-* The types of the operands must be both number.
+* The types of the operands can be any.
 
 [math]
 ++++
-\infer{\tee \type{BitwiseShiftExpression}\ \expectType\ \type{Expression}: \type{number}}{}
+\infer{\tee \type{BitwiseShiftExpression}\ \expectType\ \type{Expression}: \type{any}}{}
 ++++
 
 --
@@ -1666,12 +1689,15 @@ For a given bitwise shift expression $e$ the following constraints must hold in 
 ==== Type Inference [[type-inference-11]]
 
 
-The type returned by a bitwise shift expression is always `boolean`:
+The type returned by a bitwise shift expression is always `number`:
 
 [math]
 ++++
 \spc\infer{\tee\ (\lstnfbnf{Expression ('}<<\lstnfbnf{'|'}>>\lstnfbnf{'|'} >>> \lstnfbnf{')\ Expression}): \type{number}}{}  \\
 ++++
+
+A non-numeric operand is interpreted as 0, except for `true` which is interpreted as `1`; or objects implementing the symbol `toPrimitive`.
+
 
 // TODO - check  \tag{\S 11.7.1/2}
 
@@ -1737,9 +1763,11 @@ or an enum type reference.
 
 [math]
 ++++
+\beginalign
 \spc\infer{\tee  lhs\ \lstnfbnf{'instanceof'}\  rhs\  \expectType\ rhs: \type{Function}}{} \\
 \spc\infer{\tee  lhs\ \lstnfbnf{'instanceof'}\  rhs\  \expectType\ rhs: \type{type}\{ \type{Object}\}}{} \\
 \spc\infer{\tee  lhs\ \lstnfbnf{'instanceof'}\  rhs\  \expectType\ rhs: \type{type}\{ \type{N4Enum}\}}{}
+\endalign
 ++++
 
 The type of a definition site structural classifier $C$ is not of type `C`.
@@ -1817,7 +1845,7 @@ The type of a relational expression always is `boolean`;
 
 [math]
 ++++
-\spc\infer{\tee lhs\ \lstnfbnf{('<'|'<='|'>'|'>='|'instanceof'|'in')}\ rhs\ : \type{boolean}}{}
+\spc\infer{\tee lhs\ (\lstnfbnf{'<'}|\lstnfbnf{'<='}|\lstnfbnf{'>'}|\lstnfbnf{'>='}|\lstnfbnf{'instanceof'}|\lstnfbnf{'in'})\ rhs\ : \type{boolean}}{}
 ++++
 
 
@@ -1875,13 +1903,11 @@ This is why the upper bounds are to be used.
 
 
 
-In N4JSmode, using the non-strict equality operators `'=='|'!='` is only allowed for internal developers.
-External developers have to use the strict equality operators `'==='|'!=='`.
 The inferred type of an equality expression always is `boolean`.
 
 [math]
 ++++
-\spc\infer{\tee lhs\ \lstnfbnf{('=='|'!='|'==='|'!==')}\ rhs\ : \type{boolean}}{}
+\spc\infer{\tee lhs\ (\lstnfbnf{'=='}|\lstnfbnf{'!='}|\lstnfbnf{'==='}|\lstnfbnf{'!=='}) \ rhs\ : \type{boolean}}{}
 ++++
 
 === Binary Bitwise Expression

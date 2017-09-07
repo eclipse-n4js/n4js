@@ -33,3 +33,5 @@ var mult10 : number = c.numGetOnly *c.numGetAndSet;
 // IDE-961 XPECT ! errors --> "The accessor numSetOnly is write-only." at "numSetOnly"
 var mult11 : number = c.numSetOnly * 3;
 var mult12 : number = c.v * c.a;
+
+
