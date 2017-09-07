@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
@@ -347,6 +348,11 @@ public class ScriptImpl extends VariableEnvironmentElementImpl implements Script
 			switch (baseOperationID) {
 				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.SCRIPT___GET_ANNOTATIONS;
 				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS: return N4JSPackage.SCRIPT___GET_ALL_ANNOTATIONS;
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (baseOperationID) {
 				default: return -1;
 			}
 		}

@@ -6997,6 +6997,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		// Add supertypes to classes
 		scriptEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		scriptEClass.getESuperTypes().add(this.getAnnotableElement());
+		scriptEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());

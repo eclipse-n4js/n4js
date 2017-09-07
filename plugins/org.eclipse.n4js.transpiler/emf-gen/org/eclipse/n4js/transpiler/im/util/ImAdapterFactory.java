@@ -201,16 +201,16 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 				return createAnnotableElementAdapter();
 			}
 			@Override
+			public Adapter caseControlFlowElement(ControlFlowElement object) {
+				return createControlFlowElementAdapter();
+			}
+			@Override
 			public Adapter caseScript(Script object) {
 				return createScriptAdapter();
 			}
 			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
-			}
-			@Override
-			public Adapter caseControlFlowElement(ControlFlowElement object) {
-				return createControlFlowElementAdapter();
 			}
 			@Override
 			public Adapter caseExpression(Expression object) {

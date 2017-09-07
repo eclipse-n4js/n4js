@@ -96,6 +96,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseScript(script);
 				if (result == null) result = caseVariableEnvironmentElement(script);
 				if (result == null) result = caseAnnotableElement(script);
+				if (result == null) result = caseControlFlowElement(script);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

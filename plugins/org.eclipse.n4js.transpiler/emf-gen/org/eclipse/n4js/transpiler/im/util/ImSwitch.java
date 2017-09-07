@@ -125,6 +125,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseScript(script_IM);
 				if (result == null) result = caseVariableEnvironmentElement(script_IM);
 				if (result == null) result = caseAnnotableElement(script_IM);
+				if (result == null) result = caseControlFlowElement(script_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

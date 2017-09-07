@@ -90,7 +90,7 @@ interface ControlFlowElement {
 /*
  * Root element
  */
-class Script extends VariableEnvironmentElement, AnnotableElement {
+class Script extends VariableEnvironmentElement, AnnotableElement, ControlFlowElement {
 	contains Annotation[] annotations
 	contains ScriptElement[] scriptElements
 	refers transient TModule module
