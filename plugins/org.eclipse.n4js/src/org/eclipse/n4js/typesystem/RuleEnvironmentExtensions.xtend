@@ -13,6 +13,15 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.ArrayListMultimap
 import com.google.common.collect.ImmutableList
 import com.google.common.collect.ListMultimap
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Collection
+import java.util.Collections
+import java.util.List
+import java.util.Map
+import java.util.Set
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
 import org.eclipse.n4js.scoping.builtin.VirtualBaseTypeScope
@@ -28,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -45,16 +55,9 @@ import org.eclipse.n4js.ts.types.UndefinedType
 import org.eclipse.n4js.ts.types.VoidType
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.RecursionGuard
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Collection
-import java.util.Collections
-import java.util.List
-import java.util.Map
-import java.util.Set
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.service.OperationCanceledManager
+import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 
@@ -63,6 +66,14 @@ import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
  * retrieving build in types.
  */
 class RuleEnvironmentExtensions {
+
+	/**
+	 * Key used for storing a cancel indicator in a rule environment. Client code should not use this constant
+	 * directly, but instead use methods
+	 * {@link RuleEnvironmentExtensions#addCancelIndicator(RuleEnvironment,CancelIndicator)} and
+	 * {@link RuleEnvironmentExtensions#getCancelIndicator(RuleEnvironment)}.
+	 */
+	private static final String KEY__CANCEL_INDICATOR = "cancelIndicator";
 
 	/**
 	 * Key used for storing a 'this' binding in a rule environment. Client code should not use this constant
@@ -135,15 +146,17 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
-	 * Returns a new {@code RuleEnvironment} for the same predefined types and resource as the given rule environment.
+	 * Returns a new {@code RuleEnvironment} for the same predefined types, resource, and cancel indicator as the given
+	 * rule environment.
 	 * <p>
-	 * IMPORTANT: key/value pairs from G will not be available in the returned rule environment! Compare this with
+	 * IMPORTANT: other key/value pairs from G will not be available in the returned rule environment! Compare this with
 	 * method {@link #wrap(RuleEnvironment)}.
 	 */
 	public def static RuleEnvironment newRuleEnvironment(RuleEnvironment G) {
 		var Gnew = new RuleEnvironment();
 		Gnew.setPredefinedTypes(G.getPredefinedTypes());
-		Gnew.add(Resource,G.get(Resource));
+		Gnew.add(Resource, G.get(Resource));
+		Gnew.addCancelIndicator(G.getCancelIndicator());
 		return Gnew;
 	}
 
@@ -198,6 +211,33 @@ class RuleEnvironmentExtensions {
 	 */
 	public def static Resource getContextResource(RuleEnvironment G) {
 		return G.get(Resource) as Resource;
+	}
+
+	/**
+	 * Add a cancel indicator to the given rule environment.
+	 */
+	def static void addCancelIndicator(RuleEnvironment G, CancelIndicator cancelIndicator) {
+		G.add(KEY__CANCEL_INDICATOR, cancelIndicator);
+	}
+
+	/**
+	 * Returns the cancel indicator of this rule environment or <code>null</code> if none has been added, yet.
+	 */
+	def static CancelIndicator getCancelIndicator(RuleEnvironment G) {
+		return G.get(KEY__CANCEL_INDICATOR) as CancelIndicator;
+	}
+
+	/**
+	 * <b>IMPORTANT:</b><br>
+	 * use this only for rare special cases (e.g. logging); ordinary cancellation handling should be done by invoking
+	 * {@link OperationCanceledManager#checkCanceled(CancelIndicator)} with the cancel indicator returned by
+	 * {@link #getCancelIndicator(RuleEnvironment)}!
+	 * <p>
+	 * Tells if the given rule environment has a cancel indicator AND that indicator is canceled.
+	 */
+	def static boolean isCanceled(RuleEnvironment G) {
+		val cancelIndicator = G.getCancelIndicator;
+		return cancelIndicator!==null && cancelIndicator.isCanceled();
 	}
 
 	/*
@@ -522,6 +562,11 @@ class RuleEnvironmentExtensions {
 		G.getPredefinedTypes().builtInTypeScope.functionType
 	}
 
+ 	/* Returns newly created structural reference to built-in type {@code Function} */
+ 	public def static structuralFunctionTypeRef(RuleEnvironment G) {
+ 		G.functionType.createTypeRef(TypingStrategy.STRUCTURAL)
+ 	}
+
 	/* 	Returns newly created reference to built-in type {@code Function} */
 	public def static functionTypeRef(RuleEnvironment G) {
 		G.functionType.createTypeRef
@@ -662,13 +707,85 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
+	 * Returns true if the given type is any.
+	 */
+	public def static boolean isAny(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false
+		}
+		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.anyType
+	}
+
+	/**
+	 * Returns true if the given type is symbol.
+	 */
+	public def static boolean isSymbol(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false
+		}
+		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.symbolType
+	}
+	
+	/**
 	 * Returns true if the given type reference points to one of the {@link BuiltInTypeScope#isNumeric(Type) numeric}
 	 * primitive built-in types.
 	 */
 	public def static boolean isNumeric(RuleEnvironment G, TypeRef typeRef) {
-		typeRef?.declaredType!==null && G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)
+		if (typeRef===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)) {
+			return true;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isNumeric(G, e)];
+		}
+		if (typeRef instanceof IntersectionTypeExpression) {
+			return typeRef.typeRefs.exists[e|isNumeric(G, e)];
+		}
+		return false;
 	}
-
+	
+	
+	
+	/**
+	 * Returns true iff typeRef is a union type and one if its elements
+	 * is numeric, boolean, null or undefined or contains one of these types.
+	 * Note that this method returns false for number types -- the
+	 * typeref needs to be a union type!
+	 */
+	public def static boolean containsNumericOperand(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.exists[e | 
+				G.predefinedTypes.builtInTypeScope.isNumericOperand(e.declaredType)
+				|| containsNumericOperand(G, e)
+			]
+		}
+		return false;		
+	}
+	
+	/**
+	 * Returns true if the given type reference can be used in a numeric
+	 * operation as operand leading to a numeric result. This is true for
+	 * number, int, boolean, null, or even undefined, for unions of these types,
+	 * and for intersections containing any of these types.
+	 */
+	public def static boolean isNumericOperand(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isNumericOperand(typeRef.declaredType)) {
+			return true;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isNumericOperand(G, e)];
+		}
+		if (typeRef instanceof IntersectionTypeExpression) {
+			return typeRef.typeRefs.exists[e|isNumericOperand(G, e)];
+		}
+		return false;
+	}
+	
 	/**
 	 * Same as {@link TypeUtils#wrapInTypeRef(BuiltInTypeScope,Type,TypeArgument...)}, but will obtain
 	 * the required {@code BuiltInTypeScope} from the given rule environment.

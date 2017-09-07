@@ -20,14 +20,20 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.n4js.validation.helper.IssuesProvider;
 import org.eclipse.xtext.service.OperationCanceledError;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 
+import com.google.inject.Inject;
+
 /**
  */
 public class N4JSCache extends OnChangeEvictingCache {
+
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	@Override
 	public CacheAdapter getOrCreate(Resource resource) {
@@ -73,7 +79,8 @@ public class N4JSCache extends OnChangeEvictingCache {
 	public synchronized List<Issue> getOrElseUpdateIssues(IResourceValidator resourceValidator, Resource res,
 			CancelIndicator monitor) {
 		try {
-			List<Issue> issues = get("N4JS-IDE-AllIssues", res, new IssuesProvider(resourceValidator, res, monitor));
+			List<Issue> issues = get("N4JS-IDE-AllIssues", res,
+					new IssuesProvider(resourceValidator, res, operationCanceledManager, monitor));
 			return issues;
 		} catch (OperationCanceledError oce) {
 			// observation: the cache remains unchanged, to avoid cache corruption.

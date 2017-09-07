@@ -297,6 +297,20 @@ abstract class AnnotableElement {
 	 * annotations only via AnnotationDefinition and use type model annotation (or fields) if ever possible.
 	 */
 	op Annotation[] getAnnotations()
+	
+	/**
+	 * Returns the effective annotations of this annotable element. This includes the {@link #getAnnotations()}
+	 * and the annotations on the containing ExportDeclaration, if any.
+	 */
+	op Annotation[] getAllAnnotations() {
+		val result = <Annotation>newBasicEList()
+		val parent = eContainer
+		if(parent instanceof ExportDeclaration) {
+			result += parent.annotations
+		}
+		result += annotations
+		return result
+	}
 }
 
 abstract class AnnotableScriptElement extends AnnotableElement, ScriptElement {
@@ -597,7 +611,15 @@ class ArrowFunction extends FunctionExpression {
 		!hasBracesAroundBody &&
 		(body !== null) &&
 		!body.statements.isEmpty &&
-		(body.statements.get(0) instanceof ExpressionStatement)
+		(body.statements.head instanceof ExpressionStatement)
+	}
+
+	/**
+	 * If {@link #isSingleExprImplicitReturn()} returns <code>true</code>, this method will return the single expression
+	 * that makes up the body of this arrow function, otherwise the behavior is undefined (might throw exception).
+	 */
+	op Expression getSingleExpression() {
+		return (body.statements.head as ExpressionStatement).expression;
 	}
 
 	/**
@@ -847,12 +869,15 @@ class ForStatement extends VariableDeclarationContainer, IterationStatement, Var
 	}
 }
 
-class ContinueStatement extends Statement {
+abstract class LabelRef {
 	refers LabelledStatement label
+	transient String labelAsText
 }
 
-class BreakStatement extends Statement {
-	refers LabelledStatement label
+class ContinueStatement extends Statement, LabelRef {
+}
+
+class BreakStatement extends Statement, LabelRef {
 }
 
 class ReturnStatement extends Statement {
@@ -2113,18 +2138,33 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 	}
 }
 
-class BindingPattern {
+abstract class BindingPattern {
+}
+
+/*
+ * A binding pattern used for object destructuring within a variable declaration statement, produced by code such as
+ * <pre>
+ * let {prop: myVar} = {prop: 'hello'};
+ * </pre>
+ * where the <code>{prop: myVar}</code> part will be represented in the AST as an {@code ObjectBindingPattern}.
+ */
+class ObjectBindingPattern extends BindingPattern {
 	contains BindingProperty[] properties
+}
+
+/*
+ * A binding pattern used for array destructuring within a variable declaration statement, produced by code such as
+ * <pre>
+ * let [myVar] = ['hello'];
+ * </pre>
+ * where the <code>[myVar]</code> part will be represented in the AST as an {@code ArrayBindingPattern}.
+ */
+class ArrayBindingPattern extends BindingPattern {
 	contains BindingElement[] elements
 }
 
-class ObjectBindingPattern extends BindingPattern {}
-
-class ArrayBindingPattern extends BindingPattern {}
-
 class BindingProperty extends PropertyNameOwner {
 	contains BindingElement value
-	contains VariableDeclaration varDecl // for single name binding (no declaredName in this case)
 	op String getName() {
 		super.getName() ?: value?.varDecl?.name
 	}
@@ -2139,4 +2179,12 @@ class BindingElement {
 	contains VariableDeclaration varDecl
 	contains BindingPattern nestedPattern
 	contains Expression expression
+
+	/* 
+	 * Tells if this {@link BindingElement} is an "empty" element, corresponding to an {@link ArrayPadding} element in
+	 * an {@link ArrayLiteral}.
+	 */
+	op boolean isElision() {
+		return varDecl===null && nestedPattern===null;
+	}
 }

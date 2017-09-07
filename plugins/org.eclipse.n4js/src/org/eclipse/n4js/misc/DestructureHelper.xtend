@@ -58,7 +58,6 @@ class DestructureHelper {
 	@Inject private ContainerTypesHelper containerTypesHelper;
 	@Inject private MemberScopingHelper memberScopingHelper;
 
-
 	/**
 	 * Infers the type of a variable declaration within a destructuring pattern from the value to be
 	 * destructured and/or the default value given in the pattern.

@@ -39,13 +39,13 @@ import org.eclipse.n4js.n4jsx.ui.contentassist.ContentAssistContextFactory
 import org.eclipse.n4js.n4jsx.ui.contentassist.CustomN4JSXParser
 import org.eclipse.n4js.n4jsx.ui.editor.syntaxcoloring.ParserBasedDocumentTokenSource
 import org.eclipse.n4js.n4jsx.ui.organize.imports.N4JSXReferencesFilter
+import org.eclipse.n4js.n4jsx.ui.search.N4JSXReferenceQueryExecutor
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.preferences.OsgiExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.ts.findReferences.TargetURIKey
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey
-import org.eclipse.n4js.ts.ui.search.LabellingReferenceFinder
 import org.eclipse.n4js.ui.N4JSEditor
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant
@@ -57,6 +57,7 @@ import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback
+import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider
@@ -76,12 +77,19 @@ import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider
 import org.eclipse.n4js.ui.organize.imports.IReferenceFilter
+import org.eclipse.n4js.ui.outline.MetaTypeAwareComparator
+import org.eclipse.n4js.ui.outline.N4JSFilterLocalTypesOutlineContribution
+import org.eclipse.n4js.ui.outline.N4JSFilterNonPublicMembersOutlineContribution
+import org.eclipse.n4js.ui.outline.N4JSFilterStaticMembersOutlineContribution
+import org.eclipse.n4js.ui.outline.N4JSOutlineModes
+import org.eclipse.n4js.ui.outline.N4JSOutlineNodeFactory
+import org.eclipse.n4js.ui.outline.N4JSShowInheritedMembersOutlineContribution
 import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore
 import org.eclipse.n4js.ui.quickfix.N4JSIssue
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider
-import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor
+import org.eclipse.n4js.ui.search.LabellingReferenceFinder
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker
@@ -116,10 +124,15 @@ import org.eclipse.xtext.ui.editor.findrefs.IReferenceFinder
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
+import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkLabelProvider
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper
+import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
+import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator
+import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper
@@ -183,15 +196,7 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	 * Bind the {@link ReferenceQueryExecutor} that maps to types.
 	 */
 	def Class<? extends ReferenceQueryExecutor> bindReferenceQueryExecutor() {
-		return N4JSReferenceQueryExecutor;
-	}
-
-	/**
-	 * Bind the {@link IReferenceFinder} that find references solely to types (and
-	 * TVariables, IdentifiableElement and TEnumLiterals).
-	 */
-	def Class<? extends IReferenceFinder> bindIReferenceFinder() {
-		return LabellingReferenceFinder;
+		return N4JSXReferenceQueryExecutor;
 	}
 
 	/**
@@ -561,11 +566,74 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	def Class<? extends IReferenceFilter> bindContentReferenceFilter() {
 		return N4JSXReferencesFilter;
 	}
-	
+
+	/**
+	 * Bind the {@link IReferenceFinder} that find references solely to types (and
+	 * TVariables, IdentifiableElement and TEnumLiterals).
+	 */
+	def Class<? extends IReferenceFinder> bindIReferenceFinder() {
+		return LabellingReferenceFinder;
+	}
+
 	/**
 	 * CanLoadFromDescriptionHelper specific to the interactive editor scenario.
 	 */
 	def Class<? extends CanLoadFromDescriptionHelper> bindCanLoadFromDescriptionHelper() {
 		return EditorAwareCanLoadFromDescriptionHelper;
+	}
+
+	/**
+	 * Provide multiple hyperlink for composed members.
+	 */
+	def Class<? extends HyperlinkHelper> bindHyperlinkHelper() {
+		return ComposedMemberAwareHyperlinkHelper;
+	}
+
+	/**
+	 * Binds outline factory which creates special nodes to allow for inherited members to be filtered.
+	 */
+	def Class<? extends OutlineNodeFactory> bindOutlineNodeFactory() {
+		return N4JSOutlineNodeFactory;
+	}
+
+	/** Outline modes for showing inherited members or not */
+	def Class<? extends IOutlineTreeProvider.ModeAware> bindIOutlineTreeProvider_ModeAware() {
+		return N4JSOutlineModes;
+	}
+
+	/**
+	 * Toggle showing inherited members or not.
+	 */
+	def void configureInheritedMembersOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution).annotatedWith(Names.named("InheritedMembersOutlineContribution")).to(
+				N4JSShowInheritedMembersOutlineContribution);
+	}
+
+	/**
+	 * Toggle showing static members or not.
+	 */
+	def void configureFilterStaticMembersOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution).annotatedWith(Names.named("FilterStaticMembersOutlineContribution")).to(
+				N4JSFilterStaticMembersOutlineContribution);
+	}
+
+	/**
+	 * Toggle showing non-public members or not.
+	 */
+	def void configureFilterNonPublicMembersOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution).annotatedWith(Names.named("FilterNonPublicMembersOutlineContribution"))
+				.to(N4JSFilterNonPublicMembersOutlineContribution);
+	}
+
+	/**
+	 * Toggle showing local types or not.
+	 */
+	def void configureFilterLocalTypesOutlineContribution(Binder binder) {
+		binder.bind(IOutlineContribution).annotatedWith(Names.named("FilterLocalTypesOutlineContribution"))
+				.to(N4JSFilterLocalTypesOutlineContribution);
+	}
+
+	override Class<? extends IComparator> bindOutlineFilterAndSorter$IComparator() {
+		return MetaTypeAwareComparator;
 	}
 }

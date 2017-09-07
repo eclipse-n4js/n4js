@@ -13,7 +13,6 @@ package org.eclipse.n4js.typesbuilder
 import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
-import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
@@ -24,7 +23,19 @@ package class N4JSFieldTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
-	def package createField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase) {
+	def package boolean relinkField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
+			return false;
+
+		val field = classifierType.ownedMembers.get(idx) as TField
+		ensureEqualName(n4Field, field);
+		field.astElement = n4Field;
+		n4Field.definedField = field
+
+		return true;
+	}
+
+	def package TField createField(N4FieldDeclaration n4Field, TClassifier classifierType, boolean preLinkingPhase) {
 		if (n4Field.name === null && !n4Field.hasComputedPropertyName)
 			return null;
 
@@ -50,19 +61,21 @@ package class N4JSFieldTypesBuilder {
 		return field;
 	}
 
-	def private setFieldType(TField field, N4FieldDeclaration n4Field, boolean preLinkingPhase) {
-		if(n4Field.declaredTypeRef!==null) {
-			// type of field was declared explicitly
-			setCopyOfReference([TypeRef typeRef | field.typeRef = typeRef], n4Field.declaredTypeRef, preLinkingPhase);
-		}
-		else {
-			// in all other cases:
-			// leave it to the TypingASTWalker to infer the type (e.g. from the initializer expression, if given)
-			field.typeRef = TypeUtils.createDeferredTypeRef;
+	def private void setFieldType(TField field, N4FieldDeclaration n4Field, boolean preLinkingPhase) {
+		if (!preLinkingPhase) {
+			if(n4Field.declaredTypeRef!==null) {
+				// type of field was declared explicitly
+				field.typeRef = TypeUtils.copyWithProxies(n4Field.declaredTypeRef)
+			}
+			else {
+				// in all other cases:
+				// leave it to the TypingASTWalker to infer the type (e.g. from the initializer expression, if given)
+				field.typeRef = TypeUtils.createDeferredTypeRef;
+			}
 		}
 	}
 
-	def private setMemberAccessModifier(TField fieldType, N4FieldDeclaration n4Field) {
+	def private void setMemberAccessModifier(TField fieldType, N4FieldDeclaration n4Field) {
 		setMemberAccessModifier([MemberAccessModifier modifier | fieldType.declaredMemberAccessModifier = modifier],
 			n4Field.declaredModifiers, n4Field.annotations)
 	}

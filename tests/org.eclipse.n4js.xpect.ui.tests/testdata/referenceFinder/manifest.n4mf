@@ -19,6 +19,5 @@ Sources {
 	source {
 		"src/n4js"    // hand crafted code.
 		,"src/n4js-gen" // generated results.
-		,"src/n4js_2" // another folder to check validations of overlapping fillings.
 	}
 }

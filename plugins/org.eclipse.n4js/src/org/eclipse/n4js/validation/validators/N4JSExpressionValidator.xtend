@@ -46,6 +46,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -62,6 +63,7 @@ import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.ShiftExpression
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisArgProvider
@@ -71,10 +73,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.extensions.ExpressionExtensions
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
-import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
-import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
-import org.eclipse.n4js.scoping.members.TypingStrategyAwareMemberScope
 import org.eclipse.n4js.ts.conversions.ComputedPropertyNameValueConverter
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -157,7 +156,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject ContainerTypesHelper containerTypesHelper;
 
 	@Inject private MemberScopingHelper memberScopingHelper;
-	@Inject private MemberVisibilityChecker memberVisibilityChecker
 
 	@Inject private PromisifyHelper promisifyHelper;
 
@@ -644,8 +642,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		// success case; but perform some further checks
-		val TypeTypeRef ctorTypeRef = typeRef as TypeTypeRef;
-		internalCheckCtorVisibility(newExpression, ctorTypeRef, staticType)
 		internalCheckTypeArguments(staticType.typeVars, newExpression.typeArgs, false, staticType, newExpression,
 			N4JSPackage.eINSTANCE.newExpression_Callee);
 		internalCheckNewParameters(newExpression, staticType as TClassifier);
@@ -671,42 +667,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	private def issueNotACtor(TypeRef typeRef, NewExpression newExpression) {
 		val message = IssueCodes.getMessageForEXP_NEW_NOT_A_CTOR(typeRef.typeRefAsString);
 		addIssue(message, newExpression, N4JSPackage.eINSTANCE.newExpression_Callee, IssueCodes.EXP_NEW_NOT_A_CTOR)
-	}
-
-	/**
-	 * Checks visibility of the cTor.
-	 * Cf. Spec: "Table 3.2.: Member Access Control"
-	 */
-	def internalCheckCtorVisibility(NewExpression expression, TypeTypeRef ref, Type staticType) {
-
-		if (staticType instanceof TypeVariable) {
-			/* cannot check, back out */
-			// TODO is it possible to create an accessibility-check here ?
-			return;
-		}
-
-		val Type ctorClassifier = staticType
-		if (ctorClassifier instanceof TClassifier) {
-
-			val usedCtor = containerTypesHelper.fromContext(expression).findConstructor(ctorClassifier)
-
-			if (usedCtor === null) {
-				// case of broken AST / Typesystem
-				return;
-			}
-
-			val memberScope = memberScopingHelper.createMemberScopeAllowingNonContainedMembers(
-				TypeUtils.createTypeRef(ctorClassifier), expression, false, false); // always non-static
-			val vacs = new VisibilityAwareCtorScope(memberScope, memberVisibilityChecker, ref, staticType, expression);
-			val scope = new TypingStrategyAwareMemberScope(vacs, ref, expression);
-
-			val ele = scope.getSingleElement(usedCtor)
-			if (IEObjectDescriptionWithError.isErrorDescription(ele)) {
-				val errDescr = IEObjectDescriptionWithError.getDescriptionWithError(ele)
-				addIssue(errDescr.message, expression, N4JSPackage.eINSTANCE.newExpression_Callee,
-					errDescr.issueCode)
-			}
-		}
 	}
 
 	/**
@@ -916,40 +876,95 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkAdditiveExpressionForNonADDs(AdditiveExpression ae) {
-
-		if (ae.rhs === null || ae.lhs === null) {
-			return; // corrupt AST (e.g., while editing)
+		if (ae.op == AdditiveOperator.SUB) {
+			doCheckMathOperandTypes(ae.lhs, ae.rhs);
+		} else {
+			doCheckMathOperandTypeSymbol(ae.lhs, ae.rhs)
 		}
-
-		if (ae.op !== AdditiveOperator.ADD) {
-
-			// The types of the operands must be subtypes of number if the operator is not ’+’
-			val bits = BuiltInTypeScope.get(ae.eResource.resourceSet)
-
-			val tlhs = ts.tau(ae.lhs)
-			if (tlhs === null) {
-				return; // corrupt AST (e.g., while editing)
-			}
-			if (tlhs.declaredType === bits.nullType || tlhs.declaredType === bits.undefinedType)
-				issueNotANumberType(tlhs.declaredType.name, ae.lhs);
-
-			val trhs = ts.tau(ae.rhs)
-			if (trhs === null) {
-				return; // corrupt AST (e.g., while editing)
-			}
-
-			if (trhs.declaredType === bits.nullType || trhs.declaredType === bits.undefinedType)
-				issueNotANumberType(trhs.declaredType.name, ae.rhs);
-
-		}
-
+	}
+			
+	/**
+	 * Note: Division by 0 may lead to infinity or NaN, depending on the value of the rhs.
+	 * I.e. 0/0=NaN, but 1/0=Infinity. So we cannot infer from the type the result in these cases.
+	 */	
+	@Check
+	def checkMultiplicativeExpression(MultiplicativeExpression me) {
+		doCheckMathOperandTypes(me.lhs, me.rhs);
+	}
+	
+	@Check
+	def checkShiftExpression(ShiftExpression se) {
+		doCheckMathOperandTypes(se.lhs, se.rhs);
 	}
 
-	def issueNotANumberType(String typeString, Expression expression) {
-		addIssue(IssueCodes.getMessageForEXP_IS_NOT_A_VALID_NUMBER(typeString), expression,
-			IssueCodes.EXP_IS_NOT_A_VALID_NUMBER);
+	def doCheckMathOperandTypes(Expression lhs, Expression rhs) {
+		if (lhs===null || rhs===null) return;	
+		val tlhs = ts.tau(lhs)
+		if (tlhs===null) return;
+		val trhs = ts.tau(rhs)
+		if (trhs===null) return;
+		
+		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
+		
+		if (tlhs.declaredType === bits.undefinedType) {
+			issueMathResultIsConstant("of type undefined", "NaN", lhs);
+		}
+		if (trhs.declaredType === bits.undefinedType) {
+			issueMathResultIsConstant("of type undefined", "NaN", rhs);
+		}
+		
+		if (tlhs.declaredType===bits.nullType) {
+			issueMathOperandIsConstant("null", "0", lhs);
+		}
+		if (trhs.declaredType===bits.nullType) {
+			issueMathOperandIsConstant("null", "0", rhs);
+		}
+		if (tlhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", lhs);
+		}
+		if (trhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", rhs);
+		}
+	}
+		
+	def doCheckMathOperandTypeSymbol(Expression lhs, Expression rhs) {	
+		if (lhs===null || rhs===null) return;	
+		val tlhs = ts.tau(lhs)
+		if (tlhs===null) return;
+		val trhs = ts.tau(rhs)
+		if (trhs===null) return;
+		
+		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
+		if (tlhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", lhs);
+		}
+		if (trhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", rhs);
+		}
+	}
+	
+
+	def issueMathResultIsConstant(String operand, String constResult, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_OPERATION_RESULT_IS_CONSTANT(operand, constResult),
+			location,
+			IssueCodes.EXP_MATH_OPERATION_RESULT_IS_CONSTANT);
 	}
 
+	def issueMathOperandIsConstant(String operandType, String constValue, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_OPERAND_IS_CONSTANT(operandType, constValue),
+			location,
+			IssueCodes.EXP_MATH_OPERAND_IS_CONSTANT);
+	}
+
+	def issueMathOperandTypeNotPermitted(String operandType, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_TYPE_NOT_PERMITTED(operandType),
+			location,
+			IssueCodes.EXP_MATH_TYPE_NOT_PERMITTED);
+	}
+	
+	
+	
+	
 	/**
 	 * IDE-731 / IDE-773
 	 * Cf. 6.1.17. Equality Expression
@@ -1012,7 +1027,7 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 				// no subtype-relationship found, issue warning:
 				addIssue(
 					IssueCodes.
-						getMessageForEXP_WARN_CONSTANT_EQUALITY_TEST(warningNameOf(tdLhs), tdRhs.warningNameOf,
+						getMessageForEXP_WARN_CONSTANT_EQUALITY_TEST(tlhs.warningNameOf, trhs.warningNameOf,
 							ee.op === EqualityOperator::NSAME), ee, IssueCodes.EXP_WARN_CONSTANT_EQUALITY_TEST);
 			}
 		}
@@ -1031,21 +1046,6 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		t instanceof PrimitiveType || t instanceof TEnum || t instanceof BuiltInType || t instanceof TFunction
 	}
 
-// @SuppressWarnings("unused")
-// private def DEBUGPrint(Set<Type> tdLhs, Boolean leftSubOfRight, Boolean rightSubOfLeft, Set<Type> tdRhs,
-// TypeRef tlhs, TypeRef trhs, EqualityExpression ee) {
-// var leftText = NodeModelUtils.getNode(ee.lhs).text.lastLine
-// var rightText = NodeModelUtils.getNode(ee.rhs).text.lastLine
-//
-// println(
-// tdLhs.warningNameOf + (if (leftSubOfRight) " <: " else "") + "   öööö   " +
-// (if (rightSubOfLeft) " :> " else "") + tdRhs.warningNameOf + "  . . . . . .  " + tlhs.typeRefAsString +
-// "  äää  " + trhs.typeRefAsString + " << " + leftText + " ??? " + rightText + " >> ")
-// }
-// private def String lastLine(String s) {
-// if (!s.contains('\n')) return s;
-// '''...''' + s.substring(Math.min(s.lastIndexOf('\n') + 1, s.length))
-// }
 	private def boolean hasInterface(Set<Type> types) {
 		types.exists[hasInterface]
 	}
@@ -1057,6 +1057,16 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		return switch type {
 			TInterface: true
 			default: false
+		}
+	}
+
+	private def String warningNameOf(TypeRef typeRef) {
+
+		if (typeRef instanceof TypeTypeRef) {
+			typeRef.typeRefAsString
+		} else {
+			val typeS = typeRef.computeDeclaredTypeS
+			warningNameOf(typeS)
 		}
 	}
 
@@ -1475,7 +1485,9 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 		val checkVisibility = true
 		val staticAccess = (receiverTypeRef instanceof TypeTypeRef)
 		val scope = memberScopingHelper.createMemberScope(receiverTypeRef, indexedAccess, checkVisibility, staticAccess)
-		val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName));
+		val memberDesc = if(memberName!==null && !memberName.empty) {
+			scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName))
+		};
 		val member = memberDesc?.getEObjectOrProxy();
 		val isNonExistentMember = member===null || member.eIsProxy;
 		if (isNonExistentMember) {

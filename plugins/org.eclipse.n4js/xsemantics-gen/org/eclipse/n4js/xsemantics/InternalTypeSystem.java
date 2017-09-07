@@ -2157,7 +2157,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleTypeIndexedAccessExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IndexedAccessExpression expr) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess) val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)); val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+    /* { expr.target === null || expr.index === null; T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess) val memberDesc = if(memberName!==null && !memberName.isEmpty()) { scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)) }; val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
     {
       RuleFailedException previousFailure = null;
       try {
@@ -2168,7 +2168,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
         T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef();
       } catch (Exception e) {
         previousFailure = extractRuleFailedException(e);
-        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess) val memberDesc = scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)); val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
+        /* { expr.target instanceof SuperLiteral T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } or { G |- expr.target : var TypeRef targetTypeRef targetTypeRef = typeSystemHelper.resolveType(G, targetTypeRef); G |- expr.index : var TypeRef indexTypeRef; val targetDeclType = targetTypeRef.declaredType; val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType); val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef }; val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index); val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue); if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) { if (targetDeclType.generic && targetTypeRef.typeArgs.isEmpty) { T = G.anyTypeRef } else { val G2 = G.wrap typeSystemHelper.addSubstitutions(G2, targetTypeRef) G2.addThisType(targetTypeRef) val elementTypeRef = if(targetIsLiteralOfStringBasedEnum) { G.stringType.elementType } else { targetDeclType.elementType }; G2 |- elementTypeRef ~> T } } else if (memberName!==null) { val staticAccess = (targetTypeRef instanceof TypeTypeRef) val checkVisibility = false val scope = memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess) val memberDesc = if(memberName!==null && !memberName.isEmpty()) { scope.getSingleElement(qualifiedNameConverter.toQualifiedName(memberName)) }; val member = if(memberDesc!==null && !IEObjectDescriptionWithError.isErrorDescription(memberDesc)) { memberDesc.getEObjectOrProxy() }; if(member instanceof TMember && !member.eIsProxy) { G |- (member as TMember) : var TypeRef memberTypeRef val G2 = G.wrap typeSystemHelper.addSubstitutions(G2,targetTypeRef) G2.addThisType(targetTypeRef) G2 |- memberTypeRef ~> T } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef } } else if (targetTypeRef.dynamic) { T = G.anyTypeRefDynamic } else { T = G.anyTypeRef } } */
         {
           try {
             Expression _target = expr.getTarget();
@@ -2227,12 +2227,16 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                 final boolean staticAccess = (targetTypeRef instanceof TypeTypeRef);
                 final boolean checkVisibility = false;
                 final IScope scope = this.memberScopingHelper.createMemberScope(targetTypeRef, expr, checkVisibility, staticAccess);
-                final IEObjectDescription memberDesc = scope.getSingleElement(this.qualifiedNameConverter.toQualifiedName(memberName));
-                EObject _xifexpression_1 = null;
-                if (((memberDesc != null) && (!IEObjectDescriptionWithError.isErrorDescription(memberDesc)))) {
-                  _xifexpression_1 = memberDesc.getEObjectOrProxy();
+                IEObjectDescription _xifexpression_1 = null;
+                if (((memberName != null) && (!memberName.isEmpty()))) {
+                  _xifexpression_1 = scope.getSingleElement(this.qualifiedNameConverter.toQualifiedName(memberName));
                 }
-                final EObject member = _xifexpression_1;
+                final IEObjectDescription memberDesc = _xifexpression_1;
+                EObject _xifexpression_2 = null;
+                if (((memberDesc != null) && (!IEObjectDescriptionWithError.isErrorDescription(memberDesc)))) {
+                  _xifexpression_2 = memberDesc.getEObjectOrProxy();
+                }
+                final EObject member = _xifexpression_2;
                 if (((member instanceof TMember) && (!member.eIsProxy()))) {
                   /* G |- (member as TMember) : var TypeRef memberTypeRef */
                   TypeRef memberTypeRef = null;
@@ -2799,24 +2803,23 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
       final boolean lunknown = (l instanceof UnknownTypeRef);
       final boolean runknown = (r instanceof UnknownTypeRef);
       if ((lunknown && runknown)) {
-        T = r;
+        T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
       } else {
-        final boolean lnum = (Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, l.getDeclaredType()));
-        final boolean rnum = (Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.booleanType(G)) || RuleEnvironmentExtensions.isNumeric(G, r.getDeclaredType()));
-        final boolean undef = (((Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G)) || Objects.equal(l.getDeclaredType(), RuleEnvironmentExtensions.nullType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.undefinedType(G))) || Objects.equal(r.getDeclaredType(), RuleEnvironmentExtensions.nullType(G)));
-        if (((lnum && rnum) || (undef && (lnum || rnum)))) {
+        final boolean lnum = RuleEnvironmentExtensions.isNumericOperand(G, l);
+        final boolean rnum = RuleEnvironmentExtensions.isNumericOperand(G, r);
+        if ((lnum && rnum)) {
           T = RuleEnvironmentExtensions.numberTypeRef(G);
         } else {
-          if (((lunknown || runknown) && ((lnum || rnum) || undef))) {
-            TypeRef _xifexpression = null;
-            if (lunknown) {
-              _xifexpression = l;
-            } else {
-              _xifexpression = r;
-            }
-            T = _xifexpression;
+          if (((lunknown || runknown) && (lnum || rnum))) {
+            T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
           } else {
-            T = RuleEnvironmentExtensions.stringTypeRef(G);
+            final boolean lMayNum = (((lnum || RuleEnvironmentExtensions.containsNumericOperand(G, l)) || RuleEnvironmentExtensions.isAny(G, l)) || RuleEnvironmentExtensions.isSymbol(G, l));
+            final boolean rMayNum = (((rnum || RuleEnvironmentExtensions.containsNumericOperand(G, r)) || RuleEnvironmentExtensions.isAny(G, r)) || RuleEnvironmentExtensions.isSymbol(G, r));
+            if ((lMayNum && rMayNum)) {
+              T = this.typeSystemHelper.createUnionType(G, RuleEnvironmentExtensions.numberTypeRef(G), RuleEnvironmentExtensions.stringTypeRef(G));
+            } else {
+              T = RuleEnvironmentExtensions.stringTypeRef(G);
+            }
           }
         }
       }
@@ -3880,17 +3883,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
                             }
                           }
                           if ((!structuralTyping)) {
-                            boolean _and_1 = false;
-                            if (!((left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping()) && 
-                              (!((leftDeclType instanceof TypeVariable) || (rightDeclType instanceof TypeVariable))))) {
-                              _and_1 = false;
-                            } else {
-                              /* G |- right <: G.n4ObjectTypeRef */
-                              ParameterizedTypeRef _n4ObjectTypeRef = RuleEnvironmentExtensions.n4ObjectTypeRef(G);
-                              boolean _ruleinvocation_1 = subtypeSucceeded(G, _trace_, right, _n4ObjectTypeRef);
-                              _and_1 = _ruleinvocation_1;
-                            }
-                            if (_and_1) {
+                            if ((((left.isUseSiteStructuralTyping() || left.isDefSiteStructuralTyping()) && (!(Objects.equal(rightDeclType, RuleEnvironmentExtensions.objectType(G)) && (leftDeclType instanceof TClassifier)))) && (!(leftDeclType instanceof PrimitiveType)))) {
                               /* fail error "Structural type " + left.typeRefAsString + " is not a subtype of non-structural type " + right.typeRefAsString data PRIORITY_ERROR */
                               String _typeRefAsString = left.getTypeRefAsString();
                               String _plus = ("Structural type " + _typeRefAsString);
@@ -5115,12 +5108,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInMultiplicativeExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final MultiplicativeExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
-    if (_isTypeAware) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
-    } else {
-      T = RuleEnvironmentExtensions.anyTypeRef(G);
-    }
+    T = RuleEnvironmentExtensions.anyTypeRef(G);
     return new Result<TypeRef>(T);
   }
   
@@ -5145,11 +5133,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInAdditiveExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final AdditiveExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    if (((!Objects.equal(e.getOp(), AdditiveOperator.ADD)) && this.jsVariantHelper.isTypeAware(e))) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
-    } else {
-      T = RuleEnvironmentExtensions.anyTypeRef(G);
-    }
+    T = RuleEnvironmentExtensions.anyTypeRef(G);
     return new Result<TypeRef>(T);
   }
   
@@ -5174,12 +5158,7 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   protected Result<TypeRef> applyRuleExpectedTypeInShiftExpression(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ShiftExpression e, final Expression expression) throws RuleFailedException {
     TypeRef T = null; // output parameter
-    boolean _isTypeAware = this.jsVariantHelper.isTypeAware(e);
-    if (_isTypeAware) {
-      T = RuleEnvironmentExtensions.numberTypeRef(G);
-    } else {
-      T = RuleEnvironmentExtensions.anyTypeRef(G);
-    }
+    T = RuleEnvironmentExtensions.anyTypeRef(G);
     return new Result<TypeRef>(T);
   }
   

@@ -18,11 +18,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import org.junit.After;
-import org.junit.Before;
 import org.eclipse.n4js.hlc.tests.N4CliHelper;
 import org.eclipse.n4js.utils.io.FileCopier;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
 
 /**
  */
@@ -49,6 +53,25 @@ public abstract class AbstractN4jscJarTest {
 		this.fixture = fixture;
 	}
 
+	/** Description object of the currently running test. */
+	protected Description description;
+	/** Logs test name that is executed. */
+	@Rule
+	public TestRule watcher = new TestWatcher() {
+		@Override
+		protected void starting(Description desc) {
+			description = desc;
+			System.out.println("Started of: " + desc.getClassName() + "." + desc.getMethodName());
+		}
+
+		@Override
+		protected void finished(Description desc) {
+			description = null;
+			System.out.println("Finished of: " + desc.getClassName() + "." + desc.getMethodName());
+		}
+
+	};
+
 	/**
 	 * Copy a fresh fixture to the workspace area.
 	 */
@@ -57,7 +80,7 @@ public abstract class AbstractN4jscJarTest {
 		File wsp = new File(TARGET, WSP);
 		File fixtureFile = new File(fixture);
 
-		System.out.println("BEFORE: 			  current root " + new File(".").getAbsolutePath());
+		System.out.println("BEFORE: 	current root " + new File(".").getAbsolutePath());
 		System.out.println("BEFORE: current workspace would be " + wsp.getAbsolutePath());
 
 		// clean

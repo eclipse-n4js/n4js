@@ -573,10 +573,17 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.LABEL_REF: {
+				LabelRef labelRef = (LabelRef)theEObject;
+				T result = caseLabelRef(labelRef);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.CONTINUE_STATEMENT: {
 				ContinueStatement continueStatement = (ContinueStatement)theEObject;
 				T result = caseContinueStatement(continueStatement);
 				if (result == null) result = caseStatement(continueStatement);
+				if (result == null) result = caseLabelRef(continueStatement);
 				if (result == null) result = caseScriptElement(continueStatement);
 				if (result == null) result = caseControlFlowElement(continueStatement);
 				if (result == null) result = defaultCase(theEObject);
@@ -586,6 +593,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				BreakStatement breakStatement = (BreakStatement)theEObject;
 				T result = caseBreakStatement(breakStatement);
 				if (result == null) result = caseStatement(breakStatement);
+				if (result == null) result = caseLabelRef(breakStatement);
 				if (result == null) result = caseScriptElement(breakStatement);
 				if (result == null) result = caseControlFlowElement(breakStatement);
 				if (result == null) result = defaultCase(theEObject);
@@ -2545,6 +2553,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseForStatement(ForStatement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Label Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Label Ref</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseLabelRef(LabelRef object) {
 		return null;
 	}
 

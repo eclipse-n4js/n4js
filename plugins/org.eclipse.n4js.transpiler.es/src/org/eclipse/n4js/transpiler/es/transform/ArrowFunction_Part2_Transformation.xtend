@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.transform
 
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.TransformationDependency.Optional
 import org.eclipse.n4js.transpiler.TransformationDependency.Requires
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -19,7 +20,9 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
+ * Part 2 of {@link ArrowFunction_Part1_Transformation}.
  */
+@Optional(ArrowFunctions)
 @Requires(ArrowFunction_Part1_Transformation)
 class ArrowFunction_Part2_Transformation extends Transformation {
 

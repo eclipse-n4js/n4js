@@ -21,6 +21,7 @@ import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -80,6 +81,50 @@ public class N4JSTypesBuilder {
 
 
 	/**
+	 * When demand-loading an AST for a resource that already has a TModule (usually retrieved from the index) by
+	 * calling SyntaxRelatedTElement#getAstElement(), we are facing a challenge: we could simply replace the original
+	 * TModule by a new TModule created in the same way as in the standard case of loading an empty resource from
+	 * source, i.e. with method {@link N4JSTypesBuilder#createTModuleFromSource(DerivedStateAwareResource, boolean)
+	 * #createTModuleFromSource()}. However, this would lead to the issue of all existing references to the original,
+	 * now replaced TModule to now have an invalid target object (not contained in a resource anymore, proxy resolution
+	 * impossible, etc.).
+	 * <p>
+	 * As a solution, this method provides a 2nd mode of the types builder in which not a new TModule is created from
+	 * the AST, but an existing TModule is reused, i.e. the types builder does not create anything but simply creates
+	 * the bidirectional links between AST nodes and TModule elements.
+	 * <p>
+	 * This method should be called after the AST has been loaded, with the original TModule at second position in the
+	 * resource's contents. If the AST and TModule were created from different versions of the source, checked via an
+	 * MD5 hash, or the rewiring fails for other reasons, an {@link IllegalStateException} is thrown. In that case, the
+	 * state of the AST and TModule are undefined (i.e. linking may have taken place partially).
+	 */
+	def public void relinkTModuleToSource(DerivedStateAwareResource resource, boolean preLinkingPhase) {
+		val parseResult = resource.getParseResult();
+		if (parseResult !== null) {
+
+			val script = parseResult.rootASTElement as Script;
+
+			val TModule module = resource.contents.get(1) as TModule;
+			val astMD5New = N4JSASTUtils.md5Hex(resource);
+			if (astMD5New != module.astMD5) {
+				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
+			}
+
+			script.buildNamespacesTypesFromModuleImports(module,preLinkingPhase);
+
+			script.buildTypesFromTypeRefs(module, preLinkingPhase);
+
+			script.relinkTypes(module,preLinkingPhase);
+
+			module.astElement = script;
+			script.module = module;
+
+		} else {
+			throw new IllegalStateException("resource has no parse result: " + resource.URI);
+		}
+	}
+
+	/**
 	 * This method is the single entry point for the types builder package. The only exception is the public method
 	 * {@link N4JSFunctionDefinitionTypesBuilder#updateTFunction(FunctionExpression,FunctionTypeExprOrRef,TypeRef) updateTFunction()}
 	 * in N4JSFunctionDefinitionTypesBuilder, which is called from Xsemantics.
@@ -101,6 +146,7 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule result = typesFactory.createTModule;
+			result.astMD5 = N4JSASTUtils.md5Hex(resource);
 			var qualifiedModuleName = resource.qualifiedModuleName;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
@@ -129,10 +175,6 @@ public class N4JSTypesBuilder {
 			result.staticPolyfillModule = result.isContainedInStaticPolyfillModule;
 			result.staticPolyfillAware = result.isContainedInStaticPolyfillAware;
 
-			// create types for those TypeRefs that define a type if they play the role of an AST node
-			// (has to be done up-front, because in the rest of the types builder code we do not know
-			// where such a TypeRef shows up; to avoid having to check for them at every occurrence of
-			// a TypeRef, we do this here)
 			script.buildTypesFromTypeRefs(result,preLinkingPhase);
 
 			script.buildTypes(result,preLinkingPhase);
@@ -172,6 +214,13 @@ public class N4JSTypesBuilder {
 		}
 	}
 
+	/**
+	 * Create types for those TypeRefs that define a type if they play the role of an AST node.
+	 * <p>
+	 * This has to be done up-front, because in the rest of the types builder code we do not know where such a TypeRef
+	 * shows up; to avoid having to check for them at every occurrence of a TypeRef, we do this ahead of the main types
+	 * builder phase.
+	 */
 	def private void buildTypesFromTypeRefs(Script script, TModule target, boolean preLinkingPhase) {
 		if(!preLinkingPhase) {
 			// important to do the following in bottom-up order!
@@ -191,6 +240,84 @@ public class N4JSTypesBuilder {
 				}
 			}
 		}
+	}
+
+	def private void relinkTypes(Script script, TModule target, boolean preLinkingPhase) {
+		var topLevelTypesIdx = 0;
+		var variableIndex = 0;
+		for (n : script.eAllContents.toIterable) {
+			switch n {
+				TypeDefiningElement: {
+					topLevelTypesIdx = n.relinkType(target, preLinkingPhase, topLevelTypesIdx);
+				}
+				ExportedVariableStatement: {
+					variableIndex = n.relinkType(target, preLinkingPhase, variableIndex)
+				}
+			}
+		}
+	}
+
+	def protected dispatch int relinkType(TypeDefiningElement other, TModule target, boolean preLinkingPhase, int idx) {
+		throw new IllegalArgumentException("unknown subclass of TypeDefiningElement: "+other?.eClass.name);
+	}
+
+	def protected dispatch int relinkType(NamespaceImportSpecifier nsImpSpec, TModule target, boolean preLinkingPhase, int idx) {
+		// already handled up-front in #buildNamespacesTypesFromModuleImports()
+		return idx;
+	}
+
+	def protected dispatch int relinkType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Class.relinkTClass(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
+	def protected dispatch int relinkType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase, int idx) {
+		n4Class.createTClass(target, preLinkingPhase)
+		// do not increment the index
+		return idx
+	}
+
+	def protected dispatch int relinkType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Interface.relinkTInterface(target, preLinkingPhase, idx)) {
+			return idx+1;
+		}
+		return idx;
+	}
+
+	def protected dispatch int relinkType(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4Enum.relinkTEnum(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
+	def protected dispatch int relinkType(ObjectLiteral objectLiteral, TModule target, boolean preLinkingPhase, int idx) {
+		objectLiteral.createObjectLiteral(target, preLinkingPhase)
+		return idx;
+	}
+
+	def protected dispatch int relinkType(MethodDeclaration n4MethodDecl, TModule target, boolean preLinkingPhase, int idx) {
+		// methods are handled in their containing class/interface -> ignore them here
+		return idx;
+	}
+
+	def protected dispatch int relinkType(FunctionDeclaration n4FunctionDecl, TModule target, boolean preLinkingPhase, int idx) {
+		if (n4FunctionDecl.relinkTFunction(target, preLinkingPhase, idx)) {
+			return idx + 1;
+		}
+		return idx;
+	}
+
+	/** Function expressions are special, see {@link N4JSFunctionDefinitionTypesBuilder#createTFunction(FunctionExpression,TModule,boolean)}. */
+	def protected dispatch int relinkType(FunctionExpression n4FunctionExpr, TModule target, boolean preLinkingPhase, int idx) {
+		n4FunctionExpr.createTFunction(target, preLinkingPhase);
+		return idx;
+	}
+
+	def protected dispatch int relinkType(ExportedVariableStatement n4VariableStatement, TModule target, boolean preLinkingPhase, int idx) {
+		return n4VariableStatement.relinkVariableTypes(target, preLinkingPhase, idx)
 	}
 
 	def private void buildTypes(Script script, TModule target, boolean preLinkingPhase) {

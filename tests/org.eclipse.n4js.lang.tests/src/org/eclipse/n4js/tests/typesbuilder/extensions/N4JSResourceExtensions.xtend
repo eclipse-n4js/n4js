@@ -29,29 +29,29 @@ class N4JSResourceExtensions {
 
 	@Inject Provider<XtextResourceSet> resourceSetProvider
 
-	def reloadResourceFromDescription(Resource testResource, IResourceDescription updatedResourceDescription) {
+	def N4JSResource reloadResourceFromDescription(Resource testResource, IResourceDescription updatedResourceDescription) {
 		var rs2 = resourceSetProvider.get()
 		val newN4jsResource = rs2.createResource(testResource.URI) as N4JSResource
 		newN4jsResource.loadFromDescription(updatedResourceDescription);
-		newN4jsResource
+		return newN4jsResource
 	}
 
-	def getResourceDescription(Resource testResource) {
+	def IResourceDescription getResourceDescription(Resource testResource) {
 		val uri = testResource.URI
 		val resourceSet = testResource.resourceSet
 		val updatedResourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
 		val updatedResourceDescription = updatedResourceDescriptions.getResourceDescription(uri)
 		updatedResourceDescription.getExportedObjectsByType(TypesPackage.eINSTANCE.TModule).forEach[EObjectURI]  // trigger user data computation (see N4JSResourceDescriptionStrategy#internalCreateEObjectDescriptionForRoot(TModule, IAcceptor<IEObjectDescription>))
-		updatedResourceDescription
+		return updatedResourceDescription
 	}
 
-	def unloadResource(Resource testResource) {
+	def boolean unloadResource(Resource testResource) {
 		val resourceSet = testResource.resourceSet
 		testResource.unload
-		resourceSet.resources.remove(testResource)
+		return resourceSet.resources.remove(testResource)
 	}
 
-	def resolve(Resource testResource) {
+	def void resolve(Resource testResource) {
 		if(testResource instanceof N4JSResource)
 			testResource.resolveLazyCrossReferences(CancelIndicator.NullImpl)
 		else

@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.MemberType;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
+
 import it.xsemantics.runtime.RuleEnvironment;
 
 /**
@@ -56,7 +57,9 @@ abstract public class ComposedMemberFactory implements MemberFactory {
 	public TMember create(String name) {
 		if (specialMemberFactory == null)
 			return null;
-		return specialMemberFactory.create(name);
+		TMember composedMember = specialMemberFactory.create(name);
+		composedMember.getConstituentMembers().addAll(getConstituentMembers());
+		return composedMember;
 	}
 
 	/**

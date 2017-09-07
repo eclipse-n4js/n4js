@@ -11,19 +11,33 @@
 package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
+import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.MemberAccessModifier
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.AnnotationDefinition
 
 /**
  */
 package class N4JSSetterTypesBuilder {
 	@Inject extension N4JSTypesBuilderHelper
 	@Inject extension N4JSFormalParameterTypesBuilder
+
+	def package boolean relinkSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase, int idx) {
+		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
+			return false
+		}
+
+		val setterType = classifierType.ownedMembers.get(idx) as TSetter;
+		ensureEqualName(n4Setter, setterType);
+		setterType.linkFormalParameters(n4Setter, preLinkingPhase)
+
+		setterType.astElement = n4Setter
+		n4Setter.definedSetter = setterType
+		return true
+	}
 
 	def package TSetter createSetter(N4SetterDeclaration n4Setter, TClassifier classifierType, boolean preLinkingPhase) {
 		if (n4Setter.name === null && !n4Setter.hasComputedPropertyName) {
@@ -53,15 +67,26 @@ package class N4JSSetterTypesBuilder {
 		setterType;
 	}
 
-	def private setMemberAccessModifier(TSetter setterType, N4SetterDeclaration n4Setter) {
+	def private void setMemberAccessModifier(TSetter setterType, N4SetterDeclaration n4Setter) {
 		setMemberAccessModifier([MemberAccessModifier modifier|setterType.declaredMemberAccessModifier = modifier],
 			n4Setter.declaredModifiers, n4Setter.annotations)
 	}
 
-	def private addFormalParameters(TSetter setterType, N4SetterDeclaration n4Setter, BuiltInTypeScope builtInTypeScope,
+	def private void addFormalParameters(TSetter setterType, N4SetterDeclaration n4Setter, BuiltInTypeScope builtInTypeScope,
 		boolean preLinkingPhase) {
 		if (n4Setter.fpar !== null)
 			setterType.fpar = n4Setter.fpar.createFormalParameter(builtInTypeScope, preLinkingPhase);
+	}
+	
+	def private boolean linkFormalParameters(TSetter setterType, N4SetterDeclaration n4Setter, boolean preLinkingPhase) {
+		if (n4Setter.fpar === null) {
+			return false;
+		}
+		val formalParameterType = setterType.fpar;
+		ensureEqualName(n4Setter.fpar, formalParameterType);
+		formalParameterType.astElement = n4Setter.fpar;
+		n4Setter.fpar.definedTypeElement = formalParameterType;
+		return true;
 	}
 
 }

@@ -18,10 +18,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.util.CancelIndicator;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.postprocessing.ASTProcessor;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
 import org.eclipse.n4js.ts.types.TModule;
@@ -30,6 +26,10 @@ import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.UtilN4;
+import org.eclipse.xtext.service.OperationCanceledManager;
+import org.eclipse.xtext.util.CancelIndicator;
+
+import com.google.inject.Inject;
 
 /**
  * Performs post-processing of N4JS resources. Main responsibilities are proxy resolution, types model creation, and
@@ -46,6 +46,8 @@ public class N4JSPostProcessor implements PostProcessor {
 
 	@Inject
 	private ASTProcessor astProcessor;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	@Override
 	public boolean expectsLazyLinkResolution() {
@@ -61,6 +63,7 @@ public class N4JSPostProcessor implements PostProcessor {
 			// we assume this will not be called for other PostProcessingAwareResource than N4JSResource
 			postProcessN4JSResource((N4JSResource) resource, cancelIndicator);
 		} catch (Throwable th) {
+			operationCanceledManager.propagateIfCancelException(th);
 			if (hasBrokenAST) {
 				// swallow exception, AST is broken due to parse error anyway
 			} else {
@@ -113,7 +116,7 @@ public class N4JSPostProcessor implements PostProcessor {
 		while (i.hasNext()) {
 			final EObject object = i.next();
 			for (EReference currRef : object.eClass().getEAllReferences()) {
-				if (!currRef.isContainment()) {
+				if (!currRef.isContainment() && !currRef.isContainer()) {
 					final Object currTarget = object.eGet(currRef);
 					if (currTarget instanceof Collection<?>) {
 						for (Object currObj : (Collection<?>) currTarget) {

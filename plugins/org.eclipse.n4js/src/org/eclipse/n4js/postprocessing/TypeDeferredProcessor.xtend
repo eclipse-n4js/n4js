@@ -12,6 +12,8 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -35,8 +37,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.utils.EcoreUtilN4
-import it.xsemantics.runtime.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 

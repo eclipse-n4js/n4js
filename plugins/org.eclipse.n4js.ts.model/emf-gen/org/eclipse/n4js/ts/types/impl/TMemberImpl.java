@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.ts.types.ContainerType;
@@ -53,6 +54,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDeclaredStatic <em>Declared Static</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isDeclaredOverride <em>Declared Override</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isHasComputedName <em>Has Computed Name</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#getConstituentMembers <em>Constituent Members</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TMemberImpl#isComposed <em>Composed</em>}</li>
  * </ul>
  *
@@ -158,6 +160,16 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 	 * @ordered
 	 */
 	protected boolean hasComputedName = HAS_COMPUTED_NAME_EDEFAULT;
+
+	/**
+	 * The cached value of the '{@link #getConstituentMembers() <em>Constituent Members</em>}' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getConstituentMembers()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<TMember> constituentMembers;
 
 	/**
 	 * The default value of the '{@link #isComposed() <em>Composed</em>}' attribute.
@@ -330,6 +342,18 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 		hasComputedName = newHasComputedName;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMEMBER__HAS_COMPUTED_NAME, oldHasComputedName, hasComputedName));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EList<TMember> getConstituentMembers() {
+		if (constituentMembers == null) {
+			constituentMembers = new EObjectResolvingEList<TMember>(TMember.class, this, TypesPackage.TMEMBER__CONSTITUENT_MEMBERS);
+		}
+		return constituentMembers;
 	}
 
 	/**
@@ -561,6 +585,8 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return isDeclaredOverride();
 			case TypesPackage.TMEMBER__HAS_COMPUTED_NAME:
 				return isHasComputedName();
+			case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS:
+				return getConstituentMembers();
 			case TypesPackage.TMEMBER__COMPOSED:
 				return isComposed();
 		}
@@ -595,6 +621,10 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 			case TypesPackage.TMEMBER__HAS_COMPUTED_NAME:
 				setHasComputedName((Boolean)newValue);
 				return;
+			case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS:
+				getConstituentMembers().clear();
+				getConstituentMembers().addAll((Collection<? extends TMember>)newValue);
+				return;
 			case TypesPackage.TMEMBER__COMPOSED:
 				setComposed((Boolean)newValue);
 				return;
@@ -628,6 +658,9 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 			case TypesPackage.TMEMBER__HAS_COMPUTED_NAME:
 				setHasComputedName(HAS_COMPUTED_NAME_EDEFAULT);
 				return;
+			case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS:
+				getConstituentMembers().clear();
+				return;
 			case TypesPackage.TMEMBER__COMPOSED:
 				setComposed(COMPOSED_EDEFAULT);
 				return;
@@ -655,6 +688,8 @@ public abstract class TMemberImpl extends IdentifiableElementImpl implements TMe
 				return declaredOverride != DECLARED_OVERRIDE_EDEFAULT;
 			case TypesPackage.TMEMBER__HAS_COMPUTED_NAME:
 				return hasComputedName != HAS_COMPUTED_NAME_EDEFAULT;
+			case TypesPackage.TMEMBER__CONSTITUENT_MEMBERS:
+				return constituentMembers != null && !constituentMembers.isEmpty();
 			case TypesPackage.TMEMBER__COMPOSED:
 				return composed != COMPOSED_EDEFAULT;
 		}

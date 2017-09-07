@@ -103,8 +103,9 @@ export public class IDEReporter implements ITestReporter {
             if (!sessionId) {
                 throw new Error("Test start sent before session start")
             }
+            
             await that.send(
-                        ["/n4js/testing/sessions", sessionId, "tests", groupName + "%23" + testName, "start"].join("/")
+                        ["/n4js/testing/sessions", sessionId, "tests", IDEReporter.escapeGroupName(groupName) + "%23" + testName, "start"].join("/")
                         , Method.POST
                         , { "Content-Type": "application/vnd.n4js.start_test_req.tm+json"
                             , "Accept": "application/json"
@@ -123,7 +124,7 @@ export public class IDEReporter implements ITestReporter {
             }
 
             await that.send(
-                        ["/n4js/testing/sessions", sessionId, "tests", groupName + "%23" + testName, "end"].join("/")
+                        ["/n4js/testing/sessions", sessionId, "tests", IDEReporter.escapeGroupName(groupName) + "%23" + testName, "end"].join("/")
                         , Method.POST
                         , { "Content-Type": "application/vnd.n4js.end_test_req.tm+json"
                             , "Accept": "application/json"
@@ -158,5 +159,13 @@ export public class IDEReporter implements ITestReporter {
         }
         this.spy.testingFinished.add(handleTestingFinished);
         return this;
+    }
+    
+    /**
+     * Escapes the given group name for the use with endpoints provided
+     * by the IDE. 
+     */
+    private static escapeGroupName(groupName: string) : string {
+	    	return groupName.replace(/\//g, "%2F");
     }
 }

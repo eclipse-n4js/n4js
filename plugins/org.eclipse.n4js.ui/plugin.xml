@@ -101,6 +101,7 @@ Contributors:
             default="true"
             extensions="n4js,js,n4jsd"
             id="org.eclipse.n4js.N4JS"
+            icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">
         </editor>
     </extension>
@@ -687,6 +688,42 @@ Contributors:
 			description="Open the quick outline."
 			id="org.eclipse.xtext.ui.editor.outline.QuickOutline"
 			name="Quick Outline">
+		</command>
+		<command
+			defaultHandler="org.eclipse.n4js.ui.search.ConsiderOverridenMembersHandler"
+			id="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+			name="Consider Overriden Members">
+			<!-- By default, do NOT consider overriden members when finding references. Also, Do NOT persist the state.-->
+			<state id="org.eclipse.ui.commands.toggleState">
+				<class class="org.eclipse.ui.handlers.RegistryToggleState">
+					<parameter
+						name="default"
+						value="false">
+					</parameter>
+					<parameter
+						name="persisted"
+						value="false">
+					</parameter>
+				</class>
+			</state>
+		</command>
+		<command
+			defaultHandler="org.eclipse.n4js.ui.search.IgnoreNamedImportSpecifierHandler"
+			id="org.eclipse.n4js.ui.IgnoreNamedImportSpecifiersCmd"
+			name="Ignore named import specifier">
+			<!-- By default, do ignore named import specifier. Do NOT persist the state.-->
+			<state id="org.eclipse.ui.commands.toggleState">
+				<class class="org.eclipse.ui.handlers.RegistryToggleState">
+					<parameter
+						name="default"
+						value="true">
+					</parameter>
+					<parameter
+						name="persisted"
+						value="false">
+					</parameter>
+				</class>
+			</state>
 		</command>
 	</extension>
 	<extension point="org.eclipse.ui.menus">
@@ -1280,5 +1317,30 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.ui.building.BuilderStateLogger$Factory"
             label="Builder State">
       </consoleFactory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
+         <command
+               commandId="org.eclipse.n4js.ui.ConsiderOverridenMembersCmd"
+               icon="icons/inher_co.png"
+               label="Consider Overriden Members"
+               style="toggle"
+               tooltip="If checked, references to the overriden members in superclasses and implemented interfaces are also considered when finding references.">
+         </command>
+      </menuContribution>
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.search.ui.views.SearchView?after=additions">
+         <command
+               commandId="org.eclipse.n4js.ui.IgnoreNamedImportSpecifiersCmd"
+               icon="icons/import.gif"
+               label="Ignore Named Import Specifier"
+               style="toggle"
+               tooltip="If checked, references to named import specifier are not shown in the find references result.">
+         </command>
+      </menuContribution>
    </extension>
 </plugin>

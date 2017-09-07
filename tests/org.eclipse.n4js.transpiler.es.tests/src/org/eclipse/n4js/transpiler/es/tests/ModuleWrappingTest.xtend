@@ -11,21 +11,28 @@
 package org.eclipse.n4js.transpiler.es.tests
 
 import com.google.inject.Inject
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
 import org.eclipse.n4js.n4JS.ArrayLiteral
+import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NewExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
+import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation
+import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
+import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -38,14 +45,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 
-import static extension org.junit.Assert.*
-import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
-import org.eclipse.n4js.n4JS.StringLiteral
-import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM
-import org.eclipse.n4js.n4JS.NewExpression
-import org.eclipse.n4js.transpiler.es.transform.ModuleWrappingTransformation
-import org.eclipse.n4js.n4JS.ParenExpression
+import static org.junit.Assert.*
 
 /**
  * All tests herein starting with temp_ should be replaced with textual comparisions.
@@ -86,7 +86,7 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		script.resolveLazyRefs
 
 		// As long as Pretty print is not here, we get a dump of the structure
-		val generatedResult = esSubGen.getCompileResultAsText(script);
+		val generatedResult = esSubGen.getCompileResultAsText(script, GENERATOR_OPTIONS);
 
 		val moduleWrapped='''
 			'use strict';
@@ -102,8 +102,7 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		'''.cjsPatched;
 
 		// ignoring pretty printing, we want to compare:
-		org.eclipse.n4js.transpiler.es.tests.AbstractTranspilerTest.assertSameExceptWhiteSpace ( moduleWrapped, generatedResult );
-
+		AbstractTranspilerTest.assertSameExceptWhiteSpace ( moduleWrapped, generatedResult );
 	}
 
 

@@ -23,6 +23,12 @@
 package org.eclipse.n4js.ts.types
 
 import com.google.common.collect.Iterables
+import java.util.Collections
+import java.util.HashMap
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EMap
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
@@ -30,12 +36,6 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.internal.MemberByNameAndAccessMap
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.utils.EcoreUtilN4
-import java.util.Collections
-import java.util.HashMap
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EMap
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 
 type IterableOfTClassifier wraps Iterable<? extends TClassifier>
@@ -90,7 +90,7 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * Used in scoping to adjust shadowing rules for the project imports (see org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope).
 	 */
 	boolean mainModule
-
+	
 	/**
 	 * True iff this TModule was created during pre-linking phase.
 	 */
@@ -137,6 +137,21 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * imports 'A'. To access those, the referring {@link #variables variable} has to be used.
 	 */
 	contains Type[] exposedInternalTypes
+	
+	/**
+	 * MD5 hash (hex) of the AST from which this type model was created. This can be used to quickly
+	 * compare two type models created from -- maybe -- different versions of the same AST.
+	 * <p>
+	 * The MD5 is used since this is the fastest and easiest solution to compare the AST. More elegant
+	 * methods may would use the AST (in order to ignore comments and whitespaces), however this
+	 * is rather complicated to implement: No proxies must be resolved and the hash must be stable between
+	 * different runs (and between different machines to enable stable tests). This is rather hard to
+	 * achieve with traversing the AST.
+	 * 
+	 * @see org.eclipse.n4js.typesbuilder.N4JSTypesBuilder.md5Hex(String)
+	 */
+	String astMD5
+	
 	/**
 	 * Caches for composed members. Not serialized to the Xtext index.
 	 * See {@link ComposedTypeRef#composedMemberCache()} for details.
@@ -161,6 +176,8 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
  */
 class ComposedMemberCache {
 	contains transient TMember[] cachedComposedMembers
+	// The compose type ref of the member being cached
+	contains transient TypeRef composedTypeRef
 }
 
 /*
@@ -1023,6 +1040,9 @@ abstract class TMember extends IdentifiableElement, TAnnotableElement, SyntaxRel
 	boolean declaredOverride
 
 	boolean hasComputedName
+
+	/** The constituent members if this member is a composed member. */
+	refers transient TMember[] constituentMembers
 
 	/** Tells if this member is a composed member created by {@code ComposedMemberFactory}. */
 	boolean composed

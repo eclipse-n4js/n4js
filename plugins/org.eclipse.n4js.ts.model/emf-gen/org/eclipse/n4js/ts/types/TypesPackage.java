@@ -298,13 +298,22 @@ public interface TypesPackage extends EPackage {
 	int TMODULE__EXPOSED_INTERNAL_TYPES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 13;
 
 	/**
+	 * The feature id for the '<em><b>Ast MD5</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMODULE__AST_MD5 = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+
+	/**
 	 * The feature id for the '<em><b>Composed Member Caches</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 14;
+	int TMODULE__COMPOSED_MEMBER_CACHES = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
 
 	/**
 	 * The feature id for the '<em><b>Module Specifier</b></em>' attribute.
@@ -313,7 +322,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 15;
+	int TMODULE__MODULE_SPECIFIER = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
 
 	/**
 	 * The number of structural features of the '<em>TModule</em>' class.
@@ -322,7 +331,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 16;
+	int TMODULE_FEATURE_COUNT = SYNTAX_RELATED_TELEMENT_FEATURE_COUNT + 17;
 
 	/**
 	 * The number of operations of the '<em>TModule</em>' class.
@@ -353,13 +362,22 @@ public interface TypesPackage extends EPackage {
 	int COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = 0;
 
 	/**
+	 * The feature id for the '<em><b>Composed Type Ref</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF = 1;
+
+	/**
 	 * The number of structural features of the '<em>Composed Member Cache</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int COMPOSED_MEMBER_CACHE_FEATURE_COUNT = 1;
+	int COMPOSED_MEMBER_CACHE_FEATURE_COUNT = 2;
 
 	/**
 	 * The number of operations of the '<em>Composed Member Cache</em>' class.
@@ -6505,13 +6523,22 @@ public interface TypesPackage extends EPackage {
 	int TMEMBER__HAS_COMPUTED_NAME = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 5;
 
 	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER__CONSTITUENT_MEMBERS = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+
+	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER__COMPOSED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 6;
+	int TMEMBER__COMPOSED = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 7;
 
 	/**
 	 * The number of structural features of the '<em>TMember</em>' class.
@@ -6520,7 +6547,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMEMBER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 7;
+	int TMEMBER_FEATURE_COUNT = IDENTIFIABLE_ELEMENT_FEATURE_COUNT + 8;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -6765,6 +6792,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMEMBER_WITH_ACCESS_MODIFIER__CONSTITUENT_MEMBERS = TMEMBER__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -7045,6 +7081,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_MEMBER__HAS_COMPUTED_NAME = TMEMBER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_MEMBER__CONSTITUENT_MEMBERS = TMEMBER__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -7435,13 +7480,22 @@ public interface TypesPackage extends EPackage {
 	int TMETHOD__HAS_COMPUTED_NAME = TFUNCTION_FEATURE_COUNT + 3;
 
 	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TMETHOD__CONSTITUENT_MEMBERS = TFUNCTION_FEATURE_COUNT + 4;
+
+	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__COMPOSED = TFUNCTION_FEATURE_COUNT + 4;
+	int TMETHOD__COMPOSED = TFUNCTION_FEATURE_COUNT + 5;
 
 	/**
 	 * The feature id for the '<em><b>Has No Body</b></em>' attribute.
@@ -7450,7 +7504,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__HAS_NO_BODY = TFUNCTION_FEATURE_COUNT + 5;
+	int TMETHOD__HAS_NO_BODY = TFUNCTION_FEATURE_COUNT + 6;
 
 	/**
 	 * The feature id for the '<em><b>Declared Member Access Modifier</b></em>' attribute.
@@ -7459,7 +7513,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER = TFUNCTION_FEATURE_COUNT + 6;
+	int TMETHOD__DECLARED_MEMBER_ACCESS_MODIFIER = TFUNCTION_FEATURE_COUNT + 7;
 
 	/**
 	 * The feature id for the '<em><b>Declared Abstract</b></em>' attribute.
@@ -7468,7 +7522,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__DECLARED_ABSTRACT = TFUNCTION_FEATURE_COUNT + 7;
+	int TMETHOD__DECLARED_ABSTRACT = TFUNCTION_FEATURE_COUNT + 8;
 
 	/**
 	 * The feature id for the '<em><b>Lacks This Or Super Usage</b></em>' attribute.
@@ -7477,7 +7531,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD__LACKS_THIS_OR_SUPER_USAGE = TFUNCTION_FEATURE_COUNT + 8;
+	int TMETHOD__LACKS_THIS_OR_SUPER_USAGE = TFUNCTION_FEATURE_COUNT + 9;
 
 	/**
 	 * The number of structural features of the '<em>TMethod</em>' class.
@@ -7486,7 +7540,7 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int TMETHOD_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 9;
+	int TMETHOD_FEATURE_COUNT = TFUNCTION_FEATURE_COUNT + 10;
 
 	/**
 	 * The operation id for the '<em>Get Containing Module</em>' operation.
@@ -8001,6 +8055,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_METHOD__HAS_COMPUTED_NAME = TMETHOD__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_METHOD__CONSTITUENT_MEMBERS = TMETHOD__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -8789,6 +8852,15 @@ public interface TypesPackage extends EPackage {
 	int TFIELD__HAS_COMPUTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME;
 
 	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TFIELD__CONSTITUENT_MEMBERS = TMEMBER_WITH_ACCESS_MODIFIER__CONSTITUENT_MEMBERS;
+
+	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9112,6 +9184,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_FIELD__HAS_COMPUTED_NAME = TFIELD__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_FIELD__CONSTITUENT_MEMBERS = TFIELD__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -9457,6 +9538,15 @@ public interface TypesPackage extends EPackage {
 	int FIELD_ACCESSOR__HAS_COMPUTED_NAME = TMEMBER_WITH_ACCESS_MODIFIER__HAS_COMPUTED_NAME;
 
 	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int FIELD_ACCESSOR__CONSTITUENT_MEMBERS = TMEMBER_WITH_ACCESS_MODIFIER__CONSTITUENT_MEMBERS;
+
+	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -9771,6 +9861,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TGETTER__HAS_COMPUTED_NAME = FIELD_ACCESSOR__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TGETTER__CONSTITUENT_MEMBERS = FIELD_ACCESSOR__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -10096,6 +10195,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_GETTER__HAS_COMPUTED_NAME = TGETTER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_GETTER__CONSTITUENT_MEMBERS = TGETTER__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -10441,6 +10549,15 @@ public interface TypesPackage extends EPackage {
 	int TSETTER__HAS_COMPUTED_NAME = FIELD_ACCESSOR__HAS_COMPUTED_NAME;
 
 	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSETTER__CONSTITUENT_MEMBERS = FIELD_ACCESSOR__CONSTITUENT_MEMBERS;
+
+	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -10764,6 +10881,15 @@ public interface TypesPackage extends EPackage {
 	 * @ordered
 	 */
 	int TSTRUCT_SETTER__HAS_COMPUTED_NAME = TSETTER__HAS_COMPUTED_NAME;
+
+	/**
+	 * The feature id for the '<em><b>Constituent Members</b></em>' reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int TSTRUCT_SETTER__CONSTITUENT_MEMBERS = TSETTER__CONSTITUENT_MEMBERS;
 
 	/**
 	 * The feature id for the '<em><b>Composed</b></em>' attribute.
@@ -11845,6 +11971,17 @@ public interface TypesPackage extends EPackage {
 	EReference getTModule_ExposedInternalTypes();
 
 	/**
+	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the attribute '<em>Ast MD5</em>'.
+	 * @see org.eclipse.n4js.ts.types.TModule#getAstMD5()
+	 * @see #getTModule()
+	 * @generated
+	 */
+	EAttribute getTModule_AstMD5();
+
+	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -11886,6 +12023,17 @@ public interface TypesPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getComposedMemberCache_CachedComposedMembers();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef <em>Composed Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Composed Type Ref</em>'.
+	 * @see org.eclipse.n4js.ts.types.ComposedMemberCache#getComposedTypeRef()
+	 * @see #getComposedMemberCache()
+	 * @generated
+	 */
+	EReference getComposedMemberCache_ComposedTypeRef();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}'.
@@ -13370,6 +13518,17 @@ public interface TypesPackage extends EPackage {
 	EAttribute getTMember_HasComputedName();
 
 	/**
+	 * Returns the meta object for the reference list '{@link org.eclipse.n4js.ts.types.TMember#getConstituentMembers <em>Constituent Members</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the reference list '<em>Constituent Members</em>'.
+	 * @see org.eclipse.n4js.ts.types.TMember#getConstituentMembers()
+	 * @see #getTMember()
+	 * @generated
+	 */
+	EReference getTMember_ConstituentMembers();
+
+	/**
 	 * Returns the meta object for the attribute '{@link org.eclipse.n4js.ts.types.TMember#isComposed <em>Composed</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -14585,6 +14744,14 @@ public interface TypesPackage extends EPackage {
 		EReference TMODULE__EXPOSED_INTERNAL_TYPES = eINSTANCE.getTModule_ExposedInternalTypes();
 
 		/**
+		 * The meta object literal for the '<em><b>Ast MD5</b></em>' attribute feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EAttribute TMODULE__AST_MD5 = eINSTANCE.getTModule_AstMD5();
+
+		/**
 		 * The meta object literal for the '<em><b>Composed Member Caches</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -14617,6 +14784,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EReference COMPOSED_MEMBER_CACHE__CACHED_COMPOSED_MEMBERS = eINSTANCE.getComposedMemberCache_CachedComposedMembers();
+
+		/**
+		 * The meta object literal for the '<em><b>Composed Type Ref</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference COMPOSED_MEMBER_CACHE__COMPOSED_TYPE_REF = eINSTANCE.getComposedMemberCache_ComposedTypeRef();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.ts.types.TypableElement <em>Typable Element</em>}' class.
@@ -15825,6 +16000,14 @@ public interface TypesPackage extends EPackage {
 		 * @generated
 		 */
 		EAttribute TMEMBER__HAS_COMPUTED_NAME = eINSTANCE.getTMember_HasComputedName();
+
+		/**
+		 * The meta object literal for the '<em><b>Constituent Members</b></em>' reference list feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference TMEMBER__CONSTITUENT_MEMBERS = eINSTANCE.getTMember_ConstituentMembers();
 
 		/**
 		 * The meta object literal for the '<em><b>Composed</b></em>' attribute feature.

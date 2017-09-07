@@ -293,6 +293,10 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createForStatementAdapter();
 			}
 			@Override
+			public Adapter caseLabelRef(LabelRef object) {
+				return createLabelRefAdapter();
+			}
+			@Override
 			public Adapter caseContinueStatement(ContinueStatement object) {
 				return createContinueStatementAdapter();
 			}
@@ -1491,6 +1495,20 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createForStatementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.LabelRef <em>Label Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.LabelRef
+	 * @generated
+	 */
+	public Adapter createLabelRefAdapter() {
 		return null;
 	}
 

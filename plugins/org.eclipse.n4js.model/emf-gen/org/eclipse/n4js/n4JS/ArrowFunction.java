@@ -84,10 +84,24 @@ public interface ArrowFunction extends FunctionExpression {
 	 * or some-value-typed. An implicit return is warranted only in the latter sub-case.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((((this.isArrowFunction() && \n\t(!this.isHasBracesAroundBody())) && (this.getBody() != null)) && \n\t(!this.getBody().getStatements().isEmpty())) && (this.getBody().getStatements().get(0) instanceof <%org.eclipse.n4js.n4JS.ExpressionStatement%>));'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='return ((((this.isArrowFunction() && \n\t(!this.isHasBracesAroundBody())) && (this.getBody() != null)) && \n\t(!this.getBody().getStatements().isEmpty())) && (<%org.eclipse.xtext.xbase.lib.IterableExtensions%>.<<%org.eclipse.n4js.n4JS.Statement%>>head(this.getBody().getStatements()) instanceof <%org.eclipse.n4js.n4JS.ExpressionStatement%>));'"
 	 * @generated
 	 */
 	boolean isSingleExprImplicitReturn();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * If {@link #isSingleExprImplicitReturn()} returns <code>true</code>, this method will return the single expression
+	 * that makes up the body of this arrow function, otherwise the behavior is undefined (might throw exception).
+	 * <!-- end-model-doc -->
+	 * @model kind="operation" unique="false"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.n4js.n4JS.Statement%> _head = <%org.eclipse.xtext.xbase.lib.IterableExtensions%>.<<%org.eclipse.n4js.n4JS.Statement%>>head(this.getBody().getStatements());\nreturn ((<%org.eclipse.n4js.n4JS.ExpressionStatement%>) _head).getExpression();'"
+	 * @generated
+	 */
+	Expression getSingleExpression();
 
 	/**
 	 * <!-- begin-user-doc -->

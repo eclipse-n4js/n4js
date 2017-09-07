@@ -3122,8 +3122,8 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getBindingPatternAccess().getRule();
 	}
 	
-	//ObjectBindingPattern <Yield BindingPattern:
-	//	{BindingPattern}
+	//ObjectBindingPattern <Yield>:
+	//	{ObjectBindingPattern}
 	//	'{' (properties+=BindingProperty<Yield,AllowType=false> (',' properties+=BindingProperty<Yield,AllowType=false>)*)?
 	//	'}';
 	public N4JSGrammarAccess.ObjectBindingPatternElements getObjectBindingPatternAccess() {
@@ -3134,8 +3134,8 @@ public class N4JSXGrammarAccess extends AbstractGrammarElementFinder {
 		return getObjectBindingPatternAccess().getRule();
 	}
 	
-	//ArrayBindingPattern <Yield BindingPattern:
-	//	{BindingPattern}
+	//ArrayBindingPattern <Yield>:
+	//	{ArrayBindingPattern}
 	//	'['
 	//	elements+=Elision* (elements+=BindingRestElement<Yield> (',' elements+=Elision* elements+=BindingRestElement<Yield>)*
 	//	(',' elements+=Elision*)?)?

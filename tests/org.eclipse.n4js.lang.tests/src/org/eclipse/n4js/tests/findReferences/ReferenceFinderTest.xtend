@@ -69,13 +69,11 @@ class ReferenceFinderTest extends Assert {
 
 		}
 		referenceFinder.findAllReferences(targets, new SimpleResourceAccess(script.eResource.resourceSet), index, acceptor, null)
-		assertEquals(3, result.size)
+		assertEquals(1, result.size)
 		val varStmt = script.scriptElements.last as VariableStatement
 		val varDecl = varStmt.varDecl.head
 		val typeRef = varDecl.declaredTypeRef
 		assertTrue(result.contains(typeRef)) // type in the var decl
-		assertTrue(result.contains(c)) // ref to type element
-		assertTrue(result.contains(c.definedType)) // ref to ast element
 	}
 
 }

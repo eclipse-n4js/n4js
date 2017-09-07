@@ -45,7 +45,7 @@ class MyProps implements React.ComponentProps  {
 	private z: string;
 }
 
-const MyReactFuncComponent = (props: ~MyProps): React.Element =>  {
+const MyReactFuncComponent = function(props: ~MyProps): React.Element {
 	return (
 		<div>{props.x}</div>,
 		<div>{props.y}</div>

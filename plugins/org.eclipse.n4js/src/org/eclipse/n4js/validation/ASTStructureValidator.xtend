@@ -12,13 +12,17 @@ package org.eclipse.n4js.validation
 
 import com.google.common.collect.Sets
 import com.google.inject.Inject
+import java.util.Set
+import org.eclipse.emf.ecore.EAttribute
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.AbstractCaseClause
+import org.eclipse.n4js.n4JS.ArrayBindingPattern
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.AssignmentOperator
 import org.eclipse.n4js.n4JS.BindingElement
-import org.eclipse.n4js.n4JS.BindingPattern
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.CatchBlock
@@ -36,6 +40,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IfStatement
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IterationStatement
+import org.eclipse.n4js.n4JS.LabelRef
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
@@ -62,7 +67,6 @@ import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.StrictModeRelevant
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
@@ -81,10 +85,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRef
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.utils.N4JSLanguageHelper
-import java.util.Set
-import org.eclipse.emf.ecore.EAttribute
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtend.lib.annotations.ToString
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.diagnostics.DiagnosticMessage
@@ -92,12 +92,12 @@ import org.eclipse.xtext.diagnostics.IDiagnosticConsumer
 import org.eclipse.xtext.diagnostics.Severity
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 
+import static org.eclipse.n4js.validation.helper.FunctionValidationHelper.*
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.*
 
 import static extension org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringAssignment
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.isDestructuringForStatement
-import static extension org.eclipse.n4js.validation.helper.FunctionValidationHelper.*;
 
 /**
  * A utility that validates the structure of the AST in one pass.
@@ -1192,7 +1192,7 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_CONTINUE,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_CONTINUE), IssueCodes.AST_INVALID_CONTINUE))
 		} else {
-			validateLabel(model, model.label, producer, validLabels)
+			validateLabelRef(model, producer, validLabels)
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -1215,7 +1215,7 @@ class ASTStructureValidator {
 				new DiagnosticMessage(IssueCodes.getMessageForAST_INVALID_BREAK,
 					IssueCodes.getDefaultSeverity(IssueCodes.AST_INVALID_BREAK), IssueCodes.AST_INVALID_BREAK))
 		} else {
-			validateLabel(model, model.label, producer, validLabels)
+			validateLabelRef(model, producer, validLabels)
 		}
 		recursiveValidateASTStructure(
 			model,
@@ -1225,9 +1225,11 @@ class ASTStructureValidator {
 		)
 	}
 
-	def private void validateLabel(Statement model, LabelledStatement label, ASTStructureDiagnosticProducer producer,
-		Set<LabelledStatement> validLabels) {
-		if (label !== null && !label.eIsProxy && !validLabels.contains(label)) {
+	def private void validateLabelRef(LabelRef model, ASTStructureDiagnosticProducer producer,
+		Set<LabelledStatement> validLabels
+	) {
+		val labelAsText = model.labelAsText; // cannot use model.label, because we aren't allowed to resolve proxies in this phase!
+		if (labelAsText !== null && !validLabels.exists[it.name==labelAsText]) {
 			val target = NodeModelUtils.findActualNodeFor(model)
 			producer.node = target
 			producer.addDiagnostic(
@@ -1515,7 +1517,7 @@ class ASTStructureValidator {
 	def private void validateRestInBindingPattern(BindingElement elem, ASTStructureDiagnosticProducer producer) {
 		if(elem!==null && elem.rest) {
 			val pattern = elem.eContainer;
-			if(pattern instanceof BindingPattern) {
+			if(pattern instanceof ArrayBindingPattern) {
 				// note: the grammar ensures that BindingElement with rest===true will only appear
 				// within an array binding pattern; we only have to assert that it appears at the end
 				if(pattern.elements.last!==elem) {

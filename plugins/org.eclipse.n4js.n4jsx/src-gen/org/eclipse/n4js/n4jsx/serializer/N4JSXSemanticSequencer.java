@@ -19,6 +19,7 @@ import org.eclipse.n4js.n4JS.AdditiveExpression;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Argument;
+import org.eclipse.n4js.n4JS.ArrayBindingPattern;
 import org.eclipse.n4js.n4JS.ArrayElement;
 import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.ArrayPadding;
@@ -29,7 +30,6 @@ import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
 import org.eclipse.n4js.n4JS.BinaryIntLiteral;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.BindingElement;
-import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BooleanLiteral;
@@ -87,6 +87,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.NewExpression;
 import org.eclipse.n4js.n4JS.NewTarget;
 import org.eclipse.n4js.n4JS.NullLiteral;
+import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ObjectLiteral;
 import org.eclipse.n4js.n4JS.OctalIntLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -182,6 +183,9 @@ public class N4JSXSemanticSequencer extends N4JSSemanticSequencer {
 			case N4JSPackage.ARGUMENT:
 				sequence_Argument(context, (Argument) semanticObject); 
 				return; 
+			case N4JSPackage.ARRAY_BINDING_PATTERN:
+				sequence_ArrayBindingPattern(context, (ArrayBindingPattern) semanticObject); 
+				return; 
 			case N4JSPackage.ARRAY_ELEMENT:
 				sequence_ArrayElement(context, (ArrayElement) semanticObject); 
 				return; 
@@ -263,20 +267,6 @@ public class N4JSXSemanticSequencer extends N4JSSemanticSequencer {
 				}
 				else if (rule == grammarAccess.getSingleNameBindingRule()) {
 					sequence_SingleNameBinding(context, (BindingElement) semanticObject); 
-					return; 
-				}
-				else break;
-			case N4JSPackage.BINDING_PATTERN:
-				if (rule == grammarAccess.getArrayBindingPatternRule()) {
-					sequence_ArrayBindingPattern(context, (BindingPattern) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getBindingPatternRule()) {
-					sequence_ArrayBindingPattern_ObjectBindingPattern(context, (BindingPattern) semanticObject); 
-					return; 
-				}
-				else if (rule == grammarAccess.getObjectBindingPatternRule()) {
-					sequence_ObjectBindingPattern(context, (BindingPattern) semanticObject); 
 					return; 
 				}
 				else break;
@@ -891,6 +881,9 @@ public class N4JSXSemanticSequencer extends N4JSSemanticSequencer {
 				return; 
 			case N4JSPackage.NULL_LITERAL:
 				sequence_NullLiteral(context, (NullLiteral) semanticObject); 
+				return; 
+			case N4JSPackage.OBJECT_BINDING_PATTERN:
+				sequence_ObjectBindingPattern(context, (ObjectBindingPattern) semanticObject); 
 				return; 
 			case N4JSPackage.OBJECT_LITERAL:
 				sequence_ObjectLiteral(context, (ObjectLiteral) semanticObject); 

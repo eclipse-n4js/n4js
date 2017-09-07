@@ -32,6 +32,7 @@ import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypesFactory;
+import org.eclipse.n4js.ts.utils.TypeCompareUtils;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.EcoreUtilN4;
@@ -239,15 +240,24 @@ public abstract class ComposedMemberScope extends AbstractScope {
 			final MemberAccess contextCasted = //
 					(MemberAccess) request.context; // cast is valid, see MemberScopeRequest#provideContainedMembers
 			final ComposedMemberCache cache = contextCasted.getComposedMemberCache();
-			if (cache != null) {
+			if (cache != null && TypeCompareUtils.isEqual(cache.getComposedTypeRef(), this.composedTypeRef)) {
 				return cache;
 			}
 			// does not exist yet -> create new composed member cache in TModule:
 			final Resource res = contextCasted.eResource();
 			final TModule module = res instanceof N4JSResource ? ((N4JSResource) res).getModule() : null;
 			if (module != null) {
+				// Search in the module for composed member cache containing equivalent composed type ref
+				for (ComposedMemberCache existingCache : module.getComposedMemberCaches()) {
+					if (TypeCompareUtils.isEqual(existingCache.getComposedTypeRef(), composedTypeRef)) {
+						return existingCache;
+					}
+				}
+
 				final ComposedMemberCache cacheNew = TypesFactory.eINSTANCE.createComposedMemberCache();
 				EcoreUtilN4.doWithDeliver(false, () -> {
+					// Order important due to notification!
+					cacheNew.setComposedTypeRef(TypeUtils.copyIfContained(composedTypeRef));
 					module.getComposedMemberCaches().add(cacheNew);
 					contextCasted.setComposedMemberCache(cacheNew);
 				}, module, contextCasted);

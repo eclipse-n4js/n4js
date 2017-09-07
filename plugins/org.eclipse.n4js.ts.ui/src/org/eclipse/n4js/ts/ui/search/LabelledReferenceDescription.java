@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ts.ui.search;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.resource.impl.DefaultReferenceDescription;
 import org.eclipse.xtext.ui.editor.findrefs.DelegatingReferenceFinder;
@@ -22,6 +23,38 @@ import org.eclipse.xtext.ui.editor.findrefs.DelegatingReferenceFinder;
 @SuppressWarnings("restriction")
 public class LabelledReferenceDescription extends DefaultReferenceDescription {
 	private final String label;
+	private final EObject source;
+	private final EObject target;
+	private final EObject displayEObject;
+	private final int line;
+
+	/**
+	 * Return the line number of the found reference.
+	 */
+	public int getLine() {
+		return line;
+	}
+
+	/**
+	 * Return the display EObject.
+	 */
+	public EObject getDisplayEObject() {
+		return displayEObject;
+	}
+
+	/**
+	 * Return the target.
+	 */
+	public EObject getTarget() {
+		return target;
+	}
+
+	/**
+	 * Return the source EObject.
+	 */
+	public EObject getSource() {
+		return source;
+	}
 
 	/**
 	 * @param fromURI
@@ -35,10 +68,19 @@ public class LabelledReferenceDescription extends DefaultReferenceDescription {
 	 *            referenced element, 0 is used for toOne references
 	 * @param label
 	 *            the label to use in the find references result view
+	 * @param line
+	 *            the line number of the found reference
 	 */
-	public LabelledReferenceDescription(URI fromURI, URI toURI, EReference eReference, int index, String label) {
+	public LabelledReferenceDescription(EObject source, EObject displayEObject, URI fromURI, EObject target, URI toURI,
+			EReference eReference,
+			int index,
+			String label, int line) {
 		super(fromURI, toURI, eReference, index, null /* bug in Xtext, may not pass the real value here */);
 		this.label = label;
+		this.source = source;
+		this.target = target;
+		this.displayEObject = displayEObject;
+		this.line = line;
 	}
 
 	/**

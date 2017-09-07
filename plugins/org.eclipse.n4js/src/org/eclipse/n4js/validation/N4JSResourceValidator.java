@@ -14,6 +14,9 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
 import org.eclipse.xtext.validation.CheckMode;
@@ -21,9 +24,6 @@ import org.eclipse.xtext.validation.Issue;
 import org.eclipse.xtext.validation.ResourceValidatorImpl;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.resource.N4JSResource;
 
 /**
  * A resource validator that will only validate the first element directly contained in the resource if the resource is
@@ -38,13 +38,17 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 
 	@Inject
 	private IN4JSCore n4jsCore;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	/**
 	 * Don't validate the inferred module since all validation information should be available on the AST elements.
 	 */
 	@Override
-	protected void validate(Resource resource, CheckMode mode, CancelIndicator monitor, IAcceptor<Issue> acceptor) {
-		if (monitor.isCanceled() || n4jsCore.isNoValidate(resource.getURI())) {
+	protected void validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator,
+			IAcceptor<Issue> acceptor) {
+		operationCanceledManager.checkCanceled(cancelIndicator);
+		if (n4jsCore.isNoValidate(resource.getURI())) {
 			return;
 		}
 		List<EObject> contents = resource.getContents();
@@ -54,7 +58,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 			// if (firstElement instanceof Script) {
 			// ((Script) firstElement).setFlaggedBound(true);
 			// }
-			validate(resource, firstElement, mode, monitor, acceptor);
+			validate(resource, firstElement, mode, cancelIndicator, acceptor);
 
 			// UtilN4.takeSnapshotInGraphView("post validation", resource);
 		}

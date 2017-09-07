@@ -11,13 +11,14 @@
 package org.eclipse.n4js.hlc.tests;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Scanner;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
@@ -37,6 +38,18 @@ import com.google.common.io.Files;
  */
 public class N4jscTestersTest extends AbstractN4jscTest {
 	File workspace;
+
+	private final static String EXPECTED_TEST_CATALOG = "" +
+			"[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest/OsInspectorTest2\",\"testMethods\":[\"testFail\"]}" +
+			",{\"origin\":\"DemoTest\",\"fqn\":\"BazTest/OsInspectorTest3\",\"testMethods\":[\"testIgnored\"]}" +
+			",{\"origin\":\"DemoTest\",\"fqn\":\"FooTest/OsInspectorTest\",\"testMethods\":[\"testPass\"]}" +
+			",{\"origin\":\"DemoTest\",\"fqn\":\"subfolder/SubFolderModule/SubFolderTest\",\"testMethods\":[\"testPass\"]}"
+			+
+			",{\"origin\":\"SysProjectA\",\"fqn\":\"T/T\",\"testMethods\":[\"t\"]}" +
+			",{\"origin\":\"TestProjectA\",\"fqn\":\"A/A\",\"testMethods\":[\"a\"]}" +
+			",{\"origin\":\"TestProjectA\",\"fqn\":\"B/B\",\"testMethods\":[\"b1\",\"b2\"]}" +
+			",{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1/CSub1\",\"testMethods\":[\"c1\",\"c2\"]}" +
+			",{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2/CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
 
 	private static Collection<String> REQUIRED_LIBS = ImmutableSet.<String> builder()
 			.add(N4JSGlobals.MANGELHAFT)
@@ -62,13 +75,13 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Simple test of compiling a project and launching <u>a single test file</u>.
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
 	 *
 	 * @throws ExitCodeException
 	 *             in error cases ( not expected )
 	 */
 	@Test
-	public void testCompile_And_LaunchSingleTestFile() throws ExitCodeException {
+	public void testCompile_And_LaunchSinglePassingTestFile() throws ExitCodeException {
 		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
@@ -91,13 +104,41 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 	}
 
 	/**
-	 * Simple test of compiling a project and launching <u>a single test file</u>.
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
 	 *
 	 * @throws ExitCodeException
 	 *             in error cases ( not expected )
 	 */
 	@Test
-	public void testCompile_And_LaunchSingleTestFile2() throws ExitCodeException {
+	public void testCompile_And_LaunchSingleIgnoredTestFile() throws ExitCodeException {
+		String proot = workspace.getAbsolutePath().toString();
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+
+		// absolute src filename
+		String fileFooTest = pathToDemoTest + "/test/BazTest.n4js";
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
+				"--test", fileFooTest,
+				"-v"
+		};
+
+		new N4jscBase().doMain(args);
+
+		// TODO add proper assertion that test was actually executed properly!!!
+	}
+
+	/**
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
+	 * <p>
+	 * (negative test, it is expected to see error output)
+	 */
+	@Test
+	public void testCompile_And_LaunchSingleFailingTestFile() {
 		String proot = workspace.getAbsolutePath().toString();
 
 		// Project
@@ -114,7 +155,79 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		new N4jscBase().doMain(args);
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
+
+		// TODO add proper assertion that test was actually executed properly!!!
+	}
+
+	/**
+	 * Simple test of compiling a project and execute tests from <u>a single test file</u>.
+	 * <p>
+	 * (negative test, it is expected to see error output)
+	 *
+	 */
+	@Test
+	public void testCompile_And_RunTests_And_GenerateTestReport() throws FileNotFoundException {
+		String proot = workspace.getAbsolutePath().toString();
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+		String testReportRoot = pathToDemoTest + "/src-gen";
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
+				"--test", pathToDemoTest,
+				"--testReportRoot", testReportRoot,
+				"-v"
+		};
+
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
+
+		File report = new File(testReportRoot + "/test-report.xml");
+		assertTrue("Test report not found", report.exists());
+
+		@SuppressWarnings("resource")
+		String content = new Scanner(report).useDelimiter("\\Z").next();
+		assertTrue(content.contains(
+				"<testsuite name=\"BarTest/OsInspectorTest2\" tests=\"1\" errors=\"0\" failures=\"1\" skipped=\"0\""));
+		assertTrue(content.contains(
+				"<error message=\"AssertionError: Invalid OS detected. (detected os :: fakeOsName not == fakeOsName )\">"));
+
+		assertTrue(content.contains(
+				"<testsuite name=\"BazTest/OsInspectorTest3\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"1\""));
+
+		assertTrue(content.contains(
+				"<testsuite name=\"FooTest/OsInspectorTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+
+		assertTrue(content.contains(
+				"\"subfolder/SubFolderModule/SubFolderTest\" tests=\"1\" errors=\"0\" failures=\"0\" skipped=\"0\""));
+		assertTrue(content.contains(
+				"<testcase name=\"testPass\" classname=\"subfolder/SubFolderModule/SubFolderTest\""));
+	}
+
+	/**
+	 * Simple test of compiling a project and execute tests from <u>whole test project</u>.
+	 * <p>
+	 * (negative test, it is expected to see error output)
+	 */
+	@Test
+	public void testCompile_And_TestProject() {
+		String proot = workspace.getAbsolutePath().toString();
+
+		// Project
+		String projectDemoTest = "DemoTest";
+		String pathToDemoTest = proot + "/" + projectDemoTest;
+
+		String[] args = { "-pl", proot,
+				"-t", "allprojects",
+				"-tw", "nodejs_mangelhaft",
+				"--test", pathToDemoTest,
+				"-v"
+		};
+
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TESTER_STOPPED_WITH_ERROR);
 
 		// TODO add proper assertion that test was actually executed properly!!!
 	}
@@ -139,8 +252,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest.OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest.OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T.T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A.A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B.B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1.CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2.CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
-		assertEquals(expected, actual);
+		assertEquals(EXPECTED_TEST_CATALOG, actual);
 	}
 
 	/**
@@ -161,8 +273,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest.OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest.OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T.T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A.A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B.B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1.CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2.CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
-		assertEquals(expected, actual);
+		assertEquals(EXPECTED_TEST_CATALOG, actual);
 	}
 
 	/**
@@ -188,8 +299,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 		file.deleteOnExit();
 		final String actual = new String(
 				java.nio.file.Files.readAllBytes(Paths.get(file.toURI())));
-		final String expected = "[{\"origin\":\"DemoTest\",\"fqn\":\"BarTest.OsInspectorTest2\",\"testMethods\":[\"testFail\"]},{\"origin\":\"DemoTest\",\"fqn\":\"FooTest.OsInspectorTest\",\"testMethods\":[\"testPass\"]},{\"origin\":\"SysProjectA\",\"fqn\":\"T.T\",\"testMethods\":[\"t\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"A.A\",\"testMethods\":[\"a\"]},{\"origin\":\"TestProjectA\",\"fqn\":\"B.B\",\"testMethods\":[\"b1\",\"b2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub1.CSub1\",\"testMethods\":[\"c1\",\"c2\"]},{\"origin\":\"TestProjectB\",\"fqn\":\"CSub2.CSub2\",\"testMethods\":[\"c1\",\"c2\",\"c3\"]}]";
-		assertEquals(expected, actual);
+		assertEquals(EXPECTED_TEST_CATALOG, actual);
 	}
 
 	/**
@@ -204,12 +314,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		try {
-			new N4jscBase().doMain(args);
-			fail("Expecting exit code: " + ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue());
-		} catch (final ExitCodeException e) {
-			assertEquals(ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue(), e.getExitCode());
-		}
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 	}
 
 	/**
@@ -226,21 +331,7 @@ public class N4jscTestersTest extends AbstractN4jscTest {
 				"-v"
 		};
 
-		try {
-			new N4jscBase().doMain(args);
-			fail("Expecting exit code: " + ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue());
-		} catch (final ExitCodeException e) {
-			assertEquals(ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR.getExitCodeValue(), e.getExitCode());
-		}
+		expectCompilerException(args, ErrorExitCode.EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR);
 	}
 
-	/*
-	 * TODO more tests for launching testers from command-line
-	 *
-	 * Some ideas:
-	 *
-	 * - simple tests for launching a folder or project containing tests (instead of a file)
-	 *
-	 * - negative tests (e.g. launch folder that contains no tests, launch tests without compiling first, ...)
-	 */
 }

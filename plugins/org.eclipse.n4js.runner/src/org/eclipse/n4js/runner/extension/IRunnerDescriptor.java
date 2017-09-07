@@ -16,22 +16,7 @@ import org.eclipse.n4js.runner.IRunner;
  *
  * Runner description interface. CLients registering to runner extension point need to use this descriptor.
  */
-public interface IRunnerDescriptor {
-
-	/**
-	 * Returns the unique identifier of this runner.
-	 */
-	public String getId();
-
-	/**
-	 * Returns the human-readable name of this runner.
-	 */
-	public String getName();
-
-	/**
-	 * Returns the runtime environment supported by this runner.
-	 */
-	public RuntimeEnvironment getEnvironment();
+public interface IRunnerDescriptor extends IRunnableDescriptor {
 
 	/**
 	 * Returns the actual runner.

@@ -31,6 +31,12 @@ import org.eclipse.jface.layout.GridLayoutFactory;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.wizard.WizardPage;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
+import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
+import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.ui.viewer.TableViewerBuilder;
+import org.eclipse.n4js.ui.workingsets.ManualAssociationAwareWorkingSetManager.ManualAssociationWorkingSet;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -44,13 +50,6 @@ import org.eclipse.swt.widgets.Text;
 import com.google.common.base.Optional;
 import com.google.common.primitives.Ints;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
-import org.eclipse.n4js.ui.navigator.N4JSProjectExplorerLabelProvider;
-import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.ui.viewer.TableViewerBuilder;
-import org.eclipse.n4js.ui.workingsets.ManualAssociationAwareWorkingSetManager.ManualAssociationWorkingSet;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Wizard for creating and editing working sets based on manual associations between working sets and workspace
@@ -240,7 +239,7 @@ public class WorkingSetManualAssociationWizard extends WorkingSetEditWizard {
 				if (errorMessage == null) {
 					if (!name.equals(originalName.get())
 							// This case ID and name are equal. Intentionally name.
-							&& Arrays2.transform(manager.getAllWorkingSets(), ws -> ws.getName()).contains(name)) {
+							&& getAllWorkingSets().stream().anyMatch(ws -> ws.getName().equals(name))) {
 						errorMessage = "A working set already exists with name '" + name + "'.";
 					}
 				}
