@@ -55,6 +55,11 @@ class RefNameUtil {
 				suffixLen = 1;
 			}
 
+			//handle A+
+			if(ref.dynamic && nodeText.endsWith('+')) {
+				suffixLen = 1;
+			}
+
 			return nodeText.substring(prefixLen, nodeText.length - suffixLen)
 		} else {
 			null

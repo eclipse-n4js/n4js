@@ -207,7 +207,7 @@ public class ImportsComputer {
 		val brokenNames = new HashSet<String>();
 		brokenNames.addAll(namesThatWeBroke)
 		brokenNames.addAll(unresolved.map[it.name]);
-
+		
 		addResolutionsFromIndex(resolutions, contextProject, brokenNames, script.eResource);
 
 		return resolutions
@@ -235,7 +235,11 @@ public class ImportsComputer {
 						val ieod = exportedIEODs.next
 						if (isNotModule(ieod.EObjectURI)) {
 							brokenNames.forEach [ usedName |
-								if (isCandidate(ieod, usedName) && candidateFilter.apply(ieod) &&
+								if (//high level checks
+									candidateFilter.apply(ieod) &&
+									//heuristic check by matching names 
+									isCandidate(ieod, usedName) && 
+									//expensive check based on actual exported object
 									isVisible(ieod, contextResource)) {
 									resolution.add(usedName, ieod, contextResource)
 								}
@@ -288,7 +292,7 @@ public class ImportsComputer {
 		// normal match
 		if (qName.lastSegment == usedName)
 			return true
-
+		
 		// potential match via namespace
 		if (usedName.contains(".")) {
 			val segments = usedName.split("\\.")
@@ -297,8 +301,19 @@ public class ImportsComputer {
 				return true
 		}
 
-		return qName.lastSegment == EXPORT_DEFAULT_NAME && qName.segmentCount > 1 &&
-			qName.getSegment(qName.segmentCount - 2) == usedName
+		// exported as default but module name matches
+		if (qName.lastSegment == EXPORT_DEFAULT_NAME && qName.segmentCount > 1 ){
+			val moduleName = qName.getSegment(qName.segmentCount - 2).toLowerCase
+			val usedSimpleName = usedName.toLowerCase
+			if(usedSimpleName == moduleName)
+				return true
+			//try to match cases like 'export default class FetchMock' in file fetch-mock.n4jsd or fetch_mock.n4jsd
+			val simplifiedModuleName = moduleName.replaceAll("-|_", "")
+			if(usedSimpleName == simplifiedModuleName)
+				return true
+		}
+
+		return false
 	}
 
 	/**
