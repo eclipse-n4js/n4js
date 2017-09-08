@@ -26,37 +26,41 @@ class ImportSpecifiersUtil {
 	 * @return {@link List} of {@link ImportProvidedElement}s describing imported elements
 	 */
 	public static def List<ImportProvidedElement> mapToImportProvidedElements(List<ImportSpecifier> importSpecifiers) {
-		importSpecifiers.map(
+		return importSpecifiers.map(
 			specifier |
 				switch (specifier) {
 					NamespaceImportSpecifier:
-						if (specifier.importedModule !== null) {
-							val importProvidedElements = newArrayList
-							// add import provided element for a namespace itself
-							importProvidedElements.add(
-								new ImportProvidedElement(specifier.alias, computeNamespaceActualName(specifier),
-									specifier))
-
-							val topExported = specifier.importedModule.topLevelTypes.filter[isExported].map [
-								it as TExportableElement
-							] + specifier.importedModule.variables.filter[it.isExported].map[it as TExportableElement];
-
-							topExported.forEach [ type |
-								importProvidedElements.add(
-									new ImportProvidedElement(specifier.importedElementName(type), type.exportedName,
-										specifier as ImportSpecifier))
-							]
-							return importProvidedElements
-						} else
-							emptyList
+						return namespaceToProvidedElements(specifier)
 					NamedImportSpecifier:
-						newArrayList(
+						return newArrayList(
 							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
 								specifier as ImportSpecifier))
 					default:
-						emptyList
+						return emptyList
 				}
 		).flatten.toList
+	}
+
+	/** Map all exported elements from namespace target module to the import provided elements. */
+	private static def namespaceToProvidedElements(NamespaceImportSpecifier specifier) {
+		if (specifier.importedModule === null)
+			return emptyList
+
+		val importProvidedElements = newArrayList
+		// add import provided element for a namespace itself
+		importProvidedElements.add(
+			new ImportProvidedElement(specifier.alias, computeNamespaceActualName(specifier), specifier))
+
+		val topExportedTypes = specifier.importedModule.topLevelTypes.filter[isExported].map[it as TExportableElement]
+		val topExportedVars = specifier.importedModule.variables.filter[it.isExported].map[it as TExportableElement];
+		val topExported = topExportedTypes + topExportedVars
+
+		topExported.forEach [ type |
+			importProvidedElements.add(
+				new ImportProvidedElement(specifier.importedElementName(type), type.exportedName,
+					specifier as ImportSpecifier))
+		]
+		return importProvidedElements
 	}
 
 	/**
@@ -78,10 +82,10 @@ class ImportSpecifiersUtil {
 	public static def String importedElementName(NamedImportSpecifier specifier) {
 		val element = specifier.importedElement
 		if (element === null)
-			return "<"+ specifier.importedElementAsText + ">(null)"
-		
-		if(element.eIsProxy)
-			return "<"+ specifier.importedElementAsText + ">(proxy)"
+			return "<" + specifier.importedElementAsText + ">(null)"
+
+		if (element.eIsProxy)
+			return "<" + specifier.importedElementAsText + ">(proxy)"
 
 		return element.exportedName
 	}
@@ -99,7 +103,7 @@ class ImportSpecifiersUtil {
 	public static def importedModule(ImportSpecifier it) {
 		(eContainer as ImportDeclaration).module
 	}
-	
+
 	/**
 	 * Returns true if the module that is target of the import declaration containing provided import specifier is invalid (null, proxy, no name).
 	 * Additionally for {@link NamedImportSpecifier} instances checks if linker failed to resolve target (is null, proxy, or has no name)
@@ -109,25 +113,25 @@ class ImportSpecifiersUtil {
 	 * */
 	public static def isBrokenImport(ImportSpecifier spec) {
 		val module = spec.importedModule
-		
-		//check target module
-		if( module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
+
+		// check target module
+		if (module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
 			return true
 
 		// check import specifier
 		if (spec instanceof NamedImportSpecifier) {
 			val nis = spec
-			if(nis === null || nis.eIsProxy || nis.importedElementAsText.isNullOrEmpty)
+			if (nis === null || nis.eIsProxy || nis.importedElementAsText.isNullOrEmpty)
 				return true
-			
-			//check what object that is linked
+
+			// check what object that is linked
 			val imported = nis.importedElement
-			if(imported === null)
+			if (imported === null)
 				return true
-			if(!imported.eIsProxy)
-			return imported.exportedName.isNullOrEmpty
+			if (!imported.eIsProxy)
+				return imported.exportedName.isNullOrEmpty
 		}
-		
+
 		return false
 	}
 }

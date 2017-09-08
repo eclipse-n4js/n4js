@@ -59,8 +59,11 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		// return n4Labelprovider.getImage(element);
-		return null;
+		if (element instanceof ImportableObject) {
+			return n4Labelprovider.getImage(((ImportableObject) element).getTe());
+		}
+		return n4Labelprovider.getImage(element);
+		// return null;
 	}
 
 	@Override

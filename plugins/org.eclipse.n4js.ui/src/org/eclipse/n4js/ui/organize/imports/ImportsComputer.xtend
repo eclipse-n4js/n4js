@@ -63,7 +63,7 @@ public class ImportsComputer {
 
 	@Inject
 	private ImportsFactory importsFactory;
-	
+
 	@Inject
 	private IReferenceFilter referenceFilter;
 
@@ -150,7 +150,8 @@ public class ImportsComputer {
 
 		val contextProject = core.findProject(script.eResource.URI).orNull
 
-		val Multimap<String, ImportableObject> resolutions = createResolutionsForBrokenNames(script, contextProject, namesThatWeBroke);
+		val Multimap<String, ImportableObject> resolutions = createResolutionsForBrokenNames(script, contextProject,
+			namesThatWeBroke);
 
 		val solutions = resolutions.asMap.filter[p1, p2|p2.size == 1]
 
@@ -184,7 +185,7 @@ public class ImportsComputer {
 			forDisambiguation.removeAll(key)
 		]
 
-		//automatic / semi-automatic / or user only disambiguation
+		// automatic / semi-automatic / or user only disambiguation
 		val chosenSolutions = DisambiguateUtil.disambiguate(forDisambiguation, interaction,
 			importProvidedElementLabelprovider);
 
@@ -202,7 +203,7 @@ public class ImportsComputer {
 
 		val Iterable<ReferenceProxyInfo> unresolved = script.findProxyCrossRefInfo.filter[referenceFilter.test(it)].
 			filter[it.eobject instanceof MemberAccess === false]
-			
+
 		val brokenNames = new HashSet<String>();
 		brokenNames.addAll(namesThatWeBroke)
 		brokenNames.addAll(unresolved.map[it.name]);
@@ -213,10 +214,14 @@ public class ImportsComputer {
 	}
 
 	/**
-	 * Obtains index for based on the provided resource. Matches all broken names against object descriptions in the index.
+	 * Obtains index based on the provided resource. Matches all broken names against object descriptions in the index.
 	 * Those that pass checks are added to the resolutions map as potential solutions.
+	 * <p>
+	 * Note that similar results can be achieved by querying scopes (i.e. TypeRef scope), as it was before. Unfortunately 
+	 * browsing the scope is much slower than index. For performance reasons we are using index, even though we need to 
+	 * duplicate some scope semantics, e.g. check for visibility. Still performance does not allow us to use scopes here.
 	 */
-	private def void addResolutionsFromIndex(Multimap<String, ImportableObject> resolution,IN4JSProject contextProject,
+	private def void addResolutionsFromIndex(Multimap<String, ImportableObject> resolution, IN4JSProject contextProject,
 		Iterable<String> brokenNames, Resource contextResource) {
 
 		val resourceSet = core.createResourceSet(Optional.fromNullable(contextProject))
@@ -224,8 +229,7 @@ public class ImportsComputer {
 		resources.forEach [ res |
 			val candidateProject = core.findProject(res.URI).orNull
 			if (candidateProject !== null) {
-				val isInDeps = ImportSpecifierUtil.getDependencyWithID(candidateProject.projectId, contextProject) !== null
-				if (isInDeps) {
+				if (ImportSpecifierUtil.getDependencyWithID(candidateProject.projectId, contextProject) !== null) {
 					val exportedIEODs = res.exportedObjects.iterator
 					while (exportedIEODs.hasNext) {
 						val ieod = exportedIEODs.next
@@ -344,9 +348,8 @@ public class ImportsComputer {
 	 * @see org.eclipse.n4js.scoping.N4JSGlobalScopeProvider.isSubtypeOfIdentifiable(EClass)
 	 */
 	protected def boolean isSubtypeOfIdentifiable(EClass type) {
-		return type === TypesPackage.Literals.IDENTIFIABLE_ELEMENT ||
-			type.getEPackage() === TypesPackage.eINSTANCE &&
-				TypesPackage.Literals.IDENTIFIABLE_ELEMENT.isSuperTypeOf(type);
+		return type === TypesPackage.Literals.IDENTIFIABLE_ELEMENT || type.getEPackage() === TypesPackage.eINSTANCE &&
+			TypesPackage.Literals.IDENTIFIABLE_ELEMENT.isSuperTypeOf(type);
 	}
 
 	/**

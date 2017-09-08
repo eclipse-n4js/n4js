@@ -82,9 +82,9 @@ public class ProjectImportEnablingScope implements IScope {
 	 * such cases; however, project imports will not be available in such tests.
 	 */
 	public static IScope create(IN4JSCore n4jsCore, ImportDeclaration importDecl, IScope parent, IScope delegate) {
-		// if (n4jsCore == null || importDecl == null || parent == null) {
-		// throw new IllegalArgumentException("none of the arguments may be null");
-		// }
+		if (n4jsCore == null || importDecl == null || parent == null) {
+			throw new IllegalArgumentException("none of the arguments may be null");
+		}
 		final Resource resource = importDecl.eResource();
 		if (resource == null) {
 			throw new IllegalArgumentException("given import declaration must be contained in a resource");

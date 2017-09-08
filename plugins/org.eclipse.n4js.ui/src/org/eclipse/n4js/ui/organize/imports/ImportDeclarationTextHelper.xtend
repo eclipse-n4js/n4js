@@ -28,6 +28,8 @@ import org.eclipse.xtext.resource.XtextResource
 
 import static org.eclipse.n4js.parser.InternalSemicolonInjectingParser.SEMICOLON_INSERTED
 import static org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
+import java.util.List
+import org.eclipse.n4js.n4JS.ImportSpecifier
 
 /**
  * Helper for creating representation of the {@link ImportDeclaration} as string with N4JS code.
@@ -47,34 +49,54 @@ class ImportDeclarationTextHelper {
 
 		if (declaration.eAdapters.contains(nodelessMarker)) {
 			// wrap importSpecifiers in new ArrayList, to support sorting (GHOLD-48)
-			val impSpec = new ArrayList(declaration.importSpecifiers);
-			val module = declaration.module.moduleSpecifier;
+			val impSpec = new ArrayList(declaration.importSpecifiers)
+			val module = declaration.module.moduleSpecifier
 
 			if (impSpec.size === 1) {
 				// create own string. from single Named Adapter:
 				val onlyImpSpec = impSpec.get(0)
 				if (onlyImpSpec instanceof NamespaceImportSpecifier)
-					return '''import * as «onlyImpSpec.alias» from "«module»";'''
+					return onlyImpSpec.namespacePureText(module)
 
 				val namedSpec = onlyImpSpec as NamedImportSpecifier
 				if (namedSpec instanceof DefaultImportSpecifier)
-					'''import «namedSpec.importedElement.name» from "«module»";'''
+					return namedSpec.defaultPureText(module)
 				else
-					'''import {«spacer»«namedSpec.importedElement.name»«IF (namedSpec.alias !== null)» as «namedSpec.alias»«ENDIF»«spacer»} from "«module»";'''
+					return namedSpec.namedPureText(module, spacer)
 			} else {
-				// more then one, sort them:
-				ImportsSorter.sortByName(impSpec)
-				val defImp = impSpec.filter(DefaultImportSpecifier).head; // only one is possible
-				val nameImp = impSpec.filter(NamespaceImportSpecifier).head; // only one is possible
-				val rest = impSpec.filter[it instanceof DefaultImportSpecifier === false].filter [
-					it instanceof NamespaceImportSpecifier === false
-				]
-				val normalImports = !rest.isEmpty
-				val defaultImport = if (defImp === null) "" else '''«defImp.importedElement.name»''';
-				val spacerDefName = '''«IF defImp !== null && nameImp !== null», «ENDIF»'''
-				val namespaceImport = if (nameImp === null) "" else '''* as «nameImp.alias»''';
+				return impSpec.multiplePureText(module, spacer)
+			}
+		} else
+			return rewriteTokenText(findActualNodeFor(declaration), spacer, SEMICOLON_INSERTED);
+	}
 
-				'''import «defaultImport»«spacerDefName»«namespaceImport»«IF normalImports
+	private def namespacePureText(NamespaceImportSpecifier is, String module) {
+		return '''import * as «is.alias» from "«module»";'''
+	}
+
+	private def defaultPureText(DefaultImportSpecifier is, String module) {
+		return '''import «is.importedElement.name» from "«module»";'''
+	}
+
+	private def namedPureText(NamedImportSpecifier is, String module, String spacer) {
+		return '''import {«spacer»«is.importedElement.name»«IF (is.alias !== null)» as «is.alias»«ENDIF»«spacer»} from "«module»";'''
+	}
+
+	private def multiplePureText(List<ImportSpecifier> impSpec, String module, String spacer) {
+		// more then one, sort them:
+		ImportsSorter.sortByName(impSpec)
+		val defImp = impSpec.filter(DefaultImportSpecifier).head; // only one is possible
+		val nameImp = impSpec.filter(NamespaceImportSpecifier).head; // only one is possible
+		val rest = impSpec.filter [ specifier |
+			specifier instanceof DefaultImportSpecifier === false &&
+				specifier instanceof NamespaceImportSpecifier === false
+		]
+		val normalImports = !rest.isEmpty
+		val defaultImport = if (defImp === null) "" else '''«defImp.importedElement.name»'''
+		val spacerDefName = '''«IF defImp !== null && nameImp !== null», «ENDIF»'''
+		val namespaceImport = if (nameImp === null) "" else '''* as «nameImp.alias»'''
+
+		return '''import «defaultImport»«spacerDefName»«namespaceImport»«IF normalImports
 							»{«spacer»«
 								FOR a : impSpec SEPARATOR ', '»«
 									(a as NamedImportSpecifier).importedElement.name»«
@@ -82,9 +104,6 @@ class ImportDeclarationTextHelper {
 										ENDIF»«
 								ENDFOR»«spacer
 							»}«ENDIF» from "«module»";'''
-			}
-		} else
-			return rewriteTokenText(findActualNodeFor(declaration), spacer, SEMICOLON_INSERTED);
 	}
 
 	/**
