@@ -10,12 +10,11 @@
  */
 package org.eclipse.n4js.ui.organize.imports;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.organize.imports.ImportProvidedElement;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
@@ -34,8 +33,6 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 	private N4JSLabelProvider n4Labelprovider;
 	@Inject
 	private IQualifiedNameConverter qualifiedNameConverter;
-	@Inject
-	private IN4JSCore core;
 
 	@Override
 	public void addListener(ILabelProviderListener listener) {
@@ -63,39 +60,39 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 			return n4Labelprovider.getImage(((ImportableObject) element).getTe());
 		}
 		return n4Labelprovider.getImage(element);
-		// return null;
 	}
 
 	@Override
 	public String getText(Object element) {
 		if (element instanceof ImportableObject) {
 			ImportableObject io = (ImportableObject) element;
-			TExportableElement eobj = io.getTe();
-			if (!io.isExportedAsDefault())
-				return getText(eobj);
-
-			IN4JSProject findProject = core.findProject(eobj.eResource().getURI()).orNull();
-			String projectName = findProject != null ? findProject.getProjectId()
-					: (eobj.eResource().getURI().isPlatform() ? eobj.eResource().getURI().toPlatformString(true)
-							: eobj.eResource().getURI().toString());
-			return io.getTe() + " in project " + projectName;
-
-		} else if (element instanceof ImportProvidedElement) {
+			return getText(io.getTe());
+		}
+		if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);
-			// return n4Labelprovider.getText( ele.ambiguityList.get(0) );
 			TModule tm = ((ImportDeclaration) ele.importSpec.eContainer()).getModule();
-			String moduleText = n4Labelprovider.getText(tm);
-			return "" + ele.localname + " from " + moduleText;
-		} else if (element instanceof IEObjectDescription) {
-			IEObjectDescription ieO = (IEObjectDescription) element;
-			return ieO.getName().getLastSegment() + " from "
-					+ qualifiedNameConverter.toString(ieO.getName().skipLast(1));
-		} else if (element instanceof TExportableElement) {
+			return ele.localname + " from " + findLocation(tm);
+		}
+		if (element instanceof IEObjectDescription) {
+			IEObjectDescription ieod = (IEObjectDescription) element;
+			EObject eo = ieod.getEObjectOrProxy();
+
+			if (eo instanceof TExportableElement && !eo.eIsProxy()) {
+				return getText(eo);
+			}
+			return ieod.getName().getLastSegment() + " from "
+					+ qualifiedNameConverter.toString(ieod.getName().skipLast(1));
+		}
+		if (element instanceof TExportableElement) {
 			TExportableElement te = (TExportableElement) element;
 			return te.getName() + " (exported as " + te.getExportedName() + ") from "
-					+ te.getContainingModule().getQualifiedName() + " in " + te.getContainingModule().getProjectId();
+					+ findLocation(te.getContainingModule());
 		}
 
 		return n4Labelprovider.getText(element);
+	}
+
+	private String findLocation(TModule module) {
+		return module.getQualifiedName() + " in " + module.getProjectId();
 	}
 }
