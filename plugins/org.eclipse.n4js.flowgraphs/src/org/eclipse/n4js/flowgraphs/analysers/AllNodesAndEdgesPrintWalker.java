@@ -10,8 +10,10 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
@@ -27,7 +29,7 @@ import org.eclipse.n4js.n4JS.Script;
  */
 public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 	final List<ControlFlowElement> allNodes = new LinkedList<>();
-	final List<FlowEdge> allEdges = new LinkedList<>();
+	final Set<FlowEdge> allEdges = new HashSet<>();
 
 	/**
 	 * Constructor.
@@ -46,6 +48,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 
 	@Override
 	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		super.init(curDirection, curContainer);
 		// nothing to do
 	}
 

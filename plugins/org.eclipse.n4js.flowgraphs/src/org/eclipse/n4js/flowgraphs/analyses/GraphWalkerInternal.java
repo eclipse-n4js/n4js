@@ -113,14 +113,14 @@ abstract public class GraphWalkerInternal {
 	 * <p>
 	 * Note that the order of edges is arbitrary.
 	 *
-	 * @param start
-	 *            start in terms of current direction
-	 * @param end
-	 *            end in terms of current direction
+	 * @param lastNode
+	 *            node that was visited before
+	 * @param currentNode
+	 *            end node of the edge in terms of current direction
 	 * @param edge
 	 *            traversed edge
 	 */
-	abstract protected void visit(Node start, Node end, ControlFlowEdge edge);
+	abstract protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge);
 
 	/**
 	 * Called before {@link #terminateAll()} and after any visit-method is called.

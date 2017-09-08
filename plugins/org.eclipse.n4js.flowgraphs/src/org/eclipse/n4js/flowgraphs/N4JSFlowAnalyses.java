@@ -20,6 +20,7 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerAnalysis;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
+import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -139,6 +140,12 @@ public class N4JSFlowAnalyses {
 	public void performAnalyzes(GraphWalkerInternal... graphWalkers) {
 		List<GraphWalkerInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
 		gwa.analyseScript(this, graphWalkerList);
+	}
+
+	/** @returns the containing {@link ControlFlowElement} for the given cfe. */
+	public ControlFlowElement getContainer(ControlFlowElement cfe) {
+		ComplexNode cn = cfg.getComplexNode(cfe);
+		return cn.getControlFlowContainer();
 	}
 
 }

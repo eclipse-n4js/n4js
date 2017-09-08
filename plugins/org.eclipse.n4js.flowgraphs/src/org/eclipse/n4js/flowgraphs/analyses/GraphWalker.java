@@ -49,7 +49,7 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	}
 
 	@Override
-	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
+	final protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge) {
 		visitedEdgesInternal.add(edge);
 		Set<FlowEdge> newConnections = getNewConnections(edge);
 		for (FlowEdge dEdge : newConnections) {
@@ -170,13 +170,17 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
 	@Override
-	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
+	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+
+		visitedEdgesInternal.clear();
+		visitedEdges.clear();
+	}
 
 	/** Analog to {@link GraphWalkerInternal#visit(Node)} */
 	abstract protected void visit(ControlFlowElement cfe);
 
 	/** Analog to {@link GraphWalkerInternal#visit(Node, Node, ControlFlowEdge)} */
-	abstract protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge);
+	abstract protected void visit(ControlFlowElement lastCFE, ControlFlowElement currentCFE, FlowEdge edge);
 
 	@Override
 	abstract protected void terminate(Direction curDirection, ControlFlowElement curContainer);

@@ -11,6 +11,13 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodePredicateWalker
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodePredicateWalker.DeadCodeRegion
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
@@ -28,6 +35,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.ReturnStatement
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
@@ -48,12 +56,9 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.util.TextRegion
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -76,6 +81,9 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 
 	@Inject
+	private N4JSFlowAnalyses fa;
+
+	@Inject
 	private ReturnOrThrowAnalysis returnOrThrowAnalysis
 
 	@Inject
@@ -96,6 +104,43 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
+	}
+
+	/**
+	 *
+	 * TODO once ISSUE-666 is resolved this method could be dropped when
+	 * the check is carried out with #checkFunctionReturn(FunctionOrFieldAccessor)
+	 *
+	 * Return-Type checking.
+     *
+     * [N4JSSpec] 7.1.4 Return Statement
+     *
+     * Constraint 111
+	 *
+	 * @see #checkFunctionReturn(FunctionOrFieldAccessor)
+	 */
+	@Check
+	def checkFlowGraphs(Script script) {
+		fa.perform(script);
+		val dcpw = new DeadCodePredicateWalker();
+		//fa.performAnalyzes(dcpw);
+		val deadCodeRegions = dcpw.getDeadCodeRegions();
+		
+		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
+			val String stmtDescription = getStatementDescription(deadCodeRegion);
+			val String msg = getMessageForFUN_DEAD_CODE(stmtDescription);
+			addIssue(msg + " TEST ", deadCodeRegion.container, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), FUN_DEAD_CODE);
+		}
+	}
+
+	protected def String getStatementDescription(DeadCodeRegion deadCodeRegion) {
+		switch deadCodeRegion.getReachablePredecessor() {
+			ThrowStatement:		return 'throw'
+			ReturnStatement:	return 'return'
+			BreakStatement:		return 'break'
+			ContinueStatement:	return 'continue'
+		}
+		return deadCodeRegion.getReachablePredecessor().eClass.name;
 	}
 
 	/*

@@ -70,7 +70,7 @@ public class GraphWalkerGuideInternal {
 
 		for (GraphWalkerInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
-			walker.setContainerAndDirection(cn.getControlFlowElement(), direction);
+			walker.setContainerAndDirection(cn.getControlFlowContainer(), direction);
 			walker.callInit();
 		}
 
@@ -94,10 +94,17 @@ public class GraphWalkerGuideInternal {
 		currDEdges.addAll(nextDEdges);
 
 		Node lastVisitNode = null;
+
+		for (DecoratedEdgeInternal currDEdge : currDEdges) {
+			Node visitNode = currDEdge.getPrevNode();
+			lastVisitNode = visitNode(lastVisitNode, currDEdge, visitNode);
+		}
+
 		while (!currDEdges.isEmpty()) {
 			DecoratedEdgeInternal currDEdge = currDEdges.removeFirst();
 
-			lastVisitNode = visitNode(lastVisitNode, currDEdge);
+			Node visitNode = currDEdge.getNextNode();
+			lastVisitNode = visitNode(lastVisitNode, currDEdge, visitNode);
 			allVisitedNodes.add(lastVisitNode);
 
 			nextDEdges = getNextDecoratedEdges(currDEdge);
@@ -107,8 +114,7 @@ public class GraphWalkerGuideInternal {
 		return allVisitedNodes;
 	}
 
-	private Node visitNode(Node lastVisitNode, DecoratedEdgeInternal currDEdge) {
-		Node visitNode = currDEdge.getNextNode();
+	private Node visitNode(Node lastVisitNode, DecoratedEdgeInternal currDEdge, Node visitNode) {
 		if (lastVisitNode != null) {
 			callVisit(CallVisit.OnEdge, lastVisitNode, currDEdge, visitNode);
 		}
@@ -237,6 +243,10 @@ public class GraphWalkerGuideInternal {
 
 			this(edgeProvider, edge);
 			this.activePaths.addAll(activePaths);
+		}
+
+		Node getPrevNode() {
+			return edgeProvider.getPrevNode(edge);
 		}
 
 		Node getNextNode() {
