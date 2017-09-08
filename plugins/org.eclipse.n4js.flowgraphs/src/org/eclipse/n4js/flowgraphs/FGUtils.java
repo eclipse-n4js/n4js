@@ -16,6 +16,7 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
@@ -84,11 +85,14 @@ public class FGUtils {
 		boolean isExpression = cfe instanceof Expression;
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
+		boolean containerIsFieldAccessor = cfeContainer instanceof FieldAccessor;
 		boolean containerIsFormalParameter = cfeContainer instanceof FormalParameter;
 
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
-		isCFContainer |= isBlock && (containerIsFunctionDeclaration || containerIsFunctionDefinition);
+		isCFContainer |= isBlock && containerIsFunctionDeclaration;
+		isCFContainer |= isBlock && containerIsFunctionDefinition;
+		isCFContainer |= isBlock && containerIsFieldAccessor;
 		isCFContainer |= isExpression && containerIsFormalParameter;
 		return isCFContainer;
 	}

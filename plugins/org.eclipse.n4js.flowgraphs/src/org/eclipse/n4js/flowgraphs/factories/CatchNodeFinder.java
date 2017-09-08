@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -24,7 +25,6 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.ForStatement;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
@@ -205,15 +205,7 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingType(ControlFlowElement cfe) {
-			boolean isCatchingReturnStatement = false;
-
-			EObject container = cfe.eContainer();
-			if (container instanceof FunctionDeclaration) {
-				FunctionDeclaration fncDecl = (FunctionDeclaration) container;
-				isCatchingReturnStatement |= fncDecl.getBody() == cfe;
-			}
-
-			return isCatchingReturnStatement;
+			return FGUtils.isCFContainer(cfe);
 		}
 
 		@Override
@@ -238,18 +230,16 @@ public class CatchNodeFinder {
 		public boolean isCatchingType(ControlFlowElement cfe) {
 			boolean isCatchingThrowStatement = false;
 
+			isCatchingThrowStatement |= FGUtils.isCFContainer(cfe);
+
 			EObject container = cfe.eContainer();
-			if (container instanceof TryStatement) {
+			if (!isCatchingThrowStatement && container instanceof TryStatement) {
 				TryStatement tryStmt = (TryStatement) container;
 				Block block = tryStmt.getBlock();
 				CatchBlock catcher = tryStmt.getCatch();
 				FinallyBlock finalizer = tryStmt.getFinally();
 
 				isCatchingThrowStatement |= block == cfe && (catcher != null || finalizer != null);
-			}
-			if (container instanceof FunctionDeclaration) {
-				FunctionDeclaration fncDecl = (FunctionDeclaration) container;
-				isCatchingThrowStatement |= fncDecl.getBody() == cfe;
 			}
 
 			return isCatchingThrowStatement;
@@ -258,6 +248,10 @@ public class CatchNodeFinder {
 		@Override
 		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
 			EObject container = cfe.eContainer();
+			if (FGUtils.isCFContainer(cfe)) {
+				ComplexNode cnContainer = cnProvider.get(cfe);
+				return cnContainer.getExit();
+			}
 			if (container instanceof TryStatement) {
 				TryStatement tryStmt = (TryStatement) container;
 				ComplexNode cnTryStmt = cnProvider.get(tryStmt);
@@ -270,11 +264,6 @@ public class CatchNodeFinder {
 				}
 				Objects.requireNonNull(catchNode);
 				return catchNode;
-			}
-			if (container instanceof FunctionDeclaration) {
-				FunctionDeclaration fncDecl = (FunctionDeclaration) container;
-				ComplexNode cnBody = cnProvider.get(fncDecl.getBody());
-				return cnBody.getExit();
 			}
 			throw new IllegalStateException("Method 'isCatchingType' should be true first");
 		}

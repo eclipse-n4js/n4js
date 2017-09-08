@@ -20,28 +20,45 @@
  */
 
 
-// Script XPECT succs at '"ScriptStart"' --> "ScriptEnd"
-"ScriptStart"
-"ScriptEnd"
+// Script XPECT succs at '"Script1"' --> "Script2"
+// Script XPECT succs at '"Script2"' --> "Script3"
+// Script XPECT succs at '"Script3"' --> "Script4"
+// Script XPECT path from '"Script2"' notTo "FB1"
+"Script1";
+"Script2";
 
 
 function FunctionBody() {
-	// FunctionBody XPECT succs at '"start"' --> "end"
-	"start";
-	"end";
+	// FunctionBody XPECT succs at '"FB1"' --> "FB2"
+	"FB1";
+	"FB2";
 }
 
+"Script3";
 
 class C {
 	// XPECT warnings --> "Method names should start with lower case letter." at "MethodBody"
 	MethodBody() {
-		// MethodBody XPECT succs at '"start"' --> "end"
-		"start";
-		"end";
+		// MethodBody XPECT succs at '"MB1"' --> "MB2"
+		"MB1";
+		"MB2";
 	}
 }
 
+"Script4";
 
-// DefaultParameter XPECT succs at '1' --> 2
-function DefaultParameter(a = 1 + 2) {
+// DefaultParameter XPECT succs at '"DP1"' --> "DP2"
+function DefaultParameter(a = "DP1" + "DP2") {
+}
+
+
+
+// FunctionExpression XPECT succs at '"FEX1"' --> "FEX2"
+// FunctionExpression XPECT path from '"FEX_T1"' notTo "FEX1"
+function FunctionExpression() {
+	"FEX_T1"
+	return (function() {
+		"FEX1";
+		"FEX2";
+	});
 }

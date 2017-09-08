@@ -34,13 +34,9 @@ public class GraphWalkerAnalysis {
 	/** see {@link N4JSFlowAnalyses#performAnalyzes(GraphWalkerInternal...)} */
 	public void analyseScript(N4JSFlowAnalyses flowAnalyses, Collection<GraphWalkerInternal> graphWalkers) {
 		GraphWalkerGuideInternal guide = new GraphWalkerGuideInternal(flowAnalyses, graphWalkers);
-		Set<Node> allNodes = new HashSet<>();
-		for (ComplexNode cn : cfg.getAllComplexNodes()) {
-			if (!cn.isControlElement()) {
-				allNodes.addAll(cn.getNodes());
-			}
-		}
+		guide.init();
 
+		Set<Node> allNodes = getAllNonControlNodes();
 		Set<Node> visitedNodes;
 		for (ControlFlowElement container : cfg.getContainers()) {
 			ComplexNode cnContainer = cfg.getComplexNode(container);
@@ -60,6 +56,19 @@ public class GraphWalkerAnalysis {
 				allNodes.removeAll(visitedNodes);
 			}
 		}
+
+		guide.terminate();
+	}
+
+	/** @returns all nodes of the CFG, except for nodes of ControlElements */
+	private Set<Node> getAllNonControlNodes() {
+		Set<Node> allNodes = new HashSet<>();
+		for (ComplexNode cn : cfg.getAllComplexNodes()) {
+			if (!cn.isControlElement()) { // make sure that no control element is part of the CFG
+				allNodes.addAll(cn.getNodes());
+			}
+		}
+		return allNodes;
 	}
 
 }

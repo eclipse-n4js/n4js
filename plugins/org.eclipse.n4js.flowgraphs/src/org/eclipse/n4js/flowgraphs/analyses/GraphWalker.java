@@ -161,6 +161,14 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	/** see {@link GraphWalkerInternal#init()} */
 	abstract protected void initAll();
 
+	/**
+	 * Called after {@link #initAll()} and before any visit-method is called.
+	 *
+	 * @param curDirection
+	 *            direction of succeeding calls to visit-methods
+	 * @param curContainer
+	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
+	 */
 	@Override
 	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
 

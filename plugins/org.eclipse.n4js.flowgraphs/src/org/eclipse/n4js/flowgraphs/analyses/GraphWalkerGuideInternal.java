@@ -38,6 +38,20 @@ public class GraphWalkerGuideInternal {
 		this.walkers = walkers;
 	}
 
+	public void init() {
+		for (GraphWalkerInternal walker : walkers) {
+			walker.setFlowAnalyses(flowAnalyses);
+			walker.callInitAll();
+		}
+	}
+
+	public void terminate() {
+		for (GraphWalkerInternal walker : walkers) {
+			walker.setFlowAnalyses(flowAnalyses);
+			walker.callTerminateAll();
+		}
+	}
+
 	public Set<Node> walkthroughForward(ComplexNode cn) {
 		return walkthrough(cn, Direction.Forward);
 	}

@@ -1033,6 +1033,42 @@ function ReturnStatement3() {
 	"end";
 }
 
+
+// ReturnStatement4 XPECT warnings --> "Variable names should start with lower case letter." at "ReturnStatement4"
+let ReturnStatement4 = function() {
+	/* ReturnStatement4 XPECT allEdges ---
+		"start" --> return;
+	--- */
+	// ReturnStatement4 XPECT allPaths --> "start" -> return;
+	// ReturnStatement4 XPECT path from '"start"' notTo '"end"' -->
+	// ReturnStatement4 XPECT commonPreds of 'return;' and '"end"' -->
+	// ReturnStatement4 XPECT succs at '"start"' --> return;
+	// ReturnStatement4 XPECT succs at 'return;' -->
+	"start";
+	return;
+	// ReturnStatement4 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	"end";
+};
+
+
+class ReturnStatement5 {
+    get getterReturnStatement5() {
+    	/* ReturnStatement5 XPECT allEdges ---
+			"start" --> return;
+		--- */
+		// ReturnStatement5 XPECT allPaths --> "start" -> return;
+		// ReturnStatement5 XPECT path from '"start"' notTo '"end"' -->
+		// ReturnStatement5 XPECT commonPreds of 'return;' and '"end"' -->
+		// ReturnStatement5 XPECT succs at '"start"' --> return;
+		// ReturnStatement5 XPECT succs at 'return;' -->
+		"start";
+		// ReturnStatement5 XPECT errors --> "Return statement must have an expression of type void" at "return;"
+        return;
+		// ReturnStatement5 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+		"end";
+    }
+}
+
 function ThrowStatement1() {
 	/* ThrowStatement1 XPECT allEdges ---
 		"start" --> 1,
@@ -1071,6 +1107,43 @@ function ThrowStatement2() {
 		throw 2;
 	}
 	"end";
+}
+
+// ThrowStatement3 XPECT warnings --> "Variable names should start with lower case letter." at "ThrowStatement3"
+let ThrowStatement3 = function() {
+	/* ThrowStatement3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> throw 1;
+	--- */
+	// ThrowStatement3 XPECT allPaths --> "start" -> 1 -> throw 1;
+	// ThrowStatement3 XPECT path from '"start"' notTo '"end"' -->
+	// ThrowStatement3 XPECT commonPreds of '1' and '"end"' -->
+	// ThrowStatement3 XPECT succs at '"start"' --> 1
+	// ThrowStatement3 XPECT succs at '1' --> throw 1;
+	// ThrowStatement3 XPECT succs at 'throw 1;' -->
+	"start";
+	throw 1;
+	// ThrowStatement3 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+	"end";
+};
+
+
+class ThrowStatement4 {
+    get getterReturnStatement5() {
+    	/* ThrowStatement4 XPECT allEdges ---
+			"start" --> 1,
+			1 --> throw 1;
+		--- */
+		// ThrowStatement4 XPECT allPaths --> "start" -> 1 -> throw 1;
+		// ThrowStatement4 XPECT path from '"start"' notTo '"end"' -->
+		// ThrowStatement4 XPECT commonPreds of 'throw 1;' and '"end"' -->
+		// ThrowStatement4 XPECT succs at '1' --> throw 1;
+		// ThrowStatement4 XPECT succs at 'throw 1;' -->
+		"start";
+        throw 1;
+		// ThrowStatement4 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
+		"end";
+    }
 }
 
 function TryCatchStatement1() {

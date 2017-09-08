@@ -142,24 +142,31 @@ abstract public class GraphWalkerInternal {
 		this.flowAnalyses = fAnalyses;
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to init-methods. */
+	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #init(Direction, ControlFlowElement)}. */
 	final void callInit() {
-		if (getCurrentDirection() == Direction.Forward) {
-			init();
-		}
 		if (activeDirection) {
 			init(getCurrentDirection(), null);
 		}
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to terminate-methods. */
+	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #init()}. */
+	final void callInitAll() {
+		init();
+	}
+
+	/**
+	 * Only called from {@link GraphWalkerGuideInternal}. Delegates to
+	 * {@link #terminate(Direction, ControlFlowElement)}.
+	 */
 	final void callTerminate() {
 		if (activeDirection) {
 			terminate(getCurrentDirection(), null);
 		}
-		if (getCurrentDirection() == Direction.Islands) {
-			terminateAll();
-		}
+	}
+
+	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #terminateAll()}. */
+	final void callTerminateAll() {
+		terminateAll();
 	}
 
 	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link GraphWalkerInternal#visit(Node)}. */

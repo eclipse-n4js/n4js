@@ -15,12 +15,12 @@ import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.n4JS.GenericDeclaration;
 import org.eclipse.n4js.n4JS.Statement;
 
 class BlockFactory {
@@ -53,7 +53,7 @@ class BlockFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
-		if (block.eContainer() instanceof GenericDeclaration) {
+		if (FGUtils.isCFContainer(block)) {
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.Return));
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesErrors));
 		}

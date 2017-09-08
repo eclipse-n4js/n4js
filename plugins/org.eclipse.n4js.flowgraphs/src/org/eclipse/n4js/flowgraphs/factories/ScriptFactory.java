@@ -18,6 +18,7 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
@@ -34,7 +35,7 @@ class ScriptFactory {
 		EList<ScriptElement> scriptElems = script.getScriptElements();
 		for (int i = 0; i < scriptElems.size(); i++) {
 			ScriptElement scriptElem = scriptElems.get(i);
-			if (scriptElem instanceof Statement) {
+			if (isControlFlowStatement(scriptElem)) {
 				Node blockNode = new DelegatingNode("stmt_" + i, script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
 			}
@@ -55,6 +56,12 @@ class ScriptFactory {
 		cNode.setExitNode(exitNode);
 
 		return cNode;
+	}
+
+	private static boolean isControlFlowStatement(ScriptElement scriptElem) {
+		boolean isControlFlowStatement = scriptElem instanceof Statement;
+		isControlFlowStatement &= !(scriptElem instanceof FunctionDeclaration);
+		return isControlFlowStatement;
 	}
 
 }
