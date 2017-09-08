@@ -112,7 +112,7 @@ class AT_084_Test {
 
 		script.assertNoError(IssueCodes.IMP_AMBIGUOUS)
 		//Since A.dup cannot be linked, import is unused, but also marked with linking error
-		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of <unknown (proxy)> is unused.")
+		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of <dup>(proxy) is unused.")
 	}
 
 	@Test
@@ -132,9 +132,9 @@ class AT_084_Test {
 
 		script.assertNoError(IssueCodes.IMP_AMBIGUOUS)
 		//Since A.dup cannot be linked, import is unused, but also marked with linking error
-		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of <unknown (proxy)> is unused.")
+		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of <dup>(proxy) is unused.")
 		//Local name used in second import of unresolved element conflicts with the previous one
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name <unknown> is already used as name for named import null from A.")
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_LOCAL_NAME_CONFLICT, "Name <dup>(proxy) is already used as name for named import null from A.")
 	}
 
 	@Test
@@ -220,13 +220,25 @@ class AT_084_Test {
 		'''.parse(URI.createURI("A.n4js"), rs).withVendorAndProject('A', 'B')
 		val script = '''
 			import {A} from "A"
-			var s = ""
 		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
 
-		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible')
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.VIS_ILLEGAL_TYPE_ACCESS, 'The type A is not visible.')
+		script.assertError(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNRESOLVED, "Import of A cannot be resolved.")
+	}
+	
+	@Test
+	def void test_09b() {
+		val rs = resourceSetProvider.get();
+		'''
+			export public class A {}
+		'''.parse(URI.createURI("A.n4js"), rs).withVendorAndProject('A', 'B')
+		val script = '''
+			import {A} from "A"
+		'''.parse(URI.createURI("C.n4js"), rs).withVendorAndProject('C', 'B')
+
 		script.assertWarning(N4JSPackage.Literals.NAMED_IMPORT_SPECIFIER, IssueCodes.IMP_UNUSED_IMPORT, "The import of A is unused.")
 	}
-
+	
 	@Test
 	def void test_10() {
 		val rs = resourceSetProvider.get();

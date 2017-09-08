@@ -78,7 +78,10 @@ class ImportSpecifiersUtil {
 	public static def String importedElementName(NamedImportSpecifier specifier) {
 		val element = specifier.importedElement
 		if (element === null)
-			return "<unkown>"
+			return "<"+ specifier.importedElementAsText + ">(null)"
+		
+		if(element.eIsProxy)
+			return "<"+ specifier.importedElementAsText + ">(proxy)"
 
 		return element.exportedName
 	}
@@ -95,5 +98,36 @@ class ImportSpecifiersUtil {
 
 	public static def importedModule(ImportSpecifier it) {
 		(eContainer as ImportDeclaration).module
+	}
+	
+	/**
+	 * Returns true if the module that is target of the import declaration containing provided import specifier is invalid (null, proxy, no name).
+	 * Additionally for {@link NamedImportSpecifier} instances checks if linker failed to resolve target (is null, proxy, or has no name)
+	 * 
+	 * @param spec - the ImportSpecifier to investigate
+	 * @return true import looks broken
+	 * */
+	public static def isBrokenImport(ImportSpecifier spec) {
+		val module = spec.importedModule
+		
+		//check target module
+		if( module === null || module.eIsProxy || module.qualifiedName.isNullOrEmpty)
+			return true
+
+		// check import specifier
+		if (spec instanceof NamedImportSpecifier) {
+			val nis = spec
+			if(nis === null || nis.eIsProxy || nis.importedElementAsText.isNullOrEmpty)
+				return true
+			
+			//check what object that is linked
+			val imported = nis.importedElement
+			if(imported === null)
+				return true
+			if(!imported.eIsProxy)
+			return imported.exportedName.isNullOrEmpty
+		}
+		
+		return false
 	}
 }

@@ -218,19 +218,9 @@ class ImportStateCalculator {
 		for (is : importSpecifiers) {
 			if (! is.isFlaggedUsedInCode) {
 				reg.registerUnusedImport(is);
-				if (is.importedModule === null || is.importedModule.eIsProxy || is.isUnresolvedImport) reg.registerBrokenImport(is);
+				if (is.isBrokenImport)
+					reg.registerBrokenImport(is);
 			}
 		}
-	}
-
-	/**
-	 * @param spec - the ImportSpecifier to investigate
-	 * @return true if linker failed to resolve
-	 * */
-	private def isUnresolvedImport(ImportSpecifier spec) {
-		spec.importedModule.qualifiedName === null && if (spec instanceof NamedImportSpecifier) {
-			spec.importedElement===null || spec.importedElement.eIsProxy || spec.importedElement.name === null
-		} else
-			true;
 	}
 }

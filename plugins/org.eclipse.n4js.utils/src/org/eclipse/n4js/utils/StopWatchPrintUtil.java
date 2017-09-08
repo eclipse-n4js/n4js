@@ -27,7 +27,14 @@ public class StopWatchPrintUtil {
 	private final long threshold;
 
 	/**
-	 * Delegates to {@link #StopWatchPrintUtil(String, int)} with {@code -1} as threshold.
+	 * Delegates to {@link #StopWatchPrintUtil(String)} with {@code -1} as threshold.
+	 */
+	public StopWatchPrintUtil(String label) {
+		this(label, 0);
+	}
+
+	/**
+	 * Delegates to {@link #StopWatchPrintUtil(String, int, long)} with {@code -1} as threshold.
 	 */
 	public StopWatchPrintUtil(String label, int tabs) {
 		this(label, tabs, -1);

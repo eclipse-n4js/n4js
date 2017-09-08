@@ -151,35 +151,13 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	 * @return name from NamedImportSpecifier or AST-text if unresolved.
 	 */
 	private def String importedElementErrorName(NamedImportSpecifier spec) {
-		if (isUnresolvedImport(spec)) {
+		if (spec.isBrokenImport) {
 			// find AST for Message:
 			NodeModelUtils.findActualNodeFor(spec).text.trim
 		} else
 			spec.importedElementName
 	}
 	
-	private def importedElementName(NamedImportSpecifier it) {
-		if (importedElement !== null && !importedElement.eIsProxy) {
-			importedElement?.name ?: "<unknown>"
-		} else
-			"<unknown (proxy)>"
-	}
-
-	/**
-	 * @param spec - the ImportSpecifier to investigate
-	 * @return true if linker failed to resolve
-	 * */
-	private def isUnresolvedImport(ImportSpecifier spec) {
-		if (spec.importedModule === null || spec.importedModule.eIsProxy) {
-			return true
-		} else {
-			return spec.importedModule.qualifiedName === null && if (spec instanceof NamedImportSpecifier) {
-				spec.importedElement === null || spec.importedElement.name === null
-			} else
-				return true;
-		}
-	}
-
 	/** Mark all imports that don't appear in the header.
 	 * @param script the script
 	 */
