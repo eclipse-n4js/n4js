@@ -21,19 +21,22 @@
 
 
 // XPECT noerrors -->
-import DefImp1 from "importexport/default_duplicates/M"
-
-// duplicate default import is NOT ok
-// XPECT errors --> "C from importexport/default_duplicates/M is already imported as DefImp1." at "DefImp2"
-import DefImp2 from "importexport/default_duplicates/M"
-
-// duplicate import through namespace is ok!
-// XPECT noerrors -->
 import * as NS from "importexport/default_duplicates/M"
 
+// duplicate import through namespace is ok!
+// XPECT errors --> "default from importexport/default_duplicates/M is already imported as NS.default." at "DefImp1"
+import DefImp1 from "importexport/default_duplicates/M"
 
-DefImp1;
+// duplicate is resolved only against original
+// XPECT errors --> "default from importexport/default_duplicates/M is already imported as NS.default." at "DefImp2"
+import DefImp2 from "importexport/default_duplicates/M"
+
+
+
+// XPECT noerrors -->
 NS;
+// XPECT noerrors --> default is available through namespace
+NS.default;
 
 
 // XPECT noerrors -->

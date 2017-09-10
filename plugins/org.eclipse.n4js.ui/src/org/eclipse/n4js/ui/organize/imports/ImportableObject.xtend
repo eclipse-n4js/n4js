@@ -11,8 +11,8 @@
 package org.eclipse.n4js.ui.organize.imports
 
 import org.eclipse.n4js.organize.imports.ImportProvidedElement
+import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.xtend.lib.annotations.Data
-import org.eclipse.xtext.resource.IEObjectDescription
 
 /**
  * Enhanced information, not deducible from the IEObjectDescription:
@@ -32,18 +32,31 @@ import org.eclipse.xtext.resource.IEObjectDescription
 @Data
 public final class ImportableObject {
 	String name;
-	IEObjectDescription eobj;
+	TExportableElement te;
 	boolean exportedAsDefault;
+	boolean asNamespace;
+	
+	new(String name, TExportableElement te, boolean asDefault) {
+		this( name,  te,  asDefault,  false)
+	}
+	
+	new(String name, TExportableElement te, boolean asDefault, boolean asNamespace) {
+		this.name = name;
+		this.te = te;
+		this.exportedAsDefault = asDefault;
+		this.asNamespace = asNamespace
+	}
 
 	override equals(Object o) {
 		if (o instanceof ImportableObject) {
 			return name == o.name && exportedAsDefault == o.exportedAsDefault &&
-				eobj.EObjectURI.equals(o.eobj.EObjectURI);
+				te.equals(o.te);
 		} else
 			return false;
 	}
 
 	override hashCode() {
-		return name.hashCode + (if (exportedAsDefault) 13 else 7) + eobj.EObjectURI.hashCode;
+		return name.hashCode + (if (exportedAsDefault) 13 else 7) + te.hashCode;
 	}
+
 }

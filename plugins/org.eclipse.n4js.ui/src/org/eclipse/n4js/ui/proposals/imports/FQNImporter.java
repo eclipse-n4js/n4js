@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui.proposals.imports;
 
-import static org.eclipse.n4js.utils.N4JSLanguageUtils.isDefaultExport;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.lastSegmentOrDefaultHost;
 
 import org.apache.log4j.Logger;
@@ -29,6 +28,11 @@ import org.eclipse.jface.text.link.LinkedModeModel;
 import org.eclipse.jface.text.link.LinkedModeUI;
 import org.eclipse.jface.text.link.LinkedPosition;
 import org.eclipse.jface.text.link.LinkedPositionGroup;
+import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType;
+import org.eclipse.n4js.ui.proposals.linkedEditing.IdentifierExitPolicy;
+import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
@@ -43,11 +47,6 @@ import org.eclipse.xtext.ui.editor.contentassist.ReplacementTextApplier;
 import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 import com.google.inject.MembersInjector;
-
-import org.eclipse.n4js.scoping.imports.PlainAccessOfNamespacedImportDescription;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
-import org.eclipse.n4js.ui.proposals.linkedEditing.IdentifierExitPolicy;
-import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal;
 
 /**
  * The FQNImporter can be set on a {@link ConfigurableCompletionProposal} to handle a selected proposal that inserts a
@@ -171,6 +170,7 @@ public class FQNImporter extends ReplacementTextApplier {
 			}
 		}
 		return syntacticReplacementString;
+
 	}
 
 	/**
@@ -236,21 +236,28 @@ public class FQNImporter extends ReplacementTextApplier {
 			simpleApply(document, syntacticReplacementString, proposal);
 			return;
 		}
+
 		String alias = null;
-		boolean isDefaultImport = isDefaultExport(qualifiedName);
 		String shortQName = lastSegmentOrDefaultHost(qualifiedName);
 		IEObjectDescription descriptionFullQN = scope
 				.getSingleElement(QualifiedName.create(shortQName));
 
-		// element is imported via namespace
-		// exported packages just for this, maybe we can use similar check for PlainAccessOfAliasedImportDescription
-		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription && !isDefaultImport) {
+		// element is PlainAccessOfAliasedImportDescription imported via namespace
+		if (descriptionFullQN instanceof PlainAccessOfNamespacedImportDescription) {
 			simpleApply(document,
 					((PlainAccessOfNamespacedImportDescription) descriptionFullQN).getNamespacedName(),
 					proposal);
 			return;
 		}
+
 		if (descriptionFullQN != null) {
+
+			if (descriptionFullQN.getEObjectOrProxy() instanceof ModuleNamespaceVirtualType) {
+				// accessing default export via already imported namespace
+				simpleApply(document, qualifiedName.toString(), proposal);
+				return;
+			}
+
 			// the simple name is already reachable - another import is present
 			// try to use an alias
 			IEObjectDescription description = scope.getSingleElement(qualifiedName);
