@@ -25,5 +25,5 @@ let v = { name: "N4" }
 foo(v);
 
 
-// XPECT noerrors -->
+// XPECT warnings --> "name is not defined in ~~I." at "name"
 foo({ name: "N4"});

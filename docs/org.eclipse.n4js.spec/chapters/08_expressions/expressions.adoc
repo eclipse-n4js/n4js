@@ -818,6 +818,15 @@ $\spc \mu(pa.name)=\type{N4JSIdentifier}$
 
 --
 
+.Superfluous properties of an object literal
+[req,id=IDE-22501,version=1]
+--
+Let $E$ be the expected type of an object literal $O$ as defined by the context in which $O$ is used.
+If $E$ is not type `Object` and not dynamic, then the compiler creates a warning $O$ contains properties not found in $E$.
+
+This is true in particular for object literals passed in as arguments of a spec-constructor.
+--
+
 
 ==== Scoping and linking
 

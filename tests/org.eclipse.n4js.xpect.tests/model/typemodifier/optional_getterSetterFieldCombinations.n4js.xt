@@ -395,7 +395,7 @@ rcs = d0;
 rcs = new D0();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~r~CS." at "get f(): string {return null;}"
 rcs = { get f(): string {return null;} };
 // XPECT noerrors --> "setter of CS not included in ~r~CS, so not required here"
 rcs = dg;
@@ -403,7 +403,7 @@ rcs = dg;
 rcs = new DG();
 
 
-// XPECT noerrors -->
+// no errors but XPECT warnings -->"f is not defined in ~r~CS." at "get f(): string {return null;}"
 rcs = { get f(): string {return null;} };
 // XPECT noerrors -->
 rcs = ds;
@@ -411,7 +411,10 @@ rcs = ds;
 rcs = new DS();
 
 
-// XPECT noerrors
+/* no errors but XPECT warnings ---
+"f is not defined in ~r~CS." at "get f(): string {return null;}"
+"f is not defined in ~r~CS." at "set f(value: string) {}"
+--- */
 rcs = { get f(): string {return null;}, set f(value: string) {} }
 // XPECT noerrors -->
 rcs = dgs;
@@ -419,7 +422,7 @@ rcs = dgs;
 rcs = new DGS();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~r~CS." at "f"
 rcs = { string f : null }
 // XPECT noerrors -->
 rcs = df;
@@ -621,7 +624,7 @@ wcg = d0;
 wcg = new D0();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~w~CG." at "get f(): string {return null;}"
 wcg = { get f(): string {return null;} }
 // XPECT noerrors -->
 wcg = dg;
@@ -629,7 +632,7 @@ wcg = dg;
 wcg = new DG();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~w~CG." at "set f(value: string) {}"
 wcg = { set f(value: string) {} }
 // XPECT noerrors -->
 wcg = ds;
@@ -637,7 +640,10 @@ wcg = ds;
 wcg = new DS();
 
 
-// XPECT noerrors
+/* no errors but XPECT warnings ---
+"f is not defined in ~w~CG." at "get f(): string {return null;}"
+"f is not defined in ~w~CG." at "set f(value: string) {}"
+--- */
 wcg = { get f(): string {return null;}, set f(value: string) {} }
 // XPECT noerrors -->
 wcg = dgs;
@@ -645,7 +651,7 @@ wcg = dgs;
 wcg = new DGS();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~w~CG." at "f"
 wcg = { string f: null }
 // XPECT noerrors -->
 wcg = df;
@@ -891,7 +897,7 @@ icg = d0;
 icg = new D0();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~i~CG." at "get f(): string {return null;}"
 icg = { get f(): string {return null;} }
 // XPECT noerrors -->
 icg = dg;
@@ -899,7 +905,7 @@ icg = dg;
 icg = new DG();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~i~CG." at "set f(value: string) {}"
 icg = { set f(value: string) {} }
 // XPECT noerrors -->
 icg = ds;
@@ -907,7 +913,10 @@ icg = ds;
 icg = new DS();
 
 
-// XPECT noerrors
+/* no errors but XPECT warnings ---
+"f is not defined in ~i~CG." at "get f(): string {return null;}"
+"f is not defined in ~i~CG." at "set f(value: string) {}"
+--- */
 icg = { get f(): string {return null;}, set f(value: string) {} }
 // XPECT noerrors -->
 icg = dgs;
@@ -915,7 +924,7 @@ icg = dgs;
 icg = new DGS();
 
 
-// XPECT noerrors
+// no errors but XPECT warnings -->"f is not defined in ~i~CG." at "f"
 icg = { string f: null }
 // XPECT noerrors -->
 icg = df;
