@@ -32,6 +32,7 @@
 	 * @see <a href="https://www.ecma-international.org/ecma-402/4.0/index.html#sup-number.prototype.tolocalestring">ECMA-402, number.prototype.toLocaleString</a>
 	 * @see <a href="https://www.ecma-international.org/ecma-402/4.0/index.html#numberformat-objects">ECMA-402, numberformat</a>
 	 */
+	@Override 
 	public toLocaleString(locales: string|[string]=undefined, options: ~r~TEMP_NumberFormatOptions=undefined): string
     
 }
