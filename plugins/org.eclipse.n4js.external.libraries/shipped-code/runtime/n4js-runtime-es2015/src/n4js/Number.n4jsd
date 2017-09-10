@@ -22,6 +22,18 @@
     public static isInteger(number: number): boolean;
     public static isSafeInteger(number: number): boolean;
     //public static number toInteger(number number); // maybe ES.next?
+    
+    
+    /**
+	 * Returns a localized string; the optional parameters are defined in ECMA-402 (Internationalization API Specification)
+	 
+	 * @parameter locales locale code, IETF BCP 47
+	 * @parameter options formatting options, also used in NumberFormat, see TEMP_NumberFormatOptions for details.
+	 * @see <a href="https://www.ecma-international.org/ecma-402/4.0/index.html#sup-number.prototype.tolocalestring">ECMA-402, number.prototype.toLocaleString</a>
+	 * @see <a href="https://www.ecma-international.org/ecma-402/4.0/index.html#numberformat-objects">ECMA-402, numberformat</a>
+	 */
+	public toLocaleString(locales: string|[string]=undefined, options: ~r~TEMP_NumberFormatOptions=undefined): string
+    
 }
 
 /* -*- mode: typescript;-*- */

@@ -10,8 +10,65 @@
  */
 @@Global @@ProvidedByRuntime
 
+/**
+ * Options type of NumberFormat.
+ */
+export external interface ~TEMP_NumberFormatOptions {
+	/**
+	 * 1..21, default: 1 
+	 */
+	public minimumIntegerDigits?: int
+	
+	/**
+	 * 0..20 
+	 */
+	public  minimumFractionDigits?: int
+	
+	/**
+	 * minimumFractionDigits..20 
+	 */
+	public maximumFractionDigits?: int
+	
+	/**
+	 * 1..21, default: 1
+	 */
+	public minimumSignificantDigits?: int
+	
+	/**
+	 * minimumSignificantDigits..21, default: 21
+	 */
+	public maximumSignificantDigits?: int
+	
+	/**
+	 * "lookup" | "best fit", default "best fit"
+	 */
+	public localeMatcher?: string
+	
+	/** 
+	 * "decimal"|"percent"|"currency", default "decimal"
+	 * Style "currency" requires a defined currency. 
+	 */
+	public style?: string
+	
+	/**
+	 * 3-letter ISO 4217 currency code
+	 */
+	public currency?: string
+	
+	/**
+	 * "code" | "symbol" | "name", default: "symbol"
+	 */
+	public currencyDisplay?: string
+	
+	/**
+	 * default: true
+	 */
+	public useGrouping?: boolean
+}
+
+
 export external public class ~NumberFormat {
-    public constructor(locales: union{string, Array<string>}=, options: Object=);
+    public constructor(locales: string|[string]=undefined, options: ~r~TEMP_NumberFormatOptions=undefined);
 }
 
 /* -*- mode: typescript;-*- */
