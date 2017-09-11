@@ -23,6 +23,10 @@
  */
 
 
+// AnnotationList are ignored
+export @Internal public class AnnotationList {}
+
+
 function Block1() {
 	/* Block1 XPECT allEdges ---
 		"start" --> 1,
@@ -1444,6 +1448,45 @@ function ThrowTryCatchFinallyStatement1() {
 }
 
 
+function WithStatement1() {
+	/* WithStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end"
+	--- */
+	// WithStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// WithStatement1 XPECT path from '"start"' to '"end"' -->
+	// WithStatement1 XPECT commonPreds of '1' and '2' --> 1
+	// WithStatement1 XPECT succs at '"start"' --> 1
+	// WithStatement1 XPECT succs at '1' --> 2
+	// WithStatement1 XPECT succs at '2' --> "end"
+	"start";
+	// WithStatement1 XPECT errors --> "With statement not allowed." at "with"
+	with (1) 2;
+	"end";
+}
+
+function WithStatement2() {
+	/* WithStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end"
+	--- */
+	// WithStatement2 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// WithStatement2 XPECT path from '"start"' to '"end"' -->
+	// WithStatement2 XPECT commonPreds of '1' and '2' --> 1
+	// WithStatement2 XPECT succs at '"start"' --> 1
+	// WithStatement2 XPECT succs at '1' --> 2
+	// WithStatement2 XPECT succs at '2' --> "end"
+	"start";
+	// WithStatement2 XPECT errors --> "With statement not allowed." at "with"
+	with (1) {
+		2;
+	}
+	"end";
+}
+
+
 function VariableStatement1() {
 	/* VariableStatement1 XPECT allEdges ---
 		"start" --> 1,
@@ -1481,3 +1524,25 @@ function VariableStatement2() {
 	var x = 1;
 	"end";
 }
+
+function VariableStatement3() {
+	/* VariableStatement3 XPECT allEdges ---
+		"start" --> x,
+		x --> y,
+		y --> z,
+		z --> let x\, y\, z;,
+		let x\, y\, z; --> "end"
+	--- */
+	// VariableStatement3 XPECT allPaths --> "start" -> x -> y -> z -> let x\, y\, z; -> "end"
+	// VariableStatement3 XPECT path from '"start"' to '"end"' -->
+	// VariableStatement3 XPECT commonPreds of 'y' and 'x' --> x
+	// VariableStatement3 XPECT succs at '"start"' --> x
+	// VariableStatement3 XPECT succs at 'x' --> y
+	// VariableStatement3 XPECT succs at 'y' --> z
+	// VariableStatement3 XPECT succs at 'z' --> let x\, y\, z;
+	// VariableStatement3 XPECT succs at 'let x, y, z;' --> "end"
+	"start";
+	let x, y, z;
+	"end";
+}
+

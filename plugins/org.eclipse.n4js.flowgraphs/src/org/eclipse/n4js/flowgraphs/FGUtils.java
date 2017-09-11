@@ -10,9 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import java.util.LinkedList;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
+import org.eclipse.n4js.n4JS.AnnotationArgument;
 import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -22,6 +26,8 @@ import org.eclipse.n4js.n4JS.FormalParameter;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
@@ -66,14 +72,22 @@ public class FGUtils {
 				return curCFE;
 			}
 
-			EObject eObj = curCFE;
-			do {
-				eObj = eObj.eContainer();
-			} while (eObj != null && !(eObj instanceof ControlFlowElement));
-
-			curCFE = (ControlFlowElement) eObj;
+			curCFE = getContainer(curCFE);
 		}
 		throw new IllegalArgumentException("Could not find Container for: " + cfe.toString());
+	}
+
+	/**
+	 * @returns the container of the given {@link ControlFlowElement}. Omits AST elements that are not part of the CFG.
+	 */
+	private static ControlFlowElement getContainer(ControlFlowElement curCFE) {
+		EObject eObj = curCFE;
+		do {
+			eObj = eObj.eContainer();
+		} while (eObj != null && !(eObj instanceof ControlFlowElement));
+
+		curCFE = (ControlFlowElement) eObj;
+		return curCFE;
 	}
 
 	/** @returns true iff the given {@link ControlFlowElement} is a container such as a function's body. */
@@ -83,10 +97,14 @@ public class FGUtils {
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;
+
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
 		boolean containerIsFieldAccessor = cfeContainer instanceof FieldAccessor;
 		boolean containerIsFormalParameter = cfeContainer instanceof FormalParameter;
+		boolean containerIsFieldDeclaration = cfeContainer instanceof N4FieldDeclaration;
+		boolean containerIsAnnotationArgument = cfeContainer instanceof AnnotationArgument;
+		boolean containerIsLiteralOrComputedPropertyName = cfeContainer instanceof LiteralOrComputedPropertyName;
 
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
@@ -94,6 +112,9 @@ public class FGUtils {
 		isCFContainer |= isBlock && containerIsFunctionDefinition;
 		isCFContainer |= isBlock && containerIsFieldAccessor;
 		isCFContainer |= isExpression && containerIsFormalParameter;
+		isCFContainer |= isExpression && containerIsFieldDeclaration;
+		isCFContainer |= isExpression && containerIsAnnotationArgument;
+		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName;
 		return isCFContainer;
 	}
 
@@ -121,5 +142,33 @@ public class FGUtils {
 		isControlElement |= cfe instanceof SwitchStatement;
 		isControlElement |= cfe instanceof AbstractCaseClause;
 		return isControlElement;
+	}
+
+	/**
+	 * Returns all containers of the given {@link ControlFlowElement} that are assignable from the given class. The
+	 * results are all in the same container like the given cfe is.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> LinkedList<T> getAllContainersOfTypeUptoCFContainer(ControlFlowElement cfe, Class<T> clazz) {
+		LinkedList<T> results = new LinkedList<>();
+		ControlFlowElement curCFE = cfe;
+		while (curCFE != null && !isCFContainer(curCFE)) {
+			if (clazz.isAssignableFrom(curCFE.getClass())) {
+				results.add((T) curCFE);
+			}
+			curCFE = getContainer(curCFE);
+		}
+		return results;
+	}
+
+	/** @returns the first {@link Block} that is the direct child of a {@link CatchBlock} element, or null. */
+	public static Block getCatchBlock(ControlFlowElement cfe) {
+		LinkedList<Block> mightBeInCatchBlock = getAllContainersOfTypeUptoCFContainer(cfe, Block.class);
+		for (Block block : mightBeInCatchBlock) {
+			if (block.eContainer() instanceof CatchBlock) {
+				return block;
+			}
+		}
+		return null;
 	}
 }

@@ -12,7 +12,6 @@ package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
-import org.eclipse.n4js.n4JS.AnnotationList;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
@@ -32,6 +31,7 @@ import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
 /**
@@ -48,15 +48,13 @@ final public class CFEFactory {
 	}
 
 	static private class InternalFactoryDispatcher extends N4JSSwitch<ComplexNode> {
+
 		@Override
 		public ComplexNode caseAbstractCaseClause(AbstractCaseClause feature) {
 			return AbstractCaseClauseFactory.buildComplexNode(feature);
 		}
 
-		@Override
-		public ComplexNode caseAnnotationList(AnnotationList feature) {
-			return EmptyStatementFactory.buildComplexNode(feature);
-		}
+		// AnnotationList are ignored
 
 		@Override
 		public ComplexNode caseBlock(Block feature) {
@@ -115,12 +113,17 @@ final public class CFEFactory {
 
 		@Override
 		public ComplexNode caseVariableStatement(VariableStatement feature) {
-			return DeclarationStatementFactory.buildComplexNode(feature);
+			return VariableStatementFactory.buildComplexNode(feature);
 		}
 
 		@Override
 		public ComplexNode caseWhileStatement(WhileStatement feature) {
 			return WhileFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseWithStatement(WithStatement feature) {
+			return WithFactory.buildComplexNode(feature);
 		}
 
 		@Override

@@ -60,6 +60,10 @@ public class GraphWalkerGuideInternal {
 		return walkthrough(cn, Direction.Backward);
 	}
 
+	public Set<Node> walkthroughCatchBlocks(ComplexNode cn) {
+		return walkthrough(cn, Direction.CatchBlocks);
+	}
+
 	public Set<Node> walkthroughIsland(ComplexNode cn) {
 		return walkthrough(cn, Direction.Islands);
 	}
@@ -98,6 +102,7 @@ public class GraphWalkerGuideInternal {
 		for (DecoratedEdgeInternal currDEdge : currDEdges) {
 			Node visitNode = currDEdge.getPrevNode();
 			lastVisitNode = visitNode(lastVisitNode, currDEdge, visitNode);
+			allVisitedNodes.add(lastVisitNode);
 		}
 
 		while (!currDEdges.isEmpty()) {
@@ -223,6 +228,9 @@ public class GraphWalkerGuideInternal {
 		case Islands:
 			edgeProviders.add(new NextEdgesProvider.Forward());
 			edgeProviders.add(new NextEdgesProvider.Backward());
+			break;
+		case CatchBlocks:
+			edgeProviders.add(new NextEdgesProvider.Forward());
 			break;
 		}
 		return edgeProviders;

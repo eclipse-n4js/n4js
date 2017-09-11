@@ -82,8 +82,6 @@ public class ASTProcessor extends AbstractProcessor {
 	@Inject
 	private N4JSTypeSystem ts;
 	@Inject
-	private N4JSFlowAnalyses flowAnalyses;
-	@Inject
 	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 	@Inject
 	private ComputedNameProcessor computedNameProcessor;
@@ -181,7 +179,9 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 		}
 		// phase 4: control-/data-flow analyses
+		val N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
 		flowAnalyses.perform(script);
+		cache.storeFlowAnalyses(flowAnalyses);
 	}
 
 	/**

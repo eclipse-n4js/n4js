@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -46,18 +47,36 @@ public class GraphWalkerAnalysis {
 			allNodes.removeAll(visitedNodes);
 		}
 
+		for (ControlFlowElement catchBlock : cfg.getCatchBlocks()) {
+			ComplexNode cnCatchBlock = cfg.getComplexNode(catchBlock);
+			visitedNodes = guide.walkthroughCatchBlocks(cnCatchBlock);
+			allNodes.removeAll(visitedNodes);
+		}
+
 		while (!allNodes.isEmpty()) {
 			Node unvisitedNode = allNodes.iterator().next();
 			ComplexNode cnUnvisited = cfg.getComplexNode(unvisitedNode.getControlFlowElement());
 			if (cnUnvisited.isControlElement()) {
 				allNodes.remove(unvisitedNode);
 			} else {
+
 				visitedNodes = guide.walkthroughIsland(cnUnvisited);
+				int unvisitedCount = allNodes.size();
 				allNodes.removeAll(visitedNodes);
+				if (allNodes.size() == unvisitedCount) {
+					printErrMalformedGraph(cnUnvisited);
+					break;
+				}
 			}
 		}
 
 		guide.terminate();
+	}
+
+	private void printErrMalformedGraph(ComplexNode cnUnvisited) {
+		ControlFlowElement cfe = cnUnvisited.getControlFlowElement();
+		String astNodeStr = FGUtils.getTextLabel(cfe) + " (" + FGUtils.getClassName(cfe) + ")";
+		System.err.println("Malformed control flow graph: Could not visit AST node: " + astNodeStr);
 	}
 
 	/** @returns all nodes of the CFG, except for nodes of ControlElements */

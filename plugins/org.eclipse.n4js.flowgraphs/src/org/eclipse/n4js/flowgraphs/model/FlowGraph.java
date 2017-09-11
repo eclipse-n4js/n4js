@@ -17,6 +17,8 @@ import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
+import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
@@ -25,12 +27,16 @@ import org.eclipse.n4js.n4JS.Script;
  */
 public class FlowGraph {
 	final private TreeSet<ControlFlowElement> cfContainers;
+	final private TreeSet<ControlFlowElement> cfCatchBlocks;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private Map<String, ControlFlowEdge> cfEdgeMap = new HashMap<>();
 
 	/** Constructor. */
-	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, Map<ControlFlowElement, ComplexNode> cnMap) {
+	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, TreeSet<ControlFlowElement> cfCatchBlocks,
+			Map<ControlFlowElement, ComplexNode> cnMap) {
+
 		this.cfContainers = cfContainers;
+		this.cfCatchBlocks = cfCatchBlocks;
 		this.cnMap = cnMap;
 		init();
 	}
@@ -72,6 +78,11 @@ public class FlowGraph {
 	 */
 	public TreeSet<ControlFlowElement> getContainers() {
 		return cfContainers;
+	}
+
+	/** @returns all {@link Block}s whose containers are of type {@link CatchBlock} */
+	public TreeSet<ControlFlowElement> getCatchBlocks() {
+		return cfCatchBlocks;
 	}
 
 }

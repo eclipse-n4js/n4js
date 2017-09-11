@@ -54,7 +54,9 @@ abstract public class GraphWalkerInternal {
 		 * <p/>
 		 * Note that N is unreachable from both the containers entry and its exit node.
 		 */
-		Islands
+		Islands,
+		/** Forward edge-direction begins from the entry of a given catch block. */
+		CatchBlocks
 	}
 
 	/**
@@ -142,7 +144,10 @@ abstract public class GraphWalkerInternal {
 		this.flowAnalyses = fAnalyses;
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #initInternal(Direction, ControlFlowElement)}. */
+	/**
+	 * Only called from {@link GraphWalkerGuideInternal}. Delegates to
+	 * {@link #initInternal(Direction, ControlFlowElement)}.
+	 */
 	final void callInitInternal() {
 		if (activeDirection) {
 			initInternal(getCurrentDirection(), null);

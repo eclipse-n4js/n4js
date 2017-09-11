@@ -38,21 +38,22 @@ public class ControlFlowGraphFactory {
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
 		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(new CFEComparator());
+		TreeSet<ControlFlowElement> cfCatchBlocks = new TreeSet<>(new CFEComparator());
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
-		createComplexNodes(script, cfContainers, cnMap);
+		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
 		ComplexNodeProvider cnProvider = new CNProvider(cnMap);
 
 		connectComplexNodes(cnProvider);
 		createJumpEdges(cnProvider);
 
-		FlowGraph cfg = new FlowGraph(cfContainers, cnMap);
+		FlowGraph cfg = new FlowGraph(cfContainers, cfCatchBlocks, cnMap);
 		return cfg;
 	}
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
 	static private void createComplexNodes(Script script, TreeSet<ControlFlowElement> cfContainers,
-			Map<ControlFlowElement, ComplexNode> cnMap) {
+			TreeSet<ControlFlowElement> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		ComplexNode cn = CFEFactory.build(script);
 		cnMap.put(script, cn);
@@ -67,6 +68,10 @@ public class ControlFlowGraphFactory {
 				if (cfe != null && !cnMap.containsKey(cfe)) {
 					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
 					cfContainers.add(cfContainer);
+					ControlFlowElement cfCatchBlock = FGUtils.getCatchBlock(cfe);
+					if (cfCatchBlock != null) {
+						cfCatchBlocks.add(cfCatchBlock);
+					}
 					cn = CFEFactory.build(cfe);
 					if (cn != null) {
 						cnMap.put(cfe, cn);

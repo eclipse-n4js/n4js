@@ -66,9 +66,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return succs;
 	}
 
-	/**
-	 * @return a reference to {@link N4JSFlowAnalyses} of the current {@link Script}
-	 */
+	/** @return a reference to {@link N4JSFlowAnalyses} of the current {@link Script} */
 	public N4JSFlowAnalyses getFlowAnalyses() {
 		return flowAnalyses;
 	}
@@ -86,9 +84,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		flowAnalyses.perform(script);
 	}
 
-	/**
-	 * Searches the script node in the given input.
-	 */
+	/** Searches the script node in the given input. */
 	private Script findScript(Object input) {
 		if (input instanceof ResourceSet) {
 			ResourceSet rs = (ResourceSet) input;

@@ -21,7 +21,7 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 
-class DeclarationStatementFactory {
+class VariableStatementFactory {
 
 	static ComplexNode buildComplexNode(VariableStatement varDeclStmt) {
 		ComplexNode cNode = new ComplexNode(varDeclStmt);
@@ -41,13 +41,11 @@ class DeclarationStatementFactory {
 			cNode.addNode(varDeclNode);
 		cNode.addNode(exitNode);
 
-		for (Node varDeclNode : varDeclNodes) {
-			List<Node> nodes = new LinkedList<>();
-			nodes.add(entryNode);
-			nodes.add(varDeclNode);
-			nodes.add(exitNode);
-			cNode.connectInternalSucc(nodes);
-		}
+		List<Node> nodes = new LinkedList<>();
+		nodes.add(entryNode);
+		nodes.addAll(varDeclNodes);
+		nodes.add(exitNode);
+		cNode.connectInternalSucc(nodes);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);

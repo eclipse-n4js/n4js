@@ -14,10 +14,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportableElement;
+import org.eclipse.n4js.n4JS.ExportedVariableStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
@@ -34,7 +39,7 @@ class ScriptFactory {
 
 		EList<ScriptElement> scriptElems = script.getScriptElements();
 		for (int i = 0; i < scriptElems.size(); i++) {
-			ScriptElement scriptElem = scriptElems.get(i);
+			ScriptElement scriptElem = getScriptElementAt(script, i);
 			if (isControlFlowStatement(scriptElem)) {
 				Node blockNode = new DelegatingNode("stmt_" + i, script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
@@ -55,7 +60,21 @@ class ScriptFactory {
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
+		exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesAll));
+
 		return cNode;
+	}
+
+	private static ScriptElement getScriptElementAt(Script script, int i) {
+		EList<ScriptElement> scriptElems = script.getScriptElements();
+		ScriptElement scriptElement = scriptElems.get(i);
+		if (scriptElement instanceof ExportDeclaration) {
+			ExportableElement expElem = ((ExportDeclaration) scriptElement).getExportedElement();
+			if (expElem instanceof ExportedVariableStatement) {
+				scriptElement = (ExportedVariableStatement) expElem;
+			}
+		}
+		return scriptElement;
 	}
 
 	private static boolean isControlFlowStatement(ScriptElement scriptElem) {

@@ -71,6 +71,9 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
 
 /**
  */
@@ -80,7 +83,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 
 	@Inject
-	private N4JSFlowAnalyses fa;
+	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	@Inject
 	private ReturnOrThrowAnalysis returnOrThrowAnalysis
@@ -106,25 +109,23 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 *
-	 * TODO once ISSUE-666 is resolved this method could be dropped when
-	 * the check is carried out with #checkFunctionReturn(FunctionOrFieldAccessor)
-	 *
-	 * Return-Type checking.
-     *
-     * [N4JSSpec] 7.1.4 Return Statement
-     *
-     * Constraint 111
-	 *
-	 * @see #checkFunctionReturn(FunctionOrFieldAccessor)
+	 * Checks all flow graph related validations
 	 */
 	@Check
 	def checkFlowGraphs(Script script) {
-		fa.perform(script);
+		val ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(script.eResource() as N4JSResource);
+		val N4JSFlowAnalyses flowAnalyses = cache.getFlowAnalyses();
 		val dcpw = new DeadCodePredicateWalker();
-		fa.performAnalyzes(dcpw);
+
+		flowAnalyses.performAnalyzes(dcpw);
+
+		internalCheckDeadCode(dcpw);
+	}
+
+	// Constraints 107
+	private def String internalCheckDeadCode(DeadCodePredicateWalker dcpw) {
 		val deadCodeRegions = dcpw.getDeadCodeRegions();
-		
+
 		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
 			val String stmtDescription = getStatementDescription(deadCodeRegion);
 			var String errCode = FUN_DEAD_CODE;
@@ -137,7 +138,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	protected def String getStatementDescription(DeadCodeRegion deadCodeRegion) {
+	private def String getStatementDescription(DeadCodeRegion deadCodeRegion) {
 		val reachablePred = deadCodeRegion.getReachablePredecessor();
 		if (reachablePred === null)
 			return null;
@@ -269,7 +270,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val FunctionFullReport analysis = returnOrThrowAnalysis.exitBehaviourWithFullReport(functionOrFieldAccessor.body?.statements)
 
 		// Dead Code? : Constraints 107
-		holdsNoDeadCode(functionOrFieldAccessor, analysis);
+		// holdsNoDeadCode(functionOrFieldAccessor, analysis);
 
 		if (isOptionalReturnType) {
 			// anything goes!
@@ -502,8 +503,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 				default: db.lastExecutedStmt.eClass.name
 			}
 
-			//val String msg = getMessageForFUN_DEAD_CODE(stmtDescription)
-			//addIssue(msg, functionOrFieldAccessor, off, len, FUN_DEAD_CODE)
+//			val String msg = getMessageForFUN_DEAD_CODE(stmtDescription)
+//			addIssue(msg, functionOrFieldAccessor, off, len, FUN_DEAD_CODE)
 		}
 		return analysis.deadCode.empty
 	}

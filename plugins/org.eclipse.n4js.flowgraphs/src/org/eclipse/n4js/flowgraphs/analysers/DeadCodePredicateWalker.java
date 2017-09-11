@@ -37,11 +37,12 @@ public class DeadCodePredicateWalker extends GraphWalker {
 	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
+	Set<ControlFlowElement> allCatchBlocksCFEs = new HashSet<>();
 	Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
 
 	/** Constructor */
 	public DeadCodePredicateWalker() {
-		super(Direction.Forward, Direction.Backward, Direction.Islands);
+		super(Direction.Forward, Direction.Backward, Direction.Islands, Direction.CatchBlocks);
 	}
 
 	@Override
@@ -66,6 +67,9 @@ public class DeadCodePredicateWalker extends GraphWalker {
 		case Islands:
 			allIslandsCFEs.add(cfe);
 			break;
+		case CatchBlocks:
+			allCatchBlocksCFEs.add(cfe);
+			break;
 		}
 	}
 
@@ -84,6 +88,7 @@ public class DeadCodePredicateWalker extends GraphWalker {
 		unreachableCFEs.addAll(allBackwardCFEs);
 		unreachableCFEs.removeAll(allForwardCFEs);
 		unreachableCFEs.addAll(allIslandsCFEs);
+		unreachableCFEs.removeAll(allCatchBlocksCFEs);
 	}
 
 	/** @returns all reachable {@link ControlFlowElement}s */
@@ -117,6 +122,7 @@ public class DeadCodePredicateWalker extends GraphWalker {
 		someUnreachableCFEs.clear();
 		someUnreachableCFEs.addAll(allBackwardCFEs);
 		someUnreachableCFEs.removeAll(allForwardCFEs);
+		someUnreachableCFEs.removeAll(allCatchBlocksCFEs);
 		getSomeDeadCodeGroups(someUnreachableCFEs, deadCodeGroups);
 
 		return deadCodeGroups;
@@ -188,14 +194,15 @@ public class DeadCodePredicateWalker extends GraphWalker {
 	private ControlFlowElement findPrecedingStatement(ControlFlowElement cfe) {
 		ControlFlowElement precedingStatement = null;
 		Statement stmt = EcoreUtil2.getContainerOfType(cfe, Statement.class);
-		EObject stmtContainer = stmt.eContainer();
-
-		if (stmtContainer != null && stmtContainer instanceof Block) {
-			Block block = (Block) stmtContainer;
-			EList<Statement> stmts = block.getStatements();
-			int index = stmts.indexOf(stmt);
-			if (index > 0) {
-				precedingStatement = stmts.get(index - 1);
+		if (stmt != null) {
+			EObject stmtContainer = stmt.eContainer();
+			if (stmtContainer != null && stmtContainer instanceof Block) {
+				Block block = (Block) stmtContainer;
+				EList<Statement> stmts = block.getStatements();
+				int index = stmts.indexOf(stmt);
+				if (index > 0) {
+					precedingStatement = stmts.get(index - 1);
+				}
 			}
 		}
 		return precedingStatement;

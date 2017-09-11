@@ -62,3 +62,44 @@ function FunctionExpression() {
 		"FEX2";
 	});
 }
+
+
+// FieldInitializer1 XPECT succs at '"FI1"' --> "FI2"
+// FieldInitializer1 XPECT succs at '"FI2"' --> "FI1" + "FI2"
+class FieldInitializer1 {
+    field = "FI1" + "FI2";
+}
+
+
+class AnnotationParameter1 {
+	@Parameter(1)
+    field;
+}
+
+
+class AnnotationConfigurable1 {
+	@Configurable(false)
+    field;
+}
+
+
+// ComputedPropertyName1 XPECT succs at '"CPN1"' --> "CPN2"
+// ComputedPropertyName1 XPECT succs at '"CPN2"' --> "CPN1" + "CPN2"
+class ComputedPropertyName1 {
+	public ["CPN1" + "CPN2"];
+}
+
+
+// ExportedVariableStatement XPECT succs at '"ExportedVariableStatement1"' --> expVS1
+// ExportedVariableStatement XPECT succs at 'expVS1' --> public var expVS1;
+// ExportedVariableStatement XPECT succs at 'public var expVS1;' --> "ExportedVariableStatement2"
+"ExportedVariableStatement1";
+export public var expVS1;
+"ExportedVariableStatement2";
+
+
+
+// ThrowInScript XPECT succs at '1' --> 2
+// ThrowInScript XPECT succs at '2' --> throw 2;
+1;
+throw 2;

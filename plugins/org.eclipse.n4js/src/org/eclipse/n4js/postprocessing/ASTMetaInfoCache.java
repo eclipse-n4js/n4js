@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -65,6 +66,7 @@ public final class ASTMetaInfoCache {
 	private final Map<TypableElement, Result<TypeRef>> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
+	private N4JSFlowAnalyses flowAnalyses;
 
 	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
 
@@ -148,6 +150,17 @@ public final class ASTMetaInfoCache {
 			throw new IllegalArgumentException("astNode must be from this resource");
 		}
 		inferredTypeArgs.put(callExpr, Collections.unmodifiableList(new ArrayList<>(typeArgs)));
+	}
+
+	/* package */ void storeFlowAnalyses(N4JSFlowAnalyses fa) {
+		this.flowAnalyses = fa;
+	}
+
+	/**
+	 * Returns the {@link N4JSFlowAnalyses} object of this resource
+	 */
+	public N4JSFlowAnalyses getFlowAnalyses() {
+		return flowAnalyses;
 	}
 
 	/**

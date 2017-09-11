@@ -25,6 +25,9 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper;
+import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegion;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
@@ -42,7 +45,18 @@ import com.google.inject.Inject;
 public class FlowgraphsXpectMethod {
 
 	@Inject
-	N4JSFlowAnalyses flowAnalyses;
+	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
+
+	N4JSFlowAnalyses getFlowAnalyses(EObject eo) {
+		N4JSFlowAnalyses flowAnalyses = null;
+		// Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
+		// flowAnalyses = new N4JSFlowAnalyses();
+		// flowAnalyses.perform(script);
+
+		ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
+		flowAnalyses = cache.getFlowAnalyses();
+		return flowAnalyses;
+	}
 
 	/**
 	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
@@ -57,7 +71,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+		Set<ControlFlowElement> succs = getFlowAnalyses(cfe).getSuccessors(cfe);
 		filterByControlFlowType(cfe, succs, cfType);
 
 		List<String> succTexts = new LinkedList<>();
@@ -87,7 +101,8 @@ public class FlowgraphsXpectMethod {
 			return;
 
 		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			Set<ControlFlowType> currCFTypes = flowAnalyses.getControlFlowTypeToSuccessors(start, succIt.next());
+			Set<ControlFlowType> currCFTypes = getFlowAnalyses(start).getControlFlowTypeToSuccessors(start,
+					succIt.next());
 			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
 			}
@@ -122,13 +137,13 @@ public class FlowgraphsXpectMethod {
 		}
 
 		if (toCFE != null) {
-			boolean isTransitiveSuccs = flowAnalyses.isTransitiveSuccessor(fromCFE, toCFE);
+			boolean isTransitiveSuccs = getFlowAnalyses(fromCFE).isTransitiveSuccessor(fromCFE, toCFE);
 			if (!isTransitiveSuccs) {
 				fail("Elements are no transitive successors");
 			}
 		}
 		if (notToCFE != null) {
-			boolean isTransitiveSuccs = flowAnalyses.isTransitiveSuccessor(fromCFE, notToCFE);
+			boolean isTransitiveSuccs = getFlowAnalyses(fromCFE).isTransitiveSuccessor(fromCFE, notToCFE);
 			if (isTransitiveSuccs) {
 				fail("Elements are transitive successors");
 			}
@@ -149,7 +164,7 @@ public class FlowgraphsXpectMethod {
 			cfe = getControlFlowElement(offset);
 		}
 		AllPathPrintWalker appw = new AllPathPrintWalker(cfe);
-		flowAnalyses.performAnalyzes(appw);
+		getFlowAnalyses(cfe).performAnalyzes(appw);
 		List<String> pathStrings = appw.getPathStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -168,7 +183,7 @@ public class FlowgraphsXpectMethod {
 		cfe = FGUtils.getCFContainer(cfe);
 
 		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(cfe);
-		flowAnalyses.performAnalyzes(anaepw);
+		getFlowAnalyses(cfe).performAnalyzes(anaepw);
 		List<String> pathStrings = anaepw.getAllEdgeStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -183,7 +198,7 @@ public class FlowgraphsXpectMethod {
 		ControlFlowElement aCFE = getControlFlowElement(a);
 		ControlFlowElement bCFE = getControlFlowElement(b);
 
-		Set<ControlFlowElement> commonPreds = flowAnalyses.getCommonPredecessors(aCFE, bCFE);
+		Set<ControlFlowElement> commonPreds = getFlowAnalyses(aCFE).getCommonPredecessors(aCFE, bCFE);
 		List<String> commonPredStrs = new LinkedList<>();
 		for (ControlFlowElement commonPred : commonPreds) {
 			String commonPredStr = FGUtils.getTextLabel(commonPred);

@@ -26,12 +26,10 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
 import com.google.common.collect.Lists;
-import com.google.inject.Singleton;
 
 /**
  *
  */
-@Singleton
 public class N4JSFlowAnalyses {
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
