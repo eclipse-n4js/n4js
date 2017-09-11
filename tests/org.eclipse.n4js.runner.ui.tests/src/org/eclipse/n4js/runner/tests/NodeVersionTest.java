@@ -8,16 +8,15 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.runner.ui.tests;
+package org.eclipse.n4js.runner.tests;
 
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.nodejs.NodeBinariesConstants;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
-import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.utils.Version;
 import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.testing.InjectWith;
@@ -32,12 +31,8 @@ import com.google.inject.Inject;
  * case the wrong node version is picked up by a test.
  */
 @RunWith(XtextRunner.class)
-@InjectWith(N4JSUiInjectorProvider.class)
-public class NodeVersionUITest {
-
-	static {
-		EclipseGracefulUIShutdownEnabler.enableOnce();
-	}
+@InjectWith(N4JSInjectorProvider.class)
+public class NodeVersionTest {
 
 	@Inject
 	NodeJsBinary nodeJsBinary;
