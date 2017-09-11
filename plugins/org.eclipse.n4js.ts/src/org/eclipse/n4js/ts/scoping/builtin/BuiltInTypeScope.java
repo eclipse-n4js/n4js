@@ -18,12 +18,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.EObjectDescription;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
-import com.google.common.annotations.VisibleForTesting;
-
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.types.AnyType;
 import org.eclipse.n4js.ts.types.NullType;
@@ -38,6 +32,11 @@ import org.eclipse.n4js.ts.types.UndefinedType;
 import org.eclipse.n4js.ts.types.VirtualBaseType;
 import org.eclipse.n4js.ts.types.VoidType;
 import org.eclipse.n4js.ts.utils.TypeUtils;
+import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.EObjectDescription;
+import org.eclipse.xtext.resource.IEObjectDescription;
+
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * This scope provides access to the built in JS types. It is recommended to use {@link BuiltInTypeScopeAccess} directly
@@ -455,6 +454,15 @@ public final class BuiltInTypeScope extends EnumerableScope {
 	 */
 	public final boolean isNumeric(Type type) {
 		return type == getNumberType() || type == getIntType();
+	}
+
+	/**
+	 * Returns true iff the given type is number, int, boolean, null or even undefined.
+	 */
+	public final boolean isNumericOperand(Type type) {
+		return type == getNumberType() || type == getIntType()
+				|| type == getBooleanType() || type == getNullType()
+				|| type == getUndefinedType();
 	}
 
 	/**

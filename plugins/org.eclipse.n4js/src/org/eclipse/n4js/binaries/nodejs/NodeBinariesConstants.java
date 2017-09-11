@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.binaries.nodejs;
 
-import static org.eclipse.n4js.utils.OSInfo.isWindows;
 import static java.io.File.separator;
+import static org.eclipse.n4js.utils.OSInfo.isWindows;
 
 import java.io.File;
 
@@ -19,8 +19,10 @@ import org.eclipse.n4js.utils.Version;
 
 /**
  * Contains constants for {@code Node.js} binaries all over the system.
+ *
+ * Is public for testing only.
  */
-/* default */ abstract class NodeBinariesConstants {
+public abstract class NodeBinariesConstants {
 
 	/**
 	 * VM argument for configuring the default {@code Node.js} path. That default {@code Node.js} binary path will be
@@ -74,15 +76,16 @@ import org.eclipse.n4js.utils.Version;
 			: new File(separator + "usr" + File.separator + "local" + separator + "bin").getAbsolutePath();
 
 	/** The minimum {@code Node.js} version. */
-	public static final Version NODE_MIN_VERSION = new Version(5, 0, 0);
+	public static final Version NODE_MIN_VERSION = new Version(8, 0, 0);
 	/** The label for {@code Node.js}. */
 	public static final String NODE_LABEL = "Node.js";
 	/** The {@code Node.js} binary name (OS specific). */
 	public static final String NODE_BINARY_NAME = isWindows() ? "node.exe" : "node";
+	/** The argument for node.js to print out the version number */
 	public static final String VERSION_ARGUMENT = "-v";
 
 	/** The minimum {@code npm} version. */
-	public static final Version NPM_MIN_VERSION = new Version(3, 0, 0);
+	public static final Version NPM_MIN_VERSION = new Version(5, 0, 0);
 	/** The label for {@code npm}. */
 	public static final String NPM_LABEL = "npm";
 	/** The {@code npm} binary name. */

@@ -27315,13 +27315,21 @@ ruleQualifiedTypeReferenceName returns [AntlrDatatypeRuleToken current=new Antlr
 				$current.merge(kw);
 				newLeafNode(kw, grammarAccess.getQualifiedTypeReferenceNameAccess().getFullStopKeyword_1_0());
 			}
-			this_IDENTIFIER_2=RULE_IDENTIFIER
-			{
-				$current.merge(this_IDENTIFIER_2);
-			}
-			{
-				newLeafNode(this_IDENTIFIER_2, grammarAccess.getQualifiedTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_1_1());
-			}
+			(
+				this_IDENTIFIER_2=RULE_IDENTIFIER
+				{
+					$current.merge(this_IDENTIFIER_2);
+				}
+				{
+					newLeafNode(this_IDENTIFIER_2, grammarAccess.getQualifiedTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_1_1_0());
+				}
+				    |
+				kw=Default
+				{
+					$current.merge(kw);
+					newLeafNode(kw, grammarAccess.getQualifiedTypeReferenceNameAccess().getDefaultKeyword_1_1_1());
+				}
+			)
 		)?
 	)
 ;

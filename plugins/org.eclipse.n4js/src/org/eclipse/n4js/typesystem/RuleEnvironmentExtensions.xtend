@@ -37,6 +37,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
+import org.eclipse.n4js.ts.typeRefs.UnionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.Wildcard
 import org.eclipse.n4js.ts.types.AnyType
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -706,13 +707,85 @@ class RuleEnvironmentExtensions {
 	}
 
 	/**
+	 * Returns true if the given type is any.
+	 */
+	public def static boolean isAny(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false
+		}
+		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.anyType
+	}
+
+	/**
+	 * Returns true if the given type is symbol.
+	 */
+	public def static boolean isSymbol(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false
+		}
+		return typeRef.declaredType == G.getPredefinedTypes().builtInTypeScope.symbolType
+	}
+	
+	/**
 	 * Returns true if the given type reference points to one of the {@link BuiltInTypeScope#isNumeric(Type) numeric}
 	 * primitive built-in types.
 	 */
 	public def static boolean isNumeric(RuleEnvironment G, TypeRef typeRef) {
-		typeRef?.declaredType!==null && G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)
+		if (typeRef===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isNumeric(typeRef.declaredType)) {
+			return true;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isNumeric(G, e)];
+		}
+		if (typeRef instanceof IntersectionTypeExpression) {
+			return typeRef.typeRefs.exists[e|isNumeric(G, e)];
+		}
+		return false;
 	}
-
+	
+	
+	
+	/**
+	 * Returns true iff typeRef is a union type and one if its elements
+	 * is numeric, boolean, null or undefined or contains one of these types.
+	 * Note that this method returns false for number types -- the
+	 * typeref needs to be a union type!
+	 */
+	public def static boolean containsNumericOperand(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.exists[e | 
+				G.predefinedTypes.builtInTypeScope.isNumericOperand(e.declaredType)
+				|| containsNumericOperand(G, e)
+			]
+		}
+		return false;		
+	}
+	
+	/**
+	 * Returns true if the given type reference can be used in a numeric
+	 * operation as operand leading to a numeric result. This is true for
+	 * number, int, boolean, null, or even undefined, for unions of these types,
+	 * and for intersections containing any of these types.
+	 */
+	public def static boolean isNumericOperand(RuleEnvironment G, TypeRef typeRef) {
+		if (typeRef===null) {
+			return false;
+		}
+		if (G.predefinedTypes.builtInTypeScope.isNumericOperand(typeRef.declaredType)) {
+			return true;
+		}
+		if (typeRef instanceof UnionTypeExpression) {
+			return typeRef.typeRefs.forall[e|isNumericOperand(G, e)];
+		}
+		if (typeRef instanceof IntersectionTypeExpression) {
+			return typeRef.typeRefs.exists[e|isNumericOperand(G, e)];
+		}
+		return false;
+	}
+	
 	/**
 	 * Same as {@link TypeUtils#wrapInTypeRef(BuiltInTypeScope,Type,TypeArgument...)}, but will obtain
 	 * the required {@code BuiltInTypeScope} from the given rule environment.

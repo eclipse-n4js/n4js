@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -35,8 +35,18 @@ class UnresolveProxyCrossRefUtil {
 		switch (obj) {
 			IdentifierRef:
 				obj.findIdentifierName
-			ParameterizedTypeRef:
-				obj.findTypeName
+			ParameterizedTypeRef: {
+				val name = obj.findTypeName
+				if (!obj.isParameterized)
+					return name
+				else {
+					val index = name.indexOf('<')
+					if (index > -1)
+						return name.substring(0, index)
+					else
+						return name
+				}
+			}
 			default:
 				obj.node.tokenText
 		}

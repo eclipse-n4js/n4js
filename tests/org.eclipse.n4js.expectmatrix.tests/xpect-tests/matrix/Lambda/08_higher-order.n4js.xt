@@ -28,7 +28,7 @@ foo(n => {return "hello"});
 // IDE-1037 lambda as a parameter, simpler syntax XPECT noerrors -->
 foo(n => n+6);
 
-// IDE-1037 lambda as a parameter, simpler syntax XPECT errors -->"string is not a subtype of number." at "n+6"
+// IDE-1037 lambda as a parameter, simpler syntax XPECT errors -->"union{number,string} is not a subtype of number." at "n+6"
 foo((n : any) => n+6);
 
 // IDE-1037 lambda as a parameter, simpler syntax XPECT noerrors -->"string is not a subtype of number." at "n+6"
