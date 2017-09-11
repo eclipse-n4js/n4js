@@ -692,7 +692,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	/**
 	 * Discard the AST and proxify all referenced nodes. Does nothing if the AST is already unloaded.
 	 */
-	protected void discardAST() {
+	private void discardAST() {
 		EObject script = getScript();
 		if (script != null && !script.eIsProxy()) {
 
@@ -714,10 +714,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			unloadElements(theContents.subList(0, 1));
 
 			theContents.sneakyClear();
-			theContents.sneakyAdd(scriptProxy);
 
 			if (module != null) {
+				theContents.sneakyAdd(scriptProxy);
 				theContents.sneakyAdd(module);
+			} else {
+				// there was no module (not even a proxy)
+				// -> don't add the script proxy
+				// (i.e. transition from resource load state "Loaded" to "Created", not to "Loaded from Description")
 			}
 
 			getCache().clear(this);
@@ -1160,7 +1164,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * preLinkingPhase}==true if the module isn't fully initialized yet. It is safe to call this method at any time.
 	 */
 	public TModule getModule() {
-		return getContents().size() >= 2 ? (TModule) getContents().get(1) : null;
+		return contents != null && contents.size() >= 2 ? (TModule) contents.basicGet(1) : null;
 	}
 
 	/**
