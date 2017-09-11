@@ -12,11 +12,6 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker.ActivatedPathPredicate;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker.ActivatedPathPredicate.ActivePath;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.PredicateType;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;

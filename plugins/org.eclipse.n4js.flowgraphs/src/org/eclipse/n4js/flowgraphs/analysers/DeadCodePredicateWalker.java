@@ -142,7 +142,7 @@ public class DeadCodePredicateWalker extends GraphWalker {
 				// Add predecessors of the current cfe
 				if (someUnreachableCFEs.remove(cfe)) {
 					nextDeadGroup.add(cfe);
-					Set<ControlFlowElement> preds = flowAnalyses.getPredecessors(oneCFE);
+					Set<ControlFlowElement> preds = flowAnalyses.getPredecessors(cfe);
 					workListPreds.addAll(preds);
 				}
 
@@ -189,7 +189,8 @@ public class DeadCodePredicateWalker extends GraphWalker {
 		ControlFlowElement precedingStatement = null;
 		Statement stmt = EcoreUtil2.getContainerOfType(cfe, Statement.class);
 		EObject stmtContainer = stmt.eContainer();
-		if (stmtContainer instanceof Block) {
+
+		if (stmtContainer != null && stmtContainer instanceof Block) {
 			Block block = (Block) stmtContainer;
 			EList<Statement> stmts = block.getStatements();
 			int index = stmts.indexOf(stmt);

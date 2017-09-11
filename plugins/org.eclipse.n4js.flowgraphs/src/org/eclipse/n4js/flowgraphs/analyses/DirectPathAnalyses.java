@@ -78,10 +78,11 @@ public class DirectPathAnalyses {
 
 		// step 1: traverse all predecessors, beginning from cfeA: mark each
 		Set<ControlFlowElement> marked = new HashSet<>();
-		List<ControlFlowElement> curCFEs = new LinkedList<>();
+		LinkedList<ControlFlowElement> curCFEs = new LinkedList<>();
+		// marked.add(cfeA);
 		curCFEs.add(cfeA);
 		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
+			ControlFlowElement cfe = curCFEs.removeFirst();
 			if (!marked.contains(cfe)) {
 				marked.add(cfe);
 				Set<ControlFlowElement> preds = spa.getPredecessors(cfe);
@@ -94,7 +95,7 @@ public class DirectPathAnalyses {
 		curCFEs.clear();
 		curCFEs.add(cfeB);
 		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
+			ControlFlowElement cfe = curCFEs.removeFirst();
 			if (marked.contains(cfe)) {
 				commonPredSet.add(cfe);
 			} else {

@@ -89,17 +89,17 @@ abstract public class GraphWalkerInternal {
 	/////////////////////// Abstract Methods ///////////////////////
 
 	/** Called before any other method is called. */
-	abstract protected void init();
+	abstract protected void initAll();
 
 	/**
-	 * Called after {@link #init()} and before any visit-method is called.
+	 * Called after {@link #initAll()} and before any visit-method is called.
 	 *
 	 * @param curDirection
 	 *            direction of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
+	abstract protected void initInternal(Direction curDirection, ControlFlowElement curContainer);
 
 	/**
 	 * Called for each node that is reachable w.r.t to the current direction and the current container.
@@ -142,16 +142,16 @@ abstract public class GraphWalkerInternal {
 		this.flowAnalyses = fAnalyses;
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #init(Direction, ControlFlowElement)}. */
-	final void callInit() {
+	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #initInternal(Direction, ControlFlowElement)}. */
+	final void callInitInternal() {
 		if (activeDirection) {
-			init(getCurrentDirection(), null);
+			initInternal(getCurrentDirection(), null);
 		}
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #init()}. */
+	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #initAll()}. */
 	final void callInitAll() {
-		init();
+		initAll();
 	}
 
 	/**

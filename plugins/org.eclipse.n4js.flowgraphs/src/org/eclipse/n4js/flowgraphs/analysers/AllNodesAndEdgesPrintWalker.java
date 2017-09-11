@@ -48,7 +48,6 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 
 	@Override
 	protected void init(Direction curDirection, ControlFlowElement curContainer) {
-		super.init(curDirection, curContainer);
 		// nothing to do
 	}
 

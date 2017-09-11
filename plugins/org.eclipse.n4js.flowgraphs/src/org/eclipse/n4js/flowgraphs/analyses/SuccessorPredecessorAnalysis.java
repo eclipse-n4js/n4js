@@ -54,7 +54,10 @@ public class SuccessorPredecessorAnalysis {
 		Set<ControlFlowElement> nexts = new HashSet<>();
 
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		Node nextNode = cn.getExit();
+		Node nextNode = cn.getRepresent();
+		if (nextNode == null) {
+			nextNode = cn.getExit();
+		}
 
 		LinkedList<ControlFlowEdge> allEdges = new LinkedList<>();
 		List<ControlFlowEdge> nextEdges = nextEdgesProvider.getNextEdges(nextNode, followEdges);

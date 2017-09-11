@@ -152,14 +152,14 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	}
 
 	@Override
-	final protected void init() {
+	abstract protected void initAll();
+
+	@Override
+	final protected void initInternal(Direction curDirection, ControlFlowElement curContainer) {
 		visitedEdgesInternal.clear();
 		visitedEdges.clear();
-		initAll();
+		init(curDirection, curContainer);
 	}
-
-	/** see {@link GraphWalkerInternal#init()} */
-	abstract protected void initAll();
 
 	/**
 	 * Called after {@link #initAll()} and before any visit-method is called.
@@ -169,12 +169,7 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
-
-		visitedEdgesInternal.clear();
-		visitedEdges.clear();
-	}
+	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
 
 	/** Analog to {@link GraphWalkerInternal#visit(Node)} */
 	abstract protected void visit(ControlFlowElement cfe);

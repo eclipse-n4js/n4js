@@ -26,6 +26,7 @@ function DoStatementBreakLabel1() {
 	LBLa: do {
 		1;
 		break LBLa;
+	// DoStatementBreakLabel1 XPECT warnings --> "Dead code." at "3"
 	} while (3);
 	"end";
 }
@@ -37,6 +38,7 @@ function DoStatementBreakLabel2() {
 		LBLb: do {
 			1;
 			break LBLa;
+		// DoStatementBreakLabel2 XPECT warnings --> "Dead code." at "3); 	} while (4"
 		} while (3);
 	} while (4);
 	"end";
@@ -49,6 +51,7 @@ function DoStatementBreakLabel3() {
 		LBLb: do {
 			1;
 			break LBLb;
+		// DoStatementBreakLabel3 XPECT warnings --> "Dead code." at "3"
 		} while (3);
 	} while (4);
 	"end";
@@ -61,6 +64,7 @@ function DoStatementBreakLabel4() {
 		LBLb: do {
 			1;
 			break ;
+		// DoStatementBreakLabel4 XPECT warnings --> "Dead code." at "3"
 		} while (3);
 	} while (4);
 	"end";
@@ -83,6 +87,7 @@ function DoStatementContinue2() {
 		LBLb: do {
 			1;
 			continue LBLa;
+		// DoStatementContinue2 XPECT warnings --> "Dead code." at "3"
 		} while (3);
 	} while (4);
 	"end";
@@ -115,6 +120,7 @@ function DoStatementContinue4() {
 function ForStatementBreak1() {
 	// ForStatement1 XPECT succs at 'break;' --> "end"
 	"start";
+	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after ExpressionStatement." at "3"
 	for (1;2;3) break;
 	"end";
 }
@@ -122,6 +128,7 @@ function ForStatementBreak1() {
 function ForStatementBreak2() {
 	// ForStatement2 XPECT succs at 'break;' --> "end"
 	"start";
+	// ForStatement2 XPECT warnings --> "Dead code." at "3"
 	LBL: for (1;2;3) break;
 	"end";
 }
@@ -129,6 +136,7 @@ function ForStatementBreak2() {
 function ForStatementBreak3() {
 	// ForStatement3 XPECT succs at 'break LBL;' --> "end"
 	"start";
+	// ForStatement3 XPECT warnings --> "Dead code." at "3"
 	LBL: for (1;2;3) break LBL;
 	"end";
 }
@@ -137,6 +145,7 @@ function ForStatementBreak4() {
 	// ForStatement4 XPECT succs at 'break LBLa;' --> "end"
 	"start";
 	LBLa: for (1;2;3) {
+		// ForStatement4 XPECT warnings --> "Dead code." at "3"
 		LBLb: for (1;2;3) break LBLa;
 	}
 	"end";
@@ -146,6 +155,7 @@ function ForStatementBreak5() {
 	// ForStatement5 XPECT succs at 'break LBLb;' --> 3
 	"start";
 	LBLa: for (1;2;3) {
+		// ForStatement5 XPECT warnings --> "Dead code." at "3"
 		LBLb: for (1;2;3) break LBLb;
 	}
 	"end";
@@ -155,6 +165,7 @@ function ForStatementBreak6() {
 	// ForStatement6 XPECT succs at 'break;' --> 3
 	"start";
 	LBLa: for (1;2;3) {
+		// ForStatement6 XPECT warnings --> "Dead code." at "3"
 		LBLb: for (1;2;3) break;
 	}
 	"end";

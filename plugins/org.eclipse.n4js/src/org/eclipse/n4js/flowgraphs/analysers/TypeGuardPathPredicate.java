@@ -43,7 +43,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 	}
 
 	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+	protected void initInternal(Direction curDirection, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 

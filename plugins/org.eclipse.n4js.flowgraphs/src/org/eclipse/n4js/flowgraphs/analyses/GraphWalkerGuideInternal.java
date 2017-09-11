@@ -71,7 +71,7 @@ public class GraphWalkerGuideInternal {
 		for (GraphWalkerInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
 			walker.setContainerAndDirection(cn.getControlFlowContainer(), direction);
-			walker.callInit();
+			walker.callInitInternal();
 		}
 
 		Set<Node> allVisitedNodes = new HashSet<>();

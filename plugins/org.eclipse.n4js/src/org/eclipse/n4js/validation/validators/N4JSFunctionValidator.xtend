@@ -58,7 +58,6 @@ import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.eclipse.xtext.util.TextRegion
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -123,24 +122,32 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFlowGraphs(Script script) {
 		fa.perform(script);
 		val dcpw = new DeadCodePredicateWalker();
-		//fa.performAnalyzes(dcpw);
+		fa.performAnalyzes(dcpw);
 		val deadCodeRegions = dcpw.getDeadCodeRegions();
 		
 		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
 			val String stmtDescription = getStatementDescription(deadCodeRegion);
-			val String msg = getMessageForFUN_DEAD_CODE(stmtDescription);
-			addIssue(msg + " TEST ", deadCodeRegion.container, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), FUN_DEAD_CODE);
+			var String errCode = FUN_DEAD_CODE;
+			var String msg = getMessageForFUN_DEAD_CODE();
+			if (stmtDescription !== null) {
+				msg = getMessageForFUN_DEAD_CODE_WITH_PREDECESSOR(stmtDescription);
+				errCode = FUN_DEAD_CODE_WITH_PREDECESSOR;
+			}
+			addIssue(msg, deadCodeRegion.container, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), errCode);
 		}
 	}
 
 	protected def String getStatementDescription(DeadCodeRegion deadCodeRegion) {
-		switch deadCodeRegion.getReachablePredecessor() {
+		val reachablePred = deadCodeRegion.getReachablePredecessor();
+		if (reachablePred === null)
+			return null;
+		switch reachablePred {
 			ThrowStatement:		return 'throw'
 			ReturnStatement:	return 'return'
 			BreakStatement:		return 'break'
 			ContinueStatement:	return 'continue'
 		}
-		return deadCodeRegion.getReachablePredecessor().eClass.name;
+		return reachablePred.eClass.name;
 	}
 
 	/*
@@ -495,8 +502,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 				default: db.lastExecutedStmt.eClass.name
 			}
 
-			val String msg = getMessageForFUN_DEAD_CODE(stmtDescription)
-			addIssue(msg, functionOrFieldAccessor, off, len, FUN_DEAD_CODE)
+			//val String msg = getMessageForFUN_DEAD_CODE(stmtDescription)
+			//addIssue(msg, functionOrFieldAccessor, off, len, FUN_DEAD_CODE)
 		}
 		return analysis.deadCode.empty
 	}

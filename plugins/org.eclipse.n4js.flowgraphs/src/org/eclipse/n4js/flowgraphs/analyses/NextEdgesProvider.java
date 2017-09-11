@@ -53,6 +53,11 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
+		protected Node getEndNode(ComplexNode cn) {
+			return cn.getExit();
+		}
+
+		@Override
 		protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
 			List<ControlFlowEdge> nextEdges = nextNode.getSuccessorEdges();
 			return nextEdges;
@@ -88,6 +93,11 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
+		protected Node getEndNode(ComplexNode cn) {
+			return cn.getEntry();
+		}
+
+		@Override
 		protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
 			List<ControlFlowEdge> nextEdges = nextNode.getPredecessorEdges();
 			return nextEdges;
@@ -106,6 +116,8 @@ abstract class NextEdgesProvider {
 	abstract protected NextEdgesProvider copy();
 
 	abstract protected Node getStartNode(ComplexNode cn);
+
+	abstract protected Node getEndNode(ComplexNode cn);
 
 	abstract protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode);
 
