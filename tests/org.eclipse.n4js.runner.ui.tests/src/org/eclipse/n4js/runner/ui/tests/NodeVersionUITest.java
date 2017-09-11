@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.runner.tests;
+package org.eclipse.n4js.runner.ui.tests;
 
 import static org.junit.Assert.assertTrue;
 
@@ -33,7 +33,11 @@ import com.google.inject.Inject;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public class NodeVersionTest {
+public class NodeVersionUITest {
+
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	@Inject
 	NodeJsBinary nodeJsBinary;
@@ -49,7 +53,6 @@ public class NodeVersionTest {
 	 */
 	@Test
 	public void testNPMVersion() {
-		EclipseGracefulUIShutdownEnabler.enableOnce();
 
 		final ProcessResult result = commandFactory.checkBinaryVersionCommand(npmBinary).execute();
 		final Version currentVersion = Version.createFromString(result.getStdOut().trim());
@@ -64,7 +67,6 @@ public class NodeVersionTest {
 	 */
 	@Test
 	public void testNodeJsVersion() {
-		EclipseGracefulUIShutdownEnabler.enableOnce();
 
 		final ProcessResult result = commandFactory.checkBinaryVersionCommand(nodeJsBinary).execute();
 
