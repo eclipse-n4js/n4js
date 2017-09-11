@@ -151,7 +151,7 @@ class ASTStructureValidator {
 			this.bits = bits
 		}
 
-		private def is(int bit) {
+		def private is(int bit) {
 			return this.bits.bitwiseAnd(bit) !== 0
 		}
 
@@ -269,7 +269,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def protected void recursiveValidateASTStructure(
+	def private void recursiveValidateASTStructure(
 		EObject model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -298,14 +298,14 @@ class ASTStructureValidator {
 		}
 	}
 
-	private def isProlog(EObject object) {
+	def private isProlog(EObject object) {
 		if (object instanceof ExpressionStatement) {
 			return object.expression instanceof StringLiteral
 		}
 		return false
 	}
 
-	def protected isUseStrictProlog(EObject model, EObject next) {
+	def private isUseStrictProlog(EObject model, EObject next) {
 		if (model instanceof Script || model instanceof Block && model.eContainer instanceof FunctionDefinition) {
 			switch (next) {
 				ExpressionStatement: {
@@ -320,7 +320,7 @@ class ASTStructureValidator {
 		return false
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		Script model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -334,7 +334,7 @@ class ASTStructureValidator {
 		);
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		N4ClassifierDefinition model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -359,7 +359,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		N4EnumDeclaration model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -389,7 +389,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		EObject model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -403,7 +403,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		LegacyOctalIntLiteral model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -424,7 +424,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		StringLiteral model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -449,7 +449,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		PostfixExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -473,7 +473,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		UnaryExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -500,7 +500,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		YieldExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -521,7 +521,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		AssignmentExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -548,7 +548,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		IdentifierRef model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -568,7 +568,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		Variable model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -598,7 +598,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		WithStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -622,7 +622,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		LabelledStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -647,7 +647,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		Block model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -662,7 +662,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateBlockStructure(
+	def private dispatch void validateBlockStructure(
 		IfStatement container,
 		Block model,
 		ASTStructureDiagnosticProducer producer,
@@ -677,7 +677,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateBlockStructure(
+	def private dispatch void validateBlockStructure(
 		IterationStatement container,
 		Block model,
 		ASTStructureDiagnosticProducer producer,
@@ -692,7 +692,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateBlockStructure(
+	def private dispatch void validateBlockStructure(
 		FunctionDefinition container,
 		Block model,
 		ASTStructureDiagnosticProducer producer,
@@ -707,7 +707,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateBlockStructure(
+	def private dispatch void validateBlockStructure(
 		CatchBlock container,
 		Block model,
 		ASTStructureDiagnosticProducer producer,
@@ -722,7 +722,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateBlockStructure(
+	def private dispatch void validateBlockStructure(
 		EObject container,
 		Block model,
 		ASTStructureDiagnosticProducer producer,
@@ -737,7 +737,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		IfStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -751,7 +751,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		AbstractCaseClause model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -765,7 +765,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		ForStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -833,7 +833,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		IterationStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -847,7 +847,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		FormalParameter model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -879,7 +879,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		NewTarget model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -903,7 +903,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		SuperLiteral model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -953,7 +953,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def boolean isInvalidSuperLiteral(SuperLiteral model, Constraints constraints) {
+	def private boolean isInvalidSuperLiteral(SuperLiteral model, Constraints constraints) {
 		if (!model.isValidContainment) {
 			return true
 		}
@@ -966,12 +966,12 @@ class ASTStructureValidator {
 		return false
 	}
 
-	def boolean isValidContainment(SuperLiteral literal) {
+	def private boolean isValidContainment(SuperLiteral literal) {
 		val container = literal.eContainer
 		return container instanceof IndexedAccessExpression || container instanceof ParameterizedCallExpression || container instanceof ParameterizedPropertyAccessExpression
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		FunctionDeclaration model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -987,7 +987,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		FunctionExpression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1011,7 +1011,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def void validateFunctionDefinition(
+	def private void validateFunctionDefinition(
 		FunctionDefinition model,
 		EAttribute attribute,
 		Constraints constraints,
@@ -1045,7 +1045,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	private def void validateName(PropertyNameOwner model, Constraints constraints, ASTStructureDiagnosticProducer producer) {
+	def private void validateName(PropertyNameOwner model, Constraints constraints, ASTStructureDiagnosticProducer producer) {
 		val name = model.name
 		if (name !== null) {
 			if (!model.isValidName) {
@@ -1064,15 +1064,15 @@ class ASTStructureValidator {
 		}
 	}
 
-	private def void issueArgumentsError(EObject model, String name, boolean strict, ASTStructureDiagnosticProducer producer) {
+	def private void issueArgumentsError(EObject model, String name, boolean strict, ASTStructureDiagnosticProducer producer) {
 		issueNameDiagnostic(model, producer, name, getNameFeature(model), if (strict) Severity.ERROR else Severity.WARNING);
 	}
 
-	private def void issueNameDiagnostic(EObject model, ASTStructureDiagnosticProducer producer, String name) {
+	def private void issueNameDiagnostic(EObject model, ASTStructureDiagnosticProducer producer, String name) {
 		issueNameDiagnostic(model, producer, name, getNameFeature(model), IssueCodes.getDefaultSeverity(IssueCodes.AST_RESERVED_IDENTIFIER))
 	}
 
-	private def void issueNameDiagnostic(EObject model, ASTStructureDiagnosticProducer producer, String name, EStructuralFeature feature, Severity severity) {
+	def private void issueNameDiagnostic(EObject model, ASTStructureDiagnosticProducer producer, String name, EStructuralFeature feature, Severity severity) {
 		val nodes = NodeModelUtils.findNodesForFeature(model, feature)
 		val target = nodes.head ?: NodeModelUtils.findActualNodeFor(model)
 		producer.node = target
@@ -1084,11 +1084,11 @@ class ASTStructureValidator {
 		}
 	}
 
-	private def EStructuralFeature getNameFeature(EObject model) {
+	def private EStructuralFeature getNameFeature(EObject model) {
 		return model.eClass.getEStructuralFeature('name') ?: model.eClass.getEStructuralFeature('declaredName');
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		N4FieldAccessor model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1103,7 +1103,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		MethodDeclaration model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1118,7 +1118,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	private def boolean canCallSuperConstructor(MethodDeclaration declaration, Constraints constraints) {
+	def private boolean canCallSuperConstructor(MethodDeclaration declaration, Constraints constraints) {
 		val container = declaration.eContainer
 		if (container instanceof N4ClassDefinition) {
 			if (constraints.isN4JS) {
@@ -1129,7 +1129,7 @@ class ASTStructureValidator {
 		return false
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		FieldAccessor model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1144,7 +1144,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		PropertyAssignment model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1158,7 +1158,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		ReturnStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1179,7 +1179,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		ContinueStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1202,7 +1202,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		BreakStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1238,7 +1238,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		Expression model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1252,7 +1252,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		ArrayElement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1307,7 +1307,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	private def isValidBindingElement(Expression expr, Constraints constraints) {
+	def private isValidBindingElement(Expression expr, Constraints constraints) {
 		if (constraints.isN4JS) {
 			return (expr.isValidSimpleAssignmentTarget && expr instanceof IdentifierRef)
 				|| expr instanceof AssignmentExpression
@@ -1357,7 +1357,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		PropertyNameValuePair model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1374,7 +1374,7 @@ class ASTStructureValidator {
 		validateSingleNameInObjectLiteral(model, producer);
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		PropertyMethodDeclaration model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1399,7 +1399,7 @@ class ASTStructureValidator {
 		}
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		VariableStatement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1434,7 +1434,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	private def boolean isValidConstOrLetPosition(EObject model) {
+	def private boolean isValidConstOrLetPosition(EObject model) {
 		if (model.eContainer instanceof Block || model.eContainer instanceof Script || model.eContainer instanceof AbstractCaseClause) {
 			return true
 		}
@@ -1444,7 +1444,7 @@ class ASTStructureValidator {
 		return false
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		VariableDeclaration model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1460,7 +1460,7 @@ class ASTStructureValidator {
 		_validateASTStructure(model as Variable, producer, validLabels, constraints.allowVarWithoutInitializer(true))
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		ThisTypeRef thisTypeRef,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1476,7 +1476,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		VariableBinding model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
@@ -1498,7 +1498,7 @@ class ASTStructureValidator {
 		)
 	}
 
-	def dispatch void validateASTStructure(
+	def private dispatch void validateASTStructure(
 		BindingElement model,
 		ASTStructureDiagnosticProducer producer,
 		Set<LabelledStatement> validLabels,
