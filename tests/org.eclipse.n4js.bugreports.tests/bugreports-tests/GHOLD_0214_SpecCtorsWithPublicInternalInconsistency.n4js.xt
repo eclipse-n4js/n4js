@@ -17,7 +17,7 @@ class A {
     @Internal public a: int;
 }
 
-// XPECT warnings --> "a is not used in constructor." at "a"
+// XPECT warnings --> "a is not defined in ~i~this[A]." at "a"
 let x = new A({ a: 5 }); // value has to be initialized
 
 /* XPECT output ---
