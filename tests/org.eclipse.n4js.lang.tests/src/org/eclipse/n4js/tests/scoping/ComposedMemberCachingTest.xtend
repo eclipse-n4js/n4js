@@ -163,16 +163,18 @@ class ComposedMemberCachingTest extends AbstractN4JSTest {
 	def private Script parseAndPostProcessAndDeleteCachedComposedMembers(CharSequence code) {
 		val script = code.parseAndValidateSuccessfully;
 		assertTrue((script.eResource as N4JSResource).isFullyProcessed); // ensure validation did trigger post-processing
-		// While resolving the proxies during validation, composed members will have been added to the composed member
-		// cache in the TModule; however, during the above tests, we want to test this behavior on a more fine-grained
-		// level. Therefore, we now clear the composed member cache.
 
+		// While resolving the proxies during validation above, composed members have been added to the composed member
+		// cache in the TModule and future invocations of ComposedMemberScope will simply reuse them and won't create
+		// any more members. However, during the tests in this file, we want to test the creation of composed members
+		// (i.e. we want to test if/when/how composed members are created and added to the cache).
+		// Therefore, we now clear the composed member cache to give the above tests a chance to trigger investigate
+		// how certain invocations of ComposedMemberScope will (re-)create the composed members.
 		script.eAllContents.filter(MemberAccess).forEach[memberAccess|
 			EcoreUtilN4.doWithDeliver(false, [
 				memberAccess.composedMemberCache = null;
 			], memberAccess);
 		];
-
 		val module = script.module;
 		EcoreUtilN4.doWithDeliver(false, [
 			module.composedMemberCaches.clear;
