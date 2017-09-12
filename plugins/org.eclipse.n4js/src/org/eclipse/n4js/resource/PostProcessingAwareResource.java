@@ -129,7 +129,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	}
 
 	/**
-	 * Like {@link #performPostProcessing(CancelIndicator)}, but will use a cancel indicator obtained from Xtext.
+	 * Like {@link #performPostProcessing(CancelIndicator)}, but will try to use a cancel indicator obtained from Xtext.
 	 */
 	public void performPostProcessing() {
 		performPostProcessing(null);
