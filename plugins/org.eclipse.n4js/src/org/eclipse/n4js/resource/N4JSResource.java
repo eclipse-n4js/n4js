@@ -850,7 +850,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	/**
 	 * Invoked from {@link ProxyResolvingEObjectImpl#eResolveProxy(InternalEObject)} whenever an EMF proxy inside an
-	 * N4JSResource is being resolved.
+	 * N4JSResource is being resolved. The receiving resource is the resource containing the proxy, not necessarily the
+	 * resource the proxy points to.
 	 *
 	 * @param proxy
 	 *            the proxy to resolve.
@@ -859,6 +860,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	public EObject doResolveProxy(InternalEObject proxy, EObject objectContext) {
+		// step 1: trigger post processing of the resource containing 'proxy' iff it is the first proxy being resolved
+		// (if another proxy has been resolved before, post processing will already be running/completed, and in that
+		// case the next line will simply do nothing, cf. #performPostProcessing())
+		this.performPostProcessing();
+		// step 2: now turn to resolving the proxy at hand
 		final URI targetUri = proxy.eProxyURI();
 		final boolean isLazyLinkingProxy = getEncoder().isCrossLinkFragment(this, targetUri.fragment());
 		if (!isLazyLinkingProxy) {
