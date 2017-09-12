@@ -28,26 +28,58 @@ public class AllPathPrintWalker extends GraphWalker {
 
 	/**
 	 * Constructor.
+	 * <p>
+	 * Creates a {@link AllPathPrintWalker} in direction {@literal Direction.Forward}.
 	 *
+	 * @param container
+	 *            the container of which all paths are computed. Must not be null.
+	 */
+	public AllPathPrintWalker(ControlFlowElement container) {
+		this(container, null, Direction.Forward);
+	}
+
+	/**
+	 * Constructor.
+	 * <p>
+	 * Creates a {@link AllPathPrintWalker} in direction {@literal Direction.Forward}.
+	 *
+	 * @param container
+	 *            the container of which all paths are computed. Must not be null.
 	 * @param startElement
 	 *            if not null, all paths are found beginning at the startElement. Otherwise, all paths are found
 	 *            beginning from the first element of one of the containers in the script.
 	 */
-	public AllPathPrintWalker(ControlFlowElement startElement) {
-		super(Direction.Forward);
+	public AllPathPrintWalker(ControlFlowElement container, ControlFlowElement startElement) {
+		this(container, startElement, Direction.Forward);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param container
+	 *            the container of which all paths are computed. Must not be null.
+	 * @param startElement
+	 *            if not null, all paths are found beginning at the startElement. Otherwise, all paths are found
+	 *            beginning from the first element of one of the containers in the script.
+	 * @param direction
+	 *            the direction of the paths. Use only with {@literal Direction.Forward} and
+	 *            {@literal Direction.Backward}
+	 */
+	public AllPathPrintWalker(ControlFlowElement container, ControlFlowElement startElement, Direction direction) {
+		super(container, direction);
 		this.startElement = startElement;
 	}
 
 	@Override
 	protected void initAll() {
-		if (startElement == null) {
-			super.requestActivation(new AllPathPrintPredicate());
-		}
+		// nothing to do
 	}
 
 	@Override
 	protected void init(Direction curDirection, ControlFlowElement curContainer) {
-		// nothing to do
+		if (startElement == null) {
+			super.requestActivation(new AllPathPrintPredicate());
+		}
 	}
 
 	@Override

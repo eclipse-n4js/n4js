@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.model;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.n4JS.FinallyBlock;
 
 /**
  * Used to connect two {@link Node}s by {@link ControlFlowEdge}s. The functions take care about
@@ -37,7 +38,20 @@ public class EdgeUtils {
 		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, cfType);
 		n1.addSuccessor(cfEdge);
 		n2.addPredecessor(cfEdge);
+		return cfEdge;
+	}
 
+	/**
+	 * Adds a {@link ControlFlowEdge} from n1 to n2 with the given {@link JumpToken}.
+	 * <p>
+	 * <b>Attention:</b> Use this only when the edge connects to a {@link FinallyBlock}.
+	 */
+	public static ControlFlowEdge connectCF(Node n1, Node n2, JumpToken jumpContext) {
+		assert (n1 != n2) : "CF-Edge with same Start/End-Nodes";
+
+		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, jumpContext);
+		n1.addSuccessor(cfEdge);
+		n2.addPredecessor(cfEdge);
 		return cfEdge;
 	}
 

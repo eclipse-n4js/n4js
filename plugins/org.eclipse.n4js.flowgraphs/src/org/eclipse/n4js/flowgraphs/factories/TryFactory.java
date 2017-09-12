@@ -48,7 +48,7 @@ class TryFactory {
 		}
 
 		if (tryStmt.getFinally() != null) {
-			CatchToken ct = new CatchToken(ControlFlowType.Throw);
+			CatchToken ct = new CatchToken(ControlFlowType.CatchesAll);
 			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, tryStmt, tryStmt.getFinally().getBlock());
 			finallyNode.addCatchToken(ct);
 		}

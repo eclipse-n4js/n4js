@@ -77,12 +77,12 @@ abstract public class GraphWalkerInternal {
 	 *            sets the containing {@link ControlFlowElement} for this instance. Iff the given container is
 	 *            {@code null}, this {@link GraphWalkerInternal} is applied on all containers.
 	 * @param directions
-	 *            sets the directions for this instance. Default direction is {@literal Direction.Forward} if no
-	 *            direction is given.
+	 *            sets the directions for this instance. Default directions are {@literal Direction.Forward} and
+	 *            {@literal Direction.CatchBlocks} if no direction is given.
 	 */
 	protected GraphWalkerInternal(ControlFlowElement container, Direction... directions) {
 		if (directions.length == 0) {
-			directions = new Direction[] { Direction.Forward };
+			directions = new Direction[] { Direction.Forward, Direction.CatchBlocks };
 		}
 		this.directions = directions;
 		this.container = container;

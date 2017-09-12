@@ -11,11 +11,14 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.n4JS.FinallyBlock;
 
 /** Represents the control flow between two nodes. */
 public class ControlFlowEdge extends AbstractEdge {
 	/** The type of the control flow */
 	public final ControlFlowType cfType;
+	/** The context of an edge that is caused by {@link FinallyBlock}s */
+	public final JumpToken finallyPathContext;
 
 	/**
 	 * Constructor.<br/>
@@ -31,7 +34,18 @@ public class ControlFlowEdge extends AbstractEdge {
 	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
 		super(start, end);
+		this.finallyPathContext = null;
 		this.cfType = cfType;
+	}
+
+	/**
+	 * Constructor.<br/>
+	 * Creates a control flow edge from start to end caused by a {@link FinallyBlock} and the given {@link JumpToken}.
+	 */
+	public ControlFlowEdge(Node start, Node end, JumpToken finallyPathContext) {
+		super(start, end);
+		this.finallyPathContext = finallyPathContext;
+		this.cfType = finallyPathContext.cfType;
 	}
 
 	/**

@@ -39,8 +39,9 @@ public class CatchNodeFinder {
 	static private final CatchEvaluator catchThrowEvaluator = new CatchThrowEvaluator();
 
 	static Node find(JumpToken jumpToken, Node jumpNode, ComplexNodeProvider cnProvider) {
-		ControlFlowElement cfe = jumpNode.getControlFlowElement();
 		CatchEvaluator catchEvaluator = getCatchEvaluator(jumpToken);
+		ControlFlowElement cfe = jumpNode.getControlFlowElement();
+		cfe = skipContainers(cfe);
 		while (cfe != null) {
 			Node catchNode = findCatchNode(jumpToken, cfe, catchEvaluator, cnProvider);
 			if (catchNode != null)
@@ -50,6 +51,16 @@ public class CatchNodeFinder {
 		}
 
 		return null;
+	}
+
+	private static ControlFlowElement skipContainers(ControlFlowElement cfe) {
+		if (cfe instanceof Block) {
+			cfe = getContainer(cfe);
+		}
+		while (FGUtils.isControlElement(cfe) && !(cfe instanceof Block)) {
+			cfe = getContainer(cfe);
+		}
+		return cfe;
 	}
 
 	private static ControlFlowElement getContainer(ControlFlowElement cfe) {
@@ -84,21 +95,39 @@ public class CatchNodeFinder {
 	private static Node findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
 			CatchEvaluator catchEvaluator, ComplexNodeProvider cnProvider) {
 
-		Node catchNode = findCatchAllNode(cfe, cnProvider);
-		if (catchNode != null)
-			return catchNode;
-
 		if (catchEvaluator.isCatchingType(cfe)) {
-			catchNode = catchEvaluator.getCatchingNode(cfe, cnProvider);
+			Node catchNode = catchEvaluator.getCatchingNode(cfe, cnProvider);
 			for (CatchToken catchToken : catchNode.catchToken) {
 				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken))
 					return catchNode;
 			}
 		}
+
+		Node catchNode = findCatchAllNode(cfe, cnProvider);
+		if (catchNode != null)
+			return catchNode;
 		return null;
 	}
 
 	private static Node findCatchAllNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
+		if (cfe instanceof TryStatement) {
+			return null;
+		}
+		EObject container = cfe.eContainer();
+		if (container instanceof TryStatement) {
+			return findCatchAllNodeInOtherStmt((TryStatement) container, cnProvider);
+		}
+		if (container instanceof CatchBlock) {
+			return findCatchAllNodeInOtherStmt((TryStatement) container.eContainer(), cnProvider);
+		}
+		if (container instanceof FinallyBlock) {
+			return null;
+		}
+
+		return findCatchAllNodeInOtherStmt(cfe, cnProvider);
+	}
+
+	private static Node findCatchAllNodeInOtherStmt(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
 		ComplexNode cnCFE = cnProvider.get(cfe);
 		for (Node node : cnCFE.getNodes()) {
 			for (CatchToken cToken : node.catchToken) {
@@ -232,14 +261,26 @@ public class CatchNodeFinder {
 
 			isCatchingThrowStatement |= FGUtils.isCFContainer(cfe);
 
-			EObject container = cfe.eContainer();
-			if (!isCatchingThrowStatement && container instanceof TryStatement) {
-				TryStatement tryStmt = (TryStatement) container;
-				Block block = tryStmt.getBlock();
-				CatchBlock catcher = tryStmt.getCatch();
-				FinallyBlock finalizer = tryStmt.getFinally();
+			if (!isCatchingThrowStatement) {
+				EObject container = cfe.eContainer();
 
-				isCatchingThrowStatement |= block == cfe && (catcher != null || finalizer != null);
+				if (container instanceof TryStatement) {
+					TryStatement tryStmt = (TryStatement) container;
+					Block block = tryStmt.getBlock();
+					CatchBlock catchBlock = tryStmt.getCatch();
+					FinallyBlock finalizer = tryStmt.getFinally();
+
+					isCatchingThrowStatement |= block == cfe && (catchBlock != null || finalizer != null);
+				}
+
+				if (container instanceof CatchBlock) {
+					CatchBlock catchBlock = (CatchBlock) container;
+					TryStatement tryStmt = (TryStatement) catchBlock.eContainer();
+					Block block = catchBlock.getBlock();
+					FinallyBlock finalizer = tryStmt.getFinally();
+
+					isCatchingThrowStatement |= block == cfe && finalizer != null;
+				}
 			}
 
 			return isCatchingThrowStatement;
@@ -262,6 +303,13 @@ public class CatchNodeFinder {
 				if (catchNode == null && tryStmt.getFinally() != null) {
 					catchNode = cnTryStmt.getNode(TryFactory.FINALLY_NODE_NAME);
 				}
+				Objects.requireNonNull(catchNode);
+				return catchNode;
+			}
+			if (container instanceof CatchBlock) {
+				TryStatement tryStmt = (TryStatement) container.eContainer();
+				ComplexNode cnTryStmt = cnProvider.get(tryStmt);
+				Node catchNode = cnTryStmt.getNode(TryFactory.FINALLY_NODE_NAME);
 				Objects.requireNonNull(catchNode);
 				return catchNode;
 			}

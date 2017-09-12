@@ -24,6 +24,8 @@ import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper;
@@ -154,20 +156,37 @@ public class FlowgraphsXpectMethod {
 	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
 	 * the first code element of the containing function.
 	 */
-	@ParameterParser(syntax = "('from' arg1=OFFSET)?")
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
 	@Xpect
 	public void allPaths(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset) {
+			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
 
-		ControlFlowElement cfe = null;
-		if (offset != null) {
-			cfe = getControlFlowElement(offset);
+		EObjectCoveringRegion offsetImpl = (EObjectCoveringRegion) offset;
+		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
+		ControlFlowElement startCFE = null;
+		if (referenceOffsetImpl.getOffset() < offsetImpl.getOffset()) {
+			startCFE = getControlFlowElement(offsetImpl);
 		}
-		AllPathPrintWalker appw = new AllPathPrintWalker(cfe);
-		getFlowAnalyses(cfe).performAnalyzes(appw);
+		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
+		GraphWalkerInternal.Direction direction = getDirection(directionName);
+
+		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
+		AllPathPrintWalker appw = new AllPathPrintWalker(container, startCFE, direction);
+		getFlowAnalyses(referenceCFE).performAnalyzes(appw);
 		List<String> pathStrings = appw.getPathStrings();
 
 		expectation.assertEquals(pathStrings);
+	}
+
+	private GraphWalkerInternal.Direction getDirection(String directionName) {
+		GraphWalkerInternal.Direction direction = Direction.Forward;
+		if (directionName != null && !directionName.isEmpty()) {
+			direction = GraphWalkerInternal.Direction.valueOf(directionName);
+			if (direction == null) {
+				fail("Unknown direction");
+			}
+		}
+		return direction;
 	}
 
 	/** This xpect method can evaluate all edges of the containing function. */

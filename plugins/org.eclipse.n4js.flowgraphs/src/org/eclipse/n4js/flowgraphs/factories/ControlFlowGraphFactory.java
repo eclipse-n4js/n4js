@@ -26,7 +26,9 @@ import org.eclipse.n4js.flowgraphs.model.EdgeUtils;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
 
 /**
@@ -124,19 +126,57 @@ public class ControlFlowGraphFactory {
 	 */
 	private static void createJumpEdges(ComplexNodeProvider cnProvider) {
 		for (ComplexNode cn : cnProvider.getAll()) {
-			Node cnJumpNode = cn.getExit();
-			for (JumpToken jumpToken : cnJumpNode.jumpToken) {
-				EdgeUtils.removeAllCF(cnJumpNode.getSuccessorEdges());
-				Node catchNode = null;
-				catchNode = CatchNodeFinder.find(jumpToken, cnJumpNode, cnProvider);
-				if (catchNode == null) {
-					String jumpTokenStr = getJumpTokenDetailString(jumpToken, cnJumpNode);
-					System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
-				} else {
-					EdgeUtils.connectCF(cnJumpNode, catchNode, jumpToken.cfType);
-				}
+			Node jumpNode = cn.getExit();
+			for (JumpToken jumpToken : jumpNode.jumpToken) {
+				EdgeUtils.removeAllCF(jumpNode.getSuccessorEdges());
+				connectToJumpTarget(cnProvider, jumpNode, jumpToken);
 			}
 		}
+	}
+
+	private static void connectToJumpTarget(ComplexNodeProvider cnProvider, Node jumpNode, JumpToken jumpToken) {
+		Node catchNode = null;
+		catchNode = CatchNodeFinder.find(jumpToken, jumpNode, cnProvider);
+		if (catchNode == null) {
+			String jumpTokenStr = getJumpTokenDetailString(jumpToken, jumpNode);
+			System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
+			return;
+		}
+
+		FinallyBlock enteringFinallyBlock = getEnteringFinallyBlock(catchNode);
+		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnProvider, jumpNode);
+		if (enteringFinallyBlock != null || isExitingFinallyBlock) {
+			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+		} else {
+			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken.cfType);
+		}
+
+		if (enteringFinallyBlock != null) {
+			// Iff finally block was entered abruptly, jump on from exit of finally block
+			Block block = enteringFinallyBlock.getBlock();
+			ComplexNode cnBlock = cnProvider.get(block);
+			Node exitFinallyBlock = cnBlock.getExit();
+			connectToJumpTarget(cnProvider, exitFinallyBlock, jumpToken);
+		}
+	}
+
+	private static FinallyBlock getEnteringFinallyBlock(Node catchNode) {
+		if (catchNode.name.equals(TryFactory.FINALLY_NODE_NAME)) {
+			ControlFlowElement cfe = catchNode.getDelegatedControlFlowElement();
+			EObject cfeContainer = cfe.eContainer();
+			return (FinallyBlock) cfeContainer;
+		}
+		return null;
+	}
+
+	private static boolean isExitingFinallyBlock(ComplexNodeProvider cnProvider, Node node) {
+		ControlFlowElement cfe = node.getControlFlowElement();
+		ComplexNode cn = cnProvider.get(cfe);
+		boolean isExitingFinallyBlock = true;
+		isExitingFinallyBlock &= cfe instanceof Block;
+		isExitingFinallyBlock &= cfe.eContainer() instanceof FinallyBlock;
+		isExitingFinallyBlock &= cn.getExit() == node;
+		return isExitingFinallyBlock;
 	}
 
 	private static final class CFEComparator implements Comparator<ControlFlowElement> {
