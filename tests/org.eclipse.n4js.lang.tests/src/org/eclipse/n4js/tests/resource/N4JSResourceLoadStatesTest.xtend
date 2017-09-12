@@ -26,6 +26,7 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtend.lib.annotations.Data
 import org.junit.Test
+import org.eclipse.n4js.n4JS.IdentifierRef
 
 /**
  * Test the various load states an N4JSResource can be in.
@@ -199,6 +200,18 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		res.load(emptyMap);
 		// do *not* trigger installation of derived state explicitly, in this test case
 		res.performPostProcessing();
+		res.assertState(State.FULLY_PROCESSED);
+	}
+
+	@Test
+	def void testStateFullyProcessed3() throws Exception {
+		val res = createFromFile(SAMPLE_FILE);
+		res.load(emptyMap);
+		// do *not* trigger installation of derived state explicitly, in this test case
+		// do *not* trigger post-processing explicitly, in this test case
+		val idRef = res.script.eAllContents.filter(IdentifierRef).head;
+		assertNotNull(idRef);
+		idRef.id; // trigger installation of derived state + post-processing by resolving a proxy *without* type inference
 		res.assertState(State.FULLY_PROCESSED);
 	}
 
