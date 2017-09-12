@@ -22,6 +22,8 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TMethod
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtend.lib.annotations.Data
 import org.junit.Test
 
@@ -65,7 +67,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		new StateInfo(State.CREATED,                      ParseResult.NULL,      AST.NULL,      Module.NULL,      false,          false, false, false ),
 		new StateInfo(State.CREATED_PRIME,                ParseResult.NULL,      AST.NULL,      Module.NULL,      false,          true,  false, false ),
 		new StateInfo(State.LOADED,                       ParseResult.AVAILABLE, AST.LAZY,      Module.NULL,      true,           false, false, false ),
-		new StateInfo(State.PRE_LINKED,                   ParseResult.AVAILABLE, AST.LAZY,      Module.STUBS,     true,           false, false, false ),
+		new StateInfo(State.PRE_LINKED,                   ParseResult.AVAILABLE, AST.LAZY,      Module.STUBS,     true,           true,  false, false ),
 		new StateInfo(State.FULLY_INITIALIZED,            ParseResult.AVAILABLE, AST.LAZY,      Module.DEFERRED,  true,           true,  false, false ),
 		new StateInfo(State.FULLY_PROCESSED,              ParseResult.AVAILABLE, AST.AVAILABLE, Module.AVAILABLE, true,           true,  true,  false ),
 		new StateInfo(State.LOADED_FROM_DESC,             ParseResult.NULL,      AST.PROXY,     Module.AVAILABLE, INDETERMINATE,  true,  true,  false ),
@@ -141,6 +143,14 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 	}
 
 	@Test
+	def void testPreLinked() throws Exception {
+		val res = createFromFile(SAMPLE_FILE);
+		res.load(emptyMap);
+		res.installDerivedState(true);
+		res.assertState(State.PRE_LINKED);
+	}
+
+	@Test
 	def void testStateFullyInitialized1() throws Exception {
 		val res = createFromFile(SAMPLE_FILE);
 		res.load(emptyMap);
@@ -159,6 +169,18 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		res.load(emptyMap);
 		res.assertState(State.LOADED);
 		res.contents; // trigger installation of derived state (i.e. types builder)
+		res.assertState(State.FULLY_INITIALIZED);
+	}
+
+	/** Make sure that we can reach state 'fullyInitialized' after having been in state 'pre-linked'. */
+	@Test
+	def void testStateFullyInitialized3() throws Exception {
+		val res = createFromFile(SAMPLE_FILE);
+		res.load(emptyMap);
+		res.installDerivedState(true);
+		res.assertState(State.PRE_LINKED);
+		res.discardDerivedState();
+		res.installDerivedState(false);
 		res.assertState(State.FULLY_INITIALIZED);
 	}
 
@@ -222,7 +244,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		res.assertState(State.FULLY_PROCESSED_RECONCILED);
 	}
 
-	// same as previous method, but use different ways of triggering demand-loading of AST and post-processing
+	/** Same as previous method, but use different ways of triggering demand-loading of AST and post-processing. */
 	@Test
 	def void testStateReconciled2() throws Exception {
 		val res = loadFromDescription(SAMPLE_FILE);
@@ -281,18 +303,18 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 			case STUBS: {
 				assertNotNull("in state " + state + " the module should *not* be null", res.module);
 				assertFalse("in state " + state + " the module should *not* be a proxy", res.module.eIsProxy);
-				// FIXME assert that TModule contains stubs
+				assertTrue("in state " + state + " the module should contain stubs", res.module.containsStub);
 			}
 			case DEFERRED: {
 				assertNotNull("in state " + state + " the module should *not* be null", res.module);
 				assertFalse("in state " + state + " the module should *not* be a proxy", res.module.eIsProxy);
-				// FIXME assert that TModule does not contain stubs
+				assertFalse("in state " + state + " the module should *not* contain stubs", res.module.containsStub);
 				assertTrue("in state " + state + " the module should contain DeferredTypeRefs", res.module.containsDeferredTypeRef);
 			}
 			case AVAILABLE: {
 				assertNotNull("in state " + state + " the module should *not* be null", res.module);
 				assertFalse("in state " + state + " the module should *not* be a proxy", res.module.eIsProxy);
-				// FIXME assert that TModule does not contain stubs
+				assertFalse("in state " + state + " the module should *not* contain stubs", res.module.containsStub);
 				assertFalse("in state " + state + " the module should *not* contain DeferredTypeRefs", res.module.containsDeferredTypeRef);
 			}
 			default: {
@@ -343,6 +365,24 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 	def private boolean isLazyLinkingProxy(N4JSResource res, EObject proxy) {
 		return proxy.eIsProxy
 			&& res.getEncoder().isCrossLinkFragment(res, (proxy as InternalEObject).eProxyURI.fragment());
+	}
+
+	def private boolean containsStub(TModule root) {
+		return root.eAllContents.filter(TMethod).exists[isStub];
+	}
+
+	/**
+	 * Tells if the given {@link TMethod} is a stub as created by the types build during pre-linking phase, i.e.
+	 * when the types builder is invoked with flag <code>preLinkingPhase</code> set to true. If this method returns
+	 * <code>false</code>, the given {@code TMethod} is guaranteed to have been created by the types builder in the
+	 * ordinary, main phase (i.e. <code>preLinkingPhase</code> set to false).
+	 * <p>
+	 * As can be seen in {@code AbstractFunctionDefinitionTypesBuilder#setReturnType(TFunction, FunctionDefinition,
+	 * BuiltInTypeScope, boolean)}, return types of methods are created if and only if the types builder is running
+	 * in the main phase, not in pre-linking phase.
+	 */
+	def private boolean isStub(TMethod method) {
+		return method.returnTypeRef === null;
 	}
 
 
