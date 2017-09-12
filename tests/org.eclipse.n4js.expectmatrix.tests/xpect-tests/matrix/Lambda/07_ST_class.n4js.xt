@@ -12,8 +12,8 @@
 /* XPECT_SETUP org.eclipse.n4js.expectmatrix.tests.N4JSExpectMatrixPendingTest END_SETUP  */
 
 class S {
-	num : number;
-	str : string;
+	public num : number;
+	public str : string;
 }
 
 //////////////
@@ -25,7 +25,6 @@ class A {
 	public s : ~S;
 
 	public bar () {
-		// setting ST inside a lambda expr. XPECT noerrors -->
 		(() => { this.s = { num: 5, str: "S" } })();
 	}
 
