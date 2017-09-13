@@ -51,6 +51,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillAware <em>Static Polyfill Aware</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isMainModule <em>Main Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isReconciled <em>Reconciled</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
@@ -252,6 +253,26 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected boolean preLinkingPhase = PRE_LINKING_PHASE_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isReconciled() <em>Reconciled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReconciled()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean RECONCILED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isReconciled() <em>Reconciled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReconciled()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean reconciled = RECONCILED_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
@@ -558,6 +579,27 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isReconciled() {
+		return reconciled;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setReconciled(boolean newReconciled) {
+		boolean oldReconciled = reconciled;
+		reconciled = newReconciled;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__RECONCILED, oldReconciled, reconciled));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Type> getTopLevelTypes() {
 		if (topLevelTypes == null) {
 			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TOP_LEVEL_TYPES);
@@ -695,6 +737,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return isMainModule();
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				return isPreLinkingPhase();
+			case TypesPackage.TMODULE__RECONCILED:
+				return isReconciled();
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return getTopLevelTypes();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -752,6 +796,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return;
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				setPreLinkingPhase((Boolean)newValue);
+				return;
+			case TypesPackage.TMODULE__RECONCILED:
+				setReconciled((Boolean)newValue);
 				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
@@ -818,6 +865,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				setPreLinkingPhase(PRE_LINKING_PHASE_EDEFAULT);
 				return;
+			case TypesPackage.TMODULE__RECONCILED:
+				setReconciled(RECONCILED_EDEFAULT);
+				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
 				return;
@@ -868,6 +918,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return mainModule != MAIN_MODULE_EDEFAULT;
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				return preLinkingPhase != PRE_LINKING_PHASE_EDEFAULT;
+			case TypesPackage.TMODULE__RECONCILED:
+				return reconciled != RECONCILED_EDEFAULT;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return topLevelTypes != null && !topLevelTypes.isEmpty();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -946,6 +998,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		result.append(mainModule);
 		result.append(", preLinkingPhase: ");
 		result.append(preLinkingPhase);
+		result.append(", reconciled: ");
+		result.append(reconciled);
 		result.append(", astMD5: ");
 		result.append(astMD5);
 		result.append(')');

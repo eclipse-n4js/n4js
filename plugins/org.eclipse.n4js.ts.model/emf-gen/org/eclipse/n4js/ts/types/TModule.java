@@ -35,6 +35,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isStaticPolyfillAware <em>Static Polyfill Aware</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isMainModule <em>Main Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#isReconciled <em>Reconciled</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getInternalTypes <em>Internal Types</em>}</li>
@@ -285,6 +286,33 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	void setPreLinkingPhase(boolean value);
+
+	/**
+	 * Returns the value of the '<em><b>Reconciled</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * True iff this TModule was reconciled, i.e. was re-linked to an AST after its creation.
+	 * For details see {@code N4JSResource#isReconciled()}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Reconciled</em>' attribute.
+	 * @see #setReconciled(boolean)
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_Reconciled()
+	 * @model unique="false" transient="true"
+	 * @generated
+	 */
+	boolean isReconciled();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.ts.types.TModule#isReconciled <em>Reconciled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Reconciled</em>' attribute.
+	 * @see #isReconciled()
+	 * @generated
+	 */
+	void setReconciled(boolean value);
 
 	/**
 	 * Returns the value of the '<em><b>Top Level Types</b></em>' containment reference list.
