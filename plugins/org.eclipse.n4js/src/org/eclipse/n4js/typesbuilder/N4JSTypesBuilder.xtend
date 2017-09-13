@@ -105,12 +105,12 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule module = resource.contents.get(1) as TModule;
-			module.reconciled = true;
 
 			val astMD5New = N4JSASTUtils.md5Hex(resource);
 			if (astMD5New != module.astMD5) {
 				throw new IllegalStateException("cannot link existing TModule to new AST due to hash mismatch: " + resource.URI);
 			}
+			module.reconciled = true;
 
 			script.buildNamespacesTypesFromModuleImports(module,preLinkingPhase);
 
@@ -148,9 +148,10 @@ public class N4JSTypesBuilder {
 			val script = parseResult.rootASTElement as Script;
 
 			val TModule result = typesFactory.createTModule;
-			result.reconciled = false;
 
 			result.astMD5 = N4JSASTUtils.md5Hex(resource);
+			result.reconciled = false;
+
 			var qualifiedModuleName = resource.qualifiedModuleName;
 			result.qualifiedName = qualifiedNameConverter.toString(qualifiedModuleName);
 			result.preLinkingPhase = preLinkingPhase;
