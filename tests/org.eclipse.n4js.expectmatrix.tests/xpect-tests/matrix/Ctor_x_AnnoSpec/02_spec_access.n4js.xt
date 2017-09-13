@@ -25,9 +25,9 @@ class A {
 }
 
 // XPECT warnings ---
-// "y is not used in constructor." at "y"
-// "z is not used in constructor." at "z"
-// "w is not used in constructor." at "w"
+// "w is not defined in ~i~this[A]." at "w"
+// "y is not defined in ~i~this[A]." at "y"
+// "z is not defined in ~i~this[A]." at "z"
 // ---
 var a : A = new A({x: 1, y: 2, z: 3, w: 4});
 

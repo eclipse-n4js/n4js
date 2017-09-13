@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.runner.tests;
+package org.eclipse.n4js.runner.ui.tests;
 
 import static com.google.common.collect.Sets.difference;
 

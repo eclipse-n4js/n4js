@@ -99,6 +99,7 @@ public class N4JSXParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getAnnotationArgumentAccess().getAlternatives(), "rule__AnnotationArgument__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefForCastAccess().getAlternatives(), "rule__TypeRefForCast__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getTypeReferenceNameAccess().getAlternatives(), "rule__TypeReferenceName__Alternatives");
+			nameMappingsBuilder.put(grammarAccess.getQualifiedTypeReferenceNameAccess().getAlternatives_1_1(), "rule__QualifiedTypeReferenceName__Alternatives_1_1");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives(), "rule__ClassExtendsClause__Alternatives");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives_0_1(), "rule__ClassExtendsClause__Alternatives_0_1");
 			nameMappingsBuilder.put(grammarAccess.getClassExtendsClauseAccess().getAlternatives_0_1_0_1_0(), "rule__ClassExtendsClause__Alternatives_0_1_0_1_0");

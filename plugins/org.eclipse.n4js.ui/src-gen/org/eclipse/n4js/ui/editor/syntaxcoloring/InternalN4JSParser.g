@@ -14860,7 +14860,13 @@ ruleQualifiedTypeReferenceName
 		FullStopKeyword_1_0=FullStop {
 			announce($FullStopKeyword_1_0, grammarAccess.getQualifiedTypeReferenceNameAccess().getFullStopKeyword_1_0());
 		}
-		RULE_IDENTIFIER
+		(
+			RULE_IDENTIFIER
+			    |
+			DefaultKeyword_1_1_1=Default {
+				announce($DefaultKeyword_1_1_1, grammarAccess.getQualifiedTypeReferenceNameAccess().getDefaultKeyword_1_1_1());
+			}
+		)
 	)?
 )
 ;

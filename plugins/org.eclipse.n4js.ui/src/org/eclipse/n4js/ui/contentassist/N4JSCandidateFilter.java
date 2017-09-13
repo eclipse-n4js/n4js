@@ -10,13 +10,13 @@
  */
 package org.eclipse.n4js.ui.contentassist;
 
+import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
+import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator;
+import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.base.Predicate;
-
-import org.eclipse.n4js.scoping.utils.AbstractDescriptionWithError;
-import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator;
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
 
 /**
  * This predicate is passed to concrete proposal creators, such as {@link ImportsAwareReferenceProposalCreator}.
@@ -25,10 +25,11 @@ public class N4JSCandidateFilter implements Predicate<IEObjectDescription> {
 
 	@Override
 	public boolean apply(IEObjectDescription candidate) {
+		QualifiedName qualifiedName = candidate.getQualifiedName();
 		// Don't propose any erroneous descriptions.
 		return !AbstractDescriptionWithError.isErrorDescription_XTEND_MVN_BUG_HACK(candidate)
-				&& !N4TSQualifiedNameProvider.isModulePolyfill(candidate.getQualifiedName()) // IDE-1735 filter "!MPOLY"
-																								// entries.
-				&& !N4TSQualifiedNameProvider.isPolyfill(candidate.getQualifiedName());
+				&& !N4TSQualifiedNameProvider.GLOBAL_NAMESPACE_SEGMENT.equals(qualifiedName.getFirstSegment())
+				&& !N4TSQualifiedNameProvider.isModulePolyfill(qualifiedName)
+				&& !N4TSQualifiedNameProvider.isPolyfill(qualifiedName);
 	}
 }

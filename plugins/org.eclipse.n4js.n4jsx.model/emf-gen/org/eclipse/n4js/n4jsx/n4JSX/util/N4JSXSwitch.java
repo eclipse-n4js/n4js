@@ -17,8 +17,8 @@ import org.eclipse.emf.ecore.util.Switch;
 
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
-
 import org.eclipse.n4js.n4JS.MemberAccess;
+
 import org.eclipse.n4js.n4jsx.n4JSX.*;
 
 import org.eclipse.n4js.ts.types.TypableElement;

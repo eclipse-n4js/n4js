@@ -10,15 +10,18 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import com.google.common.base.Predicate;
-
 import org.eclipse.n4js.ts.types.MemberAccessModifier;
+import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TMethod;
+import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TypingStrategy;
 
+import com.google.common.base.Predicate;
+
 /**
- * Filter out results not available for a given typing strategy.
+ * Filter out results not available for a given typing strategy, i.e. {@code apply} returns false if member is not
+ * available.
  */
 public class TypingStrategyFilter implements Predicate<TMember> {
 
@@ -40,16 +43,35 @@ public class TypingStrategyFilter implements Predicate<TMember> {
 
 	@Override
 	public boolean apply(TMember member) {
-		if (typingStrategy == TypingStrategy.DEFAULT) {
+		if (typingStrategy == TypingStrategy.DEFAULT || typingStrategy == TypingStrategy.NOMINAL) {
 			return true;
 		}
 
 		if (member.isStatic() || member.getMemberAccessModifier() != MemberAccessModifier.PUBLIC) {
 			return false;
 		}
-		if (member instanceof TMethod) {
-			return typingStrategy == TypingStrategy.STRUCTURAL;
+
+		if (typingStrategy == TypingStrategy.STRUCTURAL) {
+			return true;
 		}
+
+		if (member instanceof TMethod) {
+			return false;
+		}
+
+		// Getter, Setter, DataField
+		if (typingStrategy == TypingStrategy.STRUCTURAL_FIELDS) {
+			return true;
+		}
+
+		if (member instanceof TSetter) {
+			return typingStrategy == TypingStrategy.STRUCTURAL_WRITE_ONLY_FIELDS
+					|| typingStrategy == TypingStrategy.STRUCTURAL_FIELD_INITIALIZER;
+		}
+		if (member instanceof TGetter) {
+			return typingStrategy == TypingStrategy.STRUCTURAL_READ_ONLY_FIELDS;
+		}
+
 		return true;
 	}
 

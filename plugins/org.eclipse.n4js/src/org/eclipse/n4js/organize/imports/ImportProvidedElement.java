@@ -28,7 +28,7 @@ public class ImportProvidedElement {
 	public String localname;
 
 	/** name as provided by TModule */
-	public String actualName;
+	public String exportedName;
 	/** Prefix to be used when creating IPE for namespace itself */
 	public final static String NAMESPACE_PREFIX = "NAMESPACE_";
 
@@ -53,17 +53,17 @@ public class ImportProvidedElement {
 	public List<ImportSpecifier> ambiguousImports = new ArrayList<>();
 
 	/**
-	 * @param usedName
-	 *            localName, aliased name for the imported entity
-	 * @param actualName
-	 *            name as exported be TModule
+	 * @param localName
+	 *            local name for the imported entity
+	 * @param exportedName
+	 *            name under which entity was exported
 	 * @param importer
 	 *            import-specifier, referencing the import-declaration.
 	 *
 	 */
-	public ImportProvidedElement(String usedName, String actualName, ImportSpecifier importer) {
-		this.localname = usedName;
-		this.actualName = actualName;
+	public ImportProvidedElement(String localName, String exportedName, ImportSpecifier importer) {
+		this.localname = localName;
+		this.exportedName = exportedName;
 		this.importSpec = importer;
 		this.tmodule = ((ImportDeclaration) importer.eContainer()).getModule();
 	}
@@ -74,7 +74,7 @@ public class ImportProvidedElement {
 	}
 
 	/**
-	 * {@code localname[actualname]<Module+øA} with
+	 * {@code localname[exportedName]<Module+øA} with
 	 * <ul>
 	 * <li>+ / - : used / unused
 	 * <li>A : ambiguityList has entries.
@@ -82,7 +82,7 @@ public class ImportProvidedElement {
 	 */
 	@Override
 	public String toString() {
-		return localname + (localname != actualName ? "[" + actualName + "]" : "") +
+		return localname + (localname != exportedName ? "[" + exportedName + "]" : "") +
 				(importSpec instanceof NamedImportSpecifier ? "-" : "*") + "<" + tmodule.getQualifiedName()
 				+ "" + (used ? "+" : "-") + (ambiguityList != null ? "A" : "");
 	}

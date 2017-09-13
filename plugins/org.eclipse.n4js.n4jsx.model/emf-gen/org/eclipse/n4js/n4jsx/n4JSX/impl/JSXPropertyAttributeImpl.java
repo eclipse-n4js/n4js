@@ -19,9 +19,9 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.n4js.n4JS.Expression;
-
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+
 import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
 import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage;
 

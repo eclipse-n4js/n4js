@@ -1214,7 +1214,7 @@ TypeReferenceName:
 ;
 
 QualifiedTypeReferenceName:
-	IDENTIFIER ('.' IDENTIFIER)?
+	IDENTIFIER ('.' (IDENTIFIER | 'default' ))?
 ;
 
 // ****************************************************************************************************
