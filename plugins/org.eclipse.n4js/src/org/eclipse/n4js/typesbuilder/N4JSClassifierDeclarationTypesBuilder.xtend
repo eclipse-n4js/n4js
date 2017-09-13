@@ -78,7 +78,6 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		// OWNED members
 		var memberIdx = 0;
 		memberIdx = classifier.relinkFields(declaration, preLinkingPhase, memberIdx);
-		println("after fields idx = " + memberIdx)
 		memberIdx = classifier.relinkMethods(declaration, preLinkingPhase, memberIdx);
 		memberIdx = classifier.relinkGetters(declaration, preLinkingPhase, memberIdx);
 		memberIdx = classifier.relinkSetters(declaration, preLinkingPhase, memberIdx);

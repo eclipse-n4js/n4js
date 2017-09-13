@@ -108,17 +108,11 @@ public abstract class N4ClassifierDefinitionImpl extends N4TypeDefinitionImpl im
 	public EList<N4MemberDeclaration> getOwnedMembers() {
 		final Function1<N4MemberDeclaration, Boolean> _function = new Function1<N4MemberDeclaration, Boolean>() {
 			public Boolean apply(final N4MemberDeclaration it) {
-				boolean _isConstructor = it.isConstructor();
-				return Boolean.valueOf((!_isConstructor));
-			}
-		};
-		final Function1<N4MemberDeclaration, Boolean> _function_1 = new Function1<N4MemberDeclaration, Boolean>() {
-			public Boolean apply(final N4MemberDeclaration it) {
 				boolean _isCallableConstructor = it.isCallableConstructor();
 				return Boolean.valueOf((!_isCallableConstructor));
 			}
 		};
-		final Iterable<N4MemberDeclaration> methods = IterableExtensions.<N4MemberDeclaration>filter(IterableExtensions.<N4MemberDeclaration>filter(Iterables.<N4MemberDeclaration>filter(this.getOwnedMembersRaw(), N4MemberDeclaration.class), _function), _function_1);
+		final Iterable<N4MemberDeclaration> methods = IterableExtensions.<N4MemberDeclaration>filter(Iterables.<N4MemberDeclaration>filter(this.getOwnedMembersRaw(), N4MemberDeclaration.class), _function);
 		List<N4MemberDeclaration> _list = IterableExtensions.<N4MemberDeclaration>toList(methods);
 		return new BasicEList<N4MemberDeclaration>(_list);
 	}
