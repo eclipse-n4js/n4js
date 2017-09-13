@@ -70,11 +70,7 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		if (declaration.ownedCallableCtor !== null ) {
 			relinkCtor(declaration.ownedCallableCtor, classifier, preLinkingPhase)
 		}
-		
-		if (declaration.ownedCtor !== null ) {
-			relinkCtor(declaration.ownedCtor, classifier, preLinkingPhase)
-		}
-		
+
 		// OWNED members
 		var memberIdx = 0;
 		memberIdx = classifier.relinkFields(declaration, preLinkingPhase, memberIdx);
