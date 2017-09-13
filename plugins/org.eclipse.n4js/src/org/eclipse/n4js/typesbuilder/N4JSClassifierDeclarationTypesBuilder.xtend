@@ -68,7 +68,7 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 
 		// members
 		if (declaration.ownedCallableCtor !== null ) {
-			relinkCtor(declaration.ownedCallableCtor, classifier, preLinkingPhase)
+			relinkCallableCtor(declaration.ownedCallableCtor, classifier, preLinkingPhase)
 		}
 
 		// OWNED members

@@ -53,32 +53,23 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 		return true;
 	}
 	
-	def package boolean relinkCtor(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
+	def package boolean relinkCallableCtor(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
 		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 
-		val methodType = if (methodDecl.callableConstructor) {
-				if (!methodDecl.name.isNullOrEmpty) {
-					throw new RuntimeException("Callable ctor cannot have a name, had " + methodDecl.name);
-				}
-				if (methodDecl.hasComputedPropertyName) {
-					throw new RuntimeException("Callable constructor cannot have computed name.");
-				}
+		if (!methodDecl.callableConstructor) {
+			throw new RuntimeException("Provided method was neither constructor nor callable constructor.");
+		}
 
-				classifier.callableCtor
-			} else if (methodDecl.isConstructor) {
-				if (methodDecl.name.isNullOrEmpty && !methodDecl.hasComputedPropertyName) {
-					throw new RuntimeException("Constructor has neither name not computed name.");
-				}
+		if (!methodDecl.name.isNullOrEmpty) {
+			throw new RuntimeException("Callable ctor cannot have a name, had " + methodDecl.name);
+		}
+		if (methodDecl.hasComputedPropertyName) {
+			throw new RuntimeException("Callable constructor cannot have computed name.");
+		}
 
-				classifier.ownedCtor
-			} else {
-				throw new RuntimeException("Provided method was neither constructor nor callable constructor.");
-			}
-
-		ensureEqualName(methodDecl, methodType);
-
+		val methodType = classifier.callableCtor
 		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
 
 		// link
