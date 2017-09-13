@@ -682,7 +682,14 @@ For choosing the element to import, there are the exact same options as in ECMAS
     import C from "M"
 
 ----
+* namespace imports provide access to the default export:
++
+[source,n4js]
+----
+    import * as N from "M"
+    var c: N.default = new N.default();
 
+----
 .Imports
 [req,id=IDE-135,version=1]
 --

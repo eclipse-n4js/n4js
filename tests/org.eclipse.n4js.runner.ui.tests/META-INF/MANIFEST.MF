@@ -15,4 +15,5 @@ Require-Bundle: org.junit,
  org.eclipse.n4js.ui,
  org.eclipse.ui,
  org.eclipse.n4js.tester,
- com.google.guava
+ com.google.guava,
+ org.eclipse.n4js.runner.nodejs

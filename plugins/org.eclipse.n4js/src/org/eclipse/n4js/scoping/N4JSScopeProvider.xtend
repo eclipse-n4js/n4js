@@ -492,7 +492,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 						return parent;
 					}
 				}
-				return getTypeScope(context.eContainer, reference, fromStaticContext);
+				return getTypeScope(container, reference, fromStaticContext);
 			}
 		}
 	}

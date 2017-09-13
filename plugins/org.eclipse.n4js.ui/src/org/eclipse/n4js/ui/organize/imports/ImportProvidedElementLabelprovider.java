@@ -10,20 +10,22 @@
  */
 package org.eclipse.n4js.ui.organize.imports;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.n4js.n4JS.ImportDeclaration;
+import org.eclipse.n4js.organize.imports.ImportProvidedElement;
+import org.eclipse.n4js.ts.types.TExportableElement;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.n4JS.ImportDeclaration;
-import org.eclipse.n4js.organize.imports.ImportProvidedElement;
-import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.ui.labeling.N4JSLabelProvider;
-
 /**
+ * Provides labels used in imports disambiguation dialog.
  */
 public class ImportProvidedElementLabelprovider implements ILabelProvider {
 
@@ -54,27 +56,43 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		// return n4Labelprovider.getImage(element);
-		return null;
+		if (element instanceof ImportableObject) {
+			return n4Labelprovider.getImage(((ImportableObject) element).getTe());
+		}
+		return n4Labelprovider.getImage(element);
 	}
 
 	@Override
 	public String getText(Object element) {
 		if (element instanceof ImportableObject) {
 			ImportableObject io = (ImportableObject) element;
-			return getText(io.getEobj());
-		} else if (element instanceof ImportProvidedElement) {
+			return getText(io.getTe());
+		}
+		if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);
-			// return n4Labelprovider.getText( ele.ambiguityList.get(0) );
 			TModule tm = ((ImportDeclaration) ele.importSpec.eContainer()).getModule();
-			String moduleText = n4Labelprovider.getText(tm);
-			return "" + ele.localname + " from " + moduleText;
-		} else if (element instanceof IEObjectDescription) {
-			IEObjectDescription ieO = (IEObjectDescription) element;
-			return ieO.getName().getLastSegment() + " from "
-					+ qualifiedNameConverter.toString(ieO.getName().skipLast(1));
+			return ele.localname + " from " + findLocation(tm);
+		}
+		if (element instanceof IEObjectDescription) {
+			IEObjectDescription ieod = (IEObjectDescription) element;
+			EObject eo = ieod.getEObjectOrProxy();
+
+			if (eo instanceof TExportableElement && !eo.eIsProxy()) {
+				return getText(eo);
+			}
+			return ieod.getName().getLastSegment() + " from "
+					+ qualifiedNameConverter.toString(ieod.getName().skipLast(1));
+		}
+		if (element instanceof TExportableElement) {
+			TExportableElement te = (TExportableElement) element;
+			return te.getName() + " (exported as " + te.getExportedName() + ") from "
+					+ findLocation(te.getContainingModule());
 		}
 
 		return n4Labelprovider.getText(element);
+	}
+
+	private String findLocation(TModule module) {
+		return module.getQualifiedName() + " in " + module.getProjectId();
 	}
 }

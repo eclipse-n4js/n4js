@@ -12218,6 +12218,27 @@ finally {
 	restoreStackSize(stackSize);
 }
 
+rule__QualifiedTypeReferenceName__Alternatives_1_1
+	@init {
+		int stackSize = keepStackSize();
+	}
+:
+	(
+		{ before(grammarAccess.getQualifiedTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_1_1_0()); }
+		RULE_IDENTIFIER
+		{ after(grammarAccess.getQualifiedTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_1_1_0()); }
+	)
+	|
+	(
+		{ before(grammarAccess.getQualifiedTypeReferenceNameAccess().getDefaultKeyword_1_1_1()); }
+		Default
+		{ after(grammarAccess.getQualifiedTypeReferenceNameAccess().getDefaultKeyword_1_1_1()); }
+	)
+;
+finally {
+	restoreStackSize(stackSize);
+}
+
 rule__ClassExtendsClause__Alternatives
 	@init {
 		int stackSize = keepStackSize();
@@ -57055,9 +57076,9 @@ rule__QualifiedTypeReferenceName__Group_1__1__Impl
 	}
 :
 (
-	{ before(grammarAccess.getQualifiedTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_1_1()); }
-	RULE_IDENTIFIER
-	{ after(grammarAccess.getQualifiedTypeReferenceNameAccess().getIDENTIFIERTerminalRuleCall_1_1()); }
+	{ before(grammarAccess.getQualifiedTypeReferenceNameAccess().getAlternatives_1_1()); }
+	(rule__QualifiedTypeReferenceName__Alternatives_1_1)
+	{ after(grammarAccess.getQualifiedTypeReferenceNameAccess().getAlternatives_1_1()); }
 )
 ;
 finally {

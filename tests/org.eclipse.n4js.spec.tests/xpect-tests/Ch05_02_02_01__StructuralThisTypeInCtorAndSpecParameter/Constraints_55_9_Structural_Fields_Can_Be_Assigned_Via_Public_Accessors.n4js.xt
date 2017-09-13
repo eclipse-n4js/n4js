@@ -31,7 +31,7 @@ new B({
 	pair: "",
 	// XPECT nowarnings --> "" at setter
 	setter: "",
-	// XPECT warnings --> "getter is not used in constructor." at "getter"
+	// XPECT warnings --> "getter is not defined in ~i~this[B]." at "getter"
 	getter: ""
 });
 

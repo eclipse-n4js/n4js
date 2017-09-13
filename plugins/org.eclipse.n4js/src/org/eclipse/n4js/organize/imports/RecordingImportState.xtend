@@ -22,8 +22,6 @@ import org.eclipse.emf.common.notify.Adapter
 /**
  * Register holding results of analyzing {@link ImportDeclaration}s
  * and contained {@link ImportSpecifier}s.
- *
- * @contributor jakub.siberski - adjustment for ES6 namespaces
  */
 class RecordingImportState {
 

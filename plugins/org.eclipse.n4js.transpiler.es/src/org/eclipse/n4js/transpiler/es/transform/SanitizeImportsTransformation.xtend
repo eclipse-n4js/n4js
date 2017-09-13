@@ -79,10 +79,10 @@ class SanitizeImportsTransformation extends Transformation {
 		if (!jsxUsedOriginalImports.nullOrEmpty)
 			return;
 
-		val jsxBackensName = steFor_React
+		val jsxBackendsName = steFor_React
 		val iMod = _Module(jsx.jsxBackendModuleQualifiedName(state.resource))
 		iMod.n4jsdModule = true
-		val iSpec = _NamespaceImportSpecifier(jsxBackensName.name, true)
+		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
 		val iDecl = _ImportDecl(iMod, iSpec);
 		insertBefore(state.im.scriptElements.get(0), iDecl);
 		state.info.setImportedModule_internal(iDecl, iMod);

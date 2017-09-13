@@ -254,7 +254,17 @@ class ParameterizedPropertyAccessExpression_IM extends ParameterizedPropertyAcce
 	}
 
 	op String getPropertyName() {
-		return if(anyPlusAccess) nameOfAnyPlusProperty else property_IM?.name;
+		return if(anyPlusAccess) nameOfAnyPlusProperty else {
+			val e = rewiredTarget;
+			if(e instanceof SymbolTableEntryOriginal){
+				val exName =  e.exportedName;
+				if(exName !== null)
+					return exName
+				else
+					return property_IM?.name;
+			}else
+				return property_IM?.name;
+		}
 	}
 
 	/* overridden attribute access to always return null */

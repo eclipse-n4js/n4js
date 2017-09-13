@@ -6332,7 +6332,11 @@ ruleQualifiedTypeReferenceName:
 	RULE_IDENTIFIER
 	(
 		'.'
-		RULE_IDENTIFIER
+		(
+			RULE_IDENTIFIER
+			    |
+			'default'
+		)
 	)?
 ;
 

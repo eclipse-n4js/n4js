@@ -11,14 +11,15 @@
 package org.eclipse.n4js.conversion;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.services.N4JSGrammarAccess;
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
+import org.eclipse.xtext.Keyword;
 import org.eclipse.xtext.RuleCall;
 import org.eclipse.xtext.TerminalRule;
 import org.eclipse.xtext.conversion.impl.QualifiedNameValueConverter;
 import org.eclipse.xtext.xtext.RuleNames;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.services.N4JSGrammarAccess;
 
 /**
  */
@@ -41,8 +42,20 @@ public class QualifiedTypeReferenceNameValueConverter extends QualifiedNameValue
 
 	@Override
 	protected boolean isDelegateRuleCall(EObject grammarElement) {
-		return (grammarElement instanceof RuleCall
+		boolean res = (grammarElement instanceof RuleCall
 				&& delegateRule == ((RuleCall) grammarElement).getRule());
+		if (!res && grammarElement instanceof Keyword) {
+			// support namespace.default
+			String elementValue = ((Keyword) grammarElement).getValue();
+			return N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(elementValue);
+		}
+		return res;
+	}
+
+	@Override
+	protected String delegateToString(String segment) {
+		// support namespace.default
+		return N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(segment) ? segment : super.delegateToString(segment);
 	}
 
 }
