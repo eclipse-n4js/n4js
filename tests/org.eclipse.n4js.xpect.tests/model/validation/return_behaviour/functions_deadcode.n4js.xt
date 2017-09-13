@@ -207,6 +207,7 @@ function f4(): number {
            }
        } while ( true )
        return 4;
+   // XPECT warnings --> "Dead code. No execution possible after return." at "true"
    } while ( true )
 
 }
@@ -286,6 +287,7 @@ function f6(): number {
 
        } // z
        return 4;
+   // XPECT warnings --> "Dead code. No execution possible after return." at "true"
    } while ( true )
 
 }
