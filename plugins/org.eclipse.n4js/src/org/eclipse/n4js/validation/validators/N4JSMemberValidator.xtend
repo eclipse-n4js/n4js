@@ -52,6 +52,7 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.xtext.service.OperationCanceledManager
 
 /**
  * Validation of rules that apply to individual members of a classifier.<p>
@@ -65,6 +66,12 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * </ul>
  */
 class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
+
+@Check
+def void checkTEMP(N4MethodDeclaration mdecl) {
+	//Thread.sleep(1000);
+}
+
 
 	@Inject ContainerTypesHelper containerTypesHelper;
 

@@ -91,6 +91,9 @@ import com.google.inject.Inject;
  */
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
 
+	public Throwable lastOtherCacheClearTrace = null;
+	public Throwable suspiciousCacheClearTrace = null;
+
 	/**
 	 * Special contents list which allows for the first slot to be a proxy in case the resource has been created by
 	 * loading the type information (slot 1) from the xtext index, i.e. the IObjectDescrition's user data.

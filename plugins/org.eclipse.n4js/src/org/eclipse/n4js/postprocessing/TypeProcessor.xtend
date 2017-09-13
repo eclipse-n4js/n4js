@@ -267,7 +267,13 @@ public class TypeProcessor extends AbstractProcessor {
 					// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
 					// debug code in ASTMetaInfoCacheHelper to track creation/deletion of typing caches to investigate this)
 					val e = new IllegalStateException("typing of entire AST not initiated yet (hint: this is often caused by an accidental cache clear!!)")
-					e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
+					println("-------------main exception:")
+					e.printStackTrace(System.out) // make sure we see this on the console (some clients eat up all exceptions!)
+					println("-------------lastOther:")
+					res.lastOtherCacheClearTrace?.printStackTrace(System.out);
+					println("-------------suspicious:")
+					res.suspiciousCacheClearTrace?.printStackTrace(System.out);
+					println("-------------end")
 					throw e;
 				} else if (cache.isProcessingInProgress) {
 

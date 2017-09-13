@@ -55,6 +55,7 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.N4MethodDeclaration
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall
@@ -190,6 +191,15 @@ public class ASTProcessor extends AbstractProcessor {
 		log(indentLevel, "processing: " + node.objectInfo);
 
 		checkCanceled(G);
+
+
+if(node instanceof N4MethodDeclaration) {
+	for(var i=0;i<10;i++) {
+		checkCanceled(G);
+		Thread.sleep(500);
+	}
+}
+
 
 		// already done as part of a forward processing?
 		if (cache.forwardProcessedSubTrees.contains(node)) {

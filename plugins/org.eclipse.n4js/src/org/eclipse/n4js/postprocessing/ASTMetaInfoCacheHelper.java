@@ -37,7 +37,7 @@ import it.xsemantics.runtime.RuleEnvironment;
 @Singleton
 public final class ASTMetaInfoCacheHelper {
 
-	private static final boolean DEBUG_TRACK_CACHE_CREATION_DELETION = false;
+	private static final boolean DEBUG_TRACK_CACHE_CREATION_DELETION = true;
 
 	@Inject
 	private IResourceScopeCache resourceScopeCacheHelper;
@@ -86,20 +86,25 @@ public final class ASTMetaInfoCacheHelper {
 			// DEBUG: use the following code to track cache creation/deletion
 			if (DEBUG_TRACK_CACHE_CREATION_DELETION) {
 				final String newCacheId = Integer.toHexString(newCache.hashCode());
-				System.out.println("!! creating new cache " + newCacheId
-						+ " (on resource " + Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ")");
+				// System.out.println("!! creating new cache " + newCacheId
+				// + " (on resource " + Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ")");
 				((OnChangeEvictingCache) resourceScopeCacheHelper).getOrCreate(res).addCacheListener((cacheAdapter) -> {
 					if (!newCache.isEmpty()) {
-						System.out.println("!!!! clearing non-empty cache " + newCacheId + " (on resource "
-								+ Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
+						// System.out.println("!!!! clearing non-empty cache " + newCacheId + " (on resource "
+						// + Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
+						res.lastOtherCacheClearTrace = new IllegalStateException();
 					} else {
-						System.out.println("!!!! clearing empty cache " + newCacheId + " (on resource "
-								+ Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
+						// System.out.println("!!!! clearing empty cache " + newCacheId + " (on resource "
+						// + Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
+						res.lastOtherCacheClearTrace = new IllegalStateException();
 					}
 					if (newCache.isProcessingInProgress()) {
 						// DEBUG: good place for a break point when hunting down an accidental cache clear
 						System.out.println("!!!! WARNING suspicious cache clear (cache " + newCacheId + " (on resource "
 								+ Integer.toHexString(res.hashCode()) + "; URI: " + res.getURI() + ").");
+						res.suspiciousCacheClearTrace = new IllegalStateException();
+						res.suspiciousCacheClearTrace.printStackTrace();
+
 					}
 				});
 			}
