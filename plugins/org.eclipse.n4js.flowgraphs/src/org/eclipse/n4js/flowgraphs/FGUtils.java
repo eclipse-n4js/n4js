@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -97,6 +98,7 @@ public class FGUtils {
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;
+		boolean isExpressionAnnotationList = cfe instanceof ExpressionAnnotationList;
 
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
@@ -108,6 +110,7 @@ public class FGUtils {
 
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
+		isCFContainer |= isExpressionAnnotationList;
 		isCFContainer |= isBlock && containerIsFunctionDeclaration;
 		isCFContainer |= isBlock && containerIsFunctionDefinition;
 		isCFContainer |= isBlock && containerIsFieldAccessor;

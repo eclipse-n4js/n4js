@@ -82,6 +82,9 @@ class AnnotationConfigurable1 {
     field;
 }
 
+//  XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
+var AnnotationExpressionList = @This(Object) function() {}
+
 
 class ComputedPropertyName1 {
 	// ComputedPropertyName1 XPECT succs at '"CPN1"' --> "CPN2"

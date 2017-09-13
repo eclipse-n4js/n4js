@@ -33,6 +33,7 @@ function AdditiveExpression() {
 	--- */
 	// AdditiveExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 + 2 -> "end"
 	// AdditiveExpression XPECT path from '"start"' to '"end"' -->
+	// AdditiveExpression XPECT allPaths direction 'Backward' --> "end" -> 1 + 2 -> 2 -> 1 -> "start"
 	// AdditiveExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// AdditiveExpression XPECT succs at '"start"' --> 1
 	// AdditiveExpression XPECT succs at '1' --> 2
@@ -57,6 +58,7 @@ function ArrayLiteral() {
 	--- */
 	// ArrayLiteral XPECT allPaths --> "start" -> 1 -> 2 -> 3 -> [1\,2\,3] -> "end"
 	// ArrayLiteral XPECT path from '"start"' to '"end"' -->
+	// ArrayLiteral XPECT allPaths direction 'Backward' --> "end" -> [1\,2\,3] -> 3 -> 2 -> 1 -> "start"
 	// ArrayLiteral XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// ArrayLiteral XPECT succs at '"start"' --> 1
 	// ArrayLiteral XPECT succs at '1' --> 2
@@ -77,6 +79,7 @@ function AssignmentExpression(x:int) {
 	--- */
 	// AssignmentExpression XPECT allPaths --> "start" -> x -> 1 -> x = 1 -> "end"
 	// AssignmentExpression XPECT path from '"start"' to '"end"' -->
+	// AssignmentExpression XPECT allPaths direction 'Backward' --> "end" -> x = 1 -> 1 -> x -> "start"
 	// AssignmentExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// AssignmentExpression XPECT succs at '"start"' --> x
 	// AssignmentExpression XPECT succs at 'x' --> 1
@@ -95,6 +98,7 @@ async function AwaitExpression() {
 	--- */
 	// AwaitExpression XPECT allPaths --> "start" -> null -> await null -> "end"
 	// AwaitExpression XPECT path from '"start"' to '"end"' -->
+	// AwaitExpression XPECT allPaths direction 'Backward' --> "end" -> await null -> null -> "start"
 	// AwaitExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// AwaitExpression XPECT succs at '"start"' --> null
 	// AwaitExpression XPECT succs at 'null' --> await null
@@ -114,6 +118,7 @@ function BinaryBitwiseExpression() {
 	--- */
 	// BinaryBitwiseExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 & 2 -> "end"
 	// BinaryBitwiseExpression XPECT path from '"start"' to '"end"' -->
+	// BinaryBitwiseExpression XPECT allPaths direction 'Backward' --> "end" -> 1 & 2 -> 2 -> 1 -> "start"
 	// BinaryBitwiseExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// BinaryBitwiseExpression XPECT succs at '"start"' --> 1
 	// BinaryBitwiseExpression XPECT succs at '1' --> 2
@@ -133,6 +138,7 @@ function BinaryLogicalExpression() {
 	--- */
 	// BinaryLogicalExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 && 2 -> "end"
 	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
+	// BinaryLogicalExpression XPECT allPaths direction 'Backward' --> "end" -> 1 && 2 -> 2 -> 1 -> "start"
 	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
 	// BinaryLogicalExpression XPECT succs at '1' --> 2
@@ -151,6 +157,7 @@ function CastExpression() {
 	--- */
 	// CastExpression XPECT allPaths --> "start" -> 4 -> 4 as int -> "end"
 	// CastExpression XPECT path from '"start"' to '"end"' -->
+	// CastExpression XPECT allPaths direction 'Backward' --> "end" -> 4 as int -> 4 -> "start"
 	// CastExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// CastExpression XPECT succs at '"start"' --> 4
 	// CastExpression XPECT succs at '4' --> 4 as int
@@ -170,6 +177,7 @@ function CommaExpression() {
 	--- */
 	// CommaExpression XPECT allPaths --> "start" -> 4 -> 5 -> 4\,5 -> "end"
 	// CommaExpression XPECT path from '"start"' to '"end"' -->
+	// CommaExpression XPECT allPaths direction 'Backward' --> "end" -> 4\,5 -> 5 -> 4 -> "start"
 	// CommaExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// CommaExpression XPECT succs at '"start"' --> 4
 	// CommaExpression XPECT succs at '4' --> 5
@@ -192,6 +200,10 @@ function ConditionalExpression() {
 	/* ConditionalExpression XPECT allPaths ---
 	"start" -> true -> 1 -> true ? 1 : 2 -> "end",
 	"start" -> true -> 2 -> true ? 1 : 2 -> "end"
+	--- */
+	/* ConditionalExpression XPECT allPaths direction 'Backward' ---
+		"end" -> true ? 1 : 2 -> 1 -> true -> "start",
+		"end" -> true ? 1 : 2 -> 2 -> true -> "start"
 	--- */
 	// ConditionalExpression XPECT path from '"start"' to '"end"' -->
 	// ConditionalExpression XPECT path from '"start"' to '1' -->
@@ -219,6 +231,7 @@ function EqualityExpression() {
 		1 == 2 --> "end"
 	--- */
 	// EqualityExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 == 2 -> "end"
+	// EqualityExpression XPECT allPaths direction 'Backward' --> "end" -> 1 == 2 -> 2 -> 1 -> "start"
 	// EqualityExpression XPECT path from '"start"' to '"end"' -->
 	// EqualityExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// EqualityExpression XPECT succs at '"start"' --> 1
@@ -237,6 +250,7 @@ function FunctionExpression() {
 		(function() { }) --> "end"
 	--- */
 	// FunctionExpression XPECT allPaths --> "start" -> function() { } -> (function() { }) -> "end"
+	// FunctionExpression XPECT allPaths direction 'Backward' --> "end" -> (function() { }) -> function() { } -> "start"
 	// FunctionExpression XPECT path from '"start"' to '"end"' -->
 	// FunctionExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// FunctionExpression XPECT succs at '"start"' --> function() { }
@@ -253,6 +267,7 @@ function IdentifierRef(i) {
 		i --> "end"
 	--- */
 	// IdentifierRef XPECT allPaths --> "start" -> i -> "end"
+	// IdentifierRef XPECT allPaths direction 'Backward' --> "end" -> i -> "start"
 	// IdentifierRef XPECT path from '"start"' to '"end"' -->
 	// IdentifierRef XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// IdentifierRef XPECT succs at '"start"' --> i
@@ -270,6 +285,7 @@ function IndexedAccessExpression(b : Array<?>) {
 		b[1] --> "end"
 	--- */
 	// IndexedAccessExpression XPECT allPaths --> "start" -> b -> 1 -> b[1] -> "end"
+	// IndexedAccessExpression XPECT allPaths direction 'Backward' --> "end" -> b[1] -> 1 -> b -> "start"
 	// IndexedAccessExpression XPECT path from '"start"' to '"end"' -->
 	// IndexedAccessExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// IndexedAccessExpression XPECT succs at '"start"' --> b
@@ -287,6 +303,7 @@ function Literal() {
 		"string literal" --> "end"
 	--- */
 	// Literal XPECT allPaths --> "start" -> "string literal" -> "end"
+	// Literal XPECT allPaths direction 'Backward' --> "end" -> "string literal" -> "start"
 	// Literal XPECT path from '"start"' to '"end"' -->
 	// Literal XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// Literal XPECT succs at '"start"' --> "string literal"
@@ -304,6 +321,7 @@ function MultiplicativeExpression() {
 		47 * 11 --> "end"
 	--- */
 	// MultiplicativeExpression XPECT allPaths --> "start" -> 47 -> 11 -> 47 * 11 -> "end"
+	// MultiplicativeExpression XPECT allPaths direction 'Backward' --> "end" -> 47 * 11 -> 11 -> 47 -> "start"
 	// MultiplicativeExpression XPECT path from '"start"' to '"end"' -->
 	// MultiplicativeExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// MultiplicativeExpression XPECT succs at '"start"' --> 47
@@ -328,6 +346,7 @@ function NewExpression() {
 		new Object() --> "end"
 	--- */
 	// NewExpression XPECT allPaths --> "start" -> Object -> new Object() -> "end"
+	// NewExpression XPECT allPaths direction 'Backward' --> "end" -> new Object() -> Object -> "start"
 	// NewExpression XPECT path from '"start"' to '"end"' -->
 	// NewExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// NewExpression XPECT succs at '"start"' --> Object
@@ -360,6 +379,7 @@ function ObjectLiteral() {
 		-> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} })
 		-> "end"
 	--- */
+	// ObjectLiteral XPECT allPaths direction 'Backward' --> "end" -> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }) -> { a : 1 \, b : "string" \, fn : function(){} \, m() {} } -> function(){} -> "string" -> 1 -> "start"
 	// ObjectLiteral XPECT path from '"start"' to '"end"' -->
 	// ObjectLiteral XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// ObjectLiteral XPECT succs at '"start"' --> 1
@@ -383,6 +403,7 @@ function ParameterizedCallExpression() {
 		Object.call(1\,2) --> "end"
 	--- */
 	// ParameterizedCallExpression XPECT allPaths --> "start" -> Object -> Object.call -> 1 -> 2 -> Object.call(1\,2) -> "end"
+	// ParameterizedCallExpression XPECT allPaths direction 'Backward' --> "end" -> Object.call(1\,2) -> 2 -> 1 -> Object.call -> Object -> "start"
 	// ParameterizedCallExpression XPECT path from '"start"' to '"end"' -->
 	// ParameterizedCallExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// ParameterizedCallExpression XPECT succs at '"start"' --> Object
@@ -403,6 +424,7 @@ function ParameterizedPropertyAccessExpression() {
 		Object.call --> "end"
 	--- */
 	// ParameterizedPropertyAccessExpression XPECT allPaths --> "start" -> Object -> Object.call -> "end"
+	// ParameterizedPropertyAccessExpression XPECT allPaths direction 'Backward' --> "end" -> Object.call -> Object -> "start"
 	// ParameterizedPropertyAccessExpression XPECT path from '"start"' to '"end"' -->
 	// ParameterizedPropertyAccessExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// ParameterizedPropertyAccessExpression XPECT succs at '"start"' --> Object
@@ -420,6 +442,7 @@ function PostfixExpression(x : int) {
 		x++ --> "end"
 	--- */
 	// PostfixExpression XPECT allPaths --> "start" -> x -> x++ -> "end"
+	// PostfixExpression XPECT allPaths direction 'Backward' --> "end" -> x++ -> x -> "start"
 	// PostfixExpression XPECT path from '"start"' to '"end"' -->
 	// PostfixExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// PostfixExpression XPECT succs at '"start"' --> x
@@ -450,6 +473,7 @@ function RelationalExpression() {
 	1 > 73 --> "end"
 	--- */
 	// RelationalExpression XPECT allPaths --> "start" -> 1 -> 73 -> 1 > 73 -> "end"
+	// RelationalExpression XPECT allPaths direction 'Backward' --> "end" -> 1 > 73 -> 73 -> 1 -> "start"
 	// RelationalExpression XPECT path from '"start"' to '"end"' -->
 	// RelationalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// RelationalExpression XPECT succs at '"start"' --> 1
@@ -469,6 +493,7 @@ function ShiftExpression() {
 		847 >> 2 --> "end"
 	--- */
 	// ShiftExpression XPECT allPaths --> "start" -> 847 -> 2 -> 847 >> 2 -> "end"
+	// ShiftExpression XPECT allPaths direction 'Backward' --> "end" -> 847 >> 2 -> 2 -> 847 -> "start"
 	// ShiftExpression XPECT path from '"start"' to '"end"' -->
 	// ShiftExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// ShiftExpression XPECT succs at '"start"' --> 847
@@ -488,6 +513,7 @@ class ClassSuperLiteral {
 			super --> "end"
 		--- */
 		// SuperLiteral XPECT allPaths --> "start" -> super -> "end"
+		// SuperLiteral XPECT allPaths direction 'Backward' --> "end" -> super -> "start"
 		// SuperLiteral XPECT path from '"start"' to '"end"' -->
 		// SuperLiteral XPECT commonPreds of '"start"' and '"end"' --> "start"
 		// SuperLiteral XPECT succs at '"start"' --> super
@@ -514,6 +540,7 @@ function TemplateExpression() {
 		`a ${"b"} c` --> "end"
 	--- */
 	// TemplateExpression XPECT allPaths --> "start" -> `a ${ -> "b" -> c` -> `a ${"b"} c` -> "end"
+	// TemplateExpression XPECT allPaths direction 'Backward' --> "end" -> `a ${"b"} c` ->  c` -> "b" -> `a ${ -> "start"
 	// TemplateExpression XPECT path from '"start"' to '"end"' -->
 	// TemplateExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// TemplateExpression XPECT succs at '"start"' --> `a ${
@@ -532,6 +559,7 @@ function ThisExpression() {
 		this --> "end"
 	--- */
 	// ThisExpression XPECT allPaths --> "start" -> this -> "end"
+	// ThisExpression XPECT allPaths direction 'Backward' --> "end" -> this -> "start"
 	// ThisExpression XPECT path from '"start"' to '"end"' -->
 	// ThisExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// ThisExpression XPECT succs at '"start"' --> this
@@ -549,6 +577,7 @@ function UnaryExpression() {
 		!true --> "end"
 	--- */
 	// UnaryExpression XPECT allPaths --> "start" -> true -> !true -> "end"
+	// UnaryExpression XPECT allPaths direction 'Backward' --> "end" -> !true -> true -> "start"
 	// UnaryExpression XPECT path from '"start"' to '"end"' -->
 	// UnaryExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// UnaryExpression XPECT succs at '"start"' --> true
@@ -568,6 +597,7 @@ function * YieldExpression(i) {
 		i = yield 1 --> "end"
 	--- */
 	// YieldExpression XPECT allPaths --> "start" -> i -> 1 -> yield 1 -> i = yield 1 -> "end"
+	// YieldExpression XPECT allPaths direction 'Backward' --> "end" -> i = yield 1 -> yield 1 -> 1 -> i -> "start"
 	// YieldExpression XPECT path from '"start"' to '"end"' -->
 	// YieldExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// YieldExpression XPECT succs at '"start"' --> i
