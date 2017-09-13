@@ -27,6 +27,7 @@ import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
@@ -146,6 +147,11 @@ final class ExpressionChildren {
 			cfc.add(ee.getLhs());
 			cfc.add(ee.getRhs());
 			return cfc;
+		}
+
+		@Override
+		public List<Expression> caseExpressionAnnotationList(ExpressionAnnotationList eal) {
+			return Collections.emptyList();
 		}
 
 		@Override
