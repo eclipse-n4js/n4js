@@ -16,8 +16,6 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodePredicateWalker
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodePredicateWalker.DeadCodeRegion
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
@@ -74,6 +72,8 @@ import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeFinder
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeFinder.DeadCodeRegion
 
 /**
  */
@@ -115,16 +115,16 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFlowGraphs(Script script) {
 		val ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(script.eResource() as N4JSResource);
 		val N4JSFlowAnalyses flowAnalyses = cache.getFlowAnalyses();
-		val dcpw = new DeadCodePredicateWalker();
+		val dcf = new DeadCodeFinder();
 
-		flowAnalyses.performAnalyzes(dcpw);
+		flowAnalyses.performAnalyzes(dcf);
 
-		internalCheckDeadCode(dcpw);
+		internalCheckDeadCode(dcf);
 	}
 
 	// Constraints 107
-	private def String internalCheckDeadCode(DeadCodePredicateWalker dcpw) {
-		val deadCodeRegions = dcpw.getDeadCodeRegions();
+	private def String internalCheckDeadCode(DeadCodeFinder dcf) {
+		val deadCodeRegions = dcf.getDeadCodeRegions();
 
 		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
 			val String stmtDescription = getStatementDescription(deadCodeRegion);
@@ -134,7 +134,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 				msg = getMessageForFUN_DEAD_CODE_WITH_PREDECESSOR(stmtDescription);
 				errCode = FUN_DEAD_CODE_WITH_PREDECESSOR;
 			}
-			addIssue(msg, deadCodeRegion.container, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), errCode);
+			addIssue(msg, deadCodeRegion.getContainer, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), errCode);
 		}
 	}
 

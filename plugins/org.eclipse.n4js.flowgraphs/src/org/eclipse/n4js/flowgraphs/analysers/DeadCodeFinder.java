@@ -10,18 +10,24 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Statement;
@@ -33,7 +39,7 @@ import org.eclipse.xtext.util.TextRegion;
 /**
  * Collects all reachable nodes and hence finds all unreachable nodes, alias <i>dead code</i>.
  */
-public class DeadCodePredicateWalker extends GraphVisitor {
+public class DeadCodeFinder extends GraphVisitor {
 	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
@@ -41,7 +47,7 @@ public class DeadCodePredicateWalker extends GraphVisitor {
 	Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
 
 	/** Constructor */
-	public DeadCodePredicateWalker() {
+	public DeadCodeFinder() {
 		super(Direction.Forward, Direction.Backward, Direction.Islands, Direction.CatchBlocks);
 	}
 
@@ -104,6 +110,7 @@ public class DeadCodePredicateWalker extends GraphVisitor {
 	/** @returns all {@link TextRegion}s of dead code */
 	public Set<DeadCodeRegion> getDeadCodeRegions() {
 		List<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups();
+		widenDeadCodeRegions(deadCodeGroups);
 		Set<DeadCodeRegion> deadCodeRegions = new HashSet<>();
 		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
 			DeadCodeRegion textRegion = getDeadCodeRegion(deadCodeGroup);
@@ -112,30 +119,68 @@ public class DeadCodePredicateWalker extends GraphVisitor {
 		return deadCodeRegions;
 	}
 
+	private Set<ControlFlowElement> getWrappingControlElements(ControlFlowElement deadCodeElem) {
+		Set<ControlFlowElement> wrappingControlElems = new HashSet<>();
+		EObject cfeContainer = deadCodeElem.eContainer();
+		if (cfeContainer instanceof ExpressionStatement && deadCodeElem instanceof Expression) {
+			wrappingControlElems.add((ExpressionStatement) cfeContainer);
+		}
+		return wrappingControlElems;
+	}
+
+	/**
+	 * Returns all {@link ControlFlowElement}s that are unreachable.
+	 * <p>
+	 * However, control elements (see {@link FGUtils#isControlElement(ControlFlowElement)}) are not part of the dead
+	 * code regions.
+	 */
 	private List<Set<ControlFlowElement>> getDeadCodeGroups() {
-		List<Set<ControlFlowElement>> deadCodeGroups = new LinkedList<>();
+		List<Set<ControlFlowElement>> allDeadCodeGroups = new LinkedList<>();
 
 		HashSet<ControlFlowElement> someUnreachableCFEs = new HashSet<>();
 		someUnreachableCFEs.addAll(allIslandsCFEs);
-		getSomeDeadCodeGroups(someUnreachableCFEs, deadCodeGroups);
+		Collection<Set<ControlFlowElement>> unreachablesInBlocks = separateOnTheirBlocks(someUnreachableCFEs);
+		for (Set<ControlFlowElement> unreachablesInBlock : unreachablesInBlocks) {
+			List<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups(unreachablesInBlock);
+			allDeadCodeGroups.addAll(deadCodeGroups);
+		}
 
 		someUnreachableCFEs.clear();
 		someUnreachableCFEs.addAll(allBackwardCFEs);
 		someUnreachableCFEs.removeAll(allForwardCFEs);
 		someUnreachableCFEs.removeAll(allCatchBlocksCFEs);
-		getSomeDeadCodeGroups(someUnreachableCFEs, deadCodeGroups);
-
-		return deadCodeGroups;
+		unreachablesInBlocks = separateOnTheirBlocks(someUnreachableCFEs);
+		for (Set<ControlFlowElement> unreachablesInBlock : unreachablesInBlocks) {
+			List<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups(unreachablesInBlock);
+			allDeadCodeGroups.addAll(deadCodeGroups);
+		}
+		return allDeadCodeGroups;
 	}
 
-	private void getSomeDeadCodeGroups(HashSet<ControlFlowElement> someUnreachableCFEs,
-			List<Set<ControlFlowElement>> deadCodeGroups) {
+	/**
+	 * Separates the given set into sets where all {@link ControlFlowElement}s of each set have the same containing
+	 * {@link Block}.
+	 */
+	private Collection<Set<ControlFlowElement>> separateOnTheirBlocks(HashSet<ControlFlowElement> unreachableElems) {
+		Map<Block, Set<ControlFlowElement>> unreachablesMap = new HashMap<>();
+		for (ControlFlowElement unreachable : unreachableElems) {
+			Block cfeBlock = EcoreUtil2.getContainerOfType(unreachable, Block.class);
+			if (!unreachablesMap.containsKey(cfeBlock)) {
+				unreachablesMap.put(cfeBlock, new HashSet<>());
+			}
+			Set<ControlFlowElement> unreachableInBlock = unreachablesMap.get(cfeBlock);
+			unreachableInBlock.add(unreachable);
+		}
 
-		List<Set<ControlFlowElement>> someDeadCodeGroups = new LinkedList<>();
-		while (!someUnreachableCFEs.isEmpty()) {
-			ControlFlowElement oneCFE = someUnreachableCFEs.iterator().next();
+		return unreachablesMap.values();
+	}
+
+	private List<Set<ControlFlowElement>> getDeadCodeGroups(Set<ControlFlowElement> unreachablesInBlock) {
+		List<Set<ControlFlowElement>> deadCodeGroups = new LinkedList<>();
+
+		while (!unreachablesInBlock.isEmpty()) {
+			ControlFlowElement oneCFE = unreachablesInBlock.iterator().next();
 			Set<ControlFlowElement> nextDeadGroup = new HashSet<>();
-			someDeadCodeGroups.add(nextDeadGroup);
 			HashSet<ControlFlowElement> workListPreds = new HashSet<>();
 			workListPreds.add(oneCFE);
 			Set<ControlFlowElement> mergeWith = null;
@@ -146,7 +191,7 @@ public class DeadCodePredicateWalker extends GraphVisitor {
 				workListIter.remove();
 
 				// Add predecessors of the current cfe
-				if (someUnreachableCFEs.remove(cfe)) {
+				if (unreachablesInBlock.remove(cfe)) {
 					nextDeadGroup.add(cfe);
 					Set<ControlFlowElement> preds = flowAnalyses.getPredecessors(cfe);
 					workListPreds.addAll(preds);
@@ -165,6 +210,25 @@ public class DeadCodePredicateWalker extends GraphVisitor {
 			} else {
 				mergeWith.addAll(nextDeadGroup);
 			}
+		}
+
+		return deadCodeGroups;
+	}
+
+	/**
+	 * Add control elements (see {@link FGUtils#isControlElement(ControlFlowElement)}) to the dead code region, if
+	 * possible.
+	 */
+	private void widenDeadCodeRegions(List<Set<ControlFlowElement>> deadCodeGroups) {
+		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
+			Set<ControlFlowElement> controlElements = new HashSet<>();
+			Iterator<ControlFlowElement> deadCodeGroupIt = deadCodeGroup.iterator();
+			while (deadCodeGroupIt.hasNext()) {
+				ControlFlowElement deadCodeElem = deadCodeGroupIt.next();
+				Set<ControlFlowElement> wrappingControlElems = getWrappingControlElements(deadCodeElem);
+				controlElements.addAll(wrappingControlElems);
+			}
+			deadCodeGroup.addAll(controlElements);
 		}
 	}
 

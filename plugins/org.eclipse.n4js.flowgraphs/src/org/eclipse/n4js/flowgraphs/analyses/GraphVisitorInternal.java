@@ -459,13 +459,21 @@ abstract public class GraphVisitorInternal {
 			/** Sets the verdict of this path to <i>Passed</i>. */
 			final public void pass() {
 				passedPaths.add(this);
-				deactivate();
+				if (predicateType == PredicateType.ForOnePath) {
+					deactivateAll();
+				} else {
+					deactivate();
+				}
 			}
 
 			/** Sets the verdict of this path to <i>Failed</i>. */
 			final public void fail() {
 				failedPaths.add(this);
-				deactivate();
+				if (predicateType == PredicateType.ForAllPaths) {
+					deactivateAll();
+				} else {
+					deactivate();
+				}
 			}
 
 			/** Deactivates this path without setting the verdict. */

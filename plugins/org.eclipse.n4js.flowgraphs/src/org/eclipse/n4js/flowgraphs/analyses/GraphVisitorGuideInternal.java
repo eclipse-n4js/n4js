@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Direction;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -100,38 +100,38 @@ public class GraphVisitorGuideInternal {
 
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<Node> allVisitedNodes = new HashSet<>();
-		LinkedList<DecoratedEdgeInternal> currDEdges = new LinkedList<>();
-		List<DecoratedEdgeInternal> nextDEdges = getFirstDecoratedEdges(cn, edgeProvider);
-		currDEdges.addAll(nextDEdges);
+		LinkedList<EdgeGuide> currEdgeGuides = new LinkedList<>();
+		List<EdgeGuide> nextEGs = getFirstDecoratedEdges(cn, edgeProvider);
+		currEdgeGuides.addAll(nextEGs);
 
 		Node lastVisitNode = null;
 
-		for (DecoratedEdgeInternal currDEdge : currDEdges) {
-			Node visitNode = currDEdge.getPrevNode();
-			lastVisitNode = visitNode(lastVisitNode, currDEdge, visitNode);
+		for (EdgeGuide currEdgeGuide : currEdgeGuides) {
+			Node visitNode = currEdgeGuide.getPrevNode();
+			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
 			allVisitedNodes.add(lastVisitNode);
 		}
 
-		while (!currDEdges.isEmpty()) {
-			DecoratedEdgeInternal currDEdge = currDEdges.removeFirst();
+		while (!currEdgeGuides.isEmpty()) {
+			EdgeGuide currEdgeGuide = currEdgeGuides.removeFirst();
 
-			Node visitNode = currDEdge.getNextNode();
-			lastVisitNode = visitNode(lastVisitNode, currDEdge, visitNode);
+			Node visitNode = currEdgeGuide.getNextNode();
+			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
 			allVisitedNodes.add(lastVisitNode);
 
-			nextDEdges = getNextDecoratedEdges(currDEdge);
-			currDEdges.addAll(0, nextDEdges); // adding to the front: deep search / to the back: breadth search
+			nextEGs = getNextEdgeGuides(currEdgeGuide);
+			currEdgeGuides.addAll(0, nextEGs); // adding to the front: deep search / to the back: breadth search
 		}
 
 		return allVisitedNodes;
 	}
 
-	private Node visitNode(Node lastVisitNode, DecoratedEdgeInternal currDEdge, Node visitNode) {
+	private Node visitNode(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		if (lastVisitNode != null) {
-			callVisit(CallVisit.OnEdge, lastVisitNode, currDEdge, visitNode);
+			callVisit(CallVisit.OnEdge, lastVisitNode, currEdgeGuide, visitNode);
 		}
 
-		callVisit(CallVisit.OnNode, lastVisitNode, currDEdge, visitNode);
+		callVisit(CallVisit.OnNode, lastVisitNode, currEdgeGuide, visitNode);
 		return visitNode;
 	}
 
@@ -139,7 +139,7 @@ public class GraphVisitorGuideInternal {
 		OnNode, OnEdge
 	}
 
-	private void callVisit(CallVisit callVisit, Node lastVisitNode, DecoratedEdgeInternal currDEdge, Node visitNode) {
+	private void callVisit(CallVisit callVisit, Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		for (GraphVisitorInternal walker : walkers) {
 			switch (callVisit) {
 			case OnNode:
@@ -149,23 +149,23 @@ public class GraphVisitorGuideInternal {
 				walkerVisitedNodes.add(visitNode);
 				break;
 			case OnEdge:
-				if (!walkerVisitedEdges.contains(currDEdge.edge)) {
-					walker.callVisit(lastVisitNode, visitNode, currDEdge.edge);
+				if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
+					walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
 				}
-				walkerVisitedEdges.add(currDEdge.edge);
+				walkerVisitedEdges.add(currEdgeGuide.edge);
 				break;
 			}
 			List<PathWalkerInternal> activatedPaths = walker.activate();
-			currDEdge.activePaths.addAll(activatedPaths);
+			currEdgeGuide.activePaths.addAll(activatedPaths);
 		}
-		for (Iterator<PathWalkerInternal> actPathIt = currDEdge.activePaths.iterator(); actPathIt.hasNext();) {
+		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
 			PathWalkerInternal activePath = actPathIt.next();
 			switch (callVisit) {
 			case OnNode:
 				activePath.callVisit(visitNode);
 				break;
 			case OnEdge:
-				activePath.callVisit(lastVisitNode, visitNode, currDEdge.edge);
+				activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
 				break;
 			}
 			if (!activePath.isActive()) {
@@ -174,7 +174,7 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
-	private List<DecoratedEdgeInternal> getFirstDecoratedEdges(ComplexNode cn, NextEdgesProvider edgeProvider) {
+	private List<EdgeGuide> getFirstDecoratedEdges(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activate());
@@ -184,11 +184,11 @@ public class GraphVisitorGuideInternal {
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(node);
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
-		List<DecoratedEdgeInternal> nextDEdges = new LinkedList<>();
+		List<EdgeGuide> nextEGs = new LinkedList<>();
 		if (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			DecoratedEdgeInternal eF = new DecoratedEdgeInternal(edgeProvider.copy(), nextEdge, activatedPaths);
-			nextDEdges.add(eF);
+			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, activatedPaths);
+			nextEGs.add(eg);
 		}
 
 		while (nextEdgeIt.hasNext()) {
@@ -198,44 +198,44 @@ public class GraphVisitorGuideInternal {
 				PathWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
-			DecoratedEdgeInternal eF = new DecoratedEdgeInternal(edgeProvider.copy(), nextEdge, forkedPaths);
-			nextDEdges.add(eF);
+			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
+			nextEGs.add(eg);
 		}
-		return nextDEdges;
+		return nextEGs;
 	}
 
-	private List<DecoratedEdgeInternal> getNextDecoratedEdges(DecoratedEdgeInternal currDEdge) {
-		List<DecoratedEdgeInternal> nextDEdges = new LinkedList<>();
-		List<ControlFlowEdge> nextEdges = currDEdge.getNextEdges();
+	private List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
+		List<EdgeGuide> nextEGs = new LinkedList<>();
+		List<ControlFlowEdge> nextEdges = currEG.getNextEdges();
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
 		if (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			currDEdge.edge = nextEdge;
-			nextDEdges.add(currDEdge);
+			currEG.edge = nextEdge;
+			nextEGs.add(currEG);
 		}
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
 			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : currDEdge.activePaths) {
+			for (PathWalkerInternal aPath : currEG.activePaths) {
 				PathWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 
-			NextEdgesProvider epCopy = currDEdge.edgeProvider.copy();
-			Set<JumpToken> fbContexts = currDEdge.finallyBlockContexts;
-			DecoratedEdgeInternal dEdge = new DecoratedEdgeInternal(epCopy, nextEdge, forkedPaths, fbContexts);
-			nextDEdges.add(dEdge);
+			NextEdgesProvider epCopy = currEG.edgeProvider.copy();
+			Set<JumpToken> fbContexts = currEG.finallyBlockContexts;
+			EdgeGuide edgeGuide = new EdgeGuide(epCopy, nextEdge, forkedPaths, fbContexts);
+			nextEGs.add(edgeGuide);
 		}
 
-		if (nextDEdges.isEmpty()) {
-			for (PathWalkerInternal aPath : currDEdge.activePaths) {
+		if (nextEGs.isEmpty()) {
+			for (PathWalkerInternal aPath : currEG.activePaths) {
 				aPath.deactivate();
 			}
 		}
 
-		return nextDEdges;
+		return nextEGs;
 	}
 
 	private List<NextEdgesProvider> getEdgeProviders(Direction direction) {
@@ -258,13 +258,13 @@ public class GraphVisitorGuideInternal {
 		return edgeProviders;
 	}
 
-	private class DecoratedEdgeInternal {
+	private class EdgeGuide {
 		final NextEdgesProvider edgeProvider;
 		ControlFlowEdge edge;
 		final Set<PathWalkerInternal> activePaths = new HashSet<>();
 		final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 
-		public DecoratedEdgeInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
+		public EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
 			this.edgeProvider = edgeProvider;
 			this.edge = edge;
 			if (edge.finallyPathContext != null) {
@@ -272,12 +272,11 @@ public class GraphVisitorGuideInternal {
 			}
 		}
 
-		public DecoratedEdgeInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge,
-				Set<PathWalkerInternal> activePaths) {
+		public EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths) {
 			this(edgeProvider, edge, activePaths, Sets.newHashSet());
 		}
 
-		public DecoratedEdgeInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge,
+		public EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge,
 				Set<PathWalkerInternal> activePaths, Set<JumpToken> finallyBlockContexts) {
 
 			this(edgeProvider, edge);
@@ -311,10 +310,10 @@ public class GraphVisitorGuideInternal {
 		 * following rules are implemented:
 		 * <ul>
 		 * <li/>If there exists no next edge with a context, then null is returned.
-		 * <li/>If there exists a next edge with a context, and the current {@link DecoratedEdgeInternal} instance has
-		 * no context that matches with one of the next edges, then all edges without context are returned.
-		 * <li/>If there exists a next edge with a context, and the current {@link DecoratedEdgeInternal} instance has a
-		 * context that matches with one of the next edges, the matching edge is returned.
+		 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuide} instance has no context
+		 * that matches with one of the next edges, then all edges without context are returned.
+		 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuide} instance has a context
+		 * that matches with one of the next edges, the matching edge is returned.
 		 * </ul>
 		 */
 		private List<ControlFlowEdge> findFinallyBlockContextEdge(List<ControlFlowEdge> nextEdges,
@@ -339,8 +338,10 @@ public class GraphVisitorGuideInternal {
 
 			if (matchedFBContextEdge != null) {
 				return Collections2.newLinkedList(matchedFBContextEdge);
+
 			} else if (!fbContextFreeEdges.isEmpty()) {
 				return fbContextFreeEdges;
+
 			} else if (otherEdgePair != null) {
 				nextJumpContexts.add(otherEdgePair.getKey());
 				return Collections2.newLinkedList(otherEdgePair.getValue());

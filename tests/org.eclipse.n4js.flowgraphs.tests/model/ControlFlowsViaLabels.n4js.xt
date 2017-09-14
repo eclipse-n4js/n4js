@@ -38,8 +38,9 @@ function DoStatementBreakLabel2() {
 		LBLb: do {
 			1;
 			break LBLa;
-		// DoStatementBreakLabel2 XPECT warnings --> "Dead code." at "3); 	} while (4"
+		// DoStatementBreakLabel2 XPECT warnings --> "Dead code." at "3"
 		} while (3);
+	// DoStatementBreakLabel2 XPECT warnings --> "Dead code." at "4"
 	} while (4);
 	"end";
 }

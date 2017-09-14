@@ -26,17 +26,17 @@ function f1() {
 		try {
 			1;
 			throw "x";
-			// XPECT warnings --> "Dead code. No execution possible after throw." at "2"
+			// XPECT warnings --> "Dead code. No execution possible after throw." at "2;"
 			2;
 		} finally {
 			3;
 		}
-		// XPECT warnings --> "Dead code. No execution possible after TryStatement." at "4"
+		// XPECT warnings --> "Dead code. No execution possible after TryStatement." at "4;"
 		4;
 	} finally {
 		6;
 	}
-	// XPECT warnings --> "Dead code. No execution possible after TryStatement." at ""end""
+	// XPECT warnings --> "Dead code. No execution possible after TryStatement." at ""end";"
 	"end";
 }
 
@@ -45,9 +45,9 @@ function f1() {
 function f2() {
 	// f2 XPECT allIslandElems --> 1, 2, 3, 4
 	return;
-	//  XPECT warnings --> "Dead code." at "1"
+	//  XPECT warnings --> "Dead code." at "1;"
 	for (;;)  1;
-	//  XPECT warnings --> "Dead code. No execution possible after ForStatement." at "2; 3; for (;;)  4"
+	//  XPECT warnings --> "Dead code. No execution possible after ForStatement." at "2; 3; for (;;)  4;"
 	2;
 
 	3;
@@ -96,7 +96,7 @@ function f4() {
 	} catch (e) {
 		2;
 		throw 3;
-		// XPECT warnings --> "Dead code. No execution possible after throw." at "0"
+		// XPECT warnings --> "Dead code. No execution possible after throw." at "0;"
 		0;
 
 	} finally {
@@ -104,3 +104,28 @@ function f4() {
 	}
 	"end";
 }
+
+
+function f5() {
+	"start";
+	do {
+		1
+		if (2) {
+			3;
+			break;
+		// XPECT warnings --> "Dead code. No execution possible after break." at "4;"
+			4;
+		} else {
+			5;
+			break;
+		// XPECT warnings --> "Dead code. No execution possible after break." at "6;"
+			6;
+		}
+		// XPECT warnings --> "Dead code. No execution possible after IfStatement." at "7;"
+		7;
+	// XPECT warnings --> "Dead code. No execution possible after ExpressionStatement." at "8"
+	} while (8);
+	"end";
+};
+
+
