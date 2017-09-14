@@ -117,7 +117,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val N4JSFlowAnalyses flowAnalyses = cache.getFlowAnalyses();
 		val dcf = new DeadCodeFinder();
 
-		flowAnalyses.performAnalyzes(dcf);
+		flowAnalyses.analyze(dcf);
 
 		internalCheckDeadCode(dcf);
 	}

@@ -175,7 +175,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllPathPrintWalker appw = new AllPathPrintWalker(container, startCFE, direction);
-		getFlowAnalyses(referenceCFE).performAnalyzes(appw);
+		getFlowAnalyses(referenceCFE).analyze(appw);
 		List<String> pathStrings = appw.getPathStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -205,7 +205,7 @@ public class FlowgraphsXpectMethod {
 		cfe = FGUtils.getCFContainer(cfe);
 
 		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(cfe);
-		getFlowAnalyses(cfe).performAnalyzes(anaepw);
+		getFlowAnalyses(cfe).analyze(anaepw);
 		List<String> pathStrings = anaepw.getAllEdgeStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -248,7 +248,7 @@ public class FlowgraphsXpectMethod {
 		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
 		ControlFlowElement container = getFlowAnalyses(referenceCFE).getContainer(referenceCFE);
 		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(container);
-		getFlowAnalyses(referenceCFE).performAnalyzes(anaepw);
+		getFlowAnalyses(referenceCFE).analyze(anaepw);
 		List<String> nodeStrings = anaepw.getAllIslandsNodeStrings();
 		expectation.assertEquals(nodeStrings);
 	}

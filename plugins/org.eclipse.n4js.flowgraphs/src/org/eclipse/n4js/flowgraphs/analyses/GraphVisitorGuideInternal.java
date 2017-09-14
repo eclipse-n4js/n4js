@@ -99,7 +99,7 @@ public class GraphVisitorGuideInternal {
 	}
 
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<Node> allVisitedNodes = new HashSet<>();
+		Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
 		LinkedList<EdgeGuide> currEdgeGuides = new LinkedList<>();
 		List<EdgeGuide> nextEGs = getFirstDecoratedEdges(cn, edgeProvider);
 		currEdgeGuides.addAll(nextEGs);
@@ -109,20 +109,29 @@ public class GraphVisitorGuideInternal {
 		for (EdgeGuide currEdgeGuide : currEdgeGuides) {
 			Node visitNode = currEdgeGuide.getPrevNode();
 			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
-			allVisitedNodes.add(lastVisitNode);
 		}
 
 		while (!currEdgeGuides.isEmpty()) {
 			EdgeGuide currEdgeGuide = currEdgeGuides.removeFirst();
+			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(currEdgeGuide.edge);
+			alreadyVisitedAndObsolete &= currEdgeGuide.activePaths.isEmpty();
+			if (alreadyVisitedAndObsolete) {
+				continue;
+			}
 
 			Node visitNode = currEdgeGuide.getNextNode();
 			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
-			allVisitedNodes.add(lastVisitNode);
 
+			allVisitedEdges.add(currEdgeGuide.edge);
 			nextEGs = getNextEdgeGuides(currEdgeGuide);
 			currEdgeGuides.addAll(0, nextEGs); // adding to the front: deep search / to the back: breadth search
 		}
 
+		Set<Node> allVisitedNodes = new HashSet<>();
+		for (ControlFlowEdge edge : allVisitedEdges) {
+			allVisitedNodes.add(edge.start);
+			allVisitedNodes.add(edge.end);
+		}
 		return allVisitedNodes;
 	}
 

@@ -32,7 +32,7 @@ public class GraphVisitorAnalysis {
 		this.cfg = cfg;
 	}
 
-	/** see {@link N4JSFlowAnalyses#performAnalyzes(GraphVisitorInternal...)} */
+	/** see {@link N4JSFlowAnalyses#analyze(GraphVisitorInternal...)} */
 	public void analyseScript(N4JSFlowAnalyses flowAnalyses, Collection<GraphVisitorInternal> graphWalkers) {
 		GraphVisitorGuideInternal guide = new GraphVisitorGuideInternal(flowAnalyses, graphWalkers);
 		guide.init();

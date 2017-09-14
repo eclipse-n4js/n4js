@@ -74,7 +74,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	/** Triggers a control flow analyses and initialized the two maps {@link #nodeMap} and {@link #edgesMap}. */
 	private void init(Object input) {
 		performFlowAnalyses(input);
-		flowAnalyses.performAnalyzes(nodesEdgesCollector);
+		flowAnalyses.analyze(nodesEdgesCollector);
 	}
 
 	/** Finds a script for the given input and then triggers a control flow analyses. */

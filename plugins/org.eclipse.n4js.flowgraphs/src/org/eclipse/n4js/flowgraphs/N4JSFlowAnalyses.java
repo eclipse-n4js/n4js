@@ -47,7 +47,9 @@ public class N4JSFlowAnalyses {
 
 		// Protect ASTPostprocessing from failures of flow analyses.
 		try {
+			// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
 			_perform(script);
+			// sw.stop();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -136,9 +138,11 @@ public class N4JSFlowAnalyses {
 	 * beginning from the exit of every source container. Finally, all remaining code elements are traversed first
 	 * forward and then backward beginning from an arbitrary element.
 	 */
-	public void performAnalyzes(GraphVisitorInternal... graphWalkers) {
+	public void analyze(GraphVisitorInternal... graphWalkers) {
 		List<GraphVisitorInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
+		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
 		gwa.analyseScript(this, graphWalkerList);
+		// sw.stop();
 	}
 
 	/** @returns the containing {@link ControlFlowElement} for the given cfe. */
