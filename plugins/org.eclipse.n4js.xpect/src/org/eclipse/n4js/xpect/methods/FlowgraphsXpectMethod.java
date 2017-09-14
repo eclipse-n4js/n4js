@@ -26,6 +26,7 @@ import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
+import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper;
@@ -36,6 +37,8 @@ import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.xpect.XpectImport;
+import org.xpect.expectation.IStringExpectation;
+import org.xpect.expectation.StringExpectation;
 import org.xpect.parameter.ParameterParser;
 import org.xpect.runner.Xpect;
 
@@ -236,4 +239,46 @@ public class FlowgraphsXpectMethod {
 		return cfe;
 	}
 
+	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
+	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
+	@Xpect
+	public void allIslandElems(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion referenceOffset) {
+
+		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
+		ControlFlowElement container = getFlowAnalyses(referenceCFE).getContainer(referenceCFE);
+		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(container);
+		getFlowAnalyses(referenceCFE).performAnalyzes(anaepw);
+		List<String> nodeStrings = anaepw.getAllIslandsNodeStrings();
+		expectation.assertEquals(nodeStrings);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void container(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
+		ControlFlowElement cfe = getControlFlowElement(offset);
+		ControlFlowElement container = getFlowAnalyses(cfe).getContainer(cfe);
+
+		String containerStr = FGUtils.getTextLabel(container);
+		expectation.assertEquals(containerStr);
+	}
+
+	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
+	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
+	@Xpect
+	public void allCatchBlocks(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset) {
+
+		ControlFlowElement cfe = getControlFlowElement(offset);
+		ControlFlowElement container = getFlowAnalyses(cfe).getContainer(cfe);
+		List<Block> catchBlocks = getFlowAnalyses(cfe).getCatchBlocksOfContainer(container);
+
+		List<String> catchBlockStrs = new LinkedList<>();
+		for (Block catchBlock : catchBlocks) {
+			String catchBlockStr = FGUtils.getTextLabel(catchBlock);
+			catchBlockStrs.add(catchBlockStr);
+		}
+		expectation.assertEquals(catchBlockStrs);
+	}
 }

@@ -20,8 +20,9 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerAnalysis;
 import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
-import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
+import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
@@ -142,8 +143,20 @@ public class N4JSFlowAnalyses {
 
 	/** @returns the containing {@link ControlFlowElement} for the given cfe. */
 	public ControlFlowElement getContainer(ControlFlowElement cfe) {
-		ComplexNode cn = cfg.getComplexNode(cfe);
-		return cn.getControlFlowContainer();
+		return cfg.getContainer(cfe);
+	}
+
+	/**
+	 * @returns all {@link ControlFlowElement}s that are containers in the {@link Script}. See
+	 *          {@link FGUtils#isCFContainer(ControlFlowElement)}
+	 */
+	public Set<ControlFlowElement> getAllContainers() {
+		return cfg.getAllContainers();
+	}
+
+	/** @returns all {@link Block}s whose containers are of type {@link CatchBlock} */
+	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
+		return cfg.getCatchBlocksOfContainer(container);
 	}
 
 }

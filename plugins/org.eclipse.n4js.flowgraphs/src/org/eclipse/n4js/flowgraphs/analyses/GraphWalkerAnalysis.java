@@ -39,7 +39,7 @@ public class GraphWalkerAnalysis {
 
 		Set<Node> allNodes = getAllNonControlNodes();
 		Set<Node> visitedNodes;
-		for (ControlFlowElement container : cfg.getContainers()) {
+		for (ControlFlowElement container : cfg.getAllContainers()) {
 			ComplexNode cnContainer = cfg.getComplexNode(container);
 			visitedNodes = guide.walkthroughForward(cnContainer);
 			allNodes.removeAll(visitedNodes);

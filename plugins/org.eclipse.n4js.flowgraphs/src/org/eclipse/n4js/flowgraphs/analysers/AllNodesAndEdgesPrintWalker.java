@@ -28,8 +28,12 @@ import org.eclipse.n4js.n4JS.Script;
  * only those elements in this container are found.
  */
 public class AllNodesAndEdgesPrintWalker extends GraphWalker {
-	final List<ControlFlowElement> allNodes = new LinkedList<>();
 	final Set<FlowEdge> allEdges = new HashSet<>();
+	final List<ControlFlowElement> allNodes = new LinkedList<>();
+	final Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
+	final Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
+	final Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
+	final Set<ControlFlowElement> allCatchBlocksCFEs = new HashSet<>();
 
 	/**
 	 * Constructor.
@@ -38,7 +42,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 	 *            if not null, only graph elements within (transitive) are found, otherwise all elements of the script
 	 */
 	public AllNodesAndEdgesPrintWalker(ControlFlowElement container) {
-		super(container, Direction.Forward, Direction.Backward, Direction.Islands);
+		super(container, Direction.Forward, Direction.Backward, Direction.Islands, Direction.CatchBlocks);
 	}
 
 	@Override
@@ -64,6 +68,20 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		allNodes.add(cfe);
+		switch (getCurrentDirection()) {
+		case Forward:
+			allForwardCFEs.add(cfe);
+			break;
+		case Backward:
+			allBackwardCFEs.add(cfe);
+			break;
+		case Islands:
+			allIslandsCFEs.add(cfe);
+			break;
+		case CatchBlocks:
+			allCatchBlocksCFEs.add(cfe);
+			break;
+		}
 	}
 
 	@Override
@@ -78,6 +96,15 @@ public class AllNodesAndEdgesPrintWalker extends GraphWalker {
 			nodeStrings.add(FGUtils.getTextLabel(node));
 		}
 		return nodeStrings;
+	}
+
+	/** @returns all found {@link ControlFlowElement}s during {@literal Direction.Islands} as Strings */
+	public List<String> getAllIslandsNodeStrings() {
+		List<String> islandsStrings = new LinkedList<>();
+		for (ControlFlowElement node : allIslandsCFEs) {
+			islandsStrings.add(FGUtils.getTextLabel(node));
+		}
+		return islandsStrings;
 	}
 
 	/** @returns all found {@link ControlFlowEdge}s as Strings */

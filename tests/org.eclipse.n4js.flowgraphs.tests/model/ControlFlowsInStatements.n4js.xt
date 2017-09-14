@@ -28,6 +28,9 @@ export @Internal public class AnnotationList {}
 
 
 function Block1() {
+	// Block1 XPECT container --> { "start"; { 1; } "end"; }
+	// Block1 XPECT allIslandElems -->
+	// Block1 XPECT allCatchBlocks -->
 	/* Block1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end"
@@ -46,6 +49,9 @@ function Block1() {
 }
 
 function Block2() {
+	// Block2 XPECT container --> { "start"; { 1; { 2; } } "end"; }
+	// Block2 XPECT allIslandElems -->
+	// Block2 XPECT allCatchBlocks -->
 	/* Block2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -69,6 +75,9 @@ function Block2() {
 }
 
 function Block3() {
+	// Block3 XPECT container --> { "start"; { { 1; } 2; } "end"; }
+	// Block3 XPECT allIslandElems -->
+	// Block3 XPECT allCatchBlocks -->
 	/* Block3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -92,6 +101,9 @@ function Block3() {
 }
 
 function DoStatement1() {
+	// DoStatement1 XPECT container --> { "start"; do { 1; } while (2); "end"; }
+	// DoStatement1 XPECT allIslandElems -->
+	// DoStatement1 XPECT allCatchBlocks -->
 	/* DoStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -122,6 +134,9 @@ function DoStatement1() {
 }
 
 function DoStatementBreak1() {
+	// DoStatementBreak1 XPECT container --> { "start"; do { 1; break; 2; } while (3); "end"; }
+	// DoStatementBreak1 XPECT allIslandElems -->
+	// DoStatementBreak1 XPECT allCatchBlocks -->
 	/* DoStatementBreak1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> break;,
@@ -158,6 +173,9 @@ function DoStatementBreak1() {
 }
 
 function DoStatementContinue1() {
+	// DoStatementContinue1 XPECT container --> { "start"; do { 1; continue; 2; } while (3); "end"; }
+	// DoStatementContinue1 XPECT allIslandElems -->
+	// DoStatementContinue1 XPECT allCatchBlocks -->
 	/* DoStatementContinue1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> continue;,
@@ -199,6 +217,9 @@ function DoStatementContinue1() {
 }
 
 function ForStatement1() {
+	// ForStatement1 XPECT container --> { "start"; for (;;) ; "end"; }
+	// ForStatement1 XPECT allIslandElems -->
+	// ForStatement1 XPECT allCatchBlocks -->
 	/* ForStatement1 XPECT allEdges ---
 		"start" --> ;,
 		; -Repeat-> ;
@@ -219,6 +240,9 @@ function ForStatement1() {
 }
 
 function ForStatement2() {
+	// ForStatement2 XPECT container --> { "start"; for (;;) 5; "end"; }
+	// ForStatement2 XPECT allIslandElems -->
+	// ForStatement2 XPECT allCatchBlocks -->
 	/* ForStatement2 XPECT allEdges ---
 		"start" --> 5,
 		5 -Repeat-> 5
@@ -239,6 +263,9 @@ function ForStatement2() {
 }
 
 function ForStatement3() {
+	// ForStatement3 XPECT container --> { "start"; for (1;2;3) 5; "end"; }
+	// ForStatement3 XPECT allIslandElems -->
+	// ForStatement3 XPECT allCatchBlocks -->
 	/* ForStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -274,6 +301,9 @@ function ForStatement3() {
 }
 
 function ForStatement4() {
+	// ForStatement4 XPECT container --> { "start"; for (1;;3) 5; "end"; }
+	// ForStatement4 XPECT allIslandElems -->
+	// ForStatement4 XPECT allCatchBlocks -->
 	/* ForStatement4 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 5,
@@ -298,6 +328,9 @@ function ForStatement4() {
 }
 
 function ForStatement5() {
+	// ForStatement5 XPECT container --> { "start"; for (1;2;) 5; "end"; }
+	// ForStatement5 XPECT allIslandElems -->
+	// ForStatement5 XPECT allCatchBlocks -->
 	/* ForStatement5 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -331,6 +364,9 @@ function ForStatement5() {
 }
 
 function ForStatement6() {
+	// ForStatement6 XPECT container --> { "start"; for (;2;3) 5; "end"; }
+	// ForStatement6 XPECT allIslandElems -->
+	// ForStatement6 XPECT allCatchBlocks -->
 	/* ForStatement6 XPECT allEdges ---
 		"start" --> 2,
 		2 -Repeat-> 5,
@@ -364,6 +400,9 @@ function ForStatement6() {
 }
 
 function ForStatement7() {
+	// ForStatement7 XPECT container --> { "start"; for (;;3) 5; "end"; }
+	// ForStatement7 XPECT allIslandElems -->
+	// ForStatement7 XPECT allCatchBlocks -->
 	/* ForStatement7 XPECT allEdges ---
 		"start" --> 5,
 		5 --> 3,
@@ -384,6 +423,9 @@ function ForStatement7() {
 }
 
 function ForStatement8() {
+	// ForStatement8 XPECT container --> { "start"; for (;2;) 5; "end"; }
+	// ForStatement8 XPECT allIslandElems -->
+	// ForStatement8 XPECT allCatchBlocks -->
 	/* ForStatement8 XPECT allEdges ---
 		"start" --> 2,
 		2 -Repeat-> 5,
@@ -414,6 +456,9 @@ function ForStatement8() {
 }
 
 function ForStatement9() {
+	// ForStatement9 XPECT container --> { "start"; for (1;;) 5; "end"; }
+	// ForStatement9 XPECT allIslandElems -->
+	// ForStatement9 XPECT allCatchBlocks -->
 	/* ForStatement9 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 5,
@@ -436,6 +481,9 @@ function ForStatement9() {
 }
 
 function ForOfStatement1() {
+	// ForOfStatement1 XPECT container --> { "start"; for (var i of [1,2]) 3; "end"; }
+	// ForOfStatement1 XPECT allIslandElems -->
+	// ForOfStatement1 XPECT allCatchBlocks -->
 	/* ForOfStatement1 XPECT allEdges ---
 		"start" --> i,
 		i --> 1,
@@ -470,11 +518,54 @@ function ForOfStatement1() {
 	// ForOfStatement1 XPECT succs at '[1,2]' --> 3, "end"
 	// ForOfStatement1 XPECT succs at '3' --> 3, "end"
 	"start";
-	for (var i in [1,2]) 3;
+	for (var i of [1,2]) 3;
+	"end";
+}
+
+function ForOfStatement2(x) {
+	// ForOfStatement2 XPECT container --> { "start"; for (x of [1,2]) 5; "end"; }
+	// ForOfStatement2 XPECT allIslandElems -->
+	// ForOfStatement2 XPECT allCatchBlocks -->
+	/* ForOfStatement2 XPECT allEdges ---
+		"start" --> x,
+		x --> 1,
+		1 --> 2,
+		2 --> [1\,2],
+		[1\,2] -Repeat-> 5,
+		[1\,2] --> "end",
+		5 --> "end",
+		5 -Repeat-> 5
+	--- */
+	/* ForOfStatement2 XPECT allPaths ---
+		"start" -> x -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> "end",
+		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> 5 -> "end"
+	--- */
+	/* ForOfStatement2 XPECT allPaths direction 'Backward' ---
+		"end" -> 5 -> 5 -> 5,
+		"end" -> 5 -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
+		"end" -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> x -> "start"
+	--- */
+	// ForOfStatement2 XPECT path from '"start"' to '"end"' -->
+	// ForOfStatement2 XPECT path from 'x' to '5' -->
+	// ForOfStatement2 XPECT commonPreds of 'x' and '5' --> x
+	// ForOfStatement2 XPECT succs at '"start"' --> x
+	// ForOfStatement2 XPECT succs at 'x' --> 1
+	// ForOfStatement2 XPECT succs at '1' --> 2
+	// ForOfStatement2 XPECT succs at '2' --> [1\,2]
+	// ForOfStatement2 XPECT succs at '[1,2]' --> "end", 5
+	// ForOfStatement2 XPECT succs at '5' --> "end", 5
+	// ForOfStatement2 XPECT succs type 'Repeat' at '[1,2]' --> 5
+	"start";
+	for (x of [1,2]) 5;
 	"end";
 }
 
 function ForInStatement1() {
+	// ForInStatement1 XPECT container --> { "start"; for (var i in [1,2]) 3; "end"; }
+	// ForInStatement1 XPECT allIslandElems -->
+	// ForInStatement1 XPECT allCatchBlocks -->
 	/* ForInStatement1 XPECT allEdges ---
 		"start" --> i,
 		i --> 1,
@@ -509,11 +600,50 @@ function ForInStatement1() {
 	// ForInStatement1 XPECT succs at '[1,2]' --> 3, "end"
 	// ForInStatement1 XPECT succs at '3' --> 3, "end"
 	"start";
-	for (var i of [1,2]) 3;
+	for (var i in [1,2]) 3;
+	"end";
+}
+
+function ForInStatement2(x) {
+	// ForInStatement2 XPECT container --> { "start"; for (x in "Hello") 5; "end"; }
+	// ForInStatement2 XPECT allIslandElems -->
+	// ForInStatement2 XPECT allCatchBlocks -->
+	/* ForInStatement2 XPECT allEdges ---
+		"start" --> x,
+		x --> "Hello",
+		"Hello" --> "end",
+		"Hello" -Repeat-> 5,
+		5 --> "end",
+		5 -Repeat-> 5
+	--- */
+	/* ForInStatement2 XPECT allPaths ---
+		"start" -> x -> "Hello" -> "end",
+		"start" -> x -> "Hello" -> 5 -> "end",
+		"start" -> x -> "Hello" -> 5 -> 5 -> "end"
+	--- */
+	/* ForInStatement2 XPECT allPaths direction 'Backward' ---
+		"end" -> "Hello" -> x -> "start",
+		"end" -> 5 -> "Hello" -> x -> "start",
+		"end" -> 5 -> 5 -> "Hello" -> x -> "start",
+		"end" -> 5 -> 5 -> 5
+	--- */
+	// ForInStatement2 XPECT path from '"start"' to '"end"' -->
+	// ForInStatement2 XPECT path from 'x' to '5' -->
+	// ForInStatement2 XPECT commonPreds of 'x' and '5' --> x
+	// ForInStatement2 XPECT succs at '"start"' --> x
+	// ForInStatement2 XPECT succs at 'x' --> "Hello"
+	// ForInStatement2 XPECT succs at '"Hello"' --> "end", 5
+	// ForInStatement2 XPECT succs at '5' --> "end", 5
+	// ForInStatement2 XPECT succs type 'Repeat' at '"Hello"' --> 5
+	"start";
+	for (x in "Hello") 5;
 	"end";
 }
 
 function ForStatementVarDecl1() {
+	// ForStatementVarDecl1 XPECT container --> { "start"; for (var i=0; 2; 3) 5; "end"; }
+	// ForStatementVarDecl1 XPECT allIslandElems -->
+	// ForStatementVarDecl1 XPECT allCatchBlocks -->
 	/* ForStatementVarDecl1 XPECT allEdges ---
 		"start" --> 0,
 		0 --> i=0,
@@ -550,6 +680,9 @@ function ForStatementVarDecl1() {
 }
 
 function ForStatementVarDecl2() {
+	// ForStatementVarDecl2 XPECT container --> { "start"; for (var i=0, j=1; 2; 3) 5; "end"; }
+	// ForStatementVarDecl2 XPECT allIslandElems -->
+	// ForStatementVarDecl2 XPECT allCatchBlocks -->
 	/* ForStatementVarDecl2 XPECT allEdges ---
 		"start" --> 0,
 		0 --> i=0,
@@ -589,7 +722,14 @@ function ForStatementVarDecl2() {
 	"end";
 }
 
+
+
+
+
 function ForStatementBreak1() {
+	// ForStatementBreak1 XPECT container --> { "start"; for (1;2;3) break; "end"; }
+	// ForStatementBreak1 XPECT allIslandElems -->
+	// ForStatementBreak1 XPECT allCatchBlocks -->
 	/* ForStatementBreak1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -627,6 +767,9 @@ function ForStatementBreak1() {
 }
 
 function ForStatementContinue1() {
+	// ForStatementContinue1 XPECT container --> { "start"; for (1;2;3) continue; "end"; }
+	// ForStatementContinue1 XPECT allIslandElems -->
+	// ForStatementContinue1 XPECT allCatchBlocks -->
 	/* ForStatementContinue1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -664,6 +807,9 @@ function ForStatementContinue1() {
 }
 
 function ForStatementContinue2() {
+	// ForStatementContinue2 XPECT container --> { "start"; for (;2;3) continue; "end"; }
+	// ForStatementContinue2 XPECT allIslandElems -->
+	// ForStatementContinue2 XPECT allCatchBlocks -->
 	/* ForStatementContinue2 XPECT allEdges ---
 		"start" --> 2,
 		2 -Repeat-> continue;,
@@ -699,6 +845,9 @@ function ForStatementContinue2() {
 }
 
 function ForStatementContinue3() {
+	// ForStatementContinue3 XPECT container --> { "start"; for (;2;) continue; "end"; }
+	// ForStatementContinue3 XPECT allIslandElems -->
+	// ForStatementContinue3 XPECT allCatchBlocks -->
 	/* ForStatementContinue3 XPECT allEdges ---
 		"start" --> 2,
 		2 -Repeat-> continue;,
@@ -731,6 +880,9 @@ function ForStatementContinue3() {
 }
 
 function ForStatementContinue4() {
+	// ForStatementContinue4 XPECT container --> { "start"; for (;;) continue; "end"; }
+	// ForStatementContinue4 XPECT allIslandElems -->
+	// ForStatementContinue4 XPECT allCatchBlocks -->
 	/* ForStatementContinue4 XPECT allEdges ---
 		"start" --> continue;,
 		continue; -Continue|Repeat-> continue;
@@ -754,6 +906,9 @@ function ForStatementContinue4() {
 
 
 function IfStatement1() {
+	// IfStatement1 XPECT container --> { "start"; if (1) 2; else 3; "end"; }
+	// IfStatement1 XPECT allIslandElems -->
+	// IfStatement1 XPECT allCatchBlocks -->
 	/* IfStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -786,6 +941,9 @@ function IfStatement1() {
 }
 
 function IfStatement2() {
+	// IfStatement2 XPECT container --> { "start"; if (1) 2; "end"; }
+	// IfStatement2 XPECT allIslandElems -->
+	// IfStatement2 XPECT allCatchBlocks -->
 	/* IfStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -816,6 +974,9 @@ function IfStatement2() {
 
 
 function SwitchCase1() {
+	// SwitchCase1 XPECT container --> { "start"; switch (1) { case 2: 3; } "end"; }
+	// SwitchCase1 XPECT allIslandElems -->
+	// SwitchCase1 XPECT allCatchBlocks -->
 	/* SwitchCase1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -846,6 +1007,9 @@ function SwitchCase1() {
 }
 
 function SwitchCaseFallThrough() {
+	// SwitchCaseFallThrough XPECT container --> { "start"; switch (1) { case 2: 3; case 4: 5; } "end"; }
+	// SwitchCaseFallThrough XPECT allIslandElems -->
+	// SwitchCaseFallThrough XPECT allCatchBlocks -->
 	/* SwitchCaseFallThrough XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -886,6 +1050,9 @@ function SwitchCaseFallThrough() {
 }
 
 function SwitchCaseBreak1() {
+	// SwitchCaseBreak1 XPECT container --> { "start"; switch (1) { case 2: 3; break; case 4: 5; break; } "end"; }
+	// SwitchCaseBreak1 XPECT allIslandElems -->
+	// SwitchCaseBreak1 XPECT allCatchBlocks -->
 	/* SwitchCaseBreak1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -931,6 +1098,9 @@ function SwitchCaseBreak1() {
 }
 
 function SwitchCaseDefault1() {
+	// SwitchCaseDefault1 XPECT container --> { "start"; switch (1) { case 2: 3; default: 5; } "end"; }
+	// SwitchCaseDefault1 XPECT allIslandElems -->
+	// SwitchCaseDefault1 XPECT allCatchBlocks -->
 	/* SwitchCaseDefault1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -966,6 +1136,9 @@ function SwitchCaseDefault1() {
 }
 
 function SwitchCaseDefault2() {
+	// SwitchCaseDefault2 XPECT container --> { "start"; switch (1) { case 2: 3; break; default: 5; } "end"; }
+	// SwitchCaseDefault2 XPECT allIslandElems -->
+	// SwitchCaseDefault2 XPECT allCatchBlocks -->
 	/* SwitchCaseDefault2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1003,6 +1176,9 @@ function SwitchCaseDefault2() {
 }
 
 function WhileStatement1() {
+	// WhileStatement1 XPECT container --> { "start"; while (1) { 2; } "end"; }
+	// WhileStatement1 XPECT allIslandElems -->
+	// WhileStatement1 XPECT allCatchBlocks -->
 	/* WhileStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 -Repeat-> 2,
@@ -1036,6 +1212,9 @@ function WhileStatement1() {
 }
 
 function WhileStatementBreak1() {
+	// WhileStatementBreak1 XPECT container --> { "start"; while (1) { 2; break; 3; } "end"; }
+	// WhileStatementBreak1 XPECT allIslandElems -->
+	// WhileStatementBreak1 XPECT allCatchBlocks -->
 	/* WhileStatementBreak1 XPECT allEdges ---
 		"start" --> 1,
 		1 -Repeat-> 2,
@@ -1079,6 +1258,9 @@ function WhileStatementBreak1() {
 }
 
 function WhileStatementContinue1() {
+	// WhileStatementContinue1 XPECT container --> { "start"; while (1) { 2; continue; 3; } "end"; }
+	// WhileStatementContinue1 XPECT allIslandElems -->
+	// WhileStatementContinue1 XPECT allCatchBlocks -->
 	/* WhileStatementContinue1 XPECT allEdges ---
 		"start" --> 1,
 		1 -Repeat-> 2,
@@ -1126,6 +1308,9 @@ function WhileStatementContinue1() {
 }
 
 function EmptyStatement() {
+	// EmptyStatement XPECT container --> { "start"; ; "end"; }
+	// EmptyStatement XPECT allIslandElems -->
+	// EmptyStatement XPECT allCatchBlocks -->
 	/* EmptyStatement XPECT allEdges ---
 		"start" --> ;,
 		; --> "end"
@@ -1142,6 +1327,9 @@ function EmptyStatement() {
 }
 
 function ReturnStatement1() {
+	// ReturnStatement1 XPECT container --> { "start"; return; "end"; }
+	// ReturnStatement1 XPECT allIslandElems -->
+	// ReturnStatement1 XPECT allCatchBlocks -->
 	/* ReturnStatement1 XPECT allEdges ---
 		"start" --> return;
 	--- */
@@ -1157,6 +1345,9 @@ function ReturnStatement1() {
 }
 
 function ReturnStatement2() : int {
+	// ReturnStatement2 XPECT container --> { "start"; return 1; "end"; }
+	// ReturnStatement2 XPECT allIslandElems -->
+	// ReturnStatement2 XPECT allCatchBlocks -->
 	/* ReturnStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> return 1;
@@ -1174,6 +1365,9 @@ function ReturnStatement2() : int {
 }
 
 function ReturnStatement3() {
+	// ReturnStatement3 XPECT container --> { "start"; if (1) { return; } "end"; }
+	// ReturnStatement3 XPECT allIslandElems -->
+	// ReturnStatement3 XPECT allCatchBlocks -->
 	/* ReturnStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> return;,
@@ -1203,6 +1397,9 @@ function ReturnStatement3() {
 
 // ReturnStatement4 XPECT warnings --> "Variable names should start with lower case letter." at "ReturnStatement4"
 let ReturnStatement4 = function() {
+	// ReturnStatement4 XPECT container --> { "start"; return; "end"; }
+	// ReturnStatement4 XPECT allIslandElems -->
+	// ReturnStatement4 XPECT allCatchBlocks -->
 	/* ReturnStatement4 XPECT allEdges ---
 		"start" --> return;
 	--- */
@@ -1221,6 +1418,9 @@ let ReturnStatement4 = function() {
 
 class ReturnStatement5 {
     get getterReturnStatement5() {
+		// ReturnStatement5 XPECT container --> { "start"; return; "end"; }
+		// ReturnStatement5 XPECT allIslandElems -->
+		// ReturnStatement5 XPECT allCatchBlocks -->
     	/* ReturnStatement5 XPECT allEdges ---
 			"start" --> return;
 		--- */
@@ -1239,6 +1439,9 @@ class ReturnStatement5 {
 }
 
 function ThrowStatement1() {
+	// ThrowStatement1 XPECT container --> { "start"; throw 1; "end"; }
+	// ThrowStatement1 XPECT allIslandElems -->
+	// ThrowStatement1 XPECT allCatchBlocks -->
 	/* ThrowStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> throw 1;
@@ -1256,6 +1459,9 @@ function ThrowStatement1() {
 }
 
 function ThrowStatement2() {
+	// ThrowStatement2 XPECT container --> { "start"; if (1) { throw 2; } "end"; }
+	// ThrowStatement2 XPECT allIslandElems -->
+	// ThrowStatement2 XPECT allCatchBlocks -->
 	/* ThrowStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1286,6 +1492,9 @@ function ThrowStatement2() {
 
 // ThrowStatement3 XPECT warnings --> "Variable names should start with lower case letter." at "ThrowStatement3"
 let ThrowStatement3 = function() {
+	// ThrowStatement3 XPECT container --> { "start"; throw 1; "end"; }
+	// ThrowStatement3 XPECT allIslandElems -->
+	// ThrowStatement3 XPECT allCatchBlocks -->
 	/* ThrowStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> throw 1;
@@ -1306,6 +1515,9 @@ let ThrowStatement3 = function() {
 
 class ThrowStatement4 {
     get getterReturnStatement5() {
+		// ThrowStatement4 XPECT container --> { "start"; throw 1; "end"; }
+		// ThrowStatement4 XPECT allIslandElems -->
+		// ThrowStatement4 XPECT allCatchBlocks -->
     	/* ThrowStatement4 XPECT allEdges ---
 			"start" --> 1,
 			1 --> throw 1;
@@ -1327,6 +1539,9 @@ class ThrowStatement4 {
 }
 
 function TryCatchStatement1() {
+	// TryCatchStatement1 XPECT container --> { "start"; try { 1; } catch (e) { 2; } "end"; }
+	// TryCatchStatement1 XPECT allIslandElems -->
+	// TryCatchStatement1 XPECT allCatchBlocks --> { 2; }
 	/* TryCatchStatement1 XPECT allEdges ---
 		"start" --> 1,
 		2 --> "end",
@@ -1352,6 +1567,9 @@ function TryCatchStatement1() {
 }
 
 function TryCatchFinallyStatement1() {
+	// TryCatchFinallyStatement1 XPECT container --> { "start"; try { 1; } catch (e) { 2; } finally { 3; } "end"; }
+	// TryCatchFinallyStatement1 XPECT allIslandElems -->
+	// TryCatchFinallyStatement1 XPECT allCatchBlocks --> { 2; }
 	/* TryCatchFinallyStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 3,
@@ -1381,6 +1599,9 @@ function TryCatchFinallyStatement1() {
 }
 
 function ThrowTryCatchStatement1() {
+	// ThrowTryCatchStatement1 XPECT container --> { "start"; try { 1; throw 2; } catch (e) { 3; } "end"; }
+	// ThrowTryCatchStatement1 XPECT allIslandElems -->
+	// ThrowTryCatchStatement1 XPECT allCatchBlocks --> { 3; }
 	/* ThrowTryCatchStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1412,6 +1633,9 @@ function ThrowTryCatchStatement1() {
 }
 
 function ThrowTryCatchStatement2() {
+	// ThrowTryCatchStatement2 XPECT container --> { "start"; try { 1; } catch (e) { 2; throw 3; } "end"; }
+	// ThrowTryCatchStatement2 XPECT allIslandElems -->
+	// ThrowTryCatchStatement2 XPECT allCatchBlocks --> { 2; throw 3; }
 	/* ThrowTryCatchStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end",
@@ -1441,6 +1665,9 @@ function ThrowTryCatchStatement2() {
 }
 
 function ThrowTryCatchStatement3() {
+	// ThrowTryCatchStatement3 XPECT container --> { "start"; try { 1; try { 2; throw 3; } catch (e) { 4; } } catch (e) { 5; } "end"; }
+	// ThrowTryCatchStatement3 XPECT allIslandElems -->
+	// ThrowTryCatchStatement3 XPECT allCatchBlocks --> { 4; }, { 5; }
 	/* ThrowTryCatchStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1481,6 +1708,9 @@ function ThrowTryCatchStatement3() {
 }
 
 function ThrowTryCatchStatement4() {
+	// ThrowTryCatchStatement4 XPECT container --> { "start"; try { 1; } catch (e) { try { 2; throw 3; } catch (ee) { 4; } 5; } "end"; }
+	// ThrowTryCatchStatement4 XPECT allIslandElems -->
+	// ThrowTryCatchStatement4 XPECT allCatchBlocks --> { 4; }, { try { 2; throw 3; } catch (ee) { 4; } 5; }
 	/* ThrowTryCatchStatement4 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end",
@@ -1520,6 +1750,9 @@ function ThrowTryCatchStatement4() {
 }
 
 function ThrowTryFinallyStatement1() {
+	// ThrowTryFinallyStatement1 XPECT container --> { "start"; try { 1; throw 2; } finally { 3; } "end"; }
+	// ThrowTryFinallyStatement1 XPECT allIslandElems -->
+	// ThrowTryFinallyStatement1 XPECT allCatchBlocks -->
 	/* ThrowTryFinallyStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1552,6 +1785,9 @@ function ThrowTryFinallyStatement1() {
 }
 
 function ThrowTryFinallyStatement2() {
+	// ThrowTryFinallyStatement2 XPECT container --> { "start"; try { 1; } finally { 2; throw 3; } "end"; }
+	// ThrowTryFinallyStatement2 XPECT allIslandElems -->
+	// ThrowTryFinallyStatement2 XPECT allCatchBlocks -->
 	/* ThrowTryFinallyStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1582,6 +1818,9 @@ function ThrowTryFinallyStatement2() {
 }
 
 function ThrowTryFinallyStatement3() {
+	// ThrowTryFinallyStatement3 XPECT container --> { "start"; try { 1; } finally { try { 2; throw 3; } catch (e) { 4; } 5; } "end"; }
+	// ThrowTryFinallyStatement3 XPECT allIslandElems -->
+	// ThrowTryFinallyStatement3 XPECT allCatchBlocks --> { 4; }
 	/* ThrowTryFinallyStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1621,6 +1860,9 @@ function ThrowTryFinallyStatement3() {
 }
 
 function ThrowTryCatchFinallyStatement1() {
+	// ThrowTryCatchFinallyStatement1 XPECT container --> { "start"; try { 1; throw 2; } catch (e) { 3; } finally { 4; } "end"; }
+	// ThrowTryCatchFinallyStatement1 XPECT allIslandElems -->
+	// ThrowTryCatchFinallyStatement1 XPECT allCatchBlocks --> { 3; }
 	/* ThrowTryCatchFinallyStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1656,6 +1898,9 @@ function ThrowTryCatchFinallyStatement1() {
 }
 
 function ThrowTryCatchFinallyStatement2() {
+	// ThrowTryCatchFinallyStatement2 XPECT container --> { "start"; try { 1; } catch (e) { 2; throw 3; } finally { 4; } "end"; }
+	// ThrowTryCatchFinallyStatement2 XPECT allIslandElems -->
+	// ThrowTryCatchFinallyStatement2 XPECT allCatchBlocks --> { 2; throw 3; }
 	/* ThrowTryCatchFinallyStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 4,
@@ -1694,6 +1939,9 @@ function ThrowTryCatchFinallyStatement2() {
 
 
 function WithStatement1() {
+	// WithStatement1 XPECT container --> { "start"; with (1) 2; "end"; }
+	// WithStatement1 XPECT allIslandElems -->
+	// WithStatement1 XPECT allCatchBlocks -->
 	/* WithStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1713,6 +1961,9 @@ function WithStatement1() {
 }
 
 function WithStatement2() {
+	// WithStatement2 XPECT container --> { "start"; with (1) { 2; } "end"; }
+	// WithStatement2 XPECT allIslandElems -->
+	// WithStatement2 XPECT allCatchBlocks -->
 	/* WithStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -1735,6 +1986,9 @@ function WithStatement2() {
 
 
 function VariableStatement1() {
+	// VariableStatement1 XPECT container --> { "start"; let x = 1; "end"; }
+	// VariableStatement1 XPECT allIslandElems -->
+	// VariableStatement1 XPECT allCatchBlocks -->
 	/* VariableStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
@@ -1755,6 +2009,9 @@ function VariableStatement1() {
 }
 
 function VariableStatement2() {
+	// VariableStatement2 XPECT container --> { "start"; var x = 1; "end"; }
+	// VariableStatement2 XPECT allIslandElems -->
+	// VariableStatement2 XPECT allCatchBlocks -->
 	/* VariableStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
@@ -1775,6 +2032,9 @@ function VariableStatement2() {
 }
 
 function VariableStatement3() {
+	// VariableStatement3 XPECT container --> { "start"; let x, y, z; "end"; }
+	// VariableStatement3 XPECT allIslandElems -->
+	// VariableStatement3 XPECT allCatchBlocks -->
 	/* VariableStatement3 XPECT allEdges ---
 		"start" --> x,
 		x --> y,

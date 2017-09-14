@@ -307,13 +307,12 @@ public class GraphWalkerGuideInternal {
 		}
 
 		/**
-		 * This method searches all FinallyBlock-entry/exit edges E to chose the correct next following edge. The
+		 * This method searches all FinallyBlock-entry/exit edges E to chose the correct next following edges. The
 		 * following rules are implemented:
 		 * <ul>
 		 * <li/>If there exists no next edge with a context, then null is returned.
 		 * <li/>If there exists a next edge with a context, and the current {@link DecoratedEdgeInternal} instance has
-		 * no context that matches with one of the next edges, then an edge without context is returned. In these cases,
-		 * there should be only one next edge.
+		 * no context that matches with one of the next edges, then all edges without context are returned.
 		 * <li/>If there exists a next edge with a context, and the current {@link DecoratedEdgeInternal} instance has a
 		 * context that matches with one of the next edges, the matching edge is returned.
 		 * </ul>
