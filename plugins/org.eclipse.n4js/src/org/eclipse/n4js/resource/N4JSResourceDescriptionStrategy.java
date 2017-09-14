@@ -129,6 +129,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	private Map<String, String> createUserData(final TModule module) {
+		// TODO GH-230 consider disallowing serializing reconciled modules to index with fail-safe behavior:
+		// if (module.isPreLinkingPhase() || module.isReconciled()) {
 		if (module.isPreLinkingPhase()) {
 			return UserdataMapper.createTimestampUserData(module);
 		}
