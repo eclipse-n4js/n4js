@@ -17,7 +17,6 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
-import org.eclipse.ui.PlatformUI
 import org.junit.Test
 
 /**
@@ -247,7 +246,7 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 
 		setDocumentContent("file B1", fileB1, editorB1, sourceB1_modify_b1)
 		waitForUpdateEditorJob
-		
+
 		val errorsB1_modified = getEditorValidationErrors(editorB1)
 		assertEquals("editor for file B1 should not have any errors", #[], errorsB1_modified)
 
@@ -255,78 +254,62 @@ class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionT
 		assertEquals("editor for file A1 should now have exactly 1 expected error", #[
 			"ERROR:union{int,string} is not a subtype of string. (platform:/resource/TestInEditorA1_B1/src/m/A1.n4js line : 4 column : 18)"
 		].join('\n'), errorsA1_modified.map[toString].join('\n'))
-		
+
 		editorA1.assertAllFromIndex
 	}
-	
-	// FIXME: This is a poor fix for a race and insufficient cancellation handling
-	private def void withoutOutline(()=>void procedure) {
-		val activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-		activePage.hideView(activePage.findViewReference('org.eclipse.ui.views.ContentOutline'));	
-		try {
-			procedure.apply;
-		} finally {
-			activePage.showView('org.eclipse.ui.views.ContentOutline');
-		}
-	}
-	
+
 	@Test
 	def void test_inEditor_a2_p() {
-		withoutOutline [|
-			prepare("TestInEditorA2_P")
+		prepare("TestInEditorA2_P")
 
-			val page = getActivePage()
-			val editorA2 = openAndGetXtextEditor(fileA2, page)
-			val editorP = openAndGetXtextEditor(fileP, page)
-			val errorsA2 = getEditorValidationErrors(editorA2)
-			assertEquals("editor for file A should not have any errors", #[], errorsA2)
-			editorA2.assertAllFromIndex
-			
-			setDocumentContent("file P", fileP, editorP, sourceP_modify_p)
-			waitForUpdateEditorJob
-	
-			val errorsA2_modified = getEditorValidationErrors(editorA2)
-			assertEquals("editor for file A2 should now have exactly 2 expected errors", #[
-				"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_P/src/m/A2.n4js line : 5 column : 19)",
-				"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_P/src/m/A2.n4js line : 6 column : 19)"
-			].join('\n'), errorsA2_modified.map[toString].join('\n'))
-			
-			val expectedFromSource = #{
-				URI.createPlatformResourceURI('TestInEditorA2_P/src/m/A2.n4js', true),
-				URI.createPlatformResourceURI('TestInEditorA2_P/src/m/P.n4js', true),
-				URI.createPlatformResourceURI('TestInEditorA2_P/src/m/Q.n4js', true)
-			}
-			editorA2.assertFromSource(expectedFromSource)
-		]
+		val page = getActivePage()
+		val editorA2 = openAndGetXtextEditor(fileA2, page)
+		val editorP = openAndGetXtextEditor(fileP, page)
+		val errorsA2 = getEditorValidationErrors(editorA2)
+		assertEquals("editor for file A should not have any errors", #[], errorsA2)
+		editorA2.assertAllFromIndex
+
+		setDocumentContent("file P", fileP, editorP, sourceP_modify_p)
+		waitForUpdateEditorJob
+
+		val errorsA2_modified = getEditorValidationErrors(editorA2)
+		assertEquals("editor for file A2 should now have exactly 2 expected errors", #[
+			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_P/src/m/A2.n4js line : 5 column : 19)",
+			"ERROR:int is not a subtype of string. (platform:/resource/TestInEditorA2_P/src/m/A2.n4js line : 6 column : 19)"
+		].join('\n'), errorsA2_modified.map[toString].join('\n'))
+
+		val expectedFromSource = #{
+			URI.createPlatformResourceURI('TestInEditorA2_P/src/m/A2.n4js', true),
+			URI.createPlatformResourceURI('TestInEditorA2_P/src/m/P.n4js', true),
+			URI.createPlatformResourceURI('TestInEditorA2_P/src/m/Q.n4js', true)
+		}
+		editorA2.assertFromSource(expectedFromSource)
 	}
-	
+
 	@Test
 	def void test_inEditor_a2_q() {
-		withoutOutline[|
-			prepare("TestInEditorA2_Q")
-	
-			val page = getActivePage()
-			val editorA2 = openAndGetXtextEditor(fileA2, page)
-			val editorQ = openAndGetXtextEditor(fileQ, page)
-			val errorsA2 = getEditorValidationErrors(editorA2)
-			assertEquals("editor for file A should not have any errors", #[], errorsA2)
-			editorA2.assertAllFromIndex
-			
-			setDocumentContent("file Q", fileQ, editorQ, sourceQ_modify_q)
-			waitForUpdateEditorJob
-	
-			val errorsA2_modified = getEditorValidationErrors(editorA2)
-			assertEquals("editor for file A2 should now have exactly 1 expected error", #[
-				"ERROR:union{int,string} is not a subtype of string. (platform:/resource/TestInEditorA2_Q/src/m/A2.n4js line : 6 column : 19)"
-			].join('\n'), errorsA2_modified.map[toString].join('\n'))
-			
-			val expectedFromSource = #{
-				URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/A2.n4js', true),
-				URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/P.n4js', true),
-				URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/Q.n4js', true)
-			}
-			editorA2.assertFromSource(expectedFromSource)
-		]
-	}
+		prepare("TestInEditorA2_Q")
 
+		val page = getActivePage()
+		val editorA2 = openAndGetXtextEditor(fileA2, page)
+		val editorQ = openAndGetXtextEditor(fileQ, page)
+		val errorsA2 = getEditorValidationErrors(editorA2)
+		assertEquals("editor for file A should not have any errors", #[], errorsA2)
+		editorA2.assertAllFromIndex
+		
+		setDocumentContent("file Q", fileQ, editorQ, sourceQ_modify_q)
+		waitForUpdateEditorJob
+
+		val errorsA2_modified = getEditorValidationErrors(editorA2)
+		assertEquals("editor for file A2 should now have exactly 1 expected error", #[
+			"ERROR:union{int,string} is not a subtype of string. (platform:/resource/TestInEditorA2_Q/src/m/A2.n4js line : 6 column : 19)"
+		].join('\n'), errorsA2_modified.map[toString].join('\n'))
+		
+		val expectedFromSource = #{
+			URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/A2.n4js', true),
+			URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/P.n4js', true),
+			URI.createPlatformResourceURI('TestInEditorA2_Q/src/m/Q.n4js', true)
+		}
+		editorA2.assertFromSource(expectedFromSource)
+	}
 }

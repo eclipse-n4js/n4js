@@ -51,10 +51,12 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isStaticPolyfillAware <em>Static Polyfill Aware</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isMainModule <em>Main Module</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isPreLinkingPhase <em>Pre Linking Phase</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#isReconciled <em>Reconciled</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTopLevelTypes <em>Top Level Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getVariables <em>Variables</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getInternalTypes <em>Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
@@ -253,6 +255,26 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	protected boolean preLinkingPhase = PRE_LINKING_PHASE_EDEFAULT;
 
 	/**
+	 * The default value of the '{@link #isReconciled() <em>Reconciled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReconciled()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean RECONCILED_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isReconciled() <em>Reconciled</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isReconciled()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean reconciled = RECONCILED_EDEFAULT;
+
+	/**
 	 * The cached value of the '{@link #getTopLevelTypes() <em>Top Level Types</em>}' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -291,6 +313,26 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<Type> exposedInternalTypes;
+
+	/**
+	 * The default value of the '{@link #getAstMD5() <em>Ast MD5</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAstMD5()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final String AST_MD5_EDEFAULT = null;
+
+	/**
+	 * The cached value of the '{@link #getAstMD5() <em>Ast MD5</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getAstMD5()
+	 * @generated
+	 * @ordered
+	 */
+	protected String astMD5 = AST_MD5_EDEFAULT;
 
 	/**
 	 * The cached value of the '{@link #getComposedMemberCaches() <em>Composed Member Caches</em>}' containment reference list.
@@ -537,6 +579,27 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public boolean isReconciled() {
+		return reconciled;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setReconciled(boolean newReconciled) {
+		boolean oldReconciled = reconciled;
+		reconciled = newReconciled;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__RECONCILED, oldReconciled, reconciled));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EList<Type> getTopLevelTypes() {
 		if (topLevelTypes == null) {
 			topLevelTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TOP_LEVEL_TYPES);
@@ -578,6 +641,27 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			exposedInternalTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES);
 		}
 		return exposedInternalTypes;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public String getAstMD5() {
+		return astMD5;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setAstMD5(String newAstMD5) {
+		String oldAstMD5 = astMD5;
+		astMD5 = newAstMD5;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TMODULE__AST_MD5, oldAstMD5, astMD5));
 	}
 
 	/**
@@ -653,6 +737,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return isMainModule();
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				return isPreLinkingPhase();
+			case TypesPackage.TMODULE__RECONCILED:
+				return isReconciled();
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return getTopLevelTypes();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -661,6 +747,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getInternalTypes();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return getExposedInternalTypes();
+			case TypesPackage.TMODULE__AST_MD5:
+				return getAstMD5();
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return getComposedMemberCaches();
 			case TypesPackage.TMODULE__MODULE_SPECIFIER:
@@ -709,6 +797,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				setPreLinkingPhase((Boolean)newValue);
 				return;
+			case TypesPackage.TMODULE__RECONCILED:
+				setReconciled((Boolean)newValue);
+				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
 				getTopLevelTypes().addAll((Collection<? extends Type>)newValue);
@@ -724,6 +815,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				getExposedInternalTypes().clear();
 				getExposedInternalTypes().addAll((Collection<? extends Type>)newValue);
+				return;
+			case TypesPackage.TMODULE__AST_MD5:
+				setAstMD5((String)newValue);
 				return;
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				getComposedMemberCaches().clear();
@@ -771,6 +865,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				setPreLinkingPhase(PRE_LINKING_PHASE_EDEFAULT);
 				return;
+			case TypesPackage.TMODULE__RECONCILED:
+				setReconciled(RECONCILED_EDEFAULT);
+				return;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				getTopLevelTypes().clear();
 				return;
@@ -782,6 +879,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return;
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				getExposedInternalTypes().clear();
+				return;
+			case TypesPackage.TMODULE__AST_MD5:
+				setAstMD5(AST_MD5_EDEFAULT);
 				return;
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				getComposedMemberCaches().clear();
@@ -818,6 +918,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return mainModule != MAIN_MODULE_EDEFAULT;
 			case TypesPackage.TMODULE__PRE_LINKING_PHASE:
 				return preLinkingPhase != PRE_LINKING_PHASE_EDEFAULT;
+			case TypesPackage.TMODULE__RECONCILED:
+				return reconciled != RECONCILED_EDEFAULT;
 			case TypesPackage.TMODULE__TOP_LEVEL_TYPES:
 				return topLevelTypes != null && !topLevelTypes.isEmpty();
 			case TypesPackage.TMODULE__VARIABLES:
@@ -826,6 +928,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return internalTypes != null && !internalTypes.isEmpty();
 			case TypesPackage.TMODULE__EXPOSED_INTERNAL_TYPES:
 				return exposedInternalTypes != null && !exposedInternalTypes.isEmpty();
+			case TypesPackage.TMODULE__AST_MD5:
+				return AST_MD5_EDEFAULT == null ? astMD5 != null : !AST_MD5_EDEFAULT.equals(astMD5);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return composedMemberCaches != null && !composedMemberCaches.isEmpty();
 			case TypesPackage.TMODULE__MODULE_SPECIFIER:
@@ -894,6 +998,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 		result.append(mainModule);
 		result.append(", preLinkingPhase: ");
 		result.append(preLinkingPhase);
+		result.append(", reconciled: ");
+		result.append(reconciled);
+		result.append(", astMD5: ");
+		result.append(astMD5);
 		result.append(')');
 		return result.toString();
 	}

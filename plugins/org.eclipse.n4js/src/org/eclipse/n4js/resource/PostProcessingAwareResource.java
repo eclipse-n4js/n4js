@@ -129,7 +129,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	}
 
 	/**
-	 * Like {@link #performPostProcessing(CancelIndicator)}, but will use a cancel indicator obtained from Xtext.
+	 * Like {@link #performPostProcessing(CancelIndicator)}, but will try to use a cancel indicator obtained from Xtext.
 	 */
 	public void performPostProcessing() {
 		performPostProcessing(null);
@@ -147,7 +147,8 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 *
 	 * @param cancelIndicator
 	 *            a cancel indicator to use or <code>null</code> if none is available. If <code>null</code> this method
-	 *            will obtain a cancel indicator from Xtext.
+	 *            will try to obtain a cancel indicator from Xtext (if that fails, processing will proceed without the
+	 *            use of a cancel indicator).
 	 */
 	public void performPostProcessing(CancelIndicator cancelIndicator) {
 		if (fullyPostProcessed)
@@ -172,9 +173,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					// in next line: call on 'super' because the method in 'this' forwards here!!
 					super.resolveLazyCrossReferences(cancelIndicator);
 				}
-				if (!cancelIndicator.isCanceled()) {
-					postProcessor.performPostProcessing(this, cancelIndicator);
-				}
+				postProcessor.performPostProcessing(this, cancelIndicator);
 			} finally {
 				isPostProcessing = false;
 				// note: doesn't matter if processing succeeded, failed or was canceled

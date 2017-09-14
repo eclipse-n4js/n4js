@@ -47,13 +47,13 @@ import org.eclipse.n4js.resource.N4JSPostProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.languages.N4LanguageUtils
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 
+import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
@@ -115,14 +115,15 @@ public class ASTProcessor extends AbstractProcessor {
 
 		log(0, "### processing resource: " + resource.URI);
 
+		val script = resource.script;
 		val cache = astMetaInfoCacheHelper.getOrCreate(resource);
-		cache.startProcessing(cancelIndicator); // will throw exception if processing already in progress or completed (i.e. if called more than once per resource)
+		val G = resource.newRuleEnvironment;
+		G.addCancelIndicator(cancelIndicator);
+		cache.startProcessing(); // will throw exception if processing already in progress or completed (i.e. if called more than once per resource)
 		try {
-			val G = RuleEnvironmentExtensions.newRuleEnvironment(resource);
-			val script = resource.script;
 			processAST(G, script, cache);
 		} finally {
-			if (cache.canceled) {
+			if (G.canceled) {
 				log(0, "CANCELED by cancelIndicator");
 			}
 
@@ -188,9 +189,7 @@ public class ASTProcessor extends AbstractProcessor {
 
 		log(indentLevel, "processing: " + node.objectInfo);
 
-		if (cache.canceled) {
-			return;
-		}
+		checkCanceled(G);
 
 		// already done as part of a forward processing?
 		if (cache.forwardProcessedSubTrees.contains(node)) {
@@ -218,8 +217,8 @@ public class ASTProcessor extends AbstractProcessor {
 			}
 			return;
 		}
-		try {
 
+		try {
 			// process node itself - part 1 (before child processing)
 			processNode_preChildren(G, node, cache, indentLevel);
 
@@ -232,9 +231,7 @@ public class ASTProcessor extends AbstractProcessor {
 				} else {
 					// process now
 					processSubtree(G, child, cache, indentLevel + 1);
-					if (cache.canceled) {
-						return;
-					}
+					checkCanceled(G);
 				}
 			}
 
@@ -379,7 +376,7 @@ public class ASTProcessor extends AbstractProcessor {
 
 		// actually perform the forward processing
 		log(0, "===START of identifiable sub-tree below " + node.objectInfo);
-		val G_fresh = RuleEnvironmentExtensions.newRuleEnvironment(G); // use a new, empty environment here
+		val G_fresh = G.newRuleEnvironment; // use a new, empty environment here (but retain cancelIndicator!)
 		processSubtree(G_fresh, node, cache, 0); // note how we reset the indent level
 		cache.forwardProcessedSubTrees.add(node);
 		log(0, "===END of identifiable sub-tree below " + node.objectInfo);

@@ -18,6 +18,17 @@ import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
+import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.BadEscapementException;
+import org.eclipse.n4js.conversion.N4JSValueConverterException;
+import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.LabelRef;
+import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.scoping.members.ComposedMemberScope;
+import org.eclipse.n4js.validation.ASTStructureValidator;
 import org.eclipse.xtext.AbstractElement;
 import org.eclipse.xtext.AbstractRule;
 import org.eclipse.xtext.Action;
@@ -42,17 +53,6 @@ import org.eclipse.xtext.util.Strings;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.conversion.AbstractN4JSStringValueConverter.BadEscapementException;
-import org.eclipse.n4js.conversion.N4JSValueConverterException;
-import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
-import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.NamedImportSpecifier;
-import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.scoping.members.ComposedMemberScope;
-import org.eclipse.n4js.validation.ASTStructureValidator;
 
 /**
  * Clears the transitive fields in the AST (e.g. references to type model element such as N4ClassDefinition) on model
@@ -268,6 +268,8 @@ public class N4JSLinker extends LazyLinker {
 			Object value = valueConverterService.toValue(tokenText, rule.getName(), node);
 			if (obj instanceof IdentifierRef && value instanceof String) {
 				((IdentifierRef) obj).setIdAsText((String) value);
+			} else if (obj instanceof LabelRef && value instanceof String) {
+				((LabelRef) obj).setLabelAsText((String) value);
 			} else if (obj instanceof ParameterizedPropertyAccessExpression && value instanceof String) {
 				((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
 			} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
@@ -315,6 +317,8 @@ public class N4JSLinker extends LazyLinker {
 			((NamedImportSpecifier) obj).setImportedElementAsText(null);
 		} else if (obj instanceof IdentifierRef) {
 			((IdentifierRef) obj).setIdAsText(null);
+		} else if (obj instanceof LabelRef) {
+			((LabelRef) obj).setLabelAsText(null);
 		} else if (obj instanceof ParameterizedPropertyAccessExpression) {
 			((ParameterizedPropertyAccessExpression) obj).setPropertyAsText(null);
 		}

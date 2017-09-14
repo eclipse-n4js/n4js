@@ -102,6 +102,21 @@ public class N4CliHelper {
 	}
 
 	/**
+	 * Fails if expectedString is found in x
+	 *
+	 * @param expectedString
+	 *            string searched for in x
+	 * @param x
+	 *            what can be searched.
+	 */
+	public static void assertExpectedOutputNotContains(String expectedString, String x) {
+
+		if (x.contains(expectedString)) {
+			fail("expected '" + expectedString + "' found in '" + x + "'");
+		}
+	}
+
+	/**
 	 * Ensured String x ends with expectedString
 	 *
 	 * @param expectedString

@@ -20,6 +20,9 @@ import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.xbase.lib.Pair
 
 import static org.junit.Assert.*
+import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.resource.IResourceDescription
 
 /**
  */
@@ -31,22 +34,36 @@ class TypesAssertionsExtensions {
 	@Inject
 	private extension TypeEqualityAssertionsExtension
 
-	def assertAllExportedElementAreOnIndex(String phase, IResourceDescriptions resourceDescriptions, List<? extends Pair<? extends Class<? extends EObject>, String>> expectedExportedTypeToNamePairs) {
+	def Iterable<IEObjectDescription> assertAllExportedElementAreOnIndex(String phase, IResourceDescriptions resourceDescriptions, List<? extends Pair<? extends Class<? extends EObject>, String>> expectedExportedTypeToNamePairs) {
 		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension == "n4js"].map[exportedObjects].flatten
 		val expectedTestContentCount = expectedExportedTypeToNamePairs.size // type roots
 		assertEquals(phase + ": count of elements are marked as exported should equal to EResourceDescriptions", expectedTestContentCount, eoDescs.size)
 		assertExpectedTypes(phase, eoDescs, expectedExportedTypeToNamePairs)
-		eoDescs
+		return eoDescs
+	}
+	
+	def void assertUserDataCreated(String phase, Resource testResource) {
+		val resourceDescriptions = assertIndexHasBeenFilled(phase, testResource);
+		val eoDescs = resourceDescriptions.allResourceDescriptions.filter[URI.fileExtension == "n4js"].map[exportedObjects].flatten
+		val syntaxEoDesc = eoDescs.head;
+		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT));
 	}
 
-	def assertIndexHasBeenFilled(String phase, Resource testResource) {
+	def void assertUserDataCreated(String phase, IResourceDescription resourceDescription) {
+		val eoDescs = resourceDescription.exportedObjects
+		val syntaxEoDesc = eoDescs.head;
+		assertNotNull(phase + ": user data not found", syntaxEoDesc.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT));
+	}
+	
+
+	def IResourceDescriptions assertIndexHasBeenFilled(String phase, Resource testResource) {
 		assertTrue(phase + ": " + testResource.errors.toString, testResource.errors.isEmpty)
 		val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(testResource);
 		assertFalse(phase + ": Test that the index has been filled", resourceDescriptions.allResourceDescriptions.empty)
-		resourceDescriptions
+		return resourceDescriptions
 	}
 
-	def assertExpectedTypesCount(String phase, Resource testResource, int expectedTypesCount) {
+	def void assertExpectedTypesCount(String phase, Resource testResource, int expectedTypesCount) {
 		assertEquals(phase + ": test content count", 2, testResource.contents.size)
 		val exportedScript = testResource.contents.last as TModule
 		assertEquals(phase + ": Should have the expected count of types", expectedTypesCount, exportedScript.topLevelTypes.size + exportedScript.variables.size)

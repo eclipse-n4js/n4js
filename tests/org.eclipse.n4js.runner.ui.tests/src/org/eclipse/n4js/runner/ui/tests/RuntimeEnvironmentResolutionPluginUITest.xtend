@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.runner.tests
+package org.eclipse.n4js.runner.ui.tests
 
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import java.io.ByteArrayInputStream
@@ -33,6 +33,7 @@ import static org.eclipse.emf.common.util.URI.createPlatformResourceURI
 import static org.junit.Assert.*
 
 import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
+import org.eclipse.n4js.runner.tests.RuntimeEnvironmentResolutionTest
 
 /**
  * Class for testing the the runtime environment resolution for the N4 runners in standalone JUnit mode.

@@ -13,6 +13,9 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.List
+import java.util.Map
 import org.eclipse.n4js.n4JS.ObjectLiteral
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyGetterDeclaration
@@ -20,6 +23,7 @@ import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
+import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
 import org.eclipse.n4js.ts.typeRefs.Versionable
@@ -38,12 +42,8 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.utils.EcoreUtilN4
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.List
-import java.util.Map
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.OptionalFieldStrategy
 
 /**
  * {@link PolyProcessor} delegates here for processing array literals.
@@ -107,16 +107,23 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		boolean quickMode, List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType
 	) {
 		for (pa : objLit.propertyAssignments) {
-			if (pa !== null && pa.definedMember!==null) {
-				val tMember = TypeUtils.copy(pa.definedMember);
-				if (tMember !== null) {
+			if (pa !== null) {
+				var TStructMember tMember = null;
+				if (pa.definedMember !== null) {
+					tMember = TypeUtils.copy(pa.definedMember);
 					tMembers += tMember;
+				} else {
+					// this happens if member name in AST was null (bad syntax in code; types builder won't
+					// create a TMember in that case) or in case of an invalid computed name (not a compile-time
+					// expression, unresolved reference, etc.; ComputedNameProcessor will remote TMember for
+					// consistency with first case); this is an error case, but we still have to continue
+					// processing, because nested expression must still be typed as usual.
+				}
 
-					if (pa.isPoly) {
-						if (!(tMember instanceof TMethod)) {
-							processNonMethodProperties(G, cache, infCtx, tMember, pa,
-								quickMode, props2InfVarOrFallbackType);
-						}
+				if (pa.isPoly) {
+					if (!(tMember instanceof TMethod)) {
+						processNonMethodProperties(G, cache, infCtx, tMember, pa,
+							quickMode, props2InfVarOrFallbackType);
 					}
 				}
 			}
@@ -128,50 +135,60 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 	 *  a) introduce a new inference variable representing the property's type (except for methods)
 	 *  b) add a constraint: expressionTypeRef <: iv
 	 *  c) create a TStructMember to be used in the structural result type reference
+	 * 
+	 * @param tMember  may be null in case of invalid members.
 	 */
 	def private void processNonMethodProperties(RuleEnvironment G, ASTMetaInfoCache cache, InferenceContext infCtx,
 		TStructMember tMember, PropertyAssignment propAssignm,
 		boolean quickMode, List<Pair<PropertyAssignment, ? extends Versionable>> props2InfVarOrFallbackType
 	) {
-		val originalMemberType = tMember.typeOfMember;
+		if(tMember!==null) {
+			val originalMemberType = tMember.typeOfMember;
 
-		assertTrueIfRigid(cache, "type of " + propAssignm.eClass.name + " in TModule should be a DeferredTypeRef",
-			originalMemberType instanceof DeferredTypeRef);
+			assertTrueIfRigid(cache, "type of " + propAssignm.eClass.name + " in TModule should be a DeferredTypeRef",
+				originalMemberType instanceof DeferredTypeRef);
 
-		if (originalMemberType instanceof DeferredTypeRef) {
-			if (!quickMode) {
-				// standard mode:
-				// create new inference variable for the to-be-inferred type of this property
-				val iv = infCtx.newInferenceVariable;
-				// set it as type in tMember
-				tMember.typeOfMember = TypeUtils.createTypeRef(iv);
-				// add a constraint for the initializer expression (if any)
-				if (propAssignm instanceof PropertyNameValuePair) {
-					if (propAssignm.expression !== null) {
-						val exprTypeRef = polyProcessor.processExpr(G, propAssignm.expression, TypeUtils.createTypeRef(iv), infCtx, cache);
-						infCtx.addConstraint(exprTypeRef, TypeUtils.createTypeRef(iv), Variance.CO); // exprTypeRef <: iv
-					}
-				}
-				// remember for later
-				props2InfVarOrFallbackType += propAssignm -> iv;
-			} else {
-				// quick mode:
-				// compute a fall-back type
-				val fallbackType = switch (propAssignm) {
-					PropertyNameValuePair case propAssignm.expression !== null:
-						polyProcessor.processExpr(G, propAssignm.expression, null, infCtx, cache)
-					PropertyGetterDeclaration:
-						propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
-					PropertySetterDeclaration:
-						propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
-					default:
-						G.anyTypeRef
-				};
-				// set it as type in tMember
-				tMember.typeOfMember = TypeUtils.copy(fallbackType);
-				// remember for later
-				props2InfVarOrFallbackType += propAssignm -> fallbackType;
+			if (!(originalMemberType instanceof DeferredTypeRef)) {
+				return; // if rigid assertions are turned off, we fail safe (should never happen)
 			}
+		}
+
+		if (!quickMode) {
+			// standard mode:
+			// create new inference variable for the to-be-inferred type of this property
+			val iv = infCtx.newInferenceVariable;
+			// set it as type in tMember
+			if (tMember !== null) {
+				tMember.typeOfMember = TypeUtils.createTypeRef(iv);
+			}
+			// add a constraint for the initializer expression (if any)
+			if (propAssignm instanceof PropertyNameValuePair) {
+				if (propAssignm.expression !== null) {
+					val exprTypeRef = polyProcessor.processExpr(G, propAssignm.expression, TypeUtils.createTypeRef(iv), infCtx, cache);
+					infCtx.addConstraint(exprTypeRef, TypeUtils.createTypeRef(iv), Variance.CO); // exprTypeRef <: iv
+				}
+			}
+			// remember for later
+			props2InfVarOrFallbackType += propAssignm -> iv;
+		} else {
+			// quick mode:
+			// compute a fall-back type
+			val fallbackType = switch (propAssignm) {
+				PropertyNameValuePair case propAssignm.expression !== null:
+					polyProcessor.processExpr(G, propAssignm.expression, null, infCtx, cache)
+				PropertyGetterDeclaration:
+					propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
+				PropertySetterDeclaration:
+					propAssignm.declaredTypeOfOtherAccessorInPair ?: G.anyTypeRef
+				default:
+					G.anyTypeRef
+			};
+			// set it as type in tMember
+			if (tMember !== null) {
+				tMember.typeOfMember = TypeUtils.copy(fallbackType);
+			}
+			// remember for later
+			props2InfVarOrFallbackType += propAssignm -> fallbackType;
 		}
 	}
 
@@ -229,13 +246,15 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		Optional<Map<InferenceVariable, TypeRef>> solution
 	) {
 		for (propPair : props2InfVarOrFallbackType) {
-			val memberType = getMemberType(G, solution, quickMode, propPair);
-			val memberTypeSane = tsh.sanitizeTypeOfVariableFieldProperty(G, memberType);
 			val propAssignm = propPair.key;
-			val memberInTModule = propAssignm.definedMember; // we know this is non-null, because pa's without defined member were not added to props2InfVarOrFallbackType
-			EcoreUtilN4.doWithDeliver(false, [
-				memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
-			], memberInTModule);
+			val memberInTModule = propAssignm.definedMember;
+			if (memberInTModule !== null) {
+				val memberType = getMemberType(G, solution, quickMode, propPair);
+				val memberTypeSane = tsh.sanitizeTypeOfVariableFieldProperty(G, memberType);
+				EcoreUtilN4.doWithDeliver(false, [
+					memberInTModule.typeOfMember = TypeUtils.copy(memberTypeSane);
+				], memberInTModule);
+			}
 		}
 
 		val resultFinal = TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL,

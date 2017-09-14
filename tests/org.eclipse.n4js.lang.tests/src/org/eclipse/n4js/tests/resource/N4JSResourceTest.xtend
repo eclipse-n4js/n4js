@@ -233,8 +233,8 @@ class N4JSResourceTest {
 		loadedFromDescription.eAdapters += recorder
 
 		val demandLoaded = exported.astElement
-		assertTrue(exported.eIsProxy)
-		assertNull(exported.eResource)
+		assertFalse(exported.eIsProxy)
+		assertNotNull(exported.eResource)
 		assertFalse(demandLoaded.eIsProxy)
 		assertSame(loadedFromDescription, demandLoaded.eResource)
 
@@ -242,13 +242,11 @@ class N4JSResourceTest {
 		// load (false -> true)
 		// modified (touch, false -> false)
 		// resolve first proxy
-		// resolve second proxy
-		assertEquals(recorder.notifications.toString, 4, recorder.notifications.size)
+		assertEquals(recorder.notifications.toString, 3, recorder.notifications.size)
 		assertEquals(Notification.SET, recorder.notifications.get(0).eventType)
 		assertEquals(Notification.SET, recorder.notifications.get(1).eventType)
 		assertTrue(recorder.notifications.get(1).touch)
 		assertEquals(Notification.RESOLVE, recorder.notifications.get(2).eventType)
-		assertEquals(Notification.RESOLVE, recorder.notifications.get(3).eventType)
 		assertEquals(2, loadedFromDescription.contents.size)
 		assertTrue(loadedFromDescription.loaded)
 		assertFalse(loadedFromDescription.loading)
@@ -380,8 +378,7 @@ class N4JSResourceTest {
 		assertFalse("Resource is not fully initialized after unloading AST", res.fullyInitialized);
 		assertFalse("Resource is not fully processed after unloading AST", res.fullyProcessed);
 
-		assertNotNull("Script is null after unloading AST", res.script);
-		assertTrue("Script is proxified after unloading AST", res.script.eIsProxy);
+		assertNull("Script is still non-null after unloading AST", res.script);
 		assertNull("TModule is null after unloading AST", res.module);
 	}
 
@@ -404,8 +401,7 @@ class N4JSResourceTest {
 		assertFalse("Resource is not fully initialized after unloading AST", res.fullyInitialized);
 		assertFalse("Resource is not fully processed after unloading AST", res.fullyProcessed);
 
-		assertNotNull("Script is null after unloading AST", res.script);
-		assertTrue("Script is proxified after unloading AST", res.script.eIsProxy);
+		assertNull("Script is still non-null after unloading AST", res.script);
 		assertNull("TModule is null after unloading AST", res.module);
 	}
 

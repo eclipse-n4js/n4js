@@ -102,7 +102,16 @@ abstract class DiffBuilder<F, T> {
 			addedItems.remove(index);
 			addedItems.add(index, newState);
 		} else {
-			editedItems.put(oldState, newState);
+			// check if oldState already is the outcome of an edit operation
+			val originalState = editedItems.inverse.get(oldState);
+			
+			// if so, override previous edit
+			if (null !== originalState) {
+				editedItems.put(originalState, newState);
+			} else {
+				// otherwise simply add a new edit operation
+				editedItems.put(oldState, newState);
+			}
 		}
 		return this;
 	}

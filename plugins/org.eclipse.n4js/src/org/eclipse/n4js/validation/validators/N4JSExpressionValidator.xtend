@@ -46,6 +46,7 @@ import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName
+import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4FieldDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -62,6 +63,7 @@ import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4JS.ShiftExpression
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisArgProvider
@@ -874,40 +876,95 @@ class N4JSExpressionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkAdditiveExpressionForNonADDs(AdditiveExpression ae) {
-
-		if (ae.rhs === null || ae.lhs === null) {
-			return; // corrupt AST (e.g., while editing)
+		if (ae.op == AdditiveOperator.SUB) {
+			doCheckMathOperandTypes(ae.lhs, ae.rhs);
+		} else {
+			doCheckMathOperandTypeSymbol(ae.lhs, ae.rhs)
 		}
-
-		if (ae.op !== AdditiveOperator.ADD) {
-
-			// The types of the operands must be subtypes of number if the operator is not ’+’
-			val bits = BuiltInTypeScope.get(ae.eResource.resourceSet)
-
-			val tlhs = ts.tau(ae.lhs)
-			if (tlhs === null) {
-				return; // corrupt AST (e.g., while editing)
-			}
-			if (tlhs.declaredType === bits.nullType || tlhs.declaredType === bits.undefinedType)
-				issueNotANumberType(tlhs.declaredType.name, ae.lhs);
-
-			val trhs = ts.tau(ae.rhs)
-			if (trhs === null) {
-				return; // corrupt AST (e.g., while editing)
-			}
-
-			if (trhs.declaredType === bits.nullType || trhs.declaredType === bits.undefinedType)
-				issueNotANumberType(trhs.declaredType.name, ae.rhs);
-
-		}
-
+	}
+			
+	/**
+	 * Note: Division by 0 may lead to infinity or NaN, depending on the value of the rhs.
+	 * I.e. 0/0=NaN, but 1/0=Infinity. So we cannot infer from the type the result in these cases.
+	 */	
+	@Check
+	def checkMultiplicativeExpression(MultiplicativeExpression me) {
+		doCheckMathOperandTypes(me.lhs, me.rhs);
+	}
+	
+	@Check
+	def checkShiftExpression(ShiftExpression se) {
+		doCheckMathOperandTypes(se.lhs, se.rhs);
 	}
 
-	def issueNotANumberType(String typeString, Expression expression) {
-		addIssue(IssueCodes.getMessageForEXP_IS_NOT_A_VALID_NUMBER(typeString), expression,
-			IssueCodes.EXP_IS_NOT_A_VALID_NUMBER);
+	def doCheckMathOperandTypes(Expression lhs, Expression rhs) {
+		if (lhs===null || rhs===null) return;	
+		val tlhs = ts.tau(lhs)
+		if (tlhs===null) return;
+		val trhs = ts.tau(rhs)
+		if (trhs===null) return;
+		
+		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
+		
+		if (tlhs.declaredType === bits.undefinedType) {
+			issueMathResultIsConstant("of type undefined", "NaN", lhs);
+		}
+		if (trhs.declaredType === bits.undefinedType) {
+			issueMathResultIsConstant("of type undefined", "NaN", rhs);
+		}
+		
+		if (tlhs.declaredType===bits.nullType) {
+			issueMathOperandIsConstant("null", "0", lhs);
+		}
+		if (trhs.declaredType===bits.nullType) {
+			issueMathOperandIsConstant("null", "0", rhs);
+		}
+		if (tlhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", lhs);
+		}
+		if (trhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", rhs);
+		}
+	}
+		
+	def doCheckMathOperandTypeSymbol(Expression lhs, Expression rhs) {	
+		if (lhs===null || rhs===null) return;	
+		val tlhs = ts.tau(lhs)
+		if (tlhs===null) return;
+		val trhs = ts.tau(rhs)
+		if (trhs===null) return;
+		
+		val bits = BuiltInTypeScope.get(lhs.eResource.resourceSet)
+		if (tlhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", lhs);
+		}
+		if (trhs.declaredType==bits.symbolType) {
+			issueMathOperandTypeNotPermitted("symbol", rhs);
+		}
+	}
+	
+
+	def issueMathResultIsConstant(String operand, String constResult, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_OPERATION_RESULT_IS_CONSTANT(operand, constResult),
+			location,
+			IssueCodes.EXP_MATH_OPERATION_RESULT_IS_CONSTANT);
 	}
 
+	def issueMathOperandIsConstant(String operandType, String constValue, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_OPERAND_IS_CONSTANT(operandType, constValue),
+			location,
+			IssueCodes.EXP_MATH_OPERAND_IS_CONSTANT);
+	}
+
+	def issueMathOperandTypeNotPermitted(String operandType, Expression location) {
+		addIssue(IssueCodes.getMessageForEXP_MATH_TYPE_NOT_PERMITTED(operandType),
+			location,
+			IssueCodes.EXP_MATH_TYPE_NOT_PERMITTED);
+	}
+	
+	
+	
+	
 	/**
 	 * IDE-731 / IDE-773
 	 * Cf. 6.1.17. Equality Expression

@@ -34,8 +34,12 @@ import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.n4js.ui.utils.UIUtils;
+import org.eclipse.n4js.utils.Diff;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -46,10 +50,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.SelectionDialog;
-
-import org.eclipse.n4js.ui.utils.UIUtils;
-import org.eclipse.n4js.utils.Diff;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Dialog for configuring the currently active working set for the navigator.
@@ -265,7 +265,11 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 	private void createWorkingSet() {
 		if (manager instanceof MutableWorkingSetManager) {
+
 			final WorkingSetNewWizard wizard = ((MutableWorkingSetManager) manager).createNewWizard();
+			// set allWorkingSets according to dialog to use it as a base for validation
+			wizard.setAllWorkingSets(allWorkingSets);
+
 			final WizardDialog dialog = new WizardDialog(getShell(), wizard);
 			if (dialog.open() == Window.OK) {
 				final WorkingSet workingSet = wizard.getWorkingSet().orNull();
@@ -294,7 +298,11 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 				final WorkingSet oldState = (WorkingSet) firstElement;
 				if (!OTHERS_WORKING_SET_ID.equals(oldState.getId())) {
 					final WorkingSetEditWizard wizard = ((MutableWorkingSetManager) manager).createEditWizard();
+
 					wizard.init(PlatformUI.getWorkbench(), selection);
+					// make sure the wizard validates against changed set of working set of this dialog
+					wizard.setAllWorkingSets(this.allWorkingSets);
+
 					final WizardDialog dialog = new WizardDialog(getShell(), wizard);
 					if (dialog.open() == Window.OK) {
 						final WorkingSet newState = wizard.getWorkingSet().orNull();
@@ -303,10 +311,25 @@ public class WorkingSetConfigurationDialog extends SelectionDialog {
 
 							@Override
 							public void run() {
+								int oldStateIndex = allWorkingSets.indexOf(oldState);
+
+								// if the old element is not in the list of all working sets
+								if (-1 == oldStateIndex) {
+									// abort the edit operation
+									return;
+								}
+
+								// replace old state with new state in allWorkingSets
 								allWorkingSets.remove(oldState);
-								tableViewer.remove(oldState);
-								tableViewer.add(newState);
+								allWorkingSets.add(oldStateIndex, newState);
+
+								// replace table viewer element
+								tableViewer.replace(newState, oldStateIndex);
+
+								// always check edited working set elements
 								tableViewer.setChecked(newState, true);
+								// set selection to newState element
+								tableViewer.setSelection(new StructuredSelection(newState));
 							}
 
 						});

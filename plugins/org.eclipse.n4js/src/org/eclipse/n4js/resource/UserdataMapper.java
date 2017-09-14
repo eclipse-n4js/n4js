@@ -122,6 +122,10 @@ public final class UserdataMapper {
 		if (exportedModule.isPreLinkingPhase()) {
 			throw new AssertionError("Module may not be from the preLinkingPhase");
 		}
+		// TODO GH-230 consider disallowing serializing reconciled modules to index with fail-fast
+		// if (exportedModule.isReconciled()) {
+		// throw new IllegalArgumentException("module must not be reconciled");
+		// }
 		final Resource originalResourceUncasted = exportedModule.eResource();
 		if (!(originalResourceUncasted instanceof N4JSResource)) {
 			throw new IllegalArgumentException("module must be contained in an N4JSResource");

@@ -11,8 +11,8 @@
 package org.eclipse.n4js.n4jsx.n4JSX;
 
 import org.eclipse.n4js.n4JS.Expression;
-
 import org.eclipse.n4js.n4JS.MemberAccess;
+
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 
 /**

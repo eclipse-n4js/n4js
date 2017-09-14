@@ -302,7 +302,8 @@ class ~SA { public f : string}
 		let sn4O : ~N4Object = {};
 	}
 	{
-		// ~Object with additional members <: ~N4Object without additional  members XPECT noerrors -->
+		// ~Object with additional members <: ~N4Object without additional  members noerrors but
+		// XPECT warnings --> "f is not defined in ~N4Object." at "f"
 		let sn4O : ~N4Object = { f : "" }
 	}
 	{

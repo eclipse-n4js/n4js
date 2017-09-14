@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4mf.ModuleFilter;
 import org.eclipse.n4js.n4mf.ModuleFilterSpecifier;
 import org.eclipse.n4js.n4mf.validation.WildcardPathFilter;
@@ -162,9 +163,20 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 			final IResourceDescription resourceDescription, boolean allowFullLoad) {
 		final URI resourceURI = resourceDescription.getURI();
 		Resource resource = resourceSet.getResource(resourceURI, false);
-		final TModule existingModule = resource instanceof N4JSResource ? ((N4JSResource) resource).getModule() : null;
-		if (existingModule != null) {
-			return existingModule;
+		if (resource instanceof N4JSResource) {
+			final N4JSResource resourceCasted = (N4JSResource) resource;
+			final Script existingScript = resourceCasted.getScript();
+			final TModule existingModule = resourceCasted.getModule();
+			if (existingModule != null) {
+				// resource exists already and it already has a TModule
+				// -> simply return that
+				return existingModule;
+			} else if (existingScript != null && !existingScript.eIsProxy()) {
+				// resource exists already and it already has its AST loaded (though no TModule yet)
+				// -> we have to create the TModule from that AST instead of loading it from index
+				resourceCasted.installDerivedState(false); // trigger installation of derived state (i.e. types builder)
+				return resourceCasted.getModule();
+			}
 		}
 		if (resource == null) {
 			resource = resourceSet.createResource(resourceURI);
@@ -179,7 +191,7 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 					} else if (allowFullLoad) {
 						casted.unload();
 						casted.load(resourceSet.getLoadOptions());
-						// casted.resolve();
+						casted.installDerivedState(false);
 						return casted.getModule();
 					}
 				} catch (final Exception e) {

@@ -36,7 +36,11 @@ public enum ErrorExitCode {
 	/** Exit code 7 indicating that assembling the test catalog failed for compiler projects. */
 	EXITCODE_TEST_CATALOG_ASSEMBLATION_ERROR(7, "assembling the test catalog failed for compiler projects"),
 	/** Exit with 8, if cleaning did not succeed. */
-	EXITCODE_CLEAN_ERROR(8, "cleaning projects encountered error");
+	EXITCODE_CLEAN_ERROR(8, "cleaning projects encountered error"),
+	/** Exit code 9 indicating an unsuccessful execution of the tests. */
+	EXITCODE_TESTER_STOPPED_WITH_ERROR(9, "unsuccessful execution of the tests"),
+	/** Exit with 10, if required tester could not be loaded. */
+	EXITCODE_TESTER_NOT_FOUND(10, "required tester could not be loaded");
 
 	private static final Map<Integer, ErrorExitCode> lookup = new HashMap<>();
 

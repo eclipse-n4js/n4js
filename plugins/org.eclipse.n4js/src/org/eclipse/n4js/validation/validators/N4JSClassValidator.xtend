@@ -175,24 +175,11 @@ class N4JSClassValidator extends AbstractN4JSDeclarativeValidator {
 			publicWritableFieldsAndSetters.put(it.name, it);
 		];
 
-		checkSuperfluousPropertiesForSpecConstructor(publicWritableFieldsAndSetters, objectLiteral);
+		// superfluous properties in initializer are checked in org.eclipse.n4js.validation.validators.N4JSTypeValidator.internalCheckSuperfluousPropertiesInObjectLiteral(..)
 		checkFieldInitializationOfImplementedInterface(publicWritableFieldsAndSetters, objectLiteral);
 	}
 
-	/**
-	 * Method for checking if an object literal in {@code @Spec} constructor provides any superfluous properties.
-	 * If so, validation warning will be raised for each violating properties.
-	 * IDE-1014.
-	 */
-	def private void checkSuperfluousPropertiesForSpecConstructor(Map<String, TMember> publicWritableFieldsMap, ObjectLiteral objectLiteral) {
-		val inputMembers = (objectLiteral.definedType as ContainerType<?>).ownedMembers;
-		inputMembers.forEach [
-			if (!publicWritableFieldsMap.containsKey(name)) {
-				val message = getMessageForCLF_SPEC_SUPERFLUOUS_PROPERTIES(name);
-				addIssue(message, astElement, PROPERTY_NAME_OWNER__DECLARED_NAME, CLF_SPEC_SUPERFLUOUS_PROPERTIES);
-			}
-		];
-	}
+
 
 	/**
 	 * Check if an object literal in {@code @Spec} constructor provide a property that comes from a built-in/provided by runtime interface.

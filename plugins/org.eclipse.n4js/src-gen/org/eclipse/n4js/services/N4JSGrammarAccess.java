@@ -7563,26 +7563,34 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cIDENTIFIERTerminalRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
 		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
 		private final Keyword cFullStopKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
-		private final RuleCall cIDENTIFIERTerminalRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
+		private final RuleCall cIDENTIFIERTerminalRuleCall_1_1_0 = (RuleCall)cAlternatives_1_1.eContents().get(0);
+		private final Keyword cDefaultKeyword_1_1_1 = (Keyword)cAlternatives_1_1.eContents().get(1);
 		
 		//QualifiedTypeReferenceName:
-		//	IDENTIFIER ('.' IDENTIFIER)?;
+		//	IDENTIFIER ('.' (IDENTIFIER | 'default'))?;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//IDENTIFIER ('.' IDENTIFIER)?
+		//IDENTIFIER ('.' (IDENTIFIER | 'default'))?
 		public Group getGroup() { return cGroup; }
 		
 		//IDENTIFIER
 		public RuleCall getIDENTIFIERTerminalRuleCall_0() { return cIDENTIFIERTerminalRuleCall_0; }
 		
-		//('.' IDENTIFIER)?
+		//('.' (IDENTIFIER | 'default'))?
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//'.'
 		public Keyword getFullStopKeyword_1_0() { return cFullStopKeyword_1_0; }
 		
+		//IDENTIFIER | 'default'
+		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
+		
 		//IDENTIFIER
-		public RuleCall getIDENTIFIERTerminalRuleCall_1_1() { return cIDENTIFIERTerminalRuleCall_1_1; }
+		public RuleCall getIDENTIFIERTerminalRuleCall_1_1_0() { return cIDENTIFIERTerminalRuleCall_1_1_0; }
+		
+		//'default'
+		public Keyword getDefaultKeyword_1_1_1() { return cDefaultKeyword_1_1_1; }
 	}
 	public class N4ClassDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.N4ClassDeclaration");
@@ -12288,7 +12296,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//QualifiedTypeReferenceName:
-	//	IDENTIFIER ('.' IDENTIFIER)?;
+	//	IDENTIFIER ('.' (IDENTIFIER | 'default'))?;
 	public QualifiedTypeReferenceNameElements getQualifiedTypeReferenceNameAccess() {
 		return pQualifiedTypeReferenceName;
 	}

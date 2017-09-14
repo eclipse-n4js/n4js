@@ -13,7 +13,6 @@ package org.eclipse.n4js.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -61,9 +60,11 @@ import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource;
 import org.eclipse.xtext.diagnostics.DiagnosticMessage;
+import org.eclipse.xtext.diagnostics.ExceptionDiagnostic;
 import org.eclipse.xtext.nodemodel.INode;
 import org.eclipse.xtext.nodemodel.SyntaxErrorMessage;
 import org.eclipse.xtext.parser.IParseResult;
+import org.eclipse.xtext.resource.IDerivedStateComputer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IFragmentProvider;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -75,7 +76,7 @@ import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.OnChangeEvictingCache;
 import org.eclipse.xtext.util.Triple;
 
-import com.google.common.collect.Lists;
+import com.google.common.base.Throwables;
 import com.google.inject.Inject;
 
 /**
@@ -208,6 +209,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			data = null;
 			size = 0;
 		}
+
 	}
 
 	private static final Logger logger = Logger.getLogger(N4JSResource.class);
@@ -237,6 +239,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private CanLoadFromDescriptionHelper canLoadFromDescriptionHelper;
 
+	@Inject
+	private IDerivedStateComputer myDerivedStateComputer;
+
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
 	 */
@@ -245,6 +250,20 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	public N4JSResource() {
 		super();
+	}
+
+	/**
+	 * Tells if this resource had its AST loaded from source after its TModule was created and has thus an AST that was
+	 * reconciled with a pre-existing TModule. This can happen when
+	 * <ol>
+	 * <li>an AST is loaded from source after the TModule was loaded from the index (usually triggered by client code
+	 * via <code>#getContents(0)</code> or {@link SyntaxRelatedTElement#getAstElement()}).
+	 * <li>an AST is re-loaded after it was loaded from source and then unloaded via {@link #unloadAST()}.
+	 * </ol>
+	 */
+	public boolean isReconciled() {
+		final TModule module = getModule();
+		return module != null && module.isReconciled();
 	}
 
 	@Override
@@ -393,20 +412,25 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * will build up the second slot again) and sends notifications that proxies have been resolved. The resource will
 	 * be even loaded if its already marked as loaded.
 	 *
+	 * If the second slot, that is the TModule, was already loaded and we just resolved the AST, then the existing
+	 * TModule is kept in the resource and rewired to the resolved AST.
+	 *
 	 * @param object
 	 *            the object which resource should be loaded
 	 * @return the loaded/resolved object
 	 */
-	// TODO ?jvp only called from ModuleAwareContentsList, which is the contents, isn't it? Thus, contents can never be
-	// null here? Can it be empty?
 	private EObject demandLoadResource(EObject object) {
-		List<EObject> discardedState = null;
+		TModule oldModule = null;
+		EObject oldScript = null;
+		ModuleAwareContentsList myContents = ((ModuleAwareContentsList) contents);
 		try {
-			discardedState = Lists.newArrayList(discardStateFromDescription());
-			if (contents != null && !contents.isEmpty()) {
-				discardedState.add(0, contents.basicGet(0));
-				((ModuleAwareContentsList) contents).sneakyClear();
+			oldModule = discardStateFromDescription(false);
+			if (!myContents.isEmpty()) {
+				oldScript = myContents.basicGet(0);
+				myContents.sneakyClear();
 			}
+			// now everything is removed from the resource and contents is empty
+			// stop sending notifications
 			eSetDeliver(false);
 
 			if (isLoaded) {
@@ -415,25 +439,32 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			}
 			superLoad(null);
 
+			// manually send the notification
 			eSetDeliver(true);
 			EObject result = getParseResult().getRootASTElement();
-			if (contents != null && contents.isEmpty()) {
-				((ModuleAwareContentsList) contents).sneakyAdd(0, result);
+			if (myContents.isEmpty()) {
+				myContents.sneakyAdd(0, result);
+				if (oldModule != null) {
+					myContents.sneakyAdd(oldModule);
+				}
 				forceInstallDerivedState(false);
 			} else {
+				if (myContents.size() == 1) {
+					if (oldModule != null) {
+						myContents.sneakyAdd(oldModule);
+					}
+				}
 				installDerivedState(false);
 			}
-
-			for (int i = 0; i < discardedState.size(); i++) {
-				notifyProxyResolved(i, discardedState.get(i));
+			if (oldScript != null) {
+				notifyProxyResolved(0, oldScript);
 			}
 			fullyPostProcessed = false;
 			return result;
-		} catch (IOException ioe) {
-			if (discardedState != null) {
-				for (int i = 0; i < discardedState.size(); i++) {
-					((ModuleAwareContentsList) contents).sneakyAdd(i, discardedState.get(i));
-				}
+		} catch (IOException | IllegalStateException ioe) {
+			if (myContents.isEmpty()) {
+				myContents.sneakyAdd(oldScript);
+				myContents.sneakyAdd(oldModule);
 			}
 			Throwable cause = ioe.getCause();
 			if (cause instanceof CoreException) {
@@ -457,7 +488,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			throw new IllegalStateException("The resource must be loaded, before installDerivedState can be called.");
 		fullyInitialized = false;
 		isInitializing = false;
-		super.installDerivedState(preIndexingPhase);
+		installDerivedState(preIndexingPhase);
 	}
 
 	/**
@@ -499,15 +530,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Overridden to make sure that the cache is initialized during {@link #isLoading() loading}.
+	 * Overridden to make sure that we add the root AST element sneakily to the resource list to make sure that no
+	 * accidental proxy resolution happens and that we do not increment the modification counter of the contents list.
 	 */
 	@Override
 	protected void updateInternalState(IParseResult newParseResult) {
 		setParseResult(newParseResult);
-		if (newParseResult.getRootASTElement() != null && !getContents().contains(newParseResult.getRootASTElement())) {
-			sneakyAddToContent(newParseResult.getRootASTElement());
+		EObject newRootAstElement = newParseResult.getRootASTElement();
+		if (newRootAstElement != null && !getContents().contains(newRootAstElement)) {
+			// do not increment the modification counter here
+			sneakyAddToContent(newRootAstElement);
 		}
-		reattachModificationTracker(newParseResult.getRootASTElement());
+		reattachModificationTracker(newRootAstElement);
 		clearErrorsAndWarnings();
 		addSyntaxErrors();
 		doLinking();
@@ -535,8 +569,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected void doLoad(InputStream inputStream, Map<?, ?> options) throws IOException {
-		if (contents != null && !contents.isEmpty())
-			discardStateFromDescription();
+		if (contents != null && !contents.isEmpty()) {
+			discardStateFromDescription(true);
+		}
 		super.doLoad(inputStream, options);
 	}
 
@@ -559,6 +594,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * <li>All errors and warnings are cleared.</li>
 	 * <li>The flags are set as follows:
 	 * <ul>
+	 * <li><code>reconciled</code> is <code>false</code></li>
 	 * <li><code>fullyInitialized</code> remains unchanged</li>
 	 * <li><code>fullyPostProcessed</code> is set to the same value as <code>fullyInitialized</code></li>
 	 * <li><code>aboutToBeUnloaded</code> is <code>false</code></li>
@@ -615,10 +651,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		// These are cleared when linking takes place., but we eagerly clear them here as a memory optimization.
 		clearLazyProxyInformation();
+
+		// clear flag 'reconciled' in TModule (if required)
+		final TModule module = getModule();
+		if (module != null && module.isReconciled()) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.setReconciled(false);
+			}, module);
+		}
 	}
 
 	/**
-	 * Sends a is loaded notification if the content is not empty and sets the resource being fully initialized but do
+	 * Sends a is loaded notification if the content is not empty and sets the resource being fully initialized but does
 	 * not actually invoke load. Load is only called when the content is empty. This behavior prevents loading the
 	 * resource when e.g. calling EcoreUtil.resolve which would try to load the resource as its first slot is marked as
 	 * proxy.
@@ -648,7 +692,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	/**
 	 * Discard the AST and proxify all referenced nodes. Does nothing if the AST is already unloaded.
 	 */
-	protected void discardAST() {
+	private void discardAST() {
 		EObject script = getScript();
 		if (script != null && !script.eIsProxy()) {
 
@@ -670,10 +714,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			unloadElements(theContents.subList(0, 1));
 
 			theContents.sneakyClear();
-			theContents.sneakyAdd(scriptProxy);
 
 			if (module != null) {
+				theContents.sneakyAdd(scriptProxy);
 				theContents.sneakyAdd(module);
+			} else {
+				// there was no module (not even a proxy)
+				// -> don't add the script proxy
+				// (i.e. transition from resource load state "Loaded" to "Created", not to "Loaded from Description")
 			}
 
 			getCache().clear(this);
@@ -697,18 +745,85 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Unloads the {@link TModule} slot (second slot in resource).
+	 * Returns the {@link TModule} from the contents list and optionally proxifies the instance. Robust against broken
+	 * state of the resource, e.g. can handle cases where the second element in the list is not of type TModule.
 	 *
-	 * @return list of unloaded slots, will be only one element as now all types are aggregated under TModule.
+	 * @param unload
+	 *            set to true if the module should be proxified.
+	 * @return the module at index 1 of the contents list (if any). Otherwise null.
+	 * @throws IllegalStateException
+	 *             if the contents list has more than two elements.
 	 */
-	protected List<EObject> discardStateFromDescription() {
+	protected TModule discardStateFromDescription(boolean unload) {
 		ModuleAwareContentsList theContents = (ModuleAwareContentsList) contents;
-		if (contents != null && !theContents.isEmpty()) {
-			List<EObject> toBeUnloaded = theContents.subList(1, theContents.size());
-			unloadElements(toBeUnloaded);
-			return toBeUnloaded;
+		if (theContents != null && !theContents.isEmpty()) {
+			if (theContents.size() == 2) {
+				EObject eObject = theContents.get(1);
+				if (eObject instanceof TModule) {
+					TModule module = (TModule) eObject;
+					if (unload) {
+						getUnloader().unloadRoot(module);
+					}
+					return module;
+				}
+				getUnloader().unloadRoot(eObject);
+				return null;
+			} else if (theContents.size() > 2) {
+				throw new IllegalStateException("Unexpected size: " + theContents);
+			}
+
 		}
-		return Collections.emptyList();
+		return null;
+	}
+
+	/**
+	 * Specialized to allow reconciliation of the TModule. We need to handle invocations of
+	 * {@link #installDerivedState(boolean)} where the contents list does already contain two elements.
+	 */
+	@SuppressWarnings("restriction")
+	@Override
+	public void installDerivedState(boolean preIndexingPhase) {
+		if (!isLoaded)
+			throw new IllegalStateException("The resource must be loaded, before installDerivedState can be called.");
+		if (!fullyInitialized && !isInitializing && !isLoadedFromStorage()) {
+			// set fully initialized to true, so we don't try initializing again on error.
+			boolean newFullyInitialized = true;
+			try {
+				isInitializing = true;
+				if (myDerivedStateComputer != null) {
+					EList<EObject> roots = doGetContents();
+					// change is here, the super class has a check that there is no derived state yet
+					// but we want to reconcile it thus we need to allow two root elements
+					if (roots.size() > 2) {
+						throw new IllegalStateException(
+								"The resource should not have more than two root elements, but: " + roots);
+					}
+					try {
+						myDerivedStateComputer.installDerivedState(this, preIndexingPhase);
+					} catch (Throwable e) {
+						if (operationCanceledManager.isOperationCanceledException(e)) {
+							doDiscardDerivedState();
+							// on cancellation we should try to initialize again next time
+							newFullyInitialized = false;
+							operationCanceledManager.propagateAsErrorIfCancelException(e);
+						}
+						throw Throwables.propagate(e);
+					}
+				}
+			} catch (RuntimeException e) {
+				getErrors().add(new ExceptionDiagnostic(e));
+				throw e;
+			} finally {
+				fullyInitialized = newFullyInitialized;
+				isInitializing = false;
+				try {
+					getCache().clear(this);
+				} catch (RuntimeException e) {
+					// don't rethrow as there might have been an exception in the try block.
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
 	}
 
 	private void unloadElements(List<EObject> toBeUnloaded) {
@@ -735,7 +850,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 	/**
 	 * Invoked from {@link ProxyResolvingEObjectImpl#eResolveProxy(InternalEObject)} whenever an EMF proxy inside an
-	 * N4JSResource is being resolved.
+	 * N4JSResource is being resolved. The receiving resource is the resource containing the proxy, not necessarily the
+	 * resource the proxy points to.
 	 *
 	 * @param proxy
 	 *            the proxy to resolve.
@@ -744,6 +860,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	public EObject doResolveProxy(InternalEObject proxy, EObject objectContext) {
+		// step 1: trigger post processing of the resource containing 'proxy' iff it is the first proxy being resolved
+		// (if another proxy has been resolved before, post processing will already be running/completed, and in that
+		// case the next line will simply do nothing, cf. #performPostProcessing())
+		this.performPostProcessing();
+		// step 2: now turn to resolving the proxy at hand
 		final URI targetUri = proxy.eProxyURI();
 		final boolean isLazyLinkingProxy = getEncoder().isCrossLinkFragment(this, targetUri.fragment());
 		if (!isLazyLinkingProxy) {
@@ -757,7 +878,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 				// proxy is pointing into an .n4js or .n4jsd file ...
 				// check if we can work with the TModule from the index or if it is mandatory to load from source
-				if (canResolveFromDescription(targetUri)) {
+				final boolean canLoadFromDescription = !targetUri.fragment().startsWith("/0")
+						&& canLoadFromDescriptionHelper.canLoadFromDescription(targetResourceUri, getResourceSet());
+				if (canLoadFromDescription) {
 
 					final String targetFragment = targetUri.fragment();
 					final Resource targetResource = resSet.getResource(targetResourceUri, false);
@@ -805,15 +928,6 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * @param targetUri
-	 *            the uri to be resolved
-	 * @return true, if the referenced object may come from the the index TModule.
-	 */
-	private boolean canResolveFromDescription(URI targetUri) {
-		return canLoadFromDescriptionHelper.canLoadFromDescription(targetUri.trimFragment(), getResourceSet());
-	}
-
-	/**
 	 * Copied from {@link ResourceImpl#getEObjectForURIFragmentRootSegment(String)} only differs, that instead of
 	 * getContent contents is accessed directly.
 	 */
@@ -843,6 +957,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 					// Note: this would be a good place to track when a proxified AST is being reloaded.
 					contents.get(0);
 				}
+
 			}
 		}
 		return super.getEObjectForURIFragmentRootSegment(uriFragmentRootSegment);
@@ -1055,7 +1170,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * preLinkingPhase}==true if the module isn't fully initialized yet. It is safe to call this method at any time.
 	 */
 	public TModule getModule() {
-		return getContents().size() >= 2 ? (TModule) getContents().get(1) : null;
+		return contents != null && contents.size() >= 2 ? (TModule) contents.basicGet(1) : null;
 	}
 
 	/**

@@ -10,20 +10,12 @@
  */
 package org.eclipse.n4js.hlc.tests;
 
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Collections.emptyMap;
-import static org.eclipse.n4js.external.libraries.TargetPlatformModel.TP_FILE_NAME;
-import static org.eclipse.n4js.utils.io.FileUtils.createDirectory;
-import static org.eclipse.n4js.utils.io.FileUtils.createTempDirectory;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Map;
-import java.util.Map.Entry;
 
-import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.junit.After;
 import org.junit.Before;
 
@@ -32,8 +24,7 @@ import org.junit.Before;
  */
 public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 
-	private File targetPlatformInstallLocation;
-	private File targetPlatformFile;
+	private final TargetPlatformFiles platformFiles = new TargetPlatformFiles();
 
 	/**
 	 * Initializes the target platform install location and the target platform file with the desired dependencies.
@@ -41,25 +32,8 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 */
 	@Before
 	public void beforeTest() throws IOException {
-
-		checkState(null == targetPlatformInstallLocation);
-		checkState(null == targetPlatformFile);
-
-		final Path tempRoot = createTempDirectory();
-		final String tempFolderName = description.getMethodName() + "-time-" + System.currentTimeMillis();
-		targetPlatformInstallLocation = createDirectory(tempRoot, tempFolderName).toFile();
-		final TargetPlatformModel model = new TargetPlatformModel();
-		for (final Entry<String, String> dependencyEntry : getNpmDependencies().entrySet()) {
-			model.addNpmDependency(dependencyEntry.getKey(), dependencyEntry.getValue());
-		}
-
-		targetPlatformFile = new File(tempRoot.toFile(), TP_FILE_NAME);
-		targetPlatformFile.createNewFile();
-
-		try (FileWriter fw = new FileWriter(targetPlatformFile)) {
-			fw.write(model.toString());
-			fw.flush();
-		}
+		ExternalsUtiities.setupExternals(platformFiles, description.getMethodName(),
+				getNpmDependencies());
 	}
 
 	/**
@@ -67,14 +41,7 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 */
 	@After
 	public void afterTest() {
-		if (null != targetPlatformFile) {
-			targetPlatformFile.delete();
-			targetPlatformFile = null;
-		}
-		if (null != targetPlatformInstallLocation) {
-			targetPlatformInstallLocation.delete();
-			targetPlatformInstallLocation = null;
-		}
+		ExternalsUtiities.cleanupExternals(platformFiles);
 	}
 
 	/**
@@ -92,14 +59,14 @@ public abstract class BaseN4jscExternalTest extends AbstractN4jscTest {
 	 * Returns with the target platform file.
 	 */
 	protected File getTargetPlatformFile() {
-		return targetPlatformFile;
+		return platformFiles.targetPlatformFile;
 	}
 
 	/**
 	 * Returns with the target platform install location.
 	 */
 	protected File getTargetPlatformInstallLocation() {
-		return targetPlatformInstallLocation;
+		return platformFiles.targetPlatformInstallLocation;
 	}
 
 }

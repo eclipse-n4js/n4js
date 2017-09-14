@@ -13,6 +13,11 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import it.xsemantics.runtime.RuleEnvironment
+import java.util.Arrays
+import java.util.LinkedList
+import java.util.List
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionDefinition
@@ -49,11 +54,6 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.StructuralTypesHelper
-import it.xsemantics.runtime.RuleEnvironment
-import java.util.Arrays
-import java.util.LinkedList
-import java.util.List
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -136,6 +136,7 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 	def TypeRef createUnionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createUnionType(G,elements)
 	}
+	
 	def TypeRef createIntersectionType(RuleEnvironment G, TypeRef... elements) {
 		simplifyComputer.createIntersectionType(G,elements)
 	}

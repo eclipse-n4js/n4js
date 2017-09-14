@@ -11,17 +11,17 @@
 package org.eclipse.n4js.organize.imports
 
 import com.google.common.collect.ArrayListMultimap
+import java.util.List
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
-import java.util.List
 
 import static extension org.eclipse.n4js.organize.imports.ScriptDependencyResolver.*
+import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 
 /**
  * Analyzes all imports in a script. Builds up a data structure of {@link RecordingImportState} to capture the findings.
@@ -85,7 +85,7 @@ class ImportStateCalculator {
 			val mod = scriptDep.dependencyModule
 			val pM2IPE = lM2IPE.findFirst[it.key == mod]
 			if(pM2IPE !== null){
-				pM2IPE.value.filter[it.actualName == scriptDep.actualName && it.localname == scriptDep.localName ].forEach[ it.markUsed];
+				pM2IPE.value.filter[it.exportedName == scriptDep.actualName && it.localname == scriptDep.localName ].forEach[ it.markUsed];
 			}
 		}
 
@@ -109,9 +109,9 @@ class ImportStateCalculator {
 
 			// find duplicates in actual name, report them as duplicateImport
 			val actname2Import = ArrayListMultimap.create
-			for (ipe : fromMod) {
-				actname2Import.put(ipe.actualName, ipe)
-			}
+			for (ipe : fromMod)
+				actname2Import.put(ipe.exportedName, ipe)
+
 			for (act : actname2Import.keySet) {
 				val v = actname2Import.get(act).toList
 				val x = v
@@ -119,16 +119,17 @@ class ImportStateCalculator {
 				.filter[internalIPE|
 					val specifier = internalIPE.importSpec;
 					if(specifier instanceof NamespaceImportSpecifier){
-						internalIPE.actualName != computeNamespaceActualName(specifier)
+						internalIPE.exportedName != computeNamespaceActualName(specifier)
 					}else{
 						true
 					}
 				].toList
-				if (x.size > 1) reg.registerDuplicateImportsOfSameElement(act, pair.key, x)
+				if (x.size > 1) 
+					reg.registerDuplicateImportsOfSameElement(act, pair.key, x)
 			}
 		}
 	}
-
+	
 	/**
 	 * Registers conflicting or duplicate (based on local name checks) imports in the provided {@link RecordingImportState}
 	 */
@@ -138,69 +139,6 @@ class ImportStateCalculator {
 				reg.registerLocalNameCollision(pair.key, pair.value)
 			}
 		}
-	}
-
-	/**
-	 * @return {@link List} of {@link ImportProvidedElement}s describing imported elements
-	 */
-	private def List<ImportProvidedElement> mapToImportProvidedElements(List<ImportSpecifier> importSpecifiers) {
-		importSpecifiers.map(
-			specifier|
-				switch (specifier) {
-					NamespaceImportSpecifier:
-						if (specifier.importedModule !== null) {
-							val importProvidedElements = newArrayList
-							//add import provided element for a namespace itself
-							importProvidedElements.add( new ImportProvidedElement(specifier.alias, computeNamespaceActualName(specifier), specifier))
-
-							val topIdentifiables = specifier.importedModule.topLevelTypes.filter[isExported]
-								+ specifier.importedModule.variables.filter[it.isExported];
-
-							topIdentifiables.forEach[type|
-								importProvidedElements.add(new ImportProvidedElement(specifier.usedName(type), type.name, specifier as ImportSpecifier))]
-								return importProvidedElements
-						} else {
-							emptyList
-						}
-					NamedImportSpecifier:
-						newArrayList(
-							new ImportProvidedElement(specifier.usedName, specifier.importedElementName, specifier as ImportSpecifier))
-					default:
-						emptyList
-				}
-		).flatten.toList
-	}
-
-	/**
-	 * Computes 'actual' name of the namespace for {@link ImportProvidedElement} entry.
-	 * If processed namespace refers to unresolved module, will return dummy name,
-	 * otherwise returns artificial name composed of prefix and target module qualified name
-	 *
-	 */
-	private def String computeNamespaceActualName(NamespaceImportSpecifier specifier) {
-		if(specifier.importedModule.eIsProxy){
-			ImportProvidedElement.NAMESPACE_PREFIX + specifier.hashCode
-		}else{
-			ImportProvidedElement.NAMESPACE_PREFIX + specifier.importedModule.qualifiedName.toString
-		}
-	}
-
-	private def importedElementName(NamedImportSpecifier it) {
-		importedElement?.name ?: "<unknown>"
-	}
-
-	/** returns locally used name of element imported via {@link NamedImportSpecifier} */
-	private def usedName(NamedImportSpecifier it) {
-		if (alias === null) importedElementName else alias
-	}
-
-	/** returns locally used name of element imported via {@link NamespaceImportSpecifier} */
-	private def usedName(NamespaceImportSpecifier is, IdentifiableElement element) {
-		is.alias + "." + element.name
-	}
-
-	private def importedModule(ImportSpecifier it) {
-		(eContainer as ImportDeclaration).module
 	}
 
 	/**
@@ -223,45 +161,54 @@ class ImportStateCalculator {
 			]
 	}
 
-	private def void registerImportDeclarationsWithNamespaceImportsForModule(List<ImportDeclaration> impDecls, RecordingImportState reg) {
-		if(impDecls.size>1){
-			val duplicates = newArrayList
-			var firstDeclaration = impDecls.head
-			var firstNamespaceName = (firstDeclaration.importSpecifiers.head as NamespaceImportSpecifier).alias
-			for(id : impDecls.tail){
-				val followingNamespaceName = (id.importSpecifiers.head as NamespaceImportSpecifier).alias
-				if(firstNamespaceName == followingNamespaceName){
-					duplicates.add(id)
-				}
-			}
-			if(!duplicates.empty){
-				reg.registerDuplicatesOfImportDeclaration(firstDeclaration, duplicates);
-			}
-		}
+	private def void registerImportDeclarationsWithNamespaceImportsForModule(List<ImportDeclaration> importDeclarations,
+		RecordingImportState reg) {
+		if (importDeclarations.size < 2)
+			return;
+
+		val duplicates = newArrayList
+		val firstDeclaration = importDeclarations.head
+		val firstNamespaceName = (firstDeclaration.importSpecifiers.filter(NamespaceImportSpecifier).head).alias
+		importDeclarations.tail.forEach [ importDeclaration |
+			val followingNamespaceName = importDeclaration.importSpecifiers.filter(NamespaceImportSpecifier).head.alias
+			if (firstNamespaceName == followingNamespaceName)
+				duplicates.add(importDeclaration)
+		]
+
+		if (!duplicates.empty)
+			reg.registerDuplicatesOfImportDeclaration(firstDeclaration, duplicates);
 	}
 
-	private def void registerImportDeclarationsWithNamedImportsForModule(List<ImportDeclaration> impDecls, RecordingImportState reg) {
-		if(impDecls.size>1){
-			val duplicates = newArrayList
-			var firstDeclaration = impDecls.head
-			var firstDeclarationSpecifiers = firstDeclaration.importSpecifiers.filter( NamedImportSpecifier)
-			for(id : impDecls.tail){
-				val followingDeclarationSpecifiers = id.importSpecifiers.filter( NamedImportSpecifier)
-				if((!firstDeclarationSpecifiers.empty) && firstDeclarationSpecifiers.size === followingDeclarationSpecifiers.size){
-					if(firstDeclarationSpecifiers.forall[namedImportSpecifier|
-							return followingDeclarationSpecifiers.exists[otherNamedImportSpecifier|
-								namedImportSpecifier.alias == otherNamedImportSpecifier.alias &&
-								namedImportSpecifier.importedElement.name == otherNamedImportSpecifier.importedElement.name
-							]
-					]){
-						duplicates.add(id)
-					}
-				}
+	private def void registerImportDeclarationsWithNamedImportsForModule(List<ImportDeclaration> importDeclarations,
+		RecordingImportState reg) {
+		if (importDeclarations.size < 2)
+			return;
+
+		val duplicates = newArrayList
+		val firstDeclaration = importDeclarations.head
+		val firstDeclarationSpecifiers = firstDeclaration.importSpecifiers.filter(NamedImportSpecifier)
+		importDeclarations.tail.forEach [ importDeclaration |
+			val followingDeclarationSpecifiers = importDeclaration.importSpecifiers.filter(NamedImportSpecifier)
+			if ((!firstDeclarationSpecifiers.empty) &&
+				firstDeclarationSpecifiers.size === followingDeclarationSpecifiers.size) {
+				if (firstDeclarationSpecifiers.allFollowingMatchByNameAndAlias(followingDeclarationSpecifiers))
+					duplicates.add(importDeclaration)
 			}
-			if(!duplicates.empty){
-				reg.registerDuplicatesOfImportDeclaration(firstDeclaration, duplicates);
-			}
-		}
+		]
+
+		if (!duplicates.empty)
+			reg.registerDuplicatesOfImportDeclaration(firstDeclaration, duplicates);
+	}
+
+	private def boolean allFollowingMatchByNameAndAlias(Iterable<NamedImportSpecifier> firstDeclarationSpecifiers,
+		Iterable<NamedImportSpecifier> followingDeclarationSpecifiers) {
+
+		firstDeclarationSpecifiers.forall [ namedImportSpecifier |
+			followingDeclarationSpecifiers.exists [ otherNamedImportSpecifier |
+				namedImportSpecifier.alias == otherNamedImportSpecifier.alias &&
+					namedImportSpecifier.importedElement.name == otherNamedImportSpecifier.importedElement.name
+			]
+		]
 	}
 
 	/**
@@ -271,19 +218,9 @@ class ImportStateCalculator {
 		for (is : importSpecifiers) {
 			if (! is.isFlaggedUsedInCode) {
 				reg.registerUnusedImport(is);
-				if (is.importedModule === null || is.importedModule.eIsProxy || is.isUnresolvedImport) reg.registerBrokenImport(is);
+				if (is.isBrokenImport)
+					reg.registerBrokenImport(is);
 			}
 		}
-	}
-
-	/**
-	 * @param spec - the ImportSpecifier to investigate
-	 * @return true if linker failed to resolve
-	 * */
-	private def isUnresolvedImport(ImportSpecifier spec) {
-		spec.importedModule.qualifiedName === null && if (spec instanceof NamedImportSpecifier) {
-			spec.importedElement===null || spec.importedElement.eIsProxy || spec.importedElement.name === null
-		} else
-			true;
 	}
 }

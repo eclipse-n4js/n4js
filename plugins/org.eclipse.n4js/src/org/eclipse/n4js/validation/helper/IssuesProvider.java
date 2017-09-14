@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.service.OperationCanceledError;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
@@ -34,12 +35,15 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 
 	private final IResourceValidator rv;
 	private final Resource r;
+	private final OperationCanceledManager operationCanceledManager;
 	private final CancelIndicator ci;
 
 	@SuppressWarnings("javadoc")
-	public IssuesProvider(IResourceValidator resourceValidator, Resource res, CancelIndicator ci) {
+	public IssuesProvider(IResourceValidator resourceValidator, Resource res,
+			OperationCanceledManager operationCanceledManager, CancelIndicator ci) {
 		this.rv = resourceValidator;
 		this.r = res;
+		this.operationCanceledManager = operationCanceledManager;
 		this.ci = ci;
 	}
 
@@ -55,22 +59,15 @@ public final class IssuesProvider implements Provider<List<Issue>> {
 	 */
 	@Override
 	public List<Issue> get() throws OperationCanceledError {
-		checkCanceled();
+		operationCanceledManager.checkCanceled(ci);
 		List<Issue> issues = rv.validate(r, CheckMode.ALL, ci);
 		if (!issues.contains(null)) {
-			checkCanceled();
+			operationCanceledManager.checkCanceled(ci);
 			return issues;
 		}
 		ArrayList<Issue> result = new ArrayList<>(issues);
 		result.removeAll(Collections.singleton(null));
-		checkCanceled();
+		operationCanceledManager.checkCanceled(ci);
 		return result;
 	}
-
-	private final void checkCanceled() {
-		if (ci.isCanceled()) {
-			throw new OperationCanceledError(new RuntimeException());
-		}
-	}
-
 }

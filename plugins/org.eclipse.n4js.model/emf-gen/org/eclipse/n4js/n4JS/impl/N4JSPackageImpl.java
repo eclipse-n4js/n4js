@@ -99,6 +99,7 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.IterationStatement;
+import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral;
 import org.eclipse.n4js.n4JS.Literal;
@@ -572,6 +573,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass forStatementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass labelRefEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1984,6 +1992,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getAnnotableElement__GetAllAnnotations() {
+		return annotableElementEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getAnnotableScriptElement() {
 		return annotableScriptElementEClass;
 	}
@@ -3055,6 +3072,33 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getLabelRef() {
+		return labelRefEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getLabelRef_Label() {
+		return (EReference)labelRefEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getLabelRef_LabelAsText() {
+		return (EAttribute)labelRefEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getContinueStatement() {
 		return continueStatementEClass;
 	}
@@ -3064,26 +3108,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getContinueStatement_Label() {
-		return (EReference)continueStatementEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getBreakStatement() {
 		return breakStatementEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getBreakStatement_Label() {
-		return (EReference)breakStatementEClass.getEStructuralFeatures().get(0);
 	}
 
 	/**
@@ -6289,6 +6315,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		annotableElementEClass = createEClass(ANNOTABLE_ELEMENT);
 		createEOperation(annotableElementEClass, ANNOTABLE_ELEMENT___GET_ANNOTATIONS);
+		createEOperation(annotableElementEClass, ANNOTABLE_ELEMENT___GET_ALL_ANNOTATIONS);
 
 		annotableScriptElementEClass = createEClass(ANNOTABLE_SCRIPT_ELEMENT);
 		createEReference(annotableScriptElementEClass, ANNOTABLE_SCRIPT_ELEMENT__ANNOTATION_LIST);
@@ -6443,11 +6470,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(forStatementEClass, FOR_STATEMENT___IS_FOR_PLAIN);
 		createEOperation(forStatementEClass, FOR_STATEMENT___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS);
 
+		labelRefEClass = createEClass(LABEL_REF);
+		createEReference(labelRefEClass, LABEL_REF__LABEL);
+		createEAttribute(labelRefEClass, LABEL_REF__LABEL_AS_TEXT);
+
 		continueStatementEClass = createEClass(CONTINUE_STATEMENT);
-		createEReference(continueStatementEClass, CONTINUE_STATEMENT__LABEL);
 
 		breakStatementEClass = createEClass(BREAK_STATEMENT);
-		createEReference(breakStatementEClass, BREAK_STATEMENT__LABEL);
 
 		returnStatementEClass = createEClass(RETURN_STATEMENT);
 		createEReference(returnStatementEClass, RETURN_STATEMENT__EXPRESSION);
@@ -7011,7 +7040,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		forStatementEClass.getESuperTypes().add(this.getIterationStatement());
 		forStatementEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		continueStatementEClass.getESuperTypes().add(this.getStatement());
+		continueStatementEClass.getESuperTypes().add(this.getLabelRef());
 		breakStatementEClass.getESuperTypes().add(this.getStatement());
+		breakStatementEClass.getESuperTypes().add(this.getLabelRef());
 		returnStatementEClass.getESuperTypes().add(this.getStatement());
 		withStatementEClass.getESuperTypes().add(this.getStatement());
 		withStatementEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
@@ -7247,6 +7278,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getAnnotableElement__GetAnnotations(), this.getAnnotation(), "getAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getAnnotableElement__GetAllAnnotations(), this.getAnnotation(), "getAllAnnotations", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(annotableScriptElementEClass, AnnotableScriptElement.class, "AnnotableScriptElement", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getAnnotableScriptElement_AnnotationList(), this.getAnnotationList(), null, "annotationList", null, 0, 1, AnnotableScriptElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -7443,11 +7476,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getForStatement__AppliesOnlyToBlockScopedElements(), theEcorePackage.getEBoolean(), "appliesOnlyToBlockScopedElements", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEClass(labelRefEClass, LabelRef.class, "LabelRef", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getLabelRef_Label(), this.getLabelledStatement(), null, "label", null, 0, 1, LabelRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLabelRef_LabelAsText(), theEcorePackage.getEString(), "labelAsText", null, 0, 1, LabelRef.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 		initEClass(continueStatementEClass, ContinueStatement.class, "ContinueStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getContinueStatement_Label(), this.getLabelledStatement(), null, "label", null, 0, 1, ContinueStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(breakStatementEClass, BreakStatement.class, "BreakStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getBreakStatement_Label(), this.getLabelledStatement(), null, "label", null, 0, 1, BreakStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(returnStatementEClass, ReturnStatement.class, "ReturnStatement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getReturnStatement_Expression(), this.getExpression(), null, "expression", null, 0, 1, ReturnStatement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
