@@ -39,11 +39,11 @@ public class PathWalkerGuide implements IPathWalkerInternal {
 			if (lastVisitedNode != null) {
 				ControlFlowElement cfeStart = lastVisitedNode.getRepresentedControlFlowElement();
 				FlowEdge edge = new FlowEdge(cfeStart, cfeEnd, cfTypes);
-				walker.visitEdge(edge);
+				walker.visit(edge);
 			}
 
 			cfTypes.clear();
-			walker.visitNode(cfeEnd);
+			walker.visit(cfeEnd);
 			lastVisitedNode = node;
 		}
 	}

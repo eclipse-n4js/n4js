@@ -11,7 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -25,7 +25,7 @@ import it.xsemantics.runtime.RuleEnvironment;
 /**
  * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
  */
-public class TypeGuardPathPredicate extends GraphWalker {
+public class TypeGuardPathPredicate extends GraphVisitor {
 	final N4JSTypeSystem ts;
 	final TypeRef reqTypeRef;
 	final ControlFlowElement cfElem;
@@ -69,7 +69,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 		// nothing to do
 	}
 
-	class TypeGuardActivatedPathPredicate extends ActivatedPathPredicate {
+	class TypeGuardActivatedPathPredicate extends PathExplorer {
 
 		TypeGuardActivatedPathPredicate() {
 			super(PredicateType.ForAllPaths);
@@ -80,7 +80,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 			return new TypeGuardActivePath();
 		}
 
-		class TypeGuardActivePath extends ActivePath {
+		class TypeGuardActivePath extends PathWalker {
 
 			@Override
 			protected void init() {
@@ -103,7 +103,7 @@ public class TypeGuardPathPredicate extends GraphWalker {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+			protected void visit(FlowEdge edge) {
 				// nothing to do
 			}
 

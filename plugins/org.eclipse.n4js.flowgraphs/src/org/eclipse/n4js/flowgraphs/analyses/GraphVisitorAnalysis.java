@@ -22,19 +22,19 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Contains algorithms that start {@link GraphWalkerInternal}s using the {@link GraphWalkerGuideInternal}.
+ * Contains algorithms that start {@link GraphVisitorInternal}s using the {@link GraphVisitorGuideInternal}.
  */
-public class GraphWalkerAnalysis {
+public class GraphVisitorAnalysis {
 	final FlowGraph cfg;
 
 	/** Constructor */
-	public GraphWalkerAnalysis(FlowGraph cfg) {
+	public GraphVisitorAnalysis(FlowGraph cfg) {
 		this.cfg = cfg;
 	}
 
-	/** see {@link N4JSFlowAnalyses#performAnalyzes(GraphWalkerInternal...)} */
-	public void analyseScript(N4JSFlowAnalyses flowAnalyses, Collection<GraphWalkerInternal> graphWalkers) {
-		GraphWalkerGuideInternal guide = new GraphWalkerGuideInternal(flowAnalyses, graphWalkers);
+	/** see {@link N4JSFlowAnalyses#performAnalyzes(GraphVisitorInternal...)} */
+	public void analyseScript(N4JSFlowAnalyses flowAnalyses, Collection<GraphVisitorInternal> graphWalkers) {
+		GraphVisitorGuideInternal guide = new GraphVisitorGuideInternal(flowAnalyses, graphWalkers);
 		guide.init();
 
 		Set<Node> allNodes = getAllNonControlNodes();

@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Direction;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -34,26 +34,26 @@ import com.google.common.collect.Sets;
 /**
  */
 @SuppressWarnings("javadoc")
-public class GraphWalkerGuideInternal {
+public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyses flowAnalyses;
-	private final Collection<GraphWalkerInternal> walkers;
+	private final Collection<GraphVisitorInternal> walkers;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
 	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
 
-	public GraphWalkerGuideInternal(N4JSFlowAnalyses flowAnalyses, Collection<GraphWalkerInternal> walkers) {
+	public GraphVisitorGuideInternal(N4JSFlowAnalyses flowAnalyses, Collection<GraphVisitorInternal> walkers) {
 		this.flowAnalyses = flowAnalyses;
 		this.walkers = walkers;
 	}
 
 	public void init() {
-		for (GraphWalkerInternal walker : walkers) {
+		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
 			walker.callInitAll();
 		}
 	}
 
 	public void terminate() {
-		for (GraphWalkerInternal walker : walkers) {
+		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
 			walker.callTerminateAll();
 		}
@@ -79,7 +79,7 @@ public class GraphWalkerGuideInternal {
 		walkerVisitedNodes.clear();
 		walkerVisitedEdges.clear();
 
-		for (GraphWalkerInternal walker : walkers) {
+		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
 			walker.setContainerAndDirection(cn.getControlFlowContainer(), direction);
 			walker.callInitInternal();
@@ -92,7 +92,7 @@ public class GraphWalkerGuideInternal {
 			allVisitedNodes.addAll(visitedNodes);
 		}
 
-		for (GraphWalkerInternal walker : walkers) {
+		for (GraphVisitorInternal walker : walkers) {
 			walker.callTerminate();
 		}
 		return allVisitedNodes;
@@ -140,7 +140,7 @@ public class GraphWalkerGuideInternal {
 	}
 
 	private void callVisit(CallVisit callVisit, Node lastVisitNode, DecoratedEdgeInternal currDEdge, Node visitNode) {
-		for (GraphWalkerInternal walker : walkers) {
+		for (GraphVisitorInternal walker : walkers) {
 			switch (callVisit) {
 			case OnNode:
 				if (!walkerVisitedNodes.contains(visitNode)) {
@@ -155,11 +155,11 @@ public class GraphWalkerGuideInternal {
 				walkerVisitedEdges.add(currDEdge.edge);
 				break;
 			}
-			List<ActivePathInternal> activatedPaths = walker.activate();
+			List<PathWalkerInternal> activatedPaths = walker.activate();
 			currDEdge.activePaths.addAll(activatedPaths);
 		}
-		for (Iterator<ActivePathInternal> actPathIt = currDEdge.activePaths.iterator(); actPathIt.hasNext();) {
-			ActivePathInternal activePath = actPathIt.next();
+		for (Iterator<PathWalkerInternal> actPathIt = currDEdge.activePaths.iterator(); actPathIt.hasNext();) {
+			PathWalkerInternal activePath = actPathIt.next();
 			switch (callVisit) {
 			case OnNode:
 				activePath.callVisit(visitNode);
@@ -175,8 +175,8 @@ public class GraphWalkerGuideInternal {
 	}
 
 	private List<DecoratedEdgeInternal> getFirstDecoratedEdges(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<ActivePathInternal> activatedPaths = new HashSet<>();
-		for (GraphWalkerInternal walker : walkers) {
+		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
+		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activate());
 		}
 
@@ -193,9 +193,9 @@ public class GraphWalkerGuideInternal {
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<ActivePathInternal> forkedPaths = new HashSet<>();
-			for (ActivePathInternal aPath : activatedPaths) {
-				ActivePathInternal forkedPath = aPath.callFork();
+			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
+			for (PathWalkerInternal aPath : activatedPaths) {
+				PathWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 			DecoratedEdgeInternal eF = new DecoratedEdgeInternal(edgeProvider.copy(), nextEdge, forkedPaths);
@@ -217,9 +217,9 @@ public class GraphWalkerGuideInternal {
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<ActivePathInternal> forkedPaths = new HashSet<>();
-			for (ActivePathInternal aPath : currDEdge.activePaths) {
-				ActivePathInternal forkedPath = aPath.callFork();
+			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
+			for (PathWalkerInternal aPath : currDEdge.activePaths) {
+				PathWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 
@@ -230,7 +230,7 @@ public class GraphWalkerGuideInternal {
 		}
 
 		if (nextDEdges.isEmpty()) {
-			for (ActivePathInternal aPath : currDEdge.activePaths) {
+			for (PathWalkerInternal aPath : currDEdge.activePaths) {
 				aPath.deactivate();
 			}
 		}
@@ -261,7 +261,7 @@ public class GraphWalkerGuideInternal {
 	private class DecoratedEdgeInternal {
 		final NextEdgesProvider edgeProvider;
 		ControlFlowEdge edge;
-		final Set<ActivePathInternal> activePaths = new HashSet<>();
+		final Set<PathWalkerInternal> activePaths = new HashSet<>();
 		final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 
 		public DecoratedEdgeInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
@@ -273,12 +273,12 @@ public class GraphWalkerGuideInternal {
 		}
 
 		public DecoratedEdgeInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge,
-				Set<ActivePathInternal> activePaths) {
+				Set<PathWalkerInternal> activePaths) {
 			this(edgeProvider, edge, activePaths, Sets.newHashSet());
 		}
 
 		public DecoratedEdgeInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge,
-				Set<ActivePathInternal> activePaths, Set<JumpToken> finallyBlockContexts) {
+				Set<PathWalkerInternal> activePaths, Set<JumpToken> finallyBlockContexts) {
 
 			this(edgeProvider, edge);
 			this.activePaths.addAll(activePaths);

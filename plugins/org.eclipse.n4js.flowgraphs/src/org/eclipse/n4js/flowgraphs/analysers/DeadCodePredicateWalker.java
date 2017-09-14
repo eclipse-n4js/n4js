@@ -19,7 +19,7 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
@@ -33,7 +33,7 @@ import org.eclipse.xtext.util.TextRegion;
 /**
  * Collects all reachable nodes and hence finds all unreachable nodes, alias <i>dead code</i>.
  */
-public class DeadCodePredicateWalker extends GraphWalker {
+public class DeadCodePredicateWalker extends GraphVisitor {
 	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();

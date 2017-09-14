@@ -16,15 +16,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * This class is the counterpart of {@link GraphWalkerGuideInternal} and the basis for the {@link GraphWalker}.
+ * This class is the counterpart of {@link GraphVisitorGuideInternal} and the basis for the {@link GraphVisitor}.
  */
-abstract public class GraphWalkerInternal {
+abstract public class GraphVisitorInternal {
 	/** Reference to {@link N4JSFlowAnalyses}. Set before performing the analyses. */
 	protected N4JSFlowAnalyses flowAnalyses;
 	/** Container, specified in constructor */
@@ -32,17 +32,17 @@ abstract public class GraphWalkerInternal {
 	/** Directions, specified in constructor */
 	protected final Direction[] directions;
 
-	private final List<ActivatedPathPredicateInternal> activationRequests = new LinkedList<>();
-	private final List<ActivatedPathPredicateInternal> activatedPredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicateInternal> activePredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicateInternal> failedPredicates = new LinkedList<>();
-	private final List<ActivatedPathPredicateInternal> passedPredicates = new LinkedList<>();
+	private final List<PathExplorerInternal> activationRequests = new LinkedList<>();
+	private final List<PathExplorerInternal> activatedPredicates = new LinkedList<>();
+	private final List<PathExplorerInternal> activePredicates = new LinkedList<>();
+	private final List<PathExplorerInternal> failedPredicates = new LinkedList<>();
+	private final List<PathExplorerInternal> passedPredicates = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
 	private Direction currentDirection;
 	private boolean activeDirection = false;
 
-	/** Specifies the traverse direction of a {@link GraphWalkerInternal} instance. */
+	/** Specifies the traverse direction of a {@link GraphVisitorInternal} instance. */
 	public enum Direction {
 		/** Forward edge-direction begins from the entry node of a given container. */
 		Forward,
@@ -66,7 +66,7 @@ abstract public class GraphWalkerInternal {
 	 *            sets the directions for this instance. Default direction is {@literal Direction.Forward} if no
 	 *            direction is given.
 	 */
-	protected GraphWalkerInternal(Direction... directions) {
+	protected GraphVisitorInternal(Direction... directions) {
 		this(null, directions);
 	}
 
@@ -75,12 +75,12 @@ abstract public class GraphWalkerInternal {
 	 *
 	 * @param container
 	 *            sets the containing {@link ControlFlowElement} for this instance. Iff the given container is
-	 *            {@code null}, this {@link GraphWalkerInternal} is applied on all containers.
+	 *            {@code null}, this {@link GraphVisitorInternal} is applied on all containers.
 	 * @param directions
 	 *            sets the directions for this instance. Default directions are {@literal Direction.Forward} and
 	 *            {@literal Direction.CatchBlocks} if no direction is given.
 	 */
-	protected GraphWalkerInternal(ControlFlowElement container, Direction... directions) {
+	protected GraphVisitorInternal(ControlFlowElement container, Direction... directions) {
 		if (directions.length == 0) {
 			directions = new Direction[] { Direction.Forward, Direction.CatchBlocks };
 		}
@@ -139,13 +139,13 @@ abstract public class GraphWalkerInternal {
 
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Sets the reference to {@link N4JSFlowAnalyses} singleton. */
+	/** Only called from {@link GraphVisitorGuideInternal}. Sets the reference to {@link N4JSFlowAnalyses} singleton. */
 	final void setFlowAnalyses(N4JSFlowAnalyses fAnalyses) {
 		this.flowAnalyses = fAnalyses;
 	}
 
 	/**
-	 * Only called from {@link GraphWalkerGuideInternal}. Delegates to
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
 	 * {@link #initInternal(Direction, ControlFlowElement)}.
 	 */
 	final void callInitInternal() {
@@ -154,13 +154,13 @@ abstract public class GraphWalkerInternal {
 		}
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #initAll()}. */
+	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #initAll()}. */
 	final void callInitAll() {
 		initAll();
 	}
 
 	/**
-	 * Only called from {@link GraphWalkerGuideInternal}. Delegates to
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
 	 * {@link #terminate(Direction, ControlFlowElement)}.
 	 */
 	final void callTerminate() {
@@ -169,12 +169,12 @@ abstract public class GraphWalkerInternal {
 		}
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #terminateAll()}. */
+	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #terminateAll()}. */
 	final void callTerminateAll() {
 		terminateAll();
 	}
 
-	/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link GraphWalkerInternal#visit(Node)}. */
+	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
 	final void callVisit(Node cfe) {
 		if (activeDirection) {
 			visit(cfe);
@@ -182,8 +182,8 @@ abstract public class GraphWalkerInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphWalkerGuideInternal}. Delegates to
-	 * {@link GraphWalkerInternal#visit(Node,Node,ControlFlowEdge)}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
+	 * {@link GraphVisitorInternal#visit(Node,Node,ControlFlowEdge)}.
 	 */
 	final void callVisit(Node start, Node end, ControlFlowEdge edge) {
 		if (activeDirection) {
@@ -192,7 +192,7 @@ abstract public class GraphWalkerInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphWalkerGuideInternal}. Sets {@link #currentDirection} and {@link #currentContainer}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentDirection} and {@link #currentContainer}.
 	 */
 	final void setContainerAndDirection(ControlFlowElement curContainer, Direction curDirection) {
 		this.currentContainer = curContainer;
@@ -214,10 +214,10 @@ abstract public class GraphWalkerInternal {
 		}
 	}
 
-	final List<ActivePathInternal> activate() {
-		List<ActivePathInternal> activatedPaths = new LinkedList<>();
-		for (ActivatedPathPredicateInternal app : activationRequests) {
-			ActivePathInternal activePath = app.firstPath();
+	final List<PathWalkerInternal> activate() {
+		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
+		for (PathExplorerInternal app : activationRequests) {
+			PathWalkerInternal activePath = app.firstPath();
 			app.activePaths.add(activePath);
 			app.allPaths.add(activePath);
 			activePath.init();
@@ -236,17 +236,17 @@ abstract public class GraphWalkerInternal {
 	 * current visit-method is finished. If not called from a visit-method, the new path predicate is spawned after the
 	 * next visit-method is finished.
 	 */
-	final public void requestActivation(ActivatedPathPredicateInternal app) {
+	final public void requestActivation(PathExplorerInternal app) {
 		activationRequests.add(app);
 	}
 
 	/** @returns all activated predicates */
-	final public List<ActivatedPathPredicateInternal> getActivatedPredicates() {
+	final public List<PathExplorerInternal> getActivatedPredicates() {
 		return activatedPredicates;
 	}
 
 	/** @returns all active predicates */
-	final public List<ActivatedPathPredicateInternal> getActivePredicates() {
+	final public List<PathExplorerInternal> getActivePredicates() {
 		return activePredicates;
 	}
 
@@ -289,27 +289,27 @@ abstract public class GraphWalkerInternal {
 	}
 
 	/**
-	 * An active path predicate is created and spawned from a graph walker on specific preconditions. It follows all
-	 * paths beginning from the location of activation. Its initial path is forked using the method
-	 * {@link #firstPath()}. Subsequent paths are forked from the initial paths. The active path predicate is
-	 * deactivated in case it has no active paths anymore. The final state of an active path predicate can be either
-	 * <i>Passed</i> or <i>Failed</i>.
+	 * An {@link PathExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific
+	 * preconditions. It follows all paths beginning from the location of activation. Its initial path is forked using
+	 * the method {@link #firstPath()}. Subsequent paths are forked from the initial paths. The
+	 * {@link PathExplorerInternal} is deactivated in case it has no active paths anymore. The final state of a
+	 * {@link PathExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
 	 * <p/>
 	 * The life cycle of a path predicate:
 	 * <ol>
 	 * <li/>Instantiation
 	 * <li/>Request for activation
 	 * <li/>Activation
-	 * <li/>Call to {@link ActivatedPathPredicateInternal#firstPath()}
-	 * <li/>De-Activation when all its {@link ActivePathInternal}s are inactive
-	 * <li/>Evaluation by user by calling e.g. {@link ActivatedPathPredicateInternal#isPassed()}
+	 * <li/>Call to {@link PathExplorerInternal#firstPath()}
+	 * <li/>De-Activation when all its {@link PathWalkerInternal}s are inactive
+	 * <li/>Evaluation by user by calling e.g. {@link PathExplorerInternal#isPassed()}
 	 * </ol>
 	 */
-	abstract public class ActivatedPathPredicateInternal {
-		private final Set<ActivePathInternal> activePaths = new HashSet<>();
-		private final List<ActivePathInternal> passedPaths = new LinkedList<>();
-		private final List<ActivePathInternal> failedPaths = new LinkedList<>();
-		private final List<ActivePathInternal> allPaths = new LinkedList<>();
+	abstract public class PathExplorerInternal {
+		private final Set<PathWalkerInternal> activePaths = new HashSet<>();
+		private final List<PathWalkerInternal> passedPaths = new LinkedList<>();
+		private final List<PathWalkerInternal> failedPaths = new LinkedList<>();
+		private final List<PathWalkerInternal> allPaths = new LinkedList<>();
 		/** Predicate type, specified in constructor */
 		protected final PredicateType predicateType;
 		/** Default verdict, specified in constructor */
@@ -318,13 +318,13 @@ abstract public class GraphWalkerInternal {
 		/**
 		 * Constructor
 		 * <p>
-		 * The predicate will pass as default in case {@link ActivePathInternal#fail()} is never called on any of its
+		 * The predicate will pass as default in case {@link PathWalkerInternal#fail()} is never called on any of its
 		 * active paths.
 		 *
 		 * @param predicateType
 		 *            defines fail/pass condition
 		 */
-		protected ActivatedPathPredicateInternal(PredicateType predicateType) {
+		protected PathExplorerInternal(PredicateType predicateType) {
 			this(predicateType, true);
 		}
 
@@ -336,37 +336,37 @@ abstract public class GraphWalkerInternal {
 		 * @param passAsDefault
 		 *            iff true, the predicate will pass as default
 		 */
-		protected ActivatedPathPredicateInternal(PredicateType predicateType, boolean passAsDefault) {
+		protected PathExplorerInternal(PredicateType predicateType, boolean passAsDefault) {
 			this.predicateType = predicateType;
 			this.passAsDefault = passAsDefault;
 		}
 
 		/////////////////////// Abstract Methods ///////////////////////
 
-		/** Spawns the first active path. Called right after this path predicate gets activated. */
-		abstract protected ActivePathInternal firstPath();
+		/** Spawns the first path. Called right after this {@link PathExplorerInternal} gets activated. */
+		abstract protected PathWalkerInternal firstPath();
 
 		/////////////////////// Service Methods for inherited classes ///////////////////////
 
-		/** @returns true, iff the path predicate is terminated and has verdict <i>Passed</i> */
+		/** @returns true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
 		final public boolean isPassed() {
 			return passedPredicates.contains(this);
 		}
 
-		/** @returns true, iff the path predicate is terminated and has verdict <i>Failed</i> */
+		/** @returns true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
 		final public boolean isFailed() {
 			return failedPredicates.contains(this);
 		}
 
 		/** @returns all paths no matter if they are active or not, or passed or failed. */
-		final public List<ActivePathInternal> getAllPaths() {
+		final public List<PathWalkerInternal> getAllPaths() {
 			return allPaths;
 		}
 
 		/** Deactivates all active paths and hence this path predicate. */
 		final protected void deactivateAll() {
 			while (!activePaths.isEmpty()) {
-				ActivePathInternal aPath = activePaths.iterator().next();
+				PathWalkerInternal aPath = activePaths.iterator().next();
 				aPath.deactivate();
 			}
 			checkPredicateDeactivation();
@@ -392,12 +392,12 @@ abstract public class GraphWalkerInternal {
 		}
 
 		/**
-		 * Paths begin when a path predicate gets active or when forked from another path. Paths end when no succeeding
-		 * nodes are in the control flow graph, or the user calls either {@link #pass()}, {@link #fail()}, or
-		 * {@link #deactivate()}. Paths follow every edge and fork on every node that has more than one edge. However,
-		 * each edge of type {@literal ControlFlowType.Repeat} is followed exactly twice.
+		 * Paths begin when a {@link PathExplorerInternal} gets active or when forked from another path. Paths end when
+		 * no succeeding nodes are in the control flow graph, or the user calls either {@link #pass()}, {@link #fail()},
+		 * or {@link #deactivate()}. Paths follow every edge and fork on every node that has more than one edge.
+		 * However, each edge of type {@literal ControlFlowType.Repeat} is followed exactly twice.
 		 */
-		abstract public class ActivePathInternal {
+		abstract public class PathWalkerInternal {
 
 			/////////////////////// Abstract Methods ///////////////////////
 
@@ -408,12 +408,8 @@ abstract public class GraphWalkerInternal {
 			abstract protected void visit(Node node);
 
 			/**
-			 * Called for each edge in the order of edges on the current path. *
+			 * Called for each edge in the order of edges on the current path.
 			 *
-			 * @param start
-			 *            start in terms of current direction
-			 * @param end
-			 *            end in terms of current direction
 			 * @param edge
 			 *            traversed edge
 			 */
@@ -423,7 +419,7 @@ abstract public class GraphWalkerInternal {
 			 * Forks another path from the current node.<br/>
 			 * <i>Take care about forking the current state of this instance!</i>
 			 */
-			abstract protected ActivePathInternal fork();
+			abstract protected PathWalkerInternal fork();
 
 			/** Called at last. */
 			abstract protected void terminate();
@@ -431,7 +427,7 @@ abstract public class GraphWalkerInternal {
 			/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
 			/**
-			 * Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link ActivePathInternal#visit(Node)}.
+			 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link PathWalkerInternal#visit(Node)}.
 			 */
 			final void callVisit(Node node) {
 				if (activeDirection) {
@@ -440,8 +436,8 @@ abstract public class GraphWalkerInternal {
 			}
 
 			/**
-			 * Only called from {@link GraphWalkerGuideInternal}. Delegates to
-			 * {@link ActivePathInternal#visit(Node,Node,ControlFlowEdge)}.
+			 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
+			 * {@link PathWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 			 */
 			final void callVisit(Node start, Node end, ControlFlowEdge edge) {
 				if (activeDirection) {
@@ -449,9 +445,9 @@ abstract public class GraphWalkerInternal {
 				}
 			}
 
-			/** Only called from {@link GraphWalkerGuideInternal}. Delegates to {@link #fork()}. */
-			final ActivePathInternal callFork() {
-				ActivePathInternal forkedPath = fork();
+			/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
+			final PathWalkerInternal callFork() {
+				PathWalkerInternal forkedPath = fork();
 				allPaths.add(forkedPath);
 				activePaths.add(forkedPath);
 				forkedPath.init();

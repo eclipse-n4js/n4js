@@ -19,12 +19,12 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 public interface IPathWalker {
 
 	/** Called for each node in direction of a path. */
-	public void visitNode(ControlFlowElement cfe);
+	public void visit(ControlFlowElement cfe);
 
 	/**
 	 * Called for each edge in direction of a path. The edge direction is aligned to the traversing direction, i.e. the
 	 * start node was traversed before the end node of the edge.
 	 */
-	public void visitEdge(FlowEdge edge);
+	public void visit(FlowEdge edge);
 
 }

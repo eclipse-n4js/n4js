@@ -11,7 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -19,7 +19,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 /**
  * Checks if a local variable is never used.
  */
-public class NeverUsedPredicateWalker extends GraphWalker {
+public class NeverUsedPredicateWalker extends GraphVisitor {
 
 	NeverUsedPredicateWalker() {
 		super(Direction.Forward);
@@ -57,7 +57,7 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 		// nothing to do
 	}
 
-	private class NeverUsedActivatedPathPredicate extends ActivatedPathPredicate {
+	private class NeverUsedActivatedPathPredicate extends PathExplorer {
 		final IdentifierRef idRef;
 
 		public NeverUsedActivatedPathPredicate(IdentifierRef idRef) {
@@ -70,7 +70,7 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 			return new NeverUsedActivePath();
 		}
 
-		private class NeverUsedActivePath extends ActivePath {
+		private class NeverUsedActivePath extends PathWalker {
 
 			@Override
 			protected void init() {
@@ -86,7 +86,7 @@ public class NeverUsedPredicateWalker extends GraphWalker {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+			protected void visit(FlowEdge edge) {
 				// nothing to do
 			}
 

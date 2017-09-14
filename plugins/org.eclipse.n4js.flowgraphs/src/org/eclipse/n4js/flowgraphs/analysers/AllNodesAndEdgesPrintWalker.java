@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4JS.Script;
  * {@link ControlFlowEdge}s. If a {@link ControlFlowElement} called 'container' passed in the constructor is not null,
  * only those elements in this container are found.
  */
-public class AllNodesAndEdgesPrintWalker extends GraphWalker {
+public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 	final Set<FlowEdge> allEdges = new HashSet<>();
 	final List<ControlFlowElement> allNodes = new LinkedList<>();
 	final Set<ControlFlowElement> allForwardCFEs = new HashSet<>();

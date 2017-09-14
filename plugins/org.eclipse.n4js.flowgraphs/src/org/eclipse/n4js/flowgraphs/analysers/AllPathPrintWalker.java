@@ -16,14 +16,14 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * Finds all control flow paths beginning from a given start element.
  */
-public class AllPathPrintWalker extends GraphWalker {
+public class AllPathPrintWalker extends GraphVisitor {
 	final ControlFlowElement startElement;
 
 	/**
@@ -107,8 +107,8 @@ public class AllPathPrintWalker extends GraphWalker {
 	/** @returns all found paths as strings */
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
-		for (ActivatedPathPredicateInternal app : getActivatedPredicates()) {
-			for (ActivePathInternal ap : app.getAllPaths()) {
+		for (PathExplorerInternal app : getActivatedPredicates()) {
+			for (PathWalkerInternal ap : app.getAllPaths()) {
 				AllPathPrintPath printPath = (AllPathPrintPath) ap;
 				pathStrings.add(printPath.currString);
 			}
@@ -116,7 +116,7 @@ public class AllPathPrintWalker extends GraphWalker {
 		return pathStrings;
 	}
 
-	class AllPathPrintPredicate extends ActivatedPathPredicate {
+	class AllPathPrintPredicate extends PathExplorer {
 
 		AllPathPrintPredicate() {
 			super(PredicateType.ForAllPaths);
@@ -127,7 +127,7 @@ public class AllPathPrintWalker extends GraphWalker {
 			return new AllPathPrintPath("");
 		}
 
-		class AllPathPrintPath extends ActivePath {
+		class AllPathPrintPath extends PathWalker {
 			String currString = "";
 
 			AllPathPrintPath(String initString) {
@@ -145,7 +145,7 @@ public class AllPathPrintWalker extends GraphWalker {
 			}
 
 			@Override
-			protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
+			protected void visit(FlowEdge edge) {
 				currString += " -> ";
 			}
 

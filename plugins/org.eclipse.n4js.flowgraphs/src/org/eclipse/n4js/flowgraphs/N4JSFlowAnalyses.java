@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerAnalysis;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
 public class N4JSFlowAnalyses {
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
-	private GraphWalkerAnalysis gwa;
+	private GraphVisitorAnalysis gwa;
 	private SuccessorPredecessorAnalysis spa;
 
 	/**
@@ -56,7 +56,7 @@ public class N4JSFlowAnalyses {
 	private void _perform(Script script) {
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
-		gwa = new GraphWalkerAnalysis(cfg);
+		gwa = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
 	}
 
@@ -131,13 +131,13 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 * Performs all given {@link GraphWalkerInternal}s in a single run. The single run will traverse the control flow
+	 * Performs all given {@link GraphVisitorInternal}s in a single run. The single run will traverse the control flow
 	 * graph in the following manner. First forward beginning from the entries of every source container, then backward
 	 * beginning from the exit of every source container. Finally, all remaining code elements are traversed first
 	 * forward and then backward beginning from an arbitrary element.
 	 */
-	public void performAnalyzes(GraphWalkerInternal... graphWalkers) {
-		List<GraphWalkerInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
+	public void performAnalyzes(GraphVisitorInternal... graphWalkers) {
+		List<GraphVisitorInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
 		gwa.analyseScript(this, graphWalkerList);
 	}
 

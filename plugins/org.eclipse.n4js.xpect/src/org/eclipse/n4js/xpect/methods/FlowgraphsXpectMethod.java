@@ -24,8 +24,8 @@ import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphWalkerInternal.Direction;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Direction;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
@@ -171,7 +171,7 @@ public class FlowgraphsXpectMethod {
 			startCFE = getControlFlowElement(offsetImpl);
 		}
 		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
-		GraphWalkerInternal.Direction direction = getDirection(directionName);
+		GraphVisitorInternal.Direction direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllPathPrintWalker appw = new AllPathPrintWalker(container, startCFE, direction);
@@ -181,10 +181,10 @@ public class FlowgraphsXpectMethod {
 		expectation.assertEquals(pathStrings);
 	}
 
-	private GraphWalkerInternal.Direction getDirection(String directionName) {
-		GraphWalkerInternal.Direction direction = Direction.Forward;
+	private GraphVisitorInternal.Direction getDirection(String directionName) {
+		GraphVisitorInternal.Direction direction = Direction.Forward;
 		if (directionName != null && !directionName.isEmpty()) {
-			direction = GraphWalkerInternal.Direction.valueOf(directionName);
+			direction = GraphVisitorInternal.Direction.valueOf(directionName);
 			if (direction == null) {
 				fail("Unknown direction");
 			}

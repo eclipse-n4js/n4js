@@ -24,19 +24,19 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import com.google.common.collect.Sets;
 
 /**
- * see {@link GraphWalkerInternal}
+ * see {@link GraphVisitorInternal}
  */
-abstract public class GraphWalker extends GraphWalkerInternal {
+abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
-	/** see {@link GraphWalkerInternal#GraphWalkerInternal(Direction...)} */
-	protected GraphWalker(Direction... directions) {
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(Direction...)} */
+	protected GraphVisitor(Direction... directions) {
 		this(null, directions);
 	}
 
-	/** see {@link GraphWalkerInternal#GraphWalkerInternal(ControlFlowElement, Direction...)} */
-	public GraphWalker(ControlFlowElement container, Direction... directions) {
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, Direction...)} */
+	public GraphVisitor(ControlFlowElement container, Direction... directions) {
 		super(container, directions);
 	}
 
@@ -171,10 +171,10 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	 */
 	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
 
-	/** Analog to {@link GraphWalkerInternal#visit(Node)} */
+	/** Analog to {@link GraphVisitorInternal#visit(Node)} */
 	abstract protected void visit(ControlFlowElement cfe);
 
-	/** Analog to {@link GraphWalkerInternal#visit(Node, Node, ControlFlowEdge)} */
+	/** Analog to {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)} */
 	abstract protected void visit(ControlFlowElement lastCFE, ControlFlowElement currentCFE, FlowEdge edge);
 
 	@Override
@@ -183,29 +183,28 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 	@Override
 	abstract protected void terminateAll();
 
-	/** see {@link GraphWalkerInternal.ActivatedPathPredicateInternal} */
-	abstract public class ActivatedPathPredicate extends ActivatedPathPredicateInternal {
+	/** see {@link GraphVisitorInternal.PathExplorerInternal} */
+	abstract public class PathExplorer extends PathExplorerInternal {
 
 		/**
-		 * see {@link GraphWalkerInternal.ActivatedPathPredicateInternal#ActivatedPathPredicateInternal(PredicateType)}
+		 * see {@link GraphVisitorInternal.PathExplorerInternal#PathExplorerInternal(PredicateType)}
 		 */
-		protected ActivatedPathPredicate(PredicateType predicateType) {
+		protected PathExplorer(PredicateType predicateType) {
 			super(predicateType);
 		}
 
 		/**
-		 * see
-		 * {@link GraphWalkerInternal.ActivatedPathPredicateInternal#ActivatedPathPredicateInternal(PredicateType, boolean)}
+		 * see {@link GraphVisitorInternal.PathExplorerInternal#PathExplorerInternal(PredicateType, boolean)}
 		 */
-		protected ActivatedPathPredicate(PredicateType predicateType, boolean passAsDefault) {
+		protected PathExplorer(PredicateType predicateType, boolean passAsDefault) {
 			super(predicateType, passAsDefault);
 		}
 
 		@Override
-		abstract protected ActivePath firstPath();
+		abstract protected PathWalker firstPath();
 
-		/** see {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal} */
-		abstract public class ActivePath extends ActivePathInternal {
+		/** see {@link GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal} */
+		abstract public class PathWalker extends PathWalkerInternal {
 			ControlFlowElement pLastCFE;
 			Set<ControlFlowType> pEdgeTypes = new HashSet<>();
 
@@ -215,7 +214,7 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 					ControlFlowElement cfe = node.getRepresentedControlFlowElement();
 					if (pLastCFE != null) {
 						FlowEdge edge = new FlowEdge(pLastCFE, cfe, pEdgeTypes);
-						visit(pLastCFE, cfe, edge);
+						visit(edge);
 						pEdgeTypes.clear();
 					}
 					visit(cfe);
@@ -231,21 +230,21 @@ abstract public class GraphWalker extends GraphWalkerInternal {
 			@Override
 			abstract protected void init();
 
-			/** Analog to {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal#visit(Node)} */
+			/** Called for each node in direction of a path. */
 			abstract protected void visit(ControlFlowElement cfe);
 
 			/**
-			 * Analog to
-			 * {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal#visit(Node, Node, ControlFlowEdge)}
+			 * Called for each edge in direction of a path. The edge direction is aligned to the traversing direction,
+			 * i.e. the start node was traversed before the end node of the edge.
 			 */
-			abstract protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge);
+			abstract protected void visit(FlowEdge edge);
 
-			/** see {@link GraphWalkerInternal.ActivatedPathPredicateInternal.ActivePathInternal#fork()} */
-			abstract protected ActivePath forkPath();
+			/** see {@link GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal#fork()} */
+			abstract protected PathWalker forkPath();
 
 			@Override
-			final protected ActivePath fork() {
-				ActivePath ap2 = forkPath();
+			final protected PathWalker fork() {
+				PathWalker ap2 = forkPath();
 				ap2.pLastCFE = pLastCFE;
 				ap2.pEdgeTypes.addAll(pEdgeTypes);
 				return ap2;
