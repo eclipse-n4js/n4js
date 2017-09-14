@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
@@ -41,7 +42,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.List
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
@@ -319,9 +319,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			val constructorDecl = method.astElement as N4MethodDeclaration;
 			addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl,
 				GENERIC_DECLARATION__TYPE_VARS, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	/**
