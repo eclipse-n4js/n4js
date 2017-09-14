@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
@@ -42,6 +43,9 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 
 	private static final Path WS_ROOT_PATH = getWorkspace().getRoot().getLocation().toFile().toPath();
 	private final Multimap<String, IProject> projectLocations;
+
+	// nature id to identify the RemoteSystemsTempFiles project
+	private static final String REMOTE_EDIT_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature";
 
 	/**
 	 * Sole constructor for creating a new working set manager instance.
@@ -83,7 +87,11 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		final IProject[] projects = root.getProjects();
 		final Multimap<String, IProject> locations = HashMultimap.create();
+
 		for (final IProject project : projects) {
+			if (isRemoteEditNature(project)) {
+				continue;
+			}
 			final String pair = getWorkingSetId(project);
 			locations.put(pair, project);
 		}
@@ -91,9 +99,25 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 		return locations;
 	}
 
+	/**
+	 * Returns {@code true} if the given project is of the
+	 * {@link ProjectLocationAwareWorkingSetManager#REMOTE_EDIT_PROJECT_NATURE_ID} nature.
+	 */
+	private boolean isRemoteEditNature(IProject project) {
+		try {
+			if (project.hasNature(REMOTE_EDIT_PROJECT_NATURE_ID)) {
+				return true;
+			}
+		} catch (CoreException e) {
+			return false;
+		}
+		return false;
+	}
+
 	private String getWorkingSetId(final IProject project) {
 		final Path projectPath = project.getLocation().toFile().toPath();
 		final Path parentPath = projectPath.getParent();
+
 		if (WS_ROOT_PATH.equals(parentPath)) {
 			return OTHERS_WORKING_SET_ID;
 		}
