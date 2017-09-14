@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -55,7 +55,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  * Validation of rules that apply to individual members of a classifier.<p>
- *
+ * 
  * Validation of rules about members:
  * <ul>
  * <li>if the rules require to take into account the other owned or inherited members of the
@@ -73,7 +73,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 	/**
 	 * NEEDED
-	 *
+	 * 
 	 * when removed check methods will be called twice once by N4JSValidator, and once by
 	 * AbstractDeclarativeN4JSValidator
 	 */
@@ -245,6 +245,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			if (!holdsConstructorNoReturnType(method)) {
 				return false;
 			}
+			if (!holdsConstructorNoTypeParameters(method)) {
+				return false;
+			}
 			var result = holdsConstructorModifiers(method);
 			return holdsRequiredExplicitSuperCallIsFound(method) && result;
 		}
@@ -271,7 +274,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Constraints 56 (Defining and Calling Constructors), #5.a
+	 * Requirement 56 (Defining and Calling Constructors), #5.a
 	 */
 	private def boolean holdsConstructorInInterfaceDoesNotHaveBody(TMethod constructor) {
 		if (constructor.containingType instanceof TInterface && !constructor.hasNoBody) {
@@ -283,7 +286,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Constraints 56 (Defining and Calling Constructors), #5.b
+	 * Requirement 56 (Defining and Calling Constructors), #5.b
 	 */
 	private def boolean holdsConstructorInInterfaceRequiresCovarianceAnnotation(TMethod constructor) {
 		val container = constructor.containingType;
@@ -295,6 +298,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
+	/**
+	 * Requirement 56 (Defining and Calling Constructors), #6
+	 */
 	private def boolean holdsConstructorNoReturnType(TMethod constructor) {
 		val constructorDecl = constructor.astElement as N4MethodDeclaration;
 		if (constructorDecl.returnTypeRef !== null) {
@@ -303,6 +309,19 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Requirement 56 (Defining and Calling Constructors), #8
+	 */
+	private def holdsConstructorNoTypeParameters(TMethod method) {
+		if (!method.typeVars.isEmpty) {
+			val constructorDecl = method.astElement as N4MethodDeclaration;
+			addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl,
+				GENERIC_DECLARATION__TYPE_VARS, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
+			return true;
+		}
+		return false;
 	}
 
 	/**
