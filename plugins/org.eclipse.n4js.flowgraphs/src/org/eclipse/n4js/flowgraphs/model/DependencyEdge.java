@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+// TODO GH-235
+@SuppressWarnings("javadoc")
 public class DependencyEdge extends AbstractEdge {
 	public final DependencyEdgeType type;
 	public final Symbol symbol;

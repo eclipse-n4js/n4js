@@ -485,29 +485,29 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		return errorMessage.nullOrEmpty
 	}
 
-	/**
-	 * Constraints 107
-	 */
-	private def boolean holdsNoDeadCode(FunctionOrFieldAccessor functionOrFieldAccessor, FunctionFullReport analysis) {
-		for (db : analysis.deadCode) {
-			val firstNode = NodeModelUtils.findActualNodeFor(db.statements.head)
-			val lastNode = NodeModelUtils.findActualNodeFor(db.statements.last)
-			val off = firstNode.offset
-			val len = lastNode.offset - firstNode.offset + lastNode.length
-
-			val String stmtDescription = switch db.lastExecutedStmt {
-				ThrowStatement: 'throw'
-				ReturnStatement: 'return'
-				BreakStatement: 'break'
-				ContinueStatement: 'continue'
-				default: db.lastExecutedStmt.eClass.name
-			}
-
+//	/**
+//	 * Constraints 107
+//	 */
+//	private def boolean holdsNoDeadCode(FunctionOrFieldAccessor functionOrFieldAccessor, FunctionFullReport analysis) {
+//		for (db : analysis.deadCode) {
+//			val firstNode = NodeModelUtils.findActualNodeFor(db.statements.head)
+//			val lastNode = NodeModelUtils.findActualNodeFor(db.statements.last)
+//			val off = firstNode.offset
+//			val len = lastNode.offset - firstNode.offset + lastNode.length
+//
+//			val String stmtDescription = switch db.lastExecutedStmt {
+//				ThrowStatement: 'throw'
+//				ReturnStatement: 'return'
+//				BreakStatement: 'break'
+//				ContinueStatement: 'continue'
+//				default: db.lastExecutedStmt.eClass.name
+//			}
+//
 //			val String msg = getMessageForFUN_DEAD_CODE(stmtDescription)
 //			addIssue(msg, functionOrFieldAccessor, off, len, FUN_DEAD_CODE)
-		}
-		return analysis.deadCode.empty
-	}
+//		}
+//		return analysis.deadCode.empty
+//	}
 
 	/**
 	 * Grab all returns in body that apply to this function/get/set. (Leave out returns of nested definitions)

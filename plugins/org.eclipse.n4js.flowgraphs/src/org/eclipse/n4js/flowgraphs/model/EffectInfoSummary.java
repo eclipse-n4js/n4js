@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+//TODO GH-235
+@SuppressWarnings("javadoc")
 public class EffectInfoSummary {
 	public Set<Symbol> assigneds = new HashSet<>();
 	public Set<Symbol> declares = new HashSet<>();

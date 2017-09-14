@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+//TODO GH-235
+@SuppressWarnings("javadoc")
 public class EffectInfoMask {
 
 	final public boolean showAssigned;

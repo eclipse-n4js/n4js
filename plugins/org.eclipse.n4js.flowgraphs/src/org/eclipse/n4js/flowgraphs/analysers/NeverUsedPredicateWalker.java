@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
  * Checks if a local variable is never used.
  */
 public class NeverUsedPredicateWalker extends GraphVisitor {
+	// TODO GH-235
 
 	NeverUsedPredicateWalker() {
 		super(Direction.Forward);
@@ -58,6 +59,7 @@ public class NeverUsedPredicateWalker extends GraphVisitor {
 	}
 
 	private class NeverUsedActivatedPathPredicate extends PathExplorer {
+		@SuppressWarnings("unused")
 		final IdentifierRef idRef;
 
 		public NeverUsedActivatedPathPredicate(IdentifierRef idRef) {
@@ -79,10 +81,11 @@ public class NeverUsedPredicateWalker extends GraphVisitor {
 
 			@Override
 			protected void visit(ControlFlowElement cfe) {
-				if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
-					pass();
-					deactivateAll();
-				}
+				// TODO
+				// if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
+				// pass();
+				// deactivateAll();
+				// }
 			}
 
 			@Override
