@@ -127,9 +127,6 @@ public class ASTProcessor extends AbstractProcessor {
 			if (G.canceled) {
 				log(0, "CANCELED by cancelIndicator");
 			}
-
-			// note: doesn't matter if processing succeeded, failed or was canceled
-			// (even if it failed or was canceled, we do not want to try again)
 			cache.endProcessing();
 
 			if (isDEBUG_LOG_RESULT) {
@@ -191,15 +188,6 @@ public class ASTProcessor extends AbstractProcessor {
 		log(indentLevel, "processing: " + node.objectInfo);
 
 		checkCanceled(G);
-
-
-if(node instanceof N4MethodDeclaration) {
-	for(var i=0;i<10;i++) {
-		checkCanceled(G);
-		Thread.sleep(500);
-	}
-}
-
 
 		// already done as part of a forward processing?
 		if (cache.forwardProcessedSubTrees.contains(node)) {

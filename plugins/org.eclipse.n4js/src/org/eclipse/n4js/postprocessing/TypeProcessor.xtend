@@ -262,18 +262,11 @@ public class TypeProcessor extends AbstractProcessor {
 			} else if (obj.isASTNode && obj.isTypableNode) {
 				// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
 				val cache = astMetaInfoCacheHelper.getOrCreate(res);
-				if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
+				if (!cache.isProcessingInProgress && !res.isFullyProcessed) {
 					// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
 					// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
 					// debug code in ASTMetaInfoCacheHelper to track creation/deletion of typing caches to investigate this)
 					val e = new IllegalStateException("typing of entire AST not initiated yet (hint: this is often caused by an accidental cache clear!!)")
-					println("-------------main exception:")
-					e.printStackTrace(System.out) // make sure we see this on the console (some clients eat up all exceptions!)
-					println("-------------lastOther:")
-					res.lastOtherCacheClearTrace?.printStackTrace(System.out);
-					println("-------------suspicious:")
-					res.suspiciousCacheClearTrace?.printStackTrace(System.out);
-					println("-------------end")
 					throw e;
 				} else if (cache.isProcessingInProgress) {
 
@@ -291,7 +284,7 @@ public class TypeProcessor extends AbstractProcessor {
 						// -> simply read from cache
 						return resultFromCache;
 					}
-				} else if (cache.isFullyProcessed) {
+				} else if (res.isFullyProcessed) {
 					return cache.getType(obj); // will throw exception in case of cache miss
 				}
 			} else {

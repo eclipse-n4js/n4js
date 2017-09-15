@@ -174,12 +174,13 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					super.resolveLazyCrossReferences(cancelIndicator);
 				}
 				postProcessor.performPostProcessing(this, cancelIndicator);
+				// fullyPostProcessed is only set to true when performPostProcessing above is successful and does not
+				// throw any exception. When a resource's fullPostProcessed flag is true, it is guaranteed that the
+				// resource's ASTMetaInfoCache
+				// contains cached types.
+				fullyPostProcessed = true;
 			} finally {
 				isPostProcessing = false;
-				// note: doesn't matter if processing succeeded, failed or was canceled
-				// (even if it failed or was canceled, we do not want to try again)
-				// Identical behavior as in ASTProcessor.processAST(RuleEnvironment, N4JSResource, CancelIndicator)
-				fullyPostProcessed = true;
 			}
 		}
 	}
