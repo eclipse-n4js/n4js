@@ -45,13 +45,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	private OutdatedStateManager outdatedStateManager;
 
 	/**
-	 * New semantics to fix IDE-2503: Set to true if the resource is loaded and fully initialized and
-	 * {@link #performPostProcessing(CancelIndicator)} has been invoked for it. It does not matter whether or not
-	 * processing was successful. However, this can be set to false later. It is crucial that this flag is in sync with
-	 * ASTMetaInfoCache's isFullyPostProcessed at all time.
-	 *
-	 * Note that the previous semantics before IDE-2503 bug fix is: True iff
-	 * {@link #performPostProcessing(CancelIndicator)} has been invoked and has completed successfully.
+	 * True iff {@link #performPostProcessing(CancelIndicator)} has been invoked and has completed successfully.
 	 */
 	protected volatile boolean fullyPostProcessed = false;
 	/**
