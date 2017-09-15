@@ -140,6 +140,11 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 
 	@Override
 	protected void enhanceProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
+		if (project.getFile(N4MFConstants.N4MF_MANIFEST).exists()) {
+			// Early exit if the manifest exists already.
+			// Do not enhance in this case and just adapt to the existing project files and manifest
+			return;
+		}
 
 		final N4MFProjectInfo pi = (N4MFProjectInfo) getProjectInfo();
 
@@ -186,8 +191,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 
 		// create initial files
 		for (Map.Entry<String, CharSequence> entry : pathContentMap.entrySet()) {
-			IFile file = project.getFile(entry.getKey());
-			file.create(FileContentUtil.from(entry.getValue(), charset), false, monitor);
+			createIfNotExists(project, entry.getKey(), entry.getValue(), charset, monitor);
 		}
 
 		// prepare the manifest
@@ -215,10 +219,35 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 		CharSequence manifestContent = NewN4JSProjectFileTemplates.getManifestContents(pi);
 
 		// create manifest
-		IFile manifest = project.getFile(N4MFConstants.N4MF_MANIFEST);
-		manifest.create(FileContentUtil.from(manifestContent, charset), false, monitor);
+		createIfNotExists(project, N4MFConstants.N4MF_MANIFEST, manifestContent, charset, monitor);
 
 		project.refreshLocal(DEPTH_INFINITE, monitor);
+	}
+
+	/**
+	 * Creates a new file with the given contents at the relative path, if no file at that path already exists.
+	 *
+	 * @param project
+	 *            The project to create the file in
+	 * @param relativePath
+	 *            The file path inside of the project
+	 * @param contents
+	 *            The file contents
+	 * @param charset
+	 *            The charset to use for the file writing
+	 * @param monitor
+	 *            The progress monitor to report to
+	 * @throws CoreException
+	 *             If the file creation fails. (See
+	 *             {@link IFile#create(java.io.InputStream, boolean, IProgressMonitor)})
+	 */
+	private void createIfNotExists(IProject project, String relativePath, CharSequence contents, Charset charset,
+			IProgressMonitor monitor) throws CoreException {
+		IFile file = project.getFile(relativePath);
+		if (!file.exists()) {
+			file.create(FileContentUtil.from(contents, charset), false, monitor);
+		}
+
 	}
 
 	/**

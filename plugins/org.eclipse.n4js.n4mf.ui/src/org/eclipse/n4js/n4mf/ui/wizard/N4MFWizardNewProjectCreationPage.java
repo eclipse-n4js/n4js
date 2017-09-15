@@ -335,13 +335,14 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 			}
 
 			setErrorMessage(errorMsg);
-			if (null == errorMsg) {
-				updateModel();
-			}
-			return null == errorMsg;
 		}
 
-		return valid;
+		final String errorMsg = getErrorMessage();
+
+		if (null == errorMsg) {
+			updateModel();
+		}
+		return null == errorMsg;
 	}
 
 	/**
