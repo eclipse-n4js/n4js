@@ -67,14 +67,7 @@ import org.eclipse.xtext.service.OperationCanceledManager
  */
 class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
-@Check
-def void checkTEMP(N4MethodDeclaration mdecl) {
-	//Thread.sleep(1000);
-}
-
-
 	@Inject ContainerTypesHelper containerTypesHelper;
-
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 
