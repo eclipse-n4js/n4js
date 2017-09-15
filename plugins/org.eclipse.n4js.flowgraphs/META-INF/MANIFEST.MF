@@ -6,14 +6,15 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.n4js.ts.model,
- org.eclipse.n4js.utils,
- org.eclipse.emf.ecore.xcore.lib,
- org.eclipse.xtext.xbase.lib,
  org.eclipse.n4js.releng.utils;resolution:=optional,
+ org.eclipse.n4js.utils,
+ org.eclipse.n4js.n4mf.model,
+ org.eclipse.emf.ecore.xcore.lib,
  org.eclipse.emf.ecore.xcore,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
- org.eclipse.n4js.n4mf.model,
- it.xsemantics.runtime
+ org.eclipse.xtext.xbase.lib,
+ it.xsemantics.runtime,
+ org.eclipse.n4js.n4jsx.model
 Export-Package: org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.flowgraphs.analysers,
  org.eclipse.n4js.flowgraphs.analyses,

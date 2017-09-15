@@ -36,6 +36,9 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
+import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
+import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
+import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * Provides function {@link #build(ControlFlowElement)} to create instances of {@link ComplexNode} for given
@@ -47,6 +50,10 @@ final public class CFEFactory {
 	 * Builds a {@link ComplexNode} from a given {@link ControlFlowElement}
 	 */
 	static public ComplexNode build(ControlFlowElement cfe) {
+		ComplexNode cnx = new InternalFactoryDispatcherX().doSwitch(cfe);
+		if (cnx != null) {
+			return cnx;
+		}
 		return new InternalFactoryDispatcher().doSwitch(cfe);
 	}
 
@@ -170,4 +177,16 @@ final public class CFEFactory {
 		}
 	}
 
+	static private class InternalFactoryDispatcherX extends N4JSXSwitch<ComplexNode> {
+
+		@Override
+		public ComplexNode caseJSXSpreadAttribute(JSXSpreadAttribute feature) {
+			return JSXAttributeFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseJSXPropertyAttribute(JSXPropertyAttribute feature) {
+			return JSXAttributeFactory.buildComplexNode(feature);
+		}
+	}
 }

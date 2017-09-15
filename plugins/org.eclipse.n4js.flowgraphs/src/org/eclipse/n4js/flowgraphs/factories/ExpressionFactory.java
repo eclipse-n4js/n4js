@@ -18,20 +18,20 @@ import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
-import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 class ExpressionFactory {
 
-	static ComplexNode buildComplexNode(Expression expr) {
+	static ComplexNode buildComplexNode(ControlFlowElement expr) {
 		ComplexNode cNode = new ComplexNode(expr);
 
 		HelperNode entryNode = new HelperNode("entry", expr);
 		Node exitNode = new RepresentingNode("exit", expr);
 		List<Node> argumentNodes = new LinkedList<>();
 
-		List<Expression> args = ExpressionChildren.get(expr);
+		List<ControlFlowElement> args = ExpressionChildren.get(expr);
 		for (int i = 0; i < args.size(); i++) {
-			Expression arg = args.get(i);
+			ControlFlowElement arg = args.get(i);
 			Node argNode = new DelegatingNode("arg_" + i, expr, arg);
 			argumentNodes.add(argNode);
 		}

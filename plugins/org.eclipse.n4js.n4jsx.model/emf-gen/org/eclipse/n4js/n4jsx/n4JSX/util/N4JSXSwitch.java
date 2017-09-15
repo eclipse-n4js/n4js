@@ -119,6 +119,7 @@ public class N4JSXSwitch<T> extends Switch<T> {
 			case N4JSXPackage.JSX_ATTRIBUTE: {
 				JSXAttribute jsxAttribute = (JSXAttribute)theEObject;
 				T result = caseJSXAttribute(jsxAttribute);
+				if (result == null) result = caseControlFlowElement(jsxAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -127,6 +128,7 @@ public class N4JSXSwitch<T> extends Switch<T> {
 				T result = caseJSXPropertyAttribute(jsxPropertyAttribute);
 				if (result == null) result = caseJSXAttribute(jsxPropertyAttribute);
 				if (result == null) result = caseMemberAccess(jsxPropertyAttribute);
+				if (result == null) result = caseControlFlowElement(jsxPropertyAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -134,6 +136,7 @@ public class N4JSXSwitch<T> extends Switch<T> {
 				JSXSpreadAttribute jsxSpreadAttribute = (JSXSpreadAttribute)theEObject;
 				T result = caseJSXSpreadAttribute(jsxSpreadAttribute);
 				if (result == null) result = caseJSXAttribute(jsxSpreadAttribute);
+				if (result == null) result = caseControlFlowElement(jsxSpreadAttribute);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
