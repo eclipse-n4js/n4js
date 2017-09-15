@@ -557,7 +557,7 @@ Sets the year, as a two-digit or a three/four-digit number, depending on the bro
 `toDateString():String`::
 Returns the date portion of a Date object in readable form.
 
-`toLocaleDateString():String`::
+`toLocaleDateString(locales: string|[string]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
 Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string and returns the date and time portion.
 The toLocalString accepts two optional arguments. The semantics of these arguments is defined in 
 https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocaledatestring[ECMA-402 (Internationalization API Specification)].
