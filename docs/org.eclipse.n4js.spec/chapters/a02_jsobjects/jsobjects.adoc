@@ -272,7 +272,7 @@ Returns the primitive value of a Number object.
 `toString(radix:Number=):String`::
 Returns a String value for this object. The toString method parses its first argument and attempts to return a string representation in the specified radix (base).
 
-`toLocaleString(locales: string|[string]=undefined, options: ~r~NumberFormatOptions=undefined): string`::
+`toLocaleString(locales: String|[String]=undefined, options: ~r~NumberFormatOptions=undefined): String`::
 Returns a locale-specific String value for this object. The toLocalString accepts two optional arguments. The semantics of these arguments
 is defined in https://www.ecma-international.org/ecma-402/4.0/index.html#sup-number.prototype.tolocalestring[ECMA-402 (Internationalization API Specification)].
 In N4JS, the base definition does not define that method, instead Number inherits `toLocaleString` from Object. The specialized
@@ -557,20 +557,20 @@ Sets the year, as a two-digit or a three/four-digit number, depending on the bro
 `toDateString():String`::
 Returns the date portion of a Date object in readable form.
 
-`toLocaleDateString(locales: string|[string]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
+`toLocaleDateString(locales: String|[String]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
 Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string and returns the date and time portion.
 The toLocalString accepts two optional arguments. The semantics of these arguments is defined in 
 https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocaledatestring[ECMA-402 (Internationalization API Specification)].
 The specialized definition is found in the runtime library `n4js-runtime-ecma402`. 
 
-`toLocaleString(locales: string|[string]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
+`toLocaleString(locales: String|[String]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
 Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string.
 The toLocalString accepts two optional arguments. The semantics of these arguments is defined in 
 https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocalestring[ECMA-402 (Internationalization API Specification)].
 In N4JS, the base definition does not define that method, instead Date inherits `toLocaleString` from Object. The specialized
 definition is found in the runtime library `n4js-runtime-ecma402`. 
 
-`toLocaleTimeString(locales: string|[string]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
+`toLocaleTimeString(locales: String|[String]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
 Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string and returns the time portion.
 The semantics of these arguments is defined in 
 https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocaletimestring[ECMA-402 (Internationalization API Specification)].
