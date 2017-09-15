@@ -75,7 +75,7 @@ public class GraphVisitorAnalysis {
 
 	private void printErrMalformedGraph(ComplexNode cnUnvisited) {
 		ControlFlowElement cfe = cnUnvisited.getControlFlowElement();
-		String astNodeStr = FGUtils.getTextLabel(cfe) + " (" + FGUtils.getClassName(cfe) + ")";
+		String astNodeStr = FGUtils.getSourceText(cfe) + " (" + FGUtils.getClassName(cfe) + ")";
 		System.err.println("Malformed control flow graph: Could not visit AST node: " + astNodeStr);
 	}
 

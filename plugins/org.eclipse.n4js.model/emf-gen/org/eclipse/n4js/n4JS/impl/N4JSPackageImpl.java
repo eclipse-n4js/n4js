@@ -7224,9 +7224,11 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4GetterDeclarationEClass.getESuperTypes().add(this.getN4FieldAccessor());
 		n4SetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		n4SetterDeclarationEClass.getESuperTypes().add(this.getN4FieldAccessor());
+		bindingPatternEClass.getESuperTypes().add(this.getControlFlowElement());
 		objectBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		arrayBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		bindingPropertyEClass.getESuperTypes().add(this.getPropertyNameOwner());
+		bindingElementEClass.getESuperTypes().add(this.getControlFlowElement());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);

@@ -44,6 +44,7 @@ import org.eclipse.n4js.n4JS.PostfixExpression;
 import org.eclipse.n4js.n4JS.PromisifyExpression;
 import org.eclipse.n4js.n4JS.PropertyAssignment;
 import org.eclipse.n4js.n4JS.PropertyNameValuePair;
+import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName;
 import org.eclipse.n4js.n4JS.RelationalExpression;
 import org.eclipse.n4js.n4JS.ShiftExpression;
 import org.eclipse.n4js.n4JS.SuperLiteral;
@@ -212,7 +213,15 @@ final class ExpressionChildren {
 			for (PropertyAssignment pa : ol.getPropertyAssignments()) {
 				if (pa instanceof PropertyNameValuePair) {
 					PropertyNameValuePair pnvp = (PropertyNameValuePair) pa;
-					cfc.add(pnvp.getExpression());
+					if (pnvp.getExpression() != null) {
+						cfc.add(pnvp.getExpression());
+					}
+					if (pa instanceof PropertyNameValuePairSingleName) {
+						PropertyNameValuePairSingleName pnvpsv = (PropertyNameValuePairSingleName) pa;
+						if (pnvpsv.getIdentifierRef() != null) {
+							cfc.add(pnvpsv.getIdentifierRef());
+						}
+					}
 				}
 			}
 			return cfc;
@@ -280,8 +289,10 @@ final class ExpressionChildren {
 
 		@Override
 		public List<Expression> caseTaggedTemplateString(TaggedTemplateString tts) {
-			// currently unsupported feature
-			return Collections.emptyList();
+			List<Expression> cfc = new LinkedList<>();
+			cfc.add(tts.getTarget());
+			cfc.add(tts.getTemplate());
+			return cfc;
 		}
 
 		@Override

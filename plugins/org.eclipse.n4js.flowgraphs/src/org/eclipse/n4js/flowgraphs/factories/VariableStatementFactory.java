@@ -49,7 +49,6 @@ class VariableStatementFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-		cNode.setRepresentNode(exitNode);
 
 		return cNode;
 	}

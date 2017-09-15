@@ -2140,7 +2140,7 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 	}
 }
 
-abstract class BindingPattern {
+abstract class BindingPattern extends ControlFlowElement {
 }
 
 /*
@@ -2175,7 +2175,7 @@ class BindingProperty extends PropertyNameOwner {
 	}
 }
 
-class BindingElement {
+class BindingElement extends ControlFlowElement {
 	/* Corresponds to spread in ArrayLiterals (but called 'rest' in ES6 specification within array binding patterns). */
 	boolean rest
 	contains VariableDeclaration varDecl

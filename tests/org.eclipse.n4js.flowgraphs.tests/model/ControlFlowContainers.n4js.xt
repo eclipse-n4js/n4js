@@ -20,6 +20,7 @@
  */
 
 
+// Script XPECT container of '"Script1"' --> Script
 // Script XPECT succs at '"Script1"' --> "Script2"
 // Script XPECT succs at '"Script2"' --> "Script3"
 // Script XPECT succs at '"Script3"' --> "Script4"
@@ -29,6 +30,7 @@
 
 
 function FunctionBody() {
+	// FunctionBody XPECT container of '"FB1"' --> FunctionDeclaration::Block
 	// FunctionBody XPECT succs at '"FB1"' --> "FB2"
 	"FB1";
 	"FB2";
@@ -39,6 +41,7 @@ function FunctionBody() {
 class C {
 	// XPECT warnings --> "Method names should start with lower case letter." at "MethodBody"
 	MethodBody() {
+		// MethodBody XPECT container of '"MB1"' --> N4MethodDeclaration::Block
 		// MethodBody XPECT succs at '"MB1"' --> "MB2"
 		"MB1";
 		"MB2";
@@ -47,12 +50,28 @@ class C {
 
 "Script4";
 
+// DefaultParameter XPECT container of '"DP1"' --> FormalParameter::AdditiveExpression
 // DefaultParameter XPECT succs at '"DP1"' --> "DP2"
 function DefaultParameter(a = "DP1" + "DP2") {
 }
 
 
+// ObjectBindingPattern1 XPECT container of 'obp1' --> FormalParameter::ObjectBindingPattern
+// ObjectBindingPattern1 XPECT succs at 'obp1' --> obp2
+// ObjectBindingPattern1 XPECT errors --> "Unsupported feature: destructuring patterns as formal parameter." at "{p1: obp1, p2: obp2}"
+function ObjectBindingPattern1({p1: obp1, p2: obp2}) {
+}
 
+
+// ArrayBindingPattern1 XPECT container of 'abp1' --> FormalParameter::ArrayBindingPattern
+// ArrayBindingPattern1 XPECT succs at 'abp1' --> abp2
+// ArrayBindingPattern1 XPECT errors --> "Unsupported feature: destructuring patterns as formal parameter." at "[abp1,abp2]"
+function ArrayBindingPattern1([abp1,abp2]) {
+}
+
+
+// FunctionExpression XPECT container of '"FEX1"' --> FunctionExpression::Block
+// FunctionExpression XPECT container of '"FEX_T1"' --> FunctionDeclaration::Block
 // FunctionExpression XPECT succs at '"FEX1"' --> "FEX2"
 // FunctionExpression XPECT path from '"FEX_T1"' notTo "FEX1"
 function FunctionExpression() {
@@ -64,6 +83,7 @@ function FunctionExpression() {
 }
 
 
+// FieldInitializer1 XPECT container of '"FI1"' --> N4FieldDeclaration::AdditiveExpression
 // FieldInitializer1 XPECT succs at '"FI1"' --> "FI2"
 // FieldInitializer1 XPECT succs at '"FI2"' --> "FI1" + "FI2"
 class FieldInitializer1 {
@@ -72,21 +92,25 @@ class FieldInitializer1 {
 
 
 class AnnotationParameter1 {
+	// AnnotationParameter1 XPECT container of '1' --> LiteralAnnotationArgument::IntLiteral
 	@Parameter(1)
     field;
 }
 
 
 class AnnotationConfigurable1 {
+	// AnnotationConfigurable1 XPECT container of 'false' --> LiteralAnnotationArgument::BooleanLiteral
 	@Configurable(false)
     field;
 }
 
-//  XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
+// AnnotationExpressionList XPECT container of '@This(Object)' --> FunctionExpression::ExpressionAnnotationList
+// AnnotationExpressionList XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
 var AnnotationExpressionList = @This(Object) function() {}
 
 
 class ComputedPropertyName1 {
+	// ComputedPropertyName1 XPECT container of '"CPN1"' --> LiteralOrComputedPropertyName::AdditiveExpression
 	// ComputedPropertyName1 XPECT succs at '"CPN1"' --> "CPN2"
 	// ComputedPropertyName1 XPECT succs at '"CPN2"' --> "CPN1" + "CPN2"
 	// ComputedPropertyName1 XPECT warnings --> "Field names should start with lower case letter." at "["CPN1" + "CPN2"]"
@@ -94,6 +118,7 @@ class ComputedPropertyName1 {
 }
 
 
+// ExportedVariableStatement XPECT container of 'expVS1' --> Script
 // ExportedVariableStatement XPECT succs at '"ExportedVariableStatement1"' --> expVS1
 // ExportedVariableStatement XPECT succs at 'expVS1' --> public var expVS1;
 // ExportedVariableStatement XPECT succs at 'public var expVS1;' --> "ExportedVariableStatement2"

@@ -12,6 +12,8 @@ package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
+import org.eclipse.n4js.n4JS.ArrayBindingPattern;
+import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
@@ -22,6 +24,7 @@ import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
@@ -149,6 +152,21 @@ final public class CFEFactory {
 		@Override
 		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
 			return VariableDeclarationFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseBindingElement(BindingElement feature) {
+			return BindingElementFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseArrayBindingPattern(ArrayBindingPattern feature) {
+			return BindingPatternFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseObjectBindingPattern(ObjectBindingPattern feature) {
+			return BindingPatternFactory.buildComplexNode(feature);
 		}
 	}
 

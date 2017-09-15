@@ -93,7 +93,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 	public List<String> getAllNodeStrings() {
 		List<String> nodeStrings = new LinkedList<>();
 		for (ControlFlowElement node : allNodes) {
-			nodeStrings.add(FGUtils.getTextLabel(node));
+			nodeStrings.add(FGUtils.getSourceText(node));
 		}
 		return nodeStrings;
 	}
@@ -102,7 +102,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 	public List<String> getAllIslandsNodeStrings() {
 		List<String> islandsStrings = new LinkedList<>();
 		for (ControlFlowElement node : allIslandsCFEs) {
-			islandsStrings.add(FGUtils.getTextLabel(node));
+			islandsStrings.add(FGUtils.getSourceText(node));
 		}
 		return islandsStrings;
 	}

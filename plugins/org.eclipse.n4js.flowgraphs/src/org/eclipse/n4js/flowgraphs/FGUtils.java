@@ -15,10 +15,13 @@ import java.util.LinkedList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.AnnotationArgument;
+import org.eclipse.n4js.n4JS.BindingPattern;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
+import org.eclipse.n4js.n4JS.ExportDeclaration;
+import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FieldAccessor;
@@ -28,6 +31,7 @@ import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
 import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
@@ -42,21 +46,21 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 public class FGUtils {
 
 	/** @returns label text that is the actual text from the source code */
-	public static String getTextLabel(EObject eo) {
+	public static String getSourceText(EObject eo) {
 		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
 		String text = NodeModelUtils.getTokenText(actualNode);
 		return text;
 	}
 
 	/** Creates a readable but still unique name for a given {@link ControlFlowElement}. */
-	public static String getNameID(ControlFlowElement cfe) {
+	public static String getNameID(EObject cfe) {
 		String className = getClassName(cfe);
 		String nameID = className + "#" + cfe.hashCode();
 		return nameID;
 	}
 
 	/** @returns the class name of the given cfe */
-	public static String getClassName(ControlFlowElement cfe) {
+	public static String getClassName(EObject cfe) {
 		String className = cfe.getClass().getSimpleName().toString();
 		int idx = className.lastIndexOf("Impl");
 		if (idx == className.length() - "Impl".length()) {
@@ -99,6 +103,7 @@ public class FGUtils {
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;
 		boolean isExpressionAnnotationList = cfe instanceof ExpressionAnnotationList;
+		boolean isBindingPattern = cfe instanceof BindingPattern;
 
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
@@ -107,6 +112,9 @@ public class FGUtils {
 		boolean containerIsFieldDeclaration = cfeContainer instanceof N4FieldDeclaration;
 		boolean containerIsAnnotationArgument = cfeContainer instanceof AnnotationArgument;
 		boolean containerIsLiteralOrComputedPropertyName = cfeContainer instanceof LiteralOrComputedPropertyName;
+		boolean containerIsExportSpecifier = cfeContainer instanceof ExportSpecifier;
+		boolean containerIsExportDeclaration = cfeContainer instanceof ExportDeclaration;
+		boolean containerIsN4ClassDefinition = cfeContainer instanceof N4ClassDefinition;
 
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
@@ -114,10 +122,14 @@ public class FGUtils {
 		isCFContainer |= isBlock && containerIsFunctionDeclaration;
 		isCFContainer |= isBlock && containerIsFunctionDefinition;
 		isCFContainer |= isBlock && containerIsFieldAccessor;
+		isCFContainer |= isBindingPattern && containerIsFormalParameter;
 		isCFContainer |= isExpression && containerIsFormalParameter;
 		isCFContainer |= isExpression && containerIsFieldDeclaration;
 		isCFContainer |= isExpression && containerIsAnnotationArgument;
 		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName;
+		isCFContainer |= isExpression && containerIsN4ClassDefinition;
+		isCFContainer |= isExpression && containerIsExportSpecifier;
+		isCFContainer |= isExpression && containerIsExportDeclaration;
 		return isCFContainer;
 	}
 

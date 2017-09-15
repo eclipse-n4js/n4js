@@ -26,7 +26,6 @@ class EmptyStatementFactory {
 
 		cNode.setEntryNode(entryAndExitNode);
 		cNode.setExitNode(entryAndExitNode);
-		cNode.setRepresentNode(entryAndExitNode);
 
 		return cNode;
 	}

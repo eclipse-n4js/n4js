@@ -28,7 +28,7 @@ export @Internal public class AnnotationList {}
 
 
 function DoStatement1() {
-	// DoStatement1 XPECT container --> { "start"; do { 1; } while (2); "end"; }
+	// DoStatement1 XPECT container --> FunctionDeclaration::Block
 	// DoStatement1 XPECT allIslandElems -->
 	// DoStatement1 XPECT allCatchBlocks -->
 	/* DoStatement1 XPECT allEdges ---
@@ -61,7 +61,7 @@ function DoStatement1() {
 }
 
 function DoStatementBreak1() {
-	// DoStatementBreak1 XPECT container --> { "start"; do { 1; break; 2; } while (3); "end"; }
+	// DoStatementBreak1 XPECT container --> FunctionDeclaration::Block
 	// DoStatementBreak1 XPECT allIslandElems -->
 	// DoStatementBreak1 XPECT allCatchBlocks -->
 	/* DoStatementBreak1 XPECT allEdges ---
@@ -101,7 +101,7 @@ function DoStatementBreak1() {
 }
 
 function DoStatementContinue1() {
-	// DoStatementContinue1 XPECT container --> { "start"; do { 1; continue; 2; } while (3); "end"; }
+	// DoStatementContinue1 XPECT container --> FunctionDeclaration::Block
 	// DoStatementContinue1 XPECT allIslandElems -->
 	// DoStatementContinue1 XPECT allCatchBlocks -->
 	/* DoStatementContinue1 XPECT allEdges ---
@@ -147,7 +147,7 @@ function DoStatementContinue1() {
 
 
 function WhileStatement1() {
-	// WhileStatement1 XPECT container --> { "start"; while (1) { 2; } "end"; }
+	// WhileStatement1 XPECT container --> FunctionDeclaration::Block
 	// WhileStatement1 XPECT allIslandElems -->
 	// WhileStatement1 XPECT allCatchBlocks -->
 	/* WhileStatement1 XPECT allEdges ---
@@ -183,7 +183,7 @@ function WhileStatement1() {
 }
 
 function WhileStatementBreak1() {
-	// WhileStatementBreak1 XPECT container --> { "start"; while (1) { 2; break; 3; } "end"; }
+	// WhileStatementBreak1 XPECT container --> FunctionDeclaration::Block
 	// WhileStatementBreak1 XPECT allIslandElems -->
 	// WhileStatementBreak1 XPECT allCatchBlocks -->
 	/* WhileStatementBreak1 XPECT allEdges ---
@@ -229,7 +229,7 @@ function WhileStatementBreak1() {
 }
 
 function WhileStatementContinue1() {
-	// WhileStatementContinue1 XPECT container --> { "start"; while (1) { 2; continue; 3; } "end"; }
+	// WhileStatementContinue1 XPECT container --> FunctionDeclaration::Block
 	// WhileStatementContinue1 XPECT allIslandElems -->
 	// WhileStatementContinue1 XPECT allCatchBlocks -->
 	/* WhileStatementContinue1 XPECT allEdges ---

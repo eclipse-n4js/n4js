@@ -81,7 +81,7 @@ public class FlowgraphsXpectMethod {
 
 		List<String> succTexts = new LinkedList<>();
 		for (ControlFlowElement succ : succs) {
-			String succText = FGUtils.getTextLabel(succ);
+			String succText = FGUtils.getSourceText(succ);
 			succTexts.add(succText);
 		}
 		expectation.assertEquals(succTexts);
@@ -223,7 +223,7 @@ public class FlowgraphsXpectMethod {
 		Set<ControlFlowElement> commonPreds = getFlowAnalyses(aCFE).getCommonPredecessors(aCFE, bCFE);
 		List<String> commonPredStrs = new LinkedList<>();
 		for (ControlFlowElement commonPred : commonPreds) {
-			String commonPredStr = FGUtils.getTextLabel(commonPred);
+			String commonPredStr = FGUtils.getSourceText(commonPred);
 			commonPredStrs.add(commonPredStr);
 		}
 
@@ -233,7 +233,7 @@ public class FlowgraphsXpectMethod {
 	private ControlFlowElement getControlFlowElement(IEObjectCoveringRegion offset) {
 		EObject context = offset.getEObject();
 		if (!(context instanceof ControlFlowElement)) {
-			fail("Element '" + FGUtils.getTextLabel(context) + "' is not a control flow element");
+			fail("Element '" + FGUtils.getSourceText(context) + "' is not a control flow element");
 		}
 		ControlFlowElement cfe = (ControlFlowElement) context;
 		return cfe;
@@ -259,8 +259,10 @@ public class FlowgraphsXpectMethod {
 	public void container(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getControlFlowElement(offset);
 		ControlFlowElement container = getFlowAnalyses(cfe).getContainer(cfe);
+		EObject containerContainer = container.eContainer();
 
-		String containerStr = FGUtils.getTextLabel(container);
+		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
+		String containerStr = ccString + FGUtils.getClassName(container);
 		expectation.assertEquals(containerStr);
 	}
 
@@ -276,7 +278,7 @@ public class FlowgraphsXpectMethod {
 
 		List<String> catchBlockStrs = new LinkedList<>();
 		for (Block catchBlock : catchBlocks) {
-			String catchBlockStr = FGUtils.getTextLabel(catchBlock);
+			String catchBlockStr = FGUtils.getSourceText(catchBlock);
 			catchBlockStrs.add(catchBlockStr);
 		}
 		expectation.assertEquals(catchBlockStrs);

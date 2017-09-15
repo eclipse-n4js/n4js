@@ -139,7 +139,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		private void addNode(ControlFlowElement cfe) {
 			if (!nodeMap.containsKey(cfe)) {
-				String label = FGUtils.getTextLabel(cfe);
+				String label = FGUtils.getSourceText(cfe);
 				Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
 				nodeMap.put(cfe, node);
 			}

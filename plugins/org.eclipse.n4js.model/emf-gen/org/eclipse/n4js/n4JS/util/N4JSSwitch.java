@@ -1730,6 +1730,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.BINDING_PATTERN: {
 				BindingPattern bindingPattern = (BindingPattern)theEObject;
 				T result = caseBindingPattern(bindingPattern);
+				if (result == null) result = caseControlFlowElement(bindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1737,6 +1738,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				ObjectBindingPattern objectBindingPattern = (ObjectBindingPattern)theEObject;
 				T result = caseObjectBindingPattern(objectBindingPattern);
 				if (result == null) result = caseBindingPattern(objectBindingPattern);
+				if (result == null) result = caseControlFlowElement(objectBindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1744,6 +1746,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				ArrayBindingPattern arrayBindingPattern = (ArrayBindingPattern)theEObject;
 				T result = caseArrayBindingPattern(arrayBindingPattern);
 				if (result == null) result = caseBindingPattern(arrayBindingPattern);
+				if (result == null) result = caseControlFlowElement(arrayBindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1758,6 +1761,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.BINDING_ELEMENT: {
 				BindingElement bindingElement = (BindingElement)theEObject;
 				T result = caseBindingElement(bindingElement);
+				if (result == null) result = caseControlFlowElement(bindingElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}

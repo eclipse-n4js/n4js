@@ -14356,7 +14356,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PATTERN_FEATURE_COUNT = 0;
+	int BINDING_PATTERN_FEATURE_COUNT = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Binding Pattern</em>' class.
@@ -14365,7 +14365,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_PATTERN_OPERATION_COUNT = 0;
+	int BINDING_PATTERN_OPERATION_COUNT = CONTROL_FLOW_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.ObjectBindingPatternImpl <em>Object Binding Pattern</em>}' class.
@@ -14531,7 +14531,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT__REST = 0;
+	int BINDING_ELEMENT__REST = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The feature id for the '<em><b>Var Decl</b></em>' containment reference.
@@ -14540,7 +14540,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT__VAR_DECL = 1;
+	int BINDING_ELEMENT__VAR_DECL = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Nested Pattern</b></em>' containment reference.
@@ -14549,7 +14549,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT__NESTED_PATTERN = 2;
+	int BINDING_ELEMENT__NESTED_PATTERN = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 2;
 
 	/**
 	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
@@ -14558,7 +14558,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT__EXPRESSION = 3;
+	int BINDING_ELEMENT__EXPRESSION = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>Binding Element</em>' class.
@@ -14567,7 +14567,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT_FEATURE_COUNT = 4;
+	int BINDING_ELEMENT_FEATURE_COUNT = CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Is Elision</em>' operation.
@@ -14576,7 +14576,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT___IS_ELISION = 0;
+	int BINDING_ELEMENT___IS_ELISION = CONTROL_FLOW_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Binding Element</em>' class.
@@ -14585,7 +14585,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int BINDING_ELEMENT_OPERATION_COUNT = 1;
+	int BINDING_ELEMENT_OPERATION_COUNT = CONTROL_FLOW_ELEMENT_OPERATION_COUNT + 1;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.

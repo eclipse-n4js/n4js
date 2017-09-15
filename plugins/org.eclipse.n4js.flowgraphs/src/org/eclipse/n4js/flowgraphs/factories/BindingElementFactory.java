@@ -17,34 +17,39 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
-import org.eclipse.n4js.n4JS.VariableBinding;
+import org.eclipse.n4js.n4JS.BindingElement;
 
-class VariableBindingFactory {
+class BindingElementFactory {
 
-	static ComplexNode buildComplexNode(VariableBinding varDOB) {
-		ComplexNode cNode = new ComplexNode(varDOB);
+	static ComplexNode buildComplexNode(BindingElement be) {
+		ComplexNode cNode = new ComplexNode(be);
 
-		Node entryNode = new HelperNode("entry", varDOB);
-		Node exitNode = new RepresentingNode("exit", varDOB);
-		Node patternNode = null;
+		Node entryNode = new HelperNode("entry", be);
+		Node exitNode = new HelperNode("exit", be);
+		Node declNode = null;
 		Node initNode = null;
+		Node nestedPatternNode = null;
 
-		if (varDOB.getPattern() != null) {
-			patternNode = new DelegatingNode("variablePattern", varDOB, varDOB.getPattern());
+		if (be.getNestedPattern() != null) {
+			nestedPatternNode = new DelegatingNode("nestedPattern", be, be.getNestedPattern());
 		}
-		if (varDOB.getExpression() != null) {
-			initNode = new DelegatingNode("initializer", varDOB, varDOB.getExpression());
+		if (be.getVarDecl() != null) {
+			declNode = new DelegatingNode("declaration", be, be.getVarDecl());
+		}
+		if (be.getExpression() != null) {
+			initNode = new DelegatingNode("initializer", be, be.getExpression());
 		}
 
 		cNode.addNode(entryNode);
-		cNode.addNode(patternNode);
+		cNode.addNode(nestedPatternNode);
+		cNode.addNode(declNode);
 		cNode.addNode(initNode);
 		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
 		nodes.add(entryNode);
-		nodes.add(patternNode);
+		nodes.add(nestedPatternNode);
+		nodes.add(declNode);
 		nodes.add(initNode);
 		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);

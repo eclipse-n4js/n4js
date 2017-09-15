@@ -32,7 +32,8 @@ public class ComplexNode implements ControlFlowable {
 	final private ControlFlowElement astElement;
 	final private Map<String, Node> nodeMap = new HashMap<>();
 
-	private Node entry, exit, represent;
+	private Node entry, exit;
+	private RepresentingNode represent;
 
 	/** Constructor */
 	public ComplexNode(ControlFlowElement astElement) {
@@ -82,50 +83,38 @@ public class ComplexNode implements ControlFlowable {
 
 		Node n1 = it.next();
 		while (it.hasNext()) {
-			if (!nodeMap.values().contains(n1)) {
-				throw new IllegalArgumentException("Node not child of complex node");
-			}
+			assert nodeMap.values().contains(n1) : "FlowGraph malformed: Node not child of complex node";
 
 			Node n2 = n1;
 			n1 = it.next();
 			n2.addInternalSuccessors(n1, cfType);
 		}
 
-		if (!nodeMap.values().contains(n1)) {
-			throw new IllegalArgumentException("Node not child of complex node");
-		}
+		assert nodeMap.values().contains(n1) : "FlowGraph malformed: Node not child of complex node";
 	}
 
 	/** Adds a node to this {@link ComplexNode}. */
 	public void addNode(Node node) {
-		if (node == null)
+		if (node == null) {
 			return;
+		}
+		if (node instanceof RepresentingNode) {
+			assert represent == null : "FlowGraph malformed: Only one RepresentingNode can be added";
+			represent = (RepresentingNode) node;
+		}
 		nodeMap.put(node.name, node);
 	}
 
 	/** Sets the entry node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */
 	public void setEntryNode(Node entryNode) {
-		if (!nodeMap.values().contains(entryNode))
-			throw new IllegalArgumentException("Node not child of complex node");
+		assert nodeMap.values().contains(entryNode) : "FlowGraph malformed: Node not child of complex node";
 		this.entry = entryNode;
 	}
 
 	/** Sets the exit node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */
 	public void setExitNode(Node exitNode) {
-		if (!nodeMap.values().contains(exitNode))
-			throw new IllegalArgumentException("Node not child of complex node");
+		assert nodeMap.values().contains(exitNode) : "FlowGraph malformed: Node not child of complex node";
 		this.exit = exitNode;
-	}
-
-	/**
-	 * Sets the representing node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before.
-	 */
-	public void setRepresentNode(Node representNode) {
-		if (!nodeMap.values().contains(representNode))
-			throw new IllegalArgumentException("Node not child of complex node");
-		if (isControlElement())
-			throw new IllegalArgumentException("Control elements do not have representing nodes");
-		this.represent = representNode;
 	}
 
 	/** @returns the control flow container. See {@link FGUtils#isCFContainer(ControlFlowElement)}. */
@@ -159,7 +148,7 @@ public class ComplexNode implements ControlFlowable {
 	}
 
 	/** @returns {@link RepresentingNode} of the {@link ControlFlowElement} represented by this {@link ComplexNode}. */
-	public Node getRepresent() {
+	public RepresentingNode getRepresent() {
 		return represent;
 	}
 

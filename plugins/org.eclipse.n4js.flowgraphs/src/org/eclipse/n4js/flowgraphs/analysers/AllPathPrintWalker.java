@@ -141,7 +141,7 @@ public class AllPathPrintWalker extends GraphVisitor {
 
 			@Override
 			protected void visit(ControlFlowElement cfe) {
-				currString += FGUtils.getTextLabel(cfe);
+				currString += FGUtils.getSourceText(cfe);
 			}
 
 			@Override

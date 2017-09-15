@@ -25,7 +25,7 @@ public class ASTUtils {
 	/** Returns a detailed string about the given node */
 	public static String getNodeDetailString(Node node) {
 		ControlFlowElement nCFE = node.getControlFlowElement();
-		String edgeStr = FGUtils.getClassName(nCFE) + ":" + node.name + ":" + FGUtils.getTextLabel(nCFE);
+		String edgeStr = FGUtils.getClassName(nCFE) + ":" + node.name + ":" + FGUtils.getSourceText(nCFE);
 		return edgeStr;
 	}
 

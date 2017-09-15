@@ -49,7 +49,6 @@ class VariableDeclarationFactory {
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-		cNode.setRepresentNode(exitNode);
 
 		// entryNode.setDeclaratedTokens(varDecl); // TODO: Declare-Effect
 

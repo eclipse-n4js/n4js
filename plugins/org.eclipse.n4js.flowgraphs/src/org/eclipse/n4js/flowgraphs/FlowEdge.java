@@ -84,7 +84,7 @@ public class FlowEdge implements Comparable<FlowEdge> {
 	@Override
 	public String toString() {
 		String toString = "";
-		toString += FGUtils.getTextLabel(start);
+		toString += FGUtils.getSourceText(start);
 		toString += " -";
 		boolean firstCFT = true;
 		for (Iterator<ControlFlowType> cftIt = cfTypes.iterator(); cftIt.hasNext();) {
@@ -98,7 +98,7 @@ public class FlowEdge implements Comparable<FlowEdge> {
 			}
 		}
 		toString += "-> ";
-		toString += FGUtils.getTextLabel(end);
+		toString += FGUtils.getSourceText(end);
 		return toString;
 	}
 }
