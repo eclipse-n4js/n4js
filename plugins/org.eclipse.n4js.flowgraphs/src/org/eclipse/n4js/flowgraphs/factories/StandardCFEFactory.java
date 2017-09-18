@@ -19,20 +19,31 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.xtext.xbase.lib.Pair;
 
-class ExpressionFactory {
+/** Used for all non-statements. Children nodes are retrieved from {@link CFEChildren#get(ControlFlowElement)}. */
+class StandardCFEFactory {
 
-	static ComplexNode buildComplexNode(ControlFlowElement expr) {
-		ComplexNode cNode = new ComplexNode(expr);
+	static ComplexNode buildComplexNode(ControlFlowElement cfe) {
+		return buildComplexNode(cfe, true);
+	}
 
-		HelperNode entryNode = new HelperNode("entry", expr);
-		Node exitNode = new RepresentingNode("exit", expr);
+	static ComplexNode buildComplexNodeHidden(ControlFlowElement cfe) {
+		return buildComplexNode(cfe, false);
+	}
+
+	private static ComplexNode buildComplexNode(ControlFlowElement cfe, boolean isRepresenting) {
+		ComplexNode cNode = new ComplexNode(cfe);
+
+		HelperNode entryNode = new HelperNode("entry", cfe);
+		Node exitNode = (isRepresenting) ? new RepresentingNode("exit", cfe) : new HelperNode("exit", cfe);
 		List<Node> argumentNodes = new LinkedList<>();
 
-		List<ControlFlowElement> args = ExpressionChildren.get(expr);
-		for (int i = 0; i < args.size(); i++) {
-			ControlFlowElement arg = args.get(i);
-			Node argNode = new DelegatingNode("arg_" + i, expr, arg);
+		List<Pair<String, ControlFlowElement>> args = CFEChildren.get(cfe);
+		for (Pair<String, ControlFlowElement> entry : args) {
+			String nodeName = entry.getKey();
+			ControlFlowElement child = entry.getValue();
+			Node argNode = new DelegatingNode(nodeName, cfe, child);
 			argumentNodes.add(argNode);
 		}
 

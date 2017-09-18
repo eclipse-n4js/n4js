@@ -44,7 +44,7 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
  * Provides function {@link #build(ControlFlowElement)} to create instances of {@link ComplexNode} for given
  * {@link ControlFlowElement}s.
  */
-final public class CFEFactory {
+final public class CFEFactoryDispatcher {
 
 	/**
 	 * Builds a {@link ComplexNode} from a given {@link ControlFlowElement}
@@ -148,32 +148,32 @@ final public class CFEFactory {
 
 		@Override
 		public ComplexNode caseExpression(Expression feature) {
-			return ExpressionFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableBinding(VariableBinding feature) {
-			return VariableBindingFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
-			return VariableDeclarationFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(feature);
 		}
 
 		@Override
 		public ComplexNode caseBindingElement(BindingElement feature) {
-			return BindingElementFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNodeHidden(feature);
 		}
 
 		@Override
 		public ComplexNode caseArrayBindingPattern(ArrayBindingPattern feature) {
-			return BindingPatternFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNodeHidden(feature);
 		}
 
 		@Override
 		public ComplexNode caseObjectBindingPattern(ObjectBindingPattern feature) {
-			return BindingPatternFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNodeHidden(feature);
 		}
 	}
 
@@ -181,12 +181,12 @@ final public class CFEFactory {
 
 		@Override
 		public ComplexNode caseJSXSpreadAttribute(JSXSpreadAttribute feature) {
-			return JSXAttributeFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(feature);
 		}
 
 		@Override
 		public ComplexNode caseJSXPropertyAttribute(JSXPropertyAttribute feature) {
-			return JSXAttributeFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(feature);
 		}
 	}
 }
