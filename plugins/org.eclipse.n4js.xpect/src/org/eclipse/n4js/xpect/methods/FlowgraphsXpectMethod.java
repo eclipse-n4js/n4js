@@ -64,6 +64,30 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/**
+	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
+	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 */
+	@ParameterParser(syntax = "('type' arg1=STRING)? ('at' arg2=OFFSET)?")
+	@Xpect
+	public void preds(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			String type, IEObjectCoveringRegion offset) {
+
+		ControlFlowType cfType = getControlFlowType(type);
+		ControlFlowElement cfe = getControlFlowElement(offset);
+		Set<ControlFlowElement> preds = getFlowAnalyses(cfe).getPredecessorsSkipInternal(cfe);
+		filterByControlFlowType(cfe, preds, cfType);
+
+		List<String> predTexts = new LinkedList<>();
+		for (ControlFlowElement succ : preds) {
+			String predText = FGUtils.getSourceText(succ);
+			predTexts.add(predText);
+		}
+		expectation.assertEquals(predTexts);
+	}
+
+	/**
 	 * This xpect method can evaluate the direct successors of a code element. The successors can be limited when
 	 * specifying the edge type.
 	 * <p>
@@ -76,7 +100,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		Set<ControlFlowElement> succs = getFlowAnalyses(cfe).getSuccessors(cfe);
+		Set<ControlFlowElement> succs = getFlowAnalyses(cfe).getSuccessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, succs, cfType);
 
 		List<String> succTexts = new LinkedList<>();

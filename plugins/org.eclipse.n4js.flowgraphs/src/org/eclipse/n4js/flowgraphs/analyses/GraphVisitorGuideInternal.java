@@ -101,7 +101,7 @@ public class GraphVisitorGuideInternal {
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
 		LinkedList<EdgeGuide> currEdgeGuides = new LinkedList<>();
-		List<EdgeGuide> nextEGs = getFirstDecoratedEdges(cn, edgeProvider);
+		List<EdgeGuide> nextEGs = getFirstEdgeGuides(cn, edgeProvider);
 		currEdgeGuides.addAll(nextEGs);
 
 		Node lastVisitNode = null;
@@ -183,7 +183,7 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
-	private List<EdgeGuide> getFirstDecoratedEdges(ComplexNode cn, NextEdgesProvider edgeProvider) {
+	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activate());

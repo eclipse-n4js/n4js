@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -35,29 +36,57 @@ public class SuccessorPredecessorAnalysis {
 		this.cfg = cfg;
 	}
 
-	/** @returns a list of all direct predecessors of cfe */
+	/** see {@link N4JSFlowAnalyses#getPredecessors(ControlFlowElement, ControlFlowType...)} */
 	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		Set<ControlFlowElement> predecessors = getNexts(new NextEdgesProvider.Backward(), cfe, followEdges);
+		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
+		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
+		Set<ControlFlowElement> predecessors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
 		return predecessors;
 	}
 
-	/** @returns a list of all direct successors of cfe */
+	/** see {@link N4JSFlowAnalyses#getPredecessorsSkipInternal(ControlFlowElement, ControlFlowType...)} */
+	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
+		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
+		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
+		Set<ControlFlowElement> predecessors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
+		return predecessors;
+	}
+
+	/** see {@link N4JSFlowAnalyses#getSuccessors(ControlFlowElement, ControlFlowType...)} */
 	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		Set<ControlFlowElement> successors = getNexts(new NextEdgesProvider.Forward(), cfe, followEdges);
+		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
+		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
+		Set<ControlFlowElement> successors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
 		return successors;
 	}
 
-	private Set<ControlFlowElement> getNexts(NextEdgesProvider nextEdgesProvider, ControlFlowElement cfe,
+	/** see {@link N4JSFlowAnalyses#getSuccessorsSkipInternal(ControlFlowElement, ControlFlowType...)} */
+	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
+		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
+		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
+		Set<ControlFlowElement> successors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
+		return successors;
+	}
+
+	private Node getNextNode(ControlFlowElement cfe, boolean skipInternal, NextEdgesProvider nextEdgesProvider) {
+		ComplexNode cn = cfg.getComplexNode(cfe);
+		if (skipInternal) {
+			return nextEdgesProvider.getEndNode(cn);
+		} else {
+			Node nextNode = cn.getRepresent();
+			// if (nextNode == null) {
+			// nextNode = cn.getExit();
+			// }
+			nextNode = nextEdgesProvider.getStartNode(cn);
+			return nextNode;
+		}
+	}
+
+	private Set<ControlFlowElement> getNexts(NextEdgesProvider nextEdgesProvider, ControlFlowElement cfe, Node nextNode,
 			ControlFlowType... followEdges) {
 
 		Objects.requireNonNull(cfe);
 		Set<ControlFlowElement> nexts = new HashSet<>();
-
-		ComplexNode cn = cfg.getComplexNode(cfe);
-		Node nextNode = cn.getRepresent();
-		if (nextNode == null) {
-			nextNode = cn.getExit();
-		}
 
 		LinkedList<ControlFlowEdge> allEdges = new LinkedList<>();
 		List<ControlFlowEdge> nextEdges = nextEdgesProvider.getNextEdges(nextNode, followEdges);

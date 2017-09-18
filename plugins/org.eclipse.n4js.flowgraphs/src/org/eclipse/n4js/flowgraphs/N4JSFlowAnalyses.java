@@ -70,15 +70,25 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 * @returns a list of all direct predecessors of cfe
+	 * @returns a list of all direct internal predecessors of cfe
 	 */
 	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getPredecessors(cfe, followEdges);
 	}
 
-	/** @returns a list of all direct successors of cfe */
+	/** @returns a list of all direct external predecessors of cfe */
+	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
+		return spa.getPredecessorsSkipInternal(cfe, followEdges);
+	}
+
+	/** @returns a list of all direct internal successors of cfe */
 	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getSuccessors(cfe, followEdges);
+	}
+
+	/** @returns a list of all direct external successors of cfe */
+	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
+		return spa.getSuccessorsSkipInternal(cfe, followEdges);
 	}
 
 	/** @returns true iff cfe2 is a direct successor of cfe1 */

@@ -13,9 +13,6 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,13 +21,20 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
+import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
+import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Statement;
+import org.eclipse.n4js.n4JS.SwitchStatement;
+import org.eclipse.n4js.n4JS.TryStatement;
+import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -109,8 +113,7 @@ public class DeadCodeFinder extends GraphVisitor {
 
 	/** @returns all {@link TextRegion}s of dead code */
 	public Set<DeadCodeRegion> getDeadCodeRegions() {
-		List<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups();
-		widenDeadCodeRegions(deadCodeGroups);
+		Collection<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups();
 		Set<DeadCodeRegion> deadCodeRegions = new HashSet<>();
 		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
 			DeadCodeRegion textRegion = getDeadCodeRegion(deadCodeGroup);
@@ -119,117 +122,116 @@ public class DeadCodeFinder extends GraphVisitor {
 		return deadCodeRegions;
 	}
 
-	private Set<ControlFlowElement> getWrappingControlElements(ControlFlowElement deadCodeElem) {
-		Set<ControlFlowElement> wrappingControlElems = new HashSet<>();
-		EObject cfeContainer = deadCodeElem.eContainer();
-		if (cfeContainer instanceof ExpressionStatement && deadCodeElem instanceof Expression) {
-			wrappingControlElems.add((ExpressionStatement) cfeContainer);
-		}
-		return wrappingControlElems;
-	}
-
 	/**
 	 * Returns all {@link ControlFlowElement}s that are unreachable.
 	 * <p>
 	 * However, control elements (see {@link FGUtils#isControlElement(ControlFlowElement)}) are not part of the dead
 	 * code regions.
 	 */
-	private List<Set<ControlFlowElement>> getDeadCodeGroups() {
-		List<Set<ControlFlowElement>> allDeadCodeGroups = new LinkedList<>();
-
-		HashSet<ControlFlowElement> someUnreachableCFEs = new HashSet<>();
-		someUnreachableCFEs.addAll(allIslandsCFEs);
-		Collection<Set<ControlFlowElement>> unreachablesInBlocks = separateOnTheirBlocks(someUnreachableCFEs);
-		for (Set<ControlFlowElement> unreachablesInBlock : unreachablesInBlocks) {
-			List<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups(unreachablesInBlock);
-			allDeadCodeGroups.addAll(deadCodeGroups);
-		}
-
-		someUnreachableCFEs.clear();
-		someUnreachableCFEs.addAll(allBackwardCFEs);
-		someUnreachableCFEs.removeAll(allForwardCFEs);
-		someUnreachableCFEs.removeAll(allCatchBlocksCFEs);
-		unreachablesInBlocks = separateOnTheirBlocks(someUnreachableCFEs);
-		for (Set<ControlFlowElement> unreachablesInBlock : unreachablesInBlocks) {
-			List<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups(unreachablesInBlock);
-			allDeadCodeGroups.addAll(deadCodeGroups);
-		}
-		return allDeadCodeGroups;
+	private Collection<Set<ControlFlowElement>> getDeadCodeGroups() {
+		Collection<Set<ControlFlowElement>> unreachablesInBlocks = separateOnTheirBlocks(unreachableCFEs);
+		return unreachablesInBlocks;
 	}
 
 	/**
 	 * Separates the given set into sets where all {@link ControlFlowElement}s of each set have the same containing
 	 * {@link Block}.
+	 * <p>
+	 * Note that the assumption is:<br/>
+	 * <i>No block can contain more than one single dead code region.</i>
 	 */
-	private Collection<Set<ControlFlowElement>> separateOnTheirBlocks(HashSet<ControlFlowElement> unreachableElems) {
+	private Collection<Set<ControlFlowElement>> separateOnTheirBlocks(Set<ControlFlowElement> unreachableElems) {
 		Map<Block, Set<ControlFlowElement>> unreachablesMap = new HashMap<>();
-		for (ControlFlowElement unreachable : unreachableElems) {
-			Block cfeBlock = EcoreUtil2.getContainerOfType(unreachable, Block.class);
+		for (ControlFlowElement unreachableElem : unreachableElems) {
+			HashSet<ControlFlowElement> moreUnreachableElems = new HashSet<>();
+			Block cfeBlock = getReachableBlock(unreachableElems, unreachableElem, moreUnreachableElems);
+			if (cfeBlock == null)
+				continue;
+
 			if (!unreachablesMap.containsKey(cfeBlock)) {
 				unreachablesMap.put(cfeBlock, new HashSet<>());
 			}
 			Set<ControlFlowElement> unreachableInBlock = unreachablesMap.get(cfeBlock);
-			unreachableInBlock.add(unreachable);
+			unreachableInBlock.add(unreachableElem);
+			unreachableInBlock.addAll(moreUnreachableElems);
 		}
 
 		return unreachablesMap.values();
 	}
 
-	private List<Set<ControlFlowElement>> getDeadCodeGroups(Set<ControlFlowElement> unreachablesInBlock) {
-		List<Set<ControlFlowElement>> deadCodeGroups = new LinkedList<>();
+	/** Finds the nearest reachable {@link Block} of the given {@link ControlFlowElement} */
+	private Block getReachableBlock(Set<ControlFlowElement> unreachableElems, ControlFlowElement unreachableElem,
+			Set<ControlFlowElement> moreUnreachableElems) {
 
-		while (!unreachablesInBlock.isEmpty()) {
-			ControlFlowElement oneCFE = unreachablesInBlock.iterator().next();
-			Set<ControlFlowElement> nextDeadGroup = new HashSet<>();
-			HashSet<ControlFlowElement> workListPreds = new HashSet<>();
-			workListPreds.add(oneCFE);
-			Set<ControlFlowElement> mergeWith = null;
-
-			while (!workListPreds.isEmpty()) {
-				Iterator<ControlFlowElement> workListIter = workListPreds.iterator();
-				ControlFlowElement cfe = workListIter.next();
-				workListIter.remove();
-
-				// Add predecessors of the current cfe
-				if (unreachablesInBlock.remove(cfe)) {
-					nextDeadGroup.add(cfe);
-					Set<ControlFlowElement> preds = flowAnalyses.getPredecessors(cfe);
-					workListPreds.addAll(preds);
-				}
-
-				// Check if the current group is connected to an already found group
-				for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
-					if (deadCodeGroup.contains(cfe)) {
-						mergeWith = deadCodeGroup;
-					}
-				}
-			}
-
-			if (mergeWith == null) {
-				deadCodeGroups.add(nextDeadGroup);
-			} else {
-				mergeWith.addAll(nextDeadGroup);
-			}
+		EObject elemContainer = unreachableElem.eContainer();
+		if (elemContainer instanceof ExpressionStatement) {
+			moreUnreachableElems.add((ExpressionStatement) elemContainer);
 		}
 
-		return deadCodeGroups;
+		Block block = EcoreUtil2.getContainerOfType(unreachableElem, Block.class);
+		if (block == null) // can be null in case of broken ASTs
+			return null;
+
+		EObject blockContainer = block.eContainer();
+		boolean isDeadContainer = false;
+		isDeadContainer |= blockContainer instanceof IfStatement;
+		isDeadContainer |= blockContainer instanceof SwitchStatement;
+		isDeadContainer |= blockContainer instanceof TryStatement;
+		isDeadContainer |= blockContainer instanceof WithStatement;
+		isDeadContainer |= blockContainer instanceof DoStatement;
+		isDeadContainer |= blockContainer instanceof WhileStatement;
+		isDeadContainer |= blockContainer instanceof ForStatement;
+		isDeadContainer &= isDeadContainer && isDeadCode((ControlFlowElement) blockContainer);
+
+		if (isDeadContainer) {
+			ControlFlowElement cfe = (ControlFlowElement) blockContainer;
+			moreUnreachableElems.add(cfe);
+			return getReachableBlock(unreachableElems, cfe, moreUnreachableElems);
+		}
+
+		return block;
 	}
 
 	/**
-	 * Add control elements (see {@link FGUtils#isControlElement(ControlFlowElement)}) to the dead code region, if
-	 * possible.
+	 * This method deals with the fact that {@link Statement}s are not represented in the control flow graph.
+	 *
+	 * @returns true iff the given {@link ControlFlowElement} is dead code.
 	 */
-	private void widenDeadCodeRegions(List<Set<ControlFlowElement>> deadCodeGroups) {
-		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
-			Set<ControlFlowElement> controlElements = new HashSet<>();
-			Iterator<ControlFlowElement> deadCodeGroupIt = deadCodeGroup.iterator();
-			while (deadCodeGroupIt.hasNext()) {
-				ControlFlowElement deadCodeElem = deadCodeGroupIt.next();
-				Set<ControlFlowElement> wrappingControlElems = getWrappingControlElements(deadCodeElem);
-				controlElements.addAll(wrappingControlElems);
+	private boolean isDeadCode(ControlFlowElement cfe) {
+		cfe = CFEMapper.map(cfe);
+
+		if (cfe instanceof Statement) {
+			Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+			for (ControlFlowElement succ : succs) {
+				if (!isDeadCode(succ)) {
+					return false;
+				}
 			}
-			deadCodeGroup.addAll(controlElements);
+			return true;
 		}
+
+		if (allForwardCFEs.contains(cfe)) {
+			return false;
+		}
+		Set<ControlFlowElement> preds = flowAnalyses.getPredecessorsSkipInternal(cfe);
+		if (preds.isEmpty()) {
+			return true;
+		}
+
+		Set<ControlFlowElement> visited = new HashSet<>();
+		while (!preds.isEmpty()) {
+			ControlFlowElement pred = preds.iterator().next();
+			preds.remove(pred);
+			if (visited.contains(pred))
+				continue;
+
+			if (allForwardCFEs.contains(pred)) {
+				return false;
+			}
+			preds.addAll(flowAnalyses.getPredecessorsSkipInternal(pred));
+			visited.add(pred);
+		}
+		return true;
 	}
 
 	private DeadCodeRegion getDeadCodeRegion(Set<ControlFlowElement> deadCodeGroup) {
