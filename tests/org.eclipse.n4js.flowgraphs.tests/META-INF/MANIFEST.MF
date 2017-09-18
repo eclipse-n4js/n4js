@@ -24,6 +24,7 @@ Require-Bundle: org.antlr.runtime,
  org.eclipse.n4js.ui,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.xpect,
+ org.eclipse.n4js.n4jsx.ui,
  org.xpect.xtext.lib;bundle-version="0.2.0"
 Bundle-Vendor: %providerName
 
