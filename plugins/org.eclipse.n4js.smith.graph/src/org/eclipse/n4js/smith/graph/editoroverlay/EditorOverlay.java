@@ -61,8 +61,10 @@ public class EditorOverlay implements PaintListener {
 	}
 
 	private void clear() {
-		styledText.removePaintListener(this);
-		styledText.redraw();
+		if (!styledText.isDisposed()) {
+			styledText.removePaintListener(this);
+			styledText.redraw();
+		}
 	}
 
 	private void drawSelection() {
@@ -84,7 +86,7 @@ public class EditorOverlay implements PaintListener {
 		Point sPoint = styledText.getLocationAtOffset(trOffset);
 		Point lPoint = sPoint;
 		int minX = sPoint.x;
-		for (int i = 1; i <= tr.getLength(); i++) {
+		for (int i = 1; i <= tr.getLength() && trOffset + i < styledText.getCharCount(); i++) {
 			Point p = styledText.getLocationAtOffset(trOffset + i);
 			minX = Math.min(minX, p.x);
 			if (p.y != lPoint.y) {
