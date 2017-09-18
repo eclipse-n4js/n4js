@@ -73,12 +73,7 @@ public class SuccessorPredecessorAnalysis {
 		if (skipInternal) {
 			return nextEdgesProvider.getEndNode(cn);
 		} else {
-			Node nextNode = cn.getRepresent();
-			// if (nextNode == null) {
-			// nextNode = cn.getExit();
-			// }
-			nextNode = nextEdgesProvider.getStartNode(cn);
-			return nextNode;
+			return nextEdgesProvider.getStartNode(cn);
 		}
 	}
 
