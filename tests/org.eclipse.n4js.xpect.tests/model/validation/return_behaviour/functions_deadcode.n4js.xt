@@ -144,10 +144,9 @@ function f1() {
            } else {
                break y;
            }
-       // XPECT warnings --> "Dead code." at "true"
+       // XPECT warnings --> "Dead code." at "true ) return; f0();"
        } while ( true )
        return;
-       // XPECT warnings --> "Dead code. No execution possible after return." at "f0();"
        f0();  // Dead
 
    // XPECT warnings --> "Dead code." at "true"
