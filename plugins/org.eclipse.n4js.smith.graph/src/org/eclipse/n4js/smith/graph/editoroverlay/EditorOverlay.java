@@ -68,8 +68,10 @@ public class EditorOverlay implements PaintListener {
 	}
 
 	private void drawSelection() {
-		styledText.addPaintListener(this);
-		styledText.redraw();
+		if (!styledText.isDisposed()) {
+			styledText.addPaintListener(this);
+			styledText.redraw();
+		}
 	}
 
 	/** Computes an array of points that create a frame around the selected element. */
