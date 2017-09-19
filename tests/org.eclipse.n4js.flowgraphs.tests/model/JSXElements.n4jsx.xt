@@ -39,6 +39,7 @@ function JSXElement1() {
 	// JSXElement1 XPECT commonPreds of 'div' and '"end"' --> div
 	// JSXElement1 XPECT succs at '"start"' --> div
 	// JSXElement1 XPECT succs at 'div' --> div
+	// JSXElement1 XPECT preds at '<div> </div>' --> "start"
 	// JSXElement1 XPECT succs at '<div> </div>' --> "end"
 	"start";
 	<div> </div>;
@@ -61,6 +62,7 @@ function JSXElement2(x) {
 	// JSXElement2 XPECT commonPreds of 'div' and '"end"' --> div
 	// JSXElement2 XPECT succs at '"start"' --> div
 	// JSXElement2 XPECT succs at 'div' --> <div/>
+	// JSXElement2 XPECT preds at '<div/>' --> "start"
 	// JSXElement2 XPECT succs at '<div/>' --> "end"
 	"start";
 	<div/>;
@@ -89,6 +91,7 @@ function JSXElement3() {
 	// JSXElement3 XPECT succs at 'div' --> li
 	// JSXElement3 XPECT succs at 'li' --> li
 	// JSXElement3 XPECT succs at '<li></li>' --> div
+	// JSXElement3 XPECT preds at '<div><li></li></div>' --> "start"
 	// JSXElement3 XPECT succs at '<div><li></li></div>' --> "end"
 	"start";
 	<div><li></li></div>;
@@ -114,6 +117,7 @@ function JSXExpression1(x) {
 	// JSXExpression1 XPECT succs at '"start"' --> div
 	// JSXExpression1 XPECT succs at 'div' --> x
 	// JSXExpression1 XPECT succs at 'x' --> div
+	// JSXExpression1 XPECT preds at '<div>{x}</div>' --> "start"
 	// JSXExpression1 XPECT succs at '<div>{x}</div>' --> "end"
 	"start";
 	<div>{x}</div>;
@@ -141,6 +145,7 @@ function JSXPropertyAttribute1() {
 	// JSXPropertyAttribute1 XPECT succs at 'div' --> ""
 	// JSXPropertyAttribute1 XPECT succs at '""' --> a=""
 	// JSXPropertyAttribute1 XPECT succs at 'a=""' --> div
+	// JSXPropertyAttribute1 XPECT preds at '<div a=""> </div>' --> "start"
 	// JSXPropertyAttribute1 XPECT succs at '<div a=""> </div>' --> "end"
 	"start";
 	<div a=""> </div>;
@@ -167,6 +172,7 @@ function JSXPropertyAttribute2(x) {
 	// JSXPropertyAttribute2 XPECT succs at 'div' --> x
 	// JSXPropertyAttribute2 XPECT succs at 'x' --> a={x}
 	// JSXPropertyAttribute2 XPECT succs at 'a={x}' --> <div a={x}/>
+	// JSXPropertyAttribute2 XPECT preds at '<div a={x}/>' --> "start"
 	// JSXPropertyAttribute2 XPECT succs at '<div a={x}/>' --> "end"
 	"start";
 	<div a={x}/>;
@@ -194,6 +200,7 @@ function JSXPropertyAttribute3(x) {
 	// JSXPropertyAttribute3 XPECT succs at 'div' --> x
 	// JSXPropertyAttribute3 XPECT succs at 'x' --> a={x}
 	// JSXPropertyAttribute3 XPECT succs at 'a={x}' --> div
+	// JSXPropertyAttribute3 XPECT preds at '<div a={x}> </div>' --> "start"
 	// JSXPropertyAttribute3 XPECT succs at '<div a={x}> </div>' --> "end"
 	"start";
 	<div a={x}> </div>;
@@ -221,6 +228,7 @@ function JSXSpreadAttribute1(x) {
 	// JSXSpreadAttribute1 XPECT succs at 'div' --> x
 	// JSXSpreadAttribute1 XPECT succs at 'x' --> {...x}
 	// JSXSpreadAttribute1 XPECT succs at '{...x}' --> div
+	// JSXSpreadAttribute1 XPECT preds at '<div {...x}> </div>' --> "start"
 	// JSXSpreadAttribute1 XPECT succs at '<div {...x}> </div>' --> "end"
 	"start";
 	<div {...x}> </div>;
@@ -247,9 +255,9 @@ function JSXSpreadAttribute2(x) {
 	// JSXSpreadAttribute2 XPECT succs at 'div' --> x
 	// JSXSpreadAttribute2 XPECT succs at 'x' --> {...x}
 	// JSXSpreadAttribute2 XPECT succs at '{...x}' --> <div {...x}/>
+	// JSXSpreadAttribute2 XPECT preds at '<div {...x}/>' --> "start"
 	// JSXSpreadAttribute2 XPECT succs at '<div {...x}/>' --> "end"
 	"start";
 	<div {...x}/>;
 	"end";
 }
-

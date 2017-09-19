@@ -37,6 +37,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 
@@ -136,26 +137,28 @@ public class FGUtils {
 	/**
 	 * Returns true iff the represented {@link ControlFlowElement} is one of the following:
 	 * <ul>
+	 * <li>AbstractCaseClause</li>
 	 * <li>Block</li>
-	 * <li>IfStatement</li>
-	 * <li>ForStatement</li>
 	 * <li>DoStatement</li>
-	 * <li>WhileStatement</li>
+	 * <li>ForStatement</li>
+	 * <li>IfStatement</li>
 	 * <li>TryStatement</li>
 	 * <li>SwitchStatement</li>
-	 * <li>AbstractCaseClause</li>
+	 * <li>WhileStatement</li>
+	 * <li>WithStatement</li>
 	 * </ul>
 	 */
 	public static boolean isControlElement(ControlFlowElement cfe) {
 		boolean isControlElement = false;
-		isControlElement |= cfe instanceof Block;
-		isControlElement |= cfe instanceof IfStatement;
-		isControlElement |= cfe instanceof ForStatement;
-		isControlElement |= cfe instanceof DoStatement;
-		isControlElement |= cfe instanceof WhileStatement;
-		isControlElement |= cfe instanceof TryStatement;
-		isControlElement |= cfe instanceof SwitchStatement;
 		isControlElement |= cfe instanceof AbstractCaseClause;
+		isControlElement |= cfe instanceof Block;
+		isControlElement |= cfe instanceof DoStatement;
+		isControlElement |= cfe instanceof ForStatement;
+		isControlElement |= cfe instanceof IfStatement;
+		isControlElement |= cfe instanceof SwitchStatement;
+		isControlElement |= cfe instanceof TryStatement;
+		isControlElement |= cfe instanceof WhileStatement;
+		isControlElement |= cfe instanceof WithStatement;
 		return isControlElement;
 	}
 

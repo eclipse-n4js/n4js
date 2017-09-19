@@ -53,6 +53,8 @@ function DoStatement1() {
 	// DoStatement1 XPECT succs at '"start"' --> 1
 	// DoStatement1 XPECT succs at '1' --> 2
 	// DoStatement1 XPECT succs at '2' --> 1, "end"
+	// DoStatement1 XPECT preds at 'do' --> "start"
+	// DoStatement1 XPECT succs at 'do' --> "end"
 	"start";
 	do {
 		1;
@@ -89,6 +91,8 @@ function DoStatementBreak1() {
 	// DoStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 	// DoStatementBreak1 XPECT succs at '2' --> 3
 	// DoStatementBreak1 XPECT succs at '3' --> 1, "end"
+	// DoStatementBreak1 XPECT preds at 'do' --> "start"
+	// DoStatementBreak1 XPECT succs at 'do' --> "end"
 	"start";
 	do {
 		1;
@@ -134,6 +138,8 @@ function DoStatementContinue1() {
 	// DoStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
 	// DoStatementContinue1 XPECT succs at '2' --> 3
 	// DoStatementContinue1 XPECT succs at '3' --> 1, "end"
+	// DoStatementContinue1 XPECT preds at 'do' --> "start"
+	// DoStatementContinue1 XPECT succs at 'do' --> "end"
 	"start";
 	do {
 		1;
@@ -175,6 +181,8 @@ function WhileStatement1() {
 	// WhileStatement1 XPECT succs at '1' --> 2, "end"
 	// WhileStatement1 XPECT succs type 'Repeat' at '1' --> 2
 	// WhileStatement1 XPECT succs at '2' --> 1
+	// WhileStatement1 XPECT preds at 'while' --> "start"
+	// WhileStatement1 XPECT succs at 'while' --> "end"
 	"start";
 	while (1) {
 		2;
@@ -218,6 +226,8 @@ function WhileStatementBreak1() {
 	// WhileStatementBreak1 XPECT succs at '2' --> break;
 	// WhileStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 	// WhileStatementBreak1 XPECT succs at '3' --> 1
+	// WhileStatementBreak1 XPECT preds at 'while' --> "start"
+	// WhileStatementBreak1 XPECT succs at 'while' --> "end"
 	"start";
 	while (1) {
 		2;
@@ -268,6 +278,8 @@ function WhileStatementContinue1() {
 	// WhileStatementContinue1 XPECT succs at '2' --> continue;
 	// WhileStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 1
 	// WhileStatementContinue1 XPECT succs at '3' --> 1
+	// WhileStatementContinue1 XPECT preds at 'while' --> "start"
+	// WhileStatementContinue1 XPECT succs at 'while' --> "end"
 	"start";
 	while (1) {
 		2;

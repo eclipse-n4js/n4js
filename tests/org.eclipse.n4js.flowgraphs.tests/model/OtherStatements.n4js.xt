@@ -41,6 +41,8 @@ function Block1() {
 	// Block1 XPECT commonPreds of '1' and '"start"' --> "start"
 	// Block1 XPECT succs at '"start"' --> 1
 	// Block1 XPECT succs at '1' --> "end"
+	// Block1 XPECT preds at '{' --> "start"
+	// Block1 XPECT succs at '{' --> "end"
 	"start";
 	{
 		1;
@@ -64,6 +66,8 @@ function Block2() {
 	// Block2 XPECT succs at '"start"' --> 1
 	// Block2 XPECT succs at '1' --> 2
 	// Block2 XPECT succs at '2' --> "end"
+	// Block2 XPECT preds at '{' --> "start"
+	// Block2 XPECT succs at '{' --> "end"
 	"start";
 	{
 		1;
@@ -90,6 +94,8 @@ function Block3() {
 	// Block3 XPECT succs at '"start"' --> 1
 	// Block3 XPECT succs at '1' --> 2
 	// Block3 XPECT succs at '2' --> "end"
+	// Block3 XPECT preds at '{' --> "start"
+	// Block3 XPECT succs at '{' --> "end"
 	"start";
 	{
 		{
@@ -132,6 +138,8 @@ function IfStatement1() {
 	// IfStatement1 XPECT succs at '1' --> 2,3
 	// IfStatement1 XPECT succs at '2' --> "end"
 	// IfStatement1 XPECT succs at '3' --> "end"
+	// IfStatement1 XPECT preds at 'if' --> "start"
+	// IfStatement1 XPECT succs at 'if' --> "end"
 	"start";
 	if (1) 2; else 3;
 	"end";
@@ -163,6 +171,8 @@ function IfStatement2() {
 	// IfStatement2 XPECT succs at '"start"' --> 1
 	// IfStatement2 XPECT succs at '1' --> 2,"end"
 	// IfStatement2 XPECT succs at '2' --> "end"
+	// IfStatement2 XPECT preds at 'if' --> "start"
+	// IfStatement2 XPECT succs at 'if' --> "end"
 	"start";
 	if (1) 2;
 	"end";
@@ -182,6 +192,7 @@ function EmptyStatement() {
 	// EmptyStatement XPECT path from '"start"' to '"end"' -->
 	// EmptyStatement XPECT commonPreds of ' ;' and '"end"' -->  ;
 	// EmptyStatement XPECT succs at '"start"' -->  ;
+	// EmptyStatement XPECT preds at ' ;' --> "start"
 	// EmptyStatement XPECT succs at ' ;' --> "end"
 	"start";
 	 ;
@@ -200,6 +211,8 @@ function ReturnStatement1() {
 	// ReturnStatement1 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement1 XPECT commonPreds of 'return;' and '"end"' -->
 	// ReturnStatement1 XPECT succs at '"start"' --> return;
+	// ReturnStatement1 XPECT preds at 'return;' --> "start"
+	// ReturnStatement1 XPECT succs at 'return;' -->
 	"start";
 	 return;
 	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
@@ -220,6 +233,8 @@ function ReturnStatement2() : int {
 	// ReturnStatement2 XPECT commonPreds of 'return 1;' and '"end"' -->
 	// ReturnStatement2 XPECT succs at '"start"' --> 1
 	// ReturnStatement2 XPECT succs at '1' --> return 1;
+	// ReturnStatement2 XPECT preds at 'return 1;' --> "start"
+	// ReturnStatement2 XPECT succs at 'return 1;' -->
 	"start";
 	 return 1;
 	// ReturnStatement2 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
@@ -249,6 +264,8 @@ function ReturnStatement3() {
 	// ReturnStatement3 XPECT commonPreds of 'return;' and '"end"' --> 1
 	// ReturnStatement3 XPECT succs at '"start"' --> 1
 	// ReturnStatement3 XPECT succs at '1' --> return;, "end"
+	// ReturnStatement3 XPECT preds at 'return;' --> 1
+	// ReturnStatement3 XPECT succs at 'return;' -->
 	"start";
 	if (1) {
 	 	return;
@@ -270,6 +287,7 @@ let ReturnStatement4 = function() {
 	// ReturnStatement4 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement4 XPECT commonPreds of 'return;' and '"end"' -->
 	// ReturnStatement4 XPECT succs at '"start"' --> return;
+	// ReturnStatement4 XPECT preds at 'return;' --> "start"
 	// ReturnStatement4 XPECT succs at 'return;' -->
 	"start";
 	return;
@@ -291,6 +309,7 @@ class ReturnStatement5 {
 		// ReturnStatement5 XPECT path from '"start"' notTo '"end"' -->
 		// ReturnStatement5 XPECT commonPreds of 'return;' and '"end"' -->
 		// ReturnStatement5 XPECT succs at '"start"' --> return;
+		// ReturnStatement5 XPECT preds at 'return;' --> "start"
 		// ReturnStatement5 XPECT succs at 'return;' -->
 		"start";
 		// ReturnStatement5 XPECT errors --> "Return statement must have an expression of type void" at "return;"
@@ -317,6 +336,8 @@ function WithStatement1() {
 	// WithStatement1 XPECT succs at '"start"' --> 1
 	// WithStatement1 XPECT succs at '1' --> 2
 	// WithStatement1 XPECT succs at '2' --> "end"
+	// WithStatement1 XPECT preds at 'with' --> "start"
+	// WithStatement1 XPECT succs at 'with' --> "end"
 	"start";
 	// WithStatement1 XPECT errors --> "With statement not allowed." at "with"
 	with (1) 2;
@@ -339,6 +360,8 @@ function WithStatement2() {
 	// WithStatement2 XPECT succs at '"start"' --> 1
 	// WithStatement2 XPECT succs at '1' --> 2
 	// WithStatement2 XPECT succs at '2' --> "end"
+	// WithStatement2 XPECT preds at 'with' --> "start"
+	// WithStatement2 XPECT succs at 'with' --> "end"
 	"start";
 	// WithStatement2 XPECT errors --> "With statement not allowed." at "with"
 	with (1) {
@@ -365,6 +388,7 @@ function VariableStatement1() {
 	// VariableStatement1 XPECT succs at '"start"' --> 1
 	// VariableStatement1 XPECT succs at '1' --> x = 1
 	// VariableStatement1 XPECT succs at 'x = 1' --> let x = 1;
+	// VariableStatement1 XPECT preds at 'let x = 1;' --> "start"
 	// VariableStatement1 XPECT succs at 'let x = 1;' --> "end"
 	"start";
 	let x = 1;
@@ -388,6 +412,7 @@ function VariableStatement2() {
 	// VariableStatement2 XPECT succs at '"start"' --> 1
 	// VariableStatement2 XPECT succs at '1' --> x = 1
 	// VariableStatement2 XPECT succs at 'x = 1' --> var x = 1;
+	// VariableStatement2 XPECT preds at 'var x = 1;' --> "start"
 	// VariableStatement2 XPECT succs at 'var x = 1;' --> "end"
 	"start";
 	var x = 1;
@@ -413,6 +438,7 @@ function VariableStatement3() {
 	// VariableStatement3 XPECT succs at 'x' --> y
 	// VariableStatement3 XPECT succs at 'y' --> z
 	// VariableStatement3 XPECT succs at 'z' --> let x\, y\, z;
+	// VariableStatement3 XPECT preds at 'let x, y, z;' --> "start"
 	// VariableStatement3 XPECT succs at 'let x, y, z;' --> "end"
 	"start";
 	let x, y, z;

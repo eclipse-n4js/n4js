@@ -36,6 +36,8 @@ function ThrowStatement1() {
 	// ThrowStatement1 XPECT commonPreds of 'throw 1;' and '"end"' -->
 	// ThrowStatement1 XPECT succs at '"start"' --> 1
 	// ThrowStatement1 XPECT succs at '1' --> throw 1;
+	// ThrowStatement1 XPECT preds at 'throw 1;' --> "start"
+	// ThrowStatement1 XPECT succs at 'throw 1;' -->
 	"start";
 	throw 1;
 	// ThrowStatement1 XPECT warnings --> "Dead code. No execution possible after throw." at ""end";"
@@ -67,6 +69,8 @@ function ThrowStatement2() {
 	// ThrowStatement2 XPECT succs at '"start"' --> 1
 	// ThrowStatement2 XPECT succs at '1' --> 2, "end"
 	// ThrowStatement2 XPECT succs at '2' --> throw 2;
+	// ThrowStatement2 XPECT preds at 'throw 2;' --> 1
+	// ThrowStatement2 XPECT succs at 'throw 2;' -->
 	"start";
 	if (1) {
 		throw 2;
@@ -89,6 +93,7 @@ let ThrowStatement3 = function() {
 	// ThrowStatement3 XPECT commonPreds of '1' and '"end"' -->
 	// ThrowStatement3 XPECT succs at '"start"' --> 1
 	// ThrowStatement3 XPECT succs at '1' --> throw 1;
+	// ThrowStatement3 XPECT preds at 'throw 1;' --> "start"
 	// ThrowStatement3 XPECT succs at 'throw 1;' -->
 	"start";
 	throw 1;
@@ -98,7 +103,7 @@ let ThrowStatement3 = function() {
 
 
 class ThrowStatement4 {
-    get getterReturnStatement5() {
+    get getterThrowStatement4() {
 		// ThrowStatement4 XPECT container --> N4GetterDeclaration::Block
 		// ThrowStatement4 XPECT allIslandElems -->
 		// ThrowStatement4 XPECT allCatchBlocks -->
@@ -114,6 +119,7 @@ class ThrowStatement4 {
 		// ThrowStatement4 XPECT path from '"start"' notTo '"end"' -->
 		// ThrowStatement4 XPECT commonPreds of 'throw 1;' and '"end"' -->
 		// ThrowStatement4 XPECT succs at '1' --> throw 1;
+		// ThrowStatement4 XPECT preds at 'throw 1;' --> "start"
 		// ThrowStatement4 XPECT succs at 'throw 1;' -->
 		"start";
         throw 1;
@@ -141,6 +147,8 @@ function TryCatchStatement1() {
 	// TryCatchStatement1 XPECT succs at '"start"' --> 1
 	// TryCatchStatement1 XPECT succs at '1' --> "end"
 	// TryCatchStatement1 XPECT succs at '2' --> "end"
+	// TryCatchStatement1 XPECT preds at 'try' --> "start"
+	// TryCatchStatement1 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -171,6 +179,8 @@ function TryCatchFinallyStatement1() {
 	// TryCatchFinallyStatement1 XPECT succs at '1' --> 3
 	// TryCatchFinallyStatement1 XPECT succs at '2' --> 3
 	// TryCatchFinallyStatement1 XPECT succs at '3' --> "end"
+	// TryCatchFinallyStatement1 XPECT preds at 'try' --> "start"
+	// TryCatchFinallyStatement1 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -205,6 +215,8 @@ function ThrowTryCatchStatement1() {
 	// ThrowTryCatchStatement1 XPECT succs at '2' --> throw 2;
 	// ThrowTryCatchStatement1 XPECT succs at 'throw 2;' --> 3
 	// ThrowTryCatchStatement1 XPECT succs at '3' --> "end"
+	// ThrowTryCatchStatement1 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement1 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -238,6 +250,8 @@ function ThrowTryCatchStatement2() {
 	// ThrowTryCatchStatement2 XPECT succs at '1' --> "end"
 	// ThrowTryCatchStatement2 XPECT succs at '2' --> 3
 	// ThrowTryCatchStatement2 XPECT succs at '3' --> throw 3;
+	// ThrowTryCatchStatement2 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement2 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -276,6 +290,8 @@ function ThrowTryCatchStatement3() {
 	// ThrowTryCatchStatement3 XPECT succs at 'throw 3;' --> 4
 	// ThrowTryCatchStatement3 XPECT succs at '4' --> "end"
 	// ThrowTryCatchStatement3 XPECT succs at '5' --> "end"
+	// ThrowTryCatchStatement3 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement3 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -318,6 +334,8 @@ function ThrowTryCatchStatement4() {
 	// ThrowTryCatchStatement4 XPECT succs at 'throw 3;' --> 4
 	// ThrowTryCatchStatement4 XPECT succs at '4' --> 5
 	// ThrowTryCatchStatement4 XPECT succs at '5' --> "end"
+	// ThrowTryCatchStatement4 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchStatement4 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -356,6 +374,8 @@ function ThrowTryFinallyStatement1() {
 	// ThrowTryFinallyStatement1 XPECT succs at '2' --> throw 2;
 	// ThrowTryFinallyStatement1 XPECT succs at 'throw 2;' --> 3
 	// ThrowTryFinallyStatement1 XPECT succs at '3' --> "end"
+	// ThrowTryFinallyStatement1 XPECT preds at 'try' --> "start"
+	// ThrowTryFinallyStatement1 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -390,6 +410,8 @@ function ThrowTryFinallyStatement2() {
 	// ThrowTryFinallyStatement2 XPECT succs at '2' --> 3
 	// ThrowTryFinallyStatement2 XPECT succs at '3' --> throw 3;
 	// ThrowTryFinallyStatement2 XPECT succs at 'throw 3;' -->
+	// ThrowTryFinallyStatement2 XPECT preds at 'try' --> "start"
+	// ThrowTryFinallyStatement2 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -428,6 +450,8 @@ function ThrowTryFinallyStatement3() {
 	// ThrowTryFinallyStatement3 XPECT succs at 'throw 3;' --> 4
 	// ThrowTryFinallyStatement3 XPECT succs at '4' --> 5
 	// ThrowTryFinallyStatement3 XPECT succs at '5' --> "end"
+	// ThrowTryFinallyStatement3 XPECT preds at 'try' --> "start"
+	// ThrowTryFinallyStatement3 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -468,6 +492,8 @@ function ThrowTryCatchFinallyStatement1() {
 	// ThrowTryCatchFinallyStatement1 XPECT succs at 'throw 2;' --> 3
 	// ThrowTryCatchFinallyStatement1 XPECT succs at '3' --> 4
 	// ThrowTryCatchFinallyStatement1 XPECT succs at '4' --> "end"
+	// ThrowTryCatchFinallyStatement1 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchFinallyStatement1 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;
@@ -507,6 +533,8 @@ function ThrowTryCatchFinallyStatement2() {
 	// ThrowTryCatchFinallyStatement2 XPECT succs at '3' --> throw 3;
 	// ThrowTryCatchFinallyStatement2 XPECT succs at 'throw 3;' --> 4
 	// ThrowTryCatchFinallyStatement2 XPECT succs at '4' --> "end"
+	// ThrowTryCatchFinallyStatement2 XPECT preds at 'try' --> "start"
+	// ThrowTryCatchFinallyStatement2 XPECT succs at 'try' --> "end"
 	"start";
 	try {
 		1;

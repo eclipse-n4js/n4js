@@ -24,17 +24,10 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
-import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
-import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Statement;
-import org.eclipse.n4js.n4JS.SwitchStatement;
-import org.eclipse.n4js.n4JS.TryStatement;
-import org.eclipse.n4js.n4JS.WhileStatement;
-import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
@@ -173,14 +166,8 @@ public class DeadCodeFinder extends GraphVisitor {
 			return null;
 
 		EObject blockContainer = block.eContainer();
-		boolean isDeadContainer = false;
-		isDeadContainer |= blockContainer instanceof IfStatement;
-		isDeadContainer |= blockContainer instanceof SwitchStatement;
-		isDeadContainer |= blockContainer instanceof TryStatement;
-		isDeadContainer |= blockContainer instanceof WithStatement;
-		isDeadContainer |= blockContainer instanceof DoStatement;
-		isDeadContainer |= blockContainer instanceof WhileStatement;
-		isDeadContainer |= blockContainer instanceof ForStatement;
+		boolean isDeadContainer = blockContainer instanceof ControlFlowElement;
+		isDeadContainer &= isDeadContainer && FGUtils.isControlElement((ControlFlowElement) blockContainer);
 		isDeadContainer &= isDeadContainer && isDeadCode((ControlFlowElement) blockContainer);
 
 		if (isDeadContainer) {

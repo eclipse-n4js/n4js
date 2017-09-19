@@ -50,6 +50,8 @@ function SwitchCase1() {
 	// SwitchCase1 XPECT succs at '1' --> 2 , "end"
 	// SwitchCase1 XPECT succs at '2' --> 3
 	// SwitchCase1 XPECT succs at '3' --> "end"
+	// SwitchCase1 XPECT preds at 'switch' --> "start"
+	// SwitchCase1 XPECT succs at 'switch' --> "end"
 	"start";
 	switch (1) {
 		case 2: 3;
@@ -92,6 +94,8 @@ function SwitchCaseFallThrough() {
 	// SwitchCaseFallThrough XPECT succs at '3' --> 4
 	// SwitchCaseFallThrough XPECT succs at '4' --> 5
 	// SwitchCaseFallThrough XPECT succs at '5' --> "end"
+	// SwitchCaseFallThrough XPECT preds at 'switch' --> "start"
+	// SwitchCaseFallThrough XPECT succs at 'switch' --> "end"
 	"start";
 	switch (1) {
 		case 2: 3;
@@ -140,6 +144,8 @@ function SwitchCaseBreak1() {
 	// SwitchCaseBreak1 XPECT succs at '3' --> break;
 	// SwitchCaseBreak1 XPECT succs at '5' --> break;
 	// SwitchCaseBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// SwitchCaseBreak1 XPECT preds at 'switch (' --> "start"
+	// SwitchCaseBreak1 XPECT succs at 'switch (1)' --> "end"
 	"start";
 	switch (1) {
 		case 2: 3; break;
@@ -178,6 +184,8 @@ function SwitchCaseDefault1() {
 	// SwitchCaseDefault1 XPECT succs at '2' --> 3
 	// SwitchCaseDefault1 XPECT succs at '3' --> 5
 	// SwitchCaseDefault1 XPECT succs at '5' --> "end"
+	// SwitchCaseDefault1 XPECT preds at 'switch' --> "start"
+	// SwitchCaseDefault1 XPECT succs at 'switch' --> "end"
 	"start";
 	switch (1) {
 		case 2: 3;
@@ -218,6 +226,8 @@ function SwitchCaseDefault2() {
 	// SwitchCaseDefault2 XPECT succs at '3' --> break;
 	// SwitchCaseDefault2 XPECT succs type 'Break' at 'break;' --> "end"
 	// SwitchCaseDefault2 XPECT succs at '5' --> "end"
+	// SwitchCaseDefault2 XPECT preds at 'switch' --> "start"
+	// SwitchCaseDefault2 XPECT succs at 'switch' --> "end"
 	"start";
 	switch (1) {
 		case 2: 3; break;
