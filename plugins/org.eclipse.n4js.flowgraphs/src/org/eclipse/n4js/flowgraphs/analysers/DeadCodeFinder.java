@@ -114,7 +114,7 @@ public class DeadCodeFinder extends GraphVisitor {
 	public boolean isDeadCode(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 
-		if (cfe instanceof Statement) {
+		if (FGUtils.isControlElement(cfe)) {
 			Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
 			for (ControlFlowElement succ : succs) {
 				if (!isDeadCode(succ)) {
