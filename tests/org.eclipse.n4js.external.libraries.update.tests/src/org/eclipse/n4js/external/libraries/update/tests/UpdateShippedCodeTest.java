@@ -19,7 +19,6 @@ import org.eclipse.n4js.external.libraries.update.UpdateShippedCode;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.utils.io.IDirectoryDiffAcceptor.CollectingDirectoryDiffAcceptor;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.google.common.base.Optional;
@@ -27,7 +26,6 @@ import com.google.common.base.Optional;
 /**
  * See {@link #ensureShippedCodeIsUpToDate()}.
  */
-@Ignore("IDE-2844")
 public class UpdateShippedCodeTest {
 
 	private static final String MY_NAME = UpdateShippedCodeTest.class.getName();
