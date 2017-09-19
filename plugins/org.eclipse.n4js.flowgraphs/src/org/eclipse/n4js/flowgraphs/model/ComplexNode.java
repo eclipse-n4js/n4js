@@ -117,7 +117,7 @@ public class ComplexNode implements ControlFlowable {
 		this.exit = exitNode;
 	}
 
-	/** @returns the control flow container. See {@link FGUtils#isCFContainer(ControlFlowElement)}. */
+	/** @return the control flow container. See {@link FGUtils#isCFContainer(ControlFlowElement)}. */
 	public ControlFlowElement getControlFlowContainer() {
 		return CFEMapper.map(container);
 	}
@@ -127,12 +127,12 @@ public class ComplexNode implements ControlFlowable {
 		return CFEMapper.map(astElement);
 	}
 
-	/** @returns all nodes */
+	/** @return all nodes */
 	public Collection<Node> getNodes() {
 		return nodeMap.values();
 	}
 
-	/** @returns a node for a given name */
+	/** @return a node for a given name */
 	public Node getNode(String name) {
 		return nodeMap.get(name);
 	}
@@ -147,7 +147,7 @@ public class ComplexNode implements ControlFlowable {
 		return exit;
 	}
 
-	/** @returns {@link RepresentingNode} of the {@link ControlFlowElement} represented by this {@link ComplexNode}. */
+	/** @return {@link RepresentingNode} of the {@link ControlFlowElement} represented by this {@link ComplexNode}. */
 	public RepresentingNode getRepresent() {
 		return represent;
 	}
@@ -171,7 +171,7 @@ public class ComplexNode implements ControlFlowable {
 		return FGUtils.isControlElement(cfe);
 	}
 
-	/** @returns all {@link DependencyEdge}s that start or end at one of the nodes of this {@link ComplexNode}. */
+	/** @return all {@link DependencyEdge}s that start or end at one of the nodes of this {@link ComplexNode}. */
 	@Deprecated
 	public Set<DependencyEdge> getDependencyEdges() {
 		Set<DependencyEdge> edges = new HashSet<>();

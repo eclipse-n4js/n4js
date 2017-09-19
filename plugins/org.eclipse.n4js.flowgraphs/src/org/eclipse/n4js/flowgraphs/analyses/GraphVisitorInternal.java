@@ -240,42 +240,42 @@ abstract public class GraphVisitorInternal {
 		activationRequests.add(app);
 	}
 
-	/** @returns all activated predicates */
+	/** @return all activated predicates */
 	final public List<PathExplorerInternal> getActivatedPredicates() {
 		return activatedPredicates;
 	}
 
-	/** @returns all active predicates */
+	/** @return all active predicates */
 	final public List<PathExplorerInternal> getActivePredicates() {
 		return activePredicates;
 	}
 
-	/** @returns the number of activated predicates */
+	/** @return the number of activated predicates */
 	final public int getActivatedPredicateCount() {
 		return getActivatedPredicates().size();
 	}
 
-	/** @returns the number of active predicates */
+	/** @return the number of active predicates */
 	final public int getActivePredicateCount() {
 		return getActivePredicates().size();
 	}
 
-	/** @returns the current direction */
+	/** @return the current direction */
 	final public Direction getCurrentDirection() {
 		return currentDirection;
 	}
 
-	/** @returns the current container */
+	/** @return the current container */
 	final public ControlFlowElement getCurrentContainer() {
 		return currentContainer;
 	}
 
-	/** @returns all passed predicates */
+	/** @return all passed predicates */
 	final public List<?> getPassed() {
 		return passedPredicates;
 	}
 
-	/** @returns all failed predicates */
+	/** @return all failed predicates */
 	final public List<?> getFailed() {
 		return failedPredicates;
 	}
@@ -348,17 +348,17 @@ abstract public class GraphVisitorInternal {
 
 		/////////////////////// Service Methods for inherited classes ///////////////////////
 
-		/** @returns true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
+		/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
 		final public boolean isPassed() {
 			return passedPredicates.contains(this);
 		}
 
-		/** @returns true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
+		/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
 		final public boolean isFailed() {
 			return failedPredicates.contains(this);
 		}
 
-		/** @returns all paths no matter if they are active or not, or passed or failed. */
+		/** @return all paths no matter if they are active or not, or passed or failed. */
 		final public List<PathWalkerInternal> getAllPaths() {
 			return allPaths;
 		}
@@ -483,7 +483,7 @@ abstract public class GraphVisitorInternal {
 				checkPredicateDeactivation();
 			}
 
-			/** @returns true, iff this path is active. */
+			/** @return true, iff this path is active. */
 			final public boolean isActive() {
 				return activePaths.contains(this);
 			}

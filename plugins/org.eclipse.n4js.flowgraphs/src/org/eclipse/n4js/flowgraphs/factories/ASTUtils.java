@@ -30,7 +30,7 @@ public class ASTUtils {
 	}
 
 	/**
-	 * @returns the {@link LabelledStatement} that the given stmt refers to or represents.
+	 * @return the {@link LabelledStatement} that the given stmt refers to or represents.
 	 */
 	public static LabelledStatement getLabelledStatement(Statement stmt) {
 		if (stmt instanceof LabelledStatement) {

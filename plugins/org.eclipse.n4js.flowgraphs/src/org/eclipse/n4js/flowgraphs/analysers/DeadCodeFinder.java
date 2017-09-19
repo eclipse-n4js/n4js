@@ -34,7 +34,9 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
 import org.eclipse.xtext.util.TextRegion;
 
 /**
- * Collects all reachable nodes and hence finds all unreachable nodes, alias <i>dead code</i>.
+ * Collects all reachable nodes and hence finds all unreachable nodes, alias <i>dead code</i>. Provides methods to
+ * determine if a given {@link ControlFlowElement} is dead code, or to compute a minimal set of {@link TextRegion}s of
+ * dead code.
  */
 public class DeadCodeFinder extends GraphVisitor {
 	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
@@ -94,36 +96,67 @@ public class DeadCodeFinder extends GraphVisitor {
 		unreachableCFEs.removeAll(allCatchBlocksCFEs);
 	}
 
-	/** @returns all reachable {@link ControlFlowElement}s */
+	/** @return all reachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getReachableCFEs() {
 		return allForwardCFEs;
 	}
 
-	/** @returns all unreachable {@link ControlFlowElement}s */
+	/** @return all unreachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getUnreachableCFEs() {
 		return unreachableCFEs;
 	}
 
-	/** @returns all {@link TextRegion}s of dead code */
+	/**
+	 * This method deals with the fact that {@link Statement}s are not represented in the control flow graph.
+	 *
+	 * @return true iff the given {@link ControlFlowElement} is dead code.
+	 */
+	public boolean isDeadCode(ControlFlowElement cfe) {
+		cfe = CFEMapper.map(cfe);
+
+		if (cfe instanceof Statement) {
+			Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+			for (ControlFlowElement succ : succs) {
+				if (!isDeadCode(succ)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		if (allForwardCFEs.contains(cfe)) {
+			return false;
+		}
+		Set<ControlFlowElement> preds = flowAnalyses.getPredecessorsSkipInternal(cfe);
+		if (preds.isEmpty()) {
+			return true;
+		}
+
+		Set<ControlFlowElement> visited = new HashSet<>();
+		while (!preds.isEmpty()) {
+			ControlFlowElement pred = preds.iterator().next();
+			preds.remove(pred);
+			if (visited.contains(pred))
+				continue;
+
+			if (allForwardCFEs.contains(pred)) {
+				return false;
+			}
+			preds.addAll(flowAnalyses.getPredecessorsSkipInternal(pred));
+			visited.add(pred);
+		}
+		return true;
+	}
+
+	/** @return all {@link TextRegion}s of dead code */
 	public Set<DeadCodeRegion> getDeadCodeRegions() {
-		Collection<Set<ControlFlowElement>> deadCodeGroups = getDeadCodeGroups();
+		Collection<Set<ControlFlowElement>> deadCodeGroups = separateOnTheirBlocks(unreachableCFEs);
 		Set<DeadCodeRegion> deadCodeRegions = new HashSet<>();
 		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
 			DeadCodeRegion textRegion = getDeadCodeRegion(deadCodeGroup);
 			deadCodeRegions.add(textRegion);
 		}
 		return deadCodeRegions;
-	}
-
-	/**
-	 * Returns all {@link ControlFlowElement}s that are unreachable.
-	 * <p>
-	 * However, control elements (see {@link FGUtils#isControlElement(ControlFlowElement)}) are not part of the dead
-	 * code regions.
-	 */
-	private Collection<Set<ControlFlowElement>> getDeadCodeGroups() {
-		Collection<Set<ControlFlowElement>> unreachablesInBlocks = separateOnTheirBlocks(unreachableCFEs);
-		return unreachablesInBlocks;
 	}
 
 	/**
@@ -177,48 +210,6 @@ public class DeadCodeFinder extends GraphVisitor {
 		}
 
 		return block;
-	}
-
-	/**
-	 * This method deals with the fact that {@link Statement}s are not represented in the control flow graph.
-	 *
-	 * @returns true iff the given {@link ControlFlowElement} is dead code.
-	 */
-	private boolean isDeadCode(ControlFlowElement cfe) {
-		cfe = CFEMapper.map(cfe);
-
-		if (cfe instanceof Statement) {
-			Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
-			for (ControlFlowElement succ : succs) {
-				if (!isDeadCode(succ)) {
-					return false;
-				}
-			}
-			return true;
-		}
-
-		if (allForwardCFEs.contains(cfe)) {
-			return false;
-		}
-		Set<ControlFlowElement> preds = flowAnalyses.getPredecessorsSkipInternal(cfe);
-		if (preds.isEmpty()) {
-			return true;
-		}
-
-		Set<ControlFlowElement> visited = new HashSet<>();
-		while (!preds.isEmpty()) {
-			ControlFlowElement pred = preds.iterator().next();
-			preds.remove(pred);
-			if (visited.contains(pred))
-				continue;
-
-			if (allForwardCFEs.contains(pred)) {
-				return false;
-			}
-			preds.addAll(flowAnalyses.getPredecessorsSkipInternal(pred));
-			visited.add(pred);
-		}
-		return true;
 	}
 
 	private DeadCodeRegion getDeadCodeRegion(Set<ControlFlowElement> deadCodeGroup) {
@@ -276,12 +267,12 @@ public class DeadCodeFinder extends GraphVisitor {
 			this.reachablePredecessor = reachablePredecessor;
 		}
 
-		/** @returns the containing element of this {@link DeadCodeRegion} */
+		/** @return the containing element of this {@link DeadCodeRegion} */
 		public ControlFlowElement getContainer() {
 			return container;
 		}
 
-		/** @returns the last reachable {@link ControlFlowElement} before this {@link DeadCodeRegion}. Can be null. */
+		/** @return the last reachable {@link ControlFlowElement} before this {@link DeadCodeRegion}. Can be null. */
 		public ControlFlowElement getReachablePredecessor() {
 			return reachablePredecessor;
 		}

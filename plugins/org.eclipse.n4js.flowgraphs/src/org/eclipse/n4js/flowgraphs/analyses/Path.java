@@ -42,47 +42,47 @@ public class Path {
 		init();
 	}
 
-	/** @returns true, iff start and end nodes are connected by this path. */
+	/** @return true, iff start and end nodes are connected by this path. */
 	public boolean isConnecting() {
 		return true;
 	}
 
-	/** @returns true, iff start and end nodes are the same node. */
+	/** @return true, iff start and end nodes are the same node. */
 	public boolean isSelfReturning() {
 		return start == end;
 	}
 
-	/** @returns true, iff either start or end node is a node that is not representing a {@link ControlFlowElement}. */
+	/** @return true, iff either start or end node is a node that is not representing a {@link ControlFlowElement}. */
 	public boolean isInternal() {
 		return !(start instanceof RepresentingNode) || !(end instanceof RepresentingNode);
 	}
 
-	/** @returns the start {@link ControlFlowElement}. */
+	/** @return the start {@link ControlFlowElement}. */
 	public ControlFlowElement getStart() {
 		return start.getRepresentedControlFlowElement();
 	}
 
-	/** @returns the end {@link ControlFlowElement}. */
+	/** @return the end {@link ControlFlowElement}. */
 	public ControlFlowElement getEnd() {
 		return end.getRepresentedControlFlowElement();
 	}
 
-	/** @returns true, iff this path has no edges. */
+	/** @return true, iff this path has no edges. */
 	public boolean isEmpty() {
 		return edges.isEmpty();
 	}
 
-	/** @returns the set of all edge types on the path. */
+	/** @return the set of all edge types on the path. */
 	public TreeSet<ControlFlowType> getControlFlowTypes() {
 		return edgeTypes;
 	}
 
-	/** @returns the number of edges. */
+	/** @return the number of edges. */
 	public int getLength() {
 		return edges.size();
 	}
 
-	/** @returns a unique identifier for this path */
+	/** @return a unique identifier for this path */
 	public Comparable<?> getIdentifier() {
 		return toString;
 	}

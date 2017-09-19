@@ -79,7 +79,7 @@ public class GraphVisitorAnalysis {
 		System.err.println("Malformed control flow graph: Could not visit AST node: " + astNodeStr);
 	}
 
-	/** @returns all nodes of the CFG, except for nodes of ControlElements */
+	/** @return all nodes of the CFG, except for nodes of ControlElements */
 	private Set<Node> getAllNonControlNodes() {
 		Set<Node> allNodes = new HashSet<>();
 		for (ComplexNode cn : cfg.getAllComplexNodes()) {

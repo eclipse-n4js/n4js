@@ -46,7 +46,7 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
  */
 public class FGUtils {
 
-	/** @returns label text that is the actual text from the source code */
+	/** @return label text that is the actual text from the source code */
 	public static String getSourceText(EObject eo) {
 		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
 		String text = NodeModelUtils.getTokenText(actualNode);
@@ -60,7 +60,7 @@ public class FGUtils {
 		return nameID;
 	}
 
-	/** @returns the class name of the given cfe */
+	/** @return the class name of the given cfe */
 	public static String getClassName(EObject cfe) {
 		String className = cfe.getClass().getSimpleName().toString();
 		int idx = className.lastIndexOf("Impl");
@@ -70,7 +70,7 @@ public class FGUtils {
 		return className;
 	}
 
-	/** @returns the containing {@link ControlFlowElement} such as the function's body. */
+	/** @return the containing {@link ControlFlowElement} such as the function's body. */
 	public static ControlFlowElement getCFContainer(ControlFlowElement cfe) {
 		ControlFlowElement curCFE = cfe;
 		while (curCFE != null) {
@@ -84,7 +84,7 @@ public class FGUtils {
 	}
 
 	/**
-	 * @returns the container of the given {@link ControlFlowElement}. Omits AST elements that are not part of the CFG.
+	 * @return the container of the given {@link ControlFlowElement}. Omits AST elements that are not part of the CFG.
 	 */
 	private static ControlFlowElement getContainer(ControlFlowElement curCFE) {
 		EObject eObj = curCFE;
@@ -96,7 +96,7 @@ public class FGUtils {
 		return curCFE;
 	}
 
-	/** @returns true iff the given {@link ControlFlowElement} is a container such as a function's body. */
+	/** @return true iff the given {@link ControlFlowElement} is a container such as a function's body. */
 	public static boolean isCFContainer(ControlFlowElement cfe) {
 		EObject cfeContainer = cfe.eContainer();
 
@@ -179,7 +179,7 @@ public class FGUtils {
 		return results;
 	}
 
-	/** @returns the first {@link Block} that is the direct child of a {@link CatchBlock} element, or null. */
+	/** @return the first {@link Block} that is the direct child of a {@link CatchBlock} element, or null. */
 	public static Block getCatchBlock(ControlFlowElement cfe) {
 		LinkedList<Block> mightBeInCatchBlock = getAllContainersOfTypeUptoCFContainer(cfe, Block.class);
 		for (Block block : mightBeInCatchBlock) {

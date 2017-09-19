@@ -104,7 +104,7 @@ public class AllPathPrintWalker extends GraphVisitor {
 		// nothing to do
 	}
 
-	/** @returns all found paths as strings */
+	/** @return all found paths as strings */
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
 		for (PathExplorerInternal app : getActivatedPredicates()) {

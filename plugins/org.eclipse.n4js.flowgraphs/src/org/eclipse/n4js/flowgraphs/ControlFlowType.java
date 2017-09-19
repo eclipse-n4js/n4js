@@ -45,7 +45,7 @@ public enum ControlFlowType {
 	/** Set of all control flow types except for {@literal ControlFlowType.Repeat} */
 	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return };
 
-	/** @returns a filtered list that contains only {@link ControlFlowType}s of the given types */
+	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {
 		List<ControlFlowType> result = new LinkedList<>();
 		for (ControlFlowType cft : list) {
@@ -58,7 +58,7 @@ public enum ControlFlowType {
 		return result;
 	}
 
-	/** @returns true, iff the given array is null or empty, or iff it contains the {@code this} enum element */
+	/** @return true, iff the given array is null or empty, or iff it contains the {@code this} enum element */
 	public boolean isInOrEmpty(ControlFlowType[] flowTypes) {
 		if (flowTypes == null || flowTypes.length == 0) {
 			return true;

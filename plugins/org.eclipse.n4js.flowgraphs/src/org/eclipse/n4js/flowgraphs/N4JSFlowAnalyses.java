@@ -63,45 +63,45 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 * @returns the underlying control flow graph
+	 * @return the underlying control flow graph
 	 */
 	public FlowGraph getControlFlowGraph() {
 		return cfg;
 	}
 
 	/**
-	 * @returns a list of all direct internal predecessors of cfe
+	 * @return a list of all direct internal predecessors of cfe
 	 */
 	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getPredecessors(cfe, followEdges);
 	}
 
-	/** @returns a list of all direct external predecessors of cfe */
+	/** @return a list of all direct external predecessors of cfe */
 	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getPredecessorsSkipInternal(cfe, followEdges);
 	}
 
-	/** @returns a list of all direct internal successors of cfe */
+	/** @return a list of all direct internal successors of cfe */
 	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getSuccessors(cfe, followEdges);
 	}
 
-	/** @returns a list of all direct external successors of cfe */
+	/** @return a list of all direct external successors of cfe */
 	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getSuccessorsSkipInternal(cfe, followEdges);
 	}
 
-	/** @returns true iff cfe2 is a direct successor of cfe1 */
+	/** @return true iff cfe2 is a direct successor of cfe1 */
 	public boolean isSuccessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
 		return spa.isSuccessor(cfe1, cfe2);
 	}
 
-	/** @returns true iff cfe2 is a direct predecessor of cfe1 */
+	/** @return true iff cfe2 is a direct predecessor of cfe1 */
 	public boolean isPredecessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
 		return spa.isPredecessor(cfe1, cfe2);
 	}
 
-	/** @returns true iff cfeTo is a transitive successor of cfeFrom */
+	/** @return true iff cfeTo is a transitive successor of cfeFrom */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo);
 	}
@@ -109,7 +109,7 @@ public class N4JSFlowAnalyses {
 	/**
 	 * <b>Attention:</b> On self loops, an empty set of successor types is returned!
 	 *
-	 * @returns all the {@link ControlFlowType}s that happen between the two direct successors cfe and cfeSucc
+	 * @return all the {@link ControlFlowType}s that happen between the two direct successors cfe and cfeSucc
 	 */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
 		return dpa.getControlFlowTypeToSuccessors(cfe, cfeSucc);
@@ -155,20 +155,20 @@ public class N4JSFlowAnalyses {
 		// sw.stop();
 	}
 
-	/** @returns the containing {@link ControlFlowElement} for the given cfe. */
+	/** @return the containing {@link ControlFlowElement} for the given cfe. */
 	public ControlFlowElement getContainer(ControlFlowElement cfe) {
 		return cfg.getContainer(cfe);
 	}
 
 	/**
-	 * @returns all {@link ControlFlowElement}s that are containers in the {@link Script}. See
+	 * @return all {@link ControlFlowElement}s that are containers in the {@link Script}. See
 	 *          {@link FGUtils#isCFContainer(ControlFlowElement)}
 	 */
 	public Set<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();
 	}
 
-	/** @returns all {@link Block}s whose containers are of type {@link CatchBlock} */
+	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
 	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
 		return cfg.getCatchBlocksOfContainer(container);
 	}

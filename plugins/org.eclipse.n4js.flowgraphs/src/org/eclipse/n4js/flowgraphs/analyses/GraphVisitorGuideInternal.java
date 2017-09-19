@@ -21,30 +21,43 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Direction;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
+import org.eclipse.n4js.n4JS.FinallyBlock;
+import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.utils.collections.Collections2;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
+ * This class executes a control flow analyzes in a specific {@link Direction} that are defined as
+ * {@link GraphVisitorInternal}s. The execution is triggered from {@link GraphVisitorAnalysis}.
+ * <p>
+ * For every {@link Direction}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary
+ * (but loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an
+ * activation of a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this
+ * mechanism, the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored.
+ * The path exploration is done in parallel for every {@link PathExplorerInternal} of every
+ * {@link GraphVisitorInternal}.
  */
-@SuppressWarnings("javadoc")
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyses flowAnalyses;
 	private final Collection<GraphVisitorInternal> walkers;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
 	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
 
+	/** Constructor */
 	public GraphVisitorGuideInternal(N4JSFlowAnalyses flowAnalyses, Collection<GraphVisitorInternal> walkers) {
 		this.flowAnalyses = flowAnalyses;
 		this.walkers = walkers;
 	}
 
+	/** Call before any of the {@code walkthrough} methods is called. */
 	public void init() {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
@@ -52,6 +65,7 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
+	/** Call after all of the {@code walkthrough} methods have been called. */
 	public void terminate() {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
@@ -59,18 +73,22 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
+	/** Traverses the control flow graph in {@literal Direction.Forward} */
 	public Set<Node> walkthroughForward(ComplexNode cn) {
 		return walkthrough(cn, Direction.Forward);
 	}
 
+	/** Traverses the control flow graph in {@literal Direction.Backward} */
 	public Set<Node> walkthroughBackward(ComplexNode cn) {
 		return walkthrough(cn, Direction.Backward);
 	}
 
+	/** Traverses the control flow graph in {@literal Direction.CatchBlocks} */
 	public Set<Node> walkthroughCatchBlocks(ComplexNode cn) {
 		return walkthrough(cn, Direction.CatchBlocks);
 	}
 
+	/** Traverses the control flow graph in {@literal Direction.Islands} */
 	public Set<Node> walkthroughIsland(ComplexNode cn) {
 		return walkthrough(cn, Direction.Islands);
 	}
@@ -96,6 +114,26 @@ public class GraphVisitorGuideInternal {
 			walker.callTerminate();
 		}
 		return allVisitedNodes;
+	}
+
+	private List<NextEdgesProvider> getEdgeProviders(Direction direction) {
+		List<NextEdgesProvider> edgeProviders = new LinkedList<>();
+		switch (direction) {
+		case Forward:
+			edgeProviders.add(new NextEdgesProvider.Forward());
+			break;
+		case Backward:
+			edgeProviders.add(new NextEdgesProvider.Backward());
+			break;
+		case Islands:
+			edgeProviders.add(new NextEdgesProvider.Forward());
+			edgeProviders.add(new NextEdgesProvider.Backward());
+			break;
+		case CatchBlocks:
+			edgeProviders.add(new NextEdgesProvider.Forward());
+			break;
+		}
+		return edgeProviders;
 	}
 
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
@@ -183,6 +221,10 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
+	/**
+	 * Computes the initial set of {@link EdgeGuide}s based on the start {@link ControlFlowEdge}s of the given
+	 * {@link ComplexNode}.
+	 */
 	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
@@ -213,6 +255,10 @@ public class GraphVisitorGuideInternal {
 		return nextEGs;
 	}
 
+	/**
+	 * Computes the next {@link EdgeGuide}s based on the next {@link ControlFlowEdge}s. For memory performance reasons,
+	 * the current {@link EdgeGuide} is reused and its edge is replaced by the next edge.
+	 */
 	private List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
 		List<EdgeGuide> nextEGs = new LinkedList<>();
 		List<ControlFlowEdge> nextEdges = currEG.getNextEdges();
@@ -247,26 +293,18 @@ public class GraphVisitorGuideInternal {
 		return nextEGs;
 	}
 
-	private List<NextEdgesProvider> getEdgeProviders(Direction direction) {
-		List<NextEdgesProvider> edgeProviders = new LinkedList<>();
-		switch (direction) {
-		case Forward:
-			edgeProviders.add(new NextEdgesProvider.Forward());
-			break;
-		case Backward:
-			edgeProviders.add(new NextEdgesProvider.Backward());
-			break;
-		case Islands:
-			edgeProviders.add(new NextEdgesProvider.Forward());
-			edgeProviders.add(new NextEdgesProvider.Backward());
-			break;
-		case CatchBlocks:
-			edgeProviders.add(new NextEdgesProvider.Forward());
-			break;
-		}
-		return edgeProviders;
-	}
-
+	/**
+	 * The {@link EdgeGuide} keeps track of all {@link PathWalkerInternal}s that are currently exploring a path on that
+	 * edge. In case an {@link EdgeGuide} has no {@link PathWalkerInternal}s, it might be removed. When an edge of an
+	 * {@link EdgeGuide} has more than one next edge, the {@link EdgeGuide} will split up and all its
+	 * {@link PathWalkerInternal}s will fork. If there is only one next edge, the current edge of the {@link EdgeGuide}
+	 * instance will be replaced.
+	 * <p>
+	 * The {@link EdgeGuide} keeps track of edges that enter or exit {@link FinallyBlock}s. The reason is, that these
+	 * e.g. entering edges will determine the correct exiting edges. (Consider that {@link FinallyBlock}s can be entered
+	 * via a {@link ReturnStatement} and will then exit directly to the next {@link FinallyBlock} or to the end of the
+	 * method, instead of executing statements that follow the {@link FinallyBlock}.)
+	 */
 	private class EdgeGuide {
 		final NextEdgesProvider edgeProvider;
 		ControlFlowEdge edge;

@@ -20,7 +20,8 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * The {@link PathWalkerGuide} traverses the internal control flow graph and maps it to the {@link ControlFlowElement}s
+ * used in {@link IPathWalker}. The {@link PathWalkerGuide} is triggered from {@link Path}.
  */
 public class PathWalkerGuide implements IPathWalkerInternal {
 	final IPathWalker walker;

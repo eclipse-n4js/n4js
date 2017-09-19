@@ -40,7 +40,7 @@ public class SuccessorPredecessorAnalysis {
 	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
 		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
-		Set<ControlFlowElement> predecessors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> predecessors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
 		return predecessors;
 	}
 
@@ -48,7 +48,7 @@ public class SuccessorPredecessorAnalysis {
 	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
 		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
-		Set<ControlFlowElement> predecessors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> predecessors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
 		return predecessors;
 	}
 
@@ -56,7 +56,7 @@ public class SuccessorPredecessorAnalysis {
 	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
 		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
-		Set<ControlFlowElement> successors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> successors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
 		return successors;
 	}
 
@@ -64,10 +64,14 @@ public class SuccessorPredecessorAnalysis {
 	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
 		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
-		Set<ControlFlowElement> successors = getNexts(nextEdgesProvider, cfe, nextNode, followEdges);
+		Set<ControlFlowElement> successors = getNextCFEs(nextEdgesProvider, cfe, nextNode, followEdges);
 		return successors;
 	}
 
+	/**
+	 * @return the next node which is either the start of the {@link ControlFlowElement}, or its end iff
+	 *         {@code skipInternal} is true.
+	 */
 	private Node getNextNode(ControlFlowElement cfe, boolean skipInternal, NextEdgesProvider nextEdgesProvider) {
 		ComplexNode cn = cfg.getComplexNode(cfe);
 		if (skipInternal) {
@@ -77,7 +81,9 @@ public class SuccessorPredecessorAnalysis {
 		}
 	}
 
-	private Set<ControlFlowElement> getNexts(NextEdgesProvider nextEdgesProvider, ControlFlowElement cfe, Node nextNode,
+	/** @return the set of all next {@link ControlFlowElement} */
+	private Set<ControlFlowElement> getNextCFEs(NextEdgesProvider nextEdgesProvider, ControlFlowElement cfe,
+			Node nextNode,
 			ControlFlowType... followEdges) {
 
 		Objects.requireNonNull(cfe);
@@ -102,13 +108,13 @@ public class SuccessorPredecessorAnalysis {
 		return nexts;
 	}
 
-	/** @returns true iff cfe2 is a direct successor of cfe1 */
+	/** @return true iff cfe2 is a direct successor of cfe1 */
 	public boolean isSuccessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
 		Set<ControlFlowElement> succs = getSuccessors(cfe1);
 		return succs.contains(cfe2);
 	}
 
-	/** @returns true iff cfe2 is a direct predecessor of cfe1 */
+	/** @return true iff cfe2 is a direct predecessor of cfe1 */
 	public boolean isPredecessor(ControlFlowElement cfe1, ControlFlowElement cfe2) {
 		Set<ControlFlowElement> preds = getPredecessors(cfe1);
 		return preds.contains(cfe2);

@@ -181,7 +181,7 @@ public class DirectPathAnalyses {
 		for (ControlFlowEdge nextEdge : nextEdges) {
 			LinkedList<ControlFlowEdge> path = new LinkedList<>();
 			path.add(nextEdge);
-			if (edgeProvider.isEndNode(endNode, nextEdge)) {
+			if (isEndNode(edgeProvider, endNode, nextEdge)) {
 				return path; // direct edge from startNode to endNode due to nextEdge
 			}
 			allPaths.add(path);
@@ -190,9 +190,9 @@ public class DirectPathAnalyses {
 		// explore all paths, terminate when endNode is found
 		while (!allPaths.isEmpty()) {
 			LinkedList<ControlFlowEdge> firstPath = allPaths.removeFirst();
-			LinkedList<LinkedList<ControlFlowEdge>> ch = edgeProvider.getPaths(firstPath, cfTypes);
+			LinkedList<LinkedList<ControlFlowEdge>> ch = getPaths(edgeProvider, firstPath, cfTypes);
 			for (LinkedList<ControlFlowEdge> chPath : ch) {
-				if (edgeProvider.isEndNode(endNode, chPath.getLast())) {
+				if (isEndNode(edgeProvider, endNode, chPath.getLast())) {
 					return chPath;
 				}
 			}
@@ -202,4 +202,25 @@ public class DirectPathAnalyses {
 		return null;
 	}
 
+	private LinkedList<LinkedList<ControlFlowEdge>> getPaths(NextEdgesProvider edgeProvider,
+			LinkedList<ControlFlowEdge> path, ControlFlowType... cfTypes) {
+
+		LinkedList<LinkedList<ControlFlowEdge>> resultPaths = new LinkedList<>();
+		ControlFlowEdge e = path.getLast();
+		Node nextNode = edgeProvider.getNextNode(e);
+		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(nextNode, cfTypes);
+
+		for (ControlFlowEdge nextEdge : nextEdges) {
+			LinkedList<ControlFlowEdge> pathCopy = path;
+			if (nextEdges.size() > 1)
+				pathCopy = Lists.newLinkedList(pathCopy);
+			pathCopy.add(nextEdge);
+			resultPaths.add(pathCopy);
+		}
+		return resultPaths;
+	}
+
+	private boolean isEndNode(NextEdgesProvider edgeProvider, Node node, ControlFlowEdge edge) {
+		return edgeProvider.getNextNode(edge) == node;
+	}
 }

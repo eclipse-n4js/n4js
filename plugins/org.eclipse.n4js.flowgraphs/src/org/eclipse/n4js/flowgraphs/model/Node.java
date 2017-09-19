@@ -93,12 +93,12 @@ abstract public class Node implements ControlFlowable {
 		endEdges.add(depEdge);
 	}
 
-	/** @returns set of all internal successors. */
+	/** @return set of all internal successors. */
 	public Set<Node> getInternalSuccessors() {
 		return internalSucc.keySet();
 	}
 
-	/** @returns the {@link ControlFlowType} of a given internal successor. */
+	/** @return the {@link ControlFlowType} of a given internal successor. */
 	public ControlFlowType getInternalSuccessorControlFlowType(Node endNode) {
 		if (internalSucc.containsKey(endNode)) {
 			SuccessorEdgeDescription sed = internalSucc.get(endNode);
@@ -107,17 +107,17 @@ abstract public class Node implements ControlFlowable {
 		return null;
 	}
 
-	/** @returns set of all successor edges. */
+	/** @return set of all successor edges. */
 	public List<ControlFlowEdge> getSuccessorEdges() {
 		return succ;
 	}
 
-	/** @returns set of all predecessor edges. */
+	/** @return set of all predecessor edges. */
 	public List<ControlFlowEdge> getPredecessorEdges() {
 		return pred;
 	}
 
-	/** @returns the given name. */
+	/** @return the given name. */
 	public String getName() {
 		return name;
 	}
@@ -132,7 +132,7 @@ abstract public class Node implements ControlFlowable {
 		catchToken.add(ct);
 	}
 
-	/** @returns true, iff this node has at least one jump token. */
+	/** @return true, iff this node has at least one jump token. */
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
 	}

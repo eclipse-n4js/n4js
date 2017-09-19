@@ -56,17 +56,17 @@ public class FlowGraph {
 		}
 	}
 
-	/** @returns all {@link ComplexNode}s of the script. */
+	/** @return all {@link ComplexNode}s of the script. */
 	public Collection<ComplexNode> getAllComplexNodes() {
 		return cnMap.values();
 	}
 
-	/** @returns all {@link ControlFlowEdge}s of the script. */
+	/** @return all {@link ControlFlowEdge}s of the script. */
 	public Collection<ControlFlowEdge> getAllControlFlowEdges() {
 		return cfEdgeMap.values();
 	}
 
-	/** @returns the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */
+	/** @return the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */
 	public ComplexNode getComplexNode(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 		if (!cnMap.containsKey(cfe))
@@ -85,7 +85,7 @@ public class FlowGraph {
 		return cfContainers;
 	}
 
-	/** @returns all {@link Block}s whose containers are of type {@link CatchBlock} */
+	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
 	public TreeSet<Block> getCatchBlocks() {
 		return cfCatchBlocks;
 	}
