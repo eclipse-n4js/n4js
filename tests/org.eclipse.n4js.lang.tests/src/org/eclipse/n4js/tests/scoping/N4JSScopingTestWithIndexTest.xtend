@@ -12,32 +12,32 @@ package org.eclipse.n4js.tests.scoping
 
 import com.google.inject.Inject
 import com.google.inject.Provider
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.ResourceSet
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.N4JSInjectorProviderWithIndex
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.UserdataMapper
 import org.eclipse.n4js.ts.types.TClass
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.emf.ecore.resource.ResourceSet
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.containers.FlatResourceSetBasedAllContainersState
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.util.StringInputStream
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.n4js.resource.N4JSResource
 
 @InjectWith(N4JSInjectorProviderWithIndex)
 @RunWith(XtextRunner)
@@ -253,6 +253,8 @@ class N4JSScopingTestWithIndexTest {
 		var supplierResource = rs.getResource(supplierJS, true) as N4JSResource
 		supplierResource.load(emptyMap)
 		supplierResource.performPostProcessing
+		assertFalse("resource should not be marked as reconciled", supplierResource.isReconciled);
+
 		rs.eAdapters += new MyFlatResourceSetBasedAllContainersState(rs, supplierJS)
 		val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(supplierResource);
 		assertFalse("Test that the index has been filled", resourceDescriptions.allResourceDescriptions.empty);
@@ -261,40 +263,46 @@ class N4JSScopingTestWithIndexTest {
 		rs.resources.forEach[unload]
 		rs.resources.clear
 
-		val clientJS = URI.createURI("src/org/eclipse/n4js/tests/scoping/Client.n4js")
-		val clientResource = rs.createResource(rs.URIConverter.normalize(clientJS))
+		val clientJS = rs.URIConverter.normalize(URI.createURI("src/org/eclipse/n4js/tests/scoping/Client.n4js"))
+		val clientResource = rs.createResource(clientJS)
 		clientResource.load(emptyMap)
 
-		EcoreUtil.resolveAll(clientResource)
+		EcoreUtil.resolveAll(clientResource) // will trigger loading of Supplier.n4js from index
 
 		val client = clientResource.contents.get(0) as Script
-		val ParameterizedCallExpression = ((client.scriptElements.last as ExpressionStatement).expression as ParameterizedCallExpression);
-		assertNotNull(ParameterizedCallExpression);
-		assertEquals(0, ParameterizedCallExpression.arguments.size)
-		assertNotNull(ParameterizedCallExpression.target)
-		assertTrue(ParameterizedCallExpression.target instanceof ParameterizedPropertyAccessExpression)
-		val dotAccess = ParameterizedCallExpression.target as ParameterizedPropertyAccessExpression
-		val wontBecomeAProxy = dotAccess.eGet(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY, false) as EObject
+		val callExpr = ((client.scriptElements.last as ExpressionStatement).expression as ParameterizedCallExpression);
+		assertNotNull(callExpr);
+		assertEquals(0, callExpr.arguments.size)
+		assertNotNull(callExpr.target)
+		assertTrue(callExpr.target instanceof ParameterizedPropertyAccessExpression)
+		val accessExpr = callExpr.target as ParameterizedPropertyAccessExpression
+		val wontBecomeAProxy = accessExpr.eGet(N4JSPackage.Literals.PARAMETERIZED_PROPERTY_ACCESS_EXPRESSION__PROPERTY, false) as EObject
 
 		assertFalse("property should not be a proxy", wontBecomeAProxy.eIsProxy)
+		assertEquals("property should point to resource Supplier.n4js", supplierJS, wontBecomeAProxy.eResource.URI)
 
 		supplierResource = rs.getResource(supplierJS, false) as N4JSResource
 		assertNotNull(supplierResource)
-//		supplierResource.contents.get(0) // trigger AST loading
 		assertFalse(supplierResource.loaded)
+		assertFalse("resource should not be marked as reconciled", supplierResource.isReconciled);
 		assertEquals(2, supplierResource.contents.size)
+		assertTrue(supplierResource.script.eIsProxy)
 
-		supplierResource.contents.head // trigger AST loading
+		supplierResource.contents.head // trigger AST loading after loading from index (with reconciliation)
 
-		assertFalse("we still point to the very same instance", wontBecomeAProxy.eIsProxy)
+		assertTrue("resource should be marked as reconciled", supplierResource.isReconciled);
+		assertTrue(supplierResource.isFullyInitialized);
+		assertFalse(supplierResource.isFullyProcessed);
+
+		assertFalse("wontBecomeAProxy should not have been proxified", wontBecomeAProxy.eIsProxy)
+		assertSame("accessExpr.property should still point to the very same instance", wontBecomeAProxy, accessExpr.property)
 		assertTrue(supplierResource.loaded)
 
-		assertFalse("Proxy cannot be resolved, type deserialization not working", dotAccess.property.eIsProxy)
-		assertEquals("foo", dotAccess.property.name);
+		assertEquals("foo", accessExpr.property.name);
 
-		val exported = supplierResource.contents.last as TModule
-		val supplierType = exported.topLevelTypes.head as TClass
-		assertSame(supplierType.ownedMembers.head, dotAccess.property)
+		val supplierTModule = supplierResource.contents.last as TModule
+		val supplierType = supplierTModule.topLevelTypes.head as TClass
+		assertSame(supplierType.ownedMembers.head, accessExpr.property)
 	}
 }
 

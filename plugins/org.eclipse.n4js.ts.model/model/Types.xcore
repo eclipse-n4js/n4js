@@ -95,6 +95,12 @@ class TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * True iff this TModule was created during pre-linking phase.
 	 */
 	transient boolean preLinkingPhase
+	/**
+	 * True iff this TModule was reconciled, i.e. was re-linked to an AST after its creation.
+	 * For details see {@code N4JSResource#isReconciled()}.
+	 */
+	transient boolean reconciled
+
 	// TODO jvp: what does that mean:
 	// TODO: make sure these are only top level types in the script
 	// (ß): currently these may also contain nested types since the traversal

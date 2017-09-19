@@ -378,8 +378,7 @@ class N4JSResourceTest {
 		assertFalse("Resource is not fully initialized after unloading AST", res.fullyInitialized);
 		assertFalse("Resource is not fully processed after unloading AST", res.fullyProcessed);
 
-		assertNotNull("Script is null after unloading AST", res.script);
-		assertTrue("Script is proxified after unloading AST", res.script.eIsProxy);
+		assertNull("Script is still non-null after unloading AST", res.script);
 		assertNull("TModule is null after unloading AST", res.module);
 	}
 
@@ -402,8 +401,7 @@ class N4JSResourceTest {
 		assertFalse("Resource is not fully initialized after unloading AST", res.fullyInitialized);
 		assertFalse("Resource is not fully processed after unloading AST", res.fullyProcessed);
 
-		assertNotNull("Script is null after unloading AST", res.script);
-		assertTrue("Script is proxified after unloading AST", res.script.eIsProxy);
+		assertNull("Script is still non-null after unloading AST", res.script);
 		assertNull("TModule is null after unloading AST", res.module);
 	}
 

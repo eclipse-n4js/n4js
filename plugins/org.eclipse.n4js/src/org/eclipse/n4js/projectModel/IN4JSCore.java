@@ -131,6 +131,17 @@ public interface IN4JSCore {
 
 	/**
 	 * Deserialize the TModule stored in the user data of the Xtext index.
+	 * <p>
+	 * If the resource set already contains a resource for the given resource description <em>and</em> that resource is
+	 * already loaded (and thus has an AST loaded from source) or even already contains a TModule, then this method
+	 * returns the TModule derived from the existing AST or the existing TModule, respectively. If loading from index
+	 * fails <em>and</em> <code>allowFullLoad</code> is set to <code>true</code>, then this method loads the resource
+	 * from source.
+	 * <p>
+	 * If loading from index is successfully performed, the resource containing the returned TModule will be in the
+	 * state <code>fullyProcessed</code>; in all the other above cases that a non-<code>null</code> value is returned,
+	 * the resource will be in state <code>fullyInitialized</code>; if <code>null</code> is returned, the state of the
+	 * resource (if it exists) will be unchanged.
 	 */
 	TModule loadModuleFromIndex(ResourceSet resourceSet, IResourceDescription resourceDescription,
 			boolean allowFullLoad);

@@ -52,6 +52,32 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 
 		return true;
 	}
+	
+	def package boolean relinkCallableCtor(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
+		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
+			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
+		}
+
+		if (!methodDecl.callableConstructor) {
+			throw new RuntimeException("Provided method was neither constructor nor callable constructor.");
+		}
+
+		if (!methodDecl.name.isNullOrEmpty) {
+			throw new RuntimeException("Callable ctor cannot have a name, had " + methodDecl.name);
+		}
+		if (methodDecl.hasComputedPropertyName) {
+			throw new RuntimeException("Callable constructor cannot have computed name.");
+		}
+
+		val methodType = classifier.callableCtor
+		methodType.relinkFormalParameters(methodDecl, preLinkingPhase)
+
+		// link
+		methodType.astElement = methodDecl
+		methodDecl.definedType = methodType
+
+		return true;
+	}
 
 	/**
 	 * Creates TMethod for the given method declaration (and links it to that method).

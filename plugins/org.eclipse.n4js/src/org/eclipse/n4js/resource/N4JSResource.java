@@ -252,6 +252,20 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		super();
 	}
 
+	/**
+	 * Tells if this resource had its AST loaded from source after its TModule was created and has thus an AST that was
+	 * reconciled with a pre-existing TModule. This can happen when
+	 * <ol>
+	 * <li>an AST is loaded from source after the TModule was loaded from the index (usually triggered by client code
+	 * via <code>#getContents(0)</code> or {@link SyntaxRelatedTElement#getAstElement()}).
+	 * <li>an AST is re-loaded after it was loaded from source and then unloaded via {@link #unloadAST()}.
+	 * </ol>
+	 */
+	public boolean isReconciled() {
+		final TModule module = getModule();
+		return module != null && module.isReconciled();
+	}
+
 	@Override
 	protected URIConverter getURIConverter() {
 		return getResourceSet() == null ? createNewURIConverter() : getResourceSet().getURIConverter();
@@ -430,7 +444,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			EObject result = getParseResult().getRootASTElement();
 			if (myContents.isEmpty()) {
 				myContents.sneakyAdd(0, result);
-				myContents.sneakyAdd(oldModule);
+				if (oldModule != null) {
+					myContents.sneakyAdd(oldModule);
+				}
 				forceInstallDerivedState(false);
 			} else {
 				if (myContents.size() == 1) {
@@ -472,7 +488,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			throw new IllegalStateException("The resource must be loaded, before installDerivedState can be called.");
 		fullyInitialized = false;
 		isInitializing = false;
-		super.installDerivedState(preIndexingPhase);
+		installDerivedState(preIndexingPhase);
 	}
 
 	/**
@@ -578,6 +594,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * <li>All errors and warnings are cleared.</li>
 	 * <li>The flags are set as follows:
 	 * <ul>
+	 * <li><code>reconciled</code> is <code>false</code></li>
 	 * <li><code>fullyInitialized</code> remains unchanged</li>
 	 * <li><code>fullyPostProcessed</code> is set to the same value as <code>fullyInitialized</code></li>
 	 * <li><code>aboutToBeUnloaded</code> is <code>false</code></li>
@@ -634,6 +651,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 
 		// These are cleared when linking takes place., but we eagerly clear them here as a memory optimization.
 		clearLazyProxyInformation();
+
+		// clear flag 'reconciled' in TModule (if required)
+		final TModule module = getModule();
+		if (module != null && module.isReconciled()) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.setReconciled(false);
+			}, module);
+		}
 	}
 
 	/**
@@ -667,7 +692,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	/**
 	 * Discard the AST and proxify all referenced nodes. Does nothing if the AST is already unloaded.
 	 */
-	protected void discardAST() {
+	private void discardAST() {
 		EObject script = getScript();
 		if (script != null && !script.eIsProxy()) {
 
@@ -689,10 +714,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 			unloadElements(theContents.subList(0, 1));
 
 			theContents.sneakyClear();
-			theContents.sneakyAdd(scriptProxy);
 
 			if (module != null) {
+				theContents.sneakyAdd(scriptProxy);
 				theContents.sneakyAdd(module);
+			} else {
+				// there was no module (not even a proxy)
+				// -> don't add the script proxy
+				// (i.e. transition from resource load state "Loaded" to "Created", not to "Loaded from Description")
 			}
 
 			getCache().clear(this);
@@ -1141,7 +1170,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * preLinkingPhase}==true if the module isn't fully initialized yet. It is safe to call this method at any time.
 	 */
 	public TModule getModule() {
-		return getContents().size() >= 2 ? (TModule) getContents().get(1) : null;
+		return contents != null && contents.size() >= 2 ? (TModule) contents.basicGet(1) : null;
 	}
 
 	/**

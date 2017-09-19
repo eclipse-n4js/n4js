@@ -1797,7 +1797,7 @@ abstract class N4ClassifierDefinition extends N4TypeDefinition {
 	 * Returns a view on ownedMembersRaw filtering out non-methods.
  	 */
 	op N4MemberDeclaration[] getOwnedMembers() {
-		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor] // FIXME consider filtering out constructors as well!
+		val methods = ownedMembersRaw.filter(N4MemberDeclaration).filter[!isCallableConstructor]
 		return new BasicEList(methods.toList)
 	}
 	/**

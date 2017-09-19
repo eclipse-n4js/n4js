@@ -67,7 +67,13 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 		ensureEqualName(declaration, classifier);
 
 		// members
-		var memberIdx = classifier.relinkFields(declaration, preLinkingPhase, 0);
+		if (declaration.ownedCallableCtor !== null ) {
+			relinkCallableCtor(declaration.ownedCallableCtor, classifier, preLinkingPhase)
+		}
+
+		// OWNED members
+		var memberIdx = 0;
+		memberIdx = classifier.relinkFields(declaration, preLinkingPhase, memberIdx);
 		memberIdx = classifier.relinkMethods(declaration, preLinkingPhase, memberIdx);
 		memberIdx = classifier.relinkGetters(declaration, preLinkingPhase, memberIdx);
 		memberIdx = classifier.relinkSetters(declaration, preLinkingPhase, memberIdx);
@@ -94,9 +100,6 @@ package abstract class N4JSClassifierDeclarationTypesBuilder {
 			}
 			return idx
 		]
-		if (definition.ownedCallableCtor !== null && relinkMethod(definition.ownedCallableCtor, classifier, preLinkingPhase, result)) {
-			result++;
-		}
 		return result;
 	}
 
