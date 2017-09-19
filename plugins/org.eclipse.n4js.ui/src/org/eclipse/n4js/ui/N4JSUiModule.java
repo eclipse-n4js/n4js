@@ -86,6 +86,7 @@ import org.eclipse.n4js.ui.quickfix.N4JSIssue;
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator;
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider;
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder;
+import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess;
 import org.eclipse.n4js.ui.search.N4JSReferenceQueryExecutor;
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
@@ -116,6 +117,7 @@ import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFin
 import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory;
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
+import org.eclipse.xtext.ui.editor.findrefs.EditorResourceAccess;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
@@ -659,5 +661,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/***/
 	public Class<? extends IReferenceFinder> bindReferenceFinder() {
 		return ConcreteSyntaxAwareReferenceFinder.class;
+	}
+
+	/** Custom EditorResourceAccess as a fix for GH-234 */
+	public Class<? extends EditorResourceAccess> bindEditorResourceAccess() {
+		return N4JSEditorResourceAccess.class;
 	}
 }
