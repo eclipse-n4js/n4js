@@ -13,6 +13,7 @@ package org.eclipse.n4js.validation.validators
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
@@ -43,6 +44,7 @@ import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -317,11 +319,35 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	private def holdsConstructorNoTypeParameters(TMethod method) {
 		if (!method.typeVars.isEmpty) {
 			val constructorDecl = method.astElement as N4MethodDeclaration;
-			addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl,
-				GENERIC_DECLARATION__TYPE_VARS, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
+			val offsetLength = findTypeVariablesOffset(constructorDecl);
+
+			addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl, offsetLength.key,
+				offsetLength.value, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
+
 			return false;
 		}
+
 		return true;
+	}
+
+	/** 
+	 * Determines the offset and length of the full list of type variable of the given {@link GenericDeclaration}.
+	 * 
+	 * This does not include the delimiting characters '<' and '>'.
+	 * 
+	 * @throws IllegalArgumentException if the GenericDeclaration does not have any type variables. 
+	 */
+	private def Pair<Integer, Integer> findTypeVariablesOffset(GenericDeclaration genericDeclaration) {
+		if (genericDeclaration.typeVars.empty) {
+			throw new IllegalArgumentException(
+				"Cannot determine offset of type variables for a GenericDeclaration without any type variables.")
+		}
+
+		val typeVariableNodes = NodeModelUtils.findNodesForFeature(genericDeclaration, GENERIC_DECLARATION__TYPE_VARS);
+		val firstTypeVariable = typeVariableNodes.get(0);
+		val lastTypeVariable = typeVariableNodes.last;
+
+		return Pair.of(firstTypeVariable.offset, lastTypeVariable.offset + lastTypeVariable.length - firstTypeVariable.offset);
 	}
 
 	/**

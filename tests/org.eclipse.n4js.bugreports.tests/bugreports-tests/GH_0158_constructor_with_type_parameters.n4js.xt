@@ -17,3 +17,13 @@ class X {
         console.log(x);
     }
 }
+
+class H2 {
+	// XPECT errors --> "Constructors must not have any type parameters." at "T"
+	public <T> constructor() {}
+}
+
+class H3 {
+	// XPECT errors --> "Constructors must not have any type parameters." at "T, U"
+	public <T,U> constructor(u: U, t : T) {}
+}
