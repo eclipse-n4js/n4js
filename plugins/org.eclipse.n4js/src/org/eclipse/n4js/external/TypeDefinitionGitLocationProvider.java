@@ -13,11 +13,10 @@ package org.eclipse.n4js.external;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.apache.log4j.Logger;
-
-import com.google.inject.ImplementedBy;
-
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
 import org.eclipse.n4js.utils.git.GitUtils;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * Representation of a Git repository location provider.
@@ -101,7 +100,8 @@ public interface TypeDefinitionGitLocationProvider {
 		 * The default location for the type definition file. Used in the production code.
 		 */
 		// TODO: Do NOT forget to change this before merging!
-		PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/NumberFour/n4jsd.git", GitUtils.getMasterBranch()),
+		// PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/NumberFour/n4jsd.git", GitUtils.getMasterBranch()),
+		PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/qtran-n4/n4jsd.git", "IDE-2850"),
 
 		/**
 		 * Type definition location for testing purposes.

@@ -11,11 +11,12 @@
 package org.eclipse.n4js.n4jsx.helpers
 
 import com.google.inject.Inject
-import org.eclipse.emf.common.util.URI
+import java.util.HashMap
+import java.util.Map
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -26,6 +27,8 @@ import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -38,7 +41,7 @@ class ReactHelper {
 	@Inject	protected N4JSTypeSystem ts
 	@Inject protected TypeSystemHelper tsh
 	@Inject	private IResourceScopeCache resourceScopeCacheHelper
-	@Inject private IN4JSCore n4jsCore
+	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider
 
 	public final static String REACT_MODULE = "react"
 	public final static String REACT_KEY = "KEY__" + REACT_MODULE
@@ -52,7 +55,8 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
 	def public TClassifier lookUpReactElement(EObject context) {
-		return lookUpReactClassifier(context, REACT_ELEMENT)
+		val reactElement = lookUpReactClassifier(context, REACT_ELEMENT)
+		return reactElement;
 	}
 
 	/**
@@ -61,7 +65,8 @@ class ReactHelper {
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
 	def public TClassifier lookUpReactComponent(EObject context) {
-		return lookUpReactClassifier(context, REACT_COMPONENT);
+		val reactComponent = lookUpReactClassifier(context, REACT_COMPONENT)
+		return reactComponent;
 	}
 
 	/**
@@ -73,25 +78,28 @@ class ReactHelper {
 	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, context.eResource, [
-			val project = n4jsCore.findProject(context.eResource.URI).get;
+			val index = resourceDescriptionsProvider.getResourceDescriptions(context.eResource)
+			val String reactClassifierFQNSuffix = REACT_MODULE + "." + reactClassifierName
 
-			var URI reactURI = null
-			// Lookup react.n4jsd in source folders
-			for (sourceContainer : project.sourceContainers) {
-				if (reactURI === null) {
-					// srcContainer is an iterable URIs
-					reactURI = sourceContainer.findFirst[trimFragment.lastSegment == REACT_DEFINITION_FILE]
+			var IEObjectDescription reactClassifierEObj = null
+			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.lastSegment == REACT_DEFINITION_FILE]
+			for (resDesc : allResDescs) {
+				val eobjDescs = resDesc.exportedObjects.filter[EObjectOrProxy instanceof TClassifier]
+				if (reactClassifierEObj === null) {
+					reactClassifierEObj = eobjDescs.findFirst[eobjDesc | eobjDesc.isReactClassifierDescription(reactClassifierFQNSuffix)]
 				}
 			}
-
-			if (reactURI === null) {
-				return null;
+			if (reactClassifierEObj !== null) {
+				val ret = context.eResource.resourceSet.getEObject(reactClassifierEObj.EObjectURI, true) as TClassifier
+				return ret;
 			}
-			// Look up React classifier in the TModule
-			val tmodule = context.eResource.resourceSet.getEObject(reactURI.appendFragment("/1"), true);
-			val reactClassifier = tmodule.eAllContents.filter(TClassifier).findFirst[name == reactClassifierName]
-			return reactClassifier
+			// React definitions cannot be found
+			return null
 		])
+	}
+
+	private def boolean isReactClassifierDescription(IEObjectDescription desc, String suffix) {
+		return desc.EObjectURI.trimFragment.lastSegment == REACT_DEFINITION_FILE && desc.qualifiedName.toString.endsWith(suffix)
 	}
 
 	/**
