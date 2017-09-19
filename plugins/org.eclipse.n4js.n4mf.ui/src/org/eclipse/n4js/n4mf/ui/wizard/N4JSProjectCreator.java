@@ -84,6 +84,21 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	}
 
 	@Override
+	protected IProject createProject(IProgressMonitor monitor) {
+		IProject project = super.createProject(monitor);
+
+		// Throw an exception if project is <code>null</code>.
+		// A null-project indicates that something went wrong while creating the plain
+		// Eclipse project. Due to the given Xtext infrastructure there is no
+		// way to actually find out what went wrong without re-implementing {@link ProjectFactory}.
+		if (null == project) {
+			throw new NullPointerException("The project could not be created.");
+		}
+
+		return project;
+	}
+
+	@Override
 	protected String getModelFolderName() {
 		return modelFolderName;
 	}
