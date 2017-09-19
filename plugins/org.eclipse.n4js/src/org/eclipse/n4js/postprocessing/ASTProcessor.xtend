@@ -55,7 +55,6 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.n4JS.N4MethodDeclaration
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall

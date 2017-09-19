@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
@@ -41,7 +42,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.List
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
@@ -52,7 +52,6 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.*
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.xtext.service.OperationCanceledManager
 
 /**
  * Validation of rules that apply to individual members of a classifier.<p>
