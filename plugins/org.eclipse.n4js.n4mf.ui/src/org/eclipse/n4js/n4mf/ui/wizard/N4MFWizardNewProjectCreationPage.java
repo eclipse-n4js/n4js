@@ -45,6 +45,8 @@ import java.util.regex.Pattern;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
@@ -281,7 +283,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	@Override
 	protected boolean validatePage() {
 		final boolean valid = super.validatePage(); // run default validation
-		final boolean existing = validateIsNotExistingProjectPath(); // check if existing project
+		final boolean existing = validateIsNotExistingProjectPath(valid); // check if existing project
 
 		if (valid && !existing) {
 
@@ -446,27 +448,48 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	 * If so, a hint is displayed ({@link #setShowExistingProjectHint(boolean)}) and further validation is not executed.
 	 * (Return value <code>false</code>)
 	 *
+	 * Only shows the hint if the project name is valid.
+	 *
 	 * Returns <code>true</code> otherwise.
+	 *
+	 * @param projectNameValid
+	 *            Specifies whether {@link #getProjectName()} returns a valid value.
 	 */
-	private boolean validateIsNotExistingProjectPath() {
+	private boolean validateIsNotExistingProjectPath(boolean projectNameValid) {
 		IPath projectLocation = getLocationPath();
+		final String projectName = getProjectName();
 
 		// if workspace is project location (default location)
 		if (projectLocation.equals(Platform.getLocation())) {
 			// add project name since #getLocationPath does not return the full project location
-			projectLocation = projectLocation.append(getProjectName());
+			projectLocation = projectLocation.append(projectName);
 		}
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		boolean workspaceProjectExists = projectNameValid ? root.getProject(projectName).exists() : false;
 
 		// check for an existing manifest
 		IPath manifestPath = projectLocation.append("manifest.n4mf");
 		File existingManifest = new File(manifestPath.toString());
 
-		boolean isExistingProject = existingManifest.exists();
-		// update UI accordingly (show hint)
-		setShowExistingProjectHint(isExistingProject);
+		// check for an existing file with the path of the project folder
+		File existingFileAtProjectDirectory = new File(projectLocation.toString());
+		boolean projectDirectoryIsExistingFile = existingFileAtProjectDirectory.exists()
+				&& existingFileAtProjectDirectory.isFile();
+
+		boolean isExistingNonWorkspaceProject = existingManifest.exists() && !workspaceProjectExists;
+
+		// set error message if there is already file with the project path
+		if (projectDirectoryIsExistingFile) {
+			setErrorMessage("There already exists a file at the location '" + projectLocation.toString() + "'.");
+			return true;
+		} else {
+			// update UI accordingly (show hint)
+			setShowExistingProjectHint(projectNameValid && isExistingNonWorkspaceProject);
+		}
 
 		// only validate further if this is not an existing project
-		return !isExistingProject;
+		return !isExistingNonWorkspaceProject;
 	}
 
 	/**
