@@ -20,6 +20,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
 class ConditionalExpressionFactory {
 
 	static ComplexNode buildComplexNode(ConditionalExpression condExpr) {

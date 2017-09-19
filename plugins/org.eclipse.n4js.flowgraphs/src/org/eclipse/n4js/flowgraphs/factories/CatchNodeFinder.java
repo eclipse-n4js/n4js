@@ -30,7 +30,9 @@ import org.eclipse.n4js.n4JS.TryStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
 /**
- *
+ * For a given {@link JumpToken}s of a given start {@link Node} the method
+ * {@link #find(JumpToken, Node, ComplexNodeProvider)} finds the target node to which the start node jumps via the given
+ * {@link JumpToken}.
  */
 public class CatchNodeFinder {
 	static private final CatchEvaluator catchBreakEvaluator = new CatchBreakEvaluator();
@@ -38,6 +40,7 @@ public class CatchNodeFinder {
 	static private final CatchEvaluator catchReturnEvaluator = new CatchReturnEvaluator();
 	static private final CatchEvaluator catchThrowEvaluator = new CatchThrowEvaluator();
 
+	/** @return the node to which the given {@code jumpNode} jumps via the given {@link JumpToken}. Can return null. */
 	static Node find(JumpToken jumpToken, Node jumpNode, ComplexNodeProvider cnProvider) {
 		CatchEvaluator catchEvaluator = getCatchEvaluator(jumpToken);
 		ControlFlowElement cfe = jumpNode.getControlFlowElement();
@@ -53,30 +56,7 @@ public class CatchNodeFinder {
 		return null;
 	}
 
-	private static ControlFlowElement skipContainers(ControlFlowElement cfe) {
-		if (cfe instanceof Block) {
-			cfe = getContainer(cfe);
-		}
-		while (FGUtils.isControlElement(cfe) && !(cfe instanceof Block)) {
-			cfe = getContainer(cfe);
-		}
-		return cfe;
-	}
-
-	private static ControlFlowElement getContainer(ControlFlowElement cfe) {
-		EObject container = cfe.eContainer();
-		if (container instanceof ControlFlowElement) {
-			return (ControlFlowElement) container;
-		}
-		boolean getNextContainer = false;
-		getNextContainer |= container instanceof CatchBlock;
-		getNextContainer |= container instanceof FinallyBlock;
-		if (getNextContainer) {
-			return (ControlFlowElement) container.eContainer();
-		}
-		return null;
-	}
-
+	/** @return the correct {@link CatchEvaluator} based on the {@link JumpToken}. */
 	private static CatchEvaluator getCatchEvaluator(JumpToken jumpToken) {
 		switch (jumpToken.cfType) {
 		case Break:
@@ -92,6 +72,36 @@ public class CatchNodeFinder {
 		}
 	}
 
+	/**
+	 * Skipping containers can be necessary when a jump node lies within a {@link FinallyBlock} (that would catch
+	 * anything itself).
+	 */
+	private static ControlFlowElement skipContainers(ControlFlowElement cfe) {
+		if (cfe instanceof Block) {
+			cfe = getContainer(cfe);
+		}
+		while (FGUtils.isControlElement(cfe) && !(cfe instanceof Block)) {
+			cfe = getContainer(cfe);
+		}
+		return cfe;
+	}
+
+	/** To find the correct catch node, all containers are searched, starting from the innermost. */
+	private static ControlFlowElement getContainer(ControlFlowElement cfe) {
+		EObject container = cfe.eContainer();
+		if (container instanceof ControlFlowElement) {
+			return (ControlFlowElement) container;
+		}
+		boolean getNextContainer = false;
+		getNextContainer |= container instanceof CatchBlock;
+		getNextContainer |= container instanceof FinallyBlock;
+		if (getNextContainer) {
+			return (ControlFlowElement) container.eContainer();
+		}
+		return null;
+	}
+
+	/** @return a node that can catch the given {@link JumpToken}. */
 	private static Node findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
 			CatchEvaluator catchEvaluator, ComplexNodeProvider cnProvider) {
 
@@ -109,6 +119,12 @@ public class CatchNodeFinder {
 		return null;
 	}
 
+	/**
+	 * Wrapper method of {@link #findCatchAllNodeInOtherStmt(ControlFlowElement, ComplexNodeProvider)}.
+	 * <p>
+	 * Necessary since neither the {@link TryStatement} itself nor the {@link FinallyBlock} can ever catch a node (only
+	 * the try block can).
+	 */
 	private static Node findCatchAllNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
 		if (cfe instanceof TryStatement) {
 			return null;
@@ -127,6 +143,7 @@ public class CatchNodeFinder {
 		return findCatchAllNodeInOtherStmt(cfe, cnProvider);
 	}
 
+	/** @return a node that can catch any {@link JumpToken} */
 	private static Node findCatchAllNodeInOtherStmt(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
 		ComplexNode cnCFE = cnProvider.get(cfe);
 		for (Node node : cnCFE.getNodes()) {
@@ -140,13 +157,18 @@ public class CatchNodeFinder {
 	}
 
 	static private interface CatchEvaluator {
+
+		/** @return true iff the given {@link ControlFlowElement} is a possible catch candidate */
 		boolean isCatchingType(ControlFlowElement cfe);
 
 		/**
 		 * Result is valid only if {@link #isCatchingType(ControlFlowElement)} returns true on the same <code>cfe</code>
+		 *
+		 * @return the catching node.
 		 */
 		Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider);
 
+		/** @return true iff the given {@link CatchToken} can catch the given {@link JumpToken}. */
 		boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken);
 
 	}

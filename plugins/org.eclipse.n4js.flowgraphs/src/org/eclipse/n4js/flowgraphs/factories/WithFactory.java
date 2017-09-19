@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.WithStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link WithStatement}s. */
 class WithFactory {
 
 	static ComplexNode buildComplexNode(WithStatement withStmt) {

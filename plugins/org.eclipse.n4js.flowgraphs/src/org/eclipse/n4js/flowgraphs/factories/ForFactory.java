@@ -24,6 +24,7 @@ import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ForStatement}s. */
 class ForFactory {
 
 	static final String LOOPCATCH_NODE_NAME = "loopCatch";

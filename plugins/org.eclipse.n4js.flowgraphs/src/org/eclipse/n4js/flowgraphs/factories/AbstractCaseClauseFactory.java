@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.Statement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s. */
 class AbstractCaseClauseFactory {
 
 	static ComplexNode buildComplexNode(AbstractCaseClause abstrCaseClause) {

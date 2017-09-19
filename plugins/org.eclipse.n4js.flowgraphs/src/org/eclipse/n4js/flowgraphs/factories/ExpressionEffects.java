@@ -23,6 +23,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 
 class ExpressionEffects {
+	// TODO GH-235
 
 	Map<Node, EffectInfo> get(Expression expr, ComplexNode cNode) {
 		Map<Node, EffectInfo> effMap = new HashMap<>();

@@ -22,6 +22,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link WhileStatement}s. */
 class WhileFactory {
 
 	static final String CONDITION_NODE_NAME = "condition";

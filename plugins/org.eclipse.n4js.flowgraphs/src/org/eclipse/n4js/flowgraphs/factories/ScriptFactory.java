@@ -28,6 +28,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link Script}s. */
 class ScriptFactory {
 
 	static ComplexNode buildComplexNode(Script script) {

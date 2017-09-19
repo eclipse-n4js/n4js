@@ -22,6 +22,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link DoStatement}s. */
 class DoWhileFactory {
 	static final String CONDITION_NODE_NAME = "condition";
 

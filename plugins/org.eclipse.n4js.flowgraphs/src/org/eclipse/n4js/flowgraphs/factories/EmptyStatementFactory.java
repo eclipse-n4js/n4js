@@ -13,11 +13,12 @@ package org.eclipse.n4js.flowgraphs.factories;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
-import org.eclipse.n4js.n4JS.Statement;
+import org.eclipse.n4js.n4JS.EmptyStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link EmptyStatement}s. */
 class EmptyStatementFactory {
 
-	static ComplexNode buildComplexNode(Statement empty) {
+	static ComplexNode buildComplexNode(EmptyStatement empty) {
 		ComplexNode cNode = new ComplexNode(empty);
 
 		Node entryAndExitNode = new RepresentingNode("entryAndExit", empty);

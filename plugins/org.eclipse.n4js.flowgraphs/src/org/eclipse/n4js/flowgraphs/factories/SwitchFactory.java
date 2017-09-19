@@ -25,6 +25,7 @@ import org.eclipse.n4js.n4JS.DefaultClause;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s. */
 class SwitchFactory {
 
 	static ComplexNode buildComplexNode(SwitchStatement switchStmt) {

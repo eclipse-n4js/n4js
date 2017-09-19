@@ -16,21 +16,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- *
+ * List utilities
  */
 public class ListUtils {
 
-	/**
-	 *
-	 */
+	/** @return a new list of all non-null elements */
 	@SafeVarargs
 	static public <T> LinkedList<T> filterNulls(T... elems) {
 		return filterNulls(Arrays.asList(elems));
 	}
 
-	/**
-	 *
-	 */
+	/** @return a new list of all non-null elements */
 	public static <T> LinkedList<T> filterNulls(Iterable<T> elems) {
 		LinkedList<T> list = new LinkedList<>();
 		for (Iterator<T> it = elems.iterator(); it.hasNext();) {
@@ -42,7 +38,7 @@ public class ListUtils {
 	}
 
 	/**
-	 *
+	 * TODO GH-235
 	 */
 	@SuppressWarnings("unused")
 	@SafeVarargs

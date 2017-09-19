@@ -22,6 +22,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.TryStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link TryStatement}s. */
 class TryFactory {
 
 	static final String CATCH_NODE_NAME = "catch";

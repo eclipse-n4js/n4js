@@ -23,6 +23,7 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.Statement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s. */
 class BlockFactory {
 
 	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.Block block) {

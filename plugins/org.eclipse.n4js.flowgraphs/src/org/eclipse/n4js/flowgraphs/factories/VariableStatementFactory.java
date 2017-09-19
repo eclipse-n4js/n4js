@@ -21,6 +21,7 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link VariableStatement}s. */
 class VariableStatementFactory {
 
 	static ComplexNode buildComplexNode(VariableStatement varDeclStmt) {

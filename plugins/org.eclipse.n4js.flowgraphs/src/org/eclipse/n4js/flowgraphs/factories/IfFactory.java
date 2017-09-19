@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.IfStatement;
 
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link IfStatement}s. */
 class IfFactory {
 
 	static ComplexNode buildComplexNode(IfStatement ifStmt) {
