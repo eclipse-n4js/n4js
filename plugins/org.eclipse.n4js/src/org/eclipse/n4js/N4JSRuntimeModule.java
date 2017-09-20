@@ -554,4 +554,5 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	public Class<? extends XpectAwareFileExtensionCalculator> bindXpectAwareFileExtensionCalculator() {
 		return XpectAwareFileExtensionCalculator.class;
 	}
+
 }

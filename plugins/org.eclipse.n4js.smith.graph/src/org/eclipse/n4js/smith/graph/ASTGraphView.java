@@ -21,6 +21,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.smith.graph.graph.Graph;
+import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.GraphList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -33,10 +36,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
-
-import org.eclipse.n4js.smith.graph.graph.Graph;
-import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
-import org.eclipse.n4js.smith.graph.graph.GraphList;
 
 /**
  * A view showing a graph of the AST and type model (i.e. TModule).

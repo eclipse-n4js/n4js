@@ -87,6 +87,9 @@ Contributors:
 		<module>org.eclipse.n4js.n4jsx.model</module>
 		<module>org.eclipse.n4js.n4jsx.ui</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui</module>
+		<!-- dashboard -->
+		<module>org.eclipse.n4js.smith.dash</module>
+		<module>org.eclipse.n4js.smith.dash.ui</module>
 	</modules>
 
 	<properties>
