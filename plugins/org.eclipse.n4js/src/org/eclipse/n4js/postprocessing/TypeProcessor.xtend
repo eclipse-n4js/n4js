@@ -248,16 +248,23 @@ public class TypeProcessor extends AbstractProcessor {
 			// make sure post-processing on the containing N4JS resource is initiated
 			res.performPostProcessing(G.cancelIndicator);
 
-			if (obj.isTypeModelElement) {
-				// for type model elements, we by-pass all caching ...
-				// but: if the type model element corresponds to an AST node, we forward-process that AST node
+			// if post-processing is in progress AND 'obj' is a type model element AND it corresponds to an AST node
+			// --> redirect processing to the AST node, in order to properly handle backward/forward references, esp.
+			// forward processing of identifiable subtrees
+			if(res.isProcessing && obj.isTypeModelElement) {
 				val astNodeToProcess = if (obj instanceof SyntaxRelatedTElement) {
 						obj.astElement // NOTE: we've made sure above that we are *NOT* in a Resource loaded from the index!
 					};
 				if (astNodeToProcess instanceof TypableElement) {
-					return getTypeOfForwardReference(G, astNodeToProcess, astMetaInfoCacheHelper.getOrCreate(res));
+					// proceed with the corresponding AST node instead of the type model element
+					obj = astNodeToProcess;
 				}
+			}
 
+			// obtain type of 'obj' depending on whether it's an AST node or type model element AND depending on current
+			// load state of containing N4JS resource
+			if (obj.isTypeModelElement) {
+				// for type model elements, we by-pass all caching ...
 				return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 			} else if (obj.isASTNode && obj.isTypableNode) {
 				// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
