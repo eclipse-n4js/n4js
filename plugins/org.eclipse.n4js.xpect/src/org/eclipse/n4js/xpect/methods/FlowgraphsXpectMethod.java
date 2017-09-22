@@ -276,7 +276,7 @@ public class FlowgraphsXpectMethod {
 	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
 	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect
-	public void container(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
+	public void cfContainer(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getControlFlowElement(offset);
 		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
 		EObject containerContainer = container.eContainer();

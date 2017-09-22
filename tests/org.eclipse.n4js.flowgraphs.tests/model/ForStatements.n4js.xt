@@ -25,7 +25,7 @@
 
 
 function ForStatement1() {
-	// ForStatement1 XPECT container --> FunctionDeclaration::Block
+	// ForStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement1 XPECT allIslandElems -->
 	// ForStatement1 XPECT allCatchBlocks -->
 	/* ForStatement1 XPECT allEdges ---
@@ -50,7 +50,7 @@ function ForStatement1() {
 }
 
 function ForStatement2() {
-	// ForStatement2 XPECT container --> FunctionDeclaration::Block
+	// ForStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement2 XPECT allIslandElems -->
 	// ForStatement2 XPECT allCatchBlocks -->
 	/* ForStatement2 XPECT allEdges ---
@@ -75,7 +75,7 @@ function ForStatement2() {
 }
 
 function ForStatement3() {
-	// ForStatement3 XPECT container --> FunctionDeclaration::Block
+	// ForStatement3 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement3 XPECT allIslandElems -->
 	// ForStatement3 XPECT allCatchBlocks -->
 	/* ForStatement3 XPECT allEdges ---
@@ -115,7 +115,7 @@ function ForStatement3() {
 }
 
 function ForStatement4() {
-	// ForStatement4 XPECT container --> FunctionDeclaration::Block
+	// ForStatement4 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement4 XPECT allIslandElems -->
 	// ForStatement4 XPECT allCatchBlocks -->
 	/* ForStatement4 XPECT allEdges ---
@@ -144,7 +144,7 @@ function ForStatement4() {
 }
 
 function ForStatement5() {
-	// ForStatement5 XPECT container --> FunctionDeclaration::Block
+	// ForStatement5 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement5 XPECT allIslandElems -->
 	// ForStatement5 XPECT allCatchBlocks -->
 	/* ForStatement5 XPECT allEdges ---
@@ -182,7 +182,7 @@ function ForStatement5() {
 }
 
 function ForStatement6() {
-	// ForStatement6 XPECT container --> FunctionDeclaration::Block
+	// ForStatement6 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement6 XPECT allIslandElems -->
 	// ForStatement6 XPECT allCatchBlocks -->
 	/* ForStatement6 XPECT allEdges ---
@@ -220,7 +220,7 @@ function ForStatement6() {
 }
 
 function ForStatement7() {
-	// ForStatement7 XPECT container --> FunctionDeclaration::Block
+	// ForStatement7 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement7 XPECT allIslandElems -->
 	// ForStatement7 XPECT allCatchBlocks -->
 	/* ForStatement7 XPECT allEdges ---
@@ -245,7 +245,7 @@ function ForStatement7() {
 }
 
 function ForStatement8() {
-	// ForStatement8 XPECT container --> FunctionDeclaration::Block
+	// ForStatement8 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement8 XPECT allIslandElems -->
 	// ForStatement8 XPECT allCatchBlocks -->
 	/* ForStatement8 XPECT allEdges ---
@@ -280,7 +280,7 @@ function ForStatement8() {
 }
 
 function ForStatement9() {
-	// ForStatement9 XPECT container --> FunctionDeclaration::Block
+	// ForStatement9 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatement9 XPECT allIslandElems -->
 	// ForStatement9 XPECT allCatchBlocks -->
 	/* ForStatement9 XPECT allEdges ---
@@ -307,7 +307,7 @@ function ForStatement9() {
 }
 
 function ForOfStatement1() {
-	// ForOfStatement1 XPECT container --> FunctionDeclaration::Block
+	// ForOfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForOfStatement1 XPECT allIslandElems -->
 	// ForOfStatement1 XPECT allCatchBlocks -->
 	/* ForOfStatement1 XPECT allEdges ---
@@ -351,7 +351,7 @@ function ForOfStatement1() {
 }
 
 function ForOfStatement2(x) {
-	// ForOfStatement2 XPECT container --> FunctionDeclaration::Block
+	// ForOfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForOfStatement2 XPECT allIslandElems -->
 	// ForOfStatement2 XPECT allCatchBlocks -->
 	/* ForOfStatement2 XPECT allEdges ---
@@ -393,7 +393,7 @@ function ForOfStatement2(x) {
 }
 
 function ForInStatement1() {
-	// ForInStatement1 XPECT container --> FunctionDeclaration::Block
+	// ForInStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForInStatement1 XPECT allIslandElems -->
 	// ForInStatement1 XPECT allCatchBlocks -->
 	/* ForInStatement1 XPECT allEdges ---
@@ -437,7 +437,7 @@ function ForInStatement1() {
 }
 
 function ForInStatement2(x) {
-	// ForInStatement2 XPECT container --> FunctionDeclaration::Block
+	// ForInStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForInStatement2 XPECT allIslandElems -->
 	// ForInStatement2 XPECT allCatchBlocks -->
 	/* ForInStatement2 XPECT allEdges ---
@@ -475,7 +475,7 @@ function ForInStatement2(x) {
 }
 
 function ForStatementVarDecl1() {
-	// ForStatementVarDecl1 XPECT container --> FunctionDeclaration::Block
+	// ForStatementVarDecl1 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementVarDecl1 XPECT allIslandElems -->
 	// ForStatementVarDecl1 XPECT allCatchBlocks -->
 	/* ForStatementVarDecl1 XPECT allEdges ---
@@ -516,7 +516,7 @@ function ForStatementVarDecl1() {
 }
 
 function ForStatementVarDecl2() {
-	// ForStatementVarDecl2 XPECT container --> FunctionDeclaration::Block
+	// ForStatementVarDecl2 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementVarDecl2 XPECT allIslandElems -->
 	// ForStatementVarDecl2 XPECT allCatchBlocks -->
 	/* ForStatementVarDecl2 XPECT allEdges ---
@@ -565,7 +565,7 @@ function ForStatementVarDecl2() {
 
 
 function ForStatementBreak1() {
-	// ForStatementBreak1 XPECT container --> FunctionDeclaration::Block
+	// ForStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementBreak1 XPECT allIslandElems -->
 	// ForStatementBreak1 XPECT allCatchBlocks -->
 	/* ForStatementBreak1 XPECT allEdges ---
@@ -607,7 +607,7 @@ function ForStatementBreak1() {
 }
 
 function ForStatementContinue1() {
-	// ForStatementContinue1 XPECT container --> FunctionDeclaration::Block
+	// ForStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementContinue1 XPECT allIslandElems -->
 	// ForStatementContinue1 XPECT allCatchBlocks -->
 	/* ForStatementContinue1 XPECT allEdges ---
@@ -649,7 +649,7 @@ function ForStatementContinue1() {
 }
 
 function ForStatementContinue2() {
-	// ForStatementContinue2 XPECT container --> FunctionDeclaration::Block
+	// ForStatementContinue2 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementContinue2 XPECT allIslandElems -->
 	// ForStatementContinue2 XPECT allCatchBlocks -->
 	/* ForStatementContinue2 XPECT allEdges ---
@@ -689,7 +689,7 @@ function ForStatementContinue2() {
 }
 
 function ForStatementContinue3() {
-	// ForStatementContinue3 XPECT container --> FunctionDeclaration::Block
+	// ForStatementContinue3 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementContinue3 XPECT allIslandElems -->
 	// ForStatementContinue3 XPECT allCatchBlocks -->
 	/* ForStatementContinue3 XPECT allEdges ---
@@ -726,7 +726,7 @@ function ForStatementContinue3() {
 }
 
 function ForStatementContinue4() {
-	// ForStatementContinue4 XPECT container --> FunctionDeclaration::Block
+	// ForStatementContinue4 XPECT cfContainer --> FunctionDeclaration::Block
 	// ForStatementContinue4 XPECT allIslandElems -->
 	// ForStatementContinue4 XPECT allCatchBlocks -->
 	/* ForStatementContinue4 XPECT allEdges ---
