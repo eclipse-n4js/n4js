@@ -19,7 +19,7 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.smith.graph.CFGraphProvider;
 import org.eclipse.swt.custom.StyledText;
@@ -40,7 +40,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	final StyledText styledText;
 	final NavigableMap<ControlFlowElement, Node> nodeMap = new TreeMap<>(new CFEComparator());
 	private CFGraphProvider gProvider;
-	private N4JSFlowAnalyses flowAnalyses;
+	private N4JSFlowAnalyzer flowAnalyzer;
 
 	/**
 	 * Constructor
@@ -56,7 +56,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		clear();
 		nodeMap.clear();
 		gProvider = provider;
-		flowAnalyses = provider.getFlowAnalyses();
+		flowAnalyzer = provider.getFlowAnalyses();
 
 		Collection<ControlFlowElement> cfes = gProvider.getElements(input);
 		for (ControlFlowElement cfe : cfes) {
@@ -139,16 +139,16 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			int offset = line1 - line2;
 
 			if (offset == 0) {
-				if (flowAnalyses.isSuccessor(cfe1, cfe2))
+				if (flowAnalyzer.isSuccessor(cfe1, cfe2))
 					return -10;
 
-				if (flowAnalyses.isSuccessor(cfe2, cfe1))
+				if (flowAnalyzer.isSuccessor(cfe2, cfe1))
 					return 10;
 
-				if (flowAnalyses.isTransitiveSuccessor(cfe1, cfe2))
+				if (flowAnalyzer.isTransitiveSuccessor(cfe1, cfe2))
 					return -1;
 
-				if (flowAnalyses.isTransitiveSuccessor(cfe2, cfe1))
+				if (flowAnalyzer.isTransitiveSuccessor(cfe2, cfe1))
 					return 1;
 			}
 

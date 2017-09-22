@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
@@ -45,23 +45,23 @@ import com.google.common.collect.Sets;
  * exploration is done in parallel for every {@link PathExplorerInternal} of every {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
-	private final N4JSFlowAnalyses flowAnalyses;
+	private final N4JSFlowAnalyzer flowAnalyzer;
 	private final Collection<? extends GraphVisitorInternal> walkers;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
 	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
 
 	/** Constructor */
-	public GraphVisitorGuideInternal(N4JSFlowAnalyses flowAnalyses,
+	public GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
 			Collection<? extends GraphVisitorInternal> walkers) {
 
-		this.flowAnalyses = flowAnalyses;
+		this.flowAnalyzer = flowAnalyzer;
 		this.walkers = walkers;
 	}
 
 	/** Call before any of the {@code walkthrough} methods is called. */
 	public void init() {
 		for (GraphVisitorInternal walker : walkers) {
-			walker.setFlowAnalyses(flowAnalyses);
+			walker.setFlowAnalyses(flowAnalyzer);
 			walker.callInitAll();
 		}
 	}
@@ -69,7 +69,7 @@ public class GraphVisitorGuideInternal {
 	/** Call after all of the {@code walkthrough} methods have been called. */
 	public void terminate() {
 		for (GraphVisitorInternal walker : walkers) {
-			walker.setFlowAnalyses(flowAnalyses);
+			walker.setFlowAnalyses(flowAnalyzer);
 			walker.callTerminateAll();
 		}
 	}
@@ -99,7 +99,7 @@ public class GraphVisitorGuideInternal {
 		walkerVisitedEdges.clear();
 
 		for (GraphVisitorInternal walker : walkers) {
-			walker.setFlowAnalyses(flowAnalyses);
+			walker.setFlowAnalyses(flowAnalyzer);
 			walker.setContainerAndMode(cn.getControlFlowContainer(), mode);
 			walker.callInitInternal();
 		}

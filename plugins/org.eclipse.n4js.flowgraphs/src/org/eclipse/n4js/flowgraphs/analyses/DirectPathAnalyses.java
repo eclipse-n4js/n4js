@@ -20,7 +20,7 @@ import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -42,7 +42,7 @@ public class DirectPathAnalyses {
 		this.spa = new SuccessorPredecessorAnalysis(cfg);
 	}
 
-	/** see {@link N4JSFlowAnalyses#getControlFlowTypeToSuccessors(ControlFlowElement , ControlFlowElement)}. */
+	/** see {@link N4JSFlowAnalyzer#getControlFlowTypeToSuccessors(ControlFlowElement , ControlFlowElement)}. */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
 		Path path = getPath(cfe, cfeSucc);
 		if (path.isConnecting()) {
@@ -52,7 +52,7 @@ public class DirectPathAnalyses {
 		}
 	}
 
-	/** see {@link N4JSFlowAnalyses#isTransitiveSuccessor(ControlFlowElement , ControlFlowElement)}. */
+	/** see {@link N4JSFlowAnalyzer#isTransitiveSuccessor(ControlFlowElement , ControlFlowElement)}. */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		Objects.requireNonNull(cfeFrom);
 		Objects.requireNonNull(cfeTo);
@@ -61,7 +61,7 @@ public class DirectPathAnalyses {
 		return path.isConnecting();
 	}
 
-	/** see {@link N4JSFlowAnalyses#getCommonPredecessors(ControlFlowElement , ControlFlowElement)}. */
+	/** see {@link N4JSFlowAnalyzer#getCommonPredecessors(ControlFlowElement , ControlFlowElement)}. */
 	public Set<ControlFlowElement> getCommonPredecessors(ControlFlowElement cfeA, ControlFlowElement cfeB) {
 		Objects.requireNonNull(cfeA);
 		Objects.requireNonNull(cfeB);
@@ -110,7 +110,7 @@ public class DirectPathAnalyses {
 		return commonPredSet;
 	}
 
-	/** see {@link N4JSFlowAnalyses#getPathIdentifier(ControlFlowElement , ControlFlowElement)}. */
+	/** see {@link N4JSFlowAnalyzer#getPathIdentifier(ControlFlowElement , ControlFlowElement)}. */
 	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		Objects.requireNonNull(cfeFrom);
 		Objects.requireNonNull(cfeTo);

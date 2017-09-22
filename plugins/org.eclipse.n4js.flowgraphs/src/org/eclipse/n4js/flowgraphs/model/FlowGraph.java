@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.CatchBlock;
@@ -74,13 +74,13 @@ public class FlowGraph {
 		return cnMap.get(cfe);
 	}
 
-	/** see {@link N4JSFlowAnalyses#getContainer(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyzer#getContainer(ControlFlowElement)} */
 	public ControlFlowElement getContainer(ControlFlowElement cfe) {
 		ComplexNode cn = getComplexNode(cfe);
 		return cn.getControlFlowContainer();
 	}
 
-	/** see {@link N4JSFlowAnalyses#getAllContainers()} */
+	/** see {@link N4JSFlowAnalyzer#getAllContainers()} */
 	public TreeSet<ControlFlowElement> getAllContainers() {
 		return cfContainers;
 	}
@@ -90,7 +90,7 @@ public class FlowGraph {
 		return cfCatchBlocks;
 	}
 
-	/** see {@link N4JSFlowAnalyses#getCatchBlocksOfContainer(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyzer#getCatchBlocksOfContainer(ControlFlowElement)} */
 	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
 		List<Block> catchBlockOfContainer = new LinkedList<>();
 		for (Block catchBlock : cfCatchBlocks) {

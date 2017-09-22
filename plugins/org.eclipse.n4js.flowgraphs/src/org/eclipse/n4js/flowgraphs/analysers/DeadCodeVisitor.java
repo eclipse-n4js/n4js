@@ -115,7 +115,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 		cfe = CFEMapper.map(cfe);
 
 		if (FGUtils.isControlElement(cfe)) {
-			Set<ControlFlowElement> succs = flowAnalyses.getSuccessors(cfe);
+			Set<ControlFlowElement> succs = flowAnalyzer.getSuccessors(cfe);
 			for (ControlFlowElement succ : succs) {
 				if (!isDeadCode(succ)) {
 					return false;
@@ -127,7 +127,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 		if (allForwardCFEs.contains(cfe)) {
 			return false;
 		}
-		Set<ControlFlowElement> preds = flowAnalyses.getPredecessorsSkipInternal(cfe);
+		Set<ControlFlowElement> preds = flowAnalyzer.getPredecessorsSkipInternal(cfe);
 		if (preds.isEmpty()) {
 			return true;
 		}
@@ -142,7 +142,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 			if (allForwardCFEs.contains(pred)) {
 				return false;
 			}
-			preds.addAll(flowAnalyses.getPredecessorsSkipInternal(pred));
+			preds.addAll(flowAnalyzer.getPredecessorsSkipInternal(pred));
 			visited.add(pred);
 		}
 		return true;
@@ -230,7 +230,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 			}
 		}
 
-		ControlFlowElement containerCFE = flowAnalyses.getContainer(firstElement);
+		ControlFlowElement containerCFE = flowAnalyzer.getContainer(firstElement);
 		ControlFlowElement reachablePredecessor = findPrecedingStatement(firstElement);
 		return new DeadCodeRegion(startIdx, endIdx - startIdx, containerCFE, reachablePredecessor);
 	}

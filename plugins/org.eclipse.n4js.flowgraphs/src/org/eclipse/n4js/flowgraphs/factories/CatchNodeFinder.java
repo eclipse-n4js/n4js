@@ -31,7 +31,7 @@ import org.eclipse.n4js.n4JS.WhileStatement;
 
 /**
  * For a given {@link JumpToken}s of a given start {@link Node} the method
- * {@link #find(JumpToken, Node, ComplexNodeProvider)} finds the target node to which the start node jumps via the given
+ * {@link #find(JumpToken, Node, ComplexNodeMapper)} finds the target node to which the start node jumps via the given
  * {@link JumpToken}.
  */
 public class CatchNodeFinder {
@@ -41,12 +41,12 @@ public class CatchNodeFinder {
 	static private final CatchEvaluator catchThrowEvaluator = new CatchThrowEvaluator();
 
 	/** @return the node to which the given {@code jumpNode} jumps via the given {@link JumpToken}. Can return null. */
-	static Node find(JumpToken jumpToken, Node jumpNode, ComplexNodeProvider cnProvider) {
+	static Node find(JumpToken jumpToken, Node jumpNode, ComplexNodeMapper cnMapper) {
 		CatchEvaluator catchEvaluator = getCatchEvaluator(jumpToken);
 		ControlFlowElement cfe = jumpNode.getControlFlowElement();
 		cfe = skipContainers(cfe);
 		while (cfe != null) {
-			Node catchNode = findCatchNode(jumpToken, cfe, catchEvaluator, cnProvider);
+			Node catchNode = findCatchNode(jumpToken, cfe, catchEvaluator, cnMapper);
 			if (catchNode != null)
 				return catchNode;
 
@@ -103,49 +103,49 @@ public class CatchNodeFinder {
 
 	/** @return a node that can catch the given {@link JumpToken}. */
 	private static Node findCatchNode(JumpToken jumpToken, ControlFlowElement cfe,
-			CatchEvaluator catchEvaluator, ComplexNodeProvider cnProvider) {
+			CatchEvaluator catchEvaluator, ComplexNodeMapper cnMapper) {
 
 		if (catchEvaluator.isCatchingType(cfe)) {
-			Node catchNode = catchEvaluator.getCatchingNode(cfe, cnProvider);
+			Node catchNode = catchEvaluator.getCatchingNode(cfe, cnMapper);
 			for (CatchToken catchToken : catchNode.catchToken) {
 				if (catchEvaluator.isCatchingToken(cfe, jumpToken, catchToken))
 					return catchNode;
 			}
 		}
 
-		Node catchNode = findCatchAllNode(cfe, cnProvider);
+		Node catchNode = findCatchAllNode(cfe, cnMapper);
 		if (catchNode != null)
 			return catchNode;
 		return null;
 	}
 
 	/**
-	 * Wrapper method of {@link #findCatchAllNodeInOtherStmt(ControlFlowElement, ComplexNodeProvider)}.
+	 * Wrapper method of {@link #findCatchAllNodeInOtherStmt(ControlFlowElement, ComplexNodeMapper)}.
 	 * <p>
 	 * Necessary since neither the {@link TryStatement} itself nor the {@link FinallyBlock} can ever catch a node (only
 	 * the try block can).
 	 */
-	private static Node findCatchAllNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
+	private static Node findCatchAllNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
 		if (cfe instanceof TryStatement) {
 			return null;
 		}
 		EObject container = cfe.eContainer();
 		if (container instanceof TryStatement) {
-			return findCatchAllNodeInOtherStmt((TryStatement) container, cnProvider);
+			return findCatchAllNodeInOtherStmt((TryStatement) container, cnMapper);
 		}
 		if (container instanceof CatchBlock) {
-			return findCatchAllNodeInOtherStmt((TryStatement) container.eContainer(), cnProvider);
+			return findCatchAllNodeInOtherStmt((TryStatement) container.eContainer(), cnMapper);
 		}
 		if (container instanceof FinallyBlock) {
 			return null;
 		}
 
-		return findCatchAllNodeInOtherStmt(cfe, cnProvider);
+		return findCatchAllNodeInOtherStmt(cfe, cnMapper);
 	}
 
 	/** @return a node that can catch any {@link JumpToken} */
-	private static Node findCatchAllNodeInOtherStmt(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
-		ComplexNode cnCFE = cnProvider.get(cfe);
+	private static Node findCatchAllNodeInOtherStmt(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+		ComplexNode cnCFE = cnMapper.get(cfe);
 		for (Node node : cnCFE.getNodes()) {
 			for (CatchToken cToken : node.catchToken) {
 				if (cToken.cfType == ControlFlowType.CatchesAll) {
@@ -166,7 +166,7 @@ public class CatchNodeFinder {
 		 *
 		 * @return the catching node.
 		 */
-		Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider);
+		Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper);
 
 		/** @return true iff the given {@link CatchToken} can catch the given {@link JumpToken}. */
 		boolean isCatchingToken(ControlFlowElement cfe, JumpToken jumpToken, CatchToken catchToken);
@@ -190,8 +190,8 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
-			ComplexNode cn = cnProvider.get(cfe);
+		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getExit();
 		}
 
@@ -220,19 +220,19 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
+		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
 			if (cfe instanceof DoStatement) {
-				ComplexNode cn = cnProvider.get(cfe);
+				ComplexNode cn = cnMapper.get(cfe);
 				Node conditionNode = cn.getNode(DoWhileFactory.CONDITION_NODE_NAME);
 				return conditionNode.getEntry();
 			}
 			if (cfe instanceof ForStatement) {
-				ComplexNode cn = cnProvider.get(cfe);
+				ComplexNode cn = cnMapper.get(cfe);
 				Node conditionNode = cn.getNode(ForFactory.LOOPCATCH_NODE_NAME);
 				return conditionNode.getEntry();
 			}
 			if (cfe instanceof WhileStatement) {
-				ComplexNode cn = cnProvider.get(cfe);
+				ComplexNode cn = cnMapper.get(cfe);
 				Node conditionNode = cn.getNode(WhileFactory.CONDITION_NODE_NAME);
 				return conditionNode.getEntry();
 			}
@@ -260,8 +260,8 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
-			ComplexNode cn = cnProvider.get(cfe);
+		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
+			ComplexNode cn = cnMapper.get(cfe);
 			return cn.getExit();
 		}
 
@@ -309,15 +309,15 @@ public class CatchNodeFinder {
 		}
 
 		@Override
-		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeProvider cnProvider) {
+		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
 			EObject container = cfe.eContainer();
 			if (FGUtils.isCFContainer(cfe)) {
-				ComplexNode cnContainer = cnProvider.get(cfe);
+				ComplexNode cnContainer = cnMapper.get(cfe);
 				return cnContainer.getExit();
 			}
 			if (container instanceof TryStatement) {
 				TryStatement tryStmt = (TryStatement) container;
-				ComplexNode cnTryStmt = cnProvider.get(tryStmt);
+				ComplexNode cnTryStmt = cnMapper.get(tryStmt);
 				Node catchNode = null;
 				if (tryStmt.getCatch() != null) {
 					catchNode = cnTryStmt.getNode(TryFactory.CATCH_NODE_NAME);
@@ -330,7 +330,7 @@ public class CatchNodeFinder {
 			}
 			if (container instanceof CatchBlock) {
 				TryStatement tryStmt = (TryStatement) container.eContainer();
-				ComplexNode cnTryStmt = cnProvider.get(tryStmt);
+				ComplexNode cnTryStmt = cnMapper.get(tryStmt);
 				Node catchNode = cnTryStmt.getNode(TryFactory.FINALLY_NODE_NAME);
 				Objects.requireNonNull(catchNode);
 				return catchNode;

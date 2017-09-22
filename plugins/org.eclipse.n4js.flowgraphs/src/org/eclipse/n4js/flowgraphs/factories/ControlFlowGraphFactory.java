@@ -45,10 +45,10 @@ public class ControlFlowGraphFactory {
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
-		ComplexNodeProvider cnProvider = new CNProvider(cnMap);
+		ComplexNodeMapper cnMapper = new CNMapper(cnMap);
 
-		connectComplexNodes(cnProvider);
-		createJumpEdges(cnProvider);
+		connectComplexNodes(cnMapper);
+		createJumpEdges(cnMapper);
 
 		FlowGraph cfg = new FlowGraph(cfContainers, cfCatchBlocks, cnMap);
 		return cfg;
@@ -84,10 +84,10 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	static private void connectComplexNodes(ComplexNodeProvider cnProvider) {
-		for (ComplexNode cn : cnProvider.getAll()) {
+	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {
+		for (ComplexNode cn : cnMapper.getAll()) {
 			for (Node mNode : cn.getAllButExitNodes()) {
-				connectNode(cnProvider, mNode);
+				connectNode(cnMapper, mNode);
 			}
 		}
 	}
@@ -99,11 +99,11 @@ public class ControlFlowGraphFactory {
 	 * <li/>the internal successor information of each node.
 	 * </ul>
 	 */
-	static private void connectNode(ComplexNodeProvider cnProvider, Node mNode) {
+	static private void connectNode(ComplexNodeMapper cnMapper, Node mNode) {
 		Node internalStartNode = mNode;
 		ControlFlowElement subASTElem = mNode.getDelegatedControlFlowElement();
 		if (subASTElem != null) {
-			ComplexNode subCN = cnProvider.get(subASTElem);
+			ComplexNode subCN = cnMapper.get(subASTElem);
 			if (subCN != null) { // can be null in case of malformed AST
 				ControlFlowEdge e = EdgeUtils.connectCF(mNode, subCN.getEntry());
 				internalStartNode = subCN.getExit();
@@ -125,19 +125,19 @@ public class ControlFlowGraphFactory {
 	 * This methods searches for {@link ComplexNode}s that cause jumps. The outgoing edge is then replaced by a new jump
 	 * edge that targets the catch node.
 	 */
-	private static void createJumpEdges(ComplexNodeProvider cnProvider) {
-		for (ComplexNode cn : cnProvider.getAll()) {
+	private static void createJumpEdges(ComplexNodeMapper cnMapper) {
+		for (ComplexNode cn : cnMapper.getAll()) {
 			Node jumpNode = cn.getExit();
 			for (JumpToken jumpToken : jumpNode.jumpToken) {
 				EdgeUtils.removeAllCF(jumpNode.getSuccessorEdges());
-				connectToJumpTarget(cnProvider, jumpNode, jumpToken);
+				connectToJumpTarget(cnMapper, jumpNode, jumpToken);
 			}
 		}
 	}
 
-	private static void connectToJumpTarget(ComplexNodeProvider cnProvider, Node jumpNode, JumpToken jumpToken) {
+	private static void connectToJumpTarget(ComplexNodeMapper cnMapper, Node jumpNode, JumpToken jumpToken) {
 		Node catchNode = null;
-		catchNode = CatchNodeFinder.find(jumpToken, jumpNode, cnProvider);
+		catchNode = CatchNodeFinder.find(jumpToken, jumpNode, cnMapper);
 		if (catchNode == null) {
 			String jumpTokenStr = getJumpTokenDetailString(jumpToken, jumpNode);
 			System.err.println("Could not find catching node for jump token '" + jumpTokenStr + "'");
@@ -145,7 +145,7 @@ public class ControlFlowGraphFactory {
 		}
 
 		FinallyBlock enteringFinallyBlock = getEnteringFinallyBlock(catchNode);
-		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnProvider, jumpNode);
+		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnMapper, jumpNode);
 		if (enteringFinallyBlock != null || isExitingFinallyBlock) {
 			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
 		} else {
@@ -155,9 +155,9 @@ public class ControlFlowGraphFactory {
 		if (enteringFinallyBlock != null) {
 			// Iff finally block was entered abruptly, jump on from exit of finally block
 			Block block = enteringFinallyBlock.getBlock();
-			ComplexNode cnBlock = cnProvider.get(block);
+			ComplexNode cnBlock = cnMapper.get(block);
 			Node exitFinallyBlock = cnBlock.getExit();
-			connectToJumpTarget(cnProvider, exitFinallyBlock, jumpToken);
+			connectToJumpTarget(cnMapper, exitFinallyBlock, jumpToken);
 		}
 	}
 
@@ -170,9 +170,9 @@ public class ControlFlowGraphFactory {
 		return null;
 	}
 
-	private static boolean isExitingFinallyBlock(ComplexNodeProvider cnProvider, Node node) {
+	private static boolean isExitingFinallyBlock(ComplexNodeMapper cnMapper, Node node) {
 		ControlFlowElement cfe = node.getControlFlowElement();
-		ComplexNode cn = cnProvider.get(cfe);
+		ComplexNode cn = cnMapper.get(cfe);
 		boolean isExitingFinallyBlock = true;
 		isExitingFinallyBlock &= cfe instanceof Block;
 		isExitingFinallyBlock &= cfe.eContainer() instanceof FinallyBlock;
@@ -187,10 +187,10 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	private static class CNProvider implements ComplexNodeProvider {
+	private static class CNMapper implements ComplexNodeMapper {
 		final private Map<ControlFlowElement, ComplexNode> cnMap;
 
-		CNProvider(Map<ControlFlowElement, ComplexNode> cnMap) {
+		CNMapper(Map<ControlFlowElement, ComplexNode> cnMap) {
 			this.cnMap = cnMap;
 		}
 

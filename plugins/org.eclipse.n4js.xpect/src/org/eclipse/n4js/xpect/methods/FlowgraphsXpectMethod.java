@@ -21,7 +21,7 @@ import java.util.Set;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
@@ -52,15 +52,11 @@ public class FlowgraphsXpectMethod {
 	@Inject
 	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
-	N4JSFlowAnalyses getFlowAnalyses(EObject eo) {
-		N4JSFlowAnalyses flowAnalyses = null;
-		// Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
-		// flowAnalyses = new N4JSFlowAnalyses();
-		// flowAnalyses.perform(script);
-
+	N4JSFlowAnalyzer getFlowAnalyses(EObject eo) {
+		N4JSFlowAnalyzer flowAnalyzer = null;
 		ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
-		flowAnalyses = cache.getFlowAnalyses();
-		return flowAnalyses;
+		flowAnalyzer = cache.getFlowAnalyses();
+		return flowAnalyzer;
 	}
 
 	/**

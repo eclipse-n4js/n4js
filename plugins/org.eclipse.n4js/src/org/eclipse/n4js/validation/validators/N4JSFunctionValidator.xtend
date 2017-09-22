@@ -15,7 +15,6 @@ import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.BreakStatement
@@ -74,6 +73,7 @@ import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
 
 /**
  */
@@ -114,10 +114,10 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkFlowGraphs(Script script) {
 		val ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(script.eResource() as N4JSResource);
-		val N4JSFlowAnalyses flowAnalyses = cache.getFlowAnalyses();
+		val N4JSFlowAnalyzer flowAnalyzer = cache.getFlowAnalyses();
 		val dcf = new DeadCodeVisitor();
 
-		flowAnalyses.accept(dcf);
+		flowAnalyzer.accept(dcf);
 
 		internalCheckDeadCode(dcf);
 	}

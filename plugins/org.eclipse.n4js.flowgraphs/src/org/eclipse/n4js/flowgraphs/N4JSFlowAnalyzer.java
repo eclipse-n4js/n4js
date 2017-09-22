@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 /**
  * Facade for all control and data flow related methods.
  */
-public class N4JSFlowAnalyses {
+public class N4JSFlowAnalyzer {
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
 	private GraphVisitorAnalysis gwa;

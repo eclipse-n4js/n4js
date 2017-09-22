@@ -24,7 +24,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -36,10 +36,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * The graph provider creates {@link Node}s and {@link CFEdge}s for a given {@link Script}. Moreover, it provides some
- * calls to the {@link N4JSFlowAnalyses} API by delegating to it.
+ * calls to the {@link N4JSFlowAnalyzer} API by delegating to it.
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
-	N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
+	N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 	Map<ControlFlowElement, Node> nodeMap = new HashMap<>();
 	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
 	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
@@ -66,22 +66,22 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return succs;
 	}
 
-	/** @return a reference to {@link N4JSFlowAnalyses} of the current {@link Script} */
-	public N4JSFlowAnalyses getFlowAnalyses() {
-		return flowAnalyses;
+	/** @return a reference to {@link N4JSFlowAnalyzer} of the current {@link Script} */
+	public N4JSFlowAnalyzer getFlowAnalyses() {
+		return flowAnalyzer;
 	}
 
 	/** Triggers a control flow analyses and initialized the two maps {@link #nodeMap} and {@link #edgesMap}. */
 	private void init(Object input) {
 		performFlowAnalyses(input);
-		flowAnalyses.accept(nodesEdgesCollector);
+		flowAnalyzer.accept(nodesEdgesCollector);
 	}
 
 	/** Finds a script for the given input and then triggers a control flow analyses. */
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
 		Objects.nonNull(script);
-		flowAnalyses.createGraphs(script);
+		flowAnalyzer.createGraphs(script);
 	}
 
 	/** Searches the script node in the given input. */

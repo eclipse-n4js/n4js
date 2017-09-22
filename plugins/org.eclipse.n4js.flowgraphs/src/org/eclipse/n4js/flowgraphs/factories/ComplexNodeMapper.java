@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * Interface that provides the method {@link #get(ControlFlowElement)}.
  */
-interface ComplexNodeProvider {
+interface ComplexNodeMapper {
 
 	/** Returns an {@link Iterator} over all {@link ComplexNode}s */
 	Iterable<ComplexNode> getAll();

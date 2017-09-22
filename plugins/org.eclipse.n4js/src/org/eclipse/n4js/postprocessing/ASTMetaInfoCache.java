@@ -26,7 +26,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -66,7 +66,7 @@ public final class ASTMetaInfoCache {
 	private final Map<TypableElement, Result<TypeRef>> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
-	private final N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
+	private final N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 
 	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
 
@@ -153,14 +153,14 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeScriptAndCreateFlowGraph(Script script) {
-		this.flowAnalyses.createGraphs(script);
+		this.flowAnalyzer.createGraphs(script);
 	}
 
 	/**
-	 * Returns the {@link N4JSFlowAnalyses} object of this resource
+	 * Returns the {@link N4JSFlowAnalyzer} object of this resource
 	 */
-	public N4JSFlowAnalyses getFlowAnalyses() {
-		return flowAnalyses;
+	public N4JSFlowAnalyzer getFlowAnalyses() {
+		return flowAnalyzer;
 	}
 
 	/**
