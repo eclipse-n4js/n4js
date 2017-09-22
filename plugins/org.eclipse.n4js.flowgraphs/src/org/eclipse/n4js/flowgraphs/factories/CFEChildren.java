@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.ArrayLiteral;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.AwaitExpression;
 import org.eclipse.n4js.n4JS.BinaryBitwiseExpression;
-import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.CastExpression;
@@ -58,7 +57,6 @@ import org.eclipse.n4js.n4JS.TemplateLiteral;
 import org.eclipse.n4js.n4JS.ThisLiteral;
 import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.VariableBinding;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute;
@@ -129,14 +127,6 @@ final class CFEChildren {
 			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
 			cfc.add(Pair.of("arg_1", bbe.getLhs()));
 			cfc.add(Pair.of("arg_2", bbe.getRhs()));
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseBinaryLogicalExpression(BinaryLogicalExpression ble) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			cfc.add(Pair.of("arg_1", ble.getLhs()));
-			cfc.add(Pair.of("arg_2", ble.getRhs()));
 			return cfc;
 		}
 
@@ -390,20 +380,11 @@ final class CFEChildren {
 		@Override
 		public List<Pair<String, ControlFlowElement>> caseVariableBinding(VariableBinding vb) {
 			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			if (vb.getPattern() != null) {
-				cfc.add(Pair.of("pattern", vb.getPattern()));
-			}
 			if (vb.getExpression() != null) {
 				cfc.add(Pair.of("expression", vb.getExpression()));
 			}
-			return cfc;
-		}
-
-		@Override
-		public List<Pair<String, ControlFlowElement>> caseVariableDeclaration(VariableDeclaration vd) {
-			List<Pair<String, ControlFlowElement>> cfc = new LinkedList<>();
-			if (vd.getExpression() != null) {
-				cfc.add(Pair.of("", vd.getExpression()));
+			if (vb.getPattern() != null) {
+				cfc.add(Pair.of("pattern", vb.getPattern()));
 			}
 			return cfc;
 		}

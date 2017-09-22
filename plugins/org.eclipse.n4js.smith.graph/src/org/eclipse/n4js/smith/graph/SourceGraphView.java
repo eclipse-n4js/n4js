@@ -125,11 +125,12 @@ public class SourceGraphView extends ViewPart {
 				"Take a CFG snapshot.",
 				Activator.getInstance().ICON_GRAPH_CF,
 				this::onTakeCFGSnapshot);
-		createAction(
-				"DFG Snapshot", IAction.AS_PUSH_BUTTON,
-				"Take a DFG snapshot.",
-				Activator.getInstance().ICON_GRAPH_DF,
-				this::onTakeCFGSnapshot);
+		// done in GH-235
+		// createAction(
+		// "DFG Snapshot", IAction.AS_PUSH_BUTTON,
+		// "Take a DFG snapshot.",
+		// Activator.getInstance().ICON_GRAPH_DF,
+		// this::onTakeCFGSnapshot);
 		createAction(
 				"Pause", IAction.AS_CHECK_BOX,
 				"Suspend accepting snapshots that were triggered programmatically.",

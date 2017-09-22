@@ -46,12 +46,14 @@ import com.google.common.collect.Sets;
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyses flowAnalyses;
-	private final Collection<GraphVisitorInternal> walkers;
+	private final Collection<? extends GraphVisitorInternal> walkers;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
 	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
 
 	/** Constructor */
-	public GraphVisitorGuideInternal(N4JSFlowAnalyses flowAnalyses, Collection<GraphVisitorInternal> walkers) {
+	public GraphVisitorGuideInternal(N4JSFlowAnalyses flowAnalyses,
+			Collection<? extends GraphVisitorInternal> walkers) {
+
 		this.flowAnalyses = flowAnalyses;
 		this.walkers = walkers;
 	}

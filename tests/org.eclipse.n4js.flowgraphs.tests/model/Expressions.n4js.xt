@@ -151,15 +151,22 @@ function BinaryLogicalExpression() {
 	/* BinaryLogicalExpression XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
+		1 --> 1 && 2,
 		2 --> 1 && 2,
 		1 && 2 --> "end"
 	--- */
-	// BinaryLogicalExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 && 2 -> "end"
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "end"
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths direction 'Backward' ---
+		"end" -> 1 && 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "start"
+	--- */
 	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
-	// BinaryLogicalExpression XPECT allPaths direction 'Backward' --> "end" -> 1 && 2 -> 2 -> 1 -> "start"
 	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
-	// BinaryLogicalExpression XPECT succs at '1' --> 2
+	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
 	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
 	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end"
 	"start";

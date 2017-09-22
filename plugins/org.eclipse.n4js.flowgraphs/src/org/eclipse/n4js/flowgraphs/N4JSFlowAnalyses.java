@@ -16,8 +16,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -139,13 +139,13 @@ public class N4JSFlowAnalyses {
 	}
 
 	/**
-	 * Performs all given {@link GraphVisitorInternal}s in a single run. The single run will traverse the control flow
-	 * graph in the following manner. First forward beginning from the entries of every source container, then backward
-	 * beginning from the exit of every source container. Finally, all remaining code elements are traversed first
-	 * forward and then backward beginning from an arbitrary element.
+	 * Performs all given {@link GraphVisitor}s in a single run. The single run will traverse the control flow graph in
+	 * the following manner. First forward beginning from the entries of every source container, then backward beginning
+	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
+	 * then backward beginning from an arbitrary element.
 	 */
-	public void accept(GraphVisitorInternal... graphWalkers) {
-		List<GraphVisitorInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
+	public void accept(GraphVisitor... graphWalkers) {
+		List<GraphVisitor> graphWalkerList = Lists.newArrayList(graphWalkers);
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
 		gwa.analyseScript(this, graphWalkerList);
 		// sw.stop();

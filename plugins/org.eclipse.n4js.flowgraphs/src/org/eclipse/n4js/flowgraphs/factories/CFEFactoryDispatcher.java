@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.factories;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.ArrayBindingPattern;
+import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.BreakStatement;
@@ -147,6 +148,11 @@ final public class CFEFactoryDispatcher {
 		}
 
 		@Override
+		public ComplexNode caseBinaryLogicalExpression(BinaryLogicalExpression feature) {
+			return BinaryLogicalExpressionFactory.buildComplexNode(feature);
+		}
+
+		@Override
 		public ComplexNode caseExpression(Expression feature) {
 			return StandardCFEFactory.buildComplexNode(feature);
 		}
@@ -158,7 +164,7 @@ final public class CFEFactoryDispatcher {
 
 		@Override
 		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
-			return StandardCFEFactory.buildComplexNode(feature);
+			return VariableDeclarationFactory.buildComplexNode(feature);
 		}
 
 		@Override
