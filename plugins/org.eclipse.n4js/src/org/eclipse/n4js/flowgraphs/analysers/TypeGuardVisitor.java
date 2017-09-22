@@ -25,13 +25,13 @@ import it.xsemantics.runtime.RuleEnvironment;
 /**
  * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
  */
-public class TypeGuardPathPredicate extends GraphVisitor {
+public class TypeGuardVisitor extends GraphVisitor {
 	final N4JSTypeSystem ts;
 	final TypeRef reqTypeRef;
 	final ControlFlowElement cfElem;
 
-	TypeGuardPathPredicate(N4JSTypeSystem ts, TypeRef reqTypeRef, ControlFlowElement cfElem) {
-		super(Direction.Backward);
+	TypeGuardVisitor(N4JSTypeSystem ts, TypeRef reqTypeRef, ControlFlowElement cfElem) {
+		super(Mode.Backward);
 		this.ts = ts;
 		this.reqTypeRef = reqTypeRef;
 		this.cfElem = cfElem;
@@ -43,12 +43,12 @@ public class TypeGuardPathPredicate extends GraphVisitor {
 	}
 
 	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+	protected void init(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+	protected void terminate(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
@@ -60,7 +60,7 @@ public class TypeGuardPathPredicate extends GraphVisitor {
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfElem == cfe) {
-			super.requestActivation(new TypeGuardActivatedPathPredicate());
+			super.requestActivation(new TypeGuardExplorer());
 		}
 	}
 
@@ -69,18 +69,18 @@ public class TypeGuardPathPredicate extends GraphVisitor {
 		// nothing to do
 	}
 
-	class TypeGuardActivatedPathPredicate extends PathExplorer {
+	class TypeGuardExplorer extends PathExplorer {
 
-		TypeGuardActivatedPathPredicate() {
-			super(PredicateType.ForAllPaths);
+		TypeGuardExplorer() {
+			super(Quantor.ForAllPaths);
 		}
 
 		@Override
-		protected TypeGuardActivePath firstPath() {
-			return new TypeGuardActivePath();
+		protected TypeGuardWalker firstPath() {
+			return new TypeGuardWalker();
 		}
 
-		class TypeGuardActivePath extends PathWalker {
+		class TypeGuardWalker extends PathWalker {
 
 			@Override
 			protected void init() {
@@ -108,8 +108,8 @@ public class TypeGuardPathPredicate extends GraphVisitor {
 			}
 
 			@Override
-			protected TypeGuardActivePath forkPath() {
-				return new TypeGuardActivePath();
+			protected TypeGuardWalker forkPath() {
+				return new TypeGuardWalker();
 			}
 
 			@Override

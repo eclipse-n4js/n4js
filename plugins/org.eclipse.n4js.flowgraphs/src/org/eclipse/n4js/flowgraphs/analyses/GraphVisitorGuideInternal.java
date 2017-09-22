@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Direction;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -35,15 +35,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * This class executes a control flow analyzes in a specific {@link Direction} that are defined as
+ * This class executes a control flow analyzes in a specific {@link Mode} that are defined as
  * {@link GraphVisitorInternal}s. The execution is triggered from {@link GraphVisitorAnalysis}.
  * <p>
- * For every {@link Direction}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary
- * (but loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an
- * activation of a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this
- * mechanism, the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored.
- * The path exploration is done in parallel for every {@link PathExplorerInternal} of every
- * {@link GraphVisitorInternal}.
+ * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
+ * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
+ * a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
+ * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored. The path
+ * exploration is done in parallel for every {@link PathExplorerInternal} of every {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyses flowAnalyses;
@@ -73,38 +72,38 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
-	/** Traverses the control flow graph in {@literal Direction.Forward} */
+	/** Traverses the control flow graph in {@literal Mode.Forward} */
 	public Set<Node> walkthroughForward(ComplexNode cn) {
-		return walkthrough(cn, Direction.Forward);
+		return walkthrough(cn, Mode.Forward);
 	}
 
-	/** Traverses the control flow graph in {@literal Direction.Backward} */
+	/** Traverses the control flow graph in {@literal Mode.Backward} */
 	public Set<Node> walkthroughBackward(ComplexNode cn) {
-		return walkthrough(cn, Direction.Backward);
+		return walkthrough(cn, Mode.Backward);
 	}
 
-	/** Traverses the control flow graph in {@literal Direction.CatchBlocks} */
+	/** Traverses the control flow graph in {@literal Mode.CatchBlocks} */
 	public Set<Node> walkthroughCatchBlocks(ComplexNode cn) {
-		return walkthrough(cn, Direction.CatchBlocks);
+		return walkthrough(cn, Mode.CatchBlocks);
 	}
 
-	/** Traverses the control flow graph in {@literal Direction.Islands} */
+	/** Traverses the control flow graph in {@literal Mode.Islands} */
 	public Set<Node> walkthroughIsland(ComplexNode cn) {
-		return walkthrough(cn, Direction.Islands);
+		return walkthrough(cn, Mode.Islands);
 	}
 
-	private Set<Node> walkthrough(ComplexNode cn, Direction direction) {
+	private Set<Node> walkthrough(ComplexNode cn, Mode mode) {
 		walkerVisitedNodes.clear();
 		walkerVisitedEdges.clear();
 
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyses);
-			walker.setContainerAndDirection(cn.getControlFlowContainer(), direction);
+			walker.setContainerAndMode(cn.getControlFlowContainer(), mode);
 			walker.callInitInternal();
 		}
 
 		Set<Node> allVisitedNodes = new HashSet<>();
-		List<NextEdgesProvider> edgeProviders = getEdgeProviders(direction);
+		List<NextEdgesProvider> edgeProviders = getEdgeProviders(mode);
 		for (NextEdgesProvider edgeProvider : edgeProviders) {
 			Set<Node> visitedNodes = walkthrough(cn, edgeProvider);
 			allVisitedNodes.addAll(visitedNodes);
@@ -116,9 +115,9 @@ public class GraphVisitorGuideInternal {
 		return allVisitedNodes;
 	}
 
-	private List<NextEdgesProvider> getEdgeProviders(Direction direction) {
+	private List<NextEdgesProvider> getEdgeProviders(Mode mode) {
 		List<NextEdgesProvider> edgeProviders = new LinkedList<>();
-		switch (direction) {
+		switch (mode) {
 		case Forward:
 			edgeProviders.add(new NextEdgesProvider.Forward());
 			break;

@@ -22,10 +22,10 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
-import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintWalker;
-import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker;
+import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
+import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Direction;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
@@ -195,20 +195,20 @@ public class FlowgraphsXpectMethod {
 			startCFE = getControlFlowElement(offsetImpl);
 		}
 		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
-		GraphVisitorInternal.Direction direction = getDirection(directionName);
+		GraphVisitorInternal.Mode direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
-		AllPathPrintWalker appw = new AllPathPrintWalker(container, startCFE, direction);
+		AllPathPrintVisitor appw = new AllPathPrintVisitor(container, startCFE, direction);
 		getFlowAnalyses(referenceCFE).analyze(appw);
 		List<String> pathStrings = appw.getPathStrings();
 
 		expectation.assertEquals(pathStrings);
 	}
 
-	private GraphVisitorInternal.Direction getDirection(String directionName) {
-		GraphVisitorInternal.Direction direction = Direction.Forward;
+	private GraphVisitorInternal.Mode getDirection(String directionName) {
+		GraphVisitorInternal.Mode direction = Mode.Forward;
 		if (directionName != null && !directionName.isEmpty()) {
-			direction = GraphVisitorInternal.Direction.valueOf(directionName);
+			direction = GraphVisitorInternal.Mode.valueOf(directionName);
 			if (direction == null) {
 				fail("Unknown direction");
 			}
@@ -228,7 +228,7 @@ public class FlowgraphsXpectMethod {
 		}
 		cfe = FGUtils.getCFContainer(cfe);
 
-		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(cfe);
+		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(cfe);
 		getFlowAnalyses(cfe).analyze(anaepw);
 		List<String> pathStrings = anaepw.getAllEdgeStrings();
 
@@ -271,7 +271,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
 		ControlFlowElement container = getFlowAnalyses(referenceCFE).getContainer(referenceCFE);
-		AllNodesAndEdgesPrintWalker anaepw = new AllNodesAndEdgesPrintWalker(container);
+		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(container);
 		getFlowAnalyses(referenceCFE).analyze(anaepw);
 		List<String> nodeStrings = anaepw.getAllIslandsNodeStrings();
 		expectation.assertEquals(nodeStrings);

@@ -38,7 +38,7 @@ import org.eclipse.xtext.util.TextRegion;
  * determine if a given {@link ControlFlowElement} is dead code, or to compute a minimal set of {@link TextRegion}s of
  * dead code.
  */
-public class DeadCodeFinder extends GraphVisitor {
+public class DeadCodeVisitor extends GraphVisitor {
 	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
@@ -46,8 +46,8 @@ public class DeadCodeFinder extends GraphVisitor {
 	Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
 
 	/** Constructor */
-	public DeadCodeFinder() {
-		super(Direction.Forward, Direction.Backward, Direction.Islands, Direction.CatchBlocks);
+	public DeadCodeVisitor() {
+		super(Mode.Forward, Mode.Backward, Mode.Islands, Mode.CatchBlocks);
 	}
 
 	@Override
@@ -56,13 +56,13 @@ public class DeadCodeFinder extends GraphVisitor {
 	}
 
 	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+	protected void init(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-		switch (getCurrentDirection()) {
+		switch (getCurrentMode()) {
 		case Forward:
 			allForwardCFEs.add(cfe);
 			break;
@@ -84,7 +84,7 @@ public class DeadCodeFinder extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+	protected void terminate(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 

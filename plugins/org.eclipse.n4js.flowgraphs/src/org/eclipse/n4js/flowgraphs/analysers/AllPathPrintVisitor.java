@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintWalker.AllPathPrintPredicate.AllPathPrintPath;
+import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor.AllPathPrintExplorer.AllPathPrintWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -23,25 +23,25 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * Finds all control flow paths beginning from a given start element.
  */
-public class AllPathPrintWalker extends GraphVisitor {
+public class AllPathPrintVisitor extends GraphVisitor {
 	final ControlFlowElement startElement;
 
 	/**
 	 * Constructor.
 	 * <p>
-	 * Creates a {@link AllPathPrintWalker} in direction {@literal Direction.Forward}.
+	 * Creates a {@link AllPathPrintVisitor} in direction {@literal Direction.Forward}.
 	 *
 	 * @param container
 	 *            the container of which all paths are computed. Must not be null.
 	 */
-	public AllPathPrintWalker(ControlFlowElement container) {
-		this(container, null, Direction.Forward);
+	public AllPathPrintVisitor(ControlFlowElement container) {
+		this(container, null, Mode.Forward);
 	}
 
 	/**
 	 * Constructor.
 	 * <p>
-	 * Creates a {@link AllPathPrintWalker} in direction {@literal Direction.Forward}.
+	 * Creates a {@link AllPathPrintVisitor} in direction {@literal Direction.Forward}.
 	 *
 	 * @param container
 	 *            the container of which all paths are computed. Must not be null.
@@ -49,8 +49,8 @@ public class AllPathPrintWalker extends GraphVisitor {
 	 *            if not null, all paths are found beginning at the startElement. Otherwise, all paths are found
 	 *            beginning from the first element of one of the containers in the script.
 	 */
-	public AllPathPrintWalker(ControlFlowElement container, ControlFlowElement startElement) {
-		this(container, startElement, Direction.Forward);
+	public AllPathPrintVisitor(ControlFlowElement container, ControlFlowElement startElement) {
+		this(container, startElement, Mode.Forward);
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class AllPathPrintWalker extends GraphVisitor {
 	 *            the direction of the paths. Use only with {@literal Direction.Forward} and
 	 *            {@literal Direction.Backward}
 	 */
-	public AllPathPrintWalker(ControlFlowElement container, ControlFlowElement startElement, Direction direction) {
+	public AllPathPrintVisitor(ControlFlowElement container, ControlFlowElement startElement, Mode direction) {
 		super(container, direction);
 		this.startElement = startElement;
 	}
@@ -76,14 +76,14 @@ public class AllPathPrintWalker extends GraphVisitor {
 	}
 
 	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+	protected void init(Mode curDirection, ControlFlowElement curContainer) {
 		if (startElement == null) {
-			super.requestActivation(new AllPathPrintPredicate());
+			super.requestActivation(new AllPathPrintExplorer());
 		}
 	}
 
 	@Override
-	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+	protected void terminate(Mode curDirection, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
@@ -94,8 +94,8 @@ public class AllPathPrintWalker extends GraphVisitor {
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-		if (startElement != null && startElement == cfe && getActivatedPredicateCount() == 0) {
-			super.requestActivation(new AllPathPrintPredicate());
+		if (startElement != null && startElement == cfe && getActivatedExplorerCount() == 0) {
+			super.requestActivation(new AllPathPrintExplorer());
 		}
 	}
 
@@ -107,30 +107,30 @@ public class AllPathPrintWalker extends GraphVisitor {
 	/** @return all found paths as strings */
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
-		for (PathExplorerInternal app : getActivatedPredicates()) {
+		for (PathExplorerInternal app : getActivatedExplorers()) {
 			for (PathWalkerInternal ap : app.getAllPaths()) {
-				AllPathPrintPath printPath = (AllPathPrintPath) ap;
+				AllPathPrintWalker printPath = (AllPathPrintWalker) ap;
 				pathStrings.add(printPath.currString);
 			}
 		}
 		return pathStrings;
 	}
 
-	class AllPathPrintPredicate extends PathExplorer {
+	class AllPathPrintExplorer extends PathExplorer {
 
-		AllPathPrintPredicate() {
-			super(PredicateType.ForAllPaths);
+		AllPathPrintExplorer() {
+			super(Quantor.ForAllPaths);
 		}
 
 		@Override
-		protected AllPathPrintPath firstPath() {
-			return new AllPathPrintPath("");
+		protected AllPathPrintWalker firstPath() {
+			return new AllPathPrintWalker("");
 		}
 
-		class AllPathPrintPath extends PathWalker {
+		class AllPathPrintWalker extends PathWalker {
 			String currString = "";
 
-			AllPathPrintPath(String initString) {
+			AllPathPrintWalker(String initString) {
 				this.currString = initString;
 			}
 
@@ -150,8 +150,8 @@ public class AllPathPrintWalker extends GraphVisitor {
 			}
 
 			@Override
-			protected AllPathPrintPath forkPath() {
-				return new AllPathPrintPath(currString);
+			protected AllPathPrintWalker forkPath() {
+				return new AllPathPrintWalker(currString);
 			}
 
 			@Override

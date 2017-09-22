@@ -72,8 +72,8 @@ import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeFinder
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeFinder.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
 
 /**
  */
@@ -115,7 +115,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	def checkFlowGraphs(Script script) {
 		val ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(script.eResource() as N4JSResource);
 		val N4JSFlowAnalyses flowAnalyses = cache.getFlowAnalyses();
-		val dcf = new DeadCodeFinder();
+		val dcf = new DeadCodeVisitor();
 
 		flowAnalyses.analyze(dcf);
 
@@ -123,7 +123,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	// Constraints 107
-	private def String internalCheckDeadCode(DeadCodeFinder dcf) {
+	private def String internalCheckDeadCode(DeadCodeVisitor dcf) {
 		val deadCodeRegions = dcf.getDeadCodeRegions();
 
 		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {

@@ -19,11 +19,11 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 /**
  * Checks if a local variable is never used.
  */
-public class NeverUsedPredicateWalker extends GraphVisitor {
+public class NeverUsedVisitor extends GraphVisitor {
 	// TODO GH-235
 
-	NeverUsedPredicateWalker() {
-		super(Direction.Forward);
+	NeverUsedVisitor() {
+		super(Mode.Forward);
 	}
 
 	@Override
@@ -32,12 +32,12 @@ public class NeverUsedPredicateWalker extends GraphVisitor {
 	}
 
 	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+	protected void init(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+	protected void terminate(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
@@ -49,7 +49,7 @@ public class NeverUsedPredicateWalker extends GraphVisitor {
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof IdentifierRef && cfe.eContainer() instanceof VariableDeclaration) {
-			super.requestActivation(new NeverUsedActivatedPathPredicate((IdentifierRef) cfe));
+			super.requestActivation(new NeverUsedExplorer((IdentifierRef) cfe));
 		}
 	}
 
@@ -58,21 +58,21 @@ public class NeverUsedPredicateWalker extends GraphVisitor {
 		// nothing to do
 	}
 
-	private class NeverUsedActivatedPathPredicate extends PathExplorer {
+	private class NeverUsedExplorer extends PathExplorer {
 		@SuppressWarnings("unused")
 		final IdentifierRef idRef;
 
-		public NeverUsedActivatedPathPredicate(IdentifierRef idRef) {
-			super(PredicateType.ForOnePath);
+		public NeverUsedExplorer(IdentifierRef idRef) {
+			super(Quantor.AtLeastOnePath);
 			this.idRef = idRef;
 		}
 
 		@Override
-		protected NeverUsedActivePath firstPath() {
-			return new NeverUsedActivePath();
+		protected NeverUsedWalker firstPath() {
+			return new NeverUsedWalker();
 		}
 
-		private class NeverUsedActivePath extends PathWalker {
+		private class NeverUsedWalker extends PathWalker {
 
 			@Override
 			protected void init() {
@@ -94,8 +94,8 @@ public class NeverUsedPredicateWalker extends GraphVisitor {
 			}
 
 			@Override
-			protected NeverUsedActivePath forkPath() {
-				return new NeverUsedActivePath();
+			protected NeverUsedWalker forkPath() {
+				return new NeverUsedWalker();
 			}
 
 			@Override

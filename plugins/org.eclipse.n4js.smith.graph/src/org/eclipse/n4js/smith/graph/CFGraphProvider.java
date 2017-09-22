@@ -103,7 +103,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	private class NodesEdgesCollector extends GraphVisitor {
 
 		NodesEdgesCollector() {
-			super(Direction.Forward, Direction.Backward, Direction.Islands);
+			super(Mode.Forward, Mode.Backward, Mode.Islands);
 		}
 
 		@Override
@@ -113,7 +113,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void init(Direction curDirection, ControlFlowElement curContainer) {
+		protected void init(Mode curDirection, ControlFlowElement curContainer) {
 			// nothing to do
 		}
 
@@ -146,7 +146,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+		protected void terminate(Mode curDirection, ControlFlowElement curContainer) {
 			// nothing to do
 		}
 

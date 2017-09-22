@@ -29,21 +29,21 @@ abstract public class GraphVisitorInternal {
 	protected N4JSFlowAnalyses flowAnalyses;
 	/** Container, specified in constructor */
 	protected final ControlFlowElement container;
-	/** Directions, specified in constructor */
-	protected final Direction[] directions;
+	/** Modes, specified in constructor */
+	protected final Mode[] modes;
 
 	private final List<PathExplorerInternal> activationRequests = new LinkedList<>();
-	private final List<PathExplorerInternal> activatedPredicates = new LinkedList<>();
-	private final List<PathExplorerInternal> activePredicates = new LinkedList<>();
-	private final List<PathExplorerInternal> failedPredicates = new LinkedList<>();
-	private final List<PathExplorerInternal> passedPredicates = new LinkedList<>();
+	private final List<PathExplorerInternal> activatedExplorers = new LinkedList<>();
+	private final List<PathExplorerInternal> activeExplorers = new LinkedList<>();
+	private final List<PathExplorerInternal> failedExplorers = new LinkedList<>();
+	private final List<PathExplorerInternal> passedExplorers = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
-	private Direction currentDirection;
-	private boolean activeDirection = false;
+	private Mode currentMode;
+	private boolean activeMode = false;
 
-	/** Specifies the traverse direction of a {@link GraphVisitorInternal} instance. */
-	public enum Direction {
+	/** Specifies the traverse mode of a {@link GraphVisitorInternal} instance. */
+	public enum Mode {
 		/** Forward edge-direction begins from the entry node of a given container. */
 		Forward,
 		/** Backward edge-direction begins from the exit node of a given container. */
@@ -62,12 +62,11 @@ abstract public class GraphVisitorInternal {
 	/**
 	 * Constructor.
 	 *
-	 * @param directions
-	 *            sets the directions for this instance. Default direction is {@literal Direction.Forward} if no
-	 *            direction is given.
+	 * @param modes
+	 *            sets the {@link Mode}s for this instance. Default mode is {@literal Mode.Forward} if no mode is given.
 	 */
-	protected GraphVisitorInternal(Direction... directions) {
-		this(null, directions);
+	protected GraphVisitorInternal(Mode... modes) {
+		this(null, modes);
 	}
 
 	/**
@@ -76,15 +75,15 @@ abstract public class GraphVisitorInternal {
 	 * @param container
 	 *            sets the containing {@link ControlFlowElement} for this instance. Iff the given container is
 	 *            {@code null}, this {@link GraphVisitorInternal} is applied on all containers.
-	 * @param directions
-	 *            sets the directions for this instance. Default directions are {@literal Direction.Forward} and
-	 *            {@literal Direction.CatchBlocks} if no direction is given.
+	 * @param modes
+	 *            sets the modes for this instance. Default modes are {@literal Mode.Forward} and
+	 *            {@literal Mode.CatchBlocks} if no mode is given.
 	 */
-	protected GraphVisitorInternal(ControlFlowElement container, Direction... directions) {
-		if (directions.length == 0) {
-			directions = new Direction[] { Direction.Forward, Direction.CatchBlocks };
+	protected GraphVisitorInternal(ControlFlowElement container, Mode... modes) {
+		if (modes.length == 0) {
+			modes = new Mode[] { Mode.Forward, Mode.CatchBlocks };
 		}
-		this.directions = directions;
+		this.modes = modes;
 		this.container = container;
 	}
 
@@ -96,29 +95,29 @@ abstract public class GraphVisitorInternal {
 	/**
 	 * Called after {@link #initAll()} and before any visit-method is called.
 	 *
-	 * @param curDirection
-	 *            direction of succeeding calls to visit-methods
+	 * @param curMode
+	 *            mode of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void initInternal(Direction curDirection, ControlFlowElement curContainer);
+	abstract protected void initInternal(Mode curMode, ControlFlowElement curContainer);
 
 	/**
-	 * Called for each node that is reachable w.r.t to the current direction and the current container.
+	 * Called for each node that is reachable w.r.t to the current mode and the current container.
 	 * <p>
 	 * Note that the order of nodes is arbitrary.
 	 */
 	abstract protected void visit(Node node);
 
 	/**
-	 * Called for each edge that is reachable w.r.t to the current direction and the current container.
+	 * Called for each edge that is reachable w.r.t to the current mode and the current container.
 	 * <p>
 	 * Note that the order of edges is arbitrary.
 	 *
 	 * @param lastNode
 	 *            node that was visited before
 	 * @param currentNode
-	 *            end node of the edge in terms of current direction
+	 *            end node of the edge in terms of current mode
 	 * @param edge
 	 *            traversed edge
 	 */
@@ -127,12 +126,12 @@ abstract public class GraphVisitorInternal {
 	/**
 	 * Called before {@link #terminateAll()} and after any visit-method is called.
 	 *
-	 * @param curDirection
-	 *            direction of previous calls to visit-methods
+	 * @param curMode
+	 *            mode of previous calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	abstract protected void terminate(Direction curDirection, ControlFlowElement curContainer);
+	abstract protected void terminate(Mode curMode, ControlFlowElement curContainer);
 
 	/** Called at last */
 	abstract protected void terminateAll();
@@ -145,12 +144,11 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link #initInternal(Direction, ControlFlowElement)}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #initInternal(Mode, ControlFlowElement)}.
 	 */
 	final void callInitInternal() {
-		if (activeDirection) {
-			initInternal(getCurrentDirection(), null);
+		if (activeMode) {
+			initInternal(getCurrentMode(), null);
 		}
 	}
 
@@ -160,12 +158,11 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link #terminate(Direction, ControlFlowElement)}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #terminate(Mode, ControlFlowElement)}.
 	 */
 	final void callTerminate() {
-		if (activeDirection) {
-			terminate(getCurrentDirection(), null);
+		if (activeMode) {
+			terminate(getCurrentMode(), null);
 		}
 	}
 
@@ -176,7 +173,7 @@ abstract public class GraphVisitorInternal {
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
 	final void callVisit(Node cfe) {
-		if (activeDirection) {
+		if (activeMode) {
 			visit(cfe);
 		}
 	}
@@ -186,28 +183,28 @@ abstract public class GraphVisitorInternal {
 	 * {@link GraphVisitorInternal#visit(Node,Node,ControlFlowEdge)}.
 	 */
 	final void callVisit(Node start, Node end, ControlFlowEdge edge) {
-		if (activeDirection) {
+		if (activeMode) {
 			visit(start, end, edge);
 		}
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentDirection} and {@link #currentContainer}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentMode} and {@link #currentContainer}.
 	 */
-	final void setContainerAndDirection(ControlFlowElement curContainer, Direction curDirection) {
+	final void setContainerAndMode(ControlFlowElement curContainer, Mode curMode) {
 		this.currentContainer = curContainer;
-		this.currentDirection = curDirection;
+		this.currentMode = curMode;
 		checkActive();
 	}
 
 	private void checkActive() {
-		activeDirection = false;
+		activeMode = false;
 		boolean containerActive = (container == null || container == currentContainer);
 
 		if (containerActive) {
-			for (Direction dir : directions) {
-				if (dir == currentDirection) {
-					activeDirection = true;
+			for (Mode dir : modes) {
+				if (dir == currentMode) {
+					activeMode = true;
 					break;
 				}
 			}
@@ -223,8 +220,8 @@ abstract public class GraphVisitorInternal {
 			activePath.init();
 			activatedPaths.add(activePath);
 		}
-		activatedPredicates.addAll(activationRequests);
-		activePredicates.addAll(activationRequests);
+		activatedExplorers.addAll(activationRequests);
+		activeExplorers.addAll(activationRequests);
 		activationRequests.clear();
 		return activatedPaths;
 	}
@@ -232,37 +229,37 @@ abstract public class GraphVisitorInternal {
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
-	 * Call this method to request the spawn of a new path predicate. The new path predicate is spawned after the
-	 * current visit-method is finished. If not called from a visit-method, the new path predicate is spawned after the
-	 * next visit-method is finished.
+	 * Call this method to request the spawn of a new {@link PathExplorerInternal}. The new {@link PathExplorerInternal}
+	 * is spawned after the current visit-method is finished. If not called from a visit-method, the new
+	 * {@link PathExplorerInternal} is spawned after the next visit-method is finished.
 	 */
 	final public void requestActivation(PathExplorerInternal app) {
 		activationRequests.add(app);
 	}
 
-	/** @return all activated predicates */
-	final public List<PathExplorerInternal> getActivatedPredicates() {
-		return activatedPredicates;
+	/** @return all activated {@link PathExplorerInternal}s */
+	final public List<PathExplorerInternal> getActivatedExplorers() {
+		return activatedExplorers;
 	}
 
-	/** @return all active predicates */
-	final public List<PathExplorerInternal> getActivePredicates() {
-		return activePredicates;
+	/** @return all active {@link PathExplorerInternal}s */
+	final public List<PathExplorerInternal> getActiveExplorers() {
+		return activeExplorers;
 	}
 
-	/** @return the number of activated predicates */
-	final public int getActivatedPredicateCount() {
-		return getActivatedPredicates().size();
+	/** @return the number of activated {@link PathExplorerInternal}s */
+	final public int getActivatedExplorerCount() {
+		return getActivatedExplorers().size();
 	}
 
-	/** @return the number of active predicates */
-	final public int getActivePredicateCount() {
-		return getActivePredicates().size();
+	/** @return the number of active {@link PathExplorerInternal}s */
+	final public int getActiveExplorerCount() {
+		return getActiveExplorers().size();
 	}
 
-	/** @return the current direction */
-	final public Direction getCurrentDirection() {
-		return currentDirection;
+	/** @return the current mode */
+	final public Mode getCurrentMode() {
+		return currentMode;
 	}
 
 	/** @return the current container */
@@ -270,22 +267,24 @@ abstract public class GraphVisitorInternal {
 		return currentContainer;
 	}
 
-	/** @return all passed predicates */
+	/** @return all passed {@link PathExplorerInternal}s */
 	final public List<?> getPassed() {
-		return passedPredicates;
+		return passedExplorers;
 	}
 
-	/** @return all failed predicates */
+	/** @return all failed {@link PathExplorerInternal}s */
 	final public List<?> getFailed() {
-		return failedPredicates;
+		return failedExplorers;
 	}
 
-	/** The {@link PredicateType} defines under which condition a path predicate fails or passes. */
-	public enum PredicateType {
-		/** The path predicate passes iff all paths pass. */
+	/** The {@link Quantor} defines under which condition a {@link PathExplorerInternal} fails or passes. */
+	public enum Quantor {
+		/** No specific condition. */
+		None,
+		/** The {@link PathExplorerInternal} passes iff all paths pass. */
 		ForAllPaths,
-		/** The path predicate passes if at least one path passes. */
-		ForOnePath
+		/** The {@link PathExplorerInternal} passes if at least one path passes. */
+		AtLeastOnePath
 	}
 
 	/**
@@ -295,7 +294,7 @@ abstract public class GraphVisitorInternal {
 	 * {@link PathExplorerInternal} is deactivated in case it has no active paths anymore. The final state of a
 	 * {@link PathExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
 	 * <p/>
-	 * The life cycle of a path predicate:
+	 * The life cycle of a {@link PathExplorerInternal}:
 	 * <ol>
 	 * <li/>Instantiation
 	 * <li/>Request for activation
@@ -310,34 +309,34 @@ abstract public class GraphVisitorInternal {
 		private final List<PathWalkerInternal> passedPaths = new LinkedList<>();
 		private final List<PathWalkerInternal> failedPaths = new LinkedList<>();
 		private final List<PathWalkerInternal> allPaths = new LinkedList<>();
-		/** Predicate type, specified in constructor */
-		protected final PredicateType predicateType;
+		/** Quantor, specified in constructor */
+		protected final Quantor quantor;
 		/** Default verdict, specified in constructor */
 		protected final boolean passAsDefault;
 
 		/**
 		 * Constructor
 		 * <p>
-		 * The predicate will pass as default in case {@link PathWalkerInternal#fail()} is never called on any of its
-		 * active paths.
+		 * The {@link PathExplorerInternal} will pass as default in case {@link PathWalkerInternal#fail()} is never
+		 * called on any of its active paths.
 		 *
-		 * @param predicateType
+		 * @param quantor
 		 *            defines fail/pass condition
 		 */
-		protected PathExplorerInternal(PredicateType predicateType) {
-			this(predicateType, true);
+		protected PathExplorerInternal(Quantor quantor) {
+			this(quantor, true);
 		}
 
 		/**
 		 * Constructor
 		 *
-		 * @param predicateType
+		 * @param quantor
 		 *            defines fail/pass condition
 		 * @param passAsDefault
-		 *            iff true, the predicate will pass as default
+		 *            iff true, the {@link PathExplorerInternal} will pass as default
 		 */
-		protected PathExplorerInternal(PredicateType predicateType, boolean passAsDefault) {
-			this.predicateType = predicateType;
+		protected PathExplorerInternal(Quantor quantor, boolean passAsDefault) {
+			this.quantor = quantor;
 			this.passAsDefault = passAsDefault;
 		}
 
@@ -350,12 +349,12 @@ abstract public class GraphVisitorInternal {
 
 		/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
 		final public boolean isPassed() {
-			return passedPredicates.contains(this);
+			return passedExplorers.contains(this);
 		}
 
 		/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
 		final public boolean isFailed() {
-			return failedPredicates.contains(this);
+			return failedExplorers.contains(this);
 		}
 
 		/** @return all paths no matter if they are active or not, or passed or failed. */
@@ -363,30 +362,30 @@ abstract public class GraphVisitorInternal {
 			return allPaths;
 		}
 
-		/** Deactivates all active paths and hence this path predicate. */
+		/** Deactivates all active paths and hence this {@link PathExplorerInternal}. */
 		final protected void deactivateAll() {
 			while (!activePaths.isEmpty()) {
 				PathWalkerInternal aPath = activePaths.iterator().next();
 				aPath.deactivate();
 			}
-			checkPredicateDeactivation();
+			checkExplorerDeactivation();
 		}
 
-		private void checkPredicateDeactivation() {
+		private void checkExplorerDeactivation() {
 			if (activePaths.isEmpty()) {
-				activePredicates.remove(this);
+				activeExplorers.remove(this);
 
 				boolean somePassed = !passedPaths.isEmpty();
 				boolean someFailed = !failedPaths.isEmpty();
 
-				boolean predicatePassed = false;
-				predicatePassed |= somePassed && predicateType == PredicateType.ForOnePath;
-				predicatePassed |= somePassed && !someFailed && predicateType == PredicateType.ForAllPaths;
-				predicatePassed |= !somePassed && !someFailed && passAsDefault;
-				if (predicatePassed) {
-					passedPredicates.add(this);
+				boolean explorerPassed = false;
+				explorerPassed |= somePassed && quantor == Quantor.AtLeastOnePath;
+				explorerPassed |= somePassed && !someFailed && quantor == Quantor.ForAllPaths;
+				explorerPassed |= !somePassed && !someFailed && passAsDefault;
+				if (explorerPassed) {
+					passedExplorers.add(this);
 				} else {
-					failedPredicates.add(this);
+					failedExplorers.add(this);
 				}
 			}
 		}
@@ -430,7 +429,7 @@ abstract public class GraphVisitorInternal {
 			 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link PathWalkerInternal#visit(Node)}.
 			 */
 			final void callVisit(Node node) {
-				if (activeDirection) {
+				if (activeMode) {
 					visit(node);
 				}
 			}
@@ -440,7 +439,7 @@ abstract public class GraphVisitorInternal {
 			 * {@link PathWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 			 */
 			final void callVisit(Node start, Node end, ControlFlowEdge edge) {
-				if (activeDirection) {
+				if (activeMode) {
 					visit(start, end, edge);
 				}
 			}
@@ -459,7 +458,7 @@ abstract public class GraphVisitorInternal {
 			/** Sets the verdict of this path to <i>Passed</i>. */
 			final public void pass() {
 				passedPaths.add(this);
-				if (predicateType == PredicateType.ForOnePath) {
+				if (quantor == Quantor.AtLeastOnePath) {
 					deactivateAll();
 				} else {
 					deactivate();
@@ -469,7 +468,7 @@ abstract public class GraphVisitorInternal {
 			/** Sets the verdict of this path to <i>Failed</i>. */
 			final public void fail() {
 				failedPaths.add(this);
-				if (predicateType == PredicateType.ForAllPaths) {
+				if (quantor == Quantor.ForAllPaths) {
 					deactivateAll();
 				} else {
 					deactivate();
@@ -480,7 +479,7 @@ abstract public class GraphVisitorInternal {
 			final public void deactivate() {
 				activePaths.remove(this);
 				terminate();
-				checkPredicateDeactivation();
+				checkExplorerDeactivation();
 			}
 
 			/** @return true, iff this path is active. */

@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4JS.Script;
  * {@link ControlFlowEdge}s. If a {@link ControlFlowElement} called 'container' passed in the constructor is not null,
  * only those elements in this container are found.
  */
-public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
+public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	final Set<FlowEdge> allEdges = new HashSet<>();
 	final List<ControlFlowElement> allNodes = new LinkedList<>();
 	final Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
@@ -41,8 +41,8 @@ public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 	 * @param container
 	 *            if not null, only graph elements within (transitive) are found, otherwise all elements of the script
 	 */
-	public AllNodesAndEdgesPrintWalker(ControlFlowElement container) {
-		super(container, Direction.Forward, Direction.Backward, Direction.Islands, Direction.CatchBlocks);
+	public AllNodesAndEdgesPrintVisitor(ControlFlowElement container) {
+		super(container, Mode.Forward, Mode.Backward, Mode.Islands, Mode.CatchBlocks);
 	}
 
 	@Override
@@ -51,12 +51,12 @@ public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 	}
 
 	@Override
-	protected void init(Direction curDirection, ControlFlowElement curContainer) {
+	protected void init(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminate(Direction curDirection, ControlFlowElement curContainer) {
+	protected void terminate(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
@@ -68,7 +68,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		allNodes.add(cfe);
-		switch (getCurrentDirection()) {
+		switch (getCurrentMode()) {
 		case Forward:
 			allForwardCFEs.add(cfe);
 			break;
@@ -98,7 +98,7 @@ public class AllNodesAndEdgesPrintWalker extends GraphVisitor {
 		return nodeStrings;
 	}
 
-	/** @return all found {@link ControlFlowElement}s during {@literal Direction.Islands} as Strings */
+	/** @return all found {@link ControlFlowElement}s during {@literal Mode.Islands} as Strings */
 	public List<String> getAllIslandsNodeStrings() {
 		List<String> islandsStrings = new LinkedList<>();
 		for (ControlFlowElement node : allIslandsCFEs) {

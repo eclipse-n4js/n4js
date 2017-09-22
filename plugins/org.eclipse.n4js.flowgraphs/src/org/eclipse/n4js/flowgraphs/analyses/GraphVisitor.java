@@ -30,14 +30,14 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
-	/** see {@link GraphVisitorInternal#GraphVisitorInternal(Direction...)} */
-	protected GraphVisitor(Direction... directions) {
-		this(null, directions);
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(Mode...)} */
+	protected GraphVisitor(Mode... modes) {
+		this(null, modes);
 	}
 
-	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, Direction...)} */
-	public GraphVisitor(ControlFlowElement container, Direction... directions) {
-		super(container, directions);
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, Mode...)} */
+	public GraphVisitor(ControlFlowElement container, Mode... modes) {
+		super(container, modes);
 	}
 
 	@Override
@@ -132,7 +132,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	private ControlFlowElement getStartCFE(FlowEdge dEdge) {
-		switch (getCurrentDirection()) {
+		switch (getCurrentMode()) {
 		case Forward:
 		case Islands:
 			return dEdge.start;
@@ -142,7 +142,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	private ControlFlowElement getEndCFE(FlowEdge dEdge) {
-		switch (getCurrentDirection()) {
+		switch (getCurrentMode()) {
 		case Forward:
 		case Islands:
 			return dEdge.end;
@@ -155,21 +155,21 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	abstract protected void initAll();
 
 	@Override
-	final protected void initInternal(Direction curDirection, ControlFlowElement curContainer) {
+	final protected void initInternal(Mode curMode, ControlFlowElement curContainer) {
 		visitedEdgesInternal.clear();
 		visitedEdges.clear();
-		init(curDirection, curContainer);
+		init(curMode, curContainer);
 	}
 
 	/**
 	 * Called after {@link #initAll()} and before any visit-method is called.
 	 *
-	 * @param curDirection
-	 *            direction of succeeding calls to visit-methods
+	 * @param curMode
+	 *            mode of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void init(Direction curDirection, ControlFlowElement curContainer);
+	abstract protected void init(Mode curMode, ControlFlowElement curContainer);
 
 	/** Analog to {@link GraphVisitorInternal#visit(Node)} */
 	abstract protected void visit(ControlFlowElement cfe);
@@ -178,7 +178,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	abstract protected void visit(ControlFlowElement lastCFE, ControlFlowElement currentCFE, FlowEdge edge);
 
 	@Override
-	abstract protected void terminate(Direction curDirection, ControlFlowElement curContainer);
+	abstract protected void terminate(Mode curMode, ControlFlowElement curContainer);
 
 	@Override
 	abstract protected void terminateAll();
@@ -187,17 +187,17 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	abstract public class PathExplorer extends PathExplorerInternal {
 
 		/**
-		 * see {@link GraphVisitorInternal.PathExplorerInternal#PathExplorerInternal(PredicateType)}
+		 * see {@link GraphVisitorInternal.PathExplorerInternal#PathExplorerInternal(Quantor)}
 		 */
-		protected PathExplorer(PredicateType predicateType) {
-			super(predicateType);
+		protected PathExplorer(Quantor quantor) {
+			super(quantor);
 		}
 
 		/**
-		 * see {@link GraphVisitorInternal.PathExplorerInternal#PathExplorerInternal(PredicateType, boolean)}
+		 * see {@link GraphVisitorInternal.PathExplorerInternal#PathExplorerInternal(Quantor, boolean)}
 		 */
-		protected PathExplorer(PredicateType predicateType, boolean passAsDefault) {
-			super(predicateType, passAsDefault);
+		protected PathExplorer(Quantor quantor, boolean passAsDefault) {
+			super(quantor, passAsDefault);
 		}
 
 		@Override
