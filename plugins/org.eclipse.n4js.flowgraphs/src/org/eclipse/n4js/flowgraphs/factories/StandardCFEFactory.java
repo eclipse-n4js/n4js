@@ -23,6 +23,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 /** Used for all non-statements. Children nodes are retrieved from {@link CFEChildren#get(ControlFlowElement)}. */
 class StandardCFEFactory {
+	static final String ENTRY_NODE = "entry";
+	static final String EXIT_NODE = "exit";
 
 	static ComplexNode buildComplexNode(ControlFlowElement cfe) {
 		return buildComplexNode(cfe, true);
@@ -35,7 +37,7 @@ class StandardCFEFactory {
 	private static ComplexNode buildComplexNode(ControlFlowElement cfe, boolean isRepresenting) {
 		ComplexNode cNode = new ComplexNode(cfe);
 
-		HelperNode entryNode = new HelperNode("entry", cfe);
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, cfe);
 		Node exitNode = (isRepresenting) ? new RepresentingNode("exit", cfe) : new HelperNode("exit", cfe);
 		List<Node> argumentNodes = new LinkedList<>();
 

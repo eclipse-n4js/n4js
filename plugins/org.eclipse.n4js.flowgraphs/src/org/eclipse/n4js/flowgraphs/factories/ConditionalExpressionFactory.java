@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,8 +29,8 @@ class ConditionalExpressionFactory {
 	static ComplexNode buildComplexNode(ConditionalExpression condExpr) {
 		ComplexNode cNode = new ComplexNode(condExpr);
 
-		HelperNode entryNode = new HelperNode("entry", condExpr);
-		Node exitNode = new RepresentingNode("exit", condExpr);
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, condExpr);
+		Node exitNode = new RepresentingNode(EXIT_NODE, condExpr);
 		Node conditionNode = new DelegatingNode("condition", condExpr, condExpr.getExpression());
 		Node thenNode = new DelegatingNode("then", condExpr, condExpr.getTrueExpression());
 		Node elseNode = new DelegatingNode("else", condExpr, condExpr.getFalseExpression());

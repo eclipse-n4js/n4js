@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,8 +32,8 @@ class BlockFactory {
 	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.Block block) {
 		ComplexNode cNode = new ComplexNode(block);
 
-		Node entryNode = new HelperNode("entry", block);
-		Node exitNode = new HelperNode("exit", block);
+		Node entryNode = new HelperNode(ENTRY_NODE, block);
+		Node exitNode = new HelperNode(EXIT_NODE, block);
 		List<Node> blockNodes = new LinkedList<>();
 
 		EList<Statement> stmts = block.getStatements();

@@ -52,7 +52,7 @@ public class FlowgraphsXpectMethod {
 	@Inject
 	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
-	N4JSFlowAnalyzer getFlowAnalyses(EObject eo) {
+	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
 		N4JSFlowAnalyzer flowAnalyzer = null;
 		ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
 		flowAnalyzer = cache.getFlowAnalyses();
@@ -72,7 +72,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		Set<ControlFlowElement> preds = getFlowAnalyses(cfe).getPredecessorsSkipInternal(cfe);
+		Set<ControlFlowElement> preds = getFlowAnalyzer(cfe).getPredecessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, preds, cfType);
 
 		List<String> predTexts = new LinkedList<>();
@@ -96,7 +96,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowType cfType = getControlFlowType(type);
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		Set<ControlFlowElement> succs = getFlowAnalyses(cfe).getSuccessorsSkipInternal(cfe);
+		Set<ControlFlowElement> succs = getFlowAnalyzer(cfe).getSuccessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, succs, cfType);
 
 		List<String> succTexts = new LinkedList<>();
@@ -126,8 +126,8 @@ public class FlowgraphsXpectMethod {
 			return;
 
 		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			Set<ControlFlowType> currCFTypes = getFlowAnalyses(start).getControlFlowTypeToSuccessors(start,
-					succIt.next());
+			N4JSFlowAnalyzer flowAnalyzer = getFlowAnalyzer(start);
+			Set<ControlFlowType> currCFTypes = flowAnalyzer.getControlFlowTypeToSuccessors(start, succIt.next());
 			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
 			}
@@ -162,13 +162,13 @@ public class FlowgraphsXpectMethod {
 		}
 
 		if (toCFE != null) {
-			boolean isTransitiveSuccs = getFlowAnalyses(fromCFE).isTransitiveSuccessor(fromCFE, toCFE);
+			boolean isTransitiveSuccs = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, toCFE);
 			if (!isTransitiveSuccs) {
 				fail("Elements are no transitive successors");
 			}
 		}
 		if (notToCFE != null) {
-			boolean isTransitiveSuccs = getFlowAnalyses(fromCFE).isTransitiveSuccessor(fromCFE, notToCFE);
+			boolean isTransitiveSuccs = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, notToCFE);
 			if (isTransitiveSuccs) {
 				fail("Elements are transitive successors");
 			}
@@ -195,7 +195,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllPathPrintVisitor appw = new AllPathPrintVisitor(container, startCFE, direction);
-		getFlowAnalyses(referenceCFE).accept(appw);
+		getFlowAnalyzer(referenceCFE).accept(appw);
 		List<String> pathStrings = appw.getPathStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -225,7 +225,7 @@ public class FlowgraphsXpectMethod {
 		cfe = FGUtils.getCFContainer(cfe);
 
 		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(cfe);
-		getFlowAnalyses(cfe).accept(anaepw);
+		getFlowAnalyzer(cfe).accept(anaepw);
 		List<String> pathStrings = anaepw.getAllEdgeStrings();
 
 		expectation.assertEquals(pathStrings);
@@ -240,7 +240,7 @@ public class FlowgraphsXpectMethod {
 		ControlFlowElement aCFE = getControlFlowElement(a);
 		ControlFlowElement bCFE = getControlFlowElement(b);
 
-		Set<ControlFlowElement> commonPreds = getFlowAnalyses(aCFE).getCommonPredecessors(aCFE, bCFE);
+		Set<ControlFlowElement> commonPreds = getFlowAnalyzer(aCFE).getCommonPredecessors(aCFE, bCFE);
 		List<String> commonPredStrs = new LinkedList<>();
 		for (ControlFlowElement commonPred : commonPreds) {
 			String commonPredStr = FGUtils.getSourceText(commonPred);
@@ -266,9 +266,9 @@ public class FlowgraphsXpectMethod {
 			IEObjectCoveringRegion referenceOffset) {
 
 		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
-		ControlFlowElement container = getFlowAnalyses(referenceCFE).getContainer(referenceCFE);
+		ControlFlowElement container = getFlowAnalyzer(referenceCFE).getContainer(referenceCFE);
 		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(container);
-		getFlowAnalyses(referenceCFE).accept(anaepw);
+		getFlowAnalyzer(referenceCFE).accept(anaepw);
 		List<String> nodeStrings = anaepw.getAllIslandsNodeStrings();
 		expectation.assertEquals(nodeStrings);
 	}
@@ -278,7 +278,7 @@ public class FlowgraphsXpectMethod {
 	@Xpect
 	public void container(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		ControlFlowElement container = getFlowAnalyses(cfe).getContainer(cfe);
+		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
 		EObject containerContainer = container.eContainer();
 
 		String ccString = (containerContainer != null) ? FGUtils.getClassName(containerContainer) + "::" : "";
@@ -293,8 +293,8 @@ public class FlowgraphsXpectMethod {
 			IEObjectCoveringRegion offset) {
 
 		ControlFlowElement cfe = getControlFlowElement(offset);
-		ControlFlowElement container = getFlowAnalyses(cfe).getContainer(cfe);
-		List<Block> catchBlocks = getFlowAnalyses(cfe).getCatchBlocksOfContainer(container);
+		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
+		List<Block> catchBlocks = getFlowAnalyzer(cfe).getCatchBlocksOfContainer(container);
 
 		List<String> catchBlockStrs = new LinkedList<>();
 		for (Block catchBlock : catchBlocks) {

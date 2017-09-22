@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -43,8 +46,8 @@ class ForFactory {
 	private static ComplexNode buildForInOf(ForStatement forStmt, boolean forInSemantics) {
 		ComplexNode cNode = new ComplexNode(forStmt);
 
-		Node entryNode = new HelperNode("entry", forStmt);
-		Node exitNode = new HelperNode("exit", forStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, forStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, forStmt);
 		List<Node> declNodes = new LinkedList<>();
 		List<Node> initNodes = new LinkedList<>();
 		if (forStmt.getVarDeclsOrBindings() != null) {
@@ -116,8 +119,8 @@ class ForFactory {
 		Node bodyNode = null;
 		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, forStmt);
 		Node updatesNode = null;
-		Node entryNode = new HelperNode("entry", forStmt);
-		Node exitNode = new HelperNode("exit", forStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, forStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, forStmt);
 
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;

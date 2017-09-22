@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,8 +30,8 @@ class VariableStatementFactory {
 	static ComplexNode buildComplexNode(VariableStatement varDeclStmt) {
 		ComplexNode cNode = new ComplexNode(varDeclStmt);
 
-		Node entryNode = new HelperNode("entry", varDeclStmt);
-		Node exitNode = new RepresentingNode("exit", varDeclStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, varDeclStmt);
+		Node exitNode = new RepresentingNode(EXIT_NODE, varDeclStmt);
 
 		List<Node> varDeclNodes = new LinkedList<>();
 		for (int i = 0; i < varDeclStmt.getVarDeclsOrBindings().size(); i++) {

@@ -21,9 +21,12 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-/** Represents a part of a {@link ControlFlowElement}. */
+/**
+ * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a
+ * {@link ComplexNode}. 
+ */
 abstract public class Node implements ControlFlowable {
-	final private ControlFlowElement cfeElem;
+	final private ControlFlowElement cfElem;
 	/** Name of the node */
 	final public String name;
 
@@ -46,9 +49,9 @@ abstract public class Node implements ControlFlowable {
 	 * Constructor.<br/>
 	 * Creates a node with the given name and {@link ControlFlowElement}.
 	 */
-	public Node(String name, ControlFlowElement cfeElem) {
+	public Node(String name, ControlFlowElement cfElem) {
 		this.name = name;
-		this.cfeElem = cfeElem;
+		this.cfElem = cfElem;
 	}
 
 	/** Returns the {@link ControlFlowElement} this node is delegating to. */
@@ -139,7 +142,7 @@ abstract public class Node implements ControlFlowable {
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		return CFEMapper.map(cfeElem);
+		return CFEMapper.map(cfElem);
 	}
 
 	@Override

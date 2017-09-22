@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,9 +31,9 @@ class AbstractCaseClauseFactory {
 	static ComplexNode buildComplexNode(AbstractCaseClause abstrCaseClause) {
 		ComplexNode cNode = new ComplexNode(abstrCaseClause);
 
-		Node entryNode = new HelperNode("entry", abstrCaseClause);
+		Node entryNode = new HelperNode(ENTRY_NODE, abstrCaseClause);
 		List<Node> stmtNodes = new LinkedList<>();
-		Node exitNode = new DelegatingNode("exit", abstrCaseClause);
+		Node exitNode = new DelegatingNode(EXIT_NODE, abstrCaseClause);
 		Node caseConditionNode = null;
 
 		if (abstrCaseClause instanceof CaseClause) {

@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,8 +30,8 @@ class BinaryLogicalExpressionFactory {
 	static ComplexNode buildComplexNode(BinaryLogicalExpression lbExpr) {
 		ComplexNode cNode = new ComplexNode(lbExpr);
 
-		HelperNode entryNode = new HelperNode("entry", lbExpr);
-		Node exitNode = new RepresentingNode("exit", lbExpr);
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, lbExpr);
+		Node exitNode = new RepresentingNode(EXIT_NODE, lbExpr);
 		Node lhsNode = new DelegatingNode("lhs", lbExpr, lbExpr.getLhs());
 		Node rhsNode = new DelegatingNode("rhs", lbExpr, lbExpr.getRhs());
 

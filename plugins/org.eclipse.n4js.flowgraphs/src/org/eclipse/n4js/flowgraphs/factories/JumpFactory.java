@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -70,8 +73,8 @@ class JumpFactory {
 	static ComplexNode buildComplexNode(Statement stmt, Expression expr, JumpToken jumptoken) {
 		ComplexNode cNode = new ComplexNode(stmt);
 
-		Node entryNode = new HelperNode("entry", stmt);
-		Node exitNode = new RepresentingNode("exit", stmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, stmt);
+		Node exitNode = new RepresentingNode(EXIT_NODE, stmt);
 		Node expression = null;
 
 		cNode.addNode(entryNode);

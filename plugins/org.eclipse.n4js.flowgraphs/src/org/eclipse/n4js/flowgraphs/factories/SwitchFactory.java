@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,8 +34,8 @@ class SwitchFactory {
 	static ComplexNode buildComplexNode(SwitchStatement switchStmt) {
 		ComplexNode cNode = new ComplexNode(switchStmt);
 
-		Node entryNode = new HelperNode("entry", switchStmt);
-		Node exitNode = new HelperNode("exit", switchStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, switchStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, switchStmt);
 		Node pivotNode = new DelegatingNode("pivot", switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);

@@ -45,21 +45,12 @@ public class N4JSFlowAnalyzer {
 	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
 
-		// Protect ASTPostprocessing from failures of flow analyses.
-		try {
-			// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
-			_createGraphs(script);
-			// sw.stop();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
-
-	private void _createGraphs(Script script) {
+		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
 		gwa = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
+		// sw.stop();
 	}
 
 	/** @return the underlying control flow graph */

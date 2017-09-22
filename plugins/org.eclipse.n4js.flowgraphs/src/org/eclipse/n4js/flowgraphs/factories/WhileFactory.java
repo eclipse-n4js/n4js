@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
+import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,8 +33,8 @@ class WhileFactory {
 	static ComplexNode buildComplexNode(WhileStatement whileStmt) {
 		ComplexNode cNode = new ComplexNode(whileStmt);
 
-		Node entryNode = new HelperNode("entry", whileStmt);
-		Node exitNode = new HelperNode("exit", whileStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, whileStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, whileStmt);
 		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, whileStmt, whileStmt.getExpression());
 		Node bodyNode = null;
 
