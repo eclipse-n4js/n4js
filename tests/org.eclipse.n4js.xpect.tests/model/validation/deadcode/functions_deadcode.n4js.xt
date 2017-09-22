@@ -99,7 +99,7 @@ function f0d() {
        return y;
 	}
 
-   // XPECT warnings --> "Dead code. No execution possible after IfStatement." at "f0();"
+   // XPECT warnings --> "Dead code. No execution possible after if statement." at "f0();"
    f0(); // Dead
 
 }
@@ -289,7 +289,7 @@ function f6(): number {
 	       } while ( true )
 
        } // z
-	   // XPECT warnings --> "Dead code. No execution possible after LabelledStatement." at "return 4;"
+	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
        return 4;
    // XPECT warnings --> "Dead code." at "true"
    } while ( true )

@@ -202,7 +202,7 @@ function f6(): number {
 
        } // z
        // XPECT returnOrThrow --> returnsMode
-  	   // XPECT warnings --> "Dead code. No execution possible after LabelledStatement." at "return 4;"
+  	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
        return 4;
 	// XPECT warnings --> "Dead code." at "true"
    } while ( true )

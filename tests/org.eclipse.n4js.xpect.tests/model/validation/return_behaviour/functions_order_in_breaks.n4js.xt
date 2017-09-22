@@ -51,7 +51,7 @@ function f6(): number {
 	       } while ( true )
 
        } // z
-   	   // XPECT warnings --> "Dead code. No execution possible after LabelledStatement." at "return 4;"
+   	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
        // XPECT returnOrThrow --> returnsMode
        return 4;
 	// XPECT warnings --> "Dead code." at "true"

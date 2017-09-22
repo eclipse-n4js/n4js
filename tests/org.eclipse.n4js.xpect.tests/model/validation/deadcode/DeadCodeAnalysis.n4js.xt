@@ -31,12 +31,12 @@ function f1() {
 		} finally {
 			3;
 		}
-		// XPECT warnings --> "Dead code. No execution possible after TryStatement." at "4;"
+		// XPECT warnings --> "Dead code. No execution possible after try statement." at "4;"
 		4;
 	} finally {
 		6;
 	}
-	// XPECT warnings --> "Dead code. No execution possible after TryStatement." at ""end";"
+	// XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
 	"end";
 }
 
@@ -120,9 +120,9 @@ function f5() {
 		// XPECT warnings --> "Dead code. No execution possible after break." at "6;"
 			6;
 		}
-		// XPECT warnings --> "Dead code. No execution possible after IfStatement." at "7;"
+		// XPECT warnings --> "Dead code. No execution possible after if statement." at "7;"
 		7;
-	// XPECT warnings --> "Dead code. No execution possible after ExpressionStatement." at "8"
+	// XPECT warnings --> "Dead code. No execution possible after expression statement." at "8"
 	} while (8);
 	"end";
 };
