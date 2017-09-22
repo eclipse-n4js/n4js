@@ -36,7 +36,7 @@ function ThrowStatement1() {
 	// ThrowStatement1 XPECT commonPreds of 'throw 1;' and '"end"' -->
 	// ThrowStatement1 XPECT succs at '"start"' --> 1
 	// ThrowStatement1 XPECT succs at '1' --> throw 1;
-	// ThrowStatement1 XPECT preds at 'throw 1;' --> "start"
+	// ThrowStatement1 XPECT preds at 'throw 1;' --> 1
 	// ThrowStatement1 XPECT succs at 'throw 1;' -->
 	"start";
 	throw 1;
@@ -69,7 +69,7 @@ function ThrowStatement2() {
 	// ThrowStatement2 XPECT succs at '"start"' --> 1
 	// ThrowStatement2 XPECT succs at '1' --> 2, "end"
 	// ThrowStatement2 XPECT succs at '2' --> throw 2;
-	// ThrowStatement2 XPECT preds at 'throw 2;' --> 1
+	// ThrowStatement2 XPECT preds at 'throw 2;' --> 2
 	// ThrowStatement2 XPECT succs at 'throw 2;' -->
 	"start";
 	if (1) {
@@ -93,7 +93,7 @@ let ThrowStatement3 = function() {
 	// ThrowStatement3 XPECT commonPreds of '1' and '"end"' -->
 	// ThrowStatement3 XPECT succs at '"start"' --> 1
 	// ThrowStatement3 XPECT succs at '1' --> throw 1;
-	// ThrowStatement3 XPECT preds at 'throw 1;' --> "start"
+	// ThrowStatement3 XPECT preds at 'throw 1;' --> 1
 	// ThrowStatement3 XPECT succs at 'throw 1;' -->
 	"start";
 	throw 1;
@@ -119,7 +119,7 @@ class ThrowStatement4 {
 		// ThrowStatement4 XPECT path from '"start"' notTo '"end"' -->
 		// ThrowStatement4 XPECT commonPreds of 'throw 1;' and '"end"' -->
 		// ThrowStatement4 XPECT succs at '1' --> throw 1;
-		// ThrowStatement4 XPECT preds at 'throw 1;' --> "start"
+		// ThrowStatement4 XPECT preds at 'throw 1;' --> 1
 		// ThrowStatement4 XPECT succs at 'throw 1;' -->
 		"start";
         throw 1;

@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
@@ -74,10 +75,14 @@ public class SuccessorPredecessorAnalysis {
 	 */
 	private Node getNextNode(ControlFlowElement cfe, boolean skipInternal, NextEdgesProvider nextEdgesProvider) {
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		if (skipInternal) {
+		if (skipInternal && FGUtils.isControlElement(cfe)) {
 			return nextEdgesProvider.getEndNode(cn);
 		} else {
-			return nextEdgesProvider.getStartNode(cn);
+			if (cn.hasRepresentingNode()) {
+				return cn.getRepresent();
+			} else {
+				return nextEdgesProvider.getStartNode(cn);
+			}
 		}
 	}
 

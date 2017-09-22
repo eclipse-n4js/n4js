@@ -140,35 +140,28 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 			if (offset == 0) {
 				if (flowAnalyses.isSuccessor(cfe1, cfe2))
-					return -1;
+					return -10;
 
 				if (flowAnalyses.isSuccessor(cfe2, cfe1))
-					return 1;
+					return 10;
 
 				if (flowAnalyses.isTransitiveSuccessor(cfe1, cfe2))
 					return -1;
 
 				if (flowAnalyses.isTransitiveSuccessor(cfe2, cfe1))
 					return 1;
-
-				if (offset == 0) {
-					Set<ControlFlowElement> commonPreds = flowAnalyses.getCommonPredecessors(cfe1, cfe2);
-					if (!commonPreds.isEmpty()) {
-						ControlFlowElement oneCommonPred = commonPreds.iterator().next();
-						String path1 = flowAnalyses.getPathIdentifier(oneCommonPred, cfe1);
-						String path2 = flowAnalyses.getPathIdentifier(oneCommonPred, cfe2);
-
-						offset = path1.compareTo(path2);
-					}
-				}
 			}
+
 			if (offset == 0) {
 				offset = getOffset(cfe1) - getOffset(cfe2);
 			}
 			if (offset == 0) {
 				offset = getLength(cfe1) - getLength(cfe2);
 			}
+
 			if (offset == 0) {
+
+				System.out.println("hashcode");
 				offset = cfe1.hashCode() - cfe2.hashCode();
 			}
 

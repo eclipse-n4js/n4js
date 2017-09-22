@@ -147,6 +147,11 @@ public class ComplexNode implements ControlFlowable {
 		return exit;
 	}
 
+	/** @return true iff the a representing node is available */
+	public boolean hasRepresentingNode() {
+		return represent != null;
+	}
+
 	/** @return {@link RepresentingNode} of the {@link ControlFlowElement} represented by this {@link ComplexNode}. */
 	public RepresentingNode getRepresent() {
 		return represent;

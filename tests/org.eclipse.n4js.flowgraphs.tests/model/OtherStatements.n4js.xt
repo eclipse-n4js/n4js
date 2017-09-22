@@ -233,7 +233,7 @@ function ReturnStatement2() : int {
 	// ReturnStatement2 XPECT commonPreds of 'return 1;' and '"end"' -->
 	// ReturnStatement2 XPECT succs at '"start"' --> 1
 	// ReturnStatement2 XPECT succs at '1' --> return 1;
-	// ReturnStatement2 XPECT preds at 'return 1;' --> "start"
+	// ReturnStatement2 XPECT preds at 'return 1;' --> 1
 	// ReturnStatement2 XPECT succs at 'return 1;' -->
 	"start";
 	 return 1;
@@ -388,7 +388,7 @@ function VariableStatement1() {
 	// VariableStatement1 XPECT succs at '"start"' --> 1
 	// VariableStatement1 XPECT succs at '1' --> x = 1
 	// VariableStatement1 XPECT succs at 'x = 1' --> let x = 1;
-	// VariableStatement1 XPECT preds at 'let x = 1;' --> "start"
+	// VariableStatement1 XPECT preds at 'let x = 1;' --> x = 1
 	// VariableStatement1 XPECT succs at 'let x = 1;' --> "end"
 	"start";
 	let x = 1;
@@ -412,7 +412,7 @@ function VariableStatement2() {
 	// VariableStatement2 XPECT succs at '"start"' --> 1
 	// VariableStatement2 XPECT succs at '1' --> x = 1
 	// VariableStatement2 XPECT succs at 'x = 1' --> var x = 1;
-	// VariableStatement2 XPECT preds at 'var x = 1;' --> "start"
+	// VariableStatement2 XPECT preds at 'var x = 1;' --> x = 1
 	// VariableStatement2 XPECT succs at 'var x = 1;' --> "end"
 	"start";
 	var x = 1;
@@ -438,7 +438,7 @@ function VariableStatement3() {
 	// VariableStatement3 XPECT succs at 'x' --> y
 	// VariableStatement3 XPECT succs at 'y' --> z
 	// VariableStatement3 XPECT succs at 'z' --> let x\, y\, z;
-	// VariableStatement3 XPECT preds at 'let x, y, z;' --> "start"
+	// VariableStatement3 XPECT preds at 'let x, y, z;' --> z
 	// VariableStatement3 XPECT succs at 'let x, y, z;' --> "end"
 	"start";
 	let x, y, z;
