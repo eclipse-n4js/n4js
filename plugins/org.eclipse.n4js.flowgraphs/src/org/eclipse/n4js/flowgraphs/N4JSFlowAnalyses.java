@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.Script;
 import com.google.common.collect.Lists;
 
 /**
- *
+ * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyses {
 	private FlowGraph cfg;
@@ -38,40 +38,36 @@ public class N4JSFlowAnalyses {
 	private SuccessorPredecessorAnalysis spa;
 
 	/**
-	 * Performs the control flow analyses for all {@link ControlFlowElement}s in the given {@link Script}.
+	 * Creates the control flow graphs for all {@link ControlFlowElement}s in the given {@link Script}.
 	 * <p/>
 	 * Never completes abruptly, i.e. throws an exception.
 	 */
-	public void perform(Script script) {
+	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
 
 		// Protect ASTPostprocessing from failures of flow analyses.
 		try {
 			// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
-			_perform(script);
+			_createGraphs(script);
 			// sw.stop();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
 	}
 
-	private void _perform(Script script) {
+	private void _createGraphs(Script script) {
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
 		gwa = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
 	}
 
-	/**
-	 * @return the underlying control flow graph
-	 */
+	/** @return the underlying control flow graph */
 	public FlowGraph getControlFlowGraph() {
 		return cfg;
 	}
 
-	/**
-	 * @return a list of all direct internal predecessors of cfe
-	 */
+	/** @return a list of all direct internal predecessors of cfe */
 	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
 		return spa.getPredecessors(cfe, followEdges);
 	}
@@ -148,7 +144,7 @@ public class N4JSFlowAnalyses {
 	 * beginning from the exit of every source container. Finally, all remaining code elements are traversed first
 	 * forward and then backward beginning from an arbitrary element.
 	 */
-	public void analyze(GraphVisitorInternal... graphWalkers) {
+	public void accept(GraphVisitorInternal... graphWalkers) {
 		List<GraphVisitorInternal> graphWalkerList = Lists.newArrayList(graphWalkers);
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
 		gwa.analyseScript(this, graphWalkerList);
@@ -162,7 +158,7 @@ public class N4JSFlowAnalyses {
 
 	/**
 	 * @return all {@link ControlFlowElement}s that are containers in the {@link Script}. See
-	 *          {@link FGUtils#isCFContainer(ControlFlowElement)}
+	 *         {@link FGUtils#isCFContainer(ControlFlowElement)}
 	 */
 	public Set<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();

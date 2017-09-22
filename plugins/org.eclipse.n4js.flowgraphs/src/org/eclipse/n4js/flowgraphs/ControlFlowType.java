@@ -25,6 +25,8 @@ import org.eclipse.n4js.n4JS.ThrowStatement;
  * {@link CatchToken}s.
  */
 public enum ControlFlowType {
+	/** Successor edges are default edges */
+	Successor,
 	/** Return edges are caused by {@link ReturnStatement}s */
 	Return,
 	/** Throw edges are caused by {@link ThrowStatement}s */
@@ -33,8 +35,6 @@ public enum ControlFlowType {
 	Break,
 	/** Continue edges are caused by {@link ContinueStatement}s */
 	Continue,
-	/** Successor edges are default edges */
-	Successor,
 	/** Repeat edges are caused by loops and flow from the condition to the body */
 	Repeat,
 	/** Used to mark {@link CatchToken}s that can catch {@link JumpToken} due to thrown N4JS errors */

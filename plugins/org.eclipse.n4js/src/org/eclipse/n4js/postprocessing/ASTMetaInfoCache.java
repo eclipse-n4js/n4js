@@ -66,7 +66,7 @@ public final class ASTMetaInfoCache {
 	private final Map<TypableElement, Result<TypeRef>> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
-	private N4JSFlowAnalyses flowAnalyses;
+	private final N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
 
 	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
 
@@ -152,8 +152,8 @@ public final class ASTMetaInfoCache {
 		inferredTypeArgs.put(callExpr, Collections.unmodifiableList(new ArrayList<>(typeArgs)));
 	}
 
-	/* package */ void storeFlowAnalyses(N4JSFlowAnalyses fa) {
-		this.flowAnalyses = fa;
+	/* package */ void storeScriptAndCreateFlowGraph(Script script) {
+		this.flowAnalyses.createGraphs(script);
 	}
 
 	/**

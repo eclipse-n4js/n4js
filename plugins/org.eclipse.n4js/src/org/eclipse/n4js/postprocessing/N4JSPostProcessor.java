@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.resource;
+package org.eclipse.n4js.postprocessing;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,8 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.postprocessing.ASTProcessor;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -44,6 +45,8 @@ import com.google.inject.Inject;
  */
 public class N4JSPostProcessor implements PostProcessor {
 
+	@Inject
+	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 	@Inject
 	private ASTProcessor astProcessor;
 	@Inject
@@ -76,6 +79,9 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
+		ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(resource);
+		// step 0: control-/data-flow analyses
+		cache.storeScriptAndCreateFlowGraph(resource.getScript());
 		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 2: expose internal types visible from outside

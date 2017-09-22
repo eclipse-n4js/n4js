@@ -117,7 +117,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val N4JSFlowAnalyses flowAnalyses = cache.getFlowAnalyses();
 		val dcf = new DeadCodeVisitor();
 
-		flowAnalyses.analyze(dcf);
+		flowAnalyses.accept(dcf);
 
 		internalCheckDeadCode(dcf);
 	}
@@ -268,9 +268,6 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 
 		val FunctionFullReport analysis = returnOrThrowAnalysis.exitBehaviourWithFullReport(functionOrFieldAccessor.body?.statements)
-
-		// Dead Code? : Constraints 107
-		// holdsNoDeadCode(functionOrFieldAccessor, analysis);
 
 		if (isOptionalReturnType) {
 			// anything goes!

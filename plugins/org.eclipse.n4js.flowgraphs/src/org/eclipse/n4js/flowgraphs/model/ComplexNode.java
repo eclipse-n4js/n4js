@@ -76,17 +76,17 @@ public class ComplexNode implements ControlFlowable {
 	public void connectInternalSucc(ControlFlowType cfType, List<Node> nodes) {
 		nodes = ListUtils.filterNulls(nodes);
 
-		Iterator<Node> it = nodes.iterator();
-		if (!it.hasNext()) {
+		Iterator<Node> iter = nodes.iterator();
+		if (!iter.hasNext()) {
 			return;
 		}
 
-		Node n1 = it.next();
-		while (it.hasNext()) {
+		Node n1 = iter.next();
+		while (iter.hasNext()) {
 			assert nodeMap.values().contains(n1) : "FlowGraph malformed: Node not child of complex node";
 
 			Node n2 = n1;
-			n1 = it.next();
+			n1 = iter.next();
 			n2.addInternalSuccessors(n1, cfType);
 		}
 

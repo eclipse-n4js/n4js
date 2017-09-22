@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.resource.N4JSPostProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -55,7 +54,6 @@ import org.eclipse.xtext.util.CancelIndicator
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyses
 
 /**
  * Main processor used during {@link N4JSPostProcessor post-processing} of N4JS resources. It controls the overall
@@ -178,10 +176,6 @@ public class ASTProcessor extends AbstractProcessor {
 				}
 			}
 		}
-		// phase 4: control-/data-flow analyses
-		val N4JSFlowAnalyses flowAnalyses = new N4JSFlowAnalyses();
-		flowAnalyses.perform(script);
-		cache.storeFlowAnalyses(flowAnalyses);
 	}
 
 	/**
