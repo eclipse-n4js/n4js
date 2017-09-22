@@ -26,7 +26,14 @@ import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-/** Represents a complete {@link ControlFlowElement}. */
+/**
+ * Represents a complete {@link ControlFlowElement}. {@link ComplexNode} represent the control flow that a
+ * {@link ControlFlowElement} introduces. This is done using several {@link Node}s inside one {@link ComplexNode}. They
+ * are connected to each other using {@link ControlFlowEdge}s. When two {@link ComplexNode}s are concatenated, the exit
+ * {@link Node} of the first {@link ComplexNode} will be connected to the entry {@link Node} of the second
+ * {@link ComplexNode}. In addition, nesting of {@link ComplexNode}s is supported using {@link DelegatingNode}s. They
+ * are connected to {@link Node}s of other {@link ComplexNode}s.
+ */
 public class ComplexNode implements ControlFlowable {
 	final private ControlFlowElement container;
 	final private ControlFlowElement astElement;

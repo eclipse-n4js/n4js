@@ -35,6 +35,7 @@ import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.Literal;
+import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
 import org.eclipse.n4js.n4JS.NewExpression;
@@ -269,6 +270,10 @@ final class CFEChildren {
 
 				if (pa instanceof PropertyNameValuePair) {
 					PropertyNameValuePair pnvp = (PropertyNameValuePair) pa;
+					LiteralOrComputedPropertyName locpn = pnvp.getDeclaredName();
+					if (locpn != null && locpn.getExpression() != null) {
+						cfc.add(Pair.of("declaredName_" + i, locpn.getExpression()));
+					}
 					if (pnvp.getExpression() != null) {
 						cfc.add(Pair.of("expression_" + i, pnvp.getExpression()));
 					}

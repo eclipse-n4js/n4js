@@ -14,9 +14,10 @@ import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. However, it does not represent a CFE
- * and thus does not return its {@link ControlFlowElement} when asked for it in
- * {@link #getRepresentedControlFlowElement()}.
+ * The {@link DelegatingNode} used to model nested {@link ComplexNode}s: The {@link ComplexNode} of the delegated
+ * {@link ControlFlowElement} is nested within its {@link ComplexNode}. does provide a {@link ControlFlowElement}
+ * delegate. However, it does not represent a CFE and thus does not return its {@link ControlFlowElement} when asked for
+ * it in {@link #getRepresentedControlFlowElement()}.
  */
 public class DelegatingNode extends Node {
 	final private ControlFlowElement cfeDelegate;

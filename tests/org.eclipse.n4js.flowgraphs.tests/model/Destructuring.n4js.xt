@@ -361,3 +361,32 @@ function DestructuringDefault2() {
 	let [x=0] = [1];
 	"end";
 }
+
+
+function DestructuringComputedPropName1() {
+	// DestructuringComputedPropName1 XPECT container --> FunctionDeclaration::Block
+	// DestructuringComputedPropName1 XPECT allIslandElems -->
+	// DestructuringComputedPropName1 XPECT allCatchBlocks -->
+	/* DestructuringComputedPropName1 XPECT allEdges ---
+		"start" --> "a",
+		"a" --> 0,
+		0 --> { ["a"]: 0 },
+		{ ["a"]: 0 } --> ({ ["a"]: 0 }),
+		({ ["a"]: 0 }) --> "end"
+	--- */
+	/* DestructuringComputedPropName1 XPECT allPaths ---
+		"start" -> "a" -> 0 -> { ["a"]: 0 } -> ({ ["a"]: 0 }) -> "end"
+	--- */
+	/* DestructuringComputedPropName1 XPECT allPaths direction 'Backward' ---
+		"end" -> ({ ["a"]: 0 }) -> { ["a"]: 0 } -> 0 -> "a" -> "start"
+	--- */
+	// DestructuringComputedPropName1 XPECT succs at '"start"' --> "a"
+	// DestructuringComputedPropName1 XPECT succs at '"a"' --> 0
+	// DestructuringComputedPropName1 XPECT succs at '0' --> { ["a"]: 0 }
+	// DestructuringComputedPropName1 XPECT succs at '{ ["a"]: 0 }' --> ({ ["a"]: 0 })
+	// DestructuringComputedPropName1 XPECT succs at '({ ["a"]: 0 })' --> "end"
+	"start";
+	({ ["a"]: 0 });
+	"end";
+}
+

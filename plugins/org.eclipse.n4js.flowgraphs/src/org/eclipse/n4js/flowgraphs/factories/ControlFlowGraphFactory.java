@@ -32,9 +32,10 @@ import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
 
 /**
- * Factory to build control flow graphs.
+ * Factory to build the internal control flow graphs.
  */
 public class ControlFlowGraphFactory {
+	/** Prints out the {@link ControlFlowEdge}s of the internal graph */
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */

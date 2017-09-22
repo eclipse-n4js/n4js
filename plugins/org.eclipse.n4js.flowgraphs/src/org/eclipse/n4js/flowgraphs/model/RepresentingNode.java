@@ -13,8 +13,10 @@ package org.eclipse.n4js.flowgraphs.model;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * The {@link DelegatingNode} does provide a {@link ControlFlowElement} delegate. Also, it does represents a CFE and
- * thus returns its {@link ControlFlowElement} when asked for it in {@link #getRepresentedControlFlowElement()}.
+ * The {@link RepresentingNode} of a {@link ComplexNode} marks the actual location of a {@link ControlFlowElement}
+ * within its {@link ComplexNode}. The {@link RepresentingNode} does provide a {@link ControlFlowElement} delegate.
+ * Also, it does represents a CFE and thus returns its {@link ControlFlowElement} when asked for it in
+ * {@link #getRepresentedControlFlowElement()}.
  */
 public class RepresentingNode extends DelegatingNode {
 
