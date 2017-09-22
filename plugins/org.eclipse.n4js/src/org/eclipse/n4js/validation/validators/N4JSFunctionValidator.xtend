@@ -17,8 +17,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
-import org.eclipse.n4js.n4JS.BreakStatement
-import org.eclipse.n4js.n4JS.ContinueStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
@@ -34,7 +32,6 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
-import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -74,6 +71,8 @@ import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import com.google.common.base.Strings
 
 /**
  */
@@ -97,6 +96,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private N4JSElementKeywordProvider keywordProvider;
 
 	/**
 	 * NEEEDED
@@ -142,13 +143,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val reachablePred = deadCodeRegion.getReachablePredecessor();
 		if (reachablePred === null)
 			return null;
-		switch reachablePred {
-			ThrowStatement:		return 'throw'
-			ReturnStatement:	return 'return'
-			BreakStatement:		return 'break'
-			ContinueStatement:	return 'continue'
+		
+		val String keyword = keywordProvider.keyword(reachablePred);
+		if (Strings.isNullOrEmpty(keyword)) {
+			return reachablePred.eClass.name;
 		}
-		return reachablePred.eClass.name;
+		return keyword;
 	}
 
 	/*

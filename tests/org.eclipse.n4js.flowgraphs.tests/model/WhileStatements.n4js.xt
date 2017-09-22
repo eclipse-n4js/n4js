@@ -99,7 +99,7 @@ function DoStatementBreak1() {
 		break;
 		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "2;"
 		2;
-		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after ExpressionStatement." at "3"
+		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after expression statement." at "3"
 	} while (3);
 	"end";
 }

@@ -121,7 +121,7 @@ function DoStatementContinue4() {
 function ForStatementBreak1() {
 	// ForStatement1 XPECT succs at 'break;' --> "end"
 	"start";
-	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after ExpressionStatement." at "3"
+	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after expression statement." at "3"
 	for (1;2;3) break;
 	"end";
 }
