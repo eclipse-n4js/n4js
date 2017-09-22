@@ -114,7 +114,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 	public boolean isDeadCode(ControlFlowElement cfe) {
 		cfe = CFEMapper.map(cfe);
 
-		if (FGUtils.isControlElement(cfe)) {
+		if (FGUtils.isControlStatement(cfe)) {
 			Set<ControlFlowElement> succs = flowAnalyzer.getSuccessors(cfe);
 			for (ControlFlowElement succ : succs) {
 				if (!isDeadCode(succ)) {
@@ -200,7 +200,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 
 		EObject blockContainer = block.eContainer();
 		boolean isDeadContainer = blockContainer instanceof ControlFlowElement;
-		isDeadContainer &= isDeadContainer && FGUtils.isControlElement((ControlFlowElement) blockContainer);
+		isDeadContainer &= isDeadContainer && FGUtils.isControlStatement((ControlFlowElement) blockContainer);
 		isDeadContainer &= isDeadContainer && isDeadCode((ControlFlowElement) blockContainer);
 
 		if (isDeadContainer) {

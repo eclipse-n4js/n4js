@@ -80,7 +80,7 @@ public class CatchNodeFinder {
 		if (cfe instanceof Block) {
 			cfe = getContainer(cfe);
 		}
-		while (FGUtils.isControlElement(cfe) && !(cfe instanceof Block)) {
+		while (FGUtils.isControlStatement(cfe) && !(cfe instanceof Block)) {
 			cfe = getContainer(cfe);
 		}
 		return cfe;
@@ -279,9 +279,7 @@ public class CatchNodeFinder {
 
 		@Override
 		public boolean isCatchingType(ControlFlowElement cfe) {
-			boolean isCatchingThrowStatement = false;
-
-			isCatchingThrowStatement |= FGUtils.isCFContainer(cfe);
+			boolean isCatchingThrowStatement = FGUtils.isCFContainer(cfe);
 
 			if (!isCatchingThrowStatement) {
 				EObject container = cfe.eContainer();

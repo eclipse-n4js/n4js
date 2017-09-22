@@ -75,7 +75,7 @@ public class SuccessorPredecessorAnalysis {
 	 */
 	private Node getNextNode(ControlFlowElement cfe, boolean skipInternal, NextEdgesProvider nextEdgesProvider) {
 		ComplexNode cn = cfg.getComplexNode(cfe);
-		if (skipInternal && FGUtils.isControlElement(cfe)) {
+		if (skipInternal && FGUtils.isControlStatement(cfe)) {
 			return nextEdgesProvider.getEndNode(cn);
 		} else {
 			if (cn.hasRepresentingNode()) {

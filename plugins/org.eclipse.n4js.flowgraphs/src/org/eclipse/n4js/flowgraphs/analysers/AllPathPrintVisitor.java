@@ -123,7 +123,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected AllPathPrintWalker firstPath() {
+		protected AllPathPrintWalker firstPathWalker() {
 			return new AllPathPrintWalker("");
 		}
 

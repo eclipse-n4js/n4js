@@ -153,7 +153,7 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeScriptAndCreateFlowGraph(Script script) {
-		this.flowAnalyzer.createGraphs(script);
+		this.flowAnalyzer.createGraphs(script); // GH-120: comment-out this line to disable CFG
 	}
 
 	/**

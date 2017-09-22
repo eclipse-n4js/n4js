@@ -183,20 +183,12 @@ abstract class NextEdgesProvider {
 	}
 
 	private int getOccurences(ControlFlowEdge edge) {
-		if (!repeatEdges.containsKey(edge)) {
-			return 0;
-		} else {
-			Integer count = repeatEdges.get(edge);
-			return count;
-		}
+		Integer count = repeatEdges.getOrDefault(edge, 0);
+		return count;
 	}
 
 	private void incrOccurence(ControlFlowEdge edge) {
-		if (!repeatEdges.containsKey(edge)) {
-			repeatEdges.put(edge, 0);
-		}
-		Integer count = repeatEdges.get(edge);
-		count++;
+		int count = getOccurences(edge) + 1;
 		repeatEdges.put(edge, count);
 	}
 }

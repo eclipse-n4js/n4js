@@ -201,7 +201,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 		}
 
 		@Override
-		abstract protected PathWalker firstPath();
+		abstract protected PathWalker firstPathWalker();
 
 		/** see {@link GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal} */
 		abstract public class PathWalker extends PathWalkerInternal {

@@ -68,7 +68,7 @@ public class NeverUsedVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected NeverUsedWalker firstPath() {
+		protected NeverUsedWalker firstPathWalker() {
 			return new NeverUsedWalker();
 		}
 

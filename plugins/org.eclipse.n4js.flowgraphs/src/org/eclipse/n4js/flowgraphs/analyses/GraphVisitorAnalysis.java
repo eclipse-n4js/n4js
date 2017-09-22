@@ -56,7 +56,7 @@ public class GraphVisitorAnalysis {
 		while (!allNodes.isEmpty()) {
 			Node unvisitedNode = allNodes.iterator().next();
 			ComplexNode cnUnvisited = cfg.getComplexNode(unvisitedNode.getControlFlowElement());
-			if (cnUnvisited.isControlElement()) {
+			if (cnUnvisited.isControlStatement()) {
 				allNodes.remove(unvisitedNode);
 			} else {
 
@@ -83,7 +83,7 @@ public class GraphVisitorAnalysis {
 	private Set<Node> getAllNonControlNodes() {
 		Set<Node> allNodes = new HashSet<>();
 		for (ComplexNode cn : cfg.getAllComplexNodes()) {
-			if (!cn.isControlElement()) { // make sure that no control element is part of the CFG
+			if (!cn.isControlStatement()) { // make sure that no control element is part of the CFG
 				allNodes.addAll(cn.getNodes());
 			}
 		}

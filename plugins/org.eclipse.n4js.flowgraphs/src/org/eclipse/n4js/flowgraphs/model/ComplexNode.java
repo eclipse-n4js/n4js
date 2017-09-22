@@ -176,11 +176,11 @@ public class ComplexNode implements ControlFlowable {
 
 	/**
 	 * Returns true iff the represented {@link ControlFlowElement} is a control element. See
-	 * {@link FGUtils#isControlElement(ControlFlowElement)}
+	 * {@link FGUtils#isControlStatement(ControlFlowElement)}
 	 */
-	public boolean isControlElement() {
+	public boolean isControlStatement() {
 		ControlFlowElement cfe = getControlFlowElement();
-		return FGUtils.isControlElement(cfe);
+		return FGUtils.isControlStatement(cfe);
 	}
 
 	/** @return all {@link DependencyEdge}s that start or end at one of the nodes of this {@link ComplexNode}. */

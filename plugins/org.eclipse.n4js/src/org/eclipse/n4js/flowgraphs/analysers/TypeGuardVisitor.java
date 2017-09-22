@@ -76,7 +76,7 @@ public class TypeGuardVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected TypeGuardWalker firstPath() {
+		protected TypeGuardWalker firstPathWalker() {
 			return new TypeGuardWalker();
 		}
 

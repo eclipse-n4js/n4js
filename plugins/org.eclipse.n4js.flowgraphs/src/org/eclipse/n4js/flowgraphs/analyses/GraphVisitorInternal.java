@@ -214,7 +214,7 @@ abstract public class GraphVisitorInternal {
 	final List<PathWalkerInternal> activate() {
 		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
 		for (PathExplorerInternal app : activationRequests) {
-			PathWalkerInternal activePath = app.firstPath();
+			PathWalkerInternal activePath = app.firstPathWalker();
 			app.activePaths.add(activePath);
 			app.allPaths.add(activePath);
 			activePath.init();
@@ -290,7 +290,7 @@ abstract public class GraphVisitorInternal {
 	/**
 	 * An {@link PathExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific
 	 * preconditions. It follows all paths beginning from the location of activation. Its initial path is forked using
-	 * the method {@link #firstPath()}. Subsequent paths are forked from the initial paths. The
+	 * the method {@link #firstPathWalker()}. Subsequent paths are forked from the initial paths. The
 	 * {@link PathExplorerInternal} is deactivated in case it has no active paths anymore. The final state of a
 	 * {@link PathExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
 	 * <p/>
@@ -299,7 +299,7 @@ abstract public class GraphVisitorInternal {
 	 * <li/>Instantiation
 	 * <li/>Request for activation
 	 * <li/>Activation
-	 * <li/>Call to {@link PathExplorerInternal#firstPath()}
+	 * <li/>Call to {@link PathExplorerInternal#firstPathWalker()}
 	 * <li/>De-Activation when all its {@link PathWalkerInternal}s are inactive
 	 * <li/>Evaluation by user by calling e.g. {@link PathExplorerInternal#isPassed()}
 	 * </ol>
@@ -343,7 +343,7 @@ abstract public class GraphVisitorInternal {
 		/////////////////////// Abstract Methods ///////////////////////
 
 		/** Spawns the first path. Called right after this {@link PathExplorerInternal} gets activated. */
-		abstract protected PathWalkerInternal firstPath();
+		abstract protected PathWalkerInternal firstPathWalker();
 
 		/////////////////////// Service Methods for inherited classes ///////////////////////
 

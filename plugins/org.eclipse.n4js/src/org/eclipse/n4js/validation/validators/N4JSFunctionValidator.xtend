@@ -118,12 +118,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val N4JSFlowAnalyzer flowAnalyzer = cache.getFlowAnalyses();
 		val dcf = new DeadCodeVisitor();
 
-		flowAnalyzer.accept(dcf);
+		flowAnalyzer.accept(dcf); // GH-120: comment-out this line to disable CFG
 
 		internalCheckDeadCode(dcf);
 	}
 
-	// Constraints 107
+	// Req.107
 	private def String internalCheckDeadCode(DeadCodeVisitor dcf) {
 		val deadCodeRegions = dcf.getDeadCodeRegions();
 

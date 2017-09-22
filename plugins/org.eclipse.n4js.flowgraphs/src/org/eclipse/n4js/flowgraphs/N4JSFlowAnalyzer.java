@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
 public class N4JSFlowAnalyzer {
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
-	private GraphVisitorAnalysis gwa;
+	private GraphVisitorAnalysis gva;
 	private SuccessorPredecessorAnalysis spa;
 
 	/**
@@ -48,7 +48,7 @@ public class N4JSFlowAnalyzer {
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
-		gwa = new GraphVisitorAnalysis(cfg);
+		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
 		// sw.stop();
 	}
@@ -138,7 +138,7 @@ public class N4JSFlowAnalyzer {
 	public void accept(GraphVisitor... graphWalkers) {
 		List<GraphVisitor> graphWalkerList = Lists.newArrayList(graphWalkers);
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
-		gwa.analyseScript(this, graphWalkerList);
+		gva.analyseScript(this, graphWalkerList);
 		// sw.stop();
 	}
 

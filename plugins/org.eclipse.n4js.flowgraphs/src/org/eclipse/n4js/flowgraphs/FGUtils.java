@@ -148,18 +148,18 @@ public class FGUtils {
 	 * <li>WithStatement</li>
 	 * </ul>
 	 */
-	public static boolean isControlElement(ControlFlowElement cfe) {
-		boolean isControlElement = false;
-		isControlElement |= cfe instanceof AbstractCaseClause;
-		isControlElement |= cfe instanceof Block;
-		isControlElement |= cfe instanceof DoStatement;
-		isControlElement |= cfe instanceof ForStatement;
-		isControlElement |= cfe instanceof IfStatement;
-		isControlElement |= cfe instanceof SwitchStatement;
-		isControlElement |= cfe instanceof TryStatement;
-		isControlElement |= cfe instanceof WhileStatement;
-		isControlElement |= cfe instanceof WithStatement;
-		return isControlElement;
+	public static boolean isControlStatement(ControlFlowElement cfe) {
+		boolean isControlStatement = false;
+		isControlStatement |= cfe instanceof AbstractCaseClause;
+		isControlStatement |= cfe instanceof Block;
+		isControlStatement |= cfe instanceof DoStatement;
+		isControlStatement |= cfe instanceof ForStatement;
+		isControlStatement |= cfe instanceof IfStatement;
+		isControlStatement |= cfe instanceof SwitchStatement;
+		isControlStatement |= cfe instanceof TryStatement;
+		isControlStatement |= cfe instanceof WhileStatement;
+		isControlStatement |= cfe instanceof WithStatement;
+		return isControlStatement;
 	}
 
 	/**
