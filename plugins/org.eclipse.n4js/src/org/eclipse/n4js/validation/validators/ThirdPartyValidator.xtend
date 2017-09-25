@@ -25,7 +25,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 /**
  * Validations that implement warnings unrelated to the N4JS language. They hint towards limitations and problems in
- * other tools that are commonly used together with N4JS (e.g. Babel).
+ * third-party tools that are commonly used together with N4JS (e.g. Babel).
  */
 class ThirdPartyValidator extends AbstractN4JSDeclarativeValidator {
 
@@ -39,6 +39,12 @@ class ThirdPartyValidator extends AbstractN4JSDeclarativeValidator {
 		// nop
 	}
 
+	/**
+	 * Adds warning for <a href="https://github.com/babel/babel/issues/6302">Babel issue #6302</a>.
+	 * <p>
+	 * This can be removed once the corresponding test file compiles without errors in Babel:<br>
+	 * {@code /org.eclipse.n4js.spec.tests/xpect-tests/Others/ThirdParty_Babel_LetConstInFunctionExpression.n4js.xt}.
+	 */
 	@Check
 	def void checkLetConstInFunctionExpression(FunctionExpression funExpr) {
 		if (isRHSOfAssignment(funExpr)) {
