@@ -1,0 +1,14 @@
+{
+  "name": "n4js-runtime-ecma402",
+  "author": "NumberFour AG <npm@numberfour.eu>",
+  "license": "EPL-1.0",
+  "repository": "https://github.com/eclipse/n4js",
+  "description": "N4JS Runtime Library for ECMA402.",
+  "keywords": [
+    "n4js",
+    "ECMA402"
+  ],
+  "engines": {
+    "node": ">= 8.0.0"
+  }
+}

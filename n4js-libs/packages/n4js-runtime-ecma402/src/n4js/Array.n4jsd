@@ -10,8 +10,16 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public class ~Collator {
-    public constructor(locales: union{string, Array<string>}=, options: Object=);
+@Polyfill export external public class Array<T> extends Array<T> {
+    /**
+	 * The parameters are spcedified in ECMA-402 superseding the default definition.
+	 *
+	 * @param locales: IETF BCP 47 language tag(s)
+	 * @param options: object literal with formatting options
+	 * @see https://www.ecma-international.org/ecma-402/4.0/
+	 */
+	@Override
+	public toLocaleString(locales: string | [string]=, options: any+ =): string
 }
 
 /* -*- mode: typescript;-*- */
