@@ -10,10 +10,7 @@
  */
 package org.eclipse.n4js.validation.validators
 
-import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FunctionExpression
-import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4JS.VariableStatementKeyword
 import org.eclipse.n4js.ts.types.TypesPackage
@@ -47,32 +44,22 @@ class ThirdPartyValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def void checkLetConstInFunctionExpression(FunctionExpression funExpr) {
-		if (isRHSOfAssignment(funExpr)) {
-			val funName = funExpr.name;
-			if (funName !== null) {
-				for (stmnt : funExpr.body.statements) { // only interested in top-level statements of the body
-					if (stmnt instanceof VariableStatement) {
-						if (stmnt.varStmtKeyword === VariableStatementKeyword.LET // only interested in let/const
-							|| stmnt.varStmtKeyword === VariableStatementKeyword.CONST) {
-							for (varDecl : stmnt.varDecl) {
-								if (varDecl.name == funName) {
-									addIssue(messageForTHIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR,
-										varDecl, TypesPackage.eINSTANCE.identifiableElement_Name,
-										THIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR);
-								}
+		val funName = funExpr.name;
+		if (funName !== null) {
+			for (stmnt : funExpr.body.statements) { // only interested in top-level statements of the body
+				if (stmnt instanceof VariableStatement) {
+					if (stmnt.varStmtKeyword === VariableStatementKeyword.LET // only interested in let/const
+						|| stmnt.varStmtKeyword === VariableStatementKeyword.CONST) {
+						for (varDecl : stmnt.varDecl) {
+							if (varDecl.name == funName) {
+								addIssue(messageForTHIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR,
+									varDecl, TypesPackage.eINSTANCE.identifiableElement_Name,
+									THIRD_PARTY_BABEL_LET_CONST_IN_FUN_EXPR);
 							}
 						}
 					}
 				}
 			}
 		}
-	}
-
-	def private boolean isRHSOfAssignment(Expression expr) {
-		val parent = expr.eContainer;
-		return parent !== null && (
-			(parent instanceof AssignmentExpression && (parent as AssignmentExpression).rhs === expr) ||
-			(parent instanceof VariableDeclaration && (parent as VariableDeclaration).expression === expr)
-		);
 	}
 }

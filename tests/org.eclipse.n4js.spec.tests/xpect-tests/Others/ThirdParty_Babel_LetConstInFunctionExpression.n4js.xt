@@ -34,7 +34,18 @@ var test12;
 test12 = function fn() {
 	// XPECT warnings --> "This code is prone to Babel bug #6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression." at "fn"
 	let fn = 42;
-}
+};
+
+
+(function fn() {
+	// XPECT warnings --> "This code is prone to Babel bug #6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression." at "fn"
+	const fn = 42;
+});
+
+(function fn() {
+	// XPECT warnings --> "This code is prone to Babel bug #6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression." at "fn"
+	let fn = 42;
+});
 
 
 var test21 = function fnX() {
