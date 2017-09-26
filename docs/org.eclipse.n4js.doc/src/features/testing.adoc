@@ -29,7 +29,7 @@ provides an engine that executes the tests and reports back to the IDE while run
 The IDE is responsible for indicating the actual test results received from Mangelhaft to the user. For
 creating a simple test suite, one requires an N4JS project with a test type source container, a test class
 in the test type source container and at least one method declared in the test class with the `@Test`
-annotation. This is described in more detail in the <<../documentation/tutorial.html#tutorial,tutorial>>.
+annotation. This is described in more detail in the <<../userguides/tutorial#tutorial,tutorial>>.
 Besides the test execution and reporting engine support, Mangelhaft provides various utility classes
 that could come handy when test assertions or preconditions have to be used in the test suites or when negative tests are required.
 
