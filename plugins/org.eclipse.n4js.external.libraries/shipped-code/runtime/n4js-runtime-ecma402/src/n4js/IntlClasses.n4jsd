@@ -8,13 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
- 
+
 /**
  * Options used do define collator format.
  * 
  * @see https://www.ecma-international.org/ecma-402/4.0/index.html#sec-initializecollator
  */ 
-export interface ~CollatorOptions {
+export public interface ~CollatorOptions {
 	/**
 	 * IETF BCP 47 language tag
 	 */
@@ -49,7 +49,8 @@ export interface ~CollatorOptions {
 	public collation?: string;
 }
 
-export external public class Collator {
+@CovariantConstructor
+export public interface ~Collator {
 	/** 
 	 * Creates a collator for given locale(s) and with given options.
 	 *
@@ -58,15 +59,15 @@ export external public class Collator {
 	 */
 	public constructor(locales: string | [string]=, options: ~r~CollatorOptions=)
 
-	/**
-	 * Returns list of supported locales. Locales not included in that list are
-	 * supported by default behavior.
-	 *
-	 * @param locales: IETF BCP 47 language tag(s)
-	 * @param options: locale matcher algorithm: 'lookup', 'best fit' (default)
-	 */
-	public static supportedLocalesOf(locales: string | [string]=, options: ~Object with {localeMatcher: string}=)
-	
+//	/**
+//	 * Returns list of supported locales. Locales not included in that list are
+//	 * supported by default behavior.
+//	 *
+//	 * @param locales: IETF BCP 47 language tag(s)
+//	 * @param options: locale matcher algorithm: 'lookup', 'best fit' (default)
+//	 */
+//	public static supportedLocalesOf(locales: string | [string]=, options: ~Object with {localeMatcher: string}=)
+
 	/**
 	 * Returns a function comparing two string based on collator options 
 	 * defined at construction.
@@ -74,7 +75,7 @@ export external public class Collator {
 	 * The returned value is less 0 if s1<s2, 0 if s1==0 and greater 0 if s1>s2.    
 	 */
 	public get compare(): (s1: string, s2: string)=>number
-	
+
 	/** 
 	 * Returns a fully initialized object literal with the options of this collator. 
 	 */
@@ -86,7 +87,7 @@ export external public class Collator {
  * 
  * @see https://www.ecma-international.org/ecma-402/4.0/index.html#sec-initializenumberformat
  */
-export interface ~NumberFormatOptions {
+export public interface ~NumberFormatOptions {
 	/**
 	 * IETF BCP 47 language tag
 	 */
@@ -137,7 +138,8 @@ export interface ~NumberFormatOptions {
 	public currencyDisplay?: string
 }
 
-export external public class NumberFormat {
+@CovariantConstructor
+export public interface ~NumberFormat {
 	/**
 	 * Creates a number format for given locale(s) and with given options.
 	 *
@@ -145,7 +147,7 @@ export external public class NumberFormat {
 	 * @param options: object literal with formatting options
 	 */
 	public constructor(locales: string | [string]=, options: ~r~NumberFormatOptions=)
-	public static supportedLocalesOf(locales: string | [string]=, options: ~r~NumberFormatOptions=)
+//	public static supportedLocalesOf(locales: string | [string]=, options: ~r~NumberFormatOptions=)
 	/**
 	 * Returns a function formatting a number to a string with the formatting options specified at construction.
 	 */
@@ -161,7 +163,7 @@ export external public class NumberFormat {
  * 
  * @see https://www.ecma-international.org/ecma-402/4.0/index.html#sec-initializedatetimeformat
  */
-export interface ~DateTimeFormatOptions {
+export public interface ~DateTimeFormatOptions {
 	/**
 	 * IETF BCP 47 language tag
 	 */
@@ -189,23 +191,50 @@ export interface ~DateTimeFormatOptions {
 	 */
 	public timeZone?: string;
 	/**
-	 * 'basic', 'best fit', defailt: 'best fit' 
+	 * 'basic', 'best fit', default: 'best fit' 
 	 */
 	public formatMatcher?: string;
-	/** 
-	 * 'numeric'
+
+	/**
+	 * 'narrow', 'short', 'long'; default: undefined
+	 */
+	public weekday?: string;
+	/**
+	 * 'narrow', 'short', 'long'; default: undefined
+	 */
+	public era?: string;
+	/**
+	 * 'numeric', '2-digit'; default: 'numeric'
 	 */
 	public year?: string;
-	/** 
-	 * 'numeric'
+	/**
+	 * 'numeric', '2-digit', 'narrow', 'short', 'long'; default: 'numeric'
 	 */
 	public month?: string;
-	/** 
-	 * 'numeric'
-	 */
-	public day?: string ;
 	/**
-	 * default: undefined 
+	 * 'numeric', '2-digit'; default: 'numeric'
+	 */
+	public day?: string;
+	/**
+	 * 'numeric', '2-digit'; default: undefined
+	 */
+	public hour?: string;
+	/**
+	 * 'numeric', '2-digit'; default: undefined
+	 */
+	public minute?: string;
+	/**
+	 * 'numeric', '2-digit'; default: undefined
+	 */
+	public second?: string;
+
+	/**
+	 * 'short', 'long'; default: undefined
+	 */
+	public timeZoneName?: string;
+
+	/**
+	 * default: undefined (i.e. default is locale dependent)
 	 */
 	public hour12?: boolean;
 }
@@ -215,7 +244,8 @@ export interface ~DateTimeFormatOptions {
  *
  * @see https://www.ecma-international.org/ecma-402/4.0/index.html#datetimeformat-objects
  */
-export external public class DateTimeFormat {
+@CovariantConstructor
+export public interface ~DateTimeFormat {
 	/**
 	 * Creates a date time format for given locale(s) and with given options.
 	 *
@@ -223,11 +253,11 @@ export external public class DateTimeFormat {
 	 * @param options: object literal with formatting options
 	 */
 	public constructor(locales: string | [string]=, options: ~r~DateTimeFormatOptions=)
-	/**
-	 * @param locales: IETF BCP 47 language tag
-	 * @param options: object literal with formatting options
-	 */
-	public static supportedLocalesOf(locales: string | [string]=, options: ~r~DateTimeFormatOptions=)
+//	/**
+//	 * @param locales: IETF BCP 47 language tag
+//	 * @param options: object literal with formatting options
+//	 */
+//	public static supportedLocalesOf(locales: string | [string]=, options: ~r~DateTimeFormatOptions=)
 	/**
 	 * Formats given date (or today if omitted) according to formatting options.
 	 */
@@ -241,4 +271,3 @@ export external public class DateTimeFormat {
 	 */
 	public resolvedOptions(): DateTimeFormatOptions
 }
-
