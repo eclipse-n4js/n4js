@@ -49,6 +49,7 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -90,6 +91,21 @@ import com.google.inject.Inject;
  * contents class {@link ModuleAwareContentsList}.
  */
 public class N4JSResource extends PostProcessingAwareResource implements ProxyResolvingResource {
+
+	private ASTMetaInfoCache metaInfoCache;
+
+	/**
+	 * Retrieve the ASTMetaInfo cache of this resource. If not exist, a new cache is created.
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCache() {
+		if (metaInfoCache == null) {
+			final boolean hasBrokenAST = !getErrors().isEmpty();
+			metaInfoCache = new ASTMetaInfoCache(this, hasBrokenAST);
+		}
+		final boolean hasBrokenAST = !getErrors().isEmpty();
+		metaInfoCache.setHasBrokenAST(hasBrokenAST);
+		return metaInfoCache;
+	}
 
 	/**
 	 * Special contents list which allows for the first slot to be a proxy in case the resource has been created by

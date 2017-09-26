@@ -126,9 +126,6 @@ public class ASTProcessor extends AbstractProcessor {
 			if (G.canceled) {
 				log(0, "CANCELED by cancelIndicator");
 			}
-
-			// note: doesn't matter if processing succeeded, failed or was canceled
-			// (even if it failed or was canceled, we do not want to try again)
 			cache.endProcessing();
 
 			if (isDEBUG_LOG_RESULT) {

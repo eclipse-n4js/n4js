@@ -61,14 +61,17 @@ public final class ASTMetaInfoCache {
 	// (add new properties here; getters should be public, setters should have package visibility)
 
 	private final N4JSResource resource;
-	private final boolean hasBrokenAST;
+	private boolean hasBrokenAST;
 	private final Map<TypableElement, Result<TypeRef>> actualTypes = new HashMap<>();
 	private final Map<ParameterizedCallExpression, List<TypeRef>> inferredTypeArgs = new HashMap<>();
 	private final Map<Expression, CompileTimeValue> compileTimeValue = new HashMap<>();
 
 	private final Map<VariableDeclaration, List<EObject>> localVariableReferences = new HashMap<>();
 
-	/* package */ ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST) {
+	/**
+	 * Constructor
+	 */
+	public ASTMetaInfoCache(N4JSResource resource, boolean hasBrokenAST) {
 		this.resource = resource;
 		this.hasBrokenAST = hasBrokenAST;
 	}
@@ -102,10 +105,12 @@ public final class ASTMetaInfoCache {
 	 * Returns the actual type of the given astNode as stored in the cache. Throws exception if not available.
 	 */
 	public Result<TypeRef> getType(TypableElement astNode) {
+
 		final Result<TypeRef> result = getTypeFailSafe(astNode);
 		if (result == null) {
 			throw UtilN4.reportError(new IllegalStateException("cache miss: no actual type in cache for AST node: "
-					+ astNode + " in resource: " + resource.getURI()));
+					+ astNode + " in resource: " + resource.getURI() + " Resource's fullPostProccessed flag is "
+					+ resource.isFullyProcessed()));
 		}
 		return result;
 	}
@@ -208,7 +213,6 @@ public final class ASTMetaInfoCache {
 	// helper variables used *only* by post-processors in package org.eclipse.n4js.postprocessing
 
 	private boolean isProcessingInProgress = false;
-	private boolean isFullyProcessed = false;
 
 	// @formatter:off
 
@@ -223,23 +227,30 @@ public final class ASTMetaInfoCache {
 		return isProcessingInProgress;
 	}
 
-	/* package */ boolean isFullyProcessed() {
-		return isFullyProcessed;
-	}
-
 	/* package */ boolean isEmpty() {
 		// only used for debugging to spot a suspicious cache clear (see ASTMetaInfoCacheHelper)
 		return actualTypes.isEmpty() && inferredTypeArgs.isEmpty();
 	}
 
 	/* package */ void startProcessing() {
-		if (isProcessingInProgress || isFullyProcessed) {
+		if (isProcessingInProgress && resource.isFullyProcessed()) {
 			// this method should never be called more than once per N4JSResource
 			logger.error("*#*#*#*#* multiple invocation of method ASTMetaInfoCache#startProcessing()\n"
 					+ dumpDebugInfo(true, true));
 			throw UtilN4.reportError(new IllegalStateException(
 					"multiple invocation of method ASTMetaInfoCache#startProcessing()"));
 		}
+		// Reset the cache
+		forwardProcessedSubTrees.clear();
+		astNodesCurrentlyBeingTyped.clear();
+		postponedSubTrees.clear();
+		potentialContainersOfLocalArgumentsVariable.clear();
+
+		hasBrokenAST = !resource.getErrors().isEmpty();
+		actualTypes.clear();
+		inferredTypeArgs.clear();
+		compileTimeValue.clear();
+		localVariableReferences.clear();
 		isProcessingInProgress = true;
 	}
 
@@ -247,7 +258,6 @@ public final class ASTMetaInfoCache {
 		if (!isProcessingInProgress) {
 			throw new IllegalStateException("invalid invocation of method ASTMetaInfoCache#endProcessing()");
 		}
-		isFullyProcessed = true;
 		isProcessingInProgress = false;
 		forwardProcessedSubTrees.clear();
 		astNodesCurrentlyBeingTyped.clear();
@@ -264,7 +274,6 @@ public final class ASTMetaInfoCache {
 		final String uriStr = resource != null ? String.valueOf(resource.getURI()) : null;
 		sb.append("BEGIN ASTMetaInfoCache debug info for resource: " + uriStr + "\n");
 		sb.append("cache's isProcessingInProgress == " + isProcessingInProgress + "\n");
-		sb.append("cache's isFullyProcessed == " + isFullyProcessed + "\n");
 		sb.append("cache's hasBrokenAST == " + hasBrokenAST + "\n");
 		sb.append("cache's astNodesCurrentlyBeingTyped == " + astNodesCurrentlyBeingTyped + "\n");
 		sb.append("resource' fullyPostProcessed = " + (resource != null ? resource.isFullyProcessed()
@@ -309,5 +318,12 @@ public final class ASTMetaInfoCache {
 		}
 		sb.append("END ASTMetaInfoCache debug info for resource: " + uriStr);
 		return sb.toString();
+	}
+
+	/**
+	 * Set the hasBrokenAST flag
+	 */
+	public void setHasBrokenAST(boolean hasBrokenAST) {
+		this.hasBrokenAST = hasBrokenAST;
 	}
 }

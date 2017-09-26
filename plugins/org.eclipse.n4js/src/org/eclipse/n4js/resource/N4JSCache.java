@@ -35,6 +35,9 @@ public class N4JSCache extends OnChangeEvictingCache {
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
+	@Inject
+	private N4JSDerivedStateComputer derivedStateComputer;
+
 	@Override
 	public CacheAdapter getOrCreate(Resource resource) {
 		// copied from super method, but we expect N4JSCacheAdapter here
