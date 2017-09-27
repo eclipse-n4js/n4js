@@ -152,18 +152,18 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 * <tr>
 	 * <td>post-processing not started yet</td>
 	 * <td>post-processing completed (!!)<br>
-	 * (call to {@link #performPostProcessing()} started post-processing on 'res' and completed it before
+	 * (call to {@code #performPostProcessing()} started post-processing on 'res' and completed it before
 	 * returning)</td>
 	 * </tr>
 	 * <tr>
 	 * <td>post-processing in progress</td>
 	 * <td>post-processing in progress<br>
-	 * (call to #performPostProcessing() was ignored, i.e. had no effect)</td>
+	 * (call to {@code #performPostProcessing()} was ignored, i.e. had no effect)</td>
 	 * </tr>
 	 * <tr>
 	 * <td>post-processing completed</td>
 	 * <td>post-processing completed<br>
-	 * (call to #performPostProcessing() was ignored, i.e. had no effect)</td>
+	 * (call to {@code #performPostProcessing()} was ignored, i.e. had no effect)</td>
 	 * </tr>
 	 * </table>
 	 * <p>
