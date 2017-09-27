@@ -143,6 +143,30 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 * post-processing has already been performed <u>or is currently in progress</u>, so unnecessarily calling this
 	 * method should not do any major harm.
 	 * <p>
+	 * The precise effect of this method can be summarized as follows:
+	 * <table border="1">
+	 * <tr>
+	 * <th>State <em>before</em> this method is invoked</th>
+	 * <th>State <em>after</em> this method returns</th>
+	 * </tr>
+	 * <tr>
+	 * <td>post-processing not started yet</td>
+	 * <td>post-processing completed (!!)<br>
+	 * (call to {@code #performPostProcessing()} started post-processing on 'res' and completed it before
+	 * returning)</td>
+	 * </tr>
+	 * <tr>
+	 * <td>post-processing in progress</td>
+	 * <td>post-processing in progress<br>
+	 * (call to {@code #performPostProcessing()} was ignored, i.e. had no effect)</td>
+	 * </tr>
+	 * <tr>
+	 * <td>post-processing completed</td>
+	 * <td>post-processing completed<br>
+	 * (call to {@code #performPostProcessing()} was ignored, i.e. had no effect)</td>
+	 * </tr>
+	 * </table>
+	 * <p>
 	 * Will throw an exception if called on an {@link #isLoaded() unloaded} resource.
 	 *
 	 * @param cancelIndicator
