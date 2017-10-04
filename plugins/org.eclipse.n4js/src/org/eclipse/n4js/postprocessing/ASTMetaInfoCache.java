@@ -33,6 +33,7 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
+import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
@@ -104,6 +105,11 @@ public final class ASTMetaInfoCache {
 	public Result<TypeRef> getType(TypableElement astNode) {
 		final Result<TypeRef> result = getTypeFailSafe(astNode);
 		if (result == null) {
+			if (resource.isFullyProcessed() && resource.getPostProcessingThrowable() != null) {
+				// post processing was attempted but failed, so we expect the cache to be incompletely filled
+				// -> do not throw exception in this case, because it is a follow-up issue
+				return new Result<>(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+			}
 			throw UtilN4.reportError(new IllegalStateException("cache miss: no actual type in cache for AST node: "
 					+ astNode + " in resource: " + resource.getURI()));
 		}
@@ -116,7 +122,8 @@ public final class ASTMetaInfoCache {
 
 	/* package */ void storeType(TypableElement astNode, Result<TypeRef> actualType) {
 		if (!isProcessingInProgress()) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(
+					"attempt to store type in cache while post-processing not in progress");
 		}
 		if (actualType == null) {
 			throw new IllegalArgumentException("actualType may not be null");
@@ -142,7 +149,8 @@ public final class ASTMetaInfoCache {
 
 	/* package */ void storeInferredTypeArgs(ParameterizedCallExpression callExpr, List<TypeRef> typeArgs) {
 		if (!isProcessingInProgress()) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(
+					"attempt to store inferred type arguments in cache while post-processing not in progress");
 		}
 		if (callExpr.eResource() != resource) {
 			throw new IllegalArgumentException("astNode must be from this resource");
@@ -165,7 +173,8 @@ public final class ASTMetaInfoCache {
 
 	/* package */ void storeCompileTimeValue(Expression expr, CompileTimeValue evalResult) {
 		if (!isProcessingInProgress()) {
-			throw new IllegalStateException();
+			throw new IllegalStateException(
+					"attempt to store compile-time value in cache while post-processing not in progress");
 		}
 		if (expr.eResource() != resource) {
 			throw new IllegalArgumentException("astNode must be from this resource");
