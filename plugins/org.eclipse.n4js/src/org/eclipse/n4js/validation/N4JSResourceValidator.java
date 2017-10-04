@@ -12,11 +12,15 @@ package org.eclipse.n4js.validation;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
@@ -67,7 +71,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 				if (operationCanceledManager.isOperationCanceledException(th)) {
 					return Collections.emptyList(); // do not show errors in case of cancellation
 				}
-				final Issue issue = createPostProcessingFailedError(resource, th);
+				final Issue issue = createPostProcessingFailedError(resourceCasted, th);
 				return Collections.singletonList(issue);
 			}
 		}
@@ -97,16 +101,20 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		}
 	}
 
-	private Issue createPostProcessingFailedError(Resource res, Throwable th) {
+	private Issue createPostProcessingFailedError(N4JSResource res, Throwable th) {
+		final Severity severity = IssueCodes.getDefaultSeverity(IssueCodes.POST_PROCESSING_FAILED);
 		final String thKind = th instanceof Error ? "error" : (th instanceof Exception ? "exception" : "throwable");
 		final String thName = th.getClass().getSimpleName();
-		final String msg = IssueCodes.getMessageForPOST_PROCESSING_FAILED(thKind, thName, th.getMessage());
+		final String trace = "\n" + Stream.of(th.getStackTrace())
+				.map(ste -> ste.toString())
+				.collect(Collectors.joining("\n")); // cannot add indentation, because Xtext would reformat the message
+		final String msg = IssueCodes.getMessageForPOST_PROCESSING_FAILED(thKind, thName, th.getMessage() + trace);
 		final Issue.IssueImpl issue = new Issue.IssueImpl();
 		issue.setCode(IssueCodes.POST_PROCESSING_FAILED);
-		issue.setSeverity(IssueCodes.getDefaultSeverity(IssueCodes.POST_PROCESSING_FAILED));
+		issue.setSeverity(severity);
 		issue.setMessage(msg);
-		issue.setUriToProblem(res.getURI());
-		issue.setType(CheckType.NORMAL);
+		issue.setUriToProblem(EcoreUtil.getURI(res.getScript()));
+		issue.setType(CheckType.FAST);
 		issue.setOffset(0);
 		issue.setLength(0);
 		issue.setLineNumber(0);
