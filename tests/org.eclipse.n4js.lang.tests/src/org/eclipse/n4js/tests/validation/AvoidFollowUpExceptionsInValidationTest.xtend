@@ -64,15 +64,12 @@ class AvoidFollowUpExceptionsInValidationTest extends AbstractN4JSTest {
 		val issues = validator.validate(res, CheckMode.ALL, CancelIndicator.NullImpl); // <-- ASSERTION #1: this should not throw follow-up exceptions
 
 		// ASSERTION #2: the exception thrown during post-processing should show up as a single error
-		val issuesStr = issues.map[toString.firstLineOnly].join("\n");
-		assertEquals("unexpected issues",
-			"ERROR:exception FailedPostProcessingException thrown during post-processing (please report this!): failure of post-processing as simulated by FailingN4JSPostProcessor",
-			issuesStr);
-	}
-
-	def private static String firstLineOnly(String str) {
-		val idx = str.indexOf('\n');
-		return if(idx>=0) str.substring(0, idx) else str;
+		assertEquals("incorrect number of issues", 1, issues.size);
+		val issueStr = issues.get(0).toString;
+		assertTrue("incorrect beginning of issue string", issueStr.startsWith(
+			"ERROR:exception FailedPostProcessingException thrown during post-processing (please report this!): failure of post-processing as simulated by FailingN4JSPostProcessor\n"));
+		assertTrue("incorrect end of issue string", issueStr.endsWith(
+			" (__synthetic0.n4js line : 0 column : 0)"));
 	}
 
 

@@ -20,7 +20,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.IAcceptor;
@@ -102,7 +101,6 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 	}
 
 	private Issue createPostProcessingFailedError(N4JSResource res, Throwable th) {
-		final Severity severity = IssueCodes.getDefaultSeverity(IssueCodes.POST_PROCESSING_FAILED);
 		final String thKind = th instanceof Error ? "error" : (th instanceof Exception ? "exception" : "throwable");
 		final String thName = th.getClass().getSimpleName();
 		final String trace = "\n" + Stream.of(th.getStackTrace())
@@ -111,7 +109,7 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		final String msg = IssueCodes.getMessageForPOST_PROCESSING_FAILED(thKind, thName, th.getMessage() + trace);
 		final Issue.IssueImpl issue = new Issue.IssueImpl();
 		issue.setCode(IssueCodes.POST_PROCESSING_FAILED);
-		issue.setSeverity(severity);
+		issue.setSeverity(IssueCodes.getDefaultSeverity(IssueCodes.POST_PROCESSING_FAILED));
 		issue.setMessage(msg);
 		issue.setUriToProblem(EcoreUtil.getURI(res.getScript()));
 		issue.setType(CheckType.FAST);
