@@ -17,7 +17,7 @@ export external public interface IReadableStream extends IEventEmitter {
     public setEncoding(encoding: string): void;
     public pause(): void;
     public resume(): void;
-    public <T extends IWritableStream> pipe(destination: T, options: ~Object with{ end?: boolean; }): T;
+    public <T extends IWritableStream> pipe(destination: T, options: ~Object with{ end?: boolean; } =): T;
     public <T extends IWritableStream> unpipe(destination: T=): void;
     public unshift(chunk: union {string, Buffer}): void;
     public wrap(oldStream: IReadableStream): IReadableStream;
@@ -98,7 +98,7 @@ export external public class Transform extends EventEmitter implements IReadWrit
     @Override public setEncoding(encoding: string): void;
     @Override public pause(): void;
     @Override public resume(): void;
-    @Override public <T extends IWritableStream> pipe(destination: T, options: ~Object with { end?: boolean; } ): T;
+    @Override public <T extends IWritableStream> pipe(destination: T, options: ~Object with { end?: boolean; } =): T;
     @Override public <T extends IWritableStream> unpipe(destination: T=): void;
     @Override public unshift(chunk: any): void;
     @Override public wrap(oldStream: IReadableStream): IReadableStream;
