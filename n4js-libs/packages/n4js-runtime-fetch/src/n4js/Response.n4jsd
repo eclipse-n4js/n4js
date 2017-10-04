@@ -13,7 +13,7 @@
 import { Body } from "fetch/Body"
 import { ResponseType } from "fetch/ResponseType"
 
-export external public class ~Response implements Body {
+export external public class Response implements Body {
     public constructor(
             body: union{/*Blob, BufferedSource, FormData, URLSearchParams,*/ string}=,
             init: ~Object with {
