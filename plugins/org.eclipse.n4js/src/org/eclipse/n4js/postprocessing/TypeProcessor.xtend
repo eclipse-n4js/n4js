@@ -291,11 +291,15 @@ public class TypeProcessor extends AbstractProcessor {
 		} else if (obj.isASTNode && obj.isTypableNode) {
 			// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
 			val cache = astMetaInfoCacheHelper.getOrCreate(res);
-			if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
+			if (!res.isProcessing && !res.isFullyProcessed) {
 				// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
+				throw new IllegalStateException("post-processing neither in progress nor completed after calling #performPostProcessing() in resource: " + res.URI);
+			} else if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
+				// "res.isProcessing() || res.isFullyProcessed()" but not "cache.isProcessing || cache.isFullyProcessed"
+				// so: the post-processing flags are out of sync between the resource and cache
 				// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
 				// debug code in ASTMetaInfoCacheHelper to track creation/deletion of typing caches to investigate this)
-				val e = new IllegalStateException("typing of entire AST not initiated yet (hint: this is often caused by an accidental cache clear!!)")
+				val e = new IllegalStateException("post-processing flags out of sync between resource and cache (hint: this is often caused by an accidental cache clear!!)");
 				e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
 				throw e;
 			} else if (cache.isProcessingInProgress) {
