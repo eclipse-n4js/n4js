@@ -112,7 +112,8 @@ public class N4JSResourceValidator extends ResourceValidatorImpl {
 		issue.setSeverity(IssueCodes.getDefaultSeverity(IssueCodes.POST_PROCESSING_FAILED));
 		issue.setMessage(msg);
 		issue.setUriToProblem(EcoreUtil.getURI(res.getScript()));
-		issue.setType(CheckType.FAST);
+		issue.setType(CheckType.FAST); // using CheckType.FAST is important to get proper marker update behavior in ...
+		// ... the editor between persisted and dirty states!
 		issue.setOffset(0);
 		issue.setLength(0);
 		issue.setLineNumber(0);

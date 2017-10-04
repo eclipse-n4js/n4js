@@ -33,7 +33,7 @@ import org.junit.Test
 class AvoidFollowUpExceptionsInValidationTest extends AbstractN4JSTest {
 
 	@Test
-	def void testEditorUpdate() throws Exception {
+	def void testSimulatedEditorUpdate() throws Exception {
 		val res = '''
 			class C {
 				m() {
