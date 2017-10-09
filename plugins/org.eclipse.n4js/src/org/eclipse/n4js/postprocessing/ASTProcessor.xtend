@@ -208,8 +208,11 @@ if (node instanceof StringLiteral) {
 				}
 				println("waiting done.");
 			}
-		} catch(Throwable th) {
+		} catch(NumberFormatException e) {
 			// ignore
+		} catch(InterruptedException e) {
+			// ignore
+			e.printStackTrace;
 		}
 	}
 }
