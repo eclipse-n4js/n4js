@@ -60,6 +60,7 @@ public class N4JSPostProcessor implements PostProcessor {
 	public void performPostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator) {
 		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
 		try {
+			System.out.println("START processing " + resource.getURI().lastSegment());
 			// we assume this will not be called for other PostProcessingAwareResource than N4JSResource
 			postProcessN4JSResource((N4JSResource) resource, cancelIndicator);
 		} catch (Throwable th) {
@@ -71,6 +72,8 @@ public class N4JSPostProcessor implements PostProcessor {
 				UtilN4.reportError("exception while post-processing resource " + resource.getURI(), th);
 				throw th;
 			}
+		} finally {
+			System.out.println("END processing " + resource.getURI().lastSegment());
 		}
 	}
 

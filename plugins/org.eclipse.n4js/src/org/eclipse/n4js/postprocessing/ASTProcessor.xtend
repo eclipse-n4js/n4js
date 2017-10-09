@@ -40,6 +40,7 @@ import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4JS.PropertySetterDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
+import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
@@ -190,6 +191,28 @@ public class ASTProcessor extends AbstractProcessor {
 		log(indentLevel, "processing: " + node.objectInfo);
 
 		checkCanceled(G);
+
+if (node instanceof StringLiteral) {
+	if (node.valueAsString.startsWith("delay ")) {
+		try {
+			val delay = Long.parseLong(node.valueAsString.substring(6));
+			if (delay > 0) {
+				println("waiting " + delay + "s ...");
+				val turns = Math.min(delay,30) * 1000 / 100;
+				for(var n=0;n<turns;n++) {
+					if(G.cancelIndicator.isCanceled) {
+						println("waiting CANCELLED!");
+						checkCanceled(G);
+					}
+					Thread.sleep(100);
+				}
+				println("waiting done.");
+			}
+		} catch(Throwable th) {
+			// ignore
+		}
+	}
+}
 
 		// already done as part of a forward processing?
 		if (cache.forwardProcessedSubTrees.contains(node)) {
