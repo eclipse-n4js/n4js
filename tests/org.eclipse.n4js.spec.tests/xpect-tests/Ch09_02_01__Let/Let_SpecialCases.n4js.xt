@@ -148,7 +148,7 @@ function case5a() {
 }
 
 var case5b = function case5b() {
-	// XPECT noerrors -->
+	// X-PECT noerrors but XPECT warnings --> "This code is prone to Babel bug #6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression." at "case5b"
 	let case5b = 'b';
 }
 

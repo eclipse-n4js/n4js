@@ -71,9 +71,8 @@ public class N4JSPostProcessor implements PostProcessor {
 				// swallow exception, AST is broken due to parse error anyway
 			} else {
 				// make sure this error is being reported, even if exception will be suppressed by calling code!
-				throw UtilN4.reportError(
-						// use Error instead of RuntimeException to ensure smoke tests will fail
-						new RuntimeException("exception while post-processing resource " + resource.getURI(), th));
+				UtilN4.reportError("exception while post-processing resource " + resource.getURI(), th);
+				throw th;
 			}
 		}
 	}

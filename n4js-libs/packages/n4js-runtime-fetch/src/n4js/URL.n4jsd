@@ -10,7 +10,7 @@
  */
 @@Global @@ProvidedByRuntime
 
-export external public class ~URL {
+export external public class URL {
     public constructor(urlString: string);
 
     public href?: string;
