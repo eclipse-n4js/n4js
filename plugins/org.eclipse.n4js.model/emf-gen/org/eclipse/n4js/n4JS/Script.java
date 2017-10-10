@@ -37,7 +37,7 @@ import org.eclipse.n4js.ts.types.TModule;
  * @model
  * @generated
  */
-public interface Script extends VariableEnvironmentElement, AnnotableElement {
+public interface Script extends VariableEnvironmentElement, AnnotableElement, ControlFlowElement {
 	/**
 	 * Returns the value of the '<em><b>Annotations</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.Annotation}.

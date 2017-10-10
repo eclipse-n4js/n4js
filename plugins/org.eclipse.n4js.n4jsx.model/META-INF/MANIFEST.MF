@@ -16,4 +16,5 @@ Require-Bundle: org.eclipse.n4js.ts.model,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.model
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.n4js.n4jsx.n4JSX
+Export-Package: org.eclipse.n4js.n4jsx.n4JSX,
+ org.eclipse.n4js.n4jsx.n4JSX.util

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Display;
 
@@ -173,64 +174,101 @@ public class Edge {
 	 * Paint edge to given GC.
 	 */
 	public void paint(GC gc) {
-		gc.setForeground(crossLink ? Display.getCurrent().getSystemColor(SWT.COLOR_RED) : Display.getCurrent()
-				.getSystemColor(SWT.COLOR_DARK_GRAY));
+		if (startNodes.isEmpty() || endNodes.isEmpty())
+			return;
 
-		if (!startNodes.isEmpty() || !endNodes.isEmpty()) {
-			final List<Node> nodes = getNodes();
-			// draw temporary labels for external nodes (and save their bounds for later)
-			final List<Rectangle> nodesExternalBounds = new ArrayList<>();
-			final Rectangle clip = GraphUtils.getClip(gc);
-			float px = clip.x + clip.width;
-			float py = clip.y + clip.height;
-			for (String currNE : endNodesExternal) {
-				final org.eclipse.swt.graphics.Point size = gc.stringExtent(currNE);
-				py -= size.y + 4;
-				final Rectangle b = new Rectangle(
-						px - (size.x + 4), py,
-						size.x, size.y);
-				nodesExternalBounds.add(b);
-				// TODO string extent will be computed twice :(
-				GraphUtils.drawString(gc, currNE, b.x + b.width / 2, b.y + b.height / 2);
-			}
-			// compute reference point
-			final Stream<Point> centerPoints = Stream.concat(
-					nodes.stream().map(n -> n.getCenter()),
-					nodesExternalBounds.stream().map(b -> b.getCenter()));
-			float minx = Float.MAX_VALUE;
-			float maxx = Float.MIN_VALUE;
-			float miny = Float.MAX_VALUE;
-			float maxy = Float.MIN_VALUE;
-			for (Point c : centerPoints.collect(Collectors.toList())) {
-				minx = Math.min(minx, c.x);
-				maxx = Math.max(maxx, c.x);
-				miny = Math.min(miny, c.y);
-				maxy = Math.max(maxy, c.y);
-			}
-			final Point rp = new Point(minx + (maxx - minx) / 2, miny + (maxy - miny) / 2);
-			// collect anchors & draw connections
-			startNodes.stream().map(n -> n.getAnchor(this, rp)).forEach(a -> GraphUtils.drawLine(gc, a, rp, false));
-			Stream.concat(
-					endNodes.stream().map(n -> n.getAnchor(this, rp)),
-					nodesExternalBounds.stream().map(b -> b.getIntersectionLocation(rp))
-					).forEach(a -> GraphUtils.drawLine(gc, rp, a, crossLink));
-			// draw label
-			if (label != null) {
-				if (getStartNodes().size() == 1 && getEndNodes().size() == 1 && isCrossLink()) {
-					// special case for 1:1 cross links:
-					// take last end node or if not there (?) last start node and compute half of distance to rp.
-					// (rationale: for these links there might be a reverse link and then labels would overlap)
-					final Node labelNode = nodes.get(nodes.size() - 1);
-					final Point labelNodeAnchor = labelNode.getAnchor(this, rp);
-					float lx = (labelNodeAnchor.x + rp.x) / 2f;
-					float ly = (labelNodeAnchor.y + rp.y) / 2f;
-					GraphUtils.drawString(gc, label, lx, ly);
-				}
-				else {
-					// standard case: draw label at reference point
-					GraphUtils.drawString(gc, label, rp.x, rp.y);
-				}
-			}
+		Display displ = Display.getCurrent();
+		Color color = crossLink ? displ.getSystemColor(SWT.COLOR_RED) : displ.getSystemColor(SWT.COLOR_DARK_GRAY);
+		gc.setForeground(color);
+
+		final List<Rectangle> nodesExternalBounds = drawTemporaryLabels(gc);
+		final List<Node> nodes = getNodes();
+		final List<Point> ctrPoints = getCenterPoints(nodesExternalBounds, nodes);
+		final Point rp = getReferencePoint(ctrPoints);
+
+		// collect anchors & draw connections
+		for (Node startNode : startNodes) {
+			Point anchor = startNode.getAnchor(this, rp);
+			paintEdgeLine(gc, anchor, rp, false);
 		}
+		for (Node endNode : endNodes) {
+			Point anchor = endNode.getAnchor(this, rp);
+			paintEdgeLine(gc, rp, anchor, crossLink);
+		}
+		for (Rectangle extBound : nodesExternalBounds) {
+			Point anchor = extBound.getIntersectionLocation(rp);
+			paintEdgeLine(gc, rp, anchor, crossLink);
+		}
+
+		// draw label
+		drawLabel(gc, nodes, rp);
+	}
+
+	/***/
+	protected void paintEdgeLine(GC gc, Point src, Point tgt, boolean drawArrow) {
+		GraphUtils.drawLine(gc, src, tgt, drawArrow);
+	}
+
+	private void drawLabel(GC gc, final List<Node> nodes, final Point rp) {
+		if (label == null)
+			return;
+
+		float x = rp.x;
+		float y = rp.y;
+		if (getStartNodes().size() == 1 && getEndNodes().size() == 1 && isCrossLink()) {
+			// special case for 1:1 cross links:
+			// take last end node or if not there (?) last start node and compute half of distance to rp.
+			// (rationale: for these links there might be a reverse link and then labels would overlap)
+			final Node labelNode = nodes.get(nodes.size() - 1);
+			final Point labelNodeAnchor = labelNode.getAnchor(this, rp);
+			x = (labelNodeAnchor.x + rp.x) / 2f;
+			y = (labelNodeAnchor.y + rp.y) / 2f;
+		}
+		GraphUtils.drawString(gc, label, x, y);
+	}
+
+	private Point getReferencePoint(final List<Point> ctrPoints) {
+		float minx = Float.MAX_VALUE;
+		float maxx = Float.MIN_VALUE;
+		float miny = Float.MAX_VALUE;
+		float maxy = Float.MIN_VALUE;
+		for (Point c : ctrPoints) {
+			minx = Math.min(minx, c.x);
+			maxx = Math.max(maxx, c.x);
+			miny = Math.min(miny, c.y);
+			maxy = Math.max(maxy, c.y);
+		}
+		final float width = maxx - minx;
+		final float height = maxy - miny;
+		final Point rp = new Point(minx + width / 2, miny + height / 2);
+		return rp;
+	}
+
+	private List<Point> getCenterPoints(final List<Rectangle> nodesExternalBounds, final List<Node> nodes) {
+		final Stream<Point> nodeCenters = nodes.stream().map(n -> n.getCenter());
+		final Stream<Point> extBoundCenters = nodesExternalBounds.stream().map(b -> b.getCenter());
+		final Stream<Point> allCenters = Stream.concat(nodeCenters, extBoundCenters);
+		final List<Point> ctrPoints = allCenters.collect(Collectors.toList());
+		return ctrPoints;
+	}
+
+	/**
+	 * draw temporary labels for external nodes (and save their bounds for later)
+	 */
+	private List<Rectangle> drawTemporaryLabels(GC gc) {
+		final List<Rectangle> nodesExternalBounds = new ArrayList<>();
+		final Rectangle clip = GraphUtils.getClip(gc);
+		float px = clip.x + clip.width;
+		float py = clip.y + clip.height;
+		for (String currNE : endNodesExternal) {
+			final org.eclipse.swt.graphics.Point size = gc.stringExtent(currNE);
+			py -= size.y + 4;
+			final float rx = px - (size.x + 4);
+			final Rectangle b = new Rectangle(rx, py, size.x, size.y);
+			nodesExternalBounds.add(b);
+			// TODO string extent will be computed twice :(
+			GraphUtils.drawString(gc, currNE, b.x + b.width / 2, b.y + b.height / 2);
+		}
+		return nodesExternalBounds;
 	}
 }

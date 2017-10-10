@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4JS;
 
 import org.eclipse.emf.common.util.EList;
 
-import org.eclipse.emf.ecore.EObject;
-
 /**
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Variable Declaration Or Binding</b></em>'.
@@ -24,7 +22,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface VariableDeclarationOrBinding extends EObject {
+public interface VariableDeclarationOrBinding extends ControlFlowElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -33,5 +31,13 @@ public interface VariableDeclarationOrBinding extends EObject {
 	 * @generated
 	 */
 	EList<VariableDeclaration> getVariableDeclarations();
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @model kind="operation" unique="false"
+	 * @generated
+	 */
+	Expression getExpression();
 
 } // VariableDeclarationOrBinding

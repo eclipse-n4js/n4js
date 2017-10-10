@@ -32,6 +32,7 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableExpression;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
@@ -334,6 +335,11 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 */
 	@Override
 	public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
+		if (baseClass == ControlFlowElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == Expression.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -366,6 +372,11 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 	 */
 	@Override
 	public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
+		if (baseClass == ControlFlowElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == Expression.class) {
 			switch (baseFeatureID) {
 				default: return -1;
@@ -402,6 +413,11 @@ public class FunctionExpressionImpl extends FunctionDefinitionImpl implements Fu
 			switch (baseOperationID) {
 				case N4JSPackage.ANNOTABLE_ELEMENT___GET_ANNOTATIONS: return N4JSPackage.FUNCTION_EXPRESSION___GET_ANNOTATIONS;
 				default: return super.eDerivedOperationID(baseOperationID, baseClass);
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
 			}
 		}
 		if (baseClass == Expression.class) {

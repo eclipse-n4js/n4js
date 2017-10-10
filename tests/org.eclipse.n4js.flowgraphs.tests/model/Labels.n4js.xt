@@ -1,0 +1,276 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file check the successors of break or continue statements only.
+ */
+
+
+function DoStatementBreakLabel1() {
+	// DoStatementBreakLabel1 XPECT succs type 'Break' at 'break LBLa;' --> "end"
+	"start";
+	LBLa: do {
+		1;
+		break LBLa;
+	// DoStatementBreakLabel1 XPECT warnings --> "Dead code." at "3"
+	} while (3);
+	"end";
+}
+
+function DoStatementBreakLabel2() {
+	// DoStatementBreakLabel2 XPECT succs type 'Break' at 'break LBLa;' --> "end"
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			break LBLa;
+		// DoStatementBreakLabel2 XPECT warnings --> "Dead code." at "3"
+		} while (3);
+	// DoStatementBreakLabel2 XPECT warnings --> "Dead code." at "4"
+	} while (4);
+	"end";
+}
+
+function DoStatementBreakLabel3() {
+	// DoStatementBreakLabel3 XPECT succs type 'Break' at 'break LBLb;' --> 4
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			break LBLb;
+		// DoStatementBreakLabel3 XPECT warnings --> "Dead code." at "3"
+		} while (3);
+	} while (4);
+	"end";
+}
+
+function DoStatementBreakLabel4() {
+	// DoStatementBreakLabel4 XPECT succs type 'Break' at 'break ;' --> 4
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			break ;
+		// DoStatementBreakLabel4 XPECT warnings --> "Dead code." at "3"
+		} while (3);
+	} while (4);
+	"end";
+}
+
+function DoStatementContinue1() {
+	// DoStatementContinue1 XPECT succs type 'Continue' at 'continue LBL;' --> 3
+	"start";
+	LBL: do {
+		1;
+		continue LBL;
+	} while (3);
+	"end";
+}
+
+function DoStatementContinue2() {
+	// DoStatementContinue2 XPECT succs type 'Continue' at 'continue LBLa;' --> 4
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			continue LBLa;
+		// DoStatementContinue2 XPECT warnings --> "Dead code." at "3"
+		} while (3);
+	} while (4);
+	"end";
+}
+
+function DoStatementContinue3() {
+	// DoStatementContinue3 XPECT succs type 'Continue' at 'continue LBLb;' --> 3
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			continue LBLb;
+		} while (3);
+	} while (4);
+	"end";
+}
+
+function DoStatementContinue4() {
+	// DoStatementContinue4 XPECT succs type 'Continue' at 'continue;' --> 3
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			continue;
+		} while (3);
+	} while (4);
+	"end";
+}
+
+function ForStatementBreak1() {
+	// ForStatement1 XPECT succs at 'break;' --> "end"
+	"start";
+	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after expression statement." at "3"
+	for (1;2;3) break;
+	"end";
+}
+
+function ForStatementBreak2() {
+	// ForStatement2 XPECT succs at 'break;' --> "end"
+	"start";
+	// ForStatement2 XPECT warnings --> "Dead code." at "3"
+	LBL: for (1;2;3) break;
+	"end";
+}
+
+function ForStatementBreak3() {
+	// ForStatement3 XPECT succs at 'break LBL;' --> "end"
+	"start";
+	// ForStatement3 XPECT warnings --> "Dead code." at "3"
+	LBL: for (1;2;3) break LBL;
+	"end";
+}
+
+function ForStatementBreak4() {
+	// ForStatement4 XPECT succs at 'break LBLa;' --> "end"
+	"start";
+	LBLa: for (1;2;3) {
+		// ForStatement4 XPECT warnings --> "Dead code." at "3"
+		LBLb: for (1;2;3) break LBLa;
+	}
+	"end";
+}
+
+function ForStatementBreak5() {
+	// ForStatement5 XPECT succs at 'break LBLb;' --> 3
+	"start";
+	LBLa: for (1;2;3) {
+		// ForStatement5 XPECT warnings --> "Dead code." at "3"
+		LBLb: for (1;2;3) break LBLb;
+	}
+	"end";
+}
+
+function ForStatementBreak6() {
+	// ForStatement6 XPECT succs at 'break;' --> 3
+	"start";
+	LBLa: for (1;2;3) {
+		// ForStatement6 XPECT warnings --> "Dead code." at "3"
+		LBLb: for (1;2;3) break;
+	}
+	"end";
+}
+
+
+function WhileStatementBreakLabel1() {
+	// WhileStatementBreakLabel1 XPECT succs type 'Break' at 'break LBL;' --> "end"
+	"start";
+	LBL: while (1) {
+		2;
+		break LBL;
+	}
+	"end";
+}
+
+function WhileStatementBreakLabel2() {
+	// WhileStatementBreakLabel2 XPECT succs type 'Break' at 'break LBLa;' --> "end"
+	"start";
+	LBLa: while (0) {
+		LBLb: while (1) {
+			2;
+			break LBLa;
+		}
+	}
+	"end";
+}
+
+function WhileStatementBreakLabel3() {
+	// WhileStatementBreakLabel3 XPECT succs type 'Break' at 'break LBLb;' --> 0
+	"start";
+	LBLa: while (0) {
+		LBLb: while (1) {
+			2;
+			break LBLb;
+		}
+	}
+	"end";
+}
+
+function WhileStatementBreakLabel4() {
+	// WhileStatementBreakLabel4 XPECT succs type 'Break' at 'break ;' --> 0
+	"start";
+	LBLa: while (0) {
+		LBLb: while (1) {
+			2;
+			break ;
+		}
+	}
+	"end";
+}
+
+function WhileStatementContinue1() {
+	// WhileStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 1
+	"start";
+	LBL: while (1) {
+		2;
+		continue;
+	}
+	"end";
+}
+
+function WhileStatementContinue2() {
+	// WhileStatementContinue2 XPECT succs type 'Continue' at 'continue LBL;' --> 1
+	"start";
+	LBL: while (1) {
+		2;
+		continue LBL;
+	}
+	"end";
+}
+
+function WhileStatementContinue3() {
+	// WhileStatementContinue3 XPECT succs type 'Continue' at 'continue LBLa;' --> 0
+	"start";
+	LBLa: while (0) {
+		LBLb: while (1) {
+			2;
+			continue LBLa;
+		}
+	}
+	"end";
+}
+
+function WhileStatementContinue4() {
+	// WhileStatementContinue4 XPECT succs type 'Continue' at 'continue LBLb;' --> 1
+	"start";
+	LBLa: while (0) {
+		LBLb: while (1) {
+			2;
+			continue LBLb;
+		}
+	}
+	"end";
+}
+
+function WhileStatementContinue5() {
+	// WhileStatementContinue5 XPECT succs type 'Continue' at 'continue;' --> 1
+	"start";
+	LBLa: while (0) {
+		LBLb: while (1) {
+			2;
+			continue;
+		}
+	}
+	"end";
+}

@@ -15,10 +15,10 @@ Contributors:
          point="org.eclipse.ui.views">
       <view
             category="org.eclipse.n4js.category"
-            class="org.eclipse.n4js.smith.graph.ASTGraphView"
-            icon="icons/graph.gif"
-            id="org.eclipse.n4js.smith.graph.ASTGraphView"
-            name="AST Graph">
+            class="org.eclipse.n4js.smith.graph.SourceGraphView"
+            icon="icons/graphAST.gif"
+            id="org.eclipse.n4js.smith.graph.SourceGraphView"
+            name="Source Graphs">
       </view>
    </extension>
 </plugin>
