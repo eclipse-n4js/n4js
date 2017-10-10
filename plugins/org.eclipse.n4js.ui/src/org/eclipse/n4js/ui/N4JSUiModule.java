@@ -59,6 +59,7 @@ import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
 import org.eclipse.n4js.ui.editor.N4JSHover;
 import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
+import org.eclipse.n4js.ui.editor.N4JSReconciler;
 import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory;
 import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingConfiguration;
@@ -135,6 +136,7 @@ import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory;
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator;
+import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper;
@@ -679,6 +681,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSDocument.class;
 	}
 
+	/** Custom XtextReconciler. */
+	public Class<? extends XtextReconciler> bindXtextReconciler() {
+		return N4JSReconciler.class;
+	}
+
 	/** Custom IEObjectHover. */
 	@Override
 	public Class<? extends IEObjectHover> bindIEObjectHover() {
@@ -689,5 +696,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends IHyperlinkDetector> bindIHyperlinkDetector() {
 		return N4JSHyperlinkDetector.class;
+	}
+
+	@Override
+	public void configureXtextEditorErrorTickUpdater(com.google.inject.Binder binder) {
+		binder.bind(IXtextEditorCallback.class).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
+				N4JSEditorErrorTickUpdater.class);
 	}
 }
