@@ -40,12 +40,18 @@ public class ControlFlowGraphFactory {
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
+		class CFEComparator implements Comparator<ControlFlowElement> {
+			@Override
+			public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+				return cfe1.hashCode() - cfe2.hashCode();
+			}
+		}
 		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(new CFEComparator());
 		TreeSet<Block> cfCatchBlocks = new TreeSet<>(new CFEComparator());
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
-		ComplexNodeMapper cnMapper = new CNMapper(cnMap);
+		ComplexNodeMapper cnMapper = new ComplexNodeMapper(cnMap);
 
 		connectComplexNodes(cnMapper);
 		createJumpEdges(cnMapper);
@@ -178,31 +184,6 @@ public class ControlFlowGraphFactory {
 		isExitingFinallyBlock &= cfe.eContainer() instanceof FinallyBlock;
 		isExitingFinallyBlock &= cn.getExit() == node;
 		return isExitingFinallyBlock;
-	}
-
-	private static final class CFEComparator implements Comparator<ControlFlowElement> {
-		@Override
-		public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-			return cfe1.hashCode() - cfe2.hashCode();
-		}
-	}
-
-	private static class CNMapper implements ComplexNodeMapper {
-		final private Map<ControlFlowElement, ComplexNode> cnMap;
-
-		CNMapper(Map<ControlFlowElement, ComplexNode> cnMap) {
-			this.cnMap = cnMap;
-		}
-
-		@Override
-		public ComplexNode get(ControlFlowElement cfe) {
-			return cnMap.get(CFEMapper.map(cfe));
-		}
-
-		@Override
-		public Iterable<ComplexNode> getAll() {
-			return cnMap.values();
-		}
 	}
 
 	/** Prints detailed information of jump nodes */

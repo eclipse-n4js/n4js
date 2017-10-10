@@ -14,11 +14,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.resource.DefaultLocationInFileProvider;
 import org.eclipse.xtext.resource.ILocationInFileProvider;
 import org.eclipse.xtext.ui.editor.XtextEditor;
@@ -32,28 +34,35 @@ import org.eclipse.xtext.util.ITextRegion;
  */
 public class EditorOverlay implements PaintListener {
 	final private ILocationInFileProvider locFileProvider;
-	final private XtextEditor editor;
-	final private StyledText styledText;
+	private StyledText styledText;
 
-	private EObject currentSelection;
+	final private List<EObject> selectedElements = new LinkedList<>();
+	private EObject hoveredElement;
 
 	/**
 	 * Constructor
 	 */
 	public EditorOverlay() {
 		locFileProvider = new DefaultLocationInFileProvider();
-		editor = EditorUtils.getActiveXtextEditor();
-		styledText = editor.getInternalSourceViewer().getTextWidget();
 	}
 
 	/** Sets the highlighted element in the editor view */
-	public void setSelection(EObject currentSelection) {
-		this.currentSelection = currentSelection;
+	public void setHoveredElement(EObject currentSelection) {
+		this.hoveredElement = currentSelection;
+		draw();
+	}
+
+	/** Sets the highlighted element in the editor view */
+	public void setSelectedElement(List<EObject> selectedEO) {
+		selectedElements.clear();
+		this.selectedElements.addAll(selectedEO);
 		draw();
 	}
 
 	private void draw() {
-		if (currentSelection != null) {
+		if (hoveredElement != null || !selectedElements.isEmpty()) {
+			XtextEditor editor = EditorUtils.getActiveXtextEditor();
+			styledText = editor.getInternalSourceViewer().getTextWidget();
 			drawSelection();
 		} else {
 			clear();
@@ -61,21 +70,21 @@ public class EditorOverlay implements PaintListener {
 	}
 
 	private void clear() {
-		if (!styledText.isDisposed()) {
+		if (styledText != null && !styledText.isDisposed()) {
 			styledText.removePaintListener(this);
 			styledText.redraw();
 		}
 	}
 
 	private void drawSelection() {
-		if (!styledText.isDisposed()) {
+		if (styledText != null && !styledText.isDisposed()) {
 			styledText.addPaintListener(this);
 			styledText.redraw();
 		}
 	}
 
 	/** Computes an array of points that create a frame around the selected element. */
-	private int[] getConturePointArray() {
+	private int[] getConturePointArray(EObject currentSelection) {
 		ITextRegion tr = locFileProvider.getFullTextRegion(currentSelection);
 		int trOffset = tr.getOffset();
 		if (trOffset == 0) {
@@ -126,14 +135,23 @@ public class EditorOverlay implements PaintListener {
 
 	@Override
 	public void paintControl(PaintEvent e) {
-		if (currentSelection == null)
-			return;
+		Color colorGreen = new Color(e.display, 20, 200, 20);
+		Color colorBlue = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
 
-		int[] pointArray = getConturePointArray();
+		for (EObject eo : selectedElements) {
+			paintConture(e, eo, colorBlue);
+		}
+
+		if (hoveredElement != null) {
+			paintConture(e, hoveredElement, colorGreen);
+		}
+	}
+
+	private void paintConture(PaintEvent e, EObject currentSelection, Color color) {
+		int[] pointArray = getConturePointArray(currentSelection);
 		if (pointArray != null) {
-			Color green = new Color(e.display, 20, 200, 20);
-			e.gc.setForeground(green);
-			e.gc.setBackground(green);
+			e.gc.setForeground(color);
+			e.gc.setBackground(color);
 			e.gc.drawPolygon(pointArray);
 		}
 	}

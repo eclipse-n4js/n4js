@@ -10,11 +10,15 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.base.Strings
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -49,6 +53,7 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess
 import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
@@ -65,11 +70,6 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
-import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import com.google.common.base.Strings
 
 /**
  */

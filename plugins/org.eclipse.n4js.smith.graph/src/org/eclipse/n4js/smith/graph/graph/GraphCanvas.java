@@ -12,6 +12,8 @@ package org.eclipse.n4js.smith.graph.graph;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -302,6 +304,7 @@ public class GraphCanvas extends Canvas {
 		if (!selectedNodes.equals(newNodes)) {
 			selectedNodes.clear();
 			selectedNodes.addAll(newNodes);
+			setSelectedInEditorOverlay(selectedNodes);
 			redraw();
 		}
 	}
@@ -312,12 +315,14 @@ public class GraphCanvas extends Canvas {
 		else
 			selectedNodes.add(node);
 
+		setSelectedInEditorOverlay(selectedNodes);
 		redraw();
 	}
 
 	public void clearSelection() {
 		if (!selectedNodes.isEmpty()) {
 			selectedNodes.clear();
+			setSelectedInEditorOverlay(selectedNodes);
 			redraw();
 		}
 	}
@@ -335,6 +340,7 @@ public class GraphCanvas extends Canvas {
 	}
 
 	protected void onMouseExit(@SuppressWarnings("unused") MouseEvent event) {
+		setHoveredNode(null);
 		if (hawkEye_active) {
 			setHawkEyeTarget(null);
 		}
@@ -357,7 +363,6 @@ public class GraphCanvas extends Canvas {
 		// update hovered node
 		if (!mousePressed) {
 			setHoveredNode(mNode);
-			setEditorOverlay(mNode);
 		}
 
 		// dragging
@@ -423,16 +428,27 @@ public class GraphCanvas extends Canvas {
 				toolTip.hide();
 			}
 
+			setHoverInEditorOverlay(hoveredNode);
 			redraw();
 		}
 	}
 
-	protected void setEditorOverlay(Node node) {
+	protected void setHoverInEditorOverlay(Node node) {
 		EObject selection = null;
 		if (node != null && node.getElement() instanceof EObject) {
 			selection = (EObject) node.getElement();
 		}
-		editorOverlay.setSelection(selection);
+		editorOverlay.setHoveredElement(selection);
+	}
+
+	protected void setSelectedInEditorOverlay(Set<Node> selectedNodes) {
+		List<EObject> selectedEO = new LinkedList<>();
+		for (Node node : selectedNodes) {
+			if (node != null && node.getElement() instanceof EObject) {
+				selectedEO.add((EObject) node.getElement());
+			}
+		}
+		editorOverlay.setSelectedElement(selectedEO);
 	}
 
 	protected void doPaint(GC gc, PaintEvent event) {
