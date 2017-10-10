@@ -16,31 +16,10 @@ Contributors:
 
       <view
             category="org.eclipse.n4js.category"
-            class="org.eclipse.n4js.smith.dash.ui.views.DashboardView3"
+            class="org.eclipse.n4js.smith.dash.ui.views.DashboardView"
             icon="icons/graph.gif"
-            id="org.eclipse.n4js.smith.dash.ui.DashboardView3"
-            name="Validations Time Graph">
-      </view>
-      <view
-            category="org.eclipse.n4js.category"
-            class="org.eclipse.n4js.smith.dash.ui.views.DashboardView4"
-            icon="icons/graph.gif"
-            id="org.eclipse.n4js.smith.dash.ui.DashboardView4"
-            name="N4JSResource Time Graph">
-      </view>
-      <view
-            category="org.eclipse.n4js.category"
-            class="org.eclipse.n4js.smith.dash.ui.views.DashboardView5"
-            icon="icons/graph.gif"
-            id="org.eclipse.n4js.smith.dash.ui.DashboardView5"
-            name="InferenceContext Time Graph">
-      </view>
-      <view
-            category="org.eclipse.n4js.category"
-            class="org.eclipse.n4js.smith.dash.ui.views.BuildQueueGraphView"
-            icon="icons/graph.gif"
-            id="org.eclipse.n4js.smith.dash.ui.BuildQueueGraphView"
-            name="Build Queue Graph">
+            id="org.eclipse.n4js.smith.dash.ui.DashboardView"
+            name="Dashboard View">
       </view>
    </extension>
 </plugin>

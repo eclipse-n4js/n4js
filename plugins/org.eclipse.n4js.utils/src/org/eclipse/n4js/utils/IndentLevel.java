@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tester;
+package org.eclipse.n4js.utils;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -16,37 +16,41 @@ import java.util.LinkedList;
 /**
  * Naive helper to keep build text indentation.
  */
-class IndentLevel {
-	private final LinkedList<String> indedation = new LinkedList<>();
+public class IndentLevel {
+	private final LinkedList<String> cachedIndedations = new LinkedList<>();
 	private final String indend;
 	private int index = 0;
 
-	IndentLevel(String indend) {
+	/** Creates new instance with specific string used as indentation sequence. */
+	public IndentLevel(String indend) {
 		this.indend = indend;
-		indedation.add("");
+		// initial indentation, 0 index
+		cachedIndedations.add("");
 	}
 
+	/** returns string with indent sequence repeated {@code n} times, based on current indedation level. */
 	public String get() {
-		return this.indedation.get(index);
+		return this.cachedIndedations.get(index);
 	}
 
+	/** Increases current indentation level. */
 	public void increase() {
 		this.index += 1;
 
-		if (this.indedation.size() == this.index)
-			this.indedation.add(times(index, this.indend));
-
+		if (this.cachedIndedations.size() == this.index)
+			this.cachedIndedations.add(times(index, this.indend));
 	}
 
+	/** decreases current indentation level. */
 	public void decrease() {
 		if (this.index == 0)
-			throw new RuntimeException("Cannot decrease.");
+			throw new RuntimeException("Cannot decrease below 0.");
 
 		this.index -= 1;
 	}
 
+	/** Creates string containing {@code n} copies of {@code s} */
 	private String times(int n, String s) {
 		return String.join("", Collections.nCopies(n, s));
 	}
-
 }

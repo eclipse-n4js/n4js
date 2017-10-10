@@ -10,30 +10,18 @@
  */
 package org.eclipse.n4js.smith.dash.data;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
-
 /**
  *
  */
-public class GraphNode {
+public class Series {
 
-	private final Set<GraphNode> connectedTo = Collections.newSetFromMap(
-			new WeakHashMap<GraphNode, Boolean>());
-
+	public final long val;
 	public final String name;
 
-	public GraphNode(String name) {
+	public Series(final long val,
+			final String name) {
+		this.val = val;
 		this.name = name;
-	}
-
-	public void addConnectionTo(GraphNode node) {
-		connectedTo.add(node);
-	}
-
-	public void removeConnectionTo(GraphNode node) {
-		connectedTo.remove(node);
 	}
 
 }

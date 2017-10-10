@@ -14,6 +14,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -104,9 +105,6 @@ import com.google.inject.name.Named;
 @SuppressWarnings("restriction")
 public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 
-	private final DataCollector buildQueueCollector = DataCollectors.getInstance()
-			.getOrCreateQueueCollector("BuildQueue");
-
 	// ====== from org.eclipse.n4js.ui.building.N4JSGenerateImmediatelyBuilderState
 
 	@Inject
@@ -118,6 +116,33 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 	@Inject
 	@BuilderState
 	private IBuildLogger builderStateLogger;
+
+	private final DataCollector builderProcess;
+	private final DataCollector builderBuildInstruction;
+	private final DataCollector builderClusteringUpdate;
+	private final DataCollector builderClusteringNewState;
+	private final DataCollector builderClusteringWriteResourceDescs;
+	private final DataCollector builderClusteringLoadOperation;
+	private final DataCollector builderValidations;
+	private final DataCollector builderProxies;
+
+	@Inject
+	public N4JSTrackedClusteringBuilderState() {
+		this.builderProcess = DataCollectors.INSTANCE.getOrCreateDataCollector("builder");
+		this.builderBuildInstruction = DataCollectors.INSTANCE.getOrCreateDataCollector("build instruction",
+				this.builderProcess);
+		this.builderClusteringUpdate = DataCollectors.INSTANCE.getOrCreateDataCollector("clustering update",
+				this.builderProcess);
+		this.builderClusteringNewState = DataCollectors.INSTANCE.getOrCreateDataCollector("new state",
+				builderClusteringUpdate);
+		this.builderClusteringWriteResourceDescs = DataCollectors.INSTANCE.getOrCreateDataCollector(
+				"write resource descs", builderClusteringUpdate);
+		this.builderClusteringLoadOperation = DataCollectors.INSTANCE.getOrCreateDataCollector(
+				"load operation", builderClusteringUpdate);
+		this.builderValidations = DataCollectors.INSTANCE.getOrCreateDataCollector("validations",
+				builderClusteringUpdate);
+		this.builderProxies = DataCollectors.INSTANCE.getOrCreateDataCollector("proxies", builderClusteringUpdate);
+	}
 
 	/**
 	 * After the load phase, checks whether the underlying index content is empty or a recovery builder was scheduled,
@@ -151,11 +176,12 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
 
-		StopWatchPrintUtil sw0 = new StopWatchPrintUtil("@doUpdate", 0);
+		Measurement measurement = builderProcess.getMeasurement("builder_" + Instant.now());
 
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
 		logBuildData(buildData, " of before #doUpdate");
 
+		Measurement measurement2 = builderBuildInstruction.getMeasurement("instruction_" + Instant.now());
 		IProject project = getProject(buildData);
 		try {
 			BuildType buildType = N4JSBuildTypeTracker.getBuildType(project);
@@ -171,12 +197,13 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 		} catch (CoreException e) {
 			handleCoreException(e);
 		}
+		measurement2.end();
 		Collection<Delta> modifiedDeltas = overrideDoUpdate(buildData, newData, monitor);
 		logBuildData(buildData, " of after #doUpdate");
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
 
-		sw0.stop();
+		measurement.end();
 		return modifiedDeltas;
 	}
 
@@ -429,7 +456,7 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 	 */
 	protected Collection<Delta> overrideDoUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
-		StopWatchPrintUtil sw1 = new StopWatchPrintUtil("@overrideDoUpdate", 1);
+		Measurement measurement2 = builderClusteringUpdate.getMeasurement("clustering update_" + Instant.now());
 		final SubMonitor progress = SubMonitor.convert(monitor, 100);
 
 		// Step 1: Clean the set of deleted URIs. If any of them are also added, they're not deleted.
@@ -440,14 +467,19 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 		// and a Guice binding, is the index that is used during the build; i.e., linking during the build will
 		// use this. Once the build is completed, the persistable index is reset to the contents of newState by
 		// virtue of the newMap, which is maintained in synch with this.
+		Measurement measeureNewState = builderClusteringNewState.getMeasurement("new state_" + Instant.now());
 		ResourceSet resourceSet = buildData.getResourceSet();
 		final CurrentDescriptions newState = new CurrentDescriptions(resourceSet, newData, buildData);
 		buildData.getSourceLevelURICache().cacheAsSourceURIs(toBeDeleted);
 		installSourceLevelURIs(buildData);
+		measeureNewState.end();
 		// Step 3: Create a queue; write new temporary resource descriptions for the added or updated resources so that
 		// we can link
 		// subsequently; put all the added or updated resources into the queue.
+		Measurement measureWrite = builderClusteringWriteResourceDescs
+				.getMeasurement("writeNewResourceDescriptions_" + Instant.now());
 		writeNewResourceDescriptions(buildData, this, newState, progress.newChild(20));
+		measureWrite.end();
 
 		if (progress.isCanceled()) {
 			throw new OperationCanceledException();
@@ -493,10 +525,11 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 		try {
 			Queue<URI> queue = buildData.getURIQueue();
 
-			StopWatchPrintUtil sw2a = new StopWatchPrintUtil("@load(queue)", 2);
+			Measurement measureLoadQueue = builderClusteringLoadOperation
+					.getMeasurement("load(queue)_" + Instant.now());
 			loadOperation = crossLinkingResourceLoader.create(resourceSet, currentProject);
 			loadOperation.load(queue);
-			sw2a.stop();
+			measureLoadQueue.end();
 
 			// Step 6: Iteratively got through the queue. For each resource, create a new resource description and queue
 			// all depending
@@ -549,10 +582,9 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 						if (manager != null) {
 							// Resolve links here!
 							try {
-								StopWatchPrintUtil sw4a = new StopWatchPrintUtil(
-										"@overrideDoUpdate#resolveLazyCrossReferences " + changedURI, 4);
+								Measurement measurement = builderProxies.getMeasurement("" + changedURI);
 								EcoreUtil2.resolveLazyCrossReferences(resource, cancelMonitor);
-								sw4a.stop();
+								measurement.end();
 								final IResourceDescription description = manager.getResourceDescription(resource);
 								final IResourceDescription copiedDescription = BuilderStateUtil.create(description);
 								newDelta = manager.createDelta(this.getResourceDescription(actualResourceURI),
@@ -611,10 +643,9 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 						// Validate now.
 						if (!buildData.isIndexingOnly()) {
 							try {
-								StopWatchPrintUtil sw4b = new StopWatchPrintUtil(
-										"@overrideDoUpdate#updateMarkers ", 4);
+								Measurement measurement = builderValidations.getMeasurement("updateMarkers");
 								updateMarkers(newDelta, resourceSet, subProgress);
-								sw4b.stop();
+								measurement.end();
 							} catch (OperationCanceledException e) {
 								loadOperation.cancel();
 								throw e;
@@ -649,7 +680,7 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			if (!progress.isCanceled())
 				progress.done();
 		}
-		sw1.stop();
+		measurement2.end();
 		return allDeltas;
 	}
 
@@ -752,9 +783,7 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 						newState.register(new DefaultResourceDescriptionDelta(oldState.getResourceDescription(uri),
 								copiedDescription));
 						System.out.println(" -> queue " + uri);
-						Measurement measurement = this.buildQueueCollector.getMeasurement(uri.toString());
 						buildData.queueURI(uri);
-						measurement.end();
 					}
 				} catch (final RuntimeException ex) {
 					if (ex instanceof LoadOperationException) {

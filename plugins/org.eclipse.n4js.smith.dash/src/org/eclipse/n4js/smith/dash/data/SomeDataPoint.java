@@ -10,17 +10,29 @@
  */
 package org.eclipse.n4js.smith.dash.data;
 
-/**
- *
- */
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
+import com.google.common.base.Stopwatch;
+
+@SuppressWarnings("javadoc")
 public class SomeDataPoint {
 
-	public final long elapsedNanos;
+	public final Long nanos;
 	public final String name;
 
-	public SomeDataPoint(final String name, final long elapsedNanos) {
+	public SomeDataPoint(final String name, final Stopwatch sw) {
+		if (sw.isRunning())
+			throw new RuntimeException("Stop watch is still running.");
 		this.name = name;
-		this.elapsedNanos = elapsedNanos;
+		this.nanos = sw.elapsed(NANOSECONDS);
 	}
 
+	public SomeDataPoint(final String name, final Long nanos) {
+		this.name = name;
+		this.nanos = nanos;
+	}
+
+	public String getHumanDuration() {
+		return SimpleTimeFormat.convert(nanos);
+	}
 }

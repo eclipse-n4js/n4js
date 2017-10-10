@@ -10,11 +10,12 @@
  */
 package org.eclipse.n4js.smith.dash.ui.graph;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.n4js.smith.dash.data.DataCollector;
+import org.eclipse.n4js.smith.dash.data.DataCollectors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -35,14 +36,10 @@ import org.eclipse.swt.widgets.Display;
  * SWT widget to draw a {@link Graph}.
  */
 @SuppressWarnings("javadoc")
-public class GraphCanvas extends Canvas {
+public class StackCanvas extends Canvas implements VisualizationCanvas {
 
-	protected Graph graph = null;
+	protected StackGraph graph = null;
 	protected boolean graphNeedsLayout = true;
-
-	protected boolean showAllCrossLinks = false;
-
-	protected final Set<Node> selectedNodes = new HashSet<>();
 
 	protected int offsetX = 0;
 	protected int offsetY = 0;
@@ -66,11 +63,12 @@ public class GraphCanvas extends Canvas {
 	protected int mouseDragBaseX;
 	protected int mouseDragBaseY;
 
-	protected Node hoveredNode = null;
+	protected StackNode hoveredNode = null;
+	protected final Set<StackNode> selectedNodes = new HashSet<>();
 
 	protected DefaultToolTip toolTip;
 
-	public GraphCanvas(Composite parent, int style) {
+	public StackCanvas(Composite parent, int style) {
 		super(parent, style);
 		addPaintListener(new PaintListener() {
 			@Override
@@ -147,22 +145,24 @@ public class GraphCanvas extends Canvas {
 		toolTip.setText("Hello tool tip!");
 	}
 
-	public Graph getGraph() {
+	@Override
+	public StackGraph getGraph() {
 		return graph;
 	}
 
+	@Override
 	public void clear() {
 		setGraph(null);
 	}
 
-	public void setGraph(Graph graph) {
-		if (graph != this.graph) {
+	public void setGraph(StackGraph vis) {
+		if (vis != this.graph) {
 			clearSelection();
-			if (this.graph == null || graph == null) {
+			if (this.graph == null || vis == null) {
 				offsetX = 0;
 				offsetY = 0;
 			}
-			this.graph = graph;
+			this.graph = vis;
 			graphNeedsLayout = true;
 			redraw();
 		}
@@ -261,20 +261,9 @@ public class GraphCanvas extends Canvas {
 		}
 	}
 
-	public void setShowAllCrossLinks(boolean value) {
-		if (value != showAllCrossLinks) {
-			showAllCrossLinks = value;
-			redraw();
-		}
-	}
-
-	public Set<Node> getSelectedNodes() {
-		return Collections.unmodifiableSet(selectedNodes);
-	}
-
-	public void setSelectedNodes(Node... nodes) {
-		final Set<Node> newNodes = new HashSet<>();
-		for (Node n : nodes)
+	public void setSelectedNodes(StackNode... nodes) {
+		final Set<StackNode> newNodes = new HashSet<>();
+		for (StackNode n : nodes)
 			if (n != null)
 				newNodes.add(n);
 		if (!selectedNodes.equals(newNodes)) {
@@ -284,7 +273,7 @@ public class GraphCanvas extends Canvas {
 		}
 	}
 
-	public void toggleSelection(Node node) {
+	public void toggleSelection(StackNode node) {
 		if (selectedNodes.contains(node))
 			selectedNodes.remove(node);
 		else
@@ -299,7 +288,7 @@ public class GraphCanvas extends Canvas {
 		}
 	}
 
-	public Node getNodeAt(int screenX, int screenY) {
+	public StackNode getNodeAt(int screenX, int screenY) {
 		final Point p = screenToGraph(screenX, screenY);
 		return graph != null ? graph.getNodeAt(p.x, p.y) : null;
 	}
@@ -329,7 +318,7 @@ public class GraphCanvas extends Canvas {
 		if (hawkEye_active) {
 			setHawkEyeTarget(new Point(event.x, event.y));
 		}
-		final Node mNode = getNodeAt(event.x, event.y);
+		final StackNode mNode = getNodeAt(event.x, event.y);
 		// update hovered node
 		if (!mousePressed)
 			setHoveredNode(mNode);
@@ -360,7 +349,8 @@ public class GraphCanvas extends Canvas {
 
 	protected void onClick(MouseEvent event) {
 		// update selection
-		final Node mNode = getNodeAt(event.x, event.y);
+		final StackNode mNode = getNodeAt(event.x, event.y);
+		// final Node mNode = getNodeAt(event.x, event.y);
 		final boolean shiftPressed = (event.stateMask & SWT.SHIFT) != 0;
 		if (!shiftPressed) {
 			if (mNode == null) {
@@ -381,12 +371,12 @@ public class GraphCanvas extends Canvas {
 		zoom(event.x, event.y, 0.01f * event.count);
 	}
 
-	protected void setHoveredNode(Node node) {
+	protected void setHoveredNode(StackNode node) {
 		if (node != hoveredNode) {
 			hoveredNode = node;
 
-			if (hoveredNode != null && hoveredNode.getDescription() != null) {
-				toolTip.setText(hoveredNode.getDescription());
+			if (hoveredNode != null && hoveredNode.description != null) {
+				toolTip.setText(hoveredNode.description);
 				toolTip.show(new org.eclipse.swt.graphics.Point(4, 4));
 			} else {
 				toolTip.hide();
@@ -413,18 +403,16 @@ public class GraphCanvas extends Canvas {
 				graphNeedsLayout = false;
 			}
 
-			graph.getEdges().stream()
-					.filter(e -> !e.isCrossLink())
-					.forEach(e -> e.paint(gc));
+			DataCollectors collectors = DataCollectors.INSTANCE;
+			String key = "builder";
+			DataCollector dataCollector = collectors.getRootCollectors().get(key);
+			if (dataCollector == null) {
+				throw new RuntimeException("No data available for key " + key);
+			}
+
 			graph.getNodes().forEach(n -> n.paint(gc));
-			graph.getEdges().stream()
-					.filter(e -> e.isCrossLink() && (showAllCrossLinks || e.getNodes().stream()
-							.anyMatch(n -> n == hoveredNode || selectedNodes.contains(n))))
-					.forEach(e -> e.paint(gc));
 
 			gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-			selectedNodes.forEach(sn -> GraphUtils.drawRectangle(
-					gc, sn.getX() - 2, sn.getY() - 2, sn.getWidth() + 4, sn.getHeight() + 4));
 
 			gc.setTransform(null);
 			tf.dispose();
@@ -441,5 +429,12 @@ public class GraphCanvas extends Canvas {
 				gc.setAlpha(255);
 			}
 		}
+	}
+
+	@Override
+	public void setGraph(VisualisationGraph graph) {
+		if (graph instanceof StackGraph == false)
+			throw new RuntimeException("not the graph I wanted " + graph.getClass());
+		this.graph = (StackGraph) graph;
 	}
 }

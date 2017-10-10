@@ -245,7 +245,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private IDerivedStateComputer myDerivedStateComputer;
 
-	private final DataCollector collector = DataCollectors.getInstance().getOrCreateDataCollector("N4JSResource");
+	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("N4JSResource");
 
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.

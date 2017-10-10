@@ -10,15 +10,26 @@
  */
 package org.eclipse.n4js.smith.dash.data;
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * Interface for measurements that can be linked together. Basic block for lists / graphs of the measurements.
+ *
  */
-public interface LinkedMeasurement extends Measurement {
+public class SeriesContainer {
+	private final List<Series> series = new LinkedList<>();
 
-	@Override
-	public void end();
+	public SeriesContainer(final List<Series> series) {
+		this.series.addAll(series);
+	}
 
-	/** Links this measurement to other measurement. Unidirectional link. */
-	public void linkTo(LinkedMeasurement other);
+	public SeriesContainer(Series... series) {
+		for (Series s : series) {
+			this.series.add(s);
+		}
+	}
 
+	public List<Series> getSeries() {
+		return new LinkedList<>(series);
+	}
 }

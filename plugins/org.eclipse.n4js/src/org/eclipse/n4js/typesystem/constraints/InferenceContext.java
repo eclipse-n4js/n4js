@@ -123,7 +123,7 @@ public final class InferenceContext {
 	private final OperationCanceledManager operationCanceledManager; // may be null
 	private final CancelIndicator cancelIndicator; // may be null
 	private final RuleEnvironment G;
-	private final DataCollector collector = DataCollectors.getInstance().getOrCreateDataCollector("InferenceContext");
+	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("InferenceContext");
 
 	/**
 	 * An order-preserving set of inference variables. A type variable is treated as an inference variable if it is

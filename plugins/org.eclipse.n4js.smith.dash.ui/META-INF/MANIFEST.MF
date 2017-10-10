@@ -10,8 +10,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.xtext.ui,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.ui,
- org.swtchart,
- org.eclipse.n4js.smith.dash
+ org.eclipse.n4js.smith.dash,
+ com.ibm.icu
 Export-Package: org.eclipse.n4js.smith.dash.ui
 Bundle-Activator: org.eclipse.n4js.smith.dash.ui.Activator
 Bundle-ActivationPolicy: lazy

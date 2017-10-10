@@ -44,7 +44,7 @@ public class ManifestAwareResourceValidator extends N4JSResourceValidator {
 			OperationCanceledManager operationCanceledManager) {
 		this.eclipseCore = eclipseCore;
 		this.operationCanceledManager = operationCanceledManager;
-		this.collector = DataCollectors.getInstance().getOrCreateDataCollector("ManifestAwareResourceValidator");
+		this.collector = DataCollectors.INSTANCE.getOrCreateDataCollector("ManifestAwareResourceValidator");
 	}
 
 	@Override

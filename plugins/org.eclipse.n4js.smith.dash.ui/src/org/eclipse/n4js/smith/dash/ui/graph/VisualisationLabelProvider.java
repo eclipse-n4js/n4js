@@ -8,25 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.smith.dash.data;
+package org.eclipse.n4js.smith.dash.ui.graph;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import org.eclipse.jface.viewers.LabelProvider;
 
-/**
- *
- */
-public class Graph {
+class VisualisationLabelProvider extends LabelProvider {
 
-	private final Set<GraphNode> nodes = new LinkedHashSet<>();
-
-	public Set<GraphNode> getNodes() {
-		return Collections.unmodifiableSet(nodes);
+	@Override
+	public String getText(Object element) {
+		return ((ListEntry) element).label;
 	}
-
-	public void addNode(GraphNode node) {
-		nodes.add(node);
-	}
-
 }
