@@ -28,34 +28,33 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper;
-import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegion;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
+import org.eclipse.xtext.EcoreUtil2;
 import org.xpect.XpectImport;
 import org.xpect.expectation.IStringExpectation;
 import org.xpect.expectation.StringExpectation;
 import org.xpect.parameter.ParameterParser;
 import org.xpect.runner.Xpect;
 
-import com.google.inject.Inject;
-
 /**
  */
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
+	// @Inject
+	// private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
-		N4JSFlowAnalyzer flowAnalyzer = null;
-		ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
-		flowAnalyzer = cache.getFlowAnalyses();
+		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
+		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+		flowAnalyzer.createGraphs(script);
+		// ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
+		// flowAnalyzer = cache.getFlowAnalyses();
 		return flowAnalyzer;
 	}
 

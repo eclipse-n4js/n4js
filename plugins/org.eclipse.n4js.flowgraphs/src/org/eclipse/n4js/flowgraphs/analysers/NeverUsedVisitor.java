@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -27,22 +28,22 @@ public class NeverUsedVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initAll() {
+	protected void initialize() {
 		// nothing to do
 	}
 
 	@Override
-	protected void init(Mode curMode, ControlFlowElement curContainer) {
+	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminate(Mode curMode, ControlFlowElement curContainer) {
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminateAll() {
+	protected void terminate() {
 		// nothing to do
 	}
 
@@ -75,7 +76,7 @@ public class NeverUsedVisitor extends GraphVisitor {
 		private class NeverUsedWalker extends PathWalker {
 
 			@Override
-			protected void init() {
+			protected void initialize() {
 				// nothing to do
 			}
 

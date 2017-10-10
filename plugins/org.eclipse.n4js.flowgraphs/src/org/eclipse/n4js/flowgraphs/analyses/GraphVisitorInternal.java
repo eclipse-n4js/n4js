@@ -10,13 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -35,8 +33,6 @@ abstract public class GraphVisitorInternal {
 	private final List<PathExplorerInternal> activationRequests = new LinkedList<>();
 	private final List<PathExplorerInternal> activatedExplorers = new LinkedList<>();
 	private final List<PathExplorerInternal> activeExplorers = new LinkedList<>();
-	private final List<PathExplorerInternal> failedExplorers = new LinkedList<>();
-	private final List<PathExplorerInternal> passedExplorers = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
 	private Mode currentMode;
@@ -90,17 +86,17 @@ abstract public class GraphVisitorInternal {
 	/////////////////////// Abstract Methods ///////////////////////
 
 	/** Called before any other method is called. */
-	abstract protected void initAll();
+	abstract protected void initialize();
 
 	/**
-	 * Called after {@link #initAll()} and before any visit-method is called.
+	 * Called after {@link #initialize()} and before any visit-method is called.
 	 *
 	 * @param curMode
 	 *            mode of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void initInternal(Mode curMode, ControlFlowElement curContainer);
+	abstract protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer);
 
 	/**
 	 * Called for each node that is reachable w.r.t to the current mode and the current container.
@@ -124,17 +120,17 @@ abstract public class GraphVisitorInternal {
 	abstract protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge);
 
 	/**
-	 * Called before {@link #terminateAll()} and after any visit-method is called.
+	 * Called before {@link #terminate()} and after any visit-method is called.
 	 *
 	 * @param curMode
 	 *            mode of previous calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	abstract protected void terminate(Mode curMode, ControlFlowElement curContainer);
+	abstract protected void terminateMode(Mode curMode, ControlFlowElement curContainer);
 
 	/** Called at last */
-	abstract protected void terminateAll();
+	abstract protected void terminate();
 
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
@@ -143,32 +139,34 @@ abstract public class GraphVisitorInternal {
 		this.flowAnalyzer = flowAnalyzer;
 	}
 
+	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #initialize()}. */
+	final void callInitialize() {
+		initialize();
+	}
+
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #initInternal(Mode, ControlFlowElement)}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
+	 * {@link #initializeModeInternal(Mode, ControlFlowElement)}.
 	 */
-	final void callInitInternal() {
+	final void callInitializeModeInternal() {
 		if (activeMode) {
-			initInternal(getCurrentMode(), null);
+			initializeModeInternal(getCurrentMode(), null);
 		}
 	}
 
-	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #initAll()}. */
-	final void callInitAll() {
-		initAll();
+	/**
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
+	 * {@link #terminateMode(Mode, ControlFlowElement)}.
+	 */
+	final void callTerminateMode() {
+		if (activeMode) {
+			terminateMode(getCurrentMode(), null);
+		}
 	}
 
-	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #terminate(Mode, ControlFlowElement)}.
-	 */
+	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #terminate()}. */
 	final void callTerminate() {
-		if (activeMode) {
-			terminate(getCurrentMode(), null);
-		}
-	}
-
-	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #terminateAll()}. */
-	final void callTerminateAll() {
-		terminateAll();
+		terminate();
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
@@ -211,13 +209,11 @@ abstract public class GraphVisitorInternal {
 		}
 	}
 
-	final List<PathWalkerInternal> activate() {
+	/** Activates the {@link PathExplorerInternal} that wait for activation. */
+	final List<PathWalkerInternal> activateRequestedPathExplorers() {
 		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
 		for (PathExplorerInternal app : activationRequests) {
-			PathWalkerInternal activePath = app.firstPathWalker();
-			app.activePaths.add(activePath);
-			app.allPaths.add(activePath);
-			activePath.init();
+			PathWalkerInternal activePath = app.callFirstPathWalker(this);
 			activatedPaths.add(activePath);
 		}
 		activatedExplorers.addAll(activationRequests);
@@ -226,6 +222,10 @@ abstract public class GraphVisitorInternal {
 		return activatedPaths;
 	}
 
+	/** Called from {@link PathExplorerInternal} when the calling {@link PathExplorerInternal} is finished. */
+	final void deactivatePathExplorer(PathExplorerInternal pathExplorerInternal) {
+		activeExplorers.remove(pathExplorerInternal);
+	}
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
@@ -269,224 +269,24 @@ abstract public class GraphVisitorInternal {
 
 	/** @return all passed {@link PathExplorerInternal}s */
 	final public List<?> getPassed() {
-		return passedExplorers;
+		List<PathExplorerInternal> passedPEI = new LinkedList<>();
+		for (PathExplorerInternal pei : activatedExplorers) {
+			if (pei.isPassed()) {
+				passedPEI.add(pei);
+			}
+		}
+		return passedPEI;
 	}
 
 	/** @return all failed {@link PathExplorerInternal}s */
-	final public List<?> getFailed() {
-		return failedExplorers;
+	final public List<PathExplorerInternal> getFailed() {
+		List<PathExplorerInternal> failedPEI = new LinkedList<>();
+		for (PathExplorerInternal pei : activatedExplorers) {
+			if (pei.isFailed()) {
+				failedPEI.add(pei);
+			}
+		}
+		return failedPEI;
 	}
 
-	/** The {@link Quantor} defines under which condition a {@link PathExplorerInternal} fails or passes. */
-	public enum Quantor {
-		/** No specific condition. */
-		None,
-		/** The {@link PathExplorerInternal} passes iff all paths pass. */
-		ForAllPaths,
-		/** The {@link PathExplorerInternal} passes if at least one path passes. */
-		AtLeastOnePath
-	}
-
-	/**
-	 * An {@link PathExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific
-	 * preconditions. It follows all paths beginning from the location of activation. Its initial path is forked using
-	 * the method {@link #firstPathWalker()}. Subsequent paths are forked from the initial paths. The
-	 * {@link PathExplorerInternal} is deactivated in case it has no active paths anymore. The final state of a
-	 * {@link PathExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
-	 * <p/>
-	 * The life cycle of a {@link PathExplorerInternal}:
-	 * <ol>
-	 * <li/>Instantiation
-	 * <li/>Request for activation
-	 * <li/>Activation
-	 * <li/>Call to {@link PathExplorerInternal#firstPathWalker()}
-	 * <li/>De-Activation when all its {@link PathWalkerInternal}s are inactive
-	 * <li/>Evaluation by user by calling e.g. {@link PathExplorerInternal#isPassed()}
-	 * </ol>
-	 */
-	abstract public class PathExplorerInternal {
-		private final Set<PathWalkerInternal> activePaths = new HashSet<>();
-		private final List<PathWalkerInternal> passedPaths = new LinkedList<>();
-		private final List<PathWalkerInternal> failedPaths = new LinkedList<>();
-		private final List<PathWalkerInternal> allPaths = new LinkedList<>();
-		/** Quantor, specified in constructor */
-		protected final Quantor quantor;
-		/** Default verdict, specified in constructor */
-		protected final boolean passAsDefault;
-
-		/**
-		 * Constructor
-		 * <p>
-		 * The {@link PathExplorerInternal} will pass as default in case {@link PathWalkerInternal#fail()} is never
-		 * called on any of its active paths.
-		 *
-		 * @param quantor
-		 *            defines fail/pass condition
-		 */
-		protected PathExplorerInternal(Quantor quantor) {
-			this(quantor, true);
-		}
-
-		/**
-		 * Constructor
-		 *
-		 * @param quantor
-		 *            defines fail/pass condition
-		 * @param passAsDefault
-		 *            iff true, the {@link PathExplorerInternal} will pass as default
-		 */
-		protected PathExplorerInternal(Quantor quantor, boolean passAsDefault) {
-			this.quantor = quantor;
-			this.passAsDefault = passAsDefault;
-		}
-
-		/////////////////////// Abstract Methods ///////////////////////
-
-		/** Spawns the first path. Called right after this {@link PathExplorerInternal} gets activated. */
-		abstract protected PathWalkerInternal firstPathWalker();
-
-		/////////////////////// Service Methods for inherited classes ///////////////////////
-
-		/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
-		final public boolean isPassed() {
-			return passedExplorers.contains(this);
-		}
-
-		/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
-		final public boolean isFailed() {
-			return failedExplorers.contains(this);
-		}
-
-		/** @return all paths no matter if they are active or not, or passed or failed. */
-		final public List<PathWalkerInternal> getAllPaths() {
-			return allPaths;
-		}
-
-		/** Deactivates all active paths and hence this {@link PathExplorerInternal}. */
-		final protected void deactivateAll() {
-			while (!activePaths.isEmpty()) {
-				PathWalkerInternal aPath = activePaths.iterator().next();
-				aPath.deactivate();
-			}
-			checkExplorerDeactivation();
-		}
-
-		private void checkExplorerDeactivation() {
-			if (activePaths.isEmpty()) {
-				activeExplorers.remove(this);
-
-				boolean somePassed = !passedPaths.isEmpty();
-				boolean someFailed = !failedPaths.isEmpty();
-
-				boolean explorerPassed = false;
-				explorerPassed |= somePassed && quantor == Quantor.AtLeastOnePath;
-				explorerPassed |= somePassed && !someFailed && quantor == Quantor.ForAllPaths;
-				explorerPassed |= !somePassed && !someFailed && passAsDefault;
-				if (explorerPassed) {
-					passedExplorers.add(this);
-				} else {
-					failedExplorers.add(this);
-				}
-			}
-		}
-
-		/**
-		 * Paths begin when a {@link PathExplorerInternal} gets active or when forked from another path. Paths end when
-		 * no succeeding nodes are in the control flow graph, or the user calls either {@link #pass()}, {@link #fail()},
-		 * or {@link #deactivate()}. Paths follow every edge and fork on every node that has more than one edge.
-		 * However, each edge of type {@literal ControlFlowType.Repeat} is followed exactly twice.
-		 */
-		abstract public class PathWalkerInternal {
-
-			/////////////////////// Abstract Methods ///////////////////////
-
-			/** Called before any other method of this instance is called. */
-			abstract protected void init();
-
-			/** Called for each node in the order of nodes on the current path. */
-			abstract protected void visit(Node node);
-
-			/**
-			 * Called for each edge in the order of edges on the current path.
-			 *
-			 * @param edge
-			 *            traversed edge
-			 */
-			abstract protected void visit(Node start, Node end, ControlFlowEdge edge);
-
-			/**
-			 * Forks another path from the current node.<br/>
-			 * <i>Take care about forking the current state of this instance!</i>
-			 */
-			abstract protected PathWalkerInternal fork();
-
-			/** Called at last. */
-			abstract protected void terminate();
-
-			/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
-
-			/**
-			 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link PathWalkerInternal#visit(Node)}.
-			 */
-			final void callVisit(Node node) {
-				if (activeMode) {
-					visit(node);
-				}
-			}
-
-			/**
-			 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-			 * {@link PathWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
-			 */
-			final void callVisit(Node start, Node end, ControlFlowEdge edge) {
-				if (activeMode) {
-					visit(start, end, edge);
-				}
-			}
-
-			/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
-			final PathWalkerInternal callFork() {
-				PathWalkerInternal forkedPath = fork();
-				allPaths.add(forkedPath);
-				activePaths.add(forkedPath);
-				forkedPath.init();
-				return forkedPath;
-			}
-
-			/////////////////////// Service Methods for inherited classes ///////////////////////
-
-			/** Sets the verdict of this path to <i>Passed</i>. */
-			final public void pass() {
-				passedPaths.add(this);
-				if (quantor == Quantor.AtLeastOnePath) {
-					deactivateAll();
-				} else {
-					deactivate();
-				}
-			}
-
-			/** Sets the verdict of this path to <i>Failed</i>. */
-			final public void fail() {
-				failedPaths.add(this);
-				if (quantor == Quantor.ForAllPaths) {
-					deactivateAll();
-				} else {
-					deactivate();
-				}
-			}
-
-			/** Deactivates this path without setting the verdict. */
-			final public void deactivate() {
-				activePaths.remove(this);
-				terminate();
-				checkExplorerDeactivation();
-			}
-
-			/** @return true, iff this path is active. */
-			final public boolean isActive() {
-				return activePaths.contains(this);
-			}
-
-		}
-	}
 }

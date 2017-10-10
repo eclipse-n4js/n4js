@@ -17,7 +17,9 @@ import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor.AllPathPrintExplorer.AllPathPrintWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -71,24 +73,24 @@ public class AllPathPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initAll() {
+	protected void initialize() {
 		// nothing to do
 	}
 
 	@Override
-	protected void init(Mode curDirection, ControlFlowElement curContainer) {
+	protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
 		if (startElement == null) {
 			super.requestActivation(new AllPathPrintExplorer());
 		}
 	}
 
 	@Override
-	protected void terminate(Mode curDirection, ControlFlowElement curContainer) {
+	protected void terminateMode(Mode curDirection, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminateAll() {
+	protected void terminate() {
 		// nothing to do
 	}
 
@@ -135,7 +137,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 			}
 
 			@Override
-			protected void init() {
+			protected void initialize() {
 				// nothing to do
 			}
 

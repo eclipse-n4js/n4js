@@ -65,9 +65,6 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
@@ -80,9 +77,6 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private N4JSTypeSystem ts;
-
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	@Inject
 	private ReturnOrThrowAnalysis returnOrThrowAnalysis
@@ -114,8 +108,11 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkFlowGraphs(Script script) {
-		val ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(script.eResource() as N4JSResource);
-		val N4JSFlowAnalyzer flowAnalyzer = cache.getFlowAnalyses();
+		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
+		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
+		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+		flowAnalyzer.createGraphs(script);
+
 		val dcf = new DeadCodeVisitor();
 
 		flowAnalyzer.accept(dcf); // GH-120: comment-out this line to disable CFG

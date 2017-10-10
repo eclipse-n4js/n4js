@@ -44,9 +44,6 @@ import com.google.inject.Inject;
  * </ol>
  */
 public class N4JSPostProcessor implements PostProcessor {
-
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 	@Inject
 	private ASTProcessor astProcessor;
 	@Inject
@@ -78,9 +75,6 @@ public class N4JSPostProcessor implements PostProcessor {
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
-		ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate(resource);
-		// step 0: control-/data-flow analyses
-		cache.storeScriptAndCreateFlowGraph(resource.getScript());
 		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 2: expose internal types visible from outside

@@ -51,12 +51,12 @@ public class DeadCodeVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initAll() {
+	protected void initialize() {
 		// nothing to do
 	}
 
 	@Override
-	protected void init(Mode curMode, ControlFlowElement curContainer) {
+	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
@@ -84,12 +84,12 @@ public class DeadCodeVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminate(Mode curMode, ControlFlowElement curContainer) {
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
 		// nothing to do
 	}
 
 	@Override
-	protected void terminateAll() {
+	protected void terminate() {
 		unreachableCFEs.addAll(allBackwardCFEs);
 		unreachableCFEs.removeAll(allForwardCFEs);
 		unreachableCFEs.addAll(allIslandsCFEs);

@@ -107,13 +107,13 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initAll() {
+		protected void initialize() {
 			nodeMap.clear();
 			edgesMap.clear();
 		}
 
 		@Override
-		protected void init(Mode curDirection, ControlFlowElement curContainer) {
+		protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
 			// nothing to do
 		}
 
@@ -146,12 +146,12 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void terminate(Mode curDirection, ControlFlowElement curContainer) {
+		protected void terminateMode(Mode curDirection, ControlFlowElement curContainer) {
 			// nothing to do
 		}
 
 		@Override
-		protected void terminateAll() {
+		protected void terminate() {
 			// nothing to do
 		}
 

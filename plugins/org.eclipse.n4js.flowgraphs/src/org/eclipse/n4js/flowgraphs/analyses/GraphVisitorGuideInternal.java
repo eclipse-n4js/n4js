@@ -21,8 +21,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.PathExplorerInternal.PathWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -62,7 +61,7 @@ public class GraphVisitorGuideInternal {
 	public void init() {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyzer);
-			walker.callInitAll();
+			walker.callInitialize();
 		}
 	}
 
@@ -70,7 +69,7 @@ public class GraphVisitorGuideInternal {
 	public void terminate() {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyzer);
-			walker.callTerminateAll();
+			walker.callTerminate();
 		}
 	}
 
@@ -101,7 +100,7 @@ public class GraphVisitorGuideInternal {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyzer);
 			walker.setContainerAndMode(cn.getControlFlowContainer(), mode);
-			walker.callInitInternal();
+			walker.callInitializeModeInternal();
 		}
 
 		Set<Node> allVisitedNodes = new HashSet<>();
@@ -112,7 +111,7 @@ public class GraphVisitorGuideInternal {
 		}
 
 		for (GraphVisitorInternal walker : walkers) {
-			walker.callTerminate();
+			walker.callTerminateMode();
 		}
 		return allVisitedNodes;
 	}
@@ -203,7 +202,7 @@ public class GraphVisitorGuideInternal {
 				walkerVisitedEdges.add(currEdgeGuide.edge);
 				break;
 			}
-			List<PathWalkerInternal> activatedPaths = walker.activate();
+			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
 			currEdgeGuide.activePaths.addAll(activatedPaths);
 		}
 		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
@@ -229,7 +228,7 @@ public class GraphVisitorGuideInternal {
 	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
-			activatedPaths.addAll(walker.activate());
+			activatedPaths.addAll(walker.activateRequestedPathExplorers());
 		}
 
 		Node node = edgeProvider.getStartNode(cn);
