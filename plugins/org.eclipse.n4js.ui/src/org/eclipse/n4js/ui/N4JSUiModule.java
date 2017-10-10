@@ -17,6 +17,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
@@ -53,7 +54,10 @@ import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback;
 import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper;
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper;
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport;
+import org.eclipse.n4js.ui.editor.N4JSDocument;
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider;
+import org.eclipse.n4js.ui.editor.N4JSHover;
+import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory;
 import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
@@ -119,11 +123,13 @@ import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher;
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider;
 import org.eclipse.xtext.ui.editor.findrefs.EditorResourceAccess;
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter;
+import org.eclipse.xtext.ui.editor.hover.IEObjectHover;
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider;
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
+import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator;
@@ -666,5 +672,22 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Custom EditorResourceAccess as a fix for GH-234 */
 	public Class<? extends EditorResourceAccess> bindEditorResourceAccess() {
 		return N4JSEditorResourceAccess.class;
+	}
+
+	/** Custom XtextDocument. */
+	public Class<? extends XtextDocument> bindXtextDocument() {
+		return N4JSDocument.class;
+	}
+
+	/** Custom IEObjectHover. */
+	@Override
+	public Class<? extends IEObjectHover> bindIEObjectHover() {
+		return N4JSHover.class;
+	}
+
+	/** Custom IHyperlinkDetector. */
+	@Override
+	public Class<? extends IHyperlinkDetector> bindIHyperlinkDetector() {
+		return N4JSHyperlinkDetector.class;
 	}
 }
