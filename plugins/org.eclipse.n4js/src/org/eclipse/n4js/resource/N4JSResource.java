@@ -860,6 +860,18 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	public EObject doResolveProxy(InternalEObject proxy, EObject objectContext) {
+		// step 0: ensure proxy resolution is allowed
+		// (this must be checked before calling #performPostProcessing(), because that would trigger initialization if
+		// not done already)
+		final Script script = getScript();
+		final boolean isProxyResolutionAllowed = (script != null && !script.eIsProxy() && isFullyInitialized())
+				|| (script != null && script.eIsProxy());
+		if (!isProxyResolutionAllowed) {
+			// FIXME currently using the following instead of exception (due to Jenkins build node issues)
+			System.out.println("+!+!+!+!+ DISALLOWED PROXY RESOLUTION");
+			// throw new IllegalStateException(
+			// "proxy resolution was triggered in a resource load state that does not allow proxy resolution");
+		}
 		// step 1: trigger post processing of the resource containing 'proxy' iff it is the first proxy being resolved
 		// (if another proxy has been resolved before, post processing will already be running/completed, and in that
 		// case the next line will simply do nothing, cf. #performPostProcessing())
