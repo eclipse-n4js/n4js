@@ -31,17 +31,20 @@ public class N4JSEditorErrorTickUpdater extends XtextEditorErrorTickUpdater {
 
 	@Override
 	public void afterCreatePartControl(XtextEditor xtextEditor) {
-		super.afterCreatePartControl(xtextEditor);
 		editor = xtextEditor;
 		if (xtextEditor instanceof N4JSEditor) {
 			((N4JSEditor) xtextEditor).setErrorTickUpdater(this);
 		}
+		super.afterCreatePartControl(xtextEditor);
 	}
 
 	@Override
 	public void beforeDispose(XtextEditor xtextEditor) {
-		super.beforeDispose(xtextEditor);
 		editor = null;
+		if (xtextEditor instanceof N4JSEditor) {
+			((N4JSEditor) xtextEditor).setErrorTickUpdater(null);
+		}
+		super.beforeDispose(xtextEditor);
 	}
 
 	// increase visibility from 'protected' to 'public'
@@ -65,7 +68,7 @@ public class N4JSEditorErrorTickUpdater extends XtextEditorErrorTickUpdater {
 			final ImageDescriptor titleImageDescWithOverlay = ((N4JSEditor) editor)
 					.applyTitleImageOverlays(titleImageDesc);
 			if (titleImageDescWithOverlay != titleImageDesc) {
-				scheduleUpdateEditor(titleImageDescWithOverlay);
+				super.scheduleUpdateEditor(titleImageDescWithOverlay);
 				return;
 			}
 		}

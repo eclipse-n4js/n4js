@@ -18,6 +18,7 @@ import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.ITextEditComposer;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions;
 
 import com.google.inject.Inject;
 
@@ -79,21 +80,19 @@ public class N4JSDocument extends XtextDocument {
 		}
 	}
 
-	/** Utility method used to read two private fields from super classes required for the above adjustments. */
+	/**
+	 * Utility method used to read two private fields from super classes required for the above adjustments.
+	 * <p>
+	 * Note: cannot use {@link ReflectExtensions#get(Object, String)}, because it would read the private field of the
+	 * receiver's class, not of the super class.
+	 */
 	private static final <T> Object readField(Class<? super T> clazz, String fieldName, T instance) {
 		try {
 			final Field f = clazz.getDeclaredField(fieldName);
-			final boolean oldAccessible = f.isAccessible();
-			if (!oldAccessible) {
+			if (!f.isAccessible()) {
 				f.setAccessible(true);
 			}
-			try {
-				return f.get(instance);
-			} finally {
-				if (!oldAccessible) {
-					f.setAccessible(oldAccessible);
-				}
-			}
+			return f.get(instance);
 		} catch (Throwable th) {
 			throw new RuntimeException("failed to read field \"" + fieldName + "\" of " + clazz.getSimpleName(), th);
 		}
