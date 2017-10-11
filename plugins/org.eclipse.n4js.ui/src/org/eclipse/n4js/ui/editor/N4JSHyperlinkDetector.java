@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.ui.editor;
 
+import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
@@ -31,8 +32,12 @@ public class N4JSHyperlinkDetector extends DefaultHyperlinkDetector {
 	@Override
 	public IHyperlink[] detectHyperlinks(final ITextViewer textViewer, final IRegion region,
 			final boolean canShowMultipleHyperlinks) {
+		final IDocument xtextDocument = textViewer.getDocument();
+		if (!(xtextDocument instanceof N4JSDocument)) {
+			return super.detectHyperlinks(textViewer, region, canShowMultipleHyperlinks);
+		}
 		final IHyperlinkHelper helper = getHelper();
-		return ((N4JSDocument) textViewer.getDocument()).tryReadOnly(new IUnitOfWork<IHyperlink[], XtextResource>() {
+		return ((N4JSDocument) xtextDocument).tryReadOnly(new IUnitOfWork<IHyperlink[], XtextResource>() {
 			@Override
 			public IHyperlink[] exec(XtextResource resource) throws Exception {
 				if (resource == null) {

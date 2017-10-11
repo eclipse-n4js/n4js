@@ -35,6 +35,9 @@ public class N4JSHover extends DispatchingEObjectTextHover {
 		IXtextDocument xtextDocument = XtextDocumentUtil.get(textViewer);
 		if (xtextDocument == null)
 			return null;
+		if (!(xtextDocument instanceof N4JSDocument)) {
+			return super.getHoverRegion(textViewer, offset);
+		}
 		// TODO this is being called on change in the UI-thread. Not a good idea to do such expensive stuff.
 		// returning the region on a per token basis would be better.
 		try {
