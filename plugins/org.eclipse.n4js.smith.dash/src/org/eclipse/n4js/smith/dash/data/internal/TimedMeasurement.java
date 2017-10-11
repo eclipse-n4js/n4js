@@ -17,30 +17,30 @@ import org.eclipse.n4js.smith.dash.data.Measurement;
 import com.google.common.base.Stopwatch;
 
 /**
- *
+ * Simple measurement that tracks time between its creation and call to {@link #end()}.
  */
 public class TimedMeasurement implements Measurement {
-	public final String name;
+	final String name;
 	final Stopwatch sw;
-	Consumer<TimedMeasurement> stopHandler;
+	private boolean consumed = false;
+	private Consumer<TimedMeasurement> stopHandler;
 
 	TimedMeasurement(final String name, Consumer<TimedMeasurement> stopHandler) {
 		this.name = name;
-		this.sw = Stopwatch.createStarted();
 		this.stopHandler = stopHandler;
+		this.sw = Stopwatch.createStarted();
 	}
 
 	@Override
 	public void end() {
+		if (consumed)
+			return;
+
 		if (this.sw.isRunning())
 			this.sw.stop();
 		stopHandler.accept(this);
-		stopHandler = TimedMeasurement::noop;
-	}
-
-	@SuppressWarnings("unused")
-	static void noop(TimedMeasurement measurement) {
-		// NOOP
+		consumed = true;
+		stopHandler = null;
 	}
 
 }

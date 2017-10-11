@@ -14,26 +14,41 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Container for collecting {@link SomeDataPoint}s based on {@link Measurement}s. Can be used stand alone to gather
- * stand alone data. Can have {@link #getParent()} and / or {@link #getChildren()} which allows to express nested or
- * more elaborated data relations.
+ * Container for collecting {@link DataPoint}s based on {@link Measurement}s. Can be used stand alone to gather stand
+ * alone data. Can have {@link #getParent()} and / or {@link #getChildren()} which allows to express nested or more
+ * elaborated data relations.
+ * <p>
+ * Collector has internal states: {@code paused} and {@code not paused}. In {@code paused} state data is not collected
+ * by the collector. Default state is {@code paused}.
  */
-public interface DataCollector {
-	public DataCollector getParent();
+public abstract class DataCollector {
+	/** returns parent collector or {@code null} */
+	public abstract DataCollector getParent();
 
-	public Collection<DataCollector> getChildren();
+	/** returns collection of child collector, can be empty list (never {@code null}) */
+	public abstract Collection<DataCollector> getChildren();
 
-	public Measurement getMeasurement(String name);
+	/**
+	 * returns new instance of the {@link Measurement}. When user invokes {@link Measurement#end()} this collector will
+	 * collect its data.
+	 */
+	public abstract Measurement getMeasurement(String name);
 
-	public List<SomeDataPoint> getData();
+	/** returns list of collected data. */
+	public abstract List<DataPoint> getData();
 
-	DataCollector getChild(String key);
+	/** Pauses set paused state according to the provided flag. */
+	public abstract void setPaused(boolean paused);
 
-	void addChild(String key, DataCollector child);
+	/** Clear all data collected so far. */
+	public abstract void purgeData();
 
-	Collection<String> childrenKeys();
+	/** return immediate child with the provided key. */
+	protected abstract DataCollector getChild(String key);
 
-	void setPaused(boolean paused);
+	/** add given collector as child under given key. */
+	protected abstract void addChild(String key, DataCollector child);
 
-	public void purgeData();
+	/** get keys for all immidate children. */
+	protected abstract Collection<String> childrenKeys();
 }

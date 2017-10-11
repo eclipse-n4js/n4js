@@ -17,8 +17,8 @@ import java.util.stream.Collectors;
 
 import org.eclipse.n4js.smith.dash.data.DataSeries;
 import org.eclipse.n4js.smith.dash.data.SimpleTimeFormat;
-import org.eclipse.n4js.smith.dash.data.SomeDataAccess;
-import org.eclipse.n4js.smith.dash.data.SomeDataPoint;
+import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
+import org.eclipse.n4js.smith.dash.data.DataPoint;
 import org.eclipse.n4js.utils.IndentLevel;
 
 /**
@@ -28,7 +28,7 @@ public class ChartGraphFactory {
 
 	/** Uses provided key to obtain performance data and builds graph representing it. */
 	public static ListEntry buildGraph(String key, float baseHeight, float baseWidth, String label) {
-		DataSeries dataSeries = SomeDataAccess.getDataSeries(key);
+		DataSeries dataSeries = CollectedDataAccess.getDataSeries(key);
 		if (dataSeries.hasNoData())
 			return new ListEntry(label, new StackGraph(), label + " (no data)");
 
@@ -38,7 +38,7 @@ public class ChartGraphFactory {
 	private static ListEntry createChartGraph(DataSeries series, float baseHeight, float baseWidth, String label) {
 		StringJoiner sj = new StringJoiner("\n");
 		IndentLevel indent = new IndentLevel("\t");
-		final List<SomeDataPoint> data = series.getData().stream().sorted(ChartGraphFactory::compareDesc)
+		final List<DataPoint> data = series.getData().stream().sorted(ChartGraphFactory::compareDesc)
 				.collect(Collectors.toList());
 		final int size = data.size();
 
@@ -60,7 +60,7 @@ public class ChartGraphFactory {
 		List<Long> data20 = new LinkedList<>();
 		sj.add(indent.get() + "top 20% :");
 		indent.increase();
-		SomeDataPoint dataPoint = null;
+		DataPoint dataPoint = null;
 		while (i < top20PercentMarker) {
 			dataPoint = data.get(i);
 			data20.add(dataPoint.nanos);
@@ -93,7 +93,7 @@ public class ChartGraphFactory {
 		return new ListEntry(label, new ChartGraph(node20, nodeGap, node80), sj.toString());
 	}
 
-	private static int compareDesc(SomeDataPoint data1, SomeDataPoint data2) {
+	private static int compareDesc(DataPoint data1, DataPoint data2) {
 		return Long.compare(data2.nanos, data1.nanos);
 	}
 }

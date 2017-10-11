@@ -20,11 +20,11 @@ import java.util.stream.Stream;
 public class DataSeries {
 	private Long sum;
 	public final String name;
-	List<SomeDataPoint> data = new LinkedList<>();
+	List<DataPoint> data = new LinkedList<>();
 
 	private final List<DataSeries> children = new LinkedList();
 
-	public DataSeries(String name, List<SomeDataPoint> data) {
+	public DataSeries(String name, List<DataPoint> data) {
 		this.name = name;
 		this.data.addAll(data);
 		this.sum = this.data.stream().map(d -> d.nanos).reduce(0L, Long::sum);
@@ -51,7 +51,7 @@ public class DataSeries {
 		return this.children.stream();
 	}
 
-	public List<SomeDataPoint> getData() {
+	public List<DataPoint> getData() {
 		return new LinkedList<>(this.data);
 	}
 

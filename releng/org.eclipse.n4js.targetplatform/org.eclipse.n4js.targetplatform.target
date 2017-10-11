@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="124">
+<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="125">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
@@ -53,8 +53,6 @@
       <unit id="com.fasterxml.jackson.core.jackson-databind" version="2.5.0.v201504151636"/>
       <unit id="com.google.guava" version="15.0.0.v201403281430"/>
       <unit id="com.google.inject" version="3.0.0.v201605172100"/>
-      <unit id="org.mozilla.javascript" version="1.7.5.v201504281450"/>
-      <unit id="org.swtchart" version="0.10.0.v201605200358"/>
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -85,11 +83,6 @@
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.gef" version="3.11.0.201606061308"/>
       <repository location="http://download.eclipse.org/tools/gef/updates/legacy/releases/4.0.0_gef-master_1952"/>
-    </location>
-    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.birt.chart.device.swt" version="4.4.2.v201410272105"/>
-      <unit id="org.eclipse.birt.chart.engine.extension" version="4.4.2.v201410272105"/>
-      <repository location="http://download.eclipse.org/birt/update-site/4.4/"/>
     </location>
   </locations>
 </target>

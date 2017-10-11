@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.jface.window.DefaultToolTip;
-import org.eclipse.n4js.smith.dash.data.DataCollector;
-import org.eclipse.n4js.smith.dash.data.DataCollectors;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -401,13 +399,6 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 			if (graphNeedsLayout) {
 				graph.layout(gc);
 				graphNeedsLayout = false;
-			}
-
-			DataCollectors collectors = DataCollectors.INSTANCE;
-			String key = "builder";
-			DataCollector dataCollector = collectors.getRootCollectors().get(key);
-			if (dataCollector == null) {
-				throw new RuntimeException("No data available for key " + key);
 			}
 
 			graph.getNodes().forEach(n -> n.paint(gc));

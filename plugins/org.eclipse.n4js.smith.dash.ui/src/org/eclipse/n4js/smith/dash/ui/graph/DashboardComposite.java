@@ -25,7 +25,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
-import org.eclipse.n4js.smith.dash.data.SomeDataAccess;
+import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
 import org.eclipse.n4js.smith.dash.ui.Activator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -152,8 +152,8 @@ public class DashboardComposite extends Composite {
 
 	/** Canvas and graph depends on actual data. */
 	void initCanvas(Composite canvasParent) {
-		if (SomeDataAccess.isValid(key)) {
-			if (SomeDataAccess.hasNestedData(key)) {
+		if (CollectedDataAccess.isValid(key)) {
+			if (CollectedDataAccess.hasNestedData(key)) {
 				this.canvas = new StackCanvas(canvasParent, SWT.NONE);
 			} else {
 				this.canvas = new ChartCanvas(canvasParent, SWT.NONE);
@@ -236,8 +236,8 @@ public class DashboardComposite extends Composite {
 	}
 
 	public void addGraph(String label, boolean select) {
-		if (SomeDataAccess.isValid(key)) {
-			if (SomeDataAccess.hasNestedData(key)) {
+		if (CollectedDataAccess.isValid(key)) {
+			if (CollectedDataAccess.hasNestedData(key)) {
 				addEntry(StackGraphFactory.buildGraph(key, BASE_HEIGHT, BASE_WIDTH, label), select);
 			} else {
 				Rectangle clientArea = canvas.getClientArea();

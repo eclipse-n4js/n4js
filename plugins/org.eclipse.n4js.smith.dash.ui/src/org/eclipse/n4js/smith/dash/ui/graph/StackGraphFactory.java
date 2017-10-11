@@ -14,7 +14,7 @@ import java.util.StringJoiner;
 
 import org.eclipse.n4js.smith.dash.data.DataSeries;
 import org.eclipse.n4js.smith.dash.data.SimpleTimeFormat;
-import org.eclipse.n4js.smith.dash.data.SomeDataAccess;
+import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
 import org.eclipse.n4js.utils.IndentLevel;
 
 /**
@@ -24,7 +24,7 @@ public class StackGraphFactory {
 
 	/** Uses provided key to obtain performance data and builds graph representing it. */
 	public static ListEntry buildGraph(String key, float baseHeight, float baseWidth, String label) {
-		DataSeries dataSeries = SomeDataAccess.getDataSeries(key);
+		DataSeries dataSeries = CollectedDataAccess.getDataSeries(key);
 		if (dataSeries.hasNoData())
 			return new ListEntry(label, new StackGraph(), label + " (no data)");
 

@@ -21,7 +21,7 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.n4js.smith.dash.data.SomeDataAccess;
+import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
 import org.eclipse.n4js.smith.dash.ui.Activator;
 import org.eclipse.n4js.smith.dash.ui.graph.DashboardComposite;
 import org.eclipse.swt.SWT;
@@ -88,7 +88,7 @@ public class DashboardView extends ViewPart {
 	}
 
 	private void addDynamicVisualisationSelection(IMenuManager menuManager) {
-		Set<String> collectorsKeys = SomeDataAccess.getCollectorsKeys();
+		Set<String> collectorsKeys = CollectedDataAccess.getCollectorsKeys();
 		trashUnreachableVisualisations(collectorsKeys);
 
 		// add actions to the menu
@@ -136,7 +136,7 @@ public class DashboardView extends ViewPart {
 	 */
 	protected void onPause(Action action) {
 		this.paused = action.isChecked();
-		SomeDataAccess.setPaused(this.paused);
+		CollectedDataAccess.setPaused(this.paused);
 	}
 
 	/**
@@ -148,7 +148,7 @@ public class DashboardView extends ViewPart {
 		this.visualisation.clear();
 
 		// remove all data from underlying data sources
-		SomeDataAccess.purgeAllData();
+		CollectedDataAccess.purgeAllData();
 	}
 
 	@Override

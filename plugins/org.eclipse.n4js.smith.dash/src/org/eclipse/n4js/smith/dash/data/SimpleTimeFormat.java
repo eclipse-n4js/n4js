@@ -30,6 +30,11 @@ public class SimpleTimeFormat extends Format {
 	private final static String NO_DECIMAL = "%.0f %s";
 	private final static String WITH_DECIMAL = "%.4g %s";
 
+	/** Convert time expressed as long with nanoseconds to human readable string. */
+	public static String convert(long duration) {
+		return convertWithFormat(duration, WITH_DECIMAL);
+	}
+
 	@Override
 	public StringBuffer format(Object obj, StringBuffer toAppendTo, FieldPosition pos) {
 		if (obj instanceof Double) {
@@ -41,11 +46,6 @@ public class SimpleTimeFormat extends Format {
 	@Override
 	public Object parseObject(String source, ParsePosition pos) {
 		throw new RuntimeException("Unexpected call.");
-	}
-
-	/** Convert time expressed as long with nanoseconds to human readable string. */
-	public static String convert(long duration) {
-		return convertWithFormat(duration, WITH_DECIMAL);
 	}
 
 	/** Convert with provided format. */
@@ -98,5 +98,4 @@ public class SimpleTimeFormat extends Format {
 			throw new RuntimeException("Unsupported unit " + unit.name());
 		}
 	}
-
 }

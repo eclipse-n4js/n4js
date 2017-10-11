@@ -17,9 +17,10 @@ package org.eclipse.n4js.smith.dash.data;
 public interface Measurement {
 
 	/**
-	 * Ends given measurement. Concrete implementations can do some data processing in this step. It is expected that
-	 * caller invokes this only once, but concrete implementations need to assure that this method is safe to call
-	 * multiple times, i.e. subsequent calls have no effects.
+	 * Ends given measurement. Concrete implementations can do some data processing in this step. Collected data is
+	 * passed to the {@link DataCollector} that created this instance. It is expected that caller invokes {@link #end()}
+	 * only once, but concrete implementations need to assure that this method is safe to call multiple times, i.e.
+	 * subsequent calls have no effects.
 	 */
 	public void end();
 

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.smith.dash.data.internal;
 
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -20,28 +22,29 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.eclipse.n4js.smith.dash.data.DataCollector;
+import org.eclipse.n4js.smith.dash.data.DataPoint;
 import org.eclipse.n4js.smith.dash.data.Measurement;
-import org.eclipse.n4js.smith.dash.data.SomeDataPoint;
 
 /**
- *
+ * Collector for timed data. NOT thread safe.
  */
-public class SomeDataCollector implements DataCollector {
+public class TimedDataCollector extends DataCollector {
 
 	private final DataCollector parent;
 	private final Map<String, DataCollector> children = new HashMap<>();
 
-	private static final TimedMeasurement NULL_MEASURMENT = new TimedMeasurement("NOOP", TimedMeasurement::noop);
+	private static final TimedMeasurement NULL_MEASURMENT = new TimedMeasurement("NOOP", TimedDataCollector::noop);
 	private boolean notCollecting = true;
 
-	// concurrent collection
-	public final List<SomeDataPoint> data = new LinkedList<>();
+	private final List<DataPoint> data = new LinkedList<>();
 
-	public SomeDataCollector() {
+	/** Convenience constructors, delegates to {@link #TimedDataCollector(DataCollector)} with null argument. */
+	public TimedDataCollector() {
 		this(null);
 	}
 
-	public SomeDataCollector(DataCollector parent) {
+	/** Creates instance of the collector. Provided parent can be {@code null}. */
+	public TimedDataCollector(DataCollector parent) {
 		this.parent = parent;
 	}
 
@@ -59,13 +62,12 @@ public class SomeDataCollector implements DataCollector {
 	private void consume(Measurement measurement) {
 		if (measurement instanceof TimedMeasurement) {
 			TimedMeasurement timed = (TimedMeasurement) measurement;
-			// synchronized
-			data.add(new SomeDataPoint(timed.name, timed.sw));
+			data.add(new DataPoint(timed.name, timed.sw.elapsed(NANOSECONDS)));
 		}
 	}
 
 	@Override
-	public List<SomeDataPoint> getData() {
+	public List<DataPoint> getData() {
 		return Collections.unmodifiableList(data);
 	}
 
@@ -80,12 +82,12 @@ public class SomeDataCollector implements DataCollector {
 	}
 
 	@Override
-	public DataCollector getChild(String key) {
+	protected DataCollector getChild(String key) {
 		return this.children.get(key);
 	}
 
 	@Override
-	public void addChild(String key, DataCollector child) {
+	protected void addChild(String key, DataCollector child) {
 		if (this.children.containsKey(key)) {
 			throw new RuntimeException("Already contains key " + key + " with child " + this.children.get(key));
 		}
@@ -119,4 +121,8 @@ public class SomeDataCollector implements DataCollector {
 		this.children.values().forEach(c -> c.purgeData());
 	}
 
+	/** NOOP consumer. */
+	private static void noop(@SuppressWarnings("unused") Measurement measurement) {
+		// NOOP
+	}
 }

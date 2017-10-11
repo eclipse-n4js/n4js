@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 import com.google.common.base.Strings;
 
 /** */
-public class SomeDataAccess {
+public class CollectedDataAccess {
 	private static final DataCollectors collectors = DataCollectors.INSTANCE;
 
 	/** */
@@ -43,22 +43,22 @@ public class SomeDataAccess {
 	}
 
 	/** */
-	public static List<SomeDataPoint> gRawData2(String key) {
+	public static List<DataPoint> gRawData2(String key) {
 
 		DataCollector dataCollector = collectors.getRootCollectors().get(key);
 		if (dataCollector == null)
 			return Collections.emptyList();
 
-		return dataCollector.getData().stream().sorted(SomeDataAccess::compareDesc)
+		return dataCollector.getData().stream().sorted(CollectedDataAccess::compareDesc)
 				.collect(Collectors.toList());
 	}
 
-	private static int compareDesc(SomeDataPoint data1, SomeDataPoint data2) {
+	private static int compareDesc(DataPoint data1, DataPoint data2) {
 		return Long.compare(data2.nanos, data1.nanos);
 	}
 
 	/** */
-	public static List<SomeDataPoint> getData(String key) {
+	public static List<DataPoint> getData(String key) {
 
 		DataCollector dataCollector = collectors.getRootCollectors().get(key);
 		if (dataCollector == null)

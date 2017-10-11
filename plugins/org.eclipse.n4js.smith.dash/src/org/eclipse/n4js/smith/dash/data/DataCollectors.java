@@ -14,21 +14,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.n4js.smith.dash.data.internal.SomeDataCollector;
+import org.eclipse.n4js.smith.dash.data.internal.TimedDataCollector;
 
 import com.google.common.base.Strings;
 
 /**
+ * Singleton managing {@link DataCollector} instances. Should be used for creating and obtaining instances of the
+ * collectors. Data collectors obtained by other means will not be reachable by this class APIs.
+ * <p>
  * Using injector causes issues in the SharedContributions, i.e. N4JS*ClusteringBuilderState gets different instance
  * than the rest of the system.
  */
 public enum DataCollectors {
 	/** The instance. */
 	INSTANCE;
-
-	private DataCollectors() {
-		// Private constructor prevents instantiation from other classes
-	}
 
 	private final Map<String, DataCollector> collectors = new HashMap<>();
 
@@ -97,13 +96,13 @@ public enum DataCollectors {
 		if (parent == null) {
 			collector = collectors.get(key);
 			if (collector == null) {
-				collector = new SomeDataCollector();
+				collector = new TimedDataCollector();
 				collectors.put(key, collector);
 			}
 		} else {
 			collector = parent.getChild(key);
 			if (collector == null) {
-				collector = new SomeDataCollector();
+				collector = new TimedDataCollector();
 				parent.addChild(key, collector);
 			}
 		}
@@ -111,10 +110,11 @@ public enum DataCollectors {
 	}
 
 	/** Returns mapping between all top level collectors and their names. */
-	public Map<String, DataCollector> getRootCollectors() {
+	Map<String, DataCollector> getRootCollectors() {
 		return Collections.unmodifiableMap(collectors);
 	}
 
+	/** sets {@code paused} state for all data collectors. */
 	public void setPaused(boolean paused) {
 		collectors.values().forEach(collector -> collector.setPaused(paused));
 	}
