@@ -87,7 +87,6 @@ class WorkspaceWizardModel {
 							model.moduleSpecifier = model.moduleSpecifier + firstElement.fullPath.removeFileExtension.lastSegment;
 						}
 					}
-
 				}
 
 			}
