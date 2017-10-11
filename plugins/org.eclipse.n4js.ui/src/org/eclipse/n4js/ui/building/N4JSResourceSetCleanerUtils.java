@@ -12,9 +12,8 @@ package org.eclipse.n4js.ui.building;
 
 import static org.eclipse.n4js.ts.scoping.builtin.N4Scheme.isN4Scheme;
 
-import java.util.Iterator;
-
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -42,11 +41,14 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 		boolean wasDeliver = resourceSet.eDeliver();
 		try {
 			resourceSet.eSetDeliver(false);
-			for (final Iterator<Resource> itr = resourceSet.getResources().iterator(); itr.hasNext(); /**/) {
-				final Resource resource = itr.next();
+			// iterate backwards to avoid costly shuffling in the underlying list
+			EList<Resource> resources = resourceSet.getResources();
+			// int originalSize = resources.size();
+			for (int i = resources.size() - 1; i >= 0; i--) {
+				final Resource resource = resources.get(i);
 				final URI uri = resource.getURI();
 				if (!isN4Scheme(uri)) {
-					itr.remove();
+					resources.remove(i);
 				} else {
 					LOGGER.info("Intentionally skipping the removal of N4 resource: " + uri);
 				}
