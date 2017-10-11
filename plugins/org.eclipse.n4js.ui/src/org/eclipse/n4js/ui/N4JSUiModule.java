@@ -98,6 +98,7 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
+import org.eclipse.n4js.utils.ui.document.AvoidRefreshDocumentProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -131,6 +132,7 @@ import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
 import org.eclipse.xtext.ui.editor.model.XtextDocument;
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator;
@@ -703,4 +705,12 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		binder.bind(IXtextEditorCallback.class).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
 				N4JSEditorErrorTickUpdater.class);
 	}
+
+	/**
+	 * A document provider that will not cancel a build when opening a file.
+	 */
+	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+		return AvoidRefreshDocumentProvider.class;
+	}
+
 }
