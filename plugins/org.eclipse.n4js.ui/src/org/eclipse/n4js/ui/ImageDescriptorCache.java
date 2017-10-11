@@ -125,7 +125,7 @@ public enum ImageDescriptorCache {
 		SHOW_HIDDEN_WORKING_SETS("show_hidden.gif"),
 
 		/** Tiny clock symbol (used as overlay of editor title image during reconciliation). */
-		TINY_CLOCK("tiny_clock.gif");
+		TINY_CLOCK("tiny_clock_ovr.gif");
 
 		private static final Logger LOGGER = Logger.getLogger(ImageRef.class);
 
