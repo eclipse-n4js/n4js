@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.n4jsx.n4JSX;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  * <!-- begin-user-doc -->
@@ -22,5 +22,5 @@ import org.eclipse.emf.ecore.EObject;
  * @model abstract="true"
  * @generated
  */
-public interface JSXAttribute extends EObject {
+public interface JSXAttribute extends ControlFlowElement {
 } // JSXAttribute

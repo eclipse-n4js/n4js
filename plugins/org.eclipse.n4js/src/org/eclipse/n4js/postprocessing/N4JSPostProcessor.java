@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.resource;
+package org.eclipse.n4js.postprocessing;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +18,8 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.postprocessing.ASTProcessor;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
@@ -43,7 +44,6 @@ import com.google.inject.Inject;
  * </ol>
  */
 public class N4JSPostProcessor implements PostProcessor {
-
 	@Inject
 	private ASTProcessor astProcessor;
 	@Inject

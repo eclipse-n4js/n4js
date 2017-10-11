@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
 import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportableElement;
 import org.eclipse.n4js.n4JS.FieldAccessor;
@@ -847,6 +848,11 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				default: return -1;
 			}
 		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == Statement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -921,6 +927,11 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 				default: return -1;
 			}
 		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == Statement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
@@ -990,6 +1001,11 @@ public class FunctionDeclarationImpl extends AnnotableScriptElementImpl implemen
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == ModifiableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
 			switch (baseOperationID) {
 				default: return -1;
 			}

@@ -35,6 +35,10 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
+import org.eclipse.n4js.n4JS.BreakStatement
+import org.eclipse.n4js.n4JS.ContinueStatement
+import org.eclipse.n4js.n4JS.ThrowStatement
+import org.eclipse.n4js.n4JS.ReturnStatement
 
 /**
  * Helper returning the keyword of a given AST or type element, e.g., "class" for a class declaration.
@@ -132,6 +136,22 @@ class N4JSElementKeywordProvider extends TypesKeywordProvider {
 
 	def dispatch String keyword(ThisLiteral thisLiteral) {
 		"this keyword"
+	}
+
+	def dispatch String keyword(BreakStatement brk) {
+		"break"
+	}
+
+	def dispatch String keyword(ContinueStatement cntn) {
+		"continue"
+	}
+
+	def dispatch String keyword(ThrowStatement thrw) {
+		"throw"
+	}
+
+	def dispatch String keyword(ReturnStatement rtrn) {
+		"return"
 	}
 
 	def dispatch String keyword(Void nullValue) {

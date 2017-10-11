@@ -57,7 +57,7 @@ function f0b() {
 	    } else {
 	       continue y;
 
-	       // XPECT warnings --> "Dead code. No execution possible after ContinueStatement." at "f0();"
+	       // XPECT warnings --> "Dead code. No execution possible after continue." at "f0();"
 	       f0(); // Dead
 		}
 
@@ -99,7 +99,7 @@ function f0d() {
        return y;
 	}
 
-   // XPECT warnings --> "Dead code. No execution possible after IfStatement." at "f0();"
+   // XPECT warnings --> "Dead code. No execution possible after if statement." at "f0();"
    f0(); // Dead
 
 }
@@ -144,11 +144,12 @@ function f1() {
            } else {
                break y;
            }
+       // XPECT warnings --> "Dead code." at "true ) return; f0();"
        } while ( true )
        return;
-       // XPECT warnings --> "Dead code. No execution possible after return." at "f0();"
        f0();  // Dead
 
+   // XPECT warnings --> "Dead code." at "true"
    } while ( true )
 
 }
@@ -205,8 +206,10 @@ function f4(): number {
 	               break y;
 	           }
            }
+	   // XPECT warnings --> "Dead code." at "true ) return 4;"
        } while ( true )
        return 4;
+   // XPECT warnings --> "Dead code." at "true"
    } while ( true )
 
 }
@@ -282,10 +285,13 @@ function f6(): number {
 		           // XPECT ! warnings --> "warning - Dead code. No execution possible after IfStatement." at "f0()"
 		           f0(); // Dead Code
 	           }
+		   // XPECT warnings --> "Dead code." at "true"
 	       } while ( true )
 
        } // z
+	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
        return 4;
+   // XPECT warnings --> "Dead code." at "true"
    } while ( true )
 
 }

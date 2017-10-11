@@ -1,0 +1,237 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To very these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+
+function SwitchCase1() {
+	// SwitchCase1 XPECT cfContainer --> FunctionDeclaration::Block
+	// SwitchCase1 XPECT allIslandElems -->
+	// SwitchCase1 XPECT allCatchBlocks -->
+	/* SwitchCase1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 3,
+		1 --> "end",
+		3 --> "end"
+	--- */
+	/* SwitchCase1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> "end",
+		"start" -> 1 -> "end"
+	---	*/
+	/* SwitchCase1 XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		"end" -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// SwitchCase1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCase1 XPECT commonPreds of '"end"' and '3' --> 1, 3
+	// SwitchCase1 XPECT commonPreds of '2' and '3' --> 2
+	// SwitchCase1 XPECT succs at '"start"' --> 1
+	// SwitchCase1 XPECT succs at '1' --> 2 , "end"
+	// SwitchCase1 XPECT succs at '2' --> 3
+	// SwitchCase1 XPECT succs at '3' --> "end"
+	// SwitchCase1 XPECT preds at 'switch' --> "start"
+	// SwitchCase1 XPECT succs at 'switch' --> "end"
+	"start";
+	switch (1) {
+		case 2: 3;
+	}
+	"end";
+}
+
+function SwitchCaseFallThrough() {
+	// SwitchCaseFallThrough XPECT cfContainer --> FunctionDeclaration::Block
+	// SwitchCaseFallThrough XPECT allIslandElems -->
+	// SwitchCaseFallThrough XPECT allCatchBlocks -->
+	/* SwitchCaseFallThrough XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 4,
+		1 --> "end",
+		2 --> 3,
+		3 --> 4,
+		4 --> 5,
+		5 --> "end"
+	--- */
+	/* SwitchCaseFallThrough XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> 4 -> 5 -> "end",
+		"start" -> 1 -> 4 -> 5 -> "end",
+		"start" -> 1 -> "end"
+	--- */
+	/* SwitchCaseFallThrough XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		"end" -> 5 -> 4 -> 1 -> "start",
+		"end" -> 5 -> 4 -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// SwitchCaseFallThrough XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseFallThrough XPECT path from '3' to '5' -->
+	// SwitchCaseFallThrough XPECT commonPreds of '"end"' and '3' --> 1, 3
+	// SwitchCaseFallThrough XPECT commonPreds of '5' and '3' --> 1, 3
+	// SwitchCaseFallThrough XPECT commonPreds of '5' and '"end"' --> 1, 5
+	// SwitchCaseFallThrough XPECT succs at '"start"' --> 1
+	// SwitchCaseFallThrough XPECT succs at '1' --> 2, 4, "end"
+	// SwitchCaseFallThrough XPECT succs at '2' --> 3
+	// SwitchCaseFallThrough XPECT succs at '3' --> 4
+	// SwitchCaseFallThrough XPECT succs at '4' --> 5
+	// SwitchCaseFallThrough XPECT succs at '5' --> "end"
+	// SwitchCaseFallThrough XPECT preds at 'switch' --> "start"
+	// SwitchCaseFallThrough XPECT succs at 'switch' --> "end"
+	"start";
+	switch (1) {
+		case 2: 3;
+		case 4: 5;
+	}
+	"end";
+}
+
+function SwitchCaseBreak1() {
+	// SwitchCaseBreak1 XPECT cfContainer --> FunctionDeclaration::Block
+	// SwitchCaseBreak1 XPECT allIslandElems -->
+	// SwitchCaseBreak1 XPECT allCatchBlocks -->
+	/* SwitchCaseBreak1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 4,
+		1 --> "end",
+		2 --> 3,
+		3 --> break;,
+		break; -Break-> "end",
+		4 --> 5,
+		5 --> break;,
+		break; -Break-> "end"
+	--- */
+	/* SwitchCaseBreak1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> break; -> "end",
+		"start" -> 1 -> 4 -> 5 -> break; -> "end",
+		"start" -> 1 -> "end"
+	--- */
+	/* SwitchCaseBreak1 XPECT allPaths direction 'Backward' ---
+		"end", "end" -> 1 -> "start",
+		"end" -> break; -> 3 -> 2 -> 1 -> "start",
+		"end" -> break; -> 5 -> 4,
+		"end" -> break; -> 5 -> 4 -> 1 -> "start"
+	--- */
+	// SwitchCaseBreak1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseBreak1 XPECT path from '3' notTo '5' -->
+	// SwitchCaseBreak1 XPECT commonPreds of '3' and '5' --> 1
+	// SwitchCaseBreak1 XPECT commonPreds of '3' and '"end"' --> 1, 3
+	// SwitchCaseBreak1 XPECT commonPreds of '5' and '"end"' --> 1, 5
+	// SwitchCaseBreak1 XPECT succs at '"start"' --> 1
+	// SwitchCaseBreak1 XPECT succs at '1' --> 2, 4, "end"
+	// SwitchCaseBreak1 XPECT succs at '2' --> 3
+	// SwitchCaseBreak1 XPECT succs at '3' --> break;
+	// SwitchCaseBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// SwitchCaseBreak1 XPECT succs at '3' --> break;
+	// SwitchCaseBreak1 XPECT succs at '5' --> break;
+	// SwitchCaseBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// SwitchCaseBreak1 XPECT preds at 'switch (' --> "start"
+	// SwitchCaseBreak1 XPECT succs at 'switch (1)' --> "end"
+	"start";
+	switch (1) {
+		case 2: 3; break;
+		case 4: 5; break;
+	}
+	"end";
+}
+
+function SwitchCaseDefault1() {
+	// SwitchCaseDefault1 XPECT cfContainer --> FunctionDeclaration::Block
+	// SwitchCaseDefault1 XPECT allIslandElems -->
+	// SwitchCaseDefault1 XPECT allCatchBlocks -->
+	/* SwitchCaseDefault1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 5,
+		2 --> 3,
+		3 --> 5,
+		5 --> "end"
+	--- */
+	/* SwitchCaseDefault1 XPECT allPaths ---
+	"start" -> 1 -> 2 -> 3 -> 5 -> "end",
+	"start" -> 1 -> 5 -> "end"
+	--- */
+	/* SwitchCaseDefault1 XPECT allPaths direction 'Backward' ---
+		"end" -> 5 -> 1 -> "start",
+		"end" -> 5 -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// SwitchCaseDefault1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseDefault1 XPECT path from '3' to '5' -->
+	// SwitchCaseDefault1 XPECT commonPreds of '3' and '5' --> 1, 3
+	// SwitchCaseDefault1 XPECT commonPreds of '3' and '"end"' --> 1, 3
+	// SwitchCaseDefault1 XPECT commonPreds of '5' and '"end"' --> 5
+	// SwitchCaseDefault1 XPECT succs at '"start"' --> 1
+	// SwitchCaseDefault1 XPECT succs at '1' --> 2, 5
+	// SwitchCaseDefault1 XPECT succs at '2' --> 3
+	// SwitchCaseDefault1 XPECT succs at '3' --> 5
+	// SwitchCaseDefault1 XPECT succs at '5' --> "end"
+	// SwitchCaseDefault1 XPECT preds at 'switch' --> "start"
+	// SwitchCaseDefault1 XPECT succs at 'switch' --> "end"
+	"start";
+	switch (1) {
+		case 2: 3;
+		default: 5;
+	}
+	"end";
+}
+
+function SwitchCaseDefault2() {
+	// SwitchCaseDefault2 XPECT cfContainer --> FunctionDeclaration::Block
+	// SwitchCaseDefault2 XPECT allIslandElems -->
+	// SwitchCaseDefault2 XPECT allCatchBlocks -->
+	/* SwitchCaseDefault2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 5,
+		2 --> 3,
+		3 --> break;,
+		break; -Break-> "end",
+		5 --> "end"
+	--- */
+	/* SwitchCaseDefault2 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> break; -> "end",
+		"start" -> 1 -> 5 -> "end"
+	--- */
+	/* SwitchCaseDefault2 XPECT allPaths direction 'Backward' ---
+		"end" -> 5, "end" -> 5 -> 1 -> "start",
+		"end" -> break; -> 3 -> 2 -> 1 -> "start"
+	--- */
+	// SwitchCaseDefault2 XPECT path from '"start"' to '"end"' -->
+	// SwitchCaseDefault2 XPECT path from '3' notTo '5' -->
+	// SwitchCaseDefault2 XPECT commonPreds of '3' and '5' --> 1
+	// SwitchCaseDefault2 XPECT commonPreds of '3' and '"end"' --> 1, 3
+	// SwitchCaseDefault2 XPECT commonPreds of '5' and '"end"' --> 1, 5
+	// SwitchCaseDefault2 XPECT succs at '"start"' --> 1
+	// SwitchCaseDefault2 XPECT succs at '1' --> 2, 5
+	// SwitchCaseDefault2 XPECT succs at '2' --> 3
+	// SwitchCaseDefault2 XPECT succs at '3' --> break;
+	// SwitchCaseDefault2 XPECT succs type 'Break' at 'break;' --> "end"
+	// SwitchCaseDefault2 XPECT succs at '5' --> "end"
+	// SwitchCaseDefault2 XPECT preds at 'switch' --> "start"
+	// SwitchCaseDefault2 XPECT succs at 'switch' --> "end"
+	"start";
+	switch (1) {
+		case 2: 3; break;
+		default: 5;
+	}
+	"end";
+}

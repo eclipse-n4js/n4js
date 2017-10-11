@@ -21,6 +21,13 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.n4js.smith.graph.editoroverlay.EditorOverlay;
+import org.eclipse.n4js.smith.graph.graph.ASTGraph;
+import org.eclipse.n4js.smith.graph.graph.CFGraph;
+import org.eclipse.n4js.smith.graph.graph.Graph;
+import org.eclipse.n4js.smith.graph.graph.GraphList;
+import org.eclipse.n4js.smith.graph.graph.GraphProvider;
+import org.eclipse.n4js.smith.graph.graph.GraphType;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -34,17 +41,14 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 
-import org.eclipse.n4js.smith.graph.graph.Graph;
-import org.eclipse.n4js.smith.graph.graph.Graph.GraphProvider;
-import org.eclipse.n4js.smith.graph.graph.GraphList;
-
 /**
  * A view showing a graph of the AST and type model (i.e. TModule).
  */
-public class ASTGraphView extends ViewPart {
+public class SourceGraphView extends ViewPart {
 
 	private GraphList graphList;
-	private GraphProvider graphProvider;
+	private ASTGraphProvider astGraphProvider;
+	private CFGraphProvider cfGraphProvider;
 
 	private XtextEditor activeEditor = null;
 
@@ -52,10 +56,12 @@ public class ASTGraphView extends ViewPart {
 
 	private final DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss.SSS");
 
+	private final EditorOverlay editorOverlay = new EditorOverlay();
+
 	/**
 	 * Create new instance.
 	 */
-	public ASTGraphView() {
+	public SourceGraphView() {
 		Activator.getInstance().setViewInstance(this);
 	}
 
@@ -105,14 +111,26 @@ public class ASTGraphView extends ViewPart {
 			}
 		});
 
-		graphList = new GraphList(parent, SWT.NONE);
-		graphProvider = new EMFGraphProvider();
+		graphList = new GraphList(parent, SWT.NONE, editorOverlay);
+		astGraphProvider = new ASTGraphProvider();
+		cfGraphProvider = new CFGraphProvider();
 
 		createAction(
-				"Snapshot", IAction.AS_PUSH_BUTTON,
-				"Take a manual snapshot.",
-				Activator.getInstance().ICON_SNAPSHOT,
-				this::onTakeSnapshot);
+				"AST Snapshot", IAction.AS_PUSH_BUTTON,
+				"Take an AST snapshot.",
+				Activator.getInstance().ICON_GRAPH_AST,
+				this::onTakeASTSnapshot);
+		createAction(
+				"CFG Snapshot", IAction.AS_PUSH_BUTTON,
+				"Take a CFG snapshot.",
+				Activator.getInstance().ICON_GRAPH_CF,
+				this::onTakeCFGSnapshot);
+		// done in GH-235
+		// createAction(
+		// "DFG Snapshot", IAction.AS_PUSH_BUTTON,
+		// "Take a DFG snapshot.",
+		// Activator.getInstance().ICON_GRAPH_DF,
+		// this::onTakeCFGSnapshot);
 		createAction(
 				"Pause", IAction.AS_CHECK_BOX,
 				"Suspend accepting snapshots that were triggered programmatically.",
@@ -141,8 +159,8 @@ public class ASTGraphView extends ViewPart {
 	}
 
 	/**
-	 * Static version of method {@link #showGraph(String, Object)}. It is safe to call this method at all times (i.e.
-	 * even if the view is not opened or disposed, from UI or non-UI thread, etc.).
+	 * Static version of method {@link #showGraph(String, Graph, GraphType, GraphProvider, Object)}. It is safe to call
+	 * this method at all times (i.e. even if the view is not opened or disposed, from UI or non-UI thread, etc.).
 	 *
 	 * @param label
 	 *            the label for the new graph.
@@ -151,13 +169,27 @@ public class ASTGraphView extends ViewPart {
 	 *            {@link EObject}.
 	 */
 	public static final void show(String label, Object root) {
-		final ASTGraphView view = findInstance();
+		final SourceGraphView view = findInstance();
 		if (view != null && !view.paused)
-			view.showGraph(label, root);
+			view.showASTGraph(label, root);
 	}
 
 	/**
-	 * Create a new graph for the given resource set (using an {@link EMFGraphProvider}), add it to the history and show
+	 *
+	 */
+	public void showASTGraph(String label, Object root) {
+		if (!(root instanceof ResourceSet || root instanceof Resource || root instanceof EObject))
+			throw new IllegalArgumentException("root must be a ResourceSet, Resource, or EObject");
+		if (graphList.isDisposed())
+			return;
+		ASTGraph graph = new ASTGraph();
+		GraphType graphType = GraphType.AST;
+		graph.build(astGraphProvider, root);
+		showGraph(label, graph, graphType);
+	}
+
+	/**
+	 * Create a new graph for the given resource set (using an {@link ASTGraphProvider}), add it to the history and show
 	 * it in the view.
 	 * <p>
 	 * Need not be invoked from the UI thread.
@@ -168,14 +200,15 @@ public class ASTGraphView extends ViewPart {
 	 *            the root object to create the graph from; must be a {@link ResourceSet}, {@link Resource}, or
 	 *            {@link EObject}.
 	 */
-	public void showGraph(String label, Object root) {
+	public <GP extends GraphProvider<?, ?>> void showGraph(String label, Graph<GP> graph, GraphType graphType,
+			GP graphProvider, Object root) {
+
 		if (!(root instanceof ResourceSet || root instanceof Resource || root instanceof EObject))
 			throw new IllegalArgumentException("root must be a ResourceSet, Resource, or EObject");
 		if (graphList.isDisposed())
 			return;
-		final Graph graph = new Graph();
 		graph.build(graphProvider, root);
-		showGraph(label, graph);
+		showGraph(label, graph, graphType);
 	}
 
 	/**
@@ -183,19 +216,20 @@ public class ASTGraphView extends ViewPart {
 	 * <p>
 	 * Need not be invoked from the UI thread.
 	 */
-	public void showGraph(String label, Graph graph) {
+	public void showGraph(String label, Graph<?> graph, GraphType graphType) {
 		if (graphList.isDisposed())
 			return;
+
 		final String prefix = getTimeStamp() + ": ";
 		if (Display.getCurrent() != null) {
 			// already on UI thread
-			graphList.addGraph(prefix + label, graph, true);
+			graphList.addGraph(prefix + label, graph, graphType, true);
 		} else {
 			// not on UI thread
 			Display.getDefault().asyncExec(new Runnable() {
 				@Override
 				public void run() {
-					graphList.addGraph(prefix + label, graph, true);
+					graphList.addGraph(prefix + label, graph, graphType, true);
 				}
 			});
 		}
@@ -216,12 +250,42 @@ public class ASTGraphView extends ViewPart {
 	/**
 	 * User clicked button 'take snapshot'.
 	 */
-	protected void onTakeSnapshot(@SuppressWarnings("unused") Action action) {
+	protected void onTakeASTSnapshot(@SuppressWarnings("unused") Action action) {
 		if (activeEditor != null) {
 			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
 				@Override
 				public Boolean exec(XtextResource state) throws Exception {
-					showGraph("manual", state.getResourceSet());
+					showGraph("manual", new ASTGraph(), GraphType.AST, astGraphProvider, state.getResourceSet());
+					return null;
+				}
+			});
+		}
+	}
+
+	/**
+	 * User clicked button 'take snapshot'.
+	 */
+	protected void onTakeCFGSnapshot(@SuppressWarnings("unused") Action action) {
+		if (activeEditor != null) {
+			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
+				@Override
+				public Boolean exec(XtextResource state) throws Exception {
+					showGraph("manual", new CFGraph(), GraphType.CFG, cfGraphProvider, state.getResourceSet());
+					return null;
+				}
+			});
+		}
+	}
+
+	/**
+	 * User clicked button 'take snapshot'.
+	 */
+	protected void onTakeDFGSnapshot(@SuppressWarnings("unused") Action action) {
+		if (activeEditor != null) {
+			activeEditor.getDocument().readOnly(new IUnitOfWork<Boolean, XtextResource>() {
+				@Override
+				public Boolean exec(XtextResource state) throws Exception {
+					showGraph("manual", new ASTGraph(), GraphType.DFG, astGraphProvider, state.getResourceSet());
 					return null;
 				}
 			});
@@ -242,18 +306,7 @@ public class ASTGraphView extends ViewPart {
 		graphList.removeSelectedGraphs(true);
 	}
 
-	private static final ASTGraphView findInstance() {
+	private static final SourceGraphView findInstance() {
 		return Activator.getInstance().getViewInstance();
-
-		// the following code won't work, because #getActiveWorkbenchWindow() returns 'null' if called form non-UI
-		// (that's why we cache the instance in the Activator)
-
-		// thread
-		// try {
-		// return (TestView)PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(ID);
-		// }
-		// catch(Exception e) {
-		// return null;
-		// }
 	}
 }

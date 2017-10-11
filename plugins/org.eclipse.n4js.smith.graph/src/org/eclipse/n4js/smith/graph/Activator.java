@@ -32,14 +32,18 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	// The view instance
-	private ASTGraphView view;
+	private SourceGraphView view;
 
 	@SuppressWarnings("javadoc")
 	public final ImageDescriptor ICON_SNAPSHOT = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "snapshot.png");
 	@SuppressWarnings("javadoc")
 	public final ImageDescriptor ICON_PAUSE = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "pause.gif");
 	@SuppressWarnings("javadoc")
-	public final ImageDescriptor ICON_GRAPH = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graph.gif");
+	public final ImageDescriptor ICON_GRAPH_AST = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphAST.gif");
+	@SuppressWarnings("javadoc")
+	public final ImageDescriptor ICON_GRAPH_CF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphCF.gif");
+	@SuppressWarnings("javadoc")
+	public final ImageDescriptor ICON_GRAPH_DF = imageDescriptorFromPlugin(PLUGIN_ID, ICON_FOLDER + "graphDF.gif");
 
 	/**
 	 * The constructor
@@ -87,7 +91,7 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/* package */void setViewInstance(ASTGraphView view) {
+	/* package */void setViewInstance(SourceGraphView view) {
 		this.view = view;
 	}
 
@@ -96,7 +100,7 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared view instance
 	 */
-	public ASTGraphView getViewInstance() {
+	public SourceGraphView getViewInstance() {
 		return view;
 	}
 }

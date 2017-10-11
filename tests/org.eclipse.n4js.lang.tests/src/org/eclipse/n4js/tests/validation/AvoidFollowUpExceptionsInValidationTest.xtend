@@ -13,7 +13,7 @@ package org.eclipse.n4js.tests.validation
 import org.eclipse.n4js.AbstractN4JSTest
 import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.N4JSStandaloneTestsModule
-import org.eclipse.n4js.resource.N4JSPostProcessor
+import org.eclipse.n4js.postprocessing.N4JSPostProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor
