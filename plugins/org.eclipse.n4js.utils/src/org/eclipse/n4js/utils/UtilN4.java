@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
@@ -313,24 +312,5 @@ public class UtilN4 {
 	public static boolean isN4jsRepoRoot(File folder) {
 		return folder.isDirectory()
 				&& new File(folder, "plugins/" + UtilN4.class.getPackage().getName()).isDirectory();
-	}
-
-	public static boolean isInN4JSEditor() {
-		return Stream.of(Thread.currentThread().getStackTrace()).anyMatch(
-				ste -> "org.eclipse.xtext.ui.editor.reconciler.XtextReconciler".equals(ste.getClassName()));
-	}
-
-	public static boolean isInIncrementalBuilder() {
-		return Stream.of(Thread.currentThread().getStackTrace()).anyMatch(
-				ste -> "org.eclipse.n4js.ui.building.N4JSGenerateImmediatelyBuilderState".equals(ste.getClassName()));
-	}
-
-	public static String getContextAsString() {
-		if (isInN4JSEditor()) {
-			return "editor";
-		} else if (isInIncrementalBuilder()) {
-			return "builder";
-		}
-		return "???";
 	}
 }
