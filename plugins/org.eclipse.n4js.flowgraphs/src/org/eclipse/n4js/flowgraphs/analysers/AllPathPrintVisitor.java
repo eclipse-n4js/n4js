@@ -28,6 +28,10 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 public class AllPathPrintVisitor extends GraphVisitor {
 	final ControlFlowElement startElement;
 
+	public AllPathPrintVisitor() {
+		this(null, null, Mode.Forward);
+	}
+
 	/**
 	 * Constructor.
 	 * <p>

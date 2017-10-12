@@ -35,8 +35,9 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
  * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
  * a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
- * the {@link EdgeGuideInternal} class is used, which stores information about all paths that are currently explored. The path
- * exploration is done in parallel for every {@link PathExplorerInternal} of every {@link GraphVisitorInternal}.
+ * the {@link EdgeGuideInternal} class is used, which stores information about all paths that are currently explored.
+ * The path exploration is done in parallel for every {@link PathExplorerInternal} of every
+ * {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyzer flowAnalyzer;
@@ -47,7 +48,6 @@ public class GraphVisitorGuideInternal {
 	/** Constructor */
 	public GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
 			Collection<? extends GraphVisitorInternal> walkers) {
-
 		this.flowAnalyzer = flowAnalyzer;
 		this.walkers = walkers;
 	}
@@ -145,6 +145,8 @@ public class GraphVisitorGuideInternal {
 		}
 
 		while (!currEdgeGuides.isEmpty()) {
+			flowAnalyzer.checkCancelled();
+
 			EdgeGuideInternal currEdgeGuide = currEdgeGuides.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(currEdgeGuide.edge);
 			alreadyVisitedAndObsolete &= currEdgeGuide.activePaths.isEmpty();
@@ -170,46 +172,57 @@ public class GraphVisitorGuideInternal {
 
 	private Node visitNode(Node lastVisitNode, EdgeGuideInternal currEdgeGuide, Node visitNode) {
 		if (lastVisitNode != null) {
-			callVisit(CallVisit.OnEdge, lastVisitNode, currEdgeGuide, visitNode);
+			callVisitOnEdge(lastVisitNode, currEdgeGuide, visitNode);
 		}
 
-		callVisit(CallVisit.OnNode, lastVisitNode, currEdgeGuide, visitNode);
+		callVisitOnNode(currEdgeGuide, visitNode);
 		return visitNode;
 	}
 
-	enum CallVisit {
-		OnNode, OnEdge
-	}
-
-	private void callVisit(CallVisit callVisit, Node lastVisitNode, EdgeGuideInternal currEdgeGuide, Node visitNode) {
-		for (GraphVisitorInternal walker : walkers) {
-			switch (callVisit) {
-			case OnNode:
-				if (!walkerVisitedNodes.contains(visitNode)) {
-					walker.callVisit(visitNode);
-				}
-				walkerVisitedNodes.add(visitNode);
-				break;
-			case OnEdge:
-				if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
-					walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
-				}
-				walkerVisitedEdges.add(currEdgeGuide.edge);
-				break;
+	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuideInternal, Node)} */
+	private void callVisitOnNode(EdgeGuideInternal currEdgeGuide, Node visitNode) {
+		if (!walkerVisitedNodes.contains(visitNode)) {
+			for (GraphVisitorInternal walker : walkers) {
+				walker.callVisit(visitNode);
 			}
+		}
+		walkerVisitedNodes.add(visitNode);
+
+		for (GraphVisitorInternal walker : walkers) {
 			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
 			currEdgeGuide.activePaths.addAll(activatedPaths);
 		}
+
 		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
 			PathWalkerInternal activePath = actPathIt.next();
-			switch (callVisit) {
-			case OnNode:
-				activePath.callVisit(visitNode);
-				break;
-			case OnEdge:
-				activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
-				break;
+
+			activePath.callVisit(visitNode);
+
+			if (!activePath.isActive()) {
+				actPathIt.remove();
 			}
+		}
+	}
+
+	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuideInternal, Node)} */
+	private void callVisitOnEdge(Node lastVisitNode, EdgeGuideInternal currEdgeGuide, Node visitNode) {
+		if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
+			for (GraphVisitorInternal walker : walkers) {
+				walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
+			}
+		}
+		walkerVisitedEdges.add(currEdgeGuide.edge);
+
+		for (GraphVisitorInternal walker : walkers) {
+			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
+			currEdgeGuide.activePaths.addAll(activatedPaths);
+		}
+
+		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
+			PathWalkerInternal activePath = actPathIt.next();
+
+			activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
+
 			if (!activePath.isActive()) {
 				actPathIt.remove();
 			}
@@ -251,8 +264,8 @@ public class GraphVisitorGuideInternal {
 	}
 
 	/**
-	 * Computes the next {@link EdgeGuideInternal}s based on the next {@link ControlFlowEdge}s. For memory performance reasons,
-	 * the current {@link EdgeGuideInternal} is reused and its edge is replaced by the next edge.
+	 * Computes the next {@link EdgeGuideInternal}s based on the next {@link ControlFlowEdge}s. For memory performance
+	 * reasons, the current {@link EdgeGuideInternal} is reused and its edge is replaced by the next edge.
 	 */
 	private List<EdgeGuideInternal> getNextEdgeGuides(EdgeGuideInternal currEG) {
 		List<EdgeGuideInternal> nextEGs = new LinkedList<>();

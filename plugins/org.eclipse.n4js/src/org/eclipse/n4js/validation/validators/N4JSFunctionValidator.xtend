@@ -70,6 +70,11 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor
+import org.eclipse.n4js.flowgraphs.analysers.CheckVariableGraphVisitor
+import org.eclipse.xtext.validation.CancelableDiagnostician
+import org.eclipse.xtext.util.CancelIndicator
+import org.eclipse.xtext.service.OperationCanceledManager
 
 /**
  */
@@ -93,6 +98,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private N4JSElementKeywordProvider keywordProvider;
 
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
+
+	var long lastCall;
+	var long sumCreate;
+	var long sumAnalyze;
 	/**
 	 * NEEEDED
 	 *
@@ -102,23 +113,79 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	override register(EValidatorRegistrar registrar) {
 		// nop
 	}
-
-	/**
-	 * Checks all flow graph related validations
-	 */
-	@Check
-	def checkFlowGraphs(Script script) {
-		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
-		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
-		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
-		flowAnalyzer.createGraphs(script);
-
-		val dcf = new DeadCodeVisitor();
-
-		flowAnalyzer.accept(dcf); // GH-120: comment-out this line to disable CFG
-
-		internalCheckDeadCode(dcf);
+	
+	def Void checkCancelled() {
+		val CancelIndicator cancelIndicator = context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
+		operationCanceledManager.checkCanceled(cancelIndicator);
+		return null;
 	}
+	
+	
+    @Check
+    def checkUseBeforeDeclared(Script script) {
+    	println("validate: "+ script.eResource.URI);
+
+
+		if (lastCall + 10000 < System.currentTimeMillis) {
+			println("");
+			println("Validate Script of: " + script.eResource.URI);
+			println("Last results:");
+			println("     create  : "+ sumCreate +"ms");
+			println("     analyze : "+ sumAnalyze +"ms");
+			sumCreate = 0;
+			sumAnalyze = 0;
+		}
+		lastCall = System.currentTimeMillis;
+		
+		var tmp = System.currentTimeMillis;
+		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer([checkCancelled();]);
+		flowAnalyzer.createGraphs(script);
+		sumCreate += (System.currentTimeMillis - tmp);
+		
+		context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
+		
+		
+		
+        val dcf = new DeadCodeVisitor();
+        val cvv = new CheckVariableGraphVisitor();
+
+
+		tmp = System.currentTimeMillis;
+        flowAnalyzer.accept(dcf);
+		sumAnalyze += (System.currentTimeMillis - tmp);
+
+        internalCheckDeadCode(dcf);
+
+        val idRefs = cvv.usedButNotDeclaredIdentifierRefs;
+        for (idRef : idRefs) {
+//            addIssue("Used before declared", idRef, "VAR_USED_BEFORE_DECLARED");
+			println("Used before declared: " + idRef.idAsText);
+        }
+    }
+
+
+
+
+//	/**
+//	 * Checks all flow graph related validations
+//	 */
+//	@Check
+//	def checkFlowGraphs(Script script) {
+//		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
+//		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
+//		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+//		flowAnalyzer.createGraphs(script);
+//
+//		val dcv = new DeadCodeVisitor();
+//		val appv = new AllPathPrintVisitor();
+//
+//		flowAnalyzer.accept(dcv, appv); // GH-120: comment-out this line to disable CFG
+//
+//		for (s : appv.pathStrings)
+//			println(s);
+//			
+//		internalCheckDeadCode(dcv);
+//	}
 
 	// Req.107
 	private def String internalCheckDeadCode(DeadCodeVisitor dcf) {

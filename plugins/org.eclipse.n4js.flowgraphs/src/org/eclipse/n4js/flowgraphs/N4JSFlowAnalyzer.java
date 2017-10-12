@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
@@ -32,10 +34,26 @@ import com.google.common.collect.Lists;
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyzer {
+	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
 	private GraphVisitorAnalysis gva;
 	private SuccessorPredecessorAnalysis spa;
+
+	/** Constructor */
+	public N4JSFlowAnalyzer() {
+		this(null);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param cancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public N4JSFlowAnalyzer(Callable<Void> cancelledChecker) {
+		this.cancelledChecker = cancelledChecker;
+	}
 
 	/**
 	 * Creates the control flow graphs for all {@link ControlFlowElement}s in the given {@link Script}.
@@ -44,13 +62,26 @@ public class N4JSFlowAnalyzer {
 	 */
 	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
-
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
 		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
 		// sw.stop();
+	}
+
+	/** Checks if the user hit the cancel button and if so, a RuntimeException is thrown. */
+	public void checkCancelled() {
+		if (cancelledChecker == null)
+			return;
+
+		try {
+			cancelledChecker.call();
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/** @return the underlying control flow graph */
