@@ -43,7 +43,6 @@ public class DeadCodeVisitor extends GraphVisitor {
 	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
 	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
 	Set<ControlFlowElement> allCatchBlocksCFEs = new HashSet<>();
-	Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
 
 	/** Constructor */
 	public DeadCodeVisitor() {
@@ -90,10 +89,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 
 	@Override
 	protected void terminate() {
-		unreachableCFEs.addAll(allBackwardCFEs);
-		unreachableCFEs.removeAll(allForwardCFEs);
-		unreachableCFEs.addAll(allIslandsCFEs);
-		unreachableCFEs.removeAll(allCatchBlocksCFEs);
+		// nothing to do
 	}
 
 	/** @return all reachable {@link ControlFlowElement}s */
@@ -103,6 +99,11 @@ public class DeadCodeVisitor extends GraphVisitor {
 
 	/** @return all unreachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getUnreachableCFEs() {
+		Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
+		unreachableCFEs.addAll(allBackwardCFEs);
+		unreachableCFEs.removeAll(allForwardCFEs);
+		unreachableCFEs.addAll(allIslandsCFEs);
+		unreachableCFEs.removeAll(allCatchBlocksCFEs);
 		return unreachableCFEs;
 	}
 
@@ -150,7 +151,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 
 	/** @return all {@link TextRegion}s of dead code */
 	public Set<DeadCodeRegion> getDeadCodeRegions() {
-		Collection<Set<ControlFlowElement>> deadCodeGroups = separateOnTheirBlocks(unreachableCFEs);
+		Collection<Set<ControlFlowElement>> deadCodeGroups = separateOnTheirBlocks(getUnreachableCFEs());
 		Set<DeadCodeRegion> deadCodeRegions = new HashSet<>();
 		for (Set<ControlFlowElement> deadCodeGroup : deadCodeGroups) {
 			DeadCodeRegion textRegion = getDeadCodeRegion(deadCodeGroup);
