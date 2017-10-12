@@ -93,6 +93,7 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
+import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -124,6 +125,7 @@ import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper;
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource;
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory;
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper;
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider;
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator;
@@ -663,8 +665,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return ConcreteSyntaxAwareReferenceFinder.class;
 	}
 
-	/** Custom EditorResourceAccess as a fix for GH-234 */
+	/** Custom EditorResourceAccess as a fix for GH-234. */
 	public Class<? extends EditorResourceAccess> bindEditorResourceAccess() {
 		return N4JSEditorResourceAccess.class;
+	}
+
+	/** Workaround for the problem: file is refreshed when opened */
+	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+		return AvoidRefreshDocumentProvider.class;
 	}
 }

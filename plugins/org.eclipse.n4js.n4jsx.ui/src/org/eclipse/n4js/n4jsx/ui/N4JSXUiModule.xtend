@@ -57,6 +57,7 @@ import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback
+import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider
 import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport
@@ -131,6 +132,7 @@ import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkLabelProvider
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator
@@ -642,5 +644,10 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	/** Custom EditorResourceAccess as a fix for GH-234 */
 	def Class<? extends EditorResourceAccess> bindEditorResourceAccess() {
 		return N4JSEditorResourceAccess;
+	}
+
+	/** Workaround for the problem: file is refreshed when opened */
+	def Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+		return AvoidRefreshDocumentProvider;
 	}
 }
