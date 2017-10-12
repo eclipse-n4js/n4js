@@ -12,11 +12,10 @@ package org.eclipse.n4js.scoping.accessModifiers;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.resource.IEObjectDescription;
-import org.eclipse.xtext.scoping.IScope;
-
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.xtext.resource.IEObjectDescription;
+import org.eclipse.xtext.scoping.IScope;
 
 /**
  * A scope implementation that prefers visible types over invisible types.
@@ -36,18 +35,20 @@ public class VisibilityAwareIdentifiableScope extends VisibilityAwareTypeScope {
 
 	@Override
 	protected boolean isAccepted(IEObjectDescription description) {
-		EObject proxyOrInstance = description.getEObjectOrProxy();
-		if (proxyOrInstance instanceof TVariable && !proxyOrInstance.eIsProxy()) {
-			TVariable type = (TVariable) proxyOrInstance;
+		if (TVariable.class.isAssignableFrom(description.getEClass().getInstanceClass())) {
+			EObject proxyOrInstance = description.getEObjectOrProxy();
+			if (proxyOrInstance instanceof TVariable && !proxyOrInstance.eIsProxy()) {
+				TVariable type = (TVariable) proxyOrInstance;
 
-			TypeVisibility visibility = checker.isVisible(this.contextResource, type);
+				TypeVisibility visibility = checker.isVisible(this.contextResource, type);
 
-			if (!visibility.visibility) {
-				this.accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
-						visibility.accessModifierSuggestion);
+				if (!visibility.visibility) {
+					this.accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
+							visibility.accessModifierSuggestion);
+				}
+
+				return visibility.visibility;
 			}
-
-			return visibility.visibility;
 		}
 		return super.isAccepted(description);
 	}

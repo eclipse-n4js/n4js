@@ -96,6 +96,59 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 
 	}
 
+	public class LazyResolvedDescription extends AbstractEObjectDescription {
+
+		private final IEObjectDescription delegate;
+		private EObject resolved;
+
+		LazyResolvedDescription(IEObjectDescription delegate) {
+			this.delegate = delegate;
+		}
+
+		@Override
+		public QualifiedName getName() {
+			return delegate.getName();
+		}
+
+		@Override
+		public QualifiedName getQualifiedName() {
+			return delegate.getQualifiedName();
+		}
+
+		@Override
+		public EObject getEObjectOrProxy() {
+			if (resolved == null) {
+				resolved = resolve(delegate).getEObjectOrProxy();
+			}
+			return resolved;
+		}
+
+		@Override
+		public URI getEObjectURI() {
+			return delegate.getEObjectURI();
+		}
+
+		@Override
+		public String getUserData(String name) {
+			return delegate.getUserData(name);
+		}
+
+		@Override
+		public String[] getUserDataKeys() {
+			return delegate.getUserDataKeys();
+		}
+
+		@Override
+		public EClass getEClass() {
+			return delegate.getEClass();
+		}
+
+		IEObjectDescription getAliasedEObjectDescription() {
+			return delegate;
+		}
+
+	}
+
 	/**
 	 * Factory method to produce a scope. The factory pattern allows to bypass the explicit object creation if the
 	 * produced scope would be empty.
@@ -153,7 +206,20 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		return resolve(result);
 	}
 
+	private IEObjectDescription lazyResolve(IEObjectDescription original) {
+		if (original instanceof LazyResolvedDescription) {
+			return original;
+		}
+		if (original instanceof ResolvedDescription) {
+			return original;
+		}
+		return new LazyResolvedDescription(original);
+	}
+
 	private IEObjectDescription resolve(IEObjectDescription original) {
+		if (original instanceof ResolvedDescription) {
+			return original;
+		}
 		if (original != null && original.getEObjectOrProxy().eIsProxy()
 				&& EcoreUtil2.isAssignableFrom(type, original.getEClass())) {
 			final URI objectURI = original.getEObjectURI();
@@ -217,7 +283,7 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		return Iterables.transform(parent, new Function<IEObjectDescription, IEObjectDescription>() {
 			@Override
 			public IEObjectDescription apply(IEObjectDescription input) {
-				return resolve(input);
+				return lazyResolve(input);
 			}
 		});
 	}
@@ -228,7 +294,7 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		return Iterables.transform(parent, new Function<IEObjectDescription, IEObjectDescription>() {
 			@Override
 			public IEObjectDescription apply(IEObjectDescription input) {
-				return resolve(input);
+				return lazyResolve(input);
 			}
 		});
 	}

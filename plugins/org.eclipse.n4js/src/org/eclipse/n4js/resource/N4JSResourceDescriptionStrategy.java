@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
@@ -96,6 +97,13 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 * representing a {@link TClass} have this user data.
 	 */
 	public static final String STATIC_POLYFILL_KEY = "STATIC_POLYFILL_KEY";
+
+	/**
+	 * Additional user data for storing the {@link TClass#isExported() exported} property in the index. Used by test
+	 * discovery helper. If the class is not exported this key could be missing, in other words, a class is marked as
+	 * exported if this key has an associated value and the value {@link Boolean#parseBoolean(String)} is {@code true}.
+	 */
+	public static final String EXPORTED_DEFAULT_KEY = "EXPORTED_DEFAULT";
 
 	@Inject
 	private IQualifiedNameProvider qualifiedNameProvider;
@@ -185,6 +193,12 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 							Boolean.toString(tClass.getOwnedMembers().stream()
 									.filter(m -> m instanceof TMethod)
 									.anyMatch(m -> AnnotationDefinition.TEST_METHOD.hasAnnotation(m))));
+					if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(tClass.getExportedName())) {
+						userData.put(EXPORTED_DEFAULT_KEY, "1");
+					}
+				} else if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(type.getExportedName())) {
+					userData = newHashMap(userData);
+					userData.put(EXPORTED_DEFAULT_KEY, "1");
 				}
 
 				IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
