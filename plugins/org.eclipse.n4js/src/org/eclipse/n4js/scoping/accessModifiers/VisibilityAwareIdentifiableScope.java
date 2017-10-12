@@ -53,4 +53,17 @@ public class VisibilityAwareIdentifiableScope extends VisibilityAwareTypeScope {
 		return super.isAccepted(description);
 	}
 
+	@Override
+	protected boolean tryAcceptWithoutResolve(IEObjectDescription description) {
+		if (TVariable.class.isAssignableFrom(description.getEClass().getInstanceClass())) {
+			TypeVisibility visibility = checker.isVisible(this.contextResource, description);
+			if (!visibility.visibility) {
+				this.accessModifierSuggestionStore.put(description.getEObjectURI().toString(),
+						visibility.accessModifierSuggestion);
+			}
+			return visibility.visibility;
+		}
+		return super.tryAcceptWithoutResolve(description);
+	}
+
 }

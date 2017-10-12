@@ -22,6 +22,7 @@ import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
+import org.eclipse.n4js.ts.types.TypeAccessModifier;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -164,6 +165,34 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	}
 
 	/**
+	 * Returns the access modifier stored on the given description or PUBLIC.
+	 */
+	public static TypeAccessModifier tryGetAccessModifier(IEObjectDescription description) {
+		try {
+			String userData = description.getUserData(description.getUserData(ACCESS_MODIFIERY_KEY));
+			if (userData == null) {
+				return TypeAccessModifier.PUBLIC;
+			}
+			return TypeAccessModifier.get(Integer.parseInt(userData));
+		} catch (NumberFormatException e) {
+			return TypeAccessModifier.PUBLIC;
+		}
+	}
+
+	/**
+	 * Returns an unmodifiable map with the user data value for the access modifier.
+	 */
+	protected Map<String, String> getAccessModifierUserData(TypeAccessModifier typeAccessModifier) {
+		// don't write public visibity to the index since it is treated as the default
+		if (TypeAccessModifier.PUBLIC == typeAccessModifier) {
+			return Collections.emptyMap();
+		}
+		return Collections.singletonMap(
+				ACCESS_MODIFIERY_KEY,
+				String.valueOf(typeAccessModifier.getValue()));
+	}
+
+	/**
 	 * Create EObjectDescriptions for elements for which N4JSQualifiedNameProvider provides a FQN; elements with a FQN
 	 * of <code>null</code> will be ignored.
 	 */
@@ -173,9 +202,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		if (typeName != null && typeName.length() != 0) {
 			QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 			if (qualifiedName != null) { // e.g. non-exported declared functions will return null for FQN
-				Map<String, String> userData = Collections.singletonMap(
-						ACCESS_MODIFIERY_KEY,
-						String.valueOf(type.getTypeAccessModifier().ordinal()));
+				Map<String, String> userData = getAccessModifierUserData(type.getTypeAccessModifier());
 
 				// Add additional user data for descriptions representing a TClass
 				if (type instanceof TClass) {
@@ -214,7 +241,8 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
 		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type);
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type,
+					getAccessModifierUserData(type.getTypeAccessModifier()));
 			acceptor.accept(eod);
 		}
 	}

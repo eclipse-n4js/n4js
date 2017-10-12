@@ -20,8 +20,8 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
-import org.eclipse.xtext.resource.AbstractEObjectDescription;
 import org.eclipse.xtext.resource.EObjectDescription;
+import org.eclipse.xtext.resource.ForwardingEObjectDescription;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -42,27 +42,16 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 	 * proxy from the delegate.
 	 *
 	 */
-	public static class ResolvedDescription extends AbstractEObjectDescription {
+	public static class ResolvedDescription extends ForwardingEObjectDescription {
 
-		private final IEObjectDescription delegate;
 		private final EObject resolved;
 
 		ResolvedDescription(EObject resolved, IEObjectDescription delegate) {
+			super(delegate);
 			if (resolved == null) {
 				throw new NullPointerException("resolved instance may not be null");
 			}
 			this.resolved = resolved;
-			this.delegate = delegate;
-		}
-
-		@Override
-		public QualifiedName getName() {
-			return delegate.getName();
-		}
-
-		@Override
-		public QualifiedName getQualifiedName() {
-			return delegate.getQualifiedName();
 		}
 
 		@Override
@@ -71,80 +60,34 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 		}
 
 		@Override
-		public URI getEObjectURI() {
-			return delegate.getEObjectURI();
-		}
-
-		@Override
-		public String getUserData(String name) {
-			return delegate.getUserData(name);
-		}
-
-		@Override
-		public String[] getUserDataKeys() {
-			return delegate.getUserDataKeys();
-		}
-
-		@Override
-		public EClass getEClass() {
-			return delegate.getEClass();
-		}
-
-		IEObjectDescription getAliasedEObjectDescription() {
-			return delegate;
+		protected IEObjectDescription delegate() {
+			return (IEObjectDescription) super.delegate();
 		}
 
 	}
 
-	public class LazyResolvedDescription extends AbstractEObjectDescription {
+	/**
+	 * An EObject description that will look as if resolved when asked for EObjectOrProxy but does that only on demand.
+	 */
+	public class LazyResolvedDescription extends ForwardingEObjectDescription {
 
-		private final IEObjectDescription delegate;
 		private EObject resolved;
 
 		LazyResolvedDescription(IEObjectDescription delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		public QualifiedName getName() {
-			return delegate.getName();
-		}
-
-		@Override
-		public QualifiedName getQualifiedName() {
-			return delegate.getQualifiedName();
+			super(delegate);
 		}
 
 		@Override
 		public EObject getEObjectOrProxy() {
 			if (resolved == null) {
-				resolved = resolve(delegate).getEObjectOrProxy();
+				resolved = resolve(delegate()).getEObjectOrProxy();
 			}
 			return resolved;
 		}
 
 		@Override
-		public URI getEObjectURI() {
-			return delegate.getEObjectURI();
-		}
-
-		@Override
-		public String getUserData(String name) {
-			return delegate.getUserData(name);
-		}
-
-		@Override
-		public String[] getUserDataKeys() {
-			return delegate.getUserDataKeys();
-		}
-
-		@Override
-		public EClass getEClass() {
-			return delegate.getEClass();
-		}
-
-		IEObjectDescription getAliasedEObjectDescription() {
-			return delegate;
+		protected IEObjectDescription delegate() {
+			return (IEObjectDescription) super.delegate();
 		}
 
 	}
