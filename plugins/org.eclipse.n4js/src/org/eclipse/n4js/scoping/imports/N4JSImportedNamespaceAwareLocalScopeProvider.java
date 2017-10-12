@@ -58,8 +58,12 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 		// ||-- changed super-impl here:
 		// IDE-662 filtering ArgumentsType & EnumBaseType from globalScobe, since it is a VirtualBaseType.
 		Predicate<IEObjectDescription> filter = p -> {
-			String name = p.getName().toString();
-			return !("ArgumentsType".equals(name) || "EnumBaseType".equals(name));
+			QualifiedName name = p.getName();
+			if (name.getSegmentCount() == 1) {
+				String singleSegment = name.getFirstSegment();
+				return !("ArgumentsType".equals(singleSegment) || "EnumBaseType".equals(singleSegment));
+			}
+			return true;
 		};
 		IScope globalScope = getGlobalScope(res, reference, filter);
 		// -- done change --||
