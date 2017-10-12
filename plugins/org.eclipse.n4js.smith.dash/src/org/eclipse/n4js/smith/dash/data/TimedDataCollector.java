@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.smith.dash.data.internal;
+package org.eclipse.n4js.smith.dash.data;
 
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
@@ -21,20 +21,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.smith.dash.data.DataCollector;
-import org.eclipse.n4js.smith.dash.data.DataPoint;
-import org.eclipse.n4js.smith.dash.data.Measurement;
-
 /**
  * Collector for timed data. NOT thread safe.
  */
-public class TimedDataCollector extends DataCollector {
+class TimedDataCollector extends DataCollector {
 
 	private final DataCollector parent;
 	private final Map<String, DataCollector> children = new HashMap<>();
 
 	private static final TimedMeasurement NULL_MEASURMENT = new TimedMeasurement("NOOP", TimedDataCollector::noop);
-	private boolean notCollecting = true;
+	private boolean paused = true;
 
 	private final List<DataPoint> data = new LinkedList<>();
 
@@ -53,17 +49,15 @@ public class TimedDataCollector extends DataCollector {
 		if (name == null || name.isEmpty())
 			throw new RuntimeException(TimedMeasurement.class.getName() + " needs non empty name.");
 
-		if (notCollecting)
+		if (paused)
 			return NULL_MEASURMENT;
 
 		return new TimedMeasurement(name, this::consume);
 	}
 
-	private void consume(Measurement measurement) {
-		if (measurement instanceof TimedMeasurement) {
-			TimedMeasurement timed = (TimedMeasurement) measurement;
-			data.add(new DataPoint(timed.name, timed.sw.elapsed(NANOSECONDS)));
-		}
+	private void consume(TimedMeasurement measurement) {
+		TimedMeasurement timed = measurement;
+		data.add(new DataPoint(timed.name, timed.sw.elapsed(NANOSECONDS)));
 	}
 
 	@Override
@@ -82,12 +76,12 @@ public class TimedDataCollector extends DataCollector {
 	}
 
 	@Override
-	protected DataCollector getChild(String key) {
+	public DataCollector getChild(String key) {
 		return this.children.get(key);
 	}
 
 	@Override
-	protected void addChild(String key, DataCollector child) {
+	public void addChild(String key, DataCollector child) {
 		if (this.children.containsKey(key)) {
 			throw new RuntimeException("Already contains key " + key + " with child " + this.children.get(key));
 		}
@@ -111,7 +105,8 @@ public class TimedDataCollector extends DataCollector {
 
 	@Override
 	public void setPaused(boolean paused) {
-		this.notCollecting = paused;
+		System.out.println(this + " paused: " + this.paused + " -> " + paused);
+		this.paused = paused;
 		this.children.values().forEach(child -> child.setPaused(paused));
 	}
 

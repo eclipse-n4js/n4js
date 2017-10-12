@@ -13,8 +13,7 @@ package org.eclipse.n4js.smith.dash.data;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.eclipse.n4js.smith.dash.data.internal.TimedDataCollector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.google.common.base.Strings;
 
@@ -25,11 +24,13 @@ import com.google.common.base.Strings;
  * Using injector causes issues in the SharedContributions, i.e. N4JS*ClusteringBuilderState gets different instance
  * than the rest of the system.
  */
+// TODO replace with Singleton once injection in shared ui contribution is clarified
 public enum DataCollectors {
 	/** The instance. */
 	INSTANCE;
 
 	private final Map<String, DataCollector> collectors = new HashMap<>();
+	private final AtomicBoolean pauseAllCollectors = new AtomicBoolean(true);
 
 	/**
 	 * returns existing collector for the provided key. If there is no collector corresponding to the key creates new
@@ -97,25 +98,29 @@ public enum DataCollectors {
 			collector = collectors.get(key);
 			if (collector == null) {
 				collector = new TimedDataCollector();
+				collector.setPaused(this.pauseAllCollectors.get());
 				collectors.put(key, collector);
 			}
 		} else {
 			collector = parent.getChild(key);
 			if (collector == null) {
 				collector = new TimedDataCollector();
+				collector.setPaused(this.pauseAllCollectors.get());
 				parent.addChild(key, collector);
 			}
 		}
 		return collector;
 	}
 
+	// package
 	/** Returns mapping between all top level collectors and their names. */
 	Map<String, DataCollector> getRootCollectors() {
 		return Collections.unmodifiableMap(collectors);
 	}
 
 	/** sets {@code paused} state for all data collectors. */
-	public void setPaused(boolean paused) {
+	void setPaused(boolean paused) {
+		this.pauseAllCollectors.set(paused);
 		collectors.values().forEach(collector -> collector.setPaused(paused));
 	}
 

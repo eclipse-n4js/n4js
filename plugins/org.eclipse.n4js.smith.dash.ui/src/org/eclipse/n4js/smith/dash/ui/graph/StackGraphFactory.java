@@ -12,9 +12,9 @@ package org.eclipse.n4js.smith.dash.ui.graph;
 
 import java.util.StringJoiner;
 
+import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
 import org.eclipse.n4js.smith.dash.data.DataSeries;
 import org.eclipse.n4js.smith.dash.data.SimpleTimeFormat;
-import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
 import org.eclipse.n4js.utils.IndentLevel;
 
 /**
@@ -23,22 +23,23 @@ import org.eclipse.n4js.utils.IndentLevel;
 public class StackGraphFactory {
 
 	/** Uses provided key to obtain performance data and builds graph representing it. */
-	public static ListEntry buildGraph(String key, float baseHeight, float baseWidth, String label) {
+	public static VisualisationSnapshot buildGraph(String key, float baseHeight, float baseWidth, String label) {
 		DataSeries dataSeries = CollectedDataAccess.getDataSeries(key);
 		if (dataSeries.hasNoData())
-			return new ListEntry(label, new StackGraph(), label + " (no data)");
+			return new VisualisationSnapshot(label, new VisualisationGraph(), label + " (no data)");
 
 		return createStackGraph(dataSeries, baseHeight, baseWidth, label);
 	}
 
-	private static ListEntry createStackGraph(DataSeries series, float baseHeight, float baseWidth, String label) {
+	private static VisualisationSnapshot createStackGraph(DataSeries series, float baseHeight, float baseWidth,
+			String label) {
 		StringJoiner sj = new StringJoiner("\n");
 		IndentLevel indent = new IndentLevel("\t");
 		sj.add(indent.get() + SimpleTimeFormat.convert(series.getSum()) + " - " + series.name);
 		StackNode root = new StackNode(series.name, series.name + " took " + SimpleTimeFormat.convert(series.getSum()),
 				baseWidth, baseHeight, 1.0f, 1.0f);
 		collectData(series, root, baseHeight, baseWidth, sj, indent);
-		return new ListEntry(label, new StackGraph(root), sj.toString());
+		return new VisualisationSnapshot(label, new VisualisationGraph(root), sj.toString());
 	}
 
 	private static void collectData(DataSeries parentSeries, StackNode parentNode, float baseHeight, float baseWidth,

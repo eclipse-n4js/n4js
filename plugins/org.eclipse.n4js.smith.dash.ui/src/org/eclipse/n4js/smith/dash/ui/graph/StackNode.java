@@ -12,33 +12,29 @@ package org.eclipse.n4js.smith.dash.ui.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.widgets.Display;
 
 /**
  * StackNode in a graph. Shameless copy of Node.
  */
 @SuppressWarnings("javadoc")
-public class StackNode {
-
-	private static final float BORDER = 4;
-	/** Base width of the nodes for this canvas. */
-	public static final float BASE_WIDTH = 1000.0f;
-	/** Base height of the nodes for this canvas. */
-	public static final float BASE_HEIGHT = 10.0f;
+public class StackNode extends VisualisationNode {
 
 	protected String title;
 	protected String description;
 
-	protected float x = 0;
-	protected float y = 0;
-	protected float width = 0;
-	protected float height = 0;
-	private final float originalWidth;
-	private final float originalHeight;
+	protected float x;
+	protected float y;
+	protected float width;
+	protected float height;
 	private final float parentScale;
 	private final float siblingScale;
 
@@ -49,10 +45,8 @@ public class StackNode {
 			float siblingScale) {
 		this.title = title;
 		this.description = description;
-		this.originalWidth = width;
-		this.originalHeight = height;
-		this.width = originalWidth;
-		this.height = originalHeight;
+		this.width = width;
+		this.height = height;
 		this.parentScale = parentScale;
 		this.siblingScale = siblingScale;
 	}
@@ -64,42 +58,6 @@ public class StackNode {
 	public void addChild(StackNode child) {
 		this.children.add(child);
 		child.setParent(this);
-	}
-
-	public boolean contains(@SuppressWarnings("hiding") float x, @SuppressWarnings("hiding") float y) {
-		return getBounds().contains(x, y);
-	}
-
-	public Rectangle getBounds() {
-		return new Rectangle(x, y, width, height);
-	}
-
-	public Point getCenter() {
-		return new Point(x + width / 2, y + height / 2);
-	}
-
-	/**
-	 * Translate receiving node in its containing graph.
-	 */
-	public void move(float dx, float dy) {
-		this.x += dx;
-		this.y += dy;
-	}
-
-	/**
-	 * Change size of receiving Node to its preferred size.
-	 */
-	public void trim(GC gc) {
-		this.width = originalWidth;
-		this.height = originalHeight;
-		// if (title != null) {
-		// final org.eclipse.swt.graphics.Point size = gc.stringExtent(title);
-		// this.width = size.x + BORDER * 2;
-		// this.height = size.y + BORDER * 2;
-		// } else {
-		// this.width = originalWidth;
-		// this.height = originalHeight;
-		// }
 	}
 
 	/** return how deep in the stack this node is */
@@ -132,8 +90,9 @@ public class StackNode {
 	/**
 	 * Paint the ... guess what!
 	 */
+	@Override
 	public void paint(GC gc) {
-		gc.setBackground(StackUtils.getColor(parentScale, siblingScale));
+		gc.setBackground(getColor(parentScale, siblingScale));
 		gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
 
 		gc.fillRectangle(Math.round(x), Math.round(y), Math.round(width), Math.round(height));
@@ -141,5 +100,62 @@ public class StackNode {
 		// StackUtils.drawString(gc, title, x, y, width, height, 0);
 
 		gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+	}
+
+	/**
+	 * Calculate color based on the position in the flame graph. From {@code red} to {@code yellow} - based on the scale
+	 * in comparison to parent. Darkness based on comparison to the previous sibling in layer.
+	 */
+	private static Color getColor(float depthInStack, float depthInLayer) {
+		float factor = 1.0f - depthInStack;
+		RGB depthColor = new RGB(255, ColorUtils.clamp(255 * factor), 0);
+
+		return ColorUtils.darken(depthColor, depthInLayer);
+	}
+
+	@Override
+	public String getDescription() {
+		return this.description;
+	}
+
+	@Override
+	public List<VisualisationNode> getChildren() {
+		return new LinkedList<>(this.children);
+	}
+
+	@Override
+	public void sortChildren(Comparator<VisualisationNode> cmp) {
+		this.children.sort(cmp);
+		this.children.forEach(c -> c.sortChildren(cmp));
+	}
+
+	@Override
+	public float getX() {
+		return x;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+
+	@Override
+	public float getWidth() {
+		return width;
+	}
+
+	@Override
+	public float getHeight() {
+		return height;
+	}
+
+	@Override
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	@Override
+	public void setY(float y) {
+		this.y = y;
 	}
 }

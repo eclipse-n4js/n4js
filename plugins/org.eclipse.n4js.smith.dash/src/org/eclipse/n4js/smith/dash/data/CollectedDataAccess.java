@@ -10,47 +10,32 @@
  */
 package org.eclipse.n4js.smith.dash.data;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
 
-/** */
+/** Provides access */
 public class CollectedDataAccess {
-	private static final DataCollectors collectors = DataCollectors.INSTANCE;
 
 	/** */
 	public static Set<String> getCollectorsKeys() {
-		return collectors.getRootCollectors().keySet();
+		return getCollectors().getRootCollectors().keySet();
 	}
 
-	public static boolean isValid(String key) {
-		DataCollector dataCollector = collectors.getRootCollectors().get(key);
-		if (dataCollector == null)
-			return false;
-
-		return !dataCollector.getData().isEmpty();
-	}
+	// public static boolean isValid(String key) {
+	// DataCollector dataCollector = collectors.getRootCollectors().get(key);
+	// if (dataCollector == null)
+	// return false;
+	//
+	// return !dataCollector.getData().isEmpty();
+	// }
 
 	public static boolean hasNestedData(String key) {
-		DataCollector dataCollector = collectors.getRootCollectors().get(key);
+		DataCollector dataCollector = getCollectors().getRootCollectors().get(key);
 		if (dataCollector == null)
 			throw new RuntimeException("Can't locate data collector for the key: " + key);
 
 		return !dataCollector.getChildren().isEmpty();
-	}
-
-	/** */
-	public static List<DataPoint> gRawData2(String key) {
-
-		DataCollector dataCollector = collectors.getRootCollectors().get(key);
-		if (dataCollector == null)
-			return Collections.emptyList();
-
-		return dataCollector.getData().stream().sorted(CollectedDataAccess::compareDesc)
-				.collect(Collectors.toList());
 	}
 
 	private static int compareDesc(DataPoint data1, DataPoint data2) {
@@ -58,20 +43,11 @@ public class CollectedDataAccess {
 	}
 
 	/** */
-	public static List<DataPoint> getData(String key) {
-
-		DataCollector dataCollector = collectors.getRootCollectors().get(key);
-		if (dataCollector == null)
-			return Collections.emptyList();
-
-		return dataCollector.getData();
-	}
-
 	public static DataSeries getDataSeries(String key) {
 		if (Strings.isNullOrEmpty(key))
 			throw new RuntimeException("Invalid key");
 
-		DataCollector dataCollector = collectors.getRootCollectors().get(key);
+		DataCollector dataCollector = getCollectors().getRootCollectors().get(key);
 
 		DataSeries rootSeries = new DataSeries(key, dataCollector.getData());
 		collectSeries(dataCollector, rootSeries);
@@ -88,15 +64,22 @@ public class CollectedDataAccess {
 		});
 	}
 
+	/** Pauses all collectors. */
 	public static void setPaused(boolean paused) {
-		collectors.setPaused(paused);
+		getCollectors().setPaused(paused);
 	}
 
 	/**
-	 *
+	 * Deletes data from all collectors.
 	 */
 	public static void purgeAllData() {
-		collectors.getRootCollectors().values().forEach(c -> c.purgeData());
+		getCollectors().getRootCollectors().values().forEach(c -> c.purgeData());
+	}
+
+	/** wrap static access */
+	protected static DataCollectors getCollectors() {
+		// TODO replace with injection
+		return DataCollectors.INSTANCE;
 	}
 
 }

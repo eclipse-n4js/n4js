@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
-import org.eclipse.n4js.smith.dash.data.DataSeries;
-import org.eclipse.n4js.smith.dash.data.SimpleTimeFormat;
 import org.eclipse.n4js.smith.dash.data.CollectedDataAccess;
 import org.eclipse.n4js.smith.dash.data.DataPoint;
+import org.eclipse.n4js.smith.dash.data.DataSeries;
+import org.eclipse.n4js.smith.dash.data.SimpleTimeFormat;
 import org.eclipse.n4js.utils.IndentLevel;
 
 /**
@@ -27,15 +27,16 @@ import org.eclipse.n4js.utils.IndentLevel;
 public class ChartGraphFactory {
 
 	/** Uses provided key to obtain performance data and builds graph representing it. */
-	public static ListEntry buildGraph(String key, float baseHeight, float baseWidth, String label) {
+	public static VisualisationSnapshot buildGraph(String key, float baseHeight, float baseWidth, String label) {
 		DataSeries dataSeries = CollectedDataAccess.getDataSeries(key);
 		if (dataSeries.hasNoData())
-			return new ListEntry(label, new StackGraph(), label + " (no data)");
+			return new VisualisationSnapshot(label, new VisualisationGraph(), label + " (no data)");
 
 		return createChartGraph(dataSeries, baseHeight, baseWidth, label);
 	}
 
-	private static ListEntry createChartGraph(DataSeries series, float baseHeight, float baseWidth, String label) {
+	private static VisualisationSnapshot createChartGraph(DataSeries series, float baseHeight, float baseWidth,
+			String label) {
 		StringJoiner sj = new StringJoiner("\n");
 		IndentLevel indent = new IndentLevel("\t");
 		final List<DataPoint> data = series.getData().stream().sorted(ChartGraphFactory::compareDesc)
@@ -49,7 +50,7 @@ public class ChartGraphFactory {
 			data100.add(data.get(0).nanos);
 			ChartNode node100 = new ChartNode("100%", "all 100 %", data100, 1.0f, min, max, baseHeight, baseWidth,
 					0, 1, size);
-			return new ListEntry(label, new ChartGraph(node100), sj.toString());
+			return new VisualisationSnapshot(label, new VisualisationGraph(node100), sj.toString());
 		}
 
 		final int top20PercentMarker = (int) Math.floor(size * 0.20) + 1;
@@ -64,7 +65,7 @@ public class ChartGraphFactory {
 		while (i < top20PercentMarker) {
 			dataPoint = data.get(i);
 			data20.add(dataPoint.nanos);
-			sj.add(indent.get() + "- " + SimpleTimeFormat.convert(dataPoint.nanos) + " " + dataPoint.name);
+			sj.add(indent.get() + SimpleTimeFormat.convert(dataPoint.nanos) + " - " + dataPoint.name);
 			i += 1;
 		}
 
@@ -79,7 +80,7 @@ public class ChartGraphFactory {
 		while (i < size) {
 			dataPoint = data.get(i);
 			data80.add(dataPoint.nanos);
-			sj.add(indent.get() + "- " + SimpleTimeFormat.convert(dataPoint.nanos) + " " + dataPoint.name);
+			sj.add(indent.get() + SimpleTimeFormat.convert(dataPoint.nanos) + " - " + dataPoint.name);
 			i += 1;
 		}
 
@@ -90,7 +91,7 @@ public class ChartGraphFactory {
 				top20PercentMarker - 1, top20PercentMarker + 1, size);
 		ChartNode node80 = new ChartNode("80%", "bottom 80 %", data80, 0.8f, min, max, baseHeight, baseWidth,
 				top20PercentMarker, size, size);
-		return new ListEntry(label, new ChartGraph(node20, nodeGap, node80), sj.toString());
+		return new VisualisationSnapshot(label, new VisualisationGraph(node20, nodeGap, node80), sj.toString());
 	}
 
 	private static int compareDesc(DataPoint data1, DataPoint data2) {

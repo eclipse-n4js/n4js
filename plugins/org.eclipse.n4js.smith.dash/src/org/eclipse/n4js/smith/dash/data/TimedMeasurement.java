@@ -8,18 +8,16 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.smith.dash.data.internal;
+package org.eclipse.n4js.smith.dash.data;
 
 import java.util.function.Consumer;
-
-import org.eclipse.n4js.smith.dash.data.Measurement;
 
 import com.google.common.base.Stopwatch;
 
 /**
  * Simple measurement that tracks time between its creation and call to {@link #end()}.
  */
-public class TimedMeasurement implements Measurement {
+class TimedMeasurement implements Measurement {
 	final String name;
 	final Stopwatch sw;
 	private boolean consumed = false;

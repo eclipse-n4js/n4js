@@ -34,9 +34,9 @@ import org.eclipse.swt.widgets.Display;
  * SWT widget to draw a {@link Graph}.
  */
 @SuppressWarnings("javadoc")
-public class ChartCanvas extends Canvas implements VisualizationCanvas {
+public class VisualisationCanvas extends Canvas {
 
-	protected ChartGraph graph = null;
+	protected VisualisationGraph graph = null;
 	protected boolean graphNeedsLayout = true;
 
 	protected int offsetX = 0;
@@ -61,12 +61,12 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 	protected int mouseDragBaseX;
 	protected int mouseDragBaseY;
 
-	protected ChartNode hoveredNode = null;
-	protected final Set<ChartNode> selectedNodes = new HashSet<>();
+	protected VisualisationNode hoveredNode = null;
+	protected final Set<VisualisationNode> selectedNodes = new HashSet<>();
 
 	protected DefaultToolTip toolTip;
 
-	public ChartCanvas(Composite parent, int style) {
+	public VisualisationCanvas(Composite parent, int style) {
 		super(parent, style);
 		addPaintListener(new PaintListener() {
 			@Override
@@ -143,17 +143,15 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 		toolTip.setText("Hello tool tip!");
 	}
 
-	@Override
-	public ChartGraph getGraph() {
+	public VisualisationGraph getGraph() {
 		return graph;
 	}
 
-	@Override
 	public void clear() {
 		setGraph(null);
 	}
 
-	public void setGraph(ChartGraph vis) {
+	public void setGraph(VisualisationGraph vis) {
 		if (vis != this.graph) {
 			clearSelection();
 			if (this.graph == null || vis == null) {
@@ -203,7 +201,6 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 			final int border = 5;
 			final float w = getSize().x;
 			final float h = getSize().y;
-			// final Rectangle b = new Rectangle(0.0f, 0.0f, 100.0f, 100.0f);
 			final Rectangle b = graph.getBounds();
 			final int newOffsetX = border;
 			final int newOffsetY = border;
@@ -260,9 +257,9 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 		}
 	}
 
-	public void setSelectedNodes(ChartNode... nodes) {
-		final Set<ChartNode> newNodes = new HashSet<>();
-		for (ChartNode n : nodes)
+	public void setSelectedNodes(VisualisationNode... nodes) {
+		final Set<VisualisationNode> newNodes = new HashSet<>();
+		for (VisualisationNode n : nodes)
 			if (n != null)
 				newNodes.add(n);
 		if (!selectedNodes.equals(newNodes)) {
@@ -272,7 +269,7 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 		}
 	}
 
-	public void toggleSelection(ChartNode node) {
+	public void toggleSelection(VisualisationNode node) {
 		if (selectedNodes.contains(node))
 			selectedNodes.remove(node);
 		else
@@ -287,7 +284,7 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 		}
 	}
 
-	public ChartNode getNodeAt(int screenX, int screenY) {
+	public VisualisationNode getNodeAt(int screenX, int screenY) {
 		final Point p = screenToGraph(screenX, screenY);
 		return graph != null ? graph.getNodeAt(p.x, p.y) : null;
 	}
@@ -317,7 +314,7 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 		if (hawkEye_active) {
 			setHawkEyeTarget(new Point(event.x, event.y));
 		}
-		final ChartNode mNode = getNodeAt(event.x, event.y);
+		final VisualisationNode mNode = getNodeAt(event.x, event.y);
 		// update hovered node
 		if (!mousePressed)
 			setHoveredNode(mNode);
@@ -348,7 +345,8 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 
 	protected void onClick(MouseEvent event) {
 		// update selection
-		final ChartNode mNode = getNodeAt(event.x, event.y);
+		final VisualisationNode mNode = getNodeAt(event.x, event.y);
+		// final Node mNode = getNodeAt(event.x, event.y);
 		final boolean shiftPressed = (event.stateMask & SWT.SHIFT) != 0;
 		if (!shiftPressed) {
 			if (mNode == null) {
@@ -369,12 +367,12 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 		zoom(event.x, event.y, 0.01f * event.count);
 	}
 
-	protected void setHoveredNode(ChartNode node) {
+	protected void setHoveredNode(VisualisationNode node) {
 		if (node != hoveredNode) {
 			hoveredNode = node;
 
-			if (hoveredNode != null && hoveredNode.description != null) {
-				toolTip.setText(hoveredNode.description);
+			if (hoveredNode != null && hoveredNode.getDescription() != null) {
+				toolTip.setText(hoveredNode.getDescription());
 				toolTip.show(new org.eclipse.swt.graphics.Point(4, 4));
 			} else {
 				toolTip.hide();
@@ -397,7 +395,7 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 			gc.setTransform(tf);
 
 			if (graphNeedsLayout) {
-				graph.layout(gc);
+				graph.layout();
 				graphNeedsLayout = false;
 			}
 
@@ -421,12 +419,8 @@ public class ChartCanvas extends Canvas implements VisualizationCanvas {
 			}
 		}
 	}
-
-	@Override
-	public void setGraph(VisualisationGraph graph) {
-		if (graph instanceof ChartGraph == false)
-			throw new RuntimeException("not the graph I wanted " + graph.getClass());
-		this.graph = (ChartGraph) graph;
-	}
-
+	//
+	// public void setGraph(VisualisationGraph graph) {
+	// this.graph = graph;
+	// }
 }

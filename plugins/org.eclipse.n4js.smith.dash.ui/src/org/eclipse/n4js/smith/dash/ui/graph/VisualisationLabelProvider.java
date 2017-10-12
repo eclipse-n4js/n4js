@@ -16,6 +16,6 @@ class VisualisationLabelProvider extends LabelProvider {
 
 	@Override
 	public String getText(Object element) {
-		return ((ListEntry) element).label;
+		return ((VisualisationSnapshot) element).label;
 	}
 }

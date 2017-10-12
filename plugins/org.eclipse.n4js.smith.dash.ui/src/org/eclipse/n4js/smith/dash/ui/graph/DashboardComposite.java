@@ -49,16 +49,14 @@ import org.eclipse.ui.PlatformUI;
  *
  */
 public class DashboardComposite extends Composite {
-	/** Base width of the nodes for this canvas. */
-	public static final float BASE_WIDTH = 1000.0f;
-	/** Base height of the nodes for this canvas. */
-	public static final float BASE_HEIGHT = 10.0f;
-	protected String key = null;
-	protected final List<ListEntry> entries = new ArrayList<>();
+	private static final float STACK_BASE_WIDTH = 1000.0f;
+	private static final float STACK_BASE_HEIGHT = 10.0f;
+	private String key = null;
+	private final List<VisualisationSnapshot> entries = new ArrayList<>();
 
-	protected ListViewer listViewer;
-	protected VisualizationCanvas canvas;
-	protected Text text;
+	private ListViewer listViewer;
+	private VisualisationCanvas canvas;
+	private final Text text;
 
 	/**
 	 */
@@ -77,7 +75,6 @@ public class DashboardComposite extends Composite {
 		text.setText("");
 
 		createVisualisationControls(sf);
-
 		sf.setWeights(new int[] { 45, 45, 10 });
 	}
 
@@ -152,13 +149,7 @@ public class DashboardComposite extends Composite {
 
 	/** Canvas and graph depends on actual data. */
 	void initCanvas(Composite canvasParent) {
-		if (CollectedDataAccess.isValid(key)) {
-			if (CollectedDataAccess.hasNestedData(key)) {
-				this.canvas = new StackCanvas(canvasParent, SWT.NONE);
-			} else {
-				this.canvas = new ChartCanvas(canvasParent, SWT.NONE);
-			}
-		}
+		this.canvas = new VisualisationCanvas(canvasParent, SWT.NONE);
 	}
 
 	private void deleteCurrentSelection() {
@@ -176,8 +167,8 @@ public class DashboardComposite extends Composite {
 		}
 	}
 
-	protected void onSelectionChanged(@SuppressWarnings("unused") SelectionChangedEvent event) {
-		final ListEntry selEntry = getSingleSelectedEntry();
+	private void onSelectionChanged(@SuppressWarnings("unused") SelectionChangedEvent event) {
+		final VisualisationSnapshot selEntry = getSingleSelectedEntry();
 		if (selEntry != null) {
 			canvas.setGraph(selEntry.graph);
 			text.setText(selEntry.text);
@@ -188,22 +179,23 @@ public class DashboardComposite extends Composite {
 		canvas.redraw();
 	}
 
-	protected void removeEntries(@SuppressWarnings("hiding") Collection<?> entries) {
+	private void removeEntries(@SuppressWarnings("hiding") Collection<?> entries) {
 		if (this.entries.removeAll(entries)) {
 			refreshList();
 			if (entries.stream().anyMatch(
-					e -> e instanceof ListEntry && ((ListEntry) e).graph == canvas.getGraph())) {
+					e -> e instanceof VisualisationSnapshot
+							&& ((VisualisationSnapshot) e).graph == canvas.getGraph())) {
 				canvas.clear();
 				text.setText("");
 			}
 		}
 	}
 
-	protected ListEntry getSingleSelectedEntry() {
+	protected VisualisationSnapshot getSingleSelectedEntry() {
 		final IStructuredSelection sel = (IStructuredSelection) listViewer.getSelection();
 		final Object obj = sel.size() == 1 ? sel.getFirstElement() : null;
-		if (obj instanceof ListEntry)
-			return (ListEntry) obj;
+		if (obj instanceof VisualisationSnapshot)
+			return (VisualisationSnapshot) obj;
 		return null;
 	}
 
@@ -236,20 +228,18 @@ public class DashboardComposite extends Composite {
 	}
 
 	public void addGraph(String label, boolean select) {
-		if (CollectedDataAccess.isValid(key)) {
-			if (CollectedDataAccess.hasNestedData(key)) {
-				addEntry(StackGraphFactory.buildGraph(key, BASE_HEIGHT, BASE_WIDTH, label), select);
-			} else {
-				Rectangle clientArea = canvas.getClientArea();
-				int chartHeight = clientArea.height;
-				int chartWidth = clientArea.width;
-				addEntry(ChartGraphFactory.buildGraph(key, chartHeight, chartWidth, label), select);
-			}
+		if (CollectedDataAccess.hasNestedData(key)) {
+			addEntry(StackGraphFactory.buildGraph(key, STACK_BASE_HEIGHT, STACK_BASE_WIDTH, label), select);
+		} else {
+			Rectangle clientArea = canvas.getClientArea();
+			int chartHeight = clientArea.height;
+			int chartWidth = clientArea.width;
+			addEntry(ChartGraphFactory.buildGraph(key, chartHeight, chartWidth, label), select);
 		}
 		this.layout();
 	}
 
-	protected void addEntry(ListEntry entry, boolean select) {
+	private void addEntry(VisualisationSnapshot entry, boolean select) {
 		if (!entries.contains(entry)) {
 			entries.add(entry);
 			refreshList();
@@ -260,7 +250,7 @@ public class DashboardComposite extends Composite {
 		}
 	}
 
-	protected void refreshList() {
+	private void refreshList() {
 		listViewer.setInput(entries.toArray());
 	}
 
@@ -269,7 +259,7 @@ public class DashboardComposite extends Composite {
 		return listViewer.getList().setFocus();
 	}
 
-	protected void removeEntry(ListEntry entry) {
+	private void removeEntry(VisualisationSnapshot entry) {
 		if (entries.remove(entry)) {
 			refreshList();
 			if (entry.graph == canvas.getGraph())
@@ -282,7 +272,7 @@ public class DashboardComposite extends Composite {
 	/**
 	 * Return time stamp to prepend to a graph's label in the list of graphs.
 	 */
-	protected String getTimeStamp() {
+	private String getTimeStamp() {
 		return dateFormat.format(new Date());
 	}
 }

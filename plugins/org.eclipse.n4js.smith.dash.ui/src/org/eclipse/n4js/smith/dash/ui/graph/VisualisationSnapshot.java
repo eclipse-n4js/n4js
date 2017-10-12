@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.smith.dash.ui.graph;
 
-class ListEntry {
+class VisualisationSnapshot {
 	public final String label;
 	public final VisualisationGraph graph;
 	public final String text;
 
-	public ListEntry(String label, VisualisationGraph graph, String text) {
+	public VisualisationSnapshot(String label, VisualisationGraph graph, String text) {
 		this.label = label;
 		this.graph = graph;
 		this.text = text;

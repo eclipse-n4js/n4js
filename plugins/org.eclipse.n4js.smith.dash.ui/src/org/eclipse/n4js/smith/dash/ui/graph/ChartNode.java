@@ -11,23 +11,20 @@
 package org.eclipse.n4js.smith.dash.ui.graph;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * StackNode in a graph. Shameless copy of Node.
  */
 @SuppressWarnings("javadoc")
-public class ChartNode {
-
-	private static final float BORDER = 4;
-	/** Base width of the nodes for this canvas. */
-	public static final float BASE_WIDTH = 1000.0f;
-	/** Base height of the nodes for this canvas. */
-	public static final float BASE_HEIGHT = 10.0f;
+public class ChartNode extends VisualisationNode {
 
 	protected String title;
 	protected String description;
@@ -36,10 +33,6 @@ public class ChartNode {
 	protected float y = 0;
 	protected float width = 0;
 	protected float height = 0;
-	// private final float originalWidth;
-	// private final float originalHeight;
-	// private final float parentScale;
-	// private final float siblingScale;
 
 	protected ChartNode parent;
 	protected final List<ChartNode> children = new ArrayList<>();
@@ -88,43 +81,6 @@ public class ChartNode {
 		child.setParent(this);
 	}
 
-	public boolean contains(@SuppressWarnings("hiding") float x, @SuppressWarnings("hiding") float y) {
-		return getBounds().contains(x, y);
-	}
-
-	public Rectangle getBounds() {
-		return new Rectangle(x, y, width, height);
-	}
-
-	public Point getCenter() {
-		return new Point(x + width / 2, y + height / 2);
-	}
-
-	/**
-	 * Translate receiving node in its containing graph.
-	 */
-	public void move(float dx, float dy) {
-		this.x += dx;
-		this.y += dy;
-	}
-
-	/**
-	 * Change size of receiving Node to its preferred size.
-	 */
-	public void trim(GC gc) {
-		// this.width = originalWidth;
-		// this.height = originalHeight;
-
-		// if (title != null) {
-		// final org.eclipse.swt.graphics.Point size = gc.stringExtent(title);
-		// this.width = size.x + BORDER * 2;
-		// this.height = size.y + BORDER * 2;
-		// } else {
-		// this.width = originalWidth;
-		// this.height = originalHeight;
-		// }
-	}
-
 	/** return how deep in the stack this node is */
 	int getDepth() {
 		int d = 0;
@@ -139,35 +95,42 @@ public class ChartNode {
 	/**
 	 * Paint the ... guess what!
 	 */
+	@Override
 	public void paint(GC gc) {
-		final Color olgBackground = gc.getBackground();
+		final Color oldBackground = gc.getBackground();
 		final Color oldForeground = gc.getForeground();
 		try {
-			Long d = null;
-			int data20Size = 2 * ((dataEnd - dataStart) + 2);
-			int[] data20 = new int[data20Size];
-			data20[0] = (int) (linearScale(dataStart, 0, dataSize) * chartWidth);
-			data20[1] = 0;
+			long value = -1;
+			int coordinatesSize = 2 * ((dataEnd - dataStart) + 2);
+			int[] coordinates = new int[coordinatesSize];
+			coordinates[0] = (int) (linearScale(dataStart, 0, dataSize) * chartWidth);
+			coordinates[1] = 0;
 			for (int j = dataStart; j < dataEnd; j++) {
 				int jj = j - dataStart;
 				int s = (jj + 1) * 2;
-				d = data.get(jj);
+				value = data.get(jj);
 				int pointX = (int) (linearScale(j, 0, dataSize) * chartWidth);
-				data20[s] = pointX;
-				int pointY = (int) (logScale(d.floatValue(), dataMin, dataMax) * chartHeight);
-				data20[s + 1] = pointY;
+				coordinates[s] = pointX;
+				int pointY = (int) (logScale(value, dataMin, dataMax) * chartHeight);
+				coordinates[s + 1] = pointY;
 			}
-			data20[data20Size - 2] = data20[data20Size - 4];
-			data20[data20Size - 1] = 0;
+			coordinates[coordinatesSize - 2] = coordinates[coordinatesSize - 4];
+			coordinates[coordinatesSize - 1] = 0;
 
-			gc.setBackground(ChartUtils.getColor(totalScale));
+			gc.setBackground(getColor(totalScale));
 			gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
-			gc.fillPolygon(data20);
-			// System.out.println("draw " + title + " " + Arrays.toString(data20));
+			gc.fillPolygon(coordinates);
 		} finally {
-			gc.setBackground(olgBackground);
+			gc.setBackground(oldBackground);
 			gc.setForeground(oldForeground);
 		}
+	}
+
+	/** Data with higher values gives {@code red} values. */
+	private static Color getColor(float volumePercentage) {
+		float factor = volumePercentage;
+		RGB color = new RGB(255, ColorUtils.clamp(255 * factor), ColorUtils.clamp(255 * factor));
+		return ColorUtils.getColor(color);
 	}
 
 	public static float logScale(final float valueIn, final float minData, final float maxData) {
@@ -179,5 +142,50 @@ public class ChartNode {
 	public static float linearScale(final float valueIn, final float minData, final float maxData) {
 		float linearScale = (valueIn - minData) / (maxData - minData);
 		return linearScale;
+	}
+
+	@Override
+	public String getDescription() {
+		return this.description;
+	}
+
+	@Override
+	public List<VisualisationNode> getChildren() {
+		return new LinkedList<>(this.children);
+	}
+
+	@Override
+	public void sortChildren(Comparator<VisualisationNode> cmp) {
+		this.children.sort(cmp);
+	}
+
+	@Override
+	public float getX() {
+		return x;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+
+	@Override
+	public float getWidth() {
+		return width;
+	}
+
+	@Override
+	public float getHeight() {
+		return height;
+	}
+
+	@Override
+	public void setX(float x) {
+		this.x = x;
+	}
+
+	@Override
+	public void setY(float y) {
+		this.y = y;
 	}
 }

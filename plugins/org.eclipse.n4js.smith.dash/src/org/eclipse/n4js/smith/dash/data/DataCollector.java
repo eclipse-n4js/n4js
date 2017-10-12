@@ -43,12 +43,13 @@ public abstract class DataCollector {
 	/** Clear all data collected so far. */
 	public abstract void purgeData();
 
+	// package
 	/** return immediate child with the provided key. */
-	protected abstract DataCollector getChild(String key);
+	abstract DataCollector getChild(String key);
 
 	/** add given collector as child under given key. */
-	protected abstract void addChild(String key, DataCollector child);
+	abstract void addChild(String key, DataCollector child);
 
 	/** get keys for all immidate children. */
-	protected abstract Collection<String> childrenKeys();
+	abstract Collection<String> childrenKeys();
 }
