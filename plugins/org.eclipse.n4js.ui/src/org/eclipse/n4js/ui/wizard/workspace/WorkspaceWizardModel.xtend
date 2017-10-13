@@ -24,9 +24,6 @@ import org.eclipse.jface.viewers.IStructuredSelection
  */
 @PropertyChangeSupport
 class WorkspaceWizardModel {
-
-	val static ROOT_URI = URI.createPlatformResourceURI("", true);
-
 	var IPath project = new Path('');
 	var IPath sourceFolder = new Path('');
 	var String moduleSpecifier = '';
@@ -54,6 +51,11 @@ class WorkspaceWizardModel {
 				path = path.removeLastSegments(1);
 			}
 
+			// Note: The following calls creates the rootURI manually
+			//       since SWTBotTests crash with this call (GH-269):
+			//       URI.createPlatformResourceURI("", true);
+			val rootURI = URI.createURI("platform:/resource/");
+
 			// Find project of path
 			val pathURI = URI.createPlatformResourceURI(path.toString(), true);
 			val n4jsProject = n4jsCore.findProject(pathURI).orNull;
@@ -61,7 +63,7 @@ class WorkspaceWizardModel {
 			if (null !== n4jsProject && n4jsProject.exists) {
 				// If project exists set the project property of the model
 				val projectUri = n4jsProject.location;
-				val projectPath = new Path(projectUri.deresolve(ROOT_URI).toString());
+				val projectPath = new Path(projectUri.deresolve(rootURI).toString());
 				model.setProject(projectPath);
 
 				// If the path also specifies a folder inside the project, use this information as well
@@ -72,8 +74,8 @@ class WorkspaceWizardModel {
 						model.setSourceFolder(new Path(sourceFolderPath));
 
 						// Finally parse the module specifier
-						val sourceFolderURI = new Path(sourceFolder.location.deresolve(ROOT_URI).toString());
-						val moduleSpecifierPath = new Path(pathURI.deresolve(ROOT_URI).toString());
+						val sourceFolderURI = new Path(sourceFolder.location.deresolve(rootURI).toString());
+						val moduleSpecifierPath = new Path(pathURI.deresolve(rootURI).toString());
 						val moduleSpecifier = moduleSpecifierPath.makeRelativeTo(sourceFolderURI).toString();
 
 						if (!moduleSpecifier.isEmpty()) {
@@ -85,7 +87,6 @@ class WorkspaceWizardModel {
 							model.moduleSpecifier = model.moduleSpecifier + firstElement.fullPath.removeFileExtension.lastSegment;
 						}
 					}
-
 				}
 
 			}

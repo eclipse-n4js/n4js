@@ -43,7 +43,8 @@ Require-Bundle: org.eclipse.n4js;visibility:=reexport,
  org.eclipse.swt,
  org.eclipse.egit.core,
  org.eclipse.jgit,
- org.eclipse.n4js.n4jsx.model
+ org.eclipse.n4js.n4jsx.model,
+ org.eclipse.n4js.utils.ui
 Export-Package: org.eclipse.n4js.n4jsx.ui,
  org.eclipse.n4js.n4jsx.ui.contentassist,
  org.eclipse.n4js.n4jsx.ui.internal,
