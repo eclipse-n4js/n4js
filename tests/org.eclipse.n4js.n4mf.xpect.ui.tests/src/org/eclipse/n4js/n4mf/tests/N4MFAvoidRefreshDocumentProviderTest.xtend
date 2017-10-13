@@ -52,7 +52,7 @@ class N4MFAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public def void noRefreshWhenOpenningN4JSFileTest() {
+	public def void noRefreshWhenOpenningN4MFFileTest() {
 		val content = 'class C {}';		
 		createFileWithContent(content)
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
