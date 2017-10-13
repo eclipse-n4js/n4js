@@ -27,7 +27,7 @@ class CountPostChangeBroadcastChangeNotificationManager extends NotificationMana
 		super(workspace)
 	}
 
-	override def void broadcastChanges(ElementTree lastState, ResourceChangeEvent event, boolean lockTree) {
+	override void broadcastChanges(ElementTree lastState, ResourceChangeEvent event, boolean lockTree) {
 		if (event.type == IResourceChangeEvent.POST_CHANGE)
 			countPostChangeBroadcastTriggered++
 		super.broadcastChanges(lastState, event, lockTree)
