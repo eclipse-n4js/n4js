@@ -15,42 +15,44 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- *
+ * Abstraction for the series of {@link DataPoint}s.
  */
 public class DataSeries {
-	private Long sum;
+	/** name of this series */
 	public final String name;
-	List<DataPoint> data = new LinkedList<>();
+	/** sum of data in this series */
+	public final Long sum;
+	private final List<DataPoint> data = new LinkedList<>();
+	private final List<DataSeries> children = new LinkedList<>();
 
-	private final List<DataSeries> children = new LinkedList();
-
+	/** construct series from the provided data points list */
 	public DataSeries(String name, List<DataPoint> data) {
 		this.name = name;
 		this.data.addAll(data);
 		this.sum = this.data.stream().map(d -> d.nanos).reduce(0L, Long::sum);
 	}
 
+	/** add child series to this series. */
 	public void addChild(DataSeries child) {
 		this.children.add(child);
-		this.sum += child.sum;
 	}
 
-	public Long getSum() {
-		return this.sum;
-	}
-
+	/** check if this series has nested series */
 	public boolean hasNoChildren() {
 		return this.children.isEmpty();
 	}
 
+	/** check if this data has nested data */
 	public boolean hasNoData() {
 		return this.data.isEmpty();
 	}
 
+	/** get stream of nested series (just immediate children) */
 	public Stream<DataSeries> getChildren() {
 		return this.children.stream();
 	}
 
+	/** return copy of the data */
 	public List<DataPoint> getData() {
 		return new LinkedList<>(this.data);
 	}

@@ -22,14 +22,7 @@ public class CollectedDataAccess {
 		return getCollectors().getRootCollectors().keySet();
 	}
 
-	// public static boolean isValid(String key) {
-	// DataCollector dataCollector = collectors.getRootCollectors().get(key);
-	// if (dataCollector == null)
-	// return false;
-	//
-	// return !dataCollector.getData().isEmpty();
-	// }
-
+	/** returns true if collector for the provided key has children */
 	public static boolean hasNestedData(String key) {
 		DataCollector dataCollector = getCollectors().getRootCollectors().get(key);
 		if (dataCollector == null)
@@ -38,11 +31,7 @@ public class CollectedDataAccess {
 		return !dataCollector.getChildren().isEmpty();
 	}
 
-	private static int compareDesc(DataPoint data1, DataPoint data2) {
-		return Long.compare(data2.nanos, data1.nanos);
-	}
-
-	/** */
+	/** return {@link DataSeries} for all data captured by the collector for the provided key */
 	public static DataSeries getDataSeries(String key) {
 		if (Strings.isNullOrEmpty(key))
 			throw new RuntimeException("Invalid key");

@@ -105,7 +105,6 @@ class TimedDataCollector extends DataCollector {
 
 	@Override
 	public void setPaused(boolean paused) {
-		System.out.println(this + " paused: " + this.paused + " -> " + paused);
 		this.paused = paused;
 		this.children.values().forEach(child -> child.setPaused(paused));
 	}

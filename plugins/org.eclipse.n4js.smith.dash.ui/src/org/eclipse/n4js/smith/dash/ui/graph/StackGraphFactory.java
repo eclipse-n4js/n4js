@@ -35,8 +35,8 @@ public class StackGraphFactory {
 			String label) {
 		StringJoiner sj = new StringJoiner("\n");
 		IndentLevel indent = new IndentLevel("\t");
-		sj.add(indent.get() + SimpleTimeFormat.convert(series.getSum()) + " - " + series.name);
-		StackNode root = new StackNode(series.name, series.name + " took " + SimpleTimeFormat.convert(series.getSum()),
+		sj.add(indent.get() + SimpleTimeFormat.convert(series.sum) + " - " + series.name);
+		StackNode root = new StackNode(series.name, series.name + " took " + SimpleTimeFormat.convert(series.sum),
 				baseWidth, baseHeight, 1.0f, 1.0f);
 		collectData(series, root, baseHeight, baseWidth, sj, indent);
 		return new VisualisationSnapshot(label, new VisualisationGraph(root), sj.toString());
@@ -50,13 +50,13 @@ public class StackGraphFactory {
 
 		indent.increase();
 
-		Long siblingSum = parentSeries.getChildren().map(s -> s.getSum()).max(Long::compare).get();
+		Long siblingSum = parentSeries.getChildren().map(s -> s.sum).max(Long::compare).get();
 		parentSeries.getChildren().forEach(series -> {
-			sj.add(indent.get() + SimpleTimeFormat.convert(series.getSum()) + " - " + series.name);
-			float parentScale = (float) series.getSum() / parentSeries.getSum();
-			float siblingScale = (float) series.getSum() / siblingSum;
+			sj.add(indent.get() + SimpleTimeFormat.convert(series.sum) + " - " + series.name);
+			float parentScale = (float) series.sum / parentSeries.sum;
+			float siblingScale = (float) series.sum / siblingSum;
 			StackNode node = new StackNode(series.name,
-					series.name + " took " + SimpleTimeFormat.convert(series.getSum()),
+					series.name + " took " + SimpleTimeFormat.convert(series.sum),
 					parentNode.width * parentScale, baseHeight, parentScale, siblingScale);
 
 			parentNode.addChild(node);
