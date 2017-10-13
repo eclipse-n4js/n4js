@@ -86,7 +86,9 @@ abstract public class GraphVisitorInternal {
 	/////////////////////// Abstract Methods ///////////////////////
 
 	/** Called before any other method is called. */
-	abstract protected void initialize();
+	protected void initialize() {
+		// overwrite me
+	}
 
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
@@ -96,14 +98,21 @@ abstract public class GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer);
+	protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
 	/**
 	 * Called for each node that is reachable w.r.t to the current mode and the current container.
 	 * <p>
 	 * Note that the order of nodes is arbitrary.
+	 *
+	 * @param node
+	 *            the node that is visits
 	 */
-	abstract protected void visit(Node node);
+	protected void visit(Node node) {
+		// overwrite me
+	}
 
 	/**
 	 * Called for each edge that is reachable w.r.t to the current mode and the current container.
@@ -117,7 +126,9 @@ abstract public class GraphVisitorInternal {
 	 * @param edge
 	 *            traversed edge
 	 */
-	abstract protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge);
+	protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge) {
+		// overwrite me
+	}
 
 	/**
 	 * Called before {@link #terminate()} and after any visit-method is called.
@@ -127,10 +138,14 @@ abstract public class GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	abstract protected void terminateMode(Mode curMode, ControlFlowElement curContainer);
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
 	/** Called at last */
-	abstract protected void terminate();
+	protected void terminate() {
+		// overwrite me
+	}
 
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 

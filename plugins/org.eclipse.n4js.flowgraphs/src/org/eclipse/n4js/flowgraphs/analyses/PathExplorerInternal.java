@@ -186,22 +186,39 @@ abstract public class PathExplorerInternal {
 	 * edge of type {@literal ControlFlowType.Repeat} is followed exactly twice.
 	 */
 	abstract public class PathWalkerInternal {
+		private PathWalkerInternal pathPredecessor;
+		private PathWalkerInternal pathSuccessor;
 
 		/////////////////////// Abstract Methods ///////////////////////
 
 		/** Called before any other method of this instance is called. */
-		abstract protected void initialize();
+		protected void initialize() {
+			// overwrite me
+		}
 
-		/** Called for each node in the order of nodes on the current path. */
-		abstract protected void visit(Node node);
+		/**
+		 * Called for each node in the order of nodes on the current path.
+		 *
+		 * @param node
+		 *            node that gets visits
+		 */
+		protected void visit(Node node) {
+			// overwrite me
+		}
 
 		/**
 		 * Called for each edge in the order of edges on the current path.
 		 *
+		 * @param start
+		 *            node that was visited before
+		 * @param end
+		 *            node that will be visited next
 		 * @param edge
 		 *            traversed edge
 		 */
-		abstract protected void visit(Node start, Node end, ControlFlowEdge edge);
+		protected void visit(Node start, Node end, ControlFlowEdge edge) {
+			// overwrite me
+		}
 
 		/**
 		 * Forks another path from the current node.<br/>
@@ -209,8 +226,44 @@ abstract public class PathExplorerInternal {
 		 */
 		abstract protected PathWalkerInternal fork();
 
+		/**
+		 * Iff {@code true} returned, this {@link PathWalkerInternal} will be joined. Otherwise joining is omitted and
+		 * this {@link PathWalkerInternal} will traverse the paths in parallel to other {@link PathWalkerInternal}s.
+		 * <p>
+		 * <b>Attention:</b> If there are more than 1000 {@link PathWalkerInternal}, the {@link PathExplorerInternal}
+		 * with the most {@link PathWalkerInternal}s will be cancelled.
+		 */
+		protected boolean isJoinable() {
+			return true;
+		}
+
+		/**
+		 * Called when another {@link PathWalkerInternal} is joined into this {@link PathWalkerInternal} instance.
+		 *
+		 * @param joiningPWI
+		 *            will receive the method call {@link #joinedWith(PathWalkerInternal)} and then terminate
+		 */
+		protected void join(PathWalkerInternal joiningPWI) {
+			// overwrite me
+		}
+
+		/**
+		 * Called after this {@link PathWalkerInternal} instance was joined into the {code joinSurvivor}
+		 * {@link PathWalkerInternal} instance.
+		 * <p>
+		 * After this method succeeded, {@link #terminate()} gets called.
+		 *
+		 * @param joinSurvivor
+		 *            will continue to walk the path.
+		 */
+		protected void joinedWith(PathWalkerInternal joinSurvivor) {
+			// overwrite me
+		}
+
 		/** Called at last. */
-		abstract protected void terminate();
+		protected void terminate() {
+			// overwrite me
+		}
 
 		/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
@@ -234,11 +287,45 @@ abstract public class PathExplorerInternal {
 			PathWalkerInternal forkedPath = fork();
 			allPaths.add(forkedPath);
 			activePaths.add(forkedPath);
+			forkedPath.pathPredecessor = this;
 			forkedPath.initialize();
 			return forkedPath;
 		}
 
+		/**
+		 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
+		 * {@link PathWalkerInternal#join(PathWalkerInternal)}.
+		 */
+		final void callJoin(PathWalkerInternal joiningPWI) {
+			join(joiningPWI);
+		}
+
+		/**
+		 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
+		 * {@link PathWalkerInternal#joinedWith(PathWalkerInternal)}.
+		 */
+		final void callJoinedWith(PathWalkerInternal joinSurvivor) {
+			pathSuccessor = joinSurvivor;
+			joinedWith(joinSurvivor);
+		}
+
 		/////////////////////// Service Methods for inherited classes ///////////////////////
+
+		/**
+		 * returns the {@link PathWalkerInternal} from which this instance was forked. Is null for the first
+		 * {@link PathWalkerInternal}.
+		 */
+		final public PathWalkerInternal getPathPredecessor() {
+			return pathPredecessor;
+		}
+
+		/**
+		 * returns the {@link PathWalkerInternal} into which this instance was joined. Is set before
+		 * {@link #joinedWith(PathWalkerInternal)} is called.
+		 */
+		final public PathWalkerInternal getPathSuccessor() {
+			return pathSuccessor;
+		}
 
 		/** Sets the verdict of this path to <i>Passed</i>. */
 		final public void pass() {

@@ -28,6 +28,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 public class AllPathPrintVisitor extends GraphVisitor {
 	final ControlFlowElement startElement;
 
+	/**
+	 * Constructor.
+	 */
 	public AllPathPrintVisitor() {
 		this(null, null, Mode.Forward);
 	}
@@ -77,25 +80,10 @@ public class AllPathPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
 	protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
 		if (startElement == null) {
 			super.requestActivation(new AllPathPrintExplorer());
 		}
-	}
-
-	@Override
-	protected void terminateMode(Mode curDirection, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
 	}
 
 	@Override
@@ -105,18 +93,14 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		}
 	}
 
-	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		// nothing to do
-	}
-
 	/** @return all found paths as strings */
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
 		for (PathExplorerInternal app : getActivatedExplorers()) {
 			for (PathWalkerInternal ap : app.getAllPaths()) {
 				AllPathPrintWalker printPath = (AllPathPrintWalker) ap;
-				pathStrings.add(printPath.currString);
+				// pathStrings.add(printPath.getCompleteString());
+				pathStrings.add(" ");
 			}
 		}
 		return pathStrings;
@@ -130,20 +114,11 @@ public class AllPathPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected AllPathPrintWalker firstPathWalker() {
-			return new AllPathPrintWalker("");
+			return new AllPathPrintWalker();
 		}
 
 		class AllPathPrintWalker extends PathWalker {
-			String currString = "";
-
-			AllPathPrintWalker(String initString) {
-				this.currString = initString;
-			}
-
-			@Override
-			protected void initialize() {
-				// nothing to do
-			}
+			private String currString = "";
 
 			@Override
 			protected void visit(ControlFlowElement cfe) {
@@ -157,14 +132,37 @@ public class AllPathPrintVisitor extends GraphVisitor {
 
 			@Override
 			protected AllPathPrintWalker forkPath() {
-				return new AllPathPrintWalker(currString);
+				return new AllPathPrintWalker();
 			}
 
-			@Override
-			protected void terminate() {
-				// nothing to do
+			String getPredString() {
+				String s = "";
+				AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
+				if (pathPred != null)
+					s += pathPred.getPredString();
+				s += currString;
+				return s;
 			}
 
+			String getSuccString() {
+				String s = currString;
+				AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
+				if (pathSucc != null)
+					s += pathSucc.getSuccString();
+				return s;
+			}
+
+			String getCompleteString() {
+				AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
+				AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
+				String s = "";
+				if (pathPred != null)
+					s += pathPred.getPredString();
+				s += currString;
+				if (pathSucc != null)
+					s += pathSucc.getSuccString();
+				return s;
+			}
 		}
 	}
 

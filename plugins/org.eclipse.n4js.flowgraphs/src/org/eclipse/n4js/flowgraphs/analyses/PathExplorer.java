@@ -73,17 +73,26 @@ abstract public class PathExplorer extends PathExplorerInternal {
 			pEdgeTypes.add(edge.cfType);
 		}
 
-		@Override
-		abstract protected void initialize();
-
-		/** Called for each node in direction of a path. */
-		abstract protected void visit(ControlFlowElement cfe);
+		/**
+		 * Called for each node in direction of a path.
+		 *
+		 * @param cfe
+		 *            {@link ControlFlowElement} that is visited
+		 */
+		protected void visit(ControlFlowElement cfe) {
+			// overwrite me
+		}
 
 		/**
 		 * Called for each edge in direction of a path. The edge direction is aligned to the traversing direction, i.e.
 		 * the start node was traversed before the end node of the edge.
+		 *
+		 * @param edge
+		 *            {@link FlowEdge} that is visited
 		 */
-		abstract protected void visit(FlowEdge edge);
+		protected void visit(FlowEdge edge) {
+			// overwrite me
+		}
 
 		/** see {@link PathExplorerInternal.PathWalkerInternal#fork()} */
 		abstract protected PathWalker forkPath();
@@ -95,9 +104,6 @@ abstract public class PathExplorer extends PathExplorerInternal {
 			ap2.pEdgeTypes.addAll(pEdgeTypes);
 			return ap2;
 		}
-
-		@Override
-		abstract protected void terminate();
 
 	}
 }
