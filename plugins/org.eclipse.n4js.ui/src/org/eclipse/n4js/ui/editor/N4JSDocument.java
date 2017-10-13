@@ -67,8 +67,6 @@ public class N4JSDocument extends XtextDocument {
 				// we managed to obtain the readLock
 				// since we have exclusive read access, we either have also the resource lock, or we are prone to
 				// deadlocking
-				// note: to avoid having to copy the entire body of method #internalReadOnly() from super class, we
-				// simply obtain two read locks (which is possible, because 'readLock' is a reentrant lock) ...
 				return internalReadOnly(work, false);
 			}
 			return defaultValue;
