@@ -158,4 +158,9 @@ public class StackNode extends VisualisationNode {
 	public void setY(float y) {
 		this.y = y;
 	}
+
+	@Override
+	public String getTitle() {
+		return this.title;
+	}
 }

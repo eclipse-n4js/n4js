@@ -144,7 +144,7 @@ public class DashboardView extends ViewPart {
 	 */
 	protected void onDelete(@SuppressWarnings("unused") Action action) {
 		// remove data previously rendered in the UI
-		this.visualisation.values().forEach(v -> v.removeSelectedGraphs(true));
+		this.visualisation.values().forEach(v -> v.removeAllGraphs());
 		this.visualisation.clear();
 
 		// remove all data from underlying data sources

@@ -419,8 +419,4 @@ public class VisualisationCanvas extends Canvas {
 			}
 		}
 	}
-	//
-	// public void setGraph(VisualisationGraph graph) {
-	// this.graph = graph;
-	// }
 }

@@ -188,4 +188,9 @@ public class ChartNode extends VisualisationNode {
 	public void setY(float y) {
 		this.y = y;
 	}
+
+	@Override
+	public String getTitle() {
+		return this.title;
+	}
 }

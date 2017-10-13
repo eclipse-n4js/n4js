@@ -55,7 +55,7 @@ public class DashboardComposite extends Composite {
 	private final List<VisualisationSnapshot> entries = new ArrayList<>();
 
 	private ListViewer listViewer;
-	private VisualisationCanvas canvas;
+	private final VisualisationCanvas canvas;
 	private final Text text;
 
 	/**
@@ -69,7 +69,7 @@ public class DashboardComposite extends Composite {
 		final SashForm sf = new SashForm(this, SWT.HORIZONTAL);
 		sf.setLayout(new FillLayout());
 
-		initCanvas(sf);
+		this.canvas = new VisualisationCanvas(sf, SWT.NONE);
 
 		this.text = new Text(sf, SWT.LEFT | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL | SWT.MULTI);
 		text.setText("");
@@ -147,15 +147,11 @@ public class DashboardComposite extends Composite {
 		});
 	}
 
-	/** Canvas and graph depends on actual data. */
-	void initCanvas(Composite canvasParent) {
-		this.canvas = new VisualisationCanvas(canvasParent, SWT.NONE);
-	}
-
 	private void deleteCurrentSelection() {
 		this.removeSelectedGraphs(false);
 	}
 
+	/** removes selected graph or all graphs if nothing selected */
 	public void removeSelectedGraphs(boolean removeAllIfNothingSelected) {
 		ISelection sel = listViewer.getSelection();
 		if (!sel.isEmpty()) {
@@ -167,16 +163,26 @@ public class DashboardComposite extends Composite {
 		}
 	}
 
+	/** deletes all rendered data */
+	public void removeAllGraphs() {
+		removeEntries(entries);
+		clearRenderedData();
+	}
+
+	/** clears canvas and text */
+	private void clearRenderedData() {
+		canvas.clear();
+		text.setText("");
+	}
+
 	private void onSelectionChanged(@SuppressWarnings("unused") SelectionChangedEvent event) {
 		final VisualisationSnapshot selEntry = getSingleSelectedEntry();
 		if (selEntry != null) {
 			canvas.setGraph(selEntry.graph);
 			text.setText(selEntry.text);
 		} else {
-			canvas.clear();
-			text.setText("");
+			clearRenderedData();
 		}
-		canvas.redraw();
 	}
 
 	private void removeEntries(@SuppressWarnings("hiding") Collection<?> entries) {
@@ -185,12 +191,12 @@ public class DashboardComposite extends Composite {
 			if (entries.stream().anyMatch(
 					e -> e instanceof VisualisationSnapshot
 							&& ((VisualisationSnapshot) e).graph == canvas.getGraph())) {
-				canvas.clear();
-				text.setText("");
+				clearRenderedData();
 			}
 		}
 	}
 
+	/** returns currently selected entry or null */
 	protected VisualisationSnapshot getSingleSelectedEntry() {
 		final IStructuredSelection sel = (IStructuredSelection) listViewer.getSelection();
 		final Object obj = sel.size() == 1 ? sel.getFirstElement() : null;
@@ -227,6 +233,10 @@ public class DashboardComposite extends Composite {
 		}
 	}
 
+	/**
+	 * creates and renders graph based on the {@link #key}. Based on the {@code select} flag, the new graph might be
+	 * selected.
+	 */
 	public void addGraph(String label, boolean select) {
 		if (CollectedDataAccess.hasNestedData(key)) {
 			addEntry(StackGraphFactory.buildGraph(key, STACK_BASE_HEIGHT, STACK_BASE_WIDTH, label), select);
@@ -252,19 +262,12 @@ public class DashboardComposite extends Composite {
 
 	private void refreshList() {
 		listViewer.setInput(entries.toArray());
+		listViewer.refresh();
 	}
 
 	@Override
 	public boolean setFocus() {
 		return listViewer.getList().setFocus();
-	}
-
-	private void removeEntry(VisualisationSnapshot entry) {
-		if (entries.remove(entry)) {
-			refreshList();
-			if (entry.graph == canvas.getGraph())
-				canvas.clear();
-		}
 	}
 
 	private final DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss.SSS");

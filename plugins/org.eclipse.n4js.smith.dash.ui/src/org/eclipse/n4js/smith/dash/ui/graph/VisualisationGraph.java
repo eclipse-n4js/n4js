@@ -68,6 +68,7 @@ public class VisualisationGraph {
 
 	/** Layouts whole graph by stacking children next to each other under the parent. */
 	public void layout() {
+		roots.stream().flatMap(this::getTree).forEach(n -> n.trim());
 		doStackLayout();
 	}
 
