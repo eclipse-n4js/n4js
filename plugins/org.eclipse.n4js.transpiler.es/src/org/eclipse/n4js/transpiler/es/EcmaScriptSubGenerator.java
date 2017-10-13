@@ -49,14 +49,7 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 	@Inject
 	private CancelIndicatorBaseExtractor ciExtractor;
 
-	private final DataCollector collector;
-	private final DataCollector collector2;
-
-	@Inject
-	public EcmaScriptSubGenerator() {
-		this.collector = DataCollectors.INSTANCE.getOrCreateDataCollector("Transpiler");
-		this.collector2 = DataCollectors.INSTANCE.getOrCreateDataCollector("Transpiler2");
-	}
+	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("Transpiler");
 
 	private static CompilerDescriptor createDescriptor() {
 		final CompilerDescriptor result = new CompilerDescriptor();
@@ -112,7 +105,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 
 		// if the transpile-conditions are all met, then transpile:
 		if (shouldBeCompiled(resource, monitor)) {
-			Measurement measurement2 = this.collector2.getMeasurement(resource.getURI().toString());
 
 			final String compiledFileExtension = getCompiledFileExtension(resource);
 			final String filename = getTargetFileName(resource, compiledFileExtension);
@@ -165,7 +157,6 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 					}
 				}
 			}
-			measurement2.end();
 		}
 		measurement.end();
 	}
