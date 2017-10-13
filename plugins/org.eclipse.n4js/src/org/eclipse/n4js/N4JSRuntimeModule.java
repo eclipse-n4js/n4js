@@ -18,6 +18,7 @@ import org.eclipse.n4js.external.HeadlessTargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
@@ -31,6 +32,7 @@ import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser;
 import org.eclipse.n4js.parser.PropertyNameAwareElementFactory;
 import org.eclipse.n4js.parser.RegExLiteralAwareLexer;
 import org.eclipse.n4js.parser.antlr.lexer.InternalN4JSLexer;
+import org.eclipse.n4js.postprocessing.N4JSPostProcessor;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.preferences.FileBasedExternalLibraryPreferenceStore;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -40,7 +42,6 @@ import org.eclipse.n4js.resource.N4JSCache;
 import org.eclipse.n4js.resource.N4JSDerivedStateComputer;
 import org.eclipse.n4js.resource.N4JSDescriptionUtils;
 import org.eclipse.n4js.resource.N4JSLinker;
-import org.eclipse.n4js.resource.N4JSPostProcessor;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.N4JSResourceDescription;
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager;
@@ -406,6 +407,13 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends N4JSTypeSystem> bindTypeSystem() {
 		return N4JSTypeSystem.class;
+	}
+
+	/**
+	 * Binds the flow analyses facade used as an entry point into flow analyses.
+	 */
+	public Class<? extends N4JSFlowAnalyzer> bindFlowAnalyses() {
+		return N4JSFlowAnalyzer.class;
 	}
 
 	/**

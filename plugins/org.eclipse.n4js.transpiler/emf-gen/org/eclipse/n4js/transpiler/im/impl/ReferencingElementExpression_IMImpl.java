@@ -11,11 +11,11 @@
 package org.eclipse.n4js.transpiler.im.impl;
 
 import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 
@@ -68,6 +68,11 @@ public abstract class ReferencingElementExpression_IMImpl extends ReferencingEle
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == TypableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
 			switch (baseOperationID) {
 				default: return -1;
 			}

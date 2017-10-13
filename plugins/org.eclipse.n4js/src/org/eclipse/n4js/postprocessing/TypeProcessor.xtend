@@ -191,7 +191,8 @@ public class TypeProcessor extends AbstractProcessor {
 	/**
 	 * This is the single, central method for obtaining the type of a typable element (AST node or TModule element).
 	 * <b>It should never be invoked directly by client code!</b> Instead, client code should always call
-	 * {@link N4JSTypeSystem#type(RuleEnvironment,TypableElement) N4JSTypeSystem#type()}.
+	 * {@link N4JSTypeSystem#type(RuleEnvironment,TypableElement) N4JSTypeSystem#type()} or, when inside Xsemantics,
+	 * use the special syntax for invoking the 'type' judgment: <code>G |- someExpression : var TypeRef result</code>.
 	 * <p>
 	 * The behavior of this method depends on the state the containing {@link N4JSResource} is in:
 	 * <ul>
@@ -248,6 +249,12 @@ public class TypeProcessor extends AbstractProcessor {
 			// make sure post-processing on the containing N4JS resource is initiated
 			res.performPostProcessing(G.cancelIndicator);
 
+			// NOTE: at this point, we know: if *before* the above call to #performPostProcessing() ...
+			// a) post-processing of 'res' had not been started yet: it will now be *completed*
+			// b) post-processing of 'res' was in progress: it will now still be *in progress*
+			// c) post-processing of 'res' was completed: it will now still be *completed*
+			// See API doc of method PostProcessingAwareResource#performPostProcessing(CancelIndicator).
+
 			// if post-processing is in progress AND 'obj' is a type model element AND it corresponds to an AST node
 			// --> redirect processing to the AST node, in order to properly handle backward/forward references, esp.
 			// forward processing of identifiable subtrees
@@ -261,45 +268,11 @@ public class TypeProcessor extends AbstractProcessor {
 				}
 			}
 
-			// obtain type of 'obj' depending on whether it's an AST node or type model element AND depending on current
-			// load state of containing N4JS resource
-			if (obj.isTypeModelElement) {
-				// for type model elements, we by-pass all caching ...
-				return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
-			} else if (obj.isASTNode && obj.isTypableNode) {
-				// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
-				val cache = astMetaInfoCacheHelper.getOrCreate(res);
-				if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
-					// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
-					// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
-					// debug code in ASTMetaInfoCacheHelper to track creation/deletion of typing caches to investigate this)
-					val e = new IllegalStateException("typing of entire AST not initiated yet (hint: this is often caused by an accidental cache clear!!)")
-					e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
-					throw e;
-				} else if (cache.isProcessingInProgress) {
+			// obtain type of 'obj'
+			return getTypeInN4JSResource(G, trace, res, obj);
 
-					// while AST typing is in progress, just read from the cache we are currently filling
-					val resultFromCache = cache.getTypeFailSafe(obj);
-
-					if (resultFromCache === null) {
-						// cache does not contain type for 'obj' (i.e. not processed yet)
-						// -> we have a forward reference!
-						log(0, "***** forward reference to: " + obj);
-
-						return getTypeOfForwardReference(G, obj, cache);
-					} else {
-						// cache contains a type for 'obj' (i.e. it was already processed)
-						// -> simply read from cache
-						return resultFromCache;
-					}
-				} else if (cache.isFullyProcessed) {
-					return cache.getType(obj); // will throw exception in case of cache miss
-				}
-			} else {
-				// a non-typable AST node OR some entity in the TModule for which obj.isTypeModelElement returns false
-				return new Result(new RuleFailedExceptionWithoutStacktrace("cannot type object: " + obj));
-			}
 		} else {
+
 			// obj not contained in an N4JSResource -> fall back to default behavior
 			// can happen for:
 			// - objects that are not contained in a Resource
@@ -308,7 +281,53 @@ public class TypeProcessor extends AbstractProcessor {
 		}
 	}
 
-	/** @see TypeProcessor#getType(RuleEnvironment,RuleApplicationTrace,TypableElement) */
+	/** See {@link TypeProcessor#getType(RuleEnvironment,RuleApplicationTrace,TypableElement)}. */
+	def private Result<TypeRef> getTypeInN4JSResource(RuleEnvironment G, RuleApplicationTrace trace, N4JSResource res, TypableElement obj) {
+		// obtain type of 'obj' depending on whether it's an AST node or type model element AND depending on current
+		// load state of containing N4JS resource
+		if (obj.isTypeModelElement) {
+			// for type model elements, we by-pass all caching ...
+			return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
+		} else if (obj.isASTNode && obj.isTypableNode) {
+			// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
+			val cache = astMetaInfoCacheHelper.getOrCreate(res);
+			if (!res.isProcessing && !res.isFullyProcessed) {
+				// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
+				throw new IllegalStateException("post-processing neither in progress nor completed after calling #performPostProcessing() in resource: " + res.URI);
+			} else if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
+				// "res.isProcessing() || res.isFullyProcessed()" but not "cache.isProcessing || cache.isFullyProcessed"
+				// so: the post-processing flags are out of sync between the resource and cache
+				// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
+				// debug code in ASTMetaInfoCacheHelper to track creation/deletion of typing caches to investigate this)
+				val e = new IllegalStateException("post-processing flags out of sync between resource and cache (hint: this is often caused by an accidental cache clear!!)");
+				e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
+				throw e;
+			} else if (cache.isProcessingInProgress) {
+
+				// while AST typing is in progress, just read from the cache we are currently filling
+				val resultFromCache = cache.getTypeFailSafe(obj);
+
+				if (resultFromCache === null) {
+					// cache does not contain type for 'obj' (i.e. not processed yet)
+					// -> we have a forward reference!
+					log(0, "***** forward reference to: " + obj);
+
+					return getTypeOfForwardReference(G, obj, cache);
+				} else {
+					// cache contains a type for 'obj' (i.e. it was already processed)
+					// -> simply read from cache
+					return resultFromCache;
+				}
+			} else if (cache.isFullyProcessed) {
+				return cache.getType(obj); // will throw exception in case of cache miss
+			}
+		} else {
+			// a non-typable AST node OR some entity in the TModule for which obj.isTypeModelElement returns false
+			return new Result(new RuleFailedExceptionWithoutStacktrace("cannot type object: " + obj));
+		}
+	}
+
+	/** See {@link TypeProcessor#getType(RuleEnvironment,RuleApplicationTrace,TypableElement)}. */
 	def private Result<TypeRef> getTypeOfForwardReference(RuleEnvironment G, TypableElement node, ASTMetaInfoCache cache) {
 		assertTrueIfRigid(cache, "argument 'node' must be an AST node", node.isASTNode);
 

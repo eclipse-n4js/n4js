@@ -7,6 +7,7 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.xtext;visibility:=reexport,
+ org.eclipse.xtext.xbase.lib,
  org.eclipse.xtext.generator;resolution:=optional,
  org.apache.commons.logging;bundle-version="1.0.4";resolution:=optional,
  org.eclipse.emf.codegen.ecore;resolution:=optional,
@@ -35,5 +36,6 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.tester.ui,
  org.eclipse.n4js.tester.nodejs,
  org.eclipse.n4js.tester.nodejs.ui,
+ org.eclipse.n4js.tests.helper,
  org.junit
 Export-Package: org.eclipse.n4js.ui.outline

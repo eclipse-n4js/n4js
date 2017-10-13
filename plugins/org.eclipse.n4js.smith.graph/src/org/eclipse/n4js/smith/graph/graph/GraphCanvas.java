@@ -13,8 +13,11 @@ package org.eclipse.n4js.smith.graph.graph;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.window.DefaultToolTip;
+import org.eclipse.n4js.smith.graph.editoroverlay.EditorOverlay;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
@@ -32,12 +35,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 
 /**
- * SWT widget to draw a {@link Graph}.
+ * SWT widget to draw a {@link ASTGraph}.
  */
 @SuppressWarnings("javadoc")
 public class GraphCanvas extends Canvas {
+	final protected EditorOverlay editorOverlay;
 
-	protected Graph graph = null;
+	protected Graph<?> graph = null;
 	protected boolean graphNeedsLayout = true;
 
 	protected boolean showAllCrossLinks = false;
@@ -70,8 +74,10 @@ public class GraphCanvas extends Canvas {
 
 	protected DefaultToolTip toolTip;
 
-	public GraphCanvas(Composite parent, int style) {
+	public GraphCanvas(Composite parent, int style, EditorOverlay editorOverlay) {
 		super(parent, style);
+		this.editorOverlay = editorOverlay;
+
 		addPaintListener(new PaintListener() {
 			@Override
 			public void paintControl(PaintEvent event) {
@@ -147,7 +153,7 @@ public class GraphCanvas extends Canvas {
 		toolTip.setText("Hello tool tip!");
 	}
 
-	public Graph getGraph() {
+	public Graph<?> getGraph() {
 		return graph;
 	}
 
@@ -155,7 +161,7 @@ public class GraphCanvas extends Canvas {
 		setGraph(null);
 	}
 
-	public void setGraph(Graph graph) {
+	public void setGraph(Graph<?> graph) {
 		if (graph != this.graph) {
 			clearSelection();
 			if (this.graph == null || graph == null) {
@@ -185,9 +191,9 @@ public class GraphCanvas extends Canvas {
 	 * (screenX,screenY).
 	 */
 	public void setScrollOffset(float graphX, float graphY, int screenX, int screenY) {
-		setScrollOffset(
-				Math.round(graphX * scale - screenX),
-				Math.round(graphY * scale - screenY));
+		int offsX = Math.round(graphX * scale - screenX);
+		int offsY = Math.round(graphY * scale - screenY);
+		setScrollOffset(offsX, offsY);
 	}
 
 	public void zoom(int screenX, int screenY, float deltaScale) {
@@ -201,46 +207,60 @@ public class GraphCanvas extends Canvas {
 
 	public void setHawkEyeMode(boolean active) {
 		if (active && !hawkEye_active && graph != null) {
-			// turn on hawk-eye mode
-			final int border = 5;
-			final float w = getSize().x;
-			final float h = getSize().y;
-			final Rectangle b = graph.getBounds();
-			final int newOffsetX = border;
-			final int newOffsetY = border;
-			final float newScale = Math.min((w - border * 2) / b.width, (h - border * 2) / b.height);
-			if (newScale < 1.0f) {
-				hawkEye_oldOffsetX = offsetX;
-				hawkEye_oldOffsetY = offsetY;
-				hawkEye_oldScale = scale;
-				offsetX = newOffsetX;
-				offsetY = newOffsetY;
-				scale = newScale;
-				hawkEye_target = null;
-				hawkEye_active = true;
-				redraw();
-			}
+			turnOnHawkeyeMode();
 		} else if (!active && hawkEye_active) {
-			// turn off hawk-eye mode
-			if (hawkEye_target != null) {
-				// we do have a target -> go there
-				// find the point in the graph we want to have at the center of the screen (after leaving hawk eye mode)
-				final Point pCenter = screenToGraph(Math.round(hawkEye_target.x), Math.round(hawkEye_target.y));
-				// switch back to old scale
-				scale = hawkEye_oldScale;
-				// set scroll offset such that pCenter is at the center of the screen
-				setScrollOffset(pCenter.x, pCenter.y, getSize().x / 2, getSize().y / 2);
-				// clear old target info
-				hawkEye_target = null;
-			} else {
-				// we have no target, so simply go back to the old offset/scale
-				offsetX = hawkEye_oldOffsetX;
-				offsetY = hawkEye_oldOffsetY;
-				scale = hawkEye_oldScale;
-			}
-			hawkEye_active = false;
+			turnOffHawkeyeMode();
+		}
+	}
+
+	/**
+	 * turn on hawk-eye mode
+	 */
+	private void turnOnHawkeyeMode() {
+		final int border = 5;
+		final float w = getSize().x;
+		final float h = getSize().y;
+		final Rectangle b = graph.getBounds();
+		final int newOffsetX = border;
+		final int newOffsetY = border;
+		final float scaleA = (w - border * 2) / b.width;
+		final float scaleB = (h - border * 2) / b.height;
+		final float newScale = Math.min(scaleA, scaleB);
+		if (newScale < 1.0f) {
+			hawkEye_oldOffsetX = offsetX;
+			hawkEye_oldOffsetY = offsetY;
+			hawkEye_oldScale = scale;
+			offsetX = newOffsetX;
+			offsetY = newOffsetY;
+			scale = newScale;
+			hawkEye_target = null;
+			hawkEye_active = true;
 			redraw();
 		}
+	}
+
+	/**
+	 * turn off hawk-eye mode
+	 */
+	private void turnOffHawkeyeMode() {
+		if (hawkEye_target != null) {
+			// we do have a target -> go there
+			// find the point in the graph we want to have at the center of the screen (after leaving hawk eye mode)
+			final Point pCenter = screenToGraph(Math.round(hawkEye_target.x), Math.round(hawkEye_target.y));
+			// switch back to old scale
+			scale = hawkEye_oldScale;
+			// set scroll offset such that pCenter is at the center of the screen
+			setScrollOffset(pCenter.x, pCenter.y, getSize().x / 2, getSize().y / 2);
+			// clear old target info
+			hawkEye_target = null;
+		} else {
+			// we have no target, so simply go back to the old offset/scale
+			offsetX = hawkEye_oldOffsetX;
+			offsetY = hawkEye_oldOffsetY;
+			scale = hawkEye_oldScale;
+		}
+		hawkEye_active = false;
+		redraw();
 	}
 
 	protected void setHawkEyeTarget(Point screenPos) {
@@ -274,9 +294,11 @@ public class GraphCanvas extends Canvas {
 
 	public void setSelectedNodes(Node... nodes) {
 		final Set<Node> newNodes = new HashSet<>();
-		for (Node n : nodes)
-			if (n != null)
+		for (Node n : nodes) {
+			if (n != null) {
 				newNodes.add(n);
+			}
+		}
 		if (!selectedNodes.equals(newNodes)) {
 			selectedNodes.clear();
 			selectedNodes.addAll(newNodes);
@@ -289,6 +311,7 @@ public class GraphCanvas extends Canvas {
 			selectedNodes.remove(node);
 		else
 			selectedNodes.add(node);
+
 		redraw();
 	}
 
@@ -301,7 +324,8 @@ public class GraphCanvas extends Canvas {
 
 	public Node getNodeAt(int screenX, int screenY) {
 		final Point p = screenToGraph(screenX, screenY);
-		return graph != null ? graph.getNodeAt(p.x, p.y) : null;
+		final Node result = graph == null ? null : graph.getNodeAt(p.x, p.y);
+		return result;
 	}
 
 	protected void onMouseEnter(MouseEvent event) {
@@ -331,27 +355,33 @@ public class GraphCanvas extends Canvas {
 		}
 		final Node mNode = getNodeAt(event.x, event.y);
 		// update hovered node
-		if (!mousePressed)
+		if (!mousePressed) {
 			setHoveredNode(mNode);
+			setEditorOverlay(mNode);
+		}
+
 		// dragging
 		if (mousePressed) {
-			mouseDragged |= Math.abs(event.x - mouseDragStartX) > 3 || Math.abs(event.y - mouseDragStartY) > 3;
+			mouseDragged |= Math.abs(event.x - mouseDragStartX) > 3;
+			mouseDragged |= Math.abs(event.y - mouseDragStartY) > 3;
 
-			if (mouseDragged)
+			if (mouseDragged) {
 				onMouseDrag(event);
+			}
 		}
 	}
 
 	protected void onMouseDrag(MouseEvent event) {
-		setScrollOffset(
-				mouseDragBaseX - event.x + mouseDragStartX,
-				mouseDragBaseY - event.y + mouseDragStartY);
+		int scrollOffsetX = mouseDragBaseX - event.x + mouseDragStartX;
+		int scrollOffsetY = mouseDragBaseY - event.y + mouseDragStartY;
+		setScrollOffset(scrollOffsetX, scrollOffsetY);
 		redraw();
 	}
 
 	protected void onMouseUp(MouseEvent event) {
-		if (!mouseDragged)
+		if (!mouseDragged) {
 			onClick(event);
+		}
 		mousePressed = false;
 		mouseDragged = false;
 		mouseDragStartX = 0;
@@ -387,7 +417,8 @@ public class GraphCanvas extends Canvas {
 
 			if (hoveredNode != null && hoveredNode.getDescription() != null) {
 				toolTip.setText(hoveredNode.getDescription());
-				toolTip.show(new org.eclipse.swt.graphics.Point(4, 4));
+				org.eclipse.swt.graphics.Point point = new org.eclipse.swt.graphics.Point(4, 4);
+				toolTip.show(point);
 			} else {
 				toolTip.hide();
 			}
@@ -396,50 +427,68 @@ public class GraphCanvas extends Canvas {
 		}
 	}
 
+	protected void setEditorOverlay(Node node) {
+		EObject selection = null;
+		if (node != null && node.getElement() instanceof EObject) {
+			selection = (EObject) node.getElement();
+		}
+		editorOverlay.setSelection(selection);
+	}
+
 	protected void doPaint(GC gc, PaintEvent event) {
 		gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
 		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLACK));
-
 		gc.fillRectangle(event.x, event.y, event.width, event.height);
 
-		if (graph != null) {
-			final Transform tf = new Transform(gc.getDevice());
-			tf.translate(-offsetX, -offsetY);
-			tf.scale(scale, scale);
-			gc.setTransform(tf);
+		if (graph == null)
+			return;
 
-			if (graphNeedsLayout) {
-				graph.layout(gc);
-				graphNeedsLayout = false;
+		final Transform tf = new Transform(gc.getDevice());
+		tf.translate(-offsetX, -offsetY);
+		tf.scale(scale, scale);
+		gc.setTransform(tf);
+
+		if (graphNeedsLayout) {
+			graph.layout(gc);
+			graphNeedsLayout = false;
+		}
+
+		for (Edge e : graph.getEdges()) {
+			Stream<Node> eNodes = e.getNodes().stream();
+			boolean paintIt = false;
+			paintIt |= !e.isCrossLink();
+			paintIt |= e.isCrossLink() && (showAllCrossLinks
+					|| eNodes.anyMatch(n -> n == hoveredNode || selectedNodes.contains(n)));
+
+			if (paintIt) {
+				e.paint(gc);
 			}
+		}
+		for (Node n : graph.getNodes()) {
+			n.paint(gc);
+		}
 
-			graph.getEdges().stream()
-					.filter(e -> !e.isCrossLink())
-					.forEach(e -> e.paint(gc));
-			graph.getNodes().forEach(n -> n.paint(gc));
-			graph.getEdges().stream()
-					.filter(e -> e.isCrossLink() && (showAllCrossLinks || e.getNodes().stream()
-							.anyMatch(n -> n == hoveredNode || selectedNodes.contains(n))))
-					.forEach(e -> e.paint(gc));
+		gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+		for (Node sn : selectedNodes) {
+			float x = sn.getX() - 2;
+			float y = sn.getY() - 2;
+			float width = sn.getWidth() + 4;
+			float height = sn.getHeight() + 4;
+			GraphUtils.drawRectangle(gc, x, y, width, height);
+		}
 
-			gc.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-			selectedNodes.forEach(sn -> GraphUtils.drawRectangle(
-					gc, sn.getX() - 2, sn.getY() - 2, sn.getWidth() + 4, sn.getHeight() + 4));
+		gc.setTransform(null);
+		tf.dispose();
 
-			gc.setTransform(null);
-			tf.dispose();
-
-			if (hawkEye_active && hawkEye_target != null) {
-				final int w = Math.round(getSize().x / hawkEye_oldScale * scale);
-				final int h = Math.round(getSize().y / hawkEye_oldScale * scale);
-				gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
-				gc.setAlpha(64);
-				gc.fillRectangle(
-						(int) hawkEye_target.x - w / 2,
-						(int) hawkEye_target.y - h / 2,
-						w, h);
-				gc.setAlpha(255);
-			}
+		if (hawkEye_active && hawkEye_target != null) {
+			final int w = Math.round(getSize().x / hawkEye_oldScale * scale);
+			final int h = Math.round(getSize().y / hawkEye_oldScale * scale);
+			final int x = (int) hawkEye_target.x - w / 2;
+			final int y = (int) hawkEye_target.y - h / 2;
+			gc.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_BLUE));
+			gc.setAlpha(64);
+			gc.fillRectangle(x, y, w, h);
+			gc.setAlpha(255);
 		}
 	}
 }

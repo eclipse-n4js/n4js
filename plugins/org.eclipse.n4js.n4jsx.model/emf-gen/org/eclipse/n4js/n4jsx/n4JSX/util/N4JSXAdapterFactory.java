@@ -17,6 +17,7 @@ import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 
 import org.eclipse.emf.ecore.EObject;
 
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.MemberAccess;
 
@@ -115,6 +116,10 @@ public class N4JSXAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseTypableElement(TypableElement object) {
 				return createTypableElementAdapter();
+			}
+			@Override
+			public Adapter caseControlFlowElement(ControlFlowElement object) {
+				return createControlFlowElementAdapter();
 			}
 			@Override
 			public Adapter caseExpression(Expression object) {
@@ -267,6 +272,20 @@ public class N4JSXAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createTypableElementAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.ControlFlowElement <em>Control Flow Element</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.ControlFlowElement
+	 * @generated
+	 */
+	public Adapter createControlFlowElementAdapter() {
 		return null;
 	}
 

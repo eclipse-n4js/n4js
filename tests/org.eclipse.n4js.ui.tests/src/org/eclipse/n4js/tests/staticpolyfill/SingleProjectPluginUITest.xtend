@@ -23,8 +23,6 @@ import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
  */
 class SingleProjectPluginUITest extends AbstractStaticPolyfillBuilderTest {
 
-
-
 	@Test
 	def void testStaticPolyfill_filling_updates_filled_module() throws Exception {
 		val srcAB= createFolder(src,"a/b")
