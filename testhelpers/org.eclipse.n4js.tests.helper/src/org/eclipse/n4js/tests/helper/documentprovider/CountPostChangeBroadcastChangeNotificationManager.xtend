@@ -19,21 +19,21 @@ import org.eclipse.core.resources.IResourceChangeEvent
 /**
   * This class counts the number of broadcastChange method calls.
   */
-public class CountPostChangeBroadcastChangeNotificationManager extends NotificationManager {
+class CountPostChangeBroadcastChangeNotificationManager extends NotificationManager {
 
-	private int countPostChangeBroadcastTriggered = 0;
+	int countPostChangeBroadcastTriggered;
 
 	new(Workspace workspace) {
 		super(workspace)
 	}
 
-	override public void broadcastChanges(ElementTree lastState, ResourceChangeEvent event, boolean lockTree) {
+	override def void broadcastChanges(ElementTree lastState, ResourceChangeEvent event, boolean lockTree) {
 		if (event.type == IResourceChangeEvent.POST_CHANGE)
 			countPostChangeBroadcastTriggered++
 		super.broadcastChanges(lastState, event, lockTree)
 	}
 
-	def public numberPostChangeTriggered() {
+	def numberPostChangeTriggered() {
 		return countPostChangeBroadcastTriggered;
 	}
 }

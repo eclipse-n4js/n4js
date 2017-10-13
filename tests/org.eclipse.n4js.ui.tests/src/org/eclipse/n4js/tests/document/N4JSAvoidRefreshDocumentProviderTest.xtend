@@ -23,8 +23,10 @@ import org.junit.runner.RunWith
 
 import static java.util.UUID.randomUUID
 
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 import org.eclipse.n4js.tests.helper.documentprovider.CountPostChangeBroadcastChangeNotificationManager
+import com.google.inject.Inject
 
 /**
  * This class tests the fix for refresh file problem in XtextDocumentProvider. GH-270.
@@ -32,6 +34,8 @@ import org.eclipse.n4js.tests.helper.documentprovider.CountPostChangeBroadcastCh
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
 class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
+	@Inject
+	ReflectExtensions reflectExtensions
 
 	val N4JS_EDITOR_ID = 'org.eclipse.n4js.N4JS'
 	val PROJECT_NAME = 'testProject'
@@ -50,20 +54,22 @@ class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 		val content = 'class C {}';		
 		val n4jsFile = createFileWithContent(content)
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
+		val notificationManager = reflectExtensions.get(workspace, "notificationManager")
 
 		val countBroadcastChangeNotificationManager = new CountPostChangeBroadcastChangeNotificationManager(workspace)
 
-		// Use reflection to replace workspace's notification manager with our custom notification manager
-		var Field notificationManagerField
-		notificationManagerField = Workspace.getDeclaredField("notificationManager")
-		notificationManagerField.accessible = true
-		notificationManagerField.set(workspace, countBroadcastChangeNotificationManager)
-		// We need to startup the notification so that it can get the initial state of the workspace
-		countBroadcastChangeNotificationManager.startup(null)
+		try {
+			// Use reflection to replace workspace's notification manager with our custom notification manager
+			reflectExtensions.set(workspace, "notificationManager", countBroadcastChangeNotificationManager)
+			// We need to startup the notification so that it can get the initial state of the workspace
+			countBroadcastChangeNotificationManager.startup(null)
 
-		// Open the editor
-		n4jsFile.openEditor
-
+			// Open the editor
+			n4jsFile.openEditor
+		} finally {
+			// Restore the notification manager
+			reflectExtensions.set(workspace, "notificationManager", notificationManager)
+		}
 		assertEquals("Exactly 1 POST_CHANGE broadcast event should have been triggered.", 1, countBroadcastChangeNotificationManager.numberPostChangeTriggered)	
 	}
 

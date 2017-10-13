@@ -17,12 +17,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider;
 
 /**
- * This class temporarily solves the problem that a file is refreshed when opened.
+ * This class solves the problem that a file is refreshed when opened. GH-270.
  */
 public class AvoidRefreshDocumentProvider extends XtextDocumentProvider {
 
 	@Override
 	protected void refreshFile(IFile file, IProgressMonitor monitor) throws CoreException {
+		// Note that file.isSynchronized does not require a scheduling rule and thus helps to identify a no-op attempt
+		// to refresh the file. The no-op will otherwise be blocked by a running build or cancel a running build
 		if (!file.isSynchronized(IResource.DEPTH_ZERO)) {
 			super.refreshFile(file, monitor);
 		}

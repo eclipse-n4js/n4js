@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4mf.tests
 
+import com.google.inject.Inject
 import java.lang.reflect.Field
 import org.eclipse.core.internal.resources.Workspace
 import org.eclipse.core.resources.IFile
@@ -20,6 +21,7 @@ import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.AbstractEditorTest
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -34,6 +36,9 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 @InjectWith(N4JSUiInjectorProvider)
 class N4MFAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 
+	@Inject
+	ReflectExtensions reflectExtensions
+
 	val N4MF_EDITOR_ID = 'org.eclipse.n4js.n4mf.N4MF'
 	val PROJECT_NAME = 'testProject'
 	val MF_FILE = 'manifest.nfmf'
@@ -47,24 +52,26 @@ class N4MFAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public def void noRefreshWhenOpenningN4MFFileTest() {
+	public def void noRefreshWhenOpenningN4JSFileTest() {
 		val content = 'class C {}';		
 		createFileWithContent(content)
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
+		val notificationManager = reflectExtensions.get(workspace, "notificationManager")
 
 		val countBroadcastChangeNotificationManager = new CountPostChangeBroadcastChangeNotificationManager(workspace)
 
-		// Use reflection to replace workspace's notification manager with our custom notification manager
-		var Field notificationManagerField
-		notificationManagerField = Workspace.getDeclaredField("notificationManager")
-		notificationManagerField.accessible = true
-		notificationManagerField.set(workspace, countBroadcastChangeNotificationManager)
-		// We need to startup the notification so that it can get the initial state of the workspace
-		countBroadcastChangeNotificationManager.startup(null)
+		try {
+			// Use reflection to replace workspace's notification manager with our custom notification manager
+			reflectExtensions.set(workspace, "notificationManager", countBroadcastChangeNotificationManager)
+			// We need to startup the notification so that it can get the initial state of the workspace
+			countBroadcastChangeNotificationManager.startup(null)
 
-		// Open the N4MF editor
-		n4mfFile.openEditor
-
+			// Open the editor
+			n4mfFile.openEditor
+		} finally {
+			// Restore the notification manager
+			reflectExtensions.set(workspace, "notificationManager", notificationManager)
+		}
 		assertEquals("No POST_CHANGE broadcast event should have been triggered.", 0, countBroadcastChangeNotificationManager.numberPostChangeTriggered)
 	}
 
