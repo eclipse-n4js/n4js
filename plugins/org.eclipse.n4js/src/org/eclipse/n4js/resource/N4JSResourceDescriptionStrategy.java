@@ -169,7 +169,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 	 */
 	public static TypeAccessModifier tryGetAccessModifier(IEObjectDescription description) {
 		try {
-			String userData = description.getUserData(description.getUserData(ACCESS_MODIFIERY_KEY));
+			String userData = description.getUserData(ACCESS_MODIFIERY_KEY);
 			if (userData == null) {
 				return TypeAccessModifier.PUBLIC;
 			}
