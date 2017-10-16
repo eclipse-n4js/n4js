@@ -64,6 +64,7 @@ import org.eclipse.n4js.n4JS.CatchVariable;
 import org.eclipse.n4js.n4JS.CommaExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DebuggerStatement;
 import org.eclipse.n4js.n4JS.DefaultClause;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
@@ -216,6 +217,13 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass namedElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass controlFlowElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1533,6 +1541,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getControlFlowElement() {
+		return controlFlowElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getScript() {
 		return scriptEClass;
 	}
@@ -2795,6 +2812,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	public EOperation getVariableDeclarationOrBinding__GetVariableDeclarations() {
 		return variableDeclarationOrBindingEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getVariableDeclarationOrBinding__GetExpression() {
+		return variableDeclarationOrBindingEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -6248,6 +6274,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		namedElementEClass = createEClass(NAMED_ELEMENT);
 		createEOperation(namedElementEClass, NAMED_ELEMENT___GET_NAME);
 
+		controlFlowElementEClass = createEClass(CONTROL_FLOW_ELEMENT);
+
 		scriptEClass = createEClass(SCRIPT);
 		createEReference(scriptEClass, SCRIPT__ANNOTATIONS);
 		createEReference(scriptEClass, SCRIPT__SCRIPT_ELEMENTS);
@@ -6428,6 +6456,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		variableDeclarationOrBindingEClass = createEClass(VARIABLE_DECLARATION_OR_BINDING);
 		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS);
+		createEOperation(variableDeclarationOrBindingEClass, VARIABLE_DECLARATION_OR_BINDING___GET_EXPRESSION);
 
 		variableBindingEClass = createEClass(VARIABLE_BINDING);
 		createEReference(variableBindingEClass, VARIABLE_BINDING__PATTERN);
@@ -6968,6 +6997,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		// Add supertypes to classes
 		scriptEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		scriptEClass.getESuperTypes().add(this.getAnnotableElement());
+		scriptEClass.getESuperTypes().add(this.getControlFlowElement());
 		exportDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		importDeclarationEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		namedImportSpecifierEClass.getESuperTypes().add(this.getImportSpecifier());
@@ -7018,12 +7048,14 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		blockEClass.getESuperTypes().add(this.getStatement());
 		blockEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		statementEClass.getESuperTypes().add(this.getScriptElement());
+		statementEClass.getESuperTypes().add(this.getControlFlowElement());
 		variableStatementEClass.getESuperTypes().add(this.getStatement());
 		variableStatementEClass.getESuperTypes().add(this.getVariableDeclarationContainer());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getVariableStatement());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getExportableElement());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getAnnotableScriptElement());
 		exportedVariableStatementEClass.getESuperTypes().add(this.getModifiableElement());
+		variableDeclarationOrBindingEClass.getESuperTypes().add(this.getControlFlowElement());
 		variableBindingEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
 		exportedVariableBindingEClass.getESuperTypes().add(this.getVariableBinding());
 		variableDeclarationEClass.getESuperTypes().add(this.getVariableDeclarationOrBinding());
@@ -7048,6 +7080,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		withStatementEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
 		switchStatementEClass.getESuperTypes().add(this.getStatement());
 		switchStatementEClass.getESuperTypes().add(this.getVariableEnvironmentElement());
+		abstractCaseClauseEClass.getESuperTypes().add(this.getControlFlowElement());
 		caseClauseEClass.getESuperTypes().add(this.getAbstractCaseClause());
 		defaultClauseEClass.getESuperTypes().add(this.getAbstractCaseClause());
 		labelledStatementEClass.getESuperTypes().add(this.getStatement());
@@ -7096,6 +7129,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		propertySetterDeclarationEClass.getESuperTypes().add(this.getAnnotablePropertyAssignment());
 		expressionEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
+		expressionEClass.getESuperTypes().add(this.getControlFlowElement());
 		newTargetEClass.getESuperTypes().add(this.getExpression());
 		newExpressionEClass.getESuperTypes().add(this.getExpression());
 		newExpressionEClass.getESuperTypes().add(this.getParameterizedAccess());
@@ -7190,14 +7224,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4GetterDeclarationEClass.getESuperTypes().add(this.getN4FieldAccessor());
 		n4SetterDeclarationEClass.getESuperTypes().add(this.getSetterDeclaration());
 		n4SetterDeclarationEClass.getESuperTypes().add(this.getN4FieldAccessor());
+		bindingPatternEClass.getESuperTypes().add(this.getControlFlowElement());
 		objectBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		arrayBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		bindingPropertyEClass.getESuperTypes().add(this.getPropertyNameOwner());
+		bindingElementEClass.getESuperTypes().add(this.getControlFlowElement());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getNamedElement__GetName(), theEcorePackage.getEString(), "getName", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(controlFlowElementEClass, ControlFlowElement.class, "ControlFlowElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(scriptEClass, Script.class, "Script", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getScript_Annotations(), this.getAnnotation(), null, "annotations", null, 0, -1, Script.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -7431,6 +7469,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEClass(variableDeclarationOrBindingEClass, VariableDeclarationOrBinding.class, "VariableDeclarationOrBinding", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEOperation(getVariableDeclarationOrBinding__GetVariableDeclarations(), this.getVariableDeclaration(), "getVariableDeclarations", 0, -1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getVariableDeclarationOrBinding__GetExpression(), this.getExpression(), "getExpression", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(variableBindingEClass, VariableBinding.class, "VariableBinding", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getVariableBinding_Pattern(), this.getBindingPattern(), null, "pattern", null, 0, 1, VariableBinding.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -18,7 +18,7 @@ import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 
-package class N4JSEnumDeclarationTypesBuilder {
+public class N4JSEnumDeclarationTypesBuilder {
 
 	@Inject extension N4JSTypesBuilderHelper
 
@@ -54,9 +54,9 @@ package class N4JSEnumDeclarationTypesBuilder {
 		return true;
 	}
 
-	def package void createTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
+	def protected TEnum createTEnum(N4EnumDeclaration n4Enum, TModule target, boolean preLinkingPhase) {
 		if (n4Enum.name === null) {
-			return;
+			return null;
 		}
 
 		val enumType = n4Enum.createTEnum
@@ -69,6 +69,7 @@ package class N4JSEnumDeclarationTypesBuilder {
 
 		n4Enum.definedType = enumType
 		target.topLevelTypes += enumType
+		return enumType;
 	}
 
 	def private TEnum createTEnum(N4EnumDeclaration n4Enum) {

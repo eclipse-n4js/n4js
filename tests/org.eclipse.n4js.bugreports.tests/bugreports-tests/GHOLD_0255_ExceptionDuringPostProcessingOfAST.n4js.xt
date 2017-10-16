@@ -24,14 +24,6 @@ let t1 = a;
 var a = x;
 
 
-// worked before:
-
-// XPECT type of 't2' --> X
-let t2 = b;
-
-for(var b = x;;) {}
-
-
 
 // did not work before:
 
@@ -40,3 +32,11 @@ for(var b = x;;) {}
 let t3 = c;
 
 for(var c of [x]) {}
+
+
+// worked before:
+
+// XPECT type of 't2' --> X
+let t2 = b;
+
+for(var b = x;;) {}

@@ -212,6 +212,13 @@ public class UtilN4 {
 	}
 
 	/**
+	 * Same as {@link #reportError(String, Throwable)}, using the given {@link Throwable}'s message as first argument.
+	 */
+	public static <T extends Throwable> T reportError(T exception) {
+		return reportError(exception.getMessage(), exception);
+	}
+
+	/**
 	 * Report the given exception and then throw it. This method is intended for main failures that should be reported
 	 * in one way or another. Currently, we just make sure the exception is logged to the console (using
 	 * {@link Throwable#printStackTrace() #printStackTrace()}; later, this method could report the error to a remote
@@ -220,8 +227,8 @@ public class UtilN4 {
 	 * Currently, the main benefit of this method is that we make sure the exception is at least reported on the
 	 * console, even if some code higher up in the call hierarchy catches and ignores the exception (e.g. Xsemantics).
 	 */
-	public static <T extends Throwable> T reportError(T exception) {
-		logger.error(exception.getMessage(), exception); // make sure we see this (some clients eat up all exceptions!)
+	public static <T extends Throwable> T reportError(String msg, T exception) {
+		logger.error(msg, exception); // make sure we see this (some clients eat up all exceptions!)
 		return exception;
 	}
 

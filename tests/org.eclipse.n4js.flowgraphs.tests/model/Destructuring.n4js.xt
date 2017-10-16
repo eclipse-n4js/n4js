@@ -1,0 +1,391 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file check the desctructuring control flows only.
+ */
+
+
+
+
+function Destructuring1() {
+	// Destructuring1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* Destructuring1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> [1\, 2],
+		[1\, 2] --> x,
+		x --> y,
+		y --> [x\,y] = [1\, 2],
+		[x\,y] = [1\, 2] --> let [x\,y] = [1\, 2];,
+		let [x\,y] = [1\, 2]; --> "end"
+	--- */
+	// Destructuring1 XPECT allPaths --> "start" -> 1 -> 2 -> [1\, 2] -> x -> y -> [x\,y] = [1\, 2] -> let [x\,y] = [1\, 2]; -> "end"
+	// Destructuring1 XPECT path from '"start"' to '"end"' -->
+	// Destructuring1 XPECT commonPreds of '1' and '2' --> 1
+	// Destructuring1 XPECT succs at '"start"' --> 1
+	// Destructuring1 XPECT succs at 'x' --> y
+	// Destructuring1 XPECT succs at 'y' --> [x\,y] = [1\, 2]
+	// Destructuring1 XPECT succs at '1' --> 2
+	// Destructuring1 XPECT succs at '2' --> [1\, 2]
+	// Destructuring1 XPECT succs at '[1, 2]' --> x
+	// Destructuring1 XPECT succs at '[x,y] = [1, 2]' --> let [x\,y] = [1\, 2];
+	// Destructuring1 XPECT succs at 'let [x,y] = [1, 2];' --> "end"
+	"start";
+	let [x,y] = [1, 2];
+	"end";
+}
+
+function Destructuring2() {
+	// Destructuring2 XPECT cfContainer --> FunctionDeclaration::Block
+	/* Destructuring2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 3,
+		3 --> [2\, 3],
+		[2\, 3] --> [1\, [2\, 3]],
+		[1\, [2\, 3]] --> x,
+		x --> y,
+		y --> [x\,y] = [1\, [2\, 3]],
+		[x\,y] = [1\, [2\, 3]] --> let [x\,y] = [1\, [2\, 3]];,
+		let [x\,y] = [1\, [2\, 3]]; --> "end"
+	--- */
+	/* Destructuring2 XPECT allPaths ---
+	   "start" -> 1 -> 2 -> 3 -> [2\, 3] -> [1\, [2\, 3]] -> x -> y -> [x\,y] = [1\, [2\, 3]] -> let [x\,y] = [1\, [2\, 3]]; -> "end"
+	--- */
+	// Destructuring2 XPECT path from '"start"' to '"end"' -->
+	// Destructuring2 XPECT commonPreds of '1' and '2' --> 1
+	// Destructuring2 XPECT succs at '"start"' --> 1
+	// Destructuring2 XPECT succs at 'x' --> y
+	// Destructuring2 XPECT succs at 'y' --> [x\,y] = [1\, [2\, 3]]
+	// Destructuring2 XPECT succs at '1' --> 2
+	// Destructuring2 XPECT succs at '2' --> 3
+	// Destructuring2 XPECT succs at '3' --> [2\, 3]
+	// Destructuring2 XPECT succs at '[2, 3]' --> [1\, [2\, 3]]
+	// Destructuring2 XPECT succs at '[1, [2, 3]]' --> x
+	// Destructuring2 XPECT succs at '[x,y] = [1, [2, 3]]' --> let [x\,y] = [1\, [2\, 3]];
+	// Destructuring2 XPECT succs at 'let [x,y] = [1, [2, 3]];' --> "end"
+	"start";
+	let [x,y] = [1, [2, 3]];
+	"end";
+}
+
+
+
+function Destructuring3() {
+	// Destructuring3 XPECT cfContainer --> FunctionDeclaration::Block
+	/* Destructuring3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> {x:1\, y:2},
+		{x:1\, y:2} --> x,
+		x --> y,
+		y --> {x\,y} = {x:1\, y:2},
+		{x\,y} = {x:1\, y:2} --> let {x\,y} = {x:1\, y:2};,
+		let {x\,y} = {x:1\, y:2}; --> "end"
+	--- */
+	/* Destructuring3 XPECT allPaths ---
+		"start" -> 1 -> 2 -> {x:1\, y:2} -> x -> y -> {x\,y} = {x:1\, y:2} -> let {x\,y} = {x:1\, y:2}; -> "end"
+	--- */
+	// Destructuring3 XPECT path from '"start"' to '"end"' -->
+	// Destructuring3 XPECT commonPreds of '1' and '2' --> 1
+	// Destructuring3 XPECT succs at '"start"' --> 1
+	// Destructuring3 XPECT succs at 'x' --> y
+	// Destructuring3 XPECT succs at 'y' --> {x\,y} = {x:1\, y:2}
+	// Destructuring3 XPECT succs at '1' --> 2
+	// Destructuring3 XPECT succs at '2' --> {x:1\, y:2}
+	// Destructuring3 XPECT succs at '{x:1, y:2}' --> x
+	// Destructuring3 XPECT succs at '{x,y} = {x:1, y:2}' --> let {x\,y} = {x:1\, y:2};
+	// Destructuring3 XPECT succs at 'let {x,y} = {x:1, y:2};' --> "end"
+	"start";
+	let {x,y} = {x:1, y:2};
+	"end";
+}
+
+function Destructuring4() {
+	// Destructuring4 XPECT cfContainer --> FunctionDeclaration::Block
+	/* Destructuring4 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> {z:2},
+		{z:2} --> {x:1\, y:{z:2}},
+		{x:1\, y:{z:2}} --> x,
+		x --> y,
+		y --> {x\,y} = {x:1\, y:{z:2}},
+		{x\,y} = {x:1\, y:{z:2}} --> let {x\,y} = {x:1\, y:{z:2}};,
+		let {x\,y} = {x:1\, y:{z:2}}; --> "end"
+	--- */
+	/* Destructuring4 XPECT allPaths ---
+		"start" -> 1 -> 2 -> {z:2} -> {x:1\, y:{z:2}} -> x -> y -> {x\,y} = {x:1\, y:{z:2}} -> let {x\,y} = {x:1\, y:{z:2}}; -> "end"
+	--- */
+	// Destructuring4 XPECT path from '"start"' to '"end"' -->
+	// Destructuring4 XPECT commonPreds of '1' and '2' --> 1
+	// Destructuring4 XPECT succs at '"start"' --> 1
+	// Destructuring4 XPECT succs at 'x' --> y
+	// Destructuring4 XPECT succs at 'y' --> {x\,y} = {x:1\, y:{z:2}}
+	// Destructuring4 XPECT succs at '1' --> 2
+	// Destructuring4 XPECT succs at '2' --> {z:2}
+	// Destructuring4 XPECT succs at '{z:2}' --> {x:1\, y:{z:2}}
+	// Destructuring4 XPECT succs at '{x:1, y:{z:2}}' --> x
+	// Destructuring4 XPECT succs at '{x,y} = {x:1, y:{z:2}}' --> let {x\,y} = {x:1\, y:{z:2}};
+	// Destructuring4 XPECT succs at 'let {x,y} = {x:1, y:{z:2}};' --> "end"
+	"start";
+	let {x,y} = {x:1, y:{z:2}};
+	"end";
+}
+
+function Destructuring5() {
+	// Destructuring5 XPECT cfContainer --> FunctionDeclaration::Block
+	/* Destructuring5 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> [2],
+		[2] --> {x:1\, y:[2]},
+		{x:1\, y:[2]} --> x,
+		x --> y,
+		y --> {x\,y} = {x:1\, y:[2]},
+		{x\,y} = {x:1\, y:[2]} --> let {x\,y} = {x:1\, y:[2]};,
+		let {x\,y} = {x:1\, y:[2]}; --> "end"
+	--- */
+	/* Destructuring4 XPECT allPaths ---
+		"start" -> 1 -> 2 -> [2] -> {x:1\, y:[2]} -> x -> y -> {x\,y} = {x:1\, y:[2]} -> let {x\,y} = {x:1\, y:[2]}; -> "end"
+	--- */
+	// Destructuring5 XPECT path from '"start"' to '"end"' -->
+	// Destructuring5 XPECT commonPreds of '1' and '2' --> 1
+	// Destructuring5 XPECT succs at '"start"' --> 1
+	// Destructuring5 XPECT succs at 'x' --> y
+	// Destructuring5 XPECT succs at 'y' --> {x\,y} = {x:1\, y:[2]}
+	// Destructuring5 XPECT succs at '1' --> 2
+	// Destructuring5 XPECT succs at '2' --> [2]
+	// Destructuring5 XPECT succs at '[2]' --> {x:1\, y:[2]}
+	// Destructuring5 XPECT succs at '{x:1, y:[2]}' --> x
+	// Destructuring5 XPECT succs at '{x,y} = {x:1, y:[2]}' --> let {x\,y} = {x:1\, y:[2]};
+	// Destructuring5 XPECT succs at 'let {x,y} = {x:1, y:[2]};' --> "end"
+	"start";
+	let {x,y} = {x:1, y:[2]};
+	"end";
+}
+
+function Destructuring6() {
+	// Destructuring6 XPECT cfContainer --> FunctionDeclaration::Block
+	/* Destructuring6 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> {y:2},
+		{y:2} --> [1\, {y:2}],
+		[1\, {y:2}] --> x,
+		x --> y,
+		y --> [x\,y] = [1\, {y:2}],
+		[x\,y] = [1\, {y:2}] --> let [x\,y] = [1\, {y:2}];,
+		let [x\,y] = [1\, {y:2}]; --> "end"
+	--- */
+	/* Destructuring6 XPECT allPaths ---
+	   "start" -> 1 -> 2 -> {y:2} -> [1\, {y:2}] -> x -> y -> [x\,y] = [1\, {y:2}] -> let [x\,y] = [1\, {y:2}]; -> "end"
+	--- */
+	// Destructuring6 XPECT path from '"start"' to '"end"' -->
+	// Destructuring6 XPECT commonPreds of '1' and '2' --> 1
+	// Destructuring6 XPECT succs at '"start"' --> 1
+	// Destructuring6 XPECT succs at 'x' --> y
+	// Destructuring6 XPECT succs at 'y' --> [x\,y] = [1\, {y:2}]
+	// Destructuring6 XPECT succs at '1' --> 2
+	// Destructuring6 XPECT succs at '2' --> {y:2}
+	// Destructuring6 XPECT succs at '{y:2}' --> [1\, {y:2}]
+	// Destructuring6 XPECT succs at '[1, {y:2}]' --> x
+	// Destructuring6 XPECT succs at '[x,y] = [1, {y:2}]' --> let [x\,y] = [1\, {y:2}];
+	// Destructuring6 XPECT succs at 'let [x,y] = [1, {y:2}];' --> "end"
+	"start";
+	let [x,y] = [1, {y:2}];
+	"end";
+}
+
+function Destructuring7() {
+	// Destructuring7 XPECT cfContainer --> FunctionDeclaration::Block
+	// Destructuring7 XPECT allIslandElems -->
+	// Destructuring7 XPECT allCatchBlocks -->
+	/* Destructuring7 XPECT allEdges ---
+		"start" --> null,
+		null --> x,
+		x --> 1,
+		1 --> {y : 1},
+		{y : 1} --> [ {x} = {y : 1} ] = null,
+		[ {x} = {y : 1} ] = null --> var [ {x} = {y : 1} ] = null;,
+		var [ {x} = {y : 1} ] = null; --> "end"
+	--- */
+	/* Destructuring7 XPECT allPaths ---
+		"start" -> null -> x -> 1 -> {y : 1} -> [ {x} = {y : 1} ] = null -> var [ {x} = {y : 1} ] = null; -> "end"
+	--- */
+	/* Destructuring7 XPECT allPaths direction 'Backward' ---
+		"end" -> var [ {x} = {y : 1} ] = null; -> [ {x} = {y : 1} ] = null -> {y : 1} -> 1 -> x -> null -> "start"
+	--- */
+	// Destructuring7 XPECT path from '"start"' to '"end"' -->
+	// Destructuring7 XPECT commonPreds of 'null' and 'x' --> null
+	// Destructuring7 XPECT succs at '"start"' --> null
+	// Destructuring7 XPECT succs at 'x' --> 1
+	// Destructuring7 XPECT succs at '1' --> {y : 1}
+	// Destructuring7 XPECT succs at '{y : 1}' --> [ {x} = {y : 1} ] = null
+	// Destructuring7 XPECT succs at 'null' --> x
+	// Destructuring7 XPECT succs at '[ {x} = {y : 1} ] = null' --> var [ {x} = {y : 1} ] = null;
+	// Destructuring7 XPECT succs at 'var [ {x} = {y : 1} ] = null' --> "end"
+	"start";
+	var [ {x} = {y : 1} ] = null;
+	"end";
+}
+
+
+function Destructuring8(q) {
+	// Destructuring8 XPECT cfContainer --> FunctionDeclaration::Block
+	// Destructuring8 XPECT allIslandElems -->
+	// Destructuring8 XPECT allCatchBlocks -->
+	/* Destructuring8 XPECT allEdges ---
+		"start" --> 5,
+		5 --> {x: 5},
+		{x: 5} --> {prop2: {x: 5}},
+		{prop2: {x: 5}} --> q,
+		q --> {q},
+		{q} --> "",
+		"" --> {q: ""},
+		{q: ""} --> {q} = {q: ""},
+		{q} = {q: ""} --> ({q} = {q: ""}),
+		({q} = {q: ""}) --> x = ({q} = {q: ""}),
+		x = ({q} = {q: ""}) --> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}},
+		{prop2: {x: 5}} --> x = ({q} = {q: ""}),
+		{prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}} --> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}};,
+		var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}; --> "end"
+	--- */
+	/* Destructuring8 XPECT allPaths ---
+		"start" -> 5 -> {x: 5} -> {prop2: {x: 5}} -> q -> {q} -> "" -> {q: ""} -> {q} = {q: ""} -> ({q} = {q: ""}) -> x = ({q} = {q: ""}) -> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}} -> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}; -> "end",
+		"start" -> 5 -> {x: 5} -> {prop2: {x: 5}} -> x = ({q} = {q: ""}) -> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}} -> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}; -> "end"
+	--- */
+	/* Destructuring8 XPECT allPaths direction 'Backward' ---
+		"end" -> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}; -> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}} -> x = ({q} = {q: ""}) -> ({q} = {q: ""}) -> {q} = {q: ""} -> {q: ""} -> "" -> {q} -> q -> {prop2: {x: 5}} -> {x: 5} -> 5 -> "start",
+		"end" -> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}; -> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}} -> x = ({q} = {q: ""}) -> {prop2: {x: 5}} -> {x: 5} -> 5 -> "start"
+	--- */
+	// Destructuring8 XPECT path from '"start"' to '"end"' -->
+	// Destructuring8 XPECT commonPreds of '""' and '5' --> 5
+	// Destructuring8 XPECT succs at '"start"' --> 5
+	// Destructuring8 XPECT succs at 'q' --> {q}
+	// Destructuring8 XPECT succs at '{q}' --> ""
+	// Destructuring8 XPECT succs at '""' --> {q: ""}
+	// Destructuring8 XPECT succs at '{q: ""}' --> {q} = {q: ""}
+	// Destructuring8 XPECT succs at '{q} = {q: ""}' --> ({q} = {q: ""})
+	// Destructuring8 XPECT succs at '({q} = {q: ""})' --> x = ({q} = {q: ""})
+	// Destructuring8 XPECT succs at 'x = ({q} = {q: ""})' --> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}
+	// Destructuring8 XPECT succs at '5' --> {x: 5}
+	// Destructuring8 XPECT succs at '{x: 5}' --> {prop2: {x: 5}}
+	// Destructuring8 XPECT succs at '{prop2: {x: 5}}' --> q, x = ({q} = {q: ""})
+	// Destructuring8 XPECT succs at '{prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}' --> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}};
+	// Destructuring8 XPECT succs at 'var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}};' --> "end"
+	"start";
+	var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}};
+	"end";
+}
+
+
+
+function DestructuringDefault1() {
+	// DestructuringDefault1 XPECT cfContainer --> FunctionDeclaration::Block
+	// DestructuringDefault1 XPECT allIslandElems -->
+	// DestructuringDefault1 XPECT allCatchBlocks -->
+	/* DestructuringDefault1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> {a:1},
+		{a:1} --> 0,
+		{a:1} --> a=0,
+		0 --> a=0,
+		a=0 --> {a=0} = {a:1},
+		{a=0} = {a:1} --> let {a=0} = {a:1};,
+		let {a=0} = {a:1}; --> "end"
+	--- */
+	/* DestructuringDefault1 XPECT allPaths ---
+		"start" -> 1 -> {a:1} -> 0 -> a=0 -> {a=0} = {a:1} -> let {a=0} = {a:1}; -> "end",
+		"start" -> 1 -> {a:1} -> a=0 -> {a=0} = {a:1} -> let {a=0} = {a:1}; -> "end"
+	--- */
+	// DestructuringDefault1 XPECT path from '"start"' to '"end"' -->
+	// DestructuringDefault1 XPECT commonPreds of '1' and '0' --> 1
+	// DestructuringDefault1 XPECT succs at '"start"' --> 1
+	// DestructuringDefault1 XPECT succs at '1' --> {a:1}
+	// DestructuringDefault1 XPECT succs at '{a:1}' --> 0, a=0
+	// DestructuringDefault1 XPECT succs at '0' --> a=0
+	// DestructuringDefault1 XPECT succs at 'a=0' --> {a=0} = {a:1}
+	// DestructuringDefault1 XPECT succs at '{a=0} = {a:1}' --> let {a=0} = {a:1};
+	// DestructuringDefault1 XPECT succs at 'let {a=0} = {a:1};' --> "end"
+	"start";
+	let {a=0} = {a:1};
+	"end";
+}
+
+
+
+function DestructuringDefault2() {
+	// DestructuringDefault2 XPECT cfContainer --> FunctionDeclaration::Block
+	// DestructuringDefault2 XPECT allIslandElems -->
+	// DestructuringDefault2 XPECT allCatchBlocks -->
+	/* DestructuringDefault2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> [1],
+		[1] --> 0,
+		[1] --> x=0,
+		0 --> x=0,
+		x=0 --> [x=0] = [1],
+		[x=0] = [1] --> let [x=0] = [1];,
+		let [x=0] = [1]; --> "end"
+	--- */
+	/* DestructuringDefault2 XPECT allPaths ---
+		"start" -> 1 -> [1] -> 0 -> x=0 -> [x=0] = [1] -> let [x=0] = [1]; -> "end",
+		"start" -> 1 -> [1] -> x=0 -> [x=0] = [1] -> let [x=0] = [1]; -> "end"
+	--- */
+	// DestructuringDefault2 XPECT path from '"start"' to '"end"' -->
+	// DestructuringDefault2 XPECT commonPreds of '1' and '0' --> 1
+	// DestructuringDefault2 XPECT succs at '"start"' --> 1
+	// DestructuringDefault2 XPECT succs at '1' --> [1]
+	// DestructuringDefault2 XPECT succs at '[1]' --> 0, x=0
+	// DestructuringDefault2 XPECT succs at '0' --> x=0
+	// DestructuringDefault2 XPECT succs at 'x=0' --> [x=0] = [1]
+	// DestructuringDefault2 XPECT succs at '[x=0] = [1]' --> let [x=0] = [1];
+	// DestructuringDefault2 XPECT succs at 'let [x=0] = [1];' --> "end"
+	"start";
+	let [x=0] = [1];
+	"end";
+}
+
+
+function DestructuringComputedPropName1() {
+	// DestructuringComputedPropName1 XPECT cfContainer --> FunctionDeclaration::Block
+	// DestructuringComputedPropName1 XPECT allIslandElems -->
+	// DestructuringComputedPropName1 XPECT allCatchBlocks -->
+	/* DestructuringComputedPropName1 XPECT allEdges ---
+		"start" --> "a",
+		"a" --> 0,
+		0 --> { ["a"]: 0 },
+		{ ["a"]: 0 } --> ({ ["a"]: 0 }),
+		({ ["a"]: 0 }) --> "end"
+	--- */
+	/* DestructuringComputedPropName1 XPECT allPaths ---
+		"start" -> "a" -> 0 -> { ["a"]: 0 } -> ({ ["a"]: 0 }) -> "end"
+	--- */
+	/* DestructuringComputedPropName1 XPECT allPaths direction 'Backward' ---
+		"end" -> ({ ["a"]: 0 }) -> { ["a"]: 0 } -> 0 -> "a" -> "start"
+	--- */
+	// DestructuringComputedPropName1 XPECT succs at '"start"' --> "a"
+	// DestructuringComputedPropName1 XPECT succs at '"a"' --> 0
+	// DestructuringComputedPropName1 XPECT succs at '0' --> { ["a"]: 0 }
+	// DestructuringComputedPropName1 XPECT succs at '{ ["a"]: 0 }' --> ({ ["a"]: 0 })
+	// DestructuringComputedPropName1 XPECT succs at '({ ["a"]: 0 })' --> "end"
+	"start";
+	({ ["a"]: 0 });
+	"end";
+}

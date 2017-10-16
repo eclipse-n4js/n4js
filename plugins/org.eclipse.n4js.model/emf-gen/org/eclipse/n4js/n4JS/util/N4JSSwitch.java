@@ -85,11 +85,18 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.CONTROL_FLOW_ELEMENT: {
+				ControlFlowElement controlFlowElement = (ControlFlowElement)theEObject;
+				T result = caseControlFlowElement(controlFlowElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			case N4JSPackage.SCRIPT: {
 				Script script = (Script)theEObject;
 				T result = caseScript(script);
 				if (result == null) result = caseVariableEnvironmentElement(script);
 				if (result == null) result = caseAnnotableElement(script);
+				if (result == null) result = caseControlFlowElement(script);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -221,6 +228,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAnnotableElement(annotableExpression);
 				if (result == null) result = caseExpression(annotableExpression);
 				if (result == null) result = caseTypableElement(annotableExpression);
+				if (result == null) result = caseControlFlowElement(annotableExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -237,6 +245,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(annotationList);
 				if (result == null) result = caseExportableElement(annotationList);
 				if (result == null) result = caseScriptElement(annotationList);
+				if (result == null) result = caseControlFlowElement(annotationList);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -246,6 +255,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseAbstractAnnotationList(expressionAnnotationList);
 				if (result == null) result = caseExpression(expressionAnnotationList);
 				if (result == null) result = caseTypableElement(expressionAnnotationList);
+				if (result == null) result = caseControlFlowElement(expressionAnnotationList);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -323,6 +333,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExportableElement(functionDeclaration);
 				if (result == null) result = caseNamedElement(functionDeclaration);
 				if (result == null) result = caseScriptElement(functionDeclaration);
+				if (result == null) result = caseControlFlowElement(functionDeclaration);
 				if (result == null) result = caseFunctionOrFieldAccessor(functionDeclaration);
 				if (result == null) result = caseTypeDefiningElement(functionDeclaration);
 				if (result == null) result = caseAnnotableElement(functionDeclaration);
@@ -346,6 +357,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariableEnvironmentElement(functionExpression);
 				if (result == null) result = caseThisArgProvider(functionExpression);
 				if (result == null) result = caseTypableElement(functionExpression);
+				if (result == null) result = caseControlFlowElement(functionExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -364,6 +376,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariableEnvironmentElement(arrowFunction);
 				if (result == null) result = caseThisArgProvider(arrowFunction);
 				if (result == null) result = caseTypableElement(arrowFunction);
+				if (result == null) result = caseControlFlowElement(arrowFunction);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -398,6 +411,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(block);
 				if (result == null) result = caseVariableEnvironmentElement(block);
 				if (result == null) result = caseScriptElement(block);
+				if (result == null) result = caseControlFlowElement(block);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -405,6 +419,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				Statement statement = (Statement)theEObject;
 				T result = caseStatement(statement);
 				if (result == null) result = caseScriptElement(statement);
+				if (result == null) result = caseControlFlowElement(statement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -420,6 +435,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(variableStatement);
 				if (result == null) result = caseVariableDeclarationContainer(variableStatement);
 				if (result == null) result = caseScriptElement(variableStatement);
+				if (result == null) result = caseControlFlowElement(variableStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -434,12 +450,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariableDeclarationContainer(exportedVariableStatement);
 				if (result == null) result = caseAnnotableElement(exportedVariableStatement);
 				if (result == null) result = caseScriptElement(exportedVariableStatement);
+				if (result == null) result = caseControlFlowElement(exportedVariableStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING: {
 				VariableDeclarationOrBinding variableDeclarationOrBinding = (VariableDeclarationOrBinding)theEObject;
 				T result = caseVariableDeclarationOrBinding(variableDeclarationOrBinding);
+				if (result == null) result = caseControlFlowElement(variableDeclarationOrBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -447,6 +465,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				VariableBinding variableBinding = (VariableBinding)theEObject;
 				T result = caseVariableBinding(variableBinding);
 				if (result == null) result = caseVariableDeclarationOrBinding(variableBinding);
+				if (result == null) result = caseControlFlowElement(variableBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -455,6 +474,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseExportedVariableBinding(exportedVariableBinding);
 				if (result == null) result = caseVariableBinding(exportedVariableBinding);
 				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableBinding);
+				if (result == null) result = caseControlFlowElement(exportedVariableBinding);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -464,6 +484,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariableDeclarationOrBinding(variableDeclaration);
 				if (result == null) result = caseAnnotableElement(variableDeclaration);
 				if (result == null) result = caseVariable(variableDeclaration);
+				if (result == null) result = caseControlFlowElement(variableDeclaration);
 				if (result == null) result = caseTypedElement(variableDeclaration);
 				if (result == null) result = caseIdentifiableElement(variableDeclaration);
 				if (result == null) result = caseNamedElement(variableDeclaration);
@@ -479,6 +500,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariableDeclarationOrBinding(exportedVariableDeclaration);
 				if (result == null) result = caseAnnotableElement(exportedVariableDeclaration);
 				if (result == null) result = caseVariable(exportedVariableDeclaration);
+				if (result == null) result = caseControlFlowElement(exportedVariableDeclaration);
 				if (result == null) result = caseTypedElement(exportedVariableDeclaration);
 				if (result == null) result = caseIdentifiableElement(exportedVariableDeclaration);
 				if (result == null) result = caseNamedElement(exportedVariableDeclaration);
@@ -492,6 +514,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseEmptyStatement(emptyStatement);
 				if (result == null) result = caseStatement(emptyStatement);
 				if (result == null) result = caseScriptElement(emptyStatement);
+				if (result == null) result = caseControlFlowElement(emptyStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -500,6 +523,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseExpressionStatement(expressionStatement);
 				if (result == null) result = caseStatement(expressionStatement);
 				if (result == null) result = caseScriptElement(expressionStatement);
+				if (result == null) result = caseControlFlowElement(expressionStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -508,6 +532,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseIfStatement(ifStatement);
 				if (result == null) result = caseStatement(ifStatement);
 				if (result == null) result = caseScriptElement(ifStatement);
+				if (result == null) result = caseControlFlowElement(ifStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -516,6 +541,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseIterationStatement(iterationStatement);
 				if (result == null) result = caseStatement(iterationStatement);
 				if (result == null) result = caseScriptElement(iterationStatement);
+				if (result == null) result = caseControlFlowElement(iterationStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -525,6 +551,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseIterationStatement(doStatement);
 				if (result == null) result = caseStatement(doStatement);
 				if (result == null) result = caseScriptElement(doStatement);
+				if (result == null) result = caseControlFlowElement(doStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -534,6 +561,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseIterationStatement(whileStatement);
 				if (result == null) result = caseStatement(whileStatement);
 				if (result == null) result = caseScriptElement(whileStatement);
+				if (result == null) result = caseControlFlowElement(whileStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -545,6 +573,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVariableEnvironmentElement(forStatement);
 				if (result == null) result = caseStatement(forStatement);
 				if (result == null) result = caseScriptElement(forStatement);
+				if (result == null) result = caseControlFlowElement(forStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -560,6 +589,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(continueStatement);
 				if (result == null) result = caseLabelRef(continueStatement);
 				if (result == null) result = caseScriptElement(continueStatement);
+				if (result == null) result = caseControlFlowElement(continueStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -569,6 +599,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(breakStatement);
 				if (result == null) result = caseLabelRef(breakStatement);
 				if (result == null) result = caseScriptElement(breakStatement);
+				if (result == null) result = caseControlFlowElement(breakStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -577,6 +608,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseReturnStatement(returnStatement);
 				if (result == null) result = caseStatement(returnStatement);
 				if (result == null) result = caseScriptElement(returnStatement);
+				if (result == null) result = caseControlFlowElement(returnStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -586,6 +618,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(withStatement);
 				if (result == null) result = caseVariableEnvironmentElement(withStatement);
 				if (result == null) result = caseScriptElement(withStatement);
+				if (result == null) result = caseControlFlowElement(withStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -595,12 +628,14 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(switchStatement);
 				if (result == null) result = caseVariableEnvironmentElement(switchStatement);
 				if (result == null) result = caseScriptElement(switchStatement);
+				if (result == null) result = caseControlFlowElement(switchStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
 			case N4JSPackage.ABSTRACT_CASE_CLAUSE: {
 				AbstractCaseClause abstractCaseClause = (AbstractCaseClause)theEObject;
 				T result = caseAbstractCaseClause(abstractCaseClause);
+				if (result == null) result = caseControlFlowElement(abstractCaseClause);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -608,6 +643,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				CaseClause caseClause = (CaseClause)theEObject;
 				T result = caseCaseClause(caseClause);
 				if (result == null) result = caseAbstractCaseClause(caseClause);
+				if (result == null) result = caseControlFlowElement(caseClause);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -615,6 +651,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				DefaultClause defaultClause = (DefaultClause)theEObject;
 				T result = caseDefaultClause(defaultClause);
 				if (result == null) result = caseAbstractCaseClause(defaultClause);
+				if (result == null) result = caseControlFlowElement(defaultClause);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -624,6 +661,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStatement(labelledStatement);
 				if (result == null) result = caseNamedElement(labelledStatement);
 				if (result == null) result = caseScriptElement(labelledStatement);
+				if (result == null) result = caseControlFlowElement(labelledStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -632,6 +670,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseThrowStatement(throwStatement);
 				if (result == null) result = caseStatement(throwStatement);
 				if (result == null) result = caseScriptElement(throwStatement);
+				if (result == null) result = caseControlFlowElement(throwStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -640,6 +679,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseTryStatement(tryStatement);
 				if (result == null) result = caseStatement(tryStatement);
 				if (result == null) result = caseScriptElement(tryStatement);
+				if (result == null) result = caseControlFlowElement(tryStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -681,6 +721,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseDebuggerStatement(debuggerStatement);
 				if (result == null) result = caseStatement(debuggerStatement);
 				if (result == null) result = caseScriptElement(debuggerStatement);
+				if (result == null) result = caseControlFlowElement(debuggerStatement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -689,6 +730,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = casePrimaryExpression(primaryExpression);
 				if (result == null) result = caseExpression(primaryExpression);
 				if (result == null) result = caseTypableElement(primaryExpression);
+				if (result == null) result = caseControlFlowElement(primaryExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -698,6 +740,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(parenExpression);
 				if (result == null) result = caseExpression(parenExpression);
 				if (result == null) result = caseTypableElement(parenExpression);
+				if (result == null) result = caseControlFlowElement(parenExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -709,6 +752,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseVersionable(identifierRef);
 				if (result == null) result = caseExpression(identifierRef);
 				if (result == null) result = caseTypableElement(identifierRef);
+				if (result == null) result = caseControlFlowElement(identifierRef);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -724,6 +768,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(superLiteral);
 				if (result == null) result = caseExpression(superLiteral);
 				if (result == null) result = caseTypableElement(superLiteral);
+				if (result == null) result = caseControlFlowElement(superLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -734,6 +779,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseStrictModeRelevant(thisLiteral);
 				if (result == null) result = caseExpression(thisLiteral);
 				if (result == null) result = caseTypableElement(thisLiteral);
+				if (result == null) result = caseControlFlowElement(thisLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -743,6 +789,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(arrayLiteral);
 				if (result == null) result = caseExpression(arrayLiteral);
 				if (result == null) result = caseTypableElement(arrayLiteral);
+				if (result == null) result = caseControlFlowElement(arrayLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -769,6 +816,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseTypeDefiningElement(objectLiteral);
 				if (result == null) result = caseExpression(objectLiteral);
 				if (result == null) result = caseTypableElement(objectLiteral);
+				if (result == null) result = caseControlFlowElement(objectLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -945,6 +993,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				Expression expression = (Expression)theEObject;
 				T result = caseExpression(expression);
 				if (result == null) result = caseTypableElement(expression);
+				if (result == null) result = caseControlFlowElement(expression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -953,6 +1002,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseNewTarget(newTarget);
 				if (result == null) result = caseExpression(newTarget);
 				if (result == null) result = caseTypableElement(newTarget);
+				if (result == null) result = caseControlFlowElement(newTarget);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -962,6 +1012,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExpression(newExpression);
 				if (result == null) result = caseParameterizedAccess(newExpression);
 				if (result == null) result = caseTypableElement(newExpression);
+				if (result == null) result = caseControlFlowElement(newExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -977,6 +1028,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExpression(parameterizedCallExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedCallExpression);
 				if (result == null) result = caseTypableElement(parameterizedCallExpression);
+				if (result == null) result = caseControlFlowElement(parameterizedCallExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -993,6 +1045,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseExpression(indexedAccessExpression);
 				if (result == null) result = caseMemberAccess(indexedAccessExpression);
 				if (result == null) result = caseTypableElement(indexedAccessExpression);
+				if (result == null) result = caseControlFlowElement(indexedAccessExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1001,6 +1054,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseTaggedTemplateString(taggedTemplateString);
 				if (result == null) result = caseExpression(taggedTemplateString);
 				if (result == null) result = caseTypableElement(taggedTemplateString);
+				if (result == null) result = caseControlFlowElement(taggedTemplateString);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1017,6 +1071,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseMemberAccess(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseParameterizedAccess(parameterizedPropertyAccessExpression);
 				if (result == null) result = caseTypableElement(parameterizedPropertyAccessExpression);
+				if (result == null) result = caseControlFlowElement(parameterizedPropertyAccessExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1025,6 +1080,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseAwaitExpression(awaitExpression);
 				if (result == null) result = caseExpression(awaitExpression);
 				if (result == null) result = caseTypableElement(awaitExpression);
+				if (result == null) result = caseControlFlowElement(awaitExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1033,6 +1089,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = casePromisifyExpression(promisifyExpression);
 				if (result == null) result = caseExpression(promisifyExpression);
 				if (result == null) result = caseTypableElement(promisifyExpression);
+				if (result == null) result = caseControlFlowElement(promisifyExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1041,6 +1098,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseYieldExpression(yieldExpression);
 				if (result == null) result = caseExpression(yieldExpression);
 				if (result == null) result = caseTypableElement(yieldExpression);
+				if (result == null) result = caseControlFlowElement(yieldExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1050,6 +1108,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(literal);
 				if (result == null) result = caseExpression(literal);
 				if (result == null) result = caseTypableElement(literal);
+				if (result == null) result = caseControlFlowElement(literal);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1060,6 +1119,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(nullLiteral);
 				if (result == null) result = caseExpression(nullLiteral);
 				if (result == null) result = caseTypableElement(nullLiteral);
+				if (result == null) result = caseControlFlowElement(nullLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1070,6 +1130,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(booleanLiteral);
 				if (result == null) result = caseExpression(booleanLiteral);
 				if (result == null) result = caseTypableElement(booleanLiteral);
+				if (result == null) result = caseControlFlowElement(booleanLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1080,6 +1141,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(stringLiteral);
 				if (result == null) result = caseExpression(stringLiteral);
 				if (result == null) result = caseTypableElement(stringLiteral);
+				if (result == null) result = caseControlFlowElement(stringLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1089,6 +1151,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(templateLiteral);
 				if (result == null) result = caseExpression(templateLiteral);
 				if (result == null) result = caseTypableElement(templateLiteral);
+				if (result == null) result = caseControlFlowElement(templateLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1099,6 +1162,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(templateSegment);
 				if (result == null) result = caseExpression(templateSegment);
 				if (result == null) result = caseTypableElement(templateSegment);
+				if (result == null) result = caseControlFlowElement(templateSegment);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1109,6 +1173,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(numericLiteral);
 				if (result == null) result = caseExpression(numericLiteral);
 				if (result == null) result = caseTypableElement(numericLiteral);
+				if (result == null) result = caseControlFlowElement(numericLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1120,6 +1185,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(doubleLiteral);
 				if (result == null) result = caseExpression(doubleLiteral);
 				if (result == null) result = caseTypableElement(doubleLiteral);
+				if (result == null) result = caseControlFlowElement(doubleLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1131,6 +1197,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(abstractIntLiteral);
 				if (result == null) result = caseExpression(abstractIntLiteral);
 				if (result == null) result = caseTypableElement(abstractIntLiteral);
+				if (result == null) result = caseControlFlowElement(abstractIntLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1143,6 +1210,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(intLiteral);
 				if (result == null) result = caseExpression(intLiteral);
 				if (result == null) result = caseTypableElement(intLiteral);
+				if (result == null) result = caseControlFlowElement(intLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1155,6 +1223,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(binaryIntLiteral);
 				if (result == null) result = caseExpression(binaryIntLiteral);
 				if (result == null) result = caseTypableElement(binaryIntLiteral);
+				if (result == null) result = caseControlFlowElement(binaryIntLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1167,6 +1236,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(octalIntLiteral);
 				if (result == null) result = caseExpression(octalIntLiteral);
 				if (result == null) result = caseTypableElement(octalIntLiteral);
+				if (result == null) result = caseControlFlowElement(octalIntLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1179,6 +1249,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(legacyOctalIntLiteral);
 				if (result == null) result = caseExpression(legacyOctalIntLiteral);
 				if (result == null) result = caseTypableElement(legacyOctalIntLiteral);
+				if (result == null) result = caseControlFlowElement(legacyOctalIntLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1191,6 +1262,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(hexIntLiteral);
 				if (result == null) result = caseExpression(hexIntLiteral);
 				if (result == null) result = caseTypableElement(hexIntLiteral);
+				if (result == null) result = caseControlFlowElement(hexIntLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1203,6 +1275,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(scientificIntLiteral);
 				if (result == null) result = caseExpression(scientificIntLiteral);
 				if (result == null) result = caseTypableElement(scientificIntLiteral);
+				if (result == null) result = caseControlFlowElement(scientificIntLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1213,6 +1286,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(regularExpressionLiteral);
 				if (result == null) result = caseExpression(regularExpressionLiteral);
 				if (result == null) result = caseTypableElement(regularExpressionLiteral);
+				if (result == null) result = caseControlFlowElement(regularExpressionLiteral);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1221,6 +1295,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = casePostfixExpression(postfixExpression);
 				if (result == null) result = caseExpression(postfixExpression);
 				if (result == null) result = caseTypableElement(postfixExpression);
+				if (result == null) result = caseControlFlowElement(postfixExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1229,6 +1304,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseUnaryExpression(unaryExpression);
 				if (result == null) result = caseExpression(unaryExpression);
 				if (result == null) result = caseTypableElement(unaryExpression);
+				if (result == null) result = caseControlFlowElement(unaryExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1237,6 +1313,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseCastExpression(castExpression);
 				if (result == null) result = caseExpression(castExpression);
 				if (result == null) result = caseTypableElement(castExpression);
+				if (result == null) result = caseControlFlowElement(castExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1245,6 +1322,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseMultiplicativeExpression(multiplicativeExpression);
 				if (result == null) result = caseExpression(multiplicativeExpression);
 				if (result == null) result = caseTypableElement(multiplicativeExpression);
+				if (result == null) result = caseControlFlowElement(multiplicativeExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1253,6 +1331,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseAdditiveExpression(additiveExpression);
 				if (result == null) result = caseExpression(additiveExpression);
 				if (result == null) result = caseTypableElement(additiveExpression);
+				if (result == null) result = caseControlFlowElement(additiveExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1261,6 +1340,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseShiftExpression(shiftExpression);
 				if (result == null) result = caseExpression(shiftExpression);
 				if (result == null) result = caseTypableElement(shiftExpression);
+				if (result == null) result = caseControlFlowElement(shiftExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1269,6 +1349,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseRelationalExpression(relationalExpression);
 				if (result == null) result = caseExpression(relationalExpression);
 				if (result == null) result = caseTypableElement(relationalExpression);
+				if (result == null) result = caseControlFlowElement(relationalExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1277,6 +1358,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseEqualityExpression(equalityExpression);
 				if (result == null) result = caseExpression(equalityExpression);
 				if (result == null) result = caseTypableElement(equalityExpression);
+				if (result == null) result = caseControlFlowElement(equalityExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1285,6 +1367,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseBinaryBitwiseExpression(binaryBitwiseExpression);
 				if (result == null) result = caseExpression(binaryBitwiseExpression);
 				if (result == null) result = caseTypableElement(binaryBitwiseExpression);
+				if (result == null) result = caseControlFlowElement(binaryBitwiseExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1293,6 +1376,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseBinaryLogicalExpression(binaryLogicalExpression);
 				if (result == null) result = caseExpression(binaryLogicalExpression);
 				if (result == null) result = caseTypableElement(binaryLogicalExpression);
+				if (result == null) result = caseControlFlowElement(binaryLogicalExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1301,6 +1385,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseConditionalExpression(conditionalExpression);
 				if (result == null) result = caseExpression(conditionalExpression);
 				if (result == null) result = caseTypableElement(conditionalExpression);
+				if (result == null) result = caseControlFlowElement(conditionalExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1309,6 +1394,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseAssignmentExpression(assignmentExpression);
 				if (result == null) result = caseExpression(assignmentExpression);
 				if (result == null) result = caseTypableElement(assignmentExpression);
+				if (result == null) result = caseControlFlowElement(assignmentExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1317,6 +1403,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseCommaExpression(commaExpression);
 				if (result == null) result = caseExpression(commaExpression);
 				if (result == null) result = caseTypableElement(commaExpression);
+				if (result == null) result = caseControlFlowElement(commaExpression);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1432,6 +1519,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = caseThisTarget(n4ClassExpression);
 				if (result == null) result = caseExpression(n4ClassExpression);
 				if (result == null) result = caseN4TypeDefinition(n4ClassExpression);
+				if (result == null) result = caseControlFlowElement(n4ClassExpression);
 				if (result == null) result = caseAnnotableElement(n4ClassExpression);
 				if (result == null) result = caseTypeDefiningElement(n4ClassExpression);
 				if (result == null) result = caseTypableElement(n4ClassExpression);
@@ -1642,6 +1730,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.BINDING_PATTERN: {
 				BindingPattern bindingPattern = (BindingPattern)theEObject;
 				T result = caseBindingPattern(bindingPattern);
+				if (result == null) result = caseControlFlowElement(bindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1649,6 +1738,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				ObjectBindingPattern objectBindingPattern = (ObjectBindingPattern)theEObject;
 				T result = caseObjectBindingPattern(objectBindingPattern);
 				if (result == null) result = caseBindingPattern(objectBindingPattern);
+				if (result == null) result = caseControlFlowElement(objectBindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1656,6 +1746,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 				ArrayBindingPattern arrayBindingPattern = (ArrayBindingPattern)theEObject;
 				T result = caseArrayBindingPattern(arrayBindingPattern);
 				if (result == null) result = caseBindingPattern(arrayBindingPattern);
+				if (result == null) result = caseControlFlowElement(arrayBindingPattern);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1670,6 +1761,7 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.BINDING_ELEMENT: {
 				BindingElement bindingElement = (BindingElement)theEObject;
 				T result = caseBindingElement(bindingElement);
+				if (result == null) result = caseControlFlowElement(bindingElement);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -1689,6 +1781,21 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseNamedElement(NamedElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseControlFlowElement(ControlFlowElement object) {
 		return null;
 	}
 

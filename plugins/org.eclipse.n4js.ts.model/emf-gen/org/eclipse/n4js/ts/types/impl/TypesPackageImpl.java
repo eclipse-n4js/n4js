@@ -80,6 +80,7 @@ import org.eclipse.n4js.ts.types.TStructSetter;
 import org.eclipse.n4js.ts.types.TStructuralType;
 import org.eclipse.n4js.ts.types.TTypedElement;
 import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeAccessModifier;
@@ -296,6 +297,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * @generated
 	 */
 	private EClass tStructuralTypeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass tVersionableEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -1668,6 +1676,33 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getTVersionable() {
+		return tVersionableEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getTVersionable_DeclaredVersion() {
+		return (EAttribute)tVersionableEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getTVersionable__GetVersion() {
+		return tVersionableEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getTClassifier() {
 		return tClassifierEClass;
 	}
@@ -1679,15 +1714,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	public EAttribute getTClassifier_DeclaredCovariantConstructor() {
 		return (EAttribute)tClassifierEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EAttribute getTClassifier_DeclaredVersion() {
-		return (EAttribute)tClassifierEClass.getEStructuralFeatures().get(1);
 	}
 
 	/**
@@ -1733,15 +1759,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 	 */
 	public EOperation getTClassifier__IsFinal() {
 		return tClassifierEClass.getEOperations().get(4);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getTClassifier__GetVersion() {
-		return tClassifierEClass.getEOperations().get(5);
 	}
 
 	/**
@@ -3205,15 +3222,17 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tStructuralTypeEClass = createEClass(TSTRUCTURAL_TYPE);
 		createEOperation(tStructuralTypeEClass, TSTRUCTURAL_TYPE___IS_FINAL);
 
+		tVersionableEClass = createEClass(TVERSIONABLE);
+		createEAttribute(tVersionableEClass, TVERSIONABLE__DECLARED_VERSION);
+		createEOperation(tVersionableEClass, TVERSIONABLE___GET_VERSION);
+
 		tClassifierEClass = createEClass(TCLASSIFIER);
 		createEAttribute(tClassifierEClass, TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR);
-		createEAttribute(tClassifierEClass, TCLASSIFIER__DECLARED_VERSION);
 		createEOperation(tClassifierEClass, TCLASSIFIER___IS_ABSTRACT);
 		createEOperation(tClassifierEClass, TCLASSIFIER___GET_SUPER_CLASSIFIERS);
 		createEOperation(tClassifierEClass, TCLASSIFIER___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(tClassifierEClass, TCLASSIFIER___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
 		createEOperation(tClassifierEClass, TCLASSIFIER___IS_FINAL);
-		createEOperation(tClassifierEClass, TCLASSIFIER___GET_VERSION);
 
 		tObjectPrototypeEClass = createEClass(TOBJECT_PROTOTYPE);
 		createEReference(tObjectPrototypeEClass, TOBJECT_PROTOTYPE__SUPER_TYPE);
@@ -3470,6 +3489,8 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tClassifierEClass.getEGenericSuperTypes().add(g1);
 		g1 = createEGenericType(this.getSyntaxRelatedTElement());
 		tClassifierEClass.getEGenericSuperTypes().add(g1);
+		g1 = createEGenericType(this.getTVersionable());
+		tClassifierEClass.getEGenericSuperTypes().add(g1);
 		tObjectPrototypeEClass.getESuperTypes().add(this.getTClassifier());
 		tObjectPrototypeEClass.getESuperTypes().add(this.getDeclaredTypeWithAccessModifier());
 		tObjectPrototypeEClass.getESuperTypes().add(this.getArrayLike());
@@ -3507,6 +3528,7 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		tStructSetterEClass.getESuperTypes().add(this.getTStructMember());
 		tEnumEClass.getESuperTypes().add(this.getDeclaredTypeWithAccessModifier());
 		tEnumEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
+		tEnumEClass.getESuperTypes().add(this.getTVersionable());
 		tEnumLiteralEClass.getESuperTypes().add(this.getSyntaxRelatedTElement());
 		tEnumLiteralEClass.getESuperTypes().add(this.getIdentifiableElement());
 		tVariableEClass.getESuperTypes().add(this.getTExportableElement());
@@ -3727,9 +3749,13 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 
 		initEOperation(getTStructuralType__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEClass(tVersionableEClass, TVersionable.class, "TVersionable", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getTVersionable_DeclaredVersion(), theEcorePackage.getEInt(), "declaredVersion", null, 0, 1, TVersionable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEOperation(getTVersionable__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(tClassifierEClass, TClassifier.class, "TClassifier", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getTClassifier_DeclaredCovariantConstructor(), theEcorePackage.getEBoolean(), "declaredCovariantConstructor", null, 0, 1, TClassifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEAttribute(getTClassifier_DeclaredVersion(), theEcorePackage.getEInt(), "declaredVersion", null, 0, 1, TClassifier.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getTClassifier__IsAbstract(), theEcorePackage.getEBoolean(), "isAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
@@ -3740,8 +3766,6 @@ public class TypesPackageImpl extends EPackageImpl implements TypesPackage {
 		initEOperation(getTClassifier__GetImplementedOrExtendedInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getTClassifier__IsFinal(), theEcorePackage.getEBoolean(), "isFinal", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEOperation(getTClassifier__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(tObjectPrototypeEClass, TObjectPrototype.class, "TObjectPrototype", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getTObjectPrototype_SuperType(), theTypeRefsPackage.getParameterizedTypeRef(), null, "superType", null, 0, 1, TObjectPrototype.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

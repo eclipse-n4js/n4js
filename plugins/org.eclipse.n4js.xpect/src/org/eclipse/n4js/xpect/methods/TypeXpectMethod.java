@@ -54,7 +54,7 @@ public class TypeXpectMethod {
 	 * Checks that an element/expression has a certain type. Usage:
 	 *
 	 * <pre>
-	 * // XPECT type of 'location' --&gt; Type
+	 * // Xpect type of 'location' --&gt; Type
 	 * </pre>
 	 *
 	 * The location (of) is optional.
@@ -81,7 +81,7 @@ public class TypeXpectMethod {
 	 * Checks that an element/expression has a certain expected type (i.e. Xsemantics judgment expectedTypeIn). Usage:
 	 *
 	 * <pre>
-	 * // XPECT expectedType at 'location' --&gt; Type
+	 * // Xpect expectedType at 'location' --&gt; Type
 	 * </pre>
 	 *
 	 * The location (at) is optional.
@@ -124,7 +124,7 @@ public class TypeXpectMethod {
 				 * example, without this tweak, the following test would fail with a "Not a TypableElement at given
 				 * region" exception:
 				 *
-				 * // XPECT type of 'len' --> number
+				 * // Xpect type of 'len' --> number
 				 * var {length:len} = "hello";
 				 */
 				if (((BindingProperty) eobject).getValue() != null
@@ -154,7 +154,7 @@ public class TypeXpectMethod {
 	 * }
 	 * var C c;
 	 *
-	 * // XPECT typeArgs of 'm' --> number, string
+	 * // Xpect typeArgs of 'm' --> number, string
 	 * c.m(42,"hello");
 	 * </pre>
 	 *
