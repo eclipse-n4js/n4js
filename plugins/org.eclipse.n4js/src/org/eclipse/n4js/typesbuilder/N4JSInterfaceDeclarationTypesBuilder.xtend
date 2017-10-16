@@ -16,7 +16,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.ts.types.TypingStrategy
 
-package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
+public class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclarationTypesBuilder {
 	
 	def package boolean relinkTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase, int idx) {
 		if (n4Interface.name === null) { // may be null due to syntax errors
@@ -28,9 +28,9 @@ package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclara
 		return true;
 	}
 
-	def package void createTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
+	def protected TInterface createTInterface(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
 		if (n4Interface.name === null) {
-			return;
+			return null;
 		}
 
 		val interfaceType = createTInterface(n4Interface);
@@ -61,6 +61,7 @@ package class N4JSInterfaceDeclarationTypesBuilder extends N4JSClassifierDeclara
 		n4Interface.definedType = interfaceType
 
 		target.topLevelTypes += interfaceType
+		return interfaceType;
 	}
 
 	def private TInterface createTInterface(N4InterfaceDeclaration n4Interface) {

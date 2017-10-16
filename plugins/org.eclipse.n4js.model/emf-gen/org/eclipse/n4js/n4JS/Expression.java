@@ -27,7 +27,7 @@ import org.eclipse.n4js.ts.types.TypableElement;
  * @model abstract="true"
  * @generated
  */
-public interface Expression extends TypableElement {
+public interface Expression extends TypableElement, ControlFlowElement {
 	/**
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

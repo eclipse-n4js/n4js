@@ -1,0 +1,291 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To very these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+// AnnotationList are ignored
+export @Internal public class AnnotationList {}
+
+
+function DoStatement1() {
+	// DoStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// DoStatement1 XPECT allIslandElems -->
+	// DoStatement1 XPECT allCatchBlocks -->
+	/* DoStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 -Repeat-> 1,
+		2 --> "end"
+	--- */
+	/* DoStatement1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> 2 -> "end"
+	--- */
+	/* DoStatement1 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 1 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 1 -> 2 -> 1 -> 2 -> 1 -> "start"
+	--- */
+	// DoStatement1 XPECT path from '"start"' to '"end"' -->
+	// DoStatement1 XPECT path from '2' to '1' -->
+	// DoStatement1 XPECT commonPreds of '1' and '"end"' --> 1, 2
+	// DoStatement1 XPECT succs at '"start"' --> 1
+	// DoStatement1 XPECT succs at '1' --> 2
+	// DoStatement1 XPECT succs at '2' --> 1, "end"
+	// DoStatement1 XPECT preds at 'do' --> "start"
+	// DoStatement1 XPECT succs at 'do' --> "end"
+	"start";
+	do {
+		1;
+	} while (2);
+	"end";
+}
+
+function DoStatementBreak1() {
+	// DoStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
+	// DoStatementBreak1 XPECT allIslandElems -->
+	// DoStatementBreak1 XPECT allCatchBlocks -->
+	/* DoStatementBreak1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> break;,
+		2 --> 3,
+		3 -Repeat-> 1,
+		3 --> "end",
+		break; -Break-> "end"
+	--- */
+	// DoStatementBreak1 XPECT allPaths --> "start" -> 1 -> break; -> "end"
+	/* DoStatementBreak1 XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 2,
+		"end" -> break; -> 1 -> "start",
+		"end" -> break; -> 1 -> 3 -> 2
+	--- */
+	// DoStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// DoStatementBreak1 XPECT path from '"start"' notTo '2' -->
+	// DoStatementBreak1 XPECT path from '"start"' notTo '3' -->
+	// DoStatementBreak1 XPECT path from 'break;' notTo '1' -->
+	// DoStatementBreak1 XPECT commonPreds of '1' and '2' --> 2
+	// DoStatementBreak1 XPECT commonPreds of 'break' and '1' --> 1
+	// DoStatementBreak1 XPECT succs at '"start"' --> 1
+	// DoStatementBreak1 XPECT succs at '1' --> break;
+	// DoStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// DoStatementBreak1 XPECT succs at '2' --> 3
+	// DoStatementBreak1 XPECT succs at '3' --> 1, "end"
+	// DoStatementBreak1 XPECT preds at 'do' --> "start"
+	// DoStatementBreak1 XPECT succs at 'do' --> "end"
+	"start";
+	do {
+		1;
+		break;
+		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "2;"
+		2;
+		// DoStatementBreak1 XPECT warnings --> "Dead code. No execution possible after expression statement." at "3"
+	} while (3);
+	"end";
+}
+
+function DoStatementContinue1() {
+	// DoStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
+	// DoStatementContinue1 XPECT allIslandElems -->
+	// DoStatementContinue1 XPECT allCatchBlocks -->
+	/* DoStatementContinue1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> continue;,
+		continue; -Continue-> 3,
+		2 --> 3,
+		3 -Repeat-> 1,
+		3 --> "end"
+	--- */
+	/* DoStatementContinue1 XPECT allPaths ---
+		"start" -> 1 -> continue; -> 3 -> "end",
+		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end",
+		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end"
+	--- */
+	/* DoStatementContinue1 XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 2, "end" -> 3 -> continue; -> 1 -> "start",
+		"end" -> 3 -> continue; -> 1 -> 3 -> 2,
+		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> "start",
+		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> 3 -> 2,
+		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> "start"
+	--- */
+	// DoStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// DoStatementContinue1 XPECT path from '"start"' notTo '2' -->
+	// DoStatementContinue1 XPECT path from 'continue;' to '1' -->
+	// DoStatementContinue1 XPECT commonPreds of '1' and '2' --> 2
+	// DoStatementContinue1 XPECT commonPreds of '1' and '3' --> 1, 3
+	// DoStatementContinue1 XPECT succs at '"start"' --> 1
+	// DoStatementContinue1 XPECT succs at '1' --> continue;
+	// DoStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
+	// DoStatementContinue1 XPECT succs at '2' --> 3
+	// DoStatementContinue1 XPECT succs at '3' --> 1, "end"
+	// DoStatementContinue1 XPECT preds at 'do' --> "start"
+	// DoStatementContinue1 XPECT succs at 'do' --> "end"
+	"start";
+	do {
+		1;
+		continue;
+		// DoStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "2;"
+		2;
+	} while (3);
+	"end";
+}
+
+
+
+function WhileStatement1() {
+	// WhileStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// WhileStatement1 XPECT allIslandElems -->
+	// WhileStatement1 XPECT allCatchBlocks -->
+	/* WhileStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 -Repeat-> 2,
+		2 --> 1,
+		1 --> "end"
+	--- */
+	/* WhileStatement1 XPECT allPaths ---
+	"start" -> 1 -> "end",
+	"start" -> 1 -> 2 -> 1 -> "end",
+	"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> "end"
+	--- */
+	/* WhileStatement1 XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		"end" -> 1 -> 2 -> 1 -> "start",
+		"end" -> 1 -> 2 -> 1 -> 2 -> 1 -> "start",
+		"end" -> 1 -> 2 -> 1 -> 2 -> 1 -> 2
+	--- */
+	// WhileStatement1 XPECT path from '"start"' to '"end"' -->
+	// WhileStatement1 XPECT path from '2' to '"end"' -->
+	// WhileStatement1 XPECT commonPreds of '1' and '2' --> 1, 2
+	// WhileStatement1 XPECT commonPreds of '1' and '"end"' --> 1
+	// WhileStatement1 XPECT succs at '"start"' --> 1
+	// WhileStatement1 XPECT succs at '1' --> 2, "end"
+	// WhileStatement1 XPECT succs type 'Repeat' at '1' --> 2
+	// WhileStatement1 XPECT succs at '2' --> 1
+	// WhileStatement1 XPECT preds at 'while' --> "start"
+	// WhileStatement1 XPECT succs at 'while' --> "end"
+	"start";
+	while (1) {
+		2;
+	}
+	"end";
+}
+
+function WhileStatementBreak1() {
+	// WhileStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
+	// WhileStatementBreak1 XPECT allIslandElems -->
+	// WhileStatementBreak1 XPECT allCatchBlocks -->
+	/* WhileStatementBreak1 XPECT allEdges ---
+		"start" --> 1,
+		1 -Repeat-> 2,
+		2 --> break;,
+		break; -Break-> "end",
+		3 --> 1,
+		1 --> "end"
+	--- */
+	/* WhileStatementBreak1 XPECT allPaths ---
+	"start" -> 1 -> "end",
+	"start" -> 1 -> 2 -> break; -> "end"
+	--- */
+	/* WhileStatementBreak1 XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		"end" -> 1 -> 3, "end" -> break; -> 2 -> 1 -> "start",
+		"end" -> break; -> 2 -> 1 -> 3
+	--- */
+	// WhileStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// WhileStatementBreak1 XPECT path from '"start"' notTo '3' -->
+	// WhileStatementBreak1 XPECT path from '2' notTo '1' -->
+	// WhileStatementBreak1 XPECT path from '3' to '2' -->
+	// WhileStatementBreak1 XPECT commonPreds of '1' and '2' --> 1
+	// WhileStatementBreak1 XPECT commonPreds of '1' and '"end"' --> 1
+	// WhileStatementBreak1 XPECT commonPreds of 'break;' and '"end"' --> 1, break;
+	// WhileStatementBreak1 XPECT commonPreds of 'break;' and '3' --> 3
+	// WhileStatementBreak1 XPECT commonPreds of '2' and '"end"' --> 1, 2
+	// WhileStatementBreak1 XPECT succs at '"start"' --> 1
+	// WhileStatementBreak1 XPECT succs at '1' --> 2, "end"
+	// WhileStatementBreak1 XPECT succs type 'Repeat' at '1' --> 2
+	// WhileStatementBreak1 XPECT succs at '2' --> break;
+	// WhileStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// WhileStatementBreak1 XPECT succs at '3' --> 1
+	// WhileStatementBreak1 XPECT preds at 'while' --> "start"
+	// WhileStatementBreak1 XPECT succs at 'while' --> "end"
+	"start";
+	while (1) {
+		2;
+		break;
+		// WhileStatementBreak1 XPECT warnings --> "Dead code. No execution possible after break." at "3;"
+		3;
+	}
+	"end";
+}
+
+function WhileStatementContinue1() {
+	// WhileStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
+	// WhileStatementContinue1 XPECT allIslandElems -->
+	// WhileStatementContinue1 XPECT allCatchBlocks -->
+	/* WhileStatementContinue1 XPECT allEdges ---
+		"start" --> 1,
+		1 -Repeat-> 2,
+		2 --> continue;,
+		continue; -Continue-> 1,
+		3 --> 1,
+		1 --> "end"
+	--- */
+	/* WhileStatementContinue1 XPECT allPaths ---
+	"start" -> 1 -> "end",
+	"start" -> 1 -> 2 -> continue; -> 1 -> "end",
+	"start" -> 1 -> 2 -> continue; -> 1 -> 2 -> continue; -> 1 -> "end"
+	--- */
+	/* WhileStatementContinue1 XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start", "end" -> 1 -> 3,
+		"end" -> 1 -> continue; -> 2 -> 1 -> "start",
+		"end" -> 1 -> continue; -> 2 -> 1 -> 3,
+		"end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> "start",
+		"end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> 3,
+		"end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> continue; -> 2
+	--- */
+	// WhileStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// WhileStatementContinue1 XPECT path from '"start"' notTo '3' -->
+	// WhileStatementContinue1 XPECT path from '2' to '1' -->
+	// WhileStatementContinue1 XPECT path from '3' to '2' -->
+	// WhileStatementContinue1 XPECT commonPreds of '1' and '2' --> 1, 2
+	// WhileStatementContinue1 XPECT commonPreds of '1' and '"end"' --> 1
+	// WhileStatementContinue1 XPECT commonPreds of 'continue;' and '"end"' --> 1, continue;
+	// WhileStatementContinue1 XPECT commonPreds of 'continue;' and '3' --> 3
+	// WhileStatementContinue1 XPECT commonPreds of '2' and '"end"' --> 1, 2
+	// WhileStatementContinue1 XPECT succs at '"start"' --> 1
+	// WhileStatementContinue1 XPECT succs at '1' --> 2, "end"
+	// WhileStatementContinue1 XPECT succs type 'Repeat' at '1' --> 2
+	// WhileStatementContinue1 XPECT succs at '2' --> continue;
+	// WhileStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 1
+	// WhileStatementContinue1 XPECT succs at '3' --> 1
+	// WhileStatementContinue1 XPECT preds at 'while' --> "start"
+	// WhileStatementContinue1 XPECT succs at 'while' --> "end"
+	"start";
+	while (1) {
+		2;
+		continue;
+		// WhileStatementContinue1 XPECT warnings --> "Dead code. No execution possible after continue." at "3;"
+		3;
+	}
+	"end";
+}

@@ -11,9 +11,12 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
+import org.eclipse.emf.common.util.EList
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
-import org.eclipse.n4js.n4JS.BreakStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FieldAccessor
@@ -27,8 +30,8 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.ReturnStatement
+import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.SetterDeclaration
-import org.eclipse.n4js.n4JS.ThrowStatement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -47,10 +50,6 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import java.util.List
-import org.eclipse.emf.common.util.EList
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
@@ -66,6 +65,11 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
+import com.google.common.base.Strings
 
 /**
  */
@@ -86,6 +90,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private N4JSElementKeywordProvider keywordProvider;
 
 	/**
 	 * NEEEDED
@@ -95,6 +101,51 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override register(EValidatorRegistrar registrar) {
 		// nop
+	}
+
+	/**
+	 * Checks all flow graph related validations
+	 */
+	@Check
+	def checkFlowGraphs(Script script) {
+		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
+		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
+		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+		flowAnalyzer.createGraphs(script);
+
+		val dcf = new DeadCodeVisitor();
+
+		flowAnalyzer.accept(dcf); // GH-120: comment-out this line to disable CFG
+
+		internalCheckDeadCode(dcf);
+	}
+
+	// Req.107
+	private def String internalCheckDeadCode(DeadCodeVisitor dcf) {
+		val deadCodeRegions = dcf.getDeadCodeRegions();
+
+		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
+			val String stmtDescription = getStatementDescription(deadCodeRegion);
+			var String errCode = FUN_DEAD_CODE;
+			var String msg = getMessageForFUN_DEAD_CODE();
+			if (stmtDescription !== null) {
+				msg = getMessageForFUN_DEAD_CODE_WITH_PREDECESSOR(stmtDescription);
+				errCode = FUN_DEAD_CODE_WITH_PREDECESSOR;
+			}
+			addIssue(msg, deadCodeRegion.getContainer, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), errCode);
+		}
+	}
+
+	private def String getStatementDescription(DeadCodeRegion deadCodeRegion) {
+		val reachablePred = deadCodeRegion.getReachablePredecessor();
+		if (reachablePred === null)
+			return null;
+		
+		val String keyword = keywordProvider.keyword(reachablePred);
+		if (Strings.isNullOrEmpty(keyword)) {
+			return reachablePred.eClass.name;
+		}
+		return keyword;
 	}
 
 	/*
@@ -214,9 +265,6 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 
 		val FunctionFullReport analysis = returnOrThrowAnalysis.exitBehaviourWithFullReport(functionOrFieldAccessor.body?.statements)
-
-		// Dead Code? : Constraints 107
-		holdsNoDeadCode(functionOrFieldAccessor, analysis);
 
 		if (isOptionalReturnType) {
 			// anything goes!
@@ -429,29 +477,6 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 
 		return errorMessage.nullOrEmpty
-	}
-
-	/**
-	 * Constraints 107
-	 */
-	private def boolean holdsNoDeadCode(FunctionOrFieldAccessor functionOrFieldAccessor, FunctionFullReport analysis) {
-		for (db : analysis.deadCode) {
-			val firstNode = NodeModelUtils.findActualNodeFor(db.statements.head)
-			val lastNode = NodeModelUtils.findActualNodeFor(db.statements.last)
-			val off = firstNode.offset
-			val len = lastNode.offset - firstNode.offset + lastNode.length
-
-			val String stmtDescription = switch db.lastExecutedStmt {
-				ThrowStatement: 'throw'
-				ReturnStatement: 'return'
-				BreakStatement: 'break'
-				default: db.lastExecutedStmt.eClass.name
-			}
-
-			val String msg = getMessageForFUN_DEAD_CODE(stmtDescription)
-			addIssue(msg, functionOrFieldAccessor, off, len, FUN_DEAD_CODE)
-		}
-		return analysis.deadCode.empty
 	}
 
 	/**

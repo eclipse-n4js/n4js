@@ -74,6 +74,13 @@ interface NamedElement {
 	op String getName()
 }
 
+/**
+ * Common interface for all AST elements that contain a control flow.
+ */
+interface ControlFlowElement {
+	// empty (marker interface)
+}
+
 // ****************************************************************************************************
 // Root element is a script,
 // cf. http://wiki.ecmascript.org/doku.php?id=harmony:modules
@@ -83,7 +90,7 @@ interface NamedElement {
 /*
  * Root element
  */
-class Script extends VariableEnvironmentElement, AnnotableElement {
+class Script extends VariableEnvironmentElement, AnnotableElement, ControlFlowElement {
 	contains Annotation[] annotations
 	contains ScriptElement[] scriptElements
 	refers transient TModule module
@@ -731,7 +738,7 @@ class Block extends Statement, VariableEnvironmentElement {
 	}
 }
 
-class Statement extends ScriptElement {
+class Statement extends ScriptElement, ControlFlowElement {
 }
 
 enum VariableStatementKeyword {
@@ -777,7 +784,7 @@ class ExportedVariableStatement extends VariableStatement, ExportableElement, An
 	}
 }
 
-abstract class VariableDeclarationOrBinding {
+abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 
 	op VariableDeclaration[] getVariableDeclarations() {
 		switch(this) {
@@ -786,6 +793,8 @@ abstract class VariableDeclarationOrBinding {
 		default: #[].toEList
 		}
 	}
+
+	op Expression getExpression()
 }
 
 class VariableBinding extends VariableDeclarationOrBinding {
@@ -800,7 +809,7 @@ class ExportedVariableBinding extends VariableBinding {
 	refers transient TVariable definedVariable
 }
 
-class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable {
+class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement, Variable  {
 	contains Annotation[] annotations
 	contains Expression expression
 	/**
@@ -915,7 +924,7 @@ class SwitchStatement extends Statement, VariableEnvironmentElement {
 	}
 }
 
-abstract class AbstractCaseClause {
+abstract class AbstractCaseClause extends ControlFlowElement {
 	/*
 	 * The consequent of the clause.
 	 */
@@ -1335,7 +1344,7 @@ enum BinaryLogicalOperator {
 /**
  * Also see utility methods in N4JSASTUtils
  */
-abstract class Expression extends TypableElement {
+abstract class Expression extends TypableElement, ControlFlowElement {
 	/**
 	 * Implements the method #isValidSimpleAssignmentTarget from ES6 spec.
 	 * Returns false by default.
@@ -2131,7 +2140,7 @@ class N4SetterDeclaration extends SetterDeclaration, N4FieldAccessor {
 	}
 }
 
-abstract class BindingPattern {
+abstract class BindingPattern extends ControlFlowElement {
 }
 
 /*
@@ -2166,7 +2175,7 @@ class BindingProperty extends PropertyNameOwner {
 	}
 }
 
-class BindingElement {
+class BindingElement extends ControlFlowElement {
 	/* Corresponds to spread in ArrayLiterals (but called 'rest' in ES6 specification within array binding patterns). */
 	boolean rest
 	contains VariableDeclaration varDecl

@@ -297,7 +297,7 @@ public interface N4JSXPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_ATTRIBUTE_FEATURE_COUNT = 0;
+	int JSX_ATTRIBUTE_FEATURE_COUNT = N4JSPackage.CONTROL_FLOW_ELEMENT_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>JSX Attribute</em>' class.
@@ -306,7 +306,7 @@ public interface N4JSXPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_ATTRIBUTE_OPERATION_COUNT = 0;
+	int JSX_ATTRIBUTE_OPERATION_COUNT = N4JSPackage.CONTROL_FLOW_ELEMENT_OPERATION_COUNT + 0;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4jsx.n4JSX.impl.JSXPropertyAttributeImpl <em>JSX Property Attribute</em>}' class.

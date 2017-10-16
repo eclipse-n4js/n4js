@@ -21,7 +21,8 @@ ProvidedRuntimeLibraries {
     n4js-runtime-es2015,
     n4js-runtime-esnext,
     n4js-runtime-fetch,
-    n4js-runtime-node
+    n4js-runtime-node,
+    n4js-runtime-ecma402
 }
 
 Output: "src-gen"

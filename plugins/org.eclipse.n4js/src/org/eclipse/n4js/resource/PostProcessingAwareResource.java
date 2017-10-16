@@ -13,6 +13,7 @@ package org.eclipse.n4js.resource;
 import org.eclipse.xtext.linking.lazy.LazyLinkingResource;
 import org.eclipse.xtext.resource.DerivedStateAwareResource;
 import org.eclipse.xtext.resource.OutdatedStateManager;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.inject.Inject;
@@ -61,6 +62,14 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	protected volatile boolean isPostProcessing = false;
 
 	/**
+	 * If {@link #fullyPostProcessed} is <code>true</code>, this field refers to the {@link Throwable} thrown during
+	 * post-processing or is <code>null</code> if post-processing was successful; if {@link #fullyPostProcessed} returns
+	 * <code>false</code>, the value of this field is undefined and should not be used (see
+	 * {@link #getPostProcessingThrowable()}).
+	 */
+	private Throwable postProcessingThrowable;
+
+	/**
 	 * Implementations of this interface are used by a {@link PostProcessingAwareResource} to perform post-processing of
 	 * an EMF / Xtext resource.
 	 */
@@ -103,6 +112,17 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 		return isPostProcessing;
 	}
 
+	/**
+	 * If {@link #isFullyProcessed()} returns <code>true</code> AND an exception or error was thrown during
+	 * post-processing, then this method returns this exception or error. Otherwise, <code>null</code> is returned.
+	 * <p>
+	 * Note that cancellation exceptions/errors are not filtered out, i.e. this method might return a throwable for
+	 * which {@link OperationCanceledManager#isOperationCanceledException(Throwable)} returns <code>true</code>.
+	 */
+	public Throwable getPostProcessingThrowable() {
+		return isFullyProcessed() ? postProcessingThrowable : null;
+	}
+
 	@Override
 	public void discardDerivedState() {
 		super.discardDerivedState();
@@ -143,6 +163,30 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 * post-processing has already been performed <u>or is currently in progress</u>, so unnecessarily calling this
 	 * method should not do any major harm.
 	 * <p>
+	 * The precise effect of this method can be summarized as follows:
+	 * <table border="1">
+	 * <tr>
+	 * <th>State <em>before</em> this method is invoked</th>
+	 * <th>State <em>after</em> this method returns</th>
+	 * </tr>
+	 * <tr>
+	 * <td>post-processing not started yet</td>
+	 * <td>post-processing completed (!!)<br>
+	 * (call to {@code #performPostProcessing()} started post-processing on 'res' and completed it before
+	 * returning)</td>
+	 * </tr>
+	 * <tr>
+	 * <td>post-processing in progress</td>
+	 * <td>post-processing in progress<br>
+	 * (call to {@code #performPostProcessing()} was ignored, i.e. had no effect)</td>
+	 * </tr>
+	 * <tr>
+	 * <td>post-processing completed</td>
+	 * <td>post-processing completed<br>
+	 * (call to {@code #performPostProcessing()} was ignored, i.e. had no effect)</td>
+	 * </tr>
+	 * </table>
+	 * <p>
 	 * Will throw an exception if called on an {@link #isLoaded() unloaded} resource.
 	 *
 	 * @param cancelIndicator
@@ -161,6 +205,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 		if (isLoaded && fullyInitialized && !fullyPostProcessed && !isPostProcessing) {
 			// initiate post-processing ...
 			try {
+				postProcessingThrowable = null;
 				isPostProcessing = true;
 				if (postProcessor == null) {
 					throw new IllegalStateException("post processor is null");
@@ -174,6 +219,9 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 					super.resolveLazyCrossReferences(cancelIndicator);
 				}
 				postProcessor.performPostProcessing(this, cancelIndicator);
+			} catch (Throwable th) {
+				postProcessingThrowable = th;
+				throw th;
 			} finally {
 				isPostProcessing = false;
 				// note: doesn't matter if processing succeeded, failed or was canceled

@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.Switch;
 
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableN4MemberDeclaration;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.FunctionDefinition;
@@ -124,6 +125,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseScript(script_IM);
 				if (result == null) result = caseVariableEnvironmentElement(script_IM);
 				if (result == null) result = caseAnnotableElement(script_IM);
+				if (result == null) result = caseControlFlowElement(script_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -172,6 +174,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseReferencingElement_IM(referencingElementExpression_IM);
 				if (result == null) result = caseExpression(referencingElementExpression_IM);
 				if (result == null) result = caseTypableElement(referencingElementExpression_IM);
+				if (result == null) result = caseControlFlowElement(referencingElementExpression_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -186,6 +189,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseReferencingElement_IM(identifierRef_IM);
 				if (result == null) result = caseExpression(identifierRef_IM);
 				if (result == null) result = caseTypableElement(identifierRef_IM);
+				if (result == null) result = caseControlFlowElement(identifierRef_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -199,6 +203,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = caseParameterizedAccess(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseReferencingElement_IM(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = caseTypableElement(parameterizedPropertyAccessExpression_IM);
+				if (result == null) result = caseControlFlowElement(parameterizedPropertyAccessExpression_IM);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -236,6 +241,7 @@ public class ImSwitch<T> extends Switch<T> {
 				T result = caseSnippet(snippet);
 				if (result == null) result = caseExpression(snippet);
 				if (result == null) result = caseTypableElement(snippet);
+				if (result == null) result = caseControlFlowElement(snippet);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -328,6 +334,7 @@ public class ImSwitch<T> extends Switch<T> {
 				if (result == null) result = casePrimaryExpression(stringLiteralForSTE);
 				if (result == null) result = caseExpression(stringLiteralForSTE);
 				if (result == null) result = caseTypableElement(stringLiteralForSTE);
+				if (result == null) result = caseControlFlowElement(stringLiteralForSTE);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -662,6 +669,21 @@ public class ImSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseTypableElement(TypableElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>Control Flow Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseControlFlowElement(ControlFlowElement object) {
 		return null;
 	}
 

@@ -818,17 +818,7 @@ class TStructuralType extends ContainerType<TStructMember>, SyntaxRelatedTElemen
 	}
 }
 
-/*
- * Base class for N4 specific classifiers, i.e., class, interface, or role.
- */
-abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement {
-
-	/*
-	 * Tells if this classifier is itself annotated with <code>@CovariantConstructor</code> or if it has an owned
-	 * constructor annotated with <code>@CovariantConstructor</code>.
-	 */
-	boolean declaredCovariantConstructor
-
+abstract class TVersionable {
 	/**
 	 * The declared version of the type. This is not used by N4JS at the moment but only
 	 * in derived languages such as N4IDL. It needs to be stored in the type model though as
@@ -837,6 +827,26 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 	 * This is set by the N4IDL types builder.
 	 */
 	int declaredVersion
+
+	/*
+	 * Overrides default implementation of type, returns the actually declared version (which
+	 * is 0 in N4JS as it cannot be set there). Only used for derived languages such as N4IDL.
+	 */
+	op int getVersion() {
+		return declaredVersion;
+	}
+}
+
+/*
+ * Base class for N4 specific classifiers, i.e., class, interface, or role.
+ */
+abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement, TVersionable {
+
+	/*
+	 * Tells if this classifier is itself annotated with <code>@CovariantConstructor</code> or if it has an owned
+	 * constructor annotated with <code>@CovariantConstructor</code>.
+	 */
+	boolean declaredCovariantConstructor
 
 	op boolean isAbstract() {
 		return false
@@ -882,14 +892,6 @@ abstract class TClassifier extends ContainerType<TMember>, SyntaxRelatedTElement
 	 */
 	op boolean isFinal() {
 		return false;
-	}
-
-	/*
-	 * Overrides default implementation of type, returns the actually declared version (which
-	 * is 0 in N4JS as it cannot be set there). Only used for derived languages such as N4IDL.
-	 */
-	op int getVersion() {
-		return declaredVersion;
 	}
 }
 
@@ -1525,7 +1527,8 @@ class TStructSetter extends TSetter, TStructMember {
  * Represents a user defined enumeration type. All enums implicitly (and transparently
  * to the user) inherit from N4Enum, which provides properties shared by all enums.
  */
-class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement {
+class TEnum extends DeclaredTypeWithAccessModifier, SyntaxRelatedTElement, TVersionable {
+
 	boolean external
 	contains TEnumLiteral[] literals
 	op TypeVariable[] getTypeVars() {

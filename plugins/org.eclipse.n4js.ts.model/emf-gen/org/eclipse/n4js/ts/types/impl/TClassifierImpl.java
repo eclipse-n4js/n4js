@@ -34,6 +34,7 @@ import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
+import org.eclipse.n4js.ts.types.TVersionable;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 
@@ -48,8 +49,8 @@ import org.eclipse.xtext.xbase.lib.CollectionLiterals;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl#getAstElement <em>Ast Element</em>}</li>
- *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl#isDeclaredCovariantConstructor <em>Declared Covariant Constructor</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl#getDeclaredVersion <em>Declared Version</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TClassifierImpl#isDeclaredCovariantConstructor <em>Declared Covariant Constructor</em>}</li>
  * </ul>
  *
  * @generated
@@ -64,26 +65,6 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * @ordered
 	 */
 	protected EObject astElement;
-
-	/**
-	 * The default value of the '{@link #isDeclaredCovariantConstructor() <em>Declared Covariant Constructor</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isDeclaredCovariantConstructor()
-	 * @generated
-	 * @ordered
-	 */
-	protected static final boolean DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT = false;
-
-	/**
-	 * The cached value of the '{@link #isDeclaredCovariantConstructor() <em>Declared Covariant Constructor</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see #isDeclaredCovariantConstructor()
-	 * @generated
-	 * @ordered
-	 */
-	protected boolean declaredCovariantConstructor = DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT;
 
 	/**
 	 * The default value of the '{@link #getDeclaredVersion() <em>Declared Version</em>}' attribute.
@@ -104,6 +85,26 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * @ordered
 	 */
 	protected int declaredVersion = DECLARED_VERSION_EDEFAULT;
+
+	/**
+	 * The default value of the '{@link #isDeclaredCovariantConstructor() <em>Declared Covariant Constructor</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredCovariantConstructor()
+	 * @generated
+	 * @ordered
+	 */
+	protected static final boolean DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT = false;
+
+	/**
+	 * The cached value of the '{@link #isDeclaredCovariantConstructor() <em>Declared Covariant Constructor</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #isDeclaredCovariantConstructor()
+	 * @generated
+	 * @ordered
+	 */
+	protected boolean declaredCovariantConstructor = DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -167,27 +168,6 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public boolean isDeclaredCovariantConstructor() {
-		return declaredCovariantConstructor;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public void setDeclaredCovariantConstructor(boolean newDeclaredCovariantConstructor) {
-		boolean oldDeclaredCovariantConstructor = declaredCovariantConstructor;
-		declaredCovariantConstructor = newDeclaredCovariantConstructor;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR, oldDeclaredCovariantConstructor, declaredCovariantConstructor));
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public int getDeclaredVersion() {
 		return declaredVersion;
 	}
@@ -202,6 +182,27 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		declaredVersion = newDeclaredVersion;
 		if (eNotificationRequired())
 			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASSIFIER__DECLARED_VERSION, oldDeclaredVersion, declaredVersion));
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public boolean isDeclaredCovariantConstructor() {
+		return declaredCovariantConstructor;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public void setDeclaredCovariantConstructor(boolean newDeclaredCovariantConstructor) {
+		boolean oldDeclaredCovariantConstructor = declaredCovariantConstructor;
+		declaredCovariantConstructor = newDeclaredCovariantConstructor;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR, oldDeclaredCovariantConstructor, declaredCovariantConstructor));
 	}
 
 	/**
@@ -279,10 +280,10 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 			case TypesPackage.TCLASSIFIER__AST_ELEMENT:
 				if (resolve) return getAstElement();
 				return basicGetAstElement();
-			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
-				return isDeclaredCovariantConstructor();
 			case TypesPackage.TCLASSIFIER__DECLARED_VERSION:
 				return getDeclaredVersion();
+			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
+				return isDeclaredCovariantConstructor();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
@@ -298,11 +299,11 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 			case TypesPackage.TCLASSIFIER__AST_ELEMENT:
 				setAstElement((EObject)newValue);
 				return;
-			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
-				setDeclaredCovariantConstructor((Boolean)newValue);
-				return;
 			case TypesPackage.TCLASSIFIER__DECLARED_VERSION:
 				setDeclaredVersion((Integer)newValue);
+				return;
+			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
+				setDeclaredCovariantConstructor((Boolean)newValue);
 				return;
 		}
 		super.eSet(featureID, newValue);
@@ -319,11 +320,11 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 			case TypesPackage.TCLASSIFIER__AST_ELEMENT:
 				setAstElement((EObject)null);
 				return;
-			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
-				setDeclaredCovariantConstructor(DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT);
-				return;
 			case TypesPackage.TCLASSIFIER__DECLARED_VERSION:
 				setDeclaredVersion(DECLARED_VERSION_EDEFAULT);
+				return;
+			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
+				setDeclaredCovariantConstructor(DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT);
 				return;
 		}
 		super.eUnset(featureID);
@@ -339,10 +340,10 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		switch (featureID) {
 			case TypesPackage.TCLASSIFIER__AST_ELEMENT:
 				return astElement != null;
-			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
-				return declaredCovariantConstructor != DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT;
 			case TypesPackage.TCLASSIFIER__DECLARED_VERSION:
 				return declaredVersion != DECLARED_VERSION_EDEFAULT;
+			case TypesPackage.TCLASSIFIER__DECLARED_COVARIANT_CONSTRUCTOR:
+				return declaredCovariantConstructor != DECLARED_COVARIANT_CONSTRUCTOR_EDEFAULT;
 		}
 		return super.eIsSet(featureID);
 	}
@@ -360,6 +361,12 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 				default: return -1;
 			}
 		}
+		if (baseClass == TVersionable.class) {
+			switch (derivedFeatureID) {
+				case TypesPackage.TCLASSIFIER__DECLARED_VERSION: return TypesPackage.TVERSIONABLE__DECLARED_VERSION;
+				default: return -1;
+			}
+		}
 		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
 	}
 
@@ -373,6 +380,12 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseFeatureID) {
 				case TypesPackage.SYNTAX_RELATED_TELEMENT__AST_ELEMENT: return TypesPackage.TCLASSIFIER__AST_ELEMENT;
+				default: return -1;
+			}
+		}
+		if (baseClass == TVersionable.class) {
+			switch (baseFeatureID) {
+				case TypesPackage.TVERSIONABLE__DECLARED_VERSION: return TypesPackage.TCLASSIFIER__DECLARED_VERSION;
 				default: return -1;
 			}
 		}
@@ -401,6 +414,12 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		}
 		if (baseClass == SyntaxRelatedTElement.class) {
 			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == TVersionable.class) {
+			switch (baseOperationID) {
+				case TypesPackage.TVERSIONABLE___GET_VERSION: return TypesPackage.TCLASSIFIER___GET_VERSION;
 				default: return -1;
 			}
 		}
@@ -441,10 +460,10 @@ public abstract class TClassifierImpl extends ContainerTypeImpl<TMember> impleme
 		if (eIsProxy()) return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
-		result.append(" (declaredCovariantConstructor: ");
-		result.append(declaredCovariantConstructor);
-		result.append(", declaredVersion: ");
+		result.append(" (declaredVersion: ");
 		result.append(declaredVersion);
+		result.append(", declaredCovariantConstructor: ");
+		result.append(declaredCovariantConstructor);
 		result.append(')');
 		return result.toString();
 	}
