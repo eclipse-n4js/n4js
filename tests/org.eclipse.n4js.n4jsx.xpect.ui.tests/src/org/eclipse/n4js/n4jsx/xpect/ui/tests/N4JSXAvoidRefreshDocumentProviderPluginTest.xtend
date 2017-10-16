@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.tests.document
+package org.eclipse.n4js.n4jsx.xpect.ui.tests
 
 import com.google.inject.Inject
 import org.eclipse.core.internal.resources.Workspace
@@ -28,20 +28,19 @@ import static java.util.UUID.randomUUID
 import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 
 /**
- * This class tests the fix for refresh file problem in XtextDocumentProvider. GH-270.
+ * This class tests the fix for refresh N4JSX file problem in XtextDocumentProvider. GH-270.
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
+class N4JSXAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
+
 	@Inject
 	ReflectExtensions reflectExtensions
 
-	val N4JS_EDITOR_ID = 'org.eclipse.n4js.N4JS'
+	val N4JSX_EDITOR_ID = 'org.eclipse.n4js.n4jsx.N4JSX'
 	val PROJECT_NAME = 'testProject'
 	val MF_FILE = 'manifest.nfmf'
 	val SRC = 'src';
-	
-	var refreshFileWasCalled = false;
 
 	override setUp() throws Exception {
 		super.setUp()
@@ -49,9 +48,9 @@ class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public def void noRefreshWhenOpenningN4JSFileTest() {
-		val content = 'class C {}';		
-		val n4jsFile = createFileWithContent(content)
+	public def void noRefreshWhenOpenningN4JSXFileTest() {
+		val content = '<div/>';		
+		val n4jsxFile = createFileWithContent(content)
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
 		val notificationManager = reflectExtensions.get(workspace, "notificationManager")
 
@@ -64,12 +63,12 @@ class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 			countBroadcastChangeNotificationManager.startup(null)
 
 			// Open the editor
-			n4jsFile.openEditor
+			n4jsxFile.openEditor
 		} finally {
 			// Restore the notification manager
 			reflectExtensions.set(workspace, "notificationManager", notificationManager)
 		}
-		assertEquals("Exactly 1 POST_CHANGE broadcast event should have been triggered.", 1, countBroadcastChangeNotificationManager.numberPostChangeTriggered)	
+		assertEquals("Exactly 1 POST_CHANGE broadcast event should have been triggered.", 1, countBroadcastChangeNotificationManager.numberPostChangeTriggered)
 	}
 
 	def private createN4JSProjectWithXtextNature() {
@@ -79,10 +78,9 @@ class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 			createN4MFFile
 		]
 	}
-	
 
 	def private createFileWithContent(String content) {
-		val file = createFile('''«PROJECT_NAME»/«SRC»/«randomUUID».n4js''', content)
+		val file = createFile('''«PROJECT_NAME»/«SRC»/«randomUUID».n4jsx''', content)
 		file
 	}
 
@@ -104,6 +102,6 @@ class N4JSAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 		}
 	'''
 	override protected getEditorId() {
-		N4JS_EDITOR_ID
+		N4JSX_EDITOR_ID
 	}
 }
