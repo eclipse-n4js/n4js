@@ -283,10 +283,9 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	@Override
 	protected boolean validatePage() {
 		final boolean valid = super.validatePage(); // run default validation
-		final boolean existing = validateIsNotExistingProjectPath(valid); // check if existing project
+		final boolean existing = validateIsExistingProjectPath(valid); // check if existing project
 
 		if (valid && !existing) {
-
 			String errorMsg = null;
 			final String projectName = getProjectName();
 			final String vendorId = projectInfo.getVendorId();
@@ -445,17 +444,17 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	/**
 	 * Checks whether the specified project path points to an existing project.
 	 *
-	 * If so, a hint is displayed ({@link #setShowExistingProjectHint(boolean)}) and further validation is not executed.
-	 * (Return value <code>false</code>)
+	 * If so, a hint is displayed ({@link #setShowExistingProjectHint(boolean)}) and this method returns
+	 * <code>true</code>.
 	 *
 	 * Only shows the hint if the project name is valid.
 	 *
-	 * Returns <code>true</code> otherwise.
+	 * Returns <code>false</code> otherwise.
 	 *
 	 * @param projectNameValid
 	 *            Specifies whether {@link #getProjectName()} returns a valid value.
 	 */
-	private boolean validateIsNotExistingProjectPath(boolean projectNameValid) {
+	private boolean validateIsExistingProjectPath(boolean projectNameValid) {
 		IPath projectLocation = getLocationPath();
 		final String projectName = getProjectName();
 
@@ -488,8 +487,8 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 			setShowExistingProjectHint(projectNameValid && isExistingNonWorkspaceProject);
 		}
 
-		// only validate further if this is not an existing project
-		return !isExistingNonWorkspaceProject;
+		// indicate existing project with return value
+		return isExistingNonWorkspaceProject;
 	}
 
 	/**
