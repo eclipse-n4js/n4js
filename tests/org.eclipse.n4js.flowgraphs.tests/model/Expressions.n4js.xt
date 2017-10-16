@@ -1,0 +1,699 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To very these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+
+function AdditiveExpression() {
+	// AdditiveExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// AdditiveExpression XPECT allIslandElems -->
+	// AdditiveExpression XPECT allCatchBlocks -->
+	/* AdditiveExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 + 2,
+		1 + 2 --> "end"
+	--- */
+	// AdditiveExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 + 2 -> "end"
+	// AdditiveExpression XPECT path from '"start"' to '"end"' -->
+	// AdditiveExpression XPECT allPaths direction 'Backward' --> "end" -> 1 + 2 -> 2 -> 1 -> "start"
+	// AdditiveExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// AdditiveExpression XPECT succs at '"start"' --> 1
+	// AdditiveExpression XPECT succs at '1' --> 2
+	// AdditiveExpression XPECT succs at '2' --> 1 + 2
+	// AdditiveExpression XPECT succs at '1 + 2' --> "end"
+	"start";
+	1 + 2;
+	"end";
+}
+
+function Argument() {
+	// tbd
+}
+
+function ArrayLiteral() {
+	// ArrayLiteral XPECT cfContainer --> FunctionDeclaration::Block
+	// ArrayLiteral XPECT allIslandElems -->
+	// ArrayLiteral XPECT allCatchBlocks -->
+	/* ArrayLiteral XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 3,
+		3 --> [1\,2\,3],
+		[1\,2\,3] --> "end"
+	--- */
+	// ArrayLiteral XPECT allPaths --> "start" -> 1 -> 2 -> 3 -> [1\,2\,3] -> "end"
+	// ArrayLiteral XPECT path from '"start"' to '"end"' -->
+	// ArrayLiteral XPECT allPaths direction 'Backward' --> "end" -> [1\,2\,3] -> 3 -> 2 -> 1 -> "start"
+	// ArrayLiteral XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ArrayLiteral XPECT succs at '"start"' --> 1
+	// ArrayLiteral XPECT succs at '1' --> 2
+	// ArrayLiteral XPECT succs at '2' --> 3
+	// ArrayLiteral XPECT succs at '3' --> [1\,2\,3]
+	// ArrayLiteral XPECT succs at '[1,2,3]' --> "end"
+	"start";
+	[1,2,3];
+	"end";
+}
+
+function AssignmentExpression(x:int) {
+	// AssignmentExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// AssignmentExpression XPECT allIslandElems -->
+	// AssignmentExpression XPECT allCatchBlocks -->
+	/* AssignmentExpression XPECT allEdges ---
+		"start" --> x,
+		x --> 1,
+		1 --> x = 1,
+		x = 1 --> "end"
+	--- */
+	// AssignmentExpression XPECT allPaths --> "start" -> x -> 1 -> x = 1 -> "end"
+	// AssignmentExpression XPECT path from '"start"' to '"end"' -->
+	// AssignmentExpression XPECT allPaths direction 'Backward' --> "end" -> x = 1 -> 1 -> x -> "start"
+	// AssignmentExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// AssignmentExpression XPECT succs at '"start"' --> x
+	// AssignmentExpression XPECT succs at 'x' --> 1
+	// AssignmentExpression XPECT succs at '1' --> x = 1
+	// AssignmentExpression XPECT succs at 'x = 1' --> "end"
+	"start";
+	x = 1;
+	"end";
+}
+
+async function AwaitExpression() {
+	// AwaitExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// AwaitExpression XPECT allIslandElems -->
+	// AwaitExpression XPECT allCatchBlocks -->
+	/* AwaitExpression XPECT allEdges ---
+		"start" --> null,
+		null --> await null,
+		await null --> "end"
+	--- */
+	// AwaitExpression XPECT allPaths --> "start" -> null -> await null -> "end"
+	// AwaitExpression XPECT path from '"start"' to '"end"' -->
+	// AwaitExpression XPECT allPaths direction 'Backward' --> "end" -> await null -> null -> "start"
+	// AwaitExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// AwaitExpression XPECT succs at '"start"' --> null
+	// AwaitExpression XPECT succs at 'null' --> await null
+	// AwaitExpression XPECT succs at 'await null' --> "end"
+	"start";
+	// AwaitExpression XPECT warnings --> "await should not be used on 'null' since it has no effect here." at "await null"
+	await null;
+	"end";
+}
+
+function BinaryBitwiseExpression() {
+	// BinaryBitwiseExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// BinaryBitwiseExpression XPECT allIslandElems -->
+	// BinaryBitwiseExpression XPECT allCatchBlocks -->
+	/* BinaryBitwiseExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 & 2,
+		1 & 2 --> "end"
+	--- */
+	// BinaryBitwiseExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 & 2 -> "end"
+	// BinaryBitwiseExpression XPECT path from '"start"' to '"end"' -->
+	// BinaryBitwiseExpression XPECT allPaths direction 'Backward' --> "end" -> 1 & 2 -> 2 -> 1 -> "start"
+	// BinaryBitwiseExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// BinaryBitwiseExpression XPECT succs at '"start"' --> 1
+	// BinaryBitwiseExpression XPECT succs at '1' --> 2
+	// BinaryBitwiseExpression XPECT succs at '2' --> 1 & 2
+	// BinaryBitwiseExpression XPECT succs at '1 & 2' --> "end"
+	"start";
+	1 & 2;
+	"end";
+}
+
+function BinaryLogicalExpression() {
+	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// BinaryLogicalExpression XPECT allIslandElems -->
+	// BinaryLogicalExpression XPECT allCatchBlocks -->
+	/* BinaryLogicalExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 1 && 2,
+		2 --> 1 && 2,
+		1 && 2 --> "end"
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths ---
+		"start" -> 1 -> 1 && 2 -> "end",
+		"start" -> 1 -> 2 -> 1 && 2 -> "end"
+	--- */
+	/* BinaryLogicalExpression XPECT allPaths direction 'Backward' ---
+		"end" -> 1 && 2 -> 1 -> "start",
+		"end" -> 1 && 2 -> 2 -> 1 -> "start"
+	--- */
+	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
+	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
+	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
+	// BinaryLogicalExpression XPECT succs at '2' --> 1 && 2
+	// BinaryLogicalExpression XPECT succs at '1 && 2' --> "end"
+	"start";
+	1 && 2;
+	"end";
+}
+
+function CastExpression() {
+	// CastExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// CastExpression XPECT allIslandElems -->
+	// CastExpression XPECT allCatchBlocks -->
+	/* CastExpression XPECT allEdges ---
+		"start" --> 4 ,
+		4 --> 4 as int,
+		4 as int --> "end"
+	--- */
+	// CastExpression XPECT allPaths --> "start" -> 4 -> 4 as int -> "end"
+	// CastExpression XPECT path from '"start"' to '"end"' -->
+	// CastExpression XPECT allPaths direction 'Backward' --> "end" -> 4 as int -> 4 -> "start"
+	// CastExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// CastExpression XPECT succs at '"start"' --> 4
+	// CastExpression XPECT succs at '4' --> 4 as int
+	// CastExpression XPECT succs at '4 as int' --> "end"
+	"start";
+	// CastExpression XPECT warnings --> "Unnecessary cast from int to int" at "4 as int"
+	4 as int;
+	"end";
+}
+
+function CommaExpression() {
+	// CommaExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// CommaExpression XPECT allIslandElems -->
+	// CommaExpression XPECT allCatchBlocks -->
+	/* CommaExpression XPECT allEdges ---
+	"start" --> 4,
+	4 --> 5,
+	5 --> 4\,5,
+	4\,5 --> "end"
+	--- */
+	// CommaExpression XPECT allPaths --> "start" -> 4 -> 5 -> 4\,5 -> "end"
+	// CommaExpression XPECT path from '"start"' to '"end"' -->
+	// CommaExpression XPECT allPaths direction 'Backward' --> "end" -> 4\,5 -> 5 -> 4 -> "start"
+	// CommaExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// CommaExpression XPECT succs at '"start"' --> 4
+	// CommaExpression XPECT succs at '4' --> 5
+	// CommaExpression XPECT succs at '5' --> 4\,5
+	// CommaExpression XPECT succs at '4,5' --> "end"
+	"start";
+	4,5;
+	"end";
+}
+
+function ConditionalExpression() {
+	// ConditionalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// ConditionalExpression XPECT allIslandElems -->
+	// ConditionalExpression XPECT allCatchBlocks -->
+	/* ConditionalExpression XPECT allEdges ---
+		"start" --> true,
+		true --> 1,
+		true --> 2,
+		1 --> true ? 1 : 2,
+		2 --> true ? 1 : 2,
+		true ? 1 : 2 --> "end"
+	--- */
+	/* ConditionalExpression XPECT allPaths ---
+	"start" -> true -> 1 -> true ? 1 : 2 -> "end",
+	"start" -> true -> 2 -> true ? 1 : 2 -> "end"
+	--- */
+	/* ConditionalExpression XPECT allPaths direction 'Backward' ---
+		"end" -> true ? 1 : 2 -> 1 -> true -> "start",
+		"end" -> true ? 1 : 2 -> 2 -> true -> "start"
+	--- */
+	// ConditionalExpression XPECT path from '"start"' to '"end"' -->
+	// ConditionalExpression XPECT path from '"start"' to '1' -->
+	// ConditionalExpression XPECT path from '"start"' to '2' -->
+	// ConditionalExpression XPECT path from '1' notTo '2' -->
+	// ConditionalExpression XPECT commonPreds of '1' and '2' --> true
+	// ConditionalExpression XPECT commonPreds of '"end"' and '1' --> 1, true
+	// ConditionalExpression XPECT commonPreds of '"end"' and '2' --> 2, true
+	// ConditionalExpression XPECT succs at '"start"' --> true
+	// ConditionalExpression XPECT succs at 'true' --> 1,2
+	// ConditionalExpression XPECT succs at '1' --> true ? 1 : 2
+	// ConditionalExpression XPECT succs at '2' --> true ? 1 : 2
+	// ConditionalExpression XPECT succs at 'true ? 1 : 2' --> "end"
+	"start";
+	// GH-151 ConditionalExpression XPECT FIXME warnings --> "Dispensable use of conditional expression. The expression 'true' always evaluates to true, so only the left-hand side will ever be evaluated." at "true"
+	true ? 1 : 2;
+	"end";
+}
+
+function EqualityExpression() {
+	// EqualityExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// EqualityExpression XPECT allIslandElems -->
+	// EqualityExpression XPECT allCatchBlocks -->
+	/* EqualityExpression XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> 1 == 2,
+		1 == 2 --> "end"
+	--- */
+	// EqualityExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 == 2 -> "end"
+	// EqualityExpression XPECT allPaths direction 'Backward' --> "end" -> 1 == 2 -> 2 -> 1 -> "start"
+	// EqualityExpression XPECT path from '"start"' to '"end"' -->
+	// EqualityExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// EqualityExpression XPECT succs at '"start"' --> 1
+	// EqualityExpression XPECT succs at '1' --> 2
+	// EqualityExpression XPECT succs at '2' --> 1 == 2
+	// EqualityExpression XPECT succs at '1 == 2' --> "end"
+	"start";
+	1 == 2;
+	"end";
+}
+
+function FunctionExpression() {
+	// FunctionExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// FunctionExpression XPECT allIslandElems -->
+	// FunctionExpression XPECT allCatchBlocks -->
+	/* FunctionExpression XPECT allEdges ---
+		"start" --> function() { },
+		function() { } --> (function() { }),
+		(function() { }) --> "end"
+	--- */
+	// FunctionExpression XPECT allPaths --> "start" -> function() { } -> (function() { }) -> "end"
+	// FunctionExpression XPECT allPaths direction 'Backward' --> "end" -> (function() { }) -> function() { } -> "start"
+	// FunctionExpression XPECT path from '"start"' to '"end"' -->
+	// FunctionExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// FunctionExpression XPECT succs at '"start"' --> function() { }
+	// FunctionExpression XPECT succs at 'function() { }' --> (function() { })
+	// FunctionExpression XPECT succs at '(function() { })' --> "end"
+	"start";
+	(function() { });
+	"end";
+}
+
+function IdentifierRef(i) {
+	// IdentifierRef XPECT cfContainer --> FunctionDeclaration::Block
+	// IdentifierRef XPECT allIslandElems -->
+	// IdentifierRef XPECT allCatchBlocks -->
+	/* IdentifierRef XPECT allEdges ---
+		"start" --> i,
+		i --> "end"
+	--- */
+	// IdentifierRef XPECT allPaths --> "start" -> i -> "end"
+	// IdentifierRef XPECT allPaths direction 'Backward' --> "end" -> i -> "start"
+	// IdentifierRef XPECT path from '"start"' to '"end"' -->
+	// IdentifierRef XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// IdentifierRef XPECT succs at '"start"' --> i
+	// IdentifierRef XPECT succs at 'i' --> "end"
+	"start";
+	i;
+	"end";
+}
+
+function IndexedAccessExpression(b : Array<?>) {
+	// IndexedAccessExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// IndexedAccessExpression XPECT allIslandElems -->
+	// IndexedAccessExpression XPECT allCatchBlocks -->
+	/* IndexedAccessExpression XPECT allEdges ---
+		"start" --> b,
+		b --> 1,
+		1 --> b[1],
+		b[1] --> "end"
+	--- */
+	// IndexedAccessExpression XPECT allPaths --> "start" -> b -> 1 -> b[1] -> "end"
+	// IndexedAccessExpression XPECT allPaths direction 'Backward' --> "end" -> b[1] -> 1 -> b -> "start"
+	// IndexedAccessExpression XPECT path from '"start"' to '"end"' -->
+	// IndexedAccessExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// IndexedAccessExpression XPECT succs at '"start"' --> b
+	// IndexedAccessExpression XPECT succs at 'b' --> 1
+	// IndexedAccessExpression XPECT succs at '1' --> b[1]
+	// IndexedAccessExpression XPECT succs at 'b[1]' --> "end"
+	"start";
+	b[1];
+	"end";
+}
+
+function Literal() {
+	// Literal XPECT cfContainer --> FunctionDeclaration::Block
+	// Literal XPECT allIslandElems -->
+	// Literal XPECT allCatchBlocks -->
+	/* Literal XPECT allEdges ---
+		"start" --> "string literal",
+		"string literal" --> "end"
+	--- */
+	// Literal XPECT allPaths --> "start" -> "string literal" -> "end"
+	// Literal XPECT allPaths direction 'Backward' --> "end" -> "string literal" -> "start"
+	// Literal XPECT path from '"start"' to '"end"' -->
+	// Literal XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// Literal XPECT succs at '"start"' --> "string literal"
+	// Literal XPECT succs at '"string literal"' --> "end"
+	"start";
+	"string literal";
+	"end";
+}
+
+function MultiplicativeExpression() {
+	// MultiplicativeExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// MultiplicativeExpression XPECT allIslandElems -->
+	// MultiplicativeExpression XPECT allCatchBlocks -->
+	/* MultiplicativeExpression XPECT allEdges ---
+		"start" --> 47,
+		47 --> 11,
+		11 --> 47 * 11,
+		47 * 11 --> "end"
+	--- */
+	// MultiplicativeExpression XPECT allPaths --> "start" -> 47 -> 11 -> 47 * 11 -> "end"
+	// MultiplicativeExpression XPECT allPaths direction 'Backward' --> "end" -> 47 * 11 -> 11 -> 47 -> "start"
+	// MultiplicativeExpression XPECT path from '"start"' to '"end"' -->
+	// MultiplicativeExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// MultiplicativeExpression XPECT succs at '"start"' --> 47
+	// MultiplicativeExpression XPECT succs at '47' --> 11
+	// MultiplicativeExpression XPECT succs at '11' --> 47 * 11
+	// MultiplicativeExpression XPECT succs at '47 * 11' --> "end"
+	"start";
+	47 * 11;
+	"end";
+}
+
+function N4ClassExpression() {
+	"start";
+	// currently unsupported feature
+	"end";
+}
+
+function NewExpression() {
+	// NewExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// NewExpression XPECT allIslandElems -->
+	// NewExpression XPECT allCatchBlocks -->
+	/* NewExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> new Object(),
+		new Object() --> "end"
+	--- */
+	// NewExpression XPECT allPaths --> "start" -> Object -> new Object() -> "end"
+	// NewExpression XPECT allPaths direction 'Backward' --> "end" -> new Object() -> Object -> "start"
+	// NewExpression XPECT path from '"start"' to '"end"' -->
+	// NewExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// NewExpression XPECT succs at '"start"' --> Object
+	// NewExpression XPECT succs at 'Object' --> new Object()
+	// NewExpression XPECT succs at 'new Object()' --> "end"
+	"start";
+	new Object();
+	"end";
+}
+
+function NewTarget() {
+	"start";
+	// currently unsupported feature
+	"end";
+}
+
+function ObjectLiteral() {
+	// ObjectLiteral XPECT cfContainer --> FunctionDeclaration::Block
+	// ObjectLiteral XPECT allIslandElems -->
+	// ObjectLiteral XPECT allCatchBlocks -->
+	/* ObjectLiteral XPECT allEdges ---
+		"start" --> 1,
+		1 --> "string",
+		"string" --> function(){},
+		function(){} --> { a : 1 \, b : "string" \, fn : function(){} \, m() {} },
+		{ a : 1 \, b : "string" \, fn : function(){} \, m() {} } --> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }),
+		({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }) --> "end"
+	--- */
+	/* ObjectLiteral XPECT allPaths ---
+	   "start" -> 1 -> "string"
+		-> function(){}
+		-> { a : 1 \, b : "string" \, fn : function(){} \, m() {} }
+		-> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} })
+		-> "end"
+	--- */
+	// ObjectLiteral XPECT allPaths direction 'Backward' --> "end" -> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }) -> { a : 1 \, b : "string" \, fn : function(){} \, m() {} } -> function(){} -> "string" -> 1 -> "start"
+	// ObjectLiteral XPECT path from '"start"' to '"end"' -->
+	// ObjectLiteral XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ObjectLiteral XPECT succs at '"start"' --> 1
+	// ObjectLiteral XPECT succs at '1' --> "string"
+	// ObjectLiteral XPECT succs at '"string"' --> function(){}
+	// ObjectLiteral XPECT succs at 'function(){}' --> { a : 1 \, b : "string" \, fn : function(){} \, m() {} }
+	// ObjectLiteral XPECT succs at '{ a : 1 , b : "string" , fn : function(){} , m() {} }' --> ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} })
+	// ObjectLiteral XPECT succs at '({ a : 1 , b : "string" , fn : function(){} , m() {} })' --> "end"
+	"start";
+	({ a : 1 , b : "string" , fn : function(){} , m() {} });
+	"end";
+}
+
+function ParameterizedCallExpression() {
+	// ParameterizedCallExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// ParameterizedCallExpression XPECT allIslandElems -->
+	// ParameterizedCallExpression XPECT allCatchBlocks -->
+	/* ParameterizedCallExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> Object.call,
+		Object.call --> 1,
+		1 --> 2,
+		2 --> Object.call(1\,2),
+		Object.call(1\,2) --> "end"
+	--- */
+	// ParameterizedCallExpression XPECT allPaths --> "start" -> Object -> Object.call -> 1 -> 2 -> Object.call(1\,2) -> "end"
+	// ParameterizedCallExpression XPECT allPaths direction 'Backward' --> "end" -> Object.call(1\,2) -> 2 -> 1 -> Object.call -> Object -> "start"
+	// ParameterizedCallExpression XPECT path from '"start"' to '"end"' -->
+	// ParameterizedCallExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ParameterizedCallExpression XPECT succs at '"start"' --> Object
+	// ParameterizedCallExpression XPECT succs at 'Object' --> Object.call
+	// ParameterizedCallExpression XPECT succs at 'Object.call' --> 1
+	// ParameterizedCallExpression XPECT succs at '1' --> 2
+	// ParameterizedCallExpression XPECT succs at '2' --> Object.call(1\,2)
+	// ParameterizedCallExpression XPECT succs at 'Object.call(1,2)' --> "end"
+	"start";
+	Object.call(1,2);
+	"end";
+}
+
+function ParameterizedPropertyAccessExpression() {
+	// ParameterizedPropertyAccessExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// ParameterizedPropertyAccessExpression XPECT allIslandElems -->
+	// ParameterizedPropertyAccessExpression XPECT allCatchBlocks -->
+	/* ParameterizedPropertyAccessExpression XPECT allEdges ---
+		"start" --> Object,
+		Object --> Object.call,
+		Object.call --> "end"
+	--- */
+	// ParameterizedPropertyAccessExpression XPECT allPaths --> "start" -> Object -> Object.call -> "end"
+	// ParameterizedPropertyAccessExpression XPECT allPaths direction 'Backward' --> "end" -> Object.call -> Object -> "start"
+	// ParameterizedPropertyAccessExpression XPECT path from '"start"' to '"end"' -->
+	// ParameterizedPropertyAccessExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ParameterizedPropertyAccessExpression XPECT succs at '"start"' --> Object
+	// ParameterizedPropertyAccessExpression XPECT succs at 'Object' --> Object.call
+	// ParameterizedPropertyAccessExpression XPECT succs at 'Object.call' --> "end"
+	"start";
+	Object.call;
+	"end";
+}
+
+function PostfixExpression(x : int) {
+	// PostfixExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// PostfixExpression XPECT allIslandElems -->
+	// PostfixExpression XPECT allCatchBlocks -->
+	/* PostfixExpression XPECT allEdges ---
+		"start" --> x,
+		x --> x++,
+		x++ --> "end"
+	--- */
+	// PostfixExpression XPECT allPaths --> "start" -> x -> x++ -> "end"
+	// PostfixExpression XPECT allPaths direction 'Backward' --> "end" -> x++ -> x -> "start"
+	// PostfixExpression XPECT path from '"start"' to '"end"' -->
+	// PostfixExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// PostfixExpression XPECT succs at '"start"' --> x
+	// PostfixExpression XPECT succs at 'x' --> x++
+	// PostfixExpression XPECT succs at 'x++' --> "end"
+	"start";
+	x++;
+	"end";
+}
+
+function PrimaryExpression() {
+	"start";
+	// tbd
+	"end";
+}
+
+function PromisifyExpression() {
+	"start";
+	// tbd
+	"end";
+}
+
+function RelationalExpression() {
+	// RelationalExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// RelationalExpression XPECT allIslandElems -->
+	// RelationalExpression XPECT allCatchBlocks -->
+	/* RelationalExpression XPECT allEdges ---
+	"start" --> 1,
+	1 --> 73,
+	73 --> 1 > 73,
+	1 > 73 --> "end"
+	--- */
+	// RelationalExpression XPECT allPaths --> "start" -> 1 -> 73 -> 1 > 73 -> "end"
+	// RelationalExpression XPECT allPaths direction 'Backward' --> "end" -> 1 > 73 -> 73 -> 1 -> "start"
+	// RelationalExpression XPECT path from '"start"' to '"end"' -->
+	// RelationalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// RelationalExpression XPECT succs at '"start"' --> 1
+	// RelationalExpression XPECT succs at '1' --> 73
+	// RelationalExpression XPECT succs at '73' --> 1 > 73
+	// RelationalExpression XPECT succs at '1 > 73' --> "end"
+	"start";
+	1 > 73;
+	"end";
+}
+
+function ShiftExpression() {
+	// ShiftExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// ShiftExpression XPECT allIslandElems -->
+	// ShiftExpression XPECT allCatchBlocks -->
+	/* ShiftExpression XPECT allEdges ---
+		"start" --> 847,
+		847 --> 2,
+		2 --> 847 >> 2,
+		847 >> 2 --> "end"
+	--- */
+	// ShiftExpression XPECT allPaths --> "start" -> 847 -> 2 -> 847 >> 2 -> "end"
+	// ShiftExpression XPECT allPaths direction 'Backward' --> "end" -> 847 >> 2 -> 2 -> 847 -> "start"
+	// ShiftExpression XPECT path from '"start"' to '"end"' -->
+	// ShiftExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ShiftExpression XPECT succs at '"start"' --> 847
+	// ShiftExpression XPECT succs at '847' --> 2
+	// ShiftExpression XPECT succs at '2' --> 847 >> 2
+	// ShiftExpression XPECT succs at '847 >> 2' --> "end"
+	"start";
+	847 >> 2;
+	"end";
+}
+
+class ClassSuperLiteral {
+	// SuperLiteral XPECT warnings --> "Method names should start with lower case letter." at "SuperLiteral"
+	SuperLiteral() {
+		// ClassSuperLiteral  XPECT cfContainer --> N4MethodDeclaration::Block
+		// ClassSuperLiteral  XPECT allIslandElems -->
+		// ClassSuperLiteral  XPECT allCatchBlocks -->
+		/* ClassSuperLiteral XPECT allEdges ---
+			"start" --> super,
+			super --> "end"
+		--- */
+		// ClassSuperLiteral XPECT allPaths --> "start" -> super -> "end"
+		// ClassSuperLiteral XPECT allPaths direction 'Backward' --> "end" -> super -> "start"
+		// ClassSuperLiteral XPECT path from '"start"' to '"end"' -->
+		// ClassSuperLiteral XPECT commonPreds of '"start"' and '"end"' --> "start"
+		// ClassSuperLiteral XPECT succs at '"start"' --> super
+		// ClassSuperLiteral XPECT succs at 'super' --> "end"
+		"start";
+		// ClassSuperLiteral XPECT errors --> "Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+		super;
+		"end";
+	}
+}
+
+function TaggedTemplateString() {
+	"start";
+	// currently unsupported feature
+	"end";
+}
+
+function TemplateExpression() {
+	// TemplateExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// TemplateExpression XPECT allIslandElems -->
+	// TemplateExpression XPECT allCatchBlocks -->
+	/* TemplateExpression XPECT allEdges ---
+		"start" --> `a ${,
+		`a ${ --> "b",
+		"b" --> c`,
+		c` --> `a ${"b"} c`,
+		`a ${"b"} c` --> "end"
+	--- */
+	// TemplateExpression XPECT allPaths --> "start" -> `a ${ -> "b" -> c` -> `a ${"b"} c` -> "end"
+	// TemplateExpression XPECT allPaths direction 'Backward' --> "end" -> `a ${"b"} c` ->  c` -> "b" -> `a ${ -> "start"
+	// TemplateExpression XPECT path from '"start"' to '"end"' -->
+	// TemplateExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// TemplateExpression XPECT succs at '"start"' --> `a ${
+	// TemplateExpression XPECT succs at 'a ${' --> "b"
+	// TemplateExpression XPECT succs at '"b"' -->  c`
+	// TemplateExpression XPECT succs at ' c`' --> `a ${"b"} c`
+	// TemplateExpression XPECT succs at '`a ${"b"} c`' --> "end"
+	"start";
+	`a ${"b"} c`;
+	"end";
+}
+
+function ThisExpression() {
+	// ThisExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// ThisExpression XPECT allIslandElems -->
+	// ThisExpression XPECT allCatchBlocks -->
+	/* ThisExpression XPECT allEdges ---
+		"start" --> this,
+		this --> "end"
+	--- */
+	// ThisExpression XPECT allPaths --> "start" -> this -> "end"
+	// ThisExpression XPECT allPaths direction 'Backward' --> "end" -> this -> "start"
+	// ThisExpression XPECT path from '"start"' to '"end"' -->
+	// ThisExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// ThisExpression XPECT succs at '"start"' --> this
+	// ThisExpression XPECT succs at 'this' --> "end"
+	"start";
+	this;
+	"end";
+}
+
+
+function UnaryExpression() {
+	// UnaryExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// UnaryExpression XPECT allIslandElems -->
+	// UnaryExpression XPECT allCatchBlocks -->
+	/* UnaryExpression XPECT allEdges ---
+	"start" --> true,
+		true --> !true,
+		!true --> "end"
+	--- */
+	// UnaryExpression XPECT allPaths --> "start" -> true -> !true -> "end"
+	// UnaryExpression XPECT allPaths direction 'Backward' --> "end" -> !true -> true -> "start"
+	// UnaryExpression XPECT path from '"start"' to '"end"' -->
+	// UnaryExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// UnaryExpression XPECT succs at '"start"' --> true
+	// UnaryExpression XPECT succs at 'true' --> !true
+	// UnaryExpression XPECT succs at '!true' --> "end"
+	"start";
+	!true;
+	"end";
+}
+
+function * YieldExpression(i) {
+	// YieldExpression XPECT cfContainer --> FunctionDeclaration::Block
+	// YieldExpression XPECT allIslandElems -->
+	// YieldExpression XPECT allCatchBlocks -->
+	/* YieldExpression XPECT allEdges ---
+		"start" --> i,
+		i --> 1,
+		1 --> yield 1,
+		yield 1 --> i = yield 1,
+		i = yield 1 --> "end"
+	--- */
+	// YieldExpression XPECT allPaths --> "start" -> i -> 1 -> yield 1 -> i = yield 1 -> "end"
+	// YieldExpression XPECT allPaths direction 'Backward' --> "end" -> i = yield 1 -> yield 1 -> 1 -> i -> "start"
+	// YieldExpression XPECT path from '"start"' to '"end"' -->
+	// YieldExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
+	// YieldExpression XPECT succs at '"start"' --> i
+	// YieldExpression XPECT succs at 'i' --> 1
+	// YieldExpression XPECT succs at '1' --> yield 1
+	// YieldExpression XPECT succs at 'yield 1' --> i = yield 1
+	// YieldExpression XPECT succs at 'i = yield 1' --> "end"
+	"start";
+	i = yield 1;
+	"end";
+}

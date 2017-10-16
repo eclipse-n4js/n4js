@@ -57,6 +57,7 @@ import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback
+import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider
 import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport
@@ -90,6 +91,7 @@ import org.eclipse.n4js.ui.quickfix.N4JSIssue
 import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator
 import org.eclipse.n4js.ui.resource.OutputFolderAwareResourceServiceProvider
 import org.eclipse.n4js.ui.search.LabellingReferenceFinder
+import org.eclipse.n4js.ui.search.N4JSEditorResourceAccess
 import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker
@@ -120,6 +122,7 @@ import org.eclipse.xtext.ui.editor.contentassist.FQNPrefixMatcher.LastSegmentFin
 import org.eclipse.xtext.ui.editor.contentassist.IContentAssistantFactory
 import org.eclipse.xtext.ui.editor.contentassist.PrefixMatcher
 import org.eclipse.xtext.ui.editor.doubleClicking.DoubleClickStrategyProvider
+import org.eclipse.xtext.ui.editor.findrefs.EditorResourceAccess
 import org.eclipse.xtext.ui.editor.findrefs.IReferenceFinder
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter
@@ -129,6 +132,7 @@ import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkLabelProvider
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparator
@@ -635,5 +639,15 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 
 	override Class<? extends IComparator> bindOutlineFilterAndSorter$IComparator() {
 		return MetaTypeAwareComparator;
+	}
+
+	/** Custom EditorResourceAccess as a fix for GH-234 */
+	def Class<? extends EditorResourceAccess> bindEditorResourceAccess() {
+		return N4JSEditorResourceAccess;
+	}
+
+	/** Workaround for the problem: file is refreshed when opened */
+	def Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+		return AvoidRefreshDocumentProvider;
 	}
 }

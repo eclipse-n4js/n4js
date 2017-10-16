@@ -12,9 +12,11 @@ package org.eclipse.n4js.typesbuilder
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
 import org.eclipse.n4js.n4JS.FunctionExpression
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.TFunction
 import org.eclipse.n4js.ts.types.TModule
@@ -32,7 +34,8 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase, int idx) {
-		if (functionDecl.definedType !== null && ! functionDecl.definedType.eIsProxy) {
+		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
 		}
 
@@ -57,7 +60,8 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * @param target the module to which the newly created TFunction is added
 	 */
 	def package void createTFunction(FunctionDeclaration functionDecl, TModule target, boolean preLinkingPhase) {
-		if (functionDecl.definedType !== null && ! functionDecl.definedType.eIsProxy) {
+		val functionDefinedType = functionDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionDeclaration");
 		}
 
@@ -102,7 +106,8 @@ public class N4JSFunctionDefinitionTypesBuilder extends AbstractFunctionDefiniti
 	 * </ol>
 	 */
 	def package void createTFunction(FunctionExpression functionExpr, TModule target, boolean preLinkingPhase) {
-		if (functionExpr.definedType !== null && ! functionExpr.definedType.eIsProxy) {
+		val functionDefinedType = functionExpr.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (functionDefinedType !== null && ! functionDefinedType.eIsProxy) {
 			throw new IllegalStateException("TFunction already created for FunctionExpression");
 		}
 

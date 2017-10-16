@@ -79,6 +79,9 @@ final_co.gif								- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.
 ## getter, setter
 function_ovr.gif							- https://github.com/eclipse/cdt/blob/master/debug/org.eclipse.cdt.debug.ui/icons/ovr16/function_ovr.gif
 function_inv_ovr.gif						- https://github.com/eclipse/cdt/blob/master/debug/org.eclipse.cdt.debug.ui/icons/ovr16/function_ovr.gif
+## other
+tiny_clock_ovr.gif							- modified version of
+											  http://git.eclipse.org/c/uml2/org.eclipse.uml2.git/tree/plugins/org.eclipse.uml2.uml.edit/icons/full/obj16/TimeEvent.gif
 
 # folder
 new_source_folder.png						- https://github.com/eclipse/eclipse.jdt.ui/blob/master/org.eclipse.jdt.ui/icons/full/elcl16/add_as_source_folder.png

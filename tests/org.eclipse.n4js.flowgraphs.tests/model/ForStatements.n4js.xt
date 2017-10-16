@@ -1,0 +1,752 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To very these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+
+function ForStatement1() {
+	// ForStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement1 XPECT allIslandElems -->
+	// ForStatement1 XPECT allCatchBlocks -->
+	/* ForStatement1 XPECT allEdges ---
+		"start" --> ;,
+		; -Repeat-> ;
+	--- */
+	// ForStatement1 XPECT allPaths --> "start" -> ; -> ; -> ;
+	// ForStatement1 XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement1 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement1 XPECT path from '"start"' to ' ;' -->
+	// ForStatement1 XPECT path from ' ;' to ' ;' -->
+	// ForStatement1 XPECT commonPreds of ' ;' and '"end"' -->
+	// ForStatement1 XPECT commonPreds of ' ;' and '"start"' --> "start"
+	// ForStatement1 XPECT succs at '"start"' --> ;
+	// ForStatement1 XPECT succs at ' ;' --> ;
+	// ForStatement1 XPECT preds at 'for' --> "start"
+	// ForStatement1 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;) ;
+	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+function ForStatement2() {
+	// ForStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement2 XPECT allIslandElems -->
+	// ForStatement2 XPECT allCatchBlocks -->
+	/* ForStatement2 XPECT allEdges ---
+		"start" --> 5,
+		5 -Repeat-> 5
+	--- */
+	// ForStatement2 XPECT allPaths --> "start" -> 5 -> 5 -> 5
+	// ForStatement2 XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement2 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement2 XPECT path from '"start"' to '5' -->
+	// ForStatement2 XPECT path from '5' to '5' -->
+	// ForStatement2 XPECT commonPreds of '5' and '"end"' -->
+	// ForStatement2 XPECT commonPreds of '5' and '"start"' --> "start"
+	// ForStatement2 XPECT succs at '"start"' --> 5
+	// ForStatement2 XPECT succs at '5' --> 5
+	// ForStatement2 XPECT preds at 'for' --> "start"
+	// ForStatement2 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;) 5;
+	// ForStatement2 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+function ForStatement3() {
+	// ForStatement3 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement3 XPECT allIslandElems -->
+	// ForStatement3 XPECT allCatchBlocks -->
+	/* ForStatement3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 -Repeat-> 5,
+		5 --> 3,
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatement3 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatement3 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5
+	--- */
+	// ForStatement3 XPECT path from '"start"' to '"end"' -->
+	// ForStatement3 XPECT path from '3' to '2' -->
+	// ForStatement3 XPECT commonPreds of '5' and '"end"' --> 2, 5
+	// ForStatement3 XPECT commonPreds of '2' and '3' --> 2, 3
+	// ForStatement3 XPECT succs at '"start"' --> 1
+	// ForStatement3 XPECT succs at '1' --> 2
+	// ForStatement3 XPECT succs at '2' --> 5, "end"
+	// ForStatement3 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement3 XPECT succs at '5' --> 3
+	// ForStatement3 XPECT succs at '3' --> 2
+	// ForStatement3 XPECT preds at 'for' --> "start"
+	// ForStatement3 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;2;3) 5;
+	"end";
+}
+
+function ForStatement4() {
+	// ForStatement4 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement4 XPECT allIslandElems -->
+	// ForStatement4 XPECT allCatchBlocks -->
+	/* ForStatement4 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 5,
+		5 --> 3,
+		3 -Repeat-> 5
+	--- */
+	// ForStatement4 XPECT allPaths --> "start" -> 1 -> 5 -> 3 -> 5 -> 3 -> 5 -> 3
+	// ForStatement4 XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement4 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement4 XPECT path from '3' to '5' -->
+	// ForStatement4 XPECT commonPreds of '1' and '3' --> 1
+	// ForStatement4 XPECT commonPreds of '5' and '3' --> 3, 5
+	// ForStatement4 XPECT commonPreds of '5' and '"end"' -->
+	// ForStatement4 XPECT succs at '"start"' --> 1
+	// ForStatement4 XPECT succs at '1' --> 5
+	// ForStatement4 XPECT succs at '5' --> 3
+	// ForStatement4 XPECT succs type 'Repeat' at '3' --> 5
+	// ForStatement4 XPECT preds at 'for' --> "start"
+	// ForStatement4 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;;3) 5;
+	// ForStatement4 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+function ForStatement5() {
+	// ForStatement5 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement5 XPECT allIslandElems -->
+	// ForStatement5 XPECT allCatchBlocks -->
+	/* ForStatement5 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 -Repeat-> 5,
+		5 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatement5 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 2 -> "end",
+		"start" -> 1 -> 2 -> 5 -> 2 -> 5 -> 2 -> "end"
+	--- */
+	/* ForStatement5 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 1 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 5
+	--- */
+	// ForStatement5 XPECT path from '"start"' to '"end"' -->
+	// ForStatement5 XPECT path from '5' to '"end"' -->
+	// ForStatement5 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement5 XPECT commonPreds of '"end"' and '5' --> 2, 5
+	// ForStatement5 XPECT succs at '"start"' --> 1
+	// ForStatement5 XPECT succs at '1' --> 2
+	// ForStatement5 XPECT succs at '2' --> 5, "end"
+	// ForStatement5 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement5 XPECT succs at '5' --> 2
+	// ForStatement5 XPECT preds at 'for' --> "start"
+	// ForStatement5 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;2;) 5;
+	"end";
+}
+
+function ForStatement6() {
+	// ForStatement6 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement6 XPECT allIslandElems -->
+	// ForStatement6 XPECT allCatchBlocks -->
+	/* ForStatement6 XPECT allEdges ---
+		"start" --> 2,
+		2 -Repeat-> 5,
+		5 --> 3,
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatement6 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatement6 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5
+	--- */
+	// ForStatement6 XPECT path from '"start"' to '"end"' -->
+	// ForStatement6 XPECT path from '2' to '3' -->
+	// ForStatement6 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement6 XPECT commonPreds of '"end"' and '5' --> 2, 5
+	// ForStatement6 XPECT succs at '"start"' --> 2
+	// ForStatement6 XPECT succs at '2' --> 5, "end"
+	// ForStatement6 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement6 XPECT succs at '5' --> 3
+	// ForStatement6 XPECT succs at '3' --> 2
+	// ForStatement6 XPECT preds at 'for' --> "start"
+	// ForStatement6 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;3) 5;
+	"end";
+}
+
+function ForStatement7() {
+	// ForStatement7 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement7 XPECT allIslandElems -->
+	// ForStatement7 XPECT allCatchBlocks -->
+	/* ForStatement7 XPECT allEdges ---
+		"start" --> 5,
+		5 --> 3,
+		3 -Repeat-> 5
+	--- */
+	// ForStatement7 XPECT allPaths --> "start" -> 5 -> 3 -> 5 -> 3 -> 5 -> 3
+	// ForStatement7 XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement7 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement7 XPECT path from '5' notTo '"end"' -->
+	// ForStatement7 XPECT commonPreds of '5' and '3' --> 3, 5
+	// ForStatement7 XPECT succs at '"start"' --> 5
+	// ForStatement7 XPECT succs at '5' --> 3
+	// ForStatement7 XPECT succs type 'Repeat' at '3' --> 5
+	// ForStatement7 XPECT preds at 'for' --> "start"
+	// ForStatement7 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;3) 5;
+	// ForStatement7 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+function ForStatement8() {
+	// ForStatement8 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement8 XPECT allIslandElems -->
+	// ForStatement8 XPECT allCatchBlocks -->
+	/* ForStatement8 XPECT allEdges ---
+		"start" --> 2,
+		2 -Repeat-> 5,
+		5 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatement8 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> 5 -> 2 -> "end",
+		"start" -> 2 -> 5 -> 2 -> 5 -> 2 -> "end"
+	--- */
+	/* ForStatement8 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 5 -> 2 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> "start",
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 5
+	--- */
+	// ForStatement8 XPECT path from '"start"' to '"end"' -->
+	// ForStatement8 XPECT path from '5' to '"end"' -->
+	// ForStatement8 XPECT commonPreds of '2' and '5' --> 2, 5
+	// ForStatement8 XPECT succs at '"start"' --> 2
+	// ForStatement8 XPECT succs at '2' --> 5, "end"
+	// ForStatement8 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement8 XPECT succs at '5' --> 2
+	// ForStatement8 XPECT preds at 'for' --> "start"
+	// ForStatement8 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;) 5;
+	"end";
+}
+
+function ForStatement9() {
+	// ForStatement9 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatement9 XPECT allIslandElems -->
+	// ForStatement9 XPECT allCatchBlocks -->
+	/* ForStatement9 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 5,
+		5 -Repeat-> 5
+	--- */
+	// ForStatement9 XPECT allPaths --> "start" -> 1 -> 5 -> 5 -> 5
+	// ForStatement9 XPECT allPaths direction 'Backward' --> "end"
+	// ForStatement9 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatement9 XPECT path from '5' notTo '"end"' -->
+	// ForStatement9 XPECT commonPreds of '1' and '5' --> 1
+	// ForStatement9 XPECT commonPreds of '1' and '1' --> 1
+	// ForStatement9 XPECT commonPreds of '5' and '5' --> 5
+	// ForStatement9 XPECT succs at '"start"' --> 1
+	// ForStatement9 XPECT succs at '1' --> 5
+	// ForStatement9 XPECT succs at '5' --> 5
+	// ForStatement9 XPECT preds at 'for' --> "start"
+	// ForStatement9 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;;) 5;
+	// ForStatement9 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+function ForOfStatement1() {
+	// ForOfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForOfStatement1 XPECT allIslandElems -->
+	// ForOfStatement1 XPECT allCatchBlocks -->
+	/* ForOfStatement1 XPECT allEdges ---
+		"start" --> i,
+		i --> 1,
+		1 --> 2,
+		2 --> [1\,2],
+		[1\,2] -Repeat-> 3,
+		[1\,2] --> "end",
+		3 -Repeat-> 3,
+		3 --> "end"
+	--- */
+	/* ForOfStatement1 XPECT allPaths ---
+		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
+	--- */
+	/* ForOfStatement1 XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 3 -> 3,
+		"end" -> 3 -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> i -> "start"
+	--- */
+	// ForOfStatement1 XPECT path from '"start"' to '"end"' -->
+	// ForOfStatement1 XPECT path from '3' to '3' -->
+	// ForOfStatement1 XPECT path from '3' notTo '[1,2]' -->
+	// ForOfStatement1 XPECT commonPreds of '3' and '"end"' --> 3, [1\,2]
+	// ForOfStatement1 XPECT commonPreds of '3' and '[1,2]' --> [1\,2]
+	// ForOfStatement1 XPECT succs at '"start"' --> i
+	// ForOfStatement1 XPECT succs at 'i' --> 1
+	// ForOfStatement1 XPECT succs at '1' --> 2
+	// ForOfStatement1 XPECT succs at '2' --> [1\,2]
+	// ForOfStatement1 XPECT succs type 'Repeat' at '[1,2]' --> 3
+	// ForOfStatement1 XPECT succs at '[1,2]' --> 3, "end"
+	// ForOfStatement1 XPECT succs at '3' --> 3, "end"
+	// ForOfStatement1 XPECT preds at 'for' --> "start"
+	// ForOfStatement1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i of [1,2]) 3;
+	"end";
+}
+
+function ForOfStatement2(x) {
+	// ForOfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForOfStatement2 XPECT allIslandElems -->
+	// ForOfStatement2 XPECT allCatchBlocks -->
+	/* ForOfStatement2 XPECT allEdges ---
+		"start" --> x,
+		x --> 1,
+		1 --> 2,
+		2 --> [1\,2],
+		[1\,2] -Repeat-> 5,
+		[1\,2] --> "end",
+		5 --> "end",
+		5 -Repeat-> 5
+	--- */
+	/* ForOfStatement2 XPECT allPaths ---
+		"start" -> x -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> "end",
+		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> 5 -> "end"
+	--- */
+	/* ForOfStatement2 XPECT allPaths direction 'Backward' ---
+		"end" -> 5 -> 5 -> 5,
+		"end" -> 5 -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
+		"end" -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> x -> "start"
+	--- */
+	// ForOfStatement2 XPECT path from '"start"' to '"end"' -->
+	// ForOfStatement2 XPECT path from 'x' to '5' -->
+	// ForOfStatement2 XPECT commonPreds of 'x' and '5' --> x
+	// ForOfStatement2 XPECT succs at '"start"' --> x
+	// ForOfStatement2 XPECT succs at 'x' --> 1
+	// ForOfStatement2 XPECT succs at '1' --> 2
+	// ForOfStatement2 XPECT succs at '2' --> [1\,2]
+	// ForOfStatement2 XPECT succs at '[1,2]' --> "end", 5
+	// ForOfStatement2 XPECT succs at '5' --> "end", 5
+	// ForOfStatement2 XPECT succs type 'Repeat' at '[1,2]' --> 5
+	// ForOfStatement2 XPECT preds at 'for' --> "start"
+	// ForOfStatement2 XPECT succs at 'for' --> "end"
+	"start";
+	for (x of [1,2]) 5;
+	"end";
+}
+
+function ForInStatement1() {
+	// ForInStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForInStatement1 XPECT allIslandElems -->
+	// ForInStatement1 XPECT allCatchBlocks -->
+	/* ForInStatement1 XPECT allEdges ---
+		"start" --> i,
+		i --> 1,
+		1 --> 2,
+		2 --> [1\,2],
+		[1\,2] -Repeat-> 3,
+		[1\,2] --> "end",
+		3 -Repeat-> 3,
+		3 --> "end"
+	--- */
+	/* ForInStatement1 XPECT allPaths ---
+		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> "end",
+		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
+	--- */
+	/* ForInStatement1 XPECT allPaths direction 'Backward' ---
+		"end" -> 3 -> 3 -> 3,
+		"end" -> 3 -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
+		"end" -> [1\,2] -> 2 -> 1 -> i -> "start"
+	--- */
+	// ForInStatement1 XPECT path from '"start"' to '"end"' -->
+	// ForInStatement1 XPECT path from '3' to '3' -->
+	// ForInStatement1 XPECT path from '3' notTo '[1,2]' -->
+	// ForInStatement1 XPECT commonPreds of '3' and '"end"' --> 3, [1\,2]
+	// ForInStatement1 XPECT commonPreds of '3' and '[1,2]' --> [1\,2]
+	// ForInStatement1 XPECT succs at '"start"' --> i
+	// ForInStatement1 XPECT succs at 'i' --> 1
+	// ForInStatement1 XPECT succs at '1' --> 2
+	// ForInStatement1 XPECT succs at '2' --> [1\,2]
+	// ForInStatement1 XPECT succs type 'Repeat' at '[1,2]' --> 3
+	// ForInStatement1 XPECT succs at '[1,2]' --> 3, "end"
+	// ForInStatement1 XPECT succs at '3' --> 3, "end"
+	// ForInStatement1 XPECT preds at 'for' --> "start"
+	// ForInStatement1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i in [1,2]) 3;
+	"end";
+}
+
+function ForInStatement2(x) {
+	// ForInStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForInStatement2 XPECT allIslandElems -->
+	// ForInStatement2 XPECT allCatchBlocks -->
+	/* ForInStatement2 XPECT allEdges ---
+		"start" --> x,
+		x --> "Hello",
+		"Hello" --> "end",
+		"Hello" -Repeat-> 5,
+		5 --> "end",
+		5 -Repeat-> 5
+	--- */
+	/* ForInStatement2 XPECT allPaths ---
+		"start" -> x -> "Hello" -> "end",
+		"start" -> x -> "Hello" -> 5 -> "end",
+		"start" -> x -> "Hello" -> 5 -> 5 -> "end"
+	--- */
+	/* ForInStatement2 XPECT allPaths direction 'Backward' ---
+		"end" -> "Hello" -> x -> "start",
+		"end" -> 5 -> "Hello" -> x -> "start",
+		"end" -> 5 -> 5 -> "Hello" -> x -> "start",
+		"end" -> 5 -> 5 -> 5
+	--- */
+	// ForInStatement2 XPECT path from '"start"' to '"end"' -->
+	// ForInStatement2 XPECT path from 'x' to '5' -->
+	// ForInStatement2 XPECT commonPreds of 'x' and '5' --> x
+	// ForInStatement2 XPECT succs at '"start"' --> x
+	// ForInStatement2 XPECT succs at 'x' --> "Hello"
+	// ForInStatement2 XPECT succs at '"Hello"' --> "end", 5
+	// ForInStatement2 XPECT succs at '5' --> "end", 5
+	// ForInStatement2 XPECT succs type 'Repeat' at '"Hello"' --> 5
+	// ForInStatement2 XPECT preds at 'for' --> "start"
+	// ForInStatement2 XPECT succs at 'for' --> "end"
+	"start";
+	for (x in "Hello") 5;
+	"end";
+}
+
+function ForStatementVarDecl1() {
+	// ForStatementVarDecl1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementVarDecl1 XPECT allIslandElems -->
+	// ForStatementVarDecl1 XPECT allCatchBlocks -->
+	/* ForStatementVarDecl1 XPECT allEdges ---
+		"start" --> 0,
+		0 --> i=0,
+		i=0 --> 2,
+		2 -Repeat-> 5,
+		5 --> 3,
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatementVarDecl1 XPECT allPaths ---
+		"start" -> 0 -> i=0 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementVarDecl1 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5,
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> i=0 -> 0 -> "start"
+	--- */
+	// ForStatementVarDecl1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementVarDecl1 XPECT path from 'i=0' to '3' -->
+	// ForStatementVarDecl1 XPECT commonPreds of 'i=0' and '2' --> i=0
+	// ForStatementVarDecl1 XPECT succs at '"start"' --> 0
+	// ForStatementVarDecl1 XPECT succs at '0' --> i=0
+	// ForStatementVarDecl1 XPECT succs at 'i=0' --> 2
+	// ForStatementVarDecl1 XPECT succs at '2' --> 5, "end"
+	// ForStatementVarDecl1 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatementVarDecl1 XPECT succs at '5' --> 3
+	// ForStatementVarDecl1 XPECT succs at '3' --> 2
+	// ForStatementVarDecl1 XPECT preds at 'for' --> "start"
+	// ForStatementVarDecl1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i=0; 2; 3) 5;
+	"end";
+}
+
+function ForStatementVarDecl2() {
+	// ForStatementVarDecl2 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementVarDecl2 XPECT allIslandElems -->
+	// ForStatementVarDecl2 XPECT allCatchBlocks -->
+	/* ForStatementVarDecl2 XPECT allEdges ---
+		"start" --> 0,
+		0 --> i=0,
+		i=0 --> 1,
+		1 --> j=1,
+		j=1 --> 2,
+		2 -Repeat-> 5,
+		5 --> 3,
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatementVarDecl2 XPECT allPaths ---
+		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> "end",
+		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementVarDecl2 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5,
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> 3 -> 5 -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start",
+		"end" -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start"
+	--- */
+	// ForStatementVarDecl2 XPECT path from '"start"' to '"end"' -->
+	// ForStatementVarDecl2 XPECT path from 'i=0' to 'j=1' -->
+	// ForStatementVarDecl2 XPECT commonPreds of 'j=1' and 'i=0' --> i=0
+	// ForStatementVarDecl2 XPECT succs at '"start"' --> 0
+	// ForStatementVarDecl2 XPECT succs at '0' --> i=0
+	// ForStatementVarDecl2 XPECT succs at 'i=0' --> 1
+	// ForStatementVarDecl2 XPECT succs at '1' --> j=1
+	// ForStatementVarDecl2 XPECT succs at 'j=1' --> 2
+	// ForStatementVarDecl2 XPECT succs at '2' --> 5, "end"
+	// ForStatementVarDecl2 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatementVarDecl2 XPECT succs at '5' --> 3
+	// ForStatementVarDecl2 XPECT succs at '3' --> 2
+	// ForStatementVarDecl2 XPECT preds at 'for' --> "start"
+	// ForStatementVarDecl2 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i=0, j=1; 2; 3) 5;
+	"end";
+}
+
+
+
+
+
+function ForStatementBreak1() {
+	// ForStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementBreak1 XPECT allIslandElems -->
+	// ForStatementBreak1 XPECT allCatchBlocks -->
+	/* ForStatementBreak1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 -Repeat-> break;,
+		break; -Break-> "end",
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatementBreak1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> break; -> "end"
+	--- */
+	/* ForStatementBreak1 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3,
+		"end" -> break; -> 2 -> 1 -> "start",
+		"end" -> break; -> 2 -> 3
+	--- */
+	// ForStatementBreak1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementBreak1 XPECT path from '3' to '"end"' -->
+	// ForStatementBreak1 XPECT path from '"start"' notTo '3' -->
+	// ForStatementBreak1 XPECT commonPreds of '3' and '2' --> 3
+	// ForStatementBreak1 XPECT commonPreds of 'break;' and '2' --> 2
+	// ForStatementBreak1 XPECT commonPreds of '"end"' and '3' --> 3
+	// ForStatementBreak1 XPECT succs at '"start"' --> 1
+	// ForStatementBreak1 XPECT succs at '1' --> 2
+	// ForStatementBreak1 XPECT succs at '2' --> break;, "end"
+	// ForStatementBreak1 XPECT succs type 'Repeat' at '2' --> break;
+	// ForStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
+	// ForStatementBreak1 XPECT succs at '3' --> 2
+	// ForStatementBreak1 XPECT preds at 'for' --> "start"
+	// ForStatementBreak1 XPECT succs at 'for' --> "end"
+	"start";
+	// ForStatementBreak1 XPECT warnings --> "Dead code. No execution possible after expression statement." at "3"
+	for (1;2;3) break;
+	"end";
+}
+
+function ForStatementContinue1() {
+	// ForStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementContinue1 XPECT allIslandElems -->
+	// ForStatementContinue1 XPECT allCatchBlocks -->
+	/* ForStatementContinue1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 -Repeat-> continue;,
+		continue; -Continue-> 3,
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatementContinue1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 2 -> continue; -> 3 -> 2 -> "end",
+		"start" -> 1 -> 2 -> continue; -> 3 -> 2 -> continue; -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementContinue1 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 1 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 3 -> continue;
+	--- */
+	// ForStatementContinue1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue1 XPECT path from '3' to '"end"' -->
+	// ForStatementContinue1 XPECT path from '"start"' to '3' -->
+	// ForStatementContinue1 XPECT commonPreds of '3' and '2' --> 2, 3
+	// ForStatementContinue1 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue1 XPECT commonPreds of '"end"' and '3' --> 2, 3
+	// ForStatementContinue1 XPECT succs at '"start"' --> 1
+	// ForStatementContinue1 XPECT succs at '1' --> 2
+	// ForStatementContinue1 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue1 XPECT succs type 'Repeat' at '2' --> continue;
+	// ForStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
+	// ForStatementContinue1 XPECT succs at '3' --> 2
+	// ForStatementContinue1 XPECT preds at 'for' --> "start"
+	// ForStatementContinue1 XPECT succs at 'for' --> "end"
+	"start";
+	for (1;2;3) continue;
+	"end";
+}
+
+function ForStatementContinue2() {
+	// ForStatementContinue2 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementContinue2 XPECT allIslandElems -->
+	// ForStatementContinue2 XPECT allCatchBlocks -->
+	/* ForStatementContinue2 XPECT allEdges ---
+		"start" --> 2,
+		2 -Repeat-> continue;,
+		continue; -Continue-> 3,
+		3 --> 2,
+		2 --> "end"
+	--- */
+	/* ForStatementContinue2 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> continue; -> 3 -> 2 -> "end",
+		"start" -> 2 -> continue; -> 3 -> 2 -> continue; -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementContinue2 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> "start",
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 3 -> continue;
+	--- */
+	// ForStatementContinue2 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue2 XPECT path from '3' to '"end"' -->
+	// ForStatementContinue2 XPECT path from '"start"' to '3' -->
+	// ForStatementContinue2 XPECT commonPreds of '3' and '2' --> 2, 3
+	// ForStatementContinue2 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue2 XPECT commonPreds of '"end"' and '3' --> 2, 3
+	// ForStatementContinue2 XPECT succs at '"start"' --> 2
+	// ForStatementContinue2 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue2 XPECT succs type 'Repeat' at '2' --> continue;
+	// ForStatementContinue2 XPECT succs type 'Continue' at 'continue;' --> 3
+	// ForStatementContinue2 XPECT succs at '3' --> 2
+	// ForStatementContinue2 XPECT preds at 'for' --> "start"
+	// ForStatementContinue2 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;3) continue;
+	"end";
+}
+
+function ForStatementContinue3() {
+	// ForStatementContinue3 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementContinue3 XPECT allIslandElems -->
+	// ForStatementContinue3 XPECT allCatchBlocks -->
+	/* ForStatementContinue3 XPECT allEdges ---
+		"start" --> 2,
+		2 -Repeat-> continue;,
+		continue; -Continue-> 2,
+		2 --> "end"
+	--- */
+	/* ForStatementContinue3 XPECT allPaths ---
+		"start" -> 2 -> "end",
+		"start" -> 2 -> continue; -> 2 -> "end",
+		"start" -> 2 -> continue; -> 2 -> continue; -> 2 -> "end"
+	--- */
+	/* ForStatementContinue3 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> "start",
+		"end" -> 2 -> continue; -> 2 -> "start",
+		"end" -> 2 -> continue; -> 2 -> continue; -> 2 -> "start",
+		"end" -> 2 -> continue; -> 2 -> continue; -> 2 -> continue;
+	--- */
+	// ForStatementContinue3 XPECT path from '"start"' to '"end"' -->
+	// ForStatementContinue3 XPECT path from 'continue;' to '"end"' -->
+	// ForStatementContinue3 XPECT commonPreds of 'continue;' and '2' --> 2, continue;
+	// ForStatementContinue3 XPECT commonPreds of '"end"' and 'continue;' --> 2, continue;
+	// ForStatementContinue3 XPECT succs at '"start"' --> 2
+	// ForStatementContinue3 XPECT succs at '2' --> continue;, "end"
+	// ForStatementContinue3 XPECT succs type 'Repeat' at '2' --> continue;
+	// ForStatementContinue3 XPECT succs type 'Continue' at 'continue;' --> 2
+	// ForStatementContinue3 XPECT succs at 'continue;' --> 2
+	// ForStatementContinue3 XPECT preds at 'for' --> "start"
+	// ForStatementContinue3 XPECT succs at 'for' --> "end"
+	"start";
+	for (;2;) continue;
+	"end";
+}
+
+function ForStatementContinue4() {
+	// ForStatementContinue4 XPECT cfContainer --> FunctionDeclaration::Block
+	// ForStatementContinue4 XPECT allIslandElems -->
+	// ForStatementContinue4 XPECT allCatchBlocks -->
+	/* ForStatementContinue4 XPECT allEdges ---
+		"start" --> continue;,
+		continue; -Continue|Repeat-> continue;
+	--- */
+	/* ForStatementContinue4 XPECT allPaths ---
+		"start" -> continue; -> continue; -> continue;
+	--- */
+	// ForStatementContinue4 XPECT allPaths direction 'Backward' --> "end"
+	// ForStatementContinue4 XPECT path from '"start"' notTo '"end"' -->
+	// ForStatementContinue4 XPECT path from 'continue;' to 'continue;' -->
+	// ForStatementContinue4 XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementContinue4 XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForStatementContinue4 XPECT succs at '"start"' --> continue;
+	// ForStatementContinue4 XPECT succs at 'continue;' --> continue;
+	// ForStatementContinue4 XPECT preds at 'for' --> "start"
+	// ForStatementContinue4 XPECT succs at 'for' --> "end"
+	"start";
+	for (;;) continue;
+	// ForStatementContinue4 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}

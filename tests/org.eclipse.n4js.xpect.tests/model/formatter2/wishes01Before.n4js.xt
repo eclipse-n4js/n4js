@@ -284,6 +284,7 @@ public add(k: any): int {
             console.log("finally");
         }
 
+		// XPECT warnings --> "Dead code. No execution possible after try statement." at "let obj = {             foo: 456,             foo123: 456,             foo13: 456,             foo2331: 456,             foo132: 456         };          return {};"
         let obj = {
             foo: 456,
             foo123: 456,

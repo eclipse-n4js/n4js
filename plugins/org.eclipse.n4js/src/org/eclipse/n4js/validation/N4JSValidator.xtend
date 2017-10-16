@@ -42,6 +42,7 @@ import org.eclipse.n4js.validation.validators.N4JSSuperValidator
 import org.eclipse.n4js.validation.validators.N4JSSyntaxValidator
 import org.eclipse.n4js.validation.validators.N4JSTypeValidator
 import org.eclipse.n4js.validation.validators.N4JSVariableValidator
+import org.eclipse.n4js.validation.validators.ThirdPartyValidator
 import org.eclipse.n4js.validation.validators.UnsupportedFeatureValidator
 import org.eclipse.n4js.xsemantics.validation.InternalTypeSystemValidator
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -97,6 +98,7 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSInjectorCallsitesValidator,
 	N4JSModuleValidator,
 	N4JSDestructureValidator,
+	ThirdPartyValidator,
 	UnsupportedFeatureValidator
 ])
 @Log

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.IterationStatement;
@@ -520,6 +521,11 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 				default: return -1;
 			}
 		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (derivedFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == Statement.class) {
 			switch (derivedFeatureID) {
 				default: return -1;
@@ -552,6 +558,11 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 				default: return -1;
 			}
 		}
+		if (baseClass == ControlFlowElement.class) {
+			switch (baseFeatureID) {
+				default: return -1;
+			}
+		}
 		if (baseClass == Statement.class) {
 			switch (baseFeatureID) {
 				default: return -1;
@@ -580,6 +591,11 @@ public class ForStatementImpl extends VariableDeclarationContainerImpl implement
 	@Override
 	public int eDerivedOperationID(int baseOperationID, Class<?> baseClass) {
 		if (baseClass == ScriptElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
 			switch (baseOperationID) {
 				default: return -1;
 			}

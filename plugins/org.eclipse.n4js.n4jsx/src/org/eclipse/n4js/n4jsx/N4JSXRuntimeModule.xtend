@@ -54,7 +54,6 @@ import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSDerivedStateComputer
 import org.eclipse.n4js.resource.N4JSDescriptionUtils
 import org.eclipse.n4js.resource.N4JSLinker
-import org.eclipse.n4js.resource.N4JSPostProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.resource.N4JSResourceDescription
 import org.eclipse.n4js.resource.N4JSResourceDescriptionManager
@@ -119,6 +118,7 @@ import org.eclipse.xtext.util.OnChangeEvictingCache
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.IssueSeveritiesProvider
+import org.eclipse.n4js.postprocessing.N4JSPostProcessor
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.

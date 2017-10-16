@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.xcore.lib.XcoreCollectionLiterals;
 import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.AnnotableExpression;
 import org.eclipse.n4js.n4JS.Annotation;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -235,6 +236,11 @@ public abstract class AnnotableExpressionImpl extends AnnotableElementImpl imple
 			}
 		}
 		if (baseClass == TypableElement.class) {
+			switch (baseOperationID) {
+				default: return -1;
+			}
+		}
+		if (baseClass == ControlFlowElement.class) {
 			switch (baseOperationID) {
 				default: return -1;
 			}

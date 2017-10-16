@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 
+import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -82,11 +83,24 @@ public abstract class VariableDeclarationOrBindingImpl extends ProxyResolvingEOb
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public Expression getExpression() {
+		// TODO: implement this method
+		// Ensure that you remove @generated or mark it @generated NOT
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	@Override
 	public Object eInvoke(int operationID, EList<?> arguments) throws InvocationTargetException {
 		switch (operationID) {
 			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING___GET_VARIABLE_DECLARATIONS:
 				return getVariableDeclarations();
+			case N4JSPackage.VARIABLE_DECLARATION_OR_BINDING___GET_EXPRESSION:
+				return getExpression();
 		}
 		return super.eInvoke(operationID, arguments);
 	}
