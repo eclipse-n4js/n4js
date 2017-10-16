@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
  * see {@link GraphVisitorInternal}
  */
 abstract public class GraphVisitor extends GraphVisitorInternal {
+
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 

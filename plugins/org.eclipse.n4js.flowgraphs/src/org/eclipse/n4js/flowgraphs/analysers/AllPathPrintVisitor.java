@@ -15,11 +15,11 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor.AllPathPrintExplorer.AllPathPrintWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
+import org.eclipse.n4js.flowgraphs.analyses.PathWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -98,7 +98,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		List<String> pathStrings = new LinkedList<>();
 		for (PathExplorerInternal app : getActivatedExplorers()) {
 			for (PathWalkerInternal ap : app.getAllPaths()) {
-				AllPathPrintWalker printPath = (AllPathPrintWalker) ap;
+				PathWalkerInternal printPath = ap;
 				// pathStrings.add(printPath.getCompleteString());
 				pathStrings.add(" ");
 			}
@@ -106,7 +106,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		return pathStrings;
 	}
 
-	class AllPathPrintExplorer extends PathExplorer {
+	static class AllPathPrintExplorer extends PathExplorer {
 
 		AllPathPrintExplorer() {
 			super(Quantor.ForAllPaths);
@@ -116,54 +116,53 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		protected AllPathPrintWalker firstPathWalker() {
 			return new AllPathPrintWalker();
 		}
-
-		class AllPathPrintWalker extends PathWalker {
-			private String currString = "";
-
-			@Override
-			protected void visit(ControlFlowElement cfe) {
-				currString += FGUtils.getSourceText(cfe);
-			}
-
-			@Override
-			protected void visit(FlowEdge edge) {
-				currString += " -> ";
-			}
-
-			@Override
-			protected AllPathPrintWalker forkPath() {
-				return new AllPathPrintWalker();
-			}
-
-			String getPredString() {
-				String s = "";
-				AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
-				if (pathPred != null)
-					s += pathPred.getPredString();
-				s += currString;
-				return s;
-			}
-
-			String getSuccString() {
-				String s = currString;
-				AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
-				if (pathSucc != null)
-					s += pathSucc.getSuccString();
-				return s;
-			}
-
-			String getCompleteString() {
-				AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
-				AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
-				String s = "";
-				if (pathPred != null)
-					s += pathPred.getPredString();
-				s += currString;
-				if (pathSucc != null)
-					s += pathSucc.getSuccString();
-				return s;
-			}
-		}
 	}
 
+	static class AllPathPrintWalker extends PathWalker {
+		private String currString = "";
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			currString += FGUtils.getSourceText(cfe);
+		}
+
+		@Override
+		protected void visit(FlowEdge edge) {
+			currString += " -> ";
+		}
+
+		@Override
+		protected AllPathPrintWalker forkPath() {
+			return new AllPathPrintWalker();
+		}
+
+		String getPredString() {
+			String s = "";
+			AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
+			if (pathPred != null)
+				s += pathPred.getPredString();
+			s += currString;
+			return s;
+		}
+
+		String getSuccString() {
+			String s = currString;
+			AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
+			if (pathSucc != null)
+				s += pathSucc.getSuccString();
+			return s;
+		}
+
+		String getCompleteString() {
+			AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
+			AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
+			String s = "";
+			if (pathPred != null)
+				s += pathPred.getPredString();
+			s += currString;
+			if (pathSucc != null)
+				s += pathSucc.getSuccString();
+			return s;
+		}
+	}
 }

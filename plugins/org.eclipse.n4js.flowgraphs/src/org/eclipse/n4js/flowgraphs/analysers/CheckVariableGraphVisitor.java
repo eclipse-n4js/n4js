@@ -18,6 +18,8 @@ import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
+import org.eclipse.n4js.flowgraphs.analyses.PathWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -76,9 +78,9 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		return idRefs;
 	}
 
-	class CheckVariablePathExplorer extends PathExplorer {
+	static class CheckVariablePathExplorer extends PathExplorer {
 		final VariableDeclaration varDecl;
-		final List<IdentifierRef> idRefs = new ArrayList<IdentifierRef>();
+		final List<IdentifierRef> idRefs = new ArrayList<>();
 
 		CheckVariablePathExplorer(VariableDeclaration varDecl) {
 			super(Quantor.None);
@@ -90,39 +92,40 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected PathWalker firstPathWalker() {
+		protected PathWalkerInternal firstPathWalker() {
 			return new CheckVariablePathWalker();
 		}
 
-		class CheckVariablePathWalker extends PathWalker {
+	}
 
-			@Override
-			protected PathWalker forkPath() {
-				return new CheckVariablePathWalker();
+	static class CheckVariablePathWalker extends PathWalker {
+
+		@Override
+		protected CheckVariablePathWalker forkPath() {
+			return new CheckVariablePathWalker();
+		}
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			CheckVariablePathExplorer explorer = (CheckVariablePathExplorer) this.getExplorer();
+			if (cfe instanceof IdentifierRef && ((IdentifierRef) cfe).getId() == explorer.varDecl) {
+				explorer.idRefs.add((IdentifierRef) cfe);
 			}
+		}
 
-			@Override
-			protected void visit(ControlFlowElement cfe) {
-				if (cfe instanceof IdentifierRef && ((IdentifierRef) cfe).getId() == varDecl) {
-					idRefs.add((IdentifierRef) cfe);
-				}
-			}
+		@Override
+		protected void visit(FlowEdge edge) {
+			// nothing to do
+		}
 
-			@Override
-			protected void visit(FlowEdge edge) {
-				// nothing to do
-			}
+		@Override
+		protected void terminate() {
+			// nothing to do
+		}
 
-			@Override
-			protected void terminate() {
-				// nothing to do
-			}
-
-			@Override
-			protected void initialize() {
-				// nothing to do
-
-			}
+		@Override
+		protected void initialize() {
+			// nothing to do
 
 		}
 

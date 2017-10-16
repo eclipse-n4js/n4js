@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -224,7 +223,10 @@ abstract public class GraphVisitorInternal {
 		}
 	}
 
-	/** Activates the {@link PathExplorerInternal} that wait for activation. */
+	/**
+	 * Only called from {@link GraphVisitorGuideInternal}. Activates the {@link PathExplorerInternal} that wait for
+	 * activation.
+	 */
 	final List<PathWalkerInternal> activateRequestedPathExplorers() {
 		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
 		for (PathExplorerInternal app : activationRequests) {
@@ -241,6 +243,7 @@ abstract public class GraphVisitorInternal {
 	final void deactivatePathExplorer(PathExplorerInternal pathExplorerInternal) {
 		activeExplorers.remove(pathExplorerInternal);
 	}
+
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
@@ -283,7 +286,7 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** @return all passed {@link PathExplorerInternal}s */
-	final public List<?> getPassed() {
+	final public List<PathExplorerInternal> getPassed() {
 		List<PathExplorerInternal> passedPEI = new LinkedList<>();
 		for (PathExplorerInternal pei : activatedExplorers) {
 			if (pei.isPassed()) {
