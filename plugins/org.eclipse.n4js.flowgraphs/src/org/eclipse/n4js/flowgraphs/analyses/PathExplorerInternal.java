@@ -163,7 +163,7 @@ abstract public class PathExplorerInternal {
 	}
 
 	/** Deactivates all active paths and hence this {@link PathExplorerInternal}. */
-	final protected void deactivateAll() {
+	final public void deactivateAll() {
 		while (!activePaths.isEmpty()) {
 			PathWalkerInternal aPath = activePaths.iterator().next();
 			aPath.deactivate();
@@ -174,6 +174,11 @@ abstract public class PathExplorerInternal {
 	/** @return all paths no matter if they are active or not, or passed or failed. */
 	final public List<PathWalkerInternal> getAllPaths() {
 		return allPaths;
+	}
+
+	/** @return all paths no matter if they are active or not, or passed or failed. */
+	final public Set<PathWalkerInternal> getActivePaths() {
+		return activePaths;
 	}
 
 }

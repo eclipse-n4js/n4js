@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -38,16 +37,18 @@ public class ControlFlowGraphFactory {
 	/** Prints out the {@link ControlFlowEdge}s of the internal graph */
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
+	/** Only needed for sorted sets in function {@link #build(Script)} */
+	static int compareCFEs(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+		return cfe1.hashCode() - cfe2.hashCode();
+	}
+
+	static public int nodeCount = 0;
+	static public int complexNodeCount = 0;
+
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
-		class CFEComparator implements Comparator<ControlFlowElement> {
-			@Override
-			public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-				return cfe1.hashCode() - cfe2.hashCode();
-			}
-		}
-		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(new CFEComparator());
-		TreeSet<Block> cfCatchBlocks = new TreeSet<>(new CFEComparator());
+		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
+		TreeSet<Block> cfCatchBlocks = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
@@ -57,6 +58,12 @@ public class ControlFlowGraphFactory {
 		createJumpEdges(cnMapper);
 
 		FlowGraph cfg = new FlowGraph(cfContainers, cfCatchBlocks, cnMap);
+
+		for (ComplexNode cn : cnMap.values()) {
+			nodeCount += cn.getNodes().size();
+		}
+		complexNodeCount += cnMap.size();
+
 		return cfg;
 	}
 

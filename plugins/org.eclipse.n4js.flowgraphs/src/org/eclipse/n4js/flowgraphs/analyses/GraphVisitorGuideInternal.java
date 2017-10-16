@@ -34,7 +34,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
  * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
  * a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
- * the {@link EdgeGuideInternal} class is used, which stores information about all paths that are currently explored.
+ * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored.
  * The path exploration is done in parallel for every {@link PathExplorerInternal} of every
  * {@link GraphVisitorInternal}.
  */
@@ -132,13 +132,13 @@ public class GraphVisitorGuideInternal {
 
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
-		LinkedList<EdgeGuideInternal> currEdgeGuides = new LinkedList<>();
-		List<EdgeGuideInternal> nextEGs = getFirstEdgeGuides(cn, edgeProvider);
+		LinkedList<EdgeGuide> currEdgeGuides = new LinkedList<>();
+		List<EdgeGuide> nextEGs = getFirstEdgeGuides(cn, edgeProvider);
 		currEdgeGuides.addAll(nextEGs);
 
 		Node lastVisitNode = null;
 
-		for (EdgeGuideInternal currEdgeGuide : currEdgeGuides) {
+		for (EdgeGuide currEdgeGuide : currEdgeGuides) {
 			Node visitNode = currEdgeGuide.getPrevNode();
 			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
 		}
@@ -146,7 +146,7 @@ public class GraphVisitorGuideInternal {
 		while (!currEdgeGuides.isEmpty()) {
 			flowAnalyzer.checkCancelled();
 
-			EdgeGuideInternal currEdgeGuide = currEdgeGuides.removeFirst();
+			EdgeGuide currEdgeGuide = currEdgeGuides.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(currEdgeGuide.edge);
 			alreadyVisitedAndObsolete &= currEdgeGuide.activePaths.isEmpty();
 			if (alreadyVisitedAndObsolete) {
@@ -169,7 +169,7 @@ public class GraphVisitorGuideInternal {
 		return allVisitedNodes;
 	}
 
-	private Node visitNode(Node lastVisitNode, EdgeGuideInternal currEdgeGuide, Node visitNode) {
+	private Node visitNode(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		if (lastVisitNode != null) {
 			callVisitOnEdge(lastVisitNode, currEdgeGuide, visitNode);
 		}
@@ -178,8 +178,8 @@ public class GraphVisitorGuideInternal {
 		return visitNode;
 	}
 
-	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuideInternal, Node)} */
-	private void callVisitOnNode(EdgeGuideInternal currEdgeGuide, Node visitNode) {
+	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuide, Node)} */
+	private void callVisitOnNode(EdgeGuide currEdgeGuide, Node visitNode) {
 		if (!walkerVisitedNodes.contains(visitNode)) {
 			for (GraphVisitorInternal walker : walkers) {
 				walker.callVisit(visitNode);
@@ -203,8 +203,8 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
-	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuideInternal, Node)} */
-	private void callVisitOnEdge(Node lastVisitNode, EdgeGuideInternal currEdgeGuide, Node visitNode) {
+	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
+	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
 			for (GraphVisitorInternal walker : walkers) {
 				walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
@@ -229,10 +229,10 @@ public class GraphVisitorGuideInternal {
 	}
 
 	/**
-	 * Computes the initial set of {@link EdgeGuideInternal}s based on the start {@link ControlFlowEdge}s of the given
+	 * Computes the initial set of {@link EdgeGuide}s based on the start {@link ControlFlowEdge}s of the given
 	 * {@link ComplexNode}.
 	 */
-	private List<EdgeGuideInternal> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
+	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activateRequestedPathExplorers());
@@ -242,10 +242,10 @@ public class GraphVisitorGuideInternal {
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(node);
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
-		List<EdgeGuideInternal> nextEGs = new LinkedList<>();
+		List<EdgeGuide> nextEGs = new LinkedList<>();
 		if (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			EdgeGuideInternal eg = new EdgeGuideInternal(edgeProvider.copy(), nextEdge, activatedPaths);
+			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, activatedPaths);
 			nextEGs.add(eg);
 		}
 
@@ -256,18 +256,18 @@ public class GraphVisitorGuideInternal {
 				PathWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
-			EdgeGuideInternal eg = new EdgeGuideInternal(edgeProvider.copy(), nextEdge, forkedPaths);
+			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
 			nextEGs.add(eg);
 		}
 		return nextEGs;
 	}
 
 	/**
-	 * Computes the next {@link EdgeGuideInternal}s based on the next {@link ControlFlowEdge}s. For memory performance
-	 * reasons, the current {@link EdgeGuideInternal} is reused and its edge is replaced by the next edge.
+	 * Computes the next {@link EdgeGuide}s based on the next {@link ControlFlowEdge}s. For memory performance
+	 * reasons, the current {@link EdgeGuide} is reused and its edge is replaced by the next edge.
 	 */
-	private List<EdgeGuideInternal> getNextEdgeGuides(EdgeGuideInternal currEG) {
-		List<EdgeGuideInternal> nextEGs = new LinkedList<>();
+	private List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
+		List<EdgeGuide> nextEGs = new LinkedList<>();
 		List<ControlFlowEdge> nextEdges = currEG.getNextEdges();
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
@@ -287,7 +287,7 @@ public class GraphVisitorGuideInternal {
 
 			NextEdgesProvider epCopy = currEG.edgeProvider.copy();
 			Set<JumpToken> fbContexts = currEG.finallyBlockContexts;
-			EdgeGuideInternal edgeGuide = new EdgeGuideInternal(epCopy, nextEdge, forkedPaths, fbContexts);
+			EdgeGuide edgeGuide = new EdgeGuide(epCopy, nextEdge, forkedPaths, fbContexts);
 			nextEGs.add(edgeGuide);
 		}
 

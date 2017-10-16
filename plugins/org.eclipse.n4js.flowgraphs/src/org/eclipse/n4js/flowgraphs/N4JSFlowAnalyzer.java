@@ -199,4 +199,16 @@ public class N4JSFlowAnalyzer {
 		return cfg.getCatchBlocksOfContainer(container);
 	}
 
+	public static int getNodeCount() {
+		int nodeCount = ControlFlowGraphFactory.nodeCount;
+		ControlFlowGraphFactory.nodeCount = 0;
+		return nodeCount;
+	}
+
+	public static int getComplexNodeCount() {
+		int nodeCount = ControlFlowGraphFactory.complexNodeCount;
+		ControlFlowGraphFactory.complexNodeCount = 0;
+		return nodeCount;
+	}
+
 }

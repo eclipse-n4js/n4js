@@ -28,24 +28,24 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * The {@link EdgeGuideInternal} keeps track of all {@link PathWalkerInternal}s that are currently exploring a path on
- * that edge. In case an {@link EdgeGuideInternal} has no {@link PathWalkerInternal}s, it might be removed. When an edge
- * of an {@link EdgeGuideInternal} has more than one next edge, the {@link EdgeGuideInternal} will split up and all its
+ * The {@link EdgeGuide} keeps track of all {@link PathWalkerInternal}s that are currently exploring a path on
+ * that edge. In case an {@link EdgeGuide} has no {@link PathWalkerInternal}s, it might be removed. When an edge
+ * of an {@link EdgeGuide} has more than one next edge, the {@link EdgeGuide} will split up and all its
  * {@link PathWalkerInternal}s will fork. If there is only one next edge, the current edge of the
- * {@link EdgeGuideInternal} instance will be replaced.
+ * {@link EdgeGuide} instance will be replaced.
  * <p>
- * The {@link EdgeGuideInternal} keeps track of edges that enter or exit {@link FinallyBlock}s. The reason is, that
+ * The {@link EdgeGuide} keeps track of edges that enter or exit {@link FinallyBlock}s. The reason is, that
  * these e.g. entering edges will determine the correct exiting edges. (Consider that {@link FinallyBlock}s can be
  * entered via a {@link ReturnStatement} and will then exit directly to the next {@link FinallyBlock} or to the end of
  * the method, instead of executing statements that follow the {@link FinallyBlock}.)
  */
-public class EdgeGuideInternal {
+public class EdgeGuide {
 	final NextEdgesProvider edgeProvider;
 	ControlFlowEdge edge;
 	final Set<PathWalkerInternal> activePaths = new HashSet<>();
 	final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 
-	EdgeGuideInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
 		this.edgeProvider = edgeProvider;
 		this.edge = edge;
 		if (edge.finallyPathContext != null) {
@@ -53,11 +53,11 @@ public class EdgeGuideInternal {
 		}
 	}
 
-	EdgeGuideInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths) {
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths) {
 		this(edgeProvider, edge, activePaths, Sets.newHashSet());
 	}
 
-	EdgeGuideInternal(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths,
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths,
 			Set<JumpToken> finallyBlockContexts) {
 
 		this(edgeProvider, edge);
@@ -91,9 +91,9 @@ public class EdgeGuideInternal {
 	 * rules are implemented:
 	 * <ul>
 	 * <li/>If there exists no next edge with a context, then null is returned.
-	 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuideInternal} instance has no
+	 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuide} instance has no
 	 * context that matches with one of the next edges, then all edges without context are returned.
-	 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuideInternal} instance has a context
+	 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuide} instance has a context
 	 * that matches with one of the next edges, the matching edge is returned.
 	 * </ul>
 	 */
@@ -141,6 +141,32 @@ public class EdgeGuideInternal {
 				fbContextFreeEdges.add(nE);
 			}
 		}
-
 	}
+
+	void join(EdgeGuide egi) {
+		for (PathWalkerInternal masterPWI : activePaths) {
+			PathExplorerInternal explorer = masterPWI.getExplorer();
+			Set<PathWalkerInternal> explorersPaths = explorer.getActivePaths();
+			PathWalkerInternal forkedPWI = null;
+			for (PathWalkerInternal forkdPWI : egi.activePaths) {
+				if (explorersPaths.contains(forkdPWI)) {
+					forkedPWI = forkdPWI;
+				}
+			}
+
+			if (forkedPWI != null) {
+				forkedPWI.callJoin(masterPWI);
+				masterPWI.callJoinedWith(forkedPWI);
+				egi.activePaths.remove(forkedPWI);
+			}
+		}
+
+		activePaths.addAll(egi.activePaths);
+	}
+
+	@Override
+	public String toString() {
+		return this.edge.toString();
+	}
+
 }
