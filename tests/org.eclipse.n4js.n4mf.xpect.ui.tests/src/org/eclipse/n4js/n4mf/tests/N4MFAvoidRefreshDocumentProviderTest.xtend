@@ -11,7 +11,6 @@
 package org.eclipse.n4js.n4mf.tests
 
 import com.google.inject.Inject
-import java.lang.reflect.Field
 import org.eclipse.core.internal.resources.Workspace
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.ResourcesPlugin

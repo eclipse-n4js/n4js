@@ -10,23 +10,22 @@
  */
 package org.eclipse.n4js.tests.document
 
-import java.lang.reflect.Field
+import com.google.inject.Inject
 import org.eclipse.core.internal.resources.Workspace
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.n4js.N4JSUiInjectorProvider
+import org.eclipse.n4js.tests.helper.documentprovider.CountPostChangeBroadcastChangeNotificationManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.AbstractEditorTest
+import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static java.util.UUID.randomUUID
 
-import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
 import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
-import org.eclipse.n4js.tests.helper.documentprovider.CountPostChangeBroadcastChangeNotificationManager
-import com.google.inject.Inject
 
 /**
  * This class tests the fix for refresh file problem in XtextDocumentProvider. GH-270.
