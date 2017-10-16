@@ -20,6 +20,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -32,7 +33,7 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class N4JSAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
+class N4JSAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 	@Inject
 	ReflectExtensions reflectExtensions
 
@@ -43,6 +44,7 @@ class N4JSAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
 	
 	var refreshFileWasCalled = false;
 
+	@Before
 	override setUp() throws Exception {
 		super.setUp()
 		createN4JSProjectWithXtextNature

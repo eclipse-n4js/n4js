@@ -8,10 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4jsx.xpect.ui.tests
+package org.eclipse.n4js.n4mf.tests
 
 import com.google.inject.Inject
 import org.eclipse.core.internal.resources.Workspace
+import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.tests.helper.documentprovider.CountPostChangeBroadcastChangeNotificationManager
@@ -28,19 +29,21 @@ import static java.util.UUID.randomUUID
 import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
 
 /**
- * This class tests the fix for refresh N4JSX file problem in XtextDocumentProvider. GH-270.
+ * This class tests the fix for refresh file problem in XtextDocumentProvider. GH-270.
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class N4JSXAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
+class N4MFAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 
 	@Inject
 	ReflectExtensions reflectExtensions
 
-	val N4JSX_EDITOR_ID = 'org.eclipse.n4js.n4jsx.N4JSX'
+	val N4MF_EDITOR_ID = 'org.eclipse.n4js.n4mf.N4MF'
 	val PROJECT_NAME = 'testProject'
 	val MF_FILE = 'manifest.nfmf'
 	val SRC = 'src';
+	
+	var IFile n4mfFile;
 
 	override setUp() throws Exception {
 		super.setUp()
@@ -48,9 +51,9 @@ class N4JSXAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
 	}
 
 	@Test
-	public def void noRefreshWhenOpenningN4JSXFileTest() {
-		val content = '<div/>';		
-		val n4jsxFile = createFileWithContent(content)
+	public def void noRefreshWhenOpenningN4MFFileTest() {
+		val content = 'class C {}';		
+		createFileWithContent(content)
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
 		val notificationManager = reflectExtensions.get(workspace, "notificationManager")
 
@@ -63,12 +66,12 @@ class N4JSXAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
 			countBroadcastChangeNotificationManager.startup(null)
 
 			// Open the editor
-			n4jsxFile.openEditor
+			n4mfFile.openEditor
 		} finally {
 			// Restore the notification manager
 			reflectExtensions.set(workspace, "notificationManager", notificationManager)
 		}
-		assertEquals("Exactly 1 POST_CHANGE broadcast event should have been triggered.", 1, countBroadcastChangeNotificationManager.numberPostChangeTriggered)
+		assertEquals("No POST_CHANGE broadcast event should have been triggered.", 0, countBroadcastChangeNotificationManager.numberPostChangeTriggered)
 	}
 
 	def private createN4JSProjectWithXtextNature() {
@@ -80,28 +83,27 @@ class N4JSXAvoidRefreshDocumentProviderPluginTest extends AbstractEditorTest {
 	}
 
 	def private createFileWithContent(String content) {
-		val file = createFile('''«PROJECT_NAME»/«SRC»/«randomUUID».n4jsx''', content)
-		file
+		createFile('''«PROJECT_NAME»/«SRC»/«randomUUID».n4js''', content)
 	}
 
 	def private createN4MFFile() {
-		createFile('''«PROJECT_NAME»/«MF_FILE»''', MFFileContent.toString);
+		 n4mfFile = createFile('''«PROJECT_NAME»/«MF_FILE»''', getMFFileContent.toString);
 	}
 
 	def private getMFFileContent() '''
-		ProjectId: «PROJECT_NAME»
-		ProjectType: library
-		ProjectVersion: 0.0.1-SNAPSHOT
-		VendorId: org.eclipse.n4js
-		VendorName: 'Eclipse N4JS Project'
-		Output: 'src-gen'
-		Sources {
-			source {
-				'«SRC»'
-			}
-		}
-	'''
+				ProjectId: «PROJECT_NAME»
+				ProjectType: library
+				ProjectVersion: 0.0.1-SNAPSHOT
+				VendorId: org.eclipse.n4js
+				VendorName: 'Eclipse N4JS Project'
+				Output: 'src-gen'
+				Sources {
+					source {
+						'«SRC»'
+					}
+				}
+			'''
 	override protected getEditorId() {
-		N4JSX_EDITOR_ID
+		N4MF_EDITOR_ID
 	}
 }
