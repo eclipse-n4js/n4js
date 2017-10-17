@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4JS;
 
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
@@ -31,7 +30,7 @@ import org.eclipse.emf.ecore.EObject;
  * @model
  * @generated
  */
-public interface BindingElement extends EObject {
+public interface BindingElement extends ControlFlowElement {
 	/**
 	 * Returns the value of the '<em><b>Rest</b></em>' attribute.
 	 * <!-- begin-user-doc -->

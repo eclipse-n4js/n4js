@@ -1,0 +1,446 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file seem similar and redundant but are necessary
+ * since all test methods rely on different algorithms. To very these
+ * algorithms it is important that all test methods are tested with
+ * all supported language features.
+ */
+
+
+// AnnotationList are ignored
+export @Internal public class AnnotationList {}
+
+
+function Block1() {
+	// Block1 XPECT cfContainer --> FunctionDeclaration::Block
+	// Block1 XPECT allIslandElems -->
+	// Block1 XPECT allCatchBlocks -->
+	/* Block1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> "end"
+	--- */
+	// Block1 XPECT allPaths --> "start" -> 1 -> "end"
+	// Block1 XPECT allPaths direction 'Backward' --> "end" -> 1 -> "start"
+	// Block1 XPECT path from '"start"' to '"end"' -->
+	// Block1 XPECT commonPreds of '1' and '"start"' --> "start"
+	// Block1 XPECT succs at '"start"' --> 1
+	// Block1 XPECT succs at '1' --> "end"
+	// Block1 XPECT preds at '{' --> "start"
+	// Block1 XPECT succs at '{' --> "end"
+	"start";
+	{
+		1;
+	}
+	"end";
+}
+
+function Block2() {
+	// Block2 XPECT cfContainer --> FunctionDeclaration::Block
+	// Block2 XPECT allIslandElems -->
+	// Block2 XPECT allCatchBlocks -->
+	/* Block2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end"
+	--- */
+	// Block2 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// Block2 XPECT allPaths direction 'Backward' --> "end" -> 2 -> 1 -> "start"
+	// Block2 XPECT path from '"start"' to '"end"' -->
+	// Block2 XPECT commonPreds of '"start"' and '2' --> "start"
+	// Block2 XPECT succs at '"start"' --> 1
+	// Block2 XPECT succs at '1' --> 2
+	// Block2 XPECT succs at '2' --> "end"
+	// Block2 XPECT preds at '{' --> "start"
+	// Block2 XPECT succs at '{' --> "end"
+	"start";
+	{
+		1;
+		{
+			2;
+		}
+	}
+	"end";
+}
+
+function Block3() {
+	// Block3 XPECT cfContainer --> FunctionDeclaration::Block
+	// Block3 XPECT allIslandElems -->
+	// Block3 XPECT allCatchBlocks -->
+	/* Block3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end"
+	--- */
+	// Block3 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// Block3 XPECT allPaths direction 'Backward' --> "end" -> 2 -> 1 -> "start"
+	// Block3 XPECT path from '"start"' to '"end"' -->
+	// Block3 XPECT commonPreds of '"end"' and '"start"' --> "start"
+	// Block3 XPECT succs at '"start"' --> 1
+	// Block3 XPECT succs at '1' --> 2
+	// Block3 XPECT succs at '2' --> "end"
+	// Block3 XPECT preds at '{' --> "start"
+	// Block3 XPECT succs at '{' --> "end"
+	"start";
+	{
+		{
+			1;
+		}
+		2;
+	}
+	"end";
+}
+
+
+
+function IfStatement1() {
+	// IfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// IfStatement1 XPECT allIslandElems -->
+	// IfStatement1 XPECT allCatchBlocks -->
+	/* IfStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		1 --> 3,
+		2 --> "end",
+		3 --> "end"
+	--- */
+	/* IfStatement1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> 3 -> "end"
+	--- */
+	/* IfStatement1 XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 1 -> "start",
+		"end" -> 3 -> 1 -> "start"
+	--- */
+	// IfStatement1 XPECT path from '"start"' to '"end"' -->
+	// IfStatement1 XPECT path from '"start"' to '2' -->
+	// IfStatement1 XPECT path from '"start"' to '3' -->
+	// IfStatement1 XPECT path from '2' notTo '3' -->
+	// IfStatement1 XPECT commonPreds of '2' and '3' --> 1
+	// IfStatement1 XPECT commonPreds of '"end"' and '2' --> 2, 1
+	// IfStatement1 XPECT commonPreds of '"end"' and '3' --> 3, 1
+	// IfStatement1 XPECT succs at '"start"' --> 1
+	// IfStatement1 XPECT succs at '1' --> 2,3
+	// IfStatement1 XPECT succs at '2' --> "end"
+	// IfStatement1 XPECT succs at '3' --> "end"
+	// IfStatement1 XPECT preds at 'if' --> "start"
+	// IfStatement1 XPECT succs at 'if' --> "end"
+	"start";
+	if (1) 2; else 3;
+	"end";
+}
+
+function IfStatement2() {
+	// IfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// IfStatement2 XPECT allIslandElems -->
+	// IfStatement2 XPECT allCatchBlocks -->
+	/* IfStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end",
+		1 --> "end"
+	--- */
+	/* IfStatement2 XPECT allPaths ---
+		"start" -> 1 -> 2 -> "end",
+		"start" -> 1 -> "end"
+	--- */
+	/* IfStatement2 XPECT allPaths direction 'Backward' ---
+		"end" -> 1 -> "start",
+		"end" -> 2 -> 1 -> "start"
+	--- */
+	// IfStatement2 XPECT path from '"start"' to '"end"' -->
+	// IfStatement2 XPECT path from '"start"' to '2' -->
+	// IfStatement2 XPECT path from '2' to '"end"' -->
+	// IfStatement2 XPECT commonPreds of '1' and '2' --> 1
+	// IfStatement2 XPECT commonPreds of '"end"' and '2' --> 1, 2
+	// IfStatement2 XPECT succs at '"start"' --> 1
+	// IfStatement2 XPECT succs at '1' --> 2,"end"
+	// IfStatement2 XPECT succs at '2' --> "end"
+	// IfStatement2 XPECT preds at 'if' --> "start"
+	// IfStatement2 XPECT succs at 'if' --> "end"
+	"start";
+	if (1) 2;
+	"end";
+}
+
+
+function EmptyStatement() {
+	// EmptyStatement XPECT cfContainer --> FunctionDeclaration::Block
+	// EmptyStatement XPECT allIslandElems -->
+	// EmptyStatement XPECT allCatchBlocks -->
+	/* EmptyStatement XPECT allEdges ---
+		"start" --> ;,
+		; --> "end"
+	--- */
+	// EmptyStatement XPECT allPaths --> "start" -> ; -> "end"
+	// EmptyStatement XPECT allPaths direction 'Backward' --> "end" -> ; -> "start"
+	// EmptyStatement XPECT path from '"start"' to '"end"' -->
+	// EmptyStatement XPECT commonPreds of ' ;' and '"end"' -->  ;
+	// EmptyStatement XPECT succs at '"start"' -->  ;
+	// EmptyStatement XPECT preds at ' ;' --> "start"
+	// EmptyStatement XPECT succs at ' ;' --> "end"
+	"start";
+	 ;
+	"end";
+}
+
+function ReturnStatement1() {
+	// ReturnStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// ReturnStatement1 XPECT allIslandElems -->
+	// ReturnStatement1 XPECT allCatchBlocks -->
+	/* ReturnStatement1 XPECT allEdges ---
+		"start" --> return;
+	--- */
+	// ReturnStatement1 XPECT allPaths --> "start" -> return;
+	// ReturnStatement1 XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+	// ReturnStatement1 XPECT path from '"start"' notTo '"end"' -->
+	// ReturnStatement1 XPECT commonPreds of 'return;' and '"end"' -->
+	// ReturnStatement1 XPECT succs at '"start"' --> return;
+	// ReturnStatement1 XPECT preds at 'return;' --> "start"
+	// ReturnStatement1 XPECT succs at 'return;' -->
+	"start";
+	 return;
+	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	"end";
+}
+
+function ReturnStatement2() : int {
+	// ReturnStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// ReturnStatement2 XPECT allIslandElems -->
+	// ReturnStatement2 XPECT allCatchBlocks -->
+	/* ReturnStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> return 1;
+	--- */
+	// ReturnStatement2 XPECT allPaths --> "start" -> 1 -> return 1;
+	// ReturnStatement2 XPECT allPaths direction 'Backward' --> "end", return 1; -> 1 -> "start"
+	// ReturnStatement2 XPECT path from '"start"' notTo '"end"' -->
+	// ReturnStatement2 XPECT commonPreds of 'return 1;' and '"end"' -->
+	// ReturnStatement2 XPECT succs at '"start"' --> 1
+	// ReturnStatement2 XPECT succs at '1' --> return 1;
+	// ReturnStatement2 XPECT preds at 'return 1;' --> 1
+	// ReturnStatement2 XPECT succs at 'return 1;' -->
+	"start";
+	 return 1;
+	// ReturnStatement2 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	"end";
+}
+
+function ReturnStatement3() {
+	// ReturnStatement3 XPECT cfContainer --> FunctionDeclaration::Block
+	// ReturnStatement3 XPECT allIslandElems -->
+	// ReturnStatement3 XPECT allCatchBlocks -->
+	/* ReturnStatement3 XPECT allEdges ---
+		"start" --> 1,
+		1 --> return;,
+		1 --> "end"
+	--- */
+	/* ReturnStatement3 XPECT allPaths ---
+	   "start" -> 1 -> return;,
+	   "start" -> 1 -> "end"
+	--- */
+	/* ReturnStatement3 XPECT allPaths direction 'Backward' ---
+		"end",
+		"end" -> 1 -> "start",
+		return; -> 1 -> "start"
+	---	*/
+	// ReturnStatement3 XPECT path from '"start"' to '"end"' -->
+	// ReturnStatement3 XPECT path from 'return;' notTo '"end"' -->
+	// ReturnStatement3 XPECT commonPreds of 'return;' and '"end"' --> 1
+	// ReturnStatement3 XPECT succs at '"start"' --> 1
+	// ReturnStatement3 XPECT succs at '1' --> return;, "end"
+	// ReturnStatement3 XPECT preds at 'return;' --> 1
+	// ReturnStatement3 XPECT succs at 'return;' -->
+	"start";
+	if (1) {
+	 	return;
+	}
+	"end";
+}
+
+
+// ReturnStatement4 XPECT warnings --> "Variable names should start with lower case letter." at "ReturnStatement4"
+let ReturnStatement4 = function() {
+	// ReturnStatement4 XPECT cfContainer --> FunctionExpression::Block
+	// ReturnStatement4 XPECT allIslandElems -->
+	// ReturnStatement4 XPECT allCatchBlocks -->
+	/* ReturnStatement4 XPECT allEdges ---
+		"start" --> return;
+	--- */
+	// ReturnStatement4 XPECT allPaths --> "start" -> return;
+	// ReturnStatement4 XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+	// ReturnStatement4 XPECT path from '"start"' notTo '"end"' -->
+	// ReturnStatement4 XPECT commonPreds of 'return;' and '"end"' -->
+	// ReturnStatement4 XPECT succs at '"start"' --> return;
+	// ReturnStatement4 XPECT preds at 'return;' --> "start"
+	// ReturnStatement4 XPECT succs at 'return;' -->
+	"start";
+	return;
+	// ReturnStatement4 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	"end";
+};
+
+
+class ReturnStatement5 {
+    get getterReturnStatement5() {
+		// ReturnStatement5 XPECT cfContainer --> N4GetterDeclaration::Block
+		// ReturnStatement5 XPECT allIslandElems -->
+		// ReturnStatement5 XPECT allCatchBlocks -->
+    	/* ReturnStatement5 XPECT allEdges ---
+			"start" --> return;
+		--- */
+		// ReturnStatement5 XPECT allPaths --> "start" -> return;
+		// ReturnStatement5 XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+		// ReturnStatement5 XPECT path from '"start"' notTo '"end"' -->
+		// ReturnStatement5 XPECT commonPreds of 'return;' and '"end"' -->
+		// ReturnStatement5 XPECT succs at '"start"' --> return;
+		// ReturnStatement5 XPECT preds at 'return;' --> "start"
+		// ReturnStatement5 XPECT succs at 'return;' -->
+		"start";
+		// ReturnStatement5 XPECT errors --> "Return statement must have an expression of type void" at "return;"
+        return;
+		// ReturnStatement5 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+		"end";
+    }
+}
+
+
+function WithStatement1() {
+	// WithStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// WithStatement1 XPECT allIslandElems -->
+	// WithStatement1 XPECT allCatchBlocks -->
+	/* WithStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end"
+	--- */
+	// WithStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// WithStatement1 XPECT allPaths direction 'Backward' --> "end" -> 2 -> 1 -> "start"
+	// WithStatement1 XPECT path from '"start"' to '"end"' -->
+	// WithStatement1 XPECT commonPreds of '1' and '2' --> 1
+	// WithStatement1 XPECT succs at '"start"' --> 1
+	// WithStatement1 XPECT succs at '1' --> 2
+	// WithStatement1 XPECT succs at '2' --> "end"
+	// WithStatement1 XPECT preds at 'with' --> "start"
+	// WithStatement1 XPECT succs at 'with' --> "end"
+	"start";
+	// WithStatement1 XPECT errors --> "With statement not allowed." at "with"
+	with (1) 2;
+	"end";
+}
+
+function WithStatement2() {
+	// WithStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// WithStatement2 XPECT allIslandElems -->
+	// WithStatement2 XPECT allCatchBlocks -->
+	/* WithStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> "end"
+	--- */
+	// WithStatement2 XPECT allPaths --> "start" -> 1 -> 2 -> "end"
+	// WithStatement2 XPECT allPaths direction 'Backward' --> "end" -> 2 -> 1 -> "start"
+	// WithStatement2 XPECT path from '"start"' to '"end"' -->
+	// WithStatement2 XPECT commonPreds of '1' and '2' --> 1
+	// WithStatement2 XPECT succs at '"start"' --> 1
+	// WithStatement2 XPECT succs at '1' --> 2
+	// WithStatement2 XPECT succs at '2' --> "end"
+	// WithStatement2 XPECT preds at 'with' --> "start"
+	// WithStatement2 XPECT succs at 'with' --> "end"
+	"start";
+	// WithStatement2 XPECT errors --> "With statement not allowed." at "with"
+	with (1) {
+		2;
+	}
+	"end";
+}
+
+
+function VariableStatement1() {
+	// VariableStatement1 XPECT cfContainer --> FunctionDeclaration::Block
+	// VariableStatement1 XPECT allIslandElems -->
+	// VariableStatement1 XPECT allCatchBlocks -->
+	/* VariableStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> x = 1,
+		x = 1 --> let x = 1;,
+		let x = 1; --> "end"
+	--- */
+	// VariableStatement1 XPECT allPaths --> "start" -> 1 -> x = 1 -> let x = 1; -> "end"
+	// VariableStatement1 XPECT allPaths direction 'Backward' --> "end" -> let x = 1; -> x = 1 -> 1 -> "start"
+	// VariableStatement1 XPECT path from '"start"' to '"end"' -->
+	// VariableStatement1 XPECT commonPreds of '1' and 'x = 1' --> 1
+	// VariableStatement1 XPECT succs at '"start"' --> 1
+	// VariableStatement1 XPECT succs at '1' --> x = 1
+	// VariableStatement1 XPECT succs at 'x = 1' --> let x = 1;
+	// VariableStatement1 XPECT preds at 'let x = 1;' --> x = 1
+	// VariableStatement1 XPECT succs at 'let x = 1;' --> "end"
+	"start";
+	let x = 1;
+	"end";
+}
+
+function VariableStatement2() {
+	// VariableStatement2 XPECT cfContainer --> FunctionDeclaration::Block
+	// VariableStatement2 XPECT allIslandElems -->
+	// VariableStatement2 XPECT allCatchBlocks -->
+	/* VariableStatement2 XPECT allEdges ---
+		"start" --> 1,
+		1 --> x = 1,
+		x = 1 --> var x = 1;,
+		var x = 1; --> "end"
+	--- */
+	// VariableStatement2 XPECT allPaths --> "start" -> 1 -> x = 1 -> var x = 1; -> "end"
+	// VariableStatement2 XPECT allPaths direction 'Backward' --> "end" -> var x = 1; -> x = 1 -> 1 -> "start"
+	// VariableStatement2 XPECT path from '"start"' to '"end"' -->
+	// VariableStatement2 XPECT commonPreds of '1' and 'x = 1' --> 1
+	// VariableStatement2 XPECT succs at '"start"' --> 1
+	// VariableStatement2 XPECT succs at '1' --> x = 1
+	// VariableStatement2 XPECT succs at 'x = 1' --> var x = 1;
+	// VariableStatement2 XPECT preds at 'var x = 1;' --> x = 1
+	// VariableStatement2 XPECT succs at 'var x = 1;' --> "end"
+	"start";
+	var x = 1;
+	"end";
+}
+
+function VariableStatement3() {
+	// VariableStatement3 XPECT cfContainer --> FunctionDeclaration::Block
+	// VariableStatement3 XPECT allIslandElems -->
+	// VariableStatement3 XPECT allCatchBlocks -->
+	/* VariableStatement3 XPECT allEdges ---
+		"start" --> x,
+		x --> y,
+		y --> z,
+		z --> let x\, y\, z;,
+		let x\, y\, z; --> "end"
+	--- */
+	// VariableStatement3 XPECT allPaths --> "start" -> x -> y -> z -> let x\, y\, z; -> "end"
+	// VariableStatement3 XPECT allPaths direction 'Backward' --> "end" -> let x\, y\, z; -> z -> y -> x -> "start"
+	// VariableStatement3 XPECT path from '"start"' to '"end"' -->
+	// VariableStatement3 XPECT commonPreds of 'y' and 'x' --> x
+	// VariableStatement3 XPECT succs at '"start"' --> x
+	// VariableStatement3 XPECT succs at 'x' --> y
+	// VariableStatement3 XPECT succs at 'y' --> z
+	// VariableStatement3 XPECT succs at 'z' --> let x\, y\, z;
+	// VariableStatement3 XPECT preds at 'let x, y, z;' --> z
+	// VariableStatement3 XPECT succs at 'let x, y, z;' --> "end"
+	"start";
+	let x, y, z;
+	"end";
+}

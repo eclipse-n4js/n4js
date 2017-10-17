@@ -265,6 +265,7 @@ async function T8(): void{
 		console.log(" -", "finally was called", finallyCalled);
 		return;
 	}
+	// XPECT warnings -->"Dead code. No execution possible after try statement." at "console.log(" -", "FORCE_FAILURE"); 	Assert.fail("failed assertion");"
 	console.log(" -", "FORCE_FAILURE");
 	Assert.fail("failed assertion");
 }

@@ -10,13 +10,16 @@
  */
 package org.eclipse.n4js.n4mf.ui
 
-import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
-import org.eclipse.xtext.ui.editor.hyperlinking.IHyperlinkHelper
-import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport
+import org.eclipse.n4js.n4mf.ui.editor.hyperlinking.N4MFHyperlinker
 import org.eclipse.n4js.n4mf.ui.internal.N4MFDirtyStateEditorSupport
 import org.eclipse.n4js.n4mf.ui.wizard.N4JSProjectCreator
+import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider
+import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
+import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport
 import org.eclipse.xtext.ui.editor.XtextEditor
-import org.eclipse.n4js.n4mf.ui.editor.hyperlinking.N4MFHyperlinker
+import org.eclipse.xtext.ui.editor.hyperlinking.IHyperlinkHelper
+import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
+import org.eclipse.xtext.ui.wizard.IProjectCreator
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -27,7 +30,7 @@ class N4MFUiModule extends AbstractN4MFUiModule {
 	/**
 	 * Returns the type of {@link N4JSProjectCreator}.
 	 */
-	def Class<? extends org.eclipse.xtext.ui.wizard.IProjectCreator> bindIProjectCreator() {
+	def Class<? extends IProjectCreator> bindIProjectCreator() {
 		return N4JSProjectCreator;
 	}
 
@@ -50,5 +53,10 @@ class N4MFUiModule extends AbstractN4MFUiModule {
 	 */
 	def Class<? extends XtextEditor> bindXtextEditor() {
 		return N4MFEditor;
+	}
+
+	/** Workaround for the problem: file is refreshed when opened */
+	def Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+		return AvoidRefreshDocumentProvider;
 	}
 }

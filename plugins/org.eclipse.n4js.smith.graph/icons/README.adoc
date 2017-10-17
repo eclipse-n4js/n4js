@@ -12,6 +12,7 @@ Contributors:
 
 Source of icons:
 
-snapshot.png  ->  git://git.eclipse.org/gitroot/cdt/org.eclipse.cdt.edc.git -> org.eclipse.cdt/edc/org.eclipse.cdt.debug.edc.ui/icons/dtool16/create_snapshot.png
 pause.gif     ->  https://github.com/eclipse/eclipse.platform.ui/blob/master/bundles/org.eclipse.ui.navigator/icons/full/clcl16/pause.png
-graph.gif     ->  git://git.eclipse.org/gitroot/amp/org.eclipse.amp.git -> org.eclipse.amp/org.eclipse.amp.agf/plugins/org.eclipse.amp.agf.zest.ide/icons/etool16/layout_tree_down.gif
+graphAST      ->  git://git.eclipse.org/gitroot/amp/org.eclipse.amp.git -> org.eclipse.amp/org.eclipse.amp.agf/plugins/org.eclipse.amp.agf.zest.ide/icons/etool16/layout_tree_down.gif
+graphDF		  ->  https://git.eclipse.org/c/gmf-tooling/org.eclipse.gmf-tooling.uml2tools.git/tree/plugins/org.eclipse.uml2.diagram.common/icons/obj16/Transition_local.gif
+graphCF		  ->  http://git.eclipse.org/c/m2t/org.eclipse.acceleo.git/tree/plugins/org.eclipse.acceleo.ide.ui/icons/template-editor/completion/ForBlock.gif

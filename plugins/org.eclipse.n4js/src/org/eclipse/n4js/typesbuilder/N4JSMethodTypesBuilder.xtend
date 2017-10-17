@@ -17,6 +17,7 @@ import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.FunctionDefinition
+import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.SuperLiteral
 import org.eclipse.n4js.n4JS.ThisLiteral
@@ -35,7 +36,8 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	@Inject extension N4JSTypesBuilderHelper
 
 	def package boolean relinkMethod(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase, int idx) {
-		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
+		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {
@@ -54,7 +56,8 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	}
 	
 	def package boolean relinkCallableCtor(N4MethodDeclaration methodDecl, TClassifier classifier, boolean preLinkingPhase) {
-		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
+		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (methodDefinedType !== null && ! methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 
@@ -86,7 +89,8 @@ package class N4JSMethodTypesBuilder extends AbstractFunctionDefinitionTypesBuil
 	 * @param preLinkingPhase
 	 */
 	def package TMethod createMethod(N4MethodDeclaration methodDecl, boolean preLinkingPhase) {
-		if (methodDecl.definedType !== null && ! methodDecl.definedType.eIsProxy) {
+		val methodDefinedType = methodDecl.eGet(N4JSPackage.eINSTANCE.typeDefiningElement_DefinedType, false) as EObject;
+		if (methodDefinedType !== null && !methodDefinedType.eIsProxy) {
 			throw new IllegalStateException("TMethod already created for N4MethodDeclaration");
 		}
 		if (methodDecl.name === null && !methodDecl.hasComputedPropertyName && !methodDecl.callableConstructor) {

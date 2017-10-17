@@ -239,19 +239,19 @@ Static constructor.
 
 === Static Attributes
 
-`MAX\_VALUE:Number`::
+`MAX_VALUE:Number`::
 The largest representable number.
 
-`MIN\_VALUE:Number`::
+`MIN_VALUE:Number`::
 The smallest representable number.
 
 `NaN:Number`::
 Special 'not a number' value.
 
-`NEGATIVE\_INFINITY:Number`::
+`NEGATIVE_INFINITY:Number`::
 Special value representing negative infinity, returned on overflow.
 
-`POSITIVE\_INFINITY:Number`::
+`POSITIVE_INFINITY:Number`::
 Special value representing infinity, returned on overflow.
 
 [discrete]
@@ -271,6 +271,12 @@ Returns the primitive value of a Number object.
 
 `toString(radix:Number=):String`::
 Returns a String value for this object. The toString method parses its first argument and attempts to return a string representation in the specified radix (base).
+
+`toLocaleString(locales: String|[String]=undefined, options: ~r~NumberFormatOptions=undefined): String`::
+Returns a locale-specific String value for this object. The toLocalString accepts two optional arguments. The semantics of these arguments
+is defined in https://www.ecma-international.org/ecma-402/4.0/index.html#sup-number.prototype.tolocalestring[ECMA-402 (Internationalization API Specification)].
+In N4JS, the base definition does not define that method, instead Number inherits `toLocaleString` from Object. The specialized
+definition is found in the runtime library `n4js-runtime-ecma402`. 
 
 
 [discrete]
@@ -551,14 +557,24 @@ Sets the year, as a two-digit or a three/four-digit number, depending on the bro
 `toDateString():String`::
 Returns the date portion of a Date object in readable form.
 
-`toLocaleDateString():String`::
-Converts a Date object, according to local time, to a string and returns the date portion.
+`toLocaleDateString(locales: String|[String]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
+Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string and returns the date and time portion.
+The toLocalString accepts two optional arguments. The semantics of these arguments is defined in 
+https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocaledatestring[ECMA-402 (Internationalization API Specification)].
+The specialized definition is found in the runtime library `n4js-runtime-ecma402`. 
 
-`toLocaleString():String`::
-Converts a Date object, according to local time, to a string.
+`toLocaleString(locales: String|[String]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
+Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string.
+The toLocalString accepts two optional arguments. The semantics of these arguments is defined in 
+https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocalestring[ECMA-402 (Internationalization API Specification)].
+In N4JS, the base definition does not define that method, instead Date inherits `toLocaleString` from Object. The specialized
+definition is found in the runtime library `n4js-runtime-ecma402`. 
 
-`toLocaleTimeString():String`::
-Converts a Date object, according to local time, to a string and returns the time portion.
+`toLocaleTimeString(locales: String|[String]=undefined, options: ~r~DateTimeFormatOptions=undefined): String`::
+Converts a Date object, using locales and options as defined in DateTimeFormat of ECMA-402 (Internationalization API), to a string and returns the time portion.
+The semantics of these arguments is defined in 
+https://www.ecma-international.org/ecma-402/4.0/index.html#sup-date.prototype.tolocaletimestring[ECMA-402 (Internationalization API Specification)].
+The specialized definition is found in the runtime library `n4js-runtime-ecma402`. 
 
 `toString():String`::
 Returns a String value for this object.
@@ -594,7 +610,7 @@ Base 10 logarithm of E, approximately 0.434.
 `PI:Number`::
 Ratio of the circumference of a circle to its diameter, approximately 3.14159.
 
-`SQRT1\_2:Number`::
+`SQRT1_2:Number`::
 Square root of 1/2; equivalently, 1 over the square root of 2, approximately 0.707.
 
 `SQRT2:Number`::

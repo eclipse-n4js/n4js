@@ -58,9 +58,11 @@ function f1() {
                // XPECT returnOrThrow --> breakOrContinue labels y
                break y;
            }
+   		// XPECT warnings --> "Dead code." at "true"
        } while ( true )
        // XPECT returnOrThrow --> returnsMode
        return;
+	// XPECT warnings --> "Dead code." at "true"
    } while ( true )
 
 }
@@ -118,9 +120,10 @@ function f4(): number {
 	               break y;
 	           }
            }
+		// XPECT warnings --> "Dead code." at "true ) return 4;"
        } while ( true )
-       // XPECT returnOrThrow --> returnsMode
        return 4;
+	// XPECT warnings --> "Dead code." at "true"
    } while ( true )
 
 }
@@ -194,11 +197,14 @@ function f6(): number {
 		               break y;
 		           }
 	           }
+			// XPECT warnings --> "Dead code." at "true"
 	       } while ( true )
 
        } // z
        // XPECT returnOrThrow --> returnsMode
+  	   // XPECT warnings --> "Dead code. No execution possible after labelled statement." at "return 4;"
        return 4;
+	// XPECT warnings --> "Dead code." at "true"
    } while ( true )
 
 }

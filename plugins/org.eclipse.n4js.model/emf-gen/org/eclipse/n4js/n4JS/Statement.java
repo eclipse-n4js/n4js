@@ -21,5 +21,5 @@ package org.eclipse.n4js.n4JS;
  * @model
  * @generated
  */
-public interface Statement extends ScriptElement {
+public interface Statement extends ScriptElement, ControlFlowElement {
 } // Statement
