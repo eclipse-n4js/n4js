@@ -29,6 +29,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
  */
 public class CheckVariableGraphVisitor extends GraphVisitor {
 
+	/** Constructor */
 	public CheckVariableGraphVisitor() {
 		super(Mode.Backward);
 	}
@@ -69,6 +70,7 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		// Do nothing
 	}
 
+	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
 		for (PathExplorerInternal pathExplorer : getActivatedExplorers()) {

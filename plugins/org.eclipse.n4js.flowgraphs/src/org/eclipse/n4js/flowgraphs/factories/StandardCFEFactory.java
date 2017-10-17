@@ -50,10 +50,10 @@ class StandardCFEFactory {
 
 		HelperNode entryNode = null;
 		String exitNodeName = ENTRY_EXIT_NODE;
-		// if (!argumentNodes.isEmpty()) {
-		entryNode = new HelperNode(ENTRY_NODE, cfe);
-		exitNodeName = EXIT_NODE;
-		// }
+		if (!argumentNodes.isEmpty()) {
+			entryNode = new HelperNode(ENTRY_NODE, cfe);
+			exitNodeName = EXIT_NODE;
+		}
 		Node exitNode = (isRepresenting) ? new RepresentingNode(exitNodeName, cfe) : new HelperNode(exitNodeName, cfe);
 
 		cNode.addNode(entryNode);
@@ -68,10 +68,10 @@ class StandardCFEFactory {
 		cNode.connectInternalSucc(nodes);
 
 		if (argumentNodes.isEmpty()) {
-			// cNode.setEntryNode(exitNode);
+			cNode.setEntryNode(exitNode);
 		} else {
+			cNode.setEntryNode(entryNode);
 		}
-		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
 		return cNode;

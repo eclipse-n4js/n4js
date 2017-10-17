@@ -98,9 +98,9 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		List<String> pathStrings = new LinkedList<>();
 		for (PathExplorerInternal app : getActivatedExplorers()) {
 			for (PathWalkerInternal ap : app.getAllPaths()) {
-				PathWalkerInternal printPath = ap;
-				// pathStrings.add(printPath.getCompleteString());
-				pathStrings.add(" ");
+				AllPathPrintWalker printPath = (AllPathPrintWalker) ap;
+				pathStrings.add(printPath.currString);
+				// pathStrings.add(" ");
 			}
 		}
 		return pathStrings;
@@ -114,12 +114,16 @@ public class AllPathPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected AllPathPrintWalker firstPathWalker() {
-			return new AllPathPrintWalker();
+			return new AllPathPrintWalker("");
 		}
 	}
 
 	static class AllPathPrintWalker extends PathWalker {
 		private String currString = "";
+
+		AllPathPrintWalker(String currString) {
+			this.currString = currString;
+		}
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
@@ -133,7 +137,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected AllPathPrintWalker forkPath() {
-			return new AllPathPrintWalker();
+			return new AllPathPrintWalker(currString);
 		}
 
 		String getPredString() {

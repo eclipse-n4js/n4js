@@ -47,9 +47,6 @@ public class ControlFlowGraphFactory {
 		return cfe1.hashCode() - cfe2.hashCode();
 	}
 
-	static public int nodeCount = 0;
-	static public int complexNodeCount = 0;
-
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
 		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
@@ -66,11 +63,6 @@ public class ControlFlowGraphFactory {
 
 		if (PRINT_EDGE_DETAILS)
 			printAllEdgeDetails(cnMapper);
-
-		for (ComplexNode cn : cnMap.values()) {
-			nodeCount += cn.getNodes().size();
-		}
-		complexNodeCount += cnMap.size();
 
 		return cfg;
 	}
@@ -177,9 +169,6 @@ public class ControlFlowGraphFactory {
 			intPred.removeInternalSuccessor(mNode);
 			intSucc.removeInternalPredecessor(mNode);
 
-			ControlFlowElement cfe1 = pred.getControlFlowElement();
-			ControlFlowElement cfe2 = succ.getControlFlowElement();
-
 			pred.removeInternalSuccessor(mNode);
 			EdgeUtils.connectCF(pred, succ);
 		}
@@ -265,14 +254,6 @@ public class ControlFlowGraphFactory {
 		for (ControlFlowEdge edge : allEdges) {
 			System.out.println(edge);
 		}
-	}
-
-	/** Prints detailed information of all control flow edges. Used for debugging purposes */
-	private static void printEdgeDetails(ControlFlowEdge edge) {
-		String sNode = ASTUtils.getNodeDetailString(edge.start);
-		String eNode = ASTUtils.getNodeDetailString(edge.end);
-		String edgeStr = sNode + ":" + edge.toString() + ":" + eNode;
-		System.out.println(edgeStr);
 	}
 
 }

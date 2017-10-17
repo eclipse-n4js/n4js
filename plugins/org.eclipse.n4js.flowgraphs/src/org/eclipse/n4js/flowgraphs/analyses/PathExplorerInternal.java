@@ -116,8 +116,6 @@ abstract public class PathExplorerInternal {
 	final PathWalkerInternal callFirstPathWalker(GraphVisitorInternal parentGraphVisitorInternal) {
 		parentGraphVisitor = parentGraphVisitorInternal;
 		PathWalkerInternal activePath = firstPathWalker();
-		activePaths.add(activePath);
-		allPaths.add(activePath);
 		activePath.callInitialize(this, null);
 		return activePath;
 	}

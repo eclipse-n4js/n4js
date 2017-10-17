@@ -429,7 +429,6 @@ public class GraphCanvas extends Canvas {
 			}
 
 			setHoverInEditorOverlay(hoveredNode);
-			redraw();
 		}
 	}
 
