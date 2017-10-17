@@ -27,6 +27,7 @@ import com.google.common.collect.Sets;
  * see {@link GraphVisitorInternal}
  */
 abstract public class GraphVisitor extends GraphVisitorInternal {
+
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
@@ -152,9 +153,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	@Override
-	abstract protected void initialize();
-
-	@Override
 	final protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer) {
 		visitedEdgesInternal.clear();
 		visitedEdges.clear();
@@ -169,18 +167,32 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void initializeMode(Mode curMode, ControlFlowElement curContainer);
+	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
-	/** Analog to {@link GraphVisitorInternal#visit(Node)} */
-	abstract protected void visit(ControlFlowElement cfe);
+	/**
+	 * Analog to {@link GraphVisitorInternal#visit(Node)}
+	 *
+	 * @param cfe
+	 *            {@link ControlFlowElement} that is visited
+	 */
+	protected void visit(ControlFlowElement cfe) {
+		// overwrite me
+	}
 
-	/** Analog to {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)} */
-	abstract protected void visit(ControlFlowElement lastCFE, ControlFlowElement currentCFE, FlowEdge edge);
-
-	@Override
-	abstract protected void terminateMode(Mode curMode, ControlFlowElement curContainer);
-
-	@Override
-	abstract protected void terminate();
+	/**
+	 * Analog to {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)}
+	 *
+	 * @param lastCFE
+	 *            {@link ControlFlowElement} that was visited before
+	 * @param nextCFE
+	 *            {@link ControlFlowElement} that is visited next
+	 * @param edge
+	 *            traversed edge that targets nextCFE. Does not necessarily start at nextCFE
+	 */
+	protected void visit(ControlFlowElement lastCFE, ControlFlowElement nextCFE, FlowEdge edge) {
+		// overwrite me
+	}
 
 }

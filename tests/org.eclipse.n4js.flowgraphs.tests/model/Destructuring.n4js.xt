@@ -315,6 +315,8 @@ function DestructuringDefault1() {
 		"start" -> 1 -> {a:1} -> a=0 -> {a=0} = {a:1} -> let {a=0} = {a:1}; -> "end"
 	--- */
 	// DestructuringDefault1 XPECT path from '"start"' to '"end"' -->
+	// DestructuringDefault1 XPECT path from '"start"' to '"end"' via '0' -->
+	// DestructuringDefault1 XPECT path from '"start"' to '"end"' notVia '0' -->
 	// DestructuringDefault1 XPECT commonPreds of '1' and '0' --> 1
 	// DestructuringDefault1 XPECT succs at '"start"' --> 1
 	// DestructuringDefault1 XPECT succs at '1' --> {a:1}
@@ -349,6 +351,8 @@ function DestructuringDefault2() {
 		"start" -> 1 -> [1] -> x=0 -> [x=0] = [1] -> let [x=0] = [1]; -> "end"
 	--- */
 	// DestructuringDefault2 XPECT path from '"start"' to '"end"' -->
+	// DestructuringDefault2 XPECT path from '"start"' to '"end"' via '0' -->
+	// DestructuringDefault2 XPECT path from '"start"' to '"end"' notVia '0' -->
 	// DestructuringDefault2 XPECT commonPreds of '1' and '0' --> 1
 	// DestructuringDefault2 XPECT succs at '"start"' --> 1
 	// DestructuringDefault2 XPECT succs at '1' --> [1]

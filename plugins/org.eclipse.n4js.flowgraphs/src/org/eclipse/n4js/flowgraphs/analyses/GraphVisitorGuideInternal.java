@@ -11,31 +11,25 @@
 package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.n4JS.FinallyBlock;
-import org.eclipse.n4js.n4JS.ReturnStatement;
-import org.eclipse.n4js.utils.collections.Collections2;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 /**
  * This class executes a control flow analyzes in a specific {@link Mode} that are defined as
  * {@link GraphVisitorInternal}s. The execution is triggered from {@link GraphVisitorAnalysis}.
+ * <p>
+ * Use the API of this class in the following order: Initialize first, then use any of the walkthrough methods in any
+ * order, and call {@link #terminate()} at last.
  * <p>
  * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
  * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
@@ -52,7 +46,6 @@ public class GraphVisitorGuideInternal {
 	/** Constructor */
 	public GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
 			Collection<? extends GraphVisitorInternal> walkers) {
-
 		this.flowAnalyzer = flowAnalyzer;
 		this.walkers = walkers;
 	}
@@ -150,6 +143,8 @@ public class GraphVisitorGuideInternal {
 		}
 
 		while (!currEdgeGuides.isEmpty()) {
+			flowAnalyzer.checkCancelled();
+
 			EdgeGuide currEdgeGuide = currEdgeGuides.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(currEdgeGuide.edge);
 			alreadyVisitedAndObsolete &= currEdgeGuide.activePaths.isEmpty();
@@ -170,51 +165,64 @@ public class GraphVisitorGuideInternal {
 			allVisitedNodes.add(edge.start);
 			allVisitedNodes.add(edge.end);
 		}
+		allVisitedNodes.add(edgeProvider.getStartNode(cn));
+
 		return allVisitedNodes;
 	}
 
 	private Node visitNode(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		if (lastVisitNode != null) {
-			callVisit(CallVisit.OnEdge, lastVisitNode, currEdgeGuide, visitNode);
+			callVisitOnEdge(lastVisitNode, currEdgeGuide, visitNode);
 		}
 
-		callVisit(CallVisit.OnNode, lastVisitNode, currEdgeGuide, visitNode);
+		callVisitOnNode(currEdgeGuide, visitNode);
 		return visitNode;
 	}
 
-	enum CallVisit {
-		OnNode, OnEdge
-	}
-
-	private void callVisit(CallVisit callVisit, Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
-		for (GraphVisitorInternal walker : walkers) {
-			switch (callVisit) {
-			case OnNode:
-				if (!walkerVisitedNodes.contains(visitNode)) {
-					walker.callVisit(visitNode);
-				}
-				walkerVisitedNodes.add(visitNode);
-				break;
-			case OnEdge:
-				if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
-					walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
-				}
-				walkerVisitedEdges.add(currEdgeGuide.edge);
-				break;
+	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuide, Node)} */
+	private void callVisitOnNode(EdgeGuide currEdgeGuide, Node visitNode) {
+		if (!walkerVisitedNodes.contains(visitNode)) {
+			for (GraphVisitorInternal walker : walkers) {
+				walker.callVisit(visitNode);
 			}
+		}
+		walkerVisitedNodes.add(visitNode);
+
+		for (GraphVisitorInternal walker : walkers) {
 			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
 			currEdgeGuide.activePaths.addAll(activatedPaths);
 		}
+
 		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
 			PathWalkerInternal activePath = actPathIt.next();
-			switch (callVisit) {
-			case OnNode:
-				activePath.callVisit(visitNode);
-				break;
-			case OnEdge:
-				activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
-				break;
+
+			activePath.callVisit(visitNode);
+
+			if (!activePath.isActive()) {
+				actPathIt.remove();
 			}
+		}
+	}
+
+	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
+	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
+		if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
+			for (GraphVisitorInternal walker : walkers) {
+				walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
+			}
+		}
+		walkerVisitedEdges.add(currEdgeGuide.edge);
+
+		for (GraphVisitorInternal walker : walkers) {
+			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
+			currEdgeGuide.activePaths.addAll(activatedPaths);
+		}
+
+		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
+			PathWalkerInternal activePath = actPathIt.next();
+
+			activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
+
 			if (!activePath.isActive()) {
 				actPathIt.remove();
 			}
@@ -293,121 +301,4 @@ public class GraphVisitorGuideInternal {
 		return nextEGs;
 	}
 
-	/**
-	 * The {@link EdgeGuide} keeps track of all {@link PathWalkerInternal}s that are currently exploring a path on that
-	 * edge. In case an {@link EdgeGuide} has no {@link PathWalkerInternal}s, it might be removed. When an edge of an
-	 * {@link EdgeGuide} has more than one next edge, the {@link EdgeGuide} will split up and all its
-	 * {@link PathWalkerInternal}s will fork. If there is only one next edge, the current edge of the {@link EdgeGuide}
-	 * instance will be replaced.
-	 * <p>
-	 * The {@link EdgeGuide} keeps track of edges that enter or exit {@link FinallyBlock}s. The reason is, that these
-	 * e.g. entering edges will determine the correct exiting edges. (Consider that {@link FinallyBlock}s can be entered
-	 * via a {@link ReturnStatement} and will then exit directly to the next {@link FinallyBlock} or to the end of the
-	 * method, instead of executing statements that follow the {@link FinallyBlock}.)
-	 */
-	private class EdgeGuide {
-		final NextEdgesProvider edgeProvider;
-		ControlFlowEdge edge;
-		final Set<PathWalkerInternal> activePaths = new HashSet<>();
-		final Set<JumpToken> finallyBlockContexts = new HashSet<>();
-
-		public EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
-			this.edgeProvider = edgeProvider;
-			this.edge = edge;
-			if (edge.finallyPathContext != null) {
-				finallyBlockContexts.add(edge.finallyPathContext);
-			}
-		}
-
-		public EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths) {
-			this(edgeProvider, edge, activePaths, Sets.newHashSet());
-		}
-
-		public EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge,
-				Set<PathWalkerInternal> activePaths, Set<JumpToken> finallyBlockContexts) {
-
-			this(edgeProvider, edge);
-			this.activePaths.addAll(activePaths);
-			this.finallyBlockContexts.addAll(finallyBlockContexts);
-		}
-
-		Node getPrevNode() {
-			return edgeProvider.getPrevNode(edge);
-		}
-
-		Node getNextNode() {
-			return edgeProvider.getNextNode(edge);
-		}
-
-		List<ControlFlowEdge> getNextEdges() {
-			List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(getNextNode());
-			Set<JumpToken> nextJumpContexts = new HashSet<>();
-			List<ControlFlowEdge> finallyBlockContextEdges = findFinallyBlockContextEdge(nextEdges, nextJumpContexts);
-			finallyBlockContexts.addAll(nextJumpContexts);
-
-			if (!finallyBlockContextEdges.isEmpty()) {
-				return finallyBlockContextEdges;
-			}
-
-			return nextEdges;
-		}
-
-		/**
-		 * This method searches all FinallyBlock-entry/exit edges E to chose the correct next following edges. The
-		 * following rules are implemented:
-		 * <ul>
-		 * <li/>If there exists no next edge with a context, then null is returned.
-		 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuide} instance has no context
-		 * that matches with one of the next edges, then all edges without context are returned.
-		 * <li/>If there exists a next edge with a context, and the current {@link EdgeGuide} instance has a context
-		 * that matches with one of the next edges, the matching edge is returned.
-		 * </ul>
-		 */
-		private List<ControlFlowEdge> findFinallyBlockContextEdge(List<ControlFlowEdge> nextEdges,
-				Set<JumpToken> nextJumpContexts) {
-
-			LinkedList<ControlFlowEdge> fbContextFreeEdges = new LinkedList<>();
-			Map<JumpToken, ControlFlowEdge> contextEdges = new HashMap<>();
-			mapFinallyBlockContextEdges(nextEdges, fbContextFreeEdges, contextEdges);
-			if (contextEdges.isEmpty()) {
-				return Lists.newLinkedList();
-			}
-
-			ControlFlowEdge matchedFBContextEdge = null;
-			Map.Entry<JumpToken, ControlFlowEdge> otherEdgePair = null;
-			for (Map.Entry<JumpToken, ControlFlowEdge> ctxEdgePair : contextEdges.entrySet()) {
-				JumpToken fbContext = ctxEdgePair.getKey();
-				otherEdgePair = ctxEdgePair;
-				if (finallyBlockContexts.contains(fbContext)) {
-					matchedFBContextEdge = ctxEdgePair.getValue();
-				}
-			}
-
-			if (matchedFBContextEdge != null) {
-				return Collections2.newLinkedList(matchedFBContextEdge);
-
-			} else if (!fbContextFreeEdges.isEmpty()) {
-				return fbContextFreeEdges;
-
-			} else if (otherEdgePair != null) {
-				nextJumpContexts.add(otherEdgePair.getKey());
-				return Collections2.newLinkedList(otherEdgePair.getValue());
-			}
-			return Lists.newLinkedList();
-		}
-
-		private void mapFinallyBlockContextEdges(List<ControlFlowEdge> nextEdges,
-				List<ControlFlowEdge> fbContextFreeEdges, Map<JumpToken, ControlFlowEdge> contextEdges) {
-
-			for (ControlFlowEdge nE : nextEdges) {
-				JumpToken finallyPathContext = nE.finallyPathContext;
-				if (finallyPathContext != null) {
-					contextEdges.put(finallyPathContext, nE);
-				} else {
-					fbContextFreeEdges.add(nE);
-				}
-			}
-		}
-
-	}
 }

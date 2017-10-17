@@ -11,7 +11,6 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +30,6 @@ public class FlowGraph {
 	final private TreeSet<ControlFlowElement> cfContainers;
 	final private TreeSet<Block> cfCatchBlocks;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
-	final private Map<String, ControlFlowEdge> cfEdgeMap = new HashMap<>();
 
 	/** Constructor. */
 	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, TreeSet<Block> cfCatchBlocks,
@@ -40,30 +38,11 @@ public class FlowGraph {
 		this.cfContainers = cfContainers;
 		this.cfCatchBlocks = cfCatchBlocks;
 		this.cnMap = cnMap;
-		init();
-	}
-
-	private void init() {
-		for (ComplexNode cn : getAllComplexNodes()) {
-			for (Node node : cn.getNodes()) {
-				for (ControlFlowEdge cfEdge : node.pred) {
-					cfEdgeMap.put(cfEdge.toString(), cfEdge);
-				}
-				for (ControlFlowEdge cfEdge : node.succ) {
-					cfEdgeMap.put(cfEdge.toString(), cfEdge);
-				}
-			}
-		}
 	}
 
 	/** @return all {@link ComplexNode}s of the script. */
 	public Collection<ComplexNode> getAllComplexNodes() {
 		return cnMap.values();
-	}
-
-	/** @return all {@link ControlFlowEdge}s of the script. */
-	public Collection<ControlFlowEdge> getAllControlFlowEdges() {
-		return cfEdgeMap.values();
 	}
 
 	/** @return the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */

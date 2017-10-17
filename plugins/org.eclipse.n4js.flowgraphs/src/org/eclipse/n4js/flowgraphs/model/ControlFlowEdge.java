@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 
 /** Represents the control flow between two nodes. */
@@ -62,11 +63,14 @@ public class ControlFlowEdge extends AbstractEdge {
 
 	@Override
 	public String toString() {
-		String s = " (" + start + ") ";
+		String s = "";
+		s += "[" + FGUtils.getSourceText(start.getControlFlowElement()) + "]";
+		s += "(" + start + ") ";
 		if (cfType != ControlFlowType.Successor) {
 			s += "-" + cfType.name();
 		}
 		s += "-> ";
+		s += "[" + FGUtils.getSourceText(end.getControlFlowElement()) + "]";
 		s += "(" + end + ")";
 		return s;
 	}
