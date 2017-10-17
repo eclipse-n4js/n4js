@@ -10,11 +10,14 @@
  */
 package org.eclipse.n4js.ui.wizard.workspace;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
@@ -22,6 +25,8 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.ITextListener;
 import org.eclipse.jface.text.TextEvent;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.ui.wizard.generator.ContentBlock;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
@@ -31,6 +36,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.xtext.ide.editor.syntaxcoloring.HighlightingStyles;
 import org.eclipse.xtext.resource.XtextResource;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor;
+import org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.DefaultHighlightingConfiguration;
 import org.eclipse.xtext.ui.editor.syntaxcoloring.PreferenceStoreAccessor;
 import org.eclipse.xtext.ui.editor.utils.TextStyle;
@@ -38,19 +45,17 @@ import org.eclipse.xtext.ui.editor.utils.TextStyle;
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.ui.wizard.generator.ContentBlock;
-
 /**
  * A preview window for wizards which shows a preview of the created class.
  */
+@SuppressWarnings("restriction")
 public class WizardPreviewProvider {
 
 	private static final DefaultHighlightingConfiguration DEFAULT_HIGHLIGHTING_CONFIGURATION = new DefaultHighlightingConfiguration();
+	private static Logger LOGGER = Logger.getLogger(WizardPreviewProvider.class);
 
 	@Inject
-	@SuppressWarnings("restriction")
-	private org.eclipse.xtext.ui.editor.embedded.EmbeddedEditorFactory editorFactory;
+	private EmbeddedEditorFactory editorFactory;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -165,7 +170,7 @@ public class WizardPreviewProvider {
 			try {
 				editorDocument.replace(replaceStart, getContent().length() - replaceStart, joinedContent.toString());
 			} catch (Exception e) {
-				// Failed to insert changed blocks
+				LOGGER.warn("Failed to insert changed blocks", e);
 			}
 
 			sourceViewer.invalidateTextPresentation();
@@ -236,15 +241,8 @@ public class WizardPreviewProvider {
 			infoLabel.setLayoutData(GridDataFactory.fillDefaults().grab(true, false).create());
 		}
 
-		@SuppressWarnings("restriction")
 		private void createEditor() {
-			org.eclipse.xtext.ui.editor.embedded.EmbeddedEditor editor = editorFactory.newEditor(
-					() -> {
-						return (XtextResource) n4jsCore.createResourceSet(Optional.absent())
-								// Use a non-existing invalid URI to prevent conflicts with existing workspace resources
-								.createResource(URI.createPlatformResourceURI("/1TempProject/temp.n4js", true));
-					})
-					.withParent(this);
+			EmbeddedEditor editor = editorFactory.newEditor(this::createTempResource).withParent(this);
 
 			editor.getViewer().getControl().setLayoutData(GridDataFactory.fillDefaults().grab(true, true).create());
 
@@ -260,12 +258,17 @@ public class WizardPreviewProvider {
 			editorDocument.set("");
 		}
 
+		/** Creates temp N4JS resource, with non-existing URI to prevent conflicts with existing workspace resources. */
+		private XtextResource createTempResource() {
+			// Use a non-existing invalid URI to prevent conflicts with existing workspace resources, e.g.
+			// "/42TempProject98248/temp.n4js"
+			String partialUri = "/" + (new Random()).nextInt() + "TempProject" + Instant.now() + "/temp.n4js";
+			return (XtextResource) n4jsCore.createResourceSet(Optional.absent())
+					.createResource(URI.createPlatformResourceURI(partialUri, true));
+		}
+
 		private void configureSourceViewer(SourceViewer viewer) {
 			viewer.setEditable(false);
-
-			viewer.getTextWidget().addModifyListener(modifyEvent -> {
-				System.out.println("Text changed");
-			});
 
 			viewer.addTextListener(new ITextListener() {
 				@Override
@@ -298,16 +301,19 @@ public class WizardPreviewProvider {
 		private void updateHighlighting() {
 			if (!getEnabled()) {
 				unhighlightAll();
-			} else {
-				int accumulatedOffset = 0;
-				for (ContentBlock block : contentBlocks) {
-					if (!block.highlighted) {
-						StyleRange range = new StyleRange(accumulatedOffset, block.content.length(), inactiveColor,
-								null);
-						sourceViewer.getTextWidget().setStyleRange(range);
-					}
-					accumulatedOffset += block.content.length();
+				return;
+			}
+			if (contentBlocks == null) {
+				return;
+			}
+
+			int accumulatedOffset = 0;
+			for (ContentBlock block : contentBlocks) {
+				if (!block.highlighted) {
+					StyleRange range = new StyleRange(accumulatedOffset, block.content.length(), inactiveColor, null);
+					sourceViewer.getTextWidget().setStyleRange(range);
 				}
+				accumulatedOffset += block.content.length();
 			}
 		}
 	}
