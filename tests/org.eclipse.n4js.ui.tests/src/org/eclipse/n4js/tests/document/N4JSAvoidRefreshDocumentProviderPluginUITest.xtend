@@ -33,7 +33,6 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-//@Ignore
 class N4JSAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 	@Inject
 	ReflectExtensions reflectExtensions
