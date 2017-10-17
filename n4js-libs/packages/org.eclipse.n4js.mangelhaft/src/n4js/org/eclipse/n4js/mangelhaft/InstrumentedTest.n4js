@@ -125,6 +125,24 @@ export public class InstrumentedTest implements IInstrumentedTest{
         return new InstrumentedTest(testClass, info, testInjector.create(testClass), null, parameterizedTests)
     }
     
+    public getFixmeScope(fixme:N4Annotation): Set<string> {
+        let scope: string;
+        let scopes: Set<string>
+        if (fixme) {
+            if (fixme.details.length > 1) {
+                scope = fixme.details[1];
+            } else {
+                const contextMatch = /^\${(.*)}/.exec(fixme.details[0]);
+                if (contextMatch && contextMatch.length > 1) {
+                    scope = contextMatch[1];
+                }
+            }
+            if (scope) {
+                scopes = new Set<string>(scope.split(",").map(scope => scope.trim()));
+            }
+        }
+        return scopes;
+    }
 
     public getTestMethodDescriptors(meths: Array<? extends N4Method>, tftype: TestFunctionType): Array<TestMethodDescriptor> {
         return meths.map( (methodDescriptor: N4Method) => {
@@ -142,11 +160,11 @@ export public class InstrumentedTest implements IInstrumentedTest{
                     , ignoreReason: ignoreAnnotation? ignoreAnnotation.details.join(" "): ""
                     , fixme: !!fixmeAnnotation
                     , fixmeReason: fixmeAnnotation? fixmeAnnotation.details.join(" "): ""
+                    , fixmeScopes: this.getFixmeScope(fixmeAnnotation)
                     , name: methodDescriptor.name
                     , value: methodDescriptor.jsFunction as {function()}
                     , type:tftype
                 });
-
             }
         )
     }

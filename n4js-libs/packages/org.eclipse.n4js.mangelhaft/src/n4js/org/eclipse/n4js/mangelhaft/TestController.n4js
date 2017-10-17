@@ -144,7 +144,7 @@ export public class TestController {
         let arr = (await Promise.all(instrumentedTestObjects)).filter((item) => item !== null);
         return arr as Array<InstrumentedTest>;
     }
-    public async runGroups(testInfoObject: TestInfos, numTests: number=): ResultGroups {
+    public async runGroups(testInfoObject: TestInfos, numTests: number=, scope: string=): ResultGroups {
         if (!testInfoObject) {
             throw new Error("TestController::runGroups called with a null testInfoObject");
         }
@@ -174,7 +174,7 @@ export public class TestController {
         } catch(ex) {
             console.log("testingStarted.dispatch is bad", ex);
         }
-        for (ii=0; ii < testInfos.length; ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
+        for (ii = 0; ii < testInfos.length; ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
             batchedTestInfos.push(
                 testInfos.slice(ii, ii + TestController.MAX_GROUPS_PER_TEST_BATCH)
             );
@@ -190,7 +190,7 @@ export public class TestController {
                 instrumentedTestsBatch =  (Array.prototype.concat.apply([], instrumentedTestsBatch2d) as Array<InstrumentedTest>)
 
                 //instrumentedTests = that.<Array<InstrumentedTest>>dirtyCast(await Promise.all(blast));
-                res = await executor.runTestsAsync(instrumentedTestsBatch);
+                res = await executor.runTestsAsync(instrumentedTestsBatch, scope);
                 reses.push(res);
             } catch (er) {
                 console.error(er);

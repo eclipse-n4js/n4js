@@ -23,6 +23,8 @@ import {PreconditionNotMet} from "org/eclipse/n4js/mangelhaft/precondition/Preco
 export public class TestExecutor {
     @Inject
     public spy: TestSpy;
+    
+    public constext: string;
     public constructor (spy: TestSpy) {
         this.spy = spy;
     }
@@ -89,8 +91,8 @@ export public class TestExecutor {
         return tr;
     }
 
-    private handleFixme(testObject: TestMethodDescriptor, testRes: TestResult): TestResult {
-        if (testObject.fixme) {
+    private handleFixme(testObject: TestMethodDescriptor, scope: string, testRes: TestResult): TestResult {
+        if (testObject.fixme && (!testObject.fixmeScopes || testObject.fixmeScopes.has(scope))) {
             if (testRes.testStatus === TestStatus.passed) {
                 testRes.testStatus = TestStatus.failed;
                 testRes.message = "Test marked with @Fixme annotation but was successful. Issue blocking test has probably been fixed. Try removing annotation.";
@@ -166,7 +168,7 @@ export public class TestExecutor {
     public async runTestAsync(instrumentedTest: InstrumentedTest): ResultGroups {
         return await this.runTestsAsync([instrumentedTest]);
     }
-    private async runGroup(iTest: IInstrumentedTest): ResultGroup {
+    private async runGroup(iTest: IInstrumentedTest, scope:string=): ResultGroup {
         let rg: ResultGroup
           , testObject: TestMethodDescriptor
           , testRes: TestResult
@@ -218,7 +220,7 @@ export public class TestExecutor {
                         );
                     }
                     testRes.elapsedTime = end - start;
-                    testRes = this.handleFixme(testObject, testRes);
+                    testRes = this.handleFixme(testObject, scope, testRes);
                     await this.spy.testFinished.dispatch(
                         [iTest, testObject, testRes,  async ()=>{
                             let allTests = iTest.tests
@@ -245,7 +247,7 @@ export public class TestExecutor {
         return rg;
         
     }
-    public async runTestsAsync(instrumentedTests: Array<? extends IInstrumentedTest>): ResultGroups {
+    public async runTestsAsync(instrumentedTests: Array<? extends IInstrumentedTest>, scope:string=): ResultGroups {
         let results: Array<ResultGroup> = [];
 
         for (let test of instrumentedTests) {
@@ -254,13 +256,13 @@ export public class TestExecutor {
                     let pResults: Array<ResultGroup> = [];
                     await this.spy.parameterizedGroupsStarted.dispatch([test]);
                     for (let ptest of test.parameterizedTests) {
-                        let testRes = await this.runGroup(ptest);
+                        let testRes = await this.runGroup(ptest, scope);
                         pResults.push(testRes);
                         results.push(testRes);
                     }
                     await this.spy.parameterizedGroupsFinished.dispatch([new ResultGroups(pResults)]);
                 } else {
-                    let testRes = await this.runGroup(test);
+                    let testRes = await this.runGroup(test, scope);
                     results.push(testRes);
                 }
             }
