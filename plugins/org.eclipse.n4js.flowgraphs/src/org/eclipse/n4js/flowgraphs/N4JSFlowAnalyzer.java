@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.Callable;
 
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
@@ -32,10 +34,26 @@ import com.google.common.collect.Lists;
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyzer {
+	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
 	private GraphVisitorAnalysis gva;
 	private SuccessorPredecessorAnalysis spa;
+
+	/** Constructor */
+	public N4JSFlowAnalyzer() {
+		this(null);
+	}
+
+	/**
+	 * Constructor.
+	 *
+	 * @param cancelledChecker
+	 *            is called in the main loop to react on cancel events. Can be null.
+	 */
+	public N4JSFlowAnalyzer(Callable<Void> cancelledChecker) {
+		this.cancelledChecker = cancelledChecker;
+	}
 
 	/**
 	 * Creates the control flow graphs for all {@link ControlFlowElement}s in the given {@link Script}.
@@ -44,13 +62,26 @@ public class N4JSFlowAnalyzer {
 	 */
 	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
-
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
 		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
 		// sw.stop();
+	}
+
+	/** Checks if the user hit the cancel button and if so, a RuntimeException is thrown. */
+	public void checkCancelled() {
+		if (cancelledChecker == null)
+			return;
+
+		try {
+			cancelledChecker.call();
+		} catch (OperationCanceledException e) {
+			throw e;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/** @return the underlying control flow graph */
@@ -90,7 +121,15 @@ public class N4JSFlowAnalyzer {
 
 	/** @return true iff cfeTo is a transitive successor of cfeFrom */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo);
+		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo, null);
+	}
+
+	/**
+	 * @return true iff cfeTo is a transitive successor of cfeFrom and the connecting path does not include cfeNotVia
+	 */
+	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo,
+			ControlFlowElement cfeNotVia) {
+		return dpa.isTransitiveSuccessor(cfeFrom, cfeTo, cfeNotVia);
 	}
 
 	/**
@@ -106,9 +145,9 @@ public class N4JSFlowAnalyzer {
 	 * Returns the common predecessor of two {@link ControlFlowElement}s.
 	 * <p/>
 	 * The common predecessor is computed as follows. First, the CF graph is traversed beginning from cfeA backwards
-	 * until an element is reached which has no predecessor. All elements that were visited during that traversion are
+	 * until an element is reached which has no predecessor. All elements that were visited during that traversal are
 	 * marked. Second, analogous the CF graph is now traversed beginning from cfeB backwards until an element is reached
-	 * which has no predecessor. If an already marked element can be found during that traversion, this element is
+	 * which has no predecessor. If an already marked element can be found during that traversal, this element is
 	 * supposed to be the common predecessor of cfeA and cfeB.
 	 * <p>
 	 * The described algorithm is repeated for swapped cfeA and cfeB.
@@ -121,9 +160,9 @@ public class N4JSFlowAnalyzer {
 	 * Returns an identifier for all paths between two {@link ControlFlowElement}s.
 	 * <p/>
 	 * The path identifier is computed as follows. First, the CF graph is traversed beginning from cfeB backwards until
-	 * an element is reached which has no predecessor. All elements that were visited during that traversion are saved
-	 * in P. Second, the CF graph is now traversed beginning from cfeA forwards. All elements that are visited during
-	 * that second traversion are part of the path identifier iff they are contained in P.
+	 * an element is reached which has no predecessor. All elements that were visited during that traversal are saved in
+	 * P. Second, the CF graph is now traversed beginning from cfeA forwards. All elements that are visited during that
+	 * second traversal are part of the path identifier iff they are contained in P.
 	 */
 	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		return dpa.getPathIdentifier(cfeFrom, cfeTo);
@@ -135,10 +174,10 @@ public class N4JSFlowAnalyzer {
 	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
 	 * then backward beginning from an arbitrary element.
 	 */
-	public void accept(GraphVisitor... graphWalkers) {
-		List<GraphVisitor> graphWalkerList = Lists.newArrayList(graphWalkers);
+	public void accept(GraphVisitor... graphVisitors) {
+		List<GraphVisitor> graphVisitorList = Lists.newArrayList(graphVisitors);
 		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
-		gva.analyseScript(this, graphWalkerList);
+		gva.analyseScript(this, graphVisitorList);
 		// sw.stop();
 	}
 

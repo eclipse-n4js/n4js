@@ -36,6 +36,7 @@ function AdditiveExpression() {
 	--- */
 	// AdditiveExpression XPECT allPaths --> "start" -> 1 -> 2 -> 1 + 2 -> "end"
 	// AdditiveExpression XPECT path from '"start"' to '"end"' -->
+	// AdditiveExpression XPECT path from '"start"' notTo '"end"' notVia '1' -->
 	// AdditiveExpression XPECT allPaths direction 'Backward' --> "end" -> 1 + 2 -> 2 -> 1 -> "start"
 	// AdditiveExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// AdditiveExpression XPECT succs at '"start"' --> 1
@@ -164,6 +165,7 @@ function BinaryLogicalExpression() {
 		"end" -> 1 && 2 -> 2 -> 1 -> "start"
 	--- */
 	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' -->
+	// BinaryLogicalExpression XPECT path from '"start"' to '"end"' notVia '2' -->
 	// BinaryLogicalExpression XPECT commonPreds of '"start"' and '"end"' --> "start"
 	// BinaryLogicalExpression XPECT succs at '"start"' --> 1
 	// BinaryLogicalExpression XPECT succs at '1' --> 2, 1 && 2
@@ -239,7 +241,8 @@ function ConditionalExpression() {
 		"end" -> true ? 1 : 2 -> 1 -> true -> "start",
 		"end" -> true ? 1 : 2 -> 2 -> true -> "start"
 	--- */
-	// ConditionalExpression XPECT path from '"start"' to '"end"' -->
+	// ConditionalExpression XPECT path from '"start"' to '"end"' via '1' -->
+	// ConditionalExpression XPECT path from '"start"' to '"end"' via '2' -->
 	// ConditionalExpression XPECT path from '"start"' to '1' -->
 	// ConditionalExpression XPECT path from '"start"' to '2' -->
 	// ConditionalExpression XPECT path from '1' notTo '2' -->
