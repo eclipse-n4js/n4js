@@ -20,7 +20,6 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,7 +32,6 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-@Ignore
 class N4JSXAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 
 	@Inject
@@ -56,7 +54,7 @@ class N4JSXAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
 		val notificationManager = reflectExtensions.get(workspace, "notificationManager")
 
-		val countBroadcastChangeNotificationManager = new CountPostChangeBroadcastChangeNotificationManager(workspace)
+		val countBroadcastChangeNotificationManager = new CountPostChangeBroadcastChangeNotificationManager(workspace, Thread.currentThread)
 
 		try {
 			// Use reflection to replace workspace's notification manager with our custom notification manager
@@ -70,7 +68,7 @@ class N4JSXAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 			// Restore the notification manager
 			reflectExtensions.set(workspace, "notificationManager", notificationManager)
 		}
-		assertEquals("Exactly 1 POST_CHANGE broadcast event should have been triggered.", 1, countBroadcastChangeNotificationManager.numberPostChangeTriggered)
+		assertEquals("No POST_CHANGE broadcast event should have been triggered on the main thread.", 0, countBroadcastChangeNotificationManager.numberPostChangeTriggered)
 	}
 
 	def private createN4JSProjectWithXtextNature() {
