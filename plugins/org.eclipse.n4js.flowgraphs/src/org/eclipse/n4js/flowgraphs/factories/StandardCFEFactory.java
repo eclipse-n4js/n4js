@@ -25,6 +25,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 class StandardCFEFactory {
 	static final String ENTRY_NODE = "entry";
 	static final String EXIT_NODE = "exit";
+	static final String ENTRY_EXIT_NODE = "entryExit";
 
 	static ComplexNode buildComplexNode(ControlFlowElement cfe) {
 		return buildComplexNode(cfe, true);
@@ -37,8 +38,6 @@ class StandardCFEFactory {
 	private static ComplexNode buildComplexNode(ControlFlowElement cfe, boolean isRepresenting) {
 		ComplexNode cNode = new ComplexNode(cfe);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, cfe);
-		Node exitNode = (isRepresenting) ? new RepresentingNode("exit", cfe) : new HelperNode("exit", cfe);
 		List<Node> argumentNodes = new LinkedList<>();
 
 		List<Pair<String, ControlFlowElement>> args = CFEChildren.get(cfe);
@@ -48,6 +47,14 @@ class StandardCFEFactory {
 			Node argNode = new DelegatingNode(nodeName, cfe, child);
 			argumentNodes.add(argNode);
 		}
+
+		HelperNode entryNode = null;
+		String exitNodeName = ENTRY_EXIT_NODE;
+		// if (!argumentNodes.isEmpty()) {
+		entryNode = new HelperNode(ENTRY_NODE, cfe);
+		exitNodeName = EXIT_NODE;
+		// }
+		Node exitNode = (isRepresenting) ? new RepresentingNode(exitNodeName, cfe) : new HelperNode(exitNodeName, cfe);
 
 		cNode.addNode(entryNode);
 		for (Node arg : argumentNodes)
@@ -60,6 +67,10 @@ class StandardCFEFactory {
 		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 
+		if (argumentNodes.isEmpty()) {
+			// cNode.setEntryNode(exitNode);
+		} else {
+		}
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 

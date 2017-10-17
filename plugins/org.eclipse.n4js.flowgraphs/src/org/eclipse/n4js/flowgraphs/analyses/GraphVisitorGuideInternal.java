@@ -34,9 +34,8 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
  * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
  * a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
- * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored.
- * The path exploration is done in parallel for every {@link PathExplorerInternal} of every
- * {@link GraphVisitorInternal}.
+ * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored. The path
+ * exploration is done in parallel for every {@link PathExplorerInternal} of every {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyzer flowAnalyzer;
@@ -166,6 +165,8 @@ public class GraphVisitorGuideInternal {
 			allVisitedNodes.add(edge.start);
 			allVisitedNodes.add(edge.end);
 		}
+		allVisitedNodes.add(edgeProvider.getStartNode(cn));
+
 		return allVisitedNodes;
 	}
 
@@ -263,8 +264,8 @@ public class GraphVisitorGuideInternal {
 	}
 
 	/**
-	 * Computes the next {@link EdgeGuide}s based on the next {@link ControlFlowEdge}s. For memory performance
-	 * reasons, the current {@link EdgeGuide} is reused and its edge is replaced by the next edge.
+	 * Computes the next {@link EdgeGuide}s based on the next {@link ControlFlowEdge}s. For memory performance reasons,
+	 * the current {@link EdgeGuide} is reused and its edge is replaced by the next edge.
 	 */
 	private List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
 		List<EdgeGuide> nextEGs = new LinkedList<>();

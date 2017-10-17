@@ -149,12 +149,13 @@ public class EdgeGuideIterator implements Iterator<EdgeGuide> {
 		return currEdgeGuides;
 	}
 
-	Set<Node> getAllVisitedNodes() {
+	Set<Node> getAllVisitedNodes(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<Node> allVisitedNodes = new HashSet<>();
 		for (ControlFlowEdge edge : allVisitedEdges) {
 			allVisitedNodes.add(edge.start);
 			allVisitedNodes.add(edge.end);
 		}
+		allVisitedNodes.add(edgeProvider.getStartNode(cn));
 		return allVisitedNodes;
 	}
 
