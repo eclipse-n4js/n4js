@@ -21,6 +21,7 @@ import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -33,6 +34,7 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
+@Ignore
 class N4MFAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 
 	@Inject
