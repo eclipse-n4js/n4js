@@ -32,7 +32,6 @@ class CountPostChangeBroadcastChangeNotificationManager extends NotificationMana
 		// Count the post change events triggered on the main thread
 		if (Thread.currentThread == mainThread && event.type == IResourceChangeEvent.POST_CHANGE) {
 			countPostChangeBroadcastTriggered++
-			println(Thread.currentThread.stackTrace)
 		}
 		super.broadcastChanges(lastState, event, lockTree)
 	}
