@@ -23,9 +23,21 @@ import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
+ * A worklist that iterates through all {@link EdgeGuide}s.
+ * <p>
+ * Use the API in the following way:
  *
+ * <pre>
+ * {@link #EdgeGuideWorklist(Collection)}
+ * -> {@link #initialize(ComplexNode, NextEdgesProvider)}
+ * {
+ *   -> {@link #hasNext()}
+ *   -> {@link #next()}
+ *   -> {@link #work()}
+ * }*
+ * </pre>
  */
-public class EdgeGuideIterator implements Iterator<EdgeGuide> {
+public class EdgeGuideWorklist {
 	private final Collection<? extends GraphVisitorInternal> walkers;
 	private final EdgeGuideQueue currEdgeGuides = new EdgeGuideQueue();
 	private final Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
@@ -33,12 +45,11 @@ public class EdgeGuideIterator implements Iterator<EdgeGuide> {
 	private EdgeGuide nextEdgeGuide;
 
 	/** Constructor */
-	public EdgeGuideIterator(Collection<? extends GraphVisitorInternal> walkers) {
+	public EdgeGuideWorklist(Collection<? extends GraphVisitorInternal> walkers) {
 		this.walkers = walkers;
 	}
 
-	@Override
-	public boolean hasNext() {
+	boolean hasNext() {
 		setNext();
 		return nextEdgeGuide != null;
 	}
@@ -47,12 +58,22 @@ public class EdgeGuideIterator implements Iterator<EdgeGuide> {
 		return currEdgeGuide;
 	}
 
-	@Override
-	public EdgeGuide next() {
+	EdgeGuide next() {
 		setNext();
 		currEdgeGuide = nextEdgeGuide;
 		nextEdgeGuide = null;
 		return currEdgeGuide;
+	}
+
+	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider) {
+		List<EdgeGuide> nextEGs = getFirstEdgeGuides(cn, edgeProvider);
+		currEdgeGuides.addAll(nextEGs);
+	}
+
+	void work() {// consider to execute this in #next()
+		allVisitedEdges.add(currEdgeGuide.edge);
+		List<EdgeGuide> nextEGs = getNextEdgeGuides(currEdgeGuide);
+		currEdgeGuides.addAll(nextEGs);
 	}
 
 	private void setNext() {
@@ -70,12 +91,7 @@ public class EdgeGuideIterator implements Iterator<EdgeGuide> {
 		}
 	}
 
-	void setFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		List<EdgeGuide> nextEGs = getFirstEdgeGuides(cn, edgeProvider);
-		currEdgeGuides.addAll(nextEGs);
-	}
-
-	List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
+	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activateRequestedPathExplorers());
@@ -105,13 +121,7 @@ public class EdgeGuideIterator implements Iterator<EdgeGuide> {
 		return nextEGs;
 	}
 
-	void addNextEdgeGuides() {
-		allVisitedEdges.add(currEdgeGuide.edge);
-		List<EdgeGuide> nextEGs = getNextEdgeGuides(currEdgeGuide);
-		currEdgeGuides.addAll(nextEGs);
-	}
-
-	List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
+	private List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
 		List<EdgeGuide> nextEGs = new LinkedList<>();
 		List<ControlFlowEdge> nextEdges = currEG.getNextEdges();
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
@@ -145,7 +155,7 @@ public class EdgeGuideIterator implements Iterator<EdgeGuide> {
 		return nextEGs;
 	}
 
-	Iterable<EdgeGuide> getCurrentEdgeGuideIterable() {
+	Iterable<EdgeGuide> getCurrentEdgeGuides() {
 		return currEdgeGuides;
 	}
 

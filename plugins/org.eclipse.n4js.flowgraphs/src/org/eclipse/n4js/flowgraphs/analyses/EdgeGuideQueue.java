@@ -22,7 +22,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * TODO in GH-235 part 2
  */
 public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 	private final ArrayList<EdgeGuide> currEdgeGuides = new ArrayList<>();
@@ -50,10 +50,6 @@ public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 	}
 
 	EdgeGuide removeFirst() {
-		// System.out.println();
-		// for (EdgeGuideInternal egi : currEdgeGuides) {
-		// System.out.print(getString(egi) + " ");
-		// }
 		return currEdgeGuides.remove(0);
 	}
 

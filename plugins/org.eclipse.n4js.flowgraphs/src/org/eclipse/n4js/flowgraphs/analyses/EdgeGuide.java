@@ -148,9 +148,9 @@ public class EdgeGuide {
 			PathExplorerInternal explorer = masterPWI.getExplorer();
 			Set<PathWalkerInternal> explorersPaths = explorer.getActivePaths();
 			PathWalkerInternal forkedPWI = null;
-			for (PathWalkerInternal forkdPWI : egi.activePaths) {
-				if (explorersPaths.contains(forkdPWI)) {
-					forkedPWI = forkdPWI;
+			for (PathWalkerInternal activePath : egi.activePaths) {
+				if (explorersPaths.contains(activePath)) {
+					forkedPWI = activePath;
 				}
 			}
 

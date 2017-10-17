@@ -33,6 +33,9 @@ import org.eclipse.xtext.util.ITextRegion;
  * is invalidated.
  */
 public class EditorOverlay implements PaintListener {
+	static final Color colorGreen = Display.getDefault().getSystemColor(SWT.COLOR_GREEN);
+	static final Color colorBlue = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
+
 	final private ILocationInFileProvider locFileProvider;
 	private StyledText styledText;
 
@@ -135,9 +138,6 @@ public class EditorOverlay implements PaintListener {
 
 	@Override
 	public void paintControl(PaintEvent e) {
-		Color colorGreen = new Color(e.display, 20, 200, 20);
-		Color colorBlue = Display.getDefault().getSystemColor(SWT.COLOR_BLUE);
-
 		for (EObject eo : selectedElements) {
 			paintConture(e, eo, colorBlue);
 		}

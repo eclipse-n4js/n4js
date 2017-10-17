@@ -106,12 +106,12 @@ public class ControlFlowGraphFactory {
 				}
 			}
 			for (Node mNode : cn.getNodes()) {
-				if (removeDelegateNode(cn, mNode)) {
+				if (isRemovableNode(mNode)) {
 					removeNodes.add(mNode);
 				}
 			}
 			for (Node removeNode : removeNodes) {
-				cn.removeNode(removeNode);
+				removeNode(cn, removeNode);
 			}
 		}
 	}
@@ -141,7 +141,27 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	private static boolean removeDelegateNode(ComplexNode cn, Node mNode) {
+	private static void removeNode(ComplexNode cn, Node mNode) {
+		ControlFlowEdge e1 = mNode.pred.get(0);
+		ControlFlowEdge e2 = mNode.succ.get(0);
+		Node pred = e1.start;
+		Node succ = e2.end;
+
+		EdgeUtils.removeCF(e1);
+		EdgeUtils.removeCF(e2);
+		cn.removeNodeChecks(mNode);
+		cn.removeNode(mNode);
+
+		Node intPred = mNode.getInternalPredecessors().iterator().next();
+		Node intSucc = mNode.getInternalSuccessors().iterator().next();
+		intPred.removeInternalSuccessor(mNode);
+		intSucc.removeInternalPredecessor(mNode);
+
+		pred.removeInternalSuccessor(mNode);
+		EdgeUtils.connectCF(pred, succ);
+	}
+
+	private static boolean isRemovableNode(Node mNode) {
 		boolean remDel = true;
 		remDel = remDel && mNode instanceof DelegatingNode;
 		remDel = remDel && !(mNode instanceof RepresentingNode);
@@ -153,25 +173,6 @@ public class ControlFlowGraphFactory {
 		remDel = remDel && mNode.succ.size() == 1;
 		remDel = remDel && mNode.pred.get(0).cfType == ControlFlowType.Successor;
 		remDel = remDel && mNode.succ.get(0).cfType == ControlFlowType.Successor;
-
-		if (remDel) {
-			ControlFlowEdge e1 = mNode.pred.get(0);
-			ControlFlowEdge e2 = mNode.succ.get(0);
-			Node pred = e1.start;
-			Node succ = e2.end;
-
-			EdgeUtils.removeCF(e1);
-			EdgeUtils.removeCF(e2);
-			cn.removeNodeChecks(mNode);
-
-			Node intPred = mNode.getInternalPredecessors().iterator().next();
-			Node intSucc = mNode.getInternalSuccessors().iterator().next();
-			intPred.removeInternalSuccessor(mNode);
-			intSucc.removeInternalPredecessor(mNode);
-
-			pred.removeInternalSuccessor(mNode);
-			EdgeUtils.connectCF(pred, succ);
-		}
 		return remDel;
 	}
 
@@ -242,7 +243,7 @@ public class ControlFlowGraphFactory {
 	}
 
 	/** Prints detailed information of all control flow edges. Used for debugging purposes */
-	private static void printAllEdgeDetails(ComplexNodeMapper cnMapper) {
+	private static void printAllEdgeDetails(ComplexNodeMapper cnMapper) { // TODO move this to a PrintUtils class
 		System.out.println("\nAll edges:");
 		Set<ControlFlowEdge> allEdges = new HashSet<>();
 		for (ComplexNode cn : cnMapper.getAll()) {

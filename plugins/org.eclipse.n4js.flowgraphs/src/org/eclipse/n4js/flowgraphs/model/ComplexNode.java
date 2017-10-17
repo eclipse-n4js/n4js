@@ -121,6 +121,7 @@ public class ComplexNode implements ControlFlowable {
 
 	/** Checks invoked before a node from this instance is removed */
 	public void removeNodeChecks(Node node) {
+		// TODO in GH-235: change/consider to use if/throw instead
 		assert entry != node : "FlowGraph malformed: Node not child of complex node";
 		assert exit != node : "FlowGraph malformed: Node not child of complex node";
 		assert represent != node : "FlowGraph malformed: Node not child of complex node";

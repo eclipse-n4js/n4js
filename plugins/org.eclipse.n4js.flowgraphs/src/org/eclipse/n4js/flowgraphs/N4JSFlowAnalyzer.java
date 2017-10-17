@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.Callable;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
@@ -34,6 +35,7 @@ import com.google.common.collect.Lists;
  * Facade for all control and data flow related methods.
  */
 public class N4JSFlowAnalyzer {
+	static private final Logger LOGGER = Logger.getLogger(N4JSFlowAnalyzer.class);
 	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
@@ -80,7 +82,7 @@ public class N4JSFlowAnalyzer {
 		} catch (OperationCanceledException e) {
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.warn("Unknown exception", e);
 		}
 	}
 
