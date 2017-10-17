@@ -60,7 +60,11 @@ public class N4JSDocument extends XtextDocument {
 			super();
 		}
 
-		/** See {@link N4JSDocument#tryReadOnly(IUnitOfWork, Object)}. */
+		/**
+		 * See {@link N4JSDocument#tryReadOnly(IUnitOfWork, Object)}.
+		 * <p>
+		 * TODO GH-283: remove this work-around once issue eclipse/xtext-eclipse#408 is fixed
+		 */
 		public <T> T tryReadOnly(IUnitOfWork<T, XtextResource> work, T defaultValue) {
 			// not super safe multithreading, but ok'ish for our purpose
 			if (getReadHoldCount() == 0 && getWriteHoldCount() == 0) {
