@@ -41,6 +41,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	final NavigableMap<ControlFlowElement, Node> nodeMap = new TreeMap<>(new CFEComparator());
 	private CFGraphProvider gProvider;
 	private N4JSFlowAnalyzer flowAnalyzer;
+	private boolean layoutDone;
 
 	/**
 	 * Constructor
@@ -49,6 +50,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		locFileProvider = new DefaultLocationInFileProvider();
 		editor = EditorUtils.getActiveXtextEditor();
 		styledText = editor.getInternalSourceViewer().getTextWidget();
+		layoutDone = false;
 	}
 
 	@Override
@@ -71,6 +73,9 @@ public class CFGraph extends Graph<CFGraphProvider> {
 
 	@Override
 	public void layout(GC gc) {
+		if (layoutDone)
+			return;
+
 		int lastLine = 0;
 		int posInLine = 10;
 		int lineCounter = 0;
@@ -95,6 +100,7 @@ public class CFGraph extends Graph<CFGraphProvider> {
 			node.trim(gc);
 			posInLine += node.width + 50;
 		}
+		layoutDone = true;
 	}
 
 	/** @return offset of the source code region of the given {@link ControlFlowElement} */

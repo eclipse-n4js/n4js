@@ -10,11 +10,15 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import com.google.common.base.Strings
 import com.google.inject.Inject
 import java.util.List
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -49,9 +53,13 @@ import org.eclipse.n4js.utils.nodemodel.HiddenLeafAccess
 import org.eclipse.n4js.utils.nodemodel.HiddenLeafs
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.service.OperationCanceledManager
+import org.eclipse.xtext.util.CancelIndicator
+import org.eclipse.xtext.validation.CancelableDiagnostician
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 
@@ -65,11 +73,6 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
-import org.eclipse.n4js.validation.N4JSElementKeywordProvider
-import com.google.common.base.Strings
 
 /**
  */
@@ -93,6 +96,9 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject
 	private N4JSElementKeywordProvider keywordProvider;
 
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
+
 	/**
 	 * NEEEDED
 	 *
@@ -102,6 +108,15 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	override register(EValidatorRegistrar registrar) {
 		// nop
 	}
+	
+	def Void checkCancelled() {
+		val CancelIndicator cancelIndicator = context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
+		operationCanceledManager.checkCanceled(cancelIndicator);
+		return null;
+	}
+
+
+
 
 	/**
 	 * Checks all flow graph related validations
@@ -113,11 +128,11 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 		flowAnalyzer.createGraphs(script);
 
-		val dcf = new DeadCodeVisitor();
+		val dcv = new DeadCodeVisitor();
 
-		flowAnalyzer.accept(dcf); // GH-120: comment-out this line to disable CFG
+		flowAnalyzer.accept(dcv); // GH-120: comment-out this line to disable CFG
 
-		internalCheckDeadCode(dcf);
+		internalCheckDeadCode(dcv);
 	}
 
 	// Req.107

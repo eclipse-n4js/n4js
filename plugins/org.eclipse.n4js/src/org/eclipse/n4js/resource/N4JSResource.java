@@ -939,7 +939,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 */
 	@Override
 	protected EObject getEObjectForURIFragmentRootSegment(String uriFragmentRootSegment) {
-		if (contents != null) {
+		if (contents != null && !contents.isEmpty()) {
 			if (isASTProxy(contents.basicGet(0))) {
 				int position = 0;
 				if (uriFragmentRootSegment.length() > 0) {

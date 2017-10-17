@@ -33,7 +33,7 @@ import static extension org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.*
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSUiInjectorProvider)
-class N4MFAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
+class N4MFAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 
 	@Inject
 	ReflectExtensions reflectExtensions
@@ -57,7 +57,7 @@ class N4MFAvoidRefreshDocumentProviderTest extends AbstractEditorTest {
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
 		val notificationManager = reflectExtensions.get(workspace, "notificationManager")
 
-		val countBroadcastChangeNotificationManager = new CountPostChangeBroadcastChangeNotificationManager(workspace)
+		val countBroadcastChangeNotificationManager = new CountPostChangeBroadcastChangeNotificationManager(workspace, Thread.currentThread)
 
 		try {
 			// Use reflection to replace workspace's notification manager with our custom notification manager

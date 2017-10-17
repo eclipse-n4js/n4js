@@ -70,7 +70,7 @@ public class FlowgraphsXpectMethod {
 			String type, IEObjectCoveringRegion offset) {
 
 		ControlFlowType cfType = getControlFlowType(type);
-		ControlFlowElement cfe = getControlFlowElement(offset);
+		ControlFlowElement cfe = getCFE(offset);
 		Set<ControlFlowElement> preds = getFlowAnalyzer(cfe).getPredecessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, preds, cfType);
 
@@ -94,7 +94,7 @@ public class FlowgraphsXpectMethod {
 			String type, IEObjectCoveringRegion offset) {
 
 		ControlFlowType cfType = getControlFlowType(type);
-		ControlFlowElement cfe = getControlFlowElement(offset);
+		ControlFlowElement cfe = getCFE(offset);
 		Set<ControlFlowElement> succs = getFlowAnalyzer(cfe).getSuccessorsSkipInternal(cfe);
 		filterByControlFlowType(cfe, succs, cfType);
 
@@ -134,44 +134,56 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/** This xpect method can evaluate if the tested element is a transitive predecessor of the given element. */
-	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@ParameterParser(syntax = "'from' arg0=OFFSET ('to' arg1=OFFSET)? ('notTo' arg2=OFFSET)? ('via' arg3=OFFSET)? ('notVia' arg4=OFFSET)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg5=OFFSET)?")
 	@Xpect
 	public void path(IEObjectCoveringRegion fromOffset, IEObjectCoveringRegion toOffset,
-			IEObjectCoveringRegion notToOffset, IEObjectCoveringRegion referenceOffset) {
+			IEObjectCoveringRegion notToOffset, IEObjectCoveringRegion viaOffset,
+			IEObjectCoveringRegion notViaOffset, IEObjectCoveringRegion referenceOffset) {
 
 		EObjectCoveringRegion toOffsetImpl = (EObjectCoveringRegion) toOffset;
 		EObjectCoveringRegion notToOffsetImpl = (EObjectCoveringRegion) notToOffset;
+		EObjectCoveringRegion viaOffsetImpl = (EObjectCoveringRegion) viaOffset;
+		EObjectCoveringRegion notViaOffsetImpl = (EObjectCoveringRegion) notViaOffset;
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
 
-		ControlFlowElement fromCFE = getControlFlowElement(fromOffset);
-		ControlFlowElement toCFE = null;
-		if (referenceOffsetImpl.getOffset() < toOffsetImpl.getOffset()) {
-			toCFE = getControlFlowElement(toOffset);
-		}
-		ControlFlowElement notToCFE = null;
-		if (referenceOffsetImpl.getOffset() < notToOffsetImpl.getOffset()) {
-			notToCFE = getControlFlowElement(notToOffsetImpl);
-		}
+		ControlFlowElement fromCFE = getCFE(fromOffset);
+		ControlFlowElement toCFE = getCFEWithReference(toOffsetImpl, referenceOffsetImpl);
+		ControlFlowElement notToCFE = getCFEWithReference(notToOffsetImpl, referenceOffsetImpl);
+		ControlFlowElement viaCFE = getCFEWithReference(viaOffsetImpl, referenceOffsetImpl);
+		ControlFlowElement notViaCFE = getCFEWithReference(notViaOffsetImpl, referenceOffsetImpl);
+		ControlFlowElement targetCFE = (toCFE != null) ? toCFE : notToCFE;
+
+		boolean expectPathExists = toCFE != null;
 
 		if (fromCFE == null) {
 			fail("Element 'from' could not be found");
 		}
-		if (toCFE == null && notToCFE == null) {
+		if (targetCFE == null) {
 			fail("Element 'to' or 'notTo' could not be found or before 'from'");
 		}
 
-		if (toCFE != null) {
-			boolean isTransitiveSuccs = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, toCFE);
-			if (!isTransitiveSuccs) {
-				fail("Elements are no transitive successors");
-			}
+		boolean actualPathExists;
+		if (viaCFE != null) {
+			actualPathExists = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, viaCFE, notViaCFE);
+			actualPathExists &= getFlowAnalyzer(fromCFE).isTransitiveSuccessor(viaCFE, targetCFE, notViaCFE);
+		} else {
+			actualPathExists = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, targetCFE, notViaCFE);
 		}
-		if (notToCFE != null) {
-			boolean isTransitiveSuccs = getFlowAnalyzer(fromCFE).isTransitiveSuccessor(fromCFE, notToCFE);
-			if (isTransitiveSuccs) {
-				fail("Elements are transitive successors");
-			}
+
+		if (expectPathExists && !actualPathExists) {
+			fail("Path not found");
 		}
+		if (!expectPathExists && actualPathExists) {
+			fail("A path was found");
+		}
+	}
+
+	private ControlFlowElement getCFEWithReference(EObjectCoveringRegion offset, EObjectCoveringRegion reference) {
+		ControlFlowElement cfe = null;
+		if (reference.getOffset() < offset.getOffset()) {
+			cfe = getCFE(offset);
+		}
+		return cfe;
 	}
 
 	/**
@@ -185,11 +197,8 @@ public class FlowgraphsXpectMethod {
 
 		EObjectCoveringRegion offsetImpl = (EObjectCoveringRegion) offset;
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
-		ControlFlowElement startCFE = null;
-		if (referenceOffsetImpl.getOffset() < offsetImpl.getOffset()) {
-			startCFE = getControlFlowElement(offsetImpl);
-		}
-		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
+		ControlFlowElement startCFE = getCFEWithReference(offsetImpl, referenceOffsetImpl);
+		ControlFlowElement referenceCFE = getCFE(referenceOffset);
 		GraphVisitorInternal.Mode direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
@@ -219,7 +228,7 @@ public class FlowgraphsXpectMethod {
 
 		ControlFlowElement cfe = null;
 		if (offset != null) {
-			cfe = getControlFlowElement(offset);
+			cfe = getCFE(offset);
 		}
 		cfe = FGUtils.getCFContainer(cfe);
 
@@ -236,8 +245,8 @@ public class FlowgraphsXpectMethod {
 	public void commonPreds(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion a, IEObjectCoveringRegion b) {
 
-		ControlFlowElement aCFE = getControlFlowElement(a);
-		ControlFlowElement bCFE = getControlFlowElement(b);
+		ControlFlowElement aCFE = getCFE(a);
+		ControlFlowElement bCFE = getCFE(b);
 
 		Set<ControlFlowElement> commonPreds = getFlowAnalyzer(aCFE).getCommonPredecessors(aCFE, bCFE);
 		List<String> commonPredStrs = new LinkedList<>();
@@ -249,7 +258,7 @@ public class FlowgraphsXpectMethod {
 		expectation.assertEquals(commonPredStrs);
 	}
 
-	private ControlFlowElement getControlFlowElement(IEObjectCoveringRegion offset) {
+	private ControlFlowElement getCFE(IEObjectCoveringRegion offset) {
 		EObject context = offset.getEObject();
 		if (!(context instanceof ControlFlowElement)) {
 			fail("Element '" + FGUtils.getSourceText(context) + "' is not a control flow element");
@@ -264,7 +273,7 @@ public class FlowgraphsXpectMethod {
 	public void allIslandElems(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion referenceOffset) {
 
-		ControlFlowElement referenceCFE = getControlFlowElement(referenceOffset);
+		ControlFlowElement referenceCFE = getCFE(referenceOffset);
 		ControlFlowElement container = getFlowAnalyzer(referenceCFE).getContainer(referenceCFE);
 		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(container);
 		getFlowAnalyzer(referenceCFE).accept(anaepw);
@@ -276,7 +285,7 @@ public class FlowgraphsXpectMethod {
 	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect
 	public void cfContainer(@StringExpectation IStringExpectation expectation, IEObjectCoveringRegion offset) {
-		ControlFlowElement cfe = getControlFlowElement(offset);
+		ControlFlowElement cfe = getCFE(offset);
 		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
 		EObject containerContainer = container.eContainer();
 
@@ -291,7 +300,7 @@ public class FlowgraphsXpectMethod {
 	public void allCatchBlocks(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset) {
 
-		ControlFlowElement cfe = getControlFlowElement(offset);
+		ControlFlowElement cfe = getCFE(offset);
 		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
 		List<Block> catchBlocks = getFlowAnalyzer(cfe).getCatchBlocksOfContainer(container);
 
