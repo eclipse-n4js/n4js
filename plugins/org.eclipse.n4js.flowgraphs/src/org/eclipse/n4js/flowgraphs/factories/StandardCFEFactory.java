@@ -14,12 +14,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.xtext.xbase.lib.Pair;
 
 /** Used for all non-statements. Children nodes are retrieved from {@link CFEChildren#get(ControlFlowElement)}. */
 class StandardCFEFactory {
@@ -40,11 +38,8 @@ class StandardCFEFactory {
 
 		List<Node> argumentNodes = new LinkedList<>();
 
-		List<Pair<String, ControlFlowElement>> args = CFEChildren.get(cfe);
-		for (Pair<String, ControlFlowElement> entry : args) {
-			String nodeName = entry.getKey();
-			ControlFlowElement child = entry.getValue();
-			Node argNode = new DelegatingNode(nodeName, cfe, child);
+		List<Node> args = CFEChildren.get(cfe);
+		for (Node argNode : args) {
 			argumentNodes.add(argNode);
 		}
 
