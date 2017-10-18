@@ -42,8 +42,7 @@ class IDENodeTestRunner  {
             }
             this.reporter.endpoint = testCatalog.endpoint;
             this.controller.reporters = [this.reporter];
-            const scope = n4.runtimeOptions.testScope || undefined;
-            await this.controller.runGroups(testCatalog, 100, scope as string);
+            await this.controller.runGroups(testCatalog, 100, n4.runtimeOptions.testScope as string);
         } catch (err) {
             let errObj: Object+ = err as Object;
             console.error(err + "\nstack: " + errObj.stack.replace(/^Error:?\s*/, ""));
