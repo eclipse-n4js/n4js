@@ -15,9 +15,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
-import org.eclipse.n4js.flowgraphs.model.Node;
-
 /**
  * An {@link PathExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific preconditions.
  * It follows all paths beginning from the location of activation. Its initial path is forked using the method
@@ -36,10 +33,10 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * </ol>
  */
 abstract public class PathExplorerInternal {
-	private final Set<PathWalkerInternal> activePaths = new HashSet<>();
-	private final List<PathWalkerInternal> passedPaths = new LinkedList<>();
-	private final List<PathWalkerInternal> failedPaths = new LinkedList<>();
-	private final List<PathWalkerInternal> allPaths = new LinkedList<>();
+	final Set<PathWalkerInternal> activePaths = new HashSet<>();
+	final List<PathWalkerInternal> passedPaths = new LinkedList<>();
+	final List<PathWalkerInternal> failedPaths = new LinkedList<>();
+	final List<PathWalkerInternal> allPaths = new LinkedList<>();
 	/** Quantor, specified in constructor */
 	protected final Quantor quantor;
 	/** Default verdict, specified in constructor */
@@ -119,39 +116,11 @@ abstract public class PathExplorerInternal {
 	final PathWalkerInternal callFirstPathWalker(GraphVisitorInternal parentGraphVisitorInternal) {
 		parentGraphVisitor = parentGraphVisitorInternal;
 		PathWalkerInternal activePath = firstPathWalker();
-		activePaths.add(activePath);
-		allPaths.add(activePath);
-		activePath.initialize();
+		activePath.callInitialize(this, null);
 		return activePath;
 	}
 
-	/////////////////////// Service Methods for inherited classes ///////////////////////
-
-	/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
-	final public boolean isPassed() {
-		return state == State.Passed;
-	}
-
-	/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
-	final public boolean isFailed() {
-		return state == State.Failed;
-	}
-
-	/** @return all paths no matter if they are active or not, or passed or failed. */
-	final public List<PathWalkerInternal> getAllPaths() {
-		return allPaths;
-	}
-
-	/** Deactivates all active paths and hence this {@link PathExplorerInternal}. */
-	final protected void deactivateAll() {
-		while (!activePaths.isEmpty()) {
-			PathWalkerInternal aPath = activePaths.iterator().next();
-			aPath.deactivate();
-		}
-		checkExplorerDeactivation();
-	}
-
-	private void checkExplorerDeactivation() {
+	final void checkExplorerDeactivation() {
 		if (activePaths.isEmpty()) {
 			boolean somePassed = !passedPaths.isEmpty();
 			boolean someFailed = !failedPaths.isEmpty();
@@ -179,99 +148,35 @@ abstract public class PathExplorerInternal {
 		}
 	}
 
-	/**
-	 * Paths begin when a {@link PathExplorerInternal} gets active or when forked from another path. Paths end when no
-	 * succeeding nodes are in the control flow graph, or the user calls either {@link #pass()}, {@link #fail()}, or
-	 * {@link #deactivate()}. Paths follow every edge and fork on every node that has more than one edge. However, each
-	 * edge of type {@literal ControlFlowType.Repeat} is followed exactly twice.
-	 */
-	abstract public class PathWalkerInternal {
+	/////////////////////// Service Methods for inherited classes ///////////////////////
 
-		/////////////////////// Abstract Methods ///////////////////////
+	/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
+	final public boolean isPassed() {
+		return state == State.Passed;
+	}
 
-		/** Called before any other method of this instance is called. */
-		abstract protected void initialize();
+	/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
+	final public boolean isFailed() {
+		return state == State.Failed;
+	}
 
-		/** Called for each node in the order of nodes on the current path. */
-		abstract protected void visit(Node node);
-
-		/**
-		 * Called for each edge in the order of edges on the current path.
-		 *
-		 * @param edge
-		 *            traversed edge
-		 */
-		abstract protected void visit(Node start, Node end, ControlFlowEdge edge);
-
-		/**
-		 * Forks another path from the current node.<br/>
-		 * <i>Take care about forking the current state of this instance!</i>
-		 */
-		abstract protected PathWalkerInternal fork();
-
-		/** Called at last. */
-		abstract protected void terminate();
-
-		/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
-
-		/**
-		 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link PathWalkerInternal#visit(Node)}.
-		 */
-		final void callVisit(Node node) {
-			visit(node);
+	/** Deactivates all active paths and hence this {@link PathExplorerInternal}. */
+	final public void deactivateAll() {
+		while (!activePaths.isEmpty()) {
+			PathWalkerInternal aPath = activePaths.iterator().next();
+			aPath.deactivate();
 		}
+		checkExplorerDeactivation();
+	}
 
-		/**
-		 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-		 * {@link PathWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
-		 */
-		final void callVisit(Node start, Node end, ControlFlowEdge edge) {
-			visit(start, end, edge);
-		}
+	/** @return all paths no matter if they are active or not, or passed or failed. */
+	final public List<PathWalkerInternal> getAllPaths() {
+		return allPaths;
+	}
 
-		/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
-		final PathWalkerInternal callFork() {
-			PathWalkerInternal forkedPath = fork();
-			allPaths.add(forkedPath);
-			activePaths.add(forkedPath);
-			forkedPath.initialize();
-			return forkedPath;
-		}
-
-		/////////////////////// Service Methods for inherited classes ///////////////////////
-
-		/** Sets the verdict of this path to <i>Passed</i>. */
-		final public void pass() {
-			passedPaths.add(this);
-			if (quantor == Quantor.AtLeastOnePath) {
-				deactivateAll();
-			} else {
-				deactivate();
-			}
-		}
-
-		/** Sets the verdict of this path to <i>Failed</i>. */
-		final public void fail() {
-			failedPaths.add(this);
-			if (quantor == Quantor.ForAllPaths) {
-				deactivateAll();
-			} else {
-				deactivate();
-			}
-		}
-
-		/** Deactivates this path without setting the verdict. */
-		final public void deactivate() {
-			activePaths.remove(this);
-			terminate();
-			checkExplorerDeactivation();
-		}
-
-		/** @return true, iff this path is active. */
-		final public boolean isActive() {
-			return activePaths.contains(this);
-		}
-
+	/** @return all paths no matter if they are active or not, or passed or failed. */
+	final public Set<PathWalkerInternal> getActivePaths() {
+		return activePaths;
 	}
 
 }
