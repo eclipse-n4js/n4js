@@ -11,10 +11,8 @@
 package org.eclipse.n4js.n4jsx.helpers
 
 import com.google.inject.Inject
-import java.util.HashMap
-import java.util.Map
+import java.io.File
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -47,7 +45,7 @@ class ReactHelper {
 	public final static String REACT_KEY = "KEY__" + REACT_MODULE
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"
-	public final static String REACT_DEFINITION_FILE = REACT_MODULE + "." + N4JSGlobals.N4JSD_FILE_EXTENSION
+	public final static String REACT_DEFINITION_FILE = REACT_MODULE + File.separatorChar + "index." + N4JSGlobals.N4JSD_FILE_EXTENSION
 
 	/**
 	 * Look up React.Element in the index.
@@ -79,10 +77,10 @@ class ReactHelper {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, context.eResource, [
 			val index = resourceDescriptionsProvider.getResourceDescriptions(context.eResource)
-			val String reactClassifierFQNSuffix = REACT_MODULE + "." + reactClassifierName
+			val String reactClassifierFQNSuffix = "index." + reactClassifierName
 
 			var IEObjectDescription reactClassifierEObj = null
-			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.lastSegment == REACT_DEFINITION_FILE]
+			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.toString.contains(REACT_DEFINITION_FILE)]
 			for (resDesc : allResDescs) {
 				val eobjDescs = resDesc.exportedObjects.filter[EObjectOrProxy instanceof TClassifier]
 				if (reactClassifierEObj === null) {
@@ -99,7 +97,7 @@ class ReactHelper {
 	}
 
 	private def boolean isReactClassifierDescription(IEObjectDescription desc, String suffix) {
-		return desc.EObjectURI.trimFragment.lastSegment == REACT_DEFINITION_FILE && desc.qualifiedName.toString.endsWith(suffix)
+		return desc.EObjectURI.trimFragment.toString.contains(REACT_DEFINITION_FILE) && desc.qualifiedName.toString.endsWith(suffix)
 	}
 
 	/**
