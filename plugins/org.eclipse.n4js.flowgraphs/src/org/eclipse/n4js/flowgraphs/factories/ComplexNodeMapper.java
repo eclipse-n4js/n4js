@@ -11,19 +11,29 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Interface that provides the method {@link #get(ControlFlowElement)}.
+ * Class that provides the method {@link #get(ControlFlowElement)}.
  */
-interface ComplexNodeMapper {
+class ComplexNodeMapper {
+	final private Map<ControlFlowElement, ComplexNode> cnMap;
+
+	ComplexNodeMapper(Map<ControlFlowElement, ComplexNode> cnMap) {
+		this.cnMap = cnMap;
+	}
 
 	/** Returns an {@link Iterator} over all {@link ComplexNode}s */
-	Iterable<ComplexNode> getAll();
+	Iterable<ComplexNode> getAll() {
+		return cnMap.values();
+	}
 
 	/** Returns the {@link ComplexNode} that represents the {@link ControlFlowElement} in the flow graph */
-	ComplexNode get(ControlFlowElement cfe);
+	ComplexNode get(ControlFlowElement cfe) {
+		return cnMap.get(CFEMapper.map(cfe));
+	}
 
 }

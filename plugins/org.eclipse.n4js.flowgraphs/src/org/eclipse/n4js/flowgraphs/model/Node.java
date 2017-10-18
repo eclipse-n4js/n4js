@@ -22,16 +22,17 @@ import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a
- * {@link ComplexNode}. 
+ * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a {@link ComplexNode}.
  */
 abstract public class Node implements ControlFlowable {
 	final private ControlFlowElement cfElem;
 	/** Name of the node */
 	final public String name;
 
-	/** Maps from a successor node to an {@link SuccessorEdgeDescription} */
-	final public Map<Node, SuccessorEdgeDescription> internalSucc = new HashMap<>();
+	/** Maps from a predecessor node to an {@link EdgeDescription} */
+	final public Map<Node, EdgeDescription> internalPred = new HashMap<>();
+	/** Maps from a successor node to an {@link EdgeDescription} */
+	final public Map<Node, EdgeDescription> internalSucc = new HashMap<>();
 	/** List of all preceding {@link ControlFlowEdge}s */
 	final public List<ControlFlowEdge> pred = new LinkedList<>();
 	/** List of all succeeding {@link ControlFlowEdge}s */
@@ -61,19 +62,46 @@ abstract public class Node implements ControlFlowable {
 	abstract public ControlFlowElement getRepresentedControlFlowElement();
 
 	/**
+	 * Adds an internal predecessor with edge type {@literal ControlFlowType.Successor} to this node. It used when the
+	 * control flow graph is created.
+	 */
+	public void addInternalPrecessor(Node node) {
+		addInternalPredecessor(node, ControlFlowType.Successor);
+	}
+
+	/**
 	 * Adds an internal successor with edge type {@literal ControlFlowType.Successor} to this node. It used when the
 	 * control flow graph is created.
 	 */
-	public void addInternalSuccessors(Node node) {
-		addInternalSuccessors(node, ControlFlowType.Successor);
+	public void addInternalSuccessor(Node node) {
+		addInternalSuccessor(node, ControlFlowType.Successor);
+	}
+
+	/**
+	 * Adds an internal predecessor with the given edge type to this node. It used when the control flow graph is
+	 * created.
+	 */
+	public void addInternalPredecessor(Node node, ControlFlowType cfType) {
+		EdgeDescription sed = new EdgeDescription(node, cfType);
+		internalPred.put(sed.node, sed);
+	}
+
+	/** Removes an internal predecessor */
+	public void removeInternalPredecessor(Node node) {
+		internalPred.remove(node);
 	}
 
 	/**
 	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
 	 */
-	public void addInternalSuccessors(Node node, ControlFlowType cfType) {
-		SuccessorEdgeDescription sed = new SuccessorEdgeDescription(node, cfType);
-		internalSucc.put(sed.endNode, sed);
+	public void addInternalSuccessor(Node node, ControlFlowType cfType) {
+		EdgeDescription sed = new EdgeDescription(node, cfType);
+		internalSucc.put(sed.node, sed);
+	}
+
+	/** Removes an internal successor */
+	public void removeInternalSuccessor(Node node) {
+		internalSucc.remove(node);
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
@@ -96,6 +124,11 @@ abstract public class Node implements ControlFlowable {
 		endEdges.add(depEdge);
 	}
 
+	/** @return set of all internal predecessors. */
+	public Set<Node> getInternalPredecessors() {
+		return internalPred.keySet();
+	}
+
 	/** @return set of all internal successors. */
 	public Set<Node> getInternalSuccessors() {
 		return internalSucc.keySet();
@@ -104,7 +137,7 @@ abstract public class Node implements ControlFlowable {
 	/** @return the {@link ControlFlowType} of a given internal successor. */
 	public ControlFlowType getInternalSuccessorControlFlowType(Node endNode) {
 		if (internalSucc.containsKey(endNode)) {
-			SuccessorEdgeDescription sed = internalSucc.get(endNode);
+			EdgeDescription sed = internalSucc.get(endNode);
 			return sed.cfType;
 		}
 		return null;
@@ -160,12 +193,12 @@ abstract public class Node implements ControlFlowable {
 		return getName();
 	}
 
-	private class SuccessorEdgeDescription {
+	private class EdgeDescription {
 		final ControlFlowType cfType;
-		final Node endNode;
+		final Node node;
 
-		SuccessorEdgeDescription(Node endNode, ControlFlowType cfType) {
-			this.endNode = endNode;
+		EdgeDescription(Node node, ControlFlowType cfType) {
+			this.node = node;
 			this.cfType = cfType;
 		}
 	}
