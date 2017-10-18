@@ -20,6 +20,7 @@ import java.util.Set
 import org.eclipse.core.resources.IWorkspace
 import org.eclipse.core.runtime.Platform
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.jface.text.hyperlink.IHyperlinkDetector
 import org.eclipse.jface.text.rules.IPartitionTokenScanner
 import org.eclipse.jface.text.rules.ITokenScanner
 import org.eclipse.jface.viewers.ILabelProvider
@@ -47,6 +48,7 @@ import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.ts.findReferences.TargetURIKey
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey
 import org.eclipse.n4js.ui.N4JSEditor
+import org.eclipse.n4js.ui.N4JSEditorErrorTickUpdater
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant
 import org.eclipse.n4js.ui.building.N4JSOutputConfigurationProvider
@@ -57,12 +59,15 @@ import org.eclipse.n4js.ui.contentassist.N4JSFollowElementCalculator
 import org.eclipse.n4js.ui.contentassist.PatchedFollowElementComputer
 import org.eclipse.n4js.ui.contentassist.SimpleLastSegmentFinder
 import org.eclipse.n4js.ui.editor.AlwaysAddNatureCallback
-import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider
 import org.eclipse.n4js.ui.editor.ComposedMemberAwareHyperlinkHelper
 import org.eclipse.n4js.ui.editor.EditorAwareCanLoadFromDescriptionHelper
 import org.eclipse.n4js.ui.editor.N4JSDirtyStateEditorSupport
+import org.eclipse.n4js.ui.editor.N4JSDocument
 import org.eclipse.n4js.ui.editor.N4JSDoubleClickStrategyProvider
+import org.eclipse.n4js.ui.editor.N4JSHover
+import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider
+import org.eclipse.n4js.ui.editor.N4JSReconciler
 import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory
 import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider
 import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingConfiguration
@@ -97,6 +102,7 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl
 import org.eclipse.n4js.utils.process.OutputStreamProvider
+import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider
 import org.eclipse.ui.PlatformUI
 import org.eclipse.xtend.lib.annotations.FinalFieldsConstructor
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2
@@ -126,12 +132,14 @@ import org.eclipse.xtext.ui.editor.findrefs.EditorResourceAccess
 import org.eclipse.xtext.ui.editor.findrefs.IReferenceFinder
 import org.eclipse.xtext.ui.editor.findrefs.ReferenceQueryExecutor
 import org.eclipse.xtext.ui.editor.formatting2.ContentFormatter
+import org.eclipse.xtext.ui.editor.hover.IEObjectHover
 import org.eclipse.xtext.ui.editor.hover.IEObjectHoverProvider
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkHelper
 import org.eclipse.xtext.ui.editor.hyperlinking.HyperlinkLabelProvider
 import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
 import org.eclipse.xtext.ui.editor.model.IResourceForEditorInputFactory
 import org.eclipse.xtext.ui.editor.model.TerminalsTokenTypeToPartitionMapper
+import org.eclipse.xtext.ui.editor.model.XtextDocument
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
 import org.eclipse.xtext.ui.editor.outline.actions.IOutlineContribution
@@ -139,6 +147,7 @@ import org.eclipse.xtext.ui.editor.outline.impl.OutlineFilterAndSorter.IComparat
 import org.eclipse.xtext.ui.editor.outline.impl.OutlineNodeFactory
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer
 import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator
+import org.eclipse.xtext.ui.editor.reconciler.XtextReconciler
 import org.eclipse.xtext.ui.editor.syntaxcoloring.AbstractAntlrTokenToAttributeIdMapper
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingConfiguration
 import org.eclipse.xtext.ui.editor.syntaxcoloring.IHighlightingHelper
@@ -649,5 +658,30 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	/** Workaround for the problem: file is refreshed when opened */
 	def Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
 		return AvoidRefreshDocumentProvider;
+	}
+
+	/** Custom XtextDocument. */
+	def Class<? extends XtextDocument> bindXtextDocument() {
+		return N4JSDocument;
+	}
+
+	/** Custom XtextReconciler. */
+	def Class<? extends XtextReconciler> bindXtextReconciler() {
+		return N4JSReconciler;
+	}
+
+	/** Custom IEObjectHover. */
+	override Class<? extends IEObjectHover> bindIEObjectHover() {
+		return N4JSHover;
+	}
+
+	/** Custom IHyperlinkDetector. */
+	override Class<? extends IHyperlinkDetector> bindIHyperlinkDetector() {
+		return N4JSHyperlinkDetector;
+	}
+
+	override void configureXtextEditorErrorTickUpdater(Binder binder) {
+		binder.bind(IXtextEditorCallback).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
+				N4JSEditorErrorTickUpdater);
 	}
 }
