@@ -18,5 +18,5 @@ Require-Bundle: org.eclipse.n4js,
  it.xsemantics.runtime,
  com.google.guava,
  org.eclipse.n4js.n4jsx.model,
- org.eclipse.n4js.smith.dash
+ org.eclipse.n4js.smith
 Export-Package: org.eclipse.n4js.transpiler.es

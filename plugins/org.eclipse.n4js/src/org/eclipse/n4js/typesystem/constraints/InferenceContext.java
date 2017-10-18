@@ -28,9 +28,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.n4js.smith.dash.data.DataCollector;
-import org.eclipse.n4js.smith.dash.data.DataCollectors;
-import org.eclipse.n4js.smith.dash.data.Measurement;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
