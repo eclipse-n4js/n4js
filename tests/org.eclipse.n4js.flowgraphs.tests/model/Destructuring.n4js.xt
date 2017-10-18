@@ -393,3 +393,37 @@ function DestructuringComputedPropName1() {
 	({ ["a"]: 0 });
 	"end";
 }
+
+function DestructuringAssignmentPadding1(x) {
+	// DestructuringAssignmentPadding1 XPECT cfContainer --> FunctionDeclaration::Block
+	// DestructuringAssignmentPadding1 XPECT allIslandElems -->
+	// DestructuringAssignmentPadding1 XPECT allCatchBlocks -->
+	/* DestructuringAssignmentPadding1 XPECT allEdges ---
+		"start" --> x,
+		x --> [\,\,x],
+		[\,\,x] --> 1,
+		1 --> 2,
+		2 --> 3,
+		3 --> [1\,2\,3],
+		[1\,2\,3] --> [\,\,x] = [1\,2\,3],
+		[\,\,x] = [1\,2\,3] --> "end"
+	--- */
+	/* DestructuringAssignmentPadding1 XPECT allPaths ---
+		"start" -> x -> [\,\,x] -> 1 -> 2 -> 3 -> [1\,2\,3] -> [\,\,x] = [1\,2\,3] -> "end"
+	--- */
+	/* DestructuringAssignmentPadding1 XPECT allPaths direction 'Backward' ---
+		"end" -> [\,\,x] = [1\,2\,3] -> [1\,2\,3] -> 3 -> 2 -> 1 -> [\,\,x] -> x -> "start"
+	--- */
+	// DestructuringAssignmentPadding1 XPECT succs at '"start"' --> x
+	// DestructuringAssignmentPadding1 XPECT succs at 'x' --> [\,\,x]
+	// DestructuringAssignmentPadding1 XPECT succs at '[,,x]' --> 1
+	// DestructuringAssignmentPadding1 XPECT succs at '1' --> 2
+	// DestructuringAssignmentPadding1 XPECT succs at '2' --> 3
+	// DestructuringAssignmentPadding1 XPECT succs at '3' --> [1\,2\,3]
+	// DestructuringAssignmentPadding1 XPECT succs at '[1,2,3]' --> [\,\,x] = [1\,2\,3]
+	// DestructuringAssignmentPadding1 XPECT succs at '[,,x] = [1,2,3]' --> "end"
+	"start";
+	[,,x] = [1,2,3];
+	"end";
+}
+
