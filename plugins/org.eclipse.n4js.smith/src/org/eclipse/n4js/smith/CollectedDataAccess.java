@@ -14,10 +14,22 @@ import java.util.Set;
 
 import com.google.common.base.Strings;
 
-/** Provides access */
+/** Allows to manage collectors, e.g. querying their data, deleting data or pausing whole data collectors. */
 public class CollectedDataAccess {
 
-	/** */
+	/** Pauses all collectors. */
+	public static void setPaused(boolean paused) {
+		getCollectors().setPaused(paused);
+	}
+
+	/**
+	 * Deletes data from all collectors.
+	 */
+	public static void purgeAllData() {
+		getCollectors().getRootCollectors().values().forEach(c -> c.purgeData());
+	}
+
+	/** returns keys for all top level collectors. */
 	public static Set<String> getCollectorsKeys() {
 		return getCollectors().getRootCollectors().keySet();
 	}
@@ -51,18 +63,6 @@ public class CollectedDataAccess {
 			parentSeries.addChild(series);
 			collectSeries(collector, series);
 		});
-	}
-
-	/** Pauses all collectors. */
-	public static void setPaused(boolean paused) {
-		getCollectors().setPaused(paused);
-	}
-
-	/**
-	 * Deletes data from all collectors.
-	 */
-	public static void purgeAllData() {
-		getCollectors().getRootCollectors().values().forEach(c -> c.purgeData());
 	}
 
 	/** wrap static access */
