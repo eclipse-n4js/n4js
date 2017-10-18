@@ -92,32 +92,35 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	 */
 	IBuildParticipantInstruction prepareBuild(IProject project, IXtextBuilderParticipant.BuildType buildType)
 			throws CoreException {
-		if (!isEnabled(project)) {
-			return IBuildParticipantInstruction.NOOP;
-		}
 		Measurement measureCreateBI = createInstruction.getMeasurement("createInstruction_" + Instant.now());
-		EclipseResourceFileSystemAccess2 access = fileSystemAccessProvider.get();
-		access.setProject(project);
-		final Map<String, OutputConfiguration> outputConfigurations = getOutputConfigurations(project);
-		refreshOutputFolders(project, outputConfigurations, null);
-		access.setOutputConfigurations(outputConfigurations);
-		if (buildType == BuildType.CLEAN || buildType == BuildType.RECOVERY) {
-			IBuildParticipantInstruction clean = new CleanInstruction(project, outputConfigurations,
-					getDerivedResourceMarkers());
-			if (buildType == BuildType.RECOVERY) {
-				clean.finish(Collections.<Delta> emptyList(), null);
-			} else {
-				measureCreateBI.end();
-				return clean;
+		try {
+
+			if (!isEnabled(project)) {
+				return IBuildParticipantInstruction.NOOP;
 			}
+			EclipseResourceFileSystemAccess2 access = fileSystemAccessProvider.get();
+			access.setProject(project);
+			final Map<String, OutputConfiguration> outputConfigurations = getOutputConfigurations(project);
+			refreshOutputFolders(project, outputConfigurations, null);
+			access.setOutputConfigurations(outputConfigurations);
+			if (buildType == BuildType.CLEAN || buildType == BuildType.RECOVERY) {
+				IBuildParticipantInstruction clean = new CleanInstruction(project, outputConfigurations,
+						getDerivedResourceMarkers());
+				if (buildType == BuildType.RECOVERY) {
+					clean.finish(Collections.<Delta> emptyList(), null);
+				} else {
+					return clean;
+				}
+			}
+			Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers = getGeneratorMarkers(project,
+					outputConfigurations.values());
+			BuildInstruction buildInstruction = new BuildInstruction(project, outputConfigurations,
+					getDerivedResourceMarkers(), access,
+					generatorMarkers, storage2UriMapper, injector);
+			return buildInstruction;
+		} finally {
+			measureCreateBI.end();
 		}
-		Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers = getGeneratorMarkers(project,
-				outputConfigurations.values());
-		BuildInstruction buildInstruction = new BuildInstruction(project, outputConfigurations,
-				getDerivedResourceMarkers(), access,
-				generatorMarkers, storage2UriMapper, injector);
-		measureCreateBI.end();
-		return buildInstruction;
 	}
 
 	/**
