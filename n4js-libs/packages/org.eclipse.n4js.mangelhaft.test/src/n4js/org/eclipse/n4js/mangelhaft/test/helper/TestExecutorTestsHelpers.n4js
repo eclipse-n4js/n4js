@@ -183,6 +183,55 @@ export public class PreconditionTests {
     }
 }
 
+export public class FixmeTests {
+  @Test @Fixme("no scope") 
+   fixme__noScope___success() {
+       
+   }
+  @Test @Fixme("no scope") 
+   fixme__noScope___failure() {
+       Assert.fail("I don't work.")
+   }
+
+   @Test 
+   @Fixme("server assert scope", "SERVER") 
+   fixme__serverScope___success() {
+       
+   }
+
+   @Test 
+   @Fixme("server assert scope", "SERVER") 
+   fixme__serverScope___fail() {
+       Assert.fail("I don't work.")       
+   }
+   
+   @Test 
+   @Fixme("server assert scope", "MOCK") 
+   fixme__mockScope___success() {
+       
+   }
+
+   @Test 
+   @Fixme("server assert scope", "MOCK") 
+   fixme__mockScope___fail() {
+       Assert.fail("I don't work.")       
+   }
+
+   @Test 
+   @Fixme("server assert scope", "MOCK, SERVER") 
+   fixme__multiScope___success() {
+       
+   }
+
+   @Test 
+   @Fixme("server assert scope", "MOCK, SERVER") 
+   fixme__multiScope___fail() {
+       Assert.fail("I don't work.")       
+   }
+
+
+}
+
 export public class MixedBag {
     @Test
     success() {
