@@ -78,6 +78,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
+	private final Set<SymbolTableEntry> exportedSTEsDontSet = newLinkedHashSet;
 
 	override analyze() {
 		//
@@ -591,9 +592,11 @@ class ModuleWrappingTransformation extends Transformation {
 			if( ste.isExported ) {
 				val container = expr.eContainer;
 				if( container.isAppendableStatement ) {
+					println("A")
 					// case 1 : contained in simple statement, then we can issue es 2nd statement just after.
 					insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
 				} else {
+					println("B")
 					exprReplacement(expr, ste);
 				}
 			}
@@ -609,8 +612,13 @@ class ModuleWrappingTransformation extends Transformation {
 			IdentifierRef_IM: {
 				val ste = lhs.rewiredTarget;
 				if( ste.isExported ) {
-					if( isTopLevel_but_not_return ) { insertAfter(expr.eContainer, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export))); }
+					if( isTopLevel_but_not_return ) {
+						println("a")
+						insertAfter(expr.eContainer, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+						exportedSTEsDontSet.add(ste)
+					}
 					else { // non toplevel, have to inject
+					println("b")
 						exprReplacement(expr, ste);
 					}
 				}
@@ -635,6 +643,10 @@ class ModuleWrappingTransformation extends Transformation {
 	 * Only applicable if {@code expr1} evaluates (while actually setting) to the new value of x.
 	 * This is true to Assignment- and Unary-Expressions <b>but not</b> for PostfixExprssion
 	 *
+	 * <p> 
+	 * Note: only <pre>++x</pre> and <pre>--x</pre> are setting the value of <pre>x</pre>.
+	 * other Unary-Expressions are not setting the value.
+	 *
 	 * <p>
 	 * Generates a ParenExpression and a callback-function
 	 *
@@ -645,6 +657,24 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 */
 	private final def void exprReplacement(Expression expr, SymbolTableEntry ste) {
+		println(__NSSafe_IdentRef( ste ) + " " + ste.needsToBeSet);
+		
+		val exprSetsValuue = 
+			if(expr instanceof AssignmentExpression){
+				true;
+			}else if(expr instanceof UnaryExpression){
+				 switch (expr.op) {
+						case INC: {
+							true;
+						}
+						case DEC: {
+							true;
+						}
+						default:
+							false
+					};
+			}else{false}
+		
 		// The new code snippet, the ObjectLiteral will be replaced by init-function
 		val replaceExp =
 			_Parenthesis(
@@ -673,6 +703,10 @@ class ModuleWrappingTransformation extends Transformation {
 
 	def private boolean isExported(SymbolTableEntry ste) {
 		return exportedSTEs.contains(ste);
+	}
+	
+	def private boolean needsToBeSet(SymbolTableEntry ste) {
+		return !exportedSTEsDontSet.contains(ste);
 	}
 
 	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
