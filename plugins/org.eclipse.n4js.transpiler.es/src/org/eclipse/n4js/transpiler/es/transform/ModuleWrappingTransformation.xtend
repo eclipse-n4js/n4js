@@ -583,7 +583,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val ste = lhs.rewiredTarget;
 				if( ste.isExported ) {
 					val container = expr.eContainer
-					if( container.isAppendableStatement) {
+					if( container.isAppendableStatement ) {
 						insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
 					}
 					else { // non toplevel, have to inject
