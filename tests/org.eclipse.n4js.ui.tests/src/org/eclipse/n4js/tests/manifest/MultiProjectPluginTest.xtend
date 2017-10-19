@@ -199,8 +199,8 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 				'''
 			);
 		createTestFile(src2, "D", "export public class D {}");
-		waitForAutoBuild
 		createManifestN4MFFile(firstProjectUnderTest)
+		waitForAutoBuild
 
 		// Couldn't resolve reference to IdentifiableElement 'D'.
 		// Couldn't resolve reference to TModule 'D'.
