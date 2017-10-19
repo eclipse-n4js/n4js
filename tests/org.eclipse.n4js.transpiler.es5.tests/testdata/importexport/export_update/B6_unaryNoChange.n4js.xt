@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.transpiler.es5.xpect.tests.CompileAndExecuteTest
+
+	ResourceSet {
+		ThisFile {}
+		File "A6_unaryNoChange.n4js" {}
+	}
+
+	END_SETUP
+ */
+
+/* XPECT output ---
+<==
+stdout:
+v1 =  2
+v2 =  1
+v3 =  3
+v4 =  4
+v5 =  5
+v6 =  6
+v7 =  7
+v8 =  8
+v9 =  9
+v10 =  10
+stderr:
+==>
+--- */
+
+import {v1,v2,v3,v4,v5,v6,v7,v8,v9,v10} from "importexport/export_update/A6_unaryNoChange"
+
+console.log( "v1 = ", v1 );  // v1 == 2 --> '++' increments
+console.log( "v2 = ", v2 );  // v2 == 2 --> '--' decreaments
+console.log( "v3 = ", v3 );  // no change 
+console.log( "v4 = ", v4 );  // no change 
+console.log( "v5 = ", v5 );  // no change 
+console.log( "v6 = ", v6 );  // no change 
+console.log( "v7 = ", v7 );  // no change 
+console.log( "v8 = ", v8 );  // no change 
+console.log( "v9 = ", v9 );  // no change 
+console.log( "v10 = ", v10 );// no change 
