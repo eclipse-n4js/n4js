@@ -761,7 +761,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 						// description, not the delta.
 						newState.register(new DefaultResourceDescriptionDelta(oldState.getResourceDescription(uri),
 								copiedDescription));
-						System.out.println(" -> queue " + uri);
 						buildData.queueURI(uri);
 					}
 				} catch (final RuntimeException ex) {
