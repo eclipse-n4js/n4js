@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.widgets.Display;
@@ -193,15 +194,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		// dynamic project dependencies may require repeated build runs
-		// yes I want to shoot myself now. Having 5 <= #ofBuilds makes this green
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-
-		// ProjectUtils.waitForAutoBuild();
+		ProjectUtils.waitForAutoBuild();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}

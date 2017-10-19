@@ -11,12 +11,7 @@
 package org.eclipse.n4js.tests.manifest
 
 import com.google.common.base.Predicate
-import org.eclipse.n4js.projectModel.IN4JSProject
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.n4mf.N4mfFactory
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.n4mf.ProjectType
-import org.eclipse.n4js.n4mf.SourceFragmentType
+import java.util.concurrent.TimeUnit
 import org.eclipse.core.resources.IFile
 import org.eclipse.core.resources.IFolder
 import org.eclipse.core.resources.IMarker
@@ -24,10 +19,15 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.IncrementalProjectBuilder
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.n4mf.N4mfFactory
+import org.eclipse.n4js.n4mf.ProjectDescription
+import org.eclipse.n4js.n4mf.ProjectType
+import org.eclipse.n4js.n4mf.SourceFragmentType
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
 import org.junit.Before
-import org.junit.Test
-import java.util.concurrent.TimeUnit
 import org.junit.Ignore
+import org.junit.Test
 
 /**
  */
