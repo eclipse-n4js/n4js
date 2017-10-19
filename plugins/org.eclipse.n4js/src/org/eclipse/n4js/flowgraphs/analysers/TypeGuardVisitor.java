@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;

@@ -88,16 +88,17 @@ public class ComplexNode implements ControlFlowable {
 			return;
 		}
 
-		Node n1 = iter.next();
+		Node nNext = iter.next();
 		while (iter.hasNext()) {
-			assert nodeMap.values().contains(n1) : "FlowGraph malformed: Node not child of complex node";
+			assert nodeMap.values().contains(nNext) : "FlowGraph malformed: Node not child of complex node";
 
-			Node n2 = n1;
-			n1 = iter.next();
-			n2.addInternalSuccessors(n1, cfType);
+			Node nLast = nNext;
+			nNext = iter.next();
+			nLast.addInternalSuccessor(nNext, cfType);
+			nNext.addInternalPredecessor(nNext, cfType);
 		}
 
-		assert nodeMap.values().contains(n1) : "FlowGraph malformed: Node not child of complex node";
+		assert nodeMap.values().contains(nNext) : "FlowGraph malformed: Node not child of complex node";
 	}
 
 	/** Adds a node to this {@link ComplexNode}. */
@@ -110,6 +111,20 @@ public class ComplexNode implements ControlFlowable {
 			represent = (RepresentingNode) node;
 		}
 		nodeMap.put(node.name, node);
+	}
+
+	/** Removes a node from this instance */
+	public void removeNode(Node node) {
+		removeNodeChecks(node);
+		nodeMap.remove(node.name);
+	}
+
+	/** Checks invoked before a node from this instance is removed */
+	public void removeNodeChecks(Node node) {
+		// TODO in GH-235: change/consider to use if/throw instead
+		assert entry != node : "FlowGraph malformed: Node not child of complex node";
+		assert exit != node : "FlowGraph malformed: Node not child of complex node";
+		assert represent != node : "FlowGraph malformed: Node not child of complex node";
 	}
 
 	/** Sets the entry node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */

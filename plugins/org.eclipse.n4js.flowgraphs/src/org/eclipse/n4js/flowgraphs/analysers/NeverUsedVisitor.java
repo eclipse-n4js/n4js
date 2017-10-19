@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -59,7 +60,7 @@ public class NeverUsedVisitor extends GraphVisitor {
 		// nothing to do
 	}
 
-	private class NeverUsedExplorer extends PathExplorer {
+	static private class NeverUsedExplorer extends PathExplorer {
 		@SuppressWarnings("unused")
 		final IdentifierRef idRef;
 
@@ -73,37 +74,37 @@ public class NeverUsedVisitor extends GraphVisitor {
 			return new NeverUsedWalker();
 		}
 
-		private class NeverUsedWalker extends PathWalker {
+	}
 
-			@Override
-			protected void initialize() {
-				// nothing to do
-			}
+	static private class NeverUsedWalker extends PathWalker {
 
-			@Override
-			protected void visit(ControlFlowElement cfe) {
-				// TODO
-				// if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
-				// pass();
-				// deactivateAll();
-				// }
-			}
+		@Override
+		protected void initialize() {
+			// nothing to do
+		}
 
-			@Override
-			protected void visit(FlowEdge edge) {
-				// nothing to do
-			}
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			// TODO
+			// if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
+			// pass();
+			// deactivateAll();
+			// }
+		}
 
-			@Override
-			protected NeverUsedWalker forkPath() {
-				return new NeverUsedWalker();
-			}
+		@Override
+		protected void visit(FlowEdge edge) {
+			// nothing to do
+		}
 
-			@Override
-			protected void terminate() {
-				fail();
-			}
+		@Override
+		protected NeverUsedWalker forkPath() {
+			return new NeverUsedWalker();
+		}
 
+		@Override
+		protected void terminate() {
+			fail();
 		}
 
 	}

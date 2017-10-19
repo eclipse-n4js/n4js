@@ -46,7 +46,12 @@ import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
  */
 public class FGUtils {
 
-	/** @return label text that is the actual text from the source code */
+	/**
+	 * <b>Attention:</b> This call is expensive due to the nested call to
+	 * {@link NodeModelUtils#getTokenText(org.eclipse.xtext.nodemodel.INode)}
+	 *
+	 * @return label text that is the actual text from the source code.
+	 */
 	public static String getSourceText(EObject eo) {
 		ICompositeNode actualNode = NodeModelUtils.findActualNodeFor(eo);
 		String text = NodeModelUtils.getTokenText(actualNode);

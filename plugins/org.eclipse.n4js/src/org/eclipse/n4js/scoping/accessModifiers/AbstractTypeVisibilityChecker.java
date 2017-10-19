@@ -98,6 +98,12 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		return new TypeVisibility(visibility, firstVisible);
 	}
 
+	/**
+	 * Returns the TypeVisibility of the <i>element</i> in the given <i>context</i>(that is the given resource) if it
+	 * had the give access modifier. That is, the actual access modifier of the element is not considered here, usually
+	 * this is done in the caller via {@code getTypeAccessModifier}. However, there is no common interface for
+	 * retrieving that information. Implementors should avoid calling {@link IEObjectDescription#getEObjectOrProxy()}.
+	 */
 	protected TypeVisibility isVisible(final Resource contextResource, final TypeAccessModifier accessModifier,
 			final IEObjectDescription element) {
 		int startIndex = accessModifier.getValue();
@@ -244,6 +250,17 @@ public abstract class AbstractTypeVisibilityChecker<T extends IdentifiableElemen
 		return false;
 	}
 
+	/**
+	 * Returns with {@code true} if the context module argument belongs to a {@link ProjectType#TEST test} project and
+	 * any of its tested projects contains the element module argument.
+	 *
+	 * @param contextModule
+	 *            the content module.
+	 * @param elementProject
+	 *            the element's projects.
+	 * @return {@code true} if the element module's container project is the tested project of the context module.
+	 *         Otherwise returns with {@code false}.
+	 */
 	public boolean isTestedProjectOf(final TModule contextModule, final IN4JSProject elementProject) {
 		for (final IN4JSProject testedProject : getTestedProjects(contextModule.eResource().getURI())) {
 			if (emptyIfNull(elementProject.getProjectId()).equals(testedProject.getProjectId())) {

@@ -98,7 +98,7 @@ import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
-import org.eclipse.n4js.utils.ui.document.AvoidRefreshDocumentProvider;
+import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -161,7 +161,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public void configure(Binder binder) {
 		super.configure(binder);
-		bindIGenerator(binder);
+		configureIGenerator(binder);
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * @param binder
 	 *            the Google guice binder
 	 */
-	private void bindIGenerator(Binder binder) {
+	private void configureIGenerator(Binder binder) {
 		IComposedGenerator composedGenerator = null;
 		List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
 		if (!composedGenerators.isEmpty()) {
@@ -673,9 +673,14 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return ConcreteSyntaxAwareReferenceFinder.class;
 	}
 
-	/** Custom EditorResourceAccess as a fix for GH-234 */
+	/** Custom EditorResourceAccess as a fix for GH-234. */
 	public Class<? extends EditorResourceAccess> bindEditorResourceAccess() {
 		return N4JSEditorResourceAccess.class;
+	}
+
+	/** A document provider that will not cancel a build when opening a file. */
+	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
+		return AvoidRefreshDocumentProvider.class;
 	}
 
 	/** Custom XtextDocument. */
@@ -704,13 +709,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	public void configureXtextEditorErrorTickUpdater(com.google.inject.Binder binder) {
 		binder.bind(IXtextEditorCallback.class).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
 				N4JSEditorErrorTickUpdater.class);
-	}
-
-	/**
-	 * A document provider that will not cancel a build when opening a file.
-	 */
-	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
-		return AvoidRefreshDocumentProvider.class;
 	}
 
 }
