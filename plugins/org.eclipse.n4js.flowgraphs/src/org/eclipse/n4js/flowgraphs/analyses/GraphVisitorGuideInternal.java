@@ -33,9 +33,9 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * <p>
  * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
  * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
- * a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
+ * a {@link GraphExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
  * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored. The path
- * exploration is done in parallel for every {@link PathExplorerInternal} of every {@link GraphVisitorInternal}.
+ * exploration is done in parallel for every {@link GraphExplorerInternal} of every {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyzer flowAnalyzer;
@@ -189,12 +189,12 @@ public class GraphVisitorGuideInternal {
 		walkerVisitedNodes.add(visitNode);
 
 		for (GraphVisitorInternal walker : walkers) {
-			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
+			List<BranchWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
 			currEdgeGuide.activePaths.addAll(activatedPaths);
 		}
 
-		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
-			PathWalkerInternal activePath = actPathIt.next();
+		for (Iterator<BranchWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
+			BranchWalkerInternal activePath = actPathIt.next();
 
 			activePath.callVisit(visitNode);
 
@@ -214,12 +214,12 @@ public class GraphVisitorGuideInternal {
 		walkerVisitedEdges.add(currEdgeGuide.edge);
 
 		for (GraphVisitorInternal walker : walkers) {
-			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
+			List<BranchWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
 			currEdgeGuide.activePaths.addAll(activatedPaths);
 		}
 
-		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
-			PathWalkerInternal activePath = actPathIt.next();
+		for (Iterator<BranchWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
+			BranchWalkerInternal activePath = actPathIt.next();
 
 			activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
 
@@ -234,7 +234,7 @@ public class GraphVisitorGuideInternal {
 	 * {@link ComplexNode}.
 	 */
 	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
+		Set<BranchWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activateRequestedPathExplorers());
 		}
@@ -252,9 +252,9 @@ public class GraphVisitorGuideInternal {
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : activatedPaths) {
-				PathWalkerInternal forkedPath = aPath.callFork();
+			Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+			for (BranchWalkerInternal aPath : activatedPaths) {
+				BranchWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
@@ -280,9 +280,9 @@ public class GraphVisitorGuideInternal {
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : currEG.activePaths) {
-				PathWalkerInternal forkedPath = aPath.callFork();
+			Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+			for (BranchWalkerInternal aPath : currEG.activePaths) {
+				BranchWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 
@@ -293,7 +293,7 @@ public class GraphVisitorGuideInternal {
 		}
 
 		if (nextEGs.isEmpty()) {
-			for (PathWalkerInternal aPath : currEG.activePaths) {
+			for (BranchWalkerInternal aPath : currEG.activePaths) {
 				aPath.deactivate();
 			}
 		}

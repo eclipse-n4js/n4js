@@ -25,32 +25,32 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * Finds all control flow paths beginning from a given start element.
  */
-public class AllPathPrintVisitor extends GraphVisitor {
+public class AllBranchPrintVisitor extends GraphVisitor {
 	final ControlFlowElement startElement;
 
 	/**
 	 * Constructor.
 	 */
-	public AllPathPrintVisitor() {
+	public AllBranchPrintVisitor() {
 		this(null, null, Mode.Forward);
 	}
 
 	/**
 	 * Constructor.
 	 * <p>
-	 * Creates a {@link AllPathPrintVisitor} in direction {@literal Direction.Forward}.
+	 * Creates a {@link AllBranchPrintVisitor} in direction {@literal Direction.Forward}.
 	 *
 	 * @param container
 	 *            the container of which all paths are computed. Must not be null.
 	 */
-	public AllPathPrintVisitor(ControlFlowElement container) {
+	public AllBranchPrintVisitor(ControlFlowElement container) {
 		this(container, null, Mode.Forward);
 	}
 
 	/**
 	 * Constructor.
 	 * <p>
-	 * Creates a {@link AllPathPrintVisitor} in direction {@literal Direction.Forward}.
+	 * Creates a {@link AllBranchPrintVisitor} in direction {@literal Direction.Forward}.
 	 *
 	 * @param container
 	 *            the container of which all paths are computed. Must not be null.
@@ -58,7 +58,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 	 *            if not null, all paths are found beginning at the startElement. Otherwise, all paths are found
 	 *            beginning from the first element of one of the containers in the script.
 	 */
-	public AllPathPrintVisitor(ControlFlowElement container, ControlFlowElement startElement) {
+	public AllBranchPrintVisitor(ControlFlowElement container, ControlFlowElement startElement) {
 		this(container, startElement, Mode.Forward);
 	}
 
@@ -74,7 +74,7 @@ public class AllPathPrintVisitor extends GraphVisitor {
 	 *            the direction of the paths. Use only with {@literal Direction.Forward} and
 	 *            {@literal Direction.Backward}
 	 */
-	public AllPathPrintVisitor(ControlFlowElement container, ControlFlowElement startElement, Mode direction) {
+	public AllBranchPrintVisitor(ControlFlowElement container, ControlFlowElement startElement, Mode direction) {
 		super(container, direction);
 		this.startElement = startElement;
 	}
@@ -82,14 +82,14 @@ public class AllPathPrintVisitor extends GraphVisitor {
 	@Override
 	protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
 		if (startElement == null) {
-			super.requestActivation(new AllPathPrintExplorer());
+			super.requestActivation(new AllBranchPrintExplorer());
 		}
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (startElement != null && startElement == cfe && getActivatedExplorerCount() == 0) {
-			super.requestActivation(new AllPathPrintExplorer());
+			super.requestActivation(new AllBranchPrintExplorer());
 		}
 	}
 
@@ -98,75 +98,46 @@ public class AllPathPrintVisitor extends GraphVisitor {
 		List<String> pathStrings = new LinkedList<>();
 		for (GraphExplorerInternal app : getActivatedExplorers()) {
 			for (BranchWalkerInternal ap : app.getAllPaths()) {
-				AllPathPrintWalker printPath = (AllPathPrintWalker) ap;
-				pathStrings.add(printPath.currString);
+				AllBranchPrintWalker printPath = (AllBranchPrintWalker) ap;
+				pathStrings.add(printPath.branchString);
 				// pathStrings.add(" ");
 			}
 		}
 		return pathStrings;
 	}
 
-	static class AllPathPrintExplorer extends GraphExplorer {
+	static class AllBranchPrintExplorer extends GraphExplorer {
 
-		AllPathPrintExplorer() {
+		AllBranchPrintExplorer() {
 			super(Quantor.ForAllPaths);
 		}
 
 		@Override
-		protected AllPathPrintWalker firstPathWalker() {
-			return new AllPathPrintWalker("");
+		protected AllBranchPrintWalker firstPathWalker() {
+			return new AllBranchPrintWalker();
 		}
 	}
 
-	static class AllPathPrintWalker extends BranchWalker {
-		private String currString = "";
+	static class AllBranchPrintWalker extends BranchWalker {
+		private String branchString = "";
 
-		AllPathPrintWalker(String currString) {
-			this.currString = currString;
+		AllBranchPrintWalker() {
 		}
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			currString += FGUtils.getSourceText(cfe);
+			branchString += FGUtils.getSourceText(cfe);
 		}
 
 		@Override
 		protected void visit(FlowEdge edge) {
-			currString += " -> ";
+			branchString += " -> ";
 		}
 
 		@Override
-		protected AllPathPrintWalker forkPath() {
-			return new AllPathPrintWalker(currString);
-		}
-
-		String getPredString() {
-			String s = "";
-			AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
-			if (pathPred != null)
-				s += pathPred.getPredString();
-			s += currString;
-			return s;
-		}
-
-		String getSuccString() {
-			String s = currString;
-			AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
-			if (pathSucc != null)
-				s += pathSucc.getSuccString();
-			return s;
-		}
-
-		String getCompleteString() {
-			AllPathPrintWalker pathPred = (AllPathPrintWalker) getPathPredecessor();
-			AllPathPrintWalker pathSucc = (AllPathPrintWalker) getPathPredecessor();
-			String s = "";
-			if (pathPred != null)
-				s += pathPred.getPredString();
-			s += currString;
-			if (pathSucc != null)
-				s += pathSucc.getSuccString();
-			return s;
+		protected AllBranchPrintWalker forkPath() {
+			return new AllBranchPrintWalker();
 		}
 	}
+
 }

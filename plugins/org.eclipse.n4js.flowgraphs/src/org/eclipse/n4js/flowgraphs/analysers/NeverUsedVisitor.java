@@ -12,8 +12,8 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -60,7 +60,7 @@ public class NeverUsedVisitor extends GraphVisitor {
 		// nothing to do
 	}
 
-	static private class NeverUsedExplorer extends PathExplorer {
+	static private class NeverUsedExplorer extends GraphExplorer {
 		@SuppressWarnings("unused")
 		final IdentifierRef idRef;
 
@@ -76,7 +76,7 @@ public class NeverUsedVisitor extends GraphVisitor {
 
 	}
 
-	static private class NeverUsedWalker extends PathWalker {
+	static private class NeverUsedWalker extends BranchWalker {
 
 		@Override
 		protected void initialize() {

@@ -16,27 +16,27 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * An {@link PathExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific preconditions.
- * It follows all paths beginning from the location of activation. Its initial path is forked using the method
- * {@link #firstPathWalker()}. Subsequent paths are forked from the initial paths. The {@link PathExplorerInternal} is
- * deactivated in case it has no active paths anymore. The final state of a {@link PathExplorerInternal} can be either
- * <i>Passed</i> or <i>Failed</i>.
+ * An {@link GraphExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific
+ * preconditions. It follows all paths beginning from the location of activation. Its initial path is forked using the
+ * method {@link #firstPathWalker()}. Subsequent paths are forked from the initial paths. The
+ * {@link GraphExplorerInternal} is deactivated in case it has no active paths anymore. The final state of a
+ * {@link GraphExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
  * <p/>
- * The life cycle of a {@link PathExplorerInternal}:
+ * The life cycle of a {@link GraphExplorerInternal}:
  * <ol>
  * <li/>Instantiation
  * <li/>Request for activation
  * <li/>Activation
- * <li/>Call to {@link PathExplorerInternal#firstPathWalker()}
- * <li/>De-Activation when all its {@link PathWalkerInternal}s are inactive
- * <li/>Evaluation by user by calling e.g. {@link PathExplorerInternal#isPassed()}
+ * <li/>Call to {@link GraphExplorerInternal#firstPathWalker()}
+ * <li/>De-Activation when all its {@link BranchWalkerInternal}s are inactive
+ * <li/>Evaluation by user by calling e.g. {@link GraphExplorerInternal#isPassed()}
  * </ol>
  */
-abstract public class PathExplorerInternal {
-	final Set<PathWalkerInternal> activePaths = new HashSet<>();
-	final List<PathWalkerInternal> passedPaths = new LinkedList<>();
-	final List<PathWalkerInternal> failedPaths = new LinkedList<>();
-	final List<PathWalkerInternal> allPaths = new LinkedList<>();
+abstract public class GraphExplorerInternal {
+	final Set<BranchWalkerInternal> activePaths = new HashSet<>();
+	final List<BranchWalkerInternal> passedPaths = new LinkedList<>();
+	final List<BranchWalkerInternal> failedPaths = new LinkedList<>();
+	final List<BranchWalkerInternal> allPaths = new LinkedList<>();
 	/** Quantor, specified in constructor */
 	protected final Quantor quantor;
 	/** Default verdict, specified in constructor */
@@ -46,48 +46,48 @@ abstract public class PathExplorerInternal {
 
 	private State state;
 
-	/** The {@link Quantor} defines under which condition a {@link PathExplorerInternal} fails or passes. */
+	/** The {@link Quantor} defines under which condition a {@link GraphExplorerInternal} fails or passes. */
 	public enum Quantor {
 		/** No specific condition. */
 		None,
-		/** The {@link PathExplorerInternal} passes iff all paths pass. */
+		/** The {@link GraphExplorerInternal} passes iff all paths pass. */
 		ForAllPaths,
-		/** The {@link PathExplorerInternal} passes if at least one path passes. */
+		/** The {@link GraphExplorerInternal} passes if at least one path passes. */
 		AtLeastOnePath
 	}
 
-	/** The {@link State} defines the current state of a {@link PathExplorerInternal}. */
+	/** The {@link State} defines the current state of a {@link GraphExplorerInternal}. */
 	public enum State {
-		/** The {@link PathExplorerInternal} is active. */
+		/** The {@link GraphExplorerInternal} is active. */
 		Active,
-		/** The {@link PathExplorerInternal} terminated with no specific verdict. */
+		/** The {@link GraphExplorerInternal} terminated with no specific verdict. */
 		Terminated,
-		/** The {@link PathExplorerInternal} terminated with the verdict <i>passed</i>. */
+		/** The {@link GraphExplorerInternal} terminated with the verdict <i>passed</i>. */
 		Passed,
-		/** The {@link PathExplorerInternal} terminated with the verdict <i>failed</i>. */
+		/** The {@link GraphExplorerInternal} terminated with the verdict <i>failed</i>. */
 		Failed
 	}
 
 	/**
 	 * Constructor
 	 * <p>
-	 * The {@link PathExplorerInternal} without support for the verdicts pass or fail.
+	 * The {@link GraphExplorerInternal} without support for the verdicts pass or fail.
 	 *
 	 */
-	protected PathExplorerInternal() {
+	protected GraphExplorerInternal() {
 		this(Quantor.None, false);
 	}
 
 	/**
 	 * Constructor
 	 * <p>
-	 * The {@link PathExplorerInternal} will pass as default in case {@link PathWalkerInternal#fail()} is never called
-	 * on any of its active paths.
+	 * The {@link GraphExplorerInternal} will pass as default in case {@link BranchWalkerInternal#fail()} is never
+	 * called on any of its active paths.
 	 *
 	 * @param quantor
 	 *            defines fail/pass condition
 	 */
-	protected PathExplorerInternal(Quantor quantor) {
+	protected GraphExplorerInternal(Quantor quantor) {
 		this(quantor, true);
 	}
 
@@ -97,9 +97,9 @@ abstract public class PathExplorerInternal {
 	 * @param quantor
 	 *            defines fail/pass condition
 	 * @param passAsDefault
-	 *            iff true, the {@link PathExplorerInternal} will pass as default
+	 *            iff true, the {@link GraphExplorerInternal} will pass as default
 	 */
-	protected PathExplorerInternal(Quantor quantor, boolean passAsDefault) {
+	protected GraphExplorerInternal(Quantor quantor, boolean passAsDefault) {
 		this.quantor = quantor;
 		this.passAsDefault = passAsDefault;
 		this.state = State.Active;
@@ -107,15 +107,15 @@ abstract public class PathExplorerInternal {
 
 	/////////////////////// Abstract Methods ///////////////////////
 
-	/** Spawns the first path. Called right after this {@link PathExplorerInternal} gets activated. */
-	abstract protected PathWalkerInternal firstPathWalker();
+	/** Spawns the first path. Called right after this {@link GraphExplorerInternal} gets activated. */
+	abstract protected BranchWalkerInternal firstPathWalker();
 
 	/////////////////////// Methods called from {@link GraphVisitorInternal} ///////////////////////
 
 	/** Only called from {@link GraphVisitorInternal}. Delegates to {@link #firstPathWalker()}. */
-	final PathWalkerInternal callFirstPathWalker(GraphVisitorInternal parentGraphVisitorInternal) {
+	final BranchWalkerInternal callFirstPathWalker(GraphVisitorInternal parentGraphVisitorInternal) {
 		parentGraphVisitor = parentGraphVisitorInternal;
-		PathWalkerInternal activePath = firstPathWalker();
+		BranchWalkerInternal activePath = firstPathWalker();
 		activePath.callInitialize(this, null);
 		return activePath;
 	}
@@ -150,32 +150,32 @@ abstract public class PathExplorerInternal {
 
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
-	/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Passed</i> */
+	/** @return true, iff the {@link GraphExplorerInternal} is terminated and has verdict <i>Passed</i> */
 	final public boolean isPassed() {
 		return state == State.Passed;
 	}
 
-	/** @return true, iff the {@link PathExplorerInternal} is terminated and has verdict <i>Failed</i> */
+	/** @return true, iff the {@link GraphExplorerInternal} is terminated and has verdict <i>Failed</i> */
 	final public boolean isFailed() {
 		return state == State.Failed;
 	}
 
-	/** Deactivates all active paths and hence this {@link PathExplorerInternal}. */
+	/** Deactivates all active paths and hence this {@link GraphExplorerInternal}. */
 	final public void deactivateAll() {
 		while (!activePaths.isEmpty()) {
-			PathWalkerInternal aPath = activePaths.iterator().next();
+			BranchWalkerInternal aPath = activePaths.iterator().next();
 			aPath.deactivate();
 		}
 		checkExplorerDeactivation();
 	}
 
 	/** @return all paths no matter if they are active or not, or passed or failed. */
-	final public List<PathWalkerInternal> getAllPaths() {
+	final public List<BranchWalkerInternal> getAllPaths() {
 		return allPaths;
 	}
 
 	/** @return all paths no matter if they are active or not, or passed or failed. */
-	final public Set<PathWalkerInternal> getActivePaths() {
+	final public Set<BranchWalkerInternal> getActivePaths() {
 		return activePaths;
 	}
 

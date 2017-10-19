@@ -20,8 +20,8 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-/** see {@link PathWalkerInternal} */
-abstract public class PathWalker extends PathWalkerInternal {
+/** see {@link BranchWalkerInternal} */
+abstract public class BranchWalker extends BranchWalkerInternal {
 	ControlFlowElement pLastCFE;
 	Set<ControlFlowType> pEdgeTypes = new HashSet<>();
 
@@ -65,12 +65,12 @@ abstract public class PathWalker extends PathWalkerInternal {
 		// overwrite me
 	}
 
-	/** see {@link PathWalkerInternal#fork()} */
-	abstract protected PathWalker forkPath();
+	/** see {@link BranchWalkerInternal#fork()} */
+	abstract protected BranchWalker forkPath();
 
 	@Override
-	final protected PathWalker fork() {
-		PathWalker ap2 = forkPath();
+	final protected BranchWalker fork() {
+		BranchWalker ap2 = forkPath();
 		ap2.pLastCFE = pLastCFE;
 		ap2.pEdgeTypes.addAll(pEdgeTypes);
 		return ap2;

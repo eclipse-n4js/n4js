@@ -92,7 +92,7 @@ public class EdgeGuideWorklist {
 	}
 
 	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
+		Set<BranchWalkerInternal> activatedPaths = new HashSet<>();
 		for (GraphVisitorInternal walker : walkers) {
 			activatedPaths.addAll(walker.activateRequestedPathExplorers());
 		}
@@ -110,9 +110,9 @@ public class EdgeGuideWorklist {
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : activatedPaths) {
-				PathWalkerInternal forkedPath = aPath.callFork();
+			Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+			for (BranchWalkerInternal aPath : activatedPaths) {
+				BranchWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
@@ -134,9 +134,9 @@ public class EdgeGuideWorklist {
 
 		while (nextEdgeIt.hasNext()) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : currEG.activePaths) {
-				PathWalkerInternal forkedPath = aPath.callFork();
+			Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+			for (BranchWalkerInternal aPath : currEG.activePaths) {
+				BranchWalkerInternal forkedPath = aPath.callFork();
 				forkedPaths.add(forkedPath);
 			}
 
@@ -147,7 +147,7 @@ public class EdgeGuideWorklist {
 		}
 
 		if (nextEGs.isEmpty()) {
-			for (PathWalkerInternal aPath : currEG.activePaths) {
+			for (BranchWalkerInternal aPath : currEG.activePaths) {
 				aPath.deactivate();
 			}
 		}

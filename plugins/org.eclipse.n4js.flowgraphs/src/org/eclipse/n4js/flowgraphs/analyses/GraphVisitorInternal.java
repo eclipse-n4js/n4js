@@ -29,9 +29,9 @@ abstract public class GraphVisitorInternal {
 	/** Modes, specified in constructor */
 	protected final Mode[] modes;
 
-	private final List<PathExplorerInternal> activationRequests = new LinkedList<>();
-	private final List<PathExplorerInternal> activatedExplorers = new LinkedList<>();
-	private final List<PathExplorerInternal> activeExplorers = new LinkedList<>();
+	private final List<GraphExplorerInternal> activationRequests = new LinkedList<>();
+	private final List<GraphExplorerInternal> activatedExplorers = new LinkedList<>();
+	private final List<GraphExplorerInternal> activeExplorers = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
 	private Mode currentMode;
@@ -224,13 +224,13 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Activates the {@link PathExplorerInternal} that wait for
+	 * Only called from {@link GraphVisitorGuideInternal}. Activates the {@link GraphExplorerInternal} that wait for
 	 * activation.
 	 */
-	final List<PathWalkerInternal> activateRequestedPathExplorers() {
-		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
-		for (PathExplorerInternal app : activationRequests) {
-			PathWalkerInternal activePath = app.callFirstPathWalker(this);
+	final List<BranchWalkerInternal> activateRequestedPathExplorers() {
+		List<BranchWalkerInternal> activatedPaths = new LinkedList<>();
+		for (GraphExplorerInternal app : activationRequests) {
+			BranchWalkerInternal activePath = app.callFirstPathWalker(this);
 			activatedPaths.add(activePath);
 		}
 		activatedExplorers.addAll(activationRequests);
@@ -239,38 +239,38 @@ abstract public class GraphVisitorInternal {
 		return activatedPaths;
 	}
 
-	/** Called from {@link PathExplorerInternal} when the calling {@link PathExplorerInternal} is finished. */
-	final void deactivatePathExplorer(PathExplorerInternal pathExplorerInternal) {
+	/** Called from {@link GraphExplorerInternal} when the calling {@link GraphExplorerInternal} is finished. */
+	final void deactivatePathExplorer(GraphExplorerInternal pathExplorerInternal) {
 		activeExplorers.remove(pathExplorerInternal);
 	}
 
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
-	 * Call this method to request the spawn of a new {@link PathExplorerInternal}. The new {@link PathExplorerInternal}
+	 * Call this method to request the spawn of a new {@link GraphExplorerInternal}. The new {@link GraphExplorerInternal}
 	 * is spawned after the current visit-method is finished. If not called from a visit-method, the new
-	 * {@link PathExplorerInternal} is spawned after the next visit-method is finished.
+	 * {@link GraphExplorerInternal} is spawned after the next visit-method is finished.
 	 */
-	final public void requestActivation(PathExplorerInternal app) {
+	final public void requestActivation(GraphExplorerInternal app) {
 		activationRequests.add(app);
 	}
 
-	/** @return all activated {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getActivatedExplorers() {
+	/** @return all activated {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getActivatedExplorers() {
 		return activatedExplorers;
 	}
 
-	/** @return all active {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getActiveExplorers() {
+	/** @return all active {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getActiveExplorers() {
 		return activeExplorers;
 	}
 
-	/** @return the number of activated {@link PathExplorerInternal}s */
+	/** @return the number of activated {@link GraphExplorerInternal}s */
 	final public int getActivatedExplorerCount() {
 		return getActivatedExplorers().size();
 	}
 
-	/** @return the number of active {@link PathExplorerInternal}s */
+	/** @return the number of active {@link GraphExplorerInternal}s */
 	final public int getActiveExplorerCount() {
 		return getActiveExplorers().size();
 	}
@@ -285,10 +285,10 @@ abstract public class GraphVisitorInternal {
 		return currentContainer;
 	}
 
-	/** @return all passed {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getPassed() {
-		List<PathExplorerInternal> passedPEI = new LinkedList<>();
-		for (PathExplorerInternal pei : activatedExplorers) {
+	/** @return all passed {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getPassed() {
+		List<GraphExplorerInternal> passedPEI = new LinkedList<>();
+		for (GraphExplorerInternal pei : activatedExplorers) {
 			if (pei.isPassed()) {
 				passedPEI.add(pei);
 			}
@@ -296,10 +296,10 @@ abstract public class GraphVisitorInternal {
 		return passedPEI;
 	}
 
-	/** @return all failed {@link PathExplorerInternal}s */
-	final public List<PathExplorerInternal> getFailed() {
-		List<PathExplorerInternal> failedPEI = new LinkedList<>();
-		for (PathExplorerInternal pei : activatedExplorers) {
+	/** @return all failed {@link GraphExplorerInternal}s */
+	final public List<GraphExplorerInternal> getFailed() {
+		List<GraphExplorerInternal> failedPEI = new LinkedList<>();
+		for (GraphExplorerInternal pei : activatedExplorers) {
 			if (pei.isFailed()) {
 				failedPEI.add(pei);
 			}

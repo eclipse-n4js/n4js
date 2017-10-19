@@ -10,20 +10,20 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.Quantor;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal.Quantor;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
- * Paths begin when a {@link PathWalkerInternal} gets active or when forked from another path. Paths end when no
+ * Paths begin when a {@link BranchWalkerInternal} gets active or when forked from another path. Paths end when no
  * succeeding nodes are in the control flow graph, or the user calls either {@link #pass()}, {@link #fail()}, or
  * {@link #deactivate()}. Paths follow every edge and fork on every node that has more than one edge. However, each edge
  * of type {@literal ControlFlowType.Repeat} is followed exactly twice.
  */
-abstract public class PathWalkerInternal {
-	private PathExplorerInternal pathExplorer;
-	private PathWalkerInternal pathPredecessor;
-	private PathWalkerInternal pathSuccessor;
+abstract public class BranchWalkerInternal {
+	private GraphExplorerInternal pathExplorer;
+	private BranchWalkerInternal pathPredecessor;
+	private BranchWalkerInternal pathSuccessor;
 
 	/////////////////////// Abstract Methods ///////////////////////
 
@@ -60,39 +60,39 @@ abstract public class PathWalkerInternal {
 	 * Forks another path from the current node.<br/>
 	 * <i>Take care about forking the current state of this instance!</i>
 	 */
-	abstract protected PathWalkerInternal fork();
+	abstract protected BranchWalkerInternal fork();
 
 	/**
-	 * Iff {@code true} returned, this {@link PathWalkerInternal} will be joined. Otherwise joining is omitted and this
-	 * {@link PathWalkerInternal} will traverse the paths in parallel to other {@link PathWalkerInternal}s.
+	 * Iff {@code true} returned, this {@link BranchWalkerInternal} will be joined. Otherwise joining is omitted and this
+	 * {@link BranchWalkerInternal} will traverse the paths in parallel to other {@link BranchWalkerInternal}s.
 	 * <p>
-	 * <b>Attention:</b> If there are more than 1000 {@link PathWalkerInternal}, the {@link PathWalkerInternal} with the
-	 * most {@link PathWalkerInternal}s will be cancelled.
+	 * <b>Attention:</b> If there are more than 1000 {@link BranchWalkerInternal}, the {@link BranchWalkerInternal} with the
+	 * most {@link BranchWalkerInternal}s will be cancelled.
 	 */
 	protected boolean isJoinable() {
 		return true;
 	}
 
 	/**
-	 * Called when another {@link PathWalkerInternal} is joined into this {@link PathWalkerInternal} instance.
+	 * Called when another {@link BranchWalkerInternal} is joined into this {@link BranchWalkerInternal} instance.
 	 *
 	 * @param joiningPWI
-	 *            will receive the method call {@link #joinedWith(PathWalkerInternal)} and then terminate
+	 *            will receive the method call {@link #joinedWith(BranchWalkerInternal)} and then terminate
 	 */
-	protected void join(PathWalkerInternal joiningPWI) {
+	protected void join(BranchWalkerInternal joiningPWI) {
 		// overwrite me
 	}
 
 	/**
-	 * Called after this {@link PathWalkerInternal} instance was joined into the {code joinSurvivor}
-	 * {@link PathWalkerInternal} instance.
+	 * Called after this {@link BranchWalkerInternal} instance was joined into the {code joinSurvivor}
+	 * {@link BranchWalkerInternal} instance.
 	 * <p>
 	 * After this method succeeded, {@link #terminate()} gets called.
 	 *
 	 * @param joinSurvivor
 	 *            will continue to walk the path.
 	 */
-	protected void joinedWith(PathWalkerInternal joinSurvivor) {
+	protected void joinedWith(BranchWalkerInternal joinSurvivor) {
 		// overwrite me
 	}
 
@@ -104,9 +104,9 @@ abstract public class PathWalkerInternal {
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link PathWalkerInternal#initialize()}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
-	protected void callInitialize(PathExplorerInternal explorer, PathWalkerInternal predecessor) {
+	protected void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal predecessor) {
 		this.pathExplorer = explorer;
 		this.pathPredecessor = predecessor;
 		pathExplorer.allPaths.add(this);
@@ -115,7 +115,7 @@ abstract public class PathWalkerInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link PathWalkerInternal#visit(Node)}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#visit(Node)}.
 	 */
 	final void callVisit(Node node) {
 		visit(node);
@@ -123,32 +123,32 @@ abstract public class PathWalkerInternal {
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link PathWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
+	 * {@link BranchWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
 	final void callVisit(Node start, Node end, ControlFlowEdge edge) {
 		visit(start, end, edge);
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
-	final PathWalkerInternal callFork() {
-		PathWalkerInternal forkedPath = fork();
+	final BranchWalkerInternal callFork() {
+		BranchWalkerInternal forkedPath = fork();
 		forkedPath.callInitialize(pathExplorer, this);
 		return forkedPath;
 	}
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link PathWalkerInternal#join(PathWalkerInternal)}.
+	 * {@link BranchWalkerInternal#join(BranchWalkerInternal)}.
 	 */
-	final void callJoin(PathWalkerInternal joiningPWI) {
+	final void callJoin(BranchWalkerInternal joiningPWI) {
 		join(joiningPWI);
 	}
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link PathWalkerInternal#joinedWith(PathWalkerInternal)}.
+	 * {@link BranchWalkerInternal#joinedWith(BranchWalkerInternal)}.
 	 */
-	final void callJoinedWith(PathWalkerInternal joinSurvivor) {
+	final void callJoinedWith(BranchWalkerInternal joinSurvivor) {
 		pathSuccessor = joinSurvivor;
 		joinedWith(joinSurvivor);
 	}
@@ -156,25 +156,25 @@ abstract public class PathWalkerInternal {
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
-	 * returns the {@link PathExplorerInternal} of this instance.
+	 * returns the {@link GraphExplorerInternal} of this instance.
 	 */
-	final public PathExplorerInternal getExplorer() {
+	final public GraphExplorerInternal getExplorer() {
 		return pathExplorer;
 	}
 
 	/**
-	 * returns the {@link PathWalkerInternal} from which this instance was forked. Is null for the first
-	 * {@link PathWalkerInternal}.
+	 * returns the {@link BranchWalkerInternal} from which this instance was forked. Is null for the first
+	 * {@link BranchWalkerInternal}.
 	 */
-	final public PathWalkerInternal getPathPredecessor() {
+	final public BranchWalkerInternal getPathPredecessor() {
 		return pathPredecessor;
 	}
 
 	/**
-	 * returns the {@link PathWalkerInternal} into which this instance was joined. Is set before
-	 * {@link #joinedWith(PathWalkerInternal)} is called.
+	 * returns the {@link BranchWalkerInternal} into which this instance was joined. Is set before
+	 * {@link #joinedWith(BranchWalkerInternal)} is called.
 	 */
-	final public PathWalkerInternal getPathSuccessor() {
+	final public BranchWalkerInternal getPathSuccessor() {
 		return pathSuccessor;
 	}
 

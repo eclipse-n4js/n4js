@@ -13,30 +13,30 @@ package org.eclipse.n4js.flowgraphs.analyses;
 /**
  * see {@link GraphVisitorInternal}
  */
-abstract public class PathExplorer extends PathExplorerInternal {
+abstract public class GraphExplorer extends GraphExplorerInternal {
 
 	/**
-	 * see {@link PathExplorerInternal#PathExplorerInternal()}
+	 * see {@link GraphExplorerInternal#GraphExplorerInternal()}
 	 */
-	protected PathExplorer() {
+	protected GraphExplorer() {
 		super();
 	}
 
 	/**
-	 * see {@link PathExplorerInternal#PathExplorerInternal(Quantor)}
+	 * see {@link GraphExplorerInternal#GraphExplorerInternal(Quantor)}
 	 */
-	protected PathExplorer(Quantor quantor) {
+	protected GraphExplorer(Quantor quantor) {
 		super(quantor);
 	}
 
 	/**
-	 * see {@link PathExplorerInternal#PathExplorerInternal(Quantor, boolean)}
+	 * see {@link GraphExplorerInternal#GraphExplorerInternal(Quantor, boolean)}
 	 */
-	protected PathExplorer(Quantor quantor, boolean passAsDefault) {
+	protected GraphExplorer(Quantor quantor, boolean passAsDefault) {
 		super(quantor, passAsDefault);
 	}
 
 	@Override
-	abstract protected PathWalkerInternal firstPathWalker();
+	abstract protected BranchWalkerInternal firstPathWalker();
 
 }

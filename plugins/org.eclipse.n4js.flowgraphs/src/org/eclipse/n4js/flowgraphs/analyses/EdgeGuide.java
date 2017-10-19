@@ -28,10 +28,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
- * The {@link EdgeGuide} keeps track of all {@link PathWalkerInternal}s that are currently exploring a path on
- * that edge. In case an {@link EdgeGuide} has no {@link PathWalkerInternal}s, it might be removed. When an edge
+ * The {@link EdgeGuide} keeps track of all {@link BranchWalkerInternal}s that are currently exploring a path on
+ * that edge. In case an {@link EdgeGuide} has no {@link BranchWalkerInternal}s, it might be removed. When an edge
  * of an {@link EdgeGuide} has more than one next edge, the {@link EdgeGuide} will split up and all its
- * {@link PathWalkerInternal}s will fork. If there is only one next edge, the current edge of the
+ * {@link BranchWalkerInternal}s will fork. If there is only one next edge, the current edge of the
  * {@link EdgeGuide} instance will be replaced.
  * <p>
  * The {@link EdgeGuide} keeps track of edges that enter or exit {@link FinallyBlock}s. The reason is, that
@@ -42,7 +42,7 @@ import com.google.common.collect.Sets;
 public class EdgeGuide {
 	final NextEdgesProvider edgeProvider;
 	ControlFlowEdge edge;
-	final Set<PathWalkerInternal> activePaths = new HashSet<>();
+	final Set<BranchWalkerInternal> activePaths = new HashSet<>();
 	final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
@@ -53,11 +53,11 @@ public class EdgeGuide {
 		}
 	}
 
-	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths) {
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<BranchWalkerInternal> activePaths) {
 		this(edgeProvider, edge, activePaths, Sets.newHashSet());
 	}
 
-	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<PathWalkerInternal> activePaths,
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<BranchWalkerInternal> activePaths,
 			Set<JumpToken> finallyBlockContexts) {
 
 		this(edgeProvider, edge);
@@ -144,11 +144,11 @@ public class EdgeGuide {
 	}
 
 	void join(EdgeGuide egi) {
-		for (PathWalkerInternal masterPWI : activePaths) {
-			PathExplorerInternal explorer = masterPWI.getExplorer();
-			Set<PathWalkerInternal> explorersPaths = explorer.getActivePaths();
-			PathWalkerInternal forkedPWI = null;
-			for (PathWalkerInternal activePath : egi.activePaths) {
+		for (BranchWalkerInternal masterPWI : activePaths) {
+			GraphExplorerInternal explorer = masterPWI.getExplorer();
+			Set<BranchWalkerInternal> explorersPaths = explorer.getActivePaths();
+			BranchWalkerInternal forkedPWI = null;
+			for (BranchWalkerInternal activePath : egi.activePaths) {
 				if (explorersPaths.contains(activePath)) {
 					forkedPWI = activePath;
 				}

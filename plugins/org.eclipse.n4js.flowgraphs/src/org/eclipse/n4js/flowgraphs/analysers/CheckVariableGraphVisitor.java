@@ -16,10 +16,10 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -73,14 +73,14 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
-		for (PathExplorerInternal pathExplorer : getActivatedExplorers()) {
+		for (GraphExplorerInternal pathExplorer : getActivatedExplorers()) {
 			CheckVariablePathExplorer checkVariablePathExplorer = (CheckVariablePathExplorer) pathExplorer;
 			idRefs.addAll(checkVariablePathExplorer.getUsedButNotDeclaredIdentifierRefs());
 		}
 		return idRefs;
 	}
 
-	static class CheckVariablePathExplorer extends PathExplorer {
+	static class CheckVariablePathExplorer extends GraphExplorer {
 		final VariableDeclaration varDecl;
 		final List<IdentifierRef> idRefs = new ArrayList<>();
 
@@ -94,13 +94,13 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected PathWalkerInternal firstPathWalker() {
+		protected BranchWalkerInternal firstPathWalker() {
 			return new CheckVariablePathWalker();
 		}
 
 	}
 
-	static class CheckVariablePathWalker extends PathWalker {
+	static class CheckVariablePathWalker extends BranchWalker {
 
 		@Override
 		protected CheckVariablePathWalker forkPath() {
