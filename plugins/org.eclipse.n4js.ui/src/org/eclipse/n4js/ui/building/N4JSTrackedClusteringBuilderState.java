@@ -126,7 +126,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 	private final DataCollector builderProxies;
 
 	/** constructor for setting up tracking in the builder */
-	@Inject
 	public N4JSTrackedClusteringBuilderState() {
 		this.builderProcess = DataCollectors.INSTANCE.getOrCreateDataCollector("builder");
 		this.builderBuildInstruction = DataCollectors.INSTANCE.getOrCreateDataCollector("build instruction",
