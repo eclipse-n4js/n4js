@@ -9,6 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+export public const bTrue = true;
+!!bTrue;
+
 // those change value
 export public var v1 = 1;
 ++v1;
