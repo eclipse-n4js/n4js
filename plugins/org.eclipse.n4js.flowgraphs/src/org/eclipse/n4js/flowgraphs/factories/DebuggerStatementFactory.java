@@ -14,9 +14,8 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.DebuggerStatement;
-import org.eclipse.n4js.n4JS.EmptyStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link EmptyStatement}s. */
+/** Creates instances of {@link ComplexNode}s for AST elements of type {@link DebuggerStatement}s. */
 class DebuggerStatementFactory {
 
 	static ComplexNode buildComplexNode(DebuggerStatement empty) {
