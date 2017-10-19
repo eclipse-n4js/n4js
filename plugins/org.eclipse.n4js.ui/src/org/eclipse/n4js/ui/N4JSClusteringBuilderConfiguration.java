@@ -17,6 +17,7 @@ import org.eclipse.n4js.ui.building.N4JSBuildTypeTrackingBuilder;
 import org.eclipse.n4js.ui.building.N4JSGenerateImmediatelyBuilderState;
 import org.eclipse.n4js.ui.building.VerboseClusteringPolicy;
 import org.eclipse.n4js.ui.containers.N4JSStorage2UriMapper;
+import org.eclipse.n4js.ui.editor.PrevStateAwareDirtyStateManager;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.PersistedStateProvider;
@@ -25,6 +26,7 @@ import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.builder.resourceloader.IResourceLoader;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
+import org.eclipse.xtext.ui.editor.DirtyStateManager;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 
 import com.google.inject.AbstractModule;
@@ -49,6 +51,7 @@ public class N4JSClusteringBuilderConfiguration extends AbstractModule {
 		bind(IStorage2UriMapper.class).to(N4JSStorage2UriMapper.class);
 		bind(PersistedStateProvider.class).to(ContributingResourceDescriptionPersister.class);
 		bind(IBuildLogger.class).annotatedWith(BuilderState.class).to(BuilderStateLogger.class);
+		bind(DirtyStateManager.class).to(PrevStateAwareDirtyStateManager.class);
 		bind(IResourceLoader.class).annotatedWith(
 				Names.named(ClusteringBuilderState.RESOURCELOADER_GLOBAL_INDEX)).toProvider(
 						new BuildScopeAwareParallelLoaderProvider());
