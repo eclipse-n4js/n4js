@@ -48,7 +48,6 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.StopWatchPrintUtil;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
@@ -231,11 +230,7 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		StopWatchPrintUtil sw0 = new StopWatchPrintUtil("@updateMarkers", 0);
-
-		StopWatchPrintUtil sw1 = new StopWatchPrintUtil("@super.updateMarkers", 1);
 		super.updateMarkers(delta, resourceSet, monitor);
-		sw1.stop();
 
 		if (resourceSet != null) { // resourceSet is null during clean build
 			IBuildParticipantInstruction instruction = (IBuildParticipantInstruction) EcoreUtil.getAdapter(
@@ -249,8 +244,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 				handleCoreException(e);
 			}
 		}
-
-		sw0.stop();
 	}
 
 	@Override
@@ -329,8 +322,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			BuildData buildData,
 			final IProgressMonitor monitor) {
 
-		StopWatchPrintUtil sw0 = new StopWatchPrintUtil("@queueAffectedResources", 0);
-
 		// don't wanna copy super-class method, so using this helper to get the set of affected URIs:
 		final Set<URI> affectedURIs = new HashSet<>(allRemainingURIs);
 
@@ -384,7 +375,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 						new ResourceDescriptionWithoutModuleUserData(resDesc)));
 			}
 		}
-		sw0.stop();
 	}
 
 	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
@@ -399,9 +389,7 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			IResourceDescriptions oldState,
 			CurrentDescriptions newState,
 			final IProgressMonitor monitor) {
-		StopWatchPrintUtil sw0 = new StopWatchPrintUtil("@writeNewResourceDescriptions", 0);
 		overrideWriteNewResourceDescriptions(buildData, oldState, newState, monitor);
-		sw0.stop();
 	}
 
 	// ======== from org.eclipse.xtext.builder.clustering.ClusteringBuilderState
@@ -563,7 +551,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 						// Load the resource and create a new resource description
 						LoadResult loadResult = loadOperation.next();
 						changedURI = loadResult.getUri();
-						StopWatchPrintUtil sw3a = new StopWatchPrintUtil("@overrideDoUpdate#" + changedURI, 3);
 						actualResourceURI = loadResult.getResource().getURI();
 						resource = addResource(loadResult.getResource(), resourceSet);
 						if (index % MONITOR_DO_UPDATE_CHUNK == 0) {
@@ -601,7 +588,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 								throw new LoadOperationException(actualResourceURI, e);
 							}
 						}
-						sw3a.stop();
 					} catch (final WrappedException ex) {
 						if (ex instanceof LoadOperationException) {
 							changedURI = ((LoadOperationException) ex).getUri();
@@ -687,8 +673,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 
 	@Override
 	protected void installSourceLevelURIs(BuildData buildData) {
-		StopWatchPrintUtil sw0b = new StopWatchPrintUtil(
-				"@installSourceLevelURIs ", 0);
 		ResourceSet resourceSet = buildData.getResourceSet();
 		Iterable<URI> sourceLevelUris = Iterables.concat(buildData.getToBeUpdated(), buildData.getURIQueue());
 		Set<URI> sourceUris = newHashSet();
@@ -705,7 +689,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			}
 		}
 		SourceLevelURIsAdapter.setSourceLevelUris(resourceSet, sourceUris);
-		sw0b.stop();
 	}
 
 	private static final int MONITOR_WRITE_CHUNK = 50;
@@ -727,7 +710,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			IResourceDescriptions oldState,
 			CurrentDescriptions newState,
 			final IProgressMonitor monitor) {
-		StopWatchPrintUtil sw1 = new StopWatchPrintUtil("@overrideWriteNewResourceDescriptions", 1);
 		int index = 0;
 		ResourceSet resourceSet = buildData.getResourceSet();
 		Set<URI> toBeUpdated = buildData.getToBeUpdated();
@@ -737,11 +719,9 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 		IProject currentProject = getBuiltProject(buildData);
 		LoadOperation loadOperation = null;
 		try {
-			StopWatchPrintUtil sw2a = new StopWatchPrintUtil("@load(toBeUpdated)", 2);
 			compilerPhases.setIndexing(resourceSet, true);
 			loadOperation = globalIndexResourceLoader.create(resourceSet, currentProject);
 			loadOperation.load(toBeUpdated);
-			sw2a.stop();
 
 			while (loadOperation.hasNext()) {
 				if (subMonitor.isCanceled()) {
@@ -750,9 +730,7 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 				}
 
 				if (!clusteringPolicy.continueProcessing(resourceSet, null, index)) {
-					StopWatchPrintUtil sw3a = new StopWatchPrintUtil("@clearResourceSet(resourceSet)", 3);
 					clearResourceSet(resourceSet);
-					sw3a.stop();
 				}
 
 				URI uri = null;
@@ -816,7 +794,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 				loadOperation.cancel();
 		}
 
-		sw1.stop();
 	}
 
 	@Override
@@ -890,8 +867,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			Collection<Delta> allDeltas,
 			BuildData buildData,
 			final IProgressMonitor monitor) {
-		StopWatchPrintUtil sw1 = new StopWatchPrintUtil(
-				"@overrideQueueAffectedResources ", 1);
 
 		if (allDeltas.isEmpty()) {
 			return;
@@ -930,7 +905,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 			if (i % MONITOR_QUEUE_CHUNK == 0)
 				progress.worked(1);
 		}
-		sw1.stop();
 	}
 
 	@Override
