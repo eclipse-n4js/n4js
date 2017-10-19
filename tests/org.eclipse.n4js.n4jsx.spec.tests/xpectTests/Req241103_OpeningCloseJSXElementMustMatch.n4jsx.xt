@@ -13,7 +13,7 @@
 
 	ResourceSet {
 		ThisFile {}
-		File "reactFiles/react.n4jsd" { from = "reactFiles/react.n4jsd"}
+		File "react/index.n4jsd" { from = "react/index.n4jsd"}
 	}
 
 	END_SETUP
