@@ -46,7 +46,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
 /**
- *
+ * Composite that serves as container for displaying a performance metric.
  */
 public class DashboardComposite extends Composite {
 	private static final float STACK_BASE_WIDTH = 1000.0f;
@@ -58,8 +58,7 @@ public class DashboardComposite extends Composite {
 	private final VisualisationCanvas canvas;
 	private final Text text;
 
-	/**
-	 */
+	/** {@code key} defines which data source will be used for display. */
 	public DashboardComposite(String key, Composite parent, int style) {
 		super(parent, style);
 		this.key = key;

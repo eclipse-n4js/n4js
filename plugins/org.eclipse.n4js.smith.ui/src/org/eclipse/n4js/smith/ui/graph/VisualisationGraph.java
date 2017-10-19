@@ -20,7 +20,7 @@ import java.util.WeakHashMap;
 import java.util.stream.Stream;
 
 /**
- *
+ * Graph of nodes to be visualized. Layouts nodes in layers based on their child - parent relation.
  */
 public class VisualisationGraph {
 
