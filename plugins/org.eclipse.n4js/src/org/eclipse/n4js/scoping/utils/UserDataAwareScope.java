@@ -18,10 +18,10 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.PolyfillAwareSelectableBasedScope;
+import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
-import org.eclipse.xtext.resource.ForwardingEObjectDescription;
 import org.eclipse.xtext.resource.IContainer;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -59,11 +59,6 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 			return resolved;
 		}
 
-		@Override
-		protected IEObjectDescription delegate() {
-			return (IEObjectDescription) super.delegate();
-		}
-
 	}
 
 	/**
@@ -83,11 +78,6 @@ public class UserDataAwareScope extends PolyfillAwareSelectableBasedScope {
 				resolved = resolve(delegate()).getEObjectOrProxy();
 			}
 			return resolved;
-		}
-
-		@Override
-		protected IEObjectDescription delegate() {
-			return (IEObjectDescription) super.delegate();
 		}
 
 	}

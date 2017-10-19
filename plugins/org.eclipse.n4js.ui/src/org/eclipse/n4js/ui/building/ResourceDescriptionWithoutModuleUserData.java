@@ -13,15 +13,15 @@ package org.eclipse.n4js.ui.building;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.resource.UserdataMapper;
+import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.xtext.scoping.ForwardingEObjectDescription;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 
 import com.google.common.collect.Iterables;
-
-import org.eclipse.n4js.resource.UserdataMapper;
-import org.eclipse.n4js.ts.types.TypesPackage;
 
 /**
  * Wraps an existing {@link IResourceDescription} in order to hide the serialized TModule in the user data (see
@@ -100,51 +100,24 @@ public class ResourceDescriptionWithoutModuleUserData implements IResourceDescri
 		return desc;
 	}
 
-	private static final class EObjectDescriptionWithoutModuleUserData implements IEObjectDescription {
-
-		private final IEObjectDescription delegate;
+	private static final class EObjectDescriptionWithoutModuleUserData extends ForwardingEObjectDescription {
 
 		public EObjectDescriptionWithoutModuleUserData(IEObjectDescription delegate) {
-			this.delegate = delegate;
-		}
-
-		@Override
-		public QualifiedName getName() {
-			return delegate.getName();
-		}
-
-		@Override
-		public QualifiedName getQualifiedName() {
-			return delegate.getQualifiedName();
-		}
-
-		@Override
-		public EObject getEObjectOrProxy() {
-			return delegate.getEObjectOrProxy();
-		}
-
-		@Override
-		public URI getEObjectURI() {
-			return delegate.getEObjectURI();
-		}
-
-		@Override
-		public EClass getEClass() {
-			return delegate.getEClass();
+			super(delegate);
 		}
 
 		@Override
 		public String getUserData(String key) {
 			if (UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT.equals(key))
 				return null;
-			return delegate.getUserData(key);
+			return delegate().getUserData(key);
 		}
 
 		@Override
 		public String[] getUserDataKeys() {
 			// no need to remove UserdataMapper#USERDATA_KEY_SERIALIZED_SCRIPT here, UserdataMapper can deal with the
 			// situation that the key exists but the value is null
-			return delegate.getUserDataKeys();
+			return delegate().getUserDataKeys();
 		}
 	}
 }
