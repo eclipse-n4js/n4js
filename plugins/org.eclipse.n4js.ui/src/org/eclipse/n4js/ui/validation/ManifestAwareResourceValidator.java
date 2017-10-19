@@ -16,6 +16,9 @@ import java.util.List;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.projectModel.IN4JSEclipseCore;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.xtext.service.OperationCanceledManager;
@@ -32,18 +35,28 @@ import com.google.inject.Inject;
  */
 public class ManifestAwareResourceValidator extends N4JSResourceValidator {
 
+	private final IN4JSEclipseCore eclipseCore;
+	private final OperationCanceledManager operationCanceledManager;
+	private final DataCollector collector;
+
 	@Inject
-	private IN4JSEclipseCore eclipseCore;
-	@Inject
-	private OperationCanceledManager operationCanceledManager;
+	private ManifestAwareResourceValidator(IN4JSEclipseCore eclipseCore,
+			OperationCanceledManager operationCanceledManager) {
+		this.eclipseCore = eclipseCore;
+		this.operationCanceledManager = operationCanceledManager;
+		this.collector = DataCollectors.INSTANCE.getOrCreateDataCollector("ManifestAwareResourceValidator");
+	}
 
 	@Override
 	public List<Issue> validate(Resource resource, CheckMode mode, CancelIndicator cancelIndicator) {
+		final Measurement measurment = collector.getMeasurement(resource.getURI().toString());
 		operationCanceledManager.checkCanceled(cancelIndicator);
 		if (!isInSourceFolder(resource)) {
 			return Collections.emptyList();
 		}
-		return super.validate(resource, mode, cancelIndicator);
+		List<Issue> res = super.validate(resource, mode, cancelIndicator);
+		measurment.end();
+		return res;
 	}
 
 	private boolean isInSourceFolder(Resource resource) {
