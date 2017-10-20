@@ -52,7 +52,7 @@ public class UpdateShippedCodeTest {
 
 		measurement.end();
 		DataSeries dataSeries = CollectedDataAccess.getDataSeries("some");
-		System.out.println(dataSeries.name + " " + dataSeries.name);
+		System.out.println(dataSeries.name + " " + dataSeries.sum);
 
 		println("START of running UpdateShippedCode into temporary folder " + tempTargetFolder.getAbsolutePath());
 		UpdateShippedCode.updateShippedCode(Optional.of(tempTargetFolder.toPath()));
