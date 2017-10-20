@@ -46,7 +46,7 @@ public class CreateConfigFileForSettingDefaultProduct {
 
 		// Create the file config.ini
 		if (!file.createNewFile()) {
-			LOGGER.info("File " + filePath + "already exists. By default, the product to run is set to " +
+			LOGGER.info("File " + filePath + "already exists.\nBy default, the product to run is set to " +
 					defaultProductId);
 			return;
 		}
@@ -54,8 +54,8 @@ public class CreateConfigFileForSettingDefaultProduct {
 		FileWriter writer = new FileWriter(file);
 		writer.write("eclipse.product=" + defaultProductId);
 		writer.close();
-		System.out.println("File" + filePath
-				+ " has been created successfully! From now on, the default product to run is set to " +
+		LOGGER.info("File" + filePath
+				+ " has been created successfully!\nFrom now on, the default product to run is set to " +
 				defaultProductId);
 	}
 
