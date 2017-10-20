@@ -346,12 +346,10 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 
 	@Override
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
-		IResourcesSetupUtil.waitForBuild();
+		// simulate auto-build loop by synchronized and fast
+		for (int i = 0; i < 10; i++) {
+			IResourcesSetupUtil.waitForBuild();
+		}
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
