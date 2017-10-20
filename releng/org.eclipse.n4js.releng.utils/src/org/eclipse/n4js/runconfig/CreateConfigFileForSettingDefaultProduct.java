@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js;
+package org.eclipse.n4js.runconfig;
 
 import java.io.File;
 import java.io.FileWriter;

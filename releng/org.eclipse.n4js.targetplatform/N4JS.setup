@@ -518,9 +518,11 @@
     </workingSet>
     <description>The dynamic working sets for ${scope.project.label}</description>
   </setupTask>
+  <!--
   <setupTask
       xsi:type="projects:ProjectsBuildTask"
       refresh="true"/>
+  -->
   <setupTask
       xsi:type="launching:LaunchTask"
       id="CreateConfigFileForSettingDefaultProduct"
