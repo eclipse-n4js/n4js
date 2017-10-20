@@ -351,6 +351,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		IResourcesSetupUtil.waitForBuild();
 		IResourcesSetupUtil.waitForBuild();
 		IResourcesSetupUtil.waitForBuild();
+		IResourcesSetupUtil.waitForBuild();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}

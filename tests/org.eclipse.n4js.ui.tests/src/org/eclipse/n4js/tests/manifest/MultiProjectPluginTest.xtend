@@ -25,11 +25,10 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.eclipse.n4js.tests.util.ProjectUtils
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 
 /**
  */
@@ -297,6 +296,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 	}
 	
 	override waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		IResourcesSetupUtil.waitForBuild
 		IResourcesSetupUtil.waitForBuild
 		IResourcesSetupUtil.waitForBuild
 		IResourcesSetupUtil.waitForBuild
