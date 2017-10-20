@@ -61,6 +61,7 @@ import org.eclipse.n4js.ui.editor.N4JSHyperlinkDetector;
 import org.eclipse.n4js.ui.editor.N4JSLocationInFileProvider;
 import org.eclipse.n4js.ui.editor.N4JSReconciler;
 import org.eclipse.n4js.ui.editor.NFARAwareResourceForEditorInputFactory;
+import org.eclipse.n4js.ui.editor.PrevStateAwareDocumentBasedDirtyResource;
 import org.eclipse.n4js.ui.editor.autoedit.AutoEditStrategyProvider;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.HighlightingConfiguration;
 import org.eclipse.n4js.ui.editor.syntaxcoloring.InvalidatingHighlightingHelper;
@@ -115,6 +116,7 @@ import org.eclipse.xtext.resource.SynchronizedXtextResourceSet;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.resource.containers.IAllContainersState;
 import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
+import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
 import org.eclipse.xtext.ui.editor.IXtextEditorCallback;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.editor.autoedit.AbstractEditStrategyProvider;
@@ -678,7 +680,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSEditorResourceAccess.class;
 	}
 
-	/** Workaround for the problem: file is refreshed when opened */
+	/** A document provider that will not cancel a build when opening a file. */
 	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
 		return AvoidRefreshDocumentProvider.class;
 	}
@@ -709,5 +711,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	public void configureXtextEditorErrorTickUpdater(com.google.inject.Binder binder) {
 		binder.bind(IXtextEditorCallback.class).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
 				N4JSEditorErrorTickUpdater.class);
+	}
+
+	@Override
+	public Class<? extends DocumentBasedDirtyResource> bindDocumentBasedDirtyResource() {
+		return PrevStateAwareDocumentBasedDirtyResource.class;
 	}
 }

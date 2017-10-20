@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -122,7 +123,7 @@ import com.google.inject.Injector;
  *
  */
 @SuppressWarnings("restriction")
-public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState {
+public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderState {
 
 	@Inject
 	private RegistryBuilderParticipant builderParticipant;
@@ -167,6 +168,7 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 			IProgressMonitor monitor) {
 
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
+		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
 
 		IProject project = getProject(buildData);
@@ -216,7 +218,8 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
-		super.updateMarkers(delta, resourceSet, monitor);
+		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
+		super.updateMarkers(delta, resourceSet, subMonitor.split(1));
 		if (resourceSet != null) { // resourceSet is null during clean build
 			IBuildParticipantInstruction instruction = (IBuildParticipantInstruction) EcoreUtil.getAdapter(
 					resourceSet.eAdapters(), IBuildParticipantInstruction.class);
@@ -224,7 +227,7 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 				throw new IllegalStateException();
 			}
 			try {
-				instruction.process(delta, resourceSet, monitor);
+				instruction.process(delta, resourceSet, subMonitor.split(1));
 			} catch (CoreException e) {
 				handleCoreException(e);
 			}
@@ -233,6 +236,7 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 
 	@Override
 	protected void clearResourceSet(final ResourceSet resourceSet) {
+		// System.out.println("Clear in builder state");
 		N4JSResourceSetCleanerUtils.clearResourceSet(resourceSet);
 	}
 

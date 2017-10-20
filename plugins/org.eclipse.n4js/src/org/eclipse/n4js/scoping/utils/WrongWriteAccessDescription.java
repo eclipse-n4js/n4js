@@ -11,13 +11,12 @@
 package org.eclipse.n4js.scoping.utils;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.resource.IEObjectDescription;
-
 import org.eclipse.n4js.scoping.members.MemberScope;
 import org.eclipse.n4js.ts.types.FieldAccessor;
 import org.eclipse.n4js.ts.types.TField;
 import org.eclipse.n4js.ts.types.TMethod;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.resource.IEObjectDescription;
 
 /**
  * If the {@link MemberScope} finds a field accessor on the wrong side of an assignment, this descriptor is used to
@@ -63,7 +62,7 @@ public class WrongWriteAccessDescription extends AbstractDescriptionWithError {
 	}
 
 	private String getKeyword() {
-		final EObject obj = getDelegate().getEObjectOrProxy();
+		final EObject obj = delegate().getEObjectOrProxy();
 		if (obj instanceof TField) {
 			if (((TField) obj).isConst())
 				return "const field";

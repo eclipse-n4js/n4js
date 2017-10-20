@@ -43,6 +43,9 @@ import org.eclipse.xtext.scoping.impl.MapBasedScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
+import org.eclipse.xtext.resource.impl.AliasedEObjectDescription
+import org.eclipse.xtext.naming.IQualifiedNameProvider
+import com.google.inject.Singleton
 
 /** internal helper collection type */
 class QName2IEODesc extends HashMap<QualifiedName, IEObjectDescription> {
@@ -57,6 +60,7 @@ class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {
  * {@link N4JSScopeProvider#scope_IdentifierRef_id(org.eclipse.n4js.n4JS.VariableEnvironmentElement) .scope_IdentifierRef_id()},
  * also used by helper {@link LocallyKnownTypesScopingHelper LocallyKnownTypesScopingHelper}.
  */
+@Singleton
 class ImportedElementsScopingHelper {
 
 	@Inject
@@ -64,6 +68,9 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private TypeVisibilityChecker typeVisibilityChecker
+	
+	@Inject
+	private IQualifiedNameProvider qualifiedNameProvider
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker
@@ -308,12 +315,22 @@ class ImportedElementsScopingHelper {
 				}
 			}
 		} else if (issueCode === null) {
-			result.put(importedName,
-				ret = new InvisibleTypeOrVariableDescription(EObjectDescription.create(importedName, element)))
+			ret = createDescription(importedName, element)
+			ret = new InvisibleTypeOrVariableDescription(ret)
+			result.put(importedName, ret)
 		} else {
-			result.put(importedName, ret = EObjectDescription.create(importedName, element))
+			ret = createDescription(importedName, element)
+			result.put(importedName, ret)
 		}
 		return ret;
+	}
+	
+	private def IEObjectDescription createDescription(QualifiedName name, IdentifiableElement element) {
+		if (name.lastSegment != element.name) {
+			return new AliasedEObjectDescription(name, EObjectDescription.create(qualifiedNameProvider.getFullyQualifiedName(element), element))
+		} else {
+			return EObjectDescription.create(name, element)
+		}
 	}
 
 	/**

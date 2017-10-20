@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.resource.N4JSResourceDescriptionStrategy;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
@@ -180,10 +181,8 @@ public class ImportsAwareReferenceProposalCreator {
 
 		// special handling for default imports:
 		if (inputQN.getLastSegment().equals(N4JSLanguageConstants.EXPORT_DEFAULT_NAME)) {
-			EObject element = candidate.getEObjectOrProxy();
-			if (element instanceof TExportableElement) {
-				TExportableElement exported = (TExportableElement) element;
-				if (N4JSLanguageConstants.EXPORT_DEFAULT_NAME.equals(exported.getExportedName())) {
+			if (TExportableElement.class.isAssignableFrom(candidate.getEClass().getInstanceClass())) {
+				if (candidate.getUserData(N4JSResourceDescriptionStrategy.EXPORTED_DEFAULT_KEY) != null) {
 					return new AliasedEObjectDescription(inputQN, candidate);
 				}
 			}

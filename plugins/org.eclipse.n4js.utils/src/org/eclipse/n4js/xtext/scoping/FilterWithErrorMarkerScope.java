@@ -10,8 +10,7 @@
  */
 package org.eclipse.n4js.xtext.scoping;
 
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.function.Predicate;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.QualifiedName;
@@ -19,6 +18,7 @@ import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.AbstractScope;
 import org.eclipse.xtext.scoping.impl.FilteringScope;
+import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
 import com.google.common.collect.Iterables;
 
@@ -80,6 +80,16 @@ public abstract class FilterWithErrorMarkerScope implements IScope {
 	protected abstract boolean isAccepted(IEObjectDescription originalDescr);
 
 	/**
+	 * Returns true if given description is to be passed unmodified. That is, if it returns false, the description is
+	 * filtered out (and possibly wrapped via {@link #wrapFilteredDescription(IEObjectDescription)}. The implementation
+	 * is allowed to make compromises here when resolution can be avoided in favor of a not 100% sure but faster
+	 * decision.
+	 */
+	protected boolean tryAcceptWithoutResolve(IEObjectDescription description) {
+		return isAccepted(description);
+	}
+
+	/**
 	 * Returns the first not filtered element found in the parent scope; if no such element is found, an
 	 * {@link IEObjectDescriptionWithError} is created for the element originally found in the parent scope by that
 	 * name.
@@ -124,7 +134,33 @@ public abstract class FilterWithErrorMarkerScope implements IScope {
 
 	@Override
 	public Iterable<IEObjectDescription> getAllElements() {
-		return decorateWithErrorIfFiltered(parent.getAllElements());
+		return decorateWithErrorIfFilteredWithoutResolve(parent.getAllElements());
+	}
+
+	/**
+	 * Decorates all descriptions which are filtered with error markers. Since
+	 * {@link #wrapFilteredDescription(IEObjectDescription)} may return null, null values are filtered out. The used
+	 * filter can resolve proxies as it wishes.
+	 *
+	 * @param originalDescriptions
+	 *            the original unfiltered descriptions.
+	 */
+	protected Iterable<IEObjectDescription> decorateWithErrorIfFiltered(
+			Iterable<IEObjectDescription> originalDescriptions) {
+		return doDecorateWithErrorIfFiltered(originalDescriptions, this::isAccepted);
+	}
+
+	/**
+	 * Decorates all descriptions which are filtered with error markers. Since
+	 * {@link #wrapFilteredDescription(IEObjectDescription)} may return null, null values are filtered out. The used
+	 * filter tries to avoid resolution of proxies.
+	 *
+	 * @param originalDescriptions
+	 *            the original unfiltered descriptions.
+	 */
+	protected Iterable<IEObjectDescription> decorateWithErrorIfFilteredWithoutResolve(
+			Iterable<IEObjectDescription> originalDescriptions) {
+		return doDecorateWithErrorIfFiltered(originalDescriptions, this::tryAcceptWithoutResolve);
 	}
 
 	/**
@@ -134,13 +170,11 @@ public abstract class FilterWithErrorMarkerScope implements IScope {
 	 * @param originalDescriptions
 	 *            the original unfiltered descriptions.
 	 */
-	protected Iterable<IEObjectDescription> decorateWithErrorIfFiltered(
-			Iterable<IEObjectDescription> originalDescriptions) {
-		// warning produced here is a bug, see https://bugs.eclipse.org/bugs/show_bug.cgi?id=445465
-		// explicitly declaring type of element fixes the warning
+	protected Iterable<IEObjectDescription> doDecorateWithErrorIfFiltered(
+			Iterable<IEObjectDescription> originalDescriptions, Predicate<IEObjectDescription> predicate) {
 		Iterable<IEObjectDescription> filteredResult = Iterables.transform(originalDescriptions,
-				(IEObjectDescription it) -> {
-					if (it == null || isAccepted(it)) {
+				it -> {
+					if (it == null || predicate.test(it)) {
 						return it;
 					} else {
 						return wrapFilteredDescription(it);
@@ -151,8 +185,7 @@ public abstract class FilterWithErrorMarkerScope implements IScope {
 
 	@Override
 	public String toString() {
-		return StreamSupport.stream(getAllElements().spliterator(), false).map(descr -> descr.toString())
-				.collect(Collectors.joining(", "));
+		return IterableExtensions.join(getAllElements(), ", ");
 	}
 
 }

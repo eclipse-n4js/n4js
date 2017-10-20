@@ -17,6 +17,7 @@ import static org.eclipse.n4js.scoping.members.TMemberEntry.MemberSource.OWNED;
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,6 +60,7 @@ import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.util.IResourceScopeCache;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Tuples;
 
@@ -87,6 +89,9 @@ public class ContainerTypesHelper {
 	 */
 	@Inject
 	private ImportedNamesRecordingScopeAccess polyfillScopeAccess;
+
+	@Inject
+	private IResourceScopeCache cache;
 
 	/**
 	 * Injected to gain access for users of this class.
@@ -162,8 +167,10 @@ public class ContainerTypesHelper {
 		public TMember findMember(ContainerType<?> type, String name, boolean writable, boolean staticAccess,
 				boolean includeImplicitSuperTypes,
 				boolean includePolyfills) {
-			return new FindMemberHelper(type, name, writable, staticAccess, includeImplicitSuperTypes,
-					includePolyfills).getResult();
+			return cache.get(Arrays.asList("findMember", type, name, writable, staticAccess, includeImplicitSuperTypes,
+					includePolyfills), contextResource,
+					() -> new FindMemberHelper(type, name, writable, staticAccess, includeImplicitSuperTypes,
+							includePolyfills).getResult());
 		}
 
 		/**
@@ -248,7 +255,10 @@ public class ContainerTypesHelper {
 		 */
 		public MemberList<TMember> members(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills) {
-			return new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills, m -> true).getResult();
+			return cache.get(Arrays.asList("members", type, includeImplicitSuperTypes, includePolyfills),
+					contextResource,
+					() -> new CollectMembersHelper(type, includeImplicitSuperTypes, includePolyfills, m -> true)
+							.getResult());
 		}
 
 		/**
@@ -282,8 +292,12 @@ public class ContainerTypesHelper {
 		 */
 		public MemberList<TMember> allMembers(ContainerType<?> type, boolean includeImplicitSuperTypes,
 				boolean includePolyfills, boolean includeInheritedMembers) {
-			return new AllMembersCollector(type, includeImplicitSuperTypes, includePolyfills, includeInheritedMembers)
-					.getResult();
+			return cache.get(
+					Arrays.asList("allMembers", type, includeImplicitSuperTypes, includePolyfills,
+							includeInheritedMembers),
+					contextResource, () -> new AllMembersCollector(type, includeImplicitSuperTypes, includePolyfills,
+							includeInheritedMembers)
+									.getResult());
 		}
 
 		/**
