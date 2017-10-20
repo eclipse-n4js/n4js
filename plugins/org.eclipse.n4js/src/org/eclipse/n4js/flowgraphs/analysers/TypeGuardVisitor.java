@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.List;
+
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -74,52 +77,57 @@ public class TypeGuardVisitor extends GraphVisitor {
 	class TypeGuardExplorer extends GraphExplorer {
 
 		TypeGuardExplorer() {
-			super(Quantor.ForAllPaths);
+			super(Quantor.ForAllBranches);
 		}
 
 		@Override
-		protected TypeGuardWalker firstPathWalker() {
+		protected TypeGuardWalker firstBranchWalker() {
 			return new TypeGuardWalker();
 		}
 
-		class TypeGuardWalker extends BranchWalker {
+		@Override
+		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
+			return new TypeGuardWalker();
+		}
 
-			@Override
-			protected void initialize() {
-				// nothing to do
-			}
+	}
 
-			@Override
-			protected void visit(ControlFlowElement cfe) {
-				if (cfe instanceof UnaryExpression) {
-					UnaryExpression ue = (UnaryExpression) cfe;
-					if (ue.getOp() == UnaryOperator.TYPEOF) {
-						Expression typeExpression = ue.getExpression();
-						RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeExpression);
-						TypeRef tRef = ts.type(G, ue).getFirst();
-						if (ts.subtypeSucceeded(G, reqTypeRef, tRef)) {
-							super.deactivate();
-						}
+	class TypeGuardWalker extends BranchWalker {
+
+		@Override
+		protected void initialize() {
+			// nothing to do
+		}
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			if (cfe instanceof UnaryExpression) {
+				UnaryExpression ue = (UnaryExpression) cfe;
+				if (ue.getOp() == UnaryOperator.TYPEOF) {
+					Expression typeExpression = ue.getExpression();
+					RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeExpression);
+					TypeRef tRef = ts.type(G, ue).getFirst();
+					if (ts.subtypeSucceeded(G, reqTypeRef, tRef)) {
+						super.deactivate();
 					}
 				}
 			}
-
-			@Override
-			protected void visit(FlowEdge edge) {
-				// nothing to do
-			}
-
-			@Override
-			protected TypeGuardWalker forkPath() {
-				return new TypeGuardWalker();
-			}
-
-			@Override
-			protected void terminate() {
-				fail();
-			}
-
 		}
-	}
 
+		@Override
+		protected void visit(FlowEdge edge) {
+			// nothing to do
+		}
+
+		@Override
+		protected TypeGuardWalker forkPath() {
+			return new TypeGuardWalker();
+		}
+
+		@Override
+		protected void terminate() {
+			fail();
+		}
+
+	}
 }

@@ -37,6 +37,6 @@ abstract public class GraphExplorer extends GraphExplorerInternal {
 	}
 
 	@Override
-	abstract protected BranchWalkerInternal firstPathWalker();
+	abstract protected BranchWalkerInternal firstBranchWalker();
 
 }

@@ -15,11 +15,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -94,7 +94,12 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected BranchWalkerInternal firstPathWalker() {
+		protected BranchWalkerInternal firstBranchWalker() {
+			return new CheckVariablePathWalker();
+		}
+
+		@Override
+		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
 			return new CheckVariablePathWalker();
 		}
 

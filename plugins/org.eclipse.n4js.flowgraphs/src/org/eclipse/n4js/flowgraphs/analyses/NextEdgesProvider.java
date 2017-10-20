@@ -143,6 +143,17 @@ abstract class NextEdgesProvider {
 		repeatEdges.clear();
 	}
 
+	protected void join(NextEdgesProvider edgesProvider) {
+		for (Map.Entry<ControlFlowEdge, Integer> repeatCounter : edgesProvider.repeatEdges.entrySet()) {
+			ControlFlowEdge rEdge = repeatCounter.getKey();
+			Integer countOther = repeatCounter.getValue();
+			int count = getOccurences(rEdge);
+			incrOccurence(rEdge);
+			int newCount = Math.min(count + countOther, 2);
+			repeatEdges.put(rEdge, newCount);
+		}
+	}
+
 	/**
 	 * Edges of type {@literal ControlFlowType.Repeat} are followed at most twice.
 	 *

@@ -13,7 +13,11 @@ package org.eclipse.n4js.flowgraphs.analyses;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
@@ -27,29 +31,49 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 	private final ArrayList<EdgeGuide> currEdgeGuides = new ArrayList<>();
 
+	void add(EdgeGuide edgeGuide) {
+		currEdgeGuides.add(edgeGuide);
+	}
+
 	void addAll(Collection<EdgeGuide> edgeGuides) {
 		currEdgeGuides.addAll(edgeGuides);
-		Collections.sort(currEdgeGuides, EdgeGuideQueue::compareForJoin);
-		Iterator<EdgeGuide> egIter = currEdgeGuides.iterator();
-		if (egIter.hasNext()) {
-			EdgeGuide lastEG = egIter.next();
-			while (egIter.hasNext()) {
-				EdgeGuide currEG = egIter.next();
-				if (lastEG.edge.end == currEG.edge.end) {
-					lastEG.join(currEG);
-					egIter.remove();
-				}
-				lastEG = currEG;
-			}
-		}
-		Collections.sort(currEdgeGuides, EdgeGuideQueue::compareForRemoveFirst);
 	}
 
 	boolean isEmpty() {
 		return currEdgeGuides.isEmpty();
 	}
 
+	Collection<LinkedList<EdgeGuide>> removeJoinGuides() {
+		Map<Node, LinkedList<EdgeGuide>> guideGroups = new HashMap<>();
+		LinkedList<EdgeGuide> guideGroup = new LinkedList<>();
+		Collections.sort(currEdgeGuides, EdgeGuideQueue::compareForJoin);
+
+		for (Iterator<EdgeGuide> iter = currEdgeGuides.iterator(); iter.hasNext();) {
+			EdgeGuide eg = iter.next();
+			if (!guideGroup.isEmpty() && guideGroup.getFirst().getEdge() != eg.getEdge()) {
+				if (guideGroup.size() > 1) {
+					guideGroups.put(eg.getEdge().end, guideGroup);
+				}
+
+				guideGroup = new LinkedList<>();
+			}
+			guideGroup.add(eg);
+			if (guideGroup.size() > 1) {
+				iter.remove();
+			}
+		}
+		for (LinkedList<EdgeGuide> guideGroup2 : guideGroups.values()) {
+			currEdgeGuides.remove(guideGroup2.getFirst());
+		}
+		return guideGroups.values();
+	}
+
+	void removeAll(List<EdgeGuide> rList) {
+		currEdgeGuides.removeAll(rList);
+	}
+
 	EdgeGuide removeFirst() {
+		Collections.sort(currEdgeGuides, EdgeGuideQueue::compareForRemoveFirst);
 		return currEdgeGuides.remove(0);
 	}
 
@@ -59,8 +83,8 @@ public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 	}
 
 	static int compareForJoin(EdgeGuide eg1, EdgeGuide eg2) {
-		ControlFlowEdge e1 = eg1.edge;
-		ControlFlowEdge e2 = eg2.edge;
+		ControlFlowEdge e1 = eg1.getEdge();
+		ControlFlowEdge e2 = eg2.getEdge();
 		Node end1 = e1.end;
 		Node end2 = e2.end;
 		int compareValue = end1.hashCode() - end2.hashCode();
@@ -74,8 +98,8 @@ public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 		int e1IsFirst = 1;
 		int e2IsFirst = -1;
 
-		ControlFlowEdge e1 = eg1.edge;
-		ControlFlowEdge e2 = eg2.edge;
+		ControlFlowEdge e1 = eg1.getEdge();
+		ControlFlowEdge e2 = eg2.getEdge();
 		Node end1 = e1.end;
 		Node end2 = e2.end;
 		boolean isJoining1 = end1.pred.size() > 1;
@@ -140,9 +164,9 @@ public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 
 	static String getString(EdgeGuide egi) {
 		String s = "(";
-		s += getASTDepth(egi.edge.end.getControlFlowElement());
+		s += getASTDepth(egi.getEdge().end.getControlFlowElement());
 		s += ":";
-		s += egi.edge.cfType;
+		s += egi.getEdge().cfType;
 		s += ")";
 		return s;
 	}

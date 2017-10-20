@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal.Quantor;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -22,8 +25,8 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  */
 abstract public class BranchWalkerInternal {
 	private GraphExplorerInternal pathExplorer;
-	private BranchWalkerInternal pathPredecessor;
-	private BranchWalkerInternal pathSuccessor;
+	private final LinkedList<BranchWalkerInternal> pathPredecessors = new LinkedList<>();
+	private final LinkedList<BranchWalkerInternal> pathSuccessors = new LinkedList<>();
 
 	/////////////////////// Abstract Methods ///////////////////////
 
@@ -62,40 +65,6 @@ abstract public class BranchWalkerInternal {
 	 */
 	abstract protected BranchWalkerInternal fork();
 
-	/**
-	 * Iff {@code true} returned, this {@link BranchWalkerInternal} will be joined. Otherwise joining is omitted and this
-	 * {@link BranchWalkerInternal} will traverse the paths in parallel to other {@link BranchWalkerInternal}s.
-	 * <p>
-	 * <b>Attention:</b> If there are more than 1000 {@link BranchWalkerInternal}, the {@link BranchWalkerInternal} with the
-	 * most {@link BranchWalkerInternal}s will be cancelled.
-	 */
-	protected boolean isJoinable() {
-		return true;
-	}
-
-	/**
-	 * Called when another {@link BranchWalkerInternal} is joined into this {@link BranchWalkerInternal} instance.
-	 *
-	 * @param joiningPWI
-	 *            will receive the method call {@link #joinedWith(BranchWalkerInternal)} and then terminate
-	 */
-	protected void join(BranchWalkerInternal joiningPWI) {
-		// overwrite me
-	}
-
-	/**
-	 * Called after this {@link BranchWalkerInternal} instance was joined into the {code joinSurvivor}
-	 * {@link BranchWalkerInternal} instance.
-	 * <p>
-	 * After this method succeeded, {@link #terminate()} gets called.
-	 *
-	 * @param joinSurvivor
-	 *            will continue to walk the path.
-	 */
-	protected void joinedWith(BranchWalkerInternal joinSurvivor) {
-		// overwrite me
-	}
-
 	/** Called at last. */
 	protected void terminate() {
 		// overwrite me
@@ -106,11 +75,26 @@ abstract public class BranchWalkerInternal {
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
-	protected void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal predecessor) {
+	protected void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal... predecessors) {
 		this.pathExplorer = explorer;
-		this.pathPredecessor = predecessor;
-		pathExplorer.allPaths.add(this);
-		pathExplorer.activePaths.add(this);
+		for (BranchWalkerInternal pred : predecessors) {
+			this.pathPredecessors.add(pred);
+		}
+		pathExplorer.allBranches.add(this);
+		pathExplorer.activeBranches.add(this);
+		initialize();
+	}
+
+	/**
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
+	 */
+	protected void callInitialize(GraphExplorerInternal explorer, List<BranchWalkerInternal> predecessors) {
+		this.pathExplorer = explorer;
+		if (predecessors != null) {
+			this.pathPredecessors.addAll(predecessors);
+		}
+		pathExplorer.allBranches.add(this);
+		pathExplorer.activeBranches.add(this);
 		initialize();
 	}
 
@@ -136,23 +120,6 @@ abstract public class BranchWalkerInternal {
 		return forkedPath;
 	}
 
-	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link BranchWalkerInternal#join(BranchWalkerInternal)}.
-	 */
-	final void callJoin(BranchWalkerInternal joiningPWI) {
-		join(joiningPWI);
-	}
-
-	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link BranchWalkerInternal#joinedWith(BranchWalkerInternal)}.
-	 */
-	final void callJoinedWith(BranchWalkerInternal joinSurvivor) {
-		pathSuccessor = joinSurvivor;
-		joinedWith(joinSurvivor);
-	}
-
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
@@ -163,25 +130,23 @@ abstract public class BranchWalkerInternal {
 	}
 
 	/**
-	 * returns the {@link BranchWalkerInternal} from which this instance was forked. Is null for the first
-	 * {@link BranchWalkerInternal}.
+	 * returns a list of {@link BranchWalkerInternal}s which proceed this instance.
 	 */
-	final public BranchWalkerInternal getPathPredecessor() {
-		return pathPredecessor;
+	final public List<BranchWalkerInternal> getPathPredecessors() {
+		return pathPredecessors;
 	}
 
 	/**
-	 * returns the {@link BranchWalkerInternal} into which this instance was joined. Is set before
-	 * {@link #joinedWith(BranchWalkerInternal)} is called.
+	 * returns a list of {@link BranchWalkerInternal}s which succeed this instance.
 	 */
-	final public BranchWalkerInternal getPathSuccessor() {
-		return pathSuccessor;
+	final public List<BranchWalkerInternal> getPathSuccessors() {
+		return pathSuccessors;
 	}
 
 	/** Sets the verdict of this path to <i>Passed</i>. */
 	final public void pass() {
-		pathExplorer.passedPaths.add(this);
-		if (pathExplorer.quantor == Quantor.AtLeastOnePath) {
+		pathExplorer.passedBranches.add(this);
+		if (pathExplorer.quantor == Quantor.AtLeastOneBranch) {
 			pathExplorer.deactivateAll();
 		} else {
 			deactivate();
@@ -190,8 +155,8 @@ abstract public class BranchWalkerInternal {
 
 	/** Sets the verdict of this path to <i>Failed</i>. */
 	final public void fail() {
-		pathExplorer.failedPaths.add(this);
-		if (pathExplorer.quantor == Quantor.ForAllPaths) {
+		pathExplorer.failedBranchs.add(this);
+		if (pathExplorer.quantor == Quantor.ForAllBranches) {
 			pathExplorer.deactivateAll();
 		} else {
 			deactivate();
@@ -200,14 +165,14 @@ abstract public class BranchWalkerInternal {
 
 	/** Deactivates this path without setting the verdict. */
 	final public void deactivate() {
-		pathExplorer.activePaths.remove(this);
+		pathExplorer.activeBranches.remove(this);
 		terminate();
 		pathExplorer.checkExplorerDeactivation();
 	}
 
 	/** @return true, iff this path is active. */
 	final public boolean isActive() {
-		return pathExplorer.activePaths.contains(this);
+		return pathExplorer.activeBranches.contains(this);
 	}
 
 }

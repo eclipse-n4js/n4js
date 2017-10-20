@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.List;
+
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -65,12 +68,17 @@ public class NeverUsedVisitor extends GraphVisitor {
 		final IdentifierRef idRef;
 
 		public NeverUsedExplorer(IdentifierRef idRef) {
-			super(Quantor.AtLeastOnePath);
+			super(Quantor.AtLeastOneBranch);
 			this.idRef = idRef;
 		}
 
 		@Override
-		protected NeverUsedWalker firstPathWalker() {
+		protected NeverUsedWalker firstBranchWalker() {
+			return new NeverUsedWalker();
+		}
+
+		@Override
+		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
 			return new NeverUsedWalker();
 		}
 

@@ -15,11 +15,11 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -97,10 +97,9 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
 		for (GraphExplorerInternal app : getActivatedExplorers()) {
-			for (BranchWalkerInternal ap : app.getAllPaths()) {
+			for (BranchWalkerInternal ap : app.getAllBranches()) {
 				AllBranchPrintWalker printPath = (AllBranchPrintWalker) ap;
 				pathStrings.add(printPath.branchString);
-				// pathStrings.add(" ");
 			}
 		}
 		return pathStrings;
@@ -109,13 +108,19 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	static class AllBranchPrintExplorer extends GraphExplorer {
 
 		AllBranchPrintExplorer() {
-			super(Quantor.ForAllPaths);
+			super(Quantor.ForAllBranches);
 		}
 
 		@Override
-		protected AllBranchPrintWalker firstPathWalker() {
+		protected AllBranchPrintWalker firstBranchWalker() {
 			return new AllBranchPrintWalker();
 		}
+
+		@Override
+		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
+			return new AllBranchPrintWalker();
+		}
+
 	}
 
 	static class AllBranchPrintWalker extends BranchWalker {

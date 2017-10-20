@@ -227,10 +227,10 @@ abstract public class GraphVisitorInternal {
 	 * Only called from {@link GraphVisitorGuideInternal}. Activates the {@link GraphExplorerInternal} that wait for
 	 * activation.
 	 */
-	final List<BranchWalkerInternal> activateRequestedPathExplorers() {
+	final List<BranchWalkerInternal> activateRequestedExplorers() {
 		List<BranchWalkerInternal> activatedPaths = new LinkedList<>();
 		for (GraphExplorerInternal app : activationRequests) {
-			BranchWalkerInternal activePath = app.callFirstPathWalker(this);
+			BranchWalkerInternal activePath = app.callFirstBranchWalker(this);
 			activatedPaths.add(activePath);
 		}
 		activatedExplorers.addAll(activationRequests);
@@ -240,16 +240,16 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** Called from {@link GraphExplorerInternal} when the calling {@link GraphExplorerInternal} is finished. */
-	final void deactivatePathExplorer(GraphExplorerInternal pathExplorerInternal) {
+	final void deactivateGraphExplorer(GraphExplorerInternal pathExplorerInternal) {
 		activeExplorers.remove(pathExplorerInternal);
 	}
 
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
-	 * Call this method to request the spawn of a new {@link GraphExplorerInternal}. The new {@link GraphExplorerInternal}
-	 * is spawned after the current visit-method is finished. If not called from a visit-method, the new
-	 * {@link GraphExplorerInternal} is spawned after the next visit-method is finished.
+	 * Call this method to request the spawn of a new {@link GraphExplorerInternal}. The new
+	 * {@link GraphExplorerInternal} is spawned after the current visit-method is finished. If not called from a
+	 * visit-method, the new {@link GraphExplorerInternal} is spawned after the next visit-method is finished.
 	 */
 	final public void requestActivation(GraphExplorerInternal app) {
 		activationRequests.add(app);

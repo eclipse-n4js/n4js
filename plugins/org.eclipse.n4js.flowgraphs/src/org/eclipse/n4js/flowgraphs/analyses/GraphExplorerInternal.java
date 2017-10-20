@@ -17,9 +17,9 @@ import java.util.Set;
 
 /**
  * An {@link GraphExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific
- * preconditions. It follows all paths beginning from the location of activation. Its initial path is forked using the
- * method {@link #firstPathWalker()}. Subsequent paths are forked from the initial paths. The
- * {@link GraphExplorerInternal} is deactivated in case it has no active paths anymore. The final state of a
+ * preconditions. It follows all branchs beginning from the location of activation. Its initial branch is forked using
+ * the method {@link #firstBranchWalker()}. Subsequent branchs are forked from the initial branchs. The
+ * {@link GraphExplorerInternal} is deactivated in case it has no active branchs anymore. The final state of a
  * {@link GraphExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
  * <p/>
  * The life cycle of a {@link GraphExplorerInternal}:
@@ -27,16 +27,16 @@ import java.util.Set;
  * <li/>Instantiation
  * <li/>Request for activation
  * <li/>Activation
- * <li/>Call to {@link GraphExplorerInternal#firstPathWalker()}
+ * <li/>Call to {@link GraphExplorerInternal#firstBranchWalker()}
  * <li/>De-Activation when all its {@link BranchWalkerInternal}s are inactive
  * <li/>Evaluation by user by calling e.g. {@link GraphExplorerInternal#isPassed()}
  * </ol>
  */
 abstract public class GraphExplorerInternal {
-	final Set<BranchWalkerInternal> activePaths = new HashSet<>();
-	final List<BranchWalkerInternal> passedPaths = new LinkedList<>();
-	final List<BranchWalkerInternal> failedPaths = new LinkedList<>();
-	final List<BranchWalkerInternal> allPaths = new LinkedList<>();
+	final Set<BranchWalkerInternal> activeBranches = new HashSet<>();
+	final List<BranchWalkerInternal> passedBranches = new LinkedList<>();
+	final List<BranchWalkerInternal> failedBranchs = new LinkedList<>();
+	final List<BranchWalkerInternal> allBranches = new LinkedList<>();
 	/** Quantor, specified in constructor */
 	protected final Quantor quantor;
 	/** Default verdict, specified in constructor */
@@ -50,10 +50,10 @@ abstract public class GraphExplorerInternal {
 	public enum Quantor {
 		/** No specific condition. */
 		None,
-		/** The {@link GraphExplorerInternal} passes iff all paths pass. */
-		ForAllPaths,
-		/** The {@link GraphExplorerInternal} passes if at least one path passes. */
-		AtLeastOnePath
+		/** The {@link GraphExplorerInternal} passes iff all branchs pass. */
+		ForAllBranches,
+		/** The {@link GraphExplorerInternal} passes if at least one branch passes. */
+		AtLeastOneBranch
 	}
 
 	/** The {@link State} defines the current state of a {@link GraphExplorerInternal}. */
@@ -82,7 +82,7 @@ abstract public class GraphExplorerInternal {
 	 * Constructor
 	 * <p>
 	 * The {@link GraphExplorerInternal} will pass as default in case {@link BranchWalkerInternal#fail()} is never
-	 * called on any of its active paths.
+	 * called on any of its active branchs.
 	 *
 	 * @param quantor
 	 *            defines fail/pass condition
@@ -107,30 +107,50 @@ abstract public class GraphExplorerInternal {
 
 	/////////////////////// Abstract Methods ///////////////////////
 
-	/** Spawns the first path. Called right after this {@link GraphExplorerInternal} gets activated. */
-	abstract protected BranchWalkerInternal firstPathWalker();
+	/** Spawns the first branch. Called right after this {@link GraphExplorerInternal} gets activated. */
+	abstract protected BranchWalkerInternal firstBranchWalker();
+
+	/** Joins two branches and returns a new one. */
+	abstract protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers);
 
 	/////////////////////// Methods called from {@link GraphVisitorInternal} ///////////////////////
 
-	/** Only called from {@link GraphVisitorInternal}. Delegates to {@link #firstPathWalker()}. */
-	final BranchWalkerInternal callFirstPathWalker(GraphVisitorInternal parentGraphVisitorInternal) {
+	/** Only called from {@link GraphVisitorInternal}. Delegates to {@link #firstBranchWalker()}. */
+	final BranchWalkerInternal callFirstBranchWalker(GraphVisitorInternal parentGraphVisitorInternal) {
 		parentGraphVisitor = parentGraphVisitorInternal;
-		BranchWalkerInternal activePath = firstPathWalker();
-		activePath.callInitialize(this, null);
-		return activePath;
+		BranchWalkerInternal activeBranch = firstBranchWalker();
+		activeBranch.callInitialize(this);
+		return activeBranch;
+	}
+
+	/**
+	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #joinBranchWalkers(List)}.
+	 */
+	final BranchWalkerInternal callJoinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
+		if (branchWalkers.size() == 1) {
+			return branchWalkers.get(0);
+		}
+
+		BranchWalkerInternal activeBranch = joinBranchWalkers(branchWalkers);
+		for (BranchWalkerInternal bW : branchWalkers) {
+			activeBranches.remove(bW);
+			bW.deactivate();
+		}
+		activeBranch.callInitialize(this, branchWalkers);
+		return activeBranch;
 	}
 
 	final void checkExplorerDeactivation() {
-		if (activePaths.isEmpty()) {
-			boolean somePassed = !passedPaths.isEmpty();
-			boolean someFailed = !failedPaths.isEmpty();
+		if (activeBranches.isEmpty()) {
+			boolean somePassed = !passedBranches.isEmpty();
+			boolean someFailed = !failedBranchs.isEmpty();
 
 			switch (quantor) {
-			case AtLeastOnePath:
-			case ForAllPaths:
+			case AtLeastOneBranch:
+			case ForAllBranches:
 				boolean explorerPassed = false;
-				explorerPassed |= somePassed && quantor == Quantor.AtLeastOnePath;
-				explorerPassed |= somePassed && !someFailed && quantor == Quantor.ForAllPaths;
+				explorerPassed |= somePassed && quantor == Quantor.AtLeastOneBranch;
+				explorerPassed |= somePassed && !someFailed && quantor == Quantor.ForAllBranches;
 				explorerPassed |= !somePassed && !someFailed && passAsDefault;
 				if (explorerPassed) {
 					state = State.Passed;
@@ -144,7 +164,7 @@ abstract public class GraphExplorerInternal {
 				break;
 			}
 
-			parentGraphVisitor.deactivatePathExplorer(this);
+			parentGraphVisitor.deactivateGraphExplorer(this);
 		}
 	}
 
@@ -160,23 +180,23 @@ abstract public class GraphExplorerInternal {
 		return state == State.Failed;
 	}
 
-	/** Deactivates all active paths and hence this {@link GraphExplorerInternal}. */
+	/** Deactivates all active branches and hence this {@link GraphExplorerInternal}. */
 	final public void deactivateAll() {
-		while (!activePaths.isEmpty()) {
-			BranchWalkerInternal aPath = activePaths.iterator().next();
-			aPath.deactivate();
+		while (!activeBranches.isEmpty()) {
+			BranchWalkerInternal aBranch = activeBranches.iterator().next();
+			aBranch.deactivate();
 		}
 		checkExplorerDeactivation();
 	}
 
-	/** @return all paths no matter if they are active or not, or passed or failed. */
-	final public List<BranchWalkerInternal> getAllPaths() {
-		return allPaths;
+	/** @return all branches no matter if they are active or not, or passed or failed. */
+	final public List<BranchWalkerInternal> getAllBranches() {
+		return allBranches;
 	}
 
-	/** @return all paths no matter if they are active or not, or passed or failed. */
-	final public Set<BranchWalkerInternal> getActivePaths() {
-		return activePaths;
+	/** @return all branches no matter if they are active or not, or passed or failed. */
+	final public Set<BranchWalkerInternal> getActiveBranches() {
+		return activeBranches;
 	}
 
 }
