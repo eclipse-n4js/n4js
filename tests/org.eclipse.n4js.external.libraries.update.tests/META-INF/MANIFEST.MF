@@ -9,6 +9,5 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.external.libraries,
  org.eclipse.n4js.external.libraries.update,
  org.eclipse.n4js.utils,
- org.junit,
- org.eclipse.n4js.smith
+ org.junit
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
