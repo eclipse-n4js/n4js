@@ -31,6 +31,11 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.ui.editor.contentassist.AbstractJavaBasedContentProposalProvider
 import org.eclipse.xtext.ui.editor.contentassist.ContentAssistContext
 import org.eclipse.xtext.ui.editor.contentassist.ICompletionProposalAcceptor
+import org.eclipse.xtext.ui.editor.contentassist.ConfigurableCompletionProposal
+import org.eclipse.jface.text.contentassist.ICompletionProposal
+import org.eclipse.xtext.conversion.ValueConverterException
+import com.google.inject.Provider
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 /**
  * see http://www.eclipse.org/Xtext/documentation.html#contentAssist on how to customize content assistant
@@ -97,9 +102,41 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * @see AbstractJavaBasedContentProposalProvider
 	 */
 	override protected getProposalFactory(String ruleName, ContentAssistContext contentAssistContext) {
-		return new DefaultProposalCreator(contentAssistContext, ruleName,
-			new IQualifiedNameConverter.DefaultImpl() // provide a fake implementation using '.' as delimiter like Java
-		);
+		val myConverter = new IQualifiedNameConverter.DefaultImpl() // provide a fake implementation using '.' as delimiter like Java
+		return new DefaultProposalCreator(contentAssistContext, ruleName, myConverter) {
+			
+			override apply(IEObjectDescription candidate) {
+				if (candidate === null)
+					return null;
+				var ICompletionProposal result = null;
+				var String proposal = myConverter.toString(candidate.getName());
+				if (valueConverter !== null) {
+					try {
+						proposal = valueConverter.toString(proposal);
+					} catch (ValueConverterException e) {
+						return null;
+					}
+				} else if (ruleName !== null) {
+					try {
+						proposal = getValueConverter().toString(proposal, ruleName);
+					} catch (ValueConverterException e) {
+						return null;
+					}
+				}
+				val StyledString displayString = getStyledDisplayString(candidate);
+				val Image image = getImage(candidate);
+				result = createCompletionProposal(proposal, displayString, image, contentAssistContext);
+				if (result instanceof ConfigurableCompletionProposal) {
+					val Provider<EObject> provider = [candidate.getEObjectOrProxy()];
+					result.setProposalContextResource(contentAssistContext.getResource());
+					result.setAdditionalProposalInfo(provider);
+					result.setHover(hover);
+				}
+				getPriorityHelper().adjustCrossReferencePriority(result, contentAssistContext.getPrefix());
+				return result;
+			}
+			
+		}
 	}
 
 	/**
@@ -114,19 +151,20 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 	 * respectively.
 	 *
 	 */
-	override protected getStyledDisplayString(EObject element, String qualifiedName, String shortName) {
-		val (QualifiedName, String)=>StyledString stringifier = [ it, name |
-			val result = new StyledString(name)
-			if (it.segmentCount > 1) {
-				if (it.lastSegment.endsWith(name)) {
-					result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)), StyledString.QUALIFIER_STYLER)
-				} else {
-					// aliased - print the alias and the original name
-					result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)) + ' alias for ' + it.lastSegment, StyledString.QUALIFIER_STYLER)
-				}
+	val (QualifiedName, String)=>StyledString stringifier = [ it, name |
+		val result = new StyledString(name)
+		if (it.segmentCount > 1) {
+			if (it.lastSegment.endsWith(name)) {
+				result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)), StyledString.QUALIFIER_STYLER)
+			} else {
+				// aliased - print the alias and the original name
+				result.append(' - ' + qualifiedNameConverter.toString(it.skipLast(1)) + ' alias for ' + it.lastSegment, StyledString.QUALIFIER_STYLER)
 			}
-			return result
-		]
+		}
+		return result
+	]
+	 
+	override protected getStyledDisplayString(EObject element, String qualifiedName, String shortName) {
 		if (qualifiedName == shortName) {
 			val parsedQualifiedName = qualifiedNameConverter.toQualifiedName(qualifiedName)
 			if (parsedQualifiedName.segmentCount == 1) {
@@ -135,6 +173,26 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			return stringifier.apply(parsedQualifiedName, parsedQualifiedName.lastSegment)
 		}
 		return tryGetDisplayString(element, stringifier, shortName) ?: stringifier.apply(qualifiedNameConverter.toQualifiedName(qualifiedName), shortName)
+	}
+	
+	override protected getImage(IEObjectDescription description) {
+		val clazz = description.EClass
+		return super.getImage(EcoreUtil.create(clazz))
+	}
+	
+	/**
+	 * Overridden to avoid calls to IEObjectDescription#getEObjectOrProxy
+	 */
+	override protected getStyledDisplayString(IEObjectDescription description) {
+		val qualifiedName = description.qualifiedName;
+		val shortName = description.name;
+		if (qualifiedName == shortName) {
+			if (shortName.segmentCount >= 1) {
+				return stringifier.apply(qualifiedName, shortName.lastSegment)
+			} 
+		}
+		// don't recompute the qualified name again
+		return stringifier.apply(qualifiedName, qualifiedNameConverter.toString(shortName))
 	}
 
 	/**

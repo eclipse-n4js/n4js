@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
@@ -482,9 +483,11 @@ public class TClassImpl extends TN4ClassifierImpl implements TClass {
 		ParameterizedTypeRef _superClassRef = this.getSuperClassRef();
 		boolean _tripleNotEquals = (_superClassRef != null);
 		if (_tripleNotEquals) {
-			return Iterables.<ParameterizedTypeRef>concat(Collections.<ParameterizedTypeRef>singleton(this.getSuperClassRef()), this.getImplementedInterfaceRefs());
+			Set<ParameterizedTypeRef> _singleton = Collections.<ParameterizedTypeRef>singleton(this.getSuperClassRef());
+			EList<ParameterizedTypeRef> _implementedInterfaceRefs = this.getImplementedInterfaceRefs();
+			return Iterables.<ParameterizedTypeRef>concat(_singleton, _implementedInterfaceRefs);
 		}
-		return Iterables.<ParameterizedTypeRef>concat(this.getImplementedInterfaceRefs());
+		return this.getImplementedInterfaceRefs();
 	}
 
 	/**

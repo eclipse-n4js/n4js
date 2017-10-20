@@ -12,10 +12,12 @@ package org.eclipse.n4js.tests.externalPackages;
 
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static java.util.Arrays.asList;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
+import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
+import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
+import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
 
 import java.io.File;
 import java.net.URI;
@@ -28,14 +30,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
@@ -45,6 +39,14 @@ import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.inject.Inject;
 
 /**
  * Test for checking the runtime behavior of the external libraries.
@@ -98,6 +100,8 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 	 */
 	@Before
 	public void setupWorkspace() throws Exception {
+		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
+
 		final IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 		assertTrue("Expected empty workspace. Projects were in workspace: " + Arrays.toString(projects),
 				0 == projects.length);
@@ -338,6 +342,16 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 				.firstMatch(p -> name.equals(p.getName())).orNull();
 		assertNotNull("Cannot find project with name: " + name, project);
 		return project;
+	}
+
+	@Override
+	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		// simulate auto-build loop by synchronized and fast
+		for (int i = 0; i < 10; i++) {
+			IResourcesSetupUtil.waitForBuild();
+		}
+		if (assertValidityOfXtextIndex)
+			assertXtextIndexIsValid();
 	}
 
 }

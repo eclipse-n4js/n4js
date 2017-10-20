@@ -41,13 +41,7 @@ public interface IEObjectDescriptionWithError extends IEObjectDescription {
 	 * @return true if given description is an (aliased) IEObjectDescriptionWithError
 	 */
 	public static boolean isErrorDescription(final IEObjectDescription eObjectDescription) {
-		if (eObjectDescription instanceof IEObjectDescriptionWithError) {
-			return true;
-		}
-		if (eObjectDescription instanceof AliasedEObjectDescription) {
-			return isErrorDescription(((AliasedEObjectDescription) eObjectDescription).getAliasedEObjectDescription());
-		}
-		return false;
+		return getDescriptionWithError(eObjectDescription) != null;
 	}
 
 	/**
@@ -57,12 +51,25 @@ public interface IEObjectDescriptionWithError extends IEObjectDescription {
 	 * @return the casted (or delegated) IEObjectDescriptionWithError, or null if description does not contain an error.
 	 */
 	public static IEObjectDescriptionWithError getDescriptionWithError(final IEObjectDescription eObjectDescription) {
-		if (eObjectDescription instanceof IEObjectDescriptionWithError) {
-			return (IEObjectDescriptionWithError) eObjectDescription;
+		return unwrap(eObjectDescription, IEObjectDescriptionWithError.class);
+	}
+
+	/**
+	 * Helper method to be used casting to IEObjectDescriptionWithError as it also covers
+	 * {@link AliasedEObjectDescription}s.
+	 *
+	 * @return the casted (or delegated) IEObjectDescriptionWithError, or null if description does not contain an error.
+	 */
+	public static <T extends IEObjectDescription> T unwrap(IEObjectDescription eObjectDescription, Class<T> type) {
+		if (type.isInstance(eObjectDescription)) {
+			return type.cast(eObjectDescription);
 		}
 		if (eObjectDescription instanceof AliasedEObjectDescription) {
-			return getDescriptionWithError(((AliasedEObjectDescription) eObjectDescription)
-					.getAliasedEObjectDescription());
+			return unwrap(((AliasedEObjectDescription) eObjectDescription)
+					.getAliasedEObjectDescription(), type);
+		}
+		if (eObjectDescription instanceof ForwardingEObjectDescription) {
+			return unwrap(((ForwardingEObjectDescription) eObjectDescription).delegate(), type);
 		}
 		return null;
 	}

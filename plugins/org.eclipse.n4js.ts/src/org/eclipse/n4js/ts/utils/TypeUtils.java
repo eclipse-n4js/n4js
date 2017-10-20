@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ts.utils;
 
-import static com.google.common.collect.Iterables.concat;
 import static java.util.Collections.singletonList;
 
 import java.util.Arrays;
@@ -610,13 +609,11 @@ public class TypeUtils {
 	 * empty list but never null. Order is always super class, super roles, super interfaces. For all non-classifiers
 	 * this method returns an empty list.
 	 */
-	@SuppressWarnings("unchecked")
 	public static Iterable<? extends ParameterizedTypeRef> declaredSuperTypes(final Type type) {
 		if (type instanceof TClass) {
 			final TClass c = (TClass) type;
 			if (c.getSuperClassRef() != null) {
-				return Iterables.concat(concat(singletonList(c.getSuperClassRef()),
-						c.getImplementedInterfaceRefs()));
+				return Iterables.concat(singletonList(c.getSuperClassRef()), c.getImplementedInterfaceRefs());
 			} else {
 				return c.getImplementedInterfaceRefs();
 			}
@@ -630,7 +627,7 @@ public class TypeUtils {
 			if (assignmentCompatible != null) {
 				ParameterizedTypeRef typeRef = TypeRefsFactory.eINSTANCE.createParameterizedTypeRef();
 				typeRef.setDeclaredType(assignmentCompatible);
-				return Collections.singletonList(typeRef);
+				return singletonList(typeRef);
 			}
 		}
 		if (type instanceof TObjectPrototype) {

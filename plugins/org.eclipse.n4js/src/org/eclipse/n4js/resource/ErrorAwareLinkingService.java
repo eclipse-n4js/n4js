@@ -17,6 +17,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -86,9 +87,12 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 			final IScope scope = getScope(context, ref);
 			QualifiedName qualifiedLinkName = qualifiedNameConverter.toQualifiedName(crossRefString);
 			IEObjectDescription eObjectDescription = scope.getSingleElement(qualifiedLinkName);
-			if (IEObjectDescriptionWithError.isErrorDescription(eObjectDescription) && context.eResource() != null
-					&& !n4jsCore.isNoValidate(context.eResource().getURI())) {
-				addError(context, node, IEObjectDescriptionWithError.getDescriptionWithError(eObjectDescription));
+			IEObjectDescriptionWithError errorDescr;
+			Resource resource = context.eResource();
+			if (resource != null && !n4jsCore.isNoValidate(resource.getURI())
+					&& (errorDescr = IEObjectDescriptionWithError
+							.getDescriptionWithError(eObjectDescription)) != null) {
+				addError(context, node, errorDescr);
 			} else if (eObjectDescription instanceof UnresolvableObjectDescription) {
 				return Collections.<EObject> singletonList((EObject) context.eGet(ref, false));
 			}

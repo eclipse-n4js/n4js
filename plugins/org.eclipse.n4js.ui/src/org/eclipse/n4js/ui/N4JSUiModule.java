@@ -678,7 +678,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		return N4JSEditorResourceAccess.class;
 	}
 
-	/** Workaround for the problem: file is refreshed when opened */
+	/** A document provider that will not cancel a build when opening a file. */
 	public Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
 		return AvoidRefreshDocumentProvider.class;
 	}
@@ -710,4 +710,5 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		binder.bind(IXtextEditorCallback.class).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
 				N4JSEditorErrorTickUpdater.class);
 	}
+
 }

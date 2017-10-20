@@ -14,13 +14,12 @@ import java.util.HashMap;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.util.IResourceScopeCache;
-
-import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.Script;
 
 /**
  * Delegating Scope holding a map of {@link IEObjectDescription} to {@link ImportSpecifier}. Queries via
@@ -77,7 +76,7 @@ public class OriginAwareScope implements IScope {
 					}
 				} else if (ret instanceof PlainAccessOfAliasedImportDescription) {
 					PlainAccessOfAliasedImportDescription plainAccess = (PlainAccessOfAliasedImportDescription) ret;
-					ImportSpecifier plainImport = origins.get(plainAccess.getDelegate());
+					ImportSpecifier plainImport = origins.get(plainAccess.delegate());
 					if (plainImport != null)
 						markAsUsed(plainImport);
 				}

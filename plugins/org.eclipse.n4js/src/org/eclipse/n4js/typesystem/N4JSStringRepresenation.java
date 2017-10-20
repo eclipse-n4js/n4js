@@ -10,8 +10,14 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import it.xsemantics.runtime.StringRepresentation;
+import java.util.List;
+
+import org.eclipse.emf.ecore.EClassifier;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
+import org.eclipse.xtext.xbase.lib.Pair;
+
+import it.xsemantics.runtime.StringRepresentation;
 
 /**
  */
@@ -22,5 +28,34 @@ public class N4JSStringRepresenation extends StringRepresentation {
 	 */
 	protected String stringRep(TypeArgument typeArgument) {
 		return typeArgument.getTypeRefAsString();
+	}
+
+	/**
+	 * Overridden to avoid more expensive polymorphic dispatching in supertype for commonly used argument types.
+	 */
+	@Override
+	public String string(Object object) {
+		if (object instanceof TypeArgument) {
+			return stringRep((TypeArgument) object);
+		}
+		if (object instanceof Class<?>) {
+			return stringRep((Class<?>) object);
+		}
+		if (object instanceof EClassifier) {
+			return stringRep((EClassifier) object);
+		}
+		if (object instanceof EObject) {
+			return stringRep((EObject) object);
+		}
+		if (object instanceof Pair<?, ?>) {
+			return stringRep(object);
+		}
+		if (object instanceof String) {
+			return (String) object;
+		}
+		if (object instanceof List<?>) {
+			return stringRep((List<?>) object);
+		}
+		return super.string(object);
 	}
 }
