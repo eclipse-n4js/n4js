@@ -14,42 +14,49 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 /**
- *
+ * This class access the variable ${target_home} and create a config.ini file specifying
+ * org.eclipse.n4js.product.product as the default product to run. This saves us from having to manually configure the
+ * product again and again whenever we trigger a test. GH-307. Attention: If you change this class, make sure to make a
+ * new JAR to replace lib/CreateConfigFileForSettingDefaultProduct.jar!
  */
 public class CreateConfigFileForSettingDefaultProduct {
 
+	private static Logger LOGGER = Logger.getLogger(CreateConfigFileForSettingDefaultProduct.class);
+
+	private static final String defaultProductId = "org.eclipse.n4js.product.product";
+
 	/**
-	 * Main
+	 * Main logic to create config.ini file in ${target_home}/configuration folder
 	 */
 	public static void main(String[] args) throws IOException {
-		// Create config init
 		if (args.length < 1) {
 			return;
 		}
 		String targetHome = args[0];
 		String folderPath = targetHome + File.separatorChar + "configuration";
 		File folder = new File(folderPath);
-		System.out.println("We want to create folder " + folderPath);
 		if (!folder.exists())
 			folder.mkdirs();
-		System.out.println("Folder " + folderPath + " has been created successfully!");
 
 		String filePath = folderPath + File.separatorChar + "config.ini";
 		File file = new File(filePath);
 
-		// Create the file
-		if (file.createNewFile()) {
-			System.out.println("File is created!");
-		} else {
-			System.out.println("File already exists.");
+		// Create the file config.ini
+		if (!file.createNewFile()) {
+			LOGGER.info("File " + filePath + "already exists. By default, the product to run is set to " +
+					defaultProductId);
 			return;
 		}
 
 		FileWriter writer = new FileWriter(file);
-		writer.write("eclipse.product=org.eclipse.n4js.product.product");
+		writer.write("eclipse.product=" + defaultProductId);
 		writer.close();
-		System.out.println("File" + filePath + " has been created");
+		System.out.println("File" + filePath
+				+ " has been created successfully! From now on, the default product to run is set to " +
+				defaultProductId);
 	}
 
 }
