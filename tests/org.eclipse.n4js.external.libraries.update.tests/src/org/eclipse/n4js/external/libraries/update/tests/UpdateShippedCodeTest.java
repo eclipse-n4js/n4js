@@ -16,6 +16,11 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator;
 import org.eclipse.n4js.external.libraries.update.UpdateShippedCode;
+import org.eclipse.n4js.smith.CollectedDataAccess;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.DataSeries;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.io.FileUtils;
 import org.eclipse.n4js.utils.io.IDirectoryDiffAcceptor.CollectingDirectoryDiffAcceptor;
 import org.junit.Assert;
@@ -28,6 +33,7 @@ import com.google.common.base.Optional;
  */
 public class UpdateShippedCodeTest {
 
+	private final DataCollector dc = DataCollectors.INSTANCE.getOrCreateDataCollector("some");
 	private static final String MY_NAME = UpdateShippedCodeTest.class.getName();
 
 	/**
@@ -37,11 +43,17 @@ public class UpdateShippedCodeTest {
 	@Test
 	public void ensureShippedCodeIsUpToDate() throws IOException {
 		println("TEST STARTING: " + MY_NAME);
+		Measurement measurement = dc.getMeasurement("x1");
 
 		// update shipped code into a temporary target folder
 		final File tempTargetFolder = new File("target/updateShippedCodeTest/"
 				+ ExternalLibrariesActivator.SHIPPED_CODE_FOLDER_NAME);
 		tempTargetFolder.mkdirs();
+
+		measurement.end();
+		DataSeries dataSeries = CollectedDataAccess.getDataSeries("some");
+		System.out.println(dataSeries.name + " " + dataSeries.name);
+
 		println("START of running UpdateShippedCode into temporary folder " + tempTargetFolder.getAbsolutePath());
 		UpdateShippedCode.updateShippedCode(Optional.of(tempTargetFolder.toPath()));
 		println("END of running UpdateShippedCode");
