@@ -259,7 +259,7 @@ public class N4ClusteringBuilderState extends AbstractBuilderState {
 					installSourceLevelURIs();
 					initLoadOperation();
 
-					releaseMemory(clusterIndex);
+					clearResourceSetIfNecessary(clusterIndex);
 				}
 			} finally {
 				done();
@@ -422,7 +422,7 @@ public class N4ClusteringBuilderState extends AbstractBuilderState {
 		/**
 		 * @param processedInThisCluster
 		 */
-		private void releaseMemory(int processedInThisCluster) {
+		private void clearResourceSetIfNecessary(int processedInThisCluster) {
 			if (!queue.isEmpty() && !continueProcessing(processedInThisCluster)) {
 				// System.out.println("Start release memory");
 				List<Delta> changedDeltas = Lists.newArrayList();

@@ -39,6 +39,7 @@ import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
+import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -341,6 +342,18 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 				.firstMatch(p -> name.equals(p.getName())).orNull();
 		assertNotNull("Cannot find project with name: " + name, project);
 		return project;
+	}
+
+	@Override
+	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
+		IResourcesSetupUtil.waitForBuild();
+		IResourcesSetupUtil.waitForBuild();
+		IResourcesSetupUtil.waitForBuild();
+		IResourcesSetupUtil.waitForBuild();
+		IResourcesSetupUtil.waitForBuild();
+		IResourcesSetupUtil.waitForBuild();
+		if (assertValidityOfXtextIndex)
+			assertXtextIndexIsValid();
 	}
 
 }
