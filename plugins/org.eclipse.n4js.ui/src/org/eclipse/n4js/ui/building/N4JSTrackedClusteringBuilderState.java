@@ -894,7 +894,6 @@ public class N4JSTrackedClusteringBuilderState extends ClusteringBuilderState {
 					}
 				}
 				if (affected) {
-					System.out.println(" => queue " + candidateURI);
 					buildData.queueURI(candidateURI);
 					iter.remove();
 				}
