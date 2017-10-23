@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -141,26 +142,6 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
-	private static void removeNode(ComplexNode cn, Node mNode) {
-		ControlFlowEdge e1 = mNode.pred.get(0);
-		ControlFlowEdge e2 = mNode.succ.get(0);
-		Node pred = e1.start;
-		Node succ = e2.end;
-
-		EdgeUtils.removeCF(e1);
-		EdgeUtils.removeCF(e2);
-		cn.removeNodeChecks(mNode);
-		cn.removeNode(mNode);
-
-		Node intPred = mNode.getInternalPredecessors().iterator().next();
-		Node intSucc = mNode.getInternalSuccessors().iterator().next();
-		intPred.removeInternalSuccessor(mNode);
-		intSucc.removeInternalPredecessor(mNode);
-
-		pred.removeInternalSuccessor(mNode);
-		EdgeUtils.connectCF(pred, succ);
-	}
-
 	private static boolean isRemovableNode(Node mNode) {
 		boolean remDel = true;
 		remDel = remDel && mNode instanceof DelegatingNode;
@@ -168,12 +149,38 @@ public class ControlFlowGraphFactory {
 		remDel = remDel && mNode.jumpToken.isEmpty();
 		remDel = remDel && mNode.catchToken.isEmpty();
 		remDel = remDel && mNode.getInternalPredecessors().size() == 1;
-		remDel = remDel && mNode.getInternalSuccessors().size() == 1;
 		remDel = remDel && mNode.pred.size() == 1;
 		remDel = remDel && mNode.succ.size() == 1;
 		remDel = remDel && mNode.pred.get(0).cfType == ControlFlowType.Successor;
 		remDel = remDel && mNode.succ.get(0).cfType == ControlFlowType.Successor;
 		return remDel;
+	}
+
+	private static void removeNode(ComplexNode cn, Node mNode) {
+		ControlFlowEdge e1 = mNode.pred.get(0);
+		ControlFlowEdge e2 = mNode.succ.get(0);
+		Node pred = e1.start;
+		Node succ = e2.end;
+
+		try {
+			EdgeUtils.removeCF(e1);
+			EdgeUtils.removeCF(e2);
+			cn.removeNodeChecks(mNode);
+			cn.removeNode(mNode);
+
+			Node intPred = mNode.getInternalPredecessors().iterator().next();
+			Node intSucc = mNode.getInternalSuccessors().iterator().next();
+			intPred.removeInternalSuccessor(mNode);
+			intSucc.removeInternalPredecessor(mNode);
+
+			pred.removeInternalSuccessor(mNode);
+
+		} catch (NoSuchElementException nsee) {
+			String message = "Node '" + mNode + "' could not be removed at: " + cn.getControlFlowElement();
+			throw new RuntimeException(message, nsee);
+		}
+
+		EdgeUtils.connectCF(pred, succ);
 	}
 
 	/**

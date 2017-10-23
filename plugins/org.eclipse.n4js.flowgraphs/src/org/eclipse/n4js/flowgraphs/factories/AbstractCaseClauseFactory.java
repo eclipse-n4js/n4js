@@ -33,7 +33,7 @@ class AbstractCaseClauseFactory {
 
 		Node entryNode = new HelperNode(ENTRY_NODE, abstrCaseClause);
 		List<Node> stmtNodes = new LinkedList<>();
-		Node exitNode = new DelegatingNode(EXIT_NODE, abstrCaseClause);
+		Node exitNode = new HelperNode(EXIT_NODE, abstrCaseClause);
 		Node caseConditionNode = null;
 
 		if (abstrCaseClause instanceof CaseClause) {
