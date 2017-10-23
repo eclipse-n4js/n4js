@@ -44,6 +44,8 @@ function SwitchCase1() {
 		"end" -> 3 -> 2 -> 1 -> "start"
 	--- */
 	// SwitchCase1 XPECT path from '"start"' to '"end"' -->
+	// SwitchCase1 XPECT path from '"start"' to '"end"' via '3' -->
+	// SwitchCase1 XPECT path from '"start"' to '"end"' notVia '3' -->
 	// SwitchCase1 XPECT commonPreds of '"end"' and '3' --> 1, 3
 	// SwitchCase1 XPECT commonPreds of '2' and '3' --> 2
 	// SwitchCase1 XPECT succs at '"start"' --> 1
@@ -133,6 +135,7 @@ function SwitchCaseBreak1() {
 	--- */
 	// SwitchCaseBreak1 XPECT path from '"start"' to '"end"' -->
 	// SwitchCaseBreak1 XPECT path from '3' notTo '5' -->
+	// SwitchCaseBreak1 XPECT path from '"start"' notTo '5' via '3' -->
 	// SwitchCaseBreak1 XPECT commonPreds of '3' and '5' --> 1
 	// SwitchCaseBreak1 XPECT commonPreds of '3' and '"end"' --> 1, 3
 	// SwitchCaseBreak1 XPECT commonPreds of '5' and '"end"' --> 1, 5
