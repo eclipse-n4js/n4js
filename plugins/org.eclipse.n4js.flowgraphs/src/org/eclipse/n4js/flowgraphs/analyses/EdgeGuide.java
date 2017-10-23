@@ -224,7 +224,11 @@ public class EdgeGuide {
 		}
 	}
 
-	public static EdgeGuide join(List<EdgeGuide> edgeGuides) {
+	/**
+	 * This method will join all the given {@link EdgeGuide}s. The returned instance is one of the given
+	 * {@link EdgeGuide}s whose data is changed so that is reflects the joined state.
+	 */
+	static EdgeGuide join(List<EdgeGuide> edgeGuides) {
 		assert edgeGuides.size() > 1 : "EdgeGuide#join must be called with more than one elements";
 
 		Map<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkerMap = new HashMap<>();
