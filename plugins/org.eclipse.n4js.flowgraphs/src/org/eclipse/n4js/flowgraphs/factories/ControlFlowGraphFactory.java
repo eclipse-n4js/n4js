@@ -152,12 +152,15 @@ public class ControlFlowGraphFactory {
 		cn.removeNodeChecks(mNode);
 		cn.removeNode(mNode);
 
-		Node intPred = mNode.getInternalPredecessors().iterator().next();
-		Node intSucc = mNode.getInternalSuccessors().iterator().next();
-		intPred.removeInternalSuccessor(mNode);
-		intSucc.removeInternalPredecessor(mNode);
+		for (Node intPred : mNode.getInternalPredecessors()) {
+			intPred.removeInternalSuccessor(mNode);
+		}
+		for (Node intSucc : mNode.getInternalSuccessors()) {
+			intSucc.removeInternalPredecessor(mNode);
+		}
+		mNode.getInternalPredecessors().clear();
+		mNode.getInternalSuccessors().clear();
 
-		pred.removeInternalSuccessor(mNode);
 		EdgeUtils.connectCF(pred, succ);
 	}
 
@@ -168,7 +171,6 @@ public class ControlFlowGraphFactory {
 		remDel = remDel && mNode.jumpToken.isEmpty();
 		remDel = remDel && mNode.catchToken.isEmpty();
 		remDel = remDel && mNode.getInternalPredecessors().size() == 1;
-		remDel = remDel && mNode.getInternalSuccessors().size() == 1;
 		remDel = remDel && mNode.pred.size() == 1;
 		remDel = remDel && mNode.succ.size() == 1;
 		remDel = remDel && mNode.pred.get(0).cfType == ControlFlowType.Successor;
