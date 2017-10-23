@@ -292,7 +292,7 @@ public class TypeProcessor extends AbstractProcessor {
 			if (!res.isPostProcessing && !res.isFullyProcessed) {
 				// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
 				throw new IllegalStateException("post-processing neither in progress nor completed after calling #performPostProcessing() in resource: " + res.URI);
-			} else if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
+			} else if (!cache.isPostProcessing && !cache.isFullyProcessed) {
 				// "res.isProcessing() || res.isFullyProcessed()" but not "cache.isProcessing || cache.isFullyProcessed"
 				// so: the post-processing flags are out of sync between the resource and cache
 				// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
@@ -300,7 +300,7 @@ public class TypeProcessor extends AbstractProcessor {
 				val e = new IllegalStateException("post-processing flags out of sync between resource and cache (hint: this is often caused by an accidental cache clear!!)");
 				e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
 				throw e;
-			} else if (cache.isProcessingInProgress) {
+			} else if (cache.isPostProcessing) {
 
 				// while AST typing is in progress, just read from the cache we are currently filling
 				val resultFromCache = cache.getTypeFailSafe(obj);

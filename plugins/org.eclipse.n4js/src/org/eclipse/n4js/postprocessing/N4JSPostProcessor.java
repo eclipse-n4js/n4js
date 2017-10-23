@@ -59,19 +59,21 @@ public class N4JSPostProcessor implements PostProcessor {
 
 	@Override
 	public void performPostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator) {
-		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
+		final N4JSResource resourceCasted = (N4JSResource) resource;
+		final ASTMetaInfoCache cache = createASTMetaInfoCache(resourceCasted);
 		try {
-			// we assume this will not be called for other PostProcessingAwareResource than N4JSResource
-			postProcessN4JSResource((N4JSResource) resource, cancelIndicator);
+			postProcessN4JSResource(resourceCasted, cancelIndicator);
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
-			if (hasBrokenAST) {
+			if (cache.hasBrokenAST()) {
 				// swallow exception, AST is broken due to parse error anyway
 			} else {
 				// make sure this error is being reported, even if exception will be suppressed by calling code!
 				UtilN4.reportError("exception while post-processing resource " + resource.getURI(), th);
 				throw th;
 			}
+		} finally {
+			cache.clearTemporaryData();
 		}
 	}
 
@@ -80,8 +82,16 @@ public class N4JSPostProcessor implements PostProcessor {
 		((N4JSResource) resource).setASTMetaInfoCache(null);
 	}
 
+	private static ASTMetaInfoCache createASTMetaInfoCache(N4JSResource resource) {
+		// at the time the cache is created (i.e. before any validation happens), we can assume that all errors are
+		// syntax errors created by the parser or the ASTStructureValidator
+		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
+		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(resource, hasBrokenAST);
+		resource.setASTMetaInfoCache(newCache);
+		return newCache;
+	}
+
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
-		createASTMetaInfoCache(resource);
 		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 2: expose internal types visible from outside
@@ -93,14 +103,6 @@ public class N4JSPostProcessor implements PostProcessor {
 		// TModule element *without* resolving proxies, so the TModule might contain lazy-cross-ref proxies; most of
 		// these should have been resolved during AST traversal and exposing internal types, but some can be left)
 		EcoreUtil.resolveAll(resource.getModule());
-	}
-
-	private static void createASTMetaInfoCache(N4JSResource resource) {
-		// at the time the cache is created (i.e. before any validation happens), we can assume that all errors are
-		// syntax errors created by the parser or the ASTStructureValidator
-		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
-		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(resource, hasBrokenAST);
-		resource.setASTMetaInfoCache(newCache);
 	}
 
 	/**
