@@ -23,6 +23,7 @@ import org.eclipse.n4js.tester.domain.TestResult;
 import org.eclipse.n4js.tester.domain.TestStatus;
 import org.eclipse.n4js.tester.domain.TestSuite;
 import org.eclipse.n4js.tester.domain.TestTree;
+import org.eclipse.n4js.utils.IndentLevel;
 
 /**
  * {@link TestTree Test tree} transformer for the CLI. Assumes the test tree contains results, based on that produces

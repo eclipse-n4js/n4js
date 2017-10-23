@@ -187,7 +187,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 			handleCoreException(e);
 		}
 		Collection<Delta> modifiedDeltas = super.doUpdate(buildData, newData, monitor);
-
 		logBuildData(buildData, " of after #doUpdate");
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");

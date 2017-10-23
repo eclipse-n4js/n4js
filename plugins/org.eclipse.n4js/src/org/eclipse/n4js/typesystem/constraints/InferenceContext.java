@@ -12,8 +12,10 @@ package org.eclipse.n4js.typesystem.constraints;
 
 import static org.eclipse.n4js.ts.types.util.Variance.INV;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -26,6 +28,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -118,6 +123,7 @@ public final class InferenceContext {
 	private final OperationCanceledManager operationCanceledManager; // may be null
 	private final CancelIndicator cancelIndicator; // may be null
 	private final RuleEnvironment G;
+	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("InferenceContext");
 
 	/**
 	 * An order-preserving set of inference variables. A type variable is treated as an inference variable if it is
@@ -340,7 +346,9 @@ public final class InferenceContext {
 	 * At this time, no partial solutions are returned in case of unsolvable constraint systems.
 	 */
 	public Map<InferenceVariable, TypeRef> solve() {
+		Measurement mes = collector.getMeasurement("soleve " + new SimpleDateFormat("hh:mm:ss.SSS").format(new Date()));
 		if (isSolved) {
+			mes.end();
 			return solution;
 		}
 		isSolved = true;
@@ -403,6 +411,7 @@ public final class InferenceContext {
 			action.accept(Optional.fromNullable(solution));
 		}
 
+		mes.end();
 		return solution;
 	}
 
