@@ -195,7 +195,6 @@ public class IncrementalBuilderCornerCasesPluginTest extends AbstractBuilderPart
 		assertXtextIndexIsValid // now do the general Xtext index validity checking
 	}
 
-
 	private def IResourceDescription findFileInXtextIndex(IResourceDescriptions xtextIndex, IProject project, String fileNameIncludingExtension) {
 		xtextIndex.allResourceDescriptions.findFirst[rd|
 			val uri = rd?.URI;

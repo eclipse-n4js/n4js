@@ -10,25 +10,26 @@
  */
 package org.eclipse.n4js.ui.organize.imports
 
+import com.google.inject.Inject
+import java.util.List
+import org.eclipse.n4js.documentation.N4JSDocumentationProvider
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.Script
-import java.util.List
+import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
+import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess
+import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.TerminalRule
 import org.eclipse.xtext.nodemodel.ILeafNode
 import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.impl.HiddenLeafNode
+import org.eclipse.xtext.nodemodel.impl.LeafNode
 import org.eclipse.xtext.resource.XtextResource
 
 import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
-import static extension org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
+
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
-import com.google.inject.Inject
-import org.eclipse.n4js.documentation.N4JSDocumentationProvider
-import org.eclipse.n4js.ts.services.TypeExpressionsGrammarAccess
-import org.eclipse.xtext.nodemodel.impl.LeafNode
-import org.eclipse.n4js.utils.UtilN4
-import org.eclipse.n4js.parser.InternalSemicolonInjectingParser
+import static extension org.eclipse.xtext.nodemodel.util.NodeModelUtils.*
 
 /**
  * Helper used to calculate imports region in the resource.

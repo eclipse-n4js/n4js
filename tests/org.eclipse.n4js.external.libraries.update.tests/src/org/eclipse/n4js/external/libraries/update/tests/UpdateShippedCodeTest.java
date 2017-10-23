@@ -42,6 +42,7 @@ public class UpdateShippedCodeTest {
 		final File tempTargetFolder = new File("target/updateShippedCodeTest/"
 				+ ExternalLibrariesActivator.SHIPPED_CODE_FOLDER_NAME);
 		tempTargetFolder.mkdirs();
+
 		println("START of running UpdateShippedCode into temporary folder " + tempTargetFolder.getAbsolutePath());
 		UpdateShippedCode.updateShippedCode(Optional.of(tempTargetFolder.toPath()));
 		println("END of running UpdateShippedCode");

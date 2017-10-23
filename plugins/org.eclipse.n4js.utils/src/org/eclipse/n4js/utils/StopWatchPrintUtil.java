@@ -70,15 +70,26 @@ public class StopWatchPrintUtil {
 
 	/** Stops this instance and if elapsed time is grater than threshold, prints result to system out. */
 	public void stop() {
+		stop(this::m);
+	}
+
+	/**
+	 */
+	public void stop(Runnable object) {
 		sw.stop();
 
 		if (sw.elapsed(unit) > threshold) {
 			String indend = times(tabs, "\u2501", "");
 			System.out.println(indend + "\u252B " + sw + " " + label);
+			object.run();
 		}
 	}
 
 	private static String times(int n, String s, String j) {
 		return String.join(j, Collections.nCopies(n, s));
+	}
+
+	private void m() {
+		// noop
 	}
 }
