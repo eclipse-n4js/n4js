@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -47,13 +46,13 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
+import org.eclipse.n4js.transpiler.es.transform.internal.ImportAssignment
+import org.eclipse.n4js.transpiler.es.transform.internal.ImportEntry
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
-import org.eclipse.xtend.lib.annotations.Data
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*
@@ -135,7 +134,7 @@ class ModuleWrappingTransformation extends Transformation {
 		// Map Module to imported element.
 		val LinkedHashMap<String,ImportEntry> importSetterMap =  processImports(content_im);
 
-		val List<Statement> activeX = newArrayList();
+		val List<Statement> activeStatements = newArrayList();
 
 		// new Element system.
 		val call_System_dot_register_Expr = _CallExpr => [
@@ -158,7 +157,7 @@ class ModuleWrappingTransformation extends Transformation {
 						statements += hoist.key;  // var-statement
 						statements += hoist.value; // list of initialisers.
 						// keep track of initilizers for further processing
-						activeX += hoist.value;
+						activeStatements += hoist.value;
 					}
 					/* exported things. */
 					// %init_B%
@@ -176,7 +175,7 @@ class ModuleWrappingTransformation extends Transformation {
 									// content_im.filter(Statement)
 								) => [
 									val intoExecute = content_im.filter(Statement).toList
-									activeX += intoExecute;
+									activeStatements += intoExecute;
 									it.body.statements += intoExecute
 								]
 							)
@@ -203,7 +202,7 @@ class ModuleWrappingTransformation extends Transformation {
 //		 	as PropertyNameValuePair).expression
 //		 	as FunctionExpression).body.statements;
 //		transFormExportExpressions( activeStatements )
-		transFormExportExpressions(activeX);
+		transFormExportExpressions(activeStatements);
 
 	}
 
@@ -333,33 +332,6 @@ class ModuleWrappingTransformation extends Transformation {
 		return map;
 	}
 
-	/* Data bag for import-rewriting. */
-	@Data
-	static class ImportEntry{
-		// specifier of the module to import from
-		String completeModuleSpecifier
-		// this string will be used in the list of dependencies (i.e. 1st argument to the System.register() call)
-		String actualModuleSpecifier
-		// name of module-parameter passed into setter
-		String fparName
-		// Mappings of things to import. the actualName can be null, which means NamespaceImport
-		List<ImportAssignment> variableSTE_actualName
-		// for Tracing: IM-element which will be replaced:
-		ImportDeclaration tobeReplacedImportSpecifier
-	}
-	@Data
-	static class ImportAssignment {
-		/* imported thing (symbol for exported thing from other file) */
-		SymbolTableEntryOriginal ste;
-		String actualName;
-		ImportSpecifier tobeReplacedIM;
-		boolean isNameSpace;
-	}
-
-
-
-
-
 	/**
 	 * Removes "export" :
 	 * Iterates over scriptContent_im and replaces each export-statement with it's containing statement.
@@ -454,7 +426,7 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 
 
-	/** Decouples VarDeclarations and their initializer expressions. Returns them as a Pair. Value kann be {@null}
+	/** Decouples VarDeclarations and their initializer expressions. Returns them as a Pair. Value can be {@code null}
 	 */
 	private def Iterable<Pair<List<VariableDeclaration>,ExpressionStatement>> toHoistDeclarations(List<VariableDeclarationOrBinding> varDeclsOrBindings) {
 		return varDeclsOrBindings.map[entry|
@@ -470,8 +442,8 @@ class ModuleWrappingTransformation extends Transformation {
 		];
 	}
 
-	/** Decouple Variabledeclaration and initialiser.
-	 * If an initialiser is given it will be wrapped into a new ExpressionStatement.
+	/** Decouple VariableDeclaration and initializer.
+	 * If an initializer is given it will be wrapped into a new ExpressionStatement.
 	 */
 	private def Pair<List<VariableDeclaration>, ExpressionStatement> hoistEntry(VariableDeclaration vDeclIM) {
 
@@ -532,7 +504,6 @@ class ModuleWrappingTransformation extends Transformation {
 		val toProcess = #[]+list;
 		// go into statements
 		toProcess.forEach[ collectNodes(it,Expression,true ).forEach[ it.inferExportCall ] ]
-
 	}
 
 	def private dispatch void inferExportCall(PostfixExpression expr) {
@@ -590,11 +561,15 @@ class ModuleWrappingTransformation extends Transformation {
 			val ste = subExpr.rewiredTarget
 			if( ste.isExported ) {
 				val container = expr.eContainer;
-				if( container.isAppendableStatement ) {
+				if( container.isAppendableStatement) {
 					// case 1 : contained in simple statement, then we can issue es 2nd statement just after.
 					insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
 				} else {
-					exprReplacement(expr, ste);
+					switch (expr.op) {
+						case INC: exprReplacement(expr, ste)
+						case DEC: exprReplacement(expr, ste)
+						default: {/*other unary operators do not modify original value, hence no replacement*/}
+					}
 				}
 			}
 		}
@@ -602,30 +577,31 @@ class ModuleWrappingTransformation extends Transformation {
 
 
 	def private dispatch void inferExportCall(AssignmentExpression expr) {
-
 		val lhs = expr.lhs;
-		val isTopLevel_but_not_return = expr.eContainer.isAppendableStatement;
 		switch (lhs) {
 			IdentifierRef_IM: {
 				val ste = lhs.rewiredTarget;
 				if( ste.isExported ) {
-					if( isTopLevel_but_not_return ) { insertAfter(expr.eContainer, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export))); }
+					val container = expr.eContainer
+					if( container.isAppendableStatement ) {
+						insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+					}
 					else { // non toplevel, have to inject
 						exprReplacement(expr, ste);
 					}
 				}
 			}
-			default:{
-				// ntd.
-			}
+			default:{ /*ntd. */ }
 		}
 	}
 
+	/** The EObject is NOT a {@link ReturnStatement} nor {@link ThrowStatement} */
 	def private static boolean isAppendableStatement(EObject container) {
 		return container instanceof Statement
 				&& !(container instanceof ReturnStatement )
 				&& !(container instanceof ThrowStatement);
 	}
+
 	/*
 	 * Reusing an expression {@code expr1} of IM wrapped into a comma-expression including call to $n4Export:
 	 * <pre>
@@ -634,6 +610,11 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 * Only applicable if {@code expr1} evaluates (while actually setting) to the new value of x.
 	 * This is true to Assignment- and Unary-Expressions <b>but not</b> for PostfixExprssion
+	 *
+	 * <p> 
+	 * Note: only <pre>++x</pre> and <pre>--x</pre> are setting the value of <pre>x</pre>.
+	 * other Unary-Expressions are not setting the value. Caller needs to take care of this, as
+	 * expression operator is not checked in this method.
 	 *
 	 * <p>
 	 * Generates a ParenExpression and a callback-function
@@ -645,6 +626,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 */
 	private final def void exprReplacement(Expression expr, SymbolTableEntry ste) {
+		
 		// The new code snippet, the ObjectLiteral will be replaced by init-function
 		val replaceExp =
 			_Parenthesis(
@@ -674,22 +656,17 @@ class ModuleWrappingTransformation extends Transformation {
 	def private boolean isExported(SymbolTableEntry ste) {
 		return exportedSTEs.contains(ste);
 	}
-
+	
+	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
 	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
 		val resourceURI = module?.eResource?.URI;
-		if(resourceURI!==null) {
-			val project = n4jsCore.findProject(resourceURI);
-			if(project.present) {
-				val loader = project.get.getModuleLoader();
-				if(loader!==null) {
-					val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
-					if(adjustment!==null) {
-						return adjustment;
-					}
-				}
-			}
-		}
-		return null; // no adjustment
+		if (resourceURI === null) return null;
+		val project = n4jsCore.findProject(resourceURI);
+		if (!project.present) return null;
+		val loader = project.get.getModuleLoader();
+		if (loader === null) return null;
+		val adjustment = N4JSLanguageConstants.MODULE_LOADER_PREFIXES.get(loader);
+		return adjustment;
 	}
 
 	/** SystemJS-wrapping of external JS-code which is not transpiled by ourselves.
