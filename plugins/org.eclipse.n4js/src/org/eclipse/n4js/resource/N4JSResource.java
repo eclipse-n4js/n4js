@@ -49,6 +49,7 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
@@ -221,6 +222,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	public static final String AST_PROXY_FRAGMENT = ":astProxy";
 
 	/**
+	 * Cache for storing type of AST nodes, inferred type arguments of parameterized call expressions, etc.
+	 */
+	private ASTMetaInfoCache astMetaInfoCache;
+
+	/**
 	 * Set by the dirty state support to announce an upcoming unloading request.
 	 */
 	private boolean aboutToBeUnloaded;
@@ -256,6 +262,32 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	public N4JSResource() {
 		super();
+	}
+
+	/**
+	 * Returns the {@link ASTMetaInfoCache} (in states {@link #isFullyProcessed() "Fully Processed"} and during the
+	 * transition from "Fully Initialized" to "Fully Processed", i.e. during post-processing) or throws an exception if
+	 * the cache is unavailable (in all other states).
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCache() {
+		if (astMetaInfoCache == null) {
+			if (!isFullyProcessed() && !isPostProcessing()) {
+				// getter invoked in wrong state
+				throw new IllegalStateException(
+						"AST meta-info cache only available in state 'Fully Processed' and during post-processing");
+			} else {
+				// getter invoked in correct state, but cache is still undefined
+				throw new NullPointerException("AST meta-info cache missing");
+			}
+		}
+		return astMetaInfoCache;
+	}
+
+	/**
+	 * Set the receiving resource's {@link ASTMetaInfoCache}. Should only be called at the beginning of post-processing.
+	 */
+	public void setASTMetaInfoCache(ASTMetaInfoCache cache) {
+		this.astMetaInfoCache = cache;
 	}
 
 	/**
@@ -915,7 +947,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// if targetResource exists, make sure it is post-processed *iff* this resource is post-processed
 				// (only relevant in case targetResource wasn't loaded from index, because after loading from index it
 				// is always marked as fullyPostProcessed==true)
-				if (targetObject != null && (this.isProcessing() || this.isFullyProcessed())) {
+				if (targetObject != null && (this.isPostProcessing() || this.isFullyProcessed())) {
 					final Resource targetResource2 = targetObject.eResource();
 					if (targetResource2 instanceof N4JSResource) {
 						// no harm done, if already running/completed

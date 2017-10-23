@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
+import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -36,10 +37,10 @@ import com.google.inject.Inject;
  * Performs post-processing of N4JS resources. Main responsibilities are proxy resolution, types model creation, and
  * ASTNodeInfo computation. When post-processing has completed, the following is guaranteed:
  * <ol>
- * <li>ensure all proxies are resolved,
- * <li>complete {@link TModule} has been created (including all type information; not a stripped-down TModule as created
- * by the {@link N4JSTypesBuilder} during pre-indexing phase),
- * <li>each AST node has a valid ASTNodeInfo,
+ * <li>all proxies are resolved,
+ * <li>complete {@link TModule} has been created (including all type information: not a stripped-down TModule as created
+ * by the {@link N4JSTypesBuilder} during pre-indexing phase; no {@link DeferredTypeRef}s left in TModule),
+ * <li>each AST node has valid information in the {@link ASTMetaInfoCache},
  * <li>referenced internal types have been exposed.
  * </ol>
  */
@@ -74,7 +75,13 @@ public class N4JSPostProcessor implements PostProcessor {
 		}
 	}
 
+	@Override
+	public void discardPostProcessingResult(PostProcessingAwareResource resource) {
+		((N4JSResource) resource).setASTMetaInfoCache(null);
+	}
+
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
+		createASTMetaInfoCache(resource);
 		// step 1: process the AST (resolve all proxies in AST, infer type of all typable AST nodes, etc.)
 		astProcessor.processAST(resource, cancelIndicator);
 		// step 2: expose internal types visible from outside
@@ -86,6 +93,14 @@ public class N4JSPostProcessor implements PostProcessor {
 		// TModule element *without* resolving proxies, so the TModule might contain lazy-cross-ref proxies; most of
 		// these should have been resolved during AST traversal and exposing internal types, but some can be left)
 		EcoreUtil.resolveAll(resource.getModule());
+	}
+
+	private static void createASTMetaInfoCache(N4JSResource resource) {
+		// at the time the cache is created (i.e. before any validation happens), we can assume that all errors are
+		// syntax errors created by the parser or the ASTStructureValidator
+		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
+		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(resource, hasBrokenAST);
+		resource.setASTMetaInfoCache(newCache);
 	}
 
 	/**

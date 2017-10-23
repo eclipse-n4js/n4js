@@ -279,7 +279,7 @@ public final class ASTMetaInfoCache {
 		sb.append("resource' fullyPostProcessed = " + (resource != null ? resource.isFullyProcessed()
 				: "don't know. Resource is null.") + "\n");
 		sb.append("resource' isPostProcessing = "
-				+ (resource != null ? resource.isProcessing() : "don't know. Resource is null") + "\n");
+				+ (resource != null ? resource.isPostProcessing() : "don't know. Resource is null") + "\n");
 
 		if (showSourceCode) {
 			final Script script = resource != null ? resource.getScript() : null;
