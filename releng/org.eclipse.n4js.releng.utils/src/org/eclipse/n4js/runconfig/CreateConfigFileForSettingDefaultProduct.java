@@ -20,22 +20,23 @@ import org.apache.log4j.Logger;
  * This class access the variable ${target_home} and create a config.ini file specifying
  * org.eclipse.n4js.product.product as the default product to run. This saves us from having to manually configure the
  * product again and again whenever we trigger a test. GH-307. Attention: If you change this class, make sure to make a
- * new JAR to replace lib/CreateConfigFileForSettingDefaultProduct.jar!
+ * new JAR to replace lib/CreateConfigFileForSettingDefaultProduct.jar! Attention: Executing this class directly here
+ * has no effect.
  */
 public class CreateConfigFileForSettingDefaultProduct {
 
 	private static Logger LOGGER = Logger.getLogger(CreateConfigFileForSettingDefaultProduct.class);
 
-	private static final String defaultProductId = "org.eclipse.n4js.product.product";
-
 	/**
 	 * Main logic to create config.ini file in ${target_home}/configuration folder
 	 */
 	public static void main(String[] args) throws IOException {
-		if (args.length < 1) {
+		if (args.length < 2) {
 			return;
 		}
 		String targetHome = args[0];
+		String defaultProductId = args[1];
+
 		String folderPath = targetHome + File.separatorChar + "configuration";
 		File folder = new File(folderPath);
 		if (!folder.exists())
@@ -46,7 +47,7 @@ public class CreateConfigFileForSettingDefaultProduct {
 
 		// Create the file config.ini
 		if (!file.createNewFile()) {
-			LOGGER.info("File " + filePath + "already exists.\nBy default, the product to run is set to " +
+			LOGGER.info("File " + filePath + " already exists.\nBy default, the product to run is set to " +
 					defaultProductId);
 			return;
 		}
