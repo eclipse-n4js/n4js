@@ -161,7 +161,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public void configure(Binder binder) {
 		super.configure(binder);
-		bindIGenerator(binder);
+		configureIGenerator(binder);
 	}
 
 	/**
@@ -407,7 +407,7 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	 * @param binder
 	 *            the Google guice binder
 	 */
-	private void bindIGenerator(Binder binder) {
+	private void configureIGenerator(Binder binder) {
 		IComposedGenerator composedGenerator = null;
 		List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
 		if (!composedGenerators.isEmpty()) {

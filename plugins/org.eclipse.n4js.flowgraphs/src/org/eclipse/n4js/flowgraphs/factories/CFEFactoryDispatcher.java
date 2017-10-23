@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.BreakStatement;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ContinueStatement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.DebuggerStatement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -80,6 +81,11 @@ final public class CFEFactoryDispatcher {
 		@Override
 		public ComplexNode caseContinueStatement(ContinueStatement feature) {
 			return JumpFactory.buildComplexNode(feature);
+		}
+
+		@Override
+		public ComplexNode caseDebuggerStatement(DebuggerStatement feature) {
+			return DebuggerStatementFactory.buildComplexNode(feature);
 		}
 
 		@Override
