@@ -141,6 +141,20 @@ public class ControlFlowGraphFactory {
 		}
 	}
 
+	private static boolean isRemovableNode(Node mNode) {
+		boolean remDel = true;
+		remDel = remDel && mNode instanceof DelegatingNode;
+		remDel = remDel && !(mNode instanceof RepresentingNode);
+		remDel = remDel && mNode.jumpToken.isEmpty();
+		remDel = remDel && mNode.catchToken.isEmpty();
+		remDel = remDel && mNode.getInternalPredecessors().size() == 1;
+		remDel = remDel && mNode.pred.size() == 1;
+		remDel = remDel && mNode.succ.size() == 1;
+		remDel = remDel && mNode.pred.get(0).cfType == ControlFlowType.Successor;
+		remDel = remDel && mNode.succ.get(0).cfType == ControlFlowType.Successor;
+		return remDel;
+	}
+
 	private static void removeNode(ComplexNode cn, Node mNode) {
 		ControlFlowEdge e1 = mNode.pred.get(0);
 		ControlFlowEdge e2 = mNode.succ.get(0);
@@ -162,20 +176,6 @@ public class ControlFlowGraphFactory {
 		mNode.getInternalSuccessors().clear();
 
 		EdgeUtils.connectCF(pred, succ);
-	}
-
-	private static boolean isRemovableNode(Node mNode) {
-		boolean remDel = true;
-		remDel = remDel && mNode instanceof DelegatingNode;
-		remDel = remDel && !(mNode instanceof RepresentingNode);
-		remDel = remDel && mNode.jumpToken.isEmpty();
-		remDel = remDel && mNode.catchToken.isEmpty();
-		remDel = remDel && mNode.getInternalPredecessors().size() == 1;
-		remDel = remDel && mNode.pred.size() == 1;
-		remDel = remDel && mNode.succ.size() == 1;
-		remDel = remDel && mNode.pred.get(0).cfType == ControlFlowType.Successor;
-		remDel = remDel && mNode.succ.get(0).cfType == ControlFlowType.Successor;
-		return remDel;
 	}
 
 	/**
