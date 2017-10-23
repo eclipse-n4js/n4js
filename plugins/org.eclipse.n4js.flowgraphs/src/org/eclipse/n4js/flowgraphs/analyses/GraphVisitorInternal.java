@@ -118,14 +118,14 @@ abstract public class GraphVisitorInternal {
 	 * <p>
 	 * Note that the order of edges is arbitrary.
 	 *
-	 * @param lastNode
-	 *            node that was visited before
+	 * @param lastVisitNode
+	 *            nodes that were visited before
 	 * @param currentNode
 	 *            end node of the edge in terms of current mode
-	 * @param edge
+	 * @param edges
 	 *            traversed edge
 	 */
-	protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge) {
+	protected void visit(Node lastVisitNode, Node currentNode, List<ControlFlowEdge> edges) {
 		// overwrite me
 	}
 
@@ -192,11 +192,11 @@ abstract public class GraphVisitorInternal {
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link GraphVisitorInternal#visit(Node,Node,ControlFlowEdge)}.
+	 * {@link GraphVisitorInternal#visit(Node, Node, List)}.
 	 */
-	final void callVisit(Node start, Node end, ControlFlowEdge edge) {
+	final void callVisit(Node lastVisitNode, Node end, List<ControlFlowEdge> edges) {
 		if (activeMode) {
-			visit(start, end, edge);
+			visit(lastVisitNode, end, edges);
 		}
 	}
 

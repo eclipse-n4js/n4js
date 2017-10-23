@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -162,23 +161,19 @@ public class ControlFlowGraphFactory {
 		Node pred = e1.start;
 		Node succ = e2.end;
 
-		try {
-			EdgeUtils.removeCF(e1);
-			EdgeUtils.removeCF(e2);
-			cn.removeNodeChecks(mNode);
-			cn.removeNode(mNode);
+		EdgeUtils.removeCF(e1);
+		EdgeUtils.removeCF(e2);
+		cn.removeNodeChecks(mNode);
+		cn.removeNode(mNode);
 
-			Node intPred = mNode.getInternalPredecessors().iterator().next();
-			Node intSucc = mNode.getInternalSuccessors().iterator().next();
+		for (Node intPred : mNode.getInternalPredecessors()) {
 			intPred.removeInternalSuccessor(mNode);
-			intSucc.removeInternalPredecessor(mNode);
-
-			pred.removeInternalSuccessor(mNode);
-
-		} catch (NoSuchElementException nsee) {
-			String message = "Node '" + mNode + "' could not be removed at: " + cn.getControlFlowElement();
-			throw new RuntimeException(message, nsee);
 		}
+		for (Node intSucc : mNode.getInternalSuccessors()) {
+			intSucc.removeInternalPredecessor(mNode);
+		}
+		mNode.getInternalPredecessors().clear();
+		mNode.getInternalSuccessors().clear();
 
 		EdgeUtils.connectCF(pred, succ);
 	}

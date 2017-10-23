@@ -132,13 +132,14 @@ public class GraphVisitorGuideInternal {
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<BranchWalkerInternal> activatedPaths = initVisit();
 		EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
-		guideWorklist.initialize(cn, activatedPaths);
+		guideWorklist.initialize(cn, edgeProvider, activatedPaths);
 
 		Node lastVisitNode = null;
 
 		for (EdgeGuide currEdgeGuide : guideWorklist.getCurrentEdgeGuides()) {
 			Node visitNode = currEdgeGuide.getPrevNode();
-			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			lastVisitNode = visitNode;
 		}
 
 		while (guideWorklist.hasNext()) {
@@ -147,7 +148,8 @@ public class GraphVisitorGuideInternal {
 			EdgeGuide currEdgeGuide = guideWorklist.next();
 
 			Node visitNode = currEdgeGuide.getNextNode();
-			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			lastVisitNode = visitNode;
 
 			guideWorklist.work();
 		}
@@ -202,12 +204,14 @@ public class GraphVisitorGuideInternal {
 	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
 	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		ControlFlowEdge egEdge = currEdgeGuide.getEdge();
+		List<ControlFlowEdge> visitedEdges = currEdgeGuide.getAllEdges();
+
 		if (!walkerVisitedEdges.contains(egEdge)) {
 			for (GraphVisitorInternal walker : walkers) {
-				walker.callVisit(lastVisitNode, visitNode, egEdge);
+				walker.callVisit(lastVisitNode, visitNode, visitedEdges);
 			}
 		}
-		walkerVisitedEdges.add(egEdge);
+		walkerVisitedEdges.addAll(visitedEdges);
 
 		for (GraphVisitorInternal walker : walkers) {
 			List<BranchWalkerInternal> activatedPaths = walker.activateRequestedExplorers();
@@ -218,7 +222,7 @@ public class GraphVisitorGuideInternal {
 				.getEWIterator(); actPathIt.hasNext();) {
 
 			BranchWalkerInternal activePath = actPathIt.next().getValue();
-			activePath.callVisit(lastVisitNode, visitNode, egEdge);
+			activePath.callVisit(lastVisitNode, visitNode, visitedEdges);
 
 			if (!activePath.isActive()) {
 				actPathIt.remove();

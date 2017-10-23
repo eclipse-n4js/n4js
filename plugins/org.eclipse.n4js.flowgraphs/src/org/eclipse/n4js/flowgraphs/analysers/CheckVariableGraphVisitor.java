@@ -99,7 +99,7 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
+		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
 			return new CheckVariablePathWalker();
 		}
 

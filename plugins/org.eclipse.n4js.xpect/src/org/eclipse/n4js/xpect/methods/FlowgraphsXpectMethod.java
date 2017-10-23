@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
-import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.n4JS.Block;
@@ -202,9 +202,10 @@ public class FlowgraphsXpectMethod {
 		GraphVisitorInternal.Mode direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
-		AllPathPrintVisitor appw = new AllPathPrintVisitor(container, startCFE, direction);
+		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
 		getFlowAnalyzer(referenceCFE).accept(appw);
 		List<String> pathStrings = appw.getPathStrings();
+		pathStrings.add(0, "size=" + pathStrings.size());
 
 		expectation.assertEquals(pathStrings);
 	}

@@ -45,6 +45,7 @@ import com.google.common.collect.Sets;
 public class EdgeGuide {
 	private final NextEdgesProvider edgeProvider;
 	private ControlFlowEdge edge;
+	private final List<ControlFlowEdge> mergedEdges = new LinkedList<>();
 	private final Map<GraphExplorerInternal, BranchWalkerInternal> explorerWalkerMap = new HashMap<>();
 	private final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 
@@ -76,6 +77,15 @@ public class EdgeGuide {
 		return edgeProvider.getNextNode(edge);
 	}
 
+	List<ControlFlowEdge> getAllEdges() {
+		if (mergedEdges.isEmpty()) {
+			List<ControlFlowEdge> edges = new LinkedList<>();
+			edges.add(edge);
+			return edges;
+		}
+		return mergedEdges;
+	}
+
 	List<ControlFlowEdge> getNextEdges() {
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(getNextNode());
 		Set<JumpToken> nextJumpContexts = new HashSet<>();
@@ -89,7 +99,9 @@ public class EdgeGuide {
 		return nextEdges;
 	}
 
-	List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, Set<BranchWalkerInternal> activatedPaths) {
+	static List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider,
+			Set<BranchWalkerInternal> activatedPaths) {
+
 		Node node = edgeProvider.getStartNode(cn);
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(node);
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
@@ -128,6 +140,7 @@ public class EdgeGuide {
 		if (nextEdges.size() == 1) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
 			edge = nextEdge;
+			mergedEdges.clear();
 			nextEGs.add(this);
 		}
 
@@ -212,14 +225,11 @@ public class EdgeGuide {
 	}
 
 	public static EdgeGuide join(List<EdgeGuide> edgeGuides) {
-		if (edgeGuides.size() == 1) {
-			return edgeGuides.get(0);
-		}
+		assert edgeGuides.size() > 1 : "EdgeGuide#join must be called with more than one elements";
 
 		Map<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkerMap = new HashMap<>();
 
 		EdgeGuide survivingEG = edgeGuides.get(0);
-		survivingEG.explorerWalkerMap.clear();
 
 		for (EdgeGuide eg : edgeGuides) {
 			for (Map.Entry<GraphExplorerInternal, BranchWalkerInternal> ewEntry : eg.explorerWalkerMap.entrySet()) {
@@ -233,8 +243,10 @@ public class EdgeGuide {
 
 			survivingEG.finallyBlockContexts.addAll(eg.finallyBlockContexts);
 			survivingEG.edgeProvider.join(eg.edgeProvider);
+			survivingEG.mergedEdges.add(eg.edge);
 		}
 
+		survivingEG.explorerWalkerMap.clear();
 		for (Map.Entry<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkers : joiningWalkerMap
 				.entrySet()) {
 

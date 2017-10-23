@@ -27,7 +27,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  *
  * <pre>
  * {@link #EdgeGuideWorklist()}
- * -> {@link #initialize(ComplexNode, Set)}
+ * -> {@link #initialize(ComplexNode, NextEdgesProvider, Set)}
  * {
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
@@ -57,8 +57,8 @@ public class EdgeGuideWorklist {
 		return currEdgeGuide;
 	}
 
-	void initialize(ComplexNode cn, Set<BranchWalkerInternal> activatedPaths) {
-		List<EdgeGuide> nextEGs = currEdgeGuide.getFirstEdgeGuides(cn, activatedPaths);
+	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Set<BranchWalkerInternal> activatedPaths) {
+		List<EdgeGuide> nextEGs = EdgeGuide.getFirstEdgeGuides(cn, edgeProvider, activatedPaths);
 		currEdgeGuides.addAll(nextEGs);
 	}
 

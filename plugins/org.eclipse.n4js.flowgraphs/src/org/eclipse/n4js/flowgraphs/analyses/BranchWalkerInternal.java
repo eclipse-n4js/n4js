@@ -48,14 +48,14 @@ abstract public class BranchWalkerInternal {
 	/**
 	 * Called for each edge in the order of edges on the current path.
 	 *
-	 * @param start
-	 *            node that was visited before
+	 * @param lastVisitNodes
+	 *            nodes that were visited before
 	 * @param end
 	 *            node that will be visited next
-	 * @param edge
+	 * @param edges
 	 *            traversed edge
 	 */
-	protected void visit(Node start, Node end, ControlFlowEdge edge) {
+	protected void visit(Node lastVisitNodes, Node end, List<ControlFlowEdge> edges) {
 		// overwrite me
 	}
 
@@ -75,24 +75,25 @@ abstract public class BranchWalkerInternal {
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
-	protected void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal... predecessors) {
-		this.pathExplorer = explorer;
+	final void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal... predecessors) {
 		for (BranchWalkerInternal pred : predecessors) {
 			this.pathPredecessors.add(pred);
 		}
-		pathExplorer.allBranches.add(this);
-		pathExplorer.activeBranches.add(this);
-		initialize();
+		initializeRest(explorer);
 	}
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
-	protected void callInitialize(GraphExplorerInternal explorer, List<BranchWalkerInternal> predecessors) {
-		this.pathExplorer = explorer;
+	final void callInitialize(GraphExplorerInternal explorer, List<BranchWalkerInternal> predecessors) {
 		if (predecessors != null) {
 			this.pathPredecessors.addAll(predecessors);
 		}
+		initializeRest(explorer);
+	}
+
+	private void initializeRest(GraphExplorerInternal explorer) {
+		this.pathExplorer = explorer;
 		pathExplorer.allBranches.add(this);
 		pathExplorer.activeBranches.add(this);
 		initialize();
@@ -107,10 +108,10 @@ abstract public class BranchWalkerInternal {
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link BranchWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
+	 * {@link BranchWalkerInternal#visit(Node, Node, List)}.
 	 */
-	final void callVisit(Node start, Node end, ControlFlowEdge edge) {
-		visit(start, end, edge);
+	final void callVisit(Node lastVisitNode, Node end, List<ControlFlowEdge> edges) {
+		visit(lastVisitNode, end, edges);
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
@@ -120,6 +121,20 @@ abstract public class BranchWalkerInternal {
 		return forkedPath;
 	}
 
+	/**
+	 * returns a list of {@link BranchWalkerInternal}s which proceed this instance.
+	 */
+	final List<BranchWalkerInternal> getPathPredecessors() {
+		return pathPredecessors;
+	}
+
+	/**
+	 * returns a list of {@link BranchWalkerInternal}s which succeed this instance.
+	 */
+	final List<BranchWalkerInternal> getPathSuccessors() {
+		return pathSuccessors;
+	}
+
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
@@ -127,20 +142,6 @@ abstract public class BranchWalkerInternal {
 	 */
 	final public GraphExplorerInternal getExplorer() {
 		return pathExplorer;
-	}
-
-	/**
-	 * returns a list of {@link BranchWalkerInternal}s which proceed this instance.
-	 */
-	final public List<BranchWalkerInternal> getPathPredecessors() {
-		return pathPredecessors;
-	}
-
-	/**
-	 * returns a list of {@link BranchWalkerInternal}s which succeed this instance.
-	 */
-	final public List<BranchWalkerInternal> getPathSuccessors() {
-		return pathSuccessors;
 	}
 
 	/** Sets the verdict of this path to <i>Passed</i>. */

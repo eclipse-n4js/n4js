@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.List;
+
 /**
  * see {@link GraphVisitorInternal}
  */
@@ -36,7 +38,16 @@ abstract public class GraphExplorer extends GraphExplorerInternal {
 		super(quantor, passAsDefault);
 	}
 
+	/** Joins two branches and returns a new one. */
+	abstract protected BranchWalker joinBranches(List<BranchWalker> branchWalkers);
+
+	/** Joins two branches and returns a new one. */
 	@Override
-	abstract protected BranchWalkerInternal firstBranchWalker();
+	final protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
+		@SuppressWarnings("unchecked")
+		List<BranchWalker> bWalkers = (List<BranchWalker>) (List<?>) branchWalkers;
+		BranchWalker joinedBranch = joinBranches(bWalkers);
+		return joinedBranch;
+	}
 
 }

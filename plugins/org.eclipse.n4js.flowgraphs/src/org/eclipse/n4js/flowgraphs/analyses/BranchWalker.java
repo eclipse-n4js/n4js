@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
@@ -29,19 +30,30 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 	final protected void visit(Node node) {
 		if (node instanceof RepresentingNode) {
 			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
-			if (pLastCFE != null) {
+
+			if (pLastCFE == null) {
+				for (BranchWalker predBW : getPredecessors()) {
+					Set<ControlFlowType> pEdgeTypesCopy = predBW.pEdgeTypes;
+					pEdgeTypesCopy.addAll(pEdgeTypes);
+					FlowEdge edge = new FlowEdge(predBW.pLastCFE, cfe, pEdgeTypesCopy);
+					visit(edge);
+				}
+			} else {
 				FlowEdge edge = new FlowEdge(pLastCFE, cfe, pEdgeTypes);
 				visit(edge);
 				pEdgeTypes.clear();
 			}
+
 			visit(cfe);
 			pLastCFE = cfe;
 		}
 	}
 
 	@Override
-	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
-		pEdgeTypes.add(edge.cfType);
+	final protected void visit(Node start, Node end, List<ControlFlowEdge> edges) {
+		if (edges.size() == 1) {
+			pEdgeTypes.add(edges.get(0).cfType);
+		}
 	}
 
 	/**
@@ -74,6 +86,22 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 		ap2.pLastCFE = pLastCFE;
 		ap2.pEdgeTypes.addAll(pEdgeTypes);
 		return ap2;
+	}
+
+	/**
+	 * returns a list of {@link BranchWalkerInternal}s which proceed this instance.
+	 */
+	@SuppressWarnings("unchecked")
+	final public List<BranchWalker> getPredecessors() {
+		return (List<BranchWalker>) (List<?>) getPathPredecessors();
+	}
+
+	/**
+	 * returns a list of {@link BranchWalkerInternal}s which succeed this instance.
+	 */
+	@SuppressWarnings("unchecked")
+	final public List<BranchWalker> getSuccessors() {
+		return (List<BranchWalker>) (List<?>) getPathSuccessors();
 	}
 
 }
