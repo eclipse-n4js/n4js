@@ -284,7 +284,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	}
 
 	/**
-	 * Set the receiving resource's {@link ASTMetaInfoCache}. Should only be called at the beginning of post-processing.
+	 * Set or unset the receiving resource's {@link ASTMetaInfoCache} (in the latter case, pass in <code>null</code>).
+	 * Should only be called at the beginning of post-processing (to set the cache) and when discarding the
+	 * post-processing result (to unset the cache).
 	 */
 	public void setASTMetaInfoCache(ASTMetaInfoCache cache) {
 		this.astMetaInfoCache = cache;
