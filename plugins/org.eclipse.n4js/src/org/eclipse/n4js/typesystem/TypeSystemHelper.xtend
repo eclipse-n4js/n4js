@@ -184,6 +184,10 @@ def StructuralTypingComputer getStructuralTypingComputer() {
 		return subtypeComputer.isSubtypeFunction(G, left, right)
 	}
 
+	def boolean isSubtypeComposedTypeRef(RuleEnvironment G, TypeRef left, TypeRef right) {
+		return subtypeComputer.isSubtypeComposedTypeRef(G, left, right);
+	}
+
 	def StructuralTypingResult isStructuralSubtype(RuleEnvironment G,TypeRef left, TypeRef right) {
 		return structuralTypingComputer.isStructuralSubtype(G, left, right);
 	}

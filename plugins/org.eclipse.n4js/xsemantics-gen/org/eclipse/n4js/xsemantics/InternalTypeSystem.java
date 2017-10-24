@@ -353,15 +353,11 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
   
   public final static String SUBTYPEPARAMETERIZEDTYPEREF = "org.eclipse.n4js.xsemantics.SubtypeParameterizedTypeRef";
   
-  public final static String SUBTYPEUNION_LEFT = "org.eclipse.n4js.xsemantics.SubtypeUnion_Left";
+  public final static String SUBTYPECOMPOSED_LEFT = "org.eclipse.n4js.xsemantics.SubtypeComposed_Left";
   
-  public final static String SUBTYPEUNION_RIGHT = "org.eclipse.n4js.xsemantics.SubtypeUnion_Right";
+  public final static String SUBTYPECOMPOSED_RIGHT = "org.eclipse.n4js.xsemantics.SubtypeComposed_Right";
   
-  public final static String SUBTYPEINTERSECTION_LEFTRIGHT = "org.eclipse.n4js.xsemantics.SubtypeIntersection_LeftRight";
-  
-  public final static String SUBTYPEINTERSECTION_LEFT = "org.eclipse.n4js.xsemantics.SubtypeIntersection_Left";
-  
-  public final static String SUBTYPEINTERSECTION_RIGHT = "org.eclipse.n4js.xsemantics.SubtypeIntersection_Right";
+  public final static String SUBTYPECOMPOSED_LEFTRIGHT = "org.eclipse.n4js.xsemantics.SubtypeComposed_LeftRight";
   
   public final static String SUBTYPEBOUNDTHISTYPEREF = "org.eclipse.n4js.xsemantics.SubtypeBoundThisTypeRef";
   
@@ -4063,162 +4059,83 @@ public class InternalTypeSystem extends XsemanticsRuntimeSystem {
     return new Result<Boolean>(true);
   }
   
-  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final UnionTypeExpression U, final TypeRef S) throws RuleFailedException {
+  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ComposedTypeRef L, final TypeRef R) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<Boolean> _result_ = applyRuleSubtypeUnion_Left(G, _subtrace_, U, S);
+    	final Result<Boolean> _result_ = applyRuleSubtypeComposed_Left(G, _subtrace_, L, R);
     	addToTrace(_trace_, new Provider<Object>() {
     		public Object get() {
-    			return ruleName("subtypeUnion_Left") + stringRepForEnv(G) + " |- " + stringRep(U) + " <: " + stringRep(S);
+    			return ruleName("subtypeComposed_Left") + stringRepForEnv(G) + " |- " + stringRep(L) + " <: " + stringRep(R);
     		}
     	});
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
-    } catch (Exception e_applyRuleSubtypeUnion_Left) {
-    	subtypeThrowException(ruleName("subtypeUnion_Left") + stringRepForEnv(G) + " |- " + stringRep(U) + " <: " + stringRep(S),
-    		SUBTYPEUNION_LEFT,
-    		e_applyRuleSubtypeUnion_Left, U, S, new ErrorInformation[] {new ErrorInformation(U), new ErrorInformation(S)});
+    } catch (Exception e_applyRuleSubtypeComposed_Left) {
+    	subtypeThrowException(ruleName("subtypeComposed_Left") + stringRepForEnv(G) + " |- " + stringRep(L) + " <: " + stringRep(R),
+    		SUBTYPECOMPOSED_LEFT,
+    		e_applyRuleSubtypeComposed_Left, L, R, new ErrorInformation[] {new ErrorInformation(L), new ErrorInformation(R)});
     	return null;
     }
   }
   
-  protected Result<Boolean> applyRuleSubtypeUnion_Left(final RuleEnvironment G, final RuleApplicationTrace _trace_, final UnionTypeExpression U, final TypeRef S) throws RuleFailedException {
-    final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
-      /* G |- T <: S */
-      boolean _ruleinvocation = subtypeSucceeded(G, _trace_, T, S);
-      return Boolean.valueOf(_ruleinvocation);
-    };
-    /* U.typeRefs.forall[T| G |- T <: S ] */
-    if (!IterableExtensions.<TypeRef>forall(U.getTypeRefs(), _function)) {
-      sneakyThrowRuleFailedException("U.typeRefs.forall[T| G |- T <: S ]");
+  protected Result<Boolean> applyRuleSubtypeComposed_Left(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ComposedTypeRef L, final TypeRef R) throws RuleFailedException {
+    /* typeSystemHelper.isSubtypeComposedTypeRef(G, L, R) */
+    if (!this.typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)) {
+      sneakyThrowRuleFailedException("typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)");
     }
     return new Result<Boolean>(true);
   }
   
-  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef S, final UnionTypeExpression U) throws RuleFailedException {
+  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef L, final ComposedTypeRef R) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<Boolean> _result_ = applyRuleSubtypeUnion_Right(G, _subtrace_, S, U);
+    	final Result<Boolean> _result_ = applyRuleSubtypeComposed_Right(G, _subtrace_, L, R);
     	addToTrace(_trace_, new Provider<Object>() {
     		public Object get() {
-    			return ruleName("subtypeUnion_Right") + stringRepForEnv(G) + " |- " + stringRep(S) + " <: " + stringRep(U);
+    			return ruleName("subtypeComposed_Right") + stringRepForEnv(G) + " |- " + stringRep(L) + " <: " + stringRep(R);
     		}
     	});
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
-    } catch (Exception e_applyRuleSubtypeUnion_Right) {
-    	subtypeThrowException(ruleName("subtypeUnion_Right") + stringRepForEnv(G) + " |- " + stringRep(S) + " <: " + stringRep(U),
-    		SUBTYPEUNION_RIGHT,
-    		e_applyRuleSubtypeUnion_Right, S, U, new ErrorInformation[] {new ErrorInformation(S), new ErrorInformation(U)});
+    } catch (Exception e_applyRuleSubtypeComposed_Right) {
+    	subtypeThrowException(ruleName("subtypeComposed_Right") + stringRepForEnv(G) + " |- " + stringRep(L) + " <: " + stringRep(R),
+    		SUBTYPECOMPOSED_RIGHT,
+    		e_applyRuleSubtypeComposed_Right, L, R, new ErrorInformation[] {new ErrorInformation(L), new ErrorInformation(R)});
     	return null;
     }
   }
   
-  protected Result<Boolean> applyRuleSubtypeUnion_Right(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef S, final UnionTypeExpression U) throws RuleFailedException {
-    final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
-      /* G |- S <: T */
-      boolean _ruleinvocation = subtypeSucceeded(G, _trace_, S, T);
-      return Boolean.valueOf(_ruleinvocation);
-    };
-    /* U.typeRefs.exists[T| G |- S <: T ] */
-    if (!IterableExtensions.<TypeRef>exists(U.getTypeRefs(), _function)) {
-      sneakyThrowRuleFailedException("U.typeRefs.exists[T| G |- S <: T ]");
+  protected Result<Boolean> applyRuleSubtypeComposed_Right(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef L, final ComposedTypeRef R) throws RuleFailedException {
+    /* typeSystemHelper.isSubtypeComposedTypeRef(G, L, R) */
+    if (!this.typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)) {
+      sneakyThrowRuleFailedException("typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)");
     }
     return new Result<Boolean>(true);
   }
   
-  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression S, final IntersectionTypeExpression I) throws RuleFailedException {
+  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ComposedTypeRef L, final ComposedTypeRef R) throws RuleFailedException {
     try {
     	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<Boolean> _result_ = applyRuleSubtypeIntersection_LeftRight(G, _subtrace_, S, I);
+    	final Result<Boolean> _result_ = applyRuleSubtypeComposed_LeftRight(G, _subtrace_, L, R);
     	addToTrace(_trace_, new Provider<Object>() {
     		public Object get() {
-    			return ruleName("subtypeIntersection_LeftRight") + stringRepForEnv(G) + " |- " + stringRep(S) + " <: " + stringRep(I);
+    			return ruleName("subtypeComposed_LeftRight") + stringRepForEnv(G) + " |- " + stringRep(L) + " <: " + stringRep(R);
     		}
     	});
     	addAsSubtrace(_trace_, _subtrace_);
     	return _result_;
-    } catch (Exception e_applyRuleSubtypeIntersection_LeftRight) {
-    	subtypeThrowException(ruleName("subtypeIntersection_LeftRight") + stringRepForEnv(G) + " |- " + stringRep(S) + " <: " + stringRep(I),
-    		SUBTYPEINTERSECTION_LEFTRIGHT,
-    		e_applyRuleSubtypeIntersection_LeftRight, S, I, new ErrorInformation[] {new ErrorInformation(S), new ErrorInformation(I)});
+    } catch (Exception e_applyRuleSubtypeComposed_LeftRight) {
+    	subtypeThrowException(ruleName("subtypeComposed_LeftRight") + stringRepForEnv(G) + " |- " + stringRep(L) + " <: " + stringRep(R),
+    		SUBTYPECOMPOSED_LEFTRIGHT,
+    		e_applyRuleSubtypeComposed_LeftRight, L, R, new ErrorInformation[] {new ErrorInformation(L), new ErrorInformation(R)});
     	return null;
     }
   }
   
-  protected Result<Boolean> applyRuleSubtypeIntersection_LeftRight(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression S, final IntersectionTypeExpression I) throws RuleFailedException {
-    final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
-      /* G |- S <: T */
-      boolean _ruleinvocation = subtypeSucceeded(G, _trace_, S, T);
-      return Boolean.valueOf(_ruleinvocation);
-    };
-    /* I.typeRefs.forall[T| G |- S <: T ] */
-    if (!IterableExtensions.<TypeRef>forall(I.getTypeRefs(), _function)) {
-      sneakyThrowRuleFailedException("I.typeRefs.forall[T| G |- S <: T ]");
-    }
-    return new Result<Boolean>(true);
-  }
-  
-  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression I, final TypeRef S) throws RuleFailedException {
-    try {
-    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<Boolean> _result_ = applyRuleSubtypeIntersection_Left(G, _subtrace_, I, S);
-    	addToTrace(_trace_, new Provider<Object>() {
-    		public Object get() {
-    			return ruleName("subtypeIntersection_Left") + stringRepForEnv(G) + " |- " + stringRep(I) + " <: " + stringRep(S);
-    		}
-    	});
-    	addAsSubtrace(_trace_, _subtrace_);
-    	return _result_;
-    } catch (Exception e_applyRuleSubtypeIntersection_Left) {
-    	subtypeThrowException(ruleName("subtypeIntersection_Left") + stringRepForEnv(G) + " |- " + stringRep(I) + " <: " + stringRep(S),
-    		SUBTYPEINTERSECTION_LEFT,
-    		e_applyRuleSubtypeIntersection_Left, I, S, new ErrorInformation[] {new ErrorInformation(I), new ErrorInformation(S)});
-    	return null;
-    }
-  }
-  
-  protected Result<Boolean> applyRuleSubtypeIntersection_Left(final RuleEnvironment G, final RuleApplicationTrace _trace_, final IntersectionTypeExpression I, final TypeRef S) throws RuleFailedException {
-    final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
-      /* G |- T <: S */
-      boolean _ruleinvocation = subtypeSucceeded(G, _trace_, T, S);
-      return Boolean.valueOf(_ruleinvocation);
-    };
-    /* I.typeRefs.exists[T| G |- T <: S ] */
-    if (!IterableExtensions.<TypeRef>exists(I.getTypeRefs(), _function)) {
-      sneakyThrowRuleFailedException("I.typeRefs.exists[T| G |- T <: S ]");
-    }
-    return new Result<Boolean>(true);
-  }
-  
-  protected Result<Boolean> subtypeImpl(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef S, final IntersectionTypeExpression I) throws RuleFailedException {
-    try {
-    	final RuleApplicationTrace _subtrace_ = newTrace(_trace_);
-    	final Result<Boolean> _result_ = applyRuleSubtypeIntersection_Right(G, _subtrace_, S, I);
-    	addToTrace(_trace_, new Provider<Object>() {
-    		public Object get() {
-    			return ruleName("subtypeIntersection_Right") + stringRepForEnv(G) + " |- " + stringRep(S) + " <: " + stringRep(I);
-    		}
-    	});
-    	addAsSubtrace(_trace_, _subtrace_);
-    	return _result_;
-    } catch (Exception e_applyRuleSubtypeIntersection_Right) {
-    	subtypeThrowException(ruleName("subtypeIntersection_Right") + stringRepForEnv(G) + " |- " + stringRep(S) + " <: " + stringRep(I),
-    		SUBTYPEINTERSECTION_RIGHT,
-    		e_applyRuleSubtypeIntersection_Right, S, I, new ErrorInformation[] {new ErrorInformation(S), new ErrorInformation(I)});
-    	return null;
-    }
-  }
-  
-  protected Result<Boolean> applyRuleSubtypeIntersection_Right(final RuleEnvironment G, final RuleApplicationTrace _trace_, final TypeRef S, final IntersectionTypeExpression I) throws RuleFailedException {
-    final Function1<TypeRef, Boolean> _function = (TypeRef T) -> {
-      /* G |- S <: T */
-      boolean _ruleinvocation = subtypeSucceeded(G, _trace_, S, T);
-      return Boolean.valueOf(_ruleinvocation);
-    };
-    /* I.typeRefs.forall[T| G |- S <: T ] */
-    if (!IterableExtensions.<TypeRef>forall(I.getTypeRefs(), _function)) {
-      sneakyThrowRuleFailedException("I.typeRefs.forall[T| G |- S <: T ]");
+  protected Result<Boolean> applyRuleSubtypeComposed_LeftRight(final RuleEnvironment G, final RuleApplicationTrace _trace_, final ComposedTypeRef L, final ComposedTypeRef R) throws RuleFailedException {
+    /* typeSystemHelper.isSubtypeComposedTypeRef(G, L, R) */
+    if (!this.typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)) {
+      sneakyThrowRuleFailedException("typeSystemHelper.isSubtypeComposedTypeRef(G, L, R)");
     }
     return new Result<Boolean>(true);
   }
