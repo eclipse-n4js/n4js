@@ -58,8 +58,6 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 public class TypeProcessor extends AbstractProcessor {
 
 	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
-	@Inject
 	private ASTProcessor astProcessor;
 	@Inject
 	private PolyProcessor polyProcessor;
@@ -258,7 +256,7 @@ public class TypeProcessor extends AbstractProcessor {
 			// if post-processing is in progress AND 'obj' is a type model element AND it corresponds to an AST node
 			// --> redirect processing to the AST node, in order to properly handle backward/forward references, esp.
 			// forward processing of identifiable subtrees
-			if(res.isProcessing && obj.isTypeModelElement) {
+			if(res.isPostProcessing && obj.isTypeModelElement) {
 				val astNodeToProcess = if (obj instanceof SyntaxRelatedTElement) {
 						obj.astElement // NOTE: we've made sure above that we are *NOT* in a Resource loaded from the index!
 					};
@@ -290,11 +288,11 @@ public class TypeProcessor extends AbstractProcessor {
 			return askXsemanticsForType(G, trace, obj); // obj is a type model element, so this will just wrap it in a TypeRef (no actual inference)
 		} else if (obj.isASTNode && obj.isTypableNode) {
 			// here we read from the cache (if AST node 'obj' was already processed) or forward-process 'obj'
-			val cache = astMetaInfoCacheHelper.getOrCreate(res);
-			if (!res.isProcessing && !res.isFullyProcessed) {
+			val cache = res.getASTMetaInfoCache();
+			if (!res.isPostProcessing && !res.isFullyProcessed) {
 				// we have called #performPostProcessing() on the containing resource above, so this is "impossible"
 				throw new IllegalStateException("post-processing neither in progress nor completed after calling #performPostProcessing() in resource: " + res.URI);
-			} else if (!cache.isProcessingInProgress && !cache.isFullyProcessed) {
+			} else if (!cache.isPostProcessing && !cache.isFullyProcessed) {
 				// "res.isProcessing() || res.isFullyProcessed()" but not "cache.isProcessing || cache.isFullyProcessed"
 				// so: the post-processing flags are out of sync between the resource and cache
 				// (HINT: if you get an exception here, this often indicates an accidental cache clear; use the
@@ -302,7 +300,7 @@ public class TypeProcessor extends AbstractProcessor {
 				val e = new IllegalStateException("post-processing flags out of sync between resource and cache (hint: this is often caused by an accidental cache clear!!)");
 				e.printStackTrace // make sure we see this on the console (some clients eat up all exceptions!)
 				throw e;
-			} else if (cache.isProcessingInProgress) {
+			} else if (cache.isPostProcessing) {
 
 				// while AST typing is in progress, just read from the cache we are currently filling
 				val resultFromCache = cache.getTypeFailSafe(obj);
