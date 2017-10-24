@@ -15,6 +15,7 @@ import static com.google.common.collect.Maps.uniqueIndex;
 import static java.util.Collections.emptyMap;
 import static org.eclipse.xtext.ui.util.ResourceUtil.getContainer;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,6 +32,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
+import org.eclipse.n4js.ui.building.instructions.BuildInstruction;
+import org.eclipse.n4js.ui.building.instructions.CleanInstruction;
+import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
+import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.BuilderParticipant;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
@@ -45,11 +53,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ui.building.instructions.BuildInstruction;
-import org.eclipse.n4js.ui.building.instructions.CleanInstruction;
-import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
-import org.eclipse.n4js.utils.resources.ExternalProject;
 
 /**
  * A custom builder participant that can be used by the {@link N4JSGenerateImmediatelyBuilderState} to process the
@@ -74,6 +77,10 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	@Inject
 	private Injector injector;
 
+	private final DataCollector createInstruction = DataCollectors.INSTANCE.getOrCreateDataCollector(
+			"createInstruction",
+			"builder", "build instruction");
+
 	/**
 	 * Intentionally package visible producer for the {@link IBuildParticipantInstruction}.
 	 *
@@ -85,28 +92,35 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	 */
 	IBuildParticipantInstruction prepareBuild(IProject project, IXtextBuilderParticipant.BuildType buildType)
 			throws CoreException {
-		if (!isEnabled(project)) {
-			return IBuildParticipantInstruction.NOOP;
-		}
-		EclipseResourceFileSystemAccess2 access = fileSystemAccessProvider.get();
-		access.setProject(project);
-		final Map<String, OutputConfiguration> outputConfigurations = getOutputConfigurations(project);
-		refreshOutputFolders(project, outputConfigurations, null);
-		access.setOutputConfigurations(outputConfigurations);
-		if (buildType == BuildType.CLEAN || buildType == BuildType.RECOVERY) {
-			IBuildParticipantInstruction clean = new CleanInstruction(project, outputConfigurations,
-					getDerivedResourceMarkers());
-			if (buildType == BuildType.RECOVERY) {
-				clean.finish(Collections.<Delta> emptyList(), null);
-			} else {
-				return clean;
-			}
-		}
-		Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers = getGeneratorMarkers(project,
-				outputConfigurations.values());
-		return new BuildInstruction(project, outputConfigurations, getDerivedResourceMarkers(), access,
-				generatorMarkers, storage2UriMapper, injector);
+		Measurement measureCreateBI = createInstruction.getMeasurement("createInstruction_" + Instant.now());
+		try {
 
+			if (!isEnabled(project)) {
+				return IBuildParticipantInstruction.NOOP;
+			}
+			EclipseResourceFileSystemAccess2 access = fileSystemAccessProvider.get();
+			access.setProject(project);
+			final Map<String, OutputConfiguration> outputConfigurations = getOutputConfigurations(project);
+			refreshOutputFolders(project, outputConfigurations, null);
+			access.setOutputConfigurations(outputConfigurations);
+			if (buildType == BuildType.CLEAN || buildType == BuildType.RECOVERY) {
+				IBuildParticipantInstruction clean = new CleanInstruction(project, outputConfigurations,
+						getDerivedResourceMarkers());
+				if (buildType == BuildType.RECOVERY) {
+					clean.finish(Collections.<Delta> emptyList(), null);
+				} else {
+					return clean;
+				}
+			}
+			Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers = getGeneratorMarkers(project,
+					outputConfigurations.values());
+			BuildInstruction buildInstruction = new BuildInstruction(project, outputConfigurations,
+					getDerivedResourceMarkers(), access,
+					generatorMarkers, storage2UriMapper, injector);
+			return buildInstruction;
+		} finally {
+			measureCreateBI.end();
+		}
 	}
 
 	/**

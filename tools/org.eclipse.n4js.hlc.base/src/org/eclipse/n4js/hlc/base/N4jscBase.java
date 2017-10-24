@@ -39,6 +39,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.equinox.app.IApplication;
@@ -399,16 +400,20 @@ public class N4jscBase implements IApplication {
 			// help.
 			initInjection(refProperties());
 
-			// Wire up available runners and testers, test file extensions and runnable file extensions
-			runnerRegistry.register(nodeRunnerDescriptorProvider.get());
-			testerRegistry.register(nodeTesterDescriptorProvider.get());
+			// Wire registers related to the extension points
+			// in non-OSGI mode extension points are not automatically populated
+			if (!Platform.isRunning()) {
+				runnerRegistry.register(nodeRunnerDescriptorProvider.get());
+				testerRegistry.register(nodeTesterDescriptorProvider.get());
+			}
 			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION);
 			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
 					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
 			registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION,
 					N4JSGlobals.JS_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
 			registerTypableFiles(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.N4JS_FILE_EXTENSION,
-					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
+					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
+					N4JSXGlobals.JSX_FILE_EXTENSION);
 			registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 
 			if (listRunners) {
@@ -1028,7 +1033,7 @@ public class N4jscBase implements IApplication {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
 
-		return fileToURI(runThisFile);
+		return FileUtils.fileToURI(runThisFile);
 	}
 
 	/**
@@ -1042,7 +1047,7 @@ public class N4jscBase implements IApplication {
 		if (testThisLocation == null || !testThisLocation.exists()) {
 			throw new ExitCodeException(EXITCODE_MODULE_TO_RUN_NOT_FOUND);
 		}
-		return fileToURI(testThisLocation);
+		return FileUtils.fileToURI(testThisLocation);
 	}
 
 	/**
@@ -1054,7 +1059,7 @@ public class N4jscBase implements IApplication {
 	 *             signaling compile-errors.
 	 */
 	private void compileArgumentsAsSingleFiles() throws ExitCodeException, N4JSCompileException {
-		srcFiles.stream().forEach(this::isExistingReadibleFile);
+		srcFiles.stream().forEach(FileUtils::isExistingReadibleFile);
 
 		if (projectLocations == null)
 			headless.compileSingleFiles(convertToFilesAddTargetPlatformAndCheckWritableDir(""), srcFiles);
@@ -1168,61 +1173,18 @@ public class N4jscBase implements IApplication {
 		final List<File> retList = new ArrayList<>();
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
 			final File tpLoc = new File(installLocationProvider.getTargetPlatformNodeModulesLocation());
-			isExistingWriteableDir(tpLoc);
+			FileUtils.isExistingWriteableDir(tpLoc);
 			retList.add(tpLoc);
 		}
 		if (!dirpaths.isEmpty()) {
 			for (String dirpath : Splitter.on(File.pathSeparatorChar).split(dirpaths)) {
 				final File ret = new File(dirpath);
-				isExistingWriteableDir(ret);
+				FileUtils.isExistingWriteableDir(ret);
 				retList.add(ret);
 			}
 		}
 
 		return retList;
-	}
-
-	/**
-	 * Ensure given file is plain, existing and readable file.
-	 *
-	 * @param file
-	 *            to check
-	 * @throws RuntimeException
-	 *             if any file is not existent or not plain or not readable
-	 */
-	private void isExistingWriteableDir(File file) {
-		if (!file.exists())
-			throw new RuntimeException("File " + file + " doesn't exist.");
-
-		if (!file.isDirectory())
-			throw new RuntimeException("File " + file + " is not a directory.");
-
-		if (!file.canWrite())
-			throw new RuntimeException("File " + file + " is not writable.");
-
-	}
-
-	/**
-	 * Ensure given file is plain, existing and readable file.
-	 *
-	 * @param file
-	 *            to check
-	 * @throws RuntimeException
-	 *             if any file is not existent or not plain or not readable
-	 */
-	private void isExistingReadibleFile(File file) {
-		if (!file.exists())
-			throw new RuntimeException("File does not exist: " + file.getAbsolutePath());
-
-		if (!file.isFile())
-			throw new RuntimeException("Not a file: " + file.getAbsolutePath());
-
-		if (!file.canRead())
-			throw new RuntimeException("File is not readable: " + file.getAbsolutePath());
-	}
-
-	private static URI fileToURI(File file) {
-		return URI.createURI(file.toURI().toString());
 	}
 
 	/**

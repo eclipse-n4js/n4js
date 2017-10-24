@@ -99,6 +99,4 @@ class UndefinedHandlingTest {
 				Diagnostic.LINKING_DIAGNOSTIC
 		);
 	}
-
-
 }
