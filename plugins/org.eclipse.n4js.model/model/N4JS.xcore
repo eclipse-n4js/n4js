@@ -817,10 +817,7 @@ class VariableDeclaration extends VariableDeclarationOrBinding, AnnotableElement
 	 */
 	op boolean isConst() {
 		val varDeclConti = N4JSASTUtils.getVariableDeclarationContainer(this);
-		if (varDeclConti !== null) {
-			return varDeclConti.varStmtKeyword === VariableStatementKeyword.CONST
-		}
-		return false;
+		return varDeclConti?.varStmtKeyword === VariableStatementKeyword.CONST
 	}
 }
 

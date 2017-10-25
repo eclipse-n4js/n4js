@@ -322,11 +322,11 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 */
 	public boolean isConst() {
 		final VariableDeclarationContainer varDeclConti = N4JSASTUtils.getVariableDeclarationContainer(this);
-		if ((varDeclConti != null)) {
-			VariableStatementKeyword _varStmtKeyword = varDeclConti.getVarStmtKeyword();
-			return (_varStmtKeyword == VariableStatementKeyword.CONST);
+		VariableStatementKeyword _varStmtKeyword = null;
+		if (varDeclConti!=null) {
+			_varStmtKeyword=varDeclConti.getVarStmtKeyword();
 		}
-		return false;
+		return (_varStmtKeyword == VariableStatementKeyword.CONST);
 	}
 
 	/**
