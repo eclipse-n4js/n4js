@@ -17,13 +17,10 @@ import org.xpect.runner.XpectTestFiles;
 import org.xpect.runner.XpectTestFiles.FileRoot;
 import org.xpect.xtext.lib.tests.ValidationTest;
 
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
-
 /**
  */
 @XpectSuiteClasses({
-	NoerrorsXpectMethod.class,
-	ValidationTest.class
+		ValidationTest.class
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model/validation", fileExtensions = { "xt" })
