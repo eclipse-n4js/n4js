@@ -18,15 +18,12 @@ import org.xpect.runner.XpectSuiteClasses;
 import org.xpect.runner.XpectTestFiles;
 import org.xpect.xtext.lib.tests.ValidationTest;
 
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
-
 /**
  * Test class for running Xpect tests as a plug-in tests after building the 'workspace' from the projects.
  */
 @RunWith(XpectRunner.class)
 @XpectSuiteClasses({
-	NoerrorsXpectMethod.class,
-	ValidationTest.class
+		ValidationTest.class
 })
 @XpectTestFiles(relativeTo = PROJECT, baseDir = "testProjects", fileExtensions = { "xt" })
 public class N4MFProjectReferencesPluginTest {
