@@ -11,7 +11,6 @@
 package org.eclipse.n4js.spec.examples.xpect.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.junit.runner.RunWith;
@@ -26,8 +25,7 @@ import org.xpect.xtext.lib.tests.ValidationTest;
  */
 @XpectSuiteClasses({
 		ValidationTest.class,
-		OutputXpectMethod.class,
-		NoerrorsXpectMethod.class,
+		OutputXpectMethod.class
 })
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata", fileExtensions = { "xt" })
 @RunWith(XpectRunner.class)

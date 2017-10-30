@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource;
 import org.eclipse.n4js.resource.PostProcessingAwareResource.PostProcessor;
+import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -36,10 +37,10 @@ import com.google.inject.Inject;
  * Performs post-processing of N4JS resources. Main responsibilities are proxy resolution, types model creation, and
  * ASTNodeInfo computation. When post-processing has completed, the following is guaranteed:
  * <ol>
- * <li>ensure all proxies are resolved,
- * <li>complete {@link TModule} has been created (including all type information; not a stripped-down TModule as created
- * by the {@link N4JSTypesBuilder} during pre-indexing phase),
- * <li>each AST node has a valid ASTNodeInfo,
+ * <li>all proxies are resolved,
+ * <li>complete {@link TModule} has been created (including all type information: not a stripped-down TModule as created
+ * by the {@link N4JSTypesBuilder} during pre-indexing phase; no {@link DeferredTypeRef}s left in TModule),
+ * <li>each AST node has valid information in the {@link ASTMetaInfoCache},
  * <li>referenced internal types have been exposed.
  * </ol>
  */
@@ -58,20 +59,36 @@ public class N4JSPostProcessor implements PostProcessor {
 
 	@Override
 	public void performPostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator) {
-		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
+		final N4JSResource resourceCasted = (N4JSResource) resource;
+		final ASTMetaInfoCache cache = createASTMetaInfoCache(resourceCasted);
 		try {
-			// we assume this will not be called for other PostProcessingAwareResource than N4JSResource
-			postProcessN4JSResource((N4JSResource) resource, cancelIndicator);
+			postProcessN4JSResource(resourceCasted, cancelIndicator);
 		} catch (Throwable th) {
 			operationCanceledManager.propagateIfCancelException(th);
-			if (hasBrokenAST) {
+			if (cache.hasBrokenAST()) {
 				// swallow exception, AST is broken due to parse error anyway
 			} else {
 				// make sure this error is being reported, even if exception will be suppressed by calling code!
 				UtilN4.reportError("exception while post-processing resource " + resource.getURI(), th);
 				throw th;
 			}
+		} finally {
+			cache.clearTemporaryData();
 		}
+	}
+
+	@Override
+	public void discardPostProcessingResult(PostProcessingAwareResource resource) {
+		((N4JSResource) resource).setASTMetaInfoCache(null);
+	}
+
+	private static ASTMetaInfoCache createASTMetaInfoCache(N4JSResource resource) {
+		// at the time the cache is created (i.e. before any validation happens), we can assume that all errors are
+		// syntax errors created by the parser or the ASTStructureValidator
+		final boolean hasBrokenAST = !resource.getErrors().isEmpty();
+		final ASTMetaInfoCache newCache = new ASTMetaInfoCache(resource, hasBrokenAST);
+		resource.setASTMetaInfoCache(newCache);
+		return newCache;
 	}
 
 	private void postProcessN4JSResource(N4JSResource resource, CancelIndicator cancelIndicator) {
