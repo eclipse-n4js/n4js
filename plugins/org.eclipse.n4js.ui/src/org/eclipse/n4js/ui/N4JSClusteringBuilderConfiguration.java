@@ -13,22 +13,23 @@ package org.eclipse.n4js.ui;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.ui.building.BuilderStateLogger;
+import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
+import org.eclipse.n4js.ui.building.N4JSBuildTypeTrackingBuilder;
+import org.eclipse.n4js.ui.building.N4JSTrackedClusteringBuilderState;
+import org.eclipse.n4js.ui.containers.N4JSStorage2UriMapper;
+import org.eclipse.n4js.ui.editor.PrevStateAwareDirtyStateManager;
+import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.PersistedStateProvider;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
 import org.eclipse.xtext.resource.clustering.DynamicResourceClusteringPolicy;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
+import org.eclipse.xtext.ui.editor.DirtyStateManager;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 
 import com.google.inject.AbstractModule;
-
-import org.eclipse.n4js.ui.building.BuilderStateLogger;
-import org.eclipse.n4js.ui.building.N4JSBuildTypeTrackingBuilder;
-import org.eclipse.n4js.ui.building.N4JSGenerateImmediatelyBuilderState;
-import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
-import org.eclipse.n4js.ui.containers.N4JSStorage2UriMapper;
-import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 
 /**
  * Enables the dynamic clustering in the Xtext builder. As soon as the amount of available HEAP is smaller than a
@@ -46,10 +47,11 @@ public class N4JSClusteringBuilderConfiguration extends AbstractModule {
 	protected void configure() {
 		bind(IResourceClusteringPolicy.class).to(N4JSVerboseClusteringPolicy.class);
 		bind(XtextBuilder.class).to(N4JSBuildTypeTrackingBuilder.class);
-		bind(ClusteringBuilderState.class).to(N4JSGenerateImmediatelyBuilderState.class);
+		bind(ClusteringBuilderState.class).to(N4JSTrackedClusteringBuilderState.class);// GH-238
 		bind(IStorage2UriMapper.class).to(N4JSStorage2UriMapper.class);
 		bind(PersistedStateProvider.class).to(ContributingResourceDescriptionPersister.class);
 		bind(IBuildLogger.class).annotatedWith(BuilderState.class).to(BuilderStateLogger.class);
+		bind(DirtyStateManager.class).to(PrevStateAwareDirtyStateManager.class);
 	}
 
 	static class N4JSVerboseClusteringPolicy extends DynamicResourceClusteringPolicy {

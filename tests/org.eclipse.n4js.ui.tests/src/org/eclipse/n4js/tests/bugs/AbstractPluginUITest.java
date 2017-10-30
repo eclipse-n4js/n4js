@@ -15,6 +15,9 @@ import static org.eclipse.ui.PlatformUI.getWorkbench;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
@@ -36,6 +39,24 @@ import com.google.common.collect.Lists;
  * concrete test classes.
  */
 public abstract class AbstractPluginUITest extends AbstractIDEBUG_Test {
+
+	/** Default timeout when waiting for values obtained from the UI. */
+	public static final long DEFAULT_UI_TIMEOUT = TimeUnit.SECONDS.toMillis(10);
+
+	/**
+	 * Like {@link Supplier}, but supports results that may not be available yet, by returning immediately with an
+	 * {@link Optional#empty() empty optional}.
+	 */
+	public interface NonWaitingSupplier<T> {
+
+		/**
+		 * Gets a result without waiting for it. Iff the result is not available yet, an {@link Optional#empty() empty
+		 * optional} is returned.
+		 *
+		 * @return a result
+		 */
+		Optional<T> get();
+	}
 
 	/**
 	 * Asserts that the {@link IWorkbench workbench} is running.
@@ -115,12 +136,57 @@ public abstract class AbstractPluginUITest extends AbstractIDEBUG_Test {
 	}
 
 	/**
-	 * Processes UI input and does not return until there are things to do on the UI thread.
+	 * Like {@link #obtainValueFromUI(NonWaitingSupplier, Supplier, long)}, but using {@link #DEFAULT_UI_TIMEOUT} as
+	 * timeout.
+	 */
+	protected <T> T obtainValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier) {
+		return obtainValueFromUI(nonWaitingSupplier, valueDescSupplier, DEFAULT_UI_TIMEOUT);
+	}
+
+	/**
+	 * Utility method to obtain some value from the UI (e.g. TreeItem of a JFace viewer, string label of a button) and
+	 * waiting for it if it isn't readily available at the time this method is invoked, up to the given timeout. If the
+	 * value is still not available after timeout, this method will throw an exception.
+	 *
+	 * @param nonWaitingSupplier
+	 *            a supplier trying to obtain the value without waiting for it.
+	 * @param valueDescSupplier
+	 *            a supplier providing a description of the value to be obtained. Used for messages in exceptions
+	 *            thrown.
+	 * @param timeout
+	 *            timeout in ms.
+	 * @return the value obtained from the UI. Never returns <code>null</code>.
+	 */
+	protected <T> T obtainValueFromUI(NonWaitingSupplier<T> nonWaitingSupplier, Supplier<String> valueDescSupplier,
+			long timeout) {
+		final long start = System.currentTimeMillis();
+
+		Optional<T> item;
+		while (!(item = nonWaitingSupplier.get()).isPresent()
+				&& System.currentTimeMillis() - start < timeout) {
+			try {
+				Thread.sleep(100); // wait for more UI events coming in
+			} catch (InterruptedException e) {
+				throw new RuntimeException("received interrupt while waiting for " + valueDescSupplier.get());
+			}
+			waitForUiThread(); // process all pending UI events
+		}
+
+		if (!item.isPresent()) {
+			throw new IllegalArgumentException(
+					"timed out after " + timeout + "ms while waiting for " + valueDescSupplier.get());
+		}
+		return item.get();
+	}
+
+	/**
+	 * Processes UI input and does not return while there are things to do on the UI thread.<br>
+	 * I.e., when this method returns, there is no more work to do on the UI thread <em>at this time</em>.
 	 */
 	protected void waitForUiThread() {
 		final Display display = getDisplay();
 		while (display.readAndDispatch()) {
-			// Wait until there is anything to process.
+			// wait while there might be something to process.
 		}
 		display.update();
 	}

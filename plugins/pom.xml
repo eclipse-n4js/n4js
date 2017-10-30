@@ -69,7 +69,8 @@ Contributors:
 		<module>org.eclipse.n4js.jsdoc2spec</module>
 		<module>org.eclipse.n4js.jsdoc2spec.ui</module>
 		<!-- AST graph viewer -->
-		<module>org.eclipse.n4js.smith.graph</module>
+		<module>org.eclipse.n4js.smith</module>
+		<module>org.eclipse.n4js.smith.ui</module>
 		<!-- Flow Graphs -->
 		<module>org.eclipse.n4js.flowgraphs</module>
 		<!-- xpect -->
@@ -89,6 +90,7 @@ Contributors:
 		<module>org.eclipse.n4js.n4jsx.model</module>
 		<module>org.eclipse.n4js.n4jsx.ui</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui</module>
+
 	</modules>
 
 	<properties>

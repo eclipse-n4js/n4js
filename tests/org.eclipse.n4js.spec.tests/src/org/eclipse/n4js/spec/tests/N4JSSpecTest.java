@@ -14,7 +14,6 @@ import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
 import org.eclipse.n4js.xpect.methods.ElementKeywordXpectMethod;
 import org.eclipse.n4js.xpect.methods.LinkingXpectMethod;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
@@ -37,7 +36,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 		AccessModifierXpectMethod.class,
 		TypeXpectMethod.class,
 		ValidationTest.class,
-		NoerrorsXpectMethod.class,
 		ScopeXpectMethod.class,
 		OutputXpectMethod.class,
 		ElementKeywordXpectMethod.class

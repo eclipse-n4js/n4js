@@ -53,6 +53,56 @@
 			],
 			execute: function() {
 				$makeClass(TestController, N4Object, [], {
+					runGroups: {
+						value: async function runGroups___n4(testInfoObject, numTests, scope) {
+							if (!testInfoObject) {
+								throw new Error("TestController::runGroups called with a null testInfoObject");
+							}
+							let executor = this.executor, reses = [], res, testInfos = testInfoObject.testDescriptors, batchedTestInfos = [], ii = 0, testInfosBatch, instrumentedTestsBatch2d, instrumentedTestsBatch;
+							;
+							if (numTests === undefined) {
+								numTests = testInfoObject.testDescriptors.reduce(function(acc, info) {
+									return acc + info.testMethods.length;
+								}, 0);
+							}
+							testInfoObject.testDescriptors = testInfoObject.testDescriptors.sort((x, y)=>{
+								let xVal = x.fqn ? x.fqn : x.module, yVal = y.fqn ? y.fqn : y.module;
+								return xVal.localeCompare(yVal);
+							});
+							try {
+								await this.spy.testingStarted.dispatch([
+									testInfos.length,
+									testInfoObject.sessionId,
+									numTests
+								]);
+							} catch(ex) {
+								console.log("testingStarted.dispatch is bad", ex);
+							}
+							for(ii = 0;ii < testInfos.length;ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
+								batchedTestInfos.push(testInfos.slice(ii, ii + TestController.MAX_GROUPS_PER_TEST_BATCH));
+							}
+							for(ii = 0, instrumentedTestsBatch = [];ii < batchedTestInfos.length;++ii, instrumentedTestsBatch = []) {
+								testInfosBatch = batchedTestInfos[ii];
+								try {
+									instrumentedTestsBatch2d = (await Promise.resolve(await Promise.all(testInfosBatch.map(this.instrument.bind(this)).filter(function(test) {
+										return test !== null;
+									}))));
+									instrumentedTestsBatch = (Array.prototype.concat.apply([], instrumentedTestsBatch2d));
+									res = await executor.runTestsAsync(instrumentedTestsBatch, scope);
+									reses.push(res);
+								} catch(er) {
+									console.error(er);
+									throw er;
+								}
+							}
+							;
+							res = ResultGroups.concatArray(reses);
+							await this.spy.testingFinished.dispatch([
+								res
+							]);
+							return res;
+						}
+					},
 					errorGroup: {
 						value: async function errorGroup___n4(info, loadPath, testObject, originalError) {
 							let error = originalError ? originalError : new Error("could not load test " + loadPath), that = this, testResult, testResults = [], unknownTest = new TestMethodDescriptor({
@@ -157,57 +207,6 @@
 							return arr;
 						}
 					},
-					runGroups: {
-						value: async function runGroups___n4(testInfoObject, numTests) {
-							if (!testInfoObject) {
-								throw new Error("TestController::runGroups called with a null testInfoObject");
-							}
-							let executor = this.executor, reses = [], res, testInfos = testInfoObject.testDescriptors, batchedTestInfos = [], ii = 0, testInfosBatch, instrumentedTestsBatch2d, instrumentedTestsBatch, fixme;
-							;
-							if (numTests === undefined) {
-								numTests = testInfoObject.testDescriptors.reduce(function(acc, info) {
-									return acc + info.testMethods.length;
-								}, 0);
-							}
-							testInfoObject.testDescriptors = testInfoObject.testDescriptors.sort((x, y)=>{
-								let xVal = x.fqn ? x.fqn : x.module, yVal = y.fqn ? y.fqn : y.module;
-								return xVal.localeCompare(yVal);
-							});
-							try {
-								await this.spy.testingStarted.dispatch([
-									testInfos.length,
-									testInfoObject.sessionId,
-									numTests
-								]);
-							} catch(ex) {
-								console.log("testingStarted.dispatch is bad", ex);
-							}
-							for(ii = 0;ii < testInfos.length;ii += TestController.MAX_GROUPS_PER_TEST_BATCH) {
-								batchedTestInfos.push(testInfos.slice(ii, ii + TestController.MAX_GROUPS_PER_TEST_BATCH));
-							}
-							for(ii = 0, instrumentedTestsBatch = [];ii < batchedTestInfos.length;++ii, instrumentedTestsBatch = []) {
-								testInfosBatch = batchedTestInfos[ii];
-								try {
-									fixme = await Promise.resolve(await Promise.all(testInfosBatch.map(this.instrument.bind(this)).filter(function(test) {
-										return test !== null;
-									})));
-									instrumentedTestsBatch2d = fixme;
-									instrumentedTestsBatch = (Array.prototype.concat.apply([], instrumentedTestsBatch2d));
-									res = await executor.runTestsAsync(instrumentedTestsBatch);
-									reses.push(res);
-								} catch(er) {
-									console.error(er);
-									throw er;
-								}
-							}
-							;
-							res = ResultGroups.concatArray(reses);
-							await this.spy.testingFinished.dispatch([
-								res
-							]);
-							return res;
-						}
-					},
 					reporters: {
 						set: function setReporters___n4(reporters) {
 							reporters.forEach(function(reporter) {
@@ -293,6 +292,12 @@
 								annotations: []
 							}),
 							new N4Method({
+								name: 'runGroups',
+								isStatic: false,
+								jsFunction: instanceProto['runGroups'],
+								annotations: []
+							}),
+							new N4Method({
 								name: 'errorGroup',
 								isStatic: false,
 								jsFunction: instanceProto['errorGroup'],
@@ -302,12 +307,6 @@
 								name: 'instrument',
 								isStatic: false,
 								jsFunction: instanceProto['instrument'],
-								annotations: []
-							}),
-							new N4Method({
-								name: 'runGroups',
-								isStatic: false,
-								jsFunction: instanceProto['runGroups'],
 								annotations: []
 							})
 						],
