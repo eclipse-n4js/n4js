@@ -22,6 +22,7 @@ ProvidedRuntimeLibraries {
     n4js-runtime-esnext,
     n4js-runtime-fetch,
     n4js-runtime-mangelhaft,
+    n4js-runtime-ecma402,
     // TODO ProjectDependencies doesn't work here:
     n4js.lang,
     org.eclipse.n4js.mangelhaft.runner.ide,

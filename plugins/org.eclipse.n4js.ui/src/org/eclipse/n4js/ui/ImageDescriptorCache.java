@@ -19,15 +19,14 @@ import java.util.concurrent.ExecutionException;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.base.Optional;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
 
 /**
  * Cache for {@link ImageDescriptor image descriptor}s.
@@ -123,7 +122,10 @@ public enum ImageDescriptorCache {
 		PROJECT_MODE("prj_mode.gif"),
 
 		/** Reference to the image 'Showing hidden working sets'. */
-		SHOW_HIDDEN_WORKING_SETS("show_hidden.gif");
+		SHOW_HIDDEN_WORKING_SETS("show_hidden.gif"),
+
+		/** Tiny clock symbol (used as overlay of editor title image during reconciliation). */
+		TINY_CLOCK("tiny_clock_ovr.gif");
 
 		private static final Logger LOGGER = Logger.getLogger(ImageRef.class);
 

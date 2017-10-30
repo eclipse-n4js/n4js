@@ -26,7 +26,7 @@ export external public class ~NodeURL {
     public password?: string;
 }
 
-export external public function parse(urlStr: string, parseQueryString: string=, slashesDenoteHost: boolean=): NodeURL;
+export external public function parse(urlStr: string, parseQueryString: boolean=, slashesDenoteHost: boolean=): NodeURL;
 export external public function format(urlObj: NodeURL): string;
 export external public function resolve(from: string, to: string): string;
 

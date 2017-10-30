@@ -45,7 +45,7 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 
 	@Override
 	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@\">=4.0.0 <5.0.0\"");
+		return singletonMap("express", "@\">=4.0.0 <4.16.0\"");
 	}
 
 	/**
@@ -67,7 +67,11 @@ public class TargetPlatformRangeConfigurationsTest extends BaseN4jscExternalTest
 				"-t", BuildType.allprojects.toString()
 		};
 		final String out = runCaptureOut(args);
+		// note: express version 4.16.0 introduced more properties, so by checking for the following properties we can
+		// assert that the version range ">=4.0.0 <4.16.0" specified above was taken into account during installation:
 		N4CliHelper.assertExpectedOutput(
 				"express properties: application, request, response, Route, Router, query, static", out);
+		// express version 4.16.0 or 4.16.1 would give us:
+		// "express properties: application, request, response, Route, Router, json, query, static, urlencoded"
 	}
 }

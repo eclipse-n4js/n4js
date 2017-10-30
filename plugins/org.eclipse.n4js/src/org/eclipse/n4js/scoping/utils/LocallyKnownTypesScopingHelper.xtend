@@ -99,12 +99,15 @@ class LocallyKnownTypesScopingHelper {
 	def IScope scopeWithLocallyKnownTypes(Script script, EReference reference, IScopeProvider delegate) {
 		return cache.get(script -> 'locallyKnownTypes', script.eResource) [|
 			// all types in the index:
-			var parent = delegate.getScope(script, reference)
+			var parent = delegate.getScope(script, reference);
 			// but imported types are preferred (or maybe renamed with aliases):
-			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script)
-			val TModule local = script.module
+			val IScope importScope = importedElementsScopingHelper.getImportedTypes(parent, script);
+			val TModule local = script.module;
+			if (local === null || local.eIsProxy) {
+				return importScope;
+			}
 			return buildMapBasedScope(importScope, local);
-		]
+		];
 	}
 
 	/**

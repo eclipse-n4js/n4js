@@ -1,0 +1,134 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note:
+ *
+ * Tests in this file check the different kinds of control flow containers only.
+ */
+
+
+// Script XPECT cfContainer of '"Script1"' --> Script
+// Script XPECT succs at '"Script1"' --> "Script2"
+// Script XPECT succs at '"Script2"' --> "Script3"
+// Script XPECT succs at '"Script3"' --> "Script4"
+// Script XPECT path from '"Script2"' notTo "FB1"
+"Script1";
+"Script2";
+
+
+function FunctionBody() {
+	// FunctionBody XPECT cfContainer of '"FB1"' --> FunctionDeclaration::Block
+	// FunctionBody XPECT succs at '"FB1"' --> "FB2"
+	"FB1";
+	"FB2";
+}
+
+"Script3";
+
+class C {
+	// XPECT warnings --> "Method names should start with lower case letter." at "MethodBody"
+	MethodBody() {
+		// MethodBody XPECT cfContainer of '"MB1"' --> N4MethodDeclaration::Block
+		// MethodBody XPECT succs at '"MB1"' --> "MB2"
+		"MB1";
+		"MB2";
+	}
+}
+
+"Script4";
+
+// DefaultParameter XPECT cfContainer of '"DP1"' --> FormalParameter::AdditiveExpression
+// DefaultParameter XPECT succs at '"DP1"' --> "DP2"
+function DefaultParameter(a = "DP1" + "DP2") {
+}
+
+
+// ObjectBindingPattern1 XPECT cfContainer of 'obp1' --> FormalParameter::ObjectBindingPattern
+// ObjectBindingPattern1 XPECT succs at 'obp1' --> obp2
+// ObjectBindingPattern1 XPECT errors --> "Unsupported feature: destructuring patterns as formal parameter." at "{p1: obp1, p2: obp2}"
+function ObjectBindingPattern1({p1: obp1, p2: obp2}) {
+}
+
+
+// ArrayBindingPattern1 XPECT cfContainer of 'abp1' --> FormalParameter::ArrayBindingPattern
+// ArrayBindingPattern1 XPECT succs at 'abp1' --> abp2
+// ArrayBindingPattern1 XPECT errors --> "Unsupported feature: destructuring patterns as formal parameter." at "[abp1,abp2]"
+function ArrayBindingPattern1([abp1,abp2]) {
+}
+
+
+// FunctionExpression XPECT cfContainer of '"FEX1"' --> FunctionExpression::Block
+// FunctionExpression XPECT cfContainer of '"FEX_T1"' --> FunctionDeclaration::Block
+// FunctionExpression XPECT succs at '"FEX1"' --> "FEX2"
+// FunctionExpression XPECT path from '"FEX_T1"' notTo "FEX1"
+function FunctionExpression() {
+	"FEX_T1"
+	return (function() {
+		"FEX1";
+		"FEX2";
+	});
+}
+
+
+// FieldInitializer1 XPECT cfContainer of '"FI1"' --> N4FieldDeclaration::AdditiveExpression
+// FieldInitializer1 XPECT succs at '"FI1"' --> "FI2"
+// FieldInitializer1 XPECT succs at '"FI2"' --> "FI1" + "FI2"
+class FieldInitializer1 {
+    field = "FI1" + "FI2";
+}
+
+
+class AnnotationParameter1 {
+	// AnnotationParameter1 XPECT cfContainer of '1' --> LiteralAnnotationArgument::IntLiteral
+	@Parameter(1)
+    field;
+}
+
+
+class AnnotationConfigurable1 {
+	// AnnotationConfigurable1 XPECT cfContainer of 'false' --> LiteralAnnotationArgument::BooleanLiteral
+	@Configurable(false)
+    field;
+}
+
+// AnnotationExpressionList XPECT cfContainer of '@This(Object)' --> FunctionExpression::ExpressionAnnotationList
+// AnnotationExpressionList XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
+var AnnotationExpressionList = @This(Object) function() {}
+
+
+class ComputedPropertyName1 {
+	// ComputedPropertyName1 XPECT cfContainer of '"CPN1"' --> LiteralOrComputedPropertyName::AdditiveExpression
+	// ComputedPropertyName1 XPECT succs at '"CPN1"' --> "CPN2"
+	// ComputedPropertyName1 XPECT succs at '"CPN2"' --> "CPN1" + "CPN2"
+	// ComputedPropertyName1 XPECT warnings --> "Field names should start with lower case letter." at "["CPN1" + "CPN2"]"
+	public ["CPN1" + "CPN2"];
+}
+
+
+// ExportedVariableStatement XPECT cfContainer of 'expVS1' --> Script
+// ExportedVariableStatement XPECT succs at '"ExportedVariableStatement1"' --> expVS1
+// ExportedVariableStatement XPECT succs at 'expVS1' --> public var expVS1;
+// ExportedVariableStatement XPECT succs at 'public var expVS1;' --> "ExportedVariableStatement2"
+"ExportedVariableStatement1";
+export public var expVS1;
+"ExportedVariableStatement2";
+
+
+
+// ThrowInScript XPECT succs at '1' --> 2
+// ThrowInScript XPECT succs at '2' --> throw 2;
+1;
+throw 2;

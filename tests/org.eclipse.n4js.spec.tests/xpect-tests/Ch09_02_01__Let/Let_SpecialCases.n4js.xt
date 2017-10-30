@@ -33,6 +33,7 @@ function case1c() {
 	for(;;) {
 		let test;
 	}
+	// XPECT warnings --> "Dead code. No execution possible after for statement." at "test;"
 	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'test'." at "test"
 	test;
 }
@@ -56,6 +57,7 @@ function case2b() {
 		// XPECT noerrors -->
 		let test: string;
 	}
+	// XPECT warnings --> "Dead code. No execution possible after for statement." at "test;"
 	// XPECT type of 'test' --> number
 	test;
 }
@@ -72,6 +74,7 @@ function case3a() {
 		// XPECT type of 'i' --> string
 		i;
 	}
+	// XPECT warnings --> "Dead code. No execution possible after for statement." at "i;"
 	// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'i'." at "i"
 	i;
 }
@@ -145,7 +148,7 @@ function case5a() {
 }
 
 var case5b = function case5b() {
-	// XPECT noerrors -->
+	// X-PECT noerrors but XPECT warnings --> "This code is prone to Babel bug #6302. If you use Babel in your build pipeline, you should rename this let/const or the containing function expression." at "case5b"
 	let case5b = 'b';
 }
 
@@ -187,7 +190,7 @@ function case7(param) {
 	try {
 		// XPECT noerrors -->
 		let param: string;
-	// TODO ES6 would allow this name for the catch variable XPECT errors --> "Catch variable param shadows parameter param (line 186)." at "param"
+	// TODO ES6 would allow this name for the catch variable XPECT errors --> "Catch variable param shadows parameter param (line 189)." at "param"
 	} catch(param) {
 		// XPECT type of 'param' --> number
 		param; // <-- note: this binds to the below 'param' that shadows the above 'param' (this is ES6!), but will throw ReferenceError at runtime due to temporal dead zone which we cannot validate

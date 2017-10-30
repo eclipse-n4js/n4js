@@ -22,6 +22,7 @@ export external public class ~RequestInit {
 //    public union{Blob, /*BufferSource, */FormData, URLSearchParams, string}? body;
     public body?: string;
 
+    public referrer?: string;
     public mode?: RequestMode;
     public credentials?: RequestCredentials;
     public cache?: RequestCache;

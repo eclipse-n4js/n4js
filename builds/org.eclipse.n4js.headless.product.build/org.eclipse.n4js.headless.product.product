@@ -93,6 +93,7 @@
       <plugin id="org.eclipse.n4js"/>
       <plugin id="org.eclipse.n4js.common.unicode"/>
       <plugin id="org.eclipse.n4js.external.libraries"/>
+      <plugin id="org.eclipse.n4js.flowgraphs"/>
       <plugin id="org.eclipse.n4js.generator"/>
       <plugin id="org.eclipse.n4js.generator.common"/>
       <plugin id="org.eclipse.n4js.generator.headless"/>
@@ -106,6 +107,7 @@
       <plugin id="org.eclipse.n4js.releng.utils"/>
       <plugin id="org.eclipse.n4js.runner"/>
       <plugin id="org.eclipse.n4js.runner.nodejs"/>
+      <plugin id="org.eclipse.n4js.smith"/>
       <plugin id="org.eclipse.n4js.tester"/>
       <plugin id="org.eclipse.n4js.tester.nodejs"/>
       <plugin id="org.eclipse.n4js.transpiler"/>

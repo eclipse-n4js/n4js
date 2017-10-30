@@ -12,7 +12,7 @@
 
 import {IteratorExt} from "Iterator"
 
-export external public class ~Headers implements Iterable<Array<string>> {
+export external public class Headers implements Iterable<Iterable2<string, string>> {
     public append(name: string, value: string): void;
     public delete(name: string): void;
     public get(name: string): string?;
@@ -20,8 +20,8 @@ export external public class ~Headers implements Iterable<Array<string>> {
     public has(name: string): boolean;
     public set(name: string, value: string): void;
 
-    // tuples of string, string
-    @Override public [Symbol.iterator](): IteratorExt<Array<string>>;
+    public entries(): IteratorExt<Iterable2<string, string>>;
+    @Override public [Symbol.iterator](): IteratorExt<Iterable2<string, string>>;
 }
 
 /* -*- mode: typescript;-*- */

@@ -43,7 +43,6 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.ThisLiteral
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.resource.N4JSPostProcessor
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
