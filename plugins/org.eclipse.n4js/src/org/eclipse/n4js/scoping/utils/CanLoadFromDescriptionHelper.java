@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -75,33 +74,38 @@ public class CanLoadFromDescriptionHelper {
 	 * @return true, if the resource must be loaded from source.
 	 */
 	public boolean mustLoadFromSource(URI resourceURI, ResourceSet resourceSet) {
-		// We do already know the resource. Nothing fancy to happen here.
-		Resource knownResource = resourceSet.getResource(resourceURI, false);
-		if (knownResource != null) {
-			return false;
-		}
-
-		/*
-		 * Iterate all the resources in the resource set and check the instances that have been loaded from source. If
-		 * the to-be-loaded resource has a transitive dependency to any resource, that was loaded from source, we need
-		 * to load this resource from source, too.
-		 */
-		Set<URI> sourceURIs = Sets.newHashSet();
-		/*
-		 * We load resources concurrently in tests thus we may face a concurrent modification exception here if we
-		 * simply iterate over the resources. Therefore a classical for loop is used here.
-		 */
-		List<Resource> listOfResources = resourceSet.getResources();
-		for (int i = 0, size = listOfResources.size(); i < size; i++) {
-			Resource existingResource = listOfResources.get(i);
-			if (existingResource instanceof N4JSResource) {
-				N4JSResource casted = (N4JSResource) existingResource;
-				if (!casted.isLoadedFromDescription()) {
-					sourceURIs.add(casted.getURI());
-				}
-			}
-		}
-		return dependsOnAny(resourceURI, sourceURIs, getIndex(resourceSet), true);
+		// disable this temporarily and go back to old behavior (i.e. can always load from index)
+		// FIXME IDE-2896 re-enable CanLoadFromDescription logic
+		return false;
+// @formatter:off
+//		// We do already know the resource. Nothing fancy to happen here.
+//		Resource knownResource = resourceSet.getResource(resourceURI, false);
+//		if (knownResource != null) {
+//			return false;
+//		}
+//
+//		/*
+//		 * Iterate all the resources in the resource set and check the instances that have been loaded from source. If
+//		 * the to-be-loaded resource has a transitive dependency to any resource, that was loaded from source, we need
+//		 * to load this resource from source, too.
+//		 */
+//		Set<URI> sourceURIs = Sets.newHashSet();
+//		/*
+//		 * We load resources concurrently in tests thus we may face a concurrent modification exception here if we
+//		 * simply iterate over the resources. Therefore a classical for loop is used here.
+//		 */
+//		List<Resource> listOfResources = resourceSet.getResources();
+//		for (int i = 0, size = listOfResources.size(); i < size; i++) {
+//			Resource existingResource = listOfResources.get(i);
+//			if (existingResource instanceof N4JSResource) {
+//				N4JSResource casted = (N4JSResource) existingResource;
+//				if (!casted.isLoadedFromDescription()) {
+//					sourceURIs.add(casted.getURI());
+//				}
+//			}
+//		}
+//		return dependsOnAny(resourceURI, sourceURIs, getIndex(resourceSet), true);
+// @formatter:on
 	}
 
 	/**
