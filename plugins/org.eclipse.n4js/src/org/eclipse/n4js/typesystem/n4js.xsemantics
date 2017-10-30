@@ -140,7 +140,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
 import org.eclipse.n4js.ts.typeRefs.ComposedTypeRef
@@ -219,7 +219,6 @@ inject PromisifyHelper promisifyHelper
 inject JavaScriptVariantHelper jsVariantHelper
 inject VersionResolver versionResolver
 inject UnsupportedExpressionTypeHelper expressionTypeHelper
-inject ASTMetaInfoCacheHelper astMetaInfoCacheHelper
 inject IQualifiedNameConverter qualifiedNameConverter
 
 judgments {
@@ -677,7 +676,7 @@ from {
 		val targetDeclType = targetTypeRef.declaredType;
 		val targetIsLiteralOfStringBasedEnum = targetDeclType instanceof TEnum && AnnotationDefinition.STRING_BASED.hasAnnotation(targetDeclType);
 		val indexIsNumeric = { G |- indexTypeRef <: G.numberTypeRef };
-		val indexValue = astMetaInfoCacheHelper.getCompileTimeValue(expr.index);
+		val indexValue = ASTMetaInfoUtils.getCompileTimeValue(expr.index);
 		val memberName = N4JSLanguageUtils.derivePropertyNameFromCompileTimeValue(indexValue);
 
 		if (indexIsNumeric && (targetTypeRef.isArrayLike || targetIsLiteralOfStringBasedEnum)) {

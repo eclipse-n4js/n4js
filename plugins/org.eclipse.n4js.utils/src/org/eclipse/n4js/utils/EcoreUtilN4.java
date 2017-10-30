@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.eclipse.emf.common.util.AbstractTreeIterator;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure0;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ForwardingList;
 import com.google.common.collect.Iterators;
 
 /**
@@ -348,4 +350,58 @@ public class EcoreUtilN4 {
 	public static boolean hasUnresolvedProxies(EObject object) {
 		return BailOutCrossReferencer.hasUnresolvedProxies(object);
 	}
+
+	private static class NonResolvingEqualityHelper extends EcoreUtil.EqualityHelper {
+		@SuppressWarnings("unchecked")
+		@Override
+		protected boolean haveEqualReference(EObject eObject1, EObject eObject2, EReference reference) {
+			Object value1 = eObject1.eGet(reference, false);
+			Object value2 = eObject2.eGet(reference, false);
+
+			return reference.isMany() ? equals((List<EObject>) value1, (List<EObject>) value2)
+					: equals((EObject) value1, (EObject) value2);
+		}
+
+		@Override
+		public boolean equals(List<EObject> list1, List<EObject> list2) {
+			return super.equals(nonResolving(list1), nonResolving(list2));
+		}
+
+		private List<EObject> nonResolving(List<EObject> list) {
+			if (list instanceof BasicEList<?>) {
+				return new NonResolvingEList<>((BasicEList<EObject>) list);
+			}
+			return list;
+		}
+
+		static class NonResolvingEList<EObj> extends ForwardingList<EObj> {
+
+			private final BasicEList<EObj> delegate;
+
+			NonResolvingEList(BasicEList<EObj> delegate) {
+				this.delegate = delegate;
+			}
+
+			@Override
+			protected BasicEList<EObj> delegate() {
+				return delegate;
+			}
+
+			@Override
+			public EObj get(int index) {
+				return delegate.basicGet(index);
+			}
+
+		}
+	}
+
+	/**
+	 * Compares two EObjects for structural equality without any proxy resolution.
+	 *
+	 * @see EcoreUtil#equals(EObject, EObject)
+	 */
+	public static boolean equalsNonResolving(EObject left, EObject right) {
+		return new NonResolvingEqualityHelper().equals(left, right);
+	}
+
 }

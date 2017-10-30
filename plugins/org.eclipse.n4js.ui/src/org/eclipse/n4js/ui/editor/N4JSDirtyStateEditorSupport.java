@@ -20,7 +20,12 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.resource.UserdataMapper;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
+import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.TypesPackage;
+import org.eclipse.n4js.utils.EcoreUtilN4;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescription.Event;
 import org.eclipse.xtext.resource.IResourceDescriptions;
@@ -140,6 +145,63 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 		return deltaURIs;
 	}
 
+	private boolean isSignificantChange(IResourceDescription.Delta delta) {
+		if (delta.haveEObjectDescriptionsChanged()) {
+			IResourceDescription newDescription = delta.getNew();
+			IResourceDescription oldDescription = delta.getOld();
+			if ((newDescription != null) != (oldDescription != null)) {
+				return true;
+			}
+			if (newDescription == null || oldDescription == null) {
+				throw new IllegalStateException();
+			}
+			List<IEObjectDescription> newDescriptions = Lists.newArrayList(newDescription.getExportedObjects());
+			List<IEObjectDescription> oldDescriptions = Lists.newArrayList(oldDescription.getExportedObjects());
+			if (newDescriptions.size() != oldDescriptions.size()) {
+				return true;
+			}
+			URI resourceURI = delta.getUri();
+			for (int i = 0; i < newDescriptions.size(); i++) {
+				if (!equalDescriptions(newDescriptions.get(i), oldDescriptions.get(i), resourceURI)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	private boolean equalDescriptions(IEObjectDescription newDescription,
+			IEObjectDescription oldDescription, URI uri) {
+		if (!newDescription.getQualifiedName().equals(oldDescription.getQualifiedName())) {
+			return false;
+		}
+		if (!newDescription.getEClass().equals(oldDescription.getEClass())) {
+			return false;
+		}
+		if (!newDescription.getEObjectURI().equals(oldDescription.getEObjectURI())) {
+			return false;
+		}
+		if (TypesPackage.Literals.TMODULE == newDescription.getEClass()) {
+			String newModule = newDescription.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT);
+			String oldModule = oldDescription.getUserData(UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT);
+			if (newModule == null || oldModule == null) {
+				return true;
+			}
+			if (!newModule.equals(oldModule)) {
+				TModule newModuleObj = UserdataMapper.getDeserializedModuleFromDescription(newDescription, uri);
+				TModule oldModuleObj = UserdataMapper.getDeserializedModuleFromDescription(oldDescription, uri);
+				// we deserialize the TModules and ignore the MD5 Hash
+				newModuleObj.setAstMD5("");
+				oldModuleObj.setAstMD5("");
+				if (!EcoreUtilN4.equalsNonResolving(newModuleObj, oldModuleObj)) {
+					return false;
+				}
+			}
+		}
+		// todo compare user data if module
+		return true;
+	}
+
 	@Override
 	public void modelChanged(XtextResource resource) {
 		if (resource == null || !getDirtyResource().isInitialized())
@@ -156,7 +218,7 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 			if (delta.getOld() == getDirtyResource().getDescription()
 					|| delta.getNew() == getDirtyResource().getDescription()) {
 				// usually we ignore events from this resource itself, but when it is part
-				// of a dependency cylce, the event may affect other resources in the same
+				// of a dependency cycle, the event may affect other resources in the same
 				// resource set thus we schedule the event in that case
 				if (canLoadFromDescriptionHelper.isPartOfDependencyCycle(delta.getUri(), dirtyState)) {
 					scheduleUpdateEditorJob(event);
@@ -164,6 +226,12 @@ public class N4JSDirtyStateEditorSupport extends DirtyStateEditorSupport {
 				return;
 			}
 		}
-		scheduleUpdateEditorJob(event);
+
+		for (IResourceDescription.Delta delta : event.getDeltas()) {
+			if (isSignificantChange(delta)) {
+				scheduleUpdateEditorJob(event);
+				return;
+			}
+		}
 	}
 }

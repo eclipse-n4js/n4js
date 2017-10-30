@@ -10,19 +10,10 @@
  */
 package org.eclipse.n4js.xpect.ui.runner;
 
-import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.runner.IXpectURIProvider;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
-import org.xpect.xtext.lib.tests.ValidationTest;
-
 import org.eclipse.n4js.xpect.methods.AccessModifierXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
 import org.eclipse.n4js.xpect.methods.LinkingXpectMethod;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
@@ -34,6 +25,13 @@ import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;
+import org.junit.runner.RunWith;
+import org.xpect.XpectImport;
+import org.xpect.runner.IXpectURIProvider;
+import org.xpect.runner.XpectRunner;
+import org.xpect.runner.XpectSuiteClasses;
+import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
+import org.xpect.xtext.lib.tests.ValidationTest;
 
 /**
  * Main and only entry point for executing xpect in the product. Uses custom setup {@link N4IDEXpectFileSetup}.
@@ -45,7 +43,6 @@ import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectT
 		FindReferencesXpectMethod.class,
 		FormatterXpectMethod.class,
 		LinkingXpectMethod.class,
-		NoerrorsXpectMethod.class,
 		ReturnXpectMethod.class,
 		TypeXpectMethod.class,
 		ValidationTest.class,

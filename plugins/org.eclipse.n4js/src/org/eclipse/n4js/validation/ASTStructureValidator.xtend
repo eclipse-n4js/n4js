@@ -1424,12 +1424,14 @@ class ASTStructureValidator {
 						IssueCodes.AST_LET_IN_STATEMENT_POSITION))
 			}
 		}
+		val directParent = model.eContainer;
+		val parent = if(directParent instanceof ExportDeclaration) directParent.eContainer else directParent;
 		recursiveValidateASTStructure(
 			model,
 			producer,
 			validLabels,
 			constraints.allowVarWithoutInitializer(model.varStmtKeyword === VariableStatementKeyword.VAR || model.varStmtKeyword === VariableStatementKeyword.LET &&
-				(model.eContainer instanceof Block || model.eContainer instanceof Script || model.eContainer instanceof AbstractCaseClause)
+				(parent instanceof Block || parent instanceof Script || parent instanceof AbstractCaseClause)
 			)
 		)
 	}

@@ -11,7 +11,6 @@
 package org.eclipse.n4js.bugreports.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
@@ -32,7 +31,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 		LinkingTest.class, ResourceDescriptionTest.class,
 		TypeXpectMethod.class,
 		ValidationTest.class,
-		NoerrorsXpectMethod.class,
 		OutputXpectMethod.class
 })
 @RunWith(XpectRunner.class)
