@@ -41,12 +41,12 @@ import com.google.inject.Singleton;
  *
  * It is also possible to register listeners to listen for changes regarding git repositories.
  *
- * This is different form {@link RepositoryCache} in that it is always in sync with the (open) workspace projects,
- * whereas {@link RepositoryCache} might also contains repositories that have already been removed. It also allows to
+ * This is different fromm {@link RepositoryCache} in that it is always in sync with the (open) workspace projects,
+ * whereas {@link RepositoryCache} might also contain repositories that have already been removed. It also allows to
  * listen for changes.
  */
 @Singleton
-@SuppressWarnings("restriction")
+@SuppressWarnings("restriction") /* To access GitProjectData */
 public class WorkspaceRepositoriesProvider {
 	private static final Logger LOGGER = Logger.getLogger(WorkspaceRepositoriesProvider.class);
 
@@ -84,6 +84,7 @@ public class WorkspaceRepositoriesProvider {
 	 */
 	public Set<Repository> getWorkspaceRepositories() {
 		knownRepositories = getWorkspaceProjects().stream()
+				.filter(p -> p.isOpen()) // do not include project mapping for closed projects
 				.map(GitProjectData::get) // get project data for project
 				.filter(Objects::nonNull) // filter null project data (no project associated or not yet initialized)
 				.map(WorkspaceRepositoriesProvider::getOfProjectData) // get mapping for project

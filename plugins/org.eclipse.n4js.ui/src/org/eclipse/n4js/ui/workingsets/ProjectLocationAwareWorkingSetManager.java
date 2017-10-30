@@ -46,6 +46,12 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 
 	// nature id to identify the RemoteSystemsTempFiles project
 	private static final String REMOTE_EDIT_PROJECT_NATURE_ID = "org.eclipse.rse.ui.remoteSystemsTempNature";
+	
+	/**
+	 * List of all the repository paths the IDE is currently aware of. This field is initialized by
+	 * {@link #initProjectLocation()}.
+	 */
+	private Collection<Path> repositoryPaths;
 
 	/**
 	 * Sole constructor for creating a new working set manager instance.
@@ -88,6 +94,10 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 		final IProject[] projects = root.getProjects();
 		final Multimap<String, IProject> locations = HashMultimap.create();
 
+		// initialize the repository paths
+		repositoryPaths = repositoriesProvider.getWorkspaceRepositories().stream()
+				.map(r -> r.getDirectory().getParentFile().toPath()).collect(Collectors.toSet());
+
 		for (final IProject project : projects) {
 			if (isRemoteEditNature(project)) {
 				continue;
@@ -126,8 +136,9 @@ public class ProjectLocationAwareWorkingSetManager extends WorkingSetManagerImpl
 			return parentPath.toFile().getName();
 		}
 
-		final Collection<Path> repositoryPaths = repositoriesProvider.getWorkspaceRepositories().stream()
-				.map(r -> r.getDirectory().getParentFile().toPath()).collect(Collectors.toSet());
+		if (!project.isOpen()) { // closed project appear under Other Projects WS
+			return OTHERS_WORKING_SET_ID;
+		}
 
 		for (final Path repositoryPath : repositoryPaths) {
 			if (repositoryPath.equals(projectPath)) {
