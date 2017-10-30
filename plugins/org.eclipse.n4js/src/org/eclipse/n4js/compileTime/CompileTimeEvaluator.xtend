@@ -11,6 +11,9 @@
 package org.eclipse.n4js.compileTime
 
 import com.google.inject.Inject
+import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.compileTime.CompileTimeValue.ValueBoolean
 import org.eclipse.n4js.compileTime.CompileTimeValue.ValueInvalid
@@ -33,7 +36,7 @@ import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.eclipse.n4js.n4JS.UnaryExpression
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.postprocessing.ASTProcessor
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -47,9 +50,6 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.utils.RecursionGuard
 import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.validators.N4JSExpressionValidator
-import it.xsemantics.runtime.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
@@ -82,7 +82,7 @@ class CompileTimeEvaluator {
 	/**
 	 * <b>
 	 * IMPORTANT: CLIENT CODE SHOULD NOT CALL THIS METHOD!<br>
-	 * Instead, read compile-time values from the cache using method {@link ASTMetaInfoCacheHelper#getCompileTimeValue(Expression)}.<br>
+	 * Instead, read compile-time values from the cache using method {@link ASTMetaInfoUtils#getCompileTimeValue(Expression)}.<br>
 	 * If the evaluation result of the expression you are interested in is not being cached, add your use case to method
 	 * {@link N4JSLanguageUtils#isProcessedAsCompileTimeExpression(Expression)}. Only expressions for which this method
 	 * returns <code>true</code> will be evaluated and cached during post-processing.

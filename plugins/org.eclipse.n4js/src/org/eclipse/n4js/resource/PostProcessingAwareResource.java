@@ -94,6 +94,11 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 		 */
 		public void performPostProcessing(PostProcessingAwareResource resource, CancelIndicator cancelIndicator);
 
+		/**
+		 * Discard all post-processing results stored in the given resource (if any).
+		 */
+		public void discardPostProcessingResult(PostProcessingAwareResource resource);
+
 		// note: so far, we do not need something like discardDerivedState() here (may be added later)
 	}
 
@@ -108,7 +113,7 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 	 * Returns true iff the receiving resource is currently performing its post-processing as defined by the
 	 * {@link PostProcessor} in use.
 	 */
-	public boolean isProcessing() {
+	public boolean isPostProcessing() {
 		return isPostProcessing;
 	}
 
@@ -125,14 +130,14 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 
 	@Override
 	public void discardDerivedState() {
+		discardPostProcessingResult();
 		super.discardDerivedState();
-		fullyPostProcessed = false;
 	}
 
 	@Override
 	protected void doUnload() {
+		discardPostProcessingResult();
 		super.doUnload();
-		fullyPostProcessed = false;
 	}
 
 	/**
@@ -228,6 +233,19 @@ public class PostProcessingAwareResource extends DerivedStateAwareResource {
 				// (even if it failed or was canceled, we do not want to try again)
 				// Identical behavior as in ASTProcessor.processAST(RuleEnvironment, N4JSResource, CancelIndicator)
 				fullyPostProcessed = true;
+			}
+		}
+	}
+
+	/**
+	 * Discard all post-processing results stored in the receiving resource (if any).
+	 */
+	public void discardPostProcessingResult() {
+		if (fullyPostProcessed) {
+			try {
+				postProcessor.discardPostProcessingResult(this);
+			} finally {
+				fullyPostProcessed = false;
 			}
 		}
 	}

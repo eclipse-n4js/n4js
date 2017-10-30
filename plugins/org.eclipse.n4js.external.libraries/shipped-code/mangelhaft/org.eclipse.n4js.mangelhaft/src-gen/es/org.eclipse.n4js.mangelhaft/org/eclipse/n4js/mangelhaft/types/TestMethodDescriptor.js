@@ -18,6 +18,7 @@
 			this.ignore = spec && 'ignore' in spec ? spec.ignore : undefined;
 			this.fixme = spec && 'fixme' in spec ? spec.fixme : undefined;
 			this.fixmeReason = spec && 'fixmeReason' in spec ? spec.fixmeReason : undefined;
+			this.fixmeScopes = spec && 'fixmeScopes' in spec ? spec.fixmeScopes : undefined;
 			this.ignoreReason = spec && 'ignoreReason' in spec ? spec.ignoreReason : undefined;
 			if (spec) {}
 		};
@@ -80,6 +81,10 @@
 						value: undefined,
 						writable: true
 					},
+					fixmeScopes: {
+						value: undefined,
+						writable: true
+					},
 					ignoreReason: {
 						value: undefined,
 						writable: true
@@ -114,6 +119,11 @@
 							}),
 							new N4DataField({
 								name: 'fixmeReason',
+								isStatic: false,
+								annotations: []
+							}),
+							new N4DataField({
+								name: 'fixmeScopes',
 								isStatic: false,
 								annotations: []
 							}),

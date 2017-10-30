@@ -16,19 +16,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-import org.xpect.XpectImport;
-import org.xpect.expectation.IStringExpectation;
-import org.xpect.expectation.StringExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -38,6 +30,14 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
+import org.xpect.XpectImport;
+import org.xpect.expectation.IStringExpectation;
+import org.xpect.expectation.StringExpectation;
+import org.xpect.parameter.ParameterParser;
+import org.xpect.runner.Xpect;
+
+import com.google.inject.Inject;
+
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleEnvironment;
 
@@ -45,8 +45,6 @@ import it.xsemantics.runtime.RuleEnvironment;
  */
 @XpectImport(N4JSOffsetAdapter.class)
 public class TypeXpectMethod {
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 	@Inject
 	private N4JSTypeSystem ts;
 
@@ -195,7 +193,7 @@ public class TypeXpectMethod {
 		if (callExpr.getTypeArgs().isEmpty()) {
 			// no type arguments given in call expression -> use inferred type arguments
 			// (should be the standard case when testing)
-			final List<TypeRef> inferredTypeArgs = astMetaInfoCacheHelper.getInferredTypeArgs(callExpr);
+			final List<TypeRef> inferredTypeArgs = ASTMetaInfoUtils.getInferredTypeArgs(callExpr);
 			if (inferredTypeArgs != null) {
 				typeArgs = inferredTypeArgs;
 			} else {

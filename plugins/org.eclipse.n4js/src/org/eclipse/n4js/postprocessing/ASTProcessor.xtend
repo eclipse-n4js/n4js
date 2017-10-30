@@ -80,8 +80,6 @@ public class ASTProcessor extends AbstractProcessor {
 	@Inject
 	private N4JSTypeSystem ts;
 	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
-	@Inject
 	private ComputedNameProcessor computedNameProcessor;
 	@Inject
 	private TypeProcessor typeProcessor;
@@ -115,20 +113,15 @@ public class ASTProcessor extends AbstractProcessor {
 		log(0, "### processing resource: " + resource.URI);
 
 		val script = resource.script;
-		val cache = astMetaInfoCacheHelper.getOrCreate(resource);
+		val cache = resource.getASTMetaInfoCache(); // we're during post-processing, so cache should be available now
 		val G = resource.newRuleEnvironment;
 		G.addCancelIndicator(cancelIndicator);
-		cache.startProcessing(); // will throw exception if processing already in progress or completed (i.e. if called more than once per resource)
 		try {
 			processAST(G, script, cache);
 		} finally {
 			if (G.canceled) {
 				log(0, "CANCELED by cancelIndicator");
 			}
-
-			// note: doesn't matter if processing succeeded, failed or was canceled
-			// (even if it failed or was canceled, we do not want to try again)
-			cache.endProcessing();
 
 			if (isDEBUG_LOG_RESULT) {
 				log(0, "### result for " + resource.URI);

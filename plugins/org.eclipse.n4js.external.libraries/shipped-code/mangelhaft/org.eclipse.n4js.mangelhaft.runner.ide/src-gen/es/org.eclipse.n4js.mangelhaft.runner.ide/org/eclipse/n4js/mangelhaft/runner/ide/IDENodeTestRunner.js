@@ -59,7 +59,7 @@
 								this.controller.reporters = [
 									this.reporter
 								];
-								await this.controller.runGroups(testCatalog, 100);
+								await this.controller.runGroups(testCatalog, 100, n4.runtimeOptions.testScope);
 							} catch(err) {
 								let errObj = err;
 								console.error(err + "\nstack: " + errObj.stack.replace(/^Error:?\s*/, ""));
