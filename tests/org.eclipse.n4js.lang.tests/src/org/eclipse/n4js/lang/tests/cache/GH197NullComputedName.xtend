@@ -10,9 +10,7 @@
  */
 package org.eclipse.n4js.lang.tests.cache
 
-import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCacheHelper
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.tests.parser.AbstractParserTest
 import org.eclipse.n4js.ts.types.TypableElement
@@ -22,9 +20,6 @@ import org.junit.Test
  * Test for GH-197 bug
  */
 class GH197NullComputedName extends AbstractParserTest {
-
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	@Test
 	def void testNullComputedNameNoCacheMiss() {
@@ -78,7 +73,7 @@ class GH197NullComputedName extends AbstractParserTest {
 		val res = script.eResource as N4JSResource
 		res.performPostProcessing(null)
 		
-		val cache = astMetaInfoCacheHelper.getOrCreate(res)
+		val cache = res.getASTMetaInfoCache();
 		val allTypableASTNodes = script.eAllContents.filter(TypableElement);
 		// The type of each typable element must have been cached 
 		while (allTypableASTNodes.hasNext) {

@@ -13,6 +13,7 @@
 		var AssertionError, ResultGroup, ResultGroups, TestResult, TestSpy, PreconditionNotMet, TestExecutor;
 		TestExecutor = function TestExecutor(spy) {
 			this.spy = undefined;
+			this.constext = undefined;
 			this.spy = spy;
 		};
 		$n4Export('TestExecutor', TestExecutor);
@@ -40,8 +41,8 @@
 			execute: function() {
 				$makeClass(TestExecutor, N4Object, [], {
 					handleFixme: {
-						value: function handleFixme___n4(testObject, testRes) {
-							if (testObject.fixme) {
+						value: function handleFixme___n4(testObject, scope, testRes) {
+							if (testObject.fixme && (!testObject.fixmeScopes || testObject.fixmeScopes.has(scope))) {
 								if (testRes.testStatus === 'PASSED') {
 									testRes.testStatus = 'FAILED';
 									testRes.message = "Test marked with @Fixme annotation but was successful. Issue blocking test has probably been fixed. Try removing annotation.";
@@ -113,7 +114,7 @@
 						}
 					},
 					runGroup: {
-						value: async function runGroup___n4(iTest) {
+						value: async function runGroup___n4(iTest, scope) {
 							let rg, testObject, testRes, testResults = [], beforeAlls = this.getAncestorTestMethods(iTest, "beforeAlls"), befores = this.getAncestorTestMethods(iTest, "befores"), afters = this.getAncestorTestMethods(iTest, "afters").reverse(), afterAlls = this.getAncestorTestMethods(iTest, "afterAlls").reverse(), numTests, ii, start, end;
 							;
 							await this.spy.groupStarted.dispatch([
@@ -160,7 +161,7 @@
 											testRes = TestExecutor.generateFailureTestResult(err, testObject.name);
 										}
 										testRes.elapsedTime = end - start;
-										testRes = this.handleFixme(testObject, testRes);
+										testRes = this.handleFixme(testObject, scope, testRes);
 										await this.spy.testFinished.dispatch([
 											iTest,
 											testObject,
@@ -197,7 +198,7 @@
 						}
 					},
 					runTestsAsync: {
-						value: async function runTestsAsync___n4(instrumentedTests) {
+						value: async function runTestsAsync___n4(instrumentedTests, scope) {
 							let results = [];
 							for(let test of instrumentedTests) {
 								if (test) {
@@ -207,7 +208,7 @@
 											test
 										]);
 										for(let ptest of test.parameterizedTests) {
-											let testRes = await this.runGroup(ptest);
+											let testRes = await this.runGroup(ptest, scope);
 											pResults.push(testRes);
 											results.push(testRes);
 										}
@@ -215,7 +216,7 @@
 											new ResultGroups(pResults)
 										]);
 									} else {
-										let testRes = await this.runGroup(test);
+										let testRes = await this.runGroup(test, scope);
 										results.push(testRes);
 									}
 								}
@@ -247,6 +248,10 @@
 						}
 					},
 					spy: {
+						value: undefined,
+						writable: true
+					},
+					constext: {
 						value: undefined,
 						writable: true
 					}
@@ -330,6 +335,11 @@
 										details: []
 									})
 								]
+							}),
+							new N4DataField({
+								name: 'constext',
+								isStatic: false,
+								annotations: []
 							}),
 							new N4Method({
 								name: 'constructor',

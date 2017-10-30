@@ -11,7 +11,6 @@
 package org.eclipse.n4js.n4jsx.xpect.ui.tests;
 
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
@@ -32,7 +31,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 @XpectSuiteClasses({
 		LinkingTest.class,
 		TypeXpectMethod.class,
-		NoerrorsXpectMethod.class,
 		ScopeXpectMethod.class,
 		ResourceDescriptionTest.class,
 		ValidationTest.class,
