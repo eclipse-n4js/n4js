@@ -14,7 +14,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal.PathWalkerInternal;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -86,7 +85,9 @@ abstract public class GraphVisitorInternal {
 	/////////////////////// Abstract Methods ///////////////////////
 
 	/** Called before any other method is called. */
-	abstract protected void initialize();
+	protected void initialize() {
+		// overwrite me
+	}
 
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
@@ -96,14 +97,21 @@ abstract public class GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	abstract protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer);
+	protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
 	/**
 	 * Called for each node that is reachable w.r.t to the current mode and the current container.
 	 * <p>
 	 * Note that the order of nodes is arbitrary.
+	 *
+	 * @param node
+	 *            the node that is visits
 	 */
-	abstract protected void visit(Node node);
+	protected void visit(Node node) {
+		// overwrite me
+	}
 
 	/**
 	 * Called for each edge that is reachable w.r.t to the current mode and the current container.
@@ -117,7 +125,9 @@ abstract public class GraphVisitorInternal {
 	 * @param edge
 	 *            traversed edge
 	 */
-	abstract protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge);
+	protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge) {
+		// overwrite me
+	}
 
 	/**
 	 * Called before {@link #terminate()} and after any visit-method is called.
@@ -127,10 +137,14 @@ abstract public class GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	abstract protected void terminateMode(Mode curMode, ControlFlowElement curContainer);
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+		// overwrite me
+	}
 
 	/** Called at last */
-	abstract protected void terminate();
+	protected void terminate() {
+		// overwrite me
+	}
 
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
@@ -209,7 +223,10 @@ abstract public class GraphVisitorInternal {
 		}
 	}
 
-	/** Activates the {@link PathExplorerInternal} that wait for activation. */
+	/**
+	 * Only called from {@link GraphVisitorGuideInternal}. Activates the {@link PathExplorerInternal} that wait for
+	 * activation.
+	 */
 	final List<PathWalkerInternal> activateRequestedPathExplorers() {
 		List<PathWalkerInternal> activatedPaths = new LinkedList<>();
 		for (PathExplorerInternal app : activationRequests) {
@@ -226,6 +243,7 @@ abstract public class GraphVisitorInternal {
 	final void deactivatePathExplorer(PathExplorerInternal pathExplorerInternal) {
 		activeExplorers.remove(pathExplorerInternal);
 	}
+
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
 	/**
@@ -268,7 +286,7 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** @return all passed {@link PathExplorerInternal}s */
-	final public List<?> getPassed() {
+	final public List<PathExplorerInternal> getPassed() {
 		List<PathExplorerInternal> passedPEI = new LinkedList<>();
 		for (PathExplorerInternal pei : activatedExplorers) {
 			if (pei.isPassed()) {

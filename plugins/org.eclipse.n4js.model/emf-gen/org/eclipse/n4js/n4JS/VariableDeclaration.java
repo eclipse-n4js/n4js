@@ -80,7 +80,7 @@ public interface VariableDeclaration extends VariableDeclarationOrBinding, Annot
 	 * Returns true if variable is declared as const.
 	 * <!-- end-model-doc -->
 	 * @model kind="operation" unique="false"
-	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='<%org.eclipse.emf.ecore.EObject%> _eContainer = this.eContainer();\nif ((_eContainer instanceof <%org.eclipse.n4js.n4JS.VariableStatement%>))\n{\n\t<%org.eclipse.emf.ecore.EObject%> _eContainer_1 = this.eContainer();\n\t<%org.eclipse.n4js.n4JS.VariableStatementKeyword%> _varStmtKeyword = ((<%org.eclipse.n4js.n4JS.VariableStatement%>) _eContainer_1).getVarStmtKeyword();\n\treturn (_varStmtKeyword == <%org.eclipse.n4js.n4JS.VariableStatementKeyword%>.CONST);\n}\n<%org.eclipse.emf.ecore.EObject%> _eContainer_2 = this.eContainer();\nif ((_eContainer_2 instanceof <%org.eclipse.n4js.n4JS.ForStatement%>))\n{\n\t<%org.eclipse.emf.ecore.EObject%> _eContainer_3 = this.eContainer();\n\t<%org.eclipse.n4js.n4JS.VariableStatementKeyword%> _varStmtKeyword_1 = ((<%org.eclipse.n4js.n4JS.ForStatement%>) _eContainer_3).getVarStmtKeyword();\n\treturn (_varStmtKeyword_1 == <%org.eclipse.n4js.n4JS.VariableStatementKeyword%>.CONST);\n}\nreturn false;'"
+	 *        annotation="http://www.eclipse.org/emf/2002/GenModel body='final <%org.eclipse.n4js.n4JS.VariableDeclarationContainer%> varDeclConti = <%org.eclipse.n4js.n4JS.N4JSASTUtils%>.getVariableDeclarationContainer(this);\n<%org.eclipse.n4js.n4JS.VariableStatementKeyword%> _varStmtKeyword = null;\nif (varDeclConti!=null)\n{\n\t_varStmtKeyword=varDeclConti.getVarStmtKeyword();\n}\nreturn (_varStmtKeyword == <%org.eclipse.n4js.n4JS.VariableStatementKeyword%>.CONST);'"
 	 * @generated
 	 */
 	boolean isConst();

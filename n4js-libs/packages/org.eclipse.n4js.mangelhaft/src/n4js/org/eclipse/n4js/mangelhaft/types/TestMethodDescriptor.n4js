@@ -21,5 +21,6 @@ export public class TestMethodDescriptor extends TypedNvp<{function()}, TestFunc
     public ignore?: boolean;
     public fixme?: boolean;
     public fixmeReason?: string;
+    public fixmeScopes?: Set<string>;
     public ignoreReason?: string;
 }
