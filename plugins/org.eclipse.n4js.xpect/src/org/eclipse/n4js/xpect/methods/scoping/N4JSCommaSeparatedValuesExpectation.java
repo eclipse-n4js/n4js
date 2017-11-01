@@ -219,7 +219,7 @@ public @interface N4JSCommaSeparatedValuesExpectation {
 		@Override
 		public List<Value> getExpectedValues() {
 			// if needed, implement as in
-			// org.xpect.expectation.impl.CommaSeparatedValuesExpectationImpl.getExpectedValues()
+			// org.eclipse.xpect.expectation.impl.CommaSeparatedValuesExpectationImpl.getExpectedValues()
 			throw new UnsupportedOperationException();
 		}
 
