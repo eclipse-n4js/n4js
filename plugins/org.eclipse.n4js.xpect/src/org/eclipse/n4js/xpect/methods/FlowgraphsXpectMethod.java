@@ -35,11 +35,11 @@ import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.eclipse.xtext.EcoreUtil2;
-import org.xpect.XpectImport;
-import org.xpect.expectation.IStringExpectation;
-import org.xpect.expectation.StringExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.expectation.IStringExpectation;
+import org.eclipse.xpect.expectation.StringExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
 
 /**
  */

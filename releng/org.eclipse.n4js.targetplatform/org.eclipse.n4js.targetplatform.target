@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
-<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="125">
+<target name="Generated target-platform N4JS:N4JS_Neon.2.GH-18" sequenceNumber="127">
   <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.equinox.executable.feature.group" version="3.6.300.v20161122-1740"/>
@@ -45,7 +45,7 @@
       <repository location="http://download.eclipse.org/modeling/tmf/xtext/updates/releases/2.12.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.swtbot.go" version="2.4.0.201604200752"/>
+      <unit id="org.hamcrest.library" version="1.3.0.v201505072020"/>
       <repository location="http://download.eclipse.org/technology/swtbot/releases/2.4.0"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -60,9 +60,8 @@
       <repository location="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.jdt.junit.runners" version="0.1.0.201411181552"/>
-      <unit id="org.xpect.xtext.lib" version="0.2.0.201706301756"/>
-      <repository location="http://www.xpect-tests.org/updatesite/nightly/"/>
+      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201710301651"/>
+      <repository location="https://ci.eclipse.org/n4js/view/xpect/job/xpect_yoosiba/job/EclipseJenkins/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>

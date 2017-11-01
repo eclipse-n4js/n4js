@@ -24,34 +24,33 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.resource.N4JSResource;
+import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
+import org.eclipse.xpect.Environment;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.XpectJavaModel;
+import org.eclipse.xpect.XpectRequiredEnvironment;
+import org.eclipse.xpect.setup.XpectSetupFactory;
+import org.eclipse.xpect.state.Creates;
+import org.eclipse.xpect.util.IXtInjectorProvider;
+import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
+import org.eclipse.xpect.xtext.lib.setup.InjectorSetup;
+import org.eclipse.xpect.xtext.lib.setup.ThisFile;
+import org.eclipse.xpect.xtext.lib.setup.ThisProject;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
+import org.eclipse.xpect.xtext.lib.setup.XtextStandaloneSetup;
+import org.eclipse.xpect.xtext.lib.setup.XtextTestObjectSetup;
+import org.eclipse.xpect.xtext.lib.setup.XtextValidatingSetup;
+import org.eclipse.xpect.xtext.lib.setup.XtextWorkspaceSetup;
+import org.eclipse.xpect.xtext.lib.setup.workspace.WorkspaceDefaultsSetup;
+import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter;
+import org.eclipse.xpect.xtext.lib.util.XtextTargetSyntaxSupport;
 import org.eclipse.xtext.resource.IResourceFactory;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
-import org.xpect.Environment;
-import org.xpect.XpectImport;
-import org.xpect.XpectJavaModel;
-import org.xpect.XpectRequiredEnvironment;
-import org.xpect.setup.XpectSetupFactory;
-import org.xpect.state.Creates;
-import org.xpect.util.IXtInjectorProvider;
-import org.xpect.xtext.lib.setup.FileSetupContext;
-import org.xpect.xtext.lib.setup.InjectorSetup;
-import org.xpect.xtext.lib.setup.ThisFile;
-import org.xpect.xtext.lib.setup.ThisProject;
-import org.xpect.xtext.lib.setup.ThisResource;
-import org.xpect.xtext.lib.setup.XtextStandaloneSetup;
-import org.xpect.xtext.lib.setup.XtextTestObjectSetup;
-import org.xpect.xtext.lib.setup.XtextValidatingSetup;
-import org.xpect.xtext.lib.setup.XtextWorkspaceSetup;
-import org.xpect.xtext.lib.setup.workspace.WorkspaceDefaultsSetup;
-import org.xpect.xtext.lib.util.XtextOffsetAdapter;
-import org.xpect.xtext.lib.util.XtextTargetSyntaxSupport;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.resource.N4JSResource;
-import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
 
 /**
  * Setup for running xpect in the product. Should be used instead of {@link XtextStandaloneSetup},
@@ -59,18 +58,18 @@ import org.eclipse.n4js.xpect.ui.N4IDEXpectUIPlugin;
  */
 @XpectSetupFactory
 @XpectImport({ XtextTargetSyntaxSupport.class, XtextTestObjectSetup.class,
-	InjectorSetup.class, XtextValidatingSetup.class, XtextOffsetAdapter.class })
+		InjectorSetup.class, XtextValidatingSetup.class, XtextOffsetAdapter.class })
 @XpectRequiredEnvironment(Environment.WORKBENCH)
 public class N4IDEXpectFileSetup {
 
 	/**
 	 * see ENCODE_PLATFORM_RESOURCE_URIS in {@link org.eclipse.emf.common.util.URI}
 	 */
-	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS =
-			System.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null
-					&&
-					!"false".equalsIgnoreCase(System
-							.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs"));
+	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS = System
+			.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null
+			&&
+			!"false".equalsIgnoreCase(System
+					.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs"));
 
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
@@ -131,7 +130,7 @@ public class N4IDEXpectFileSetup {
 	/**
 	 * Creates {@link N4JSResource} in new {@link ResourceSet}. Created resource has uri of processed xt file and its
 	 * context. During creation resource factory is obtained dynamically to preserve bindings created by XPECT (see
-	 * {@link org.xpect.xtext.lib.tests.ValidationTestModuleSetup#configure})
+	 * {@link org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup#configure})
 	 *
 	 */
 	@Creates(ThisResource.class)
@@ -168,7 +167,7 @@ public class N4IDEXpectFileSetup {
 	 * file. If only one file in only one project is found, returns that mapping, throws error in other cases
 	 *
 	 * @return {@link java.util.Map.Entry} map entry of file and containing project for a given
-	 *         {@link org.xpect.XpectFile}
+	 *         {@link org.eclipse.xpect.XpectFile}
 	 */
 	private Entry<IFile, IProject> findTestResources() throws RuntimeException {
 		Map<IFile, IProject> files2projects = new HashMap<>();
