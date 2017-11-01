@@ -100,7 +100,7 @@ Contributors:
    
    <!-- Register .n4jsx file extension to XPECT -->
    <extension
-      point="org.xpect.testSuite">
+      point="org.eclipse.xpect.testSuite">
          <testSuite
                 class="org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass"
                 fileExtension="n4jsx">

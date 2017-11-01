@@ -825,7 +825,7 @@ Contributors:
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
-            pattern=".*/org.xpect.Xpect">
+            pattern=".*/org.eclipse.xpect.Xpect">
       </activityPatternBinding>
       <activityPatternBinding
             activityId="org.eclipse.n4js.product.activity"
