@@ -96,8 +96,8 @@ class ForFactory {
 		nodes.add(getObjectKeysNode);
 		nodes.add(getIteratorNode);
 		nodes.add(hasNextNode);
-		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
+		cNode.connectInternalSucc(ControlFlowType.Exit, hasNextNode, exitNode);
 		cNode.connectInternalSucc(ControlFlowType.Repeat, hasNextNode, nextNode);
 		cNode.connectInternalSucc(nextNode, bodyNode, hasNextNode);
 
@@ -163,7 +163,8 @@ class ForFactory {
 
 		if (conditionNode != null) {
 			cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode, exitNode);
+			cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode);
 
 		} else {
 			nodes.clear();

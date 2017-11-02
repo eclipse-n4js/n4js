@@ -14,7 +14,6 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -86,7 +85,7 @@ public class TypeGuardVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
+		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
 			return new TypeGuardWalker();
 		}
 

@@ -41,7 +41,7 @@ public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyzer flowAnalyzer;
 	private final Collection<? extends GraphVisitorInternal> walkers;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
-	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
+	private final EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
 
 	/** Constructor */
 	public GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
@@ -88,7 +88,6 @@ public class GraphVisitorGuideInternal {
 
 	private Set<Node> walkthrough(ComplexNode cn, Mode mode) {
 		walkerVisitedNodes.clear();
-		walkerVisitedEdges.clear();
 
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyzer);
@@ -131,7 +130,6 @@ public class GraphVisitorGuideInternal {
 
 	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<BranchWalkerInternal> activatedPaths = initVisit();
-		EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
 		guideWorklist.initialize(cn, edgeProvider, activatedPaths);
 
 		Node lastVisitNode = null;
@@ -151,7 +149,7 @@ public class GraphVisitorGuideInternal {
 			visitNode(lastVisitNode, currEdgeGuide, visitNode);
 			lastVisitNode = visitNode;
 
-			guideWorklist.work();
+			guideWorklist.workOnEdges();
 		}
 
 		Set<Node> allVisitedNodes = guideWorklist.getAllVisitedNodes(cn, edgeProvider);
@@ -204,14 +202,13 @@ public class GraphVisitorGuideInternal {
 	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
 	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		ControlFlowEdge egEdge = currEdgeGuide.getEdge();
-		List<ControlFlowEdge> visitedEdges = currEdgeGuide.getAllEdges();
+		ControlFlowEdge visitedEdge = currEdgeGuide.getEdge();
 
-		if (!walkerVisitedEdges.contains(egEdge)) {
+		if (!guideWorklist.edgeVisited(egEdge)) {
 			for (GraphVisitorInternal walker : walkers) {
-				walker.callVisit(lastVisitNode, visitNode, visitedEdges);
+				walker.callVisit(lastVisitNode, visitNode, visitedEdge);
 			}
 		}
-		walkerVisitedEdges.addAll(visitedEdges);
 
 		for (GraphVisitorInternal walker : walkers) {
 			List<BranchWalkerInternal> activatedPaths = walker.activateRequestedExplorers();
@@ -222,7 +219,7 @@ public class GraphVisitorGuideInternal {
 				.getEWIterator(); actPathIt.hasNext();) {
 
 			BranchWalkerInternal activePath = actPathIt.next().getValue();
-			activePath.callVisit(lastVisitNode, visitNode, visitedEdges);
+			activePath.callVisit(lastVisitNode, visitNode, visitedEdge);
 
 			if (!activePath.isActive()) {
 				actPathIt.remove();

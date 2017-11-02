@@ -37,6 +37,8 @@ public enum ControlFlowType {
 	Continue,
 	/** Repeat edges are caused by loops and flow from the condition to the body */
 	Repeat,
+	/** Exit edges are caused by loops and flow from the condition to the exit of the control statement */
+	Exit,
 	/** Used to mark {@link CatchToken}s that can catch {@link JumpToken} due to thrown N4JS errors */
 	CatchesErrors,
 	/** Used to mark {@link CatchToken}s that can catch any {@link JumpToken} */

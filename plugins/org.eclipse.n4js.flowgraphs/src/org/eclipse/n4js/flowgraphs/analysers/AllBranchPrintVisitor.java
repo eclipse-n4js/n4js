@@ -96,13 +96,40 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	/** @return all found paths as strings */
 	public List<String> getPathStrings() {
 		List<String> pathStrings = new LinkedList<>();
-		for (GraphExplorerInternal app : getActivatedExplorers()) {
-			for (BranchWalkerInternal ap : app.getAllBranches()) {
+		for (GraphExplorerInternal gei : getActivatedExplorers()) {
+			BranchWalkerInternal firstBranch = gei.getFirstBranch();
+			List<String> explPathStrings = getPathStrings((AllBranchPrintWalker) firstBranch);
+			pathStrings.addAll(explPathStrings);
+		}
+		return pathStrings;
+	}
+
+	/** @return all found branches as strings */
+	public List<String> getBranchStrings() {
+		List<String> pathStrings = new LinkedList<>();
+		for (GraphExplorerInternal gei : getActivatedExplorers()) {
+			for (BranchWalkerInternal ap : gei.getAllBranches()) {
 				AllBranchPrintWalker printPath = (AllBranchPrintWalker) ap;
-				pathStrings.add(printPath.branchString);
+				pathStrings.add(printPath.getCompleteBranchString());
 			}
 		}
 		return pathStrings;
+	}
+
+	static private List<String> getPathStrings(AllBranchPrintWalker bw) {
+		List<String> allStrings = new LinkedList<>();
+		for (BranchWalker succ : bw.getSuccessors()) {
+			List<String> succStrings = getPathStrings((AllBranchPrintWalker) succ);
+			for (String succString : succStrings) {
+				String prefixedString = bw.branchString + succString;
+				allStrings.add(prefixedString);
+			}
+		}
+		if (bw.getSuccessors().isEmpty()) {
+			allStrings.add(bw.branchString);
+		}
+
+		return allStrings;
 	}
 
 	static class AllBranchPrintExplorer extends GraphExplorer {
@@ -142,6 +169,32 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		@Override
 		protected AllBranchPrintWalker forkPath() {
 			return new AllBranchPrintWalker();
+		}
+
+		String getCompleteBranchString() {
+			String cbs = "";
+			cbs += "B" + getNumber() + ": ";
+			if (!this.getPredecessors().isEmpty()) {
+				cbs += "[";
+				for (BranchWalker bw : this.getPredecessors()) {
+					cbs += "B" + bw.getNumber() + "|";
+				}
+				cbs = cbs.substring(0, cbs.length() - 1) + "]";
+			}
+			cbs += branchString;
+			if (!this.getSuccessors().isEmpty()) {
+				cbs += "[";
+				for (BranchWalker bw : this.getSuccessors()) {
+					cbs += "B" + bw.getNumber() + "|";
+				}
+				cbs = cbs.substring(0, cbs.length() - 1) + "]";
+			}
+			return cbs;
+		}
+
+		@Override
+		public String toString() {
+			return branchString;
 		}
 	}
 

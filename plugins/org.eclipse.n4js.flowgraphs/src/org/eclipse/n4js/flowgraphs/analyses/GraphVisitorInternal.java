@@ -122,10 +122,10 @@ abstract public class GraphVisitorInternal {
 	 *            nodes that were visited before
 	 * @param currentNode
 	 *            end node of the edge in terms of current mode
-	 * @param edges
+	 * @param edge
 	 *            traversed edge
 	 */
-	protected void visit(Node lastVisitNode, Node currentNode, List<ControlFlowEdge> edges) {
+	protected void visit(Node lastVisitNode, Node currentNode, ControlFlowEdge edge) {
 		// overwrite me
 	}
 
@@ -192,11 +192,11 @@ abstract public class GraphVisitorInternal {
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link GraphVisitorInternal#visit(Node, Node, List)}.
+	 * {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
-	final void callVisit(Node lastVisitNode, Node end, List<ControlFlowEdge> edges) {
+	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
 		if (activeMode) {
-			visit(lastVisitNode, end, edges);
+			visit(lastVisitNode, end, edge);
 		}
 	}
 

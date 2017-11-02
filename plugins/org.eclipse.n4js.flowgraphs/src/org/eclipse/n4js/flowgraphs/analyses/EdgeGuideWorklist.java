@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,12 +30,12 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * {
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
- *   -> {@link #work()}
+ *   -> {@link #workOnEdges()}
  * }*
  * </pre>
  */
 public class EdgeGuideWorklist {
-	private final EdgeGuideQueue currEdgeGuides = new EdgeGuideQueue();
+	private final EdgeGuideQueue currEdgeGuides = new EdgeGuideQueue(this);
 	private final Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
 	private EdgeGuide currEdgeGuide;
 	private EdgeGuide nextEdgeGuide;
@@ -58,18 +57,25 @@ public class EdgeGuideWorklist {
 	}
 
 	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Set<BranchWalkerInternal> activatedPaths) {
+		allVisitedEdges.clear();
+		currEdgeGuide = null;
+		nextEdgeGuide = null;
+		currEdgeGuides.clear();
 		List<EdgeGuide> nextEGs = EdgeGuide.getFirstEdgeGuides(cn, edgeProvider, activatedPaths);
 		currEdgeGuides.addAll(nextEGs);
 	}
 
-	void work() {// consider to execute this in #next()
+	void workOnEdges() {
 		allVisitedEdges.add(currEdgeGuide.getEdge());
 		List<EdgeGuide> nextEGs = currEdgeGuide.getNextEdgeGuides();
 		currEdgeGuides.addAll(nextEGs);
 
-		Collection<LinkedList<EdgeGuide>> edgeGuideGroups = currEdgeGuides.removeJoinGuides();
-		for (List<EdgeGuide> edgeGuideGroup : edgeGuideGroups) {
-			EdgeGuide remainingEdgeGuide = EdgeGuide.join(edgeGuideGroup);
+		LinkedList<EdgeGuide> joinGuideGroup = currEdgeGuides.removeFirstJoinGuide();
+		if (!joinGuideGroup.isEmpty()) {
+			EdgeGuide remainingEdgeGuide = EdgeGuide.join(joinGuideGroup);
+			for (EdgeGuide eg : joinGuideGroup) {
+				allVisitedEdges.add(eg.getEdge());
+			}
 			currEdgeGuides.add(remainingEdgeGuide);
 		}
 	}
@@ -91,6 +97,10 @@ public class EdgeGuideWorklist {
 
 	Iterable<EdgeGuide> getCurrentEdgeGuides() {
 		return currEdgeGuides;
+	}
+
+	boolean edgeVisited(ControlFlowEdge edge) {
+		return allVisitedEdges.contains(edge);
 	}
 
 	Set<Node> getAllVisitedNodes(ComplexNode cn, NextEdgesProvider edgeProvider) {

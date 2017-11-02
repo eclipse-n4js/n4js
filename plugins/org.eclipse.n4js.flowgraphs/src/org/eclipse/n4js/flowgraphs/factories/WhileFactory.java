@@ -48,9 +48,8 @@ class WhileFactory {
 		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
-		nodes.add(entryNode);
-		nodes.add(conditionNode);
-		nodes.add(exitNode);
+		cNode.connectInternalSucc(entryNode, conditionNode);
+		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
 		cNode.connectInternalSucc(nodes);
 		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
 		cNode.connectInternalSucc(bodyNode, conditionNode);

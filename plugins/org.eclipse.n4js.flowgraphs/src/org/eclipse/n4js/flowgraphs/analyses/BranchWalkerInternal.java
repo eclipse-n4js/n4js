@@ -24,6 +24,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * of type {@literal ControlFlowType.Repeat} is followed exactly twice.
  */
 abstract public class BranchWalkerInternal {
+	private int branchNumber = -1;
 	private GraphExplorerInternal pathExplorer;
 	private final LinkedList<BranchWalkerInternal> pathPredecessors = new LinkedList<>();
 	private final LinkedList<BranchWalkerInternal> pathSuccessors = new LinkedList<>();
@@ -52,10 +53,10 @@ abstract public class BranchWalkerInternal {
 	 *            nodes that were visited before
 	 * @param end
 	 *            node that will be visited next
-	 * @param edges
+	 * @param edge
 	 *            traversed edge
 	 */
-	protected void visit(Node lastVisitNodes, Node end, List<ControlFlowEdge> edges) {
+	protected void visit(Node lastVisitNodes, Node end, ControlFlowEdge edge) {
 		// overwrite me
 	}
 
@@ -78,6 +79,7 @@ abstract public class BranchWalkerInternal {
 	final void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal... predecessors) {
 		for (BranchWalkerInternal pred : predecessors) {
 			this.pathPredecessors.add(pred);
+			pred.pathSuccessors.add(this);
 		}
 		initializeRest(explorer);
 	}
@@ -86,13 +88,17 @@ abstract public class BranchWalkerInternal {
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
 	final void callInitialize(GraphExplorerInternal explorer, List<BranchWalkerInternal> predecessors) {
-		if (predecessors != null) {
-			this.pathPredecessors.addAll(predecessors);
+		for (BranchWalkerInternal pred : predecessors) {
+			this.pathPredecessors.add(pred);
+			pred.pathSuccessors.add(this);
 		}
 		initializeRest(explorer);
 	}
 
 	private void initializeRest(GraphExplorerInternal explorer) {
+		assert (this.branchNumber == -1) : "Cannot initialize twice";
+
+		this.branchNumber = explorer.getAndIncrementBranchCounter();
 		this.pathExplorer = explorer;
 		pathExplorer.allBranches.add(this);
 		pathExplorer.activeBranches.add(this);
@@ -108,10 +114,10 @@ abstract public class BranchWalkerInternal {
 
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to
-	 * {@link BranchWalkerInternal#visit(Node, Node, List)}.
+	 * {@link BranchWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
-	final void callVisit(Node lastVisitNode, Node end, List<ControlFlowEdge> edges) {
-		visit(lastVisitNode, end, edges);
+	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
+		visit(lastVisitNode, end, edge);
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
@@ -122,14 +128,14 @@ abstract public class BranchWalkerInternal {
 	}
 
 	/**
-	 * returns a list of {@link BranchWalkerInternal}s which proceed this instance.
+	 * @return a list of {@link BranchWalkerInternal}s which proceed this instance.
 	 */
 	final List<BranchWalkerInternal> getPathPredecessors() {
 		return pathPredecessors;
 	}
 
 	/**
-	 * returns a list of {@link BranchWalkerInternal}s which succeed this instance.
+	 * @return a list of {@link BranchWalkerInternal}s which succeed this instance.
 	 */
 	final List<BranchWalkerInternal> getPathSuccessors() {
 		return pathSuccessors;
@@ -137,11 +143,14 @@ abstract public class BranchWalkerInternal {
 
 	/////////////////////// Service Methods for inherited classes ///////////////////////
 
-	/**
-	 * returns the {@link GraphExplorerInternal} of this instance.
-	 */
+	/** @return the {@link GraphExplorerInternal} of this instance. */
 	final public GraphExplorerInternal getExplorer() {
 		return pathExplorer;
+	}
+
+	/** @return the number of this {@link BranchWalkerInternal}. */
+	final public int getNumber() {
+		return branchNumber;
 	}
 
 	/** Sets the verdict of this path to <i>Passed</i>. */
@@ -174,6 +183,11 @@ abstract public class BranchWalkerInternal {
 	/** @return true, iff this path is active. */
 	final public boolean isActive() {
 		return pathExplorer.activeBranches.contains(this);
+	}
+
+	@Override
+	public String toString() {
+		return "B" + branchNumber;
 	}
 
 }

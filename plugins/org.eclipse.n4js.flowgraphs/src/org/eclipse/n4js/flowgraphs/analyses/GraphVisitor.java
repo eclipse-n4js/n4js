@@ -50,12 +50,10 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	@Override
-	final protected void visit(Node lastNodes, Node currentNode, List<ControlFlowEdge> edges) {
-		visitedEdgesInternal.addAll(edges);
+	final protected void visit(Node lastNodes, Node currentNode, ControlFlowEdge edge) {
+		visitedEdgesInternal.add(edge);
 		Set<FlowEdge> newConnections = new HashSet<>();
-		for (ControlFlowEdge edge : edges) {
-			addNewConnections(edge, newConnections);
-		}
+		addNewConnections(edge, newConnections);
 
 		for (FlowEdge dEdge : newConnections) {
 			if (!visitedEdges.contains(dEdge)) {
@@ -183,7 +181,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	/**
-	 * Analog to {@link GraphVisitorInternal#visit(Node, Node, List)}
+	 * Analog to {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)}
 	 *
 	 * @param lastCFE
 	 *            {@link ControlFlowElement} that was visited before

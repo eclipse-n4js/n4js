@@ -41,10 +41,14 @@ abstract public class GraphExplorerInternal {
 	protected final Quantor quantor;
 	/** Default verdict, specified in constructor */
 	protected final boolean passAsDefault;
+	/** First branch created by {@link #firstBranchWalker()} */
+	private BranchWalkerInternal firstBranch;
 	/** Parent {@link GraphVisitorInternal}. Always set once. */
 	private GraphVisitorInternal parentGraphVisitor;
-
+	/** Current state of this {@link GraphExplorerInternal} */
 	private State state;
+	/** Branch counter */
+	private int branchCounter = 0;
 
 	/** The {@link Quantor} defines under which condition a {@link GraphExplorerInternal} fails or passes. */
 	public enum Quantor {
@@ -118,9 +122,9 @@ abstract public class GraphExplorerInternal {
 	/** Only called from {@link GraphVisitorInternal}. Delegates to {@link #firstBranchWalker()}. */
 	final BranchWalkerInternal callFirstBranchWalker(GraphVisitorInternal parentGraphVisitorInternal) {
 		parentGraphVisitor = parentGraphVisitorInternal;
-		BranchWalkerInternal activeBranch = firstBranchWalker();
-		activeBranch.callInitialize(this);
-		return activeBranch;
+		firstBranch = firstBranchWalker();
+		firstBranch.callInitialize(this);
+		return firstBranch;
 	}
 
 	/**
@@ -140,6 +144,7 @@ abstract public class GraphExplorerInternal {
 		return activeBranch;
 	}
 
+	/** Only called from {@link BranchWalkerInternal}. Performs checked deactivation and state updates. */
 	final void checkExplorerDeactivation() {
 		if (activeBranches.isEmpty()) {
 			boolean somePassed = !passedBranches.isEmpty();
@@ -166,6 +171,11 @@ abstract public class GraphExplorerInternal {
 
 			parentGraphVisitor.deactivateGraphExplorer(this);
 		}
+	}
+
+	/** Only called from {@link BranchWalkerInternal}. Returns and increments the current branch count. */
+	final int getAndIncrementBranchCounter() {
+		return branchCounter++;
 	}
 
 	/////////////////////// Service Methods for inherited classes ///////////////////////
@@ -197,6 +207,11 @@ abstract public class GraphExplorerInternal {
 	/** @return all branches no matter if they are active or not, or passed or failed. */
 	final public Set<BranchWalkerInternal> getActiveBranches() {
 		return activeBranches;
+	}
+
+	/** @return the first {@link BranchWalkerInternal} of this {@link GraphExplorerInternal} instance. */
+	final public BranchWalkerInternal getFirstBranch() {
+		return firstBranch;
 	}
 
 }

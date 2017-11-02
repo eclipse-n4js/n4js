@@ -43,9 +43,9 @@ class DoWhileFactory {
 		nodes.add(entryNode);
 		nodes.add(bodyNode);
 		nodes.add(conditionNode);
-		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 
+		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
 		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
 
 		cNode.setEntryNode(entryNode);
