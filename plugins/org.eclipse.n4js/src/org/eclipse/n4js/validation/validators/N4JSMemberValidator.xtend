@@ -317,17 +317,17 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	 * Requirement 56 (Defining and Calling Constructors), #8
 	 */
 	private def holdsConstructorNoTypeParameters(TMethod method) {
-		if (!method.typeVars.isEmpty) {
-			val constructorDecl = method.astElement as N4MethodDeclaration;
-			val offsetLength = findTypeVariablesOffset(constructorDecl);
-
-			addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl, offsetLength.key,
-				offsetLength.value, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
-
-			return false;
+		if (method.typeVars.isEmpty) {
+			return true;
 		}
+		
+		val constructorDecl = method.astElement as N4MethodDeclaration;
+		val offsetLength = findTypeVariablesOffset(constructorDecl);
 
-		return true;
+		addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl, offsetLength.key,
+			offsetLength.value, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
+
+		return false;
 	}
 
 	/** 
