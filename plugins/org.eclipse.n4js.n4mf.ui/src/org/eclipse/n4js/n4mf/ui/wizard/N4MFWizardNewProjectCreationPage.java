@@ -421,7 +421,8 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	}
 
 	/**
-	 * Hides or shows the hint that an existing project hint.
+	 * Hides or shows the hint that an existing project was detected and enables/disables the according controls. (e.g.
+	 * project type, vendor id)
 	 *
 	 * The hint informs the user that an existing project was found at the specified project location.
 	 */
@@ -493,7 +494,6 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 	/**
 	 * Recursively sets the {@link Control#setEnabled(boolean)} property for all children of the given composite.
-	 *
 	 */
 	private void setEnabledAllChildren(Composite composite, boolean enabled) {
 		for (Control control : composite.getChildren()) {

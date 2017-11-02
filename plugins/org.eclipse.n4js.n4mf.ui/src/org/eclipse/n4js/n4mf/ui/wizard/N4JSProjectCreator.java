@@ -245,7 +245,7 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 	 * @param project
 	 *            The project to create the file in
 	 * @param relativePath
-	 *            The file path inside of the project
+	 *            The file path inside the project
 	 * @param contents
 	 *            The file contents
 	 * @param charset
