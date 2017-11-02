@@ -12,10 +12,10 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleApplicationTrace
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.RuleFailedException
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleApplicationTrace
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleFailedException
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.Expression

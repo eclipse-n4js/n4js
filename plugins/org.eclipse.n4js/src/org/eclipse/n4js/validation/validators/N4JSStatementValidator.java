@@ -36,8 +36,8 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.JavaScriptVariantHelper;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Statement validation rules for N4JS.

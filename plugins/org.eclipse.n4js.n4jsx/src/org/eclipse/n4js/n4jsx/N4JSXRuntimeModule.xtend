@@ -14,8 +14,8 @@ import com.google.inject.Binder
 import com.google.inject.Inject
 import com.google.inject.Provider
 import com.google.inject.name.Names
-import it.xsemantics.runtime.StringRepresentation
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import org.eclipse.xsemantics.runtime.StringRepresentation
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.io.File
 import org.eclipse.emf.ecore.util.Diagnostician
 import org.eclipse.n4js.CancelIndicatorBaseExtractor

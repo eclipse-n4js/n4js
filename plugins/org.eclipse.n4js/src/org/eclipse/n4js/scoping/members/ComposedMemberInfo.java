@@ -37,7 +37,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Joiner;
 
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * The purpose of the classes and methods in this file is twofold:
