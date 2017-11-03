@@ -38,7 +38,6 @@ timestamps {
 
                 String N4JS_SNAPSHOT_MAVEN_REPO_FOLDER_WSREL = "N4JS_SNAPSHOT_MAVEN_REPO_FOLDER_WSREL"
 
-
                 stage("PreBuild") {
                     //clean workspace
                     listDir(workspace)
@@ -59,7 +58,7 @@ timestamps {
 
 
                 stage('Build') {
-                    def nodeHome = tool(name: n4jsNodejsVersion, type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation')
+                    def nodeHome = "$(tool 'Node 6.x')"
                     def xvfbBin = tool(name: 'default', type: 'org.jenkinsci.plugins.xvfb.XvfbInstallation')
 
                     String targetPomFile = "--file ${workspace}/${n4jsDir}//pom.xml"
