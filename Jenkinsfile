@@ -58,7 +58,7 @@ timestamps {
 
 
                 stage('Build') {
-                    def nodeHome = "$(tool 'Node 6.x')"
+                    def nodeHome = "tool('Node 6.x')"
                     def xvfbBin = tool(name: 'default', type: 'org.jenkinsci.plugins.xvfb.XvfbInstallation')
 
                     String targetPomFile = "--file ${workspace}/${n4jsDir}//pom.xml"
