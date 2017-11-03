@@ -92,15 +92,8 @@ timestamps {
                     }
                 }
 
-                stage('PostBuild') {
-                }
-                //sendEmail("${env.JOB_NAME} (${env.BUILD_NUMBER}) succeeded", "${env.BUILD_URL} succeeded - ${env.JOB_NAME} (#${env.BUILD_NUMBER}).")
             } catch (exc) {
-                //sendEmail( "${env.JOB_NAME} (${env.BUILD_NUMBER}) failed", "${env.BUILD_URL} is failing - ${env.JOB_NAME} (#${env.BUILD_NUMBER}). The following exception was caught : \n ${exc.toString()}")
-                //rethrow otherwise job will always be green
                 throw exc
-            } finally {
-            //checkLogsForDownloads();
             }
         }
     }
@@ -120,34 +113,12 @@ void listDir(String location) {
 //=============== util functions ===============
 
 /**
- * Checks if current branch (based on environment property {@code env.BRANCH_NAME}) equals {@code master}.
- * @return {@code true} if on master branch
- */
-@NonCPS
-boolean isMaster() { return env.BRANCH_NAME == "master" }
-
-/**
  * Checks if current build is nightly (based on environment property {@code env.NIGTHLY_BUILD}) equals {@code "true"}.
  * @return {@code true} if on master branch
  */
 @NonCPS
 boolean isNightly() { return env.NIGTHLY_BUILD == "true" }
 
-
-/**
- * Sends email notification about job status based on the provided data.
- *
- * @param subject the subject of the email
- * @param body the body of the email
- */
-@NonCPS
-void sendEmail(String subject, String body) {
-        emailext subject: subject,
-                body: body,
-                recipientProviders: [
-                        [$class: 'CulpritsRecipientProvider'],
-                        [$class: 'RequesterRecipientProvider']]
-}
 
 /**
  * Helper function that performs git checkout.
