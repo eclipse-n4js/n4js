@@ -17,7 +17,7 @@
  * Note:
  *
  * Tests in this file seem similar and redundant but are necessary
- * since all test methods rely on different algorithms. To very these
+ * since all test methods rely on different algorithms. To verify these
  * algorithms it is important that all test methods are tested with
  * all supported language features.
  */
@@ -84,7 +84,7 @@ function ForStatement3() {
 		2 -Repeat-> 5,
 		5 --> 3,
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatement3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -152,7 +152,7 @@ function ForStatement5() {
 		1 --> 2,
 		2 -Repeat-> 5,
 		5 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatement5 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -190,7 +190,7 @@ function ForStatement6() {
 		2 -Repeat-> 5,
 		5 --> 3,
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatement6 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -252,7 +252,7 @@ function ForStatement8() {
 		"start" --> 2,
 		2 -Repeat-> 5,
 		5 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatement8 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -316,9 +316,9 @@ function ForOfStatement1() {
 		1 --> 2,
 		2 --> [1\,2],
 		[1\,2] -Repeat-> 3,
-		[1\,2] --> "end",
+		[1\,2] -Exit-> "end",
 		3 -Repeat-> 3,
-		3 --> "end"
+		3 -Exit-> "end"
 	--- */
 	/* ForOfStatement1 XPECT allPaths ---
 		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
@@ -360,8 +360,8 @@ function ForOfStatement2(x) {
 		1 --> 2,
 		2 --> [1\,2],
 		[1\,2] -Repeat-> 5,
-		[1\,2] --> "end",
-		5 --> "end",
+		[1\,2] -Exit-> "end",
+		5 -Exit-> "end",
 		5 -Repeat-> 5
 	--- */
 	/* ForOfStatement2 XPECT allPaths ---
@@ -402,9 +402,9 @@ function ForInStatement1() {
 		1 --> 2,
 		2 --> [1\,2],
 		[1\,2] -Repeat-> 3,
-		[1\,2] --> "end",
+		[1\,2] -Exit-> "end",
 		3 -Repeat-> 3,
-		3 --> "end"
+		3 -Exit-> "end"
 	--- */
 	/* ForInStatement1 XPECT allPaths ---
 		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
@@ -443,9 +443,9 @@ function ForInStatement2(x) {
 	/* ForInStatement2 XPECT allEdges ---
 		"start" --> x,
 		x --> "Hello",
-		"Hello" --> "end",
+		"Hello" -Exit-> "end",
 		"Hello" -Repeat-> 5,
-		5 --> "end",
+		5 -Exit-> "end",
 		5 -Repeat-> 5
 	--- */
 	/* ForInStatement2 XPECT allPaths ---
@@ -485,7 +485,7 @@ function ForStatementVarDecl1() {
 		2 -Repeat-> 5,
 		5 --> 3,
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatementVarDecl1 XPECT allPaths ---
 		"start" -> 0 -> i=0 -> 2 -> "end",
@@ -528,7 +528,7 @@ function ForStatementVarDecl2() {
 		2 -Repeat-> 5,
 		5 --> 3,
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatementVarDecl2 XPECT allPaths ---
 		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> "end",
@@ -574,7 +574,7 @@ function ForStatementBreak1() {
 		2 -Repeat-> break;,
 		break; -Break-> "end",
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatementBreak1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -616,7 +616,7 @@ function ForStatementContinue1() {
 		2 -Repeat-> continue;,
 		continue; -Continue-> 3,
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatementContinue1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -657,7 +657,7 @@ function ForStatementContinue2() {
 		2 -Repeat-> continue;,
 		continue; -Continue-> 3,
 		3 --> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatementContinue2 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -696,7 +696,7 @@ function ForStatementContinue3() {
 		"start" --> 2,
 		2 -Repeat-> continue;,
 		continue; -Continue-> 2,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* ForStatementContinue3 XPECT allPaths ---
 		"start" -> 2 -> "end",

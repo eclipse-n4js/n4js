@@ -30,7 +30,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * {
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
- *   -> {@link #workOnEdges()}
+ *   -> {@link #getJoinGroups()}
  * }*
  * </pre>
  */
@@ -65,19 +65,27 @@ public class EdgeGuideWorklist {
 		currEdgeGuides.addAll(nextEGs);
 	}
 
-	void workOnEdges() {
+	LinkedList<EdgeGuide> getJoinGroups() {
 		allVisitedEdges.add(currEdgeGuide.getEdge());
 		List<EdgeGuide> nextEGs = currEdgeGuide.getNextEdgeGuides();
 		currEdgeGuides.addAll(nextEGs);
 
 		LinkedList<EdgeGuide> joinGuideGroup = currEdgeGuides.removeFirstJoinGuide();
+		return joinGuideGroup;
+	}
+
+	EdgeGuideMerged mergeJoinGroup(LinkedList<EdgeGuide> joinGuideGroup) {
 		if (!joinGuideGroup.isEmpty()) {
-			EdgeGuide remainingEdgeGuide = EdgeGuide.join(joinGuideGroup);
+			EdgeGuideMerged remainingEdgeGuide = new EdgeGuideMerged(joinGuideGroup);
 			for (EdgeGuide eg : joinGuideGroup) {
 				allVisitedEdges.add(eg.getEdge());
 			}
-			currEdgeGuides.add(remainingEdgeGuide);
+
+			List<EdgeGuide> nextEGs = remainingEdgeGuide.getNextEdgeGuides();
+			currEdgeGuides.addAll(nextEGs);
+			return remainingEdgeGuide;
 		}
+		return null;
 	}
 
 	private void setNext() {

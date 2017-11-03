@@ -22,6 +22,7 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
+import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -62,7 +63,7 @@ public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 
 		for (Iterator<EdgeGuide> iter = currEdgeGuides.iterator(); iter.hasNext();) {
 			EdgeGuide eg = iter.next();
-			if (!guideGroup.isEmpty() && guideGroup.getFirst().getEdge().end != eg.getEdge().end) {
+			if (!guideGroup.isEmpty() && !isJoinGroup(guideGroup.getFirst(), eg)) {
 				break;
 			}
 			guideGroup.add(eg);
@@ -77,6 +78,15 @@ public class EdgeGuideQueue implements Iterable<EdgeGuide> {
 		}
 
 		return Lists.newLinkedList();
+	}
+
+	private boolean isJoinGroup(EdgeGuide eg1, EdgeGuide eg2) {
+		Node nextN1 = eg1.getNextNode();
+		Node nextN2 = eg2.getNextNode();
+		JumpToken pathContext1 = eg1.getEdge().finallyPathContext;
+		JumpToken pathContext2 = eg2.getEdge().finallyPathContext;
+		boolean isJoinGroup = nextN1 == nextN2 && pathContext1 == pathContext2;
+		return isJoinGroup;
 	}
 
 	void removeAll(List<EdgeGuide> rList) {

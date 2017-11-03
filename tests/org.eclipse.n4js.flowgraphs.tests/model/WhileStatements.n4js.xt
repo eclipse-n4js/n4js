@@ -17,7 +17,7 @@
  * Note:
  *
  * Tests in this file seem similar and redundant but are necessary
- * since all test methods rely on different algorithms. To very these
+ * since all test methods rely on different algorithms. To verify these
  * algorithms it is important that all test methods are tested with
  * all supported language features.
  */
@@ -35,7 +35,7 @@ function DoStatement1() {
 		"start" --> 1,
 		1 --> 2,
 		2 -Repeat-> 1,
-		2 --> "end"
+		2 -Exit-> "end"
 	--- */
 	/* DoStatement1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -71,7 +71,7 @@ function DoStatementBreak1() {
 		1 --> break;,
 		2 --> 3,
 		3 -Repeat-> 1,
-		3 --> "end",
+		3 -Exit-> "end",
 		break; -Break-> "end"
 	--- */
 	// DoStatementBreak1 XPECT allPaths --> "start" -> 1 -> break; -> "end"
@@ -114,7 +114,7 @@ function DoStatementContinue1() {
 		continue; -Continue-> 3,
 		2 --> 3,
 		3 -Repeat-> 1,
-		3 --> "end"
+		3 -Exit-> "end"
 	--- */
 	/* DoStatementContinue1 XPECT allPaths ---
 		"start" -> 1 -> continue; -> 3 -> "end",
@@ -160,7 +160,7 @@ function WhileStatement1() {
 		"start" --> 1,
 		1 -Repeat-> 2,
 		2 --> 1,
-		1 --> "end"
+		1 -Exit-> "end"
 	--- */
 	/* WhileStatement1 XPECT allPaths ---
 	"start" -> 1 -> "end",
@@ -200,7 +200,7 @@ function WhileStatementBreak1() {
 		2 --> break;,
 		break; -Break-> "end",
 		3 --> 1,
-		1 --> "end"
+		1 -Exit-> "end"
 	--- */
 	/* WhileStatementBreak1 XPECT allPaths ---
 	"start" -> 1 -> "end",
@@ -248,7 +248,7 @@ function WhileStatementContinue1() {
 		2 --> continue;,
 		continue; -Continue-> 1,
 		3 --> 1,
-		1 --> "end"
+		1 -Exit-> "end"
 	--- */
 	/* WhileStatementContinue1 XPECT allPaths ---
 	"start" -> 1 -> "end",

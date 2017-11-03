@@ -17,7 +17,7 @@
  * Note:
  *
  * Tests in this file seem similar and redundant but are necessary
- * since all test methods rely on different algorithms. To very these
+ * since all test methods rely on different algorithms. To verify these
  * algorithms it is important that all test methods are tested with
  * all supported language features.
  */

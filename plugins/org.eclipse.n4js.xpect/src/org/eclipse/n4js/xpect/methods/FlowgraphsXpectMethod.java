@@ -187,6 +187,21 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/**
+	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
+	 * specified, the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
+
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> branchStrings = appw.getBranchStrings();
+
+		expectation.assertEquals(branchStrings);
+	}
+
+	/**
 	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
 	 * the first code element of the containing function.
 	 */
@@ -194,6 +209,15 @@ public class FlowgraphsXpectMethod {
 	@Xpect
 	public void allPaths(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
+
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> pathStrings = appw.getPathStrings();
+
+		expectation.assertEquals(pathStrings);
+	}
+
+	private AllBranchPrintVisitor performBranchAnalysis(IEObjectCoveringRegion offset, String directionName,
+			IEObjectCoveringRegion referenceOffset) {
 
 		EObjectCoveringRegion offsetImpl = (EObjectCoveringRegion) offset;
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
@@ -204,10 +228,7 @@ public class FlowgraphsXpectMethod {
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
 		getFlowAnalyzer(referenceCFE).accept(appw);
-		List<String> pathStrings = appw.getPathStrings();
-		pathStrings.add(0, "size=" + pathStrings.size());
-
-		expectation.assertEquals(pathStrings);
+		return appw;
 	}
 
 	private GraphVisitorInternal.Mode getDirection(String directionName) {

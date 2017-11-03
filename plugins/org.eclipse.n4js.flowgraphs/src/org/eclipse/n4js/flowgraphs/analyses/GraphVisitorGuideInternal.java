@@ -149,11 +149,26 @@ public class GraphVisitorGuideInternal {
 			visitNode(lastVisitNode, currEdgeGuide, visitNode);
 			lastVisitNode = visitNode;
 
-			guideWorklist.workOnEdges();
+			tryMergeEdgeGuides();
 		}
 
 		Set<Node> allVisitedNodes = guideWorklist.getAllVisitedNodes(cn, edgeProvider);
 		return allVisitedNodes;
+	}
+
+	private void tryMergeEdgeGuides() {
+		LinkedList<EdgeGuide> joinGuideGroup = guideWorklist.getJoinGroups();
+		if (!joinGuideGroup.isEmpty()) {
+			EdgeGuide firstEG = joinGuideGroup.getFirst();
+			Node endNode = firstEG.getNextNode(); // end node is the same on all EGs in the list
+			for (EdgeGuide eg : joinGuideGroup) {
+				Node startNode = eg.getPrevNode();
+				// Before merging the join group, the edges are visited.
+				callVisitOnEdge(startNode, eg, endNode);
+			}
+			EdgeGuide mergedEG = guideWorklist.mergeJoinGroup(joinGuideGroup);
+			callVisitOnNode(mergedEG, endNode);
+		}
 	}
 
 	private Set<BranchWalkerInternal> initVisit() {

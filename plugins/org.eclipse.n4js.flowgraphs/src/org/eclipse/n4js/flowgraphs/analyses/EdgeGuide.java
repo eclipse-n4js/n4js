@@ -43,11 +43,10 @@ import com.google.common.collect.Sets;
  * instead of executing statements that follow the {@link FinallyBlock}.)
  */
 public class EdgeGuide {
-	private final NextEdgesProvider edgeProvider;
+	final NextEdgesProvider edgeProvider;
+	final Map<GraphExplorerInternal, BranchWalkerInternal> explorerWalkerMap = new HashMap<>();
+	final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 	private ControlFlowEdge edge;
-	private final Map<GraphExplorerInternal, BranchWalkerInternal> explorerWalkerMap = new HashMap<>();
-	private final Set<JumpToken> finallyBlockContexts = new HashSet<>();
-	private boolean isMergedGuide = false;
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
 		this.edgeProvider = edgeProvider;
@@ -57,11 +56,11 @@ public class EdgeGuide {
 		}
 	}
 
-	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<BranchWalkerInternal> activePaths) {
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths) {
 		this(edgeProvider, edge, activePaths, Sets.newHashSet());
 	}
 
-	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Set<BranchWalkerInternal> activePaths,
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths,
 			Set<JumpToken> finallyBlockContexts) {
 
 		this(edgeProvider, edge);
@@ -70,7 +69,7 @@ public class EdgeGuide {
 	}
 
 	Node getPrevNode() {
-		assert !isMergedGuide : "Cannot be called on merged EdgeGuides";
+		assert !isMerged() : "Cannot be called on merged EdgeGuides";
 		return edgeProvider.getPrevNode(edge);
 	}
 
@@ -94,27 +93,30 @@ public class EdgeGuide {
 	static List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider,
 			Set<BranchWalkerInternal> activatedPaths) {
 
+		List<EdgeGuide> nextEGs = new LinkedList<>();
 		Node node = edgeProvider.getStartNode(cn);
 		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(node);
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
 
-		List<EdgeGuide> nextEGs = new LinkedList<>();
-		if (nextEdgeIt.hasNext()) {
+		if (nextEdges.size() == 1) {
 			ControlFlowEdge nextEdge = nextEdgeIt.next();
 			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, activatedPaths);
 			nextEGs.add(eg);
 		}
 
-		while (nextEdgeIt.hasNext()) {
-			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
-			for (BranchWalkerInternal aPath : activatedPaths) {
-				BranchWalkerInternal forkedPath = aPath.callFork();
-				forkedPaths.add(forkedPath);
+		if (nextEdges.size() > 1) {
+			while (nextEdgeIt.hasNext()) {
+				ControlFlowEdge nextEdge = nextEdgeIt.next();
+				Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+				for (BranchWalkerInternal aPath : activatedPaths) {
+					BranchWalkerInternal forkedPath = aPath.callFork();
+					forkedPaths.add(forkedPath);
+				}
+				EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
+				nextEGs.add(eg);
 			}
-			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
-			nextEGs.add(eg);
 		}
+
 		return nextEGs;
 	}
 
@@ -215,55 +217,6 @@ public class EdgeGuide {
 		}
 	}
 
-	/**
-	 * This method will join all the given {@link EdgeGuide}s. The returned instance is one of the given
-	 * {@link EdgeGuide}s whose data is changed so that is reflects the joined state.
-	 * <p>
-	 * <b>Assumptions:</b>
-	 * <ul>
-	 * <li/>All joined {@link EdgeGuide}s have the same {@link EdgeGuide#getNextNode()}
-	 * <li/>All joined {@link EdgeGuide}s have different {@link EdgeGuide#getPrevNode()}s
-	 * </ul>
-	 */
-	static EdgeGuide join(List<EdgeGuide> edgeGuides) {
-		assert edgeGuides.size() > 1 : "EdgeGuide#join must be called with more than one elements";
-
-		Map<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkerMap = new HashMap<>();
-		EdgeGuide survivingEG = edgeGuides.get(0);
-
-		for (EdgeGuide eg : edgeGuides) {
-			for (Map.Entry<GraphExplorerInternal, BranchWalkerInternal> ewEntry : eg.explorerWalkerMap.entrySet()) {
-				GraphExplorerInternal explorer = ewEntry.getKey();
-				if (!joiningWalkerMap.containsKey(explorer)) {
-					joiningWalkerMap.put(explorer, new LinkedList<>());
-				}
-				List<BranchWalkerInternal> joiningWalkers = joiningWalkerMap.get(explorer);
-				BranchWalkerInternal bwi = ewEntry.getValue();
-				joiningWalkers.add(bwi);
-
-				Node startNode = eg.getPrevNode();
-				Node endNode = eg.getNextNode();
-				bwi.callVisit(startNode, endNode, eg.edge);
-			}
-
-			survivingEG.finallyBlockContexts.addAll(eg.finallyBlockContexts);
-			survivingEG.edgeProvider.join(eg.edgeProvider);
-			survivingEG.isMergedGuide = true;
-		}
-
-		survivingEG.explorerWalkerMap.clear();
-		for (Map.Entry<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkers : joiningWalkerMap
-				.entrySet()) {
-
-			GraphExplorerInternal explorer = joiningWalkers.getKey();
-			List<BranchWalkerInternal> walkers = joiningWalkers.getValue();
-			BranchWalkerInternal joinedWalker = explorer.callJoinBranchWalkers(walkers);
-			survivingEG.explorerWalkerMap.put(explorer, joinedWalker);
-		}
-
-		return survivingEG;
-	}
-
 	void addActiveBranches(Collection<BranchWalkerInternal> activatedPaths) {
 		for (BranchWalkerInternal bwi : activatedPaths) {
 			GraphExplorerInternal explorer = bwi.getExplorer();
@@ -294,6 +247,6 @@ public class EdgeGuide {
 
 	/** @return true iff this {@link EdgeGuide} was merged from two or more {@link EdgeGuide}s */
 	boolean isMerged() {
-		return isMergedGuide;
+		return false;
 	}
 }
