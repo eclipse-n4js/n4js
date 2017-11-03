@@ -56,7 +56,6 @@ timestamps {
 
                 }
 
-
                 stage('Build') {
                     def nodeHome = "tool('Node 6.x')"
                     def xvfbBin = tool(name: 'default', type: 'org.jenkinsci.plugins.xvfb.XvfbInstallation')
@@ -74,7 +73,6 @@ timestamps {
                             withMaven( jdk: n4jsJavaVersion,
                                        maven: n4jsMavenVersion,
                                        mavenLocalRepo: '.repository',
-                                       mavenSettingsConfig: '3f2fefed-80bc-4bfc-9e72-5f5cf9315f7c',
                                        mavenOpts: '-Xms512m -Xmx2048M') {
 
                                 sh """\
