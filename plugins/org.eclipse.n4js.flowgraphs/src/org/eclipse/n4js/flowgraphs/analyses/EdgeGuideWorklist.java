@@ -20,7 +20,7 @@ import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
- * A worklist that iterates through all {@link EdgeGuide}s.
+ * A work list that iterates through all {@link EdgeGuide}s.
  * <p>
  * Use the API in the following way:
  *
@@ -31,6 +31,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
  *   -> {@link #getJoinGroups()}
+ *   -> {@link #mergeJoinGroup(LinkedList)}
  * }*
  * </pre>
  */
@@ -40,15 +41,18 @@ public class EdgeGuideWorklist {
 	private EdgeGuide currEdgeGuide;
 	private EdgeGuide nextEdgeGuide;
 
+	/** @return true iff a subsequent call to {@link #next()} returns a non null value */
 	boolean hasNext() {
 		setNext();
 		return nextEdgeGuide != null;
 	}
 
-	EdgeGuide getCurrent() {
-		return currEdgeGuide;
+	/** @return an {@link Iterable} over all {@link EdgeGuide} that are currently in the work list */
+	Iterable<EdgeGuide> getCurrentEdgeGuides() {
+		return currEdgeGuides.getIterator();
 	}
 
+	/** @return the next {@link EdgeGuide} which is the new current {@link EdgeGuide} */
 	EdgeGuide next() {
 		setNext();
 		currEdgeGuide = nextEdgeGuide;
@@ -56,6 +60,7 @@ public class EdgeGuideWorklist {
 		return currEdgeGuide;
 	}
 
+	/** Initializes this instance. Can be used for re-initialization. */
 	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Set<BranchWalkerInternal> activatedPaths) {
 		allVisitedEdges.clear();
 		currEdgeGuide = null;
@@ -65,6 +70,11 @@ public class EdgeGuideWorklist {
 		currEdgeGuides.addAll(nextEGs);
 	}
 
+	/**
+	 * Sets the current edge to be visited.
+	 *
+	 * @return a list that is either empty or contains two or more {@link EdgeGuide} that can be merged.
+	 */
 	LinkedList<EdgeGuide> getJoinGroups() {
 		allVisitedEdges.add(currEdgeGuide.getEdge());
 		List<EdgeGuide> nextEGs = currEdgeGuide.getNextEdgeGuides();
@@ -74,6 +84,11 @@ public class EdgeGuideWorklist {
 		return joinGuideGroup;
 	}
 
+	/**
+	 * Sets the edges of the given {@link EdgeGuide}s to be visited.
+	 *
+	 * @return the {@link EdgeGuideMerged} that is the merge result of the given {@link EdgeGuide}s
+	 */
 	EdgeGuideMerged mergeJoinGroup(LinkedList<EdgeGuide> joinGuideGroup) {
 		if (!joinGuideGroup.isEmpty()) {
 			EdgeGuideMerged remainingEdgeGuide = new EdgeGuideMerged(joinGuideGroup);
@@ -86,6 +101,22 @@ public class EdgeGuideWorklist {
 			return remainingEdgeGuide;
 		}
 		return null;
+	}
+
+	/** @return true iff the given edge was already visited */
+	boolean edgeVisited(ControlFlowEdge edge) {
+		return allVisitedEdges.contains(edge);
+	}
+
+	/** @return a set of all visited nodes */
+	Set<Node> getAllVisitedNodes(ComplexNode cn, NextEdgesProvider edgeProvider) {
+		Set<Node> allVisitedNodes = new HashSet<>();
+		for (ControlFlowEdge edge : allVisitedEdges) {
+			allVisitedNodes.add(edge.start);
+			allVisitedNodes.add(edge.end);
+		}
+		allVisitedNodes.add(edgeProvider.getStartNode(cn));
+		return allVisitedNodes;
 	}
 
 	private void setNext() {
@@ -101,24 +132,6 @@ public class EdgeGuideWorklist {
 				nextEdgeGuide = null;
 			}
 		}
-	}
-
-	Iterable<EdgeGuide> getCurrentEdgeGuides() {
-		return currEdgeGuides;
-	}
-
-	boolean edgeVisited(ControlFlowEdge edge) {
-		return allVisitedEdges.contains(edge);
-	}
-
-	Set<Node> getAllVisitedNodes(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<Node> allVisitedNodes = new HashSet<>();
-		for (ControlFlowEdge edge : allVisitedEdges) {
-			allVisitedNodes.add(edge.start);
-			allVisitedNodes.add(edge.end);
-		}
-		allVisitedNodes.add(edgeProvider.getStartNode(cn));
-		return allVisitedNodes;
 	}
 
 }

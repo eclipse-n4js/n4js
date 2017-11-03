@@ -21,5 +21,6 @@ Export-Package: org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.flowgraphs.model
 Import-Package: org.eclipse.core.runtime,
  org.eclipse.n4js.n4JS,
- org.eclipse.n4js.n4JS.util
+ org.eclipse.n4js.n4JS.util,
+ org.eclipse.n4js.smith
 

@@ -44,14 +44,14 @@ public class GraphVisitorGuideInternal {
 	private final EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
 
 	/** Constructor */
-	public GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
+	GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
 			Collection<? extends GraphVisitorInternal> walkers) {
 		this.flowAnalyzer = flowAnalyzer;
 		this.walkers = walkers;
 	}
 
 	/** Call before any of the {@code walkthrough} methods is called. */
-	public void init() {
+	void init() {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyzer);
 			walker.callInitialize();
@@ -59,7 +59,7 @@ public class GraphVisitorGuideInternal {
 	}
 
 	/** Call after all of the {@code walkthrough} methods have been called. */
-	public void terminate() {
+	void terminate() {
 		for (GraphVisitorInternal walker : walkers) {
 			walker.setFlowAnalyses(flowAnalyzer);
 			walker.callTerminate();
@@ -67,22 +67,22 @@ public class GraphVisitorGuideInternal {
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.Forward} */
-	public Set<Node> walkthroughForward(ComplexNode cn) {
+	Set<Node> walkthroughForward(ComplexNode cn) {
 		return walkthrough(cn, Mode.Forward);
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.Backward} */
-	public Set<Node> walkthroughBackward(ComplexNode cn) {
+	Set<Node> walkthroughBackward(ComplexNode cn) {
 		return walkthrough(cn, Mode.Backward);
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.CatchBlocks} */
-	public Set<Node> walkthroughCatchBlocks(ComplexNode cn) {
+	Set<Node> walkthroughCatchBlocks(ComplexNode cn) {
 		return walkthrough(cn, Mode.CatchBlocks);
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.Islands} */
-	public Set<Node> walkthroughIsland(ComplexNode cn) {
+	Set<Node> walkthroughIsland(ComplexNode cn) {
 		return walkthrough(cn, Mode.Islands);
 	}
 
@@ -149,26 +149,11 @@ public class GraphVisitorGuideInternal {
 			visitNode(lastVisitNode, currEdgeGuide, visitNode);
 			lastVisitNode = visitNode;
 
-			tryMergeEdgeGuides();
+			mergeEdgeGuides();
 		}
 
 		Set<Node> allVisitedNodes = guideWorklist.getAllVisitedNodes(cn, edgeProvider);
 		return allVisitedNodes;
-	}
-
-	private void tryMergeEdgeGuides() {
-		LinkedList<EdgeGuide> joinGuideGroup = guideWorklist.getJoinGroups();
-		if (!joinGuideGroup.isEmpty()) {
-			EdgeGuide firstEG = joinGuideGroup.getFirst();
-			Node endNode = firstEG.getNextNode(); // end node is the same on all EGs in the list
-			for (EdgeGuide eg : joinGuideGroup) {
-				Node startNode = eg.getPrevNode();
-				// Before merging the join group, the edges are visited.
-				callVisitOnEdge(startNode, eg, endNode);
-			}
-			EdgeGuide mergedEG = guideWorklist.mergeJoinGroup(joinGuideGroup);
-			callVisitOnNode(mergedEG, endNode);
-		}
 	}
 
 	private Set<BranchWalkerInternal> initVisit() {
@@ -177,6 +162,21 @@ public class GraphVisitorGuideInternal {
 			activatedPaths.addAll(walker.activateRequestedExplorers());
 		}
 		return activatedPaths;
+	}
+
+	private void mergeEdgeGuides() {
+		LinkedList<EdgeGuide> joinGuideGroup = guideWorklist.getJoinGroups();
+		if (!joinGuideGroup.isEmpty()) {
+			EdgeGuide firstEG = joinGuideGroup.getFirst();
+			Node endNode = firstEG.getNextNode(); // end node is the same of all EGs in the list
+			for (EdgeGuide eg : joinGuideGroup) {
+				Node startNode = eg.getPrevNode();
+				// Before merging the join group, the edges are visited.
+				callVisitOnEdge(startNode, eg, endNode);
+			}
+			EdgeGuide mergedEG = guideWorklist.mergeJoinGroup(joinGuideGroup);
+			callVisitOnNode(mergedEG, endNode);
+		}
 	}
 
 	private Node visitNode(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {

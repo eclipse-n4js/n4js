@@ -20,11 +20,23 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Contains algorithms that start {@link GraphVisitorInternal}s using the {@link GraphVisitorGuideInternal}.
  */
 public class GraphVisitorAnalysis {
+	static private final DataCollector dcForwardAnalyses = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Forward", "Flow Graphs", "Perform Analyses");
+	static private final DataCollector dcBackwardAnalyses = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Backward", "Flow Graphs", "Perform Analyses");
+	static private final DataCollector dcCatchBlocksAnalyses = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("CatchBlocks", "Flow Graphs", "Perform Analyses");
+	static private final DataCollector dcIslandsAnalyses = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Islands", "Flow Graphs", "Perform Analyses");
+
 	final FlowGraph cfg;
 
 	/** Constructor */
@@ -38,21 +50,47 @@ public class GraphVisitorAnalysis {
 		guide.init();
 
 		Set<Node> allNodes = getAllNonControlNodes();
-		Set<Node> visitedNodes;
 		for (ControlFlowElement container : cfg.getAllContainers()) {
 			ComplexNode cnContainer = cfg.getComplexNode(container);
-			visitedNodes = guide.walkthroughForward(cnContainer);
-			allNodes.removeAll(visitedNodes);
-			visitedNodes = guide.walkthroughBackward(cnContainer);
-			allNodes.removeAll(visitedNodes);
+
+			traverseForwards(guide, allNodes, cnContainer);
+			traverseBackwards(guide, allNodes, cnContainer);
 		}
 
+		traverseCatchBlocks(guide, allNodes);
+		traverseIslands(guide, allNodes);
+
+		guide.terminate();
+	}
+
+	private void traverseForwards(GraphVisitorGuideInternal guide, Set<Node> allNodes, ComplexNode cnContainer) {
+		Measurement msmnt = dcForwardAnalyses.getMeasurement("Forward_" + cfg.getScriptName());
+		Set<Node> visitedNodes = guide.walkthroughForward(cnContainer);
+		msmnt.end();
+		allNodes.removeAll(visitedNodes);
+	}
+
+	private void traverseBackwards(GraphVisitorGuideInternal guide, Set<Node> allNodes, ComplexNode cnContainer) {
+		Measurement msmnt = dcBackwardAnalyses.getMeasurement("Forward_" + cfg.getScriptName());
+		Set<Node> visitedNodes = guide.walkthroughBackward(cnContainer);
+		msmnt.end();
+		allNodes.removeAll(visitedNodes);
+	}
+
+	private void traverseCatchBlocks(GraphVisitorGuideInternal guide, Set<Node> allNodes) {
+		Measurement msmnt = dcCatchBlocksAnalyses.getMeasurement("CatchBlocks_" + cfg.getScriptName());
+		Set<Node> visitedNodes;
 		for (ControlFlowElement catchBlock : cfg.getCatchBlocks()) {
 			ComplexNode cnCatchBlock = cfg.getComplexNode(catchBlock);
 			visitedNodes = guide.walkthroughCatchBlocks(cnCatchBlock);
 			allNodes.removeAll(visitedNodes);
 		}
+		msmnt.end();
+	}
 
+	private void traverseIslands(GraphVisitorGuideInternal guide, Set<Node> allNodes) {
+		Measurement msmnt = dcIslandsAnalyses.getMeasurement("Islands_" + cfg.getScriptName());
+		Set<Node> visitedNodes;
 		while (!allNodes.isEmpty()) {
 			Node unvisitedNode = allNodes.iterator().next();
 			ComplexNode cnUnvisited = cfg.getComplexNode(unvisitedNode.getControlFlowElement());
@@ -69,8 +107,7 @@ public class GraphVisitorAnalysis {
 				}
 			}
 		}
-
-		guide.terminate();
+		msmnt.end();
 	}
 
 	private void printErrMalformedGraph(ComplexNode cnUnvisited) {

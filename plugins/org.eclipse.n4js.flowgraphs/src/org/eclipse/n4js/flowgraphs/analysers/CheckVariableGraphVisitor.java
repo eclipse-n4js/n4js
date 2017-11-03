@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
@@ -35,39 +34,10 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof VariableDeclaration) {
 			super.requestActivation(new CheckVariablePathExplorer((VariableDeclaration) cfe));
 		}
-	}
-
-	@Override
-	protected void visit(ControlFlowElement lastCFE, ControlFlowElement currentCFE, FlowEdge edge) {
-		// Do nothing
 	}
 
 	/** @return all {@link IdentifierRef}s that are used before declared */
@@ -118,22 +88,6 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 			if (cfe instanceof IdentifierRef && ((IdentifierRef) cfe).getId() == explorer.varDecl) {
 				explorer.idRefs.add((IdentifierRef) cfe);
 			}
-		}
-
-		@Override
-		protected void visit(FlowEdge edge) {
-			// nothing to do
-		}
-
-		@Override
-		protected void terminate() {
-			// nothing to do
-		}
-
-		@Override
-		protected void initialize() {
-			// nothing to do
-
 		}
 
 	}

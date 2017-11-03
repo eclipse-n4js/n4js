@@ -108,13 +108,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 	override register(EValidatorRegistrar registrar) {
 		// nop
 	}
-	
+
 	def Void checkCancelled() {
 		val CancelIndicator cancelIndicator = context.get(CancelableDiagnostician.CANCEL_INDICATOR) as CancelIndicator;
 		operationCanceledManager.checkCanceled(cancelIndicator);
 		return null;
 	}
-
 
 
 
@@ -130,7 +129,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 		val dcv = new DeadCodeVisitor();
 
-		flowAnalyzer.accept(dcv); // GH-120: comment-out this line to disable CFG
+		flowAnalyzer.accept(dcv );
 
 		internalCheckDeadCode(dcv);
 	}

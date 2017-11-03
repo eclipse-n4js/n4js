@@ -19,7 +19,6 @@ import java.util.Set;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.Block;
@@ -50,16 +49,6 @@ public class DeadCodeVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		switch (getCurrentMode()) {
 		case Forward:
@@ -75,21 +64,6 @@ public class DeadCodeVisitor extends GraphVisitor {
 			allCatchBlocksCFEs.add(cfe);
 			break;
 		}
-	}
-
-	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
 	}
 
 	/** @return all reachable {@link ControlFlowElement}s */

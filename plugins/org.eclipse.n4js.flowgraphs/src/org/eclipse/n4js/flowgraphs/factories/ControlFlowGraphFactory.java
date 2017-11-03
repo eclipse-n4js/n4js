@@ -59,7 +59,7 @@ public class ControlFlowGraphFactory {
 		connectComplexNodes(cnMapper);
 		createJumpEdges(cnMapper);
 
-		FlowGraph cfg = new FlowGraph(cfContainers, cfCatchBlocks, cnMap);
+		FlowGraph cfg = new FlowGraph(script, cfContainers, cfCatchBlocks, cnMap);
 
 		if (PRINT_EDGE_DETAILS)
 			printAllEdgeDetails(cnMapper);

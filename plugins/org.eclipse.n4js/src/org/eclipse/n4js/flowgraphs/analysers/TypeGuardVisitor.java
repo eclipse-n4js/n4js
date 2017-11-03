@@ -12,7 +12,6 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
@@ -42,35 +41,10 @@ public class TypeGuardVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfElem == cfe) {
 			super.requestActivation(new TypeGuardExplorer());
 		}
-	}
-
-	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		// nothing to do
 	}
 
 	class TypeGuardExplorer extends GraphExplorer {
@@ -94,11 +68,6 @@ public class TypeGuardVisitor extends GraphVisitor {
 	class TypeGuardWalker extends BranchWalker {
 
 		@Override
-		protected void initialize() {
-			// nothing to do
-		}
-
-		@Override
 		protected void visit(ControlFlowElement cfe) {
 			if (cfe instanceof UnaryExpression) {
 				UnaryExpression ue = (UnaryExpression) cfe;
@@ -111,11 +80,6 @@ public class TypeGuardVisitor extends GraphVisitor {
 					}
 				}
 			}
-		}
-
-		@Override
-		protected void visit(FlowEdge edge) {
-			// nothing to do
 		}
 
 		@Override

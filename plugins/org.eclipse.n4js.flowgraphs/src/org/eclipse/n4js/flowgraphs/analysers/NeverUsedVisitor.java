@@ -12,7 +12,6 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
@@ -31,35 +30,10 @@ public class NeverUsedVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof IdentifierRef && cfe.eContainer() instanceof VariableDeclaration) {
 			super.requestActivation(new NeverUsedExplorer((IdentifierRef) cfe));
 		}
-	}
-
-	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		// nothing to do
 	}
 
 	static private class NeverUsedExplorer extends GraphExplorer {
@@ -86,22 +60,12 @@ public class NeverUsedVisitor extends GraphVisitor {
 	static private class NeverUsedWalker extends BranchWalker {
 
 		@Override
-		protected void initialize() {
-			// nothing to do
-		}
-
-		@Override
 		protected void visit(ControlFlowElement cfe) {
 			// TODO
 			// if (cfe instanceof IdentifierRef && flowAnalyses.isRead(cfe, idRef)) {
 			// pass();
 			// deactivateAll();
 			// }
-		}
-
-		@Override
-		protected void visit(FlowEdge edge) {
-			// nothing to do
 		}
 
 		@Override
