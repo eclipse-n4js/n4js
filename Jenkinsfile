@@ -77,6 +77,8 @@ timestamps {
 
                                 sh """\
                                        echo "===== checking tools versions ====="
+                                       echo $PATH
+                                       ls -l ${xvfbBin}
                                        mvn -v
                                        node -v
                                        npm -v
