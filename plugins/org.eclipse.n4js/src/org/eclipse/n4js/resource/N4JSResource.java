@@ -49,9 +49,13 @@ import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.parser.InternalSemicolonInjectingParser;
+import org.eclipse.n4js.postprocessing.ASTMetaInfoCache;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.scoping.diagnosing.N4JSScopingDiagnostician;
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
@@ -218,6 +222,11 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	public static final String AST_PROXY_FRAGMENT = ":astProxy";
 
 	/**
+	 * Cache for storing type of AST nodes, inferred type arguments of parameterized call expressions, etc.
+	 */
+	private ASTMetaInfoCache astMetaInfoCache;
+
+	/**
 	 * Set by the dirty state support to announce an upcoming unloading request.
 	 */
 	private boolean aboutToBeUnloaded;
@@ -242,14 +251,45 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	@Inject
 	private IDerivedStateComputer myDerivedStateComputer;
 
+	private final DataCollector collector = DataCollectors.INSTANCE.getOrCreateDataCollector("N4JSResource");
+
 	/*
 	 * Even though the constructor is empty, it simplifies debugging (allows to set a breakpoint) thus we keep it here.
 	 */
 	/**
 	 * Public default constructor.
 	 */
+	@Inject
 	public N4JSResource() {
 		super();
+	}
+
+	/**
+	 * Returns the {@link ASTMetaInfoCache} (in states {@link #isFullyProcessed() "Fully Processed"} and during the
+	 * transition from "Fully Initialized" to "Fully Processed", i.e. during post-processing) or throws an exception if
+	 * the cache is unavailable (in all other states).
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCache() {
+		if (astMetaInfoCache == null) {
+			if (!isFullyProcessed() && !isPostProcessing()) {
+				// getter invoked in wrong state
+				throw new IllegalStateException(
+						"AST meta-info cache only available in state 'Fully Processed' and during post-processing");
+			} else {
+				// getter invoked in correct state, but cache is still undefined
+				throw new NullPointerException("AST meta-info cache missing");
+			}
+		}
+		return astMetaInfoCache;
+	}
+
+	/**
+	 * Set or unset the receiving resource's {@link ASTMetaInfoCache} (in the latter case, pass in <code>null</code>).
+	 * Should only be called at the beginning of post-processing (to set the cache) and when discarding the
+	 * post-processing result (to unset the cache).
+	 */
+	public void setASTMetaInfoCache(ASTMetaInfoCache cache) {
+		this.astMetaInfoCache = cache;
 	}
 
 	/**
@@ -909,7 +949,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// if targetResource exists, make sure it is post-processed *iff* this resource is post-processed
 				// (only relevant in case targetResource wasn't loaded from index, because after loading from index it
 				// is always marked as fullyPostProcessed==true)
-				if (targetObject != null && (this.isProcessing() || this.isFullyProcessed())) {
+				if (targetObject != null && (this.isPostProcessing() || this.isFullyProcessed())) {
 					final Resource targetResource2 = targetObject.eResource();
 					if (targetResource2 instanceof N4JSResource) {
 						// no harm done, if already running/completed
@@ -1139,7 +1179,9 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		// called from builder before resource descriptions are created + called from validator
 		final Script script = getScriptResolved(); // need to be called before resolve() since that one injects a proxy
 		// at resource.content[0]
+		final Measurement measurment = collector.getMeasurement(getURI().toString());
 		super.resolveLazyCrossReferences(mon);
+		measurment.end();
 		if (script != null) {
 			// FIXME freezing of used imports tracking can/should now be moved to N4JSPostProcessor or ASTProcessor
 			EcoreUtilN4.doWithDeliver(false,

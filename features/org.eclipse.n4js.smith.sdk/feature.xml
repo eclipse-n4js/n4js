@@ -37,10 +37,16 @@ Contributors:
    </license>
 
    <plugin
-         id="org.eclipse.n4js.smith.graph"
+         id="org.eclipse.n4js.smith"
          download-size="0"
          install-size="0"
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.eclipse.n4js.smith.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 </feature>

@@ -107,6 +107,25 @@ function Block3() {
 }
 
 
+function Debugger1() {
+	// Debugger1 XPECT cfContainer --> FunctionDeclaration::Block
+	// Debugger1 XPECT allIslandElems -->
+	// Debugger1 XPECT allCatchBlocks -->
+	/* Debugger1 XPECT allEdges ---
+		"start" --> debugger;, debugger; --> "end"
+	--- */
+	// Debugger1 XPECT allPaths --> "start" -> debugger; -> "end"
+	// Debugger1 XPECT allPaths direction 'Backward' --> "end" -> debugger; -> "start"
+	// Debugger1 XPECT path from '"start"' to '"end"' -->
+	// Debugger1 XPECT commonPreds of '"end"' and '"start"' --> "start"
+	// Debugger1 XPECT succs at '"start"' --> debugger;
+	// Debugger1 XPECT succs at 'debugger;' --> "end"
+	"start";
+	debugger;
+	"end";
+}
+
+
 
 function IfStatement1() {
 	// IfStatement1 XPECT cfContainer --> FunctionDeclaration::Block

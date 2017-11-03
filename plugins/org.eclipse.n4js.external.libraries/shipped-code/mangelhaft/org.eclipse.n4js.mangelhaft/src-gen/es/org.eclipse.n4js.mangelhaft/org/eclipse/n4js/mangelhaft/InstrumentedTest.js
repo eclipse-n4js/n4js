@@ -74,6 +74,21 @@
 							});
 						}
 					},
+					getFixmeScope: {
+						value: function getFixmeScope___n4(fixme) {
+							let scope;
+							let scopes;
+							if (fixme) {
+								if (fixme.details.length > 1) {
+									scope = fixme.details[1];
+								}
+								if (scope) {
+									scopes = new Set(scope.split(",").map((scope)=>scope.trim()));
+								}
+							}
+							return scopes;
+						}
+					},
 					getTestMethodDescriptors: {
 						value: function getTestMethodDescriptors___n4(meths, tftype) {
 							return meths.map((methodDescriptor)=>{
@@ -86,6 +101,7 @@
 									ignoreReason: ignoreAnnotation ? ignoreAnnotation.details.join(" ") : "",
 									fixme: !!fixmeAnnotation,
 									fixmeReason: fixmeAnnotation ? fixmeAnnotation.details.join(" ") : "",
+									fixmeScopes: this.getFixmeScope(fixmeAnnotation),
 									name: methodDescriptor.name,
 									value: methodDescriptor.jsFunction,
 									type: tftype
@@ -345,6 +361,12 @@
 								name: 'getInstrumentedTest',
 								isStatic: true,
 								jsFunction: staticProto['getInstrumentedTest'],
+								annotations: []
+							}),
+							new N4Method({
+								name: 'getFixmeScope',
+								isStatic: false,
+								jsFunction: instanceProto['getFixmeScope'],
 								annotations: []
 							}),
 							new N4Method({
