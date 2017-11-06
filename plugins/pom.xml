@@ -90,7 +90,7 @@ Contributors:
 		<module>org.eclipse.n4js.n4jsx.model</module>
 		<module>org.eclipse.n4js.n4jsx.ui</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui</module>
-
+		<module>org.eclipse.n4js.n4jsx.generator</module>
 	</modules>
 
 	<properties>

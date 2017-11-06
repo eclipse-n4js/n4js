@@ -18,7 +18,7 @@ Contributors:
             class="org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator">
       </generator>
    </extension>
-   <!-- Register Emac script generator for N4JSX -->
+   <!-- Register ECMAScript generator for N4JSX -->
    <extension
          point="org.eclipse.n4js.generator.common.subgenerator">
       <subgenerator
