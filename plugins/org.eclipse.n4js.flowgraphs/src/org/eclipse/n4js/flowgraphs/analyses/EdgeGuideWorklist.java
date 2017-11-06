@@ -36,7 +36,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * </pre>
  */
 public class EdgeGuideWorklist {
-	private final EdgeGuideQueue currEdgeGuides = new EdgeGuideQueue(this);
+	private final EdgeGuideQueue egQueue = new EdgeGuideQueue(this);
 	private final Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
 	private EdgeGuide currEdgeGuide;
 	private EdgeGuide nextEdgeGuide;
@@ -49,7 +49,7 @@ public class EdgeGuideWorklist {
 
 	/** @return an {@link Iterable} over all {@link EdgeGuide} that are currently in the work list */
 	Iterable<EdgeGuide> getCurrentEdgeGuides() {
-		return currEdgeGuides.getIterator();
+		return egQueue.getIterator();
 	}
 
 	/** @return the next {@link EdgeGuide} which is the new current {@link EdgeGuide} */
@@ -65,9 +65,9 @@ public class EdgeGuideWorklist {
 		allVisitedEdges.clear();
 		currEdgeGuide = null;
 		nextEdgeGuide = null;
-		currEdgeGuides.clear();
+		egQueue.clear();
 		List<EdgeGuide> nextEGs = EdgeGuide.getFirstEdgeGuides(cn, edgeProvider, activatedPaths);
-		currEdgeGuides.addAll(nextEGs);
+		egQueue.addAll(nextEGs);
 	}
 
 	/**
@@ -78,9 +78,9 @@ public class EdgeGuideWorklist {
 	LinkedList<EdgeGuide> getJoinGroups() {
 		allVisitedEdges.add(currEdgeGuide.getEdge());
 		List<EdgeGuide> nextEGs = currEdgeGuide.getNextEdgeGuides();
-		currEdgeGuides.addAll(nextEGs);
+		egQueue.addAll(nextEGs);
 
-		LinkedList<EdgeGuide> joinGuideGroup = currEdgeGuides.removeFirstJoinGuide();
+		LinkedList<EdgeGuide> joinGuideGroup = egQueue.removeFirstJoinGuide();
 		return joinGuideGroup;
 	}
 
@@ -97,7 +97,7 @@ public class EdgeGuideWorklist {
 			}
 
 			List<EdgeGuide> nextEGs = remainingEdgeGuide.getNextEdgeGuides();
-			currEdgeGuides.addAll(nextEGs);
+			egQueue.addAll(nextEGs);
 			return remainingEdgeGuide;
 		}
 		return null;
@@ -124,8 +124,8 @@ public class EdgeGuideWorklist {
 			return;
 		}
 		nextEdgeGuide = null;
-		while (!currEdgeGuides.isEmpty() && nextEdgeGuide == null) {
-			nextEdgeGuide = currEdgeGuides.removeFirst();
+		while (!egQueue.isEmpty() && nextEdgeGuide == null) {
+			nextEdgeGuide = egQueue.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(nextEdgeGuide.getEdge());
 			alreadyVisitedAndObsolete &= nextEdgeGuide.isEmpty();
 			if (alreadyVisitedAndObsolete) {

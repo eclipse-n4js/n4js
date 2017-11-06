@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
@@ -202,10 +201,8 @@ public class GraphVisitorGuideInternal {
 			currEdgeGuide.addActiveBranches(activatedPaths);
 		}
 
-		for (Iterator<Map.Entry<GraphExplorerInternal, BranchWalkerInternal>> actPathIt = currEdgeGuide
-				.getEWIterator(); actPathIt.hasNext();) {
-
-			BranchWalkerInternal activePath = actPathIt.next().getValue();
+		for (Iterator<BranchWalkerInternal> actPathIt = currEdgeGuide.getEWIterator(); actPathIt.hasNext();) {
+			BranchWalkerInternal activePath = actPathIt.next();
 			activePath.callVisit(visitNode);
 
 			if (!activePath.isActive()) {
@@ -230,10 +227,8 @@ public class GraphVisitorGuideInternal {
 			currEdgeGuide.addActiveBranches(activatedPaths);
 		}
 
-		for (Iterator<Map.Entry<GraphExplorerInternal, BranchWalkerInternal>> actPathIt = currEdgeGuide
-				.getEWIterator(); actPathIt.hasNext();) {
-
-			BranchWalkerInternal activePath = actPathIt.next().getValue();
+		for (Iterator<BranchWalkerInternal> actPathIt = currEdgeGuide.getEWIterator(); actPathIt.hasNext();) {
+			BranchWalkerInternal activePath = actPathIt.next();
 			activePath.callVisit(lastVisitNode, visitNode, visitedEdge);
 
 			if (!activePath.isActive()) {

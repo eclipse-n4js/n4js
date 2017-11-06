@@ -129,7 +129,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 		val dcv = new DeadCodeVisitor();
 
-		flowAnalyzer.accept(dcv );
+		flowAnalyzer.accept(dcv);
 
 		internalCheckDeadCode(dcv);
 	}

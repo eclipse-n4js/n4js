@@ -17,9 +17,9 @@ import java.util.Set;
 
 /**
  * An {@link GraphExplorerInternal} is created and spawned from a {@link GraphVisitorInternal} on specific
- * preconditions. It follows all branchs beginning from the location of activation. Its initial branch is forked using
- * the method {@link #firstBranchWalker()}. Subsequent branchs are forked from the initial branchs. The
- * {@link GraphExplorerInternal} is deactivated in case it has no active branchs anymore. The final state of a
+ * preconditions. It follows all branches beginning from the location of activation. Its initial branch is forked using
+ * the method {@link #firstBranchWalker()}. Subsequent branches are forked from the initial branches. The
+ * {@link GraphExplorerInternal} is deactivated in case it has no active branches anymore. The final state of a
  * {@link GraphExplorerInternal} can be either <i>Passed</i> or <i>Failed</i>.
  * <p/>
  * The life cycle of a {@link GraphExplorerInternal}:
@@ -54,7 +54,7 @@ abstract public class GraphExplorerInternal {
 	public enum Quantor {
 		/** No specific condition. */
 		None,
-		/** The {@link GraphExplorerInternal} passes iff all branchs pass. */
+		/** The {@link GraphExplorerInternal} passes iff all branches pass. */
 		ForAllBranches,
 		/** The {@link GraphExplorerInternal} passes if at least one branch passes. */
 		AtLeastOneBranch
@@ -86,7 +86,7 @@ abstract public class GraphExplorerInternal {
 	 * Constructor
 	 * <p>
 	 * The {@link GraphExplorerInternal} will pass as default in case {@link BranchWalkerInternal#fail()} is never
-	 * called on any of its active branchs.
+	 * called on any of its active branches.
 	 *
 	 * @param quantor
 	 *            defines fail/pass condition

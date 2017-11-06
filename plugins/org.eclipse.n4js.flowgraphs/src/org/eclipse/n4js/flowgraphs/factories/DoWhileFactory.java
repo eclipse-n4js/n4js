@@ -27,12 +27,13 @@ class DoWhileFactory {
 	static final String CONDITION_NODE_NAME = "condition";
 
 	static ComplexNode buildComplexNode(DoStatement doStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(doStmt);
 
-		Node entryNode = new HelperNode("entry", doStmt);
-		Node exitNode = new DelegatingNode("exit", doStmt);
-		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, doStmt, doStmt.getExpression());
-		Node bodyNode = new DelegatingNode("body", doStmt, doStmt.getStatement());
+		Node entryNode = new HelperNode("entry", intPos++, doStmt);
+		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, intPos++, doStmt, doStmt.getExpression());
+		Node bodyNode = new DelegatingNode("body", intPos++, doStmt, doStmt.getStatement());
+		Node exitNode = new DelegatingNode("exit", intPos++, doStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);

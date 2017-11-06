@@ -31,16 +31,16 @@ class WhileFactory {
 	static final String CONDITION_NODE_NAME = "condition";
 
 	static ComplexNode buildComplexNode(WhileStatement whileStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(whileStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, whileStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, whileStmt);
-		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, whileStmt, whileStmt.getExpression());
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, whileStmt);
+		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, intPos++, whileStmt, whileStmt.getExpression());
 		Node bodyNode = null;
-
 		if (whileStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", whileStmt, whileStmt.getStatement());
+			bodyNode = new DelegatingNode("body", intPos++, whileStmt, whileStmt.getStatement());
 		}
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, whileStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

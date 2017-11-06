@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -176,6 +177,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 			cbs += "B" + getNumber() + ": ";
 			if (!this.getPredecessors().isEmpty()) {
 				cbs += "[";
+				Collections.sort(this.getPredecessors(), AllBranchPrintWalker::compareBranches);
 				for (BranchWalker bw : this.getPredecessors()) {
 					cbs += "B" + bw.getNumber() + "|";
 				}
@@ -184,12 +186,17 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 			cbs += branchString;
 			if (!this.getSuccessors().isEmpty()) {
 				cbs += "[";
+				Collections.sort(this.getSuccessors(), AllBranchPrintWalker::compareBranches);
 				for (BranchWalker bw : this.getSuccessors()) {
 					cbs += "B" + bw.getNumber() + "|";
 				}
 				cbs = cbs.substring(0, cbs.length() - 1) + "]";
 			}
 			return cbs;
+		}
+
+		static int compareBranches(BranchWalkerInternal b1, BranchWalkerInternal b2) {
+			return b1.getNumber() - b2.getNumber();
 		}
 
 		@Override

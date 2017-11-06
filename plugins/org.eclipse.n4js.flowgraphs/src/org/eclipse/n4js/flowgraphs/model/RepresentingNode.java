@@ -23,8 +23,8 @@ public class RepresentingNode extends DelegatingNode {
 	/**
 	 * Constructor. Sets the delegated {@link ControlFlowElement} to cfe
 	 */
-	public RepresentingNode(String name, ControlFlowElement cfe) {
-		super(name, cfe, cfe);
+	public RepresentingNode(String name, int internalPosition, ControlFlowElement cfe) {
+		super(name, internalPosition, cfe, cfe);
 	}
 
 	@Override

@@ -51,11 +51,13 @@ public class EdgeGuideQueue {
 	/** Adds an {@link EdgeGuide} to this queue */
 	void add(EdgeGuide edgeGuide) {
 		currEdgeGuides.add(edgeGuide);
+		Collections.sort(currEdgeGuides, this::compareForRemoveFirst);
 	}
 
 	/** Adds several {@link EdgeGuide}s to this queue */
 	void addAll(Collection<EdgeGuide> edgeGuides) {
 		currEdgeGuides.addAll(edgeGuides);
+		Collections.sort(currEdgeGuides, this::compareForRemoveFirst);
 	}
 
 	/** @return true iff this queue is empty */
@@ -65,7 +67,6 @@ public class EdgeGuideQueue {
 
 	/** @return and removes the head of this queue */
 	EdgeGuide removeFirst() {
-		Collections.sort(currEdgeGuides, this::compareForRemoveFirst);
 		return currEdgeGuides.remove(0);
 	}
 
@@ -110,10 +111,10 @@ public class EdgeGuideQueue {
 	private int compareForRemoveFirst(EdgeGuide eg1, EdgeGuide eg2) {
 		ControlFlowEdge e1 = eg1.getEdge();
 		ControlFlowEdge e2 = eg2.getEdge();
-		Node end1 = e1.end;
-		Node end2 = e2.end;
-		ControlFlowElement cfe1 = end1.getControlFlowElement();
-		ControlFlowElement cfe2 = end1.getControlFlowElement();
+		Node nextNode1 = eg1.getNextNode();
+		Node nextNode2 = eg2.getNextNode();
+		ControlFlowElement cfe1 = nextNode1.getControlFlowElement();
+		ControlFlowElement cfe2 = nextNode1.getControlFlowElement();
 		ControlFlowType cft1 = e1.cfType;
 		ControlFlowType cft2 = e2.cfType;
 
@@ -122,8 +123,9 @@ public class EdgeGuideQueue {
 				.compare(cfe1, cfe2, EdgeGuideQueue::compareDepth)
 				.compare(e1, e2, this::compareVisited)
 				.compare(cft1, cft2, EdgeGuideQueue::compareEdgeTypes)
-				.compare(end1, end2, EdgeGuideQueue::compareJoining)
-				.compare(end1.hashCode(), end2.hashCode())
+				.compare(eg1, eg2, EdgeGuideQueue::compareJoining)
+				.compare(eg1, eg2, EdgeGuideQueue::compareInternalPosition)
+				.compare(nextNode1.hashCode(), nextNode2.hashCode())
 				.compare(e1.hashCode(), e2.hashCode())
 				.result();
 	}
@@ -153,13 +155,25 @@ public class EdgeGuideQueue {
 		return isVisited1 ? -1 : 1;
 	}
 
-	private static int compareJoining(Node end1, Node end2) {
-		boolean isJoining1 = end1.pred.size() > 1;
-		boolean isJoining2 = end2.pred.size() > 1;
+	private static int compareJoining(EdgeGuide eg1, EdgeGuide eg2) {
+		Node nextNode1 = eg1.getNextNode();
+		Node nextNode2 = eg2.getNextNode();
+		boolean isJoining1 = eg1.edgeProvider.getPlainPrevEdges(nextNode1).size() > 1;
+		boolean isJoining2 = eg2.edgeProvider.getPlainPrevEdges(nextNode2).size() > 1;
 		if (isJoining1 == isJoining2) {
 			return 0;
 		}
 		return isJoining1 ? 1 : -1;
+	}
+
+	private static int compareInternalPosition(EdgeGuide eg1, EdgeGuide eg2) {
+		Node nextNode1 = eg1.getNextNode();
+		Node nextNode2 = eg2.getNextNode();
+		if (eg1.edgeProvider instanceof NextEdgesProvider.Forward) {
+			return nextNode1.internalPosition - nextNode2.internalPosition;
+		} else {
+			return nextNode2.internalPosition - nextNode1.internalPosition;
+		}
 	}
 
 	private static Map<ControlFlowType, Integer> cftOrderMap = new EnumMap<>(ControlFlowType.class);

@@ -44,7 +44,7 @@ import com.google.common.collect.Sets;
  */
 public class EdgeGuide {
 	final NextEdgesProvider edgeProvider;
-	final Map<GraphExplorerInternal, BranchWalkerInternal> explorerWalkerMap = new HashMap<>();
+	final LinkedList<BranchWalkerInternal> branchWalkers = new LinkedList<>();
 	final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 	private ControlFlowEdge edge;
 
@@ -140,9 +140,11 @@ public class EdgeGuide {
 		if (nextEdges.size() > 1) {
 			while (nextEdgeIt.hasNext()) {
 				ControlFlowEdge nextEdge = nextEdgeIt.next();
+
 				Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
 				for (BranchWalkerInternal aPath : getBranchIterable()) {
 					BranchWalkerInternal forkedPath = aPath.callFork();
+					aPath.deactivate();
 					forkedPaths.add(forkedPath);
 				}
 
@@ -150,10 +152,6 @@ public class EdgeGuide {
 				Set<JumpToken> fbContexts = finallyBlockContexts;
 				EdgeGuide edgeGuide = new EdgeGuide(epCopy, nextEdge, forkedPaths, fbContexts);
 				nextEGs.add(edgeGuide);
-			}
-
-			for (BranchWalkerInternal aPath : getBranchIterable()) {
-				aPath.deactivate();
 			}
 		}
 
@@ -218,18 +216,15 @@ public class EdgeGuide {
 	}
 
 	void addActiveBranches(Collection<BranchWalkerInternal> activatedPaths) {
-		for (BranchWalkerInternal bwi : activatedPaths) {
-			GraphExplorerInternal explorer = bwi.getExplorer();
-			explorerWalkerMap.put(explorer, bwi);
-		}
+		branchWalkers.addAll(activatedPaths);
 	}
 
 	Iterable<BranchWalkerInternal> getBranchIterable() {
-		return explorerWalkerMap.values();
+		return branchWalkers;
 	}
 
-	Iterator<Map.Entry<GraphExplorerInternal, BranchWalkerInternal>> getEWIterator() {
-		return explorerWalkerMap.entrySet().iterator();
+	Iterator<BranchWalkerInternal> getEWIterator() {
+		return branchWalkers.iterator();
 	}
 
 	ControlFlowEdge getEdge() {
@@ -242,11 +237,12 @@ public class EdgeGuide {
 	}
 
 	boolean isEmpty() {
-		return explorerWalkerMap.isEmpty();
+		return branchWalkers.isEmpty();
 	}
 
 	/** @return true iff this {@link EdgeGuide} was merged from two or more {@link EdgeGuide}s */
 	boolean isMerged() {
 		return false;
 	}
+
 }

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,13 +22,21 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
+import com.google.common.collect.ComparisonChain;
+
 /**
  * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a {@link ComplexNode}.
  */
 abstract public class Node implements ControlFlowable {
+	static private int ID_COUNTER = 0;
+	/** The node id */
+	final public int id = ID_COUNTER++;
+	/** The {@link ControlFlowElement} this node refers to */
 	final private ControlFlowElement cfElem;
 	/** Name of the node */
 	final public String name;
+	/** The control flow position of this node in context of its {@link ComplexNode} */
+	final public int internalPosition;
 
 	/** Maps from a predecessor node to an {@link EdgeDescription} */
 	final public Map<Node, EdgeDescription> internalPred = new HashMap<>();
@@ -50,8 +59,9 @@ abstract public class Node implements ControlFlowable {
 	 * Constructor.<br/>
 	 * Creates a node with the given name and {@link ControlFlowElement}.
 	 */
-	public Node(String name, ControlFlowElement cfElem) {
+	public Node(String name, int internalPosition, ControlFlowElement cfElem) {
 		this.name = name;
+		this.internalPosition = internalPosition;
 		this.cfElem = cfElem;
 	}
 
@@ -107,11 +117,13 @@ abstract public class Node implements ControlFlowable {
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
 		succ.add(cfEdge);
+		Collections.sort(succ, Node::compareNodes);
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
 		pred.add(cfEdge);
+		Collections.sort(pred, Node::compareNodes);
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
@@ -203,4 +215,14 @@ abstract public class Node implements ControlFlowable {
 		}
 	}
 
+	private static int compareNodes(ControlFlowEdge e1, ControlFlowEdge e2) {
+		int result = ComparisonChain.start()
+				.compare(e1.start.id, e2.start.id)
+				.compare(e1.end.id, e2.end.id)
+				.compare(e1.cfType, e2.cfType)
+				.compare(e1.start.cfElem.toString(), e2.start.cfElem.toString())
+				.result();
+		assert result != 0;
+		return result;
+	}
 }

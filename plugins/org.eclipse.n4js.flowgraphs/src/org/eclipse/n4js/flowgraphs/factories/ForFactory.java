@@ -44,36 +44,37 @@ class ForFactory {
 	}
 
 	private static ComplexNode buildForInOf(ForStatement forStmt, boolean forInSemantics) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(forStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, forStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, forStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, forStmt);
 		List<Node> declNodes = new LinkedList<>();
 		List<Node> initNodes = new LinkedList<>();
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("decl_" + i, forStmt, varDecl);
+					Node initNode = new DelegatingNode("decl_" + i, intPos++, forStmt, varDecl);
 					declNodes.add(initNode);
 					i++;
 				}
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", forStmt, forStmt.getInitExpr());
+			Node initNode = new DelegatingNode("inits", intPos++, forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
-		Node expressionNode = new DelegatingNode("expression", forStmt, forStmt.getExpression());
+		Node expressionNode = new DelegatingNode("expression", intPos++, forStmt, forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics)
-			getObjectKeysNode = new HelperNode("getObjectKeys", forStmt);
-		Node getIteratorNode = new HelperNode("getIterator", forStmt);
-		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, forStmt);
-		Node nextNode = new HelperNode("next", forStmt);
+			getObjectKeysNode = new HelperNode("getObjectKeys", intPos++, forStmt);
+		Node getIteratorNode = new HelperNode("getIterator", intPos++, forStmt);
+		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, intPos++, forStmt);
+		Node nextNode = new HelperNode("next", intPos++, forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null)
-			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", intPos++, forStmt, forStmt.getStatement());
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, forStmt);
 
 		cNode.addNode(entryNode);
 		for (Node declNode : declNodes)
@@ -112,39 +113,40 @@ class ForFactory {
 	}
 
 	private static ComplexNode buildForPlain(ForStatement forStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(forStmt);
 
 		List<Node> initNodes = new LinkedList<>();
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, forStmt);
 		Node conditionNode = null;
 		Node bodyNode = null;
-		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, forStmt);
 		Node updatesNode = null;
-		Node entryNode = new HelperNode(ENTRY_NODE, forStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, forStmt);
 
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("init_" + i, forStmt, varDecl);
+					Node initNode = new DelegatingNode("init_" + i, intPos++, forStmt, varDecl);
 					initNodes.add(initNode);
 					i++;
 				}
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", forStmt, forStmt.getInitExpr());
+			Node initNode = new DelegatingNode("inits", intPos++, forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode("condition", forStmt, forStmt.getExpression());
+			conditionNode = new DelegatingNode("condition", intPos++, forStmt, forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", forStmt, forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", intPos++, forStmt, forStmt.getStatement());
 		}
+		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, intPos++, forStmt);
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = new DelegatingNode("updates", forStmt, forStmt.getUpdateExpr());
+			updatesNode = new DelegatingNode("updates", intPos++, forStmt, forStmt.getUpdateExpr());
 		}
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, forStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(exitNode);

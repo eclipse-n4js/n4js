@@ -68,6 +68,12 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
+		protected List<ControlFlowEdge> getPlainPrevEdges(Node nextNode) {
+			List<ControlFlowEdge> nextEdges = nextNode.getPredecessorEdges();
+			return nextEdges;
+		}
+
+		@Override
 		protected Forward copy() {
 			return new Forward(new HashMap<>(super.repeatEdges));
 		}
@@ -109,6 +115,12 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
+		protected List<ControlFlowEdge> getPlainPrevEdges(Node nextNode) {
+			List<ControlFlowEdge> nextEdges = nextNode.getSuccessorEdges();
+			return nextEdges;
+		}
+
+		@Override
 		protected Backward copy() {
 			return new Backward(new HashMap<>(super.repeatEdges));
 		}
@@ -134,6 +146,9 @@ abstract class NextEdgesProvider {
 	 *         traversed first.
 	 */
 	abstract protected Node getEndNode(ComplexNode cn);
+
+	/** @return the all unfiltered previous edges with regard to the traverse direction */
+	abstract protected List<ControlFlowEdge> getPlainPrevEdges(Node nextNode);
 
 	/** @return the all unfiltered next edges with regard to the traverse direction */
 	abstract protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode);
@@ -176,7 +191,7 @@ abstract class NextEdgesProvider {
 	 * null nor empty.
 	 */
 	protected List<ControlFlowEdge> filter(Iterable<ControlFlowEdge> edges, ControlFlowType... cfTypes) {
-		List<ControlFlowEdge> filteredEdges = Lists.newLinkedList(edges);
+		List<ControlFlowEdge> filteredEdges = Lists.newLinkedList(edges); // copy of the original pred/succ list of Node
 		for (Iterator<ControlFlowEdge> edgeIt = filteredEdges.iterator(); edgeIt.hasNext();) {
 			ControlFlowEdge edge = edgeIt.next();
 

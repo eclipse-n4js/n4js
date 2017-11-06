@@ -34,13 +34,13 @@ public class EdgeGuideMerged extends EdgeGuide {
 		Map<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkerMap = new HashMap<>();
 
 		for (EdgeGuide eg : edgeGuides) {
-			for (Map.Entry<GraphExplorerInternal, BranchWalkerInternal> ewEntry : eg.explorerWalkerMap.entrySet()) {
-				GraphExplorerInternal explorer = ewEntry.getKey();
+			for (BranchWalkerInternal bwi : eg.branchWalkers) {
+
+				GraphExplorerInternal explorer = bwi.getExplorer();
 				if (!joiningWalkerMap.containsKey(explorer)) {
 					joiningWalkerMap.put(explorer, new LinkedList<>());
 				}
 				List<BranchWalkerInternal> joiningWalkers = joiningWalkerMap.get(explorer);
-				BranchWalkerInternal bwi = ewEntry.getValue();
 				joiningWalkers.add(bwi);
 			}
 
@@ -48,20 +48,20 @@ public class EdgeGuideMerged extends EdgeGuide {
 			edgeProvider.join(eg.edgeProvider);
 		}
 
-		explorerWalkerMap.clear();
+		branchWalkers.clear();
 		for (Map.Entry<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkers : joiningWalkerMap
 				.entrySet()) {
 
 			GraphExplorerInternal explorer = joiningWalkers.getKey();
 			List<BranchWalkerInternal> walkers = joiningWalkers.getValue();
 			BranchWalkerInternal joinedWalker = explorer.callJoinBranchWalkers(walkers);
-			explorerWalkerMap.put(explorer, joinedWalker);
+			branchWalkers.add(joinedWalker);
 		}
 	}
 
 	@Override
 	List<EdgeGuide> getNextEdgeGuides() {
-		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), explorerWalkerMap.values(), finallyBlockContexts);
+		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), branchWalkers, finallyBlockContexts);
 		return edgeGuide.getNextEdgeGuides();
 	}
 

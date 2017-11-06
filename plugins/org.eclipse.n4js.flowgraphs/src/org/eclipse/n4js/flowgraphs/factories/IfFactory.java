@@ -26,18 +26,19 @@ import org.eclipse.n4js.n4JS.IfStatement;
 class IfFactory {
 
 	static ComplexNode buildComplexNode(IfStatement ifStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(ifStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, ifStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, ifStmt);
-		Node conditionNode = new DelegatingNode("condition", ifStmt, ifStmt.getExpression());
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, ifStmt);
+		Node conditionNode = new DelegatingNode("condition", intPos++, ifStmt, ifStmt.getExpression());
 		Node thenNode = null;
 		Node elseNode = null;
 
 		if (ifStmt.getIfStmt() != null)
-			thenNode = new DelegatingNode("then", ifStmt, ifStmt.getIfStmt());
+			thenNode = new DelegatingNode("then", intPos++, ifStmt, ifStmt.getIfStmt());
 		if (ifStmt.getElseStmt() != null)
-			elseNode = new DelegatingNode("else", ifStmt, ifStmt.getElseStmt());
+			elseNode = new DelegatingNode("else", intPos++, ifStmt, ifStmt.getElseStmt());
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, ifStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

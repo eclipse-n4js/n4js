@@ -30,16 +30,17 @@ import org.eclipse.n4js.n4JS.Statement;
 class BlockFactory {
 
 	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.Block block) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(block);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, block);
-		Node exitNode = new HelperNode(EXIT_NODE, block);
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, block);
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, block);
 		List<Node> blockNodes = new LinkedList<>();
 
 		EList<Statement> stmts = block.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = new DelegatingNode("stmt_" + i, block, stmt);
+			Node blockNode = new DelegatingNode("stmt_" + i, intPos++, block, stmt);
 			blockNodes.add(blockNode);
 		}
 
