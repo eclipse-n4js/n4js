@@ -1,0 +1,41 @@
+
+= Building n4js
+
+The container comes with java & maven & node installed.
+
+== Usage
+
+.Build Docker image
+[source,bash]
+----
+docker build -t n4js-build docker-build
+----
+
+.Run n4js Build in Docker
+[source,bash]
+----
+docker run                                    \
+       -ti                                      \ # acquire interactive terminal
+       --rm                                     \ # remove container when not needed anymore
+       -v m2_repo:/root/.m2/repository          \ # create volume for .m2/repository (speeds up subsequent builds)
+       -v $(pwd):/workspace                     \ # mount the project in /workspace
+       n4js-build                               \
+       mvn package -Dmaven.test.failure.ignore  \ # run the desired tool
+----
+
+== Internals
+There is actually not a lot to say about this Docker image.
+It's basically just an isolated Maven installation with a few additional tools:
+
+* nodejs + yarn
+* xvfb
+
+The image holds the necessary maven settings specific to this project.
+To inspect the image, just run the container with a bash:
+
+[source,bash]
+----
+docker run --rm -it n4js-build /bin/bash
+----
+
+This opens a root shell into the container.
