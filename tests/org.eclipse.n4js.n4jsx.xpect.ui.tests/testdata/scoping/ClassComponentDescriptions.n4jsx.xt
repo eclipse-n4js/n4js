@@ -18,7 +18,9 @@
 					ThisFile {}
 				}
 				Folder "jsxbackend" {
-					File "react.n4jsd" { from = "../../reactFiles/react.n4jsd" }
+					Folder "react" {
+						File "index.n4jsd" { from = "../../react/index.n4jsd" }
+					}
 				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
@@ -29,7 +31,7 @@
  */
 
 
-import * as React from "jsxbackend/react"
+import * as React from "jsxbackend/react/index"
 
 
 export public class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {
@@ -53,13 +55,13 @@ React.PropConstraint, React.PropType, React.PropTypes, React.PureComponent, Reac
 React.createElement, React.isValidElement, React.renderToStaticMarkup, React.renderToString,
 ReferenceError, RegExp, String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError,
 URIError, any, boolean, cloneElement, console, createElement, i18nKey, int,
-isValidElement, jsxbackend.react.Component, jsxbackend.react.ComponentProps,
-jsxbackend.react.Element, jsxbackend.react.PropConstraint, jsxbackend.react.PropType,
-jsxbackend.react.PropTypes, jsxbackend.react.PureComponent, jsxbackend.react.cloneElement,
-jsxbackend.react.createElement, jsxbackend.react.isValidElement, jsxbackend.react.renderToStaticMarkup,
-jsxbackend.react.renderToString, null, number, pathSelector, renderToStaticMarkup, renderToString,
-scoping.ClassComponentDescriptions.LowerComponent, scoping.ClassComponentDescriptions.MyComponent, string, symbol, typeName,
-undefined, void
+isValidElement, jsxbackend.react.index.Component, jsxbackend.react.index.ComponentProps,
+jsxbackend.react.index.Element, jsxbackend.react.index.PropConstraint, jsxbackend.react.index.PropType,
+jsxbackend.react.index.PropTypes, jsxbackend.react.index.PureComponent, jsxbackend.react.index.cloneElement,
+jsxbackend.react.index.createElement, jsxbackend.react.index.isValidElement,
+jsxbackend.react.index.renderToStaticMarkup, jsxbackend.react.index.renderToString, null, number, pathSelector,
+renderToStaticMarkup, renderToString, scoping.ClassComponentDescriptions.LowerComponent,
+scoping.ClassComponentDescriptions.MyComponent, string, symbol, typeName, undefined, void
 --- */
 export public class MyComponent extends React.Component<~React.ComponentProps with {aProp: string}, String> {
 
@@ -67,21 +69,23 @@ export public class MyComponent extends React.Component<~React.ComponentProps wi
 	public render() : React.Element{
 		const constText = "some text";
 		/* XPECT scope at 'Lower|Component'  ---
-		Array, Boolean, Component, ComponentProps, Date, Element, Error, EvalError, Function,
-		Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4, Iterable5, Iterable6,
-		Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON, LowerComponent, Math,
-		MyComponent, N4Accessor, N4Annotation, N4ApiNotImplementedError, N4Class, N4Classifier,
-		N4DataField, N4Element, N4Enum, N4EnumType, N4Field, N4Interface, N4Member, N4Method,
-		N4NamedElement, N4Object, N4Provider, N4Role, N4StringBasedEnum, N4StringBasedEnumType,
-		N4Type, NaN, Number, Object, Promise, PropConstraint, PropType, PropTypes, PureComponent,
-		RangeError, React, ReferenceError, RegExp, String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec,
-		TypeError, URIError, __proto__, arguments, cloneElement, console, constText, constructor, createElement,
-		decodeURI, decodeURIComponent, encodeURI, encodeURIComponent, eval, hasOwnProperty, isFinite, isNaN,
-		isPrototypeOf, isValidElement, jsxbackend.react.Component, jsxbackend.react.ComponentProps, jsxbackend.react.Element,
-		jsxbackend.react.PropConstraint, jsxbackend.react.PropType, jsxbackend.react.PropTypes, jsxbackend.react.PureComponent,
-		jsxbackend.react.cloneElement, jsxbackend.react.createElement, jsxbackend.react.isValidElement,
-		jsxbackend.react.renderToStaticMarkup, jsxbackend.react.renderToString, null, parseFloat, parseInt, propertyIsEnumerable,
-		renderToStaticMarkup, renderToString, scoping.ClassComponentDescriptions.LowerComponent,
+		Array, Boolean, Component, ComponentProps, Date, Element, Error, EvalError,
+		Function, Generator, Infinity, Iterable, Iterable2, Iterable3, Iterable4, Iterable5,
+		Iterable6, Iterable7, Iterable8, Iterable9, Iterator, IteratorEntry, JSON, LowerComponent,
+		Math, MyComponent, N4Accessor, N4Annotation, N4ApiNotImplementedError, N4Class,
+		N4Classifier, N4DataField, N4Element, N4Enum, N4EnumType, N4Field, N4Interface, N4Member,
+		N4Method, N4NamedElement, N4Object, N4Provider, N4Role, N4StringBasedEnum,
+		N4StringBasedEnumType, N4Type, NaN, Number, Object, Promise, PropConstraint, PropType, PropTypes,
+		PureComponent, RangeError, React, ReferenceError, RegExp, String, Symbol, SyntaxError,
+		TEMP_ReturnTypeOfMatchExec, TypeError, URIError, __proto__, arguments, cloneElement, console, constText,
+		constructor, createElement, decodeURI, decodeURIComponent, encodeURI, encodeURIComponent,
+		eval, hasOwnProperty, isFinite, isNaN, isPrototypeOf, isValidElement,
+		jsxbackend.react.index.Component, jsxbackend.react.index.ComponentProps, jsxbackend.react.index.Element,
+		jsxbackend.react.index.PropConstraint, jsxbackend.react.index.PropType, jsxbackend.react.index.PropTypes,
+		jsxbackend.react.index.PureComponent, jsxbackend.react.index.cloneElement, jsxbackend.react.index.createElement,
+		jsxbackend.react.index.isValidElement, jsxbackend.react.index.renderToStaticMarkup,
+		jsxbackend.react.index.renderToString, null, parseFloat, parseInt, propertyIsEnumerable, renderToStaticMarkup,
+		renderToString, scoping.ClassComponentDescriptions.LowerComponent,
 		scoping.ClassComponentDescriptions.MyComponent, toLocaleString, toString, undefined, valueOf, void
 --- */
 		return (<LowerComponent whatTextShouldIShow="Hallo">{constText}</LowerComponent>

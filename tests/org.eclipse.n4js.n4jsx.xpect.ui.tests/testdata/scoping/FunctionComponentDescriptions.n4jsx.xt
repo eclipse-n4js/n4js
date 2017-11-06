@@ -18,7 +18,9 @@
 					ThisFile {}
 				}
 				Folder "jsxbackend" {
-					File "react.n4jsd" { from = "../../reactFiles/react.n4jsd" }
+					Folder "react" {
+						File "index.n4jsd" { from = "../../react/index.n4jsd" }
+					}
 				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
@@ -29,7 +31,7 @@
  */
 
 
-import * as React from "jsxbackend/react"
+import * as React from "jsxbackend/react/index"
 
 
 class ~Props {
@@ -49,11 +51,12 @@ React.PropConstraint, React.PropType, React.PropTypes, React.PureComponent, Reac
 React.createElement, React.isValidElement, React.renderToStaticMarkup, React.renderToString,
 ReferenceError, RegExp, String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError,
 URIError, any, boolean, cloneElement, console, createElement, i18nKey, int,
-isValidElement, jsxbackend.react.Component, jsxbackend.react.ComponentProps,
-jsxbackend.react.Element, jsxbackend.react.PropConstraint, jsxbackend.react.PropType,
-jsxbackend.react.PropTypes, jsxbackend.react.PureComponent, jsxbackend.react.cloneElement,
-jsxbackend.react.createElement, jsxbackend.react.isValidElement, jsxbackend.react.renderToStaticMarkup,
-jsxbackend.react.renderToString, number, pathSelector, renderToStaticMarkup, renderToString,
+isValidElement, jsxbackend.react.index.Component, jsxbackend.react.index.ComponentProps,
+jsxbackend.react.index.Element, jsxbackend.react.index.PropConstraint, jsxbackend.react.index.PropType,
+jsxbackend.react.index.PropTypes, jsxbackend.react.index.PureComponent, jsxbackend.react.index.cloneElement,
+jsxbackend.react.index.createElement, jsxbackend.react.index.isValidElement,
+jsxbackend.react.index.renderToStaticMarkup, jsxbackend.react.index.renderToString, number, pathSelector,
+renderToStaticMarkup, renderToString,
 resourcedescriptions.FunctionComponentDescriptions.NamedFnComponent, resourcedescriptions.FunctionComponentDescriptions.Props, string, symbol,
 typeName, void
 --- */

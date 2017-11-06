@@ -12,15 +12,15 @@
 /* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest
 	ResourceSet {
 		ThisFile {}
-		File "../reactFiles/react.n4jsd" { from = "../reactFiles/react.n4jsd" }
-		File "../reactFiles/react.js" { from = "../reactFiles/react.js" }
-		File "../reactFiles/replacer.n4js" { from = "../reactFiles/replacer.n4js" }
+		File "../react/index.n4jsd" { from = "../react/index.n4jsd" }
+		File "../react/index.js" { from = "../react/index.js" }
+		File "../react/replacer.n4js" { from = "../react/replacer.n4js" }
 	}
 	END_SETUP
  */
 
-import * as React from "reactFiles/react"
-import { replacer } from "reactFiles/replacer"
+import * as React from "react/index"
+import { replacer } from "react/replacer"
 
 var zzzz: React.Element; // Avoid unused import warnings
 zzzz;
