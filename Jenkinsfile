@@ -68,9 +68,9 @@ pipeline {
                 echo 'Building ...'
                 def options = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
                 def profiles = "-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests"
-                    if (isNightly()) {
-                        profiles = profiles + ",execute-ecma-tests,execute-performance-tests,execute-swtbot-performance-tests,execute-accesscontrol-tests"
-                    }
+                    // if (isNightly()) {
+                    //     profiles = profiles + ",execute-ecma-tests,execute-performance-tests,execute-swtbot-performance-tests,execute-accesscontrol-tests"
+                    // }
                 sh """\
                     echo "===== checking tools versions ====="
                     mvn -v
