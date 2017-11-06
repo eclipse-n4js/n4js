@@ -26,9 +26,9 @@ import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.JavaScriptVariant
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.TraceUtils
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.TraceUtils
 import java.util.List
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.EcoreUtil2

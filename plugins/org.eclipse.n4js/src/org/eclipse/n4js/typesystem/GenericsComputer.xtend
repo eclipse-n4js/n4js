@@ -11,7 +11,7 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Collection
 import java.util.List
 import java.util.Set

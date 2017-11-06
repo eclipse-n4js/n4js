@@ -11,10 +11,9 @@
 package org.eclipse.n4js.typesystem;
 
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * This interface defines a variation point for extending the type system, in particular for extending the rules that
