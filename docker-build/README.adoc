@@ -18,9 +18,17 @@ docker run                                    \
        -ti                                      \ # acquire interactive terminal
        --rm                                     \ # remove container when not needed anymore
        -v m2_repo:/root/.m2/repository          \ # create volume for .m2/repository (speeds up subsequent builds)
-       -v $(pwd):/workspace                     \ # mount the project in /workspace
-       n4js-build                               \
+       -v $(pwd):/workspace                     \ # mount the project sources in /workspace
+       n4js-build                               \ # name of the image from the previous step
        mvn package -Dmaven.test.failure.ignore  \ # run the desired tool
+----
+
+Or just use the `build.sh` script in the root directory of this project.
+
+.build.sh
+[source,bash]
+----
+./build.sh mvn package
 ----
 
 == Internals
