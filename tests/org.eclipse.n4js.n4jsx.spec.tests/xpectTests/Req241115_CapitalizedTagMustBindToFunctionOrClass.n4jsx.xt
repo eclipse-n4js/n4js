@@ -13,13 +13,13 @@
 
 	ResourceSet {
 		ThisFile {}
-		File "reactFiles/react.n4jsd" { from = "reactFiles/react.n4jsd"}
+		File "react/index.n4jsd" { from = "react/index.n4jsd" }
 	}
 
 	END_SETUP
 */
 
-import * as React from "reactFiles/react"
+import * as React from "react/index"
 
 class C extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override

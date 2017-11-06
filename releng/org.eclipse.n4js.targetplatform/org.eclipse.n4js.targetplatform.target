@@ -56,8 +56,8 @@
       <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20160520211859/repository"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="it.xsemantics.runtime" version="1.12.0.v20170627-2011"/>
-      <repository location="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
+      <unit id="org.eclipse.xsemantics.runtime" version="1.12.1.v20171102-1951"/>
+      <repository location="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201710301651"/>

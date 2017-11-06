@@ -62,8 +62,8 @@ import org.eclipse.n4js.typesystem.ITypeReplacementProvider;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Helper for comparing API and implementation projects to check if the implementation complies to the API. For more

@@ -124,8 +124,8 @@ import org.eclipse.n4js.validation.validators.utils.MemberCube;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix.SourceAwareIterator;
 import org.eclipse.n4js.validation.validators.utils.MemberRedefinitionUtils;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Implementation of constraints in chapter 5.4. Redefinition of Members.

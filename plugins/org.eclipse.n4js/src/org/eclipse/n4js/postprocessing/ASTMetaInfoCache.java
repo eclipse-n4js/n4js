@@ -34,8 +34,8 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
 
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * The <em>AST meta-info cache</em> is created and filled with information during post-processing of an N4JS resource

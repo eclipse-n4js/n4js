@@ -18,16 +18,15 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.xsemantics.runtime.ErrorInformation;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleApplicationTrace;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleFailedException;
 import org.eclipse.xtext.service.OperationCanceledManager;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import it.xsemantics.runtime.ErrorInformation;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleApplicationTrace;
-import it.xsemantics.runtime.RuleEnvironment;
-import it.xsemantics.runtime.RuleFailedException;
 
 /**
  * This class contains some customizations of the Xsemantics-generated types system {@link InternalTypeSystem}. It is
