@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4ide.spec.tests;
 
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.HyperlinkXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OrganizeImportXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.OutlineXpectMethod;
@@ -33,7 +32,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 @XpectSuiteClasses({
 		// LinkingTest.class,
 		// TypeXpectMethod.class,
-		NoerrorsXpectMethod.class,
 		// ScopeXpectMethod.class,
 		// ResourceDescriptionTest.class,
 		ValidationTest.class,

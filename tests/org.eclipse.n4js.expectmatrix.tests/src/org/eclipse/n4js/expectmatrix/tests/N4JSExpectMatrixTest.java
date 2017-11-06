@@ -12,7 +12,6 @@ package org.eclipse.n4js.expectmatrix.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.expectmatrix.tests.utils.N4JSRuntimeTest;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 import org.junit.runner.RunWith;
@@ -31,8 +30,7 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 		LinkingTest.class, ResourceDescriptionTest.class,
 		TypeXpectMethod.class,
 		ValidationTest.class,
-		N4JSRuntimeTest.class,
-		NoerrorsXpectMethod.class
+		N4JSRuntimeTest.class
 })
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-tests")

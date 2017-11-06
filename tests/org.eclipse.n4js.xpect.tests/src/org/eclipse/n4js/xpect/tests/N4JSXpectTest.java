@@ -16,7 +16,6 @@ import org.eclipse.n4js.xpect.methods.ElementKeywordXpectMethod;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.FlowgraphsXpectMethod;
 import org.eclipse.n4js.xpect.methods.FormatterXpectMethod;
-import org.eclipse.n4js.xpect.methods.NoerrorsXpectMethod;
 import org.eclipse.n4js.xpect.methods.ReturnXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
@@ -41,7 +40,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 		ReturnXpectMethod.class,
 		TypeXpectMethod.class,
 		ScopeXpectMethod.class,
-		NoerrorsXpectMethod.class,
 		ResourceDescriptionTest.class,
 		ValidationTest.class,
 		FormatterXpectMethod.class,

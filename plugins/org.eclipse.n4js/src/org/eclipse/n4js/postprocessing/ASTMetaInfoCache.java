@@ -20,16 +20,11 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.compileTime.CompileTimeValue;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
-import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -38,9 +33,6 @@ import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
 import org.eclipse.n4js.utils.UtilN4;
-import org.eclipse.xtext.nodemodel.INode;
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.OnChangeEvictingCache.CacheAdapter;
 
 import it.xsemantics.runtime.Result;
 import it.xsemantics.runtime.RuleEnvironment;
@@ -54,8 +46,6 @@ import it.xsemantics.runtime.RuleEnvironment;
  * and therefore have an AST (not those that are loaded from the Xtext index / TModule).
  */
 public final class ASTMetaInfoCache {
-
-	private static Logger logger = Logger.getLogger(ASTMetaInfoCache.class);
 
 	// ################################################################################################################
 	// main content of the cache
@@ -121,7 +111,7 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeType(TypableElement astNode, Result<TypeRef> actualType) {
-		if (!isProcessingInProgress()) {
+		if (!isPostProcessing()) {
 			throw new IllegalStateException(
 					"attempt to store type in cache while post-processing not in progress");
 		}
@@ -148,7 +138,7 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeInferredTypeArgs(ParameterizedCallExpression callExpr, List<TypeRef> typeArgs) {
-		if (!isProcessingInProgress()) {
+		if (!isPostProcessing()) {
 			throw new IllegalStateException(
 					"attempt to store inferred type arguments in cache while post-processing not in progress");
 		}
@@ -172,7 +162,7 @@ public final class ASTMetaInfoCache {
 	}
 
 	/* package */ void storeCompileTimeValue(Expression expr, CompileTimeValue evalResult) {
-		if (!isProcessingInProgress()) {
+		if (!isPostProcessing()) {
 			throw new IllegalStateException(
 					"attempt to store compile-time value in cache while post-processing not in progress");
 		}
@@ -214,10 +204,8 @@ public final class ASTMetaInfoCache {
 	}
 
 	// ################################################################################################################
-	// helper variables used *only* by post-processors in package org.eclipse.n4js.postprocessing
-
-	private boolean isProcessingInProgress = false;
-	private boolean isFullyProcessed = false;
+	// helper variables used *only* internally by post-processors in package org.eclipse.n4js.postprocessing for
+	// temporary data during post-processing
 
 	// @formatter:off
 
@@ -228,95 +216,18 @@ public final class ASTMetaInfoCache {
 
 	// @formatter:on
 
-	/* package */ boolean isProcessingInProgress() {
-		return isProcessingInProgress;
-	}
-
-	/* package */ boolean isFullyProcessed() {
-		return isFullyProcessed;
-	}
-
-	/* package */ boolean isEmpty() {
-		// only used for debugging to spot a suspicious cache clear (see ASTMetaInfoCacheHelper)
-		return actualTypes.isEmpty() && inferredTypeArgs.isEmpty();
-	}
-
-	/* package */ void startProcessing() {
-		if (isProcessingInProgress || isFullyProcessed) {
-			// this method should never be called more than once per N4JSResource
-			logger.error("*#*#*#*#* multiple invocation of method ASTMetaInfoCache#startProcessing()\n"
-					+ dumpDebugInfo(true, true));
-			throw UtilN4.reportError(new IllegalStateException(
-					"multiple invocation of method ASTMetaInfoCache#startProcessing()"));
-		}
-		isProcessingInProgress = true;
-	}
-
-	/* package */ void endProcessing() {
-		if (!isProcessingInProgress) {
-			throw new IllegalStateException("invalid invocation of method ASTMetaInfoCache#endProcessing()");
-		}
-		isFullyProcessed = true;
-		isProcessingInProgress = false;
+	/* package */ void clearTemporaryData() {
 		forwardProcessedSubTrees.clear();
 		astNodesCurrentlyBeingTyped.clear();
 		postponedSubTrees.clear();
 		potentialContainersOfLocalArgumentsVariable.clear();
 	}
 
-	/**
-	 * Compiles some debug information for this ASTMetaInfoCache.
-	 */
-	public String dumpDebugInfo(boolean showSourceCode, boolean showOtherResources) {
-		final StringBuilder sb = new StringBuilder();
+	/* package */ boolean isPostProcessing() {
+		return resource.isPostProcessing();
+	}
 
-		final String uriStr = resource != null ? String.valueOf(resource.getURI()) : null;
-		sb.append("BEGIN ASTMetaInfoCache debug info for resource: " + uriStr + "\n");
-		sb.append("cache's isProcessingInProgress == " + isProcessingInProgress + "\n");
-		sb.append("cache's isFullyProcessed == " + isFullyProcessed + "\n");
-		sb.append("cache's hasBrokenAST == " + hasBrokenAST + "\n");
-		sb.append("cache's astNodesCurrentlyBeingTyped == " + astNodesCurrentlyBeingTyped + "\n");
-		sb.append("resource' fullyPostProcessed = " + (resource != null ? resource.isFullyProcessed()
-				: "don't know. Resource is null.") + "\n");
-		sb.append("resource' isPostProcessing = "
-				+ (resource != null ? resource.isProcessing() : "don't know. Resource is null") + "\n");
-
-		if (showSourceCode) {
-			final Script script = resource != null ? resource.getScript() : null;
-			final INode scriptNode = script != null && !script.eIsProxy() ? NodeModelUtils.findActualNodeFor(script)
-					: null;
-			final String code = scriptNode != null ? scriptNode.getText() : null;
-			sb.append("source code:\n------------\n" + code + "\n------------\n");
-		}
-
-		if (showOtherResources) {
-			sb.append("Resources in containing resource set:\n");
-			final ResourceSet resSet = resource != null ? resource.getResourceSet() : null;
-			if (resSet != null) {
-				// we know: resource!=null
-				for (Resource otherRes : resSet.getResources()) {
-					if (otherRes != null) {
-						sb.append(otherRes.getURI());
-						final CacheAdapter cacheAdapter = (CacheAdapter) EcoreUtil.getAdapter(resource.eAdapters(),
-								CacheAdapter.class);
-						final ASTMetaInfoCache astCache = cacheAdapter != null
-								? cacheAdapter.get(ASTMetaInfoCache.class)
-								: null;
-						if (astCache != null) {
-							if (astCache == this) {
-								sb.append(" <=== this ASTMetaInfoCache is attached here!!!!");
-							}
-							final String nestedInfo = astCache.dumpDebugInfo(false, false);
-							final String nestedInfoIndented = ("\n" + nestedInfo).replace("\n", "\n    ");
-							sb.append(nestedInfoIndented);
-						}
-						sb.append("\n");
-					}
-				}
-			}
-			sb.append("END of list of resources in containing resource set\n");
-		}
-		sb.append("END ASTMetaInfoCache debug info for resource: " + uriStr);
-		return sb.toString();
+	/* package */ boolean isFullyProcessed() {
+		return resource.isFullyProcessed();
 	}
 }

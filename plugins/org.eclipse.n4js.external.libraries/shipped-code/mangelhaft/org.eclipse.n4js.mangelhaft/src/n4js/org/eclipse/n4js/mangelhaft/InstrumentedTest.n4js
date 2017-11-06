@@ -24,6 +24,11 @@ function getAllPropertyNames (objProt: constructor{? extends N4Object}, propName
     })
     return propNames;
 }
+
+/**
+ * Represents a test class which has been preprocessed to process test annotations and extract
+ * tests, befores, afters, etc and any metadata needed to run the tests.
+ */
 export public class InstrumentedTest implements IInstrumentedTest{
     @Override public tests: Array<TestMethodDescriptor> = [];
     @Override public beforeAlls: Array<TestMethodDescriptor> = [];
@@ -61,6 +66,10 @@ export public class InstrumentedTest implements IInstrumentedTest{
         }
     }
 
+    /**
+     * Used for parameterized tests.
+     * processes parameterized fields and sets which parameter gets set to which field.
+     */
     private static getParameterizedFields(testClass: constructor{? extends N4Object}): Map<int, string> {
         let parameterizedFields = new Map<int, string>();
 
@@ -71,7 +80,10 @@ export public class InstrumentedTest implements IInstrumentedTest{
         }
         return parameterizedFields;
     }
-
+    
+    /**
+     * Gets the fully instrumented, ready-to-run, parameterized tests for a test class.
+     */
     private static getParameterizedInstrumentedTests(testClass:constructor{N4Object}, info: TestInfo,
         testInjector:N4Injector, parameterGroups:Array<Array<any>>, nameTemplate: string): Array<InstrumentedTest> {
         
@@ -105,6 +117,10 @@ export public class InstrumentedTest implements IInstrumentedTest{
         }
         return tests;
     }
+    
+    /**
+     * processes a test class and gives a fully processed ready-to-run instrumented test group.
+     */
     public static getInstrumentedTest(
         testClass:constructor{N4Object}, info: TestInfo, testInjector:N4Injector
     ): IInstrumentedTest {
@@ -125,8 +141,26 @@ export public class InstrumentedTest implements IInstrumentedTest{
         return new InstrumentedTest(testClass, info, testInjector.create(testClass), null, parameterizedTests)
     }
     
-
-    public getTestMethodDescriptors(meths: Array<? extends N4Method>, tftype: TestFunctionType): Array<TestMethodDescriptor> {
+    /**
+     * gets the fixme scope(s) if any as a Set.
+     */
+    private getFixmeScope(fixme:N4Annotation): Set<string> {
+        let scope: string;
+        let scopes: Set<string>
+        if (fixme) {
+            if (fixme.details.length > 1) {
+                scope = fixme.details[1];
+            } 
+            if (scope) {
+                scopes = new Set<string>(scope.split(",").map(scope => scope.trim()));
+            }
+        }
+        return scopes;
+    }
+    /**
+     * Processes a test method and extracts info from annotations.
+     */
+    private getTestMethodDescriptors(meths: Array<? extends N4Method>, tftype: TestFunctionType): Array<TestMethodDescriptor> {
         return meths.map( (methodDescriptor: N4Method) => {
                 const desc = methodDescriptor.anyAnnotation("Description")
                     , fixmeAnnotation = methodDescriptor.anyAnnotation("Fixme")
@@ -142,26 +176,34 @@ export public class InstrumentedTest implements IInstrumentedTest{
                     , ignoreReason: ignoreAnnotation? ignoreAnnotation.details.join(" "): ""
                     , fixme: !!fixmeAnnotation
                     , fixmeReason: fixmeAnnotation? fixmeAnnotation.details.join(" "): ""
+                    , fixmeScopes: this.getFixmeScope(fixmeAnnotation)
                     , name: methodDescriptor.name
                     , value: methodDescriptor.jsFunction as {function()}
                     , type:tftype
                 });
-
             }
         )
     }
 
+    /**
+     * Allows setting the actual instance of the test externally.
+     */
     @Override
     public setTestObject(test: N4Object): this {
         this.testObject = test;
         return this;
     }
-
+    
+    /**
+     * Allows setting error state externally.
+     */
     @Override public setError(error: any): this {
         this.error = error;
         return this;
     }
-
+    /**
+     * Loads a new test class into existing instance of an InstrumentedTest
+     */
     @Override public load(testClass: constructor{? extends N4Object}, info: TestInfo=): this {
         let parentClass = Object.getPrototypeOf(testClass) as constructor{? extends N4Object};
 

@@ -51,8 +51,6 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 
 	@Inject
 	private N4JSTypeSystem ts;
-	@Inject
-	private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
 
 	/**
 	 * Convenience method for {@link #isPoly(Expression)} and {@link #isPoly(PropertyAssignment)}, accepting any type of
@@ -176,7 +174,7 @@ package abstract class AbstractPolyProcessor extends AbstractProcessor {
 	 * nested poly expression's type from the cache.
 	 */
 	def protected TypeRef getFinalResultTypeOfNestedPolyExpression(Expression nestedPolyExpression) {
-		return astMetaInfoCacheHelper.getTypeFailSafe(nestedPolyExpression)?.value;
+		return ASTMetaInfoUtils.getTypeFailSafe(nestedPolyExpression)?.value;
 	}
 
 	def protected TypeRef subst(TypeRef typeRef, RuleEnvironment G,

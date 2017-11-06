@@ -9,17 +9,18 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-import {InstrumentedTest} from "org/eclipse/n4js/mangelhaft/InstrumentedTest"
-import {TestExecutor} from "org/eclipse/n4js/mangelhaft/TestExecutor"
-import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert"
-import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups"
-import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy"
-import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus"
-import { MockTest } from "org/eclipse/n4js/mangelhaft/test/helper/MockTest"
-import { BeforeAllErrorMockTest } from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers"
-import { ChildOfMock } from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers"
-import { PreconditionTests } from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers"
-import {N4Injector} from "n4js/lang/N4Injector"
+import {N4Injector} from "n4js/lang/N4Injector";
+import {InstrumentedTest} from "org/eclipse/n4js/mangelhaft/InstrumentedTest";
+import {TestExecutor} from "org/eclipse/n4js/mangelhaft/TestExecutor";
+import {Assert} from "org/eclipse/n4js/mangelhaft/assert/Assert";
+import {MockTest} from "org/eclipse/n4js/mangelhaft/test/helper/MockTest";
+import {BeforeAllErrorMockTest} from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers";
+import {ChildOfMock} from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers";
+import {FixmeTests} from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers";
+import {PreconditionTests} from "org/eclipse/n4js/mangelhaft/test/helper/TestExecutorTestsHelpers";
+import {ResultGroups} from "org/eclipse/n4js/mangelhaft/types/ResultGroups";
+import {TestSpy} from "org/eclipse/n4js/mangelhaft/types/TestSpy";
+import {TestStatus} from "org/eclipse/n4js/mangelhaft/types/TestStatus";
 class SubTestSpy extends TestSpy {}
 
 @Binder
@@ -250,6 +251,74 @@ export public class TestExecutorTests {
         val =  await this.subject.executor.runTestsAsync(tests);
         Assert.equal(val.results[0].testResults[0].testStatus, TestStatus.skipped_precondition);
     }
+    
+    @Test 
+    async fixmes___noScope() {
+        console.log(n4);
+        const expected = [
+            ["fixme__noScope___success", TestStatus.failed],
+            ["fixme__noScope___failure", TestStatus.skipped_fixme],
+            ["fixme__serverScope___success", TestStatus.passed],
+            ["fixme__serverScope___fail", TestStatus.failed],
+            ["fixme__mockScope___success", TestStatus.passed],
+            ["fixme__mockScope___fail", TestStatus.failed],
+            ["fixme__multiScope___success", TestStatus.passed],
+            ["fixme__multiScope___fail", TestStatus.failed],
+        ]
+        const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
+        const tests: Array<InstrumentedTest> = []        
+        tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
+        const val =  await this.subject.executor.runTestsAsync(tests);
+        const results = val.results[0].testResults.map(res => [res.description, res.testStatus]);
+        for (let [key, value] of results as Iterable<Iterable2<string,string>>) {
+            Assert.equal(value, expectedMap.get(key), `${key} test should have correct test status`);
+        }
+    }
+
+    @Test 
+    async fixmes___serverScope() {
+        const expected = [
+            ["fixme__noScope___success", TestStatus.failed],
+            ["fixme__noScope___failure", TestStatus.skipped_fixme],
+            ["fixme__serverScope___success", TestStatus.failed],
+            ["fixme__serverScope___fail", TestStatus.skipped_fixme],
+            ["fixme__mockScope___success", TestStatus.passed],
+            ["fixme__mockScope___fail", TestStatus.failed],
+            ["fixme__multiScope___success", TestStatus.failed],
+            ["fixme__multiScope___fail", TestStatus.skipped_fixme],
+        ]
+        const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
+        const tests: Array<InstrumentedTest> = []        
+        tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
+        const val =  await this.subject.executor.runTestsAsync(tests, "SERVER");
+        const results = val.results[0].testResults.map(res => [res.description, res.testStatus]);
+        for (let [key, value] of results as Iterable<Iterable2<string,string>>) {
+            Assert.equal(value, expectedMap.get(key), `${key} test should have correct test status`);
+        }
+    }
+
+    @Test 
+    async fixmes___mockScope() {
+        const expected = [
+            ["fixme__noScope___success", TestStatus.failed],
+            ["fixme__noScope___failure", TestStatus.skipped_fixme],
+            ["fixme__serverScope___success", TestStatus.passed],
+            ["fixme__serverScope___fail", TestStatus.failed],
+            ["fixme__mockScope___success", TestStatus.failed],
+            ["fixme__mockScope___fail", TestStatus.skipped_fixme],
+            ["fixme__multiScope___success", TestStatus.failed],
+            ["fixme__multiScope___fail", TestStatus.skipped_fixme],
+        ]
+        const expectedMap = new Map<string, string>(expected as Iterable<Iterable2<string,string>>);
+        const tests: Array<InstrumentedTest> = []        
+        tests.push(new InstrumentedTest().load(FixmeTests).setTestObject(new FixmeTests()));
+        const val =  await this.subject.executor.runTestsAsync(tests, "MOCK");
+        const results = val.results[0].testResults.map(res => [res.description, res.testStatus]);
+        for (let [key, value] of results as Iterable<Iterable2<string,string>>) {
+            Assert.equal(value, expectedMap.get(key), `${key} test should have correct test status`);
+        }
+    }
+    
 }
 
 /*
