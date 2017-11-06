@@ -1374,7 +1374,7 @@ public class N4HeadlessCompiler {
 						}
 						// Ask each composite generator to try to generate the current resource
 						for (IComposedGenerator compositeGenerator : compositeGenerators) {
-							// Configure FSA:
+							// Configure FSA for the composite generator and the project
 							configureFSAOutput(compositeGenerator, markedProject.project);
 							compositeGenerator.doGenerate(resource, fsa);
 						}
