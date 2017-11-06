@@ -13,17 +13,16 @@ package org.eclipse.n4js.ui.preferences;
 import java.util.List;
 
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.n4js.generator.common.CompilerDescriptor;
+import org.eclipse.n4js.generator.common.CompilerProperties;
+import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.CompilerProperties;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 
 /**
  * Copied and adapted from org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess
@@ -33,11 +32,15 @@ import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 
 	private IPreferenceStoreAccess preferenceStoreAccess;
+	private ComposedGeneratorRegistry composedGeneratorRegistry;
 
 	/**
 	 * To initialize the default values of the compiler related preference store values
 	 */
 	public static class Initializer implements IPreferenceStoreInitializer {
+
+		@Inject
+		private ComposedGeneratorRegistry composedGeneratorRegistry;
 
 		@Override
 		public void initialize(IPreferenceStoreAccess preferenceStoreAccess) {
@@ -46,7 +49,7 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 		}
 
 		private void intializeBuilderPreferences(IPreferenceStore store) {
-			List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
+			List<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 			for (IComposedGenerator composedGenerator : composedGenerators) {
 				for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 					for (CompilerProperties prop : CompilerProperties.values()) {
@@ -73,6 +76,14 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 		this.preferenceStoreAccess = preferenceStoreAccess;
 	}
 
+	/**
+	 * Set ComposedGeneratorRegistry.
+	 */
+	@Inject
+	public void setComposedGeneratorRegistry(ComposedGeneratorRegistry composedGeneratorRegistry) {
+		this.composedGeneratorRegistry = composedGeneratorRegistry;
+	}
+
 	@Override
 	public boolean isAutoBuildEnabled(Object context) {
 		// always return true, as otherwise the dirty state handling (that is also handled in the builder participant)
@@ -83,7 +94,7 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 	@Override
 	public void setAutoBuildEnabled(Object context, boolean enabled) {
 		IPreferenceStore preferenceStore = preferenceStoreAccess.getWritablePreferenceStore(context);
-		List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
+		List<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 		String key = null;
 		for (IComposedGenerator composedGenerator : composedGenerators) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {

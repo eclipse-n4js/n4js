@@ -11,11 +11,19 @@ Contributors:
 -->
 <?eclipse version="3.4"?>
 <plugin>
+   <!-- Register composed generator for N4JSX -->
    <extension
          point="org.eclipse.n4js.ui.composedgenerator">
       <generator
-            class="org.eclipse.n4js.generator.CompositeGenerator">
+            class="org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator">
       </generator>
    </extension>
-
+   <!-- Register Emac script generator for N4JSX -->
+   <extension
+         point="org.eclipse.n4js.generator.common.subgenerator">
+      <subgenerator
+            fileExtension="n4jsx"
+            class="org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator">
+      </subgenerator>
+   </extension>
 </plugin>

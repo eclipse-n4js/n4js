@@ -10,13 +10,8 @@
  */
 package org.eclipse.n4js.ui;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.text.hyperlink.IHyperlinkDetector;
 import org.eclipse.jface.text.rules.IPartitionTokenScanner;
 import org.eclipse.jface.text.rules.ITokenScanner;
@@ -29,8 +24,6 @@ import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -41,7 +34,6 @@ import org.eclipse.n4js.ts.findReferences.TargetURIKey;
 import org.eclipse.n4js.ts.ui.search.BuiltinSchemeAwareTargetURIKey;
 import org.eclipse.n4js.ui.building.FileSystemAccessWithoutTraceFileSupport;
 import org.eclipse.n4js.ui.building.N4JSBuilderParticipant;
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.n4js.ui.containers.N4JSAllContainersStateProvider;
 import org.eclipse.n4js.ui.contentassist.ContentAssistContextFactory;
 import org.eclipse.n4js.ui.contentassist.ContentAssistantFactory;
@@ -105,8 +97,6 @@ import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.findReferences.IReferenceFinder;
-import org.eclipse.xtext.generator.IFileSystemAccess;
-import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.generator.IOutputConfigurationProvider;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.FollowElementComputer;
 import org.eclipse.xtext.ide.editor.contentassist.antlr.IContentAssistParser;
@@ -163,7 +153,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public void configure(Binder binder) {
 		super.configure(binder);
-		configureIGenerator(binder);
 	}
 
 	/**
@@ -398,37 +387,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends IContentAssistParser> bindIContentAssistParser() {
 		return CustomN4JSParser.class;
-	}
-
-	/**
-	 * Loads all registered composed generators via the extension point if there are some the first found composite
-	 * generator is registered as IGenerator (this binding is required internally by the Xtext builder participant) or
-	 * if there are no composite generators found, a dummy IComposedGenerator implementation is bound as IGenerator.
-	 *
-	 *
-	 * @param binder
-	 *            the Google guice binder
-	 */
-	private void configureIGenerator(Binder binder) {
-		IComposedGenerator composedGenerator = null;
-		List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
-		if (!composedGenerators.isEmpty()) {
-			composedGenerator = composedGenerators.get(0);
-		} else {
-			composedGenerator = new IComposedGenerator() {
-
-				@Override
-				public void doGenerate(Resource input, IFileSystemAccess fsa) {
-					// nothing to do, as dummy generator
-				}
-
-				@Override
-				public Set<CompilerDescriptor> getCompilerDescriptors() {
-					return new HashSet<>();
-				}
-			};
-		}
-		binder.bind(IGenerator.class).toInstance(composedGenerator);
 	}
 
 	/**

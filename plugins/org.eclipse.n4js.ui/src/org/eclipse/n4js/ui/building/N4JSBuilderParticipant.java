@@ -37,6 +37,7 @@ import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ui.building.instructions.BuildInstruction;
 import org.eclipse.n4js.ui.building.instructions.CleanInstruction;
+import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.BuilderParticipant;
@@ -73,6 +74,9 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 
 	@Inject
 	private IStorage2UriMapper storage2UriMapper;
+
+	@Inject
+	private ComposedGeneratorRegistry composedGeneratorRegistry;
 
 	@Inject
 	private Injector injector;
@@ -116,7 +120,7 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 					outputConfigurations.values());
 			BuildInstruction buildInstruction = new BuildInstruction(project, outputConfigurations,
 					getDerivedResourceMarkers(), access,
-					generatorMarkers, storage2UriMapper, injector);
+					generatorMarkers, storage2UriMapper, composedGeneratorRegistry, injector);
 			return buildInstruction;
 		} finally {
 			measureCreateBI.end();

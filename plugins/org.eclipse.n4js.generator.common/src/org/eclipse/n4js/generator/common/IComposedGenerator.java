@@ -10,17 +10,23 @@
  */
 package org.eclipse.n4js.generator.common;
 
+import java.util.Collection;
 import java.util.Set;
 
-import org.eclipse.xtext.generator.IGenerator;
-
 /**
+ * A composite generator is responsible for a language. A composite generator delegates the generation logics to its
+ * children (subgenerators).
  */
-public interface IComposedGenerator extends IGenerator {
+public interface IComposedGenerator extends IBaseGenerator {
 
 	/**
 	 * @return the descriptors of the registered compilers. Besides identifier and name they also contain the default
 	 *         output configuration.
 	 */
 	Set<CompilerDescriptor> getCompilerDescriptors();
+
+	/**
+	 * @return the list of sub-generators.
+	 */
+	Collection<ISubGenerator> getSubGenerators();
 }

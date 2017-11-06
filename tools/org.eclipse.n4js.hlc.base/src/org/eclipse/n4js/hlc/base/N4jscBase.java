@@ -61,6 +61,8 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -73,6 +75,7 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4jsx.N4JSXGlobals;
 import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
+import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
@@ -85,6 +88,7 @@ import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
+import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -298,6 +302,18 @@ public class N4jscBase implements IApplication {
 	@Inject
 	private FileExtensionsRegistry n4jsFileExtensionsRegistry;
 
+	@Inject
+	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
+
+	@Inject
+	private SubgeneratorsRegistry subgeneratorsRegistry;
+
+	@Inject
+	private N4JSCompositeGenerator n4jsCompositeGenerator;
+
+	@Inject
+	private N4JSXCompositeGenerator n4jsxCompositeGenerator;
+
 	// TODO IDE-2493 remove duplicated singletons
 	/**
 	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
@@ -399,6 +415,14 @@ public class N4jscBase implements IApplication {
 			// Injection should not be called before making sure the argument parsing successfully finished. Such as
 			// help.
 			initInjection(refProperties());
+
+			// Register subgenerators
+			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
+			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
+			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
+
+			headless.registerComposedGenerator(n4jsCompositeGenerator);
+			headless.registerComposedGenerator(n4jsxCompositeGenerator);
 
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated

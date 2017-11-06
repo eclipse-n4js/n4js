@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,9 +37,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.generator.CompositeGenerator;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.GeneratorException;
+import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
@@ -104,7 +105,7 @@ import com.google.inject.Provider;
 public class N4HeadlessCompiler {
 
 	/** The Generator to compile with */
-	private final CompositeGenerator compositeGenerator;
+	private final List<IComposedGenerator> compositeGenerators = new ArrayList<>();
 
 	/** Abstraction to the filesystem, used by the Generator */
 	private final JavaIoFileSystemAccess fsa;
@@ -140,13 +141,6 @@ public class N4HeadlessCompiler {
 	@Inject
 	private ClassLoader classLoader;
 
-	/**
-	 * original outputConfiguration, possibly requires a reconfiguration based on the project-path.
-	 * {@link JavaIoFileSystemAccess#getFile} relies on the assumption, that the basepath (for new File) is the current
-	 * project. If that assumption doesn't hold, we need to be creative with the output-configuration.
-	 */
-	private final Map<String, OutputConfiguration> outputs;
-
 	/** if set to true should try to compile even if errors are in some projects */
 	private boolean keepOnCompiling = false;
 
@@ -163,19 +157,30 @@ public class N4HeadlessCompiler {
 	 * Private constructor to prevent accidental instantiation.
 	 */
 	@Inject
-	private N4HeadlessCompiler(CompositeGenerator compositeGenerator, JavaIoFileSystemAccess fsa) {
-		this.compositeGenerator = compositeGenerator;
+	private N4HeadlessCompiler(JavaIoFileSystemAccess fsa) {
 		this.fsa = fsa;
-		this.outputs = buildInitialOutputConfiguration();
-		fsa.setOutputConfigurations(this.outputs);
 	}
 
-	private Map<String, OutputConfiguration> buildInitialOutputConfiguration() {
+	/**
+	 * Register a composed generator.
+	 */
+	public void registerComposedGenerator(IComposedGenerator compositeGenerator) {
+		this.compositeGenerators.add(compositeGenerator);
+	}
+
+	/** Build an output configuration from a composite generator. */
+	private Map<String, OutputConfiguration> buildOutputConfigurations(IComposedGenerator compositeGenerator) {
 		Map<String, OutputConfiguration> result = new HashMap<>();
 		for (CompilerDescriptor desc : compositeGenerator.getCompilerDescriptors()) {
 			result.put(desc.getIdentifier(), desc.getOutputConfiguration());
 		}
 		return result;
+	}
+
+	/** Configure FileSystemAccess (FSA) from a composite generator and a project */
+	private void configureFSAOutput(IComposedGenerator compositeGenerator, IN4JSProject project) {
+		Map<String, OutputConfiguration> outputs = buildOutputConfigurations(compositeGenerator);
+		configureFSA(project, outputs);
 	}
 
 	/*
@@ -916,7 +921,7 @@ public class N4HeadlessCompiler {
 			// Only load a project if it was requested to be compile or if other requested projects depend on it.
 			if (markedProject.hasMarkers()) {
 				recorder.markProcessing(markedProject.project);
-				configureFSA(markedProject.project);
+				// configureFSA(markedProject.project);
 
 				try {
 					// Add to loaded projects immediately so that the project gets unloaded even if loading fails.
@@ -939,7 +944,6 @@ public class N4HeadlessCompiler {
 				} finally {
 					markedProject.unloadASTAndClearCaches();
 					unmarkAndUnloadProjects(loadedProjects, markedProject, resourceSet, recorder);
-					resetFSA();
 				}
 				recorder.markEndProcessing(markedProject.project);
 			}
@@ -984,7 +988,7 @@ public class N4HeadlessCompiler {
 	/**
 	 * Loads all resources in the given project and indexes them.
 	 *
-	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject)} and {@link #resetFSA()}
+	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject, Map)}
 	 *
 	 * @param markedProject
 	 *            project to load
@@ -1330,7 +1334,7 @@ public class N4HeadlessCompiler {
 	/**
 	 * Generates code for all resources in the given project.
 	 *
-	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject)} and {@link #resetFSA()}
+	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject, Map)}
 	 *
 	 * @param markedProject
 	 *            project to compile.
@@ -1368,7 +1372,12 @@ public class N4HeadlessCompiler {
 						if (logger.isVerbose()) {
 							logger.info("  Generating resource " + resource.getURI());
 						}
-						compositeGenerator.doGenerate(resource, fsa);
+						// Ask each composite generator to try to generate the current resource
+						for (IComposedGenerator compositeGenerator : compositeGenerators) {
+							// Configure FSA:
+							configureFSAOutput(compositeGenerator, markedProject.project);
+							compositeGenerator.doGenerate(resource, fsa);
+						}
 						rec.markEndCompile(resource);
 					} catch (GeneratorException e) {
 						rec.markBrokenCompile(e);
@@ -1454,7 +1463,7 @@ public class N4HeadlessCompiler {
 	 * @param project
 	 *            project to be compiled
 	 */
-	private void configureFSA(IN4JSProject project) {
+	private void configureFSA(IN4JSProject project, Map<String, OutputConfiguration> outputConfigToBeWrapped) {
 		File currentDirectory = new File(".");
 		File projectLocation = new File(project.getLocation().toFileString());
 
@@ -1467,36 +1476,27 @@ public class N4HeadlessCompiler {
 		}
 
 		// set different output configuration.
-		fsa.setOutputConfigurations(transformedOutputConfiguration(projectPath));
+		fsa.setOutputConfigurations(transformedOutputConfiguration(projectPath, outputConfigToBeWrapped));
 	}
 
 	/**
-	 * Wraps the output-configurations {@link #outputs} with a delegate that transparently injects the relative path to
-	 * the project-root.
+	 * Wraps the output-configurations with a delegate that transparently injects the relative path to the project-root.
 	 *
 	 * @param projectPath
 	 *            relative path to the project-root
 	 * @return wrapped configurations.
 	 */
-	private Map<String, OutputConfiguration> transformedOutputConfiguration(String projectPath) {
+	private Map<String, OutputConfiguration> transformedOutputConfiguration(String projectPath,
+			Map<String, OutputConfiguration> outputConfigToBeWrapped) {
 		Map<String, OutputConfiguration> result = new HashMap<>();
 
-		for (Entry<String, OutputConfiguration> pair : outputs.entrySet()) {
+		for (Entry<String, OutputConfiguration> pair : outputConfigToBeWrapped.entrySet()) {
 			final OutputConfiguration input = pair.getValue();
 			OutputConfiguration transOC = new WrappedOutputConfiguration(input, projectPath);
 			result.put(pair.getKey(), transOC);
 		}
 
 		return result;
-	}
-
-	/**
-	 * Reset output configuration to initial settings stored in {@link #outputs}.
-	 *
-	 * @see #configureFSA(IN4JSProject) how to set to specific project.
-	 */
-	private void resetFSA() {
-		fsa.setOutputConfigurations(outputs);
 	}
 
 	/*

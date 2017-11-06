@@ -8,13 +8,17 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator
+package org.eclipse.n4js.generator.common;
+
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.generator.IGenerator;
 
 /**
  */
-interface CompilerConstants {
-	@org.eclipse.n4js.utils.Compiler
-	public static String ECMA_SCRIPT_SUB_GENERATOR = "org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator"
-//	@org.eclipse.n4js.utils.Compiler
-//	public static String SAMPLE_SUB_GENERATOR = "org.eclipse.n4js.transpiler.sample.N4JSSampleSubGenerator"
+public interface IBaseGenerator extends IGenerator {
+	/**
+	 *
+	 * @return true if the composed generator is applicable to the given resource and false otherwise.
+	 */
+	boolean isApplicableTo(Resource resource);
 }

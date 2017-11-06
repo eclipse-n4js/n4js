@@ -12,13 +12,12 @@ package org.eclipse.n4js.generator.common;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.xtext.generator.IGenerator;
 import org.eclipse.xtext.util.CancelIndicator;
 
 /**
  * This interface has to be implemented by all concrete N4JS transpilers.
  */
-public interface ISubGenerator extends IGenerator {
+public interface ISubGenerator extends IBaseGenerator {
 
 	/**
 	 * @return {@link CompilerDescriptor} instance

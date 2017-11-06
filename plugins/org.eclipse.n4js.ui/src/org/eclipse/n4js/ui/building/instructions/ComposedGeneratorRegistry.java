@@ -19,28 +19,49 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
-
-import com.google.inject.ProvisionException;
-
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
+
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+import com.google.inject.ProvisionException;
 
 /**
+ * This is a global registry for composed generators.
  */
 public class ComposedGeneratorRegistry {
 	/** see also {@link ISharedStateContributionRegistry} as a possible alternative */
-	private static String EXTENSION_POINT = N4JSActivator.getInstance().getBundle().getSymbolicName()
+	private final String EXTENSION_POINT = N4JSActivator.getInstance().getBundle().getSymbolicName()
 			+ ".composedgenerator";
-	private static final Logger LOGGER = Logger.getLogger(BuildInstruction.class);
+	private final Logger LOGGER = Logger.getLogger(BuildInstruction.class);
+
+	private boolean isInitialized = false;
+
+	private final List<IComposedGenerator> composedGenerators = new ArrayList<>();
+
+	@Inject
+	private Injector injector;
 
 	/**
 	 * @return a list of composed generators that have been registered via extension point in plug-ins available on the
 	 *         classpath of this N4JS ui bundle.
 	 */
-	public static List<IComposedGenerator> getComposedGenerators() {
-		List<IComposedGenerator> composedGenerators = new ArrayList<>();
+	public List<IComposedGenerator> getComposedGenerators() {
+		if (!isInitialized) {
+			initialize();
+		}
+
+		return composedGenerators;
+	}
+
+	private void initialize() {
+		if (isInitialized) {
+			throw new IllegalStateException("may invoke method initialize() only once");
+		}
+		isInitialized = true;
+
 		IExtensionPoint extensionPoint = Platform.getExtensionRegistry().getExtensionPoint(EXTENSION_POINT);
 		IExtension[] extensions = extensionPoint.getExtensions();
 		for (IExtension extension : extensions) {
@@ -49,9 +70,9 @@ public class ComposedGeneratorRegistry {
 				try {
 					IComposedGenerator composedGenerator = (IComposedGenerator) configurationElement
 							.createExecutableExtension("class");
-					if (composedGenerator != null) {
-						composedGenerators.add(composedGenerator);
-					}
+					injector.injectMembers(composedGenerator);
+					register(composedGenerator);
+
 				} catch (CoreException e) {
 					LOGGER.error(e.getMessage(), e);
 				} catch (ProvisionException e) {
@@ -60,16 +81,19 @@ public class ComposedGeneratorRegistry {
 			}
 		}
 
-		return composedGenerators;
+	}
+
+	private void register(IComposedGenerator composedGenerator) {
+		composedGenerators.add(composedGenerator);
 	}
 
 	/**
 	 * Returns the compile descriptor for the compiler with the given name, or null if no such compiler has been found.
 	 */
-	public static CompilerDescriptor getDesiredCompilerDescriptor(String desiredCompilerName) {
+	public CompilerDescriptor getDesiredCompilerDescriptor(String desiredCompilerName) {
 		CompilerDescriptor desiredCompilerDescriptor = null;
-		List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
-		for (IComposedGenerator composedGenerator : composedGenerators) {
+		List<IComposedGenerator> composedGeneratorsLocal = getComposedGenerators();
+		for (IComposedGenerator composedGenerator : composedGeneratorsLocal) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 				if (compilerDescriptor.getName().equals(desiredCompilerName)) {
 					desiredCompilerDescriptor = compilerDescriptor;
