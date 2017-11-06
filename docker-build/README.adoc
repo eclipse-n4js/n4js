@@ -3,49 +3,39 @@
 
 The container comes with java & maven & node installed.
 
+== Usage
 
+.Build Docker image
+[source,bash]
+----
+docker build -t n4js-build docker-build
+----
 
-== Hacky works until this image is production ready
+.Run n4js Build in Docker
+[source,bash]
+----
+docker run                                    \
+       -ti                                      \ # acquire interactive terminal
+       --rm                                     \ # remove container when not needed anymore
+       -v m2_repo:/root/.m2/repository          \ # create volume for .m2/repository (speeds up subsequent builds)
+       -v $(pwd):/workspace                     \ # mount the project in /workspace
+       n4js-build                               \
+       mvn package -Dmaven.test.failure.ignore  \ # run the desired tool
+----
 
-To generate the Dockerfile from template, enter with trailing slash (/):
-`./build.sh build-n4js-lang/`
+== Internals
+There is actually not a lot to say about this Docker image.
+It's basically just an isolated Maven installation with a few additional tools:
 
-This will stop with an error but updated the template.
+* nodejs + yarn
+* xvfb
 
-Then go into this folder `build-n4js-lang` and work from here.
+The image holds the necessary maven settings specific to this project.
+To inspect the image, just run the container with a bash:
 
-BUILD:
-	docker build -t "docker.corp.numberfour.eu/numberfour/build-n4js-lang:1.8.121-2" --no-cache build-n4js-lang/
+[source,bash]
+----
+docker run --rm -it n4js-build /bin/bash
+----
 
-PREPARE volume for local maven caching:
-	docker run -v /root/.m2/ --name m2-volume docker.corp.numberfour.eu/numberfour/build-n4js-lang:1.8.121-2 /bin/true
-
-
-You need a checked out version of https://github.numberfour.eu/NumberFour/n4js
-Replace `/Users/torsten.kraemer/git/n4js` with your location below.
-
-RUN
-
-	docker run -ti --rm -v /Users/torsten.kraemer/git/n4js:/workspace:rw --volumes-from m2-volume -e local-snapshot-deploy-folder="/workspace/temp.snapshot.deploy" --name build-n4js docker.corp.numberfour.eu/numberfour/build-n4js-lang:1.8.121-2 /bin/bash
-
-or with `/tmp` mounted to a local /tmp/docker-tmp folder:
-
-	docker run -ti --rm -v /tmp/docker-tmp/:/tmp:rw -v /Users/torsten.kraemer/git/n4js:/workspace:rw --volumes-from m2-volume -e local-snapshot-deploy-folder="/workspace/temp.snapshot.deploy" --name build-n4js docker.corp.numberfour.eu/numberfour/build-n4js-lang:1.8.121-2 /bin/bash
-
-
-To run a complete build inside the docker:
-
-`cd /workspace`
-
-One of these:
---
-# Bauen
-	MAVEN_OPTS="-Xms512m -Xmx2048M" mvn verify -e -s /root/settings.xml
-# + mit debug-output
-	MAVEN_OPTS="-Xms512m -Xmx2048M" mvn verify -e -X -s /root/settings.xml
-# + Update der caches:
-	MAVEN_OPTS="-Xms512m -Xmx2048M" mvn verify -e -X -s /root/settings.xml -U
---
-
-
-
+This opens a root shell into the container.
