@@ -28,4 +28,43 @@ Contributors:
             name="Performance Graphs">
       </view>
    </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:org.eclipse.ui.main.menu">
+         <menu
+               id="org.eclipse.n4js.smith.ui.menu"
+               label="N4JS Smith">
+            <command
+                  commandId="org.eclipse.n4js.ui.ResourceLoadStatsHandler"
+                  label="Resource Loading Statistics"
+                  style="push"
+                  tooltip="Check how many files are loaded from AST per n4js(x) file.">
+            </command>
+            <command
+                  commandId="org.eclipse.n4js.ui.MassOpen"
+                  label="Mass Open"
+                  style="push"
+                  tooltip="Open several files at once.">
+            </command>
+         </menu>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.n4js.smith.ui.SmithExecutableExtensionFactory:org.eclipse.n4js.smith.ui.command.ResourceLoadStatsHandler"
+            id="org.eclipse.n4js.ui.ResourceLoadStatsHandler"
+            name="Resource Loading Statistics">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            defaultHandler="org.eclipse.n4js.smith.ui.SmithExecutableExtensionFactory:org.eclipse.n4js.smith.ui.command.MassOpenHandler"
+            id="org.eclipse.n4js.ui.MassOpen"
+            name="Mass Open">
+      </command>
+   </extension>
 </plugin>
