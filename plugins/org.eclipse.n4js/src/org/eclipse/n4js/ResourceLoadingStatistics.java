@@ -11,6 +11,7 @@
 package org.eclipse.n4js;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -101,21 +102,38 @@ public class ResourceLoadingStatistics {
 	}
 
 	private List<FileLoadInfo> investigate(IN4JSProject project) {
-		final List<FileLoadInfo> results = Lists.newArrayList();
+		final List<URI> urisToInvestigate = Lists.newArrayList();
 		for (IN4JSSourceContainer container : project.getSourceContainers()) {
 			for (URI uri : container) {
 				final String lastSegment = uri.lastSegment();
 				if (lastSegment.endsWith(".n4js") || lastSegment.endsWith(".n4jsd") || lastSegment.endsWith(".n4jsx")) {
-					results.add(investigate(project, uri));
+					urisToInvestigate.add(uri);
 				}
 			}
+		}
+		return investigate(project, urisToInvestigate);
+	}
+
+	private List<FileLoadInfo> investigate(IN4JSProject project, List<URI> urisToInvestigate) {
+		final int urisCount = urisToInvestigate.size();
+		final List<FileLoadInfo> results = new ArrayList<>(urisCount);
+		for (int i = 0; i < urisCount; i++) {
+			final URI uri = urisToInvestigate.get(i);
+			final int progress = (int) Math.floor(((float) i) / ((float) urisCount) * 100.0f);
+			System.out.print("Investigating file " + uri.lastSegment()
+					+ " (" + (i + 1) + "/" + urisCount + ", " + progress + "%) ...");
+			try {
+				results.add(investigate(project, uri));
+			} catch (Throwable th) {
+				th.printStackTrace();
+				// do not abort if investigation of one file fails
+			}
+			System.out.println(" done.");
 		}
 		return results;
 	}
 
 	private FileLoadInfo investigate(IN4JSProject project, URI fileURI) {
-		System.out.print("Investigating file " + fileURI.lastSegment() + " ..."); // show some progress info
-
 		final ResourceSet resSet = n4jsCore.createResourceSet(Optional.of(project));
 		final N4JSResource res = (N4JSResource) resSet.createResource(fileURI);
 		try {
@@ -132,8 +150,6 @@ public class ResourceLoadingStatistics {
 		result.countBuiltIn = countN4JSResourcesBuiltIn(resSet);
 		result.countLoadedFromAST = countN4JSResourcesLoadedFromAST(resSet) - 1; // do not count 'res' itself
 		result.countLoadedFromIndex = countN4JSResourcesLoadedFromIndex(resSet);
-
-		System.out.println(" done.");
 		return result;
 	}
 
