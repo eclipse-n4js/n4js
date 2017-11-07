@@ -11,6 +11,12 @@ The container comes with java & maven & node installed.
 docker build -t n4js-build docker-build
 ----
 
+NOTE: The whole build process requires quite some memory.
+On systems, on which Docker runs inside a VM (i.e. Windows and macOS),
+the amount of memory available to containers must be increased to at least 6GB.
+If the build fails abruptely without any error message,
+chances are high that adding more memory to the container will help.
+
 .Run n4js Build in Docker
 [source,bash]
 ----
