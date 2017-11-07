@@ -16,11 +16,11 @@ pipeline {
     }
     stages {
         stage('build') {
+            def xvfb     =  'xvfb-run -a --server-args="-screen 0 1024x768x24"'
+            def targets  = 'clean verify'
+            def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests'
+            def options  = '-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}'
             steps {
-                def xvfb     =  'xvfb-run -a --server-args="-screen 0 1024x768x24"'
-                def targets  = 'clean verify'
-                def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests'
-                def options  = '-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}'
                 sh "$xvfb mvn ${targets} -P${profiles} ${options}"
             }
         }
