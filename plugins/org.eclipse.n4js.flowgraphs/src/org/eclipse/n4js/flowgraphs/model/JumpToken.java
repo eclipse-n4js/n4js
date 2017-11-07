@@ -17,7 +17,7 @@ import org.eclipse.n4js.n4JS.LabelledStatement;
  * Represents the ability to jump at a {@link Node}, which can be added to {@link Node}s. The {@link JumpToken} can be
  * specialized by giving a specific Object as an identifier.
  */
-public class JumpToken {
+public class JumpToken implements Comparable<JumpToken> {
 	/** Specifies the control flow type that invokes the jump */
 	final public ControlFlowType cfType;
 	/** Specifies an identifier, such as a label in a {@link LabelledStatement}. */
@@ -38,6 +38,23 @@ public class JumpToken {
 	public JumpToken(ControlFlowType type, LabelledStatement lblStmt) {
 		this.cfType = type;
 		this.lblStmt = lblStmt;
+	}
+
+	@Override
+	public int compareTo(JumpToken jumpToken) {
+		int result = cfType.compareTo(jumpToken.cfType);
+		if (result == 0) {
+			if (lblStmt != null && jumpToken.lblStmt != null) {
+				return lblStmt.hashCode() - jumpToken.lblStmt.hashCode();
+			}
+			if (lblStmt != null) {
+				return -1;
+			}
+			if (jumpToken.lblStmt != null) {
+				return 1;
+			}
+		}
+		return result;
 	}
 
 	@Override

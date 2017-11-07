@@ -11,18 +11,16 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-
-import com.google.common.collect.ComparisonChain;
 
 /**
  * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a {@link ComplexNode}.
@@ -43,9 +41,9 @@ abstract public class Node implements ControlFlowable {
 	/** Maps from a successor node to an {@link EdgeDescription} */
 	final public Map<Node, EdgeDescription> internalSucc = new HashMap<>();
 	/** List of all preceding {@link ControlFlowEdge}s */
-	final public List<ControlFlowEdge> pred = new LinkedList<>();
+	final public TreeSet<ControlFlowEdge> pred = new TreeSet<>();
 	/** List of all succeeding {@link ControlFlowEdge}s */
-	final public List<ControlFlowEdge> succ = new LinkedList<>();
+	final public TreeSet<ControlFlowEdge> succ = new TreeSet<>();
 	/** List of all {@link DependencyEdge}s starting at this node */
 	final public List<DependencyEdge> startEdges = new LinkedList<>();
 	/** List of all {@link DependencyEdge}s ending at this node */
@@ -117,13 +115,11 @@ abstract public class Node implements ControlFlowable {
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
 		succ.add(cfEdge);
-		Collections.sort(succ, Node::compareNodes);
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
 		pred.add(cfEdge);
-		Collections.sort(pred, Node::compareNodes);
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
@@ -156,12 +152,12 @@ abstract public class Node implements ControlFlowable {
 	}
 
 	/** @return set of all successor edges. */
-	public List<ControlFlowEdge> getSuccessorEdges() {
+	public Set<ControlFlowEdge> getSuccessorEdges() {
 		return succ;
 	}
 
 	/** @return set of all predecessor edges. */
-	public List<ControlFlowEdge> getPredecessorEdges() {
+	public Set<ControlFlowEdge> getPredecessorEdges() {
 		return pred;
 	}
 
@@ -215,14 +211,4 @@ abstract public class Node implements ControlFlowable {
 		}
 	}
 
-	private static int compareNodes(ControlFlowEdge e1, ControlFlowEdge e2) {
-		int result = ComparisonChain.start()
-				.compare(e1.start.id, e2.start.id)
-				.compare(e1.end.id, e2.end.id)
-				.compare(e1.cfType, e2.cfType)
-				.compare(e1.start.cfElem.toString(), e2.start.cfElem.toString())
-				.result();
-		assert result != 0;
-		return result;
-	}
 }
