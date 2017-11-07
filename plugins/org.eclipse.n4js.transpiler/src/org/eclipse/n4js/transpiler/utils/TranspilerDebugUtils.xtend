@@ -10,25 +10,26 @@
  */
 package org.eclipse.n4js.transpiler.utils
 
+
+import org.eclipse.n4js.transpiler.TranspilerState
+import org.eclipse.n4js.transpiler.im.Script_IM
+import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.N4JSPackage
+import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
+import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.utils.UtilN4
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.io.Writer
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.ImportDeclaration
-import org.eclipse.n4js.n4JS.ImportSpecifier
-import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.NamedElement
-import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.transpiler.TranspilerState
-import org.eclipse.n4js.transpiler.im.Script_IM
-import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
-import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
-import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
-
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.n4JS.ImportDeclaration
 import static extension org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper.*
 
 /**
@@ -87,6 +88,7 @@ class TranspilerDebugUtils {
 		//TODO IDE-2416 added for JSX workarounds, if possible remove, only SymbolTableEntry should be allowed
 		switch it {
 			SymbolTableEntry: true
+			TModule: jsxBackendModule
 			ImportDeclaration: jsxBackendImportDeclaration
 			ImportSpecifier: jsxBackendImportSpecifier
 			default: false
