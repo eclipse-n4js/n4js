@@ -17,9 +17,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                String profiles = "-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests"
-                String options = "-Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"
-                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean verify ${targetPomFile} ${profiles} ${options}"""
+                sh """xvfb-run -a --server-args="-screen 0 1024x768x24" mvn clean verify -PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests -Dmaven.test.failure.ignore -e -DWORKSPACE=${env.WORKSPACE}"""
             }
         }
     }
