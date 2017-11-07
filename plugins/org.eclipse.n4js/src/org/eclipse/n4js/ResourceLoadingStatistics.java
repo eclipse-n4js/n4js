@@ -11,12 +11,17 @@
 package org.eclipse.n4js;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
@@ -28,6 +33,8 @@ import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.ts.scoping.builtin.N4Scheme;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.resources.ExternalProject;
+import org.eclipse.xtext.builder.MonitorBasedCancelIndicator;
+import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
@@ -44,6 +51,8 @@ public class ResourceLoadingStatistics {
 
 	@Inject
 	private IN4JSCore n4jsCore;
+	@Inject
+	private OperationCanceledManager operationCanceledManager;
 
 	private static final class FileLoadInfo {
 		final URI fileURI;
@@ -57,83 +66,114 @@ public class ResourceLoadingStatistics {
 			this.fileURI = fileURI;
 		}
 
-		void print() {
+		void println(PrintStream out) {
 			final String name = fileURI.lastSegment();
-			System.out.printf("%-50s   %3d   (%3d = %3d + %3d + %3d)",
+			out.printf("%-50s   %3d   (%3d = %3d + %3d + %3d)",
 					name,
 					countTotal,
 					countLoadedFromAST + countLoadedFromIndex + countBuiltIn,
 					countLoadedFromAST,
 					countLoadedFromIndex,
 					countBuiltIn);
-			System.out.println();
+			out.println();
 		}
 
-		static void printReport(IN4JSProject project, List<FileLoadInfo> results) {
-			System.out.println("------------------------------------------------------------------------------------");
-			System.out.println("Resource loading per file for project: " + project.getLocation().lastSegment());
-			System.out.println();
+		static void printReport(IN4JSProject project, List<FileLoadInfo> results, PrintStream out) {
+			out.println("------------------------------------------------------------------------------------");
+			out.println("Resource loading per file for project: " + project.getLocation().lastSegment());
+			out.println();
 			final List<FileLoadInfo> othersFromAST = results.stream().filter(result -> result.countLoadedFromAST > 0)
 					.collect(Collectors.toList());
 			final List<FileLoadInfo> noOthersFromAST = results.stream().filter(result -> result.countLoadedFromAST == 0)
 					.collect(Collectors.toList());
-			System.out.println("Files that triggered other files being loaded from AST:");
-			othersFromAST.forEach(result -> result.print());
-			System.out.println();
-			System.out.println("Files that did *not* trigger other files being loaded from AST:");
-			noOthersFromAST.forEach(result -> result.print());
-			System.out.println();
-			System.out.println(
+			out.println("Files that triggered other files being loaded from AST:");
+			othersFromAST.forEach(result -> result.println(out));
+			out.println();
+			out.println("Files that did *not* trigger other files being loaded from AST:");
+			noOthersFromAST.forEach(result -> result.println(out));
+			out.println();
+			out.println(
 					"Files that triggered other files being loaded from AST        : " + othersFromAST.size());
-			System.out.println(
+			out.println(
 					"Files that did *not* trigger other files being loaded from AST: " + noOthersFromAST.size());
-			System.out.println("------------------------------------------------------------------------------------");
+			out.println("------------------------------------------------------------------------------------");
 		}
 	}
 
-	public void investigate() {
+	/**
+	 * Computes and prints resource loading statistics for all N4JS[X] projects in the workspace.
+	 */
+	public void computeAndShowStatsForWorkspace(PrintStream out, IProgressMonitor monitor) {
+		final CancelIndicator cancelIndicator = new MonitorBasedCancelIndicator(monitor);
+
+		// for proper progress reporting, first collect all URIs in all N4JS projects
+		int uriCount = 0;
+		final Map<IN4JSProject, List<URI>> urisPerProject = new LinkedHashMap<>();
 		final Iterable<IN4JSProject> projects = n4jsCore.findAllProjects();
 		for (IN4JSProject project : projects) {
+			operationCanceledManager.checkCanceled(cancelIndicator);
 			if (!isManagedByLibraryManager(project)) {
-				final List<FileLoadInfo> results = investigate(project);
-				FileLoadInfo.printReport(project, results);
+				final List<URI> uris = collectURIsToInvestigate(project);
+				uriCount += uris.size();
+				urisPerProject.put(project, uris);
 			}
+		}
+
+		// now do the actual work: compute and show statistics for each project
+		monitor.beginTask("Investigate projects in workspace ... ", uriCount);
+		for (Entry<IN4JSProject, List<URI>> entry : urisPerProject.entrySet()) {
+			operationCanceledManager.checkCanceled(cancelIndicator);
+			final IN4JSProject project = entry.getKey();
+			final List<URI> uris = entry.getValue();
+			final List<FileLoadInfo> results = investigate(project, uris, out, monitor, false);
+			FileLoadInfo.printReport(project, results, out);
 		}
 	}
 
-	private List<FileLoadInfo> investigate(IN4JSProject project) {
-		final List<URI> urisToInvestigate = Lists.newArrayList();
-		for (IN4JSSourceContainer container : project.getSourceContainers()) {
-			for (URI uri : container) {
-				final String lastSegment = uri.lastSegment();
-				if (lastSegment.endsWith(".n4js") || lastSegment.endsWith(".n4jsd") || lastSegment.endsWith(".n4jsx")) {
-					urisToInvestigate.add(uri);
-				}
-			}
-		}
-		return investigate(project, urisToInvestigate);
+	/**
+	 * This method assumes the given resource set has at least 1 resource and that the first resource is the main
+	 * resource, i.e. the only resource for which loading and proxy resolution was triggered explicitly (and thus all
+	 * other resources can be assumed to have been loaded incidentally while processing the first).
+	 */
+	public void computeAndShowStatsFor(ResourceSet resSet, PrintStream out) {
+		final FileLoadInfo info = investigate(resSet);
+		info.println(out);
 	}
 
-	private List<FileLoadInfo> investigate(IN4JSProject project, List<URI> urisToInvestigate) {
+	private List<FileLoadInfo> investigate(IN4JSProject project, List<URI> urisToInvestigate,
+			PrintStream out, IProgressMonitor monitor, boolean printProgressToOut) {
 		final int urisCount = urisToInvestigate.size();
 		final List<FileLoadInfo> results = new ArrayList<>(urisCount);
 		for (int i = 0; i < urisCount; i++) {
 			final URI uri = urisToInvestigate.get(i);
-			final int progress = (int) Math.floor(((float) i) / ((float) urisCount) * 100.0f);
-			System.out.print("Investigating file " + uri.lastSegment()
-					+ " (" + (i + 1) + "/" + urisCount + ", " + progress + "%) ...");
+			monitor.subTask("Investigating file " + uri.lastSegment() + " ...");
+			if (printProgressToOut) {
+				final int progress = (int) Math.floor(((float) i) / ((float) urisCount) * 100.0f);
+				out.println("Investigating file " + uri.lastSegment()
+						+ " (" + (i + 1) + "/" + urisCount + ", " + progress + "%) ...");
+			}
 			try {
-				results.add(investigate(project, uri));
+				final FileLoadInfo currResult = investigate(project, uri, monitor);
+				results.add(currResult);
+				currResult.println(out); // note: print currResult always (even if !printProgressToOut)
 			} catch (Throwable th) {
+				if (operationCanceledManager.isOperationCanceledException(th)) {
+					// don't propagate the cancel exception; instead, return the results collected thus far
+					return results;
+				}
 				th.printStackTrace();
 				// do not abort if investigation of one file fails
+			} finally {
+				monitor.worked(1);
 			}
-			System.out.println(" done.");
 		}
 		return results;
 	}
 
-	private FileLoadInfo investigate(IN4JSProject project, URI fileURI) {
+	private FileLoadInfo investigate(IN4JSProject project, URI fileURI, IProgressMonitor monitor) {
+		final CancelIndicator cancelIndicator = new MonitorBasedCancelIndicator(monitor);
+		operationCanceledManager.checkCanceled(cancelIndicator);
+
 		final ResourceSet resSet = n4jsCore.createResourceSet(Optional.of(project));
 		final N4JSResource res = (N4JSResource) resSet.createResource(fileURI);
 		try {
@@ -142,10 +182,16 @@ public class ResourceLoadingStatistics {
 			e.printStackTrace();
 		}
 		res.getContents(); // trigger loading of AST
-		res.resolveLazyCrossReferences(CancelIndicator.NullImpl);
+		res.resolveLazyCrossReferences(cancelIndicator);
 
 		// now start counting what was loaded incidentally ...
-		final FileLoadInfo result = new FileLoadInfo(fileURI);
+		return investigate(resSet);
+	}
+
+	/** This method makes the same assumptions as {@link #computeAndShowStatsFor(ResourceSet)}. */
+	private FileLoadInfo investigate(ResourceSet resSet) {
+		final Resource resMain = resSet.getResources().get(0);
+		final FileLoadInfo result = new FileLoadInfo(resMain.getURI());
 		result.countTotal = resSet.getResources().size();
 		result.countBuiltIn = countN4JSResourcesBuiltIn(resSet);
 		result.countLoadedFromAST = countN4JSResourcesLoadedFromAST(resSet) - 1; // do not count 'res' itself
@@ -194,6 +240,19 @@ public class ResourceLoadingStatistics {
 			}
 		}
 		return n;
+	}
+
+	private List<URI> collectURIsToInvestigate(IN4JSProject project) {
+		final List<URI> urisToInvestigate = Lists.newArrayList();
+		for (IN4JSSourceContainer container : project.getSourceContainers()) {
+			for (URI uri : container) {
+				final String lastSegment = uri.lastSegment();
+				if (lastSegment.endsWith(".n4js") || lastSegment.endsWith(".n4jsd") || lastSegment.endsWith(".n4jsx")) {
+					urisToInvestigate.add(uri);
+				}
+			}
+		}
+		return urisToInvestigate;
 	}
 
 	private boolean isBuiltInResource(Resource res) {
