@@ -101,13 +101,16 @@ import com.google.inject.Provider;
  *
  * The way how the compiler behaves can be configured through flags like {@link #keepOnCompiling},
  * {@link #processTestCode}, {@link #compileSourceCode}
+ *
+ * IMPORTANT: Before using the functionalities of this class, make sure to register composed generators first. Moreover,
+ * the subgenerators must have been registered as well.
  */
 public class N4HeadlessCompiler {
 
-	/** The Generator to compile with */
+	/** The list of composed generators, each of which is responsible for a language. */
 	private final List<IComposedGenerator> compositeGenerators = new ArrayList<>();
 
-	/** Abstraction to the filesystem, used by the Generator */
+	/** Abstraction to the file system, used by the generators */
 	private final JavaIoFileSystemAccess fsa;
 
 	/** Compares two N4JS projects. Used for sorting and comparing project dependencies. */
@@ -170,6 +173,13 @@ public class N4HeadlessCompiler {
 
 	/**
 	 * Unregister a composed generator.
+	 */
+	public void unregisterComposedGenerator(IComposedGenerator compositeGenerator) {
+		this.compositeGenerators.remove(compositeGenerator);
+	}
+
+	/**
+	 * Clear all registered composed generator.
 	 */
 	public void clearComposedGenerators() {
 		this.compositeGenerators.clear();
