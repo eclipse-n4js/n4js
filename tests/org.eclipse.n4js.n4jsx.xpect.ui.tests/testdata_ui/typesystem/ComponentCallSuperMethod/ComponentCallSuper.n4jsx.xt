@@ -15,9 +15,7 @@
    	 	Folder "src" {
    	 		File "LowerComponent.n4jsx" {}
 			Folder "jsxbackend" {
-				Folder "react" {
-					File "index.n4jsd" { from = "../../../react/index.n4jsd" }
-				}
+				File "react.n4jsd" { from = "../../../reactFiles/react.n4jsd" }
 			}
    	 	}
    	 	File "manifest.n4mf" { from="manifest_A.n4mf" }
@@ -33,7 +31,7 @@
 */
 
 import { LowerComponent } from "LowerComponent"
-import * as React from "jsxbackend/react/index"
+import * as React from "jsxbackend/react"
 
 
 class MyComponent extends LowerComponent {

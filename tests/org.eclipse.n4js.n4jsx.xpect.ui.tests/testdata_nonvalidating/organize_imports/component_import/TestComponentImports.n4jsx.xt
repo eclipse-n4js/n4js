@@ -20,9 +20,7 @@
 					File "FunctionComponent.n4jsx" {}
 				}
 				Folder "jsxbackend" {
-					Folder "react" {
-						File "index.n4jsd" { from = "../../../react/index.n4jsd" }
-					}
+					File "react.n4jsd" { from = "../../../reactFiles/react.n4jsd" }
 				}
 			}
 			File "manifest.n4mf" { from="../../../manifest_nv.n4mf" }

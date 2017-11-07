@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4jsx.transpiler.utils;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,20 +24,21 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.eclipse.xtext.resource.IContainer;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.naming.ModuleNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.XtextUtilN4;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.eclipse.xtext.resource.IContainer;
-
-import com.google.common.base.Optional;
-import com.google.inject.Inject;
 
 /**
  * Helper for working with JSX backends, e.g. Ract, Preact, etc. Internally it supports only React, but API wise should
@@ -48,6 +48,8 @@ public final class JSXBackendHelper {
 	private final static String JSX_BACKEND_MODULE_NAME = "react";
 	private final static String JSX_BACKEND_FACADE_NAME = "React";
 	private final static String JSX_BACKEND_ELEMENT_FACTORY_NAME = "createElement";
+	private final static String JSX_BACKEND_DEFINITION_NAME = JSX_BACKEND_MODULE_NAME + "."
+			+ N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 	/**
 	 * Local cache of JSX backends.
@@ -82,18 +84,22 @@ public final class JSXBackendHelper {
 		return JSX_BACKEND_ELEMENT_FACTORY_NAME;
 	}
 
+	/** Checks if given module looks like JSX backend module, e.g. "react" */
+	public static boolean isJsxBackendModule(TModule module) {
+		if (module == null) {
+			return false;
+		}
+		return module.getQualifiedName().endsWith(JSX_BACKEND_MODULE_NAME);
+	}
+
 	/** Checks if given import declaration looks like JSX backend import, e.g. "(...) from "react" */
 	public static boolean isJsxBackendImportDeclaration(ImportDeclaration declaration) {
-		return declaration.getImportSpecifiers().stream().anyMatch(specifier -> isJsxBackendImportSpecifier(specifier));
+		return isJsxBackendModule(declaration.getModule());
 	}
 
 	/** Checks if given import specifier looks like JSX backend import, e.g. "import * as React from "react" */
 	public static boolean isJsxBackendImportSpecifier(ImportSpecifier specifier) {
-		if ((specifier instanceof NamespaceImportSpecifier)
-				&& (JSX_BACKEND_FACADE_NAME.equalsIgnoreCase(((NamespaceImportSpecifier) specifier).getAlias()))) {
-			return true;
-		}
-		return false;
+		return isJsxBackendImportDeclaration((ImportDeclaration) specifier.eContainer());
 	}
 
 	/**
@@ -113,8 +119,9 @@ public final class JSXBackendHelper {
 	}
 
 	/**
-	 * Similar to {@link org.eclipse.n4js.naming.QualifiedNameComputer#getCompleteModuleSpecifierAsIdentifier(TModule)}
-	 * but for artificial modules that were patched in by the transpiler for JSX backend.
+	 * Similar to
+	 * {@link org.eclipse.n4js.naming.QualifiedNameComputer#getCompleteModuleSpecifierAsIdentifier(TModule)} but for
+	 * artificial modules that were patched in by the transpiler for JSX backend.
 	 */
 	public String getJsxBackendCompleteModuleSpecifierAsIdentifier(TModule module) {
 		URI uri = getOrFindJSXBackend(module.eResource(), module.getQualifiedName());
@@ -249,6 +256,6 @@ public final class JSXBackendHelper {
 		if (sqn == null)
 			return false;
 
-		return sqn.endsWith(JSX_BACKEND_MODULE_NAME + File.separatorChar + "index.n4jsd"); // i.e. react/index.n4jsd
+		return sqn.endsWith(JSX_BACKEND_DEFINITION_NAME); // i.e. react.n4jsd
 	}
 }
