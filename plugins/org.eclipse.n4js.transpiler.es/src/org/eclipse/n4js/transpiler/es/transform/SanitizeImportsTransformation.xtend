@@ -193,7 +193,7 @@ class SanitizeImportsTransformation extends Transformation {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
 
-			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec)) {
+			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec)){
 				return true
 			}
 
