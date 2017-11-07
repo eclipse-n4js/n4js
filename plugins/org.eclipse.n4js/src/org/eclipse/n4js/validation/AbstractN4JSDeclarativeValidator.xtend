@@ -11,7 +11,7 @@
 package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.lang.reflect.Method
 import java.util.List
 import org.eclipse.emf.common.util.EList

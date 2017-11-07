@@ -244,23 +244,3 @@ class G<S> implements M<S> {
     // XPECT nowarnings -->
 	<T> m() : void {}
 }
-
-class H1 {
-	// XPECT nowarnings -->
-	public <T> constructor(t: T) {}
-}
-
-class H2 {
-	// XPECT nowarnings -->
-	public <T> constructor() {}
-}
-
-class H3 {
-	// XPECT nowarnings -->
-	public <T> constructor(s: string) {}
-}
-
-class H4 {
-	// XPECT nowarnings -->
-	public <T,U> constructor(u: U) {}
-}

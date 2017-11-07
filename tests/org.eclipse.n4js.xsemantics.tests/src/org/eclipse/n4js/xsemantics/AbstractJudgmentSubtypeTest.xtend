@@ -12,7 +12,7 @@ package org.eclipse.n4js.xsemantics
 
 import com.google.inject.Inject
 import org.eclipse.n4js.typesystem.TypeRefsToVariablesAssembler
-import it.xsemantics.runtime.TraceUtils
+import org.eclipse.xsemantics.runtime.TraceUtils
 import org.junit.Before
 
 import static org.junit.Assert.*

@@ -44,6 +44,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
+import org.junit.Ignore
 
 /**
  * @see N4JSScopeProvider
@@ -90,6 +91,7 @@ class CircularReferencesScopingTest implements N4Scheme {
 		childURI = null
 	}
 
+	@Ignore("IDE-2896") // FIXME IDE-2896 re-enable this test!
 	@Test
 	def void testCircularDependencies() {
 		assertEquals(3, resourceDescriptions.getExportedObjectsByType(TypesPackage.Literals.TMODULE).size)
