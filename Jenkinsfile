@@ -19,7 +19,7 @@ pipeline {
             steps {
                 sh 'xvfb-run -a --server-args="-screen 0 1024x768x24" ' +
                     'mvn clean verify ' +
-                        '-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-swtbot-tests ' +
+                        '-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests ' +
                         '-Dmaven.test.failure.ignore' +
                         '-e -DWORKSPACE=' + env.WORKSPACE
             }
