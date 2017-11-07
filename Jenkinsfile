@@ -25,6 +25,9 @@ pipeline {
         timeout(time: 3, unit: 'HOURS')
         timestamps()
     }
+    triggers {
+        pollSCM('H 4/* 0 0 1-5') // every 4 minutes on weekdays
+    }
     stages {
         stage('build') {
             steps {
