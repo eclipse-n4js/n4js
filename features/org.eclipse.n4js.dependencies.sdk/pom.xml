@@ -58,7 +58,7 @@ Contributors:
 						<plugin id="org.apache.log4j"/>
 						<plugin id="com.google.guava"/>
 						<plugin id="org.eclipse.emf.ecore"/>
-						<plugin id="it.xsemantics.runtime"/>
+						<plugin id="org.eclipse.xsemantics.runtime"/>
 						<plugin id="com.google.inject"/>
 						<plugin id="org.eclipse.xtext.util"/>
 						<plugin id="org.antlr.runtime"/>

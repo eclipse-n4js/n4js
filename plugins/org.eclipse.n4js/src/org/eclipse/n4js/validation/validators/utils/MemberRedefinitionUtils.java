@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.eclipse.emf.ecore.resource.Resource;
-
-import com.google.common.collect.Iterables;
-
 import org.eclipse.n4js.n4JS.N4ClassDefinition;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -35,7 +32,9 @@ import org.eclipse.n4js.ts.types.util.ExtendedClassesIterable;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.N4JSLanguageUtils;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
+
+import com.google.common.collect.Iterables;
 
 /**
  * A util class for member redefinition validation.

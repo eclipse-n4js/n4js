@@ -222,10 +222,10 @@
       xsi:type="setup.p2:P2Task"
       label="XSemantics">
     <requirement
-        name="it.xsemantics.sdk.feature.group"
-        versionRange="[1.12.0,1.12.1)"/>
+        name="org.eclipse.xsemantics.sdk.feature.group"
+        versionRange="[1.12.1,1.12.2)"/>
     <repository
-        url="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
+        url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"
@@ -391,7 +391,7 @@
         <repository
             url="http://boothen.github.io/Json-Eclipse-Plugin"/>
         <repository
-            url="http://dl.bintray.com/lorenzobettini/xsemantics/updates/1.12"/>
+            url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
         <repository
             url="http://www.xpect-tests.org/updatesite/nightly/"/>
         <repository
