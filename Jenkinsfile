@@ -31,7 +31,9 @@ pipeline {
     }
     stages {
         stage('dependencies') {
-            sh 'mvn dependency:go-offline'
+            steps {
+                sh 'mvn dependency:go-offline'
+            }
         }
         stage('build') {
             steps {
