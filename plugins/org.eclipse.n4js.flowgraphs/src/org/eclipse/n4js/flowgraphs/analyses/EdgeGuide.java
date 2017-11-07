@@ -69,7 +69,6 @@ public class EdgeGuide {
 	}
 
 	Node getPrevNode() {
-		assert !isMerged() : "Cannot be called on merged EdgeGuides";
 		return edgeProvider.getPrevNode(edge);
 	}
 

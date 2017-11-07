@@ -15,7 +15,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.n4js.flowgraphs.model.Node;
+
 /**
+ * This subclass of {@link EdgeGuide} models a merged {@link EdgeGuide}. This merged {@link EdgeGuide} is created when
+ * control flow branches are joined.
  */
 public class EdgeGuideMerged extends EdgeGuide {
 
@@ -63,6 +67,12 @@ public class EdgeGuideMerged extends EdgeGuide {
 	List<EdgeGuide> getNextEdgeGuides() {
 		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), branchWalkers, finallyBlockContexts);
 		return edgeGuide.getNextEdgeGuides();
+	}
+
+	/** @return always returns null since a {@link EdgeGuideMerged} has several preceding nodes */
+	@Override
+	Node getPrevNode() {
+		return null;
 	}
 
 	@Override
