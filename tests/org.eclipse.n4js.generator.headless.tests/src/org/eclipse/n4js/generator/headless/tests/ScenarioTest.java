@@ -24,22 +24,36 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.n4js.HeadlessCompilerFactory;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.N4JSInjectorProvider;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
+import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator;
+import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
+import org.eclipse.xtext.testing.InjectWith;
+import org.eclipse.xtext.testing.XtextRunner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  * Test data is organized in txt-files (content concatenated) under "/testdata".
  */
+@RunWith(XtextRunner.class)
+@InjectWith(N4JSInjectorProvider.class)
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class ScenarioTest {
 
@@ -48,6 +62,20 @@ public class ScenarioTest {
 
 	/** compiler path segment as "es" in "...src-gen/es/A/..." */
 	static String CMPLR = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
+
+	@Inject
+	private SubgeneratorsRegistry subgeneratorsRegistry;
+
+	@Inject
+	private N4JSCompositeGenerator n4jsCompositeGenerator;
+
+	@Inject
+	private N4JSXCompositeGenerator n4jsxCompositeGenerator;
+
+	@Inject
+	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
+
+	private final N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 
 	/**
 	 */
@@ -109,7 +137,12 @@ public class ScenarioTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		//
+		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
+		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
+		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
+
+		hlc.registerComposedGenerator(n4jsCompositeGenerator);
+		hlc.registerComposedGenerator(n4jsxCompositeGenerator);
 	}
 
 	/**
@@ -117,7 +150,7 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario01BuildAllProjects() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
+
 		File root = new File(workspace, "scenario01");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1"), // A, NotAProject
@@ -147,7 +180,6 @@ public class ScenarioTest {
 	 */
 	@Test(expected = N4JSCompileException.class)
 	public void testScenario02brokenManifest() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario02");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
@@ -161,7 +193,6 @@ public class ScenarioTest {
 	 */
 	@Test(expected = N4JSCompileException.class)
 	public void testScenario03brokenN4jsSyntax() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario03");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
@@ -174,7 +205,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario04BuildSingleProjectsWithManyProjectsOnPath() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario04");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1"), // A, NotAProject
@@ -208,7 +238,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario05BuildSingleProjectsWithoutProjectroot() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario05");
 
 		List<File> toCompile = Arrays.asList(//
@@ -233,7 +262,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario06NoModuleWrapFilter() throws N4JSCompileException, IOException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario06");
 
 		List<File> toCompile = Arrays.asList(//
@@ -262,7 +290,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario06bNoModuleWrapFilter() throws N4JSCompileException, IOException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario06b");
 
 		List<File> toCompile = Arrays.asList(//
@@ -290,7 +317,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario07TestOnlyCompilation() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario07");
 
 		List<File> toCompile = Arrays.asList(//
@@ -319,7 +345,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario08NotTestCompilation() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario08");
 
 		List<File> toCompile = Arrays.asList(//
@@ -346,7 +371,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario09BuildSingleFilesWithoutProjectRoot() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario09");
 
 		List<File> toCompile = Arrays.asList(//
@@ -364,14 +388,12 @@ public class ScenarioTest {
 		assertNotExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
 		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
 		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
-
 	}
 
 	/**
 	 */
 	@Test
 	public void testScenario10BuildSingleFileWithProjectRootAndDependency() throws N4JSCompileException {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario10");
 
 		List<File> toCompile = Arrays.asList(//
@@ -400,7 +422,6 @@ public class ScenarioTest {
 	 */
 	@Test
 	public void testScenario11FailDueToInvisbleProject() {
-		N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
 		File root = new File(workspace, "scenario11");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1"));
@@ -452,5 +473,14 @@ public class ScenarioTest {
 	 */
 	private static void assertNotExists(File root, String path) {
 		assertFalse("File " + path + " should not be there.", new File(root, path).exists());
+	}
+
+	/**
+	 * Tear down after each test run.
+	 */
+	@After
+	public void tearDown() {
+		subgeneratorsRegistry.reset();
+		hlc.clearComposedGenerators();
 	}
 }

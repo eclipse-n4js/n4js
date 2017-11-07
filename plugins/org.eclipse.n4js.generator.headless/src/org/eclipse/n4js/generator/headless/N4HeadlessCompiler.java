@@ -168,6 +168,13 @@ public class N4HeadlessCompiler {
 		this.compositeGenerators.add(compositeGenerator);
 	}
 
+	/**
+	 * Unregister a composed generator.
+	 */
+	public void clearComposedGenerators() {
+		this.compositeGenerators.clear();
+	}
+
 	/** Build an output configuration from a composite generator. */
 	private Map<String, OutputConfiguration> buildOutputConfigurations(IComposedGenerator compositeGenerator) {
 		Map<String, OutputConfiguration> result = new HashMap<>();
