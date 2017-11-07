@@ -357,6 +357,7 @@ public class ProjectUtils {
 
 	private static List<String> listJobs() {
 		return from(newArrayList(getJobManager().find(null)))
+				.filter(job -> job.getState() != Job.SLEEPING)
 				.transform(job -> " - " + job.getName() + " : " + job.getState())
 				.toList();
 	}
