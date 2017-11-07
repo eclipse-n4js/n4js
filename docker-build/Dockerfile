@@ -21,7 +21,7 @@ CMD ["mvn"]
 #
 ARG MAVEN_VERSION=3.5.2
 ARG USER_HOME_DIR="/root"
-ARG SHA=cce5914cf8797671fc6e10c4e034b453d854edf711cbc664b478d0f04934cb76
+ARG SHA=707b1f6e390a65bde4af4cdaf2a24d45fc19a6ded00fff02e91626e3e42ceaff
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
