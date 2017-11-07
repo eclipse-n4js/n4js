@@ -348,7 +348,7 @@ public class ProjectUtils {
 			if (!listJobs.isEmpty()) {
 				LOGGER.debug("waitForUpdateEditorJob finished, but there are still #" + listJobs.size() + " jobs.");
 				StringJoiner sj = new StringJoiner("\n");
-				sj.add("ProjectUtils.waitForAutoBuild() finished, but some jobs are still there ");
+				sj.add("ProjectUtils.waitForUpdateEditorJob() finished, but some jobs are still there ");
 				listJobs.forEach(sj::add);
 				System.out.println(sj.toString());
 			}
