@@ -19,7 +19,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * The purpose of the {@link ComposedMemberInfoBuilder} is to provide methods to aggregate all existing members into one

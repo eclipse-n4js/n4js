@@ -15,9 +15,8 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClassifier;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
+import org.eclipse.xsemantics.runtime.StringRepresentation;
 import org.eclipse.xtext.xbase.lib.Pair;
-
-import it.xsemantics.runtime.StringRepresentation;
 
 /**
  */

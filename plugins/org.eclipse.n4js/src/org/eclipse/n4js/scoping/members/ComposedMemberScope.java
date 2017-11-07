@@ -45,7 +45,7 @@ import org.eclipse.xtext.scoping.impl.AbstractScope;
 
 import com.google.common.collect.Iterators;
 
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Scope implementation for ComposedTypeRefs, i.e. union types and intersection types.

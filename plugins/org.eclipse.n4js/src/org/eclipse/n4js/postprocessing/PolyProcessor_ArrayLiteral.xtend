@@ -25,7 +25,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Arrays
 import java.util.List
 import java.util.Map

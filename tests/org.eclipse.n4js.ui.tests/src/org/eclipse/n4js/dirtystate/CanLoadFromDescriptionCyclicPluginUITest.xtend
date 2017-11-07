@@ -16,12 +16,14 @@ import org.eclipse.core.resources.IProject
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
-import org.junit.Test
 import org.eclipse.emf.common.util.URI
+import org.junit.Ignore
+import org.junit.Test
 
 /**
  * Test builder / editor behavior with multiple files and cyclic dependencies.
  */
+@Ignore("IDE-2896") // FIXME IDE-2896 re-enable this test!
 class CanLoadFromDescriptionCyclicPluginUITest extends AbstractCanLoadFromDescriptionTest {
 	/*
 	 * X <- Y <- A <- B <- C <- D

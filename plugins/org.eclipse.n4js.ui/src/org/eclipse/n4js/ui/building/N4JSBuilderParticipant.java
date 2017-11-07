@@ -84,6 +84,7 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	 */
 	IBuildParticipantInstruction prepareBuild(IProject project, IXtextBuilderParticipant.BuildType buildType)
 			throws CoreException {
+
 		if (!isEnabled(project)) {
 			return IBuildParticipantInstruction.NOOP;
 		}

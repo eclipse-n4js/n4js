@@ -75,6 +75,8 @@ import org.eclipse.n4js.validation.N4JSIssueSeveritiesProvider;
 import org.eclipse.n4js.validation.N4JSJavaScriptVariantHelper;
 import org.eclipse.n4js.validation.N4JSResourceValidator;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.xsemantics.runtime.StringRepresentation;
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 import org.eclipse.xtext.conversion.IValueConverterService;
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider;
@@ -112,9 +114,6 @@ import com.google.inject.Binder;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.name.Names;
-
-import it.xsemantics.runtime.StringRepresentation;
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.

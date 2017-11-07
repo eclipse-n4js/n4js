@@ -19,7 +19,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.n4jsx.helpers.ReactHelper
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
 import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 
 /**
