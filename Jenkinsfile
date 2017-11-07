@@ -24,7 +24,9 @@ pipeline {
         disableConcurrentBuilds()
         timeout(time: 3, unit: 'HOURS')
         timestamps()
-        triggers { pollSCM('H 5/* 0 0 1-5') } // every 5 minutes on weekdays
+    }
+    triggers {
+        pollSCM('H 5/* 0 0 1-5') // every 5 minutes on weekdays
     }
     stages {
         stage('build') {
