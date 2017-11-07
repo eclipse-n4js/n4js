@@ -15,6 +15,7 @@ pipeline {
         }
     }
     options {
+        ansiColor('xterm')
         buildDiscarder(
             logRotator(
                 numToKeepStr:           '5',
@@ -29,13 +30,19 @@ pipeline {
         pollSCM('H/5 * * * *') // every 5 minutes
     }
     stages {
+        stage('dependencies') {
+            sh 'mvn dependency:go-offline'
+        }
         stage('build') {
             steps {
-                sh 'xvfb-run -a --server-args="-screen 0 1024x768x24" ' +
-                    'mvn clean verify ' +
-                        '-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests ' +
-                        '-Dmaven.test.failure.ignore ' +
-                        '-e -DWORKSPACE=' + env.WORKSPACE
+                script {
+                    def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
+                    def targets = 'clean verify'
+                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                    def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
+
+                    sh "${xvfb} mvn ${targets} ${profiles} ${options}"
+                }
             }
         }
         stage('long-running-tests') {
