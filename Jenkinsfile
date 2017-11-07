@@ -26,7 +26,7 @@ pipeline {
         timestamps()
     }
     triggers {
-        pollSCM('H 5/* 0 0 1-5') /* every 5 minutes on weekdays */
+        pollSCM('H 5/* 0 0 1-5')
     }
     stages {
         stage('build') {
