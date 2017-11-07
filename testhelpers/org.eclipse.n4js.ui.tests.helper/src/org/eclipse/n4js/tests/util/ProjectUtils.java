@@ -12,6 +12,8 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.core.runtime.jobs.Job.getJobManager;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
@@ -26,6 +28,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringJoiner;
 import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
@@ -275,62 +278,87 @@ public class ProjectUtils {
 
 	/***/
 	public static void waitForAutoBuild() {
-		int maxWait = 100 * 60 * 2;
-		long start = System.currentTimeMillis();
-		long end = start;
-		boolean wasInterrupted = false;
-		boolean foundJob = false;
-		do {
-			try {
-				Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
-				if (foundJobs.length > 0) {
-					foundJob = true;
-					Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
-							null);
+		try {
+			int maxWait = 100 * 60 * 2;
+			long start = System.currentTimeMillis();
+			long end = start;
+			boolean wasInterrupted = false;
+			boolean foundJob = false;
+			do {
+				try {
+					Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+					if (foundJobs.length > 0) {
+						foundJob = true;
+						Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+								null);
+					}
+					wasInterrupted = false;
+					end = System.currentTimeMillis();
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					wasInterrupted = true;
 				}
-				wasInterrupted = false;
-				end = System.currentTimeMillis();
-			} catch (OperationCanceledException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				wasInterrupted = true;
-			}
-		} while (wasInterrupted && (end - start) < maxWait);
-		if (!foundJob) {
-			if (LOGGER.isDebugEnabled()) {
+			} while (wasInterrupted && (end - start) < maxWait);
+			if (!foundJob) {
 				LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
+			}
+		} finally {
+			List<String> listJobs = listJobs();
+			if (!listJobs.isEmpty()) {
+				LOGGER.debug("waitForAutoBuild finished, but there are still #" + listJobs.size() + " jobs.");
+				StringJoiner sj = new StringJoiner("\n");
+				sj.add("ProjectUtils.waitForAutoBuild() finished, but some jobs are still there ");
+				listJobs.forEach(sj::add);
+				System.out.println(sj.toString());
 			}
 		}
 	}
 
-	/***/
 	/**
 	 * Waits for N4JSDirtyStateEditorSupport job to be run
 	 */
 	public static void waitForUpdateEditorJob() {
-		int maxWait = 100 * 60 * 2;
-		long start = System.currentTimeMillis();
-		long end = start;
-		boolean wasInterrupted = false;
-		boolean foundJob = false;
-		do {
-			try {
-				Job[] foundJobs = Job.getJobManager().find(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB);
-				if (foundJobs.length > 0) {
-					foundJob = true;
-					Job.getJobManager().join(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB, null);
+		try {
+			int maxWait = 100 * 60 * 2;
+			long start = System.currentTimeMillis();
+			long end = start;
+			boolean wasInterrupted = false;
+			boolean foundJob = false;
+			do {
+				try {
+					Job[] foundJobs = Job.getJobManager().find(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB);
+					if (foundJobs.length > 0) {
+						foundJob = true;
+						Job.getJobManager().join(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB, null);
+					}
+					wasInterrupted = false;
+					end = System.currentTimeMillis();
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					wasInterrupted = true;
 				}
-				wasInterrupted = false;
-				end = System.currentTimeMillis();
-			} catch (OperationCanceledException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				wasInterrupted = true;
+			} while (wasInterrupted && (end - start) < maxWait);
+			if (!foundJob) {
+				LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
 			}
-		} while (wasInterrupted && (end - start) < maxWait);
-		if (!foundJob) {
-			LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
+		} finally {
+			List<String> listJobs = listJobs();
+			if (!listJobs.isEmpty()) {
+				LOGGER.debug("waitForUpdateEditorJob finished, but there are still #" + listJobs.size() + " jobs.");
+				StringJoiner sj = new StringJoiner("\n");
+				sj.add("ProjectUtils.waitForAutoBuild() finished, but some jobs are still there ");
+				listJobs.forEach(sj::add);
+				System.out.println(sj.toString());
+			}
 		}
+	}
+
+	private static List<String> listJobs() {
+		return from(newArrayList(getJobManager().find(null)))
+				.transform(job -> " - " + job.getName() + " : " + job.getState())
+				.toList();
 	}
 
 	/***/
