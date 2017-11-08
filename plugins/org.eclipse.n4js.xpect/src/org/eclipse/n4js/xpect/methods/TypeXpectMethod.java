@@ -38,8 +38,8 @@ import org.xpect.runner.Xpect;
 
 import com.google.inject.Inject;
 
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  */

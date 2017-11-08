@@ -109,7 +109,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			operationCanceledManager.propagateIfCancelException(e);
 
 			// issue error marker
-			val target = if (input instanceof N4JSResource) input.module.moduleSpecifier else input.URI;
+			val target = (if (input instanceof N4JSResource) input.module?.moduleSpecifier) ?: input.URI?.toString;
 			val msgMarker = "Severe error occurred while transpiling module " + target
 				+ ". Check error log for details about the failure.";
 			genMarkerSupport.createMarker(input, msgMarker, Severity.ERROR);

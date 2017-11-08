@@ -12,8 +12,8 @@ package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Collection
 import java.util.List
 import org.eclipse.emf.ecore.util.EcoreUtil.EqualityHelper
