@@ -328,7 +328,7 @@ public class ProjectUtils {
 					List<String> foundJobs = listJobsRunnuingWaiting();
 					if (!foundJobs.isEmpty()) {
 						foundJob = true;
-						Job.getJobManager().join(null, null);
+						Thread.sleep(100);
 					}
 					wasInterrupted = false;
 					end = System.currentTimeMillis();
