@@ -18,10 +18,10 @@ pipeline {
         ansiColor('xterm')
         buildDiscarder(
             logRotator(
-                numToKeepStr:           '5',
-                artifactDaysToKeepStr: '10',
-                artifactNumToKeepStr:   '5',
-                daysToKeepStr:         '10'))
+                numToKeepStr:          '15',
+                artifactDaysToKeepStr: '30',
+                artifactNumToKeepStr:  '15',
+                daysToKeepStr:         '30'))
         disableConcurrentBuilds()
         timeout(time: 3, unit: 'HOURS')
         timestamps()
