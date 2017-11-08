@@ -19,9 +19,9 @@ CMD ["mvn"]
 # see https://github.com/carlossg/docker-maven/tree/ecf54b9839caed8aa2bcf9b8f7bb19594634ee89/jdk-8
 # and https://hub.docker.com/_/maven/
 #
-ARG MAVEN_VERSION=3.5.2
+ARG MAVEN_VERSION=3.2.2
 ARG USER_HOME_DIR="/root"
-ARG SHA=707b1f6e390a65bde4af4cdaf2a24d45fc19a6ded00fff02e91626e3e42ceaff
+ARG SHA=cce5914cf8797671fc6e10c4e034b453d854edf711cbc664b478d0f04934cb76
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
