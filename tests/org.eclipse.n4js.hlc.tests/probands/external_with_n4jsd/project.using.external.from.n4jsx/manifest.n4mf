@@ -9,9 +9,9 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-ProjectId: external.project
+ProjectId: project.using.external.from.n4jsx
 VendorId: org.eclipse.n4js
-VendorName: "Eclipse N4JS Project"
+VendorName: "Eclipse N4JSX Project"
 ProjectType: library
 ProjectVersion: 0.0.1-SNAPSHOT
 Output: "src-gen"
@@ -20,7 +20,6 @@ Sources {
 		"src"
 	}
 }
-
 ProjectDependencies {
     express
 }
