@@ -32,11 +32,11 @@ import org.eclipse.n4js.n4JS.SwitchStatement;
 class SwitchFactory {
 
 	static ComplexNode buildComplexNode(SwitchStatement switchStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(switchStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, switchStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, switchStmt);
-		Node pivotNode = new DelegatingNode("pivot", switchStmt, switchStmt.getExpression());
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, switchStmt);
+		Node pivotNode = new DelegatingNode("pivot", intPos++, switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -44,18 +44,19 @@ class SwitchFactory {
 		List<Node> caseNodes = new LinkedList<>();
 		// Assumption: clauses are ordered analog to the source code
 		List<AbstractCaseClause> caseClauses = switchStmt.getCases();
-		for (int i = 0; i < caseClauses.size(); i++) {
-			AbstractCaseClause cc = caseClauses.get(i);
+		for (int n = 0; n < caseClauses.size(); n++) {
+			AbstractCaseClause cc = caseClauses.get(n);
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = new DelegatingNode("case_" + i, switchStmt, cc);
+				caseNode = new DelegatingNode("case_" + n, intPos++, switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = new DelegatingNode("default", switchStmt, cc);
+				caseNode = new DelegatingNode("default", intPos++, switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);
 		}
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, switchStmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();

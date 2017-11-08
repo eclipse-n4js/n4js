@@ -27,7 +27,6 @@ import com.google.common.collect.Sets;
  * see {@link GraphVisitorInternal}
  */
 abstract public class GraphVisitor extends GraphVisitorInternal {
-
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
@@ -50,9 +49,11 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	@Override
-	final protected void visit(Node lastNode, Node currentNode, ControlFlowEdge edge) {
+	final protected void visit(Node lastNodes, Node currentNode, ControlFlowEdge edge) {
 		visitedEdgesInternal.add(edge);
-		Set<FlowEdge> newConnections = getNewConnections(edge);
+		Set<FlowEdge> newConnections = new HashSet<>();
+		addNewConnections(edge, newConnections);
+
 		for (FlowEdge dEdge : newConnections) {
 			if (!visitedEdges.contains(dEdge)) {
 				visitedEdges.add(dEdge);
@@ -84,10 +85,9 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	 * all Shfe to create {@link FlowEdge}s FE. These flow edges are then visited, if not already done so. Note, that
 	 * while searching for Prn and Srn, only already found {@link ControlFlowEdge}s are followed.
 	 */
-	private Set<FlowEdge> getNewConnections(ControlFlowEdge edge) {
+	private void addNewConnections(ControlFlowEdge edge, Set<FlowEdge> directNeighbours) {
 		Set<HalfFlowEdge> startHalfs = new HashSet<>();
 		Set<HalfFlowEdge> endHalfs = new HashSet<>();
-		Set<FlowEdge> directNeighbours = new HashSet<>();
 
 		NextEdgesProvider forwardEP = new NextEdgesProvider.Forward();
 		endHalfs = findDirectNeighbours(edge, forwardEP, new HashSet<>());
@@ -104,8 +104,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 				directNeighbours.add(flowEdge);
 			}
 		}
-
-		return directNeighbours;
 	}
 
 	private Set<HalfFlowEdge> findDirectNeighbours(ControlFlowEdge edge, NextEdgesProvider edgeProvider,

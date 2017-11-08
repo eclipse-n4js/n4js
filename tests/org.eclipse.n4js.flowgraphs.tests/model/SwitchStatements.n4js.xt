@@ -17,7 +17,7 @@
  * Note:
  *
  * Tests in this file seem similar and redundant but are necessary
- * since all test methods rely on different algorithms. To very these
+ * since all test methods rely on different algorithms. To verify these
  * algorithms it is important that all test methods are tested with
  * all supported language features.
  */
@@ -35,11 +35,23 @@ function SwitchCase1() {
 		1 --> "end",
 		3 --> "end"
 	--- */
+	/* SwitchCase1 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> [B3],
+		B2: [B0] -> 2 -> 3 -> [B3],
+		B3: [B1|B2]"end"
+	---	*/
+	/* SwitchCase1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2],
+		B1: [B0] -> [B3],
+		B2: [B0] -> 3 -> 2 -> [B3],
+		B3: [B1|B2]1 -> "start"
+	--- */
 	/* SwitchCase1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 3 -> "end",
 		"start" -> 1 -> "end"
 	---	*/
-	/* SwitchCase1 XPECT allPaths direction 'Backward' ---
+	/* SwitchCase1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "start",
 		"end" -> 3 -> 2 -> 1 -> "start"
 	--- */
@@ -75,12 +87,28 @@ function SwitchCaseFallThrough() {
 		4 --> 5,
 		5 --> "end"
 	--- */
+	/* SwitchCaseFallThrough XPECT allBranches ---
+		B0: "start" -> 1[B1|B2|B3],
+		B1: [B0] -> [B4],
+		B2: [B0] -> [B5],
+		B3: [B0] -> 2 -> 3 -> [B4],
+		B4: [B1|B3]4 -> 5 -> [B5],
+		B5: [B2|B4]"end"
+	--- */
+	/* SwitchCaseFallThrough backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2],
+		B1: [B0] -> [B5],
+		B2: [B0] -> 5 -> 4[B3|B4],
+		B3: [B2] -> [B5],
+		B4: [B2] -> 3 -> 2 -> [B5],
+		B5: [B1|B3|B4]1 -> "start"
+	--- */
 	/* SwitchCaseFallThrough XPECT allPaths ---
 		"start" -> 1 -> 2 -> 3 -> 4 -> 5 -> "end",
 		"start" -> 1 -> 4 -> 5 -> "end",
 		"start" -> 1 -> "end"
 	--- */
-	/* SwitchCaseFallThrough XPECT allPaths direction 'Backward' ---
+	/* SwitchCaseFallThrough backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "start",
 		"end" -> 5 -> 4 -> 1 -> "start",
 		"end" -> 5 -> 4 -> 3 -> 2 -> 1 -> "start"
@@ -122,12 +150,28 @@ function SwitchCaseBreak1() {
 		5 --> break;,
 		break; -Break-> "end"
 	--- */
+	/* SwitchCaseBreak1 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2|B3],
+		B1: [B0] -> 4 -> 5 -> break; -> [B4],
+		B2: [B0] -> [B4],
+		B3: [B0] -> 2 -> 3 -> break; -> [B4],
+		B4: [B1|B2|B3]"end"
+	--- */
+	/* SwitchCaseBreak1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2|B3|B4],
+		B1: [B0] -> 1 -> "start",
+		B2: [B0] -> break; -> 3 -> 2 -> 1 -> "start",
+		B3: [B0],
+		B4: [B0] -> break; -> 5 -> 4[B5|B6],
+		B5: [B4] -> 1 -> "start",
+		B6: [B4]
+	--- */
 	/* SwitchCaseBreak1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 3 -> break; -> "end",
 		"start" -> 1 -> 4 -> 5 -> break; -> "end",
 		"start" -> 1 -> "end"
 	--- */
-	/* SwitchCaseBreak1 XPECT allPaths direction 'Backward' ---
+	/* SwitchCaseBreak1 backward XPECT allPaths direction 'Backward' ---
 		"end", "end" -> 1 -> "start",
 		"end" -> break; -> 3 -> 2 -> 1 -> "start",
 		"end" -> break; -> 5 -> 4,
@@ -169,11 +213,23 @@ function SwitchCaseDefault1() {
 		3 --> 5,
 		5 --> "end"
 	--- */
-	/* SwitchCaseDefault1 XPECT allPaths ---
-	"start" -> 1 -> 2 -> 3 -> 5 -> "end",
-	"start" -> 1 -> 5 -> "end"
+	/* SwitchCaseDefault1 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> [B3],
+		B2: [B0] -> 2 -> 3 -> [B3],
+		B3: [B1|B2]5 -> "end"
 	--- */
-	/* SwitchCaseDefault1 XPECT allPaths direction 'Backward' ---
+	/* SwitchCaseDefault1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 5[B1|B2],
+		B1: [B0] -> [B3],
+		B2: [B0] -> 3 -> 2 -> [B3],
+		B3: [B1|B2]1 -> "start"
+	--- */
+	/* SwitchCaseDefault1 XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> 5 -> "end",
+		"start" -> 1 -> 5 -> "end"
+	--- */
+	/* SwitchCaseDefault1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 5 -> 1 -> "start",
 		"end" -> 5 -> 3 -> 2 -> 1 -> "start"
 	--- */
@@ -210,11 +266,24 @@ function SwitchCaseDefault2() {
 		break; -Break-> "end",
 		5 --> "end"
 	--- */
+	/* SwitchCaseDefault2 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 5 -> [B3],
+		B2: [B0] -> 2 -> 3 -> break; -> [B3],
+		B3: [B1|B2]"end"
+	--- */
+	/* SwitchCaseDefault2 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2],
+		B1: [B0] -> break; -> 3 -> 2 -> 1 -> "start",
+		B2: [B0] -> 5[B3|B4],
+		B3: [B2] -> 1 -> "start",
+		B4: [B2]
+	--- */
 	/* SwitchCaseDefault2 XPECT allPaths ---
 		"start" -> 1 -> 2 -> 3 -> break; -> "end",
 		"start" -> 1 -> 5 -> "end"
 	--- */
-	/* SwitchCaseDefault2 XPECT allPaths direction 'Backward' ---
+	/* SwitchCaseDefault2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 5, "end" -> 5 -> 1 -> "start",
 		"end" -> break; -> 3 -> 2 -> 1 -> "start"
 	--- */

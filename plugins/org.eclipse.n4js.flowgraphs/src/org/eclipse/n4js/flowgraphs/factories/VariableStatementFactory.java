@@ -28,17 +28,17 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 class VariableStatementFactory {
 
 	static ComplexNode buildComplexNode(VariableStatement varDeclStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(varDeclStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, varDeclStmt);
-		Node exitNode = new RepresentingNode(EXIT_NODE, varDeclStmt);
-
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, varDeclStmt);
 		List<Node> varDeclNodes = new LinkedList<>();
-		for (int i = 0; i < varDeclStmt.getVarDeclsOrBindings().size(); i++) {
-			VariableDeclarationOrBinding varDOB = varDeclStmt.getVarDeclsOrBindings().get(i);
-			Node varDeclNode = new DelegatingNode("declaration_" + i, varDeclStmt, varDOB);
+		for (int n = 0; n < varDeclStmt.getVarDeclsOrBindings().size(); n++) {
+			VariableDeclarationOrBinding varDOB = varDeclStmt.getVarDeclsOrBindings().get(n);
+			Node varDeclNode = new DelegatingNode("declaration_" + n, intPos++, varDeclStmt, varDOB);
 			varDeclNodes.add(varDeclNode);
 		}
+		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, varDeclStmt);
 
 		cNode.addNode(entryNode);
 		for (Node varDeclNode : varDeclNodes)

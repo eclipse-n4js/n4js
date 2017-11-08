@@ -59,7 +59,7 @@ public class ControlFlowGraphFactory {
 		connectComplexNodes(cnMapper);
 		createJumpEdges(cnMapper);
 
-		FlowGraph cfg = new FlowGraph(cfContainers, cfCatchBlocks, cnMap);
+		FlowGraph cfg = new FlowGraph(script, cfContainers, cfCatchBlocks, cnMap);
 
 		if (PRINT_EDGE_DETAILS)
 			printAllEdgeDetails(cnMapper);
@@ -150,14 +150,14 @@ public class ControlFlowGraphFactory {
 		remDel = remDel && mNode.getInternalPredecessors().size() == 1;
 		remDel = remDel && mNode.pred.size() == 1;
 		remDel = remDel && mNode.succ.size() == 1;
-		remDel = remDel && mNode.pred.get(0).cfType == ControlFlowType.Successor;
-		remDel = remDel && mNode.succ.get(0).cfType == ControlFlowType.Successor;
+		remDel = remDel && mNode.pred.first().cfType == ControlFlowType.Successor;
+		remDel = remDel && mNode.succ.first().cfType == ControlFlowType.Successor;
 		return remDel;
 	}
 
 	private static void removeNode(ComplexNode cn, Node mNode) {
-		ControlFlowEdge e1 = mNode.pred.get(0);
-		ControlFlowEdge e2 = mNode.succ.get(0);
+		ControlFlowEdge e1 = mNode.pred.first();
+		ControlFlowEdge e2 = mNode.succ.first();
 		Node pred = e1.start;
 		Node succ = e2.end;
 
