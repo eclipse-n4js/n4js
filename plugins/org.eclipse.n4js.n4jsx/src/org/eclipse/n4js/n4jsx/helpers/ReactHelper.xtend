@@ -42,6 +42,7 @@ class ReactHelper {
 	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider
 
 	public final static String REACT_MODULE = "react"
+	public final static String REACT_SCOPE_PREFIX = "index"
 	public final static String REACT_FILE_NAME = "index"
 	public final static String REACT_KEY = "KEY__" + REACT_MODULE
 	public final static String REACT_COMPONENT = "Component"
@@ -78,15 +79,17 @@ class ReactHelper {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, context.eResource, [
 			val index = resourceDescriptionsProvider.getResourceDescriptions(context.eResource)
-			val String reactClassifierFQNSuffix = REACT_FILE_NAME + "." + reactClassifierName
+			val String reactClassifierFQNSuffix = REACT_SCOPE_PREFIX + "." + reactClassifierName
 
 			var IEObjectDescription reactClassifierEObj = null
 			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.toString.endsWith(REACT_DEFINITION_FILE)]
-			while (reactClassifierEObj === null && allResDescs.iterator.hasNext) {
-				val resDesc = allResDescs.iterator.next
+			val iter = allResDescs.iterator
+			while (reactClassifierEObj === null && iter.hasNext) {
+				val resDesc = iter.next
 				val eobjDescs = resDesc.exportedObjects.filter[EObjectOrProxy instanceof TClassifier]
 				reactClassifierEObj = eobjDescs.findFirst[eobjDesc | eobjDesc.isReactClassifierDescription(reactClassifierFQNSuffix)]
 			}
+
 			if (reactClassifierEObj !== null) {
 				val ret = context.eResource.resourceSet.getEObject(reactClassifierEObj.EObjectURI, true) as TClassifier
 				return ret;
@@ -97,7 +100,7 @@ class ReactHelper {
 	}
 
 	private def boolean isReactClassifierDescription(IEObjectDescription desc, String suffix) {
-		return desc.EObjectURI.trimFragment.toString.contains(REACT_DEFINITION_FILE) && desc.qualifiedName.toString.endsWith(suffix)
+		return desc.qualifiedName.toString.endsWith(suffix)
 	}
 
 	/**
