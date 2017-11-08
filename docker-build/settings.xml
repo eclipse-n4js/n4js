@@ -7,7 +7,7 @@
     <mirror>
       <id>public</id>
       <mirrorOf>*</mirrorOf>
-      <url>http://repository.corp.numberfour.eu/nexus/content/groups/public</url>
+      <url>http://dualstack.internal-lb-nexus-1985583365.eu-central-1.elb.amazonaws.com/nexus/content/groups/public</url>
     </mirror>
   </mirrors>
   <server>
