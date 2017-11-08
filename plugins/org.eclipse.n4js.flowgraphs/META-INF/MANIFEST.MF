@@ -19,7 +19,9 @@ Export-Package: org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.flowgraphs.analysers,
  org.eclipse.n4js.flowgraphs.analyses,
  org.eclipse.n4js.flowgraphs.model
-Import-Package: org.eclipse.core.runtime,
+Import-Package: com.google.common.base;version="[15.0.0,16.0.0)",
+ com.google.common.collect;version="[15.0.0,16.0.0)",
+ org.eclipse.core.runtime,
  org.eclipse.n4js.n4JS,
  org.eclipse.n4js.n4JS.util,
  org.eclipse.n4js.smith

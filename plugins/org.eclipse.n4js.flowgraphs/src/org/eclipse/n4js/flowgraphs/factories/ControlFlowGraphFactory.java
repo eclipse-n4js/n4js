@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
@@ -42,15 +41,10 @@ public class ControlFlowGraphFactory {
 	/** Prints out the {@link ControlFlowEdge}s of the internal graph */
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
-	/** Only needed for sorted sets in function {@link #build(Script)} */
-	static int compareCFEs(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-		return cfe1.hashCode() - cfe2.hashCode();
-	}
-
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
-		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
-		TreeSet<Block> cfCatchBlocks = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
+		Map<ControlFlowElement, List<ControlFlowElement>> cfContainers = new HashMap<>();
+		Set<Block> cfCatchBlocks = new HashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
@@ -68,8 +62,9 @@ public class ControlFlowGraphFactory {
 	}
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	static private void createComplexNodes(Script script, TreeSet<ControlFlowElement> cfContainers,
-			TreeSet<Block> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
+	static private void createComplexNodes(Script script,
+			Map<ControlFlowElement, List<ControlFlowElement>> cfContainers,
+			Set<Block> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		ComplexNode cn = CFEFactoryDispatcher.build(script);
 		cnMap.put(script, cn);
@@ -82,8 +77,8 @@ public class ControlFlowGraphFactory {
 				cfe = CFEMapper.map(cfe);
 
 				if (cfe != null && !cnMap.containsKey(cfe)) {
-					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
-					cfContainers.add(cfContainer);
+					addToContainer(cfContainers, cfe);
+
 					Block cfCatchBlock = FGUtils.getCatchBlock(cfe);
 					if (cfCatchBlock != null) {
 						cfCatchBlocks.add(cfCatchBlock);
@@ -95,6 +90,17 @@ public class ControlFlowGraphFactory {
 				}
 			}
 		}
+	}
+
+	private static void addToContainer(Map<ControlFlowElement, List<ControlFlowElement>> cfContainers,
+			ControlFlowElement cfe) {
+
+		ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
+		if (!cfContainers.containsKey(cfContainer)) {
+			cfContainers.put(cfContainer, new LinkedList<ControlFlowElement>());
+		}
+		List<ControlFlowElement> containerList = cfContainers.get(cfContainer);
+		containerList.add(cfe);
 	}
 
 	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {
@@ -186,9 +192,17 @@ public class ControlFlowGraphFactory {
 		for (ComplexNode cn : cnMapper.getAll()) {
 			Node jumpNode = cn.getExit();
 			for (JumpToken jumpToken : jumpNode.jumpToken) {
-				EdgeUtils.removeAllCF(jumpNode.getSuccessorEdges());
+				replaceWithDeadCodeEdges(jumpNode.getSuccessorEdges());
 				connectToJumpTarget(cnMapper, jumpNode, jumpToken);
 			}
+		}
+	}
+
+	private static void replaceWithDeadCodeEdges(Set<ControlFlowEdge> replacedEdges) {
+		for (ControlFlowEdge rEdge : replacedEdges) {
+			assert rEdge.finallyPathContext == null;
+			EdgeUtils.removeCF(rEdge);
+			EdgeUtils.connectCF(rEdge.start, rEdge.end, ControlFlowType.DeadCode);
 		}
 	}
 

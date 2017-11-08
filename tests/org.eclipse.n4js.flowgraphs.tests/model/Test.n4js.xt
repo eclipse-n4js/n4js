@@ -1,0 +1,43 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+
+
+
+
+
+
+
+function ForStatement1() {
+	/* ForStatement1 X-PECT allEdges ---
+		"start" --> ;,
+		; -Repeat-> ;
+	--- */
+	// ForStatement1 X-PECT allBranches --> B0: "start" -> ; -> ; -> ;
+	// ForStatement1 backward XPECT allBranches direction 'Backward' --> B0: "end"
+	// ForStatement1 X-PECT allPaths --> "start" -> ; -> ; -> ;
+	// ForStatement1 backward XPECT allPaths direction 'Backward' --> "end"
+	"start";
+	for (;;) ;
+	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+
+
+
+
+
+

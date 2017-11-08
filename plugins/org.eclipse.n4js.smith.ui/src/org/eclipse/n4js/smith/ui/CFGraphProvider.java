@@ -100,21 +100,17 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return null;
 	}
 
+	// FIXME: This is broken since the visit-Edge method is deprecated
 	private class NodesEdgesCollector extends GraphVisitor {
 
 		NodesEdgesCollector() {
-			super(Mode.Forward, Mode.Backward, Mode.Islands);
+			super(Mode.Forward);
 		}
 
 		@Override
 		protected void initialize() {
 			nodeMap.clear();
 			edgesMap.clear();
-		}
-
-		@Override
-		protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
-			// nothing to do
 		}
 
 		@Override
@@ -143,16 +139,6 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 				Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
 				nodeMap.put(cfe, node);
 			}
-		}
-
-		@Override
-		protected void terminateMode(Mode curDirection, ControlFlowElement curContainer) {
-			// nothing to do
-		}
-
-		@Override
-		protected void terminate() {
-			// nothing to do
 		}
 
 	}

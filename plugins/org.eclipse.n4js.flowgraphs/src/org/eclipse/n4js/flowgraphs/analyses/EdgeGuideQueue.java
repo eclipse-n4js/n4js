@@ -179,12 +179,13 @@ public class EdgeGuideQueue {
 	private static Map<ControlFlowType, Integer> cftOrderMap = new EnumMap<>(ControlFlowType.class);
 	static {
 		cftOrderMap.put(ControlFlowType.Successor, 10);
-		cftOrderMap.put(ControlFlowType.Repeat, 9);
-		cftOrderMap.put(ControlFlowType.Continue, 8);
-		cftOrderMap.put(ControlFlowType.Break, 7);
-		cftOrderMap.put(ControlFlowType.Throw, 6);
-		cftOrderMap.put(ControlFlowType.Return, 5);
-		cftOrderMap.put(ControlFlowType.Exit, 4);
+		cftOrderMap.put(ControlFlowType.DeadCode, 9);
+		cftOrderMap.put(ControlFlowType.Repeat, 8);
+		cftOrderMap.put(ControlFlowType.Continue, 7);
+		cftOrderMap.put(ControlFlowType.Break, 6);
+		cftOrderMap.put(ControlFlowType.Throw, 5);
+		cftOrderMap.put(ControlFlowType.Return, 4);
+		cftOrderMap.put(ControlFlowType.Exit, 3);
 		cftOrderMap.put(ControlFlowType.CatchesAll, 0);
 		cftOrderMap.put(ControlFlowType.CatchesErrors, 0);
 	}

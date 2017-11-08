@@ -289,20 +289,6 @@ public class FlowgraphsXpectMethod {
 		return cfe;
 	}
 
-	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
-	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
-	@Xpect
-	public void allIslandElems(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion referenceOffset) {
-
-		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		ControlFlowElement container = getFlowAnalyzer(referenceCFE).getContainer(referenceCFE);
-		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(container);
-		getFlowAnalyzer(referenceCFE).accept(anaepw);
-		List<String> nodeStrings = anaepw.getAllIslandsNodeStrings();
-		expectation.assertEquals(nodeStrings);
-	}
-
 	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
 	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect

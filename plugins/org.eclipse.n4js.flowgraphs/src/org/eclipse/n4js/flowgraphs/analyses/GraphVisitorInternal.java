@@ -36,22 +36,14 @@ abstract public class GraphVisitorInternal {
 	private ControlFlowElement currentContainer;
 	private Mode currentMode;
 	private boolean activeMode = false;
+	private boolean lastVisitedNodeIsDead = false;
 
 	/** Specifies the traverse mode of a {@link GraphVisitorInternal} instance. */
 	public enum Mode {
 		/** Forward edge-direction begins from the entry node of a given container. */
 		Forward,
 		/** Backward edge-direction begins from the exit node of a given container. */
-		Backward,
-		/**
-		 * Begins from an arbitrary node N of a given container in the following manner: First in forward edge-direction
-		 * beginning from the entry node of N, second in backward edge-direction beginning from the exit node of N.
-		 * <p/>
-		 * Note that N is unreachable from both the containers entry and its exit node.
-		 */
-		Islands,
-		/** Forward edge-direction begins from the entry of a given catch block. */
-		CatchBlocks
+		Backward
 	}
 
 	/**
@@ -76,7 +68,7 @@ abstract public class GraphVisitorInternal {
 	 */
 	protected GraphVisitorInternal(ControlFlowElement container, Mode... modes) {
 		if (modes.length == 0) {
-			modes = new Mode[] { Mode.Forward, Mode.CatchBlocks };
+			modes = new Mode[] { Mode.Forward };
 		}
 		this.modes = modes;
 		this.container = container;
@@ -184,9 +176,9 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
-	final void callVisit(Node cfe) {
+	final void callVisit(Node node) {
 		if (activeMode) {
-			visit(cfe);
+			visit(node);
 		}
 	}
 
@@ -207,6 +199,11 @@ abstract public class GraphVisitorInternal {
 		this.currentContainer = curContainer;
 		this.currentMode = curMode;
 		checkActive();
+	}
+
+	/** Only called from {@link GraphVisitorGuideInternal}. Sets {@link #lastVisitedNodeIsDead}. */
+	final void setVisitedNodeIsDead(boolean lastVisitedNodeIsDead) {
+		this.lastVisitedNodeIsDead = lastVisitedNodeIsDead;
 	}
 
 	private void checkActive() {
@@ -278,6 +275,16 @@ abstract public class GraphVisitorInternal {
 	/** @return the current mode */
 	final public Mode getCurrentMode() {
 		return currentMode;
+	}
+
+	/** @return true iff the last visited node was not dead. */
+	final public boolean isLive() {
+		return !lastVisitedNodeIsDead;
+	}
+
+	/** @return true iff the last visited node was dead. */
+	final public boolean isDead() {
+		return lastVisitedNodeIsDead;
 	}
 
 	/** @return the current container */

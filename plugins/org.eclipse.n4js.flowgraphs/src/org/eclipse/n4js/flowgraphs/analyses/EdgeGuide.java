@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
@@ -44,28 +45,36 @@ import com.google.common.collect.Sets;
  */
 public class EdgeGuide {
 	final NextEdgesProvider edgeProvider;
-	final LinkedList<BranchWalkerInternal> branchWalkers = new LinkedList<>();
+	final Collection<BranchWalkerInternal> branchWalkers;
 	final Set<JumpToken> finallyBlockContexts = new HashSet<>();
 	private ControlFlowEdge edge;
+	private boolean isDeadCode;
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
-		this.edgeProvider = edgeProvider;
-		this.edge = edge;
-		if (edge.finallyPathContext != null) {
-			finallyBlockContexts.add(edge.finallyPathContext);
-		}
+		this(edgeProvider, edge, Sets.newHashSet());
 	}
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths) {
-		this(edgeProvider, edge, activePaths, Sets.newHashSet());
+		this(edgeProvider, edge, activePaths, Sets.newHashSet(), false);
 	}
 
 	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths,
 			Set<JumpToken> finallyBlockContexts) {
+		this(edgeProvider, edge, activePaths, finallyBlockContexts, false);
+	}
 
-		this(edgeProvider, edge);
-		addActiveBranches(activePaths);
+	EdgeGuide(NextEdgesProvider edgeProvider, ControlFlowEdge edge, Collection<BranchWalkerInternal> activePaths,
+			Set<JumpToken> finallyBlockContexts, boolean isDeadCode) {
+
+		this.isDeadCode = isDeadCode || edge.cfType == ControlFlowType.DeadCode;
+		this.edgeProvider = edgeProvider;
+		this.edge = edge;
+		this.branchWalkers = activePaths;
+		if (edge.finallyPathContext != null) {
+			finallyBlockContexts.add(edge.finallyPathContext);
+		}
 		this.finallyBlockContexts.addAll(finallyBlockContexts);
+		checkDeadEdge();
 	}
 
 	Node getPrevNode() {
@@ -90,7 +99,7 @@ public class EdgeGuide {
 	}
 
 	static List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider,
-			Set<BranchWalkerInternal> activatedPaths) {
+			Collection<BranchWalkerInternal> activatedPaths) {
 
 		List<EdgeGuide> nextEGs = new LinkedList<>();
 		Node node = edgeProvider.getStartNode(cn);
@@ -106,7 +115,7 @@ public class EdgeGuide {
 		if (nextEdges.size() > 1) {
 			while (nextEdgeIt.hasNext()) {
 				ControlFlowEdge nextEdge = nextEdgeIt.next();
-				Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+				Collection<BranchWalkerInternal> forkedPaths = new HashSet<>();
 				for (BranchWalkerInternal aPath : activatedPaths) {
 					BranchWalkerInternal forkedPath = aPath.callFork();
 					forkedPaths.add(forkedPath);
@@ -123,6 +132,8 @@ public class EdgeGuide {
 		List<EdgeGuide> nextEGs = new LinkedList<>();
 		List<ControlFlowEdge> nextEdges = getNextEdges();
 		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
+		boolean diedCode = false;
+		checkDeadEdge();
 
 		if (nextEdges.size() == 0) {
 			for (BranchWalkerInternal aPath : getBranchIterable()) {
@@ -131,16 +142,20 @@ public class EdgeGuide {
 		}
 
 		if (nextEdges.size() == 1) {
-			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			edge = nextEdge;
-			nextEGs.add(this);
+			diedCode = !isDeadCode && nextEdges.get(0).cfType == ControlFlowType.DeadCode;
+			if (!diedCode) {
+				ControlFlowEdge nextEdge = nextEdgeIt.next();
+				edge = nextEdge;
+				checkDeadEdge();
+				nextEGs.add(this);
+			}
 		}
 
-		if (nextEdges.size() > 1) {
+		if (diedCode || nextEdges.size() > 1) {
 			while (nextEdgeIt.hasNext()) {
 				ControlFlowEdge nextEdge = nextEdgeIt.next();
 
-				Set<BranchWalkerInternal> forkedPaths = new HashSet<>();
+				Collection<BranchWalkerInternal> forkedPaths = new HashSet<>();
 				for (BranchWalkerInternal aPath : getBranchIterable()) {
 					BranchWalkerInternal forkedPath = aPath.callFork();
 					aPath.deactivate();
@@ -150,11 +165,23 @@ public class EdgeGuide {
 				NextEdgesProvider epCopy = edgeProvider.copy();
 				Set<JumpToken> fbContexts = finallyBlockContexts;
 				EdgeGuide edgeGuide = new EdgeGuide(epCopy, nextEdge, forkedPaths, fbContexts);
+				edgeGuide.isDeadCode = isDeadCode();
+				edgeGuide.checkDeadEdge();
 				nextEGs.add(edgeGuide);
 			}
 		}
 
 		return nextEGs;
+	}
+
+	private void checkDeadEdge() {
+		if (edgeProvider instanceof NextEdgesProvider.Forward) {
+			isDeadCode = isDeadCode || edge.cfType == ControlFlowType.DeadCode;
+			assert !(getNextNode().isDeadCode && !isDeadCode);
+			getNextNode().isDeadCode = isDeadCode;
+		} else {
+			isDeadCode = getNextNode().isDeadCode;
+		}
 	}
 
 	/**
@@ -222,12 +249,13 @@ public class EdgeGuide {
 		return branchWalkers;
 	}
 
-	Iterator<BranchWalkerInternal> getEWIterator() {
-		return branchWalkers.iterator();
-	}
-
 	ControlFlowEdge getEdge() {
 		return edge;
+	}
+
+	/** @return true iff this edge guide refers to dead code */
+	boolean isDeadCode() {
+		return isDeadCode;
 	}
 
 	@Override

@@ -230,7 +230,6 @@ function Destructuring6() {
 
 function Destructuring7() {
 	// Destructuring7 XPECT cfContainer --> FunctionDeclaration::Block
-	// Destructuring7 XPECT allIslandElems -->
 	// Destructuring7 XPECT allCatchBlocks -->
 	/* Destructuring7 XPECT allEdges ---
 		"start" --> null,
@@ -267,7 +266,6 @@ function Destructuring7() {
 
 function Destructuring8(q) {
 	// Destructuring8 XPECT cfContainer --> FunctionDeclaration::Block
-	// Destructuring8 XPECT allIslandElems -->
 	// Destructuring8 XPECT allCatchBlocks -->
 	/* Destructuring8 XPECT allEdges ---
 		"start" --> 5,
@@ -323,7 +321,6 @@ function Destructuring8(q) {
 
 function DestructuringDefault1() {
 	// DestructuringDefault1 XPECT cfContainer --> FunctionDeclaration::Block
-	// DestructuringDefault1 XPECT allIslandElems -->
 	// DestructuringDefault1 XPECT allCatchBlocks -->
 	/* DestructuringDefault1 XPECT allEdges ---
 		"start" --> 1,
@@ -365,7 +362,6 @@ function DestructuringDefault1() {
 
 function DestructuringDefault2() {
 	// DestructuringDefault2 XPECT cfContainer --> FunctionDeclaration::Block
-	// DestructuringDefault2 XPECT allIslandElems -->
 	// DestructuringDefault2 XPECT allCatchBlocks -->
 	/* DestructuringDefault2 XPECT allEdges ---
 		"start" --> 1,
@@ -406,7 +402,6 @@ function DestructuringDefault2() {
 
 function DestructuringComputedPropName1() {
 	// DestructuringComputedPropName1 XPECT cfContainer --> FunctionDeclaration::Block
-	// DestructuringComputedPropName1 XPECT allIslandElems -->
 	// DestructuringComputedPropName1 XPECT allCatchBlocks -->
 	/* DestructuringComputedPropName1 XPECT allEdges ---
 		"start" --> "a",
@@ -430,7 +425,6 @@ function DestructuringComputedPropName1() {
 
 function DestructuringAssignmentPadding1(x) {
 	// DestructuringAssignmentPadding1 XPECT cfContainer --> FunctionDeclaration::Block
-	// DestructuringAssignmentPadding1 XPECT allIslandElems -->
 	// DestructuringAssignmentPadding1 XPECT allCatchBlocks -->
 	/* DestructuringAssignmentPadding1 XPECT allEdges ---
 		"start" --> x,

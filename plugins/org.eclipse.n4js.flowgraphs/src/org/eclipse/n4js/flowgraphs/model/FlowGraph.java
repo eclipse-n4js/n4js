@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
@@ -28,13 +28,13 @@ import org.eclipse.n4js.n4JS.Script;
  */
 public class FlowGraph {
 	final private Script script;
-	final private TreeSet<ControlFlowElement> cfContainers;
-	final private TreeSet<Block> cfCatchBlocks;
+	final private Map<ControlFlowElement, List<ControlFlowElement>> cfContainers;
+	final private Set<Block> cfCatchBlocks;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 
 	/** Constructor. */
-	public FlowGraph(Script script, TreeSet<ControlFlowElement> cfContainers, TreeSet<Block> cfCatchBlocks,
-			Map<ControlFlowElement, ComplexNode> cnMap) {
+	public FlowGraph(Script script, Map<ControlFlowElement, List<ControlFlowElement>> cfContainers,
+			Set<Block> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		this.script = script;
 		this.cfContainers = cfContainers;
@@ -72,12 +72,17 @@ public class FlowGraph {
 	}
 
 	/** see {@link N4JSFlowAnalyzer#getAllContainers()} */
-	public TreeSet<ControlFlowElement> getAllContainers() {
-		return cfContainers;
+	public Set<ControlFlowElement> getAllContainers() {
+		return cfContainers.keySet();
+	}
+
+	/** @return all {@link ControlFlowElement}s of the given container */
+	public List<ControlFlowElement> getCFEsOfContainer(ControlFlowElement container) {
+		return cfContainers.get(container);
 	}
 
 	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
-	public TreeSet<Block> getCatchBlocks() {
+	public Set<Block> getCatchBlocks() {
 		return cfCatchBlocks;
 	}
 

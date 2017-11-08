@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  *
  * <pre>
  * {@link #EdgeGuideWorklist()}
- * -> {@link #initialize(ComplexNode, NextEdgesProvider, Set)}
+ * -> {@link #initialize(ComplexNode, NextEdgesProvider, Collection)}
  * {
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
@@ -61,7 +62,7 @@ public class EdgeGuideWorklist {
 	}
 
 	/** Initializes this instance. Can be used for re-initialization. */
-	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Set<BranchWalkerInternal> activatedPaths) {
+	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Collection<BranchWalkerInternal> activatedPaths) {
 		allVisitedEdges.clear();
 		currEdgeGuide = null;
 		nextEdgeGuide = null;
@@ -106,6 +107,11 @@ public class EdgeGuideWorklist {
 	/** @return true iff the given edge was already visited */
 	boolean edgeVisited(ControlFlowEdge edge) {
 		return allVisitedEdges.contains(edge);
+	}
+
+	/** @return a set of all visited edges */
+	Set<ControlFlowEdge> getAllVisitedEdges() {
+		return allVisitedEdges;
 	}
 
 	/** @return a set of all visited nodes */

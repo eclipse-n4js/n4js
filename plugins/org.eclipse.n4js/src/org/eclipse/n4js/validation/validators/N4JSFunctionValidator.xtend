@@ -73,6 +73,7 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.flowgraphs.analysers.CheckVariableGraphVisitor
 
 /**
  */
@@ -128,8 +129,11 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		flowAnalyzer.createGraphs(script);
 
 		val dcv = new DeadCodeVisitor();
+		val cvgv1 = new CheckVariableGraphVisitor();
+		val cvgv2 = new CheckVariableGraphVisitor();
+		val cvgv3 = new CheckVariableGraphVisitor();
 
-		flowAnalyzer.accept(dcv);
+		flowAnalyzer.accept(dcv, cvgv1 );
 
 		internalCheckDeadCode(dcv);
 	}

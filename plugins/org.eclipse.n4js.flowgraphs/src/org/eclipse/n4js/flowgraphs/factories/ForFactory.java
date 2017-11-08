@@ -179,6 +179,7 @@ class ForFactory {
 			Node loopSrc = loopCycle.getLast();
 			Node loopTgt = loopCycle.getFirst();
 			cNode.connectInternalSucc(ControlFlowType.Repeat, loopSrc, loopTgt);
+			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}
 
 		cNode.setEntryNode(entryNode);

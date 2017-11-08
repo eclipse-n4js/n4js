@@ -105,23 +105,23 @@ public class N4JSFlowAnalyzer {
 	}
 
 	/** @return a list of all direct internal predecessors of cfe */
-	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getPredecessors(cfe, followEdges);
+	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
+		return spa.getPredecessors(cfe);
 	}
 
 	/** @return a list of all direct external predecessors of cfe */
-	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getPredecessorsSkipInternal(cfe, followEdges);
+	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe) {
+		return spa.getPredecessorsSkipInternal(cfe);
 	}
 
 	/** @return a list of all direct internal successors of cfe */
-	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getSuccessors(cfe, followEdges);
+	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
+		return spa.getSuccessors(cfe);
 	}
 
 	/** @return a list of all direct external successors of cfe */
-	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe, ControlFlowType... followEdges) {
-		return spa.getSuccessorsSkipInternal(cfe, followEdges);
+	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe) {
+		return spa.getSuccessorsSkipInternal(cfe);
 	}
 
 	/** @return true iff cfe2 is a direct successor of cfe1 */
@@ -169,18 +169,6 @@ public class N4JSFlowAnalyzer {
 	 */
 	public Set<ControlFlowElement> getCommonPredecessors(ControlFlowElement cfeA, ControlFlowElement cfeB) {
 		return dpa.getCommonPredecessors(cfeA, cfeB);
-	}
-
-	/**
-	 * Returns an identifier for all paths between two {@link ControlFlowElement}s.
-	 * <p/>
-	 * The path identifier is computed as follows. First, the CF graph is traversed beginning from cfeB backwards until
-	 * an element is reached which has no predecessor. All elements that were visited during that traversal are saved in
-	 * P. Second, the CF graph is now traversed beginning from cfeA forwards. All elements that are visited during that
-	 * second traversal are part of the path identifier iff they are contained in P.
-	 */
-	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		return dpa.getPathIdentifier(cfeFrom, cfeTo);
 	}
 
 	/**

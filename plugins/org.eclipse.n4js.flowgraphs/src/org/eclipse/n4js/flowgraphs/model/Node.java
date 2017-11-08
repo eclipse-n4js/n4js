@@ -53,6 +53,9 @@ abstract public class Node implements ControlFlowable {
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
 
+	/** Set to true during graph traversal. Used to find dead code. */
+	public boolean isDeadCode = false;
+
 	/**
 	 * Constructor.<br/>
 	 * Creates a node with the given name and {@link ControlFlowElement}.

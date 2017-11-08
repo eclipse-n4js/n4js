@@ -26,7 +26,6 @@
 
 function AdditiveExpression() {
 	// AdditiveExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// AdditiveExpression XPECT allIslandElems -->
 	// AdditiveExpression XPECT allCatchBlocks -->
 	/* AdditiveExpression XPECT allEdges ---
 		"start" --> 1,
@@ -55,7 +54,6 @@ function Argument() {
 
 function ArrayLiteral() {
 	// ArrayLiteral XPECT cfContainer --> FunctionDeclaration::Block
-	// ArrayLiteral XPECT allIslandElems -->
 	// ArrayLiteral XPECT allCatchBlocks -->
 	/* ArrayLiteral XPECT allEdges ---
 		"start" --> 1,
@@ -81,7 +79,6 @@ function ArrayLiteral() {
 
 function AssignmentExpression(x:int) {
 	// AssignmentExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// AssignmentExpression XPECT allIslandElems -->
 	// AssignmentExpression XPECT allCatchBlocks -->
 	/* AssignmentExpression XPECT allEdges ---
 		"start" --> x,
@@ -105,7 +102,6 @@ function AssignmentExpression(x:int) {
 
 async function AwaitExpression() {
 	// AwaitExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// AwaitExpression XPECT allIslandElems -->
 	// AwaitExpression XPECT allCatchBlocks -->
 	/* AwaitExpression XPECT allEdges ---
 		"start" --> null,
@@ -128,7 +124,6 @@ async function AwaitExpression() {
 
 function BinaryBitwiseExpression() {
 	// BinaryBitwiseExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// BinaryBitwiseExpression XPECT allIslandElems -->
 	// BinaryBitwiseExpression XPECT allCatchBlocks -->
 	/* BinaryBitwiseExpression XPECT allEdges ---
 		"start" --> 1,
@@ -152,7 +147,6 @@ function BinaryBitwiseExpression() {
 
 function BinaryLogicalExpression() {
 	// BinaryLogicalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// BinaryLogicalExpression XPECT allIslandElems -->
 	// BinaryLogicalExpression XPECT allCatchBlocks -->
 	/* BinaryLogicalExpression XPECT allEdges ---
 		"start" --> 1,
@@ -189,7 +183,6 @@ function BinaryLogicalExpression() {
 
 function CastExpression() {
 	// CastExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// CastExpression XPECT allIslandElems -->
 	// CastExpression XPECT allCatchBlocks -->
 	/* CastExpression XPECT allEdges ---
 		"start" --> 4 ,
@@ -212,7 +205,6 @@ function CastExpression() {
 
 function CommaExpression() {
 	// CommaExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// CommaExpression XPECT allIslandElems -->
 	// CommaExpression XPECT allCatchBlocks -->
 	/* CommaExpression XPECT allEdges ---
 	"start" --> 4,
@@ -236,7 +228,6 @@ function CommaExpression() {
 
 function ConditionalExpression() {
 	// ConditionalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// ConditionalExpression XPECT allIslandElems -->
 	// ConditionalExpression XPECT allCatchBlocks -->
 	/* ConditionalExpression XPECT allEdges ---
 		"start" --> true,
@@ -281,7 +272,6 @@ function ConditionalExpression() {
 
 function EqualityExpression() {
 	// EqualityExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// EqualityExpression XPECT allIslandElems -->
 	// EqualityExpression XPECT allCatchBlocks -->
 	/* EqualityExpression XPECT allEdges ---
 		"start" --> 1,
@@ -305,7 +295,6 @@ function EqualityExpression() {
 
 function FunctionExpression() {
 	// FunctionExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// FunctionExpression XPECT allIslandElems -->
 	// FunctionExpression XPECT allCatchBlocks -->
 	/* FunctionExpression XPECT allEdges ---
 		"start" --> function() { },
@@ -327,7 +316,6 @@ function FunctionExpression() {
 
 function IdentifierRef(i) {
 	// IdentifierRef XPECT cfContainer --> FunctionDeclaration::Block
-	// IdentifierRef XPECT allIslandElems -->
 	// IdentifierRef XPECT allCatchBlocks -->
 	/* IdentifierRef XPECT allEdges ---
 		"start" --> i,
@@ -347,7 +335,6 @@ function IdentifierRef(i) {
 
 function IndexedAccessExpression(b : Array<?>) {
 	// IndexedAccessExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// IndexedAccessExpression XPECT allIslandElems -->
 	// IndexedAccessExpression XPECT allCatchBlocks -->
 	/* IndexedAccessExpression XPECT allEdges ---
 		"start" --> b,
@@ -371,7 +358,6 @@ function IndexedAccessExpression(b : Array<?>) {
 
 function Literal() {
 	// Literal XPECT cfContainer --> FunctionDeclaration::Block
-	// Literal XPECT allIslandElems -->
 	// Literal XPECT allCatchBlocks -->
 	/* Literal XPECT allEdges ---
 		"start" --> "string literal",
@@ -391,7 +377,6 @@ function Literal() {
 
 function MultiplicativeExpression() {
 	// MultiplicativeExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// MultiplicativeExpression XPECT allIslandElems -->
 	// MultiplicativeExpression XPECT allCatchBlocks -->
 	/* MultiplicativeExpression XPECT allEdges ---
 		"start" --> 47,
@@ -421,7 +406,6 @@ function N4ClassExpression() {
 
 function NewExpression() {
 	// NewExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// NewExpression XPECT allIslandElems -->
 	// NewExpression XPECT allCatchBlocks -->
 	/* NewExpression XPECT allEdges ---
 		"start" --> Object,
@@ -449,7 +433,6 @@ function NewTarget() {
 
 function ObjectLiteral() {
 	// ObjectLiteral XPECT cfContainer --> FunctionDeclaration::Block
-	// ObjectLiteral XPECT allIslandElems -->
 	// ObjectLiteral XPECT allCatchBlocks -->
 	/* ObjectLiteral XPECT allEdges ---
 		"start" --> 1,
@@ -489,7 +472,6 @@ function ObjectLiteral() {
 
 function ParameterizedCallExpression() {
 	// ParameterizedCallExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// ParameterizedCallExpression XPECT allIslandElems -->
 	// ParameterizedCallExpression XPECT allCatchBlocks -->
 	/* ParameterizedCallExpression XPECT allEdges ---
 		"start" --> Object,
@@ -517,7 +499,6 @@ function ParameterizedCallExpression() {
 
 function ParameterizedPropertyAccessExpression() {
 	// ParameterizedPropertyAccessExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// ParameterizedPropertyAccessExpression XPECT allIslandElems -->
 	// ParameterizedPropertyAccessExpression XPECT allCatchBlocks -->
 	/* ParameterizedPropertyAccessExpression XPECT allEdges ---
 		"start" --> Object,
@@ -539,7 +520,6 @@ function ParameterizedPropertyAccessExpression() {
 
 function PostfixExpression(x : int) {
 	// PostfixExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// PostfixExpression XPECT allIslandElems -->
 	// PostfixExpression XPECT allCatchBlocks -->
 	/* PostfixExpression XPECT allEdges ---
 		"start" --> x,
@@ -573,7 +553,6 @@ function PromisifyExpression() {
 
 function RelationalExpression() {
 	// RelationalExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// RelationalExpression XPECT allIslandElems -->
 	// RelationalExpression XPECT allCatchBlocks -->
 	/* RelationalExpression XPECT allEdges ---
 	"start" --> 1,
@@ -597,7 +576,6 @@ function RelationalExpression() {
 
 function ShiftExpression() {
 	// ShiftExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// ShiftExpression XPECT allIslandElems -->
 	// ShiftExpression XPECT allCatchBlocks -->
 	/* ShiftExpression XPECT allEdges ---
 		"start" --> 847,
@@ -623,7 +601,6 @@ class ClassSuperLiteral {
 	// SuperLiteral XPECT warnings --> "Method names should start with lower case letter." at "SuperLiteral"
 	SuperLiteral() {
 		// ClassSuperLiteral  XPECT cfContainer --> N4MethodDeclaration::Block
-		// ClassSuperLiteral  XPECT allIslandElems -->
 		// ClassSuperLiteral  XPECT allCatchBlocks -->
 		/* ClassSuperLiteral XPECT allEdges ---
 			"start" --> super,
@@ -651,7 +628,6 @@ function TaggedTemplateString() {
 
 function TemplateExpression() {
 	// TemplateExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// TemplateExpression XPECT allIslandElems -->
 	// TemplateExpression XPECT allCatchBlocks -->
 	/* TemplateExpression XPECT allEdges ---
 		"start" --> `a ${,
@@ -677,7 +653,6 @@ function TemplateExpression() {
 
 function ThisExpression() {
 	// ThisExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// ThisExpression XPECT allIslandElems -->
 	// ThisExpression XPECT allCatchBlocks -->
 	/* ThisExpression XPECT allEdges ---
 		"start" --> this,
@@ -698,7 +673,6 @@ function ThisExpression() {
 
 function UnaryExpression() {
 	// UnaryExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// UnaryExpression XPECT allIslandElems -->
 	// UnaryExpression XPECT allCatchBlocks -->
 	/* UnaryExpression XPECT allEdges ---
 	"start" --> true,
@@ -720,7 +694,6 @@ function UnaryExpression() {
 
 function * YieldExpression(i) {
 	// YieldExpression XPECT cfContainer --> FunctionDeclaration::Block
-	// YieldExpression XPECT allIslandElems -->
 	// YieldExpression XPECT allCatchBlocks -->
 	/* YieldExpression XPECT allEdges ---
 		"start" --> i,

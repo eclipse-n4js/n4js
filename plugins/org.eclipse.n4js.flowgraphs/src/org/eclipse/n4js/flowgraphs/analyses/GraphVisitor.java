@@ -29,6 +29,7 @@ import com.google.common.collect.Sets;
 abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
+	private boolean lastVisitedCFEIsDead = false;
 
 	/** see {@link GraphVisitorInternal#GraphVisitorInternal(Mode...)} */
 	protected GraphVisitor(Mode... modes) {
@@ -44,24 +45,25 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	final protected void visit(Node node) {
 		if (node instanceof RepresentingNode) {
 			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
+			lastVisitedCFEIsDead = isDead();
 			visit(cfe);
 		}
 	}
 
 	@Override
 	final protected void visit(Node lastNodes, Node currentNode, ControlFlowEdge edge) {
-		visitedEdgesInternal.add(edge);
-		Set<FlowEdge> newConnections = new HashSet<>();
-		addNewConnections(edge, newConnections);
-
-		for (FlowEdge dEdge : newConnections) {
-			if (!visitedEdges.contains(dEdge)) {
-				visitedEdges.add(dEdge);
-				ControlFlowElement startCFE = getStartCFE(dEdge);
-				ControlFlowElement endCFE = getEndCFE(dEdge);
-				visit(startCFE, endCFE, dEdge);
-			}
-		}
+		// visitedEdgesInternal.add(edge);
+		// Set<FlowEdge> newConnections = new HashSet<>();
+		// addNewConnections(edge, newConnections);
+		//
+		// for (FlowEdge dEdge : newConnections) {
+		// if (!visitedEdges.contains(dEdge)) {
+		// visitedEdges.add(dEdge);
+		// ControlFlowElement startCFE = getStartCFE(dEdge);
+		// ControlFlowElement endCFE = getEndCFE(dEdge);
+		// visit(startCFE, endCFE, dEdge);
+		// }
+		// }
 	}
 
 	/**
@@ -133,7 +135,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	private ControlFlowElement getStartCFE(FlowEdge dEdge) {
 		switch (getCurrentMode()) {
 		case Forward:
-		case Islands:
 			return dEdge.start;
 		default:
 			return dEdge.end;
@@ -143,7 +144,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	private ControlFlowElement getEndCFE(FlowEdge dEdge) {
 		switch (getCurrentMode()) {
 		case Forward:
-		case Islands:
 			return dEdge.end;
 		default:
 			return dEdge.start;
@@ -189,8 +189,19 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	 * @param edge
 	 *            traversed edge that targets nextCFE. Does not necessarily start at nextCFE
 	 */
+	@Deprecated
 	protected void visit(ControlFlowElement lastCFE, ControlFlowElement nextCFE, FlowEdge edge) {
 		// overwrite me
+	}
+
+	/** @return true iff the last visited {@link ControlFlowElement} was not dead. */
+	final public boolean isLiveCFE() {
+		return !lastVisitedCFEIsDead;
+	}
+
+	/** @return true iff the last visited {@link ControlFlowElement} was dead. */
+	final public boolean isDeadCFE() {
+		return lastVisitedCFEIsDead;
 	}
 
 }

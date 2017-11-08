@@ -74,6 +74,7 @@ class TryFactory {
 
 		LinkedList<Node> parts = ListUtils.filterNulls(finallyNode, exitNode);
 		Node tgtFrgmt = parts.getFirst();
+		cNode.connectInternalSucc(tryNode, catchNode); // TODO: Consider to use a special edge type 'unsound'
 		cNode.connectInternalSucc(catchNode, tgtFrgmt);
 
 		cNode.setEntryNode(entryNode);

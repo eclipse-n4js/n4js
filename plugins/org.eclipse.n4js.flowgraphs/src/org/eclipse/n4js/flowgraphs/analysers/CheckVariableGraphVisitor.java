@@ -27,6 +27,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
  * This graph visitor prints all paths
  */
 public class CheckVariableGraphVisitor extends GraphVisitor {
+	static int explCount = 0;
+	static int branCount = 0;
 
 	/** Constructor */
 	public CheckVariableGraphVisitor() {
@@ -40,6 +42,12 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		}
 	}
 
+	@Override
+	protected void terminate() {
+		// System.out.println("Explorers: " + explCount);
+		// System.out.println("Branches: " + branCount);
+	}
+
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
@@ -50,13 +58,14 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		return idRefs;
 	}
 
-	static class CheckVariablePathExplorer extends GraphExplorer {
+	class CheckVariablePathExplorer extends GraphExplorer {
 		final VariableDeclaration varDecl;
 		final List<IdentifierRef> idRefs = new ArrayList<>();
 
 		CheckVariablePathExplorer(VariableDeclaration varDecl) {
 			super(Quantor.None);
 			this.varDecl = varDecl;
+			explCount++;
 		}
 
 		public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
@@ -75,7 +84,10 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 
 	}
 
-	static class CheckVariablePathWalker extends BranchWalker {
+	class CheckVariablePathWalker extends BranchWalker {
+		CheckVariablePathWalker() {
+			branCount++;
+		}
 
 		@Override
 		protected CheckVariablePathWalker forkPath() {
