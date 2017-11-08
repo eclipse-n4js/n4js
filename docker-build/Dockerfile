@@ -37,6 +37,7 @@ ENV MAVEN_OPTS   "-Xms1536m -Xmx2048M"
 
 COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
 COPY settings.xml /usr/share/maven/ref/
+RUN /usr/local/bin/mvn-entrypoint.sh
 
 #
 # The remaining part has been inspired by:
