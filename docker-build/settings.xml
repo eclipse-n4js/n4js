@@ -11,7 +11,7 @@
     </mirror>
   </mirrors>
   <server>
-    <id>central</id>
+    <id>public</id>
     <configuration>
       <httpConfiguration>
         <all>
