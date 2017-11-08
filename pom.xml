@@ -52,7 +52,6 @@ Contributors:
 		</profile>
 	</profiles>
 
-	<!-- central actions done for all sub-builds only once here. (inherited false) -->
 	<build>
 		<plugins>
 			<plugin>
