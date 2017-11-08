@@ -194,8 +194,8 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		// ProjectUtils.waitForAutoBuild();
-		ProjectUtils.waitForAllJobs();
+		ProjectUtils.waitForAutoBuild();
+		ProjectUtils.waitForAllJobs(); // updating error markers, etc.
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
