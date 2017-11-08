@@ -315,6 +315,45 @@ public class ProjectUtils {
 		}
 	}
 
+	/***/
+	public static void waitForAllJobs() {
+		try {
+			int maxWait = 100 * 60 * 2;
+			long start = System.currentTimeMillis();
+			long end = start;
+			boolean wasInterrupted = false;
+			boolean foundJob = false;
+			do {
+				try {
+					List<String> foundJobs = listJobsRunnuingWaiting();
+					if (!foundJobs.isEmpty()) {
+						foundJob = true;
+						Job.getJobManager().join(null, null);
+					}
+					wasInterrupted = false;
+					end = System.currentTimeMillis();
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					wasInterrupted = true;
+				}
+			} while (wasInterrupted && (end - start) < maxWait);
+			if (!foundJob) {
+				LOGGER.debug("No running nor waiting jobs found, maybe all have already finished.");
+				System.out.println("No running nor waiting jobs found, maybe all have already finished.");
+			}
+		} finally {
+			List<String> listJobs = listJobs();
+			if (!listJobs.isEmpty()) {
+				LOGGER.debug("waitForAutoBuild finished, but there are still #" + listJobs.size() + " jobs.");
+				StringJoiner sj = new StringJoiner("\n");
+				sj.add("ProjectUtils.waitForAutoBuild() finished, but some jobs are still there ");
+				listJobs.forEach(sj::add);
+				System.out.println(sj.toString());
+			}
+		}
+	}
+
 	/**
 	 * Waits for N4JSDirtyStateEditorSupport job to be run
 	 */
@@ -353,6 +392,13 @@ public class ProjectUtils {
 				System.out.println(sj.toString());
 			}
 		}
+	}
+
+	private static List<String> listJobsRunnuingWaiting() {
+		return from(newArrayList(getJobManager().find(null)))
+				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
+				.transform(job -> " - " + job.getName() + " : " + job.getState())
+				.toList();
 	}
 
 	private static List<String> listJobs() {
