@@ -35,17 +35,18 @@ import org.eclipse.n4js.n4JS.Statement;
 class ScriptFactory {
 
 	static ComplexNode buildComplexNode(Script script) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(script);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, script);
-		Node exitNode = new HelperNode(EXIT_NODE, script);
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, script);
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, script);
 		List<Node> scriptNodes = new LinkedList<>();
 
 		EList<ScriptElement> scriptElems = script.getScriptElements();
-		for (int i = 0; i < scriptElems.size(); i++) {
-			ScriptElement scriptElem = getScriptElementAt(script, i);
+		for (int n = 0; n < scriptElems.size(); n++) {
+			ScriptElement scriptElem = getScriptElementAt(script, n);
 			if (isControlFlowStatement(scriptElem)) {
-				Node blockNode = new DelegatingNode("stmt_" + i, script, (Statement) scriptElem);
+				Node blockNode = new DelegatingNode("stmt_" + n, intPos++, script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
 			}
 		}
