@@ -38,7 +38,7 @@ pipeline {
                     def options = '-DskipTests -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                     def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
 
-                    sh "${xvfb} mvn ${targets} ${profiles} ${options}"
+                    sh "${xvfb} mvn ${targets} -P${profiles} ${options}"
                 }
             }
         }
