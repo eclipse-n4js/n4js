@@ -42,10 +42,11 @@ class ReactHelper {
 	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider
 
 	public final static String REACT_MODULE = "react"
+	public final static String REACT_FILE_NAME = "index"
 	public final static String REACT_KEY = "KEY__" + REACT_MODULE
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"
-	public final static String REACT_DEFINITION_FILE = REACT_MODULE + File.separatorChar + "index." + N4JSGlobals.N4JSD_FILE_EXTENSION
+	public final static String REACT_DEFINITION_FILE = REACT_MODULE + File.separatorChar + REACT_FILE_NAME + "." + N4JSGlobals.N4JSD_FILE_EXTENSION
 
 	/**
 	 * Look up React.Element in the index.
@@ -77,15 +78,14 @@ class ReactHelper {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, context.eResource, [
 			val index = resourceDescriptionsProvider.getResourceDescriptions(context.eResource)
-			val String reactClassifierFQNSuffix = "index." + reactClassifierName
+			val String reactClassifierFQNSuffix = REACT_FILE_NAME + "." + reactClassifierName
 
 			var IEObjectDescription reactClassifierEObj = null
-			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.toString.contains(REACT_DEFINITION_FILE)]
-			for (resDesc : allResDescs) {
+			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.toString.endsWith(REACT_DEFINITION_FILE)]
+			while (reactClassifierEObj === null && allResDescs.iterator.hasNext) {
+				val resDesc = allResDescs.iterator.next
 				val eobjDescs = resDesc.exportedObjects.filter[EObjectOrProxy instanceof TClassifier]
-				if (reactClassifierEObj === null) {
-					reactClassifierEObj = eobjDescs.findFirst[eobjDesc | eobjDesc.isReactClassifierDescription(reactClassifierFQNSuffix)]
-				}
+				reactClassifierEObj = eobjDescs.findFirst[eobjDesc | eobjDesc.isReactClassifierDescription(reactClassifierFQNSuffix)]
 			}
 			if (reactClassifierEObj !== null) {
 				val ret = context.eResource.resourceSet.getEObject(reactClassifierEObj.EObjectURI, true) as TClassifier
