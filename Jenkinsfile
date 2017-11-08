@@ -44,9 +44,6 @@ pipeline {
             }
         }
         stage('long-running-tests') {
-            when {
-                branch 'master'
-            }
             steps {
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
