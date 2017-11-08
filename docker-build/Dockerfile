@@ -36,7 +36,7 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV MAVEN_OPTS   "-Xms1536m -Xmx2048M"
 
 COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
-COPY settings-docker.xml /usr/share/maven/ref/
+COPY settings.xml /usr/share/maven/ref/
 
 #
 # The remaining part has been inspired by:

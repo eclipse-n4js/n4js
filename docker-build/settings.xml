@@ -1,0 +1,24 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <localRepository>/usr/share/maven/ref/repository</localRepository>
+  <mirrors>
+    <mirror>
+      <id>public</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://repository.corp.numberfour.eu/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
+  <server>
+    <id>central</id>
+    <configuration>
+      <httpConfiguration>
+        <all>
+          <connectionTimeout>120000</connectionTimeout>
+          <readTimeout>120000</readTimeout>
+        </all>
+      </httpConfiguration>
+    </configuration>
+  </server>
+</settings>
