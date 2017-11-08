@@ -32,6 +32,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
+                sh "cat ~/.m2/settings.xml"
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                     def targets = 'clean install'
