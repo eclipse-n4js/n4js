@@ -30,16 +30,11 @@ pipeline {
         pollSCM('H/5 * * * *') // every 5 minutes
     }
     stages {
-        stage('dependencies') {
-            steps {
-                sh 'mvn dependency:go-offline'
-            }
-        }
         stage('build') {
             steps {
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                    def targets = 'clean verify'
+                    def targets = 'clean install'
                     def options = '-DskipTests -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                     def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
 
