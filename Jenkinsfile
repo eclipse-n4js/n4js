@@ -40,7 +40,7 @@ pipeline {
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                     def targets = 'clean verify'
-                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                    def options = '-DskipTests -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                     def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
 
                     sh "${xvfb} mvn ${targets} ${profiles} ${options}"
@@ -52,11 +52,21 @@ pipeline {
                 branch 'master'
             }
             steps {
-                sh 'xvfb-run -a --server-args="-screen 0 1024x768x24" ' +
-                    'mvn verify ' +
-                        '-PbuildProduct,execute-plugin-tests,execute-plugin-ui-tests,execute-ecma-tests,execute-performance-tests,execute-swtbot-performance-tests,execute-accesscontrol-tests ' +
-                        '-Dmaven.test.failure.ignore ' +
-                        '-e -DWORKSPACE=' + env.WORKSPACE
+                script {
+                    def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
+                    def targets = 'clean verify'
+                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                    def profiles = [
+                        'buildProduct',
+                        'execute-plugin-tests',
+                        'execute-plugin-ui-tests',
+                        'execute-ecma-tests',
+                        'execute-performance-tests',
+                        'execute-swtbot-performance-tests',
+                        'execute-accesscontrol-tests '
+                    ].join(',')
+                    sh "${xvfb} mvn ${targets} ${profiles} ${options}"
+                }
             }
         }
     }
