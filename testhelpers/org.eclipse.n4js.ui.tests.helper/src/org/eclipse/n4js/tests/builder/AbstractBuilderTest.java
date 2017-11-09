@@ -184,8 +184,8 @@ public abstract class AbstractBuilderTest implements IResourceDescription.Event.
 		waitForAutoBuild();
 		events.clear();
 		getBuilderState().removeListener(this);
-		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
 		assertEquals(0, root().getProjects().length);
+		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
 	}
 
 	/***/
