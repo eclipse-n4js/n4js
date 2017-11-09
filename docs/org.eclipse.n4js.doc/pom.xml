@@ -231,6 +231,41 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
               </executions>
             </plugin>
 
+            <!-- HTML to Eclipse TOC.XML -->
+            <plugin>
+                <groupId>com.bsiag.geneclipsetoc</groupId>
+                <artifactId>geneclipsetoc-maven-plugin</artifactId>
+                <version>1.0.2</version>
+                <executions>
+                    <!-- generating userguides TOC -->
+                    <execution>
+                        <id>userguides-toc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>geneclipsetoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFolder>${basedir}</sourceFolder>
+                            <pagesListFile>${indices.dir}/${help.userguides.list}</pagesListFile>
+                            <outputTocFile>${indices.dir}/userguides.xml</outputTocFile>
+                        </configuration>
+                    </execution>
+                    <!-- generating articles TOC -->
+                    <execution>
+                        <id>articles-toc</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>geneclipsetoc</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFolder>${basedir}</sourceFolder>
+                            <pagesListFile>${indices.dir}/${help.articles.list}</pagesListFile>
+                            <outputTocFile>${indices.dir}/articles.xml</outputTocFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
         </plugins>
     </build>
 
