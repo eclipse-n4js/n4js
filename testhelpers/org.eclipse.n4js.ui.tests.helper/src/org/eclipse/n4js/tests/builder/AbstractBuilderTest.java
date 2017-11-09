@@ -76,6 +76,8 @@ public abstract class AbstractBuilderTest implements IResourceDescription.Event.
 	@Before
 	public void setUp() throws Exception {
 		IResourcesSetupUtil.cleanWorkspace();
+		IResourcesSetupUtil.cleanBuild();
+		waitForAutoBuild();
 		if (checkForCleanWorkspace()) {
 			if (root().getProjects().length != 0 && 0 != root().getProjects(INCLUDE_HIDDEN).length) {
 				StringBuilder error = new StringBuilder();
@@ -181,6 +183,7 @@ public abstract class AbstractBuilderTest implements IResourceDescription.Event.
 		// save the files as otherwise the projects cannot be deleted
 		closeAllEditorsForTearDown();
 		IResourcesSetupUtil.cleanWorkspace();
+		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
 		events.clear();
 		getBuilderState().removeListener(this);
