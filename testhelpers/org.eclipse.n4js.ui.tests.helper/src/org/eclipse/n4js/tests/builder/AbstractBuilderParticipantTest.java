@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.n4mf.ProjectDescription;
 import org.eclipse.n4js.n4mf.ProjectType;
@@ -47,7 +46,6 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.XtextEditor;
-import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
@@ -58,18 +56,14 @@ import org.eclipse.xtext.validation.Issue;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
-import com.google.inject.Injector;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 /**
  */
 public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest {
-	private ResourceSet resourceSet = null;
-
-	/***/
-	protected Injector getInjector() {
-		final Injector injector = N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
-		return injector;
-	}
+	@Inject
+	private Provider<IDirtyStateManager> DirtyStateManager;
 
 	/***/
 	protected IProject createJSProject(String projectName) throws CoreException {
@@ -111,14 +105,6 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	protected void createManifestN4MFFile(IProject javaProject, String sourceFolder, String outputFolder,
 			Consumer<ProjectDescription> manifestAdjustments) throws CoreException {
 		ProjectUtils.createManifestN4MFFile(javaProject.getProject(), sourceFolder, outputFolder, manifestAdjustments);
-	}
-
-	/***/
-	protected ResourceSet getResourceSet(IProject project) {
-		if (resourceSet == null) {
-			resourceSet = getInjector().getInstance(IResourceSetProvider.class).get(project);
-		}
-		return resourceSet;
 	}
 
 	/***/
@@ -297,7 +283,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected void setDocumentContent(String context, IFile file, XtextEditor fileEditor, String newContent) {
-		IDirtyStateManager dirtyStateManager = getInjector().getInstance(IDirtyStateManager.class);
+		IDirtyStateManager dirtyStateManager = DirtyStateManager.get();
 
 		TestEventListener eventListener = new TestEventListener(context, file);
 		dirtyStateManager.addListener(eventListener);

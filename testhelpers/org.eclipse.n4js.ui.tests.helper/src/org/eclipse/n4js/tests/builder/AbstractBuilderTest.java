@@ -7,7 +7,6 @@
  *******************************************************************************/
 package org.eclipse.n4js.tests.builder;
 
-import static java.lang.Boolean.TRUE;
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.core.resources.IContainer.INCLUDE_HIDDEN;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
@@ -15,12 +14,9 @@ import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
-import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
@@ -28,7 +24,9 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -39,7 +37,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
 import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescription.Event;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 import org.eclipse.xtext.testing.InjectWith;
@@ -50,7 +47,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
@@ -59,13 +55,12 @@ import com.google.inject.Injector;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public abstract class AbstractBuilderTest implements IResourceDescription.Event.Listener {
+public abstract class AbstractBuilderTest {
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 
-	/***/
-	public static final String F_EXT = ".n4js";
-	private volatile List<Event> events = Lists.newArrayList();
+	/** {@code .n4js} file extension */
+	public static final String F_EXT = "." + N4JSGlobals.N4JS_FILE_EXTENSION;
 
 	@Inject
 	private IResourceSetProvider resourceSetProvider;
@@ -185,8 +180,6 @@ public abstract class AbstractBuilderTest implements IResourceDescription.Event.
 		IResourcesSetupUtil.cleanWorkspace();
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
-		events.clear();
-		getBuilderState().removeListener(this);
 		assertEquals(0, root().getProjects().length);
 		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
 	}
@@ -229,16 +222,6 @@ public abstract class AbstractBuilderTest implements IResourceDescription.Event.
 			page.closeAllEditors(false);
 	}
 
-	@Override
-	public void descriptionsChanged(Event event) {
-		this.events.add(event);
-	}
-
-	/***/
-	public List<Event> getEvents() {
-		return events;
-	}
-
 	/***/
 	public <T> T getInstance(Class<T> type) {
 		Injector injector = N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_N4JS_N4JS);
@@ -246,12 +229,21 @@ public abstract class AbstractBuilderTest implements IResourceDescription.Event.
 	}
 
 	/**
-	 * Returns the Xtext index, i.e. a new instance of {@link IResourceDescriptions}.
+	 * Returns the Xtext index, i.e. a new instance of {@link IResourceDescriptions}. Note similarity to
+	 * {@link IN4JSCore#getXtextIndex(ResourceSet)}
 	 */
 	protected IResourceDescriptions getXtextIndex() {
-		final ResourceSet resourceSet = resourceSetProvider.get(null);
-		resourceSet.getLoadOptions().put(PERSISTED_DESCRIPTIONS, TRUE);
+		final ResourceSet resourceSet = getResourceSet(null);
+		resourceSet.getLoadOptions().put(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS, Boolean.TRUE);
 		return resourceDescriptionsProvider.getResourceDescriptions(resourceSet);
+	}
+
+	/**
+	 * Return resource set for given project. Note similarity to
+	 * {@link IN4JSCore#createResourceSet(com.google.common.base.Optional)}
+	 */
+	protected ResourceSet getResourceSet(IProject project) {
+		return resourceSetProvider.get(project);
 	}
 
 	/**
