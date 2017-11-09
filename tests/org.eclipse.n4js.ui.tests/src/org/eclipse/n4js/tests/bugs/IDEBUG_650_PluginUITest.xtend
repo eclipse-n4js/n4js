@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.tests.bugs
 
+import static org.junit.Assert.*;
 import java.io.File
 import java.util.regex.Pattern
 import org.eclipse.core.resources.IFile

@@ -11,15 +11,17 @@
 package org.eclipse.n4js.runner.ui.tests
 
 import com.google.inject.Inject
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.tests.builder.AbstractBuilderTest
-import org.eclipse.n4js.tests.util.ProjectUtils
-import org.eclipse.n4js.tester.TestDiscoveryHelper
 import org.eclipse.core.resources.IWorkspace
 import org.eclipse.core.runtime.CoreException
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.tester.TestDiscoveryHelper
+import org.eclipse.n4js.tests.builder.AbstractBuilderTest
+import org.eclipse.n4js.tests.util.ProjectUtils
 import org.junit.Test
+
+import static org.junit.Assert.*
 
 import static extension com.google.common.base.Throwables.propagate
 

@@ -17,6 +17,8 @@ import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -45,7 +47,6 @@ import org.eclipse.xtext.testing.XtextRunner;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 
@@ -58,7 +59,7 @@ import com.google.inject.Injector;
  */
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
-public abstract class AbstractBuilderTest extends Assert implements IResourceDescription.Event.Listener {
+public abstract class AbstractBuilderTest implements IResourceDescription.Event.Listener {
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 

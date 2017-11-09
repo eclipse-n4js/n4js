@@ -18,6 +18,9 @@ import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.countResourcesInIndex;
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescriptionsAsString;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URI;

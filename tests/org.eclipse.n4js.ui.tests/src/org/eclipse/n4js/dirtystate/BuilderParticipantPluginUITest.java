@@ -11,6 +11,9 @@
 package org.eclipse.n4js.dirtystate;
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 

@@ -11,6 +11,7 @@
 package org.eclipse.n4js.tests.builder;
 
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileWriter;

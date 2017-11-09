@@ -12,8 +12,6 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.newArrayList;
-import static org.eclipse.core.runtime.jobs.Job.getJobManager;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
@@ -28,7 +26,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.StringJoiner;
 import java.util.function.Consumer;
 
 import org.apache.log4j.Logger;
@@ -304,45 +301,6 @@ public class ProjectUtils {
 		}
 	}
 
-	/***/
-	private static void waitForAllJobs() {
-		try {
-			int maxWait = 100 * 60 * 2;
-			long start = System.currentTimeMillis();
-			long end = start;
-			boolean wasInterrupted = false;
-			boolean foundJob = false;
-			do {
-				try {
-					List<String> foundJobs = listJobsRunningWaiting();
-					if (!foundJobs.isEmpty()) {
-						foundJob = true;
-						Thread.sleep(100);
-					}
-					wasInterrupted = false;
-					end = System.currentTimeMillis();
-				} catch (OperationCanceledException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					wasInterrupted = true;
-				}
-			} while (wasInterrupted && (end - start) < maxWait);
-			if (!foundJob) {
-				LOGGER.debug("No running nor waiting jobs found, maybe all have already finished.");
-				System.out.println("No running nor waiting jobs found, maybe all have already finished.");
-			}
-		} finally {
-			List<String> listJobs = listJobs();
-			if (!listJobs.isEmpty()) {
-				LOGGER.debug("waitForAllJobs finished, but there are still #" + listJobs.size() + " jobs.");
-				StringJoiner sj = new StringJoiner("\n");
-				sj.add("ProjectUtils.waitForAllJobs() finished, but some jobs are still there ");
-				listJobs.forEach(sj::add);
-				System.out.println(sj.toString());
-			}
-		}
-	}
-
 	/**
 	 * Waits for N4JSDirtyStateEditorSupport job to be run
 	 */
@@ -370,20 +328,6 @@ public class ProjectUtils {
 		if (!foundJob) {
 			LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
 		}
-	}
-
-	private static List<String> listJobsRunningWaiting() {
-		return from(newArrayList(getJobManager().find(null)))
-				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
-				.transform(job -> " - " + job.getName() + " : " + job.getState())
-				.toList();
-	}
-
-	private static List<String> listJobs() {
-		return from(newArrayList(getJobManager().find(null)))
-				.filter(job -> job.getState() != Job.SLEEPING)
-				.transform(job -> " - " + job.getName() + " : " + job.getState())
-				.toList();
 	}
 
 	/***/

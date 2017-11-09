@@ -11,14 +11,16 @@
 package org.eclipse.n4js.runner.ui.tests
 
 import com.google.inject.Inject
-import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.tests.util.ProjectUtils
-import org.eclipse.n4js.runner.RunnerHelper
 import java.util.ArrayList
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.runner.RunnerHelper
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
+import org.eclipse.n4js.tests.util.ProjectUtils
 import org.junit.Test
+
+import static org.junit.Assert.*
 
 /**
  * Contains basic plug-in UI tests for {@link RunnerHelper}.

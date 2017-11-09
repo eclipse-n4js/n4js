@@ -16,6 +16,7 @@ import static java.text.MessageFormat.format;
 import static org.eclipse.core.resources.IMarker.SEVERITY;
 import static org.eclipse.core.resources.IMarker.SEVERITY_WARNING;
 import static org.eclipse.xtext.validation.Issue.CODE_KEY;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Arrays;

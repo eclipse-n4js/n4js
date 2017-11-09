@@ -10,14 +10,15 @@
  */
 package org.eclipse.n4js.tests.staticpolyfill
 
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.core.resources.IFile
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.ui.IWorkbenchPage
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.Files
 import org.junit.Test
 
 import static org.eclipse.n4js.tests.staticpolyfill.SingleProject_Probands.*
+import static org.junit.Assert.*
 
 /**
  */

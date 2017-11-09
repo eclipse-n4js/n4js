@@ -11,6 +11,8 @@
 package org.eclipse.n4js.tests.bugs;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Collections;

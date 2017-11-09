@@ -18,6 +18,8 @@ import org.eclipse.xtext.ui.editor.outline.IOutlineNode
 import org.eclipse.xtext.ui.editor.outline.IOutlineTreeProvider
 import org.junit.Test
 
+import static org.junit.Assert.*
+
 /**
  * Ensure to configure the right product when running this plugin-ui tests:
  * Main / Program to Run: Run a product: com.enfore.n4js.product.product

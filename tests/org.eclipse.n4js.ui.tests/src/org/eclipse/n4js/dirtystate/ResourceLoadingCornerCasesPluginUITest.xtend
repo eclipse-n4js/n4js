@@ -16,6 +16,8 @@ import org.eclipse.n4js.tests.resource.ModuleToModuleProxyPluginTest
 import org.eclipse.n4js.utils.emf.ProxyResolvingResource
 import org.junit.Test
 
+import static org.junit.Assert.*
+
 /**
  * Tests a corner case of dependencies between resources. See also {@link ModuleToModuleProxyPluginTest}.
  */

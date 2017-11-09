@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.tests.outline;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
@@ -23,6 +27,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IViewPart;
@@ -36,8 +41,6 @@ import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.outline.IOutlineNode;
 import org.eclipse.xtext.ui.editor.outline.impl.IOutlineNodeComparer;
 import org.eclipse.xtext.ui.editor.outline.impl.OutlinePage;
-
-import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 
 /**
  * Copied and adapted from http://git.eclipse.org/c/tmf/org.eclipse.xtext.git/plain/tests/

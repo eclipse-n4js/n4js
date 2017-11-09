@@ -15,6 +15,8 @@ import static com.google.common.collect.Iterables.size;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Sets.difference;
 import static org.eclipse.n4js.resource.UserdataMapper.USERDATA_KEY_SERIALIZED_SCRIPT;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.Set;
