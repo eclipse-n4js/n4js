@@ -190,19 +190,12 @@ public class ControlFlowGraphFactory {
 	 */
 	private static void createJumpEdges(ComplexNodeMapper cnMapper) {
 		for (ComplexNode cn : cnMapper.getAll()) {
-			Node jumpNode = cn.getExit();
-			for (JumpToken jumpToken : jumpNode.jumpToken) {
-				replaceWithDeadCodeEdges(jumpNode.getSuccessorEdges());
-				connectToJumpTarget(cnMapper, jumpNode, jumpToken);
+			Node jumpNode = cn.getJump();
+			if (jumpNode != null) {
+				for (JumpToken jumpToken : jumpNode.jumpToken) {
+					connectToJumpTarget(cnMapper, jumpNode, jumpToken);
+				}
 			}
-		}
-	}
-
-	private static void replaceWithDeadCodeEdges(Set<ControlFlowEdge> replacedEdges) {
-		for (ControlFlowEdge rEdge : replacedEdges) {
-			assert rEdge.finallyPathContext == null;
-			EdgeUtils.removeCF(rEdge);
-			EdgeUtils.connectCF(rEdge.start, rEdge.end, ControlFlowType.DeadCode);
 		}
 	}
 

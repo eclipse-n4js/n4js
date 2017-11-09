@@ -41,6 +41,11 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
+		protected boolean isForward() {
+			return true;
+		}
+
+		@Override
 		protected Node getPrevNode(ControlFlowEdge edge) {
 			return edge.start;
 		}
@@ -88,6 +93,11 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
+		protected boolean isForward() {
+			return false;
+		}
+
+		@Override
 		protected Node getPrevNode(ControlFlowEdge edge) {
 			return edge.end;
 		}
@@ -125,6 +135,9 @@ abstract class NextEdgesProvider {
 		}
 	}
 
+	/** @return true iff this edge provider traverses in forward direction */
+	abstract boolean isForward();
+
 	/** @return the next node with regard to the traverse direction */
 	abstract protected Node getNextNode(ControlFlowEdge edge);
 
@@ -159,12 +172,11 @@ abstract class NextEdgesProvider {
 
 	protected void join(NextEdgesProvider edgesProvider) {
 		for (Map.Entry<ControlFlowEdge, Integer> repeatCounter : edgesProvider.repeatEdges.entrySet()) {
-			ControlFlowEdge rEdge = repeatCounter.getKey();
-			Integer countOther = repeatCounter.getValue();
-			int count = getOccurences(rEdge);
-			incrOccurence(rEdge);
-			int newCount = Math.min(count + countOther, 2);
-			repeatEdges.put(rEdge, newCount);
+			ControlFlowEdge edge = repeatCounter.getKey();
+			Integer otherCount = repeatCounter.getValue();
+			int myCount = getOccurences(edge);
+			int newCount = Math.max(myCount, otherCount);
+			repeatEdges.put(edge, newCount);
 		}
 	}
 

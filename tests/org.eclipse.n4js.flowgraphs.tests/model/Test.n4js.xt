@@ -20,18 +20,34 @@
 
 
 
-function ForStatement1() {
-	/* ForStatement1 X-PECT allEdges ---
-		"start" --> ;,
-		; -Repeat-> ;
+function ThrowTryFinallyStatement1() {
+	/* ThrowTryFinallyStatement1 XPECT allEdges ---
+		"start" --> 1,
+		1 --> 2,
+		2 --> throw 2;,
+		throw 2; -Throw-> 3,
+		3 --> "end"
 	--- */
-	// ForStatement1 X-PECT allBranches --> B0: "start" -> ; -> ; -> ;
-	// ForStatement1 backward XPECT allBranches direction 'Backward' --> B0: "end"
-	// ForStatement1 X-PECT allPaths --> "start" -> ; -> ; -> ;
-	// ForStatement1 backward XPECT allPaths direction 'Backward' --> "end"
+	// ThrowTryFinallyStatement1 XPECT allBranches --> B0: "start" -> 1 -> 2 -> throw 2; -> 3
+	/* ThrowTryFinallyStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|B2],
+		B1: [B0]3 -> throw 2; -> 2 -> 1 -> "start",
+		B2: [B0]"end" -> 3
+	--- */
+	// ThrowTryFinallyStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3
+	/* ThrowTryFinallyStatement1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> 3,
+		3 -> throw 2; -> 2 -> 1 -> "start"
+	--- */
 	"start";
-	for (;;) ;
-	// ForStatement1 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	try {
+		1;
+		throw 2;
+
+	} finally {
+		3;
+	}
+	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
 	"end";
 }
 

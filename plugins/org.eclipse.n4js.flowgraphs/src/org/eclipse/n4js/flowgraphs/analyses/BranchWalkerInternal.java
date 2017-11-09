@@ -28,7 +28,7 @@ abstract public class BranchWalkerInternal {
 	private GraphExplorerInternal pathExplorer;
 	private final LinkedList<BranchWalkerInternal> pathPredecessors = new LinkedList<>();
 	private final LinkedList<BranchWalkerInternal> pathSuccessors = new LinkedList<>();
-	private boolean lastVisitedNodeIsDead = false;
+	private boolean isDeadCode = false;
 
 	/////////////////////// Abstract Methods ///////////////////////
 
@@ -81,7 +81,6 @@ abstract public class BranchWalkerInternal {
 		if (predecessor != null) {
 			predecessor.pathSuccessors.add(this);
 			this.pathPredecessors.add(predecessor);
-			this.lastVisitedNodeIsDead = predecessor.lastVisitedNodeIsDead;
 		}
 		initializeRest(explorer);
 	}
@@ -90,11 +89,9 @@ abstract public class BranchWalkerInternal {
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
 	final void callInitialize(GraphExplorerInternal explorer, List<BranchWalkerInternal> predecessors) {
-		this.lastVisitedNodeIsDead = true;
 		for (BranchWalkerInternal pred : predecessors) {
 			pred.pathSuccessors.add(this);
 			this.pathPredecessors.add(pred);
-			this.lastVisitedNodeIsDead &= pred.lastVisitedNodeIsDead;
 		}
 		initializeRest(explorer);
 	}
@@ -109,9 +106,8 @@ abstract public class BranchWalkerInternal {
 		initialize();
 	}
 
-	/** Only called from {@link GraphVisitorGuideInternal}. Sets {@link #lastVisitedNodeIsDead}. */
-	final void setToDeadCode() {
-		this.lastVisitedNodeIsDead = true;
+	final void setDeadCode() {
+		isDeadCode = true;
 	}
 
 	/**
@@ -195,18 +191,25 @@ abstract public class BranchWalkerInternal {
 	}
 
 	/** @return true iff the last visited node was not dead. */
-	final public boolean isLive() {
-		return !lastVisitedNodeIsDead;
+	final public boolean isLiveCode() {
+		return !isDeadCode;
 	}
 
 	/** @return true iff the last visited node was dead. */
-	final public boolean isDead() {
-		return lastVisitedNodeIsDead;
+	final public boolean isDeadCode() {
+		return isDeadCode;
+	}
+
+	/** @return true iff this branch is dead and its predecessor is alive. */
+	final public boolean isFirstDead() {
+		boolean isFirstDead = isDeadCode();
+		isFirstDead &= !pathPredecessors.isEmpty() && pathPredecessors.getFirst().isLiveCode();
+		return isFirstDead;
 	}
 
 	@Override
 	public String toString() {
-		return "B" + branchNumber;
+		return (isDeadCode ? "b" : "B") + branchNumber;
 	}
 
 }

@@ -163,37 +163,6 @@ public class GraphVisitorGuideInternal {
 		return visitNode;
 	}
 
-	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuide, Node)} */
-	private void callVisitOnNode(EdgeGuide currEdgeGuide, Node visitNode) {
-		if (!walkerVisitedNodes.contains(visitNode)) {
-			for (GraphVisitorInternal visitor : visitors) {
-				visitor.setVisitedNodeIsDead(visitNode.isDeadCode);
-				visitor.callVisit(visitNode);
-			}
-		}
-		walkerVisitedNodes.add(visitNode);
-
-		for (GraphVisitorInternal walker : visitors) {
-			List<BranchWalkerInternal> activatedBranchWalkers = walker.activateRequestedExplorers();
-			currEdgeGuide.addActiveBranches(activatedBranchWalkers);
-		}
-
-		for (Iterator<BranchWalkerInternal> branchWalkerIt = currEdgeGuide.getBranchIterable()
-				.iterator(); branchWalkerIt.hasNext();) {
-
-			BranchWalkerInternal branchWalker = branchWalkerIt.next();
-
-			if (visitNode.isDeadCode) {
-				branchWalker.setToDeadCode();
-			}
-			branchWalker.callVisit(visitNode);
-
-			if (!branchWalker.isActive()) {
-				branchWalkerIt.remove();
-			}
-		}
-	}
-
 	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
 	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
 		ControlFlowEdge egEdge = currEdgeGuide.getEdge();
@@ -210,14 +179,40 @@ public class GraphVisitorGuideInternal {
 			currEdgeGuide.addActiveBranches(activatedPaths);
 		}
 
-		for (Iterator<BranchWalkerInternal> actPathIt = currEdgeGuide.getBranchIterable().iterator(); actPathIt
-				.hasNext();) {
+		for (Iterator<BranchWalkerInternal> branchWalkerIt = currEdgeGuide.getBranchIterable()
+				.iterator(); branchWalkerIt.hasNext();) {
 
-			BranchWalkerInternal activePath = actPathIt.next();
-			activePath.callVisit(lastVisitNode, visitNode, visitedEdge);
+			BranchWalkerInternal branchWalker = branchWalkerIt.next();
+			branchWalker.callVisit(lastVisitNode, visitNode, visitedEdge);
 
-			if (!activePath.isActive()) {
-				actPathIt.remove();
+			if (!branchWalker.isActive()) {
+				branchWalkerIt.remove();
+			}
+		}
+	}
+
+	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuide, Node)} */
+	private void callVisitOnNode(EdgeGuide currEdgeGuide, Node visitNode) {
+		if (!walkerVisitedNodes.contains(visitNode)) {
+			for (GraphVisitorInternal visitor : visitors) {
+				visitor.callVisit(visitNode);
+			}
+		}
+		walkerVisitedNodes.add(visitNode);
+
+		for (GraphVisitorInternal walker : visitors) {
+			List<BranchWalkerInternal> activatedBranchWalkers = walker.activateRequestedExplorers();
+			currEdgeGuide.addActiveBranches(activatedBranchWalkers);
+		}
+
+		for (Iterator<BranchWalkerInternal> branchWalkerIt = currEdgeGuide.getBranchIterable()
+				.iterator(); branchWalkerIt.hasNext();) {
+
+			BranchWalkerInternal branchWalker = branchWalkerIt.next();
+			branchWalker.callVisit(visitNode);
+
+			if (!branchWalker.isActive()) {
+				branchWalkerIt.remove();
 			}
 		}
 	}

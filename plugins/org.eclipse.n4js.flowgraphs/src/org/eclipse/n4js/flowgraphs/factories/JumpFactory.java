@@ -82,19 +82,24 @@ class JumpFactory {
 			expression = new DelegatingNode("expression", intPos++, stmt, expr);
 			cNode.addNode(expression);
 		}
-		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, stmt);
+		Node jumpNode = new RepresentingNode("jumpNode", intPos++, stmt);
+		cNode.addNode(jumpNode);
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, stmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();
 		cfs.add(entryNode);
 		cfs.add(expression);
-		cfs.add(exitNode);
-		cNode.connectInternalSucc(cfs);
+		cNode.connectInternalSucc(entryNode, expression);
 
+		Node beforeDeadNode = ListUtils.filterNulls(entryNode, expression).getLast();
+		cNode.connectInternalSucc(beforeDeadNode, jumpNode);
+		cNode.connectInternalSucc(ControlFlowType.DeadCode, jumpNode, exitNode);
+
+		jumpNode.addJumpToken(jumptoken);
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-
-		exitNode.addJumpToken(jumptoken);
+		cNode.setJumpNode(jumpNode);
 
 		return cNode;
 	}

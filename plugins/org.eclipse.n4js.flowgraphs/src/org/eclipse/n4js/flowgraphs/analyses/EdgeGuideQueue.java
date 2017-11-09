@@ -121,10 +121,10 @@ public class EdgeGuideQueue {
 		return ComparisonChain.start()
 				.compare(eg1, eg2, EdgeGuideQueue::compareJoined)
 				.compare(cfe1, cfe2, EdgeGuideQueue::compareDepth)
+				.compare(eg1, eg2, EdgeGuideQueue::compareInternalPosition)
 				.compare(e1, e2, this::compareVisited)
 				.compare(cft1, cft2, EdgeGuideQueue::compareEdgeTypes)
 				.compare(eg1, eg2, EdgeGuideQueue::compareJoining)
-				.compare(eg1, eg2, EdgeGuideQueue::compareInternalPosition)
 				.compare(nextNode1.hashCode(), nextNode2.hashCode())
 				.compare(e1.hashCode(), e2.hashCode())
 				.result();
@@ -169,7 +169,10 @@ public class EdgeGuideQueue {
 	private static int compareInternalPosition(EdgeGuide eg1, EdgeGuide eg2) {
 		Node nextNode1 = eg1.getNextNode();
 		Node nextNode2 = eg2.getNextNode();
-		if (eg1.edgeProvider instanceof NextEdgesProvider.Forward) {
+		if (nextNode1.getControlFlowElement() != nextNode2.getControlFlowElement()) {
+			return 0;
+		}
+		if (eg1.edgeProvider.isForward()) {
 			return nextNode1.internalPosition - nextNode2.internalPosition;
 		} else {
 			return nextNode2.internalPosition - nextNode1.internalPosition;
@@ -179,8 +182,8 @@ public class EdgeGuideQueue {
 	private static Map<ControlFlowType, Integer> cftOrderMap = new EnumMap<>(ControlFlowType.class);
 	static {
 		cftOrderMap.put(ControlFlowType.Successor, 10);
-		cftOrderMap.put(ControlFlowType.DeadCode, 9);
-		cftOrderMap.put(ControlFlowType.Repeat, 8);
+		cftOrderMap.put(ControlFlowType.DeadCode, 10);
+		cftOrderMap.put(ControlFlowType.Repeat, 10);
 		cftOrderMap.put(ControlFlowType.Continue, 7);
 		cftOrderMap.put(ControlFlowType.Break, 6);
 		cftOrderMap.put(ControlFlowType.Throw, 5);

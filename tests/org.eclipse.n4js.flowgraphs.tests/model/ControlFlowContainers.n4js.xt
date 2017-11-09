@@ -132,14 +132,3 @@ export public var expVS1;
 // ThrowInScript XPECT succs at '2' --> throw 2;
 1;
 throw 2;
-
-
-function Islands1() {
-	// islands XPECT allIslandElems --> "island", ;
-	"start";
-	for (;;);
-	// XPECT warnings -->"Dead code. No execution possible after for statement." at ""island"; 	for (;;); 	"end";"
-	"island";
-	for (;;);
-	"end";
-}

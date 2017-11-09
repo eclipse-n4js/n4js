@@ -40,7 +40,7 @@ public class ComplexNode implements ControlFlowable {
 	final private ControlFlowElement astElement;
 	final private Map<String, Node> nodeMap = new HashMap<>();
 
-	private Node entry, exit;
+	private Node entry, exit, jump;
 	private RepresentingNode represent;
 
 	/** Constructor */
@@ -96,7 +96,7 @@ public class ComplexNode implements ControlFlowable {
 			Node nLast = nNext;
 			nNext = iter.next();
 			nLast.addInternalSuccessor(nNext, cfType);
-			nNext.addInternalPredecessor(nNext, cfType);
+			nNext.addInternalPredecessor(nLast, cfType);
 		}
 
 		assert nodeMap.values().contains(nNext) : "FlowGraph malformed: Node not child of complex node";
@@ -140,6 +140,13 @@ public class ComplexNode implements ControlFlowable {
 		this.exit = exitNode;
 	}
 
+	/** Sets the jump node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */
+	public void setJumpNode(Node jumpNode) {
+		assert nodeMap.values().contains(jumpNode) : "FlowGraph malformed: Node not child of complex node";
+		assert !jumpNode.jumpToken.isEmpty() : "Jump nodes must provide jump tokens";
+		this.jump = jumpNode;
+	}
+
 	/** @return the control flow container. See {@link FGUtils#isCFContainer(ControlFlowElement)}. */
 	public ControlFlowElement getControlFlowContainer() {
 		return CFEMapper.map(container);
@@ -168,6 +175,11 @@ public class ComplexNode implements ControlFlowable {
 	@Override
 	public Node getExit() {
 		return exit;
+	}
+
+	/** @return a node with a {@link JumpToken} or null */
+	public Node getJump() {
+		return jump;
 	}
 
 	/** @return true iff the a representing node is available */

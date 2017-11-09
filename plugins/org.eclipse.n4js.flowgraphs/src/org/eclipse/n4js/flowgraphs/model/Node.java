@@ -117,12 +117,14 @@ abstract public class Node implements ControlFlowable {
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
-		succ.add(cfEdge);
+		boolean addSucceeded = succ.add(cfEdge);
+		assert addSucceeded : "Adding an edge should always be successful";
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
-		pred.add(cfEdge);
+		boolean addSucceeded = pred.add(cfEdge);
+		assert addSucceeded : "Adding an edge should always be successful";
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */

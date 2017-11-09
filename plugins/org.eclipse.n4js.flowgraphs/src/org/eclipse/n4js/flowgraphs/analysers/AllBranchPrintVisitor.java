@@ -99,7 +99,8 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		List<String> pathStrings = new LinkedList<>();
 		for (GraphExplorerInternal gei : getActivatedExplorers()) {
 			BranchWalkerInternal firstBranch = gei.getFirstBranch();
-			List<String> explPathStrings = getPathStrings((AllBranchPrintWalker) firstBranch);
+			AllBranchPrintWalker firstBranchPW = (AllBranchPrintWalker) firstBranch;
+			List<String> explPathStrings = getPathStrings(firstBranchPW, firstBranch.isDeadCode());
 			pathStrings.addAll(explPathStrings);
 		}
 		return pathStrings;
@@ -110,22 +111,20 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		List<String> pathStrings = new LinkedList<>();
 		for (GraphExplorerInternal gei : getActivatedExplorers()) {
 			for (BranchWalkerInternal ap : gei.getAllBranches()) {
-				if (ap.isLive()) {
-					AllBranchPrintWalker printPath = (AllBranchPrintWalker) ap;
-					pathStrings.add(printPath.getCompleteBranchString());
-				}
+				AllBranchPrintWalker printPath = (AllBranchPrintWalker) ap;
+				pathStrings.add(printPath.getCompleteBranchString());
 			}
 		}
 		return pathStrings;
 	}
 
-	static private List<String> getPathStrings(AllBranchPrintWalker bw) {
+	static private List<String> getPathStrings(AllBranchPrintWalker bw, boolean isDead) {
 		List<String> allStrings = new LinkedList<>();
 		boolean visitedSuccessor = false;
 		for (BranchWalker succ : bw.getSuccessors()) {
-			if (succ.isLive()) {
+			if (isDead == succ.isDeadCode()) {
 				visitedSuccessor = true;
-				List<String> succStrings = getPathStrings((AllBranchPrintWalker) succ);
+				List<String> succStrings = getPathStrings((AllBranchPrintWalker) succ, isDead);
 				for (String succString : succStrings) {
 					String prefixedString = bw.branchString + succString;
 					allStrings.add(prefixedString);
@@ -180,7 +179,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 
 		String getCompleteBranchString() {
 			String cbs = "";
-			cbs += "B" + getNumber() + ": ";
+			cbs += getBranchLetter(this) + getNumber() + ": ";
 			cbs += getBranchNames(this.getPredecessors());
 			cbs += branchString;
 			cbs += getBranchNames(this.getSuccessors());
@@ -194,10 +193,8 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 				Collections.sort(walkers, AllBranchPrintWalker::compareBranches);
 				boolean addedBW = false;
 				for (BranchWalker bw : walkers) {
-					if (!isLive() || bw.isLive()) {
-						cbs += "B" + bw.getNumber() + "|";
-						addedBW = true;
-					}
+					cbs += getBranchLetter(bw) + bw.getNumber() + "|";
+					addedBW = true;
 				}
 				if (!addedBW) {
 					return "";
@@ -205,6 +202,10 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 				cbs = cbs.substring(0, cbs.length() - 1) + "]";
 			}
 			return cbs;
+		}
+
+		private String getBranchLetter(BranchWalker bw) {
+			return bw.isDeadCode() ? "b" : "B";
 		}
 
 		static int compareBranches(BranchWalkerInternal b1, BranchWalkerInternal b2) {

@@ -33,7 +33,7 @@ class DoWhileFactory {
 		Node entryNode = new HelperNode("entry", intPos++, doStmt);
 		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, intPos++, doStmt, doStmt.getExpression());
 		Node bodyNode = new DelegatingNode("body", intPos++, doStmt, doStmt.getStatement());
-		Node exitNode = new DelegatingNode("exit", intPos++, doStmt);
+		Node exitNode = new HelperNode("exit", intPos++, doStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);

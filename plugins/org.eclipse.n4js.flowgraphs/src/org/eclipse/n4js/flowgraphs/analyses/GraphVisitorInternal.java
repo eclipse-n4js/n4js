@@ -178,6 +178,7 @@ abstract public class GraphVisitorInternal {
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
 	final void callVisit(Node node) {
 		if (activeMode) {
+			this.lastVisitedNodeIsDead = node.isDeadCode;
 			visit(node);
 		}
 	}
@@ -188,6 +189,7 @@ abstract public class GraphVisitorInternal {
 	 */
 	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
 		if (activeMode) {
+			this.lastVisitedNodeIsDead = end.isDeadCode;
 			visit(lastVisitNode, end, edge);
 		}
 	}
@@ -199,11 +201,6 @@ abstract public class GraphVisitorInternal {
 		this.currentContainer = curContainer;
 		this.currentMode = curMode;
 		checkActive();
-	}
-
-	/** Only called from {@link GraphVisitorGuideInternal}. Sets {@link #lastVisitedNodeIsDead}. */
-	final void setVisitedNodeIsDead(boolean lastVisitedNodeIsDead) {
-		this.lastVisitedNodeIsDead = lastVisitedNodeIsDead;
 	}
 
 	private void checkActive() {

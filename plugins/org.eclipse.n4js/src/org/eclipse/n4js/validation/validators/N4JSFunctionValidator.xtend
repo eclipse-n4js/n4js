@@ -126,14 +126,14 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
 		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
 		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
-		flowAnalyzer.createGraphs(script);
 
 		val dcv = new DeadCodeVisitor();
 		val cvgv1 = new CheckVariableGraphVisitor();
 		val cvgv2 = new CheckVariableGraphVisitor();
 		val cvgv3 = new CheckVariableGraphVisitor();
 
-		flowAnalyzer.accept(dcv, cvgv1 );
+//		flowAnalyzer.createGraphs(script);
+//		flowAnalyzer.accept(dcv, cvgv1 );
 
 		internalCheckDeadCode(dcv);
 	}
