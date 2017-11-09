@@ -36,6 +36,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.intro.IIntroManager;
+import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
@@ -181,7 +182,14 @@ public abstract class AbstractBuilderTest {
 		IResourcesSetupUtil.cleanBuild();
 		waitForAutoBuild();
 		assertEquals(0, root().getProjects().length);
-		assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0, countResourcesInIndex());
+		try {
+			assertEquals("Resources in index:\n" + getAllResourceDescriptionsAsString() + "\n", 0,
+					countResourcesInIndex());
+		} catch (Exception e) {
+			IBuilderState builderState = getBuilderState();
+			System.out.println("WILL THROW " + builderState.getClass().getName() + " :: " + builderState.hashCode());
+			throw e;
+		}
 	}
 
 	/***/
