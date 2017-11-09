@@ -36,7 +36,7 @@ pipeline {
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                     def targets = 'clean install'
-                    def options = '-DskipTests -Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                     def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
 
                     sh "${xvfb} mvn ${targets} -P${profiles} ${options}"
