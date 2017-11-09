@@ -10,6 +10,6 @@ docker build -t n4js-build docker-build/
 
 # run the docker container
 docker run -ti --rm \
-    -v m2_repo:/root/.m2/repository \
+    -v ~/.m2:/root/.m2/ \
     -v $(pwd):/workspace \
     n4js-build $@
