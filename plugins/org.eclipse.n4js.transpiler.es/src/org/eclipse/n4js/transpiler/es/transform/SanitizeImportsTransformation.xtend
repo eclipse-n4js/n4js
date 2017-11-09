@@ -74,7 +74,7 @@ class SanitizeImportsTransformation extends Transformation {
 			return
 
 		val jsxUsedOriginalImports = state.info.browseOriginalImports_internal.filter [
-			it.value.qualifiedName.endsWith(jsx.getBackendModuleName())
+			it.value.qualifiedName.endsWith(jsx.getBackendReactModuleFileName())
 		].map[it.key.importSpecifiers].flatten.filter[isUsed]
 		if (!jsxUsedOriginalImports.nullOrEmpty)
 			return;
@@ -193,7 +193,7 @@ class SanitizeImportsTransformation extends Transformation {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
 
-			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec)) {
+			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec)){
 				return true
 			}
 
