@@ -278,45 +278,34 @@ public class ProjectUtils {
 
 	/***/
 	public static void waitForAutoBuild() {
-		try {
-			int maxWait = 100 * 60 * 2;
-			long start = System.currentTimeMillis();
-			long end = start;
-			boolean wasInterrupted = false;
-			boolean foundJob = false;
-			do {
-				try {
-					Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
-					if (foundJobs.length > 0) {
-						foundJob = true;
-						Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
-								null);
-					}
-					wasInterrupted = false;
-					end = System.currentTimeMillis();
-				} catch (OperationCanceledException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					wasInterrupted = true;
+		int maxWait = 100 * 60 * 2;
+		long start = System.currentTimeMillis();
+		long end = start;
+		boolean wasInterrupted = false;
+		boolean foundJob = false;
+		do {
+			try {
+				Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+				if (foundJobs.length > 0) {
+					foundJob = true;
+					Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+							null);
 				}
-			} while (wasInterrupted && (end - start) < maxWait);
-			if (!foundJob) {
-				LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
+				wasInterrupted = false;
+				end = System.currentTimeMillis();
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				wasInterrupted = true;
 			}
-		} finally {
-			List<String> listJobs = listJobs();
-			if (!listJobs.isEmpty()) {
-				LOGGER.debug("waitForAutoBuild finished, but there are still #" + listJobs.size() + " jobs.");
-				StringJoiner sj = new StringJoiner("\n");
-				sj.add("ProjectUtils.waitForAutoBuild() finished, but some jobs are still there ");
-				listJobs.forEach(sj::add);
-				System.out.println(sj.toString());
-			}
+		} while (wasInterrupted && (end - start) < maxWait);
+		if (!foundJob) {
+			LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
 		}
 	}
 
 	/***/
-	public static void waitForAllJobs() {
+	private static void waitForAllJobs() {
 		try {
 			int maxWait = 100 * 60 * 2;
 			long start = System.currentTimeMillis();
@@ -325,7 +314,7 @@ public class ProjectUtils {
 			boolean foundJob = false;
 			do {
 				try {
-					List<String> foundJobs = listJobsRunnuingWaiting();
+					List<String> foundJobs = listJobsRunningWaiting();
 					if (!foundJobs.isEmpty()) {
 						foundJob = true;
 						Thread.sleep(100);
@@ -358,43 +347,32 @@ public class ProjectUtils {
 	 * Waits for N4JSDirtyStateEditorSupport job to be run
 	 */
 	public static void waitForUpdateEditorJob() {
-		try {
-			int maxWait = 100 * 60 * 2;
-			long start = System.currentTimeMillis();
-			long end = start;
-			boolean wasInterrupted = false;
-			boolean foundJob = false;
-			do {
-				try {
-					Job[] foundJobs = Job.getJobManager().find(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB);
-					if (foundJobs.length > 0) {
-						foundJob = true;
-						Job.getJobManager().join(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB, null);
-					}
-					wasInterrupted = false;
-					end = System.currentTimeMillis();
-				} catch (OperationCanceledException e) {
-					e.printStackTrace();
-				} catch (InterruptedException e) {
-					wasInterrupted = true;
+		int maxWait = 100 * 60 * 2;
+		long start = System.currentTimeMillis();
+		long end = start;
+		boolean wasInterrupted = false;
+		boolean foundJob = false;
+		do {
+			try {
+				Job[] foundJobs = Job.getJobManager().find(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB);
+				if (foundJobs.length > 0) {
+					foundJob = true;
+					Job.getJobManager().join(N4JSDirtyStateEditorSupport.FAMILY_UPDATE_JOB, null);
 				}
-			} while (wasInterrupted && (end - start) < maxWait);
-			if (!foundJob) {
-				LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
+				wasInterrupted = false;
+				end = System.currentTimeMillis();
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				wasInterrupted = true;
 			}
-		} finally {
-			List<String> listJobs = listJobs();
-			if (!listJobs.isEmpty()) {
-				LOGGER.debug("waitForUpdateEditorJob finished, but there are still #" + listJobs.size() + " jobs.");
-				StringJoiner sj = new StringJoiner("\n");
-				sj.add("ProjectUtils.waitForUpdateEditorJob() finished, but some jobs are still there ");
-				listJobs.forEach(sj::add);
-				System.out.println(sj.toString());
-			}
+		} while (wasInterrupted && (end - start) < maxWait);
+		if (!foundJob) {
+			LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
 		}
 	}
 
-	private static List<String> listJobsRunnuingWaiting() {
+	private static List<String> listJobsRunningWaiting() {
 		return from(newArrayList(getJobManager().find(null)))
 				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
 				.transform(job -> " - " + job.getName() + " : " + job.getState())

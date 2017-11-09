@@ -16,7 +16,6 @@ import static org.eclipse.n4js.tests.builder.BuilderUtil.getAllResourceDescripti
 import static org.eclipse.n4js.tests.builder.BuilderUtil.getBuilderState;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS;
-import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.root;
 
 import java.util.List;
@@ -75,6 +74,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	/***/
 	@Before
 	public void setUp() throws Exception {
+		IResourcesSetupUtil.cleanWorkspace();
 		if (checkForCleanWorkspace()) {
 			if (root().getProjects().length != 0 && 0 != root().getProjects(INCLUDE_HIDDEN).length) {
 				StringBuilder error = new StringBuilder();
@@ -179,7 +179,7 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	public void tearDown() throws Exception {
 		// save the files as otherwise the projects cannot be deleted
 		closeAllEditorsForTearDown();
-		cleanWorkspace();
+		IResourcesSetupUtil.cleanWorkspace();
 		waitForAutoBuild();
 		events.clear();
 		getBuilderState().removeListener(this);
@@ -195,7 +195,6 @@ public abstract class AbstractBuilderTest extends Assert implements IResourceDes
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
 		ProjectUtils.waitForAutoBuild();
-		ProjectUtils.waitForAllJobs(); // updating error markers, etc.
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
