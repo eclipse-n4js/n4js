@@ -66,15 +66,4 @@ Contributors:
       </plugin>
 	  </plugins>
 	</build>
-
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>bintray-jmini-maven</id>
-      <name>bintray</name>
-      <url>https://dl.bintray.com/jmini/maven</url>
-    </repository>
-  </repositories>
 </project>
