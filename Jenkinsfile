@@ -39,7 +39,7 @@ pipeline {
                     def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                     def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
 
-                    sh "${xvfb} mvn --debug ${targets} -P${profiles} ${options}"
+                    sh "${xvfb} mvn -U ${targets} -P${profiles} ${options}"
                 }
             }
         }
@@ -58,7 +58,7 @@ pipeline {
                         'execute-swtbot-performance-tests',
                         'execute-accesscontrol-tests '
                     ].join(',')
-                    sh "${xvfb} mvn --debug ${targets} ${profiles} ${options}"
+                    sh "${xvfb} mvn -U ${targets} ${profiles} ${options}"
                 }
             }
         }
