@@ -34,6 +34,8 @@ public class EdgeGuideMerged extends EdgeGuide {
 	 */
 	EdgeGuideMerged(List<EdgeGuide> edgeGuides) {
 		super(edgeGuides.get(0).edgeProvider, edgeGuides.get(0).getEdge());
+		finallyContext.follow(edgeGuides.get(0).finallyContext);
+		deadContext.follow(edgeGuides.get(0).deadContext);
 
 		Map<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkerMap = new HashMap<>();
 

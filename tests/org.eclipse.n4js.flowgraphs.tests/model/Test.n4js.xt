@@ -15,6 +15,17 @@
 
 
 
+function DoStatementBreakLabel2() {
+	// XPECT allBranches -->
+	"start";
+	LBLa: do {
+		LBLb: do {
+			1;
+			break LBLa;
+		} while (3);
+	} while (4);
+	"end";
+}
 
 
 
@@ -28,7 +39,7 @@ function ThrowTryFinallyStatement1() {
 		throw 2; -Throw-> 3
 	--- */
 	// ThrowTryFinallyStatement1 X-PECT allBranches --> B0: "start" -> 1 -> 2 -> throw 2; -> 3
-	/* ThrowTryFinallyStatement1 backward XPECT allBranches direction 'Backward' ---
+	/* ThrowTryFinallyStatement1 backward X-PECT allBranches direction 'Backward' ---
 		B0: [B1|B2],
 		B1: [B0]3 -> throw 2; -> 2 -> 1 -> "start",
 		B2: [B0]"end" -> 3
@@ -46,7 +57,7 @@ function ThrowTryFinallyStatement1() {
 	} finally {
 		3;
 	}
-	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
+	// ThrowTryFinallyStatement1 X-PECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
 	"end";
 }
 

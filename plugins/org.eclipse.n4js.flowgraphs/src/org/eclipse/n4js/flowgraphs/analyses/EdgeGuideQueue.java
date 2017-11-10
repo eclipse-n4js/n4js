@@ -66,14 +66,14 @@ public class EdgeGuideQueue {
 
 	/** @return and removes the head of this queue */
 	EdgeGuide removeFirst() {
-		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
+		// Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
 		return edgeGuideQueue.remove(0);
 	}
 
 	/** @return and removes the head of this queue */
 	LinkedList<EdgeGuide> removeFirstJoinGuide() {
 		LinkedList<EdgeGuide> guideGroup = new LinkedList<>();
-		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
+		// Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
 
 		for (Iterator<EdgeGuide> iter = edgeGuideQueue.iterator(); iter.hasNext();) {
 			EdgeGuide eg = iter.next();
@@ -112,7 +112,7 @@ public class EdgeGuideQueue {
 		Node nextNode1 = eg1.getNextNode();
 		Node nextNode2 = eg2.getNextNode();
 		ControlFlowElement cfe1 = nextNode1.getControlFlowElement();
-		ControlFlowElement cfe2 = nextNode1.getControlFlowElement();
+		ControlFlowElement cfe2 = nextNode2.getControlFlowElement();
 		ControlFlowType cft1 = e1.cfType;
 		ControlFlowType cft2 = e2.cfType;
 
@@ -182,9 +182,9 @@ public class EdgeGuideQueue {
 		DeadFlowContext dfc1 = eg1.deadContext;
 		DeadFlowContext dfc2 = eg2.deadContext;
 
-		if (dfc1.isForwardAndDeadInside() == dfc2.isForwardAndDeadInside())
+		if (dfc1.isForwardDeadFlow() == dfc2.isForwardDeadFlow())
 			return 0;
-		return dfc1.isForwardAndDeadInside() ? 1 : -1;
+		return dfc1.isForwardDeadFlow() ? 1 : -1;
 	}
 
 	private static Map<ControlFlowType, Integer> cftOrderMap = new EnumMap<>(ControlFlowType.class);

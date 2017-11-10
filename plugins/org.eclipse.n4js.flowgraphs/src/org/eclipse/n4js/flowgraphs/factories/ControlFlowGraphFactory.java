@@ -43,17 +43,16 @@ public class ControlFlowGraphFactory {
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
-		Map<ControlFlowElement, List<ControlFlowElement>> cfContainers = new HashMap<>();
-		Set<Block> cfCatchBlocks = new HashSet<>();
+		HashSet<ControlFlowElement> cfContainers = new HashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
-		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
+		createComplexNodes(script, cfContainers, cnMap);
 		ComplexNodeMapper cnMapper = new ComplexNodeMapper(cnMap);
 
 		connectComplexNodes(cnMapper);
 		createJumpEdges(cnMapper);
 
-		FlowGraph cfg = new FlowGraph(script, cfContainers, cfCatchBlocks, cnMap);
+		FlowGraph cfg = new FlowGraph(script, cfContainers, cnMap);
 
 		if (PRINT_EDGE_DETAILS)
 			printAllEdgeDetails(cnMapper);
@@ -62,9 +61,8 @@ public class ControlFlowGraphFactory {
 	}
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	static private void createComplexNodes(Script script,
-			Map<ControlFlowElement, List<ControlFlowElement>> cfContainers,
-			Set<Block> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
+	static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
+			Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		ComplexNode cn = CFEFactoryDispatcher.build(script);
 		cnMap.put(script, cn);
@@ -77,12 +75,8 @@ public class ControlFlowGraphFactory {
 				cfe = CFEMapper.map(cfe);
 
 				if (cfe != null && !cnMap.containsKey(cfe)) {
-					addToContainer(cfContainers, cfe);
-
-					Block cfCatchBlock = FGUtils.getCatchBlock(cfe);
-					if (cfCatchBlock != null) {
-						cfCatchBlocks.add(cfCatchBlock);
-					}
+					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
+					cfContainers.add(cfContainer);
 					cn = CFEFactoryDispatcher.build(cfe);
 					if (cn != null) {
 						cnMap.put(cfe, cn);
@@ -90,17 +84,6 @@ public class ControlFlowGraphFactory {
 				}
 			}
 		}
-	}
-
-	private static void addToContainer(Map<ControlFlowElement, List<ControlFlowElement>> cfContainers,
-			ControlFlowElement cfe) {
-
-		ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
-		if (!cfContainers.containsKey(cfContainer)) {
-			cfContainers.put(cfContainer, new LinkedList<ControlFlowElement>());
-		}
-		List<ControlFlowElement> containerList = cfContainers.get(cfContainer);
-		containerList.add(cfe);
 	}
 
 	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {

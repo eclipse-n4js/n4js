@@ -134,7 +134,7 @@ public class EdgeGuideWorklist {
 			nextEdgeGuide = egQueue.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(nextEdgeGuide.getEdge());
 			alreadyVisitedAndObsolete &= nextEdgeGuide.isEmpty();
-			alreadyVisitedAndObsolete &= !nextEdgeGuide.deadContext.isForwardAndDeadInside();
+			alreadyVisitedAndObsolete &= !nextEdgeGuide.deadContext.isForwardDeadFlow();
 			if (alreadyVisitedAndObsolete) {
 				nextEdgeGuide = null; // optimization. might be removed
 				// obsoleteCounter++;

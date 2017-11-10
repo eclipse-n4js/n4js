@@ -20,6 +20,7 @@ import java.util.Set;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
+import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.utils.collections.Collections2;
 
 import com.google.common.collect.Lists;
@@ -39,13 +40,25 @@ public class FinallyFlowContext {
 	}
 
 	FinallyFlowContext(FinallyFlowContext flowContext, ControlFlowEdge edge) {
-		joinWith(flowContext);
-		update(edge);
-	}
-
-	void update(ControlFlowEdge edge) {
+		follow(flowContext);
 		if (edge.finallyPathContext != null) {
 			finallyBlockContexts.add(edge.finallyPathContext);
+		}
+	}
+
+	void follow(FinallyFlowContext flowContext) {
+		joinWith(flowContext);
+	}
+
+	void update(NextEdgesProvider edgeProvider, ControlFlowEdge edge) {
+		if (edge.finallyPathContext != null) {
+			boolean added = finallyBlockContexts.add(edge.finallyPathContext);
+			if (!added) {
+				Node nextNode = edgeProvider.getNextNode(edge);
+				if (nextNode.jumpToken.contains(edge.finallyPathContext)) {
+					finallyBlockContexts.remove(edge.finallyPathContext);
+				}
+			}
 		}
 	}
 

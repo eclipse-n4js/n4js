@@ -26,7 +26,6 @@
 
 function SwitchCase1() {
 	// SwitchCase1 XPECT cfContainer --> FunctionDeclaration::Block
-	// SwitchCase1 XPECT allCatchBlocks -->
 	/* SwitchCase1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -74,7 +73,6 @@ function SwitchCase1() {
 
 function SwitchCaseFallThrough() {
 	// SwitchCaseFallThrough XPECT cfContainer --> FunctionDeclaration::Block
-	// SwitchCaseFallThrough XPECT allCatchBlocks -->
 	/* SwitchCaseFallThrough XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -134,7 +132,6 @@ function SwitchCaseFallThrough() {
 
 function SwitchCaseBreak1() {
 	// SwitchCaseBreak1 XPECT cfContainer --> FunctionDeclaration::Block
-	// SwitchCaseBreak1 XPECT allCatchBlocks -->
 	/* SwitchCaseBreak1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -200,7 +197,6 @@ function SwitchCaseBreak1() {
 
 function SwitchCaseDefault1() {
 	// SwitchCaseDefault1 XPECT cfContainer --> FunctionDeclaration::Block
-	// SwitchCaseDefault1 XPECT allCatchBlocks -->
 	/* SwitchCaseDefault1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -251,7 +247,6 @@ function SwitchCaseDefault1() {
 
 function SwitchCaseDefault2() {
 	// SwitchCaseDefault2 XPECT cfContainer --> FunctionDeclaration::Block
-	// SwitchCaseDefault2 XPECT allCatchBlocks -->
 	/* SwitchCaseDefault2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,

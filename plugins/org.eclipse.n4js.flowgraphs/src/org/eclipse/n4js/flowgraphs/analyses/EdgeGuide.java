@@ -126,7 +126,7 @@ public class EdgeGuide {
 			if (!deadAliveChange) {
 				ControlFlowEdge nextEdge = nextEdgeIt.next();
 				edge = nextEdge;
-				finallyContext.update(edge);
+				finallyContext.update(edgeProvider, edge);
 				setBranchWalkersReachability();
 				nextEGs.add(this);
 			}

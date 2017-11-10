@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ abstract public class Node implements ControlFlowable {
 	/** List of all {@link DependencyEdge}s ending at this node */
 	final public List<DependencyEdge> endEdges = new LinkedList<>();
 	/** List of all {@link JumpToken}s of this node */
-	final public List<JumpToken> jumpToken = new ArrayList<>();
+	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
 

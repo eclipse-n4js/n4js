@@ -24,8 +24,6 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
-import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.DataCollector;
@@ -197,11 +195,6 @@ public class N4JSFlowAnalyzer {
 	 */
 	public Set<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();
-	}
-
-	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
-	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
-		return cfg.getCatchBlocksOfContainer(container);
 	}
 
 }

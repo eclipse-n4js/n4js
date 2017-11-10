@@ -24,7 +24,6 @@
 
 function ThrowStatement1() {
 	// ThrowStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowStatement1 XPECT allCatchBlocks -->
 	/* ThrowStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> throw 1;
@@ -47,7 +46,6 @@ function ThrowStatement1() {
 
 function ThrowStatement2() {
 	// ThrowStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowStatement2 XPECT allCatchBlocks -->
 	/* ThrowStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -89,7 +87,6 @@ function ThrowStatement2() {
 // ThrowStatement3 XPECT warnings --> "Variable names should start with lower case letter." at "ThrowStatement3"
 let ThrowStatement3 = function() {
 	// ThrowStatement3 XPECT cfContainer --> FunctionExpression::Block
-	// ThrowStatement3 XPECT allCatchBlocks -->
 	/* ThrowStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> throw 1;
@@ -114,7 +111,6 @@ let ThrowStatement3 = function() {
 class ThrowStatement4 {
     get getterThrowStatement4() {
 		// ThrowStatement4 XPECT cfContainer --> N4GetterDeclaration::Block
-		// ThrowStatement4 XPECT allCatchBlocks -->
     	/* ThrowStatement4 XPECT allEdges ---
 			"start" --> 1,
 			1 --> throw 1;
@@ -144,7 +140,6 @@ class ThrowStatement4 {
 
 function TryCatchStatement1() {
 	// TryCatchStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// TryCatchStatement1 XPECT allCatchBlocks --> { 2; }
 	/* TryCatchStatement1 XPECT allEdges ---
 		"start" --> 1,
 		2 --> "end",
@@ -179,7 +174,6 @@ function TryCatchStatement1() {
 
 function TryCatchFinallyStatement1() {
 	// TryCatchFinallyStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// TryCatchFinallyStatement1 XPECT allCatchBlocks --> { 2; }
 	/* TryCatchFinallyStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 3,
@@ -218,7 +212,6 @@ function TryCatchFinallyStatement1() {
 
 function ThrowTryCatchStatement1() {
 	// ThrowTryCatchStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryCatchStatement1 XPECT allCatchBlocks --> { 3; }
 	/* ThrowTryCatchStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -259,7 +252,6 @@ function ThrowTryCatchStatement1() {
 
 function ThrowTryCatchStatement2() {
 	// ThrowTryCatchStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryCatchStatement2 XPECT allCatchBlocks --> { 2; throw 3; }
 	/* ThrowTryCatchStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end",
@@ -300,7 +292,6 @@ function ThrowTryCatchStatement2() {
 
 function ThrowTryCatchStatement3() {
 	// ThrowTryCatchStatement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryCatchStatement3 XPECT allCatchBlocks --> { 4; }, { 5; }
 	/* ThrowTryCatchStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -352,7 +343,6 @@ function ThrowTryCatchStatement3() {
 
 function ThrowTryCatchStatement4() {
 	// ThrowTryCatchStatement4 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryCatchStatement4 XPECT allCatchBlocks --> { 4; }, { try { 2; throw 3; } catch (ee) { 4; } 5; }
 	/* ThrowTryCatchStatement4 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end",
@@ -403,7 +393,6 @@ function ThrowTryCatchStatement4() {
 
 function ThrowTryFinallyStatement1() {
 	// ThrowTryFinallyStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryFinallyStatement1 XPECT allCatchBlocks -->
 	/* ThrowTryFinallyStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -445,7 +434,6 @@ function ThrowTryFinallyStatement1() {
 
 function ThrowTryFinallyStatement2() {
 	// ThrowTryFinallyStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryFinallyStatement2 XPECT allCatchBlocks -->
 	/* ThrowTryFinallyStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -485,7 +473,6 @@ function ThrowTryFinallyStatement2() {
 
 function ThrowTryFinallyStatement3() {
 	// ThrowTryFinallyStatement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryFinallyStatement3 XPECT allCatchBlocks --> { 4; }
 	/* ThrowTryFinallyStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -534,7 +521,6 @@ function ThrowTryFinallyStatement3() {
 
 function ThrowTryCatchFinallyStatement1() {
 	// ThrowTryCatchFinallyStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryCatchFinallyStatement1 XPECT allCatchBlocks --> { 3; }
 	/* ThrowTryCatchFinallyStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -579,7 +565,6 @@ function ThrowTryCatchFinallyStatement1() {
 
 function ThrowTryCatchFinallyStatement2() {
 	// ThrowTryCatchFinallyStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// ThrowTryCatchFinallyStatement2 XPECT allCatchBlocks --> { 2; throw 3; }
 	/* ThrowTryCatchFinallyStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 4,

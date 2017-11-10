@@ -29,7 +29,6 @@ export @Internal public class AnnotationList {}
 
 function Block1() {
 	// Block1 XPECT cfContainer --> FunctionDeclaration::Block
-	// Block1 XPECT allCatchBlocks -->
 	/* Block1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end"
@@ -51,7 +50,6 @@ function Block1() {
 
 function Block2() {
 	// Block2 XPECT cfContainer --> FunctionDeclaration::Block
-	// Block2 XPECT allCatchBlocks -->
 	/* Block2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -78,7 +76,6 @@ function Block2() {
 
 function Block3() {
 	// Block3 XPECT cfContainer --> FunctionDeclaration::Block
-	// Block3 XPECT allCatchBlocks -->
 	/* Block3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -106,7 +103,6 @@ function Block3() {
 
 function Debugger1() {
 	// Debugger1 XPECT cfContainer --> FunctionDeclaration::Block
-	// Debugger1 XPECT allCatchBlocks -->
 	/* Debugger1 XPECT allEdges ---
 		"start" --> debugger;, debugger; --> "end"
 	--- */
@@ -125,7 +121,6 @@ function Debugger1() {
 
 function IfStatement1() {
 	// IfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// IfStatement1 XPECT allCatchBlocks -->
 	/* IfStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -173,7 +168,6 @@ function IfStatement1() {
 
 function IfStatement2() {
 	// IfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// IfStatement2 XPECT allCatchBlocks -->
 	/* IfStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -216,7 +210,6 @@ function IfStatement2() {
 
 function EmptyStatement() {
 	// EmptyStatement XPECT cfContainer --> FunctionDeclaration::Block
-	// EmptyStatement XPECT allCatchBlocks -->
 	/* EmptyStatement XPECT allEdges ---
 		"start" --> ;,
 		; --> "end"
@@ -235,7 +228,6 @@ function EmptyStatement() {
 
 function ReturnStatement1() {
 	// ReturnStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// ReturnStatement1 XPECT allCatchBlocks -->
 	/* ReturnStatement1 XPECT allEdges ---
 		"start" --> return;
 	--- */
@@ -256,7 +248,6 @@ function ReturnStatement1() {
 
 function ReturnStatement2() : int {
 	// ReturnStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// ReturnStatement2 XPECT allCatchBlocks -->
 	/* ReturnStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> return 1;
@@ -279,7 +270,6 @@ function ReturnStatement2() : int {
 
 function ReturnStatement3() {
 	// ReturnStatement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// ReturnStatement3 XPECT allCatchBlocks -->
 	/* ReturnStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> return;,
@@ -325,7 +315,6 @@ function ReturnStatement3() {
 // ReturnStatement4 XPECT warnings --> "Variable names should start with lower case letter." at "ReturnStatement4"
 let ReturnStatement4 = function() {
 	// ReturnStatement4 XPECT cfContainer --> FunctionExpression::Block
-	// ReturnStatement4 XPECT allCatchBlocks -->
 	/* ReturnStatement4 XPECT allEdges ---
 		"start" --> return;
 	--- */
@@ -348,7 +337,6 @@ let ReturnStatement4 = function() {
 class ReturnStatement5 {
     get getterReturnStatement5() {
 		// ReturnStatement5 XPECT cfContainer --> N4GetterDeclaration::Block
-		// ReturnStatement5 XPECT allCatchBlocks -->
     	/* ReturnStatement5 XPECT allEdges ---
 			"start" --> return;
 		--- */
@@ -372,7 +360,6 @@ class ReturnStatement5 {
 
 function WithStatement1() {
 	// WithStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// WithStatement1 XPECT allCatchBlocks -->
 	/* WithStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -397,7 +384,6 @@ function WithStatement1() {
 
 function WithStatement2() {
 	// WithStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// WithStatement2 XPECT allCatchBlocks -->
 	/* WithStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -423,7 +409,6 @@ function WithStatement2() {
 
 function VariableStatement1() {
 	// VariableStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// VariableStatement1 XPECT allCatchBlocks -->
 	/* VariableStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
@@ -446,7 +431,6 @@ function VariableStatement1() {
 
 function VariableStatement2() {
 	// VariableStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// VariableStatement2 XPECT allCatchBlocks -->
 	/* VariableStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
@@ -469,7 +453,6 @@ function VariableStatement2() {
 
 function VariableStatement3() {
 	// VariableStatement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// VariableStatement3 XPECT allCatchBlocks -->
 	/* VariableStatement3 XPECT allEdges ---
 		"start" --> x,
 		x --> y,

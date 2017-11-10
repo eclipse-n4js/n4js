@@ -32,10 +32,15 @@ abstract class DeadFlowContext {
 		private ControlFlowEdge switchEdge;
 
 		Forward(DeadFlowContext deadContext, Node node) {
+			follow(deadContext);
+			update(node);
+		}
+
+		@Override
+		void follow(DeadFlowContext deadContext) {
 			if (deadContext != null) {
 				switchEdge = ((Forward) deadContext).switchEdge;
 			}
-			update(node);
 		}
 
 		@Override
@@ -60,7 +65,7 @@ abstract class DeadFlowContext {
 		}
 
 		@Override
-		boolean isForwardAndDeadInside() {
+		boolean isForwardDeadFlow() {
 			return switchEdge != null;
 		}
 
@@ -81,6 +86,11 @@ abstract class DeadFlowContext {
 	static class Backward extends DeadFlowContext {
 
 		Backward(DeadFlowContext deadContext) {
+			follow(deadContext);
+		}
+
+		@Override
+		void follow(DeadFlowContext deadContext) {
 			if (deadContext != null) {
 				isDeadCode = deadContext.isDeadCode;
 			}
@@ -103,7 +113,7 @@ abstract class DeadFlowContext {
 		}
 
 		@Override
-		boolean isForwardAndDeadInside() {
+		boolean isForwardDeadFlow() {
 			return false;
 		}
 
@@ -113,13 +123,15 @@ abstract class DeadFlowContext {
 		}
 	}
 
+	abstract void follow(DeadFlowContext deadContext);
+
 	abstract void update(Node node);
 
 	abstract void update(NextEdgesProvider edgeProvider, ControlFlowEdge edge);
 
 	abstract void joinWith(DeadFlowContext deadContext);
 
-	abstract boolean isForwardAndDeadInside();
+	abstract boolean isForwardDeadFlow();
 
 	boolean isDead() {
 		return isDeadCode;

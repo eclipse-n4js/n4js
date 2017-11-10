@@ -26,7 +26,6 @@ import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
-import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -302,21 +301,4 @@ public class FlowgraphsXpectMethod {
 		expectation.assertEquals(containerStr);
 	}
 
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
-	public void allCatchBlocks(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset) {
-
-		ControlFlowElement cfe = getCFE(offset);
-		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
-		List<Block> catchBlocks = getFlowAnalyzer(cfe).getCatchBlocksOfContainer(container);
-
-		List<String> catchBlockStrs = new LinkedList<>();
-		for (Block catchBlock : catchBlocks) {
-			String catchBlockStr = FGUtils.getSourceText(catchBlock);
-			catchBlockStrs.add(catchBlockStr);
-		}
-		expectation.assertEquals(catchBlockStrs);
-	}
 }
