@@ -59,10 +59,10 @@ Contributors:
 		<org.eclipse.emf.ecore.xcore.lib-version>[1.1.100]</org.eclipse.emf.ecore.xcore.lib-version>
 
 		<!-- maven plugins -->
-		<build-helper-maven-plugin.version>1.9</build-helper-maven-plugin.version>
+		<build-helper-maven-plugin.version>1.12</build-helper-maven-plugin.version>
 		<codehaus-buildnumber-maven-plugin.version>1.4</codehaus-buildnumber-maven-plugin.version>
-		<codehaus-exec-maven-plugin.version>1.4.0</codehaus-exec-maven-plugin.version>
-		<codehaus-copy-rename-maven-plugin.version>1.0</codehaus-copy-rename-maven-plugin.version>
+		<codehaus-exec-maven-plugin.version>1.6.0</codehaus-exec-maven-plugin.version>
+		<codehaus-copy-rename-maven-plugin.version>1.0.1</codehaus-copy-rename-maven-plugin.version>
 		<fornax-oaw-m2-plugin.version>3.6.0</fornax-oaw-m2-plugin.version>
 		<m2e-lifecycle-mapping.version>1.0.0</m2e-lifecycle-mapping.version>
 		<maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
