@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2016 NumberFour AG.
+ * Copyright (c) 2017 NumberFour AG.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -19,6 +19,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 
 /**
+ * This validator validates react import statements.
  */
 @Log
 class N4JSXImportValidator extends N4JSImportValidator {
