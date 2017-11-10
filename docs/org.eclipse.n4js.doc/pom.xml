@@ -63,16 +63,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 
     <pluginRepositories>
         <pluginRepository>
-            <id>my.central.maven</id>
-            <url>http://repo.maven.apache.org/maven2/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
             <id>bintray.jmini.maven</id>
             <url>http://dl.bintray.com/jmini/maven/</url>
             <releases>
