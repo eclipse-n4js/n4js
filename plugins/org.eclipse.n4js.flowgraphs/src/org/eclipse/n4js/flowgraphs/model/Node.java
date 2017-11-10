@@ -53,8 +53,14 @@ abstract public class Node implements ControlFlowable {
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
 
-	/** Set to true during graph traversal. Used to find dead code. */
-	public boolean isDeadCode = false;
+	/** Set during graph traversal. */
+	private Reachability reachability = Reachability.Unknown;
+	/** Set to true during graph traversal. */
+	private boolean isVisited = false;
+
+	private enum Reachability {
+		Unknown, Reachable, Unreachable
+	}
 
 	/**
 	 * Constructor.<br/>
@@ -184,6 +190,31 @@ abstract public class Node implements ControlFlowable {
 	/** @return true, iff this node has at least one jump token. */
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
+	}
+
+	public void setUnreachable() {
+		reachability = Reachability.Unreachable;
+		isVisited = true;
+	}
+
+	public void setReachable() {
+		reachability = Reachability.Reachable;
+		isVisited = true;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isUnreachable() {
+		return reachability == Reachability.Unreachable;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isReachable() {
+		return reachability == Reachability.Reachable;
 	}
 
 	@Override

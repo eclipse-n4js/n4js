@@ -132,8 +132,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val cvgv2 = new CheckVariableGraphVisitor();
 		val cvgv3 = new CheckVariableGraphVisitor();
 
-//		flowAnalyzer.createGraphs(script);
-//		flowAnalyzer.accept(dcv, cvgv1 );
+		flowAnalyzer.createGraphs(script);
+		flowAnalyzer.accept(dcv, cvgv1 );
 
 		internalCheckDeadCode(dcv);
 	}

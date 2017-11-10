@@ -76,6 +76,8 @@ public class GraphVisitorGuideInternal {
 
 	private void walkthrough(ComplexNode cn, Mode mode) {
 		walkerVisitedNodes.clear();
+		cn.getEntry().setReachable();
+		cn.getExit().setReachable();
 
 		for (GraphVisitorInternal walker : visitors) {
 			walker.setFlowAnalyses(flowAnalyzer);

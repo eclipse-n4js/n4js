@@ -134,10 +134,14 @@ public class EdgeGuideWorklist {
 			nextEdgeGuide = egQueue.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(nextEdgeGuide.getEdge());
 			alreadyVisitedAndObsolete &= nextEdgeGuide.isEmpty();
+			alreadyVisitedAndObsolete &= !nextEdgeGuide.deadContext.isForwardAndDeadInside();
 			if (alreadyVisitedAndObsolete) {
-				nextEdgeGuide = null;
+				nextEdgeGuide = null; // optimization. might be removed
+				// obsoleteCounter++;
+				// System.out.println(obsoleteCounter);
 			}
 		}
 	}
 
+	static int obsoleteCounter = 0;
 }

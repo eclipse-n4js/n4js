@@ -178,7 +178,7 @@ abstract public class GraphVisitorInternal {
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link GraphVisitorInternal#visit(Node)}. */
 	final void callVisit(Node node) {
 		if (activeMode) {
-			this.lastVisitedNodeIsDead = node.isDeadCode;
+			this.lastVisitedNodeIsDead = node.isUnreachable();
 			visit(node);
 		}
 	}
@@ -189,7 +189,7 @@ abstract public class GraphVisitorInternal {
 	 */
 	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
 		if (activeMode) {
-			this.lastVisitedNodeIsDead = end.isDeadCode;
+			this.lastVisitedNodeIsDead = end.isUnreachable();
 			visit(lastVisitNode, end, edge);
 		}
 	}

@@ -21,21 +21,20 @@
 
 
 function ThrowTryFinallyStatement1() {
-	/* ThrowTryFinallyStatement1 XPECT allEdges ---
+	/* ThrowTryFinallyStatement1 X-PECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
 		2 --> throw 2;,
-		throw 2; -Throw-> 3,
-		3 --> "end"
+		throw 2; -Throw-> 3
 	--- */
-	// ThrowTryFinallyStatement1 XPECT allBranches --> B0: "start" -> 1 -> 2 -> throw 2; -> 3
+	// ThrowTryFinallyStatement1 X-PECT allBranches --> B0: "start" -> 1 -> 2 -> throw 2; -> 3
 	/* ThrowTryFinallyStatement1 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|B2],
 		B1: [B0]3 -> throw 2; -> 2 -> 1 -> "start",
 		B2: [B0]"end" -> 3
 	--- */
-	// ThrowTryFinallyStatement1 XPECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3
-	/* ThrowTryFinallyStatement1 backward XPECT allPaths direction 'Backward' ---
+	// ThrowTryFinallyStatement1 X-PECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3
+	/* ThrowTryFinallyStatement1 backward X-PECT allPaths direction 'Backward' ---
 		"end" -> 3,
 		3 -> throw 2; -> 2 -> 1 -> "start"
 	--- */

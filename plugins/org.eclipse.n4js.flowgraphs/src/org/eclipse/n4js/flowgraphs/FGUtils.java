@@ -104,6 +104,7 @@ public class FGUtils {
 	/** @return true iff the given {@link ControlFlowElement} is a container such as a function's body. */
 	public static boolean isCFContainer(ControlFlowElement cfe) {
 		EObject cfeContainer = cfe.eContainer();
+		EObject cfeContainer2 = (cfeContainer == null) ? null : cfeContainer.eContainer();
 
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
@@ -122,6 +123,8 @@ public class FGUtils {
 		boolean containerIsExportDeclaration = cfeContainer instanceof ExportDeclaration;
 		boolean containerIsN4ClassDefinition = cfeContainer instanceof N4ClassDefinition;
 
+		boolean container2IsN4FieldDeclaration = cfeContainer2 instanceof N4FieldDeclaration;
+
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
 		isCFContainer |= isExpressionAnnotationList;
@@ -132,7 +135,7 @@ public class FGUtils {
 		isCFContainer |= isExpression && containerIsFormalParameter;
 		isCFContainer |= isExpression && containerIsFieldDeclaration;
 		isCFContainer |= isExpression && containerIsAnnotationArgument;
-		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName;
+		isCFContainer |= isExpression && containerIsLiteralOrComputedPropertyName && container2IsN4FieldDeclaration;
 		isCFContainer |= isExpression && containerIsN4ClassDefinition;
 		isCFContainer |= isExpression && containerIsExportSpecifier;
 		isCFContainer |= isExpression && containerIsExportDeclaration;

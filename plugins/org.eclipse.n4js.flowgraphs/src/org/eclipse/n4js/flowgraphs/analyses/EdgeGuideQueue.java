@@ -22,7 +22,6 @@ import java.util.Map;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
-import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -35,47 +34,48 @@ import com.google.common.collect.Lists;
  * new {@link EdgeGuide} which can then be removed.
  */
 public class EdgeGuideQueue {
-	private final EdgeGuideWorklist guideWorklist;
-	private final ArrayList<EdgeGuide> currEdgeGuides = new ArrayList<>();
+	private final EdgeGuideWorklist parent;
+	private final ArrayList<EdgeGuide> edgeGuideQueue = new ArrayList<>();
 
 	/** Constructor */
 	EdgeGuideQueue(EdgeGuideWorklist guideWorklist) {
-		this.guideWorklist = guideWorklist;
+		this.parent = guideWorklist;
 	}
 
 	/** Clears the queue */
 	void clear() {
-		currEdgeGuides.clear();
+		edgeGuideQueue.clear();
 	}
 
 	/** Adds an {@link EdgeGuide} to this queue */
 	void add(EdgeGuide edgeGuide) {
-		currEdgeGuides.add(edgeGuide);
-		Collections.sort(currEdgeGuides, this::compareForRemoveFirst);
+		edgeGuideQueue.add(edgeGuide);
+		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
 	}
 
 	/** Adds several {@link EdgeGuide}s to this queue */
 	void addAll(Collection<EdgeGuide> edgeGuides) {
-		currEdgeGuides.addAll(edgeGuides);
-		Collections.sort(currEdgeGuides, this::compareForRemoveFirst);
+		edgeGuideQueue.addAll(edgeGuides);
+		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
 	}
 
 	/** @return true iff this queue is empty */
 	boolean isEmpty() {
-		return currEdgeGuides.isEmpty();
+		return edgeGuideQueue.isEmpty();
 	}
 
 	/** @return and removes the head of this queue */
 	EdgeGuide removeFirst() {
-		return currEdgeGuides.remove(0);
+		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
+		return edgeGuideQueue.remove(0);
 	}
 
 	/** @return and removes the head of this queue */
 	LinkedList<EdgeGuide> removeFirstJoinGuide() {
 		LinkedList<EdgeGuide> guideGroup = new LinkedList<>();
-		Collections.sort(currEdgeGuides, this::compareForRemoveFirst);
+		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
 
-		for (Iterator<EdgeGuide> iter = currEdgeGuides.iterator(); iter.hasNext();) {
+		for (Iterator<EdgeGuide> iter = edgeGuideQueue.iterator(); iter.hasNext();) {
 			EdgeGuide eg = iter.next();
 			if (!guideGroup.isEmpty() && !isJoinGroup(guideGroup.getFirst(), eg)) {
 				break;
@@ -87,7 +87,7 @@ public class EdgeGuideQueue {
 		}
 
 		if (guideGroup.size() > 1) {
-			currEdgeGuides.remove(guideGroup.getFirst());
+			edgeGuideQueue.remove(guideGroup.getFirst());
 			return guideGroup;
 		}
 
@@ -96,15 +96,13 @@ public class EdgeGuideQueue {
 
 	/** @return an {@link Iterable} over all {@link EdgeGuide} in the queue */
 	Iterable<EdgeGuide> getIterator() {
-		return currEdgeGuides;
+		return edgeGuideQueue;
 	}
 
 	private boolean isJoinGroup(EdgeGuide eg1, EdgeGuide eg2) {
 		Node nextN1 = eg1.getNextNode();
 		Node nextN2 = eg2.getNextNode();
-		JumpToken pathContext1 = eg1.getEdge().finallyPathContext;
-		JumpToken pathContext2 = eg2.getEdge().finallyPathContext;
-		boolean isJoinGroup = nextN1 == nextN2 && pathContext1 == pathContext2;
+		boolean isJoinGroup = nextN1 == nextN2 && eg1.finallyContext.equals(eg2.finallyContext);
 		return isJoinGroup;
 	}
 
@@ -123,6 +121,7 @@ public class EdgeGuideQueue {
 				.compare(cfe1, cfe2, EdgeGuideQueue::compareDepth)
 				.compare(eg1, eg2, EdgeGuideQueue::compareInternalPosition)
 				.compare(e1, e2, this::compareVisited)
+				.compare(eg1, eg2, EdgeGuideQueue::compareDeadFlowContext)
 				.compare(cft1, cft2, EdgeGuideQueue::compareEdgeTypes)
 				.compare(eg1, eg2, EdgeGuideQueue::compareJoining)
 				.compare(nextNode1.hashCode(), nextNode2.hashCode())
@@ -147,8 +146,8 @@ public class EdgeGuideQueue {
 	}
 
 	private int compareVisited(ControlFlowEdge e1, ControlFlowEdge e2) {
-		boolean isVisited1 = guideWorklist.edgeVisited(e1);
-		boolean isVisited2 = guideWorklist.edgeVisited(e2);
+		boolean isVisited1 = parent.edgeVisited(e1);
+		boolean isVisited2 = parent.edgeVisited(e2);
 		if (isVisited1 == isVisited2) {
 			return 0;
 		}
@@ -179,6 +178,15 @@ public class EdgeGuideQueue {
 		}
 	}
 
+	private static int compareDeadFlowContext(EdgeGuide eg1, EdgeGuide eg2) {
+		DeadFlowContext dfc1 = eg1.deadContext;
+		DeadFlowContext dfc2 = eg2.deadContext;
+
+		if (dfc1.isForwardAndDeadInside() == dfc2.isForwardAndDeadInside())
+			return 0;
+		return dfc1.isForwardAndDeadInside() ? 1 : -1;
+	}
+
 	private static Map<ControlFlowType, Integer> cftOrderMap = new EnumMap<>(ControlFlowType.class);
 	static {
 		cftOrderMap.put(ControlFlowType.Successor, 10);
@@ -206,6 +214,11 @@ public class EdgeGuideQueue {
 			eObj = eObj.eContainer();
 		}
 		return i;
+	}
+
+	@Override
+	public String toString() {
+		return edgeGuideQueue.isEmpty() ? "empty" : edgeGuideQueue.toString();
 	}
 
 }

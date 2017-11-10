@@ -22,7 +22,6 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * control flow branches are joined.
  */
 public class EdgeGuideMerged extends EdgeGuide {
-	private boolean isDeadCode = true;
 
 	/**
 	 * The constructor will join all the given {@link EdgeGuide}s. The created instance reflects the joined state.
@@ -49,9 +48,9 @@ public class EdgeGuideMerged extends EdgeGuide {
 				joiningWalkers.add(bwi);
 			}
 
-			finallyBlockContexts.addAll(eg.finallyBlockContexts);
+			finallyContext.joinWith(eg.finallyContext);
 			edgeProvider.join(eg.edgeProvider);
-			isDeadCode &= eg.isDeadCode();
+			deadContext.joinWith(eg.deadContext);
 		}
 
 		branchWalkers.clear();
@@ -67,7 +66,7 @@ public class EdgeGuideMerged extends EdgeGuide {
 
 	@Override
 	List<EdgeGuide> getNextEdgeGuides() {
-		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), branchWalkers, finallyBlockContexts, isDeadCode);
+		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), branchWalkers, finallyContext, deadContext);
 		return edgeGuide.getNextEdgeGuides();
 	}
 
