@@ -82,8 +82,9 @@ class ReactHelper {
 			val String reactClassifierFQNSuffix = REACT_SCOPE_PREFIX + "." + reactClassifierName
 
 			var IEObjectDescription reactClassifierEObj = null
-			val allResDescs = index.allResourceDescriptions.filter[URI.trimFragment.toString.endsWith(REACT_DEFINITION_FILE)]
-			val iter = allResDescs.iterator
+			val allResDescs = index.allResourceDescriptions
+			val fileredResDescs = allResDescs.filter[URI.trimFragment.toString.contains("n4jsd")]
+			val iter = fileredResDescs.iterator
 			while (reactClassifierEObj === null && iter.hasNext) {
 				val resDesc = iter.next
 				val eobjDescs = resDesc.exportedObjects.filter[EObjectOrProxy instanceof TClassifier]

@@ -39,7 +39,7 @@ class N4JSXImportValidator extends N4JSImportValidator {
 	@Check
 	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
 		val module = importSpecifier.importedModule
-		if (module.projectId.equalsIgnoreCase(REACT_PROJECT_ID)) {
+		if (module !== null && REACT_PROJECT_ID.equalsIgnoreCase(module.projectId)) {
 			if (importSpecifier.alias != REACT_ALIAS) {
 						addIssue(
 							IssueCodes.getMessageForREACT_ALIAS_NOT_ALLOWED(),

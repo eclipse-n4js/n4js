@@ -256,24 +256,25 @@ class ModuleWrappingTransformation extends Transformation {
 
 				val module = state.info.getImportedModule(elementIM);
 
+				val isReactImport = JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)
+
 				// calculate names in output
 				val completeModuleSpecifier =
-					if (JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)) {
+					if (isReactImport) {
 						jsx.jsxBackendModuleSpecifier(module, state.resource)
 					} else {
 						module.completeModuleSpecifier
 					}
 
-				val fparName = if (JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)) {
+				val fparName = if (isReactImport) {
 						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
 					} else {
 						"$_import_"+module.completeModuleSpecifierAsIdentifier
 					}
 
-
-
 				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-				val actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
+
+				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
 					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
 						moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
 					} else {
@@ -282,6 +283,10 @@ class ModuleWrappingTransformation extends Transformation {
 				} else {
 					completeModuleSpecifier
 				};
+
+				if (isReactImport && !actualModuleSpecifier.startsWith('@@cjs')) {
+					actualModuleSpecifier = '@@cjs/' + actualModuleSpecifier;
+				}
 
 				var moduleEntry = map.get( completeModuleSpecifier )
 				if( moduleEntry === null ) {

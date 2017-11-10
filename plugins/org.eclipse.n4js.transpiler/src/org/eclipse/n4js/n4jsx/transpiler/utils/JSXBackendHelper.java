@@ -114,8 +114,7 @@ public final class JSXBackendHelper {
 			throw new RuntimeException(
 					"Cannot handle resource without containing project. Resource URI was: " + uri);
 		}
-		return ProjectUtils.formatDescriptor(optionalProject.get(),
-				module.getModuleSpecifier(), "-", ".", "/", false);
+		return ProjectUtils.formatDescriptor(optionalProject.get(), module.getModuleSpecifier(), "-", ".", "/", false);
 	}
 
 	/**
