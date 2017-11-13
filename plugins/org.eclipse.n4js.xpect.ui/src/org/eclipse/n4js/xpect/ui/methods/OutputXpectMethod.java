@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -36,13 +35,12 @@ import com.google.inject.Inject;
 /**
  * Provides execution output xpect test methods. Provided resource compiled on the fly and executed, captured output is
  * compared against provided expectations.
+ *
+ * <p>
+ * NOTE: this method is also used in non UI context - i.e. where Eclipse platform is not running.
  */
 @SuppressWarnings("restriction")
 public class OutputXpectMethod {
-
-	static {
-		EclipseGracefulUIShutdownEnabler.enableOnce();
-	}
 
 	/** {@link TestConfig Test configurations} used for output tests which do not specify a module loader. */
 	private final static TestConfig[] DEFAULT_CONFIGS = {
