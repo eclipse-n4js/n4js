@@ -58,7 +58,7 @@ pipeline {
                         'execute-swtbot-performance-tests',
                         'execute-accesscontrol-tests '
                     ].join(',')
-                    sh "${xvfb} mvn -U ${targets} -p${profiles} ${options}"
+                    sh "${xvfb} mvn -U ${targets} -P${profiles} ${options}"
                 }
             }
         }
