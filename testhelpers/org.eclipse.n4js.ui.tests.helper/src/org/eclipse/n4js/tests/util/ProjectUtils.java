@@ -348,7 +348,7 @@ public class ProjectUtils {
 				if (!foundJobs.isEmpty()) {
 					foundJob = true;
 					// Job.getJobManager().join(null, null);
-					Thread.sleep(100);
+					Thread.sleep(100L);
 				}
 				wasInterrupted = false;
 				end = System.currentTimeMillis();
