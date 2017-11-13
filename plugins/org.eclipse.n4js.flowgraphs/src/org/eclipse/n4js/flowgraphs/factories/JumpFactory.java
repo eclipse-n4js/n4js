@@ -71,18 +71,18 @@ class JumpFactory {
 	}
 
 	static ComplexNode buildComplexNode(Statement stmt, Expression expr, JumpToken jumptoken) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(stmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, stmt);
-		Node exitNode = new RepresentingNode(EXIT_NODE, stmt);
-		Node expression = null;
-
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, stmt);
 		cNode.addNode(entryNode);
 
+		Node expression = null;
 		if (expr != null) {
-			expression = new DelegatingNode("expression", stmt, expr);
+			expression = new DelegatingNode("expression", intPos++, stmt, expr);
 			cNode.addNode(expression);
 		}
+		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, stmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();

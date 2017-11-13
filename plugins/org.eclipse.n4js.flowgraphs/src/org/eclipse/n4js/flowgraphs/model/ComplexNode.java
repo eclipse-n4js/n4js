@@ -27,7 +27,8 @@ import org.eclipse.n4js.flowgraphs.factories.ListUtils;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Represents a complete {@link ControlFlowElement}. {@link ComplexNode} represent the control flow that a
+ * {@link ComplexNode}s are used only to create the internal graph. They represent a complete
+ * {@link ControlFlowElement}. {@link ComplexNode} hold information about the control flow that a
  * {@link ControlFlowElement} introduces. This is done using several {@link Node}s inside one {@link ComplexNode}. They
  * are connected to each other using {@link ControlFlowEdge}s. When two {@link ComplexNode}s are concatenated, the exit
  * {@link Node} of the first {@link ComplexNode} will be connected to the entry {@link Node} of the second

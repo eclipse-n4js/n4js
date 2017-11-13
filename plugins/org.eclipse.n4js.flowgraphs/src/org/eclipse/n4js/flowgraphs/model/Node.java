@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
@@ -25,18 +26,24 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Typically, several {@link Node}s are used to represent a {@link ControlFlowElement} within a {@link ComplexNode}.
  */
 abstract public class Node implements ControlFlowable {
+	static private int ID_COUNTER = 0;
+	/** The node id */
+	final public int id = ID_COUNTER++;
+	/** The {@link ControlFlowElement} this node refers to */
 	final private ControlFlowElement cfElem;
 	/** Name of the node */
 	final public String name;
+	/** The control flow position of this node in context of its {@link ComplexNode} */
+	final public int internalPosition;
 
 	/** Maps from a predecessor node to an {@link EdgeDescription} */
 	final public Map<Node, EdgeDescription> internalPred = new HashMap<>();
 	/** Maps from a successor node to an {@link EdgeDescription} */
 	final public Map<Node, EdgeDescription> internalSucc = new HashMap<>();
 	/** List of all preceding {@link ControlFlowEdge}s */
-	final public List<ControlFlowEdge> pred = new LinkedList<>();
+	final public TreeSet<ControlFlowEdge> pred = new TreeSet<>();
 	/** List of all succeeding {@link ControlFlowEdge}s */
-	final public List<ControlFlowEdge> succ = new LinkedList<>();
+	final public TreeSet<ControlFlowEdge> succ = new TreeSet<>();
 	/** List of all {@link DependencyEdge}s starting at this node */
 	final public List<DependencyEdge> startEdges = new LinkedList<>();
 	/** List of all {@link DependencyEdge}s ending at this node */
@@ -50,8 +57,9 @@ abstract public class Node implements ControlFlowable {
 	 * Constructor.<br/>
 	 * Creates a node with the given name and {@link ControlFlowElement}.
 	 */
-	public Node(String name, ControlFlowElement cfElem) {
+	public Node(String name, int internalPosition, ControlFlowElement cfElem) {
 		this.name = name;
+		this.internalPosition = internalPosition;
 		this.cfElem = cfElem;
 	}
 
@@ -144,12 +152,12 @@ abstract public class Node implements ControlFlowable {
 	}
 
 	/** @return set of all successor edges. */
-	public List<ControlFlowEdge> getSuccessorEdges() {
+	public Set<ControlFlowEdge> getSuccessorEdges() {
 		return succ;
 	}
 
 	/** @return set of all predecessor edges. */
-	public List<ControlFlowEdge> getPredecessorEdges() {
+	public Set<ControlFlowEdge> getPredecessorEdges() {
 		return pred;
 	}
 

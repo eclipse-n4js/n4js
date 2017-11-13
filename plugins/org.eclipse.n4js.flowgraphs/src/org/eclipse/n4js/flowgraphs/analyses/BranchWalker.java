@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
@@ -20,28 +21,37 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-/** see {@link PathWalkerInternal} */
-abstract public class PathWalker extends PathWalkerInternal {
-	ControlFlowElement pLastCFE;
+/** see {@link BranchWalkerInternal} */
+abstract public class BranchWalker extends BranchWalkerInternal {
+	private RepresentingNode lastRN;
 	Set<ControlFlowType> pEdgeTypes = new HashSet<>();
 
 	@Override
 	final protected void visit(Node node) {
 		if (node instanceof RepresentingNode) {
+			lastRN = (RepresentingNode) node;
 			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
-			if (pLastCFE != null) {
-				FlowEdge edge = new FlowEdge(pLastCFE, cfe, pEdgeTypes);
-				visit(edge);
-				pEdgeTypes.clear();
-			}
 			visit(cfe);
-			pLastCFE = cfe;
 		}
 	}
 
 	@Override
 	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
-		pEdgeTypes.add(edge.cfType);
+		if (lastRN == null && !getPathPredecessors().isEmpty()) {
+			for (BranchWalkerInternal bwi : getPathPredecessors()) {
+				bwi.callVisit(start, end, edge);
+			}
+		} else {
+			pEdgeTypes.add(edge.cfType);
+
+			if (lastRN != null && end instanceof RepresentingNode) {
+				ControlFlowElement startCFE = lastRN.getRepresentedControlFlowElement();
+				ControlFlowElement endCFE = end.getRepresentedControlFlowElement();
+				FlowEdge flowEdge = new FlowEdge(startCFE, endCFE, pEdgeTypes);
+				visit(flowEdge);
+				pEdgeTypes.clear();
+			}
+		}
 	}
 
 	/**
@@ -65,15 +75,31 @@ abstract public class PathWalker extends PathWalkerInternal {
 		// overwrite me
 	}
 
-	/** see {@link PathWalkerInternal#fork()} */
-	abstract protected PathWalker forkPath();
+	/** see {@link BranchWalkerInternal#fork()} */
+	abstract protected BranchWalker forkPath();
 
 	@Override
-	final protected PathWalker fork() {
-		PathWalker ap2 = forkPath();
-		ap2.pLastCFE = pLastCFE;
+	final protected BranchWalker fork() {
+		BranchWalker ap2 = forkPath();
+		ap2.lastRN = lastRN;
 		ap2.pEdgeTypes.addAll(pEdgeTypes);
 		return ap2;
+	}
+
+	/**
+	 * returns a list of {@link BranchWalkerInternal}s which proceed this instance.
+	 */
+	@SuppressWarnings("unchecked")
+	final public List<BranchWalker> getPredecessors() {
+		return (List<BranchWalker>) (List<?>) getPathPredecessors();
+	}
+
+	/**
+	 * returns a list of {@link BranchWalkerInternal}s which succeed this instance.
+	 */
+	@SuppressWarnings("unchecked")
+	final public List<BranchWalker> getSuccessors() {
+		return (List<BranchWalker>) (List<?>) getPathSuccessors();
 	}
 
 }

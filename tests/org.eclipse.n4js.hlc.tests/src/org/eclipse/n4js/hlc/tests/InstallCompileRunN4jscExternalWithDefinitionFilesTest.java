@@ -31,6 +31,9 @@ import org.junit.Test;
 public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN4jscExternalTest {
 	File workspace;
 
+	private static final String PROJECT_NAME_N4JS = "project.using.external.from.n4js";
+	private static final String PROJECT_NAME_N4JSX = "project.using.external.from.n4jsx";
+
 	/** Prepare workspace. */
 	@Before
 	public void setupWorkspace() throws IOException {
@@ -45,7 +48,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 
 	@Override
 	protected Map<String, String> getNpmDependencies() {
-		return singletonMap("express", "@4.13.4");
+		return singletonMap("express", "@4.15.3");
 	}
 
 	/**
@@ -55,7 +58,7 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 	@Test
 	public void testCompileAndRunWithExternalDependenciesAndDefinitionFiles() throws IOException, ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-		final String fileToRun = wsRoot + "/external.project/src/Main.n4js";
+		final String fileToRun = wsRoot + "/" + PROJECT_NAME_N4JS + "/src/Main.n4js";
 
 		final String[] args = {
 				"--systemLoader", COMMON_JS.getId(),
@@ -65,7 +68,8 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				"-r", fileToRun,
 				"--verbose",
 				"--projectlocations", wsRoot,
-				"-t", BuildType.allprojects.toString()
+				"-t", BuildType.projects.toString(),
+				wsRoot + "/" + PROJECT_NAME_N4JS
 		};
 		final String out = runCaptureOut(args);
 		N4CliHelper.assertExpectedOutput(
@@ -73,4 +77,34 @@ public class InstallCompileRunN4jscExternalWithDefinitionFilesTest extends BaseN
 				out);
 	}
 
+	/**
+	 * Same test as above, but with two changes:
+	 * <ol>
+	 * <li>importing the external dependency from an N4JSX file (instead of an N4JS file),
+	 * <li>using a target platform definition file and letting the 'n4jsc.jar' install the dependency.
+	 * </ol>
+	 */
+	@Test
+	public void testCompileAndRunWithExternalDependenciesAndDefinitionFilesFromN4JSX()
+			throws IOException, ExitCodeException {
+		final String wsRoot = workspace.getAbsolutePath().toString();
+		final String fileToRun = wsRoot + "/" + PROJECT_NAME_N4JSX + "/src/MainX.n4jsx";
+
+		final String[] args = {
+				"--systemLoader", COMMON_JS.getId(),
+				"--targetPlatformFile", wsRoot + "/targetplatform.n4tp",
+				"--targetPlatformInstallLocation", wsRoot + "/targetPlatformInstallLocation",
+				"-rw", "nodejs",
+				"-r", fileToRun,
+				"--verbose",
+				"--projectlocations", wsRoot,
+				"-t", BuildType.projects.toString(),
+				wsRoot + "/" + PROJECT_NAME_N4JSX
+		};
+
+		final String out = runCaptureOut(args);
+		N4CliHelper.assertExpectedOutput(
+				"express properties: init, defaultConfiguration, lazyrouter, handle, use, route, engine, param, set, path, enabled, disabled, enable, disable, acl, bind, checkout, connect, copy, delete, get, head, link, lock, m-search, merge, mkactivity, mkcalendar, mkcol, move, notify, options, patch, post, propfind, proppatch, purge, put, rebind, report, search, subscribe, trace, unbind, unlink, unlock, unsubscribe, all, del, render, listen",
+				out);
+	}
 }

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -62,8 +63,14 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
-		protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
-			List<ControlFlowEdge> nextEdges = nextNode.getSuccessorEdges();
+		protected Collection<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
+			Collection<ControlFlowEdge> nextEdges = nextNode.getSuccessorEdges();
+			return nextEdges;
+		}
+
+		@Override
+		protected Collection<ControlFlowEdge> getPlainPrevEdges(Node nextNode) {
+			Collection<ControlFlowEdge> nextEdges = nextNode.getPredecessorEdges();
 			return nextEdges;
 		}
 
@@ -103,8 +110,14 @@ abstract class NextEdgesProvider {
 		}
 
 		@Override
-		protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
-			List<ControlFlowEdge> nextEdges = nextNode.getPredecessorEdges();
+		protected Collection<ControlFlowEdge> getPlainNextEdges(Node nextNode) {
+			Collection<ControlFlowEdge> nextEdges = nextNode.getPredecessorEdges();
+			return nextEdges;
+		}
+
+		@Override
+		protected Collection<ControlFlowEdge> getPlainPrevEdges(Node nextNode) {
+			Collection<ControlFlowEdge> nextEdges = nextNode.getSuccessorEdges();
 			return nextEdges;
 		}
 
@@ -135,12 +148,26 @@ abstract class NextEdgesProvider {
 	 */
 	abstract protected Node getEndNode(ComplexNode cn);
 
+	/** @return the all unfiltered previous edges with regard to the traverse direction */
+	abstract protected Collection<ControlFlowEdge> getPlainPrevEdges(Node nextNode);
+
 	/** @return the all unfiltered next edges with regard to the traverse direction */
-	abstract protected List<ControlFlowEdge> getPlainNextEdges(Node nextNode);
+	abstract protected Collection<ControlFlowEdge> getPlainNextEdges(Node nextNode);
 
 	/** Resets the counter of traversed {@literal ControlFlowType.Repeat} edges. */
 	protected void reset() {
 		repeatEdges.clear();
+	}
+
+	protected void join(NextEdgesProvider edgesProvider) {
+		for (Map.Entry<ControlFlowEdge, Integer> repeatCounter : edgesProvider.repeatEdges.entrySet()) {
+			ControlFlowEdge rEdge = repeatCounter.getKey();
+			Integer countOther = repeatCounter.getValue();
+			int count = getOccurences(rEdge);
+			incrOccurence(rEdge);
+			int newCount = Math.min(count + countOther, 2);
+			repeatEdges.put(rEdge, newCount);
+		}
 	}
 
 	/**
@@ -154,9 +181,9 @@ abstract class NextEdgesProvider {
 	 * @return all following edges of the given node.
 	 */
 	protected List<ControlFlowEdge> getNextEdges(Node nextNode, ControlFlowType... cfTypes) {
-		List<ControlFlowEdge> nextEdges = getPlainNextEdges(nextNode);
-		nextEdges = filter(nextEdges, cfTypes);
-		return nextEdges;
+		Iterable<ControlFlowEdge> nextEdges = getPlainNextEdges(nextNode);
+		List<ControlFlowEdge> filteredEdges = filter(nextEdges, cfTypes);
+		return filteredEdges;
 	}
 
 	/**
@@ -165,7 +192,7 @@ abstract class NextEdgesProvider {
 	 * null nor empty.
 	 */
 	protected List<ControlFlowEdge> filter(Iterable<ControlFlowEdge> edges, ControlFlowType... cfTypes) {
-		List<ControlFlowEdge> filteredEdges = Lists.newLinkedList(edges);
+		List<ControlFlowEdge> filteredEdges = Lists.newLinkedList(edges); // copy of the original pred/succ list of Node
 		for (Iterator<ControlFlowEdge> edgeIt = filteredEdges.iterator(); edgeIt.hasNext();) {
 			ControlFlowEdge edge = edgeIt.next();
 
