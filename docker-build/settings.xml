@@ -6,7 +6,7 @@
   <mirrors>
     <mirror>
       <id>public</id>
-      <mirrorOf>*</mirrorOf>
+      <mirrorOf>central</mirrorOf>
       <url>http://dualstack.internal-lb-nexus-1985583365.eu-central-1.elb.amazonaws.com/nexus/content/groups/public</url>
     </mirror>
   </mirrors>
