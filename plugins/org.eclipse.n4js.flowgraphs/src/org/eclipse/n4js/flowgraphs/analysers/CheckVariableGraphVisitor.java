@@ -36,6 +36,12 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 	}
 
 	@Override
+	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+		// TODO Auto-generated method stub
+		super.initializeMode(curMode, curContainer);
+	}
+
+	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof VariableDeclaration) {
 			super.requestActivation(new CheckVariablePathExplorer((VariableDeclaration) cfe));

@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.ArrayBindingPattern;
@@ -43,15 +44,14 @@ import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
 import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
- * Provides function {@link #build(ControlFlowElement)} to create instances of {@link ComplexNode} for given
- * {@link ControlFlowElement}s.
+ * Provides function {@link #build(EObject)} to create instances of {@link ComplexNode} for given {@link EObject}s.
  */
 final public class CFEFactoryDispatcher {
 
 	/**
-	 * Builds a {@link ComplexNode} from a given {@link ControlFlowElement}
+	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
-	static public ComplexNode build(ControlFlowElement cfe) {
+	static public ComplexNode build(EObject cfe) {
 		ComplexNode cnx = new InternalFactoryDispatcherX().doSwitch(cfe);
 		if (cnx != null) {
 			return cnx;

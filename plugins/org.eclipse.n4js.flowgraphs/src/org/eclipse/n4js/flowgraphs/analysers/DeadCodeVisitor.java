@@ -72,7 +72,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 	 * @return true iff the given {@link ControlFlowElement} is dead code.
 	 */
 	public boolean isDeadCode(ControlFlowElement cfe) {
-		cfe = CFEMapper.map(cfe);
+		cfe = CFEMapper.mapCFE(cfe);
 
 		if (FGUtils.isControlStatement(cfe)) {
 			Set<ControlFlowElement> succs = flowAnalyzer.getSuccessors(cfe);

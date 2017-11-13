@@ -37,9 +37,12 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 
 	@Override
 	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
-		if (lastRN == null && !getPathPredecessors().isEmpty()) {
+		boolean delegateEdge = delegateEdgeToPredecessor();
+		if (delegateEdge) {
 			for (BranchWalkerInternal bwi : getPathPredecessors()) {
+				boolean isDeadTmp = isDeadCode();
 				bwi.callVisit(start, end, edge);
+				bwi.setDeadCode(isDeadTmp);
 			}
 		} else {
 			pEdgeTypes.add(edge.cfType);
@@ -52,6 +55,16 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 				pEdgeTypes.clear();
 			}
 		}
+	}
+
+	private boolean delegateEdgeToPredecessor() {
+		boolean firstEdge = lastRN == null;
+		boolean allPredsAreFinished = true;
+		for (BranchWalkerInternal bwi : getPathPredecessors()) {
+			BranchWalker bw = (BranchWalker) bwi;
+			allPredsAreFinished &= bw.pEdgeTypes.isEmpty();
+		}
+		return firstEdge && !allPredsAreFinished;
 	}
 
 	/**

@@ -19,11 +19,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Lists;
@@ -111,14 +109,12 @@ public class EdgeGuideQueue {
 		ControlFlowEdge e2 = eg2.getEdge();
 		Node nextNode1 = eg1.getNextNode();
 		Node nextNode2 = eg2.getNextNode();
-		ControlFlowElement cfe1 = nextNode1.getControlFlowElement();
-		ControlFlowElement cfe2 = nextNode2.getControlFlowElement();
 		ControlFlowType cft1 = e1.cfType;
 		ControlFlowType cft2 = e2.cfType;
 
 		return ComparisonChain.start()
 				.compare(eg1, eg2, EdgeGuideQueue::compareJoined)
-				.compare(cfe1, cfe2, EdgeGuideQueue::compareDepth)
+				.compare(nextNode1, nextNode2, EdgeGuideQueue::compareDepth)
 				.compare(eg1, eg2, EdgeGuideQueue::compareInternalPosition)
 				.compare(e1, e2, this::compareVisited)
 				.compare(eg1, eg2, EdgeGuideQueue::compareDeadFlowContext)
@@ -136,11 +132,9 @@ public class EdgeGuideQueue {
 		return eg1.isMerged() ? 1 : -1;
 	}
 
-	private static int compareDepth(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-		int d1 = getASTDepth(cfe1);
-		int d2 = getASTDepth(cfe2);
-		if (d1 != d2) {
-			return d2 - d1;
+	private static int compareDepth(Node n1, Node n2) {
+		if (n1.depth != n2.depth) {
+			return n2.depth - n1.depth;
 		}
 		return 0;
 	}
@@ -206,14 +200,6 @@ public class EdgeGuideQueue {
 			return 0;
 
 		return cftOrderMap.get(cft2) - cftOrderMap.get(cft1);
-	}
-
-	private static int getASTDepth(EObject eObj) {
-		int i;
-		for (i = 0; eObj != null; i++) {
-			eObj = eObj.eContainer();
-		}
-		return i;
 	}
 
 	@Override

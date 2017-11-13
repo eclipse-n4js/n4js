@@ -717,7 +717,6 @@ function ForStatementBreak1() {
 		1 --> 2,
 		2 -Repeat-> break;,
 		break; -Break-> "end",
-		3 --> 2,
 		2 -Exit-> "end"
 	--- */
 	/* ForStatementBreak1 XPECT allBranches ---

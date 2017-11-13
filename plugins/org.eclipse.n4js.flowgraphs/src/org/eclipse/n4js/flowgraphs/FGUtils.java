@@ -103,14 +103,17 @@ public class FGUtils {
 
 	/** @return true iff the given {@link ControlFlowElement} is a container such as a function's body. */
 	public static boolean isCFContainer(ControlFlowElement cfe) {
-		EObject cfeContainer = cfe.eContainer();
-		EObject cfeContainer2 = (cfeContainer == null) ? null : cfeContainer.eContainer();
-
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;
 		boolean isExpressionAnnotationList = cfe instanceof ExpressionAnnotationList;
 		boolean isBindingPattern = cfe instanceof BindingPattern;
+		if (!isScript && !isBlock && !isExpression && !isExpressionAnnotationList && !isBindingPattern) {
+			return false;
+		}
+
+		EObject cfeContainer = cfe.eContainer();
+		EObject cfeContainer2 = (cfeContainer == null) ? null : cfeContainer.eContainer();
 
 		boolean containerIsFunctionDeclaration = cfeContainer instanceof FunctionDeclaration;
 		boolean containerIsFunctionDefinition = cfeContainer instanceof FunctionDefinition;
@@ -196,5 +199,14 @@ public class FGUtils {
 			}
 		}
 		return null;
+	}
+
+	/** @return the AST depth of the given {@link EObject}. */
+	public static int getASTDepth(EObject eObj) {
+		int i;
+		for (i = 0; eObj != null; i++) {
+			eObj = eObj.eContainer();
+		}
+		return i;
 	}
 }

@@ -18,11 +18,10 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  *
  */
 abstract class DeadFlowContext {
-	boolean isDeadCode = false;
 
-	static DeadFlowContext create(NextEdgesProvider edgeProv, DeadFlowContext deadCtx, Node node) {
+	static DeadFlowContext create(DeadFlowContext deadCtx, NextEdgesProvider edgeProv, ControlFlowEdge edge) {
 		if (edgeProv.isForward()) {
-			return new DeadFlowContext.Forward(deadCtx, node);
+			return new DeadFlowContext.Forward(deadCtx, edgeProv, edge);
 		} else {
 			return new DeadFlowContext.Backward(deadCtx);
 		}
@@ -31,16 +30,16 @@ abstract class DeadFlowContext {
 	static class Forward extends DeadFlowContext {
 		private ControlFlowEdge switchEdge;
 
-		Forward(DeadFlowContext deadContext, Node node) {
-			follow(deadContext);
-			update(node);
+		Forward(DeadFlowContext deadContext, NextEdgesProvider edgeProv, ControlFlowEdge edge) {
+			if (deadContext != null) {
+				follow(deadContext);
+			}
+			update(edgeProv, edge);
 		}
 
 		@Override
 		void follow(DeadFlowContext deadContext) {
-			if (deadContext != null) {
-				switchEdge = ((Forward) deadContext).switchEdge;
-			}
+			switchEdge = ((Forward) deadContext).switchEdge;
 		}
 
 		@Override
@@ -69,12 +68,14 @@ abstract class DeadFlowContext {
 			return switchEdge != null;
 		}
 
+		@Override
+		boolean isDead() {
+			return switchEdge != null;
+		}
+
 		private void setDeadCode(Node nextNode) {
-			if (nextNode.isReachable()) {
-				isDeadCode = false;
-			} else {
-				isDeadCode = isDeadCode || switchEdge != null;
-				if (isDeadCode) {
+			if (!nextNode.isReachable()) {
+				if (isDead()) {
 					nextNode.setUnreachable();
 				} else {
 					nextNode.setReachable();
@@ -84,16 +85,17 @@ abstract class DeadFlowContext {
 	}
 
 	static class Backward extends DeadFlowContext {
+		boolean isDeadCode = false;
 
 		Backward(DeadFlowContext deadContext) {
-			follow(deadContext);
+			if (deadContext != null) {
+				follow(deadContext);
+			}
 		}
 
 		@Override
 		void follow(DeadFlowContext deadContext) {
-			if (deadContext != null) {
-				isDeadCode = deadContext.isDeadCode;
-			}
+			isDeadCode = deadContext.isDead();
 		}
 
 		@Override
@@ -117,6 +119,11 @@ abstract class DeadFlowContext {
 			return false;
 		}
 
+		@Override
+		boolean isDead() {
+			return isDeadCode;
+		}
+
 		private void setDeadCode(Node node) {
 			assert node.isVisited();
 			isDeadCode = node.isUnreachable();
@@ -133,9 +140,7 @@ abstract class DeadFlowContext {
 
 	abstract boolean isForwardDeadFlow();
 
-	boolean isDead() {
-		return isDeadCode;
-	}
+	abstract boolean isDead();
 
 	@Override
 	public String toString() {

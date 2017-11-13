@@ -15,52 +15,22 @@
 
 
 
-function DoStatementBreakLabel2() {
-	// XPECT allBranches -->
-	"start";
-	LBLa: do {
-		LBLb: do {
-			1;
-			break LBLa;
-		} while (3);
-	} while (4);
-	"end";
+
+// Script XPECT cfContainer of '"Script1"' --> Script
+// Script XPECT succs at '"Script1"' --> "Script2"
+// Script XPECT succs at '"Script2"' --> "Script3"
+// Script XPECT succs at '"Script3"' --> "Script4"
+// Script XPECT path from '"Script2"' notTo "FB1"
+"Script1";
+"Script2";
+
+
+function FunctionBody() {
+	// FunctionBody XPECT cfContainer of '"FB1"' --> FunctionDeclaration::Block
+	// FunctionBody XPECT succs at '"FB1"' --> "FB2"
+	"FB1";
+	"FB2";
 }
-
-
-
-
-
-function ThrowTryFinallyStatement1() {
-	/* ThrowTryFinallyStatement1 X-PECT allEdges ---
-		"start" --> 1,
-		1 --> 2,
-		2 --> throw 2;,
-		throw 2; -Throw-> 3
-	--- */
-	// ThrowTryFinallyStatement1 X-PECT allBranches --> B0: "start" -> 1 -> 2 -> throw 2; -> 3
-	/* ThrowTryFinallyStatement1 backward X-PECT allBranches direction 'Backward' ---
-		B0: [B1|B2],
-		B1: [B0]3 -> throw 2; -> 2 -> 1 -> "start",
-		B2: [B0]"end" -> 3
-	--- */
-	// ThrowTryFinallyStatement1 X-PECT allPaths --> "start" -> 1 -> 2 -> throw 2; -> 3
-	/* ThrowTryFinallyStatement1 backward X-PECT allPaths direction 'Backward' ---
-		"end" -> 3,
-		3 -> throw 2; -> 2 -> 1 -> "start"
-	--- */
-	"start";
-	try {
-		1;
-		throw 2;
-
-	} finally {
-		3;
-	}
-	// ThrowTryFinallyStatement1 X-PECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
-	"end";
-}
-
 
 
 

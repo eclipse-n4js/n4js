@@ -36,6 +36,7 @@ function FunctionBody() {
 	"FB2";
 }
 
+// Script XPECT cfContainer of '"Script3"' --> Script
 "Script3";
 
 class C {

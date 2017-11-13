@@ -77,7 +77,6 @@ function DoStatementBreak1() {
 	/* DoStatementBreak1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> break;,
-		2 --> 3,
 		3 -Repeat-> 1,
 		3 -Exit-> "end",
 		break; -Break-> "end"
@@ -127,7 +126,6 @@ function DoStatementContinue1() {
 		"start" --> 1,
 		1 --> continue;,
 		continue; -Continue-> 3,
-		2 --> 3,
 		3 -Repeat-> 1,
 		3 -Exit-> "end"
 	--- */
@@ -248,7 +246,6 @@ function WhileStatementBreak1() {
 		1 -Repeat-> 2,
 		2 --> break;,
 		break; -Break-> "end",
-		3 --> 1,
 		1 -Exit-> "end"
 	--- */
 	/* WhileStatementBreak1 XPECT allBranches ---
@@ -308,7 +305,6 @@ function WhileStatementContinue1() {
 		1 -Repeat-> 2,
 		2 --> continue;,
 		continue; -Continue-> 1,
-		3 --> 1,
 		1 -Exit-> "end"
 	--- */
 	/* WhileStatementContinue1 XPECT allBranches ---

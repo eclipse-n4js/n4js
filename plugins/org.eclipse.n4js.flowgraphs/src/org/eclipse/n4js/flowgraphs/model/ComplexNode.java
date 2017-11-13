@@ -46,6 +46,8 @@ public class ComplexNode implements ControlFlowable {
 	/** Constructor */
 	public ComplexNode(ControlFlowElement astElement) {
 		this.container = FGUtils.getCFContainer(astElement);
+		// assert CFEFactoryDispatcher.lastContainer == this.container;
+		// this.container = CFEFactoryDispatcher.lastContainer;
 		this.astElement = astElement;
 	}
 
@@ -149,12 +151,12 @@ public class ComplexNode implements ControlFlowable {
 
 	/** @return the control flow container. See {@link FGUtils#isCFContainer(ControlFlowElement)}. */
 	public ControlFlowElement getControlFlowContainer() {
-		return CFEMapper.map(container);
+		return CFEMapper.mapCFE(container);
 	}
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		return CFEMapper.map(astElement);
+		return CFEMapper.mapCFE(astElement);
 	}
 
 	/** @return all nodes */

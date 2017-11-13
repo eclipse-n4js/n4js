@@ -64,7 +64,7 @@ public class EdgeGuide {
 		this.edge = edge;
 		this.branchWalkers = activePaths;
 		this.finallyContext = new FinallyFlowContext(flowContext, edge);
-		this.deadContext = DeadFlowContext.create(edgeProvider, deadContext, getNextNode());
+		this.deadContext = DeadFlowContext.create(deadContext, edgeProvider, edge);
 		setBranchWalkersReachability();
 	}
 
@@ -154,11 +154,6 @@ public class EdgeGuide {
 
 	private void setBranchWalkersReachability() {
 		deadContext.update(edgeProvider, edge);
-		if (deadContext.isDead()) {
-			for (BranchWalkerInternal bw : branchWalkers) {
-				bw.setDeadCode();
-			}
-		}
 	}
 
 	private boolean isDeadAliveChange(ControlFlowEdge cfEdge) {

@@ -106,14 +106,11 @@ abstract public class BranchWalkerInternal {
 		initialize();
 	}
 
-	final void setDeadCode() {
-		isDeadCode = true;
-	}
-
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#visit(Node)}.
 	 */
 	final void callVisit(Node node) {
+		isDeadCode |= node.isUnreachable();
 		visit(node);
 	}
 
@@ -122,7 +119,12 @@ abstract public class BranchWalkerInternal {
 	 * {@link BranchWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
 	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
+		isDeadCode |= end.isUnreachable(); // no!
 		visit(lastVisitNode, end, edge);
+	}
+
+	final void setDeadCode(boolean isDead) {
+		this.isDeadCode = isDead;
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */

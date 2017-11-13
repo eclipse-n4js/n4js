@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -36,6 +37,8 @@ abstract public class Node implements ControlFlowable {
 	final public String name;
 	/** The control flow position of this node in context of its {@link ComplexNode} */
 	final public int internalPosition;
+	/** The AST depth of the {@link ControlFlowElement} */
+	final public int depth;
 
 	/** Maps from a predecessor node to an {@link EdgeDescription} */
 	final public Map<Node, EdgeDescription> internalPred = new HashMap<>();
@@ -71,6 +74,7 @@ abstract public class Node implements ControlFlowable {
 		this.name = name;
 		this.internalPosition = internalPosition;
 		this.cfElem = cfElem;
+		this.depth = FGUtils.getASTDepth(cfElem);
 	}
 
 	/** Returns the {@link ControlFlowElement} this node is delegating to. */
@@ -193,11 +197,13 @@ abstract public class Node implements ControlFlowable {
 		return !jumpToken.isEmpty();
 	}
 
+	/** Sets the reachability of this node to unreachable. Sets this node to be visited. */
 	public void setUnreachable() {
 		reachability = Reachability.Unreachable;
 		isVisited = true;
 	}
 
+	/** Sets the reachability of this node to reachable. Sets this node to be visited. */
 	public void setReachable() {
 		reachability = Reachability.Reachable;
 		isVisited = true;
@@ -220,7 +226,7 @@ abstract public class Node implements ControlFlowable {
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		return CFEMapper.map(cfElem);
+		return CFEMapper.mapCFE(cfElem);
 	}
 
 	@Override
