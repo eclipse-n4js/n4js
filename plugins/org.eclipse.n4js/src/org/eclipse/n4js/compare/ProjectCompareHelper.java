@@ -24,13 +24,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
-
-import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
-import com.google.inject.Inject;
-
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -64,6 +57,12 @@ import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.xsemantics.runtime.Result;
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xtext.resource.IResourceDescription;
+import org.eclipse.xtext.resource.IResourceDescriptions;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
 
 /**
  * Helper for comparing API and implementation projects to check if the implementation complies to the API. For more
@@ -300,6 +299,8 @@ public class ProjectCompareHelper {
 						IResourceDescriptions xtextIndex = n4jsCore.getXtextIndex(apiImplModule.eResource()
 								.getResourceSet());
 						IResourceDescription resourceDescription = xtextIndex.getResourceDescription(apiURI);
+						if (resourceDescription == null)
+							return null;
 						apiModule = n4jsCore.loadModuleFromIndex(apiImplModule.eResource().getResourceSet(),
 								resourceDescription, false);
 						if (apiModule != null)
