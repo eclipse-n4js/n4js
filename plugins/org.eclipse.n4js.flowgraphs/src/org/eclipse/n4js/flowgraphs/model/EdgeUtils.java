@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.FinallyBlock;
@@ -56,7 +56,7 @@ public class EdgeUtils {
 	}
 
 	/** Applies {@link #removeCF(ControlFlowEdge)} for every entry in succEdges */
-	public static void removeAllCF(List<ControlFlowEdge> succEdges) {
+	public static void removeAllCF(Collection<ControlFlowEdge> succEdges) {
 		for (ControlFlowEdge succEdge : succEdges) {
 			removeCF(succEdge);
 		}

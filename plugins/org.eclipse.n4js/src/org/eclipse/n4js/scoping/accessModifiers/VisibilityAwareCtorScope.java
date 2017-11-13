@@ -23,7 +23,7 @@ import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Scope used to check accessibility of constructor in new-expressions.

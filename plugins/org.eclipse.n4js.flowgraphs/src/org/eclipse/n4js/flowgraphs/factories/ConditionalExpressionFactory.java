@@ -27,13 +27,14 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
 class ConditionalExpressionFactory {
 
 	static ComplexNode buildComplexNode(ConditionalExpression condExpr) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(condExpr);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, condExpr);
-		Node exitNode = new RepresentingNode(EXIT_NODE, condExpr);
-		Node conditionNode = new DelegatingNode("condition", condExpr, condExpr.getExpression());
-		Node thenNode = new DelegatingNode("then", condExpr, condExpr.getTrueExpression());
-		Node elseNode = new DelegatingNode("else", condExpr, condExpr.getFalseExpression());
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, intPos++, condExpr);
+		Node conditionNode = new DelegatingNode("condition", intPos++, condExpr, condExpr.getExpression());
+		Node thenNode = new DelegatingNode("then", intPos++, condExpr, condExpr.getTrueExpression());
+		Node elseNode = new DelegatingNode("else", intPos++, condExpr, condExpr.getFalseExpression());
+		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, condExpr);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

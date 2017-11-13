@@ -27,17 +27,29 @@ import org.eclipse.n4js.n4JS.Script;
  * Stores information about all control flow graphs of one {@link Script}.
  */
 public class FlowGraph {
+	final private Script script;
 	final private TreeSet<ControlFlowElement> cfContainers;
 	final private TreeSet<Block> cfCatchBlocks;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 
 	/** Constructor. */
-	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, TreeSet<Block> cfCatchBlocks,
+	public FlowGraph(Script script, TreeSet<ControlFlowElement> cfContainers, TreeSet<Block> cfCatchBlocks,
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
+		this.script = script;
 		this.cfContainers = cfContainers;
 		this.cfCatchBlocks = cfCatchBlocks;
 		this.cnMap = cnMap;
+	}
+
+	/** @return the script of this {@link FlowGraph} */
+	public Script getScript() {
+		return script;
+	}
+
+	/** @return the URI String of the script of this {@link FlowGraph} */
+	public String getScriptName() {
+		return script.eResource().getURI().toString();
 	}
 
 	/** @return all {@link ComplexNode}s of the script. */

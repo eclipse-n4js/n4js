@@ -34,6 +34,7 @@ class StandardCFEFactory {
 	}
 
 	private static ComplexNode buildComplexNode(ControlFlowElement cfe, boolean isRepresenting) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();
@@ -44,12 +45,19 @@ class StandardCFEFactory {
 		}
 
 		HelperNode entryNode = null;
-		String exitNodeName = ENTRY_EXIT_NODE;
+		String extName = ENTRY_EXIT_NODE;
+		int extID = intPos++;
 		if (!argumentNodes.isEmpty()) {
-			entryNode = new HelperNode(ENTRY_NODE, cfe);
-			exitNodeName = EXIT_NODE;
+			entryNode = new HelperNode(ENTRY_NODE, intPos++, cfe);
+			extName = EXIT_NODE;
+			extID = argumentNodes.get(argumentNodes.size() - 1).id + 1;
 		}
-		Node exitNode = (isRepresenting) ? new RepresentingNode(exitNodeName, cfe) : new HelperNode(exitNodeName, cfe);
+		Node exitNode = null;
+		if (isRepresenting) {
+			exitNode = new RepresentingNode(extName, extID, cfe);
+		} else {
+			exitNode = new HelperNode(extName, extID, cfe);
+		}
 
 		cNode.addNode(entryNode);
 		for (Node arg : argumentNodes)

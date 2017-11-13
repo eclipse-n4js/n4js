@@ -263,7 +263,14 @@ public class N4jscBase implements IApplication {
 	private TesterRegistry testerRegistry;
 
 	@Inject
-	private FileBasedWorkspace fbWorkspace;
+	private FileBasedWorkspace n4jsFileBasedWorkspace;
+
+	// TODO IDE-2493 remove duplicated singletons
+	/**
+	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
+	 */
+	@Inject
+	private FileBasedWorkspace n4jsxFileBasedWorkspace;
 
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
@@ -934,7 +941,8 @@ public class N4jscBase implements IApplication {
 		// instances of singletons per language).
 		Injector n4jsxInjector = N4JSXStandaloneSetup.doSetupWithoutParentLanguages();
 		this.n4jsxFileExtensionsRegistry = n4jsxInjector.getInstance(FileExtensionsRegistry.class);
-
+		this.n4jsxFileBasedWorkspace = n4jsxInjector.getInstance(FileBasedWorkspace.class);
+		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 
 	/**
@@ -1114,8 +1122,7 @@ public class N4jscBase implements IApplication {
 					"Require option for projectlocations.");
 
 		HeadlessHelper.registerProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-				fbWorkspace);
-
+				n4jsFileBasedWorkspace, n4jsxFileBasedWorkspace);
 	}
 
 	/**

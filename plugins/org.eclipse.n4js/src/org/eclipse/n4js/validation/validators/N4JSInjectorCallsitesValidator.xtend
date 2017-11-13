@@ -27,7 +27,7 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.List
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar

@@ -10,10 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import org.eclipse.n4js.flowgraphs.FlowEdge;
+import java.util.List;
+
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -22,7 +23,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
  * Checks if all paths to a given a given node have a type constraint that is assignable from the given {@link TypeRef}.
@@ -40,86 +41,56 @@ public class TypeGuardVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfElem == cfe) {
 			super.requestActivation(new TypeGuardExplorer());
 		}
 	}
 
-	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		// nothing to do
-	}
-
-	class TypeGuardExplorer extends PathExplorer {
+	class TypeGuardExplorer extends GraphExplorer {
 
 		TypeGuardExplorer() {
-			super(Quantor.ForAllPaths);
+			super(Quantor.ForAllBranches);
 		}
 
 		@Override
-		protected TypeGuardWalker firstPathWalker() {
+		protected TypeGuardWalker firstBranchWalker() {
 			return new TypeGuardWalker();
 		}
 
-		class TypeGuardWalker extends PathWalker {
+		@Override
+		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
+			return new TypeGuardWalker();
+		}
 
-			@Override
-			protected void initialize() {
-				// nothing to do
-			}
+	}
 
-			@Override
-			protected void visit(ControlFlowElement cfe) {
-				if (cfe instanceof UnaryExpression) {
-					UnaryExpression ue = (UnaryExpression) cfe;
-					if (ue.getOp() == UnaryOperator.TYPEOF) {
-						Expression typeExpression = ue.getExpression();
-						RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeExpression);
-						TypeRef tRef = ts.type(G, ue).getFirst();
-						if (ts.subtypeSucceeded(G, reqTypeRef, tRef)) {
-							super.deactivate();
-						}
+	class TypeGuardWalker extends BranchWalker {
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			if (cfe instanceof UnaryExpression) {
+				UnaryExpression ue = (UnaryExpression) cfe;
+				if (ue.getOp() == UnaryOperator.TYPEOF) {
+					Expression typeExpression = ue.getExpression();
+					RuleEnvironment G = RuleEnvironmentExtensions.newRuleEnvironment(typeExpression);
+					TypeRef tRef = ts.type(G, ue).getFirst();
+					if (ts.subtypeSucceeded(G, reqTypeRef, tRef)) {
+						super.deactivate();
 					}
 				}
 			}
-
-			@Override
-			protected void visit(FlowEdge edge) {
-				// nothing to do
-			}
-
-			@Override
-			protected TypeGuardWalker forkPath() {
-				return new TypeGuardWalker();
-			}
-
-			@Override
-			protected void terminate() {
-				fail();
-			}
-
 		}
-	}
 
+		@Override
+		protected TypeGuardWalker forkPath() {
+			return new TypeGuardWalker();
+		}
+
+		@Override
+		protected void terminate() {
+			fail();
+		}
+
+	}
 }

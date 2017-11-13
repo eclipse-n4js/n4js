@@ -12,7 +12,7 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration
 import org.eclipse.n4js.n4JS.FormalParameter

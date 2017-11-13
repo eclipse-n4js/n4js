@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.typesystem;
 
-import it.xsemantics.runtime.StringRepresentation;
 import org.eclipse.n4js.ts.typeRefs.TypeArgument;
+import org.eclipse.xsemantics.runtime.StringRepresentation;
 
 /**
  */

@@ -11,8 +11,8 @@
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
-import it.xsemantics.runtime.RuleEnvironment
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
+import org.eclipse.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.util.ArrayList
 import java.util.Collections
 import java.util.Comparator

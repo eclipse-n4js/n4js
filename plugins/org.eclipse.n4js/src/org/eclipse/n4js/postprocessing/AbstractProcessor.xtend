@@ -12,9 +12,9 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.common.base.Throwables
 import com.google.inject.Inject
-import it.xsemantics.runtime.Result
-import it.xsemantics.runtime.RuleApplicationTrace
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.RuleApplicationTrace
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.function.BooleanSupplier
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.FunctionDefinition
