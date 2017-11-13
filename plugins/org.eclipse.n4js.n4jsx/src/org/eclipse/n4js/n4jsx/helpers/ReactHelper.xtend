@@ -40,9 +40,9 @@ class ReactHelper {
 	@Inject	protected N4JSTypeSystem ts
 	@Inject protected TypeSystemHelper tsh
 	@Inject	private IResourceScopeCache resourceScopeCacheHelper
-	@Inject IN4JSCore n4jscore;
+	@Inject IN4JSCore n4jscore
 
-	public final static String REACT_PROJECT_ID = "react";
+	public final static String REACT_PROJECT_ID = "react"
 	public final static String REACT_FILE_NAME = "index"
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"

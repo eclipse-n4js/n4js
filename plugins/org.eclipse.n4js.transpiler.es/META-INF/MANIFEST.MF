@@ -20,5 +20,5 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.n4jsx.model,
  org.eclipse.n4js.smith,
  org.eclipse.n4js.n4jsx,
- org.eclipse.n4js.external.libraries;bundle-version="0.0.1"
+ org.eclipse.n4js.external.libraries
 Export-Package: org.eclipse.n4js.transpiler.es
