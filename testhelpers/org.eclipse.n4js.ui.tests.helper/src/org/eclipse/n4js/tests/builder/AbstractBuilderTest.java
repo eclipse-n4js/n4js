@@ -27,6 +27,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -54,9 +55,14 @@ import com.google.inject.Injector;
 /**
  * @author Sven Efftinge - Initial contribution and API
  */
+@SuppressWarnings("restriction")
 @RunWith(XtextRunner.class)
 @InjectWith(N4JSUiInjectorProvider.class)
 public abstract class AbstractBuilderTest {
+
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
 
@@ -200,6 +206,7 @@ public abstract class AbstractBuilderTest {
 	/***/
 	public void waitForAutoBuild(boolean assertValidityOfXtextIndex) {
 		ProjectUtils.waitForAutoBuild();
+		ProjectUtils.waitForAllJobs();
 		if (assertValidityOfXtextIndex)
 			assertXtextIndexIsValid();
 	}
@@ -210,7 +217,6 @@ public abstract class AbstractBuilderTest {
 	}
 
 	/***/
-	@SuppressWarnings("restriction")
 	protected IWorkbenchPage getActivePage() {
 		IWorkbenchPage page = null;
 		if (org.eclipse.ui.internal.Workbench.getInstance() != null) {

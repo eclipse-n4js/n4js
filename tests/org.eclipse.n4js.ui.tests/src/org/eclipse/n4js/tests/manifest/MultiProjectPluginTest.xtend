@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4mf.ProjectType
 import org.eclipse.n4js.n4mf.SourceFragmentType
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
@@ -295,17 +294,6 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		Thread.sleep(TimeUnit.SECONDS.toMillis(5L));
 		assertTrue('External folder \'ext\' should be missing', extFolder.exists);
 		assertMarkers('Manifest file should have zero errors.', manifest, 0);
-	}
-	
-	override waitForAutoBuild(boolean assertValidityOfXtextIndex) {
-		IResourcesSetupUtil.waitForBuild
-		IResourcesSetupUtil.waitForBuild
-		IResourcesSetupUtil.waitForBuild
-		IResourcesSetupUtil.waitForBuild
-		IResourcesSetupUtil.waitForBuild
-		IResourcesSetupUtil.waitForBuild
-		if (assertValidityOfXtextIndex)
-			assertXtextIndexIsValid();
 	}
 
 }

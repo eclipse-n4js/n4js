@@ -12,6 +12,8 @@ package org.eclipse.n4js.tests.util;
 
 import static com.google.common.base.Predicates.alwaysTrue;
 import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.core.runtime.jobs.Job.getJobManager;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.addNature;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.monitor;
 import static org.eclipse.xtext.ui.testing.util.JavaProjectSetupUtil.createSimpleProject;
@@ -328,6 +330,45 @@ public class ProjectUtils {
 		if (!foundJob) {
 			LOGGER.warn("Update editor job hasn't been found, but maybe already run.");
 		}
+	}
+
+	/**
+	 * Waits for all the jobs that have status {@link Job#RUNNING} of {@link Job#WAITING}. Uses {@link Thread#sleep}, so
+	 * use with care.
+	 */
+	public static void waitForAllJobs() {
+		int maxWait = 100 * 60 * 2;
+		long start = System.currentTimeMillis();
+		long end = start;
+		boolean wasInterrupted = false;
+		boolean foundJob = false;
+		do {
+			try {
+				List<String> foundJobs = listJobsRunnuingWaiting();
+				if (!foundJobs.isEmpty()) {
+					foundJob = true;
+					// Job.getJobManager().join(null, null);
+					Thread.sleep(100);
+				}
+				wasInterrupted = false;
+				end = System.currentTimeMillis();
+			} catch (OperationCanceledException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				wasInterrupted = true;
+			}
+		} while (wasInterrupted && (end - start) < maxWait);
+		if (!foundJob) {
+			LOGGER.debug("No running nor waiting jobs found, maybe all have already finished.");
+			System.out.println("No running nor waiting jobs found, maybe all have already finished.");
+		}
+	}
+
+	private static List<String> listJobsRunnuingWaiting() {
+		return from(newArrayList(getJobManager().find(null)))
+				.filter(job -> job.getState() != Job.SLEEPING || job.getState() != Job.NONE)
+				.transform(job -> " - " + job.getName() + " : " + job.getState())
+				.toList();
 	}
 
 	/***/
