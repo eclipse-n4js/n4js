@@ -90,7 +90,6 @@ public final class JSXBackendHelper {
 	/** Checks if given import declaration looks like JSX backend import, e.g. "(...) from "react" */
 	public static boolean isJsxBackendImportDeclaration(ImportDeclaration declaration) {
 		return declaration.getImportSpecifiers().stream().anyMatch(specifier -> isJsxBackendImportSpecifier(specifier));
-		// return isJsxBackendModule(declaration.getModule());
 	}
 
 	/** Checks if given import specifier looks like JSX backend import, e.g. "import * as React from "react" */

@@ -15,7 +15,9 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -40,6 +42,7 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4jsx.helpers.ReactHelper
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -59,6 +62,8 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator
+import java.io.File
 
 /**
  * Module/Script wrapping transformation.
@@ -69,12 +74,14 @@ class ModuleWrappingTransformation extends Transformation {
 	JSXBackendHelper jsx;
 
 	@Inject
+	TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider
+
+	@Inject
 	extension QualifiedNameComputer qnameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -256,23 +263,23 @@ class ModuleWrappingTransformation extends Transformation {
 
 				val module = state.info.getImportedModule(elementIM);
 
-				val isReactImport = JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)
+				val isJSXBackendImport = JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)
 
 				// calculate names in output
 				val completeModuleSpecifier =
-					if (isReactImport) {
+					if (isJSXBackendImport) {
 						jsx.jsxBackendModuleSpecifier(module, state.resource)
 					} else {
 						module.completeModuleSpecifier
 					}
 
-				val fparName = if (isReactImport) {
+				val fparName = if (isJSXBackendImport) {
 						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
 					} else {
 						"$_import_"+module.completeModuleSpecifierAsIdentifier
 					}
 
-				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
+				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module, isJSXBackendImport);
 
 				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
 					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
@@ -284,17 +291,12 @@ class ModuleWrappingTransformation extends Transformation {
 					completeModuleSpecifier
 				};
 
-				if (isReactImport && !actualModuleSpecifier.startsWith('@@cjs')) {
-					actualModuleSpecifier = '@@cjs/' + actualModuleSpecifier;
-				}
-
 				var moduleEntry = map.get( completeModuleSpecifier )
 				if( moduleEntry === null ) {
 					moduleEntry = new ImportEntry(completeModuleSpecifier, actualModuleSpecifier, fparName, newArrayList(), elementIM)
 					map.put( completeModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
-
 
 				// local name : as used in Script
 				// actual name : exported name.
@@ -663,9 +665,15 @@ class ModuleWrappingTransformation extends Transformation {
 	}
 	
 	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
-	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
-		val resourceURI = module?.eResource?.URI;
-		if (resourceURI === null) return null;
+	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module, boolean isJSXBackendImport) {
+		var resourceURI = module?.eResource?.URI;
+		if (resourceURI === null) {
+			if (isJSXBackendImport) {
+				// Implicit JSX important
+				resourceURI = URI.createURI(targetPlatformInstallLocationProvider.getTargetPlatformInstallLocation + ExternalLibrariesActivator.NPM_CATEGORY + File.separator  + ReactHelper.REACT_DEFINITION_FILE)
+			}
+		}
+
 		val project = n4jsCore.findProject(resourceURI);
 		if (!project.present) return null;
 		val loader = project.get.getModuleLoader();

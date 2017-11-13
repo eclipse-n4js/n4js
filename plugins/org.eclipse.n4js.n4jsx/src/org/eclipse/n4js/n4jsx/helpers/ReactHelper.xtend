@@ -15,6 +15,7 @@ import java.io.File
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
+import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -22,11 +23,11 @@ import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.xtext.resource.IEObjectDescription
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -39,15 +40,24 @@ class ReactHelper {
 	@Inject	protected N4JSTypeSystem ts
 	@Inject protected TypeSystemHelper tsh
 	@Inject	private IResourceScopeCache resourceScopeCacheHelper
-	@Inject ResourceDescriptionsProvider resourceDescriptionsProvider
+	@Inject IN4JSCore n4jscore;
 
-	public final static String REACT_MODULE = "react"
-	public final static String REACT_SCOPE_PREFIX = "index"
+	public final static String REACT_PROJECT_ID = "react";
 	public final static String REACT_FILE_NAME = "index"
-	public final static String REACT_KEY = "KEY__" + REACT_MODULE
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"
-	public final static String REACT_DEFINITION_FILE = REACT_MODULE + File.separatorChar + REACT_FILE_NAME + "." + N4JSGlobals.N4JSD_FILE_EXTENSION
+
+	public final static String REACT_NAMESPACE = REACT_PROJECT_ID.toFirstUpper;
+	public final static String REACT_SCOPE_PREFIX = REACT_FILE_NAME
+	public final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
+	public final static String REACT_DEFINITION_FILE = REACT_PROJECT_ID + File.separatorChar + REACT_FILE_NAME + "." + N4JSGlobals.N4JSD_FILE_EXTENSION
+
+	/**
+	 * Check if a module is a React module.
+	 */
+	def public boolean isReactModule(TModule module) {
+		return (module !== null && REACT_PROJECT_ID.equals(module.projectId))
+	}
 
 	/**
 	 * Look up React.Element in the index.
@@ -78,7 +88,7 @@ class ReactHelper {
 	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, context.eResource, [
-			val index = resourceDescriptionsProvider.getResourceDescriptions(context.eResource)
+			val index = n4jscore.getXtextIndex(context.eResource.resourceSet)
 			val String reactClassifierFQNSuffix = REACT_SCOPE_PREFIX + "." + reactClassifierName
 
 			var IEObjectDescription reactClassifierEObj = null

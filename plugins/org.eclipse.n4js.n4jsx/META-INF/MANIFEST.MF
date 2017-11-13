@@ -43,4 +43,5 @@ Export-Package: org.eclipse.n4js.n4jsx,
  org.eclipse.n4js.n4jsx.parser.antlr.lexer,
  org.eclipse.n4js.n4jsx.serializer,
  org.eclipse.n4js.n4jsx.services,
- org.eclipse.n4js.n4jsx.validation
+ org.eclipse.n4js.n4jsx.validation,
+ org.eclipse.n4js.n4jsx.helpers

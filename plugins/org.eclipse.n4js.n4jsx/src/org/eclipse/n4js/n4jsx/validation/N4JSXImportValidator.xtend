@@ -10,7 +10,9 @@
  */
 package org.eclipse.n4js.n4jsx.validation
 
+import com.google.inject.Inject
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4jsx.helpers.ReactHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.validators.N4JSImportValidator
 import org.eclipse.xtext.validation.Check
@@ -23,9 +25,9 @@ import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
  */
 @Log
 class N4JSXImportValidator extends N4JSImportValidator {
-	private final String REACT_PROJECT_ID = "react"; 
-	private final String REACT_ALIAS = "React"; 
 
+	@Inject
+	private ReactHelper reactHelper;
 	/**
 	 * NEEEDED
 	 *
@@ -36,15 +38,15 @@ class N4JSXImportValidator extends N4JSImportValidator {
 		// nop
 	}
 
-	/** Make sure the alias to react module is React. */
+	/** Make sure the namespace to react module is React. */
 	@Check
 	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
 		val module = importSpecifier.importedModule
-		if (module !== null && REACT_PROJECT_ID.equalsIgnoreCase(module.projectId)) {
-			if (importSpecifier.alias != REACT_ALIAS) {
+		if (reactHelper.isReactModule(module)) {
+			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE) {
 						addIssue(
-							IssueCodes.getMessageForREACT_ALIAS_NOT_ALLOWED(),
-							importSpecifier, IssueCodes.REACT_ALIAS_NOT_ALLOWED);
+							IssueCodes.getMessageForREACT_NAMESPACE_NOT_ALLOWED(),
+							importSpecifier, IssueCodes.REACT_NAMESPACE_NOT_ALLOWED);
 			}
 		}
 	}

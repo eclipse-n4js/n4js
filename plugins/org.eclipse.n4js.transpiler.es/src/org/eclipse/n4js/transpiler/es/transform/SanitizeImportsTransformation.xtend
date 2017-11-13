@@ -17,6 +17,9 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
+import org.eclipse.n4js.n4mf.ModuleLoader
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -25,8 +28,6 @@ import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -82,6 +83,7 @@ class SanitizeImportsTransformation extends Transformation {
 		val jsxBackendsName = steFor_React
 		val iMod = _Module(jsx.jsxBackendModuleQualifiedName(state.resource))
 		iMod.n4jsdModule = true
+		iMod.moduleLoader = ModuleLoader.COMMONJS.getName()
 		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
 		val iDecl = _ImportDecl(iMod, iSpec);
 		insertBefore(state.im.scriptElements.get(0), iDecl);

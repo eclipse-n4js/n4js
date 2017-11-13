@@ -49,7 +49,7 @@ import org.junit.Test;
 import com.google.inject.Inject;
 
 /**
- * Test for checking the runtime behavior of the external libraries.
+ * Test for checking the runtime behavior of the React external library.
  */
 public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipantTest {
 
