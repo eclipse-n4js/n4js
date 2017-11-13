@@ -26,12 +26,13 @@ import org.eclipse.n4js.n4JS.WithStatement;
 class WithFactory {
 
 	static ComplexNode buildComplexNode(WithStatement withStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(withStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, withStmt);
-		Node expressionNode = new DelegatingNode("expression", withStmt, withStmt.getExpression());
-		Node statementNode = new DelegatingNode("statement", withStmt, withStmt.getStatement());
-		Node exitNode = new HelperNode(EXIT_NODE, withStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, withStmt);
+		Node expressionNode = new DelegatingNode("expression", intPos++, withStmt, withStmt.getExpression());
+		Node statementNode = new DelegatingNode("statement", intPos++, withStmt, withStmt.getStatement());
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, withStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(expressionNode);

@@ -32,30 +32,32 @@ class TryFactory {
 	static final String FINALLY_NODE_NAME = "finally";
 
 	static ComplexNode buildComplexNode(TryStatement tryStmt) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(tryStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, tryStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, tryStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, tryStmt);
 		Node tryNode = null;
 		Node catchNode = null;
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = new DelegatingNode("try", tryStmt, tryStmt.getBlock());
+			tryNode = new DelegatingNode("try", intPos++, tryStmt, tryStmt.getBlock());
 		}
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(ControlFlowType.Throw);
-			catchNode = new DelegatingNode(CATCH_NODE_NAME, tryStmt, catchClause.getBlock());
+			catchNode = new DelegatingNode(CATCH_NODE_NAME, intPos++, tryStmt, catchClause.getBlock());
 			catchNode.addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
 			CatchToken ct = new CatchToken(ControlFlowType.CatchesAll);
-			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, tryStmt, tryStmt.getFinally().getBlock());
+			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, intPos++, tryStmt, tryStmt.getFinally().getBlock());
 			finallyNode.addCatchToken(ct);
 		}
+
+		Node exitNode = new HelperNode(EXIT_NODE, intPos++, tryStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(tryNode);

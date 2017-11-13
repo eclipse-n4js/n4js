@@ -17,11 +17,13 @@ import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.core.runtime.ICoreRunnable
 import org.eclipse.core.runtime.NullProgressMonitor
 import org.eclipse.emf.common.util.URI
+import org.junit.Ignore
 import org.junit.Test
 
 /**
  * 
  */
+@Ignore("IDE-2896") // FIXME IDE-2896 re-enable this test!
 class CanLoadFromDescriptionPluginUITest extends AbstractCanLoadFromDescriptionTest {
 	/*
 	 * A1 -> B1 -> C -> D

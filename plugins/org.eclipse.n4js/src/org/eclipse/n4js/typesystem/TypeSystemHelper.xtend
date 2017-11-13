@@ -13,7 +13,7 @@ package org.eclipse.n4js.typesystem
 import com.google.common.collect.Iterables
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Arrays
 import java.util.LinkedList
 import java.util.List

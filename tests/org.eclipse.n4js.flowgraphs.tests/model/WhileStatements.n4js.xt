@@ -17,7 +17,7 @@
  * Note:
  *
  * Tests in this file seem similar and redundant but are necessary
- * since all test methods rely on different algorithms. To very these
+ * since all test methods rely on different algorithms. To verify these
  * algorithms it is important that all test methods are tested with
  * all supported language features.
  */
@@ -35,14 +35,26 @@ function DoStatement1() {
 		"start" --> 1,
 		1 --> 2,
 		2 -Repeat-> 1,
-		2 --> "end"
+		2 -Exit-> "end"
+	--- */
+	/* DoStatement1 XPECT allBranches ---
+		B0: "start" -> 1 -> 2[B1|B2],
+		B1: [B0] -> 1 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 1 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* DoStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2 -> 1[B1|B2], B1: [B0] -> "start", B2: [B0] -> 2 -> 1[B3|B4],
+		B3: [B2] -> "start", B4: [B2] -> 2 -> 1 -> "start"
 	--- */
 	/* DoStatement1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 1 -> 2 -> "end",
 		"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> 2 -> "end"
 	--- */
-	/* DoStatement1 XPECT allPaths direction 'Backward' ---
+	/* DoStatement1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> 1 -> "start",
 		"end" -> 2 -> 1 -> 2 -> 1 -> "start",
 		"end" -> 2 -> 1 -> 2 -> 1 -> 2 -> 1 -> "start"
@@ -71,11 +83,20 @@ function DoStatementBreak1() {
 		1 --> break;,
 		2 --> 3,
 		3 -Repeat-> 1,
-		3 --> "end",
+		3 -Exit-> "end",
 		break; -Break-> "end"
 	--- */
+	// DoStatementBreak1 XPECT allBranches --> B0: "start" -> 1 -> break; -> "end"
+	/* DoStatementBreak1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2],
+		B1: [B0] -> break; -> 1[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> "start",
+		B4: [B1] -> [B5],
+		B5: [B2|B4]3 -> 2
+	--- */
 	// DoStatementBreak1 XPECT allPaths --> "start" -> 1 -> break; -> "end"
-	/* DoStatementBreak1 XPECT allPaths direction 'Backward' ---
+	/* DoStatementBreak1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 3 -> 2,
 		"end" -> break; -> 1 -> "start",
 		"end" -> break; -> 1 -> 3 -> 2
@@ -114,14 +135,35 @@ function DoStatementContinue1() {
 		continue; -Continue-> 3,
 		2 --> 3,
 		3 -Repeat-> 1,
-		3 --> "end"
+		3 -Exit-> "end"
+	--- */
+	/* DoStatementContinue1 XPECT allBranches ---
+		B0: "start" -> 1 -> continue; -> 3[B1|B2],
+		B1: [B0] -> 1 -> continue; -> 3[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 1 -> continue; -> 3 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* DoStatementContinue1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 3[B1|B2],
+		B10: [B8] -> continue; -> 1 -> "start",
+		B1: [B0] -> 2,
+		B2: [B0] -> continue; -> 1[B3|B4],
+		B3: [B2] -> "start",
+		B4: [B2] -> 3[B5|B6],
+		B5: [B4] -> 2,
+		B6: [B4] -> continue; -> 1[B7|B8],
+		B7: [B6] -> "start",
+		B8: [B6] -> 3[B9|B10],
+		B9: [B8] -> 2
 	--- */
 	/* DoStatementContinue1 XPECT allPaths ---
 		"start" -> 1 -> continue; -> 3 -> "end",
 		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end",
 		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end"
 	--- */
-	/* DoStatementContinue1 XPECT allPaths direction 'Backward' ---
+	/* DoStatementContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 3 -> 2, "end" -> 3 -> continue; -> 1 -> "start",
 		"end" -> 3 -> continue; -> 1 -> 3 -> 2,
 		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> "start",
@@ -160,14 +202,31 @@ function WhileStatement1() {
 		"start" --> 1,
 		1 -Repeat-> 2,
 		2 --> 1,
-		1 --> "end"
+		1 -Exit-> "end"
+	--- */
+	/* WhileStatement1 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 2 -> 1[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 2 -> 1 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* WhileStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 1[B1|B2],
+		B1: [B0] -> "start",
+		B2: [B0] -> 2 -> 1[B3|B4],
+		B3: [B2] -> "start",
+		B4: [B2] -> 2 -> 1[B5|B6],
+		B5: [B4] -> "start",
+		B6: [B4] -> 2
 	--- */
 	/* WhileStatement1 XPECT allPaths ---
-	"start" -> 1 -> "end",
-	"start" -> 1 -> 2 -> 1 -> "end",
-	"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> "end"
+		"start" -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 -> "end",
+		"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> "end"
 	--- */
-	/* WhileStatement1 XPECT allPaths direction 'Backward' ---
+	/* WhileStatement1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "start",
 		"end" -> 1 -> 2 -> 1 -> "start",
 		"end" -> 1 -> 2 -> 1 -> 2 -> 1 -> "start",
@@ -200,13 +259,27 @@ function WhileStatementBreak1() {
 		2 --> break;,
 		break; -Break-> "end",
 		3 --> 1,
-		1 --> "end"
+		1 -Exit-> "end"
+	--- */
+	/* WhileStatementBreak1 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 2 -> break; -> [B3],
+		B2: [B0] -> [B3],
+		B3: [B1|B2]"end"
+	--- */
+	/* WhileStatementBreak1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2],
+		B1: [B0] -> break; -> 2 -> [B3],
+		B2: [B0] -> [B3],
+		B3: [B1|B2]1[B4|B5],
+		B4: [B3] -> "start",
+		B5: [B3] -> 3
 	--- */
 	/* WhileStatementBreak1 XPECT allPaths ---
-	"start" -> 1 -> "end",
-	"start" -> 1 -> 2 -> break; -> "end"
+		"start" -> 1 -> "end",
+		"start" -> 1 -> 2 -> break; -> "end"
 	--- */
-	/* WhileStatementBreak1 XPECT allPaths direction 'Backward' ---
+	/* WhileStatementBreak1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "start",
 		"end" -> 1 -> 3, "end" -> break; -> 2 -> 1 -> "start",
 		"end" -> break; -> 2 -> 1 -> 3
@@ -248,14 +321,34 @@ function WhileStatementContinue1() {
 		2 --> continue;,
 		continue; -Continue-> 1,
 		3 --> 1,
-		1 --> "end"
+		1 -Exit-> "end"
+	--- */
+	/* WhileStatementContinue1 XPECT allBranches ---
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 2 -> continue; -> 1[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> 2 -> continue; -> 1 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* WhileStatementContinue1 backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 1[B1|B2|B3],
+		B1: [B0] -> "start",
+		B2: [B0] -> 3,
+		B3: [B0] -> continue; -> 2 -> 1[B4|B5|B6],
+		B4: [B3] -> "start",
+		B5: [B3] -> 3,
+		B6: [B3] -> continue; -> 2 -> 1[B7|B8|B9],
+		B7: [B6] -> "start",
+		B8: [B6] -> 3,
+		B9: [B6] -> continue; -> 2
 	--- */
 	/* WhileStatementContinue1 XPECT allPaths ---
-	"start" -> 1 -> "end",
-	"start" -> 1 -> 2 -> continue; -> 1 -> "end",
-	"start" -> 1 -> 2 -> continue; -> 1 -> 2 -> continue; -> 1 -> "end"
+		"start" -> 1 -> "end",
+		"start" -> 1 -> 2 -> continue; -> 1 -> "end",
+		"start" -> 1 -> 2 -> continue; -> 1 -> 2 -> continue; -> 1 -> "end"
 	--- */
-	/* WhileStatementContinue1 XPECT allPaths direction 'Backward' ---
+	/* WhileStatementContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "start", "end" -> 1 -> 3,
 		"end" -> 1 -> continue; -> 2 -> 1 -> "start",
 		"end" -> 1 -> continue; -> 2 -> 1 -> 3,

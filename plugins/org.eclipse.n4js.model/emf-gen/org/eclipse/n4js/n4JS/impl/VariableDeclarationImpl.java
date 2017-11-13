@@ -37,14 +37,14 @@ import org.eclipse.n4js.n4JS.AnnotableElement;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.Variable;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
-import org.eclipse.n4js.n4JS.VariableStatement;
+import org.eclipse.n4js.n4JS.VariableDeclarationContainer;
 import org.eclipse.n4js.n4JS.VariableStatementKeyword;
 
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
@@ -321,19 +321,12 @@ public class VariableDeclarationImpl extends VariableDeclarationOrBindingImpl im
 	 * @generated
 	 */
 	public boolean isConst() {
-		EObject _eContainer = this.eContainer();
-		if ((_eContainer instanceof VariableStatement)) {
-			EObject _eContainer_1 = this.eContainer();
-			VariableStatementKeyword _varStmtKeyword = ((VariableStatement) _eContainer_1).getVarStmtKeyword();
-			return (_varStmtKeyword == VariableStatementKeyword.CONST);
+		final VariableDeclarationContainer varDeclContainer = N4JSASTUtils.getVariableDeclarationContainer(this);
+		VariableStatementKeyword _varStmtKeyword = null;
+		if (varDeclContainer!=null) {
+			_varStmtKeyword=varDeclContainer.getVarStmtKeyword();
 		}
-		EObject _eContainer_2 = this.eContainer();
-		if ((_eContainer_2 instanceof ForStatement)) {
-			EObject _eContainer_3 = this.eContainer();
-			VariableStatementKeyword _varStmtKeyword_1 = ((ForStatement) _eContainer_3).getVarStmtKeyword();
-			return (_varStmtKeyword_1 == VariableStatementKeyword.CONST);
-		}
-		return false;
+		return (_varStmtKeyword == VariableStatementKeyword.CONST);
 	}
 
 	/**

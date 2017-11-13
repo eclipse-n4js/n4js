@@ -22,8 +22,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
-import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.n4JS.Block;
@@ -187,6 +187,21 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/**
+	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
+	 * specified, the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
+
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> branchStrings = appw.getBranchStrings();
+
+		expectation.assertEquals(branchStrings);
+	}
+
+	/**
 	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
 	 * the first code element of the containing function.
 	 */
@@ -195,6 +210,15 @@ public class FlowgraphsXpectMethod {
 	public void allPaths(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
 
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> pathStrings = appw.getPathStrings();
+
+		expectation.assertEquals(pathStrings);
+	}
+
+	private AllBranchPrintVisitor performBranchAnalysis(IEObjectCoveringRegion offset, String directionName,
+			IEObjectCoveringRegion referenceOffset) {
+
 		EObjectCoveringRegion offsetImpl = (EObjectCoveringRegion) offset;
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
 		ControlFlowElement startCFE = getCFEWithReference(offsetImpl, referenceOffsetImpl);
@@ -202,11 +226,9 @@ public class FlowgraphsXpectMethod {
 		GraphVisitorInternal.Mode direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
-		AllPathPrintVisitor appw = new AllPathPrintVisitor(container, startCFE, direction);
+		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
 		getFlowAnalyzer(referenceCFE).accept(appw);
-		List<String> pathStrings = appw.getPathStrings();
-
-		expectation.assertEquals(pathStrings);
+		return appw;
 	}
 
 	private GraphVisitorInternal.Mode getDirection(String directionName) {

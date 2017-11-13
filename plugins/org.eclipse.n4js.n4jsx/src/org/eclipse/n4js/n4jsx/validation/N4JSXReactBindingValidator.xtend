@@ -31,7 +31,7 @@ import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
 import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute
 import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute
 import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage
-import it.xsemantics.runtime.Result
+import org.eclipse.xsemantics.runtime.Result
 import java.util.Arrays
 import java.util.List
 import org.eclipse.xtext.validation.Check

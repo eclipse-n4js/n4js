@@ -11,9 +11,9 @@
 package org.eclipse.n4js.xsemantics.validation;
 
 import com.google.inject.Inject;
-import it.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator;
 
 /**
  * N4JS Type System.
