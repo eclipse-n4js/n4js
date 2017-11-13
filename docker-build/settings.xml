@@ -3,4 +3,11 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
                               https://maven.apache.org/xsd/settings-1.0.0.xsd">
   <localRepository>/usr/share/maven/ref/repository</localRepository>
+  <mirrors>
+    <mirror>
+      <id>public</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://dualstack.internal-lb-nexus-1985583365.eu-central-1.elb.amazonaws.com/nexus/content/groups/public</url>
+    </mirror>
+  </mirrors>
 </settings>
