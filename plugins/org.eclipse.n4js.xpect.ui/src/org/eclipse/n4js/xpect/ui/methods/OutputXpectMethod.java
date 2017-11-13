@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
 import org.eclipse.xtext.resource.XtextResource;
@@ -38,6 +39,10 @@ import com.google.inject.Inject;
  */
 @SuppressWarnings("restriction")
 public class OutputXpectMethod {
+
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	/** {@link TestConfig Test configurations} used for output tests which do not specify a module loader. */
 	private final static TestConfig[] DEFAULT_CONFIGS = {

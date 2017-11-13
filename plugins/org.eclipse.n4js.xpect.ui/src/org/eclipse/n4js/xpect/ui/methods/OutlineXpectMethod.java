@@ -40,6 +40,7 @@ import com.google.inject.Provider;
 
 /**
  */
+// TODO xpect method should not extend abstract test
 public class OutlineXpectMethod extends AbstractOutlineWorkbenchTest {
 
 	@SuppressWarnings("javadoc")

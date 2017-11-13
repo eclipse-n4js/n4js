@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.jface.text.templates.TemplateProposal;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.config.Config;
@@ -64,6 +65,13 @@ import junit.framework.AssertionFailedError;
  */
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class })
 public class ProposalXpectMethod {
+
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
+
+	private static Logger logger = Logger.getLogger(ProposalXpectMethod.class);
+
 	@Inject
 	private IParser parser;
 
@@ -75,8 +83,6 @@ public class ProposalXpectMethod {
 
 	@Inject
 	private N4ContentAssistProcessorTestBuilderHelper n4ContentAssistProcessorTestBuilderHelper;
-
-	private static Logger logger = Logger.getLogger(ProposalXpectMethod.class);
 
 	/**
 	 * Iterates over all proposed completion entries at the given offset and checks whether its application would cause

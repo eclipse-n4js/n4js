@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.EditorsUtil;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -79,17 +80,22 @@ import com.google.inject.Inject;
 @XpectImport({ N4JSOffsetAdapter.class, XpEnvironmentData.class, VarDef.class, Config.class,
 		ValidationTestModuleSetup.class })
 public class QuickFixXpectMethod {
-	@Inject
-	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
 
-	@Inject
-	private IssueResolutionProvider quickfixProvider;
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	private static Logger logger = Logger.getLogger(QuickFixXpectMethod.class);
 
 	private static class ExecutionResult {
 		public String result;
 	}
+
+	@Inject
+	private XpectN4JSES5TranspilerHelper xpectN4JSES5TranpilerHelper;
+
+	@Inject
+	private IssueResolutionProvider quickfixProvider;
 
 	/*-
 	contentAssist kind 'smart' at 'a.<|>methodA'       display   'methodA2'            --> 'methodA2(): any - A'
