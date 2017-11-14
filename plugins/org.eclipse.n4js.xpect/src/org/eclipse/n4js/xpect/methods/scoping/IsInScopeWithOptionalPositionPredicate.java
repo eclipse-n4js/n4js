@@ -44,7 +44,6 @@ class IsInScopeWithOptionalPositionPredicate implements Predicate<String> {
 
 	@Override
 	public boolean apply(String nameWithPosition) {
-		// System.out.println(nameWithPosition);
 		String name = getNameFromNameWithPosition(nameWithPosition);
 		String position = getPositionFromNameWithPosition(nameWithPosition);
 		QualifiedName qualifiedName = converter.toQualifiedName(name);
