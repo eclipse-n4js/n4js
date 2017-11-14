@@ -25,7 +25,7 @@ pipeline {
                 artifactNumToKeepStr:  '15',
                 daysToKeepStr:         '30'))
         disableConcurrentBuilds()
-        timeout(time: 3, unit: 'HOURS')
+        timeout(time: 5, unit: 'HOURS')
         timestamps()
     }
     triggers {
