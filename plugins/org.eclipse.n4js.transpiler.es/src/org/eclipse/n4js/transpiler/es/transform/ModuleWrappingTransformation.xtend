@@ -15,9 +15,7 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
-import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -42,7 +40,6 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.n4jsx.helpers.ReactHelper
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -62,8 +59,6 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.external.libraries.ExternalLibrariesActivator
-import java.io.File
 
 /**
  * Module/Script wrapping transformation.
@@ -72,9 +67,6 @@ import java.io.File
 class ModuleWrappingTransformation extends Transformation {
 	@Inject
 	JSXBackendHelper jsx;
-
-	@Inject
-	TargetPlatformInstallLocationProvider targetPlatformInstallLocationProvider
 
 	@Inject
 	extension QualifiedNameComputer qnameComputer
@@ -279,7 +271,7 @@ class ModuleWrappingTransformation extends Transformation {
 						"$_import_"+module.completeModuleSpecifierAsIdentifier
 					}
 
-				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module, isJSXBackendImport);
+				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
 
 				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
 					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
@@ -663,17 +655,11 @@ class ModuleWrappingTransformation extends Transformation {
 	def private boolean isExported(SymbolTableEntry ste) {
 		return exportedSTEs.contains(ste);
 	}
-	
-	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
-	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module, boolean isJSXBackendImport) {
-		var resourceURI = module?.eResource?.URI;
-		if (resourceURI === null) {
-			if (isJSXBackendImport) {
-				// Implicit JSX important
-				resourceURI = URI.createURI(targetPlatformInstallLocationProvider.getTargetPlatformInstallLocation + ExternalLibrariesActivator.NPM_CATEGORY + File.separator  + ReactHelper.REACT_DEFINITION_FILE)
-			}
-		}
 
+	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
+	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
+		val resourceURI = module?.eResource?.URI;
+		if (resourceURI === null) return null;
 		val project = n4jsCore.findProject(resourceURI);
 		if (!project.present) return null;
 		val loader = project.get.getModuleLoader();

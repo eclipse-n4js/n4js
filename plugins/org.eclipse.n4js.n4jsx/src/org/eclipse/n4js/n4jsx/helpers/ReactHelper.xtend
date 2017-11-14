@@ -108,7 +108,7 @@ class ReactHelper {
 		val String key = REACT_KEY + "." + "TMODULE";
 		return resourceScopeCacheHelper.get(key, resource, [
 			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
-			val desc = scope.getSingleElement(QualifiedName.create("react"));
+			val desc = scope.getSingleElement(QualifiedName.create(REACT_PROJECT_ID));
 			val tModule = desc?.EObjectOrProxy as TModule;
 			return tModule;
 		]);

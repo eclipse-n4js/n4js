@@ -17,16 +17,14 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4jsx.helpers.ReactHelper
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
-import org.eclipse.n4js.n4mf.ModuleLoader
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
-import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.EcoreUtil2
 
@@ -43,6 +41,9 @@ class SanitizeImportsTransformation extends Transformation {
 
 	@Inject
 	JSXBackendHelper jsx;
+
+	@Inject
+	ReactHelper reactHelper;
 
 	override analyze() {
 	}
@@ -81,19 +82,12 @@ class SanitizeImportsTransformation extends Transformation {
 			return;
 
 		val jsxBackendsName = steFor_React
-		val iMod = _Module(jsx.jsxBackendModuleQualifiedName(state.resource))
-		iMod.n4jsdModule = true
-		iMod.moduleLoader = ModuleLoader.COMMONJS.getName()
+		// We lookup react's module using react helper.
+		val iMod = reactHelper.lookUpReactTModule(state.resource)
 		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
 		val iDecl = _ImportDecl(iMod, iSpec);
 		insertBefore(state.im.scriptElements.get(0), iDecl);
 		state.info.setImportedModule_internal(iDecl, iMod);
-	}
-
-	private static def TModule _Module(String qn) {
-		val result = TypesFactory.eINSTANCE.createTModule
-		result.qualifiedName = qn
-		return result;
 	}
 
 	/**
