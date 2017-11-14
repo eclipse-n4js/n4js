@@ -39,7 +39,7 @@ ENV MAVEN_OPTS   "-Xms1536m -Xmx2048M"
 COPY copy-reference-files.sh /usr/local/bin/
 COPY mvn-entrypoint.sh /usr/local/bin/
 COPY settings.xml /usr/share/maven/ref/
-RUN sed -i -e "s/MAVEN_CENTRAL_URL/$MAVEN_CENTRAL_URL/g" /usr/share/maven/ref/settings.xml && \
+RUN sed -i -e 's|MAVEN_CENTRAL_URL|'"$MAVEN_CENTRAL_URL"'|g' /usr/share/maven/ref/settings.xml && \
     /usr/local/bin/copy-reference-files.sh
 
 #
