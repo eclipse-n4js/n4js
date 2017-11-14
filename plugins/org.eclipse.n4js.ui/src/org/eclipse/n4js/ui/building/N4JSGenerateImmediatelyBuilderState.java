@@ -30,6 +30,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
+import org.eclipse.n4js.external.NoopExternalLibraryWorkspace;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
@@ -239,6 +240,9 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		N4JSResourceSetCleanerUtils.clearResourceSet(resourceSet);
 	}
 
+	// TODO IDE-2493 multiple languages topic
+	// this duplicates IN4JSCore logic, especially
+	// IN4JSCore#findAllProjects() with filtering by name
 	private IProject getProject(BuildData buildData) {
 		IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(buildData.getProjectName());
 		if (null == project || !project.isAccessible()) {
@@ -365,9 +369,28 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		}
 	}
 
+	// TODO IDE-2493 multiple languages topic
+	// Instead of asking concrete injector we should have
+	// language independent IN4JSCore instance injected
 	private ExternalLibraryWorkspace getExternalLibraryWorkspace() {
-		final Injector injector = N4JSActivator.getInstance().getInjector(ORG_ECLIPSE_N4JS_N4JS);
+
+		final Injector injector = getN4JSInjector();
+		if (injector == null)
+			return new NoopExternalLibraryWorkspace();
+
 		return injector.getInstance(ExternalLibraryWorkspace.class);
+	}
+
+	private Injector n4jsInjector = null;
+
+	private Injector getN4JSInjector() {
+		if (n4jsInjector != null) {
+
+			final N4JSActivator n4jsActivator = N4JSActivator.getInstance();
+			if (n4jsActivator != null)
+				n4jsInjector = n4jsActivator.getInjector(ORG_ECLIPSE_N4JS_N4JS);
+		}
+		return n4jsInjector;
 	}
 
 }
