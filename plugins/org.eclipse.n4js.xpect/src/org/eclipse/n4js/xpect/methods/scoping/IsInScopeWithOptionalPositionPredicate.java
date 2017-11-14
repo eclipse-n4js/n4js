@@ -15,6 +15,7 @@ import static org.eclipse.n4js.xpect.methods.scoping.EObjectDescriptionToNameWit
 import static org.eclipse.n4js.xpect.methods.scoping.EObjectDescriptionToNameWithPositionMapper.getPositionFromNameWithPosition;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -43,11 +44,12 @@ class IsInScopeWithOptionalPositionPredicate implements Predicate<String> {
 
 	@Override
 	public boolean apply(String nameWithPosition) {
+		// System.out.println(nameWithPosition);
 		String name = getNameFromNameWithPosition(nameWithPosition);
 		String position = getPositionFromNameWithPosition(nameWithPosition);
 		QualifiedName qualifiedName = converter.toQualifiedName(name);
 		IEObjectDescription desc = scope.getSingleElement(qualifiedName);
-		if (desc != null) {
+		if (desc != null && !(desc instanceof UnresolvableObjectDescription)) {
 			if (!Strings.isNullOrEmpty(position)) {
 				String nameWithPositionOfScopeELement = descriptionToNameWithPosition(currentURI, withLineNumber, desc);
 				String positionOfScopeElement = getPositionFromNameWithPosition(nameWithPositionOfScopeELement);

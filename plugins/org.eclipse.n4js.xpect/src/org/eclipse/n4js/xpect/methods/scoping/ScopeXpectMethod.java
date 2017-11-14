@@ -29,6 +29,8 @@ import org.xpect.runner.Xpect;
 import org.xpect.xtext.lib.tests.ScopingTest;
 import org.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Predicate;
 import com.google.inject.Inject;
 
 /**
@@ -91,9 +93,10 @@ public class ScopeXpectMethod extends ScopingTest {
 		EObject eobj = arg1.getEObject();
 		IScope scope = scopeProvider.getScope(eobj, arg1.getCrossEReference());
 		URI uri = eobj == null ? null : eobj.eResource() == null ? null : eobj.eResource().getURI();
-		expectation.assertEquals(new ScopeAllElements(scope), new IsInScopeWithOptionalPositionPredicate(converter,
-				uri, false,
-				scope));
+		Iterable<?> temp1 = new ScopeAllElements(scope);
+		System.out.println(Joiner.on("\n").join(temp1));
+		Predicate<String> temp2 = new IsInScopeWithOptionalPositionPredicate(converter, uri, false, scope);
+		expectation.assertEquals(temp1, temp2);
 	}
 
 	/**

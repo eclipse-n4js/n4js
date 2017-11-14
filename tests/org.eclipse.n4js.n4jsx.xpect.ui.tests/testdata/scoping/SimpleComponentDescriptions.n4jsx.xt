@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
 
 	Workspace {
-		JavaProject "N4JSXPECTTests" {
+		Project "N4JSXXpectTests" {
 			Folder "model" {
 				Folder "scoping" {
 					ThisFile {}
@@ -32,19 +32,19 @@
 export public let simpleSelfClosing = <div/>;
 
 
-/* XPECT scope at '<di|v'  ---
-jsxbackend.react.Component, jsxbackend.react.ComponentProps,
-jsxbackend.react.Element, jsxbackend.react.PropConstraint, jsxbackend.react.PropType,
-jsxbackend.react.PropTypes, jsxbackend.react.PureComponent, jsxbackend.react.cloneElement,
-jsxbackend.react.createElement, jsxbackend.react.isValidElement, jsxbackend.react.renderToStaticMarkup,
-jsxbackend.react.renderToString, null, number, parseFloat, parseInt, pathSelector, propertyIsEnumerable, propsA,
+/* XPECT scope at '<|div'  ---
+jsxbackend/react/Component, jsxbackend/react/ComponentProps,
+jsxbackend/react/Element, jsxbackend/react/PropConstraint, jsxbackend/react/PropType,
+jsxbackend/react/PropTypes, jsxbackend/react/PureComponent, jsxbackend/react/cloneElement,
+jsxbackend/react/createElement, jsxbackend/react/isValidElement, jsxbackend/react/renderToStaticMarkup,
+jsxbackend/react/renderToString, null, Number, parseFloat, parseInt, propertyIsEnumerable, propsA,
 propsB, ...
 --- */
 export public let simpleOpenClose = <div></div>
 
 let x = 42;
 export public let simpleNested =
-/* XPECT scope at 'pr|op1'  ---
+/* XPECT scope at '|prop1'  ---
 
 --- */
 		<div prop1 prop2='hello' prop3={x}>
