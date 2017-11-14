@@ -52,7 +52,6 @@ Contributors:
 		</profile>
 	</profiles>
 
-	<!-- central actions done for all sub-builds only once here. (inherited false) -->
 	<build>
 		<plugins>
 			<plugin>
@@ -60,8 +59,29 @@ Contributors:
 				<artifactId>maven-enforcer-plugin</artifactId>
 				<inherited>false</inherited>
 			</plugin>
-		</plugins>
+	    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.0.2</version>
+      </plugin>
+	  </plugins>
 	</build>
-	
-
+  <repositories>
+    <repository>
+      <id>central</id>
+      <url>http://repo1.maven.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <url>http://repo1.maven.org/maven2</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
 </project>
