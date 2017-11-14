@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSNotValidatingXpectPluginUITest
 
    Workspace {
-		JavaProject "N4JSXPECTTests" {
+		JavaProject "N4JSXpectTests" {
 			Folder "model" {
 				Folder "proposal" {
 					Folder "contentassist" {
