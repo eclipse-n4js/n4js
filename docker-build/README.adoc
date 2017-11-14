@@ -23,6 +23,7 @@ chances are high that adding more memory to the container will help.
 docker run                                    \
        -ti                                      \ # acquire interactive terminal
        --rm                                     \ # remove container when not needed anymore
+       -u `id -u`:`id -g`                         \ # use local user on the host to avoid file permission issues
        -v m2_repo:/root/.m2/repository          \ # create volume for .m2/repository (speeds up subsequent builds)
        -v $(pwd):/workspace                     \ # mount the project sources in /workspace
        n4js-build                               \ # name of the image from the previous step
