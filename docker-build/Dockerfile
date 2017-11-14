@@ -35,9 +35,10 @@ ENV MAVEN_HOME   /usr/share/maven
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 ENV MAVEN_OPTS   "-Xms1536m -Xmx2048M"
 
-COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
+COPY copy-reference-files.sh /usr/local/bin/
+COPY mvn-entrypoint.sh /usr/local/bin/
 COPY settings.xml /usr/share/maven/ref/
-RUN /usr/local/bin/mvn-entrypoint.sh
+RUN /usr/local/bin/copy-reference-files.sh
 
 #
 # The remaining part has been inspired by:
