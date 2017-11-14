@@ -44,7 +44,7 @@ export public let simpleOpenClose = <div></div>
 
 let x = 42;
 export public let simpleNested =
-/* XPECT scope at '|prop1'  ---
+/* XPECT scope at 'pr|op1'  ---
 
 --- */
 		<div prop1 prop2='hello' prop3={x}>
