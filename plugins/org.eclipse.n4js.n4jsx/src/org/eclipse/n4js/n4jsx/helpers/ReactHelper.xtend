@@ -13,9 +13,11 @@ package org.eclipse.n4js.n4jsx.helpers
 import com.google.inject.Inject
 import java.io.File
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
@@ -27,7 +29,8 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.xtext.resource.IEObjectDescription
+import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
@@ -40,7 +43,7 @@ class ReactHelper {
 	@Inject	protected N4JSTypeSystem ts
 	@Inject protected TypeSystemHelper tsh
 	@Inject	private IResourceScopeCache resourceScopeCacheHelper
-	@Inject IN4JSCore n4jscore
+	@Inject IScopeProvider scopeProvider;
 
 	public final static String REACT_PROJECT_ID = "react"
 	public final static String REACT_FILE_NAME = "index"
@@ -86,32 +89,29 @@ class ReactHelper {
 	 * @param reactClassifierName the name of React classifier.
 	 */
 	def private TClassifier lookUpReactClassifier(EObject context, String reactClassifierName) {
+		val resource = context.eResource;
 		val String key = REACT_KEY + "." + reactClassifierName;
-		return resourceScopeCacheHelper.get(key, context.eResource, [
-			val index = n4jscore.getXtextIndex(context.eResource.resourceSet)
-			val String reactClassifierFQNSuffix = REACT_SCOPE_PREFIX + "." + reactClassifierName
-
-			var IEObjectDescription reactClassifierEObj = null
-			val allResDescs = index.allResourceDescriptions
-			val fileredResDescs = allResDescs.filter[URI.trimFragment.toString.contains(REACT_DEFINITION_FILE)]
-			val iter = fileredResDescs.iterator
-			while (reactClassifierEObj === null && iter.hasNext) {
-				val resDesc = iter.next
-				val eobjDescs = resDesc.exportedObjects.filter[EObjectOrProxy instanceof TClassifier]
-				reactClassifierEObj = eobjDescs.findFirst[eobjDesc | eobjDesc.isReactClassifierDescription(reactClassifierFQNSuffix)]
+		return resourceScopeCacheHelper.get(key, resource, [
+			val tModule = lookUpReactTModule(resource);
+			if (tModule !== null) {
+				val tClassifier = tModule.topLevelTypes.filter(TClassifier).findFirst[name==reactClassifierName];
+				return tClassifier;
 			}
-
-			if (reactClassifierEObj !== null) {
-				val ret = context.eResource.resourceSet.getEObject(reactClassifierEObj.EObjectURI, true) as TClassifier
-				return ret;
-			}
-			// React definitions cannot be found
-			return null
-		])
+			return null;
+		]);
 	}
 
-	private def boolean isReactClassifierDescription(IEObjectDescription desc, String suffix) {
-		return desc.qualifiedName.toString.endsWith(suffix)
+	/**
+	 * Look up react's main TModule in the index.
+	 */
+	def public TModule lookUpReactTModule(Resource resource) {
+		val String key = REACT_KEY + "." + "TMODULE";
+		return resourceScopeCacheHelper.get(key, resource, [
+			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
+			val desc = scope.getSingleElement(QualifiedName.create("react"));
+			val tModule = desc?.EObjectOrProxy as TModule;
+			return tModule;
+		]);
 	}
 
 	/**
