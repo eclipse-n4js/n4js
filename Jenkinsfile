@@ -12,6 +12,8 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker-build/'
+            // Reuse repository.volume container if one exists, to speed up subsequent builds.
+            args '-v n4js-m2-repository:/usr/share/maven/ref/repository/'
         }
     }
     options {
@@ -28,6 +30,7 @@ pipeline {
     }
     triggers {
         pollSCM('H/5 * * * *') // every 5 minutes
+        cron   ('H   1 * * *') // Nightly build every day a 1am
     }
     stages {
         stage('build') {
@@ -35,19 +38,28 @@ pipeline {
                 sh "cat ~/.m2/settings.xml"
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                    def targets = 'clean install'
                     def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
-                    def profiles = 'buildProduct,execute-plugin-tests,execute-plugin-ui-tests '
+                    def profiles = [
+                        'buildProduct',
+                        'execute-plugin-tests',
+                        'execute-plugin-ui-tests'
+                    ].join(',')
 
-                    sh "${xvfb} mvn -U ${targets} -P${profiles} ${options}"
+                    sh "${xvfb} mvn -U clean install -P${profiles} ${options}"
                 }
             }
         }
         stage('long-running-tests') {
+            // Run in nightly build only
+            // There should be a better way, see issue
+            // https://issues.jenkins-ci.org/browse/JENKINS-41272
+            when {
+                branch 'master'
+                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
+            }
             steps {
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                    def targets = 'clean verify'
                     def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
                     def profiles = [
                         'buildProduct',
@@ -58,7 +70,8 @@ pipeline {
                         'execute-swtbot-performance-tests',
                         'execute-accesscontrol-tests '
                     ].join(',')
-                    sh "${xvfb} mvn -U ${targets} -P${profiles} ${options}"
+
+                    sh "${xvfb} mvn -U verify -P${profiles} ${options}"
                 }
             }
         }
