@@ -14,6 +14,7 @@ pipeline {
             dir 'docker-build/'
             // Reuse repository.volume container if one exists, to speed up subsequent builds.
             args '-v n4js-m2-repository:/usr/share/maven/ref/repository/'
+            additionalBuildArgs '--build-arg MAVEN_CENTRAL_URL=' + env.MAVEN_CENTRAL_URL
         }
     }
     options {

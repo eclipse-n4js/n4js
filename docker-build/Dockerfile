@@ -23,6 +23,7 @@ ARG MAVEN_VERSION=3.5.2
 ARG USER_HOME_DIR="/root"
 ARG SHA=707b1f6e390a65bde4af4cdaf2a24d45fc19a6ded00fff02e91626e3e42ceaff
 ARG BASE_URL=https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries
+ARG MAVEN_CENTRAL_URL=https://repo1.maven.org/maven2/
 
 RUN mkdir -p /usr/share/maven /usr/share/maven/ref && \
     curl -fsSL -o /tmp/apache-maven.tar.gz ${BASE_URL}/apache-maven-$MAVEN_VERSION-bin.tar.gz && \
@@ -38,7 +39,8 @@ ENV MAVEN_OPTS   "-Xms1536m -Xmx2048M"
 COPY copy-reference-files.sh /usr/local/bin/
 COPY mvn-entrypoint.sh /usr/local/bin/
 COPY settings.xml /usr/share/maven/ref/
-RUN /usr/local/bin/copy-reference-files.sh
+RUN sed -i -e "s/MAVEN_CENTRAL_URL/$MAVEN_CENTRAL_URL/g" /usr/share/maven/ref/settings.xml && \
+    /usr/local/bin/copy-reference-files.sh
 
 #
 # The remaining part has been inspired by:

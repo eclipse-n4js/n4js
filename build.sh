@@ -6,7 +6,7 @@
 #   ./build.sh mvn package ...
 
 # build docker image
-docker build -t n4js-build docker-build/
+docker build --build-arg MAVEN_CENTRAL_URL=$MAVEN_CENTRAL_URL -t n4js-build docker-build/
 
 # run the docker container
 docker run -ti --rm      \

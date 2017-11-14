@@ -7,7 +7,7 @@
     <mirror>
       <id>public</id>
       <mirrorOf>central</mirrorOf>
-      <url>http://dualstack.internal-lb-nexus-1985583365.eu-central-1.elb.amazonaws.com/nexus/content/groups/public</url>
+      <url>MAVEN_CENTRAL_URL</url>
     </mirror>
   </mirrors>
 </settings>
