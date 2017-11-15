@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.ui;
 
-import org.eclipse.n4js.ui.building.BuildScopeAwareParallelLoaderProvider;
 import org.eclipse.n4js.ui.building.BuilderStateLogger;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.N4JSBuildTypeTrackingBuilder;
@@ -21,17 +20,14 @@ import org.eclipse.n4js.ui.editor.PrevStateAwareDirtyStateManager;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.PersistedStateProvider;
-import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.XtextBuilder;
-import org.eclipse.xtext.builder.resourceloader.IResourceLoader;
 import org.eclipse.xtext.resource.clustering.IResourceClusteringPolicy;
 import org.eclipse.xtext.ui.editor.DirtyStateManager;
 import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
-import com.google.inject.name.Names;
 
 /**
  * Enables the dynamic clustering in the Xtext builder. As soon as the amount of available HEAP is smaller than a
@@ -52,9 +48,8 @@ public class N4JSClusteringBuilderConfiguration extends AbstractModule {
 		bind(PersistedStateProvider.class).to(ContributingResourceDescriptionPersister.class);
 		bind(IBuildLogger.class).annotatedWith(BuilderState.class).to(BuilderStateLogger.class);
 		bind(DirtyStateManager.class).to(PrevStateAwareDirtyStateManager.class);
-		bind(IResourceLoader.class).annotatedWith(
-				Names.named(ClusteringBuilderState.RESOURCELOADER_GLOBAL_INDEX)).toProvider(
-						new BuildScopeAwareParallelLoaderProvider());
+		// bind(IResourceLoader.class).annotatedWith(
+		// Names.named(ClusteringBuilderState.RESOURCELOADER_GLOBAL_INDEX)).toProvider(
+		// new BuildScopeAwareParallelLoaderProvider());
 	}
-
 }

@@ -13,17 +13,16 @@ package org.eclipse.n4js.ui.building;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.ui.N4JSClusteringBuilderConfiguration;
 import org.eclipse.xtext.resource.clustering.DynamicResourceClusteringPolicy;
 
 /**
  * Customized clustering policy that will at least process 100 resources per cluster. It also logs eagerly when the
- * clustersize is capped.
+ * cluster size is capped.
  */
 @SuppressWarnings("restriction")
 public class VerboseClusteringPolicy extends DynamicResourceClusteringPolicy {
 
-	private static final Logger LOGGER = Logger.getLogger(N4JSClusteringBuilderConfiguration.class);
+	private static final Logger LOGGER = Logger.getLogger(VerboseClusteringPolicy.class);
 
 	@Override
 	public boolean continueProcessing(ResourceSet resourceSet, URI next, int alreadyProcessed) {
