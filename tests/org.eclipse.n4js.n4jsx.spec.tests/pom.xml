@@ -14,7 +14,7 @@ Contributors:
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>org.eclipse.n4js.n4jsx.spec.tests</artifactId>
+	<artifactId>org.eclipse.n4js.n4jsx.spec.ui.tests</artifactId>
 	<packaging>eclipse-test-plugin</packaging>
 
 	<parent>

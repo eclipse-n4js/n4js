@@ -108,7 +108,7 @@ Contributors:
 
 		<!-- *************************************** n4jsx Tests -->
 		<module>org.eclipse.n4js.n4jsx.lang.tests</module>
-		<module>org.eclipse.n4js.n4jsx.spec.tests</module>
+		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.ui.tests</module>
 

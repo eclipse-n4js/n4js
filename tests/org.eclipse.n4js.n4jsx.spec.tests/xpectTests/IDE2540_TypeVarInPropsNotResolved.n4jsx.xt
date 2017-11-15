@@ -9,17 +9,25 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest
+/* XPECT_SETUP org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest
 
-	ResourceSet {
-		ThisFile {}
-		File "react/index.n4jsd" { from = "react/index.n4jsd" }
+   Workspace {
+		Project "N4JSXSpecTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "manifest.n4mf" { from="../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "react/index.n4jsd" }
+			File "manifest.n4mf" { from = "react/manifest.n4mf" }
+		}
 	}
 
 	END_SETUP
 */
 
-import * as React from "react/index";
+import * as React from "react";
 
 interface ~Props<ValueT> extends React.ComponentProps  {
     public value?: ValueT;

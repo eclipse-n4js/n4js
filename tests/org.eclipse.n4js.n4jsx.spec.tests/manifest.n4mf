@@ -10,7 +10,7 @@
  */
 
 // manifest used by projects in model
-ProjectId: N4JSXXPECTTests
+ProjectId: N4JSXSpecTest
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
 ProjectType: library
@@ -18,6 +18,10 @@ ProjectVersion: 0.0.1-SNAPSHOT
 Output: "src-gen"
 Sources {
 	source {
-		"xpectTests"
+		"src"
 	}
+}
+
+ProjectDependencies {
+    react
 }

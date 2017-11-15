@@ -12,15 +12,15 @@ Contributors:
 <?eclipse version="3.4"?>
 <plugin>
 	<extension point="org.xpect.testSuite">
-		<testSuite class="org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest" fileExtension="n4js" />
+		<testSuite class="org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest" fileExtension="n4js" />
 	</extension>
 	<extension point="org.xpect.testSuite">
-		<testSuite class="org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest" fileExtension="js" />
+		<testSuite class="org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest" fileExtension="js" />
 	</extension>
 	<extension point="org.xpect.testSuite">
-		<testSuite class="org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest" fileExtension="n4jsx" />
+		<testSuite class="org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest" fileExtension="n4jsx" />
 	</extension>
 	<extension point="org.xpect.testSuite">
-		<testSuite class="org.eclipse.n4js.n4jsx.spec.tests.N4JSXSpecTest" fileExtension="jsx" />
+		<testSuite class="org.eclipse.n4js.n4jsx.spec.ui.tests.N4JSXSpecPluginTest" fileExtension="jsx" />
 	</extension>
 </plugin>

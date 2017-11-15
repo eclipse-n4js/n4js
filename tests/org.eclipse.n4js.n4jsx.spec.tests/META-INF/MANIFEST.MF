@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.eclipse.n4js.n4jsx.spec.tests;singleton:=true
+Bundle-SymbolicName: org.eclipse.n4js.n4jsx.spec.ui.tests;singleton:=true
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
@@ -26,4 +26,5 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.regex.ui,
  org.eclipse.n4js.ts.ui,
  org.eclipse.n4js.xpect,
- org.eclipse.n4js.xpect.ui
+ org.eclipse.n4js.xpect.ui,
+ org.eclipse.n4js.n4jsx;bundle-version="0.0.1"
