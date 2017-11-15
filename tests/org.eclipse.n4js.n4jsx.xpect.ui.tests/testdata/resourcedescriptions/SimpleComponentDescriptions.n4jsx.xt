@@ -17,13 +17,12 @@
 				Folder "resourcedescriptions" {
 					ThisFile {}
 				}
-				Folder "jsxbackend" {
-					Folder "react" {
-						File "index.n4jsd" { from = "../../react/index.n4jsd" }
-					}
-				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react/index.n4jsd" }
+			File "manifest.n4mf" { from = "../../react/manifest.n4mf" }
 		}
 	}
 
