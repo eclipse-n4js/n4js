@@ -22,8 +22,8 @@ public class HelperNode extends Node {
 	/**
 	 * Constructor
 	 */
-	public HelperNode(String name, ControlFlowElement cfe) {
-		super(name, cfe);
+	public HelperNode(String name, int internalPosition, ControlFlowElement cfe) {
+		super(name, internalPosition, cfe);
 	}
 
 	@Override

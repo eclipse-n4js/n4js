@@ -79,9 +79,9 @@ import org.eclipse.n4js.ts.types.TGetter;
 import org.eclipse.n4js.ts.types.TSetter;
 import org.eclipse.n4js.ts.types.TVariable;
 import org.eclipse.n4js.ts.types.Type;
-import it.xsemantics.runtime.RuleApplicationTrace;
-import it.xsemantics.runtime.RuleEnvironment;
-import it.xsemantics.runtime.internal.PatchedPolymorphicDispatcher;
+import org.eclipse.xsemantics.runtime.RuleApplicationTrace;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.internal.PatchedPolymorphicDispatcher;
 
 /**
  * This class is solely used to analyze and demonstrate a bug in Xtext's PolymorphicDispatcher.

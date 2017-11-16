@@ -44,14 +44,13 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.n4js.typesystem.TypeSystemHelper;
 import org.eclipse.n4js.utils.CharDiscreteDomain;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.ContiguousSet;
 import com.google.common.collect.Range;
-
-import it.xsemantics.runtime.RuleEnvironment;
 
 /**
  * An inference context maintains a set of inference variables together with a set of {@link TypeConstraint constraints}

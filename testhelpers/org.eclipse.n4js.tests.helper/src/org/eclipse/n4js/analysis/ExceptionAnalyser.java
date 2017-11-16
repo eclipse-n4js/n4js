@@ -33,9 +33,9 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
-import it.xsemantics.runtime.RuleFailedException;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.RuleFailedException;
 
 /**
  * Used in smoke tests to check that no exception have been thrown. Issued errors and warning are ignored.
