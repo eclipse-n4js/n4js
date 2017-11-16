@@ -12,7 +12,13 @@ Contributors:
 <?eclipse version="3.0"?>
 
 <plugin>
-
+	<extension
+         point="org.eclipse.n4js.ui.composedgenerator">
+      <generator
+            class="org.eclipse.n4js.n4jsx.ui.N4JSXExecutableExtensionFactory:org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator">
+      </generator>
+   </extension>
+   
     <extension
             point="org.eclipse.ui.editors">
         <editor

@@ -199,7 +199,6 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 				// generator.doGenerate(resource, access);
 				Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 				for (IComposedGenerator composedGenerator : composedGenerators) {
-					injector.injectMembers(composedGenerator);
 					composedGenerator.doGenerate(resource, access);
 				}
 			} catch (RuntimeException e) {

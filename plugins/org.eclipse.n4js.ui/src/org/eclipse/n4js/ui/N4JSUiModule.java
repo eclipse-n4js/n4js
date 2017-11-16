@@ -24,6 +24,8 @@ import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -162,6 +164,13 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 		super(plugin);
 		// get the logging initialized for UI presentation:
 		N4jsUiLoggingInitializer.init();
+	}
+
+	/**
+	 * Bind composed generator.
+	 */
+	public Class<? extends IComposedGenerator> bindIComposedGenerator() {
+		return N4JSCompositeGenerator.class;
 	}
 
 	/**

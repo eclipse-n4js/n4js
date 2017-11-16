@@ -21,6 +21,12 @@ Contributors:
   A specialized Types representation is registered for n4ts files that are loaded
   with the built-in scheme, e.g. 'n4scheme:/global.n4ts'
 -->
+	<extension
+         point="org.eclipse.n4js.ui.composedgenerator">
+      <generator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.generator.N4JSCompositeGenerator">
+      </generator>
+   </extension>
 
 	<extension
          point="org.eclipse.ui.newWizards">

@@ -55,8 +55,6 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 		private void intializeBuilderPreferences(IPreferenceStore store) {
 			Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 			for (IComposedGenerator composedGenerator : composedGenerators) {
-				injector.injectMembers(composedGenerator);
-
 				for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 					for (CompilerProperties prop : CompilerProperties.values()) {
 						if (prop.getType() == Boolean.class) {

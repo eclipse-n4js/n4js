@@ -11,23 +11,27 @@
 package org.eclipse.n4js.n4jsx.generator;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
-import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.generator.common.CompilerDescriptor;
+import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.common.ISubGenerator;
 import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.xtext.generator.IFileSystemAccess;
 
 import com.google.inject.Inject;
 
 /**
  * N4JSX composite generator.
  */
-public class N4JSXCompositeGenerator extends N4JSCompositeGenerator {
+public class N4JSXCompositeGenerator implements IComposedGenerator {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSXCompositeGenerator.class);
 
@@ -64,5 +68,29 @@ public class N4JSXCompositeGenerator extends N4JSCompositeGenerator {
 	public Collection<ISubGenerator> getSubGenerators() {
 		// Ask the global generator registry and filter generators that are applicable to N4JS language.
 		return subgeneratorRegistry.getGenerators(N4JSGlobals.N4JSX_FILE_EXTENSION);
+	}
+
+	@Override
+	public void doGenerate(Resource input, IFileSystemAccess fsa) {
+		if (isApplicableTo(input)) {
+			// Delegate to subgenerators only when the composite generator is applicable to the resource
+			for (ISubGenerator subgenerator : getSubGenerators()) {
+				subgenerator.doGenerate(input, fsa);
+			}
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.eclipse.n4js.generator.IComposedGenerator#getCompilerDescriptors()
+	 */
+	@Override
+	public Set<CompilerDescriptor> getCompilerDescriptors() {
+		Set<CompilerDescriptor> descriptors = new HashSet<>();
+		getSubGenerators().stream().forEachOrdered(subGenerator -> {
+			descriptors.add(subGenerator.getCompilerDescriptor());
+		});
+		return descriptors;
 	}
 }

@@ -28,6 +28,7 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace
 import org.eclipse.n4js.external.GitCloneSupplier
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider
+import org.eclipse.n4js.generator.common.IComposedGenerator
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport
 import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport
 import org.eclipse.n4js.n4jsx.ui.contentassist.ContentAssistContextFactory
@@ -146,6 +147,7 @@ import org.eclipse.xtext.ui.resource.DefaultResourceUIServiceProvider
 import org.eclipse.xtext.ui.shared.Access
 import org.eclipse.xtext.ui.util.IssueUtil
 import org.eclipse.xtext.validation.IResourceValidator
+import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -642,5 +644,12 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	override void configureXtextEditorErrorTickUpdater(Binder binder) {
 		binder.bind(IXtextEditorCallback).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
 				N4JSEditorErrorTickUpdater);
+	}
+
+	/**
+	 * Bind composed generator for N4JSX.
+	 */
+	def Class<? extends IComposedGenerator> bindIComposedGenerator() {
+		return N4JSXCompositeGenerator;
 	}
 }
