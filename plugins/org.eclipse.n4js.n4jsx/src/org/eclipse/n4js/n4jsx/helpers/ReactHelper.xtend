@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
+import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -109,7 +110,8 @@ class ReactHelper {
 		return resourceScopeCacheHelper.get(key, resource, [
 			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
 			val desc = scope.getSingleElement(QualifiedName.create(REACT_PROJECT_ID));
-			val tModule = desc?.EObjectOrProxy as TModule;
+			var tModule = desc?.EObjectOrProxy as TModule;
+			tModule = EcoreUtil2.resolve(tModule, resource) as TModule;
 			return tModule;
 		]);
 	}
