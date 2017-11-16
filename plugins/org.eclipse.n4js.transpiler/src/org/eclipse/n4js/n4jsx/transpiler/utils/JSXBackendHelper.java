@@ -28,11 +28,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.n4jsx.helpers.ReactHelper;
 import org.eclipse.n4js.naming.ModuleNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.transpiler.InformationRegistry;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.XtextUtilN4;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -72,6 +73,9 @@ public final class JSXBackendHelper {
 	@Inject
 	XtextUtilN4 xtextUtil;
 
+	@Inject
+	ReactHelper reactHelper;
+
 	/** @return name of the JSX backend module file name, i.e. "index" */
 	public String getBackendReactModuleFileName() {
 		return JSX_REACT_MODULE_FILE_NAME;
@@ -87,18 +91,20 @@ public final class JSXBackendHelper {
 		return JSX_BACKEND_ELEMENT_FACTORY_NAME;
 	}
 
+	/** Checks if given module looks like JSX backend module, e.g. "react" */
+	public boolean isJsxBackendModule(TModule module) {
+		return reactHelper.isReactModule(module);
+	}
+
 	/** Checks if given import declaration looks like JSX backend import, e.g. "(...) from "react" */
-	public static boolean isJsxBackendImportDeclaration(ImportDeclaration declaration) {
-		return declaration.getImportSpecifiers().stream().anyMatch(specifier -> isJsxBackendImportSpecifier(specifier));
+	public boolean isJsxBackendImportDeclaration(ImportDeclaration declaration, InformationRegistry info) {
+		// 'false' here means: we turn off checking intermediate model element.
+		return isJsxBackendModule(info.getImportedModule(declaration, false));
 	}
 
 	/** Checks if given import specifier looks like JSX backend import, e.g. "import * as React from "react" */
-	public static boolean isJsxBackendImportSpecifier(ImportSpecifier specifier) {
-		if ((specifier instanceof NamespaceImportSpecifier)
-				&& (JSX_BACKEND_FACADE_NAME.equals(((NamespaceImportSpecifier) specifier).getAlias()))) {
-			return true;
-		}
-		return false;
+	public boolean isJsxBackendImportSpecifier(ImportSpecifier specifier, InformationRegistry info) {
+		return isJsxBackendImportDeclaration((ImportDeclaration) specifier.eContainer(), info);
 	}
 
 	/**

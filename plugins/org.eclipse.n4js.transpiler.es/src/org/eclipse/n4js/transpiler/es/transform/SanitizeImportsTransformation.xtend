@@ -40,10 +40,10 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 class SanitizeImportsTransformation extends Transformation {
 
 	@Inject
-	JSXBackendHelper jsx;
+	private ReactHelper reactHelper;
 
 	@Inject
-	ReactHelper reactHelper;
+	private JSXBackendHelper JSXBackendHelper;
 
 	override analyze() {
 	}
@@ -76,8 +76,8 @@ class SanitizeImportsTransformation extends Transformation {
 			return
 
 		val jsxUsedOriginalImports = state.info.browseOriginalImports_internal.filter [
-			it.value.qualifiedName.endsWith(jsx.getBackendReactModuleFileName())
-		].map[it.key.importSpecifiers].flatten.filter[isUsed]
+			JSXBackendHelper.isJsxBackendModule(value)
+		].map[key.importSpecifiers].flatten.filter[isUsed]
 		if (!jsxUsedOriginalImports.nullOrEmpty)
 			return;
 
@@ -85,7 +85,7 @@ class SanitizeImportsTransformation extends Transformation {
 		// We lookup react's module using react helper.
 		val iMod = reactHelper.lookUpReactTModule(state.resource)
 		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
-		val iDecl = _ImportDecl(iMod, iSpec);
+		val iDecl = _ImportDecl(null, iSpec);
 		insertBefore(state.im.scriptElements.get(0), iDecl);
 		state.info.setImportedModule_internal(iDecl, iMod);
 	}
@@ -189,7 +189,7 @@ class SanitizeImportsTransformation extends Transformation {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
 
-			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec)){
+			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec, state.info)){
 				return true
 			}
 

@@ -74,6 +74,9 @@ class ModuleWrappingTransformation extends Transformation {
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
+	
+	@Inject
+	private JSXBackendHelper JSXBackendHelper;
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -222,7 +225,7 @@ class ModuleWrappingTransformation extends Transformation {
 								target = refToFPar;
 							];
 						};
-					if (current.ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(current.tobeReplacedIM)) {
+					if (current.ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(current.tobeReplacedIM, state.info)) {
 						statements += _ExprStmnt(_IdentRef(steFor_React)._AssignmentExpr(rhs))
 					} else {
 						statements += _ExprStmnt(_IdentRef(current.ste)._AssignmentExpr(rhs)) => [
@@ -255,7 +258,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 				val module = state.info.getImportedModule(elementIM);
 
-				val isJSXBackendImport = JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)
+				val isJSXBackendImport = JSXBackendHelper.isJsxBackendModule(module)
 
 				// calculate names in output
 				val completeModuleSpecifier =
