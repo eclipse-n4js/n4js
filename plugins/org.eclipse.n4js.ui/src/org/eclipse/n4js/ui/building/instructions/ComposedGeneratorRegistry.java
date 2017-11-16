@@ -26,8 +26,6 @@ import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.ProvisionException;
 
 /**
@@ -42,9 +40,6 @@ public class ComposedGeneratorRegistry {
 	private boolean isInitialized = false;
 
 	private final List<IComposedGenerator> composedGenerators = new ArrayList<>();
-
-	@Inject
-	private Injector injector;
 
 	/**
 	 * @return a collection of composed generators that have been registered via extension point in plug-ins available
@@ -72,9 +67,9 @@ public class ComposedGeneratorRegistry {
 				try {
 					IComposedGenerator composedGenerator = (IComposedGenerator) configurationElement
 							.createExecutableExtension("class");
-					injector.injectMembers(composedGenerator);
-					register(composedGenerator);
-
+					if (composedGenerator != null) {
+						register(composedGenerator);
+					}
 				} catch (CoreException e) {
 					LOGGER.error(e.getMessage(), e);
 				} catch (ProvisionException e) {

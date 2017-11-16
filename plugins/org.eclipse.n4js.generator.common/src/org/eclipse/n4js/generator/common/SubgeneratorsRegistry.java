@@ -23,8 +23,6 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 /**
@@ -44,9 +42,6 @@ public class SubgeneratorsRegistry {
 
 	private boolean isInitialized = false;
 	private final Map<String, List<ISubGenerator>> generators = new HashMap<>();
-
-	@Inject
-	private Injector injector;
 
 	/**
 	 * Register a generator. This method should only be invoked by client code directly in headless mode. When running
@@ -98,7 +93,6 @@ public class SubgeneratorsRegistry {
 						String fileExtension = elem.getAttribute(ATT_FILE_EXTENSION);
 						ISubGenerator generator = (ISubGenerator) elem
 								.createExecutableExtension(ATT_SUB_GENERATOR_CLASS);
-						injector.injectMembers(generator);
 						register(generator, fileExtension);
 
 					} catch (Exception ex) {
