@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -125,6 +126,10 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderState {
+
+	/** Intended for internal implementations to share logs. */
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = Logger.getLogger(N4JSGenerateImmediatelyBuilderState.class);
 
 	@Inject
 	private RegistryBuilderParticipant builderParticipant;
@@ -236,7 +241,6 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 
 	@Override
 	protected void clearResourceSet(final ResourceSet resourceSet) {
-		// System.out.println("Clear in builder state");
 		N4JSResourceSetCleanerUtils.clearResourceSet(resourceSet);
 	}
 
@@ -271,17 +275,12 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		throw new IllegalStateException();
 	}
 
-	// cannot be injected with annotation as there will be wrong injection context
-	// @Inject FileExtensionProvider fileExtensionProvider
-	// doesn't work neither
-	// FileExtensionProvider fileExtensionProvider =
-	// N4JSActivator.getInstance().getInjector(N4JSActivator.ORG_ECLIPSE_IDE_N4JS_N4JS).getProvider(FileExtensionProvider.class).get();
-
 	/**
 	 * Check if given build participant is supporting given file type
 	 */
 	private boolean isParticipating(DeferredBuilderParticipant dbp) {
-		// TODO switch hardcoded extensions to FileExtensionProvider query
+		// TODO IDE-2493 multilanguage support
+		// @Inject FileExtensionProvider
 		for (String ext : N4JSGlobals.ALL_N4_FILE_EXTENSIONS) {
 			if (dbp.isParticipating(ext)) {
 				return true;
