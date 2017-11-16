@@ -9,7 +9,7 @@ http://www.eclipse.org/legal/epl-v10.html
 Contributors:
   NumberFour AG - Initial API and implementation
 -->
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!DOCTYPE log4j:configuration SYSTEM "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 	<appender class="org.apache.log4j.ConsoleAppender" name="default">
 		<layout class="org.apache.log4j.PatternLayout">
