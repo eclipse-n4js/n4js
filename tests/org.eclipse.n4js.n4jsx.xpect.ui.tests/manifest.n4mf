@@ -21,6 +21,6 @@ Sources {
 		"model_ui"
 	}
 	external {
-		"jsxbackend"
+		"model/jsxbackend"
 	}
 }

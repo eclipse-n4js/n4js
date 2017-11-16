@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
 
 	Workspace {
-		JavaProject "N4JSXPECTTests" {
+		JavaProject "N4JSXpectTests" {
 			Folder "model" {
 				Folder "scoping" {
 					Folder "accessors" {
@@ -35,8 +35,9 @@ class Caller {
 	call() {
 		var callee : N.Callee = null;
 
-// XPECT scope at 'callee.|a' --> a, b, data_property_b, !newB, ...
+// XPECT scope at 'callee.|a' --> a, !b, c, d, data_property_b, !data_property_c, !newB, ...
 		callee.a = "newA"
+// XPECT scope at 'callee.|a' --> a, b, !c, d, data_property_b, !data_property_c, !newB, ...
 		var newA = callee.a
 
 		var newB = callee.b
