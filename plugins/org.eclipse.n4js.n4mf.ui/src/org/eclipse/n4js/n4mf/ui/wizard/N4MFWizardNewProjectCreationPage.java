@@ -71,8 +71,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.ISharedImages;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
@@ -87,12 +85,6 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 	// RegEx pattern for valid vendor IDs. See terminal ID rule in the N4MF grammar.
 	private static final Pattern VENDOR_ID_PATTERN = Pattern.compile("\\^?[A-Za-z\\_][A-Za-z_\\-\\.0-9]*");
-
-	private Composite projectTypePropertyControls;
-	private ComboViewer projectTypeCombo;
-	private Text vendorIdText;
-
-	private Composite existingProjectHint;
 
 	/**
 	 * Creates a new wizard page to set up and create a new N4JS project with the given project info model.
@@ -126,13 +118,13 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 		createVendorIdControls(dbc, control);
 
-		projectTypeCombo = new ComboViewer(control, READ_ONLY);
+		ComboViewer projectTypeCombo = new ComboViewer(control, READ_ONLY);
 		projectTypeCombo.setLabelProvider(new ProjectTypeLabelProvider());
 		projectTypeCombo.setContentProvider(ArrayContentProvider.getInstance());
 		projectTypeCombo.getControl().setLayoutData(fillDefaults().grab(true, false).create());
 		projectTypeCombo.setInput(ProjectType.values());
 
-		projectTypePropertyControls = new Composite(control, NONE);
+		Composite projectTypePropertyControls = new Composite(control, NONE);
 		StackLayout changingStackLayout = new StackLayout();
 		projectTypePropertyControls.setLayout(changingStackLayout);
 		projectTypePropertyControls.setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).create());
@@ -169,9 +161,6 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 				}); // $NON-NLS-1$
 		Dialog.applyDialogFont(getControl());
 
-		// create bottom existing-project-hint
-		createExistingSourcesHint((Composite) getControl());
-
 		dbc.updateTargets();
 
 		setControl(control);
@@ -186,7 +175,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		final Label vendorIdLabel = new Label(composite, SWT.NONE);
 		vendorIdLabel.setText("Vendor id:");
 
-		vendorIdText = new Text(composite, SWT.BORDER);
+		Text vendorIdText = new Text(composite, SWT.BORDER);
 		vendorIdText.setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).create());
 
 		projectInfo.addPropertyChangeListener(event -> {
@@ -403,52 +392,8 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 				PojoProperties.list(N4MFProjectInfo.class, IMPLEMENTED_PROJECTS_PROP_NAME).observe(projectInfo));
 	}
 
-	private void createExistingSourcesHint(Composite parent) {
-		// create the actual hint
-		existingProjectHint = new Composite(parent, SWT.NONE);
-		GridLayoutFactory.fillDefaults().margins(30, 5).numColumns(2).applyTo(existingProjectHint);
-
-		Label icon = new Label(existingProjectHint, SWT.NONE);
-		icon.setImage(PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_INFO_TSK));
-		GridDataFactory.swtDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(icon);
-
-		Label text = new Label(existingProjectHint, SWT.WRAP);
-		text.setText(
-				"The wizard will automatically configure the project contents and type based on the existing project.");
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, true).applyTo(text);
-
-		existingProjectHint.setVisible(false);
-	}
-
 	/**
-	 * Hides or shows the hint that an existing project was detected and enables/disables the according controls. (e.g.
-	 * project type, vendor id)
-	 *
-	 * The hint informs the user that an existing project was found at the specified project location.
-	 */
-	private void setShowExistingProjectHint(boolean show) {
-		if (null == existingProjectHint) {
-			// if UI isn't initialized yet, don't do anything
-			return;
-		}
-
-		existingProjectHint.setVisible(show);
-
-		// only enable other configuration controls if hint is not shown
-		boolean controlsEnabled = !show;
-
-		projectTypeCombo.getControl().setEnabled(controlsEnabled);
-		vendorIdText.setEnabled(controlsEnabled);
-		setEnabledAllChildren(projectTypePropertyControls, controlsEnabled);
-	}
-
-	/**
-	 * Checks whether the specified project path points to an existing project.
-	 *
-	 * If so, a hint is displayed ({@link #setShowExistingProjectHint(boolean)}) and this method returns
-	 * <code>true</code>.
-	 *
-	 * Only shows the hint if the project name is valid.
+	 * Checks whether the specified project path points to an existing project and sets an according error message.
 	 *
 	 * Returns <code>false</code> otherwise.
 	 *
@@ -483,25 +428,12 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		if (projectDirectoryIsExistingFile) {
 			setErrorMessage("There already exists a file at the location '" + projectLocation.toString() + "'.");
 			return true;
+		} else if (isExistingNonWorkspaceProject && projectNameValid) {
+			setErrorMessage(
+					"There already exists an N4JS project at the specified location. Please use 'File > Import...' to add it to the workspace.");
+			return true;
 		} else {
-			// update UI accordingly (show hint)
-			setShowExistingProjectHint(projectNameValid && isExistingNonWorkspaceProject);
-		}
-
-		// indicate existing project with return value
-		return isExistingNonWorkspaceProject;
-	}
-
-	/**
-	 * Recursively sets the {@link Control#setEnabled(boolean)} property for all children of the given composite.
-	 */
-	private void setEnabledAllChildren(Composite composite, boolean enabled) {
-		for (Control control : composite.getChildren()) {
-			control.setEnabled(enabled);
-
-			if (control instanceof Composite) {
-				setEnabledAllChildren((Composite) control, enabled);
-			}
+			return false;
 		}
 	}
 

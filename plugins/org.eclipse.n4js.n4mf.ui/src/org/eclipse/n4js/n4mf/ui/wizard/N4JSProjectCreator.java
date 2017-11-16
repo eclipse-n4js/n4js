@@ -155,11 +155,6 @@ public class N4JSProjectCreator extends AbstractProjectCreator {
 
 	@Override
 	protected void enhanceProject(final IProject project, final IProgressMonitor monitor) throws CoreException {
-		if (project.getFile(N4MFConstants.N4MF_MANIFEST).exists()) {
-			// Early exit if the manifest exists already.
-			// Do not enhance in this case and just adapt to the existing project files and manifest
-			return;
-		}
 
 		final N4MFProjectInfo pi = (N4MFProjectInfo) getProjectInfo();
 
