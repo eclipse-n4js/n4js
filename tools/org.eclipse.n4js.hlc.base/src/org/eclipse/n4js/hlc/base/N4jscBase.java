@@ -423,19 +423,21 @@ public class N4jscBase implements IApplication {
 			// help.
 			initInjection(refProperties());
 
-			// Register subgenerators
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
-
-			headless.registerComposedGenerator(n4jsCompositeGenerator);
-			headless.registerComposedGenerator(n4jsxCompositeGenerator);
-
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated
 			if (!Platform.isRunning()) {
 				runnerRegistry.register(nodeRunnerDescriptorProvider.get());
 				testerRegistry.register(nodeTesterDescriptorProvider.get());
+
+				// Register subgenerators
+				subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
+				subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
+				subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
+				subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JSX_FILE_EXTENSION);
+
+				// Register composed generators
+				headless.registerComposedGenerator(n4jsCompositeGenerator);
+				headless.registerComposedGenerator(n4jsxCompositeGenerator);
 			}
 			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION);
 			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,

@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.ui.preferences;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
@@ -49,7 +49,7 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 		}
 
 		private void intializeBuilderPreferences(IPreferenceStore store) {
-			List<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+			Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 			for (IComposedGenerator composedGenerator : composedGenerators) {
 				for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 					for (CompilerProperties prop : CompilerProperties.values()) {
@@ -94,7 +94,7 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 	@Override
 	public void setAutoBuildEnabled(Object context, boolean enabled) {
 		IPreferenceStore preferenceStore = preferenceStoreAccess.getWritablePreferenceStore(context);
-		List<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+		Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 		String key = null;
 		for (IComposedGenerator composedGenerator : composedGenerators) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {

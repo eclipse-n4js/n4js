@@ -11,6 +11,8 @@
 package org.eclipse.n4js.ui.building.instructions;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -45,15 +47,15 @@ public class ComposedGeneratorRegistry {
 	private Injector injector;
 
 	/**
-	 * @return a list of composed generators that have been registered via extension point in plug-ins available on the
-	 *         classpath of this N4JS ui bundle.
+	 * @return a collection of composed generators that have been registered via extension point in plug-ins available
+	 *         on the classpath of this N4JS ui bundle.
 	 */
-	public List<IComposedGenerator> getComposedGenerators() {
+	public Collection<IComposedGenerator> getComposedGenerators() {
 		if (!isInitialized) {
 			initialize();
 		}
 
-		return composedGenerators;
+		return Collections.unmodifiableCollection(composedGenerators);
 	}
 
 	private void initialize() {
@@ -92,7 +94,7 @@ public class ComposedGeneratorRegistry {
 	 */
 	public CompilerDescriptor getDesiredCompilerDescriptor(String desiredCompilerName) {
 		CompilerDescriptor desiredCompilerDescriptor = null;
-		List<IComposedGenerator> composedGeneratorsLocal = getComposedGenerators();
+		Collection<IComposedGenerator> composedGeneratorsLocal = getComposedGenerators();
 		for (IComposedGenerator composedGenerator : composedGeneratorsLocal) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 				if (compilerDescriptor.getName().equals(desiredCompilerName)) {

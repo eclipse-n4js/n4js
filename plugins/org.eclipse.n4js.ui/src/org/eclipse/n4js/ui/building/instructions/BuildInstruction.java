@@ -12,6 +12,7 @@ package org.eclipse.n4js.ui.building.instructions;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -196,7 +197,7 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 		if (shouldGenerate(resource, aProject)) {
 			try {
 				// generator.doGenerate(resource, access);
-				List<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+				Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 				for (IComposedGenerator composedGenerator : composedGenerators) {
 					injector.injectMembers(composedGenerator);
 					composedGenerator.doGenerate(resource, access);

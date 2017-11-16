@@ -11,8 +11,8 @@
 package org.eclipse.n4js.ui.preferences;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,7 +72,7 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 	public N4JSBuilderPreferencePage() {
 		super(new ArrayList<Triple<String, String, CompilerDescriptor>>());
 
-		List<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+		Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 		for (IComposedGenerator composedGenerator : composedGenerators) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 				this.components.add(Tuples.create(compilerDescriptor.getIdentifier(), compilerDescriptor.getName(),

@@ -30,7 +30,6 @@ import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
-import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
@@ -68,9 +67,6 @@ public class ScenarioTest {
 
 	@Inject
 	private N4JSCompositeGenerator n4jsCompositeGenerator;
-
-	@Inject
-	private N4JSXCompositeGenerator n4jsxCompositeGenerator;
 
 	@Inject
 	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
@@ -138,11 +134,8 @@ public class ScenarioTest {
 	@Before
 	public void setUp() throws Exception {
 		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
-		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
 		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
-
 		hlc.registerComposedGenerator(n4jsCompositeGenerator);
-		hlc.registerComposedGenerator(n4jsxCompositeGenerator);
 	}
 
 	/**
