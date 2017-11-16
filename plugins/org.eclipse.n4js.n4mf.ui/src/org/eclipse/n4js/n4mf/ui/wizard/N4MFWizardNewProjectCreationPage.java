@@ -271,10 +271,10 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 	@Override
 	protected boolean validatePage() {
-		final boolean valid = super.validatePage(); // run default validation
-		final boolean existing = validateIsExistingProjectPath(valid); // check if existing project
+		boolean valid = super.validatePage(); // run default validation
+		valid = (valid && validateIsExistingProjectPath()); // check if existing project
 
-		if (valid && !existing) {
+		if (valid) {
 			String errorMsg = null;
 			final String projectName = getProjectName();
 			final String vendorId = projectInfo.getVendorId();
@@ -325,14 +325,13 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 			}
 
 			setErrorMessage(errorMsg);
+			if (null == errorMsg) {
+				updateModel();
+			}
+			return null == errorMsg;
 		}
 
-		final String errorMsg = getErrorMessage();
-
-		if (null == errorMsg) {
-			updateModel();
-		}
-		return null == errorMsg;
+		return valid;
 	}
 
 	/**
@@ -395,12 +394,11 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	/**
 	 * Checks whether the specified project path points to an existing project and sets an according error message.
 	 *
-	 * Returns <code>false</code> otherwise.
+	 * Returns <code>true</code> otherwise.
 	 *
-	 * @param projectNameValid
-	 *            Specifies whether {@link #getProjectName()} returns a valid value.
+	 * This method assumes that {@link #getProjectName()} returns a valid project name.
 	 */
-	private boolean validateIsExistingProjectPath(boolean projectNameValid) {
+	private boolean validateIsExistingProjectPath() {
 		IPath projectLocation = getLocationPath();
 		final String projectName = getProjectName();
 
@@ -411,7 +409,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		}
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		boolean workspaceProjectExists = projectNameValid ? root.getProject(projectName).exists() : false;
+		boolean workspaceProjectExists = root.getProject(projectName).exists();
 
 		// check for an existing manifest
 		IPath manifestPath = projectLocation.append("manifest.n4mf");
@@ -424,16 +422,18 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 		boolean isExistingNonWorkspaceProject = existingManifest.exists() && !workspaceProjectExists;
 
-		// set error message if there is already file with the project path
 		if (projectDirectoryIsExistingFile) {
+			// set error message if there is already at the specified project location
 			setErrorMessage("There already exists a file at the location '" + projectLocation.toString() + "'.");
-			return true;
-		} else if (isExistingNonWorkspaceProject && projectNameValid) {
+			return false;
+		} else if (isExistingNonWorkspaceProject) {
+			// set error message if the specified directory already represents an N4JS project
 			setErrorMessage(
 					"There already exists an N4JS project at the specified location. Please use 'File > Import...' to add it to the workspace.");
-			return true;
-		} else {
 			return false;
+		} else {
+			// otherwise the project location does not exist yet
+			return true;
 		}
 	}
 
