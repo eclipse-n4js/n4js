@@ -28,8 +28,7 @@ import com.google.common.collect.Iterables;
  * {@link UserdataMapper}).
  * <p>
  * This is used by the incremental builder to enforce a fully re-load of certain resources for which the TModule info in
- * the user data is out-dated. See method <code>#queueAffectedResources()</code> in
- * {@link N4JSGenerateImmediatelyBuilderState} for details.
+ * the user data is out-dated. See {@link N4JSGenerateImmediatelyBuilderState#queueAffectedResources} for details.
  */
 public class ResourceDescriptionWithoutModuleUserData implements IResourceDescription {
 

@@ -277,30 +277,46 @@ public class ProjectUtils {
 
 	/***/
 	public static void waitForAutoBuild() {
+		final int maxTry = 3;
+		int currentTry = 1;
 		int maxWait = 100 * 60 * 2;
 		long start = System.currentTimeMillis();
 		long end = start;
 		boolean wasInterrupted = false;
 		boolean foundJob = false;
 		do {
-			try {
-				Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
-				if (foundJobs.length > 0) {
-					foundJob = true;
-					Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
-							null);
+			do {
+				try {
+					Job[] foundJobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_AUTO_BUILD);
+					if (foundJobs.length > 0) {
+						foundJob = true;
+						Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD,
+								null);
+					}
+					wasInterrupted = false;
+					end = System.currentTimeMillis();
+				} catch (OperationCanceledException e) {
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					wasInterrupted = true;
 				}
-				wasInterrupted = false;
-				end = System.currentTimeMillis();
-			} catch (OperationCanceledException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				wasInterrupted = true;
+			} while (wasInterrupted && (end - start) < maxWait);
+			if (!foundJob) {
+				LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
+				System.out.println("Auto build job hasn't been found, but maybe already run.");
+
+				currentTry += 1;
+				System.out.println("Take a nap...");
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+					System.out.println("Couldn't sleep, abort waiting");
+					return;
+				}
+				System.out.println("Try again, try " + currentTry + " of " + maxTry);
 			}
-		} while (wasInterrupted && (end - start) < maxWait);
-		if (!foundJob) {
-			LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
-		}
+		} while (!foundJob && currentTry < maxTry);
 	}
 
 	/**
