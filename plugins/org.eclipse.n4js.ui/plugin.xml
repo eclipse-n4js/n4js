@@ -28,6 +28,14 @@ Contributors:
       </generator>
    </extension>
 
+   <extension
+         point="org.eclipse.n4js.generator.common.subgenerator">
+      <subgenerator
+            fileExtension="n4js"
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator">
+      </subgenerator>
+   </extension>
+
 	<extension
          point="org.eclipse.ui.newWizards">
           <category

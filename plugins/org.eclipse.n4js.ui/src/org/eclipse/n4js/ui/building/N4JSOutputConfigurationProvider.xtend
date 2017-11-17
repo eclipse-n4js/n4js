@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.building
 
 import com.google.inject.Inject
-import com.google.inject.Injector
 import org.eclipse.n4js.generator.common.CompilerDescriptor
 import org.eclipse.n4js.generator.common.IComposedGenerator
 import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry

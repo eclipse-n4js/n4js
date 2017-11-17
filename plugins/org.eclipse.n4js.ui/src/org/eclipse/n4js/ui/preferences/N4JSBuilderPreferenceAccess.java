@@ -22,7 +22,6 @@ import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
 
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.google.inject.Singleton;
 
 /**
@@ -42,9 +41,6 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 
 		@Inject
 		private ComposedGeneratorRegistry composedGeneratorRegistry;
-
-		@Inject
-		private Injector injector;
 
 		@Override
 		public void initialize(IPreferenceStoreAccess preferenceStoreAccess) {

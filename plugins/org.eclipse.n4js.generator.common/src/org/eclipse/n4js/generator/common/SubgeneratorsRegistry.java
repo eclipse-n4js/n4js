@@ -94,7 +94,6 @@ public class SubgeneratorsRegistry {
 						ISubGenerator generator = (ISubGenerator) elem
 								.createExecutableExtension(ATT_SUB_GENERATOR_CLASS);
 						register(generator, fileExtension);
-
 					} catch (Exception ex) {
 						LOGGER.error(
 								"Error while reading extensions for extension point "
