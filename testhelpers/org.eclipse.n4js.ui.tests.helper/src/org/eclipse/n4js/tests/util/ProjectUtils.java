@@ -303,18 +303,16 @@ public class ProjectUtils {
 			} while (wasInterrupted && (end - start) < maxWait);
 			if (!foundJob) {
 				LOGGER.debug("Auto build job hasn't been found, but maybe already run.");
-				System.out.println("Auto build job hasn't been found, but maybe already run.");
 
 				currentTry += 1;
-				System.out.println("Take a nap...");
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					System.out.println("Couldn't sleep, abort waiting");
+					LOGGER.debug("Couldn't sleep, abort waiting");
 					return;
 				}
-				System.out.println("Try again, try " + currentTry + " of " + maxTry);
+				LOGGER.debug("Try again, try " + currentTry + " of " + maxTry);
 			}
 		} while (!foundJob && currentTry < maxTry);
 	}
@@ -376,7 +374,6 @@ public class ProjectUtils {
 		} while (wasInterrupted && (end - start) < maxWait);
 		if (!foundJob) {
 			LOGGER.debug("No running nor waiting jobs found, maybe all have already finished.");
-			System.out.println("No running nor waiting jobs found, maybe all have already finished.");
 		}
 	}
 
