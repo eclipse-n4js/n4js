@@ -29,12 +29,14 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
- * IMPORTANT: All the tests in classes inherited by this class require that n4jsc.jar exist. Before executing this test,
- * execute the script: {@code git/n4js/tools/scripts/mvn-cp-n4jsjar.sh in your console first}. in your console first.
+ * IMPORTANT: All the tests in the classes inherited by this class require that n4jsc.jar exist. Before executing this
+ * test, in the console, change your current to the folder {@code git/n4js/tools/scripts/}. Then inside that folder,
+ * execute the {@code mvn-cp-n4jsjar.sh}.
  * <p>
  * This script executes Maven locally to create n4jsc.jar and copy the n4jsc.jar to the folder
  * git/n4js/tests/org.eclipse.n4js.hlc.tests/target required by these tests.
  */
+
 public abstract class AbstractN4jscJarTest {
 
 	// Running directory will be ${TARGET}/${WSP}
