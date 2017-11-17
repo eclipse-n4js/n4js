@@ -257,8 +257,8 @@ public abstract class AbstractBuilderTest {
 	 * Performs some general validity checks on the Xtext index.
 	 */
 	protected void assertXtextIndexIsValid() {
-		String indexData = getIndexData();
-		if (indexData.length() != 0) {
+		// first throw away check, for sync purposes
+		if (getIndexData().length() != 0) {
 			try {
 				Thread.sleep(100);
 				ProjectUtils.waitForAllJobs();
@@ -266,8 +266,8 @@ public abstract class AbstractBuilderTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			indexData = getIndexData();
 		}
+		String indexData = getIndexData();
 		assertTrue(indexData, 0 == indexData.length());
 	}
 
@@ -282,6 +282,8 @@ public abstract class AbstractBuilderTest {
 				sb.append(ResourceDescriptionWithoutModuleUserData.class.getSimpleName());
 				sb.append(" but it was. URI: ");
 				sb.append(desc.getURI());
+				sb.append(", ");
+				sb.append(desc.toString());
 			}
 		}
 		return sb.toString();
