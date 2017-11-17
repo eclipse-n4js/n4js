@@ -30,6 +30,11 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
+ * IMPORTANT: All the tests in classes inherited by this class require that n4jsc.jar exist. Before executing this test,
+ * execute the script: {@code git/n4js/tools/scripts/mvn-cp-n4jsjar.sh in your console first}. in your console first.
+ * <p>
+ * This script executes Maven locally to create n4jsc.jar and copy the n4jsc.jar to the folder
+ * git/n4js/tests/org.eclipse.n4js.hlc.tests/target required by these tests.
  */
 public class N4jscJarTestersTest extends AbstractN4jscJarTest {
 

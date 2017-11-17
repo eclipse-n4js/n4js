@@ -29,6 +29,12 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
+ *
+ * IMPORTANT: All the tests in classes inherited by this class require that n4jsc.jar exist. Before executing this test,
+ * execute the script: {@code git/n4js/tools/scripts/mvn-cp-n4jsjar.sh in your console first}. in your console first.
+ * <p>
+ * This script executes Maven locally to create n4jsc.jar and copy the n4jsc.jar to the folder
+ * git/n4js/tests/org.eclipse.n4js.hlc.tests/target required by these tests.
  */
 public abstract class AbstractN4jscJarTest {
 
@@ -77,11 +83,26 @@ public abstract class AbstractN4jscJarTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
+		// Create target folder if not exists
+		File targetFolder = new File(TARGET);
+		if (!targetFolder.exists()) {
+			System.out.println(TARGET + " folder does not exist. Creating one.");
+			targetFolder.mkdirs();
+		}
+
+		// File currentFolder = new File(".");
+		// File p = currentFolder.getParentFile();
+		// File n4jsFolder = currentFolder.getParentFile().getParentFile();
 		File wsp = new File(TARGET, WSP);
 		File fixtureFile = new File(fixture);
 
 		System.out.println("BEFORE: 	current root " + new File(".").getAbsolutePath());
 		System.out.println("BEFORE: current workspace would be " + wsp.getAbsolutePath());
+
+		// // Check if n4jsc.jar exist
+		// File n4jscJar = new File(new File(new File(new File(n4jsFolder, "tools"), "org.eclipse.n4js.hlc"), TARGET),
+		// N4JSC_JAR);
+		// Assert.assertTrue(N4JSC_JAR + " does not exist in " + n4jscJar.getAbsolutePath(), n4jscJar.exists());
 
 		// clean
 		// Files.deleteIfExists(wsp.toPath());
