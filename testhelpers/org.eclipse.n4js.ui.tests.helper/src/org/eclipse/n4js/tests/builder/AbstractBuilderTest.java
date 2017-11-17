@@ -257,6 +257,21 @@ public abstract class AbstractBuilderTest {
 	 * Performs some general validity checks on the Xtext index.
 	 */
 	protected void assertXtextIndexIsValid() {
+		String indexData = getIndexData();
+		if (indexData.length() != 0) {
+			try {
+				Thread.sleep(100);
+				ProjectUtils.waitForAllJobs();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			indexData = getIndexData();
+		}
+		assertTrue(indexData, 0 == indexData.length());
+	}
+
+	private String getIndexData() {
 		final IResourceDescriptions index = getXtextIndex();
 		final StringBuilder sb = new StringBuilder();
 		for (IResourceDescription desc : index.getAllResourceDescriptions()) {
@@ -269,6 +284,6 @@ public abstract class AbstractBuilderTest {
 				sb.append(desc.getURI());
 			}
 		}
-		assertTrue(sb.toString(), 0 == sb.length());
+		return sb.toString();
 	}
 }
