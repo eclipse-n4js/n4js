@@ -28,6 +28,9 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 
 import com.google.common.collect.Lists;
 
@@ -36,6 +39,13 @@ import com.google.common.collect.Lists;
  */
 public class N4JSFlowAnalyzer {
 	static private final Logger LOGGER = Logger.getLogger(N4JSFlowAnalyzer.class);
+	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Flow Graphs");
+	static private final DataCollector dcCreateGraph = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Create Graphs", "Flow Graphs");
+	static private final DataCollector dcPerformAnalyses = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Perform Analyses", "Flow Graphs");
+
 	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
 	private DirectPathAnalyses dpa;
@@ -64,12 +74,15 @@ public class N4JSFlowAnalyzer {
 	 */
 	public void createGraphs(Script script) {
 		Objects.requireNonNull(script);
-		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#perform");
+		String uriString = script.eResource().getURI().toString();
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
+		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + uriString);
 		cfg = ControlFlowGraphFactory.build(script);
 		dpa = new DirectPathAnalyses(cfg);
 		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
-		// sw.stop();
+		msmnt2.end();
+		msmnt1.end();
 	}
 
 	/** Checks if the user hit the cancel button and if so, a RuntimeException is thrown. */
@@ -178,9 +191,11 @@ public class N4JSFlowAnalyzer {
 	 */
 	public void accept(GraphVisitor... graphVisitors) {
 		List<GraphVisitor> graphVisitorList = Lists.newArrayList(graphVisitors);
-		// StopWatchPrintUtil sw = new StopWatchPrintUtil("N4JSFlowAnalyses#analyze");
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
+		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("createGraph_" + cfg.getScriptName());
 		gva.analyseScript(this, graphVisitorList);
-		// sw.stop();
+		msmnt2.end();
+		msmnt1.end();
 	}
 
 	/** @return the containing {@link ControlFlowElement} for the given cfe. */

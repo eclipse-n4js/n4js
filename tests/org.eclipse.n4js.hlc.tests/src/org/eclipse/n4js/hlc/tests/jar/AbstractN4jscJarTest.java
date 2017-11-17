@@ -29,7 +29,14 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 
 /**
+ * IMPORTANT: All the tests in the classes inherited by this class require that n4jsc.jar exist. Before executing this
+ * test, in the console, change your current to the folder {@code git/n4js/tools/scripts/}. Then inside that folder,
+ * execute the {@code mvn-cp-n4jsjar.sh}.
+ * <p>
+ * This script executes Maven locally to create n4jsc.jar and copy the n4jsc.jar to the folder
+ * git/n4js/tests/org.eclipse.n4js.hlc.tests/target required by these tests.
  */
+
 public abstract class AbstractN4jscJarTest {
 
 	// Running directory will be ${TARGET}/${WSP}
@@ -77,6 +84,13 @@ public abstract class AbstractN4jscJarTest {
 	 */
 	@Before
 	public void setupWorkspace() throws IOException {
+		// Create target folder if not exists
+		File targetFolder = new File(TARGET);
+		if (!targetFolder.exists()) {
+			System.out.println(TARGET + " folder does not exist. Creating one.");
+			targetFolder.mkdirs();
+		}
+
 		File wsp = new File(TARGET, WSP);
 		File fixtureFile = new File(fixture);
 

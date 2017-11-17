@@ -28,12 +28,13 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
 class BinaryLogicalExpressionFactory {
 
 	static ComplexNode buildComplexNode(BinaryLogicalExpression lbExpr) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(lbExpr);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, lbExpr);
-		Node exitNode = new RepresentingNode(EXIT_NODE, lbExpr);
-		Node lhsNode = new DelegatingNode("lhs", lbExpr, lbExpr.getLhs());
-		Node rhsNode = new DelegatingNode("rhs", lbExpr, lbExpr.getRhs());
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, intPos++, lbExpr);
+		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, lbExpr);
+		Node lhsNode = new DelegatingNode("lhs", intPos++, lbExpr, lbExpr.getLhs());
+		Node rhsNode = new DelegatingNode("rhs", intPos++, lbExpr, lbExpr.getRhs());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(lhsNode);

@@ -12,7 +12,7 @@
 import * as React from "jsxbackend/react"
 
 
-export class Cls extends React.Component<~Object with {prop: int}, Object> {
+export class Cls extends React.Component<~React.ComponentProps with {prop: int}, Object> {
 	@Override
 	public render(): React.Element {
 		return <button/>

@@ -10,10 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import org.eclipse.n4js.flowgraphs.FlowEdge;
+import java.util.List;
+
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -29,59 +30,34 @@ public class NeverUsedVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof IdentifierRef && cfe.eContainer() instanceof VariableDeclaration) {
 			super.requestActivation(new NeverUsedExplorer((IdentifierRef) cfe));
 		}
 	}
 
-	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		// nothing to do
-	}
-
-	static private class NeverUsedExplorer extends PathExplorer {
+	static private class NeverUsedExplorer extends GraphExplorer {
 		@SuppressWarnings("unused")
 		final IdentifierRef idRef;
 
 		public NeverUsedExplorer(IdentifierRef idRef) {
-			super(Quantor.AtLeastOnePath);
+			super(Quantor.AtLeastOneBranch);
 			this.idRef = idRef;
 		}
 
 		@Override
-		protected NeverUsedWalker firstPathWalker() {
+		protected NeverUsedWalker firstBranchWalker() {
+			return new NeverUsedWalker();
+		}
+
+		@Override
+		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
 			return new NeverUsedWalker();
 		}
 
 	}
 
-	static private class NeverUsedWalker extends PathWalker {
-
-		@Override
-		protected void initialize() {
-			// nothing to do
-		}
+	static private class NeverUsedWalker extends BranchWalker {
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
@@ -90,11 +66,6 @@ public class NeverUsedVisitor extends GraphVisitor {
 			// pass();
 			// deactivateAll();
 			// }
-		}
-
-		@Override
-		protected void visit(FlowEdge edge) {
-			// nothing to do
 		}
 
 		@Override

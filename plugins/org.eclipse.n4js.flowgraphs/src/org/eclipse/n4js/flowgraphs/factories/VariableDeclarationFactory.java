@@ -29,15 +29,16 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 class VariableDeclarationFactory {
 
 	static ComplexNode buildComplexNode(VariableDeclaration vd) {
+		int intPos = 0;
 		ComplexNode cNode = new ComplexNode(vd);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, vd);
-		Node exitNode = new RepresentingNode(EXIT_NODE, vd);
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, intPos++, vd);
 		Node expressionNode = null;
 
 		if (vd.getExpression() != null) {
-			expressionNode = new DelegatingNode("expression", vd, vd.getExpression());
+			expressionNode = new DelegatingNode("expression", intPos++, vd, vd.getExpression());
 		}
+		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, vd);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(expressionNode);
