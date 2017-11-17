@@ -187,6 +187,7 @@ class MultiProjectPluginTest extends AbstractBuilderParticipantTest {
 		// waitForAutobuild may wait while the autobuild is also waiting to start
 		// thus we trigger the incremental build here
 		firstProjectUnderTest.project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, new NullProgressMonitor)
+		waitForAutoBuild
 		assertMarkers("file should have no errors", c, 0, errorMarkerPredicate);
 	}
 
