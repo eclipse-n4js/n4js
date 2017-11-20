@@ -31,33 +31,32 @@ class TryFactory {
 	static final String CATCH_NODE_NAME = "catch";
 	static final String FINALLY_NODE_NAME = "finally";
 
-	static ComplexNode buildComplexNode(TryStatement tryStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(tryStmt);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, TryStatement tryStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), tryStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, tryStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), tryStmt);
 		Node tryNode = null;
 		Node catchNode = null;
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = new DelegatingNode("try", intPos++, tryStmt, tryStmt.getBlock());
+			tryNode = new DelegatingNode("try", astpp.pos(), tryStmt, tryStmt.getBlock());
 		}
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(ControlFlowType.Throw);
-			catchNode = new DelegatingNode(CATCH_NODE_NAME, intPos++, tryStmt, catchClause.getBlock());
+			catchNode = new DelegatingNode(CATCH_NODE_NAME, astpp.pos(), tryStmt, catchClause.getBlock());
 			catchNode.addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
 			CatchToken ct = new CatchToken(ControlFlowType.CatchesAll);
-			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, intPos++, tryStmt, tryStmt.getFinally().getBlock());
+			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, astpp.pos(), tryStmt, tryStmt.getFinally().getBlock());
 			finallyNode.addCatchToken(ct);
 		}
 
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, tryStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), tryStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(tryNode);

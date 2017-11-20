@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
@@ -44,10 +45,8 @@ public class ComplexNode implements ControlFlowable {
 	private RepresentingNode represent;
 
 	/** Constructor */
-	public ComplexNode(ControlFlowElement astElement) {
-		this.container = FGUtils.getCFContainer(astElement);
-		// assert CFEFactoryDispatcher.lastContainer == this.container;
-		// this.container = CFEFactoryDispatcher.lastContainer;
+	public ComplexNode(ControlFlowElement container, ControlFlowElement astElement) {
+		this.container = container;
 		this.astElement = astElement;
 	}
 
@@ -149,14 +148,14 @@ public class ComplexNode implements ControlFlowable {
 		this.jump = jumpNode;
 	}
 
-	/** @return the control flow container. See {@link FGUtils#isCFContainer(ControlFlowElement)}. */
+	/** @return the control flow container. See {@link FGUtils#isCFContainer(EObject)}. */
 	public ControlFlowElement getControlFlowContainer() {
-		return CFEMapper.mapCFE(container);
+		return CFEMapper.map(container);
 	}
 
 	@Override
 	public ControlFlowElement getControlFlowElement() {
-		return CFEMapper.mapCFE(astElement);
+		return CFEMapper.map(astElement);
 	}
 
 	/** @return all nodes */

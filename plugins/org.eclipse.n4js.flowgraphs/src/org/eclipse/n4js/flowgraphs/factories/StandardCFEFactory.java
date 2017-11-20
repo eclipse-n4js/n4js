@@ -25,34 +25,35 @@ class StandardCFEFactory {
 	static final String EXIT_NODE = "exit";
 	static final String ENTRY_EXIT_NODE = "entryExit";
 
-	static ComplexNode buildComplexNode(ControlFlowElement cfe) {
-		return buildComplexNode(cfe, true);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ControlFlowElement cfe) {
+		return buildComplexNode(astpp, cfe, true);
 	}
 
-	static ComplexNode buildComplexNodeHidden(ControlFlowElement cfe) {
-		return buildComplexNode(cfe, false);
+	static ComplexNode buildComplexNodeHidden(ASTIteratorInfo astpp, ControlFlowElement cfe) {
+		return buildComplexNode(astpp, cfe, false);
 	}
 
-	private static ComplexNode buildComplexNode(ControlFlowElement cfe, boolean isRepresenting) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(cfe);
+	private static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ControlFlowElement cfe, boolean isRepresenting) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();
-
 		List<Node> args = CFEChildren.get(cfe);
 		for (Node argNode : args) {
 			argumentNodes.add(argNode);
 		}
 
-		HelperNode entryNode = null;
-		String extName = ENTRY_EXIT_NODE;
-		int extID = intPos++;
-		if (!argumentNodes.isEmpty()) {
-			entryNode = new HelperNode(ENTRY_NODE, intPos++, cfe);
+		Node exitNode;
+		String extName;
+		int extID;
+		if (argumentNodes.isEmpty()) {
+			entryNode = null; //
+			extName = ENTRY_EXIT_NODE;
+			extID = astpp.pos();
+		} else {
 			extName = EXIT_NODE;
 			extID = argumentNodes.get(argumentNodes.size() - 1).id + 1;
 		}
-		Node exitNode = null;
 		if (isRepresenting) {
 			exitNode = new RepresentingNode(extName, extID, cfe);
 		} else {

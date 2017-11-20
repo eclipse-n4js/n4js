@@ -79,7 +79,7 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 
 		@Override
 		protected void visit(FlowEdge edge) {
-			if (isLiveCode()) {
+			if (!edge.isDead()) {
 				allEdges.add(edge);
 			}
 		}

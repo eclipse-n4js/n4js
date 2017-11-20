@@ -18,10 +18,10 @@ import org.eclipse.n4js.n4JS.EmptyStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link EmptyStatement}s. */
 class EmptyStatementFactory {
 
-	static ComplexNode buildComplexNode(EmptyStatement empty) {
-		ComplexNode cNode = new ComplexNode(empty);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, EmptyStatement empty) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), empty);
 
-		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, 0, empty);
+		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, astpp.pos(), empty);
 
 		cNode.addNode(entryAndExitNode);
 

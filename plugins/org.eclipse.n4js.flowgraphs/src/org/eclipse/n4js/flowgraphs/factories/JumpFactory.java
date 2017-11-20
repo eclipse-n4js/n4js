@@ -50,41 +50,40 @@ import org.eclipse.n4js.n4JS.WhileStatement;
  */
 class JumpFactory {
 
-	static ComplexNode buildComplexNode(BreakStatement stmt) {
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, BreakStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Break, stmt.getLabel());
-		return buildComplexNode(stmt, null, jumptoken);
+		return buildComplexNode(astpp, stmt, null, jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ContinueStatement stmt) {
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ContinueStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Continue, stmt.getLabel());
-		return buildComplexNode(stmt, null, jumptoken);
+		return buildComplexNode(astpp, stmt, null, jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ReturnStatement stmt) {
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ReturnStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Return);
-		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
+		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ThrowStatement stmt) {
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ThrowStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Throw);
-		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
+		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(Statement stmt, Expression expr, JumpToken jumptoken) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(stmt);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, Statement stmt, Expression expr, JumpToken jumptoken) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), stmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, stmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), stmt);
 		cNode.addNode(entryNode);
 
 		Node expression = null;
 		if (expr != null) {
-			expression = new DelegatingNode("expression", intPos++, stmt, expr);
+			expression = new DelegatingNode("expression", astpp.pos(), stmt, expr);
 			cNode.addNode(expression);
 		}
-		Node jumpNode = new RepresentingNode("jumpNode", intPos++, stmt);
+		Node jumpNode = new RepresentingNode("jumpNode", astpp.pos(), stmt);
 		cNode.addNode(jumpNode);
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, stmt);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), stmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();

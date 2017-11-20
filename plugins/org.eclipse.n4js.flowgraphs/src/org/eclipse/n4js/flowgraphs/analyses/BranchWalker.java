@@ -37,34 +37,82 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 
 	@Override
 	final protected void visit(Node start, Node end, ControlFlowEdge edge) {
-		boolean delegateEdge = delegateEdgeToPredecessor();
-		if (delegateEdge) {
-			for (BranchWalkerInternal bwi : getPathPredecessors()) {
-				boolean isDeadTmp = isDeadCode();
-				bwi.callVisit(start, end, edge);
-				bwi.setDeadCode(isDeadTmp);
-			}
-		} else {
-			pEdgeTypes.add(edge.cfType);
+		pEdgeTypes.add(edge.cfType);
 
-			if (lastRN != null && end instanceof RepresentingNode) {
+		if (end instanceof RepresentingNode) {
+			if (lastRN != null) {
 				ControlFlowElement startCFE = lastRN.getRepresentedControlFlowElement();
 				ControlFlowElement endCFE = end.getRepresentedControlFlowElement();
 				FlowEdge flowEdge = new FlowEdge(startCFE, endCFE, pEdgeTypes);
 				visit(flowEdge);
 				pEdgeTypes.clear();
+
+			} else {
+				HashSet<EdgeInfo> edgeInfos = new HashSet<>();
+				addPredecedingRepNodes(this, edgeInfos, new EdgeInfo(this));
+				for (EdgeInfo edgeInfo : edgeInfos) {
+					ControlFlowElement startCFE = edgeInfo.startNode.getRepresentedControlFlowElement();
+					ControlFlowElement endCFE = end.getRepresentedControlFlowElement();
+					FlowEdge flowEdge = new FlowEdge(startCFE, endCFE, edgeInfo.pEdgeTypes);
+					edgeInfo.edgeOwner.visit(flowEdge);
+					pEdgeTypes.clear();
+				}
 			}
 		}
 	}
 
-	private boolean delegateEdgeToPredecessor() {
-		boolean firstEdge = lastRN == null;
-		boolean allPredsAreFinished = true;
-		for (BranchWalkerInternal bwi : getPathPredecessors()) {
-			BranchWalker bw = (BranchWalker) bwi;
-			allPredsAreFinished &= bw.pEdgeTypes.isEmpty();
+	static class EdgeInfo {
+		RepresentingNode startNode = null;
+		boolean isDead = false;
+		Set<ControlFlowType> pEdgeTypes = new HashSet<>();
+		BranchWalker edgeOwner = null;
+
+		EdgeInfo(BranchWalker bw) {
+			update(bw);
 		}
-		return firstEdge && !allPredsAreFinished;
+
+		EdgeInfo(EdgeInfo edgeInfo) {
+			this.startNode = edgeInfo.startNode;
+			this.isDead = edgeInfo.isDead;
+			this.edgeOwner = edgeInfo.edgeOwner;
+			this.pEdgeTypes.addAll(edgeInfo.pEdgeTypes);
+		}
+
+		EdgeInfo(EdgeInfo edgeInfo, RepresentingNode startNode) {
+			this.startNode = startNode;
+			this.isDead = edgeInfo.isDead;
+			this.pEdgeTypes.addAll(edgeInfo.pEdgeTypes);
+		}
+
+		void update(BranchWalker bw) {
+			pEdgeTypes.addAll(bw.pEdgeTypes);
+			if (bw.pEdgeTypes.contains(ControlFlowType.DeadCode)) {
+				isDead = true;
+				if (edgeOwner == null) {
+					edgeOwner = bw;
+				}
+			}
+		}
+	}
+
+	static void addPredecedingRepNodes(BranchWalker bw, HashSet<EdgeInfo> edgeInfos, EdgeInfo incompleteInfo) {
+		if (bw.lastRN != null) {
+			incompleteInfo.startNode = bw.lastRN;
+			if (incompleteInfo.edgeOwner == null) {
+				incompleteInfo.edgeOwner = bw;
+			}
+			edgeInfos.add(incompleteInfo);
+		} else {
+			for (BranchWalkerInternal predBWI : bw.getPathPredecessors()) {
+				BranchWalker predBW = (BranchWalker) predBWI;
+				EdgeInfo incompleteInfoCpy = new EdgeInfo(incompleteInfo);
+				boolean omitUpdate = !predBW.isDeadCode() && bw.isDeadCode();
+				if (!omitUpdate) {
+					incompleteInfoCpy.update(predBW);
+				}
+				addPredecedingRepNodes(predBW, edgeInfos, incompleteInfoCpy);
+			}
+		}
 	}
 
 	/**

@@ -53,7 +53,7 @@ public class FlowGraph {
 
 	/** @return the {@link ComplexNode} for the given {@link ControlFlowElement} cfe. */
 	public ComplexNode getComplexNode(ControlFlowElement cfe) {
-		cfe = CFEMapper.mapCFE(cfe);
+		cfe = CFEMapper.map(cfe);
 		if (!cnMap.containsKey(cfe))
 			return null;
 		return cnMap.get(cfe);

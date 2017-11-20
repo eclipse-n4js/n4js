@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -79,25 +78,31 @@ public class ControlFlowGraphFactory {
 	static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
-		ComplexNode cn = CFEFactoryDispatcher.build(script);
-		cnMap.put(script, cn);
+		ReentrantASTIterator astIt = new ReentrantASTIterator(cfContainers, cnMap, script);
+		astIt.visitUtil(script);
 
-		TreeIterator<EObject> tit = script.eAllContents();
-		while (tit.hasNext()) {
-			EObject eObj = tit.next();
-			if (eObj instanceof ControlFlowElement) {
-				eObj = CFEMapper.map(eObj);
-
-				if (eObj != null && !cnMap.containsKey(eObj)) {
-					cn = CFEFactoryDispatcher.build(eObj);
-					if (cn != null) {
-						cfContainers.add(cn.getControlFlowContainer());
-						cnMap.put((ControlFlowElement) eObj, cn);
-					}
-				}
-			}
-		}
 	}
+	//
+	// /** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
+	// static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
+	// Map<ControlFlowElement, ComplexNode> cnMap) {
+	//
+	// ASTIterator astIt = new ASTIterator(script);
+	//
+	// while (astIt.hasNext()) {
+	// ControlFlowElement cfe = astIt.next();
+	// ControlFlowElement mappedCFE = CFEMapper.map(cfe);
+	// if (cfe == mappedCFE) {
+	// if (mappedCFE != null && !cnMap.containsKey(mappedCFE)) {
+	// ComplexNode cn = CFEFactoryDispatcher.build(astIt, mappedCFE);
+	// if (cn != null) {
+	// cfContainers.add(cn.getControlFlowContainer());
+	// cnMap.put(mappedCFE, cn);
+	// }
+	// }
+	// }
+	// }
+	// }
 
 	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {
 		for (ComplexNode cn : cnMapper.getAll()) {

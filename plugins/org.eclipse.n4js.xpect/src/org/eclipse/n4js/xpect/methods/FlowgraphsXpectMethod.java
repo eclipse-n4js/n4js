@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
@@ -55,6 +56,32 @@ public class FlowgraphsXpectMethod {
 		// ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
 		// flowAnalyzer = cache.getFlowAnalyses();
 		return flowAnalyzer;
+	}
+
+	/**
+	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
+	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 */
+	@ParameterParser(syntax = "('of' arg2=OFFSET)?")
+	@Xpect
+	public void astOrder(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset) {
+
+		EObject context = offset.getEObject();
+		Iterator<ControlFlowElement> astIter = new ASTIterator(context);
+
+		int idx = 0;
+		List<String> astElements = new LinkedList<>();
+		while (astIter.hasNext()) {
+			ControlFlowElement cfe = astIter.next();
+			String elem = idx + ": " + FGUtils.getSourceText(cfe);
+			astElements.add(elem);
+			idx++;
+		}
+
+		expectation.assertEquals(astElements);
 	}
 
 	/**

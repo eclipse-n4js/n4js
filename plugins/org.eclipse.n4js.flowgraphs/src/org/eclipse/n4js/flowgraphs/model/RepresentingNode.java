@@ -37,7 +37,7 @@ public class RepresentingNode extends Node {
 
 	@Override
 	public ControlFlowElement getRepresentedControlFlowElement() {
-		return CFEMapper.mapCFE(cfeRepresent);
+		return CFEMapper.map(cfeRepresent);
 	}
 
 }

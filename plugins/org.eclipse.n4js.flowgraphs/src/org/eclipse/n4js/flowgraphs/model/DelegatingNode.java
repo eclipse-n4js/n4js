@@ -32,7 +32,7 @@ public class DelegatingNode extends Node {
 
 	@Override
 	public ControlFlowElement getDelegatedControlFlowElement() {
-		return CFEMapper.mapCFE(cfeDelegate);
+		return CFEMapper.map(cfeDelegate);
 	}
 
 	@Override

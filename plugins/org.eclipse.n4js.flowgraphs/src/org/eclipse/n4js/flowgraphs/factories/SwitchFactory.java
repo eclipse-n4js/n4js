@@ -31,12 +31,11 @@ import org.eclipse.n4js.n4JS.SwitchStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s. */
 class SwitchFactory {
 
-	static ComplexNode buildComplexNode(SwitchStatement switchStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(switchStmt);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, SwitchStatement switchStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), switchStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, switchStmt);
-		Node pivotNode = new DelegatingNode("pivot", intPos++, switchStmt, switchStmt.getExpression());
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), switchStmt);
+		Node pivotNode = new DelegatingNode("pivot", astpp.pos(), switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -48,15 +47,15 @@ class SwitchFactory {
 			AbstractCaseClause cc = caseClauses.get(n);
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = new DelegatingNode("case_" + n, intPos++, switchStmt, cc);
+				caseNode = new DelegatingNode("case_" + n, astpp.pos(), switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = new DelegatingNode("default", intPos++, switchStmt, cc);
+				caseNode = new DelegatingNode("default", astpp.pos(), switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);
 		}
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, switchStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), switchStmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();

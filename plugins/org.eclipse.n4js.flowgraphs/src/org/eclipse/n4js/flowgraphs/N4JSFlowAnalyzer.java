@@ -18,6 +18,7 @@ import java.util.concurrent.Callable;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
@@ -191,7 +192,7 @@ public class N4JSFlowAnalyzer {
 
 	/**
 	 * @return all {@link ControlFlowElement}s that are containers in the {@link Script}. See
-	 *         {@link FGUtils#isCFContainer(ControlFlowElement)}
+	 *         {@link FGUtils#isCFContainer(EObject)}
 	 */
 	public Set<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();

@@ -1,0 +1,416 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * The order of all features of AST node instances is tested here.
+ * Example:
+ *   The 'while' statement has the two features 'expression' and 'statement'.
+ *   Their order must be: first 'expression', then 'statement'.
+ */
+
+
+
+
+/* AdditiveExpression XPECT astOrder ---
+	0: function AdditiveExpression() { 1 + 2; },
+	1: { 1 + 2; },
+	2: 1 + 2;,
+	3: 1 + 2,
+	4: 1,
+	5: 2
+--- */
+function AdditiveExpression() {
+	1 + 2;
+}
+
+
+function Argument() {
+	// tbd
+}
+
+
+/* ArrayLiteral XPECT astOrder ---
+	0: function ArrayLiteral() { [1\,2\,3]; },
+	1: { [1\,2\,3]; },
+	2: [1\,2\,3];,
+	3: [1\,2\,3],
+	4: 1,
+	5: 2,
+	6: 3
+--- */
+function ArrayLiteral() {
+	[1,2,3];
+}
+
+
+/* AssignmentExpression XPECT astOrder ---
+	0: function AssignmentExpression(x:int) { x = 1; },
+	1: { x = 1; },
+	2: x = 1;,
+	3: x = 1,
+	4: x,
+	5: 1
+--- */
+function AssignmentExpression(x:int) {
+	x = 1;
+}
+
+
+/* AwaitExpression XPECT astOrder ---
+	0: async function AwaitExpression() { await null; },
+	1: { await null; },
+	2: await null;,
+	3: await null,
+	4: null
+--- */
+async function AwaitExpression() {
+	// AwaitExpression XPECT warnings --> "await should not be used on 'null' since it has no effect here." at "await null"
+	await null;
+}
+
+
+/* BinaryBitwiseExpression XPECT astOrder ---
+	0: function BinaryBitwiseExpression() { 1 & 2; },
+	1: { 1 & 2; },
+	2: 1 & 2;,
+	3: 1 & 2, 4: 1,
+	5: 2
+--- */
+function BinaryBitwiseExpression() {
+	1 & 2;
+}
+
+
+/* BinaryLogicalExpression XPECT astOrder ---
+	0: function BinaryLogicalExpression() { 1 && 2; },
+	1: { 1 && 2; },
+	2: 1 && 2;,
+	3: 1 && 2,
+	4: 1,
+	5: 2
+--- */
+function BinaryLogicalExpression() {
+	1 && 2;
+}
+
+
+/* CastExpression XPECT astOrder ---
+	0: function CastExpression() { 4 as int; },
+	1: { 4 as int; },
+	2: 4 as int;,
+	3: 4 as int,
+	4: 4
+--- */
+function CastExpression() {
+	// CastExpression XPECT warnings --> "Unnecessary cast from int to int" at "4 as int"
+	4 as int;
+}
+
+
+/* CommaExpression XPECT astOrder ---
+	0: function CommaExpression() { 4\,5; },
+	1: { 4\,5; },
+	2: 4\,5;,
+	3: 4\,5,
+	4: 4,
+	5: 5
+--- */
+function CommaExpression() {
+	4,5;
+}
+
+
+/* ConditionalExpression XPECT astOrder ---
+	0: function ConditionalExpression() { true ? 1 : 2; },
+	1: { true ? 1 : 2; },
+	2: true ? 1 : 2;,
+	3: true ? 1 : 2,
+	4: true,
+	5: 1,
+	6: 2
+--- */
+function ConditionalExpression() {
+	// GH-151 ConditionalExpression XPECT FIXME warnings --> "Dispensable use of conditional expression. The expression 'true' always evaluates to true, so only the left-hand side will ever be evaluated." at "true"
+	true ? 1 : 2;
+}
+
+
+/* EqualityExpression XPECT astOrder ---
+	0: function EqualityExpression() { 1 == 2; },
+	1: { 1 == 2; },
+	2: 1 == 2;,
+	3: 1 == 2,
+	4: 1,
+	5: 2
+--- */
+function EqualityExpression() {
+	1 == 2;
+}
+
+
+/* FunctionExpression XPECT astOrder ---
+	0: function FunctionExpression() { (function() { }); },
+	1: { (function() { }); },
+	2: (function() { });,
+	3: (function() { }),
+	4: function() { },
+	5: { }
+--- */
+function FunctionExpression() {
+	(function() { });
+}
+
+
+/* IdentifierRef XPECT astOrder ---
+	0: function IdentifierRef(i) { i; },
+	1: { i; },
+	2: i;,
+	3: i
+--- */
+function IdentifierRef(i) {
+	i;
+}
+
+
+/* IndexedAccessExpression XPECT astOrder ---
+	0: function IndexedAccessExpression(b : Array<?>) { b[1]; },
+	1: { b[1]; },
+	2: b[1];,
+	3: b[1],
+	4: b,
+	5: 1
+--- */
+function IndexedAccessExpression(b : Array<?>) {
+	b[1];
+}
+
+
+/* Literal XPECT astOrder ---
+	0: function Literal() { "string literal"; },
+	1: { "string literal"; },
+	2: "string literal";,
+	3: "string literal"
+--- */
+function Literal() {
+	"string literal";
+}
+
+
+/* MultiplicativeExpression XPECT astOrder ---
+	0: function MultiplicativeExpression() { 47 * 11; },
+	1: { 47 * 11; },
+	2: 47 * 11;,
+	3: 47 * 11,
+	4: 47,
+	5: 11
+--- */
+function MultiplicativeExpression() {
+	47 * 11;
+}
+
+function N4ClassExpression() {
+	// currently unsupported feature
+}
+
+
+/* NewExpression XPECT astOrder ---
+	0: function NewExpression() { new Object(); },
+	1: { new Object(); },
+	2: new Object();,
+	3: new Object(),
+	4: Object
+--- */
+function NewExpression() {
+	new Object();
+}
+
+
+/* NewTarget XPECT astOrder ---
+	0: function NewTarget() { },
+	1: { }
+--- */
+function NewTarget() {
+	// currently unsupported feature
+}
+
+
+/* ObjectLiteral XPECT astOrder ---
+	0: function ObjectLiteral() { ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }); },
+	1: { ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }); },
+	2: ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} });,
+	3: ({ a : 1 \, b : "string" \, fn : function(){} \, m() {} }),
+	4: { a : 1 \, b : "string" \, fn : function(){} \, m() {} },
+	5: 1,
+	6: "string",
+	7: function(){},
+	8: {},
+	9: {}
+--- */
+function ObjectLiteral() {
+	({ a : 1 , b : "string" , fn : function(){} , m() {} });
+}
+
+
+/* ParameterizedCallExpression XPECT astOrder ---
+	0: function ParameterizedCallExpression() { Object.call(1\,2); },
+	1: { Object.call(1\,2); },
+	2: Object.call(1\,2);,
+	3: Object.call(1\,2),
+	4: Object.call,
+	5: Object,
+	6: 1,
+	7: 2
+--- */
+function ParameterizedCallExpression() {
+	Object.call(1,2);
+}
+
+
+/* ParameterizedPropertyAccessExpression XPECT astOrder ---
+	0: function ParameterizedPropertyAccessExpression() { Object.call; },
+	1: { Object.call; },
+	2: Object.call;,
+	3: Object.call,
+	4: Object
+--- */
+function ParameterizedPropertyAccessExpression() {
+	Object.call;
+}
+
+
+/* PostfixExpression XPECT astOrder ---
+	0: function PostfixExpression(x : int) { x++; },
+	1: { x++; },
+	2: x++;,
+	3: x++,
+	4: x
+--- */
+function PostfixExpression(x : int) {
+	x++;
+}
+
+
+/* PrimaryExpression XPECT astOrder ---
+	0: function PrimaryExpression() { },
+	1: { }
+--- */
+function PrimaryExpression() {
+	// tbd
+}
+
+
+/* PromisifyExpression XPECT astOrder ---
+	0: function PromisifyExpression() { },
+	1: { }
+--- */
+function PromisifyExpression() {
+	// tbd
+}
+
+
+/* RelationalExpression XPECT astOrder ---
+	0: function RelationalExpression() { 1 > 73; },
+	1: { 1 > 73; },
+	2: 1 > 73;,
+	3: 1 > 73,
+	4: 1,
+	5: 73
+--- */
+function RelationalExpression() {
+	1 > 73;
+}
+
+
+/* ShiftExpression XPECT astOrder ---
+	0: function ShiftExpression() { 847 >> 2; },
+	1: { 847 >> 2; },
+	2: 847 >> 2;,
+	3: 847 >> 2,
+	4: 847,
+	5: 2
+--- */
+function ShiftExpression() {
+	847 >> 2;
+}
+
+
+/* ClassSuperLiteral XPECT astOrder ---
+	0: { super; },
+	1: super;,
+	2: super
+--- */
+class ClassSuperLiteral {
+	// ClassSuperLiteral XPECT warnings --> "Method names should start with lower case letter." at "SuperLiteral"
+	SuperLiteral() {
+		// ClassSuperLiteral XPECT errors --> "Keyword super may only be used in member access expressions, call expressions or new expressions." at "super"
+		super;
+	}
+}
+
+function TaggedTemplateString() {
+	// currently unsupported feature
+}
+
+
+/* TemplateExpression XPECT astOrder ---
+	0: function TemplateExpression() { `a ${"b"} c`; },
+	1: { `a ${"b"} c`; },
+	2: `a ${"b"} c`;,
+	3: `a ${"b"} c`,
+	4: `a ${,
+	5: "b",
+	6:  c`
+--- */
+function TemplateExpression() {
+	`a ${"b"} c`;
+}
+
+
+/* ThisExpression XPECT astOrder ---
+	0: function ThisExpression() { this; },
+	1: { this; },
+	2: this;,
+	3: this
+--- */
+function ThisExpression() {
+	this;
+}
+
+
+
+/* UnaryExpression XPECT astOrder ---
+	0: function UnaryExpression() { !true; },
+	1: { !true; },
+	2: !true;,
+	3: !true,
+	4: true
+--- */
+function UnaryExpression() {
+	!true;
+}
+
+
+/* YieldExpression XPECT astOrder ---
+	0: function * YieldExpression(i) { i = yield 1; }\n,
+	1: { i = yield 1; },
+	2: i = yield 1;,
+	3: i = yield 1,
+	4: i,
+	5: yield 1,
+	6: 1
+--- */
+function * YieldExpression(i) {
+	i = yield 1;
+}

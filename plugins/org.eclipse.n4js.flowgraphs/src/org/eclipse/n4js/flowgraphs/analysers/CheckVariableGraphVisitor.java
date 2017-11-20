@@ -10,73 +10,55 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- * This graph visitor prints all paths
+ *
  */
 public class CheckVariableGraphVisitor extends GraphVisitor {
-	static int explCount = 0;
 	static int branCount = 0;
+	final CheckVariablePathExplorer cvpe;
 
 	/** Constructor */
 	public CheckVariableGraphVisitor() {
 		super(Mode.Backward);
+		cvpe = new CheckVariablePathExplorer();
 	}
 
 	@Override
 	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// TODO Auto-generated method stub
-		super.initializeMode(curMode, curContainer);
-	}
-
-	@Override
-	protected void visit(ControlFlowElement cfe) {
-		if (cfe instanceof VariableDeclaration) {
-			super.requestActivation(new CheckVariablePathExplorer((VariableDeclaration) cfe));
-		}
+		super.requestActivation(cvpe);
 	}
 
 	@Override
 	protected void terminate() {
-		// System.out.println("Explorers: " + explCount);
-		// System.out.println("Branches: " + branCount);
+		// System.out.println("branches: " + branCount);
 	}
 
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
-		for (GraphExplorerInternal pathExplorer : getActivatedExplorers()) {
-			CheckVariablePathExplorer checkVariablePathExplorer = (CheckVariablePathExplorer) pathExplorer;
-			idRefs.addAll(checkVariablePathExplorer.getUsedButNotDeclaredIdentifierRefs());
+		for (BranchWalkerInternal activeBW : cvpe.getActiveBranches()) {
+			CheckVariablePathWalker cvbw = (CheckVariablePathWalker) activeBW;
+			for (List<IdentifierRef> idRefList : cvbw.checkLists.values()) {
+				idRefs.addAll(idRefList);
+			}
 		}
 		return idRefs;
 	}
 
 	class CheckVariablePathExplorer extends GraphExplorer {
-		final VariableDeclaration varDecl;
-		final List<IdentifierRef> idRefs = new ArrayList<>();
-
-		CheckVariablePathExplorer(VariableDeclaration varDecl) {
-			super(Quantor.None);
-			this.varDecl = varDecl;
-			explCount++;
-		}
-
-		public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
-			return idRefs;
-		}
 
 		@Override
 		protected BranchWalkerInternal firstBranchWalker() {
@@ -85,29 +67,44 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 
 		@Override
 		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
-			return new CheckVariablePathWalker();
+			CheckVariablePathWalker joinedWalker = new CheckVariablePathWalker();
+			for (BranchWalker bW : branchWalkers) {
+				CheckVariablePathWalker cvbw = (CheckVariablePathWalker) bW;
+				joinedWalker.checkLists.putAll(cvbw.checkLists);
+			}
+			return joinedWalker;
 		}
-
 	}
 
 	class CheckVariablePathWalker extends BranchWalker {
+		final Map<VariableDeclaration, List<IdentifierRef>> checkLists = new HashMap<>();
+
 		CheckVariablePathWalker() {
 			branCount++;
 		}
 
 		@Override
 		protected CheckVariablePathWalker forkPath() {
-			return new CheckVariablePathWalker();
+			CheckVariablePathWalker newBranch = new CheckVariablePathWalker();
+			newBranch.checkLists.putAll(checkLists);
+			return newBranch;
 		}
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			CheckVariablePathExplorer explorer = (CheckVariablePathExplorer) this.getExplorer();
-			if (cfe instanceof IdentifierRef && ((IdentifierRef) cfe).getId() == explorer.varDecl) {
-				explorer.idRefs.add((IdentifierRef) cfe);
+			if (cfe instanceof VariableDeclaration) {
+				checkLists.put((VariableDeclaration) cfe, new LinkedList<>());
+			} else if (cfe instanceof IdentifierRef) {
+				IdentifierRef ir = (IdentifierRef) cfe;
+
+				if (!checkLists.containsKey(ir.getId())) {
+					return;
+				}
+
+				List<IdentifierRef> idRefs = checkLists.get(ir.getId());
+				idRefs.add(ir);
 			}
 		}
-
 	}
 
 }

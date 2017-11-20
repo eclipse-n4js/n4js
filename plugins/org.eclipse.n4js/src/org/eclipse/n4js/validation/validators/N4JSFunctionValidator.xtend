@@ -74,6 +74,7 @@ import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
 import org.eclipse.n4js.flowgraphs.analysers.CheckVariableGraphVisitor
+import org.eclipse.n4js.flowgraphs.analysers.CheckVariableGraphVisitor2
 
 /**
  */

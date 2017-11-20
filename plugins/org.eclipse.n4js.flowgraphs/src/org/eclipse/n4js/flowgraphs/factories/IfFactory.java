@@ -25,20 +25,19 @@ import org.eclipse.n4js.n4JS.IfStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link IfStatement}s. */
 class IfFactory {
 
-	static ComplexNode buildComplexNode(IfStatement ifStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(ifStmt);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, IfStatement ifStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), ifStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, ifStmt);
-		Node conditionNode = new DelegatingNode("condition", intPos++, ifStmt, ifStmt.getExpression());
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), ifStmt);
+		Node conditionNode = new DelegatingNode("condition", astpp.pos(), ifStmt, ifStmt.getExpression());
 		Node thenNode = null;
 		Node elseNode = null;
 
 		if (ifStmt.getIfStmt() != null)
-			thenNode = new DelegatingNode("then", intPos++, ifStmt, ifStmt.getIfStmt());
+			thenNode = new DelegatingNode("then", astpp.pos(), ifStmt, ifStmt.getIfStmt());
 		if (ifStmt.getElseStmt() != null)
-			elseNode = new DelegatingNode("else", intPos++, ifStmt, ifStmt.getElseStmt());
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, ifStmt);
+			elseNode = new DelegatingNode("else", astpp.pos(), ifStmt, ifStmt.getElseStmt());
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), ifStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

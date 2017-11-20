@@ -28,26 +28,25 @@ import org.eclipse.n4js.n4JS.Statement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s. */
 class AbstractCaseClauseFactory {
 
-	static ComplexNode buildComplexNode(AbstractCaseClause abstrCaseClause) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(abstrCaseClause);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, AbstractCaseClause abstrCaseClause) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), abstrCaseClause);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, abstrCaseClause);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), abstrCaseClause);
 		List<Node> stmtNodes = new LinkedList<>();
 		Node caseConditionNode = null;
 
 		if (abstrCaseClause instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) abstrCaseClause;
-			caseConditionNode = new DelegatingNode("condition", intPos++, caseClause, caseClause.getExpression());
+			caseConditionNode = new DelegatingNode("condition", astpp.pos(), caseClause, caseClause.getExpression());
 		}
 
 		EList<Statement> stmts = abstrCaseClause.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = new DelegatingNode("stmt_" + i, intPos++, abstrCaseClause, stmt);
+			Node blockNode = new DelegatingNode("stmt_" + i, astpp.pos(), abstrCaseClause, stmt);
 			stmtNodes.add(blockNode);
 		}
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, abstrCaseClause);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), abstrCaseClause);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(caseConditionNode);

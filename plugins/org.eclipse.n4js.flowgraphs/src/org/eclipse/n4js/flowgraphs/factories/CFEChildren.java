@@ -147,15 +147,16 @@ final class CFEChildren {
 
 		@Override
 		public List<Node> caseBindingElement(BindingElement be) {
+			int id = 1;
 			List<Node> cfc = new LinkedList<>();
 			if (be.getNestedPattern() != null) {
-				cfc.add(getDelegatingNode("nestedPattern", 1, be, be.getNestedPattern()));
+				cfc.add(getDelegatingNode("nestedPattern", id++, be, be.getNestedPattern()));
 			}
 			if (be.getVarDecl() != null) {
-				cfc.add(getDelegatingNode("declaration", 1, be, be.getVarDecl()));
+				cfc.add(getDelegatingNode("declaration", id++, be, be.getVarDecl()));
 			}
 			if (be.getExpression() != null) {
-				cfc.add(getDelegatingNode("initializer", 1, be, be.getExpression()));
+				cfc.add(getDelegatingNode("initializer", id++, be, be.getExpression()));
 			}
 			return cfc;
 		}
@@ -283,10 +284,10 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseObjectLiteral(ObjectLiteral ol) {
 			List<Node> cfc = new LinkedList<>();
+			int intPos = 1;
 			for (int i = 0; i < ol.getPropertyAssignments().size(); i++) {
 				PropertyAssignment pa = ol.getPropertyAssignments().get(i);
 
-				int intPos = 1;
 				if (pa instanceof PropertyNameValuePair) {
 					PropertyNameValuePair pnvp = (PropertyNameValuePair) pa;
 					LiteralOrComputedPropertyName locpn = pnvp.getDeclaredName();
@@ -405,12 +406,13 @@ final class CFEChildren {
 
 		@Override
 		public List<Node> caseVariableBinding(VariableBinding vb) {
+			int id = 1;
 			List<Node> cfc = new LinkedList<>();
 			if (vb.getExpression() != null) {
-				cfc.add(getDelegatingNode("expression", 1, vb, vb.getExpression()));
+				cfc.add(getDelegatingNode("expression", id++, vb, vb.getExpression()));
 			}
 			if (vb.getPattern() != null) {
-				cfc.add(getDelegatingNode("pattern", 2, vb, vb.getPattern()));
+				cfc.add(getDelegatingNode("pattern", id++, vb, vb.getPattern()));
 			}
 			return cfc;
 		}

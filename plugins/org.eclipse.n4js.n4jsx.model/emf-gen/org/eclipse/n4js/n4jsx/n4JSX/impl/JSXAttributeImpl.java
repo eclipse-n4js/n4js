@@ -11,7 +11,6 @@
 package org.eclipse.n4js.n4jsx.n4JSX.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute;
 import org.eclipse.n4js.n4jsx.n4JSX.N4JSXPackage;
 

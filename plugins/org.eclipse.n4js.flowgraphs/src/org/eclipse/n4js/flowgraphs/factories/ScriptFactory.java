@@ -34,19 +34,18 @@ import org.eclipse.n4js.n4JS.Statement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link Script}s. */
 class ScriptFactory {
 
-	static ComplexNode buildComplexNode(Script script) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(script);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, Script script) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), script);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, script);
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, script);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), script);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), script);
 		List<Node> scriptNodes = new LinkedList<>();
 
 		EList<ScriptElement> scriptElems = script.getScriptElements();
 		for (int n = 0; n < scriptElems.size(); n++) {
 			ScriptElement scriptElem = getScriptElementAt(script, n);
 			if (isControlFlowStatement(scriptElem)) {
-				Node blockNode = new DelegatingNode("stmt_" + n, intPos++, script, (Statement) scriptElem);
+				Node blockNode = new DelegatingNode("stmt_" + n, astpp.pos(), script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
 			}
 		}

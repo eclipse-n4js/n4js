@@ -27,18 +27,17 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link VariableStatement}s. */
 class VariableStatementFactory {
 
-	static ComplexNode buildComplexNode(VariableStatement varDeclStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(varDeclStmt);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, VariableStatement varDeclStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), varDeclStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, varDeclStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), varDeclStmt);
 		List<Node> varDeclNodes = new LinkedList<>();
 		for (int n = 0; n < varDeclStmt.getVarDeclsOrBindings().size(); n++) {
 			VariableDeclarationOrBinding varDOB = varDeclStmt.getVarDeclsOrBindings().get(n);
-			Node varDeclNode = new DelegatingNode("declaration_" + n, intPos++, varDeclStmt, varDOB);
+			Node varDeclNode = new DelegatingNode("declaration_" + n, astpp.pos(), varDeclStmt, varDOB);
 			varDeclNodes.add(varDeclNode);
 		}
-		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, varDeclStmt);
+		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), varDeclStmt);
 
 		cNode.addNode(entryNode);
 		for (Node varDeclNode : varDeclNodes)

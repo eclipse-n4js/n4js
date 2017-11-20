@@ -29,22 +29,14 @@ public class CFEMapper {
 	 * Maps the given {@link EObject} to another {@link EObject} which will be used in the control flow graph. This
 	 * method invokes the internal mapping methods repeatedly until a fixpoint is reached.
 	 */
-	static public EObject map(EObject eObj) {
-		EObject eObjTmp = eObj;
-		EObject lastEObj = null;
+	static public ControlFlowElement map(ControlFlowElement eObj) {
+		ControlFlowElement eObjTmp = eObj;
+		ControlFlowElement lastEObj = null;
 		while (eObjTmp != null) {
 			lastEObj = eObjTmp;
 			eObjTmp = mapInternal(eObjTmp);
 		}
 		return lastEObj;
-	}
-
-	/**
-	 * Maps the given {@link ControlFlowElement} to another {@link ControlFlowElement} which will be used in the control
-	 * flow graph. This method invokes the internal mapping methods repeatedly until a fixpoint is reached.
-	 */
-	static public ControlFlowElement mapCFE(ControlFlowElement cfe) {
-		return (ControlFlowElement) map(cfe);
 	}
 
 	/**

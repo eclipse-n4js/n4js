@@ -102,7 +102,7 @@ public class FGUtils {
 	}
 
 	/** @return true iff the given {@link ControlFlowElement} is a container such as a function's body. */
-	public static boolean isCFContainer(ControlFlowElement cfe) {
+	public static boolean isCFContainer(EObject cfe) {
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;

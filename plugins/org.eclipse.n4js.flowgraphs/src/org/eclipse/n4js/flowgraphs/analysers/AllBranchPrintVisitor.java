@@ -170,6 +170,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		@Override
 		protected void visit(FlowEdge edge) {
 			branchString += " -> ";
+			// branchString += " --" + edge.toString() + "--> ";
 		}
 
 		@Override

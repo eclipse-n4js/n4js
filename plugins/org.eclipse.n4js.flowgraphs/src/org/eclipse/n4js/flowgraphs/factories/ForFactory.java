@@ -32,49 +32,48 @@ class ForFactory {
 
 	static final String LOOPCATCH_NODE_NAME = "loopCatch";
 
-	static ComplexNode buildComplexNode(ForStatement forStmt) {
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ForStatement forStmt) {
 		if (forStmt.isForIn())
-			return buildForInOf(forStmt, true);
+			return buildForInOf(astpp, forStmt, true);
 		if (forStmt.isForOf())
-			return buildForInOf(forStmt, false);
+			return buildForInOf(astpp, forStmt, false);
 		if (forStmt.isForPlain())
-			return buildForPlain(forStmt);
+			return buildForPlain(astpp, forStmt);
 
 		return null;
 	}
 
-	private static ComplexNode buildForInOf(ForStatement forStmt, boolean forInSemantics) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(forStmt);
+	private static ComplexNode buildForInOf(ASTIteratorInfo astpp, ForStatement forStmt, boolean forInSemantics) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), forStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, forStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), forStmt);
 		List<Node> declNodes = new LinkedList<>();
 		List<Node> initNodes = new LinkedList<>();
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("decl_" + i, intPos++, forStmt, varDecl);
+					Node initNode = new DelegatingNode("decl_" + i, astpp.pos(), forStmt, varDecl);
 					declNodes.add(initNode);
 					i++;
 				}
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", intPos++, forStmt, forStmt.getInitExpr());
+			Node initNode = new DelegatingNode("inits", astpp.pos(), forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
-		Node expressionNode = new DelegatingNode("expression", intPos++, forStmt, forStmt.getExpression());
+		Node expressionNode = new DelegatingNode("expression", astpp.pos(), forStmt, forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics)
-			getObjectKeysNode = new HelperNode("getObjectKeys", intPos++, forStmt);
-		Node getIteratorNode = new HelperNode("getIterator", intPos++, forStmt);
-		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, intPos++, forStmt);
-		Node nextNode = new HelperNode("next", intPos++, forStmt);
+			getObjectKeysNode = new HelperNode("getObjectKeys", astpp.pos(), forStmt);
+		Node getIteratorNode = new HelperNode("getIterator", astpp.pos(), forStmt);
+		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, astpp.pos(), forStmt);
+		Node nextNode = new HelperNode("next", astpp.pos(), forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null)
-			bodyNode = new DelegatingNode("body", intPos++, forStmt, forStmt.getStatement());
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, forStmt);
+			bodyNode = new DelegatingNode("body", astpp.pos(), forStmt, forStmt.getStatement());
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
 		for (Node declNode : declNodes)
@@ -112,12 +111,11 @@ class ForFactory {
 		return cNode;
 	}
 
-	private static ComplexNode buildForPlain(ForStatement forStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(forStmt);
+	private static ComplexNode buildForPlain(ASTIteratorInfo astpp, ForStatement forStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), forStmt);
 
 		List<Node> initNodes = new LinkedList<>();
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, forStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), forStmt);
 		Node conditionNode = null;
 		Node bodyNode = null;
 		Node updatesNode = null;
@@ -126,27 +124,27 @@ class ForFactory {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("init_" + i, intPos++, forStmt, varDecl);
+					Node initNode = new DelegatingNode("init_" + i, astpp.pos(), forStmt, varDecl);
 					initNodes.add(initNode);
 					i++;
 				}
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", intPos++, forStmt, forStmt.getInitExpr());
+			Node initNode = new DelegatingNode("inits", astpp.pos(), forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode("condition", intPos++, forStmt, forStmt.getExpression());
+			conditionNode = new DelegatingNode("condition", astpp.pos(), forStmt, forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", intPos++, forStmt, forStmt.getStatement());
+			bodyNode = new DelegatingNode("body", astpp.pos(), forStmt, forStmt.getStatement());
 		}
-		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, intPos++, forStmt);
+		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = new DelegatingNode("updates", intPos++, forStmt, forStmt.getUpdateExpr());
+			updatesNode = new DelegatingNode("updates", astpp.pos(), forStmt, forStmt.getUpdateExpr());
 		}
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, forStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(exitNode);

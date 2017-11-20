@@ -29,18 +29,17 @@ import org.eclipse.n4js.n4JS.Statement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s. */
 class BlockFactory {
 
-	static ComplexNode buildComplexNode(org.eclipse.n4js.n4JS.Block block) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(block);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, org.eclipse.n4js.n4JS.Block block) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), block);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, block);
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, block);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), block);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), block);
 		List<Node> blockNodes = new LinkedList<>();
 
 		EList<Statement> stmts = block.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = new DelegatingNode("stmt_" + i, intPos++, block, stmt);
+			Node blockNode = new DelegatingNode("stmt_" + i, astpp.pos(), block, stmt);
 			blockNodes.add(blockNode);
 		}
 
@@ -59,6 +58,7 @@ class BlockFactory {
 		cNode.setExitNode(exitNode);
 
 		if (FGUtils.isCFContainer(block)) {
+			// if (block == astpp.container()) { // TODO
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesAll));
 		}
 

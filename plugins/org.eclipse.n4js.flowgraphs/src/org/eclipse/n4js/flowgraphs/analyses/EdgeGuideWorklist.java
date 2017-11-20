@@ -37,7 +37,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * </pre>
  */
 public class EdgeGuideWorklist {
-	private final EdgeGuideQueue egQueue = new EdgeGuideQueue(this);
+	private final EdgeGuideQueue egQueue = new EdgeGuideQueue();
 	private final Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
 	private EdgeGuide currEdgeGuide;
 	private EdgeGuide nextEdgeGuide;

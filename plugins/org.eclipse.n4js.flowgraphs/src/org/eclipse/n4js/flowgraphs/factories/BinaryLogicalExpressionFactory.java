@@ -27,14 +27,13 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
 class BinaryLogicalExpressionFactory {
 
-	static ComplexNode buildComplexNode(BinaryLogicalExpression lbExpr) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(lbExpr);
+	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, BinaryLogicalExpression lbExpr) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), lbExpr);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, intPos++, lbExpr);
-		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, lbExpr);
-		Node lhsNode = new DelegatingNode("lhs", intPos++, lbExpr, lbExpr.getLhs());
-		Node rhsNode = new DelegatingNode("rhs", intPos++, lbExpr, lbExpr.getRhs());
+		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), lbExpr);
+		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), lbExpr);
+		Node lhsNode = new DelegatingNode("lhs", astpp.pos(), lbExpr, lbExpr.getLhs());
+		Node rhsNode = new DelegatingNode("rhs", astpp.pos(), lbExpr, lbExpr.getRhs());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(lhsNode);

@@ -231,10 +231,20 @@ function ReturnStatement1() {
 	/* ReturnStatement1 XPECT allEdges ---
 		"start" --> return;
 	--- */
-	// ReturnStatement1 XPECT allBranches --> B0: "start" -> return;
-	// ReturnStatement1 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return; -> "start", B2: [B0]"end"
+	/* ReturnStatement1 XPECT allBranches ---
+		B0: "start" -> return;[B1|b2],
+		B1: [B0],
+		b2: [B0] -> "end"
+	--- */
+	/* ReturnStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]return; -> "start",
+		b2: [B0]"end"[B3]
+	--- */
 	// ReturnStatement1 XPECT allPaths --> "start" -> return;
-	// ReturnStatement1 backward XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+	// ReturnStatement1 backward XPECT allPaths direction 'Backward' -->  return; -> "start"
 	// ReturnStatement1 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement1 XPECT commonPreds of 'return;' and '"end"' -->
 	// ReturnStatement1 XPECT succs at '"start"' --> return;
@@ -252,10 +262,20 @@ function ReturnStatement2() : int {
 		"start" --> 1,
 		1 --> return 1;
 	--- */
-	// ReturnStatement2 XPECT allBranches --> B0: "start" -> 1 -> return 1;
-	// ReturnStatement2 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return 1; -> 1 -> "start", B2: [B0]"end"
+	/* ReturnStatement2 XPECT allBranches ---
+		B0: "start" -> 1 -> return 1;[B1|b2],
+		B1: [B0],
+		b2: [B0] -> "end"
+	--- */
+	/* ReturnStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]return 1; -> 1 -> "start",
+		b2: [B0]"end"[B3]
+	--- */
 	// ReturnStatement2 XPECT allPaths --> "start" -> 1 -> return 1;
-	// ReturnStatement2 backward XPECT allPaths direction 'Backward' --> "end", return 1; -> 1 -> "start"
+	// ReturnStatement2 backward XPECT allPaths direction 'Backward' -->  return 1; -> 1 -> "start"
 	// ReturnStatement2 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement2 XPECT commonPreds of 'return 1;' and '"end"' -->
 	// ReturnStatement2 XPECT succs at '"start"' --> 1
@@ -276,26 +296,19 @@ function ReturnStatement3() {
 		1 --> "end"
 	--- */
 	/* ReturnStatement3 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> "end"[B3],
-		B2: [B0] -> return;[B3],
-		B3: [B1|B2]
+		B0: "start" -> 1[B1|B2], B1: [B0] -> "end"[B5], B2: [B0] -> return;[B3|b4],
+		B3: [B2][B5], B5: [B1|B3], b4: [B2] -> "end"
 	--- */
 	/* ReturnStatement3 backward XPECT allBranches direction 'Backward' ---
-		B0: [B1|B2],
-		B1: [B0]return; -> 1 -> "start",
-		B2: [B0]"end"[B3|B4],
-		B3: [B2] -> 1 -> "start",
-		B4: [B2]
+		B0: [B1|B2], B1: [B0]return; -> 1 -> "start", B2: [B0]"end"[B3|b4],
+		B3: [B2] -> [B6], B5: [b4] -> return; -> [B6], B6: [B3|B5]1 -> "start", b4: [B2][B5]
 	---	*/
 	/* ReturnStatement3 XPECT allPaths ---
 	   "start" -> 1 -> return;,
 	   "start" -> 1 -> "end"
 	--- */
 	/* ReturnStatement3 backward XPECT allPaths direction 'Backward' ---
-		"end",
-		"end" -> 1 -> "start",
-		return; -> 1 -> "start"
+		"end" -> 1 -> "start", return; -> 1 -> "start"
 	---	*/
 	// ReturnStatement3 XPECT path from '"start"' to '"end"' -->
 	// ReturnStatement3 XPECT path from 'return;' notTo '"end"' -->
@@ -318,10 +331,20 @@ let ReturnStatement4 = function() {
 	/* ReturnStatement4 XPECT allEdges ---
 		"start" --> return;
 	--- */
-	// ReturnStatement4 XPECT allBranches --> B0: "start" -> return;
-	// ReturnStatement4 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return; -> "start", B2: [B0]"end"
+	/* ReturnStatement4 XPECT allBranches ---
+	   B0: "start" -> return;[B1|b2],
+	   B1: [B0],
+	   b2: [B0] -> "end"
+	--- */
+	/* ReturnStatement4 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]return; -> "start",
+		b2: [B0]"end"[B3]
+	--- */
 	// ReturnStatement4 XPECT allPaths --> "start" -> return;
-	// ReturnStatement4 backward XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+	// ReturnStatement4 backward XPECT allPaths direction 'Backward' -->  return; -> "start"
 	// ReturnStatement4 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement4 XPECT commonPreds of 'return;' and '"end"' -->
 	// ReturnStatement4 XPECT succs at '"start"' --> return;
@@ -340,10 +363,20 @@ class ReturnStatement5 {
     	/* ReturnStatement5 XPECT allEdges ---
 			"start" --> return;
 		--- */
-		// ReturnStatement5 XPECT allBranches --> B0: "start" -> return;
-		// ReturnStatement5 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return; -> "start", B2: [B0]"end"
+		/* ReturnStatement5 XPECT allBranches ---
+			B0: "start" -> return;[B1|b2],
+			B1: [B0],
+			b2: [B0] -> "end"
+		--- */
+		/* ReturnStatement5 backward XPECT allBranches direction 'Backward' ---
+			B0: [B1|b2],
+			B1: [B0][B4],
+			B3: [b2] -> [B4],
+			B4: [B1|B3]return; -> "start",
+			b2: [B0]"end"[B3]
+		--- */
 		// ReturnStatement5 XPECT allPaths --> "start" -> return;
-		// ReturnStatement5 backward XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+		// ReturnStatement5 backward XPECT allPaths direction 'Backward' -->  return; -> "start"
 		// ReturnStatement5 XPECT path from '"start"' notTo '"end"' -->
 		// ReturnStatement5 XPECT commonPreds of 'return;' and '"end"' -->
 		// ReturnStatement5 XPECT succs at '"start"' --> return;
