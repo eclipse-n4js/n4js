@@ -197,13 +197,13 @@ public class N4HeadlessCompiler {
 		return result;
 	}
 
-
 	/** Configure FileSystemAccess (FSA) from a composite generator and a project */
 	private void configureFSAOutput(IComposedGenerator compositeGenerator, IN4JSProject project) {
 		Map<String, OutputConfiguration> outputs = buildOutputConfigurations(compositeGenerator);
 		configureFSA(project, outputs);
 	}
-		/**
+
+	/**
 	 * Invoked by {@code N4jscBase} to set instances of injected types from the N4JSX injector. This is a work-around
 	 * for the known issue of IDE-2493.
 	 */
@@ -1406,8 +1406,14 @@ public class N4HeadlessCompiler {
 						if (logger.isVerbose()) {
 							logger.info("  Generating resource " + resource.getURI());
 						}
+						if (logger.isVerbose()) {
+							logger.info("  will generate with  " + compositeGenerators.size() + " composed generators");
+						}
 						// Ask each composite generator to try to generate the current resource
 						for (IComposedGenerator compositeGenerator : compositeGenerators) {
+							if (logger.isVerbose()) {
+								logger.info("  generating  " + compositeGenerator.getClass().getName());
+							}
 							// Configure FSA for the composite generator and the project
 							configureFSAOutput(compositeGenerator, markedProject.project);
 							compositeGenerator.doGenerate(resource, fsa);
