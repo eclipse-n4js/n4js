@@ -61,7 +61,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.N4JSCompositeGenerator;
+import org.eclipse.n4js.generator.common.IComposedGenerator;
 import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
@@ -75,7 +75,6 @@ import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4jsx.N4JSXGlobals;
 import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
-import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
@@ -273,7 +272,7 @@ public class N4jscBase implements IApplication {
 	/**
 	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
 	 */
-	@Inject
+	// @Inject (from N4JSX injector; will be done manually in #initInjection())
 	private FileBasedWorkspace n4jsxFileBasedWorkspace;
 
 	@Inject
@@ -316,16 +315,17 @@ public class N4jscBase implements IApplication {
 	private SubgeneratorsRegistry subgeneratorsRegistry;
 
 	@Inject
-	private N4JSCompositeGenerator n4jsCompositeGenerator;
+	private IComposedGenerator n4jsCompositeGenerator;
 
-	@Inject
-	private N4JSXCompositeGenerator n4jsxCompositeGenerator;
+	// TODO IDE-2493 remove workaround for multi-language problem
+	// @Inject (from N4JSX injector; will be done manually in #initInjection())
+	private IComposedGenerator n4jsxCompositeGenerator;
 
 	// TODO IDE-2493 remove duplicated singletons
 	/**
 	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
 	 */
-	@Inject
+	// @Inject (from N4JSX injector; will be done manually in #initInjection())
 	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
 
 	@Override
@@ -968,6 +968,7 @@ public class N4jscBase implements IApplication {
 		Injector n4jsxInjector = N4JSXStandaloneSetup.doSetupWithoutParentLanguages();
 		this.n4jsxFileExtensionsRegistry = n4jsxInjector.getInstance(FileExtensionsRegistry.class);
 		this.n4jsxFileBasedWorkspace = n4jsxInjector.getInstance(FileBasedWorkspace.class);
+		this.n4jsxCompositeGenerator = n4jsxInjector.getInstance(IComposedGenerator.class);
 		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 
