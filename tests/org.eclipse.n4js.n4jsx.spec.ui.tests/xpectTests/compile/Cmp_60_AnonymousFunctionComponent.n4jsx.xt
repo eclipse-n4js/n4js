@@ -45,7 +45,7 @@ stderr:
 ==>
 --- */
 
-import * as React from "react/index"
+import * as React from "react"
 import { replacer } from "react/replacer";
 
 class MyProps implements React.ComponentProps  {

@@ -43,7 +43,7 @@ class SanitizeImportsTransformation extends Transformation {
 	private ReactHelper reactHelper;
 
 	@Inject
-	private JSXBackendHelper JSXBackendHelper;
+	private JSXBackendHelper jsxBackendHelper;
 
 	override analyze() {
 	}
@@ -76,7 +76,7 @@ class SanitizeImportsTransformation extends Transformation {
 			return
 
 		val jsxUsedOriginalImports = state.info.browseOriginalImports_internal.filter [
-			JSXBackendHelper.isJsxBackendModule(value)
+			jsxBackendHelper.isJsxBackendModule(value) && value.qualifiedName.equals(ReactHelper.REACT_PROJECT_ID)
 		].map[key.importSpecifiers].flatten.filter[isUsed]
 		if (!jsxUsedOriginalImports.nullOrEmpty)
 			return;
@@ -189,7 +189,7 @@ class SanitizeImportsTransformation extends Transformation {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
 
-			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec, state.info)){
+			if(ste === null && jsxBackendHelper.isJsxBackendImportSpecifier(importSpec, state.info)){
 				return true
 			}
 

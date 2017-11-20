@@ -52,7 +52,7 @@ stderr:
 ==>
 --- */
 
-import * as React from "react/index"
+import * as React from "react"
 import { replacer } from "react/replacer"
 
 class LowerComponent extends React.Component<~React.ComponentProps with {whatTextShouldIShow : string}, ~Object with {squares: Array<string>}> {

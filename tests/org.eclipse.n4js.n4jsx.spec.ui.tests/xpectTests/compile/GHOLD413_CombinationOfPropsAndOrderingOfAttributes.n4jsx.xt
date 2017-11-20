@@ -29,7 +29,7 @@
 	END_SETUP
  */
 
-import * as React from "react/index"
+import * as React from "react"
 import { replacer } from "react/replacer"
 
 var zzzz: React.Element; // Avoid unused import warnings
