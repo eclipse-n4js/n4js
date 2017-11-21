@@ -37,7 +37,7 @@
       <plugin id="com.google.inject"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
-      <plugin id="it.xsemantics.runtime"/>
+      <plugin id="org.eclipse.xsemantics.runtime"/>
       <plugin id="javaewah"/>
       <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>

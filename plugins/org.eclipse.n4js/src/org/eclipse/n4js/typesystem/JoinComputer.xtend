@@ -39,7 +39,7 @@ import org.eclipse.n4js.ts.utils.TypeCompareHelper
 import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.utils.ContainerTypesHelper
-import it.xsemantics.runtime.RuleEnvironment
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.HashMap
 import java.util.HashSet
 import java.util.List

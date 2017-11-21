@@ -4,14 +4,16 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
 package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
+import org.eclipse.n4js.n4JS.GenericDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassDefinition
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
@@ -41,8 +43,8 @@ import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.List
 import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.Tuples
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -55,7 +57,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  * Validation of rules that apply to individual members of a classifier.<p>
- *
+ * 
  * Validation of rules about members:
  * <ul>
  * <li>if the rules require to take into account the other owned or inherited members of the
@@ -73,7 +75,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 
 	/**
 	 * NEEDED
-	 *
+	 * 
 	 * when removed check methods will be called twice once by N4JSValidator, and once by
 	 * AbstractDeclarativeN4JSValidator
 	 */
@@ -245,6 +247,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			if (!holdsConstructorNoReturnType(method)) {
 				return false;
 			}
+			if (!holdsConstructorNoTypeParameters(method)) {
+				return false;
+			}
 			var result = holdsConstructorModifiers(method);
 			return holdsRequiredExplicitSuperCallIsFound(method) && result;
 		}
@@ -271,7 +276,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Constraints 56 (Defining and Calling Constructors), #5.a
+	 * Requirement 56 (Defining and Calling Constructors), #5.a
 	 */
 	private def boolean holdsConstructorInInterfaceDoesNotHaveBody(TMethod constructor) {
 		if (constructor.containingType instanceof TInterface && !constructor.hasNoBody) {
@@ -283,7 +288,7 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Constraints 56 (Defining and Calling Constructors), #5.b
+	 * Requirement 56 (Defining and Calling Constructors), #5.b
 	 */
 	private def boolean holdsConstructorInInterfaceRequiresCovarianceAnnotation(TMethod constructor) {
 		val container = constructor.containingType;
@@ -295,6 +300,9 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 		return true;
 	}
 
+	/**
+	 * Requirement 56 (Defining and Calling Constructors), #6
+	 */
 	private def boolean holdsConstructorNoReturnType(TMethod constructor) {
 		val constructorDecl = constructor.astElement as N4MethodDeclaration;
 		if (constructorDecl.returnTypeRef !== null) {
@@ -303,6 +311,43 @@ class N4JSMemberValidator extends AbstractN4JSDeclarativeValidator {
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Requirement 56 (Defining and Calling Constructors), #8
+	 */
+	private def holdsConstructorNoTypeParameters(TMethod method) {
+		if (method.typeVars.isEmpty) {
+			return true;
+		}
+		
+		val constructorDecl = method.astElement as N4MethodDeclaration;
+		val offsetLength = findTypeVariablesOffset(constructorDecl);
+
+		addIssue(IssueCodes.messageForCLF_CTOR_NO_TYPE_PARAMETERS, constructorDecl, offsetLength.key,
+			offsetLength.value, IssueCodes.CLF_CTOR_NO_TYPE_PARAMETERS);
+
+		return false;
+	}
+
+	/** 
+	 * Determines the offset and length of the full list of type variable of the given {@link GenericDeclaration}.
+	 * 
+	 * This does not include the delimiting characters '<' and '>'.
+	 * 
+	 * @throws IllegalArgumentException if the GenericDeclaration does not have any type variables. 
+	 */
+	private def Pair<Integer, Integer> findTypeVariablesOffset(GenericDeclaration genericDeclaration) {
+		if (genericDeclaration.typeVars.empty) {
+			throw new IllegalArgumentException(
+				"Cannot determine offset of type variables for a GenericDeclaration without any type variables.")
+		}
+
+		val typeVariableNodes = NodeModelUtils.findNodesForFeature(genericDeclaration, GENERIC_DECLARATION__TYPE_VARS);
+		val firstTypeVariable = typeVariableNodes.get(0);
+		val lastTypeVariable = typeVariableNodes.last;
+
+		return Pair.of(firstTypeVariable.offset, lastTypeVariable.offset + lastTypeVariable.length - firstTypeVariable.offset);
 	}
 
 	/**

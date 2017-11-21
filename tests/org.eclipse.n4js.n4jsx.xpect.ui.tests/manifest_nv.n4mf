@@ -20,6 +20,6 @@ Sources {
 		"model"
 	}
 	external {
-		"jsxbackend"
+		"model/jsxbackend"
 	}
 }

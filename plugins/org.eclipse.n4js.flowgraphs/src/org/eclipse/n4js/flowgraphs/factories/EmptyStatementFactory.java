@@ -21,7 +21,7 @@ class EmptyStatementFactory {
 	static ComplexNode buildComplexNode(EmptyStatement empty) {
 		ComplexNode cNode = new ComplexNode(empty);
 
-		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, empty);
+		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, 0, empty);
 
 		cNode.addNode(entryAndExitNode);
 

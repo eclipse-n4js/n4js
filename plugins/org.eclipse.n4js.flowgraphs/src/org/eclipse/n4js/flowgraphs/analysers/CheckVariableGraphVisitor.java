@@ -14,12 +14,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.PathExplorerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalker;
-import org.eclipse.n4js.flowgraphs.analyses.PathWalkerInternal;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -35,52 +34,23 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		if (cfe instanceof VariableDeclaration) {
 			super.requestActivation(new CheckVariablePathExplorer((VariableDeclaration) cfe));
 		}
 	}
 
-	@Override
-	protected void visit(ControlFlowElement lastCFE, ControlFlowElement currentCFE, FlowEdge edge) {
-		// Do nothing
-	}
-
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
-		for (PathExplorerInternal pathExplorer : getActivatedExplorers()) {
+		for (GraphExplorerInternal pathExplorer : getActivatedExplorers()) {
 			CheckVariablePathExplorer checkVariablePathExplorer = (CheckVariablePathExplorer) pathExplorer;
 			idRefs.addAll(checkVariablePathExplorer.getUsedButNotDeclaredIdentifierRefs());
 		}
 		return idRefs;
 	}
 
-	static class CheckVariablePathExplorer extends PathExplorer {
+	static class CheckVariablePathExplorer extends GraphExplorer {
 		final VariableDeclaration varDecl;
 		final List<IdentifierRef> idRefs = new ArrayList<>();
 
@@ -94,13 +64,18 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		}
 
 		@Override
-		protected PathWalkerInternal firstPathWalker() {
+		protected BranchWalkerInternal firstBranchWalker() {
+			return new CheckVariablePathWalker();
+		}
+
+		@Override
+		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
 			return new CheckVariablePathWalker();
 		}
 
 	}
 
-	static class CheckVariablePathWalker extends PathWalker {
+	static class CheckVariablePathWalker extends BranchWalker {
 
 		@Override
 		protected CheckVariablePathWalker forkPath() {
@@ -113,22 +88,6 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 			if (cfe instanceof IdentifierRef && ((IdentifierRef) cfe).getId() == explorer.varDecl) {
 				explorer.idRefs.add((IdentifierRef) cfe);
 			}
-		}
-
-		@Override
-		protected void visit(FlowEdge edge) {
-			// nothing to do
-		}
-
-		@Override
-		protected void terminate() {
-			// nothing to do
-		}
-
-		@Override
-		protected void initialize() {
-			// nothing to do
-
 		}
 
 	}

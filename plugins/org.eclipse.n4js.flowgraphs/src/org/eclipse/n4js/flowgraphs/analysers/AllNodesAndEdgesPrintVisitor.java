@@ -46,26 +46,6 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void initialize() {
-		// nothing to do
-	}
-
-	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
-		// nothing to do
-	}
-
-	@Override
-	protected void terminate() {
-		// nothing to do
-	}
-
-	@Override
 	protected void visit(ControlFlowElement cfe) {
 		allNodes.add(cfe);
 		switch (getCurrentMode()) {

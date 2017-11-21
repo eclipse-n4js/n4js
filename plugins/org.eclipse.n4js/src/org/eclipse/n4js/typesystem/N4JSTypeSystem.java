@@ -14,11 +14,6 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.xtext.EcoreUtil2;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.postprocessing.TypeProcessor;
@@ -29,8 +24,12 @@ import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TypableElement;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.xsemantics.InternalTypeSystem;
-import it.xsemantics.runtime.Result;
-import it.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xsemantics.runtime.Result;
+import org.eclipse.xsemantics.runtime.RuleEnvironment;
+import org.eclipse.xtext.EcoreUtil2;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * Main entry point into the N4JS type system. This class is only a facade. In most cases it simply forwards to
