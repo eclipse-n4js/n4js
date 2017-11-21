@@ -133,3 +133,12 @@ export public var expVS1;
 // ThrowInScript XPECT succs at '2' --> throw 2;
 1;
 throw 2;
+
+
+function top() {
+	// top nested XPECT succs at '"nested";' -->
+	function nested() {
+		"nested";
+	}
+	"top";
+}

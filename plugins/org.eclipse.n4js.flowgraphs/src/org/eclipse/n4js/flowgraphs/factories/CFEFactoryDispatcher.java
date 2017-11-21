@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.IfStatement;
 import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ReturnStatement;
@@ -149,6 +150,11 @@ final public class CFEFactoryDispatcher {
 		@Override
 		public ComplexNode caseScript(Script feature) {
 			return ScriptFactory.buildComplexNode(astip, feature);
+		}
+
+		@Override
+		public ComplexNode caseFunctionDeclaration(FunctionDeclaration feature) {
+			return EmptyStatementFactory.buildComplexNode(astip, feature);
 		}
 
 		@Override

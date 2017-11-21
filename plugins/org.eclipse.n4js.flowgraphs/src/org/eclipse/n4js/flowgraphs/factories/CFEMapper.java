@@ -14,7 +14,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
-import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
@@ -48,10 +47,6 @@ public class CFEMapper {
 	}
 
 	static private class InternalCFEMapper extends N4JSSwitch<ControlFlowElement> {
-		@Override
-		public ControlFlowElement caseFunctionDeclaration(FunctionDeclaration feature) {
-			return feature.getBody();
-		}
 
 		@Override
 		public ControlFlowElement caseLabelledStatement(LabelledStatement feature) {

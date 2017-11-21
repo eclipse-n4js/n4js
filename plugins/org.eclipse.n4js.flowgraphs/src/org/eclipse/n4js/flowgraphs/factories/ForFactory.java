@@ -23,7 +23,6 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link ForStatement}s. */
@@ -51,11 +50,9 @@ class ForFactory {
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
-				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = DelNodeFactory.create(astpp, "decl_" + i, forStmt, varDecl);
-					declNodes.add(initNode);
-					i++;
-				}
+				Node initNode = DelNodeFactory.create(astpp, "decl_" + i, forStmt, vdob);
+				declNodes.add(initNode);
+				i++;
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
@@ -124,11 +121,9 @@ class ForFactory {
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
-				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = DelNodeFactory.create(astpp, "init_" + i, forStmt, varDecl);
-					initNodes.add(initNode);
-					i++;
-				}
+				Node initNode = DelNodeFactory.create(astpp, "init_" + i, forStmt, vdob);
+				initNodes.add(initNode);
+				i++;
 			}
 		}
 		if (forStmt.getInitExpr() != null) {

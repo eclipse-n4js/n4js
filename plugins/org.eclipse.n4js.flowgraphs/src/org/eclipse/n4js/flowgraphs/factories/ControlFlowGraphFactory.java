@@ -191,7 +191,10 @@ public class ControlFlowGraphFactory {
 		FinallyBlock enteringFinallyBlock = getEnteringFinallyBlock(catchNode);
 		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnMapper, jumpNode);
 		if (enteringFinallyBlock != null || isExitingFinallyBlock) {
-			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+			boolean equalEdgeExistsAlready = equalEdgeExistsAlready(jumpNode, jumpToken, catchNode);
+			if (!equalEdgeExistsAlready) {
+				EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+			}
 		} else {
 			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken.cfType);
 		}
@@ -203,6 +206,14 @@ public class ControlFlowGraphFactory {
 			Node exitFinallyBlock = cnBlock.getExit();
 			connectToJumpTarget(cnMapper, exitFinallyBlock, jumpToken);
 		}
+	}
+
+	private static boolean equalEdgeExistsAlready(Node jumpNode, JumpToken jumpToken, Node catchNode) {
+		boolean equalEdgeExistsAlready = false;
+		for (ControlFlowEdge cfEdge : catchNode.pred) {
+			equalEdgeExistsAlready |= cfEdge.cfType == jumpToken.cfType && cfEdge.start == jumpNode;
+		}
+		return equalEdgeExistsAlready;
 	}
 
 	private static FinallyBlock getEnteringFinallyBlock(Node catchNode) {

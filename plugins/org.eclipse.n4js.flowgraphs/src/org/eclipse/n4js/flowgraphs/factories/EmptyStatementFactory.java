@@ -14,11 +14,12 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.EmptyStatement;
+import org.eclipse.n4js.n4JS.Statement;
 
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link EmptyStatement}s. */
 class EmptyStatementFactory {
 
-	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, EmptyStatement empty) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Statement empty) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), empty);
 
 		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, astpp.pos(), empty);

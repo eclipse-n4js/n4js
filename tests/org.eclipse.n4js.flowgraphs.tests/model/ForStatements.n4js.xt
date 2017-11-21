@@ -433,6 +433,63 @@ function ForStatement9() {
 	"end";
 }
 
+function ForStatementDestructuring(arr : Array<number>) {
+	// ForStatementDestructuring XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementDestructuring XPECT allEdges ---
+		"start" --> arr,
+		arr --> a4,
+		a4 --> b4,
+		b4 --> c4,
+		c4 --> [a4\,b4\,c4] = arr,
+		[a4\,b4\,c4] = arr --> 2,
+		2 -Exit-> "end",
+		2 -Repeat-> "loop",
+		"loop" --> 3,
+		3 --> 2
+	--- */
+	/* ForStatementDestructuring XPECT allBranches ---
+		B0: "start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2[B1|B2],
+		B1: [B0] -> "loop" -> 3 -> 2[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> "loop" -> 3 -> 2 -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForStatementDestructuring backward XPECT allBranches direction 'Backward' ---
+		B0: "end" -> 2[B1|B2],
+		B1: [B0] -> 3 -> "loop" -> 2[B3|B4],
+		B2: [B0] -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
+		B3: [B1] -> 3 -> "loop" -> 2[B5|B6],
+		B4: [B1] -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
+		B5: [B3] -> 3 -> "loop",
+		B6: [B3] -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
+	--- */
+	/* ForStatementDestructuring XPECT allPaths ---
+		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "end",
+		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "loop" -> 3 -> 2 -> "end",
+		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "loop" -> 3 -> 2 -> "loop" -> 3 -> 2 -> "end"
+	--- */
+	/* ForStatementDestructuring backward XPECT allPaths direction 'Backward' ---
+		"end" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop",
+		"end" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
+		"end" -> 2 -> 3 -> "loop" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
+		"end" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
+	--- */
+	// ForStatementDestructuring XPECT path from '"start"' to '"end"' -->
+	// ForStatementDestructuring XPECT path from 'continue;' to 'continue;' -->
+	// ForStatementDestructuring XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementDestructuring XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForStatementDestructuring XPECT succs at '"start"' --> arr
+	// ForStatementDestructuring XPECT succs at '"loop"' --> 3
+	// ForStatementDestructuring XPECT preds at 'b1' --> a1
+	// ForStatementDestructuring XPECT succs at 'for' --> "end"
+	"start";
+	for(var [a4,b4,c4] = arr; 2; 3) {
+		"loop";
+	}
+	"end";
+}
+
 function ForOfStatement1() {
 	// ForOfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForOfStatement1 XPECT allEdges ---
@@ -546,6 +603,62 @@ function ForOfStatement2(x) {
 	// ForOfStatement2 XPECT succs at 'for' --> "end"
 	"start";
 	for (x of [1,2]) 5;
+	"end";
+}
+
+function ForOfStatementDestructuring(it : Array<Iterable2<Object,Object>>) {
+	// ForOfStatementDestructuring XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForOfStatementDestructuring XPECT allEdges ---
+		"start" --> a1,
+		a1 --> b1,
+		b1 --> c1,
+		c1 --> [a1\,b1\,c1],
+		[a1\,b1\,c1] --> it,
+		it -Repeat-> "loop",
+		it -Exit-> "end",
+		"loop" -Exit-> "end",
+		"loop" -Repeat-> "loop"
+	--- */
+	/* ForOfStatementDestructuring XPECT allBranches ---
+		B0: "start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it[B1|B2],
+		B1: [B0] -> "loop"[B3|B4],
+		B2: [B0] -> [B5],
+		B3: [B1] -> "loop" -> [B5],
+		B4: [B1] -> [B5],
+		B5: [B2|B3|B4]"end"
+	--- */
+	/* ForOfStatementDestructuring backward XPECT allBranches direction 'Backward' ---
+		B0: "end"[B1|B2],
+		B1: [B0] -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		B2: [B0] -> "loop"[B3|B4],
+		B3: [B2] -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		B4: [B2] -> "loop"[B5|B6],
+		B5: [B4] -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		B6: [B4] -> "loop"
+	--- */
+	/* ForOfStatementDestructuring XPECT allPaths ---
+		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "end",
+		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "loop" -> "end",
+		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "loop" -> "loop" -> "end"
+	--- */
+	/* ForOfStatementDestructuring backward XPECT allPaths direction 'Backward' ---
+		"end" -> "loop" -> "loop" -> "loop",
+		"end" -> "loop" -> "loop" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		"end" -> "loop" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
+		"end" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start"
+	--- */
+	// ForOfStatementDestructuring XPECT path from '"start"' to '"end"' -->
+	// ForOfStatementDestructuring XPECT path from 'continue;' to 'continue;' -->
+	// ForOfStatementDestructuring XPECT path from 'continue;' notTo '"end"' -->
+	// ForOfStatementDestructuring XPECT commonPreds of 'continue;' and '"end"' -->
+	// ForOfStatementDestructuring XPECT succs at '"start"' --> a1
+	// ForOfStatementDestructuring XPECT succs at '"loop"' --> "loop", "end"
+	// ForOfStatementDestructuring XPECT preds at 'b1' --> a1
+	// ForOfStatementDestructuring XPECT succs at 'for' --> "end"
+	"start";
+	for(var [a1,b1,c1] of it) {
+		"loop";
+	}
 	"end";
 }
 
