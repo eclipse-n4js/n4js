@@ -25,8 +25,8 @@ public class RepresentingNode extends Node {
 	/**
 	 * Constructor. Sets the represented {@link ControlFlowElement}
 	 */
-	public RepresentingNode(String name, int internalPosition, ControlFlowElement cfe) {
-		super(name, internalPosition, cfe);
+	public RepresentingNode(String name, int astPosition, ControlFlowElement cfe) {
+		super(name, astPosition, cfe);
 		this.cfeRepresent = cfe;
 	}
 

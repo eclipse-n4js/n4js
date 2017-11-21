@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.CatchBlock;
@@ -40,22 +39,19 @@ class TryFactory {
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = new DelegatingNode("try", astpp.pos(), tryStmt, tryStmt.getBlock());
-			astpp.visitUtil(tryNode.getDelegatedControlFlowElement());
+			tryNode = DelNodeFactory.create(astpp, "try", tryStmt, tryStmt.getBlock());
 		}
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(ControlFlowType.Throw);
-			catchNode = new DelegatingNode(CATCH_NODE_NAME, astpp.pos(), tryStmt, catchClause.getBlock());
-			astpp.visitUtil(catchNode.getDelegatedControlFlowElement());
+			catchNode = DelNodeFactory.create(astpp, CATCH_NODE_NAME, tryStmt, catchClause.getBlock());
 			catchNode.addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
 			CatchToken ct = new CatchToken(ControlFlowType.CatchesAll);
-			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, astpp.pos(), tryStmt, tryStmt.getFinally().getBlock());
-			astpp.visitUtil(finallyNode.getDelegatedControlFlowElement());
+			finallyNode = DelNodeFactory.create(astpp, FINALLY_NODE_NAME, tryStmt, tryStmt.getFinally().getBlock());
 			finallyNode.addCatchToken(ct);
 		}
 

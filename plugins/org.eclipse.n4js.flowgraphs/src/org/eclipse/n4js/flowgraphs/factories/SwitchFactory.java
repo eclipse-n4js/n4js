@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
@@ -35,8 +34,7 @@ class SwitchFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), switchStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), switchStmt);
-		Node pivotNode = new DelegatingNode("pivot", astpp.pos(), switchStmt, switchStmt.getExpression());
-		astpp.visitUtil(pivotNode.getDelegatedControlFlowElement());
+		Node pivotNode = DelNodeFactory.create(astpp, "pivot", switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -48,12 +46,10 @@ class SwitchFactory {
 			AbstractCaseClause cc = caseClauses.get(n);
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = new DelegatingNode("case_" + n, astpp.pos(), switchStmt, cc);
-				astpp.visitUtil(caseNode.getDelegatedControlFlowElement());
+				caseNode = DelNodeFactory.create(astpp, "case_" + n, switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = new DelegatingNode("default", astpp.pos(), switchStmt, cc);
-				astpp.visitUtil(caseNode.getDelegatedControlFlowElement());
+				caseNode = DelNodeFactory.create(astpp, "default", switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);

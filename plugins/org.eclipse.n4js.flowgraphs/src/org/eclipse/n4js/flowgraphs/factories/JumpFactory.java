@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -70,7 +69,8 @@ class JumpFactory {
 		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Statement stmt, Expression expr, JumpToken jumptoken) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Statement stmt, Expression expr,
+			JumpToken jumptoken) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), stmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), stmt);
@@ -78,8 +78,7 @@ class JumpFactory {
 
 		Node expression = null;
 		if (expr != null) {
-			expression = new DelegatingNode("expression", astpp.pos(), stmt, expr);
-			astpp.visitUtil(expression.getDelegatedControlFlowElement());
+			expression = DelNodeFactory.create(astpp, "expression", stmt, expr);
 			cNode.addNode(expression);
 		}
 		Node jumpNode = new RepresentingNode("jumpNode", astpp.pos(), stmt);

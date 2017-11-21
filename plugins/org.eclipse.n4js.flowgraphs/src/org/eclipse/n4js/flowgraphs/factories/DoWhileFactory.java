@@ -16,7 +16,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
@@ -30,10 +29,8 @@ class DoWhileFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), doStmt);
 
 		Node entryNode = new HelperNode("entry", astpp.pos(), doStmt);
-		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, astpp.pos(), doStmt, doStmt.getExpression());
-		astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
-		Node bodyNode = new DelegatingNode("body", astpp.pos(), doStmt, doStmt.getStatement());
-		astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
+		Node conditionNode = DelNodeFactory.create(astpp, CONDITION_NODE_NAME, doStmt, doStmt.getExpression());
+		Node bodyNode = DelNodeFactory.create(astpp, "body", doStmt, doStmt.getStatement());
 		Node exitNode = new HelperNode("exit", astpp.pos(), doStmt);
 
 		cNode.addNode(entryNode);

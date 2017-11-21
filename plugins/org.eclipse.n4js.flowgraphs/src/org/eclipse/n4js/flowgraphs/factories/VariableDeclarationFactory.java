@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
@@ -35,8 +34,7 @@ class VariableDeclarationFactory {
 		Node expressionNode = null;
 
 		if (vd.getExpression() != null) {
-			expressionNode = new DelegatingNode("expression", astpp.pos(), vd, vd.getExpression());
-			astpp.visitUtil(expressionNode.getDelegatedControlFlowElement());
+			expressionNode = DelNodeFactory.create(astpp, "expression", vd, vd.getExpression());
 		}
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), vd);
 

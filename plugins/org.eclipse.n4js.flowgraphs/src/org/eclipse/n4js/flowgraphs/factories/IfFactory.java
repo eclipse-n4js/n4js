@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.IfStatement;
@@ -29,17 +28,15 @@ class IfFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), ifStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), ifStmt);
-		Node conditionNode = new DelegatingNode("condition", astpp.pos(), ifStmt, ifStmt.getExpression());
+		Node conditionNode = DelNodeFactory.create(astpp, "condition", ifStmt, ifStmt.getExpression());
 		Node thenNode = null;
 		Node elseNode = null;
 
 		if (ifStmt.getIfStmt() != null) {
-			thenNode = new DelegatingNode("then", astpp.pos(), ifStmt, ifStmt.getIfStmt());
-			astpp.visitUtil(thenNode.getDelegatedControlFlowElement());
+			thenNode = DelNodeFactory.create(astpp, "then", ifStmt, ifStmt.getIfStmt());
 		}
 		if (ifStmt.getElseStmt() != null) {
-			elseNode = new DelegatingNode("else", astpp.pos(), ifStmt, ifStmt.getElseStmt());
-			astpp.visitUtil(elseNode.getDelegatedControlFlowElement());
+			elseNode = DelNodeFactory.create(astpp, "else", ifStmt, ifStmt.getElseStmt());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), ifStmt);
 

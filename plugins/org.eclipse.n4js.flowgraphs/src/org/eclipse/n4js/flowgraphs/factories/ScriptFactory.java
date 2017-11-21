@@ -20,7 +20,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
@@ -45,8 +44,7 @@ class ScriptFactory {
 		for (int n = 0; n < scriptElems.size(); n++) {
 			ScriptElement scriptElem = getScriptElementAt(script, n);
 			if (isControlFlowStatement(scriptElem)) {
-				Node blockNode = new DelegatingNode("stmt_" + n, astpp.pos(), script, (Statement) scriptElem);
-				astpp.visitUtil(blockNode.getDelegatedControlFlowElement());
+				Node blockNode = DelNodeFactory.create(astpp, "stmt_" + n, script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
 			}
 		}

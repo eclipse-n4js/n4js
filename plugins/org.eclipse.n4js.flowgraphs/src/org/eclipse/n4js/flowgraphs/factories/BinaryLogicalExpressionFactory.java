@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
@@ -31,10 +30,8 @@ class BinaryLogicalExpressionFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), lbExpr);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), lbExpr);
-		Node lhsNode = new DelegatingNode("lhs", astpp.pos(), lbExpr, lbExpr.getLhs());
-		astpp.visitUtil(lhsNode.getDelegatedControlFlowElement());
-		Node rhsNode = new DelegatingNode("rhs", astpp.pos(), lbExpr, lbExpr.getRhs());
-		astpp.visitUtil(rhsNode.getDelegatedControlFlowElement());
+		Node lhsNode = DelNodeFactory.create(astpp, "lhs", lbExpr, lbExpr.getLhs());
+		Node rhsNode = DelNodeFactory.create(astpp, "rhs", lbExpr, lbExpr.getRhs());
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), lbExpr);
 
 		cNode.addNode(entryNode);

@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.LabelledStatement;
@@ -34,12 +33,10 @@ class WhileFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), whileStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), whileStmt);
-		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, astpp.pos(), whileStmt, whileStmt.getExpression());
-		astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
+		Node conditionNode = DelNodeFactory.create(astpp, CONDITION_NODE_NAME, whileStmt, whileStmt.getExpression());
 		Node bodyNode = null;
 		if (whileStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", astpp.pos(), whileStmt, whileStmt.getStatement());
-			astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
+			bodyNode = DelNodeFactory.create(astpp, "body", whileStmt, whileStmt.getStatement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), whileStmt);
 

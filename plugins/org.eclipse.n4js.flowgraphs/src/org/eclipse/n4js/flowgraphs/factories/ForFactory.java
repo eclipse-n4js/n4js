@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
@@ -53,20 +52,17 @@ class ForFactory {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("decl_" + i, astpp.pos(), forStmt, varDecl);
-					astpp.visitUtil(initNode.getDelegatedControlFlowElement());
+					Node initNode = DelNodeFactory.create(astpp, "decl_" + i, forStmt, varDecl);
 					declNodes.add(initNode);
 					i++;
 				}
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", astpp.pos(), forStmt, forStmt.getInitExpr());
-			astpp.visitUtil(initNode.getDelegatedControlFlowElement());
+			Node initNode = DelNodeFactory.create(astpp, "inits", forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
-		Node expressionNode = new DelegatingNode("expression", astpp.pos(), forStmt, forStmt.getExpression());
-		astpp.visitUtil(expressionNode.getDelegatedControlFlowElement());
+		Node expressionNode = DelNodeFactory.create(astpp, "expression", forStmt, forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics) {
 			getObjectKeysNode = new HelperNode("getObjectKeys", astpp.pos(), forStmt);
@@ -76,8 +72,7 @@ class ForFactory {
 		Node nextNode = new HelperNode("next", astpp.pos(), forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", astpp.pos(), forStmt, forStmt.getStatement());
-			astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
+			bodyNode = DelNodeFactory.create(astpp, "body", forStmt, forStmt.getStatement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 
@@ -130,30 +125,25 @@ class ForFactory {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("init_" + i, astpp.pos(), forStmt, varDecl);
-					astpp.visitUtil(initNode.getDelegatedControlFlowElement());
+					Node initNode = DelNodeFactory.create(astpp, "init_" + i, forStmt, varDecl);
 					initNodes.add(initNode);
 					i++;
 				}
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", astpp.pos(), forStmt, forStmt.getInitExpr());
-			astpp.visitUtil(initNode.getDelegatedControlFlowElement());
+			Node initNode = DelNodeFactory.create(astpp, "inits", forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode("condition", astpp.pos(), forStmt, forStmt.getExpression());
-			astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
+			conditionNode = DelNodeFactory.create(astpp, "condition", forStmt, forStmt.getExpression());
 		}
 		if (forStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", astpp.pos(), forStmt, forStmt.getStatement());
-			astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
+			bodyNode = DelNodeFactory.create(astpp, "body", forStmt, forStmt.getStatement());
 		}
 		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = new DelegatingNode("updates", astpp.pos(), forStmt, forStmt.getUpdateExpr());
-			astpp.visitUtil(updatesNode.getDelegatedControlFlowElement());
+			updatesNode = DelNodeFactory.create(astpp, "updates", forStmt, forStmt.getUpdateExpr());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 

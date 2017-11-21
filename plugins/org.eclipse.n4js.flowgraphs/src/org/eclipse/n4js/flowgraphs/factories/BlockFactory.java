@@ -21,7 +21,6 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.Statement;
@@ -39,9 +38,8 @@ class BlockFactory {
 		EList<Statement> stmts = block.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = new DelegatingNode("stmt_" + i, astpp.pos(), block, stmt);
+			Node blockNode = DelNodeFactory.create(astpp, "stmt_" + i, block, stmt);
 			blockNodes.add(blockNode);
-			astpp.visitUtil(blockNode.getDelegatedControlFlowElement());
 		}
 
 		cNode.addNode(entryNode);

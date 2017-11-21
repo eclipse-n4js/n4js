@@ -25,8 +25,8 @@ public class DelegatingNode extends Node {
 	/**
 	 * Constructor
 	 */
-	public DelegatingNode(String name, int internalPosition, ControlFlowElement cfe, ControlFlowElement cfeDelegate) {
-		super(name, internalPosition, cfe);
+	public DelegatingNode(String name, int astPosition, ControlFlowElement cfe, ControlFlowElement cfeDelegate) {
+		super(name, astPosition, cfe);
 		this.cfeDelegate = cfeDelegate;
 	}
 
