@@ -99,8 +99,7 @@ public interface TypeDefinitionGitLocationProvider {
 		/**
 		 * The default location for the type definition file. Used in the production code.
 		 */
-		PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/qtran-n4/n4jsd.git", "IDE-2850"),
-		// PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/NumberFour/n4jsd.git", GitUtils.getMasterBranch()),
+		PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/NumberFour/n4jsd.git", GitUtils.getMasterBranch()),
 
 		/**
 		 * Type definition location for testing purposes.
