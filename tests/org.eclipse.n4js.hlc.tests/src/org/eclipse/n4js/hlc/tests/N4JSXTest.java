@@ -43,9 +43,10 @@ public class N4JSXTest extends AbstractN4jscTest {
 	@Test
 	public void testOnlyN4JSX() throws ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
+		String react = wsRoot + "/react";
 		String p1Root = wsRoot + "/" + "P1";
 
-		new N4jscBase().doMain("-pl", wsRoot, "-t", "projects", p1Root);
+		new N4jscBase().doMain("-pl", wsRoot, "-t", "projects", p1Root, react);
 		assertFilesCompiledToES(1, p1Root);
 	}
 
@@ -54,8 +55,9 @@ public class N4JSXTest extends AbstractN4jscTest {
 	public void testCombinedWithN4JS() throws ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
 		String p2Root = wsRoot + "/" + "P2";
+		String react = wsRoot + "/react";
 
-		new N4jscBase().doMain("-pl", wsRoot, "-t", "projects", p2Root);
+		new N4jscBase().doMain("-pl", wsRoot, "-t", "projects", p2Root, react);
 		assertFilesCompiledToES(3, p2Root);
 	}
 
@@ -63,7 +65,6 @@ public class N4JSXTest extends AbstractN4jscTest {
 	@Test
 	public void testCombinedWithN4JS_singleFile() throws ExitCodeException {
 		final String wsRoot = workspace.getAbsolutePath().toString();
-
 		String p2Root = wsRoot + "/" + "P2";
 
 		new N4jscBase().doMain("-pl", wsRoot, "-t", "singlefile", p2Root + "/src/foo.n4js");

@@ -32,6 +32,9 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.n4jsx,
  org.eclipse.n4js.n4jsx.ui,
  org.eclipse.n4js.n4jsx.tests.helper,
- org.eclipse.xtext.ui.testing
+ org.eclipse.xtext.ui.testing,
+ org.eclipse.n4js.runner.ui,
+ org.eclipse.n4js.runner,
+ org.eclipse.n4js.runner.nodejs;bundle-version="0.0.1"
 Bundle-Vendor: %providerName
 

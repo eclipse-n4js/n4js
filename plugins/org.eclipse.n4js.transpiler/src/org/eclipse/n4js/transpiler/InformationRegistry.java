@@ -17,9 +17,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-
-import com.google.common.collect.HashMultimap;
-
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
@@ -42,6 +39,8 @@ import org.eclipse.n4js.ts.types.TInterface;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
+
+import com.google.common.collect.HashMultimap;
 
 /**
  * Data storage for meta-information that will be passed from one transformation to another and should not be stored in
@@ -144,12 +143,27 @@ public class InformationRegistry {
 		hmTagged.put(tag, element);
 	}
 
+	/** Return true if the element is an IM element. */
+	public boolean isIntermediateModelElement(EObject eobj) {
+		return TranspilerUtils.isIntermediateModelElement(eobj);
+	}
+
 	/**
 	 * For {@link ImportDeclaration}s that do not have an original AST node (i.e. that were created by some
 	 * transformation on-the-fly), this returns the imported module.
 	 */
 	public TModule getImportedModule(ImportDeclaration importDeclInIM) {
-		TranspilerUtils.assertIntermediateModelElement(importDeclInIM);
+		return getImportedModule(importDeclInIM, true);
+	}
+
+	/**
+	 * For {@link ImportDeclaration}s that do not have an original AST node (i.e. that were created by some
+	 * transformation on-the-fly), this returns the imported module.
+	 */
+	public TModule getImportedModule(ImportDeclaration importDeclInIM, boolean assertIntermediateModel) {
+		if (assertIntermediateModel) {
+			TranspilerUtils.assertIntermediateModelElement(importDeclInIM);
+		}
 		return importedModules.get(importDeclInIM);
 	}
 

@@ -58,6 +58,9 @@ public abstract class AbstractTranspiler {
 	@Inject
 	private QualifiedNameComputer qnComputer;
 
+	@Inject
+	private TranspilerDebugUtils transpilerDebugUtils;
+
 	/**
 	 * Returns an optional preamble that will be prepended to the output code in each output file. Use '\n' as line
 	 * separator. See {@link PrettyPrinter#print(TranspilerState, Writer, Optional, Optional)} for details.
@@ -211,7 +214,7 @@ public abstract class AbstractTranspiler {
 				}
 
 				if (DEBUG_PERFORM_VALIDATIONS) {
-					TranspilerDebugUtils.validateState(state, true);
+					transpilerDebugUtils.validateState(state, true);
 				}
 			}
 

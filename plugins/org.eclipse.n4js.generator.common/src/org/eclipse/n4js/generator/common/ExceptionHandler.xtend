@@ -18,6 +18,8 @@ import org.eclipse.n4js.utils.Log
 class ExceptionHandler {
 
 	def handleError(String message, Throwable cause) {
+		println(message)
+		cause.printStackTrace
 		throw new GeneratorException( message, cause);
 	}
 }

@@ -15,10 +15,10 @@
 		Project "SomeProject" {
 			Folder "src" {
 				Folder "some" {
-					Folder "folder.with.dots" {
+					Folder "folder_with_dots" {
 						Folder "m" {
-							File "C.n4js" { from="some/folder.with.dots/m/C.n4js" }
-							File "I.n4js" { from="some/folder.with.dots/m/I.n4js" }
+							File "C.n4js" { from="some/folder_with_dots/m/C.n4js" }
+							File "I.n4js" { from="some/folder_with_dots/m/I.n4js" }
 						}
 					}
 					Folder "folder" {
@@ -43,9 +43,9 @@
 
 
 // XPECT noerrors -->
-import { C as C_withDots    } from "some/folder.with.dots/m/C"
+import { C as C_withDots    } from "some/folder_with_dots/m/C"
 import { C as C_withoutDots } from "some/folder/with/dots/m/C"
-import { I as I_withDots    } from "some/folder.with.dots/m/I"
+import { I as I_withDots    } from "some/folder_with_dots/m/I"
 import { I as I_withoutDots } from "some/folder/with/dots/m/I"
 
 // XPECT noerrors --> "Cannot consume some.folder.with.dots.m.I.I multiple times." at "I_withDots"
