@@ -17,11 +17,12 @@
 				Folder "linking" {
 					ThisFile {}
 				}
-				Folder "jsxbackend" {
-					File "react.n4jsd" { from = "../../reactFiles/react.n4jsd" }
-				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react/index.n4jsd" }
+			File "manifest.n4mf" { from = "../../react/manifest.n4mf" }
 		}
 	}
 
@@ -29,13 +30,13 @@
  */
 
 
-import * as React from "jsxbackend/react"
+import * as React from "react"
 
 class ~Props {
 	public myProp: string;
 }
 
-// XPECT linkedFragment at 'React.|Element' --> ../jsxbackend/react.n4jsd#/1/@topLevelTypes.0
+// XPECT linkedFragment at 'React.|Element' --> /resource/react/index.n4jsd#/1/@topLevelTypes.0
 function PureFnComponent(props: Props): React.Element {
 	return (<div>{props.myProp}</div>);
 }
