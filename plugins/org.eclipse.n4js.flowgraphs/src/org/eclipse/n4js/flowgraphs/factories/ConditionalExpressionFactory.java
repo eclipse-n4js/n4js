@@ -26,13 +26,16 @@ import org.eclipse.n4js.n4JS.ConditionalExpression;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
 class ConditionalExpressionFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ConditionalExpression condExpr) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ConditionalExpression condExpr) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), condExpr);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), condExpr);
 		Node conditionNode = new DelegatingNode("condition", astpp.pos(), condExpr, condExpr.getExpression());
+		astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
 		Node thenNode = new DelegatingNode("then", astpp.pos(), condExpr, condExpr.getTrueExpression());
+		astpp.visitUtil(thenNode.getDelegatedControlFlowElement());
 		Node elseNode = new DelegatingNode("else", astpp.pos(), condExpr, condExpr.getFalseExpression());
+		astpp.visitUtil(elseNode.getDelegatedControlFlowElement());
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), condExpr);
 
 		cNode.addNode(entryNode);

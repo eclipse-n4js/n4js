@@ -26,12 +26,14 @@ import org.eclipse.n4js.n4JS.LabelledStatement;
 class DoWhileFactory {
 	static final String CONDITION_NODE_NAME = "condition";
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, DoStatement doStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, DoStatement doStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), doStmt);
 
 		Node entryNode = new HelperNode("entry", astpp.pos(), doStmt);
 		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, astpp.pos(), doStmt, doStmt.getExpression());
+		astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
 		Node bodyNode = new DelegatingNode("body", astpp.pos(), doStmt, doStmt.getStatement());
+		astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
 		Node exitNode = new HelperNode("exit", astpp.pos(), doStmt);
 
 		cNode.addNode(entryNode);

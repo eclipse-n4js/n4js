@@ -29,7 +29,7 @@ import org.eclipse.n4js.n4JS.Statement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s. */
 class BlockFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, org.eclipse.n4js.n4JS.Block block) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, org.eclipse.n4js.n4JS.Block block) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), block);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), block);
@@ -41,6 +41,7 @@ class BlockFactory {
 			Statement stmt = stmts.get(i);
 			Node blockNode = new DelegatingNode("stmt_" + i, astpp.pos(), block, stmt);
 			blockNodes.add(blockNode);
+			astpp.visitUtil(blockNode.getDelegatedControlFlowElement());
 		}
 
 		cNode.addNode(entryNode);

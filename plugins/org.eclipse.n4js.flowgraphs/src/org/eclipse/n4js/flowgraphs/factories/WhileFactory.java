@@ -30,14 +30,16 @@ class WhileFactory {
 
 	static final String CONDITION_NODE_NAME = "condition";
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, WhileStatement whileStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, WhileStatement whileStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), whileStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), whileStmt);
 		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, astpp.pos(), whileStmt, whileStmt.getExpression());
+		astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
 		Node bodyNode = null;
 		if (whileStmt.getStatement() != null) {
 			bodyNode = new DelegatingNode("body", astpp.pos(), whileStmt, whileStmt.getStatement());
+			astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), whileStmt);
 

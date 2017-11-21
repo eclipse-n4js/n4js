@@ -19,14 +19,14 @@ import org.eclipse.n4js.flowgraphs.factories.OrderedEContentProvider;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * The {@link ASTIterator} iterates through all {@link ControlFlowElement}s of the given root element.
  */
 final public class ASTIterator implements Iterator<ControlFlowElement> {
 	ControlFlowElement cfe;
 	ArrayList<EObject> nextElems = new ArrayList<>();
 	ArrayList<ControlFlowElement> containerStack = new ArrayList<>();
-	private int astPositionCounter = 0;
 
+	/** Constructor */
 	public ASTIterator(EObject cfe) {
 		nextElems.add(cfe);
 	}
@@ -47,15 +47,12 @@ final public class ASTIterator implements Iterator<ControlFlowElement> {
 		return pop();
 	}
 
+	/** @return the container of the current {@link ControlFlowElement} */
 	public ControlFlowElement container() {
 		if (containerStack.isEmpty()) {
 			return null;
 		}
 		return containerStack.get(containerStack.size() - 1);
-	}
-
-	public int pos() {
-		return astPositionCounter++;
 	}
 
 	private void searchNextCFE() {

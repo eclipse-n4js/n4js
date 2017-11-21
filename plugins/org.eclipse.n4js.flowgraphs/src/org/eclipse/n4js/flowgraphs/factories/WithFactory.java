@@ -25,12 +25,14 @@ import org.eclipse.n4js.n4JS.WithStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link WithStatement}s. */
 class WithFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, WithStatement withStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, WithStatement withStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), withStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), withStmt);
 		Node expressionNode = new DelegatingNode("expression", astpp.pos(), withStmt, withStmt.getExpression());
+		astpp.visitUtil(expressionNode.getDelegatedControlFlowElement());
 		Node statementNode = new DelegatingNode("statement", astpp.pos(), withStmt, withStmt.getStatement());
+		astpp.visitUtil(statementNode.getDelegatedControlFlowElement());
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), withStmt);
 
 		cNode.addNode(entryNode);

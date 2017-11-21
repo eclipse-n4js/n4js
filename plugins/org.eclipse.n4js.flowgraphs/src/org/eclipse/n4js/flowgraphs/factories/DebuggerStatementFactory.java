@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.DebuggerStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link DebuggerStatement}s. */
 class DebuggerStatementFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, DebuggerStatement empty) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, DebuggerStatement empty) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), empty);
 
 		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, astpp.pos(), empty);

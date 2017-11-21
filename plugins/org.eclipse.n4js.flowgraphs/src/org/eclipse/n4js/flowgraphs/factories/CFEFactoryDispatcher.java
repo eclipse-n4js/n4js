@@ -44,16 +44,16 @@ import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
 import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
- * Provides function {@link #build(ASTIteratorInfo, EObject)} to create instances of {@link ComplexNode} for given
+ * Provides function {@link #build(ReentrantASTIterator, EObject)} to create instances of {@link ComplexNode} for given
  * {@link EObject}s.
  */
 final public class CFEFactoryDispatcher {
-	static private ASTIteratorInfo astip;
+	static private ReentrantASTIterator astip;
 
 	/**
 	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
-	static public ComplexNode build(ASTIteratorInfo pAstip, EObject cfe) {
+	static public ComplexNode build(ReentrantASTIterator pAstip, EObject cfe) {
 		astip = pAstip;
 		ComplexNode cnx = new InternalFactoryDispatcherX().doSwitch(cfe);
 		if (cnx != null) {

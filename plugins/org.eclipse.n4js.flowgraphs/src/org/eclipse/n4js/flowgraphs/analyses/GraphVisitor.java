@@ -75,21 +75,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 		// overwrite me
 	}
 
-	/**
-	 * Analog to {@link GraphVisitorInternal#visit(Node, Node, ControlFlowEdge)}
-	 *
-	 * @param lastCFE
-	 *            {@link ControlFlowElement} that was visited before
-	 * @param nextCFE
-	 *            {@link ControlFlowElement} that is visited next
-	 * @param edge
-	 *            traversed edge that targets nextCFE. Does not necessarily start at nextCFE
-	 */
-	@Deprecated
-	protected void visit(ControlFlowElement lastCFE, ControlFlowElement nextCFE, FlowEdge edge) {
-		// overwrite me
-	}
-
 	/** @return true iff the last visited {@link ControlFlowElement} was not dead. */
 	final public boolean isLiveCFE() {
 		return !lastVisitedCFEIsDead;

@@ -175,7 +175,9 @@ function IfStatement2() {
 		1 --> "end"
 	--- */
 	/* IfStatement2 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> [B3], B2: [B0] -> 2 -> [B3],
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 2 -> [B3],
+		B2: [B0] -> [B3],
 		B3: [B1|B2]"end"
 	--- */
 	/* IfStatement2 backward XPECT allBranches direction 'Backward' ---
@@ -296,12 +298,20 @@ function ReturnStatement3() {
 		1 --> "end"
 	--- */
 	/* ReturnStatement3 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> "end"[B5], B2: [B0] -> return;[B3|b4],
-		B3: [B2][B5], B5: [B1|B3], b4: [B2] -> "end"
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> return;[B3|b4],
+		B2: [B0] -> "end"[B5],
+		B3: [B1][B5],
+		B5: [B2|B3],
+		b4: [B1] -> "end"
 	--- */
 	/* ReturnStatement3 backward XPECT allBranches direction 'Backward' ---
-		B0: [B1|B2], B1: [B0]return; -> 1 -> "start", B2: [B0]"end"[B3|b4],
-		B3: [B2] -> [B6], B5: [b4] -> return; -> [B6], B6: [B3|B5]1 -> "start", b4: [B2][B5]
+		B0: [B1|B2], B1: [B0]return; -> 1 -> "start",
+		B2: [B0]"end"[B3|b4],
+		B3: [B2] -> [B6],
+		B5: [b4] -> return; -> [B6],
+		B6: [B3|B5]1 -> "start",
+		b4: [B2][B5]
 	---	*/
 	/* ReturnStatement3 XPECT allPaths ---
 	   "start" -> 1 -> return;,

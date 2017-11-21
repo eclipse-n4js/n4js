@@ -182,6 +182,7 @@ public class EdgeGuideQueue {
 		return s;
 	}
 
+	/** @return a {@link EdgeGuide} String that contains all sort properties */
 	public String getEdgeString(EdgeGuide eg) {
 		String egs = "[";
 		egs += eg.isMerged() ? "J " : "j ";

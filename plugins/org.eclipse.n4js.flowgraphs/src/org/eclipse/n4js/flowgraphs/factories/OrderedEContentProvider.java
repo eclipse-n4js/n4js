@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,6 +30,9 @@ final public class OrderedEContentProvider {
 	 *
 	 */
 	static public List<EObject> eContents(EObject cfe) {
+		if (cfe == null) {
+			return Collections.emptyList();
+		}
 		List<EObject> list = new InternalFactoryDispatcherX().doSwitch(cfe);
 		if (list != null) {
 			return list;

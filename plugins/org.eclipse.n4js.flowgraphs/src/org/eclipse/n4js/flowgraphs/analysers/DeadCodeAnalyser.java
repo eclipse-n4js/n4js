@@ -37,12 +37,12 @@ import org.eclipse.xtext.util.TextRegion;
  * determine if a given {@link ControlFlowElement} is dead code, or to compute a minimal set of {@link TextRegion}s of
  * dead code.
  */
-public class DeadCodeVisitor extends GraphVisitor {
+public class DeadCodeAnalyser extends GraphVisitor {
 	Set<ControlFlowElement> allLiveNodes = new HashSet<>();
 	Set<ControlFlowElement> allDeadNodes = new HashSet<>();
 
 	/** Constructor */
-	public DeadCodeVisitor() {
+	public DeadCodeAnalyser() {
 		super(Mode.Forward);
 	}
 

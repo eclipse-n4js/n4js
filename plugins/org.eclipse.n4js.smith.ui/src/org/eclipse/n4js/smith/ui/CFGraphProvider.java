@@ -25,6 +25,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -100,7 +103,6 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return null;
 	}
 
-	// FIXME: This is broken since the visit-Edge method is deprecated
 	private class NodesEdgesCollector extends GraphVisitor {
 
 		NodesEdgesCollector() {
@@ -114,23 +116,13 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void visit(ControlFlowElement cfe) {
-			addNode(cfe);
+		protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+			requestActivation(new EdgesExplorer());
 		}
 
 		@Override
-		protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-			addNode(edge.start);
-			addNode(edge.end);
-			Node sNode = nodeMap.get(edge.start);
-			Node eNode = nodeMap.get(edge.end);
-			Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
-
-			if (!edgesMap.containsKey(edge.start)) {
-				edgesMap.put(edge.start, new LinkedList<>());
-			}
-			List<Edge> cfEdges = edgesMap.get(edge.start);
-			cfEdges.add(cfEdge);
+		protected void visit(ControlFlowElement cfe) {
+			addNode(cfe);
 		}
 
 		private void addNode(ControlFlowElement cfe) {
@@ -141,5 +133,42 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			}
 		}
 
+		class EdgesExplorer extends GraphExplorer {
+
+			@Override
+			protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
+				return new EdgesBranchWalker();
+			}
+
+			@Override
+			protected BranchWalkerInternal firstBranchWalker() {
+				return new EdgesBranchWalker();
+			}
+
+		}
+
+		class EdgesBranchWalker extends BranchWalker {
+
+			@Override
+			protected BranchWalker forkPath() {
+				return new EdgesBranchWalker();
+			}
+
+			@Override
+			protected void visit(FlowEdge edge) {
+				addNode(edge.start);
+				addNode(edge.end);
+				Node sNode = nodeMap.get(edge.start);
+				Node eNode = nodeMap.get(edge.end);
+				Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
+
+				if (!edgesMap.containsKey(edge.start)) {
+					edgesMap.put(edge.start, new LinkedList<>());
+				}
+				List<Edge> cfEdges = edgesMap.get(edge.start);
+				cfEdges.add(cfEdge);
+			}
+
+		}
 	}
 }

@@ -79,30 +79,9 @@ public class ControlFlowGraphFactory {
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
 		ReentrantASTIterator astIt = new ReentrantASTIterator(cfContainers, cnMap, script);
-		astIt.visitUtil(script);
+		astIt.visitAll();
 
 	}
-	//
-	// /** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	// static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
-	// Map<ControlFlowElement, ComplexNode> cnMap) {
-	//
-	// ASTIterator astIt = new ASTIterator(script);
-	//
-	// while (astIt.hasNext()) {
-	// ControlFlowElement cfe = astIt.next();
-	// ControlFlowElement mappedCFE = CFEMapper.map(cfe);
-	// if (cfe == mappedCFE) {
-	// if (mappedCFE != null && !cnMap.containsKey(mappedCFE)) {
-	// ComplexNode cn = CFEFactoryDispatcher.build(astIt, mappedCFE);
-	// if (cn != null) {
-	// cfContainers.add(cn.getControlFlowContainer());
-	// cnMap.put(mappedCFE, cn);
-	// }
-	// }
-	// }
-	// }
-	// }
 
 	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {
 		for (ComplexNode cn : cnMapper.getAll()) {

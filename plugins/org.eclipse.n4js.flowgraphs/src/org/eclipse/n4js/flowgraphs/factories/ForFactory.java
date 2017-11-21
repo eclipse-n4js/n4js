@@ -32,7 +32,7 @@ class ForFactory {
 
 	static final String LOOPCATCH_NODE_NAME = "loopCatch";
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ForStatement forStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ForStatement forStmt) {
 		if (forStmt.isForIn())
 			return buildForInOf(astpp, forStmt, true);
 		if (forStmt.isForOf())
@@ -43,7 +43,7 @@ class ForFactory {
 		return null;
 	}
 
-	private static ComplexNode buildForInOf(ASTIteratorInfo astpp, ForStatement forStmt, boolean forInSemantics) {
+	private static ComplexNode buildForInOf(ReentrantASTIterator astpp, ForStatement forStmt, boolean forInSemantics) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), forStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), forStmt);
@@ -54,6 +54,7 @@ class ForFactory {
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
 					Node initNode = new DelegatingNode("decl_" + i, astpp.pos(), forStmt, varDecl);
+					astpp.visitUtil(initNode.getDelegatedControlFlowElement());
 					declNodes.add(initNode);
 					i++;
 				}
@@ -61,18 +62,23 @@ class ForFactory {
 		}
 		if (forStmt.getInitExpr() != null) {
 			Node initNode = new DelegatingNode("inits", astpp.pos(), forStmt, forStmt.getInitExpr());
+			astpp.visitUtil(initNode.getDelegatedControlFlowElement());
 			initNodes.add(initNode);
 		}
 		Node expressionNode = new DelegatingNode("expression", astpp.pos(), forStmt, forStmt.getExpression());
+		astpp.visitUtil(expressionNode.getDelegatedControlFlowElement());
 		Node getObjectKeysNode = null;
-		if (forInSemantics)
+		if (forInSemantics) {
 			getObjectKeysNode = new HelperNode("getObjectKeys", astpp.pos(), forStmt);
+		}
 		Node getIteratorNode = new HelperNode("getIterator", astpp.pos(), forStmt);
 		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, astpp.pos(), forStmt);
 		Node nextNode = new HelperNode("next", astpp.pos(), forStmt);
 		Node bodyNode = null;
-		if (forStmt.getStatement() != null)
+		if (forStmt.getStatement() != null) {
 			bodyNode = new DelegatingNode("body", astpp.pos(), forStmt, forStmt.getStatement());
+			astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
+		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
@@ -111,7 +117,7 @@ class ForFactory {
 		return cNode;
 	}
 
-	private static ComplexNode buildForPlain(ASTIteratorInfo astpp, ForStatement forStmt) {
+	private static ComplexNode buildForPlain(ReentrantASTIterator astpp, ForStatement forStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), forStmt);
 
 		List<Node> initNodes = new LinkedList<>();
@@ -125,6 +131,7 @@ class ForFactory {
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
 				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
 					Node initNode = new DelegatingNode("init_" + i, astpp.pos(), forStmt, varDecl);
+					astpp.visitUtil(initNode.getDelegatedControlFlowElement());
 					initNodes.add(initNode);
 					i++;
 				}
@@ -132,17 +139,21 @@ class ForFactory {
 		}
 		if (forStmt.getInitExpr() != null) {
 			Node initNode = new DelegatingNode("inits", astpp.pos(), forStmt, forStmt.getInitExpr());
+			astpp.visitUtil(initNode.getDelegatedControlFlowElement());
 			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
 			conditionNode = new DelegatingNode("condition", astpp.pos(), forStmt, forStmt.getExpression());
+			astpp.visitUtil(conditionNode.getDelegatedControlFlowElement());
 		}
 		if (forStmt.getStatement() != null) {
 			bodyNode = new DelegatingNode("body", astpp.pos(), forStmt, forStmt.getStatement());
+			astpp.visitUtil(bodyNode.getDelegatedControlFlowElement());
 		}
 		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
 			updatesNode = new DelegatingNode("updates", astpp.pos(), forStmt, forStmt.getUpdateExpr());
+			astpp.visitUtil(updatesNode.getDelegatedControlFlowElement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 

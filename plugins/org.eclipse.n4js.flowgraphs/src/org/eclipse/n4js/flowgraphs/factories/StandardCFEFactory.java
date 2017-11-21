@@ -19,26 +19,29 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-/** Used for all non-statements. Children nodes are retrieved from {@link CFEChildren#get(ControlFlowElement)}. */
+/**
+ * Used for all non-statements. Children nodes are retrieved from
+ * {@link CFEChildren#get(ReentrantASTIterator, ControlFlowElement)}.
+ */
 class StandardCFEFactory {
 	static final String ENTRY_NODE = "entry";
 	static final String EXIT_NODE = "exit";
 	static final String ENTRY_EXIT_NODE = "entryExit";
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ControlFlowElement cfe) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe) {
 		return buildComplexNode(astpp, cfe, true);
 	}
 
-	static ComplexNode buildComplexNodeHidden(ASTIteratorInfo astpp, ControlFlowElement cfe) {
+	static ComplexNode buildComplexNodeHidden(ReentrantASTIterator astpp, ControlFlowElement cfe) {
 		return buildComplexNode(astpp, cfe, false);
 	}
 
-	private static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ControlFlowElement cfe, boolean isRepresenting) {
+	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe, boolean isRepresenting) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();
-		List<Node> args = CFEChildren.get(cfe);
+		List<Node> args = CFEChildren.get(astpp, cfe);
 		for (Node argNode : args) {
 			argumentNodes.add(argNode);
 		}

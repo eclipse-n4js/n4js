@@ -25,7 +25,7 @@ import org.eclipse.n4js.n4JS.IfStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link IfStatement}s. */
 class IfFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, IfStatement ifStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, IfStatement ifStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), ifStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), ifStmt);
@@ -33,10 +33,14 @@ class IfFactory {
 		Node thenNode = null;
 		Node elseNode = null;
 
-		if (ifStmt.getIfStmt() != null)
+		if (ifStmt.getIfStmt() != null) {
 			thenNode = new DelegatingNode("then", astpp.pos(), ifStmt, ifStmt.getIfStmt());
-		if (ifStmt.getElseStmt() != null)
+			astpp.visitUtil(thenNode.getDelegatedControlFlowElement());
+		}
+		if (ifStmt.getElseStmt() != null) {
 			elseNode = new DelegatingNode("else", astpp.pos(), ifStmt, ifStmt.getElseStmt());
+			astpp.visitUtil(elseNode.getDelegatedControlFlowElement());
+		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), ifStmt);
 
 		cNode.addNode(entryNode);

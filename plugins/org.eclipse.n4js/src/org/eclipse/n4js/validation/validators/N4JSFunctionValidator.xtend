@@ -17,8 +17,9 @@ import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor
-import org.eclipse.n4js.flowgraphs.analysers.DeadCodeVisitor.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser
+import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser2
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -73,8 +74,6 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
-import org.eclipse.n4js.flowgraphs.analysers.CheckVariableGraphVisitor
-import org.eclipse.n4js.flowgraphs.analysers.CheckVariableGraphVisitor2
 
 /**
  */
@@ -128,19 +127,20 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
 		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 
-		val dcv = new DeadCodeVisitor();
-		val cvgv1 = new CheckVariableGraphVisitor();
-		val cvgv2 = new CheckVariableGraphVisitor();
-		val cvgv3 = new CheckVariableGraphVisitor();
+		val dcv = new DeadCodeAnalyser();
+		val cvgv1 = new UsedBeforeDeclaredAnalyser2();
+//		val cvgv2 = new UsedBeforeDeclaredAnalyser2();
+//		val cvgv3 = new UsedBeforeDeclaredAnalyser2();
 
 		flowAnalyzer.createGraphs(script);
 		flowAnalyzer.accept(dcv, cvgv1 );
 
 		internalCheckDeadCode(dcv);
+		internalCheckUsedBeforeDeclared(cvgv1);
 	}
 
 	// Req.107
-	private def String internalCheckDeadCode(DeadCodeVisitor dcf) {
+	private def void internalCheckDeadCode(DeadCodeAnalyser dcf) {
 		val deadCodeRegions = dcf.getDeadCodeRegions();
 
 		for (DeadCodeRegion deadCodeRegion : deadCodeRegions) {
@@ -152,6 +152,16 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 				errCode = FUN_DEAD_CODE_WITH_PREDECESSOR;
 			}
 			addIssue(msg, deadCodeRegion.getContainer, deadCodeRegion.getOffset(), deadCodeRegion.getLength(), errCode);
+		}
+	}
+
+	private def void internalCheckUsedBeforeDeclared(UsedBeforeDeclaredAnalyser2 ubda) {
+		val usedBeforeDeclared = ubda.getUsedButNotDeclaredIdentifierRefs();
+
+		for (IdentifierRef idRef : usedBeforeDeclared) {
+			val String varName = idRef.id.name;
+			var String msg = getMessageForVCO_USED_BEFORE_DECLARED(varName);
+			addIssue(msg, idRef, VCO_USED_BEFORE_DECLARED);
 		}
 	}
 

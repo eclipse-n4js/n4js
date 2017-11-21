@@ -34,7 +34,7 @@ import org.eclipse.n4js.n4JS.Statement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link Script}s. */
 class ScriptFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, Script script) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Script script) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), script);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), script);
@@ -46,6 +46,7 @@ class ScriptFactory {
 			ScriptElement scriptElem = getScriptElementAt(script, n);
 			if (isControlFlowStatement(scriptElem)) {
 				Node blockNode = new DelegatingNode("stmt_" + n, astpp.pos(), script, (Statement) scriptElem);
+				astpp.visitUtil(blockNode.getDelegatedControlFlowElement());
 				scriptNodes.add(blockNode);
 			}
 		}

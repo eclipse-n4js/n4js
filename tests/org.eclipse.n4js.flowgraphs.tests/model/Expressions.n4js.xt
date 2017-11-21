@@ -151,8 +151,8 @@ function BinaryLogicalExpression() {
 	--- */
 	/* BinaryLogicalExpression XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> [B3],
-		B2: [B0] -> 2 -> [B3],
+		B1: [B0] -> 2 -> [B3],
+		B2: [B0] -> [B3],
 		B3: [B1|B2]1 && 2 -> "end"
 	--- */
 	/* BinaryLogicalExpression XPECT allPaths ---

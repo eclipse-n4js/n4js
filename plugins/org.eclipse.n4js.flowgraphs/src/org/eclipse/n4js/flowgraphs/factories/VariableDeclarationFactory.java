@@ -28,7 +28,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
 class VariableDeclarationFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, VariableDeclaration vd) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, VariableDeclaration vd) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), vd);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), vd);
@@ -36,6 +36,7 @@ class VariableDeclarationFactory {
 
 		if (vd.getExpression() != null) {
 			expressionNode = new DelegatingNode("expression", astpp.pos(), vd, vd.getExpression());
+			astpp.visitUtil(expressionNode.getDelegatedControlFlowElement());
 		}
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), vd);
 

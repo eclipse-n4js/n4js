@@ -28,7 +28,7 @@ import org.eclipse.n4js.n4JS.Statement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s. */
 class AbstractCaseClauseFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, AbstractCaseClause abstrCaseClause) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, AbstractCaseClause abstrCaseClause) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), abstrCaseClause);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), abstrCaseClause);
@@ -38,6 +38,7 @@ class AbstractCaseClauseFactory {
 		if (abstrCaseClause instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) abstrCaseClause;
 			caseConditionNode = new DelegatingNode("condition", astpp.pos(), caseClause, caseClause.getExpression());
+			astpp.visitUtil(caseConditionNode.getDelegatedControlFlowElement());
 		}
 
 		EList<Statement> stmts = abstrCaseClause.getStatements();
@@ -45,6 +46,7 @@ class AbstractCaseClauseFactory {
 			Statement stmt = stmts.get(i);
 			Node blockNode = new DelegatingNode("stmt_" + i, astpp.pos(), abstrCaseClause, stmt);
 			stmtNodes.add(blockNode);
+			astpp.visitUtil(blockNode.getDelegatedControlFlowElement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), abstrCaseClause);
 

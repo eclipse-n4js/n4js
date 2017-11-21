@@ -31,11 +31,12 @@ import org.eclipse.n4js.n4JS.SwitchStatement;
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s. */
 class SwitchFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, SwitchStatement switchStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, SwitchStatement switchStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), switchStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), switchStmt);
 		Node pivotNode = new DelegatingNode("pivot", astpp.pos(), switchStmt, switchStmt.getExpression());
+		astpp.visitUtil(pivotNode.getDelegatedControlFlowElement());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -48,9 +49,11 @@ class SwitchFactory {
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
 				caseNode = new DelegatingNode("case_" + n, astpp.pos(), switchStmt, cc);
+				astpp.visitUtil(caseNode.getDelegatedControlFlowElement());
 			}
 			if (cc instanceof DefaultClause) {
 				caseNode = new DelegatingNode("default", astpp.pos(), switchStmt, cc);
+				astpp.visitUtil(caseNode.getDelegatedControlFlowElement());
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);

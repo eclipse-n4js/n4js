@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
 /**
  *
  */
-public class CheckVariableGraphVisitor2 extends FastFlowVisitor {
+public class UsedBeforeDeclaredAnalyser2 extends FastFlowVisitor {
 
 	static class CVLocationDataEntry extends ActivationLocation {
 		final ControlFlowElement cfe;
@@ -40,10 +40,10 @@ public class CheckVariableGraphVisitor2 extends FastFlowVisitor {
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
-		// for (ActivationLocation actLoc : getAllActivationLocations()) {
-		// CVLocationDataEntry userData = (CVLocationDataEntry) actLoc;
-		// idRefs.addAll(userData.idRefs);
-		// }
+		for (ActivationLocation actLoc : getAllActivationLocations()) {
+			CVLocationDataEntry userData = (CVLocationDataEntry) actLoc;
+			idRefs.addAll(userData.idRefs);
+		}
 		return idRefs;
 	}
 

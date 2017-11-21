@@ -50,27 +50,27 @@ import org.eclipse.n4js.n4JS.WhileStatement;
  */
 class JumpFactory {
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, BreakStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, BreakStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Break, stmt.getLabel());
 		return buildComplexNode(astpp, stmt, null, jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ContinueStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ContinueStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Continue, stmt.getLabel());
 		return buildComplexNode(astpp, stmt, null, jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ReturnStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ReturnStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Return);
 		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, ThrowStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ThrowStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Throw);
 		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ASTIteratorInfo astpp, Statement stmt, Expression expr, JumpToken jumptoken) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Statement stmt, Expression expr, JumpToken jumptoken) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), stmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), stmt);
@@ -79,6 +79,7 @@ class JumpFactory {
 		Node expression = null;
 		if (expr != null) {
 			expression = new DelegatingNode("expression", astpp.pos(), stmt, expr);
+			astpp.visitUtil(expression.getDelegatedControlFlowElement());
 			cNode.addNode(expression);
 		}
 		Node jumpNode = new RepresentingNode("jumpNode", astpp.pos(), stmt);

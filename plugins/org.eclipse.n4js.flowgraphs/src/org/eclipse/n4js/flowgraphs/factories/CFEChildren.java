@@ -73,15 +73,17 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * All {@link Expression}s can have a set of children in the sense, that these children are also respected by the
- * control flow. This class provides the function {@link #get(ControlFlowElement)} that returns all control flow
- * relevant sub-expressions of a given {@link Expression}.
+ * control flow. This class provides the function {@link #get(ReentrantASTIterator, ControlFlowElement)} that returns all
+ * control flow relevant sub-expressions of a given {@link Expression}.
  */
 final class CFEChildren {
+	static private ReentrantASTIterator astpp;
 
 	/**
 	 * Returns all control flow relevant sub-expressions of the given {@link Expression}.
 	 */
-	static List<Node> get(ControlFlowElement expr) {
+	static List<Node> get(ReentrantASTIterator ast, ControlFlowElement expr) {
+		astpp = ast;
 		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX().doSwitch(expr);
 		if (n4jsxExpressionList != null) {
 			return n4jsxExpressionList;
@@ -90,7 +92,9 @@ final class CFEChildren {
 	}
 
 	static DelegatingNode getDelegatingNode(String name, int id, ControlFlowElement cfe, ControlFlowElement delegate) {
-		return new DelegatingNode(name, id, cfe, delegate);
+		DelegatingNode delegatingNode = new DelegatingNode(name, id, cfe, delegate);
+		astpp.visitUtil(delegatingNode.getDelegatedControlFlowElement());
+		return delegatingNode;
 	}
 
 	static HelperNode getHelperNode(String name, int id, ControlFlowElement cfe) {
