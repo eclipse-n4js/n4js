@@ -43,7 +43,6 @@ function f1() {
 
 
 function f2() {
-	// f2 XPECT allIslandElems --> 1, 2, 3, 4
 	return;
 	//  XPECT warnings --> "Dead code." at "1; 2; 3; for (;;) 4;"
 	for (;;)  1;
