@@ -9,8 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphTest
 
-/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+   Workspace {
+		Project "N4JSXFlowgraphTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "manifest.n4mf" { from="../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "react/index.n4jsd" }
+			File "manifest.n4mf" { from = "react/manifest.n4mf" }
+		}
+	}
+
+	END_SETUP
+*/
 
 
 /**
@@ -21,6 +36,8 @@
  * algorithms it is important that all test methods are tested with
  * all supported language features.
  */
+
+
 
 
 function JSXElement1() {
