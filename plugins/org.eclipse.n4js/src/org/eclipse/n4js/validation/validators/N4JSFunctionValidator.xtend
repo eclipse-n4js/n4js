@@ -158,8 +158,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 		for (IdentifierRef idRef : usedBeforeDeclared) {
 			val String varName = idRef.id.name;
-			var String msg = getMessageForVCO_USED_BEFORE_DECLARED(varName);
-			addIssue(msg, idRef, VCO_USED_BEFORE_DECLARED);
+			var String msg = getMessageForAST_USED_BEFORE_DECLARED(varName);
+			addIssue(msg, idRef, AST_USED_BEFORE_DECLARED);
 		}
 	}
 

@@ -49,13 +49,13 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
  * {@link EObject}s.
  */
 final public class CFEFactoryDispatcher {
-	static private ReentrantASTIterator astip;
+	static private ReentrantASTIterator astIter;
 
 	/**
 	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
-	static public ComplexNode build(ReentrantASTIterator pAstip, EObject cfe) {
-		astip = pAstip;
+	static public ComplexNode build(ReentrantASTIterator pAstIter, EObject cfe) {
+		astIter = pAstIter;
 		ComplexNode cnx = new InternalFactoryDispatcherX().doSwitch(cfe);
 		if (cnx != null) {
 			return cnx;
@@ -67,134 +67,134 @@ final public class CFEFactoryDispatcher {
 
 		@Override
 		public ComplexNode caseAbstractCaseClause(AbstractCaseClause feature) {
-			return AbstractCaseClauseFactory.buildComplexNode(astip, feature);
+			return AbstractCaseClauseFactory.buildComplexNode(astIter, feature);
 		}
 
 		// AnnotationList are ignored
 
 		@Override
 		public ComplexNode caseBlock(Block feature) {
-			return BlockFactory.buildComplexNode(astip, feature);
+			return BlockFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseBreakStatement(BreakStatement feature) {
-			return JumpFactory.buildComplexNode(astip, feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseContinueStatement(ContinueStatement feature) {
-			return JumpFactory.buildComplexNode(astip, feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseDebuggerStatement(DebuggerStatement feature) {
-			return DebuggerStatementFactory.buildComplexNode(astip, feature);
+			return DebuggerStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseDoStatement(DoStatement feature) {
-			return DoWhileFactory.buildComplexNode(astip, feature);
+			return DoWhileFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseEmptyStatement(EmptyStatement feature) {
-			return EmptyStatementFactory.buildComplexNode(astip, feature);
+			return EmptyStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseForStatement(ForStatement feature) {
-			return ForFactory.buildComplexNode(astip, feature);
+			return ForFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseIfStatement(IfStatement feature) {
-			return IfFactory.buildComplexNode(astip, feature);
+			return IfFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseReturnStatement(ReturnStatement feature) {
-			return JumpFactory.buildComplexNode(astip, feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseSwitchStatement(SwitchStatement feature) {
-			return SwitchFactory.buildComplexNode(astip, feature);
+			return SwitchFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseThrowStatement(ThrowStatement feature) {
-			return JumpFactory.buildComplexNode(astip, feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseTryStatement(TryStatement feature) {
-			return TryFactory.buildComplexNode(astip, feature);
+			return TryFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableStatement(VariableStatement feature) {
-			return VariableStatementFactory.buildComplexNode(astip, feature);
+			return VariableStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseWhileStatement(WhileStatement feature) {
-			return WhileFactory.buildComplexNode(astip, feature);
+			return WhileFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseWithStatement(WithStatement feature) {
-			return WithFactory.buildComplexNode(astip, feature);
+			return WithFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseScript(Script feature) {
-			return ScriptFactory.buildComplexNode(astip, feature);
+			return ScriptFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseFunctionDeclaration(FunctionDeclaration feature) {
-			return EmptyStatementFactory.buildComplexNode(astip, feature);
+			return EmptyStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseConditionalExpression(ConditionalExpression feature) {
-			return ConditionalExpressionFactory.buildComplexNode(astip, feature);
+			return ConditionalExpressionFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseBinaryLogicalExpression(BinaryLogicalExpression feature) {
-			return BinaryLogicalExpressionFactory.buildComplexNode(astip, feature);
+			return BinaryLogicalExpressionFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseExpression(Expression feature) {
-			return StandardCFEFactory.buildComplexNode(astip, feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableBinding(VariableBinding feature) {
-			return StandardCFEFactory.buildComplexNode(astip, feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
-			return VariableDeclarationFactory.buildComplexNode(astip, feature);
+			return VariableDeclarationFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseBindingElement(BindingElement feature) {
-			return StandardCFEFactory.buildComplexNodeHidden(astip, feature);
+			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseArrayBindingPattern(ArrayBindingPattern feature) {
-			return StandardCFEFactory.buildComplexNodeHidden(astip, feature);
+			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseObjectBindingPattern(ObjectBindingPattern feature) {
-			return StandardCFEFactory.buildComplexNodeHidden(astip, feature);
+			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
 	}
 
@@ -202,12 +202,12 @@ final public class CFEFactoryDispatcher {
 
 		@Override
 		public ComplexNode caseJSXSpreadAttribute(JSXSpreadAttribute feature) {
-			return StandardCFEFactory.buildComplexNode(astip, feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseJSXPropertyAttribute(JSXPropertyAttribute feature) {
-			return StandardCFEFactory.buildComplexNode(astip, feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 	}
 }

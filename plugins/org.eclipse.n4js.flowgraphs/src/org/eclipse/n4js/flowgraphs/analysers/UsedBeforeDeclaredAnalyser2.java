@@ -19,7 +19,8 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- *
+ * Analysis to detect uses of {@link IdentifierRef}s that are located in the control flow before their corresponding
+ * variables are declared.
  */
 public class UsedBeforeDeclaredAnalyser2 extends FastFlowVisitor {
 

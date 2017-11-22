@@ -77,13 +77,13 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
  * all control flow relevant sub-expressions of a given {@link Expression}.
  */
 final class CFEChildren {
-	static private ReentrantASTIterator astpp;
+	static private ReentrantASTIterator astIter;
 
 	/**
 	 * Returns all control flow relevant sub-expressions of the given {@link Expression}.
 	 */
-	static List<Node> get(ReentrantASTIterator ast, ControlFlowElement expr) {
-		astpp = ast;
+	static List<Node> get(ReentrantASTIterator pAstIter, ControlFlowElement expr) {
+		astIter = pAstIter;
 		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX().doSwitch(expr);
 		if (n4jsxExpressionList != null) {
 			return n4jsxExpressionList;
@@ -93,7 +93,7 @@ final class CFEChildren {
 
 	static void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe, ControlFlowElement delegate) {
 		if (delegate != null) {
-			DelegatingNode delegatingNode = DelNodeFactory.create(astpp, name, cfe, delegate);
+			DelegatingNode delegatingNode = DelNodeFactory.create(astIter, name, cfe, delegate);
 			cfc.add(delegatingNode);
 		}
 	}

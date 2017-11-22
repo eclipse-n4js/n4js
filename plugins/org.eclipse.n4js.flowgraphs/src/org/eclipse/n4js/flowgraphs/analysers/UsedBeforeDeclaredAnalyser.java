@@ -24,7 +24,8 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- *
+ * Analysis to detect uses of {@link IdentifierRef}s that are located in the control flow before their corresponding
+ * variables are declared.
  */
 public class UsedBeforeDeclaredAnalyser extends GraphVisitor {
 	static int branCount = 0;
@@ -39,11 +40,6 @@ public class UsedBeforeDeclaredAnalyser extends GraphVisitor {
 		if (cfe instanceof VariableDeclaration) {
 			super.requestActivation(new CheckVariablePathExplorer((VariableDeclaration) cfe));
 		}
-	}
-
-	@Override
-	protected void terminate() {
-		// System.out.println("branches: " + branCount);
 	}
 
 	/** @return all {@link IdentifierRef}s that are used before declared */

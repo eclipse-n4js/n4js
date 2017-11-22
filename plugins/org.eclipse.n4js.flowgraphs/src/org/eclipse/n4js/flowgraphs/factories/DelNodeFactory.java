@@ -14,10 +14,15 @@ import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- *
+ * Factory class to create Delegating nodes. It also re-enters the AST iterator.
  */
 public class DelNodeFactory {
 
+	/**
+	 * Returns control flow after the delegate {@link ControlFlowElement} was visited.
+	 *
+	 * @return a new {@link DelegatingNode} instance
+	 */
 	static DelegatingNode create(ReentrantASTIterator astpp, String name, ControlFlowElement parent,
 			ControlFlowElement delegate) {
 

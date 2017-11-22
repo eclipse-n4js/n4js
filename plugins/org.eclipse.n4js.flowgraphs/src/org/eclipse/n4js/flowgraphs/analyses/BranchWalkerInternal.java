@@ -119,7 +119,7 @@ abstract public class BranchWalkerInternal {
 	 * {@link BranchWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
 	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
-		isDeadCode |= end.isUnreachable(); // no!
+		isDeadCode |= end.isUnreachable();
 		visit(lastVisitNode, end, edge);
 	}
 

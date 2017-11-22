@@ -43,9 +43,9 @@ public class GraphVisitorGuideInternal {
 	private final EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
 
 	/** Constructor */
-	GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer, Collection<? extends GraphVisitorInternal> walkers) {
+	GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer, Collection<? extends GraphVisitorInternal> visitors) {
 		this.flowAnalyzer = flowAnalyzer;
-		this.visitors = walkers;
+		this.visitors = visitors;
 	}
 
 	/** Call before any of the {@code walkthrough} methods is called. */
