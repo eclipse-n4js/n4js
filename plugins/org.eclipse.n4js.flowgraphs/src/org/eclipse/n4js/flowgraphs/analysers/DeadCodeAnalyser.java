@@ -37,48 +37,33 @@ import org.eclipse.xtext.util.TextRegion;
  * determine if a given {@link ControlFlowElement} is dead code, or to compute a minimal set of {@link TextRegion}s of
  * dead code.
  */
-public class DeadCodeVisitor extends GraphVisitor {
-	Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
-	Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
-	Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
-	Set<ControlFlowElement> allCatchBlocksCFEs = new HashSet<>();
+public class DeadCodeAnalyser extends GraphVisitor {
+	Set<ControlFlowElement> allLiveNodes = new HashSet<>();
+	Set<ControlFlowElement> allDeadNodes = new HashSet<>();
 
 	/** Constructor */
-	public DeadCodeVisitor() {
-		super(Mode.Forward, Mode.Backward, Mode.Islands, Mode.CatchBlocks);
+	public DeadCodeAnalyser() {
+		super(Mode.Forward);
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
-		switch (getCurrentMode()) {
-		case Forward:
-			allForwardCFEs.add(cfe);
-			break;
-		case Backward:
-			allBackwardCFEs.add(cfe);
-			break;
-		case Islands:
-			allIslandsCFEs.add(cfe);
-			break;
-		case CatchBlocks:
-			allCatchBlocksCFEs.add(cfe);
-			break;
+		if (isLiveCFE()) {
+			allLiveNodes.add(cfe);
+		}
+		if (isDeadCFE()) {
+			allDeadNodes.add(cfe);
 		}
 	}
 
 	/** @return all reachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getReachableCFEs() {
-		return allForwardCFEs;
+		return allLiveNodes;
 	}
 
 	/** @return all unreachable {@link ControlFlowElement}s */
 	public Set<ControlFlowElement> getUnreachableCFEs() {
-		Set<ControlFlowElement> unreachableCFEs = new HashSet<>();
-		unreachableCFEs.addAll(allBackwardCFEs);
-		unreachableCFEs.removeAll(allForwardCFEs);
-		unreachableCFEs.addAll(allIslandsCFEs);
-		unreachableCFEs.removeAll(allCatchBlocksCFEs);
-		return unreachableCFEs;
+		return allDeadNodes;
 	}
 
 	/**
@@ -99,7 +84,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 			return true;
 		}
 
-		if (allForwardCFEs.contains(cfe)) {
+		if (allLiveNodes.contains(cfe)) {
 			return false;
 		}
 		Set<ControlFlowElement> preds = flowAnalyzer.getPredecessorsSkipInternal(cfe);
@@ -114,7 +99,7 @@ public class DeadCodeVisitor extends GraphVisitor {
 			if (visited.contains(pred))
 				continue;
 
-			if (allForwardCFEs.contains(pred)) {
+			if (allLiveNodes.contains(pred)) {
 				return false;
 			}
 			preds.addAll(flowAnalyzer.getPredecessorsSkipInternal(pred));

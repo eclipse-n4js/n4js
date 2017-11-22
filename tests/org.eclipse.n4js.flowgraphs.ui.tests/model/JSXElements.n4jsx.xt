@@ -9,8 +9,23 @@
  *   NumberFour AG - Initial API and implementation
  */
 
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphTest
 
-/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+   Workspace {
+		Project "N4JSXFlowgraphTest" {
+			Folder "src" {
+				ThisFile {}
+			}
+			File "manifest.n4mf" { from="../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "react/index.n4jsd" }
+			File "manifest.n4mf" { from = "react/manifest.n4mf" }
+		}
+	}
+
+	END_SETUP
+*/
 
 
 /**
@@ -23,10 +38,10 @@
  */
 
 
+
+
 function JSXElement1() {
 	// JSXElement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXElement1 XPECT allIslandElems -->
-	// JSXElement1 XPECT allCatchBlocks -->
 	/* JSXElement1 XPECT allEdges ---
 		"start" --> div,
 		div --> div,
@@ -49,8 +64,6 @@ function JSXElement1() {
 
 function JSXElement2(x) {
 	// JSXElement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXElement2 XPECT allIslandElems -->
-	// JSXElement2 XPECT allCatchBlocks -->
 	/* JSXElement2 XPECT allEdges ---
 		"start" --> div,
 		div --> <div/>,
@@ -72,8 +85,6 @@ function JSXElement2(x) {
 
 function JSXElement3() {
 	// JSXElement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXElement3 XPECT allIslandElems -->
-	// JSXElement3 XPECT allCatchBlocks -->
 	/* JSXElement3 XPECT allEdges ---
 		"start" --> div,
 		div --> li,
@@ -101,8 +112,6 @@ function JSXElement3() {
 
 function JSXExpression1(x) {
 	// JSXExpression1 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXExpression1 XPECT allIslandElems -->
-	// JSXExpression1 XPECT allCatchBlocks -->
 	/* JSXExpression1 XPECT allEdges ---
 		"start" --> div,
 		div --> x,
@@ -127,8 +136,6 @@ function JSXExpression1(x) {
 
 function JSXPropertyAttribute1() {
 	// JSXPropertyAttribute1 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXPropertyAttribute1 XPECT allIslandElems -->
-	// JSXPropertyAttribute1 XPECT allCatchBlocks -->
 	/* JSXPropertyAttribute1 XPECT allEdges ---
 		"start" --> div,
 		div --> "",
@@ -155,8 +162,6 @@ function JSXPropertyAttribute1() {
 
 function JSXPropertyAttribute2(x) {
 	// JSXPropertyAttribute2 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXPropertyAttribute2 XPECT allIslandElems -->
-	// JSXPropertyAttribute2 XPECT allCatchBlocks -->
 	/* JSXPropertyAttribute2 XPECT allEdges ---
 		"start" --> div,
 		div --> x,
@@ -182,8 +187,6 @@ function JSXPropertyAttribute2(x) {
 
 function JSXPropertyAttribute3(x) {
 	// JSXPropertyAttribute3 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXPropertyAttribute3 XPECT allIslandElems -->
-	// JSXPropertyAttribute3 XPECT allCatchBlocks -->
 	/* JSXPropertyAttribute3 XPECT allEdges ---
 		"start" --> div,
 		div --> x,
@@ -210,8 +213,6 @@ function JSXPropertyAttribute3(x) {
 
 function JSXSpreadAttribute1(x) {
 	// JSXSpreadAttribute1 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXSpreadAttribute1 XPECT allIslandElems -->
-	// JSXSpreadAttribute1 XPECT allCatchBlocks -->
 	/* JSXSpreadAttribute1 XPECT allEdges ---
 		"start" --> div,
 		div --> x,
@@ -238,8 +239,6 @@ function JSXSpreadAttribute1(x) {
 
 function JSXSpreadAttribute2(x) {
 	// JSXSpreadAttribute2 XPECT cfContainer --> FunctionDeclaration::Block
-	// JSXSpreadAttribute2 XPECT allIslandElems -->
-	// JSXSpreadAttribute2 XPECT allCatchBlocks -->
 	/* JSXSpreadAttribute2 XPECT allEdges ---
 		"start" --> div,
 		div --> x,

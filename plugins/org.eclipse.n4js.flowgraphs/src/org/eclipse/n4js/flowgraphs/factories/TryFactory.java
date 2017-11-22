@@ -19,7 +19,6 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.CatchBlock;
@@ -31,33 +30,32 @@ class TryFactory {
 	static final String CATCH_NODE_NAME = "catch";
 	static final String FINALLY_NODE_NAME = "finally";
 
-	static ComplexNode buildComplexNode(TryStatement tryStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(tryStmt);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, TryStatement tryStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), tryStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, tryStmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), tryStmt);
 		Node tryNode = null;
 		Node catchNode = null;
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = new DelegatingNode("try", intPos++, tryStmt, tryStmt.getBlock());
+			tryNode = DelNodeFactory.create(astpp, "try", tryStmt, tryStmt.getBlock());
 		}
 
 		if (tryStmt.getCatch() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(ControlFlowType.Throw);
-			catchNode = new DelegatingNode(CATCH_NODE_NAME, intPos++, tryStmt, catchClause.getBlock());
+			catchNode = DelNodeFactory.create(astpp, CATCH_NODE_NAME, tryStmt, catchClause.getBlock());
 			catchNode.addCatchToken(ct);
 		}
 
 		if (tryStmt.getFinally() != null) {
 			CatchToken ct = new CatchToken(ControlFlowType.CatchesAll);
-			finallyNode = new DelegatingNode(FINALLY_NODE_NAME, intPos++, tryStmt, tryStmt.getFinally().getBlock());
+			finallyNode = DelNodeFactory.create(astpp, FINALLY_NODE_NAME, tryStmt, tryStmt.getFinally().getBlock());
 			finallyNode.addCatchToken(ct);
 		}
 
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, tryStmt);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), tryStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(tryNode);
@@ -72,8 +70,10 @@ class TryFactory {
 		nodes.add(exitNode);
 		cNode.connectInternalSucc(nodes);
 
+		cNode.connectInternalSucc(entryNode, catchNode); // TODO: Consider to use a special edge type 'unsound'
 		LinkedList<Node> parts = ListUtils.filterNulls(finallyNode, exitNode);
 		Node tgtFrgmt = parts.getFirst();
+		cNode.connectInternalSucc(tryNode, catchNode); // TODO: Consider to use a special edge type 'unsound'
 		cNode.connectInternalSucc(catchNode, tgtFrgmt);
 
 		cNode.setEntryNode(entryNode);

@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +28,15 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  */
 abstract public class Node implements ControlFlowable {
 	static private int ID_COUNTER = 0;
+
 	/** The node id */
 	final public int id = ID_COUNTER++;
 	/** The {@link ControlFlowElement} this node refers to */
 	final private ControlFlowElement cfElem;
 	/** Name of the node */
 	final public String name;
-	/** The control flow position of this node in context of its {@link ComplexNode} */
-	final public int internalPosition;
+	/** The control flow position of this node in context of the AST */
+	final public int astPosition;
 
 	/** Maps from a predecessor node to an {@link EdgeDescription} */
 	final public Map<Node, EdgeDescription> internalPred = new HashMap<>();
@@ -49,17 +51,26 @@ abstract public class Node implements ControlFlowable {
 	/** List of all {@link DependencyEdge}s ending at this node */
 	final public List<DependencyEdge> endEdges = new LinkedList<>();
 	/** List of all {@link JumpToken}s of this node */
-	final public List<JumpToken> jumpToken = new ArrayList<>();
+	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
+
+	/** Set during graph traversal. */
+	private Reachability reachability = Reachability.Unknown;
+	/** Set to true during graph traversal. */
+	private boolean isVisited = false;
+
+	private enum Reachability {
+		Unknown, Reachable, Unreachable
+	}
 
 	/**
 	 * Constructor.<br/>
 	 * Creates a node with the given name and {@link ControlFlowElement}.
 	 */
-	public Node(String name, int internalPosition, ControlFlowElement cfElem) {
+	public Node(String name, int astPosition, ControlFlowElement cfElem) {
 		this.name = name;
-		this.internalPosition = internalPosition;
+		this.astPosition = astPosition;
 		this.cfElem = cfElem;
 	}
 
@@ -114,12 +125,14 @@ abstract public class Node implements ControlFlowable {
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
-		succ.add(cfEdge);
+		boolean addSucceeded = succ.add(cfEdge);
+		assert addSucceeded : "Adding an edge should always be successful";
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
-		pred.add(cfEdge);
+		boolean addSucceeded = pred.add(cfEdge);
+		assert addSucceeded : "Adding an edge should always be successful";
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
@@ -179,6 +192,33 @@ abstract public class Node implements ControlFlowable {
 	/** @return true, iff this node has at least one jump token. */
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
+	}
+
+	/** Sets the reachability of this node to unreachable. Sets this node to be visited. */
+	public void setUnreachable() {
+		reachability = Reachability.Unreachable;
+		isVisited = true;
+	}
+
+	/** Sets the reachability of this node to reachable. Sets this node to be visited. */
+	public void setReachable() {
+		reachability = Reachability.Reachable;
+		isVisited = true;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isVisited() {
+		return isVisited;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isUnreachable() {
+		return reachability == Reachability.Unreachable;
+	}
+
+	/** @return true iff this node is not reachable */
+	public boolean isReachable() {
+		return reachability == Reachability.Reachable;
 	}
 
 	@Override

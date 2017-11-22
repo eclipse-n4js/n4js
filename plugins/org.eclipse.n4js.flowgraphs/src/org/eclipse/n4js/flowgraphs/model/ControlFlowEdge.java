@@ -61,25 +61,14 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		}
 	}
 
+	/** There should be no two edges with same start and end nodes. */
 	@Override
 	public int compareTo(ControlFlowEdge edge) {
 		int result = ComparisonChain.start()
 				.compare(start.id, edge.start.id)
 				.compare(end.id, edge.end.id)
-				.compare(cfType, edge.cfType)
 				.result();
 
-		if (result == 0) {
-			if (finallyPathContext != null && edge.finallyPathContext != null) {
-				return finallyPathContext.compareTo(edge.finallyPathContext);
-			}
-			if (finallyPathContext != null) {
-				return -1;
-			}
-			if (edge.finallyPathContext != null) {
-				return 1;
-			}
-		}
 		return result;
 	}
 
@@ -92,8 +81,6 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		boolean equals = true;
 		equals &= start.id == edge.start.id;
 		equals &= end.id == edge.end.id;
-		equals &= cfType == edge.cfType;
-		equals &= finallyPathContext != null && finallyPathContext.equals(edge.finallyPathContext);
 		return equals;
 	}
 
@@ -102,8 +89,6 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		long hashCode = 0;
 		hashCode += start.hashCode();
 		hashCode += end.hashCode();
-		hashCode += cfType.hashCode();
-		hashCode += (finallyPathContext != null) ? finallyPathContext.hashCode() : 0;
 		return (int) (hashCode % Integer.MAX_VALUE);
 	}
 
