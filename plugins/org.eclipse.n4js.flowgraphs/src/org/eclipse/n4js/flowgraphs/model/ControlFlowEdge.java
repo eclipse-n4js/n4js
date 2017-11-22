@@ -93,7 +93,7 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		equals &= start.id == edge.start.id;
 		equals &= end.id == edge.end.id;
 		equals &= cfType == edge.cfType;
-		equals &= finallyPathContext.equals(edge.finallyPathContext);
+		equals &= finallyPathContext != null && finallyPathContext.equals(edge.finallyPathContext);
 		return equals;
 	}
 
