@@ -19,6 +19,9 @@ abstract public class AbstractEdge implements GraphElement {
 
 	/** Constructor */
 	public AbstractEdge(Node start, Node end) {
+		assert (start != null) : "Start node must not be null";
+		assert (end != null) : "End node must not be null";
+		assert (start != end) : "Edge must not have same Start/End nodes";
 		this.start = start;
 		this.end = end;
 	}
