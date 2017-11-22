@@ -19,3 +19,7 @@ Sources {
         "src"
     }
 }
+
+ProjectDependencies {
+    react
+}

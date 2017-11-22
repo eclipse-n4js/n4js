@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.scoping
 
+import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.name.Named
 import java.util.List
@@ -41,6 +42,7 @@ import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
+import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
@@ -211,6 +213,22 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	/**
+	 * Returns a scope as created by {@link #getScope(EObject, EReference)} for the 'from' part of an import declaration
+	 * in the AST, but without the need for providing any AST nodes. This can be used to implement implicit imports
+	 * without duplicating any logic from the scoping.
+	 * <p>
+	 * There are two minor differences to the scope created by {@code #getScope()}:
+	 * <ol>
+	 * <li>the current module, i.e. the module represented by the given resource, won't be filtered out, and
+	 * <li>advanced error reporting will be disabled, i.e. {@link IScope#getSingleElement(QualifiedName)} will simply
+	 *     return <code>null</code> instead of returning an {@code IEObjectDescriptionWithError}.
+	 * </ol>
+	 */
+	public def IScope getScopeForImplicitImports(N4JSResource resource) {
+		return scope_ImportedModule(resource, Optional.absent());
+	}
+
+	/**
 	 * In <pre>continue XYZ</pre>, bind XYZ to label.
 	 * Bind to ALL labels in script, although not all of them are valid. Later is to be validated in ASTStructureValidator and
 	 * allows for better error and quick fix handling. However, most inner (and correct) scope is preferred (solving problems in case of duplicate names).
@@ -247,19 +265,29 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 */
 	private def IScope scope_ImportedModule(ImportDeclaration importDeclaration, EReference reference) {
 
-		val initialScope = scope_ImportedAndCurrentModule(importDeclaration, reference);
-
-		val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(importDeclaration.eResource);
-		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
-			resourceDescriptions, reference.EReferenceType);
-
-		val projectImportEnabledScope = ProjectImportEnablingScope.create(n4jsCore, importDeclaration, initialScope,
-			delegateMainModuleAwareScope);
+		val resource = importDeclaration.eResource as N4JSResource;
+		val projectImportEnabledScope = scope_ImportedModule(resource, Optional.of(importDeclaration));
 
 		// filter out clashing module name (can be main module with the same name but in different project)
 		return new FilteringScope(projectImportEnabledScope, [
 			if (it === null) false else !it.isDescriptionOfModuleWith(importDeclaration);
 		]);
+	}
+
+	private def IScope scope_ImportedModule(N4JSResource resource, Optional<ImportDeclaration> importDeclaration) {
+
+		val reference = N4JSPackage.eINSTANCE.importDeclaration_Module;
+
+		val initialScope = scope_ImportedAndCurrentModule(resource.script, reference);
+
+		val resourceDescriptions = resourceDescriptionsProvider.getResourceDescriptions(resource);
+		val delegateMainModuleAwareScope = MainModuleAwareSelectableBasedScope.createMainModuleAwareScope(initialScope,
+			resourceDescriptions, reference.EReferenceType);
+
+		val projectImportEnabledScope = ProjectImportEnablingScope.create(n4jsCore, resource, importDeclaration, initialScope,
+			delegateMainModuleAwareScope);
+
+		return projectImportEnabledScope;
 	}
 
 	/**

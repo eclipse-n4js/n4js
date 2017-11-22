@@ -36,10 +36,12 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.n4jsx.model
 Export-Package: org.eclipse.n4js.n4jsx,
  org.eclipse.n4js.n4jsx.formatting2,
+ org.eclipse.n4js.n4jsx.internal,
  org.eclipse.n4js.n4jsx.parser,
  org.eclipse.n4js.n4jsx.parser.antlr,
  org.eclipse.n4js.n4jsx.parser.antlr.internal,
  org.eclipse.n4js.n4jsx.parser.antlr.lexer,
  org.eclipse.n4js.n4jsx.serializer,
  org.eclipse.n4js.n4jsx.services,
- org.eclipse.n4js.n4jsx.validation
+ org.eclipse.n4js.n4jsx.validation,
+ org.eclipse.n4js.n4jsx.helpers
