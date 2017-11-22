@@ -11,7 +11,6 @@
 package org.eclipse.n4js.scoping.imports;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static java.util.Collections.emptyList;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +25,6 @@ import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.resource.ISelectable;
-import org.eclipse.xtext.resource.impl.AliasedEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import org.eclipse.xtext.scoping.impl.ImportNormalizer;
 import org.eclipse.xtext.scoping.impl.ImportScope;
@@ -101,58 +99,4 @@ public class N4JSImportedNamespaceAwareLocalScopeProvider extends ImportedNamesp
 			ISelectable importFrom, EClass type, boolean ignoreCase) {
 		return new NonResolvingImportScope(namespaceResolvers, parent, importFrom, type, ignoreCase);
 	}
-
-	static class NonResolvingImportScope extends ImportScope {
-
-		private List<ImportNormalizer> myNormalizers;
-		private final EClass myType;
-
-		public NonResolvingImportScope(List<ImportNormalizer> namespaceResolvers, IScope parent, ISelectable importFrom,
-				EClass type, boolean ignoreCase) {
-			super(namespaceResolvers, parent, importFrom, type, ignoreCase);
-			this.myType = type;
-		}
-
-		@Override
-		protected List<ImportNormalizer> removeDuplicates(List<ImportNormalizer> namespaceResolvers) {
-			List<ImportNormalizer> result = super.removeDuplicates(namespaceResolvers);
-			myNormalizers = result;
-			return result;
-		}
-
-		@Override
-		protected Iterable<IEObjectDescription> getLocalElementsByName(QualifiedName name) {
-			List<IEObjectDescription> result = newArrayList();
-			QualifiedName resolvedQualifiedName = null;
-			ISelectable importFrom = getImportFrom();
-			for (ImportNormalizer normalizer : myNormalizers) {
-				final QualifiedName resolvedName = normalizer.resolve(name);
-				if (resolvedName != null) {
-					Iterable<IEObjectDescription> resolvedElements = importFrom.getExportedObjects(myType, resolvedName,
-							isIgnoreCase());
-					for (IEObjectDescription resolvedElement : resolvedElements) {
-						if (resolvedQualifiedName == null)
-							resolvedQualifiedName = resolvedName;
-						else if (!resolvedQualifiedName.equals(resolvedName)) {
-							// change is here
-							if (result.get(0).getEObjectURI().equals(resolvedElement.getEObjectOrProxy())) {
-								return emptyList();
-							}
-							// change is above
-						}
-						QualifiedName alias = normalizer.deresolve(resolvedElement.getName());
-						if (alias == null)
-							throw new IllegalStateException("Couldn't deresolve " + resolvedElement.getName()
-									+ " with import " + normalizer);
-						final AliasedEObjectDescription aliasedEObjectDescription = new AliasedEObjectDescription(alias,
-								resolvedElement);
-						result.add(aliasedEObjectDescription);
-					}
-				}
-			}
-			return result;
-		}
-
-	}
-
 }
