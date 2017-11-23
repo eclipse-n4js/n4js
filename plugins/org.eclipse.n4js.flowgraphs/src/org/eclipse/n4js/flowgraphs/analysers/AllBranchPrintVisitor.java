@@ -126,20 +126,22 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 				visitedSuccessor = true;
 				List<String> succStrings = getPathStrings((AllBranchPrintWalker) succ, isDead);
 				for (String succString : succStrings) {
-					String prefixedString = bw.branchString + succString;
+					if (!bw.pathString.isEmpty() && !succString.isEmpty() && !succString.startsWith(" -> ")) {
+						succString = " -> " + succString;
+					}
+					String prefixedString = bw.pathString + succString;
 					allStrings.add(prefixedString);
 				}
 			}
 		}
 		if (!visitedSuccessor) {
-			allStrings.add(bw.branchString);
+			allStrings.add(bw.pathString);
 		}
 
 		return allStrings;
 	}
 
 	static class AllBranchPrintExplorer extends GraphExplorer {
-
 		AllBranchPrintExplorer() {
 			super(Quantor.ForAllBranches);
 		}
@@ -153,24 +155,27 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
 			return new AllBranchPrintWalker();
 		}
-
 	}
 
 	static class AllBranchPrintWalker extends BranchWalker {
 		private String branchString = "";
+		private String pathString = "";
 
 		AllBranchPrintWalker() {
 		}
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
+			if (!pathString.isEmpty()) {
+				pathString += " -> ";
+			}
+			pathString += FGUtils.getSourceText(cfe);
 			branchString += FGUtils.getSourceText(cfe);
 		}
 
 		@Override
 		protected void visit(FlowEdge edge) {
 			branchString += " -> ";
-			// branchString += " --" + edge.toString() + "--> ";
 		}
 
 		@Override

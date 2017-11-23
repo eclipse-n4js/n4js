@@ -13,12 +13,21 @@
 /* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
 
 
+/**
+ *
+ */
 
-function ReturnStatement2() : int {
-	// ReturnStatement2 XPECT allPaths --> "start" -> 1 -> return 1;
-	// ReturnStatement2 backward XPECT allPaths direction 'Backward' -->  return 1; -> 1 -> "start"
+
+/* SwitchStatement1 XPECT allMergeBranches ---
+	B0: [1](entryExit) -> [case 2: 3;](entry),
+	B0: [1](entryExit) -> [switch (1) { case 2: 3; }](exit),
+	F1: [1](entryExit) -> [switch (1) { case 2: 3; }](exit),
+	F1: [case 2: 3;](exit) -> [switch (1) { case 2: 3; }](exit)
+--- */
+function SwitchStatement1() {
 	"start";
-	 return 1;
-	// ReturnStatement2 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
+	switch (1) {
+	case 2:	3;
+	}
 	"end";
 }

@@ -12,7 +12,6 @@ package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -32,7 +31,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
  *   -> {@link #getJoinGroups()}
- *   -> {@link #mergeJoinGroup(LinkedList)}
+ *   -> {@link #mergeJoinGroup(List)}
  * }*
  * </pre>
  */
@@ -76,12 +75,12 @@ public class EdgeGuideWorklist {
 	 *
 	 * @return a list that is either empty or contains two or more {@link EdgeGuide} that can be merged.
 	 */
-	LinkedList<EdgeGuide> getJoinGroups() {
+	List<EdgeGuide> getJoinGroups() {
 		allVisitedEdges.add(currEdgeGuide.getEdge());
 		List<EdgeGuide> nextEGs = currEdgeGuide.getNextEdgeGuides();
 		egQueue.addAll(nextEGs);
 
-		LinkedList<EdgeGuide> joinGuideGroup = egQueue.removeFirstJoinGuide();
+		List<EdgeGuide> joinGuideGroup = egQueue.removeFirstJoinGuide();
 		return joinGuideGroup;
 	}
 
@@ -90,18 +89,17 @@ public class EdgeGuideWorklist {
 	 *
 	 * @return the {@link EdgeGuideMerged} that is the merge result of the given {@link EdgeGuide}s
 	 */
-	EdgeGuideMerged mergeJoinGroup(LinkedList<EdgeGuide> joinGuideGroup) {
-		if (!joinGuideGroup.isEmpty()) {
-			EdgeGuideMerged remainingEdgeGuide = new EdgeGuideMerged(joinGuideGroup);
-			for (EdgeGuide eg : joinGuideGroup) {
-				allVisitedEdges.add(eg.getEdge());
-			}
+	EdgeGuideMerged mergeJoinGroup(List<EdgeGuide> joinGuideGroup) {
+		assert !joinGuideGroup.isEmpty();
 
-			List<EdgeGuide> nextEGs = remainingEdgeGuide.getNextEdgeGuides();
-			egQueue.addAll(nextEGs);
-			return remainingEdgeGuide;
+		EdgeGuideMerged remainingEdgeGuide = new EdgeGuideMerged(joinGuideGroup);
+		for (EdgeGuide eg : joinGuideGroup) {
+			allVisitedEdges.add(eg.getEdge());
 		}
-		return null;
+
+		List<EdgeGuide> nextEGs = remainingEdgeGuide.getNextEdgeGuides();
+		egQueue.addAll(nextEGs);
+		return remainingEdgeGuide;
 	}
 
 	/** @return true iff the given edge was already visited */

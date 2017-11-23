@@ -13,18 +13,13 @@ package org.eclipse.n4js.flowgraphs.analyses;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 import com.google.common.collect.ComparisonChain;
-import com.google.common.collect.Lists;
 
 /**
  * The {@link EdgeGuideQueue} is a sorted {@link List} of all {@link EdgeGuide}s that could be handled next. The sorting
@@ -58,11 +53,12 @@ public class EdgeGuideQueue {
 
 	/** @return and removes the head of this queue */
 	EdgeGuide removeFirst() {
+		Collections.sort(edgeGuideQueue, this::compareForRemoveFirst);
 		return edgeGuideQueue.remove(0);
 	}
 
 	/** @return and removes the head of this queue */
-	LinkedList<EdgeGuide> removeFirstJoinGuide() {
+	List<EdgeGuide> removeFirstJoinGuide() {
 		LinkedList<EdgeGuide> guideGroup = new LinkedList<>();
 
 		for (Iterator<EdgeGuide> iter = edgeGuideQueue.iterator(); iter.hasNext();) {
@@ -81,7 +77,7 @@ public class EdgeGuideQueue {
 			return guideGroup;
 		}
 
-		return Lists.newLinkedList();
+		return Collections.emptyList();
 	}
 
 	/** @return an {@link Iterable} over all {@link EdgeGuide} in the queue */
@@ -97,16 +93,9 @@ public class EdgeGuideQueue {
 	}
 
 	private int compareForRemoveFirst(EdgeGuide eg1, EdgeGuide eg2) {
-		ControlFlowEdge e1 = eg1.getEdge();
-		ControlFlowEdge e2 = eg2.getEdge();
-		ControlFlowType cft1 = e1.cfType;
-		ControlFlowType cft2 = e2.cfType;
-
 		return ComparisonChain.start()
 				.compare(eg1, eg2, EdgeGuideQueue::compareJoined)
 				.compare(eg1, eg2, EdgeGuideQueue::compareDeadFlowContext)
-				.compare(cft1, cft2, EdgeGuideQueue::compareEdgeTypes)
-				.compare(eg1, eg2, EdgeGuideQueue::compareJoining)
 				.compare(eg1, eg2, EdgeGuideQueue::compareASTPosition)
 				.result();
 	}
@@ -129,18 +118,6 @@ public class EdgeGuideQueue {
 		return posDiff;
 	}
 
-	/** Prioritize joining edges. */
-	private static int compareJoining(EdgeGuide eg1, EdgeGuide eg2) {
-		Node nextNode1 = eg1.getNextNode();
-		Node nextNode2 = eg2.getNextNode();
-		boolean isJoining1 = eg1.edgeProvider.getPlainPrevEdges(nextNode1).size() > 1;
-		boolean isJoining2 = eg2.edgeProvider.getPlainPrevEdges(nextNode2).size() > 1;
-		if (isJoining1 == isJoining2) {
-			return 0;
-		}
-		return isJoining1 ? 1 : -1;
-	}
-
 	/** Prioritize live flow branches. */
 	private static int compareDeadFlowContext(EdgeGuide eg1, EdgeGuide eg2) {
 		DeadFlowContext dfc1 = eg1.deadContext;
@@ -149,28 +126,6 @@ public class EdgeGuideQueue {
 		if (dfc1.isForwardDeadFlow() == dfc2.isForwardDeadFlow())
 			return 0;
 		return dfc1.isForwardDeadFlow() ? 1 : -1;
-	}
-
-	/** Prioritize normal edges. */
-	private static int compareEdgeTypes(ControlFlowType cft1, ControlFlowType cft2) {
-		if (cft1 == cft2)
-			return 0;
-
-		return cftOrderMap.get(cft2) - cftOrderMap.get(cft1);
-	}
-
-	private static Map<ControlFlowType, Integer> cftOrderMap = new EnumMap<>(ControlFlowType.class);
-	static {
-		cftOrderMap.put(ControlFlowType.Successor, 10);
-		cftOrderMap.put(ControlFlowType.DeadCode, 10);
-		cftOrderMap.put(ControlFlowType.Repeat, 10);
-		cftOrderMap.put(ControlFlowType.Continue, 7);
-		cftOrderMap.put(ControlFlowType.Break, 6);
-		cftOrderMap.put(ControlFlowType.Throw, 5);
-		cftOrderMap.put(ControlFlowType.Return, 4);
-		cftOrderMap.put(ControlFlowType.Exit, 3);
-		cftOrderMap.put(ControlFlowType.CatchesAll, 0);
-		cftOrderMap.put(ControlFlowType.CatchesErrors, 0);
 	}
 
 	@Override
@@ -187,7 +142,6 @@ public class EdgeGuideQueue {
 		String egs = "[";
 		egs += eg.isMerged() ? "J " : "j ";
 		egs += eg.deadContext.isForwardDeadFlow() ? "D " : "d ";
-		egs += eg.getEdge().cfType + " ";
 		egs += eg.getNextNode().astPosition;
 		egs += "] " + eg.getEdge().toString();
 		return egs;

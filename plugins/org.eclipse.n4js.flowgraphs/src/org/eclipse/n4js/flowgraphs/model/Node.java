@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -239,6 +240,14 @@ abstract public class Node implements ControlFlowable {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	/** @return a String that contains the node name and the {@link ControlFlowElement} */
+	public String getExtendedString() {
+		String s = "";
+		s += "[" + FGUtils.getSourceText(getControlFlowElement()) + "]";
+		s += "(" + getName() + ") ";
+		return s;
 	}
 
 	private class EdgeDescription {
