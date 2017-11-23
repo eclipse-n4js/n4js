@@ -82,6 +82,11 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute
+import org.eclipse.n4js.n4JS.JSXElementName
+import org.eclipse.n4js.n4jsx.helpers.ReactHelper
 
 /**
  * This class contains custom scoping description.
@@ -92,7 +97,9 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * see : http://www.eclipse.org/Xtext/documentation/latest/xtext.html#scoping
  * on how and when to use it
  */
+ @Log
 class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScopeProvider, IContentAssistScopeProvider {
+	
 
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
 
@@ -127,6 +134,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject extension VariableVisibilityChecker
 
 	@Inject extension ProjectUtils;
+	
+	@Inject extension ReactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
 
@@ -153,6 +162,16 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
 				return scope_LabelledStatement(context);
 			}
+			
+			//maybe JSXAttribute
+			val maybeJSXAScope = getJSXPropertyAttributeScope(context, reference);
+			if(maybeJSXAScope !== IScope.NULLSCOPE)
+				return maybeJSXAScope;
+				
+			//maybe JSXElement
+			val maybeJSXEScope = getJSXElementScope(context, reference);
+			if(maybeJSXEScope !== IScope.NULLSCOPE)
+				return maybeJSXEScope;
 
 			// otherwise use context:
 			switch (context) {
@@ -532,5 +551,46 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def <T extends EObject> T ancestor(EObject obj, Class<T> ancestorType) {
 		if (obj === null) return null;
 		return EcoreUtil2.getContainerOfType(obj.eContainer, ancestorType);
+	}
+	
+	/** Returns scope for the {@link JSXPropertyAttribute} (obtained from context) or {@link IScope#NULLSCOPE} */
+	private def getJSXPropertyAttributeScope(EObject context, EReference reference) {
+		if (reference == N4JSPackage.Literals.JSX_PROPERTY_ATTRIBUTE__PROPERTY) {
+			if (context instanceof JSXPropertyAttribute) {
+				val jsxElem = (context.eContainer as JSXElement);
+				val TypeRef propsTypeRef = jsxElem.getPropsType();
+				val checkVisibility = true;
+				val staticAccess = false;
+				if (propsTypeRef !== null) {
+					// Prevent "Cannot resolve to element" error message of unknown attributes since
+					// we want to issue a warning instead
+					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
+						staticAccess);
+					return new DynamicPseudoScope(memberScope);
+				} else {
+					val scope = getScope(context, reference);
+					return new DynamicPseudoScope(scope);
+				}
+			}
+		}
+		return IScope.NULLSCOPE;
+	}
+	
+	/** Returns scope for the JSXElement (obtained from context) or {@link IScope#NULLSCOPE} */
+	private def getJSXElementScope(EObject context, EReference reference) {
+
+		// Otherwise, if we are within a JSX element context but cannot bind JSX element, ignore binding for now
+		var JSXElementName jsxElName;
+		for (var ei = context; ei !== null; ei = ei.eContainer) {
+			if (ei instanceof JSXElementName) {
+				jsxElName = ei;
+			}
+		}
+		if (jsxElName !== null) {
+			val scope = getScope(context, reference);
+			return new DynamicPseudoScope(scope);
+		}
+
+		return IScope.NULLSCOPE;
 	}
 }

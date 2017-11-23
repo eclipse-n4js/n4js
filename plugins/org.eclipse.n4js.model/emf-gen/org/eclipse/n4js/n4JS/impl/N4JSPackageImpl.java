@@ -100,6 +100,14 @@ import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.IntLiteral;
 import org.eclipse.n4js.n4JS.IterationStatement;
+import org.eclipse.n4js.n4JS.JSXAttribute;
+import org.eclipse.n4js.n4JS.JSXChild;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXElementName;
+import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
+import org.eclipse.n4js.n4JS.JSXText;
 import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral;
@@ -1337,6 +1345,62 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass bindingElementEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxChildEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxElementNameEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxTextEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxExpressionEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxPropertyAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxSpreadAttributeEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass jsxElementEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6095,6 +6159,168 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getJSXChild() {
+		return jsxChildEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXElementName() {
+		return jsxElementNameEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXElementName_Expression() {
+		return (EReference)jsxElementNameEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXText() {
+		return jsxTextEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXExpression() {
+		return jsxExpressionEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXExpression_Expression() {
+		return (EReference)jsxExpressionEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXAttribute() {
+		return jsxAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXPropertyAttribute() {
+		return jsxPropertyAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXPropertyAttribute_Property() {
+		return (EReference)jsxPropertyAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EAttribute getJSXPropertyAttribute_PropertyAsText() {
+		return (EAttribute)jsxPropertyAttributeEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXPropertyAttribute_JsxAttributeValue() {
+		return (EReference)jsxPropertyAttributeEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXSpreadAttribute() {
+		return jsxSpreadAttributeEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXSpreadAttribute_Expression() {
+		return (EReference)jsxSpreadAttributeEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getJSXElement() {
+		return jsxElementEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXElement_JsxElementName() {
+		return (EReference)jsxElementEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXElement_JsxClosingName() {
+		return (EReference)jsxElementEClass.getEStructuralFeatures().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXElement_JsxAttributes() {
+		return (EReference)jsxElementEClass.getEStructuralFeatures().get(2);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EReference getJSXElement_JsxChildren() {
+		return (EReference)jsxElementEClass.getEStructuralFeatures().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EEnum getVariableStatementKeyword() {
 		return variableStatementKeywordEEnum;
 	}
@@ -6940,6 +7166,32 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEReference(bindingElementEClass, BINDING_ELEMENT__EXPRESSION);
 		createEOperation(bindingElementEClass, BINDING_ELEMENT___IS_ELISION);
 
+		jsxChildEClass = createEClass(JSX_CHILD);
+
+		jsxElementNameEClass = createEClass(JSX_ELEMENT_NAME);
+		createEReference(jsxElementNameEClass, JSX_ELEMENT_NAME__EXPRESSION);
+
+		jsxTextEClass = createEClass(JSX_TEXT);
+
+		jsxExpressionEClass = createEClass(JSX_EXPRESSION);
+		createEReference(jsxExpressionEClass, JSX_EXPRESSION__EXPRESSION);
+
+		jsxAttributeEClass = createEClass(JSX_ATTRIBUTE);
+
+		jsxPropertyAttributeEClass = createEClass(JSX_PROPERTY_ATTRIBUTE);
+		createEReference(jsxPropertyAttributeEClass, JSX_PROPERTY_ATTRIBUTE__PROPERTY);
+		createEAttribute(jsxPropertyAttributeEClass, JSX_PROPERTY_ATTRIBUTE__PROPERTY_AS_TEXT);
+		createEReference(jsxPropertyAttributeEClass, JSX_PROPERTY_ATTRIBUTE__JSX_ATTRIBUTE_VALUE);
+
+		jsxSpreadAttributeEClass = createEClass(JSX_SPREAD_ATTRIBUTE);
+		createEReference(jsxSpreadAttributeEClass, JSX_SPREAD_ATTRIBUTE__EXPRESSION);
+
+		jsxElementEClass = createEClass(JSX_ELEMENT);
+		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ELEMENT_NAME);
+		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
+		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ATTRIBUTES);
+		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CHILDREN);
+
 		// Create enums
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
 		propertyNameKindEEnum = createEEnum(PROPERTY_NAME_KIND);
@@ -7229,6 +7481,14 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		arrayBindingPatternEClass.getESuperTypes().add(this.getBindingPattern());
 		bindingPropertyEClass.getESuperTypes().add(this.getPropertyNameOwner());
 		bindingElementEClass.getESuperTypes().add(this.getControlFlowElement());
+		jsxTextEClass.getESuperTypes().add(this.getJSXChild());
+		jsxExpressionEClass.getESuperTypes().add(this.getJSXChild());
+		jsxAttributeEClass.getESuperTypes().add(this.getControlFlowElement());
+		jsxPropertyAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
+		jsxPropertyAttributeEClass.getESuperTypes().add(this.getMemberAccess());
+		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
+		jsxElementEClass.getESuperTypes().add(this.getExpression());
+		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(namedElementEClass, NamedElement.class, "NamedElement", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -8053,6 +8313,32 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEReference(getBindingElement_Expression(), this.getExpression(), null, "expression", null, 0, 1, BindingElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getBindingElement__IsElision(), theEcorePackage.getEBoolean(), "isElision", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(jsxChildEClass, JSXChild.class, "JSXChild", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(jsxElementNameEClass, JSXElementName.class, "JSXElementName", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXElementName_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXElementName.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxTextEClass, JSXText.class, "JSXText", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(jsxExpressionEClass, JSXExpression.class, "JSXExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXExpression_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxAttributeEClass, JSXAttribute.class, "JSXAttribute", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(jsxPropertyAttributeEClass, JSXPropertyAttribute.class, "JSXPropertyAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXPropertyAttribute_Property(), theTypesPackage.getIdentifiableElement(), null, "property", null, 0, 1, JSXPropertyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getJSXPropertyAttribute_PropertyAsText(), theEcorePackage.getEString(), "propertyAsText", null, 0, 1, JSXPropertyAttribute.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJSXPropertyAttribute_JsxAttributeValue(), this.getExpression(), null, "jsxAttributeValue", null, 0, 1, JSXPropertyAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxSpreadAttributeEClass, JSXSpreadAttribute.class, "JSXSpreadAttribute", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXSpreadAttribute_Expression(), this.getExpression(), null, "expression", null, 0, 1, JSXSpreadAttribute.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		initEClass(jsxElementEClass, JSXElement.class, "JSXElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getJSXElement_JsxElementName(), this.getJSXElementName(), null, "jsxElementName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJSXElement_JsxAttributes(), this.getJSXAttribute(), null, "jsxAttributes", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJSXElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");

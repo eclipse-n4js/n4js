@@ -569,6 +569,7 @@ PrimaryExpression <Yield> returns Expression:
 	  ThisLiteral
 	| SuperLiteral
 	| IdentifierRef<Yield>
+	| JSXElement /* see JSX  */
 	| ParameterizedCallExpression<Yield>
 	| Literal
 	| ArrayLiteral<Yield>
@@ -580,6 +581,58 @@ PrimaryExpression <Yield> returns Expression:
 	| N4ClassExpression<Yield>
 	| TemplateLiteral<Yield>
 ;
+
+
+// ****************************************************************************************************
+// see https://facebook.github.io/jsx/
+// ****************************************************************************************************
+
+
+JSXElement:
+	'<' jsxElementName=JSXElementName JSXAttributes
+	(('>' jsxChildren+=JSXChild* JSXClosingElement) | ('/' '>'));
+
+fragment JSXClosingElement *:
+	'<' '/' jsxClosingName=JSXElementName '>';
+
+JSXChild:
+	JSXElement | JSXExpression
+	//	| JSXText -- not supported yet, cf. IDE-2414
+;
+
+// terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
+
+JSXExpression: '{' expression=AssignmentExpression<false,false> '}';
+
+JSXElementName:
+	expression=JSXElementNameExpression
+	;
+
+JSXElementNameExpression returns Expression:
+	IdentifierRef<false>
+	({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
+	//	| JSXNamedspacedName not supported
+;
+
+//JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+//JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
+
+fragment JSXAttributes *:
+	jsxAttributes+=JSXAttribute*;
+
+JSXAttribute:
+	JSXSpreadAttribute
+	|
+	JSXPropertyAttribute;
+
+JSXSpreadAttribute:
+	'{' '...' expression=AssignmentExpression<In=false, Yield=false> '}';
+
+JSXPropertyAttribute:
+	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
+	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
+
+
 
 ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 

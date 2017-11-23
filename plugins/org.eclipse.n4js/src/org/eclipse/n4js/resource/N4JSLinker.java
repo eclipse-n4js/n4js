@@ -23,6 +23,7 @@ import org.eclipse.n4js.conversion.N4JSValueConverterException;
 import org.eclipse.n4js.conversion.N4JSValueConverterWithValueException;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
 import org.eclipse.n4js.n4JS.LabelRef;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
@@ -65,9 +66,7 @@ import com.google.inject.Inject;
  */
 public class N4JSLinker extends LazyLinker {
 
-	/**
-	 * Custom delimiter to use for encoded URI fragments.
-	 */
+	/** Custom delimiter to use for encoded URI fragments. */
 	public static final char N4JS_CROSSREF_DELIM = '|';
 
 	@Inject
@@ -274,6 +273,8 @@ public class N4JSLinker extends LazyLinker {
 				((ParameterizedPropertyAccessExpression) obj).setPropertyAsText((String) value);
 			} else if (obj instanceof NamedImportSpecifier && value instanceof String) {
 				((NamedImportSpecifier) obj).setImportedElementAsText((String) value);
+			} else if ((obj instanceof JSXPropertyAttribute) && (value instanceof String)) {
+				((JSXPropertyAttribute) obj).setPropertyAsText((String) value);
 			} else {
 				setOtherElementAsText(tokenText, obj, value);
 			}

@@ -11,15 +11,14 @@
 package org.eclipse.n4js.n4jsx.internal;
 
 import org.eclipse.emf.common.util.URI;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4JSModel;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
 import org.eclipse.n4js.n4jsx.N4JSXGlobals;
 import org.eclipse.n4js.n4jsx.validation.N4JSXResourceType;
+
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * This class overrides the isJsFile method of {@link N4JSRuntimeCore} to consider JSX files as plain JS files
@@ -36,8 +35,8 @@ public class N4JSXRuntimeCore extends N4JSRuntimeCore {
 	}
 
 	/**
-	 * Check for raw JS-files
-	 *
+	 * Check for raw JS-files §
+	 * 
 	 * @param uri
 	 *            to test
 	 * @boolean if ends in .jsx or .jsx.xt or .js or .js.xt
