@@ -352,27 +352,34 @@ override   boolean validate(EDataType eDataType, Object value, DiagnosticChain d
 
 	def private checkForExistingWildcardModuleSpecifier(ModuleFilterSpecifier moduleFilterSpecifier,
 		String moduleFilterSpecifierWithWildcard) {
-		val sourcePaths = EcoreUtil2.getContainerOfType(moduleFilterSpecifier, ProjectDescription).sourceFragment.map[
-			paths].flatten
+		val sourcePaths = EcoreUtil2.getContainerOfType(moduleFilterSpecifier, ProjectDescription).sourceFragment.map [
+			paths
+		].flatten
 		val uri = moduleFilterSpecifier.eResource.URI
 		val absoluteProjectPath = pathProvider.getAbsoluteProjectPath(uri)
-		if (!sourcePaths.filter[
-			if (moduleFilterSpecifier.sourcePath !== null) it == moduleFilterSpecifier.sourcePath else true].exists [
-			val path = it + "/" + moduleFilterSpecifier.moduleSpecifierWithWildcard
-			val foundFiles = WildcardPathFilter.collectPathsByWildcardPath(absoluteProjectPath, path)
+		val hasIssue = !sourcePaths.filter [
+			var res = false
+			if (moduleFilterSpecifier.sourcePath !== null)
+				res = it == moduleFilterSpecifier.sourcePath
+			else
+				res = true
+			return res
+		].exists [
+			val basePathToCheck = absoluteProjectPath + "/" + it
+			val pathsToFind = "/" + moduleFilterSpecifier.moduleSpecifierWithWildcard
+			val foundFiles = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck, pathsToFind)
 			foundFiles.filter[endsWith(".n4js")].forEach [
 				handleNoValidationForN4JSFiles(moduleFilterSpecifier, moduleFilterSpecifierWithWildcard)
 			]
-			!foundFiles.empty
-		]) {
-			addIssue(
-				getMessageForNON_EXISTING_MODULE_SPECIFIER(moduleFilterSpecifier.moduleSpecifierWithWildcard),
-				moduleFilterSpecifier,
-				MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
-				NON_EXISTING_MODULE_SPECIFIER
-			)
+			return !foundFiles.empty
+		]
+
+		if (hasIssue) {
+			addIssue(getMessageForNON_EXISTING_MODULE_SPECIFIER(moduleFilterSpecifier.moduleSpecifierWithWildcard),
+				moduleFilterSpecifier, MODULE_FILTER_SPECIFIER__MODULE_SPECIFIER_WITH_WILDCARD,
+				NON_EXISTING_MODULE_SPECIFIER	)
+			}
 		}
-	}
 
 	def private handleNoValidationForN4JSFiles(ModuleFilterSpecifier moduleFilterSpecifier,
 		String moduleFilterSpecifierWithWildcard) {
