@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,12 +24,14 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- * This graph visitor prints all paths
+ * Analysis to detect uses of {@link IdentifierRef}s that are located in the control flow before their corresponding
+ * variables are declared.
  */
-public class CheckVariableGraphVisitor extends GraphVisitor {
+public class UsedBeforeDeclaredAnalyser extends GraphVisitor {
+	static int branCount = 0;
 
 	/** Constructor */
-	public CheckVariableGraphVisitor() {
+	public UsedBeforeDeclaredAnalyser() {
 		super(Mode.Backward);
 	}
 
@@ -43,24 +45,20 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
-		for (GraphExplorerInternal pathExplorer : getActivatedExplorers()) {
-			CheckVariablePathExplorer checkVariablePathExplorer = (CheckVariablePathExplorer) pathExplorer;
-			idRefs.addAll(checkVariablePathExplorer.getUsedButNotDeclaredIdentifierRefs());
+
+		for (GraphExplorerInternal explorer : getActivatedExplorers()) {
+			CheckVariablePathExplorer cvExplorer = (CheckVariablePathExplorer) explorer;
+			idRefs.addAll(cvExplorer.checkLists);
 		}
 		return idRefs;
 	}
 
-	static class CheckVariablePathExplorer extends GraphExplorer {
-		final VariableDeclaration varDecl;
-		final List<IdentifierRef> idRefs = new ArrayList<>();
+	class CheckVariablePathExplorer extends GraphExplorer {
+		final VariableDeclaration vd;
+		HashSet<IdentifierRef> checkLists = new HashSet<>();
 
-		CheckVariablePathExplorer(VariableDeclaration varDecl) {
-			super(Quantor.None);
-			this.varDecl = varDecl;
-		}
-
-		public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
-			return idRefs;
+		CheckVariablePathExplorer(VariableDeclaration vd) {
+			this.vd = vd;
 		}
 
 		@Override
@@ -72,10 +70,13 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
 			return new CheckVariablePathWalker();
 		}
-
 	}
 
-	static class CheckVariablePathWalker extends BranchWalker {
+	class CheckVariablePathWalker extends BranchWalker {
+
+		CheckVariablePathWalker() {
+			branCount++;
+		}
 
 		@Override
 		protected CheckVariablePathWalker forkPath() {
@@ -84,12 +85,13 @@ public class CheckVariableGraphVisitor extends GraphVisitor {
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			CheckVariablePathExplorer explorer = (CheckVariablePathExplorer) this.getExplorer();
-			if (cfe instanceof IdentifierRef && ((IdentifierRef) cfe).getId() == explorer.varDecl) {
-				explorer.idRefs.add((IdentifierRef) cfe);
+			if (cfe instanceof IdentifierRef) {
+				IdentifierRef ir = (IdentifierRef) cfe;
+
+				CheckVariablePathExplorer explorer = (CheckVariablePathExplorer) getExplorer();
+				explorer.checkLists.add(ir);
 			}
 		}
-
 	}
 
 }

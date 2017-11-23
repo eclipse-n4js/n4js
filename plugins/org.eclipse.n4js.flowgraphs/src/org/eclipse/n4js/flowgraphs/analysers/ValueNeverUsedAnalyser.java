@@ -20,12 +20,13 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
- * Checks if a local variable is never used.
+ * Analysis to detect obsolete variable definitions. In other words, the analysis detects variable definition sites that
+ * are not followed by use sites of the same variable. In these cases, the defined value is never used.
  */
-public class NeverUsedVisitor extends GraphVisitor {
+public class ValueNeverUsedAnalyser extends GraphVisitor {
 	// TODO GH-235
 
-	NeverUsedVisitor() {
+	ValueNeverUsedAnalyser() {
 		super(Mode.Forward);
 	}
 

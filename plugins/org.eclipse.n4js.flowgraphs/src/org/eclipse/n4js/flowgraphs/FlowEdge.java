@@ -36,9 +36,15 @@ public class FlowEdge implements Comparable<FlowEdge> {
 
 	/** Constructor */
 	public FlowEdge(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
+		assert start != null && end != null;
 		this.start = start;
 		this.end = end;
 		this.cfTypes = Collections.unmodifiableSortedSet(Sets.newTreeSet(cfTypes));
+	}
+
+	/** @return true iff the edge traverses dead code */
+	public boolean isDead() {
+		return cfTypes.contains(ControlFlowType.DeadCode);
 	}
 
 	@Override

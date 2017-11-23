@@ -28,6 +28,7 @@ abstract public class BranchWalkerInternal {
 	private GraphExplorerInternal pathExplorer;
 	private final LinkedList<BranchWalkerInternal> pathPredecessors = new LinkedList<>();
 	private final LinkedList<BranchWalkerInternal> pathSuccessors = new LinkedList<>();
+	private boolean isDeadCode = false;
 
 	/////////////////////// Abstract Methods ///////////////////////
 
@@ -76,10 +77,10 @@ abstract public class BranchWalkerInternal {
 	/**
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#initialize()}.
 	 */
-	final void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal... predecessors) {
-		for (BranchWalkerInternal pred : predecessors) {
-			this.pathPredecessors.add(pred);
-			pred.pathSuccessors.add(this);
+	final void callInitialize(GraphExplorerInternal explorer, BranchWalkerInternal predecessor) {
+		if (predecessor != null) {
+			predecessor.pathSuccessors.add(this);
+			this.pathPredecessors.add(predecessor);
 		}
 		initializeRest(explorer);
 	}
@@ -89,8 +90,8 @@ abstract public class BranchWalkerInternal {
 	 */
 	final void callInitialize(GraphExplorerInternal explorer, List<BranchWalkerInternal> predecessors) {
 		for (BranchWalkerInternal pred : predecessors) {
-			this.pathPredecessors.add(pred);
 			pred.pathSuccessors.add(this);
+			this.pathPredecessors.add(pred);
 		}
 		initializeRest(explorer);
 	}
@@ -109,6 +110,7 @@ abstract public class BranchWalkerInternal {
 	 * Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link BranchWalkerInternal#visit(Node)}.
 	 */
 	final void callVisit(Node node) {
+		isDeadCode |= node.isUnreachable();
 		visit(node);
 	}
 
@@ -117,7 +119,12 @@ abstract public class BranchWalkerInternal {
 	 * {@link BranchWalkerInternal#visit(Node, Node, ControlFlowEdge)}.
 	 */
 	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
+		isDeadCode |= end.isUnreachable();
 		visit(lastVisitNode, end, edge);
+	}
+
+	final void setDeadCode(boolean isDead) {
+		this.isDeadCode = isDead;
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
@@ -185,9 +192,26 @@ abstract public class BranchWalkerInternal {
 		return pathExplorer.activeBranches.contains(this);
 	}
 
+	/** @return true iff the last visited node was not dead. */
+	final public boolean isLiveCode() {
+		return !isDeadCode;
+	}
+
+	/** @return true iff the last visited node was dead. */
+	final public boolean isDeadCode() {
+		return isDeadCode;
+	}
+
+	/** @return true iff this branch is dead and its predecessor is alive. */
+	final public boolean isFirstDead() {
+		boolean isFirstDead = isDeadCode();
+		isFirstDead &= !pathPredecessors.isEmpty() && pathPredecessors.getFirst().isLiveCode();
+		return isFirstDead;
+	}
+
 	@Override
 	public String toString() {
-		return "B" + branchNumber;
+		return (isDeadCode ? "b" : "B") + branchNumber;
 	}
 
 }

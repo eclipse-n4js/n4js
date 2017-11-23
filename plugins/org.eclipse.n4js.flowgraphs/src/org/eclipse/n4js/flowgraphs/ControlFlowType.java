@@ -39,13 +39,18 @@ public enum ControlFlowType {
 	Repeat,
 	/** Exit edges are caused by loops and flow from the condition to the exit of the control statement */
 	Exit,
+	/** DeadCode edges target a node that is represents dead code */
+	DeadCode,
 	/** Used to mark {@link CatchToken}s that can catch {@link JumpToken} due to thrown N4JS errors */
 	CatchesErrors,
 	/** Used to mark {@link CatchToken}s that can catch any {@link JumpToken} */
 	CatchesAll;
 
 	/** Set of all control flow types except for {@literal ControlFlowType.Repeat} */
-	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return };
+	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return, Exit };
+
+	/** Set of all control flow types except for {@literal ControlFlowType.DeadCode} */
+	static public final ControlFlowType[] NonDeadTypes = { Successor, Break, Continue, Throw, Return, Repeat, Exit };
 
 	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {

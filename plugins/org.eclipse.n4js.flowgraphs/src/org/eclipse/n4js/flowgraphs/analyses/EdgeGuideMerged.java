@@ -34,6 +34,8 @@ public class EdgeGuideMerged extends EdgeGuide {
 	 */
 	EdgeGuideMerged(List<EdgeGuide> edgeGuides) {
 		super(edgeGuides.get(0).edgeProvider, edgeGuides.get(0).getEdge());
+		finallyContext.follow(edgeGuides.get(0).finallyContext);
+		deadContext.follow(edgeGuides.get(0).deadContext);
 
 		Map<GraphExplorerInternal, List<BranchWalkerInternal>> joiningWalkerMap = new HashMap<>();
 
@@ -48,8 +50,9 @@ public class EdgeGuideMerged extends EdgeGuide {
 				joiningWalkers.add(bwi);
 			}
 
-			finallyBlockContexts.addAll(eg.finallyBlockContexts);
+			finallyContext.joinWith(eg.finallyContext);
 			edgeProvider.join(eg.edgeProvider);
+			deadContext.joinWith(eg.deadContext);
 		}
 
 		branchWalkers.clear();
@@ -65,7 +68,7 @@ public class EdgeGuideMerged extends EdgeGuide {
 
 	@Override
 	List<EdgeGuide> getNextEdgeGuides() {
-		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), branchWalkers, finallyBlockContexts);
+		EdgeGuide edgeGuide = new EdgeGuide(edgeProvider, getEdge(), branchWalkers, finallyContext, deadContext);
 		return edgeGuide.getNextEdgeGuides();
 	}
 

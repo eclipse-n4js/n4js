@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  *
  * <pre>
  * {@link #EdgeGuideWorklist()}
- * -> {@link #initialize(ComplexNode, NextEdgesProvider, Set)}
+ * -> {@link #initialize(ComplexNode, NextEdgesProvider, Collection)}
  * {
  *   -> {@link #hasNext()}
  *   -> {@link #next()}
@@ -36,7 +37,7 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * </pre>
  */
 public class EdgeGuideWorklist {
-	private final EdgeGuideQueue egQueue = new EdgeGuideQueue(this);
+	private final EdgeGuideQueue egQueue = new EdgeGuideQueue();
 	private final Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
 	private EdgeGuide currEdgeGuide;
 	private EdgeGuide nextEdgeGuide;
@@ -61,7 +62,7 @@ public class EdgeGuideWorklist {
 	}
 
 	/** Initializes this instance. Can be used for re-initialization. */
-	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Set<BranchWalkerInternal> activatedPaths) {
+	void initialize(ComplexNode cn, NextEdgesProvider edgeProvider, Collection<BranchWalkerInternal> activatedPaths) {
 		allVisitedEdges.clear();
 		currEdgeGuide = null;
 		nextEdgeGuide = null;
@@ -108,6 +109,11 @@ public class EdgeGuideWorklist {
 		return allVisitedEdges.contains(edge);
 	}
 
+	/** @return a set of all visited edges */
+	Set<ControlFlowEdge> getAllVisitedEdges() {
+		return allVisitedEdges;
+	}
+
 	/** @return a set of all visited nodes */
 	Set<Node> getAllVisitedNodes(ComplexNode cn, NextEdgesProvider edgeProvider) {
 		Set<Node> allVisitedNodes = new HashSet<>();
@@ -128,10 +134,14 @@ public class EdgeGuideWorklist {
 			nextEdgeGuide = egQueue.removeFirst();
 			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(nextEdgeGuide.getEdge());
 			alreadyVisitedAndObsolete &= nextEdgeGuide.isEmpty();
+			alreadyVisitedAndObsolete &= !nextEdgeGuide.deadContext.isForwardDeadFlow();
 			if (alreadyVisitedAndObsolete) {
-				nextEdgeGuide = null;
+				nextEdgeGuide = null; // optimization. might be removed
+				// obsoleteCounter++;
+				// System.out.println(obsoleteCounter);
 			}
 		}
 	}
 
+	static int obsoleteCounter = 0;
 }

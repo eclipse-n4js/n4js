@@ -25,6 +25,9 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -103,7 +106,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	private class NodesEdgesCollector extends GraphVisitor {
 
 		NodesEdgesCollector() {
-			super(Mode.Forward, Mode.Backward, Mode.Islands);
+			super(Mode.Forward);
 		}
 
 		@Override
@@ -113,28 +116,13 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
-			// nothing to do
+		protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+			requestActivation(new EdgesExplorer());
 		}
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
 			addNode(cfe);
-		}
-
-		@Override
-		protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-			addNode(edge.start);
-			addNode(edge.end);
-			Node sNode = nodeMap.get(edge.start);
-			Node eNode = nodeMap.get(edge.end);
-			Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
-
-			if (!edgesMap.containsKey(edge.start)) {
-				edgesMap.put(edge.start, new LinkedList<>());
-			}
-			List<Edge> cfEdges = edgesMap.get(edge.start);
-			cfEdges.add(cfEdge);
 		}
 
 		private void addNode(ControlFlowElement cfe) {
@@ -145,15 +133,42 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			}
 		}
 
-		@Override
-		protected void terminateMode(Mode curDirection, ControlFlowElement curContainer) {
-			// nothing to do
+		class EdgesExplorer extends GraphExplorer {
+
+			@Override
+			protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
+				return new EdgesBranchWalker();
+			}
+
+			@Override
+			protected BranchWalkerInternal firstBranchWalker() {
+				return new EdgesBranchWalker();
+			}
+
 		}
 
-		@Override
-		protected void terminate() {
-			// nothing to do
-		}
+		class EdgesBranchWalker extends BranchWalker {
 
+			@Override
+			protected BranchWalker forkPath() {
+				return new EdgesBranchWalker();
+			}
+
+			@Override
+			protected void visit(FlowEdge edge) {
+				addNode(edge.start);
+				addNode(edge.end);
+				Node sNode = nodeMap.get(edge.start);
+				Node eNode = nodeMap.get(edge.end);
+				Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
+
+				if (!edgesMap.containsKey(edge.start)) {
+					edgesMap.put(edge.start, new LinkedList<>());
+				}
+				List<Edge> cfEdges = edgesMap.get(edge.start);
+				cfEdges.add(cfEdge);
+			}
+
+		}
 	}
 }
