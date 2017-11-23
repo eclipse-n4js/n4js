@@ -2185,3 +2185,46 @@ class BindingElement extends ControlFlowElement {
 		return varDecl===null && nestedPattern===null;
 	}
 }
+
+// ****************************************************************************************************
+// JSX extensions
+// cf. https://facebook.github.io/jsx/
+// ****************************************************************************************************
+
+
+abstract class JSXChild {}
+
+class JSXElementName {
+	contains Expression expression
+}
+
+class JSXText extends JSXChild {}
+
+class JSXExpression extends JSXChild {
+	contains Expression expression
+}
+
+
+abstract class JSXAttribute extends ControlFlowElement {}
+
+class JSXPropertyAttribute extends JSXAttribute, MemberAccess {
+	refers IdentifiableElement property
+	transient String propertyAsText
+	contains Expression jsxAttributeValue
+}
+
+class JSXSpreadAttribute extends JSXAttribute {
+	contains Expression expression
+}
+
+
+class JSXElement extends Expression, JSXChild {
+	contains JSXElementName jsxElementName
+	contains JSXElementName jsxClosingName
+	contains JSXAttribute[] jsxAttributes
+	contains JSXChild[] jsxChildren
+}
+
+
+
+
