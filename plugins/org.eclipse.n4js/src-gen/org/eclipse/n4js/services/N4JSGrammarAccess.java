@@ -3902,16 +3902,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cThisLiteralParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cSuperLiteralParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
 		private final RuleCall cIdentifierRefParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cParameterizedCallExpressionParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cLiteralParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cArrayLiteralParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cObjectLiteralParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cParenExpressionParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cAnnotatedExpressionParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cFunctionExpressionParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cAsyncFunctionExpressionParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cN4ClassExpressionParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cTemplateLiteralParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cJSXElementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cParameterizedCallExpressionParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cLiteralParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cArrayLiteralParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cObjectLiteralParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cParenExpressionParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cAnnotatedExpressionParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cFunctionExpressionParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cAsyncFunctionExpressionParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cN4ClassExpressionParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cTemplateLiteralParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.3 Expressions (p. 218)
@@ -3920,16 +3921,17 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//PrimaryExpression <Yield Expression:
 		//	ThisLiteral
 		//	| SuperLiteral
-		//	| IdentifierRef<Yield> | ParameterizedCallExpression<Yield> | Literal
+		//	| IdentifierRef<Yield> | JSXElement /* see JSX  */
+		//	| ParameterizedCallExpression<Yield> | Literal
 		//	| ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
 		//	FunctionExpression
 		//	| AsyncFunctionExpression
 		//	| N4ClassExpression<Yield> | TemplateLiteral<Yield>;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//ThisLiteral | SuperLiteral | IdentifierRef<Yield> | ParameterizedCallExpression<Yield> | Literal | ArrayLiteral<Yield> |
-		//ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> | FunctionExpression |
-		//AsyncFunctionExpression | N4ClassExpression<Yield> | TemplateLiteral<Yield>
+		//ThisLiteral | SuperLiteral | IdentifierRef<Yield> | JSXElement /* see JSX  */ | ParameterizedCallExpression<Yield> |
+		//Literal | ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
+		//FunctionExpression | AsyncFunctionExpression | N4ClassExpression<Yield> | TemplateLiteral<Yield>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//ThisLiteral
@@ -3941,35 +3943,363 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//IdentifierRef<Yield>
 		public RuleCall getIdentifierRefParserRuleCall_2() { return cIdentifierRefParserRuleCall_2; }
 		
+		//JSXElement
+		public RuleCall getJSXElementParserRuleCall_3() { return cJSXElementParserRuleCall_3; }
+		
 		//ParameterizedCallExpression<Yield>
-		public RuleCall getParameterizedCallExpressionParserRuleCall_3() { return cParameterizedCallExpressionParserRuleCall_3; }
+		public RuleCall getParameterizedCallExpressionParserRuleCall_4() { return cParameterizedCallExpressionParserRuleCall_4; }
 		
 		//Literal
-		public RuleCall getLiteralParserRuleCall_4() { return cLiteralParserRuleCall_4; }
+		public RuleCall getLiteralParserRuleCall_5() { return cLiteralParserRuleCall_5; }
 		
 		//ArrayLiteral<Yield>
-		public RuleCall getArrayLiteralParserRuleCall_5() { return cArrayLiteralParserRuleCall_5; }
+		public RuleCall getArrayLiteralParserRuleCall_6() { return cArrayLiteralParserRuleCall_6; }
 		
 		//ObjectLiteral<Yield>
-		public RuleCall getObjectLiteralParserRuleCall_6() { return cObjectLiteralParserRuleCall_6; }
+		public RuleCall getObjectLiteralParserRuleCall_7() { return cObjectLiteralParserRuleCall_7; }
 		
 		//ParenExpression<Yield>
-		public RuleCall getParenExpressionParserRuleCall_7() { return cParenExpressionParserRuleCall_7; }
+		public RuleCall getParenExpressionParserRuleCall_8() { return cParenExpressionParserRuleCall_8; }
 		
 		//AnnotatedExpression<Yield>
-		public RuleCall getAnnotatedExpressionParserRuleCall_8() { return cAnnotatedExpressionParserRuleCall_8; }
+		public RuleCall getAnnotatedExpressionParserRuleCall_9() { return cAnnotatedExpressionParserRuleCall_9; }
 		
 		//FunctionExpression
-		public RuleCall getFunctionExpressionParserRuleCall_9() { return cFunctionExpressionParserRuleCall_9; }
+		public RuleCall getFunctionExpressionParserRuleCall_10() { return cFunctionExpressionParserRuleCall_10; }
 		
 		//AsyncFunctionExpression
-		public RuleCall getAsyncFunctionExpressionParserRuleCall_10() { return cAsyncFunctionExpressionParserRuleCall_10; }
+		public RuleCall getAsyncFunctionExpressionParserRuleCall_11() { return cAsyncFunctionExpressionParserRuleCall_11; }
 		
 		//N4ClassExpression<Yield>
-		public RuleCall getN4ClassExpressionParserRuleCall_11() { return cN4ClassExpressionParserRuleCall_11; }
+		public RuleCall getN4ClassExpressionParserRuleCall_12() { return cN4ClassExpressionParserRuleCall_12; }
 		
 		//TemplateLiteral<Yield>
-		public RuleCall getTemplateLiteralParserRuleCall_12() { return cTemplateLiteralParserRuleCall_12; }
+		public RuleCall getTemplateLiteralParserRuleCall_13() { return cTemplateLiteralParserRuleCall_13; }
+	}
+	public class JSXElementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXElement");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cJsxElementNameAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cJsxElementNameJSXElementNameParserRuleCall_1_0 = (RuleCall)cJsxElementNameAssignment_1.eContents().get(0);
+		private final RuleCall cJSXAttributesParserRuleCall_2 = (RuleCall)cGroup.eContents().get(2);
+		private final Alternatives cAlternatives_3 = (Alternatives)cGroup.eContents().get(3);
+		private final Group cGroup_3_0 = (Group)cAlternatives_3.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_3_0_0 = (Keyword)cGroup_3_0.eContents().get(0);
+		private final Assignment cJsxChildrenAssignment_3_0_1 = (Assignment)cGroup_3_0.eContents().get(1);
+		private final RuleCall cJsxChildrenJSXChildParserRuleCall_3_0_1_0 = (RuleCall)cJsxChildrenAssignment_3_0_1.eContents().get(0);
+		private final RuleCall cJSXClosingElementParserRuleCall_3_0_2 = (RuleCall)cGroup_3_0.eContents().get(2);
+		private final Group cGroup_3_1 = (Group)cAlternatives_3.eContents().get(1);
+		private final Keyword cSolidusKeyword_3_1_0 = (Keyword)cGroup_3_1.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_3_1_1 = (Keyword)cGroup_3_1.eContents().get(1);
+		
+		//// ****************************************************************************************************
+		//// see https://facebook.github.io/jsx/
+		//// ****************************************************************************************************
+		//JSXElement:
+		//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>');
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>')
+		public Group getGroup() { return cGroup; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
+		
+		//jsxElementName=JSXElementName
+		public Assignment getJsxElementNameAssignment_1() { return cJsxElementNameAssignment_1; }
+		
+		//JSXElementName
+		public RuleCall getJsxElementNameJSXElementNameParserRuleCall_1_0() { return cJsxElementNameJSXElementNameParserRuleCall_1_0; }
+		
+		//JSXAttributes
+		public RuleCall getJSXAttributesParserRuleCall_2() { return cJSXAttributesParserRuleCall_2; }
+		
+		//'>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>'
+		public Alternatives getAlternatives_3() { return cAlternatives_3; }
+		
+		//'>' jsxChildren+=JSXChild* JSXClosingElement
+		public Group getGroup_3_0() { return cGroup_3_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_3_0_0() { return cGreaterThanSignKeyword_3_0_0; }
+		
+		//jsxChildren+=JSXChild*
+		public Assignment getJsxChildrenAssignment_3_0_1() { return cJsxChildrenAssignment_3_0_1; }
+		
+		//JSXChild
+		public RuleCall getJsxChildrenJSXChildParserRuleCall_3_0_1_0() { return cJsxChildrenJSXChildParserRuleCall_3_0_1_0; }
+		
+		//JSXClosingElement
+		public RuleCall getJSXClosingElementParserRuleCall_3_0_2() { return cJSXClosingElementParserRuleCall_3_0_2; }
+		
+		//'/' '>'
+		public Group getGroup_3_1() { return cGroup_3_1; }
+		
+		//'/'
+		public Keyword getSolidusKeyword_3_1_0() { return cSolidusKeyword_3_1_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_3_1_1() { return cGreaterThanSignKeyword_3_1_1; }
+	}
+	public class JSXClosingElementElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXClosingElement");
+		private final Group cGroup = (Group)rule.eContents().get(0);
+		private final Keyword cLessThanSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cSolidusKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cJsxClosingNameAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cJsxClosingNameJSXElementNameParserRuleCall_2_0 = (RuleCall)cJsxClosingNameAssignment_2.eContents().get(0);
+		private final Keyword cGreaterThanSignKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		
+		//fragment JSXClosingElement *:
+		//	'<' '/' jsxClosingName=JSXElementName '>';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'<' '/' jsxClosingName=JSXElementName '>'
+		public Group getGroup() { return cGroup; }
+		
+		//'<'
+		public Keyword getLessThanSignKeyword_0() { return cLessThanSignKeyword_0; }
+		
+		//'/'
+		public Keyword getSolidusKeyword_1() { return cSolidusKeyword_1; }
+		
+		//jsxClosingName=JSXElementName
+		public Assignment getJsxClosingNameAssignment_2() { return cJsxClosingNameAssignment_2; }
+		
+		//JSXElementName
+		public RuleCall getJsxClosingNameJSXElementNameParserRuleCall_2_0() { return cJsxClosingNameJSXElementNameParserRuleCall_2_0; }
+		
+		//'>'
+		public Keyword getGreaterThanSignKeyword_3() { return cGreaterThanSignKeyword_3; }
+	}
+	public class JSXChildElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXChild");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cJSXElementParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cJSXExpressionParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//JSXChild:
+		//	JSXElement | JSXExpression
+		//	//	| JSXText -- not supported yet, cf. IDE-2414
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//JSXElement | JSXExpression
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//JSXElement
+		public RuleCall getJSXElementParserRuleCall_0() { return cJSXElementParserRuleCall_0; }
+		
+		//JSXExpression
+		public RuleCall getJSXExpressionParserRuleCall_1() { return cJSXExpressionParserRuleCall_1; }
+	}
+	public class JSXExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLeftCurlyBracketKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Assignment cExpressionAssignment_1 = (Assignment)cGroup.eContents().get(1);
+		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_1_0 = (RuleCall)cExpressionAssignment_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_2 = (Keyword)cGroup.eContents().get(2);
+		
+		//// terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
+		//JSXExpression:
+		//	'{' expression=AssignmentExpression<false,false> '}';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'{' expression=AssignmentExpression<false,false> '}'
+		public Group getGroup() { return cGroup; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_0() { return cLeftCurlyBracketKeyword_0; }
+		
+		//expression=AssignmentExpression<false,false>
+		public Assignment getExpressionAssignment_1() { return cExpressionAssignment_1; }
+		
+		//AssignmentExpression<false,false>
+		public RuleCall getExpressionAssignmentExpressionParserRuleCall_1_0() { return cExpressionAssignmentExpressionParserRuleCall_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_2() { return cRightCurlyBracketKeyword_2; }
+	}
+	public class JSXElementNameElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXElementName");
+		private final Assignment cExpressionAssignment = (Assignment)rule.eContents().get(1);
+		private final RuleCall cExpressionJSXElementNameExpressionParserRuleCall_0 = (RuleCall)cExpressionAssignment.eContents().get(0);
+		
+		//JSXElementName:
+		//	expression=JSXElementNameExpression;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//expression=JSXElementNameExpression
+		public Assignment getExpressionAssignment() { return cExpressionAssignment; }
+		
+		//JSXElementNameExpression
+		public RuleCall getExpressionJSXElementNameExpressionParserRuleCall_0() { return cExpressionJSXElementNameExpressionParserRuleCall_0; }
+	}
+	public class JSXElementNameExpressionElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXElementNameExpression");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final RuleCall cIdentifierRefParserRuleCall_0 = (RuleCall)cGroup.eContents().get(0);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Action cParameterizedPropertyAccessExpressionTargetAction_1_0 = (Action)cGroup_1.eContents().get(0);
+		private final RuleCall cParameterizedPropertyAccessExpressionTailParserRuleCall_1_1 = (RuleCall)cGroup_1.eContents().get(1);
+		
+		//JSXElementNameExpression Expression:
+		//	IdentifierRef<false> ({ParameterizedPropertyAccessExpression.target=current}
+		//	ParameterizedPropertyAccessExpressionTail<false>)*
+		//	//	| JSXNamedspacedName not supported
+		//;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//IdentifierRef<false> ({ParameterizedPropertyAccessExpression.target=current}
+		//ParameterizedPropertyAccessExpressionTail<false>)*
+		public Group getGroup() { return cGroup; }
+		
+		//IdentifierRef<false>
+		public RuleCall getIdentifierRefParserRuleCall_0() { return cIdentifierRefParserRuleCall_0; }
+		
+		//({ParameterizedPropertyAccessExpression.target=current} ParameterizedPropertyAccessExpressionTail<false>)*
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//{ParameterizedPropertyAccessExpression.target=current}
+		public Action getParameterizedPropertyAccessExpressionTargetAction_1_0() { return cParameterizedPropertyAccessExpressionTargetAction_1_0; }
+		
+		//ParameterizedPropertyAccessExpressionTail<false>
+		public RuleCall getParameterizedPropertyAccessExpressionTailParserRuleCall_1_1() { return cParameterizedPropertyAccessExpressionTailParserRuleCall_1_1; }
+	}
+	public class JSXAttributesElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXAttributes");
+		private final Assignment cJsxAttributesAssignment = (Assignment)rule.eContents().get(0);
+		private final RuleCall cJsxAttributesJSXAttributeParserRuleCall_0 = (RuleCall)cJsxAttributesAssignment.eContents().get(0);
+		
+		////JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+		////JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
+		//fragment JSXAttributes *:
+		//	jsxAttributes+=JSXAttribute*;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//jsxAttributes+=JSXAttribute*
+		public Assignment getJsxAttributesAssignment() { return cJsxAttributesAssignment; }
+		
+		//JSXAttribute
+		public RuleCall getJsxAttributesJSXAttributeParserRuleCall_0() { return cJsxAttributesJSXAttributeParserRuleCall_0; }
+	}
+	public class JSXAttributeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXAttribute");
+		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
+		private final RuleCall cJSXSpreadAttributeParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
+		private final RuleCall cJSXPropertyAttributeParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
+		
+		//JSXAttribute:
+		//	JSXSpreadAttribute
+		//	| JSXPropertyAttribute;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//JSXSpreadAttribute | JSXPropertyAttribute
+		public Alternatives getAlternatives() { return cAlternatives; }
+		
+		//JSXSpreadAttribute
+		public RuleCall getJSXSpreadAttributeParserRuleCall_0() { return cJSXSpreadAttributeParserRuleCall_0; }
+		
+		//JSXPropertyAttribute
+		public RuleCall getJSXPropertyAttributeParserRuleCall_1() { return cJSXPropertyAttributeParserRuleCall_1; }
+	}
+	public class JSXSpreadAttributeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXSpreadAttribute");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Keyword cLeftCurlyBracketKeyword_0 = (Keyword)cGroup.eContents().get(0);
+		private final Keyword cFullStopFullStopFullStopKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cExpressionAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cExpressionAssignmentExpressionParserRuleCall_2_0 = (RuleCall)cExpressionAssignment_2.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_3 = (Keyword)cGroup.eContents().get(3);
+		
+		//JSXSpreadAttribute:
+		//	'{' '...' expression=AssignmentExpression<In=false,Yield=false> '}';
+		@Override public ParserRule getRule() { return rule; }
+		
+		//'{' '...' expression=AssignmentExpression<In=false,Yield=false> '}'
+		public Group getGroup() { return cGroup; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_0() { return cLeftCurlyBracketKeyword_0; }
+		
+		//'...'
+		public Keyword getFullStopFullStopFullStopKeyword_1() { return cFullStopFullStopFullStopKeyword_1; }
+		
+		//expression=AssignmentExpression<In=false,Yield=false>
+		public Assignment getExpressionAssignment_2() { return cExpressionAssignment_2; }
+		
+		//AssignmentExpression<In=false,Yield=false>
+		public RuleCall getExpressionAssignmentExpressionParserRuleCall_2_0() { return cExpressionAssignmentExpressionParserRuleCall_2_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_3() { return cRightCurlyBracketKeyword_3; }
+	}
+	public class JSXPropertyAttributeElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.JSXPropertyAttribute");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Assignment cPropertyAssignment_0 = (Assignment)cGroup.eContents().get(0);
+		private final CrossReference cPropertyIdentifiableElementCrossReference_0_0 = (CrossReference)cPropertyAssignment_0.eContents().get(0);
+		private final RuleCall cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1 = (RuleCall)cPropertyIdentifiableElementCrossReference_0_0.eContents().get(1);
+		private final Group cGroup_1 = (Group)cGroup.eContents().get(1);
+		private final Keyword cEqualsSignKeyword_1_0 = (Keyword)cGroup_1.eContents().get(0);
+		private final Alternatives cAlternatives_1_1 = (Alternatives)cGroup_1.eContents().get(1);
+		private final Assignment cJsxAttributeValueAssignment_1_1_0 = (Assignment)cAlternatives_1_1.eContents().get(0);
+		private final RuleCall cJsxAttributeValueStringLiteralParserRuleCall_1_1_0_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_0.eContents().get(0);
+		private final Group cGroup_1_1_1 = (Group)cAlternatives_1_1.eContents().get(1);
+		private final Keyword cLeftCurlyBracketKeyword_1_1_1_0 = (Keyword)cGroup_1_1_1.eContents().get(0);
+		private final Assignment cJsxAttributeValueAssignment_1_1_1_1 = (Assignment)cGroup_1_1_1.eContents().get(1);
+		private final RuleCall cJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0 = (RuleCall)cJsxAttributeValueAssignment_1_1_1_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_1_1_1_2 = (Keyword)cGroup_1_1_1.eContents().get(2);
+		
+		//JSXPropertyAttribute:
+		//	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
+		//	jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
+		@Override public ParserRule getRule() { return rule; }
+		
+		//property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
+		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
+		public Group getGroup() { return cGroup; }
+		
+		//property=[types::IdentifiableElement|IdentifierName]
+		public Assignment getPropertyAssignment_0() { return cPropertyAssignment_0; }
+		
+		//[types::IdentifiableElement|IdentifierName]
+		public CrossReference getPropertyIdentifiableElementCrossReference_0_0() { return cPropertyIdentifiableElementCrossReference_0_0; }
+		
+		//IdentifierName
+		public RuleCall getPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1() { return cPropertyIdentifiableElementIdentifierNameParserRuleCall_0_0_1; }
+		
+		//('=' (jsxAttributeValue=StringLiteral | '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?
+		public Group getGroup_1() { return cGroup_1; }
+		
+		//'='
+		public Keyword getEqualsSignKeyword_1_0() { return cEqualsSignKeyword_1_0; }
+		
+		//jsxAttributeValue=StringLiteral | '{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'
+		public Alternatives getAlternatives_1_1() { return cAlternatives_1_1; }
+		
+		//jsxAttributeValue=StringLiteral
+		public Assignment getJsxAttributeValueAssignment_1_1_0() { return cJsxAttributeValueAssignment_1_1_0; }
+		
+		//StringLiteral
+		public RuleCall getJsxAttributeValueStringLiteralParserRuleCall_1_1_0_0() { return cJsxAttributeValueStringLiteralParserRuleCall_1_1_0_0; }
+		
+		//'{' jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'
+		public Group getGroup_1_1_1() { return cGroup_1_1_1; }
+		
+		//'{'
+		public Keyword getLeftCurlyBracketKeyword_1_1_1_0() { return cLeftCurlyBracketKeyword_1_1_1_0; }
+		
+		//jsxAttributeValue=AssignmentExpression<In=false,Yield=false>
+		public Assignment getJsxAttributeValueAssignment_1_1_1_1() { return cJsxAttributeValueAssignment_1_1_1_1; }
+		
+		//AssignmentExpression<In=false,Yield=false>
+		public RuleCall getJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0() { return cJsxAttributeValueAssignmentExpressionParserRuleCall_1_1_1_1_0; }
+		
+		//'}'
+		public Keyword getRightCurlyBracketKeyword_1_1_1_2() { return cRightCurlyBracketKeyword_1_1_1_2; }
 	}
 	public class ParenExpressionElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.ParenExpression");
@@ -9682,6 +10012,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final FinallyBlockElements pFinallyBlock;
 	private final DebuggerStatementElements pDebuggerStatement;
 	private final PrimaryExpressionElements pPrimaryExpression;
+	private final JSXElementElements pJSXElement;
+	private final JSXClosingElementElements pJSXClosingElement;
+	private final JSXChildElements pJSXChild;
+	private final JSXExpressionElements pJSXExpression;
+	private final JSXElementNameElements pJSXElementName;
+	private final JSXElementNameExpressionElements pJSXElementNameExpression;
+	private final JSXAttributesElements pJSXAttributes;
+	private final JSXAttributeElements pJSXAttribute;
+	private final JSXSpreadAttributeElements pJSXSpreadAttribute;
+	private final JSXPropertyAttributeElements pJSXPropertyAttribute;
 	private final ParenExpressionElements pParenExpression;
 	private final IdentifierRefElements pIdentifierRef;
 	private final SuperLiteralElements pSuperLiteral;
@@ -9925,6 +10265,16 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pFinallyBlock = new FinallyBlockElements();
 		this.pDebuggerStatement = new DebuggerStatementElements();
 		this.pPrimaryExpression = new PrimaryExpressionElements();
+		this.pJSXElement = new JSXElementElements();
+		this.pJSXClosingElement = new JSXClosingElementElements();
+		this.pJSXChild = new JSXChildElements();
+		this.pJSXExpression = new JSXExpressionElements();
+		this.pJSXElementName = new JSXElementNameElements();
+		this.pJSXElementNameExpression = new JSXElementNameExpressionElements();
+		this.pJSXAttributes = new JSXAttributesElements();
+		this.pJSXAttribute = new JSXAttributeElements();
+		this.pJSXSpreadAttribute = new JSXSpreadAttributeElements();
+		this.pJSXPropertyAttribute = new JSXPropertyAttributeElements();
 		this.pParenExpression = new ParenExpressionElements();
 		this.pIdentifierRef = new IdentifierRefElements();
 		this.pSuperLiteral = new SuperLiteralElements();
@@ -11014,7 +11364,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//PrimaryExpression <Yield Expression:
 	//	ThisLiteral
 	//	| SuperLiteral
-	//	| IdentifierRef<Yield> | ParameterizedCallExpression<Yield> | Literal
+	//	| IdentifierRef<Yield> | JSXElement /* see JSX  */
+	//	| ParameterizedCallExpression<Yield> | Literal
 	//	| ArrayLiteral<Yield> | ObjectLiteral<Yield> | ParenExpression<Yield> | AnnotatedExpression<Yield> |
 	//	FunctionExpression
 	//	| AsyncFunctionExpression
@@ -11025,6 +11376,119 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getPrimaryExpressionRule() {
 		return getPrimaryExpressionAccess().getRule();
+	}
+	
+	//// ****************************************************************************************************
+	//// see https://facebook.github.io/jsx/
+	//// ****************************************************************************************************
+	//JSXElement:
+	//	'<' jsxElementName=JSXElementName JSXAttributes ('>' jsxChildren+=JSXChild* JSXClosingElement | '/' '>');
+	public JSXElementElements getJSXElementAccess() {
+		return pJSXElement;
+	}
+	
+	public ParserRule getJSXElementRule() {
+		return getJSXElementAccess().getRule();
+	}
+	
+	//fragment JSXClosingElement *:
+	//	'<' '/' jsxClosingName=JSXElementName '>';
+	public JSXClosingElementElements getJSXClosingElementAccess() {
+		return pJSXClosingElement;
+	}
+	
+	public ParserRule getJSXClosingElementRule() {
+		return getJSXClosingElementAccess().getRule();
+	}
+	
+	//JSXChild:
+	//	JSXElement | JSXExpression
+	//	//	| JSXText -- not supported yet, cf. IDE-2414
+	//;
+	public JSXChildElements getJSXChildAccess() {
+		return pJSXChild;
+	}
+	
+	public ParserRule getJSXChildRule() {
+		return getJSXChildAccess().getRule();
+	}
+	
+	//// terminal JSX_TEXT: !('{'|'<'|'>'|'}'); needs to be refactored similar to template text, cf. IDE-2414
+	//JSXExpression:
+	//	'{' expression=AssignmentExpression<false,false> '}';
+	public JSXExpressionElements getJSXExpressionAccess() {
+		return pJSXExpression;
+	}
+	
+	public ParserRule getJSXExpressionRule() {
+		return getJSXExpressionAccess().getRule();
+	}
+	
+	//JSXElementName:
+	//	expression=JSXElementNameExpression;
+	public JSXElementNameElements getJSXElementNameAccess() {
+		return pJSXElementName;
+	}
+	
+	public ParserRule getJSXElementNameRule() {
+		return getJSXElementNameAccess().getRule();
+	}
+	
+	//JSXElementNameExpression Expression:
+	//	IdentifierRef<false> ({ParameterizedPropertyAccessExpression.target=current}
+	//	ParameterizedPropertyAccessExpressionTail<false>)*
+	//	//	| JSXNamedspacedName not supported
+	//;
+	public JSXElementNameExpressionElements getJSXElementNameExpressionAccess() {
+		return pJSXElementNameExpression;
+	}
+	
+	public ParserRule getJSXElementNameExpressionRule() {
+		return getJSXElementNameExpressionAccess().getRule();
+	}
+	
+	////JSXNamedspacedName: JSXIdentifier ':' JSXIdentifier -- not supported in N4JSX
+	////JSXMemberExpression: JSXIdentifier '.' JSXIdentifier -- defined by means of ParameterizedPropertyAccessExpression
+	//fragment JSXAttributes *:
+	//	jsxAttributes+=JSXAttribute*;
+	public JSXAttributesElements getJSXAttributesAccess() {
+		return pJSXAttributes;
+	}
+	
+	public ParserRule getJSXAttributesRule() {
+		return getJSXAttributesAccess().getRule();
+	}
+	
+	//JSXAttribute:
+	//	JSXSpreadAttribute
+	//	| JSXPropertyAttribute;
+	public JSXAttributeElements getJSXAttributeAccess() {
+		return pJSXAttribute;
+	}
+	
+	public ParserRule getJSXAttributeRule() {
+		return getJSXAttributeAccess().getRule();
+	}
+	
+	//JSXSpreadAttribute:
+	//	'{' '...' expression=AssignmentExpression<In=false,Yield=false> '}';
+	public JSXSpreadAttributeElements getJSXSpreadAttributeAccess() {
+		return pJSXSpreadAttribute;
+	}
+	
+	public ParserRule getJSXSpreadAttributeRule() {
+		return getJSXSpreadAttributeAccess().getRule();
+	}
+	
+	//JSXPropertyAttribute:
+	//	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | '{'
+	//	jsxAttributeValue=AssignmentExpression<In=false,Yield=false> '}'))?;
+	public JSXPropertyAttributeElements getJSXPropertyAttributeAccess() {
+		return pJSXPropertyAttribute;
+	}
+	
+	public ParserRule getJSXPropertyAttributeRule() {
+		return getJSXPropertyAttributeAccess().getRule();
 	}
 	
 	//ParenExpression <Yield>:
