@@ -8,32 +8,36 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4jsx.tests.helper.parser
+package org.eclipse.n4js.n4jsx.lang.tests.parser
 
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.N4JSInjectorProvider
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.JSXChild
+import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.ParenExpression
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4jsx.tests.helper.N4JSXInjectorProvider
 import org.eclipse.n4js.n4jsx.tests.helper.N4JSXParseHelper
-import org.eclipse.emf.ecore.EObject
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
-import org.eclipse.xtext.nodemodel.util.NodeModelUtils
-import org.junit.Assert
 import org.junit.runner.RunWith
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4jsx.n4JSX.JSXChild
+
+import static org.junit.Assert.assertEquals
+import static org.junit.Assert.assertFalse
+import static org.junit.Assert.assertTrue
+import static org.junit.Assert.fail
 
 /**
  * N4JSX version of N4JS' AbstractParserTest
  */
 @RunWith(XtextRunner)
-@InjectWith(N4JSXInjectorProvider)
-public abstract class AbstractN4JSXParserTest extends Assert {
+@InjectWith(N4JSInjectorProvider)
+public abstract class AbstractN4JSXParserTest {
 	@Inject
 	protected extension N4JSXParseHelper
 

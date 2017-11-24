@@ -37,6 +37,12 @@ import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.JSXAttribute;
+import org.eclipse.n4js.n4JS.JSXChild;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -63,13 +69,6 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXChild;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXExpression;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * All {@link Expression}s can have a set of children in the sense, that these children are also respected by the
@@ -84,10 +83,6 @@ final class CFEChildren {
 	 */
 	static List<Node> get(ReentrantASTIterator pAstIter, ControlFlowElement expr) {
 		astIter = pAstIter;
-		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX().doSwitch(expr);
-		if (n4jsxExpressionList != null) {
-			return n4jsxExpressionList;
-		}
 		return new InternalExpressionChildren().doSwitch(expr);
 	}
 
@@ -406,10 +401,6 @@ final class CFEChildren {
 			addDelegatingNode(cfc, "expression", ye, ye.getExpression());
 			return cfc;
 		}
-
-	}
-
-	static private class InternalExpressionChildrenX extends N4JSXSwitch<List<Node>> {
 
 		@Override
 		public List<Node> caseJSXElement(JSXElement jsxel) {
