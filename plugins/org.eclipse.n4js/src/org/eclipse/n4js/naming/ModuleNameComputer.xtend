@@ -68,7 +68,8 @@ class ModuleNameComputer {
 			val location = sourceContainer.location
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location.appendSegment(""))
-				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) { // support Xpect tests with files having additional file extension .xt
+				 // support Xpect tests with files *.n4sj.xt and *.xt
+				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
 					relativeURI = relativeURI.trimFileExtension.trimFileExtension
 				} else {
 					relativeURI = relativeURI.trimFileExtension
@@ -89,6 +90,9 @@ class ModuleNameComputer {
 
 	/** Called only for URIs without container, e.g. from tests, or built-ins. Hardcoded values should be fine for those cases.*/
 	def private createDefaultQualifiedName(URI uri) {
+		val x = uri.trimFileExtension
+		val y = x.trimFileExtension
+		println(y)
 		var segmentList = uri.trimFileExtension.segmentsList
 		val srcFolder = Math.max(segmentList.indexOf('src'), segmentList.indexOf('src-test'))
 		if (srcFolder != -1) {
