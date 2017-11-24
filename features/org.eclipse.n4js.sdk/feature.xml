@@ -88,14 +88,6 @@ Contributors:
          id="org.eclipse.n4js.jsdoc2spec.sdk"
          version="0.0.0"/>
 
-   <includes
-         id="org.eclipse.n4js.n4jsx.sdk"
-         version="0.0.0"/>
-
-   <includes
-         id="org.eclipse.n4js.n4jsx.xpect.sdk"
-         version="0.0.0"/>
-
    <plugin
          id="org.eclipse.n4js.utils"
          download-size="0"
@@ -103,7 +95,7 @@ Contributors:
          version="0.0.0"
          unpack="false"/>
 
-    <plugin
+   <plugin
          id="org.eclipse.n4js.utils.ui"
          download-size="0"
          install-size="0"
