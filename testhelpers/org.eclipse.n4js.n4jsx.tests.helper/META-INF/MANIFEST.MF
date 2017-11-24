@@ -24,8 +24,6 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.runner,
  org.eclipse.n4js.runner.nodejs,
- org.eclipse.n4js.tests.helper;bundle-version="0.0.1",
- org.eclipse.n4js.n4jsx,
- org.eclipse.n4js.n4jsx.model
+ org.eclipse.n4js.tests.helper
 Export-Package: org.eclipse.n4js.n4jsx.tests.helper,
  org.eclipse.n4js.n4jsx.tests.helper.parser
