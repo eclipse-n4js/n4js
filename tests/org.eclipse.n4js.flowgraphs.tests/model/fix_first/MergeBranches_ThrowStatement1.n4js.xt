@@ -19,14 +19,14 @@
 
 
 /* ThrowStatement1 XPECT allMergeBranches ---
-	B1: [try { 1; } catch (e) { 2; } finally { 3; }](entry) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
-	B1: [try { 1; } catch (e) { 2; } finally { 3; }](entry) -> [{ 1; }](entry),
-	B3: [{ 1; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
-	B3: [{ 1; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](finally),
-	F0: [try { 1; } catch (e) { 2; } finally { 3; }](entry) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
-	F0: [{ 1; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
-	F2: [{ 1; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](finally),
-	F2: [{ 2; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](finally)
+	B0: [1](entryExit) -> [{ 1; }](exit),
+	B0: [1](entryExit) -> [{ 1; }](exit),
+	B2: [try { 1; } catch (e) { 2; } finally { 3; }](entry) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
+	B2: [try { 1; } catch (e) { 2; } finally { 3; }](entry) -> [{ 1; }](entry),
+	F1: [try { 1; } catch (e) { 2; } finally { 3; }](entry) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
+	F1: [{ 1; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](catch),
+	F3: [{ 1; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](finally),
+	F3: [{ 2; }](exit) -> [try { 1; } catch (e) { 2; } finally { 3; }](finally)
 --- */
 function ThrowStatement1() {
 	"start";

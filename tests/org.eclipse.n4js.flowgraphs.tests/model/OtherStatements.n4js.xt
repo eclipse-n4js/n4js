@@ -234,9 +234,7 @@ function ReturnStatement1() {
 		"start" --> return;
 	--- */
 	/* ReturnStatement1 XPECT allBranches ---
-		B0: "start" -> return;[B1|b2],
-		B1: [B0],
-		b2: [B0] -> "end"
+		B0: "start" -> return;[b1|B2], B2: [B0], b1: [B0] -> "end"
 	--- */
 	/* ReturnStatement1 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|b2],
@@ -265,9 +263,7 @@ function ReturnStatement2() : int {
 		1 --> return 1;
 	--- */
 	/* ReturnStatement2 XPECT allBranches ---
-		B0: "start" -> 1 -> return 1;[B1|b2],
-		B1: [B0],
-		b2: [B0] -> "end"
+		B0: "start" -> 1 -> return 1;[b1|B2], B2: [B0], b1: [B0] -> "end"
 	--- */
 	/* ReturnStatement2 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|b2],
@@ -298,20 +294,12 @@ function ReturnStatement3() {
 		1 --> "end"
 	--- */
 	/* ReturnStatement3 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> return;[B3|b4],
-		B2: [B0] -> "end",
-		B3: [B1],
-		b4: [B1] -> "end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> return;[b3|B4], B2: [B0] -> "end"[B5],
+		B4: [B1][B5], B5: [B2|B4], b3: [B1] -> "end"
 	--- */
 	/* ReturnStatement3 backward XPECT allBranches direction 'Backward' ---
-		B0: [B1|B2], B1: [B0]return; -> [B6],
-		B2: [B0]"end"[B3|b4],
-		B3: [B2] -> 1 -> [B7],
-		B5: [b4] -> return; -> [B6],
-		B6: [B1|B5]1 -> [B7],
-		B7: [B3|B6]"start",
-		b4: [B2][B5]
+		B0: [B1|B2], B1: [B0][B6], B2: [B0]"end"[B3|b4], B3: [B2] -> [B7],
+		B5: [b4] -> [B6], B6: [B1|B5]return; -> [B7], B7: [B3|B6]1 -> "start", b4: [B2][B5]
 	---	*/
 	/* ReturnStatement3 XPECT allPaths ---
 	   "start" -> 1 -> return;,
@@ -342,9 +330,7 @@ let ReturnStatement4 = function() {
 		"start" --> return;
 	--- */
 	/* ReturnStatement4 XPECT allBranches ---
-	   B0: "start" -> return;[B1|b2],
-	   B1: [B0],
-	   b2: [B0] -> "end"
+	   B0: "start" -> return;[b1|B2], B2: [B0], b1: [B0] -> "end"
 	--- */
 	/* ReturnStatement4 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|b2],
@@ -374,9 +360,7 @@ class ReturnStatement5 {
 			"start" --> return;
 		--- */
 		/* ReturnStatement5 XPECT allBranches ---
-			B0: "start" -> return;[B1|b2],
-			B1: [B0],
-			b2: [B0] -> "end"
+			B0: "start" -> return;[b1|B2], B2: [B0], b1: [B0] -> "end"
 		--- */
 		/* ReturnStatement5 backward XPECT allBranches direction 'Backward' ---
 			B0: [B1|b2],

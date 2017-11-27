@@ -15,16 +15,19 @@
 
 
 function ReturnStatement2() {
-	// XPECT allPaths --> "start" -> 1 -> return 1;
-	// XPECT allPaths direction 'Backward' -->  return 1; -> 1 -> "start"
-	// XPECT cfContainer of '1 + @This("123")' --> AdditiveExpression::ExpressionAnnotationList
-	// XPECT cfContainer of '@This("123")' --> AdditiveExpression::ExpressionAnnotationList
-	// XPECT cfContainer of '"123"' --> LiteralAnnotationArgument::StringLiteral
-	"start";
-	/* ReturnStatement2 XPECT errors ---
-		"cannot type AdditiveExpression 1 + @This("123")." at "1 + @This("123")"
-		"no viable alternative at input ';'" at ";"
+	/* XPECT allPaths ---
+		"start" -> 1 -> 2 -> 3 -> "finally" -> "end",
+		"start" -> 1 -> 2 -> return; -> "finally"
 	--- */
-	1 + @This("123");
+	"start";
+	try {
+		1;
+		if (2)
+			return;
+		3;
+	} finally {
+		"finally";
+	}
+	// XPECT nowarnings --> "Dead code. No execution possible after try statement." at ""end";"
 	"end";
 }

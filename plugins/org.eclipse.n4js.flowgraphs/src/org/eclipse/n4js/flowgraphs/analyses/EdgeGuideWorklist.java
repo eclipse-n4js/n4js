@@ -135,11 +135,8 @@ public class EdgeGuideWorklist {
 			alreadyVisitedAndObsolete &= !nextEdgeGuide.deadContext.isForwardDeadFlow();
 			if (alreadyVisitedAndObsolete) {
 				nextEdgeGuide = null; // optimization. might be removed
-				// obsoleteCounter++;
-				// System.out.println(obsoleteCounter);
 			}
 		}
 	}
 
-	static int obsoleteCounter = 0;
 }

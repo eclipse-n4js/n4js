@@ -19,20 +19,20 @@
 
 
 /* WhileStatementContinue XPECT allMergeBranches ---
-	B1: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
-	B1: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
-	B1: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
-	B3: [{ 2; continue; 3; }](entry) -> [2](entryExit),
-	B3: [{ 2; continue; 3; }](entry) -> [2](entryExit),
-	B4: [{ 2; continue; 3; }](entry) -> [2](entryExit),
-	B4: [{ 2; continue; 3; }](entry) -> [2](entryExit),
-	B5: [{ 2; continue; 3; }](entry) -> [2](entryExit),
-	B5: [{ 2; continue; 3; }](entry) -> [2](entryExit),
+	B1: [continue;](jumpNode) -Continue-> [while (1) { 2; continue; 3; }](condition),
+	B1: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	B2: [continue;](jumpNode) -Continue-> [while (1) { 2; continue; 3; }](condition),
+	B2: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	B3: [continue;](jumpNode) -Continue-> [while (1) { 2; continue; 3; }](condition),
+	B3: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	B4: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
+	B4: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
+	B4: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
 	F0: [continue;](jumpNode) -DeadCode-> [continue;](exit),
 	F0: [continue;](jumpNode) -DeadCode-> [continue;](exit),
-	F2: [1](entryExit) -Exit-> [while (1) { 2; continue; 3; }](exit),
-	F2: [1](entryExit) -Exit-> [while (1) { 2; continue; 3; }](exit),
-	F2: [1](entryExit) -Exit-> [while (1) { 2; continue; 3; }](exit)
+	F5: [1](entryExit) -Exit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [1](entryExit) -Exit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [1](entryExit) -Exit-> [while (1) { 2; continue; 3; }](exit)
 --- */
 function WhileStatementContinue() {
 	"start";

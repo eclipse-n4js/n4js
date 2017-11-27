@@ -32,7 +32,6 @@ class BlockFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), block);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), block);
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), block);
 		List<Node> blockNodes = new LinkedList<>();
 
 		EList<Statement> stmts = block.getStatements();
@@ -41,6 +40,8 @@ class BlockFactory {
 			Node blockNode = DelNodeFactory.create(astpp, "stmt_" + i, block, stmt);
 			blockNodes.add(blockNode);
 		}
+
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), block);
 
 		cNode.addNode(entryNode);
 		for (Node blockNode : blockNodes)

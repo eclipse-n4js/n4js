@@ -38,7 +38,9 @@ class StandardCFEFactory {
 
 	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe,
 			boolean isRepresenting) {
+
 		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
+
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();

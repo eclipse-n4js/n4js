@@ -95,6 +95,7 @@ public class EdgeGuideQueue {
 	private int compareForRemoveFirst(EdgeGuide eg1, EdgeGuide eg2) {
 		return ComparisonChain.start()
 				.compare(eg1, eg2, EdgeGuideQueue::compareDeadFlowContext)
+				.compare(eg1, eg2, EdgeGuideQueue::compareFinallyContext)
 				.compare(eg1, eg2, EdgeGuideQueue::compareASTPosition)
 				.result();
 	}
@@ -107,6 +108,17 @@ public class EdgeGuideQueue {
 		if (dfc1.isForwardDeadFlow() == dfc2.isForwardDeadFlow())
 			return 0;
 		return dfc1.isForwardDeadFlow() ? 1 : -1;
+	}
+
+	/** Prioritize normal flow branches to get reliable dead code information in forward walkthrough. */
+	private static int compareFinallyContext(EdgeGuide eg1, EdgeGuide eg2) {
+		FinallyFlowContext ffc1 = eg1.finallyContext;
+		FinallyFlowContext ffc2 = eg2.finallyContext;
+
+		if (ffc1.finallyBlockContexts.isEmpty() == ffc2.finallyBlockContexts.isEmpty())
+			return 0;
+
+		return ffc1.finallyBlockContexts.isEmpty() ? -1 : 1;
 	}
 
 	private static int compareASTPosition(EdgeGuide eg1, EdgeGuide eg2) {
@@ -133,6 +145,7 @@ public class EdgeGuideQueue {
 		String egs = "[";
 		egs += eg.isMerged() ? "J " : "j ";
 		egs += eg.deadContext.isForwardDeadFlow() ? "D " : "d ";
+		egs += eg.finallyContext.finallyBlockContexts.isEmpty() ? "f " : "F ";
 		egs += eg.getNextNode().astPosition;
 		egs += "] " + eg.getEdge().toString();
 		return egs;

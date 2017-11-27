@@ -37,7 +37,6 @@ class ScriptFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), script);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), script);
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), script);
 		List<Node> scriptNodes = new LinkedList<>();
 
 		EList<ScriptElement> scriptElems = script.getScriptElements();
@@ -48,6 +47,8 @@ class ScriptFactory {
 				scriptNodes.add(blockNode);
 			}
 		}
+
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), script);
 
 		cNode.addNode(entryNode);
 		for (Node scriptNode : scriptNodes)
