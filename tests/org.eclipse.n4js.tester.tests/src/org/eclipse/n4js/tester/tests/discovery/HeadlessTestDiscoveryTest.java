@@ -261,14 +261,14 @@ public class HeadlessTestDiscoveryTest {
 	@Test
 	public void testDiscoveryN4JSXForSingleExistingProject() {
 		final TestTree actual = helper.collectTests(toURI(TEST_N4JSX_PROJECT));
-		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
 				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D"),
 				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E"),
 				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_4, "F"));
-		assertTestCaseCount(actual, 7);
+		assertTestSuiteCount(actual, 3);
 		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D"), 2);
 		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E"), 2);
+		assertTestCaseCount(actual, 7);
 	}
 
 	private void assertTestSuiteCount(final TestTree actual, final int expected) {
