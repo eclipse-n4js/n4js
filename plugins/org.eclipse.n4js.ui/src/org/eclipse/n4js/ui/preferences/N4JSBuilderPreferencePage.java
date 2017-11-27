@@ -63,15 +63,12 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 	@Inject
 	private N4JSPreferenceStoreAccessor preferenceStoreAccessor;
 
-	@Inject
-	private ComposedGeneratorRegistry composedGeneratorRegistry;
-
 	/**
 	 * Initializes default compiler configuration.
 	 */
-	public N4JSBuilderPreferencePage() {
+	@Inject
+	public N4JSBuilderPreferencePage(ComposedGeneratorRegistry composedGeneratorRegistry) {
 		super(new ArrayList<Triple<String, String, CompilerDescriptor>>());
-
 		Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 		for (IComposedGenerator composedGenerator : composedGenerators) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
@@ -79,7 +76,6 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 						compilerDescriptor));
 			}
 		}
-
 	}
 
 	@Override
