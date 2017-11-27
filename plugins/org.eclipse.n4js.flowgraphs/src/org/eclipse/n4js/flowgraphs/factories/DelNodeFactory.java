@@ -26,6 +26,9 @@ public class DelNodeFactory {
 	static DelegatingNode create(ReentrantASTIterator astpp, String name, ControlFlowElement parent,
 			ControlFlowElement delegate) {
 
+		if (delegate == null)
+			return null;
+
 		DelegatingNode node = new DelegatingNode(name, astpp.pos(), parent, delegate);
 		astpp.visitUtil(delegate);
 		return node;
