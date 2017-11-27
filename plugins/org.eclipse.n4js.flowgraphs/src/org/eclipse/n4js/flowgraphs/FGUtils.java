@@ -23,7 +23,6 @@ import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.ExportDeclaration;
 import org.eclipse.n4js.n4JS.ExportSpecifier;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FormalParameter;
@@ -106,9 +105,8 @@ public class FGUtils {
 		boolean isScript = cfe instanceof Script;
 		boolean isBlock = cfe instanceof Block;
 		boolean isExpression = cfe instanceof Expression;
-		boolean isExpressionAnnotationList = cfe instanceof ExpressionAnnotationList;
 		boolean isBindingPattern = cfe instanceof BindingPattern;
-		if (!isScript && !isBlock && !isExpression && !isExpressionAnnotationList && !isBindingPattern) {
+		if (!isScript && !isBlock && !isExpression && !isBindingPattern) {
 			return false;
 		}
 
@@ -130,7 +128,6 @@ public class FGUtils {
 
 		boolean isCFContainer = false;
 		isCFContainer |= isScript;
-		isCFContainer |= isExpressionAnnotationList;
 		isCFContainer |= isBlock && containerIsFunctionDeclaration;
 		isCFContainer |= isBlock && containerIsFunctionDefinition;
 		isCFContainer |= isBlock && containerIsFieldAccessor;
