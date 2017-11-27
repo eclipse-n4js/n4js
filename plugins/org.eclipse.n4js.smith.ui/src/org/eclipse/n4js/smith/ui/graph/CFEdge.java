@@ -28,13 +28,17 @@ import com.google.common.collect.Lists;
  * differently to improve to visual appearance w.r.t. crossings of other edges.
  */
 public class CFEdge extends Edge {
-	final TreeSet<ControlFlowType> cfTypes;
+	/** Set of all {@link ControlFlowType}s */
+	final public TreeSet<ControlFlowType> cfTypes;
+	/** True iff this edge is within or leads into dead code */
+	final public boolean isDead;
 
 	/**
 	 * Constructor
 	 */
-	public CFEdge(String label, Node startNode, Node endNode, Set<ControlFlowType> cfTypes) {
+	public CFEdge(String label, Node startNode, Node endNode, Set<ControlFlowType> cfTypes, boolean isDead) {
 		super(label, false, startNode, Lists.newArrayList(endNode), Collections.emptyList());
+		this.isDead = isDead;
 		this.cfTypes = new TreeSet<>(cfTypes);
 	}
 
@@ -70,22 +74,23 @@ public class CFEdge extends Edge {
 		Display displ = Display.getCurrent();
 		Color color = GraphUtils.getColor(50, 50, 50);
 
-		for (ControlFlowType cfType : cfTypes) {
-			switch (cfType) {
-			case Repeat:
-			case Break:
-			case Continue:
-			case Return:
-				color = displ.getSystemColor(SWT.COLOR_BLUE);
-				break;
-			case Throw:
-				color = displ.getSystemColor(SWT.COLOR_RED);
-				break;
-			case DeadCode:
-				color = displ.getSystemColor(SWT.COLOR_GRAY);
-				break;
-			default:
-				break;
+		if (isDead) {
+			color = displ.getSystemColor(SWT.COLOR_GRAY);
+		} else {
+			for (ControlFlowType cfType : cfTypes) {
+				switch (cfType) {
+				case Repeat:
+				case Break:
+				case Continue:
+				case Return:
+					color = displ.getSystemColor(SWT.COLOR_BLUE);
+					break;
+				case Throw:
+					color = displ.getSystemColor(SWT.COLOR_RED);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 		gc.setForeground(color);

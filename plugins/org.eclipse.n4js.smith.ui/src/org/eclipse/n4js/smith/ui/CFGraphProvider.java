@@ -171,13 +171,31 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 				addNode(edge.end, isDeadCode());
 				Node sNode = nodeMap.get(edge.start);
 				Node eNode = nodeMap.get(edge.end);
-				Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
+				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCode());
 
 				if (!edgesMap.containsKey(edge.start)) {
 					edgesMap.put(edge.start, new LinkedList<>());
 				}
 				List<Edge> cfEdges = edgesMap.get(edge.start);
 				cfEdges.add(cfEdge);
+
+				removeDuplicatedDeadEdge(eNode, cfEdge, cfEdges);
+			}
+
+			private void removeDuplicatedDeadEdge(Node eNode, CFEdge cfEdge, List<Edge> cfEdges) {
+				CFEdge removeEdge = null;
+				for (Edge e : cfEdges) {
+					if (cfEdge != e && e.getEndNodes().get(0) == eNode) {
+						removeEdge = (CFEdge) e;
+					}
+				}
+				if (removeEdge != null) {
+					if (removeEdge.isDead) {
+						cfEdges.remove(removeEdge);
+					} else {
+						cfEdges.remove(cfEdge);
+					}
+				}
 			}
 
 		}
