@@ -12,6 +12,7 @@ package org.eclipse.n4js.flowgraphs.factories;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,7 @@ public class ControlFlowGraphFactory {
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
-		HashSet<ControlFlowElement> cfContainers = new HashSet<>();
+		Set<ControlFlowElement> cfContainers = new LinkedHashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
 		Measurement mes = dcCreateNodes.getMeasurement("createNodes_" + script.eResource().getURI().toString());
