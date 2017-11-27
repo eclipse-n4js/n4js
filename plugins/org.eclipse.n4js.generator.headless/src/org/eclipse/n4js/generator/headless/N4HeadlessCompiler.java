@@ -39,7 +39,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.GeneratorException;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.N4FilebasedWorkspaceResourceSetContainerState;
@@ -102,13 +102,13 @@ import com.google.inject.Provider;
  * The way how the compiler behaves can be configured through flags like {@link #keepOnCompiling},
  * {@link #processTestCode}, {@link #compileSourceCode}
  *
- * IMPORTANT: Before using the functionalities of this class, make sure to register composed generators first. Moreover,
- * the subgenerators must have been registered as well.
+ * IMPORTANT: Before using the functionalities of this class, make sure to register composite generators first.
+ * Moreover, the subgenerators must have been registered as well.
  */
 public class N4HeadlessCompiler {
 
-	/** The list of composed generators, each of which is responsible for a language. */
-	private final List<IComposedGenerator> compositeGenerators = new ArrayList<>();
+	/** The list of composite generators, each of which is responsible for a language. */
+	private final List<ICompositeGenerator> compositeGenerators = new ArrayList<>();
 
 	/** Abstraction to the file system, used by the generators */
 	private final JavaIoFileSystemAccess fsa;
@@ -168,28 +168,28 @@ public class N4HeadlessCompiler {
 	}
 
 	/**
-	 * Register a composed generator.
+	 * Register a composite generator.
 	 */
-	public void registerComposedGenerator(IComposedGenerator compositeGenerator) {
+	public void registerCompositeGenerator(ICompositeGenerator compositeGenerator) {
 		this.compositeGenerators.add(compositeGenerator);
 	}
 
 	/**
-	 * Unregister a composed generator.
+	 * Unregister a composite generator.
 	 */
-	public void unregisterComposedGenerator(IComposedGenerator compositeGenerator) {
+	public void unregisterCompositeGenerator(ICompositeGenerator compositeGenerator) {
 		this.compositeGenerators.remove(compositeGenerator);
 	}
 
 	/**
-	 * Clear all registered composed generator.
+	 * Clear all registered composite generator.
 	 */
-	public void clearComposedGenerators() {
+	public void clearCompositeGenerators() {
 		this.compositeGenerators.clear();
 	}
 
 	/** Build an output configuration from a composite generator. */
-	private Map<String, OutputConfiguration> buildOutputConfigurations(IComposedGenerator compositeGenerator) {
+	private Map<String, OutputConfiguration> buildOutputConfigurations(ICompositeGenerator compositeGenerator) {
 		Map<String, OutputConfiguration> result = new HashMap<>();
 		for (CompilerDescriptor desc : compositeGenerator.getCompilerDescriptors()) {
 			result.put(desc.getIdentifier(), desc.getOutputConfiguration());
@@ -198,7 +198,7 @@ public class N4HeadlessCompiler {
 	}
 
 	/** Configure FileSystemAccess (FSA) from a composite generator and a project */
-	private void configureFSAOutput(IComposedGenerator compositeGenerator, IN4JSProject project) {
+	private void configureFSAOutput(ICompositeGenerator compositeGenerator, IN4JSProject project) {
 		Map<String, OutputConfiguration> outputs = buildOutputConfigurations(compositeGenerator);
 		configureFSA(project, outputs);
 	}
@@ -1407,10 +1407,11 @@ public class N4HeadlessCompiler {
 							logger.info("  Generating resource " + resource.getURI());
 						}
 						if (logger.isVerbose()) {
-							logger.info("  will generate with  " + compositeGenerators.size() + " composed generators");
+							logger.info(
+									"  will generate with  " + compositeGenerators.size() + " composite generators");
 						}
 						// Ask each composite generator to try to generate the current resource
-						for (IComposedGenerator compositeGenerator : compositeGenerators) {
+						for (ICompositeGenerator compositeGenerator : compositeGenerators) {
 							if (logger.isVerbose()) {
 								logger.info("  generating  " + compositeGenerator.getClass().getName());
 							}

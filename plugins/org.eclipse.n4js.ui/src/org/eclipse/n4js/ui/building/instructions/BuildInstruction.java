@@ -34,7 +34,7 @@ import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.generator.common.GeneratorException;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
@@ -197,8 +197,8 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 		if (shouldGenerate(resource, aProject)) {
 			try {
 				// generator.doGenerate(resource, access);
-				Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
-				for (IComposedGenerator composedGenerator : composedGenerators) {
+				Collection<ICompositeGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+				for (ICompositeGenerator composedGenerator : composedGenerators) {
 					composedGenerator.doGenerate(resource, access);
 				}
 			} catch (RuntimeException e) {

@@ -18,7 +18,7 @@ import org.eclipse.xtext.generator.IGenerator;
 public interface IBaseGenerator extends IGenerator {
 	/**
 	 *
-	 * @return true if the composed generator is applicable to the given resource and false otherwise.
+	 * @return true if the composite generator is applicable to the given resource and false otherwise.
 	 */
 	boolean isApplicableTo(Resource resource);
 }

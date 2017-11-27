@@ -359,7 +359,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/**
 	 *
-	 * @return true if the composed generator is applicable to the given resource and false otherwise.
+	 * @return true if the composite generator is applicable to the given resource and false otherwise.
 	 */
 	override boolean isApplicableTo(Resource input) {
 		return shouldBeCompiled(input, null);

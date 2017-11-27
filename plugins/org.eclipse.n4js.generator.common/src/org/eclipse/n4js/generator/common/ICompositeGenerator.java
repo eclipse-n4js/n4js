@@ -17,7 +17,7 @@ import java.util.Set;
  * A composite generator is responsible for a language. A composite generator delegates the generation logics to its
  * children (subgenerators).
  */
-public interface IComposedGenerator extends IBaseGenerator {
+public interface ICompositeGenerator extends IBaseGenerator {
 
 	/**
 	 * @return the descriptors of the registered compilers. Besides identifier and name they also contain the default

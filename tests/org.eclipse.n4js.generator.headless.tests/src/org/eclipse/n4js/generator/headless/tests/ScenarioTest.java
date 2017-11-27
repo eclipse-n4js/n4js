@@ -135,7 +135,7 @@ public class ScenarioTest {
 	public void setUp() throws Exception {
 		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
 		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
-		hlc.registerComposedGenerator(n4jsCompositeGenerator);
+		hlc.registerCompositeGenerator(n4jsCompositeGenerator);
 	}
 
 	/**
@@ -474,6 +474,6 @@ public class ScenarioTest {
 	@After
 	public void tearDown() {
 		subgeneratorsRegistry.reset();
-		hlc.clearComposedGenerators();
+		hlc.clearCompositeGenerators();
 	}
 }

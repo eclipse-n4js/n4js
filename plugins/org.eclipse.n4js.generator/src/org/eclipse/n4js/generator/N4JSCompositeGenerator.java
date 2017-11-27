@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.generator.common.ISubGenerator;
 import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -32,7 +32,7 @@ import com.google.inject.Inject;
  * A composite generator is responsible for a language. A composite generator delegates the generation logics to its
  * children (subgenerators).
  */
-public class N4JSCompositeGenerator implements IComposedGenerator {
+public class N4JSCompositeGenerator implements ICompositeGenerator {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSCompositeGenerator.class);
 

@@ -24,7 +24,7 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferencePageContainer;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.CompilerProperties;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.xtext.builder.DerivedResourceCleanerJob;
@@ -69,8 +69,8 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 	@Inject
 	public N4JSBuilderPreferencePage(ComposedGeneratorRegistry composedGeneratorRegistry) {
 		super(new ArrayList<Triple<String, String, CompilerDescriptor>>());
-		Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
-		for (IComposedGenerator composedGenerator : composedGenerators) {
+		Collection<ICompositeGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+		for (ICompositeGenerator composedGenerator : composedGenerators) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 				this.components.add(Tuples.create(compilerDescriptor.getIdentifier(), compilerDescriptor.getName(),
 						compilerDescriptor));

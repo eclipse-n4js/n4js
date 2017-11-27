@@ -61,7 +61,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
@@ -315,11 +315,11 @@ public class N4jscBase implements IApplication {
 	private SubgeneratorsRegistry subgeneratorsRegistry;
 
 	@Inject
-	private IComposedGenerator n4jsCompositeGenerator;
+	private ICompositeGenerator n4jsCompositeGenerator;
 
 	// TODO IDE-2493 remove workaround for multi-language problem
 	// @Inject (from N4JSX injector; will be done manually in #initInjection())
-	private IComposedGenerator n4jsxCompositeGenerator;
+	private ICompositeGenerator n4jsxCompositeGenerator;
 
 	// TODO IDE-2493 remove duplicated singletons
 	/**
@@ -429,9 +429,9 @@ public class N4jscBase implements IApplication {
 			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
 			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JSX_FILE_EXTENSION);
 
-			// Register composed generators
-			headless.registerComposedGenerator(n4jsCompositeGenerator);
-			headless.registerComposedGenerator(n4jsxCompositeGenerator);
+			// Register composite generators
+			headless.registerCompositeGenerator(n4jsCompositeGenerator);
+			headless.registerCompositeGenerator(n4jsxCompositeGenerator);
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated
 			if (!Platform.isRunning()) {
@@ -968,7 +968,7 @@ public class N4jscBase implements IApplication {
 		Injector n4jsxInjector = N4JSXStandaloneSetup.doSetupWithoutParentLanguages();
 		this.n4jsxFileExtensionsRegistry = n4jsxInjector.getInstance(FileExtensionsRegistry.class);
 		this.n4jsxFileBasedWorkspace = n4jsxInjector.getInstance(FileBasedWorkspace.class);
-		this.n4jsxCompositeGenerator = n4jsxInjector.getInstance(IComposedGenerator.class);
+		this.n4jsxCompositeGenerator = n4jsxInjector.getInstance(ICompositeGenerator.class);
 		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 

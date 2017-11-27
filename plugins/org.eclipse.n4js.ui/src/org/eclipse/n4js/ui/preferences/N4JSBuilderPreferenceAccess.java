@@ -15,7 +15,7 @@ import java.util.Collection;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.CompilerProperties;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
+import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
@@ -49,8 +49,8 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 		}
 
 		private void intializeBuilderPreferences(IPreferenceStore store) {
-			Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
-			for (IComposedGenerator composedGenerator : composedGenerators) {
+			Collection<ICompositeGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+			for (ICompositeGenerator composedGenerator : composedGenerators) {
 				for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 					for (CompilerProperties prop : CompilerProperties.values()) {
 						if (prop.getType() == Boolean.class) {
@@ -94,9 +94,9 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 	@Override
 	public void setAutoBuildEnabled(Object context, boolean enabled) {
 		IPreferenceStore preferenceStore = preferenceStoreAccess.getWritablePreferenceStore(context);
-		Collection<IComposedGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
+		Collection<ICompositeGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
 		String key = null;
-		for (IComposedGenerator composedGenerator : composedGenerators) {
+		for (ICompositeGenerator composedGenerator : composedGenerators) {
 			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
 				key = CompilerProperties.IS_ACTIVE.getKey(compilerDescriptor.getIdentifier());
 				preferenceStore.setValue(key, enabled);
