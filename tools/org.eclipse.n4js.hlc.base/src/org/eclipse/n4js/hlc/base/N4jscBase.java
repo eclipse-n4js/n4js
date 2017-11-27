@@ -62,7 +62,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.common.ICompositeGenerator;
-import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
+import org.eclipse.n4js.generator.common.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -312,7 +312,7 @@ public class N4jscBase implements IApplication {
 	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
 
 	@Inject
-	private SubgeneratorsRegistry subgeneratorsRegistry;
+	private SubGeneratorRegistry subGeneratorRegistry;
 
 	@Inject
 	private ICompositeGenerator n4jsCompositeGenerator;
@@ -424,10 +424,10 @@ public class N4jscBase implements IApplication {
 			initInjection(refProperties());
 
 			// Register subgenerators
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
-			subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JSX_FILE_EXTENSION);
+			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
+			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
+			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
+			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JSX_FILE_EXTENSION);
 
 			// Register composite generators
 			headless.registerCompositeGenerator(n4jsCompositeGenerator);

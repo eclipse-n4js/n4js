@@ -21,7 +21,7 @@ import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.ICompositeGenerator;
 import org.eclipse.n4js.generator.common.ISubGenerator;
-import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
+import org.eclipse.n4js.generator.common.SubGeneratorRegistry;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.xtext.generator.IFileSystemAccess;
@@ -43,7 +43,7 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	private ExternalLibraryUriHelper externalLibraryUriHelper;
 
 	@Inject
-	private SubgeneratorsRegistry subgeneratorRegistry;
+	private SubGeneratorRegistry subGeneratorRegistry;
 
 	@Override
 	public void doGenerate(Resource input, IFileSystemAccess fsa) {
@@ -93,6 +93,6 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	@Override
 	public Collection<ISubGenerator> getSubGenerators() {
 		// Ask the global generator registry and filter generators that are applicable to N4JS language.
-		return subgeneratorRegistry.getGenerators(N4JSGlobals.N4JS_FILE_EXTENSION);
+		return subGeneratorRegistry.getGenerators(N4JSGlobals.N4JS_FILE_EXTENSION);
 	}
 }

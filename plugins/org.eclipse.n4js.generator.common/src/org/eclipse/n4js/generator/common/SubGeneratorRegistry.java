@@ -27,12 +27,11 @@ import com.google.inject.Singleton;
 
 /**
  * This is a global singleton registry to which a generator can be registered.
- *
  */
 @Singleton
-public class SubgeneratorsRegistry {
+public class SubGeneratorRegistry {
 
-	private final static Logger LOGGER = Logger.getLogger(SubgeneratorsRegistry.class);
+	private final static Logger LOGGER = Logger.getLogger(SubGeneratorRegistry.class);
 
 	/* The extension point to subgenerators */
 	private static final String SUBGENERATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.generator.common.subgenerator";

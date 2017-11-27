@@ -27,7 +27,7 @@ import org.eclipse.n4js.HeadlessCompilerFactory;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
-import org.eclipse.n4js.generator.common.SubgeneratorsRegistry;
+import org.eclipse.n4js.generator.common.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
@@ -63,7 +63,7 @@ public class ScenarioTest {
 	static String CMPLR = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 
 	@Inject
-	private SubgeneratorsRegistry subgeneratorsRegistry;
+	private SubGeneratorRegistry subGeneratorRegistry;
 
 	@Inject
 	private N4JSCompositeGenerator n4jsCompositeGenerator;
@@ -133,8 +133,8 @@ public class ScenarioTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
-		subgeneratorsRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
 		hlc.registerCompositeGenerator(n4jsCompositeGenerator);
 	}
 
@@ -473,7 +473,7 @@ public class ScenarioTest {
 	 */
 	@After
 	public void tearDown() {
-		subgeneratorsRegistry.reset();
+		subGeneratorRegistry.reset();
 		hlc.clearCompositeGenerators();
 	}
 }

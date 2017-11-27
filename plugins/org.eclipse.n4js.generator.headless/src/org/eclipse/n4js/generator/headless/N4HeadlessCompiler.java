@@ -1022,8 +1022,6 @@ public class N4HeadlessCompiler {
 	/**
 	 * Loads all resources in the given project and indexes them.
 	 *
-	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject, Map)}
-	 *
 	 * @param markedProject
 	 *            project to load
 	 * @param resSet
