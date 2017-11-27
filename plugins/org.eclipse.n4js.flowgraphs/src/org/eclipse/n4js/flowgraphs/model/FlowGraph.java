@@ -11,6 +11,8 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -65,9 +67,16 @@ public class FlowGraph {
 		return cn.getControlFlowContainer();
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getAllContainers()} */
-	public Set<ControlFlowElement> getAllContainers() {
-		return cfContainers;
+	/** see {@link N4JSFlowAnalyzer#getAllContainers()}. */
+	public Collection<ControlFlowElement> getAllContainers() {
+		// The order of containers is reversed.
+		// This causes fail-fast behavior regarding the assertion 'isVisited()'
+		// in {@link DeadFlowContext.Backward#setDeadCode(Node)}
+		List<ControlFlowElement> containerList = new LinkedList<>();
+		for (ControlFlowElement cfe : cfContainers) {
+			containerList.add(0, cfe);
+		}
+		return containerList;
 	}
 
 }

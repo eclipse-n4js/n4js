@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -194,7 +195,7 @@ public class N4JSFlowAnalyzer {
 	 * @return all {@link ControlFlowElement}s that are containers in the {@link Script}. See
 	 *         {@link FGUtils#isCFContainer(EObject)}
 	 */
-	public Set<ControlFlowElement> getAllContainers() {
+	public Collection<ControlFlowElement> getAllContainers() {
 		return cfg.getAllContainers();
 	}
 
