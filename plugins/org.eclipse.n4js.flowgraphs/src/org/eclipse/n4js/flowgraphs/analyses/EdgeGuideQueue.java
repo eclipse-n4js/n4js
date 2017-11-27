@@ -94,18 +94,19 @@ public class EdgeGuideQueue {
 
 	private int compareForRemoveFirst(EdgeGuide eg1, EdgeGuide eg2) {
 		return ComparisonChain.start()
-				.compare(eg1, eg2, EdgeGuideQueue::compareJoined)
 				.compare(eg1, eg2, EdgeGuideQueue::compareDeadFlowContext)
 				.compare(eg1, eg2, EdgeGuideQueue::compareASTPosition)
 				.result();
 	}
 
-	/** Prioritize joined edges. */
-	private static int compareJoined(EdgeGuide eg1, EdgeGuide eg2) {
-		if (eg1.isMerged() == eg2.isMerged()) {
+	/** Prioritize live flow branches to get reliable dead code information in forward walkthrough. */
+	private static int compareDeadFlowContext(EdgeGuide eg1, EdgeGuide eg2) {
+		DeadFlowContext dfc1 = eg1.deadContext;
+		DeadFlowContext dfc2 = eg2.deadContext;
+
+		if (dfc1.isForwardDeadFlow() == dfc2.isForwardDeadFlow())
 			return 0;
-		}
-		return eg1.isMerged() ? 1 : -1;
+		return dfc1.isForwardDeadFlow() ? 1 : -1;
 	}
 
 	private static int compareASTPosition(EdgeGuide eg1, EdgeGuide eg2) {
@@ -116,16 +117,6 @@ public class EdgeGuideQueue {
 		boolean isForward = eg1.edgeProvider.isForward();
 		int posDiff = (isForward) ? p1 - p2 : p2 - p1;
 		return posDiff;
-	}
-
-	/** Prioritize live flow branches. */
-	private static int compareDeadFlowContext(EdgeGuide eg1, EdgeGuide eg2) {
-		DeadFlowContext dfc1 = eg1.deadContext;
-		DeadFlowContext dfc2 = eg2.deadContext;
-
-		if (dfc1.isForwardDeadFlow() == dfc2.isForwardDeadFlow())
-			return 0;
-		return dfc1.isForwardDeadFlow() ? 1 : -1;
 	}
 
 	@Override

@@ -131,7 +131,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val cvgv1 = new UsedBeforeDeclaredAnalyser2();
 
 		flowAnalyzer.createGraphs(script);
-		flowAnalyzer.accept(dcv, cvgv1 );
+		flowAnalyzer.accept(dcv );
 
 		internalCheckDeadCode(dcv);
 		internalCheckUsedBeforeDeclared(cvgv1);

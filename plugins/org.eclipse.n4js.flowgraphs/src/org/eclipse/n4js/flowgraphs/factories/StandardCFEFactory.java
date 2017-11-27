@@ -36,7 +36,8 @@ class StandardCFEFactory {
 		return buildComplexNode(astpp, cfe, false);
 	}
 
-	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe, boolean isRepresenting) {
+	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe,
+			boolean isRepresenting) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), cfe);
 
@@ -50,7 +51,7 @@ class StandardCFEFactory {
 		String extName;
 		int extID;
 		if (argumentNodes.isEmpty()) {
-			entryNode = null; //
+			entryNode = null;
 			extName = ENTRY_EXIT_NODE;
 			extID = astpp.pos();
 		} else {
