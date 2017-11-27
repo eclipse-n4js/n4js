@@ -125,7 +125,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			addNode(cfe, isDead());
+			addNode(cfe, isDeadCode());
 		}
 
 		private void addNode(ControlFlowElement cfe, boolean isDeadCode) {
