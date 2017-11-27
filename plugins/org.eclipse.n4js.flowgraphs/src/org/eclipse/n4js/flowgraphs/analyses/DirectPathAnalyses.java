@@ -19,7 +19,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
@@ -114,41 +113,6 @@ public class DirectPathAnalyses {
 		return commonPredSet;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getPathIdentifier(ControlFlowElement , ControlFlowElement)}. */
-	public String getPathIdentifier(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
-		Objects.requireNonNull(cfeFrom);
-		Objects.requireNonNull(cfeTo);
-
-		LinkedHashSet<ControlFlowElement> predSet = new LinkedHashSet<>();
-
-		// step 1: traverse all predecessors, beginning from cfeTo: mark each
-		List<ControlFlowElement> curCFEs = new LinkedList<>();
-		curCFEs.add(cfeTo);
-		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
-			predSet.add(cfe);
-			Set<ControlFlowElement> preds = spa.getPredecessors(cfe, ControlFlowType.NonRepeatTypes);
-			curCFEs.addAll(preds);
-		}
-
-		// step 2: traverse all successors, beginning from cfeFrom. All revisited are part of the identifier.
-		String pathString = "";
-		curCFEs.clear();
-		curCFEs.add(cfeFrom);
-		while (!curCFEs.isEmpty()) {
-			ControlFlowElement cfe = curCFEs.remove(0);
-			if (predSet.contains(cfe)) {
-				Set<ControlFlowElement> succs = spa.getSuccessors(cfe, ControlFlowType.NonRepeatTypes);
-				curCFEs.addAll(succs);
-				String nameID = FGUtils.getNameID(cfe);
-				pathString += nameID + "->";
-			}
-		}
-
-		pathString = pathString.substring(0, pathString.length() - 2);
-		return pathString;
-	}
-
 	/** @return the path from cfeFrom to cfeTo */
 	public Path getPath(ControlFlowElement cfeFrom, ControlFlowElement cfeTo) {
 		return getPath(cfeFrom, cfeTo, null);
@@ -182,7 +146,7 @@ public class DirectPathAnalyses {
 	}
 
 	private LinkedList<ControlFlowEdge> findPath(Node startNode, Node endNode, Node notVia,
-			NextEdgesProvider edgeProvider, ControlFlowType... cfTypes) {
+			NextEdgesProvider edgeProvider) {
 
 		if (startNode == endNode) {
 			return Lists.newLinkedList();
@@ -191,7 +155,7 @@ public class DirectPathAnalyses {
 		LinkedList<LinkedList<ControlFlowEdge>> allPaths = new LinkedList<>();
 
 		// initialization
-		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(startNode, cfTypes);
+		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(startNode, ControlFlowType.NonDeadTypes);
 		for (ControlFlowEdge nextEdge : nextEdges) {
 			LinkedList<ControlFlowEdge> path = new LinkedList<>();
 			path.add(nextEdge);
@@ -204,7 +168,7 @@ public class DirectPathAnalyses {
 		// explore all paths, terminate when endNode is found
 		while (!allPaths.isEmpty()) {
 			LinkedList<ControlFlowEdge> firstPath = allPaths.removeFirst();
-			LinkedList<LinkedList<ControlFlowEdge>> ch = getPaths(edgeProvider, firstPath, notVia, cfTypes);
+			LinkedList<LinkedList<ControlFlowEdge>> ch = getPaths(edgeProvider, firstPath, notVia);
 			for (LinkedList<ControlFlowEdge> chPath : ch) {
 				if (isEndNode(edgeProvider, endNode, chPath.getLast())) {
 					return chPath;
@@ -217,12 +181,12 @@ public class DirectPathAnalyses {
 	}
 
 	private LinkedList<LinkedList<ControlFlowEdge>> getPaths(NextEdgesProvider edgeProvider,
-			LinkedList<ControlFlowEdge> path, Node notVia, ControlFlowType... cfTypes) {
+			LinkedList<ControlFlowEdge> path, Node notVia) {
 
 		LinkedList<LinkedList<ControlFlowEdge>> resultPaths = new LinkedList<>();
 		ControlFlowEdge e = path.getLast();
 		Node nextNode = edgeProvider.getNextNode(e);
-		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(nextNode, cfTypes);
+		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(nextNode, ControlFlowType.NonDeadTypes);
 
 		for (ControlFlowEdge nextEdge : nextEdges) {
 			Node uberNextNode = edgeProvider.getNextNode(nextEdge);

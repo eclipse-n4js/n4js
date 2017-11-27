@@ -30,7 +30,6 @@ import org.eclipse.n4js.validation.validators.N4JSEnumValidator
 import org.eclipse.n4js.validation.validators.N4JSExpressionValidator
 import org.eclipse.n4js.validation.validators.N4JSExternalValidator
 import org.eclipse.n4js.validation.validators.N4JSFunctionValidator
-import org.eclipse.n4js.validation.validators.N4JSImportValidator
 import org.eclipse.n4js.validation.validators.N4JSInjectorCallsitesValidator
 import org.eclipse.n4js.validation.validators.N4JSInterfaceValidator
 import org.eclipse.n4js.validation.validators.N4JSLambdaValidator
@@ -65,7 +64,7 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSClassValidator,
 	N4JSInterfaceValidator,
 	N4JSFunctionValidator,
-	N4JSImportValidator,
+	N4JSXImportValidator,
 	N4JSTypeValidator,
 	N4JSExpressionValidator,
 	N4JSMemberValidator,

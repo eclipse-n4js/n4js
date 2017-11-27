@@ -16,12 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
@@ -34,6 +31,9 @@ import org.eclipse.n4js.n4JS.Block;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 
 /**
  * Factory to build the internal control flow graphs.
@@ -42,24 +42,31 @@ public class ControlFlowGraphFactory {
 	/** Prints out the {@link ControlFlowEdge}s of the internal graph */
 	private final static boolean PRINT_EDGE_DETAILS = false;
 
-	/** Only needed for sorted sets in function {@link #build(Script)} */
-	static int compareCFEs(ControlFlowElement cfe1, ControlFlowElement cfe2) {
-		return cfe1.hashCode() - cfe2.hashCode();
-	}
+	static private final DataCollector dcCreateNodes = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Create Nodes", "Flow Graphs", "Create Graphs");
+	static private final DataCollector dcConnectNodes = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Connect Nodes", "Flow Graphs", "Create Graphs");
+	static private final DataCollector dcJumpEdges = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Jump Edges", "Flow Graphs", "Create Graphs");
 
 	/** Builds and returns a control flow graph from a given {@link Script}. */
 	static public FlowGraph build(Script script) {
-		TreeSet<ControlFlowElement> cfContainers = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
-		TreeSet<Block> cfCatchBlocks = new TreeSet<>(ControlFlowGraphFactory::compareCFEs);
+		HashSet<ControlFlowElement> cfContainers = new HashSet<>();
 		Map<ControlFlowElement, ComplexNode> cnMap = new HashMap<>();
 
-		createComplexNodes(script, cfContainers, cfCatchBlocks, cnMap);
+		Measurement mes = dcCreateNodes.getMeasurement("createNodes_" + script.eResource().getURI().toString());
+		createComplexNodes(script, cfContainers, cnMap);
 		ComplexNodeMapper cnMapper = new ComplexNodeMapper(cnMap);
+		mes.end();
 
+		mes = dcConnectNodes.getMeasurement("connectNodes_" + script.eResource().getURI().toString());
 		connectComplexNodes(cnMapper);
+		mes.end();
+		mes = dcJumpEdges.getMeasurement("jumpEdges_" + script.eResource().getURI().toString());
 		createJumpEdges(cnMapper);
+		mes.end();
 
-		FlowGraph cfg = new FlowGraph(script, cfContainers, cfCatchBlocks, cnMap);
+		FlowGraph cfg = new FlowGraph(script, cfContainers, cnMap);
 
 		if (PRINT_EDGE_DETAILS)
 			printAllEdgeDetails(cnMapper);
@@ -68,33 +75,12 @@ public class ControlFlowGraphFactory {
 	}
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
-	static private void createComplexNodes(Script script, TreeSet<ControlFlowElement> cfContainers,
-			TreeSet<Block> cfCatchBlocks, Map<ControlFlowElement, ComplexNode> cnMap) {
+	static private void createComplexNodes(Script script, Set<ControlFlowElement> cfContainers,
+			Map<ControlFlowElement, ComplexNode> cnMap) {
 
-		ComplexNode cn = CFEFactoryDispatcher.build(script);
-		cnMap.put(script, cn);
+		ReentrantASTIterator astIt = new ReentrantASTIterator(cfContainers, cnMap, script);
+		astIt.visitAll();
 
-		TreeIterator<EObject> tit = script.eAllContents();
-		while (tit.hasNext()) {
-			EObject eObj = tit.next();
-			if (eObj instanceof ControlFlowElement) {
-				ControlFlowElement cfe = (ControlFlowElement) eObj;
-				cfe = CFEMapper.map(cfe);
-
-				if (cfe != null && !cnMap.containsKey(cfe)) {
-					ControlFlowElement cfContainer = FGUtils.getCFContainer(cfe);
-					cfContainers.add(cfContainer);
-					Block cfCatchBlock = FGUtils.getCatchBlock(cfe);
-					if (cfCatchBlock != null) {
-						cfCatchBlocks.add(cfCatchBlock);
-					}
-					cn = CFEFactoryDispatcher.build(cfe);
-					if (cn != null) {
-						cnMap.put(cfe, cn);
-					}
-				}
-			}
-		}
 	}
 
 	static private void connectComplexNodes(ComplexNodeMapper cnMapper) {
@@ -184,10 +170,11 @@ public class ControlFlowGraphFactory {
 	 */
 	private static void createJumpEdges(ComplexNodeMapper cnMapper) {
 		for (ComplexNode cn : cnMapper.getAll()) {
-			Node jumpNode = cn.getExit();
-			for (JumpToken jumpToken : jumpNode.jumpToken) {
-				EdgeUtils.removeAllCF(jumpNode.getSuccessorEdges());
-				connectToJumpTarget(cnMapper, jumpNode, jumpToken);
+			Node jumpNode = cn.getJump();
+			if (jumpNode != null) {
+				for (JumpToken jumpToken : jumpNode.jumpToken) {
+					connectToJumpTarget(cnMapper, jumpNode, jumpToken);
+				}
 			}
 		}
 	}
@@ -204,7 +191,10 @@ public class ControlFlowGraphFactory {
 		FinallyBlock enteringFinallyBlock = getEnteringFinallyBlock(catchNode);
 		boolean isExitingFinallyBlock = isExitingFinallyBlock(cnMapper, jumpNode);
 		if (enteringFinallyBlock != null || isExitingFinallyBlock) {
-			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+			boolean equalEdgeExistsAlready = equalEdgeExistsAlready(jumpNode, jumpToken, catchNode);
+			if (!equalEdgeExistsAlready) {
+				EdgeUtils.connectCF(jumpNode, catchNode, jumpToken);
+			}
 		} else {
 			EdgeUtils.connectCF(jumpNode, catchNode, jumpToken.cfType);
 		}
@@ -216,6 +206,14 @@ public class ControlFlowGraphFactory {
 			Node exitFinallyBlock = cnBlock.getExit();
 			connectToJumpTarget(cnMapper, exitFinallyBlock, jumpToken);
 		}
+	}
+
+	private static boolean equalEdgeExistsAlready(Node jumpNode, JumpToken jumpToken, Node catchNode) {
+		boolean equalEdgeExistsAlready = false;
+		for (ControlFlowEdge cfEdge : catchNode.pred) {
+			equalEdgeExistsAlready |= cfEdge.cfType == jumpToken.cfType && cfEdge.start == jumpNode;
+		}
+		return equalEdgeExistsAlready;
 	}
 
 	private static FinallyBlock getEnteringFinallyBlock(Node catchNode) {

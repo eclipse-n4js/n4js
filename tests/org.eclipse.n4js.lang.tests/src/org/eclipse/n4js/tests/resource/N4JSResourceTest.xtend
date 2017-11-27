@@ -12,49 +12,45 @@ package org.eclipse.n4js.tests.resource
 
 import com.google.inject.Inject
 import com.google.inject.Provider
-import org.eclipse.n4js.N4JSInjectorProvider
-import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.emf.common.notify.Notification
 import org.eclipse.emf.common.notify.impl.AdapterImpl
 import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EClass
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EcoreFactory
 import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.xtext.testing.InjectWith
-import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.jface.text.DocumentEvent
+import org.eclipse.n4js.N4JSInjectorProvider
+import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.resource.N4JSResource
+import org.eclipse.n4js.resource.UserdataMapper
+import org.eclipse.n4js.ts.types.TClass
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
+import org.eclipse.xtext.resource.DerivedStateAwareResource
+import org.eclipse.xtext.resource.IDerivedStateComputer
 import org.eclipse.xtext.resource.IResourceDescription
+import org.eclipse.xtext.resource.OutdatedStateManager
 import org.eclipse.xtext.resource.XtextResourceSet
 import org.eclipse.xtext.resource.impl.AbstractResourceDescription
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider
-import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
+import org.eclipse.xtext.service.OperationCanceledManager
+import org.eclipse.xtext.testing.InjectWith
+import org.eclipse.xtext.testing.XtextRunner
+import org.eclipse.xtext.testing.util.ParseHelper
+import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
+import org.eclipse.xtext.ui.editor.model.XtextDocument
+import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
 import static org.junit.Assert.*
-import org.eclipse.xtext.ui.editor.model.XtextDocument
-import org.eclipse.xtext.ui.editor.model.DocumentTokenSource
-import org.eclipse.jface.text.DocumentEvent
-import org.eclipse.xtext.service.OperationCanceledManager
-import org.eclipse.xtext.resource.OutdatedStateManager
-import org.eclipse.xtext.resource.IDerivedStateComputer
-import org.eclipse.xtext.resource.DerivedStateAwareResource
-import org.junit.Assert
-import org.eclipse.xtext.testing.util.ParseHelper
-import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.resource.UserdataMapper
 
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProvider)
 class N4JSResourceTest {
-
-	@Inject extension ReflectExtensions
 
 	@Inject IQualifiedNameConverter qualifiedNameConverter
 
@@ -70,25 +66,6 @@ class N4JSResourceTest {
 	IResourceDescription emptyDescription = new EmptyResourceDescription
 
 	@Inject extension ParseHelper<Script>
-
-	@Test
-	def void testASTProxy() {
-		var rs = resourceSetProvider.get();
-		val supplierResource = rs.createResource(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js")) as N4JSResource
-		assertFalse(supplierResource.loaded)
-		supplierResource.loadFromDescription(emptyDescription)
-		assertFalse(supplierResource.loaded)
-		val contents = supplierResource.contents
-		assertEquals(1, contents.size)
-		val dataArray = contents.get("data") as EObject[]
-		assertTrue(dataArray.get(0).eIsProxy)
-		val astProxy = dataArray.get(0)
-
-		val loadedContent = contents.get(0)
-		assertNotSame(loadedContent, astProxy)
-		assertFalse(loadedContent.eIsProxy)
-		assertTrue(supplierResource.loaded)
-	}
 
 	private def loadAndResolve(String path, XtextResourceSet rs) {
 		val result = rs.getResource(URI.createURI(path), true) as N4JSResource
@@ -148,30 +125,6 @@ class N4JSResourceTest {
 	}
 
 	@Test
-	def void testLoadReplacesTypeInformation() {
-		var rs = resourceSetProvider.get();
-		val supplierResource = rs.createResource(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js")) as N4JSResource
-		assertFalse(supplierResource.loaded)
-		supplierResource.loadFromDescription(emptyDescription)
-		assertFalse(supplierResource.loaded)
-		val contents = supplierResource.contents
-		assertEquals(1, contents.size)
-		val dataArray = contents.get("data") as EObject[]
-		val dummy = EcoreFactory.eINSTANCE.createEObject
-		dataArray.set(1, dummy) // we assume the array has 4 slots since this is the default for ELists
-		contents.set("size", 2)
-		assertEquals(2, contents.size)
-
-		contents.get(0) // trigger load
-		assertTrue(dummy.eIsProxy)
-		assertEquals(2, contents.size)
-		assertTrue(contents.last instanceof TModule)
-		val module = contents.last as TModule
-		assertTrue(module.topLevelTypes.head instanceof TClass)
-		assertEquals("Supplier", (module.topLevelTypes.head as TClass).name)
-	}
-
-	@Test
 	def void testLoadFromDescriptionFailsIfResourceIsLoaded() {
 		var rs = resourceSetProvider.get();
 		val supplierResource = rs.getResource(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js"), true) as N4JSResource
@@ -185,18 +138,13 @@ class N4JSResourceTest {
 	}
 
 	@Test
-	def void testLoadFromDescriptionFailsIfRunTwice() {
+	def void testLoadFromDescriptionDoesNotFailIfRunTwice() {
 		var rs = resourceSetProvider.get();
 		val supplierResource = rs.createResource(URI.createURI("src/org/eclipse/n4js/tests/scoping/Supplier.n4js")) as N4JSResource
 		assertFalse(supplierResource.loaded)
-		supplierResource.loadFromDescription(emptyDescription)
+		supplierResource.loadFromDescription(emptyDescription) // failed attempt to load from description should not change state of supplierResource
 		assertFalse(supplierResource.loaded)
-		try {
-			supplierResource.loadFromDescription(emptyDescription)
-			fail("Expected IllegalStateException")
-		} catch(IllegalStateException ise) {
-			// success
-		}
+		supplierResource.loadFromDescription(emptyDescription) // thus, this should not throw an exception
 	}
 
 	@Test

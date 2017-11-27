@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -18,18 +19,25 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * Also, it does represents a CFE and thus returns its {@link ControlFlowElement} when asked for it in
  * {@link #getRepresentedControlFlowElement()}.
  */
-public class RepresentingNode extends DelegatingNode {
+public class RepresentingNode extends Node {
+	final private ControlFlowElement cfeRepresent;
 
 	/**
-	 * Constructor. Sets the delegated {@link ControlFlowElement} to cfe
+	 * Constructor. Sets the represented {@link ControlFlowElement}
 	 */
-	public RepresentingNode(String name, int internalPosition, ControlFlowElement cfe) {
-		super(name, internalPosition, cfe, cfe);
+	public RepresentingNode(String name, int astPosition, ControlFlowElement cfe) {
+		super(name, astPosition, cfe);
+		this.cfeRepresent = cfe;
+	}
+
+	@Override
+	public ControlFlowElement getDelegatedControlFlowElement() {
+		return null;
 	}
 
 	@Override
 	public ControlFlowElement getRepresentedControlFlowElement() {
-		return getDelegatedControlFlowElement();
+		return CFEMapper.map(cfeRepresent);
 	}
 
 }

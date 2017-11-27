@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -50,51 +49,56 @@ import org.eclipse.n4js.n4JS.WhileStatement;
  */
 class JumpFactory {
 
-	static ComplexNode buildComplexNode(BreakStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, BreakStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Break, stmt.getLabel());
-		return buildComplexNode(stmt, null, jumptoken);
+		return buildComplexNode(astpp, stmt, null, jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ContinueStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ContinueStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Continue, stmt.getLabel());
-		return buildComplexNode(stmt, null, jumptoken);
+		return buildComplexNode(astpp, stmt, null, jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ReturnStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ReturnStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Return);
-		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
+		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(ThrowStatement stmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ThrowStatement stmt) {
 		JumpToken jumptoken = new JumpToken(ControlFlowType.Throw);
-		return buildComplexNode(stmt, stmt.getExpression(), jumptoken);
+		return buildComplexNode(astpp, stmt, stmt.getExpression(), jumptoken);
 	}
 
-	static ComplexNode buildComplexNode(Statement stmt, Expression expr, JumpToken jumptoken) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(stmt);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Statement stmt, Expression expr,
+			JumpToken jumptoken) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), stmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, stmt);
+		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), stmt);
 		cNode.addNode(entryNode);
 
 		Node expression = null;
 		if (expr != null) {
-			expression = new DelegatingNode("expression", intPos++, stmt, expr);
+			expression = DelNodeFactory.create(astpp, "expression", stmt, expr);
 			cNode.addNode(expression);
 		}
-		Node exitNode = new RepresentingNode(EXIT_NODE, intPos++, stmt);
+		Node jumpNode = new RepresentingNode("jumpNode", astpp.pos(), stmt);
+		cNode.addNode(jumpNode);
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), stmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();
 		cfs.add(entryNode);
 		cfs.add(expression);
-		cfs.add(exitNode);
-		cNode.connectInternalSucc(cfs);
+		cNode.connectInternalSucc(entryNode, expression);
 
+		Node beforeDeadNode = ListUtils.filterNulls(entryNode, expression).getLast();
+		cNode.connectInternalSucc(beforeDeadNode, jumpNode);
+		cNode.connectInternalSucc(ControlFlowType.DeadCode, jumpNode, exitNode);
+
+		jumpNode.addJumpToken(jumptoken);
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
-
-		exitNode.addJumpToken(jumptoken);
+		cNode.setJumpNode(jumpNode);
 
 		return cNode;
 	}
