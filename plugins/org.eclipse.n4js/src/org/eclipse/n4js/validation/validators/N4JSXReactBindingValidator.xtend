@@ -39,6 +39,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.validation.IssueCodes
+import org.eclipse.n4js.utils.ResourceType
 
 /**
  * Validation of React bindings including naming convention (components in upper case and HTML tags in lower case)
@@ -78,6 +79,22 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	override void register(EValidatorRegistrar registrar) {
 		// nop
+	}
+
+	/**
+	 * This method checks that JSXElement is not placed in JSX like resource.
+	 */
+	@Check
+	def public void checkJSXinN4JS(JSXElement jsxElem) {
+		val resType = ResourceType.getResourceType(jsxElem);
+		switch (resType) {
+			case N4JSX: return
+			case JSX: return
+			default: {
+				val message = IssueCodes.getMessageForJSXELEMENT_IN_NON_JSX_RESOURCE(resType.name)
+				addIssue(message,jsxElem,IssueCodes.JSXELEMENT_IN_NON_JSX_RESOURCE);
+			}
+		}
 	}
 
 	/**
