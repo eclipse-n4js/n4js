@@ -2,9 +2,7 @@ FROM openjdk:8u151-jdk
 
 LABEL version="0.1.0" \
       description="Build n4js with Maven. Includes xvfb, node." \
-      maintainer="Continuous Delivery Team <staff-build-release@numberfour.eu>" \
-      eu.numberfour.dockerimage.name="numberfour/build-n4js" \
-      eu.numberfour.dockerimage.github="eclipse/n4js"
+      maintainer="N4JS Team <n4js-dev@eclipse.org>"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
