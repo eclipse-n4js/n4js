@@ -68,23 +68,25 @@ public class CFEdge extends Edge {
 	/** Sets the color of the {@link GC} depending on the edge type. */
 	void setColor(GC gc) {
 		Display displ = Display.getCurrent();
-		Color color = null;
+		Color color = GraphUtils.getColor(50, 50, 50);
 
-		ControlFlowType cfType = cfTypes.first();
-		switch (cfType) {
-		case Repeat:
-			color = displ.getSystemColor(SWT.COLOR_GREEN);
-			break;
-		case Break:
-		case Continue:
-		case Return:
-			color = displ.getSystemColor(SWT.COLOR_BLUE);
-			break;
-		case Throw:
-			color = displ.getSystemColor(SWT.COLOR_RED);
-			break;
-		default:
-			color = GraphUtils.getColor(50, 50, 50);
+		for (ControlFlowType cfType : cfTypes) {
+			switch (cfType) {
+			case Repeat:
+			case Break:
+			case Continue:
+			case Return:
+				color = displ.getSystemColor(SWT.COLOR_BLUE);
+				break;
+			case Throw:
+				color = displ.getSystemColor(SWT.COLOR_RED);
+				break;
+			case DeadCode:
+				color = displ.getSystemColor(SWT.COLOR_GRAY);
+				break;
+			default:
+				break;
+			}
 		}
 		gc.setForeground(color);
 	}
