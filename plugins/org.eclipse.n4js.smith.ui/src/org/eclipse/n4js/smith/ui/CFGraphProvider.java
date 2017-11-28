@@ -125,7 +125,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			addNode(cfe, isDeadCode());
+			addNode(cfe, isDeadCodeNode());
 		}
 
 		private void addNode(ControlFlowElement cfe, boolean isDeadCode) {
@@ -167,11 +167,11 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 			@Override
 			protected void visit(FlowEdge edge) {
-				addNode(edge.start, isDeadCode());
-				addNode(edge.end, isDeadCode());
+				addNode(edge.start, isDeadCodeNode());
+				addNode(edge.end, isDeadCodeNode());
 				Node sNode = nodeMap.get(edge.start);
 				Node eNode = nodeMap.get(edge.end);
-				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCode());
+				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCodeNode());
 
 				if (!edgesMap.containsKey(edge.start)) {
 					edgesMap.put(edge.start, new LinkedList<>());

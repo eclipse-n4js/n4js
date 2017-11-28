@@ -14,7 +14,7 @@
 
 
 /**
- *
+ * Note: Tests of kind 'allMergeBranches' need to have single files for each test.
  */
 
 

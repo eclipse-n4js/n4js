@@ -51,7 +51,7 @@ public class DeadCodeAnalyser extends GraphVisitor {
 		if (isLiveCode()) {
 			allLiveNodes.add(cfe);
 		}
-		if (isDeadCode()) {
+		if (isDeadCodeNode()) {
 			allDeadNodes.add(cfe);
 		}
 	}

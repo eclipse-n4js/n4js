@@ -29,8 +29,9 @@ class DoWhileFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), doStmt);
 
 		Node entryNode = new HelperNode("entry", astpp.pos(), doStmt);
-		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, CONDITION_NODE_NAME, doStmt, doStmt.getExpression());
 		Node bodyNode = DelegatingNodeFactory.create(astpp, "body", doStmt, doStmt.getStatement());
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, CONDITION_NODE_NAME, doStmt,
+				doStmt.getExpression());
 		Node exitNode = new HelperNode("exit", astpp.pos(), doStmt);
 
 		cNode.addNode(entryNode);
@@ -44,7 +45,7 @@ class DoWhileFactory {
 		nodes.add(conditionNode);
 		cNode.connectInternalSucc(nodes);
 
-		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, bodyNode, exitNode);
+		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
 		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
 
 		cNode.setEntryNode(entryNode);

@@ -58,7 +58,6 @@ class BlockFactory {
 		cNode.setExitNode(exitNode);
 
 		if (FGUtils.isCFContainer(block)) {
-			// if (block == astpp.container()) { // TODO
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesAll));
 		}
 

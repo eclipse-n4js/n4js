@@ -74,7 +74,7 @@ public class CFEdge extends Edge {
 		Display displ = Display.getCurrent();
 		Color color = GraphUtils.getColor(50, 50, 50);
 
-		if (isDead) {
+		if (isDead || cfTypes.contains(ControlFlowType.DeadCode)) {
 			color = displ.getSystemColor(SWT.COLOR_GRAY);
 		} else {
 			for (ControlFlowType cfType : cfTypes) {

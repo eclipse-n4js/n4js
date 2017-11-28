@@ -100,7 +100,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		for (GraphExplorerInternal gei : getActivatedExplorers()) {
 			BranchWalkerInternal firstBranch = gei.getFirstBranch();
 			AllBranchPrintWalker firstBranchPW = (AllBranchPrintWalker) firstBranch;
-			List<String> explPathStrings = getPathStrings(firstBranchPW, firstBranch.isDeadCode());
+			List<String> explPathStrings = getPathStrings(firstBranchPW, firstBranch.isDeadCodeBranch());
 			pathStrings.addAll(explPathStrings);
 		}
 		return pathStrings;
@@ -122,7 +122,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		List<String> allStrings = new LinkedList<>();
 		boolean visitedSuccessor = false;
 		for (BranchWalker succ : bw.getSuccessors()) {
-			if (isDead == succ.isDeadCode()) {
+			if (isDead == succ.isDeadCodeBranch()) {
 				visitedSuccessor = true;
 				List<String> succStrings = getPathStrings((AllBranchPrintWalker) succ, isDead);
 				for (String succString : succStrings) {
@@ -211,7 +211,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 		}
 
 		private String getBranchLetter(BranchWalker bw) {
-			return bw.isDeadCode() ? "b" : "B";
+			return bw.isDeadCodeBranch() ? "b" : "B";
 		}
 
 		static int compareBranches(BranchWalkerInternal b1, BranchWalkerInternal b2) {

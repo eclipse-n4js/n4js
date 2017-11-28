@@ -280,7 +280,7 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** @return true iff the last visited node was dead. */
-	final public boolean isDeadCode() {
+	final public boolean isDeadCodeNode() {
 		return lastVisitedNodeIsDead;
 	}
 

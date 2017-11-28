@@ -234,7 +234,8 @@ function ReturnStatement1() {
 		"start" --> return;
 	--- */
 	/* ReturnStatement1 XPECT allBranches ---
-		B0: "start" -> return;[b1|B2], B2: [B0], b1: [B0] -> "end"
+		B0: "start" -> return;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
 	--- */
 	/* ReturnStatement1 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|b2],
@@ -263,7 +264,8 @@ function ReturnStatement2() : int {
 		1 --> return 1;
 	--- */
 	/* ReturnStatement2 XPECT allBranches ---
-		B0: "start" -> 1 -> return 1;[b1|B2], B2: [B0], b1: [B0] -> "end"
+		B0: "start" -> 1 -> return 1;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
 	--- */
 	/* ReturnStatement2 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|b2],
@@ -294,8 +296,8 @@ function ReturnStatement3() {
 		1 --> "end"
 	--- */
 	/* ReturnStatement3 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> return;[b3|B4], B2: [B0] -> "end"[B5],
-		B4: [B1][B5], B5: [B2|B4], b3: [B1] -> "end"
+		B0: "start" -> 1[B1|B2], B1: [B0] -> return;[b3|B4], B2: [B0] -> [B5],
+		B4: [B1][B6], B5: [B2|b3]"end"[B6], B6: [B4|B5], b3: [B1] -> [B5]
 	--- */
 	/* ReturnStatement3 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|B2], B1: [B0][B6], B2: [B0]"end"[B3|b4], B3: [B2] -> [B7],
@@ -330,7 +332,8 @@ let ReturnStatement4 = function() {
 		"start" --> return;
 	--- */
 	/* ReturnStatement4 XPECT allBranches ---
-	   B0: "start" -> return;[b1|B2], B2: [B0], b1: [B0] -> "end"
+	   B0: "start" -> return;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+	   b1: [B0] -> "end"[B3]
 	--- */
 	/* ReturnStatement4 backward XPECT allBranches direction 'Backward' ---
 		B0: [B1|b2],
@@ -360,7 +363,8 @@ class ReturnStatement5 {
 			"start" --> return;
 		--- */
 		/* ReturnStatement5 XPECT allBranches ---
-			B0: "start" -> return;[b1|B2], B2: [B0], b1: [B0] -> "end"
+			B0: "start" -> return;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+			b1: [B0] -> "end"[B3]
 		--- */
 		/* ReturnStatement5 backward XPECT allBranches direction 'Backward' ---
 			B0: [B1|b2],

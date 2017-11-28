@@ -93,9 +93,9 @@ public class EdgeGuideQueue {
 
 	private int compareForRemoveFirst(EdgeGuide eg1, EdgeGuide eg2) {
 		return ComparisonChain.start()
-				// .compare(eg1, eg2, EdgeGuideQueue::compareFinallyContext)
 				.compare(eg1, eg2, EdgeGuideQueue::compareASTPosition)
 				.compare(eg1, eg2, EdgeGuideQueue::compareDeadFlowContext)
+				.compare(eg1, eg2, EdgeGuideQueue::compareFinallyContext)
 				.result();
 	}
 

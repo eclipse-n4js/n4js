@@ -18,17 +18,17 @@
  */
 
 
-/* WhileStatement XPECT allMergeBranches ---
-	B0: [while (1) 2;](entry) -> [while (1) 2;](condition),
-	B0: [while (1) 2;](entry) -> [while (1) 2;](condition),
-	B0: [while (1) 2;](entry) -> [while (1) 2;](condition),
-	F1: [1](entryExit) -Exit-> [while (1) 2;](exit),
-	F1: [1](entryExit) -Exit-> [while (1) 2;](exit),
-	F1: [1](entryExit) -Exit-> [while (1) 2;](exit)
+
+
+/* ReturnStatement XPECT allMergeBranches ---
+	B0: [return;](jumpNode) -DeadCode-> [return;](exit),
+	B0: [return;](jumpNode) -Return-> [{ "start"; return; "end"; }](exit),
+	F1: ["end"](entryExit) -> [{ "start"; return; "end"; }](exit),
+	F1: [return;](jumpNode) -Return-> [{ "start"; return; "end"; }](exit)
 --- */
-function WhileStatement() {
+function ReturnStatement() {
 	"start";
-	while (1)
-		2;
+	 return;
+	// ReturnStatement1 XPECT warnings --> "Dead code. No execution possible after return." at ""end";"
 	"end";
 }

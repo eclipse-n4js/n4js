@@ -48,6 +48,7 @@ public class ReentrantASTIterator {
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
 	public void visitUtil(ControlFlowElement termNode) {
+		termNode = CFEMapper.map(termNode);
 		while (astIt.hasNext()) {
 			ControlFlowElement cfe = astIt.next();
 			ControlFlowElement mappedCFE = CFEMapper.map(cfe);
@@ -59,7 +60,6 @@ public class ReentrantASTIterator {
 						cnMap.put(mappedCFE, cn);
 					}
 				}
-
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {
 					break;
 				}

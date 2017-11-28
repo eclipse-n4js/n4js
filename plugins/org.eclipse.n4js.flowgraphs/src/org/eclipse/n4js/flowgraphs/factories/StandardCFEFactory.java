@@ -51,19 +51,16 @@ class StandardCFEFactory {
 
 		Node exitNode;
 		String extName;
-		int extID;
 		if (argumentNodes.isEmpty()) {
 			entryNode = null;
 			extName = ENTRY_EXIT_NODE;
-			extID = astpp.pos();
 		} else {
 			extName = EXIT_NODE;
-			extID = argumentNodes.get(argumentNodes.size() - 1).id + 1;
 		}
 		if (isRepresenting) {
-			exitNode = new RepresentingNode(extName, extID, cfe);
+			exitNode = new RepresentingNode(extName, astpp.pos(), cfe);
 		} else {
-			exitNode = new HelperNode(extName, extID, cfe);
+			exitNode = new HelperNode(extName, astpp.pos(), cfe);
 		}
 
 		cNode.addNode(entryNode);
