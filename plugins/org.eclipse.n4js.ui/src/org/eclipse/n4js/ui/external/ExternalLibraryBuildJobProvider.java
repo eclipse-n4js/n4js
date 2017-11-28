@@ -49,7 +49,7 @@ public class ExternalLibraryBuildJobProvider {
 		return new ExternalLibraryBuildJob(builderHelper, toBuild, toClean);
 	}
 
-	/* default */ static class ExternalLibraryBuildJob extends WorkspaceJob {
+	private static class ExternalLibraryBuildJob extends WorkspaceJob {
 
 		private static final ISchedulingRule BUILD_RULE = ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
 
