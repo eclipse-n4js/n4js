@@ -77,23 +77,23 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
  * all control flow relevant sub-expressions of a given {@link Expression}.
  */
 final class CFEChildren {
-	static private ReentrantASTIterator astIter;
 
 	/**
 	 * Returns all control flow relevant sub-expressions of the given {@link Expression}.
 	 */
-	static List<Node> get(ReentrantASTIterator pAstIter, ControlFlowElement expr) {
-		astIter = pAstIter;
-		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX().doSwitch(expr);
+	static List<Node> get(ReentrantASTIterator astIter, ControlFlowElement expr) {
+		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX(astIter).doSwitch(expr);
 		if (n4jsxExpressionList != null) {
 			return n4jsxExpressionList;
 		}
-		return new InternalExpressionChildren().doSwitch(expr);
+		return new InternalExpressionChildren(astIter).doSwitch(expr);
 	}
 
-	static void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe, ControlFlowElement delegate) {
+	static void addDelegatingNode(ReentrantASTIterator astIter, List<Node> cfc, String name, ControlFlowElement cfe,
+			ControlFlowElement delegate) {
+
 		if (delegate != null) {
-			DelegatingNode delegatingNode = DelNodeFactory.create(astIter, name, cfe, delegate);
+			DelegatingNode delegatingNode = DelegatingNodeFactory.create(astIter, name, cfe, delegate);
 			cfc.add(delegatingNode);
 		}
 	}
@@ -104,6 +104,17 @@ final class CFEChildren {
 	}
 
 	static private class InternalExpressionChildren extends N4JSSwitch<List<Node>> {
+		private final ReentrantASTIterator astIter;
+
+		InternalExpressionChildren(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
+
+		void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
+				ControlFlowElement delegate) {
+
+			CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
+		}
 
 		@Override
 		public List<Node> caseAdditiveExpression(AdditiveExpression ae) {
@@ -410,6 +421,17 @@ final class CFEChildren {
 	}
 
 	static private class InternalExpressionChildrenX extends N4JSXSwitch<List<Node>> {
+		private final ReentrantASTIterator astIter;
+
+		InternalExpressionChildrenX(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
+
+		void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
+				ControlFlowElement delegate) {
+
+			CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
+		}
 
 		@Override
 		public List<Node> caseJSXElement(JSXElement jsxel) {

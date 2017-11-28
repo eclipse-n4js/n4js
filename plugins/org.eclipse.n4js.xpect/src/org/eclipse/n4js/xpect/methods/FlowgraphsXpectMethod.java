@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
@@ -46,15 +46,10 @@ import org.xpect.runner.Xpect;
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	// @Inject
-	// private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
-
 	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 		flowAnalyzer.createGraphs(script);
-		// ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
-		// flowAnalyzer = cache.getFlowAnalyses();
 		return flowAnalyzer;
 	}
 

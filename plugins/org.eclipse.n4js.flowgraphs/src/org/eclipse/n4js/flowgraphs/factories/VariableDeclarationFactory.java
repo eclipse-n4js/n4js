@@ -34,7 +34,7 @@ class VariableDeclarationFactory {
 		Node expressionNode = null;
 
 		if (vd.getExpression() != null) {
-			expressionNode = DelNodeFactory.create(astpp, "expression", vd, vd.getExpression());
+			expressionNode = DelegatingNodeFactory.create(astpp, "expression", vd, vd.getExpression());
 		}
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), vd);
 

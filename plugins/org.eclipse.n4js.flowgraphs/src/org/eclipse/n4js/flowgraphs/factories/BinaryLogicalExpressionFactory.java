@@ -30,8 +30,8 @@ class BinaryLogicalExpressionFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), lbExpr);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), lbExpr);
-		Node lhsNode = DelNodeFactory.create(astpp, "lhs", lbExpr, lbExpr.getLhs());
-		Node rhsNode = DelNodeFactory.create(astpp, "rhs", lbExpr, lbExpr.getRhs());
+		Node lhsNode = DelegatingNodeFactory.create(astpp, "lhs", lbExpr, lbExpr.getLhs());
+		Node rhsNode = DelegatingNodeFactory.create(astpp, "rhs", lbExpr, lbExpr.getRhs());
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), lbExpr);
 
 		cNode.addNode(entryNode);
