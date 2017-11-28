@@ -53,15 +53,10 @@ import org.xpect.runner.Xpect;
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	// @Inject
-	// private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
-
 	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 		flowAnalyzer.createGraphs(script);
-		// ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
-		// flowAnalyzer = cache.getFlowAnalyses();
 		return flowAnalyzer;
 	}
 

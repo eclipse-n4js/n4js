@@ -37,7 +37,7 @@ class AbstractCaseClauseFactory {
 
 		if (abstrCaseClause instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) abstrCaseClause;
-			caseConditionNode = DelNodeFactory.create(astpp, "condition", caseClause, caseClause.getExpression());
+			caseConditionNode = DelegatingNodeFactory.create(astpp, "condition", caseClause, caseClause.getExpression());
 		}
 
 		EList<Statement> stmts = abstrCaseClause.getStatements();

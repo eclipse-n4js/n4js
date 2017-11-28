@@ -34,7 +34,7 @@ class SwitchFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), switchStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), switchStmt);
-		Node pivotNode = DelNodeFactory.create(astpp, "pivot", switchStmt, switchStmt.getExpression());
+		Node pivotNode = DelegatingNodeFactory.createOrHelper(astpp, "pivot", switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -46,10 +46,10 @@ class SwitchFactory {
 			AbstractCaseClause cc = caseClauses.get(n);
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = DelNodeFactory.create(astpp, "case_" + n, switchStmt, cc);
+				caseNode = DelegatingNodeFactory.create(astpp, "case_" + n, switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = DelNodeFactory.create(astpp, "default", switchStmt, cc);
+				caseNode = DelegatingNodeFactory.create(astpp, "default", switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);

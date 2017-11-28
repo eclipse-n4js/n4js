@@ -33,10 +33,12 @@ class WhileFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), whileStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), whileStmt);
-		Node conditionNode = DelNodeFactory.create(astpp, CONDITION_NODE_NAME, whileStmt, whileStmt.getExpression());
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, CONDITION_NODE_NAME, whileStmt,
+				whileStmt.getExpression());
+
 		Node bodyNode = null;
 		if (whileStmt.getStatement() != null) {
-			bodyNode = DelNodeFactory.create(astpp, "body", whileStmt, whileStmt.getStatement());
+			bodyNode = DelegatingNodeFactory.create(astpp, "body", whileStmt, whileStmt.getStatement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), whileStmt);
 
@@ -47,6 +49,7 @@ class WhileFactory {
 
 		List<Node> nodes = new LinkedList<>();
 		cNode.connectInternalSucc(entryNode, conditionNode);
+
 		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
 		cNode.connectInternalSucc(nodes);
 		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);

@@ -49,21 +49,24 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
  * {@link EObject}s.
  */
 final public class CFEFactoryDispatcher {
-	static private ReentrantASTIterator astIter;
 
 	/**
 	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
-	static public ComplexNode build(ReentrantASTIterator pAstIter, EObject cfe) {
-		astIter = pAstIter;
-		ComplexNode cnx = new InternalFactoryDispatcherX().doSwitch(cfe);
+	static public ComplexNode build(ReentrantASTIterator astIter, EObject cfe) {
+		ComplexNode cnx = new InternalFactoryDispatcherX(astIter).doSwitch(cfe);
 		if (cnx != null) {
 			return cnx;
 		}
-		return new InternalFactoryDispatcher().doSwitch(cfe);
+		return new InternalFactoryDispatcher(astIter).doSwitch(cfe);
 	}
 
 	static private class InternalFactoryDispatcher extends N4JSSwitch<ComplexNode> {
+		private final ReentrantASTIterator astIter;
+
+		InternalFactoryDispatcher(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
 
 		@Override
 		public ComplexNode caseAbstractCaseClause(AbstractCaseClause feature) {
@@ -199,6 +202,11 @@ final public class CFEFactoryDispatcher {
 	}
 
 	static private class InternalFactoryDispatcherX extends N4JSXSwitch<ComplexNode> {
+		private final ReentrantASTIterator astIter;
+
+		InternalFactoryDispatcherX(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
 
 		@Override
 		public ComplexNode caseJSXSpreadAttribute(JSXSpreadAttribute feature) {

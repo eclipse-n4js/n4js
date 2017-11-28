@@ -22,6 +22,7 @@ import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.CatchBlock;
+import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.TryStatement;
 
 /** Creates instances of {@link ComplexNode}s for AST elements of type {@link TryStatement}s. */
@@ -39,19 +40,20 @@ class TryFactory {
 		Node finallyNode = null;
 
 		if (tryStmt.getBlock() != null) {
-			tryNode = DelNodeFactory.create(astpp, "try", tryStmt, tryStmt.getBlock());
+			tryNode = DelegatingNodeFactory.create(astpp, "try", tryStmt, tryStmt.getBlock());
 		}
 
-		if (tryStmt.getCatch() != null) {
+		if (tryStmt.getCatch() != null && tryStmt.getCatch().getBlock() != null) {
 			CatchBlock catchClause = tryStmt.getCatch();
 			CatchToken ct = new CatchToken(ControlFlowType.Throw);
-			catchNode = DelNodeFactory.create(astpp, CATCH_NODE_NAME, tryStmt, catchClause.getBlock());
+			catchNode = DelegatingNodeFactory.create(astpp, CATCH_NODE_NAME, tryStmt, catchClause.getBlock());
 			catchNode.addCatchToken(ct);
 		}
 
-		if (tryStmt.getFinally() != null) {
+		if (tryStmt.getFinally() != null && tryStmt.getFinally().getBlock() != null) {
+			FinallyBlock finallyElem = tryStmt.getFinally();
 			CatchToken ct = new CatchToken(ControlFlowType.CatchesAll);
-			finallyNode = DelNodeFactory.create(astpp, FINALLY_NODE_NAME, tryStmt, tryStmt.getFinally().getBlock());
+			finallyNode = DelegatingNodeFactory.create(astpp, FINALLY_NODE_NAME, tryStmt, finallyElem.getBlock());
 			finallyNode.addCatchToken(ct);
 		}
 

@@ -50,16 +50,16 @@ class ForFactory {
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
-				Node initNode = DelNodeFactory.create(astpp, "decl_" + i, forStmt, vdob);
+				Node initNode = DelegatingNodeFactory.create(astpp, "decl_" + i, forStmt, vdob);
 				declNodes.add(initNode);
 				i++;
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = DelNodeFactory.create(astpp, "inits", forStmt, forStmt.getInitExpr());
+			Node initNode = DelegatingNodeFactory.create(astpp, "inits", forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
-		Node expressionNode = DelNodeFactory.create(astpp, "expression", forStmt, forStmt.getExpression());
+		Node expressionNode = DelegatingNodeFactory.create(astpp, "expression", forStmt, forStmt.getExpression());
 		Node getObjectKeysNode = null;
 		if (forInSemantics) {
 			getObjectKeysNode = new HelperNode("getObjectKeys", astpp.pos(), forStmt);
@@ -69,7 +69,7 @@ class ForFactory {
 		Node nextNode = new HelperNode("next", astpp.pos(), forStmt);
 		Node bodyNode = null;
 		if (forStmt.getStatement() != null) {
-			bodyNode = DelNodeFactory.create(astpp, "body", forStmt, forStmt.getStatement());
+			bodyNode = DelegatingNodeFactory.create(astpp, "body", forStmt, forStmt.getStatement());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 
@@ -121,24 +121,22 @@ class ForFactory {
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
-				Node initNode = DelNodeFactory.create(astpp, "init_" + i, forStmt, vdob);
+				Node initNode = DelegatingNodeFactory.create(astpp, "init_" + i, forStmt, vdob);
 				initNodes.add(initNode);
 				i++;
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = DelNodeFactory.create(astpp, "inits", forStmt, forStmt.getInitExpr());
+			Node initNode = DelegatingNodeFactory.create(astpp, "inits", forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = DelNodeFactory.create(astpp, "condition", forStmt, forStmt.getExpression());
+			conditionNode = DelegatingNodeFactory.create(astpp, "condition", forStmt, forStmt.getExpression());
 		}
-		if (forStmt.getStatement() != null) {
-			bodyNode = DelNodeFactory.create(astpp, "body", forStmt, forStmt.getStatement());
-		}
+		bodyNode = DelegatingNodeFactory.createOrHelper(astpp, "body", forStmt, forStmt.getStatement());
 		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = DelNodeFactory.create(astpp, "updates", forStmt, forStmt.getUpdateExpr());
+			updatesNode = DelegatingNodeFactory.create(astpp, "updates", forStmt, forStmt.getUpdateExpr());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), forStmt);
 
@@ -172,7 +170,9 @@ class ForFactory {
 			LinkedList<Node> loopCycle = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();
 			Node loopTgt = loopCycle.getFirst();
-			cNode.connectInternalSucc(ControlFlowType.Repeat, loopSrc, loopTgt);
+			if (loopSrc != loopTgt) {
+				cNode.connectInternalSucc(ControlFlowType.Repeat, loopSrc, loopTgt);
+			}
 			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}
 

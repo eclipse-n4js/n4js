@@ -33,7 +33,7 @@ class VariableStatementFactory {
 		List<Node> varDeclNodes = new LinkedList<>();
 		for (int n = 0; n < varDeclStmt.getVarDeclsOrBindings().size(); n++) {
 			VariableDeclarationOrBinding varDOB = varDeclStmt.getVarDeclsOrBindings().get(n);
-			Node varDeclNode = DelNodeFactory.create(astpp, "declaration_" + n, varDeclStmt, varDOB);
+			Node varDeclNode = DelegatingNodeFactory.create(astpp, "declaration_" + n, varDeclStmt, varDOB);
 			varDeclNodes.add(varDeclNode);
 		}
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), varDeclStmt);
