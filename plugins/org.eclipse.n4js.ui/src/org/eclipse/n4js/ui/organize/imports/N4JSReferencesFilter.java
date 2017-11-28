@@ -28,7 +28,7 @@ public class N4JSReferencesFilter implements IReferenceFilter {
 		ResourceType resourceType = ResourceType.getResourceType(proxyInfo.eobject);
 		switch (resourceType) {
 		case N4JSX:
-			return filterN4JSX(proxyInfo);
+			return !n4jxIsToBeIgnored(proxyInfo);
 
 		default:
 			return true;
@@ -40,7 +40,7 @@ public class N4JSReferencesFilter implements IReferenceFilter {
 	 * {@link JSXElementName} or {@link JSXPropertyAttribute} than this reference should not be subject to Organize
 	 * Imports.
 	 */
-	private boolean filterN4JSX(ReferenceProxyInfo proxyInfo) {
+	private boolean n4jxIsToBeIgnored(ReferenceProxyInfo proxyInfo) {
 		// only if reference is looks like HTML tag
 		String usedName = proxyInfo.name;
 		boolean isLikeHTML = Strings.isNullOrEmpty(usedName) ? false : Character.isLowerCase(usedName.charAt(0));
