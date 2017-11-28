@@ -90,9 +90,6 @@ class ModuleNameComputer {
 
 	/** Called only for URIs without container, e.g. from tests, or built-ins. Hardcoded values should be fine for those cases.*/
 	def private createDefaultQualifiedName(URI uri) {
-		val x = uri.trimFileExtension
-		val y = x.trimFileExtension
-		println(y)
 		var segmentList = uri.trimFileExtension.segmentsList
 		val srcFolder = Math.max(segmentList.indexOf('src'), segmentList.indexOf('src-test'))
 		if (srcFolder != -1) {
