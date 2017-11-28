@@ -44,7 +44,7 @@ class ScriptFactory {
 		for (int n = 0; n < scriptElems.size(); n++) {
 			ScriptElement scriptElem = getScriptElementAt(script, n);
 			if (isControlFlowStatement(scriptElem)) {
-				Node blockNode = DelNodeFactory.create(astpp, "stmt_" + n, script, (Statement) scriptElem);
+				Node blockNode = DelegatingNodeFactory.create(astpp, "stmt_" + n, script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
 			}
 		}

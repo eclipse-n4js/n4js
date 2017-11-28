@@ -78,7 +78,7 @@ class JumpFactory {
 
 		Node expression = null;
 		if (expr != null) {
-			expression = DelNodeFactory.create(astpp, "expression", stmt, expr);
+			expression = DelegatingNodeFactory.create(astpp, "expression", stmt, expr);
 			cNode.addNode(expression);
 		}
 		Node jumpNode = new RepresentingNode("jumpNode", astpp.pos(), stmt);

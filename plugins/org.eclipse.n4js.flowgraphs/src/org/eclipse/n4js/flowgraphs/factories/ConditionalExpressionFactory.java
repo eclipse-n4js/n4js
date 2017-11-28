@@ -29,9 +29,9 @@ class ConditionalExpressionFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), condExpr);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), condExpr);
-		Node conditionNode = DelNodeFactory.create(astpp, "condition", condExpr, condExpr.getExpression());
-		Node thenNode = DelNodeFactory.create(astpp, "then", condExpr, condExpr.getTrueExpression());
-		Node elseNode = DelNodeFactory.create(astpp, "else", condExpr, condExpr.getFalseExpression());
+		Node conditionNode = DelegatingNodeFactory.create(astpp, "condition", condExpr, condExpr.getExpression());
+		Node thenNode = DelegatingNodeFactory.create(astpp, "then", condExpr, condExpr.getTrueExpression());
+		Node elseNode = DelegatingNodeFactory.create(astpp, "else", condExpr, condExpr.getFalseExpression());
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), condExpr);
 
 		cNode.addNode(entryNode);

@@ -38,7 +38,7 @@ class BlockFactory {
 		EList<Statement> stmts = block.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = DelNodeFactory.create(astpp, "stmt_" + i, block, stmt);
+			Node blockNode = DelegatingNodeFactory.create(astpp, "stmt_" + i, block, stmt);
 			blockNodes.add(blockNode);
 		}
 

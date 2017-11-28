@@ -28,8 +28,8 @@ class WithFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), withStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), withStmt);
-		Node expressionNode = DelNodeFactory.create(astpp, "expression", withStmt, withStmt.getExpression());
-		Node statementNode = DelNodeFactory.create(astpp, "statement", withStmt, withStmt.getStatement());
+		Node expressionNode = DelegatingNodeFactory.create(astpp, "expression", withStmt, withStmt.getExpression());
+		Node statementNode = DelegatingNodeFactory.create(astpp, "statement", withStmt, withStmt.getStatement());
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), withStmt);
 
 		cNode.addNode(entryNode);

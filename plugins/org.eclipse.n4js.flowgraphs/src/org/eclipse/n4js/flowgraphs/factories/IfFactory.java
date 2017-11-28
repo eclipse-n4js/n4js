@@ -28,15 +28,15 @@ class IfFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), ifStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), ifStmt);
-		Node conditionNode = DelNodeFactory.create(astpp, "condition", ifStmt, ifStmt.getExpression());
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, "condition", ifStmt, ifStmt.getExpression());
 		Node thenNode = null;
 		Node elseNode = null;
 
 		if (ifStmt.getIfStmt() != null) {
-			thenNode = DelNodeFactory.create(astpp, "then", ifStmt, ifStmt.getIfStmt());
+			thenNode = DelegatingNodeFactory.create(astpp, "then", ifStmt, ifStmt.getIfStmt());
 		}
 		if (ifStmt.getElseStmt() != null) {
-			elseNode = DelNodeFactory.create(astpp, "else", ifStmt, ifStmt.getElseStmt());
+			elseNode = DelegatingNodeFactory.create(astpp, "else", ifStmt, ifStmt.getElseStmt());
 		}
 		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), ifStmt);
 
