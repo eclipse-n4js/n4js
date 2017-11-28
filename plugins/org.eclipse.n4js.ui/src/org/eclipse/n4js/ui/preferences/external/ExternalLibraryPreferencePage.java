@@ -465,7 +465,7 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 				externalLibrariesReloadHelper.reloadLibraries(true, monitor);
 			} catch (InvocationTargetException e) {
 				multistatus.merge(
-						statusHelper.createError("Error when reloading libraries after maintanance actions.", e));
+						statusHelper.createError("Error when reloading libraries after maintenance actions.", e));
 			}
 			updateInput(viewer, store.getLocations());
 		}
