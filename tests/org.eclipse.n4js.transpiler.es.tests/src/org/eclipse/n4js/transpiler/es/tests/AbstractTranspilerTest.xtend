@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.emf.ecore.resource.ResourceSet
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.N4JSParseHelper
-import org.eclipse.n4js.generator.common.GeneratorOption
+import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedElement

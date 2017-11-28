@@ -28,8 +28,10 @@ import org.eclipse.n4js.external.ExternalLibraryWorkspace
 import org.eclipse.n4js.external.GitCloneSupplier
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider
+import org.eclipse.n4js.generator.ICompositeGenerator
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport
 import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport
+import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator
 import org.eclipse.n4js.n4jsx.ui.contentassist.ContentAssistContextFactory
 import org.eclipse.n4js.n4jsx.ui.contentassist.CustomN4JSXParser
 import org.eclipse.n4js.n4jsx.ui.editor.syntaxcoloring.ParserBasedDocumentTokenSource
@@ -642,5 +644,10 @@ class N4JSXUiModule extends AbstractN4JSXUiModule {
 	override void configureXtextEditorErrorTickUpdater(Binder binder) {
 		binder.bind(IXtextEditorCallback).annotatedWith(Names.named("IXtextEditorCallBack")).to( //$NON-NLS-1$
 				N4JSEditorErrorTickUpdater);
+	}
+
+	/** Bind N4JSX composite generator */
+	def Class<? extends ICompositeGenerator> bindICompositeGenerator() {
+		return N4JSXCompositeGenerator;
 	}
 }

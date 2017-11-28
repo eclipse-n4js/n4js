@@ -27,7 +27,7 @@ import org.eclipse.n4js.HeadlessCompilerFactory;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
-import org.eclipse.n4js.generator.common.SubGeneratorRegistry;
+import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;

@@ -14,8 +14,6 @@ import com.google.inject.Binder
 import com.google.inject.Inject
 import com.google.inject.Provider
 import com.google.inject.name.Names
-import org.eclipse.xsemantics.runtime.StringRepresentation
-import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import java.io.File
 import org.eclipse.emf.ecore.util.Diagnostician
 import org.eclipse.n4js.CancelIndicatorBaseExtractor
@@ -27,6 +25,7 @@ import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider
+import org.eclipse.n4js.generator.ICompositeGenerator
 import org.eclipse.n4js.internal.FileBasedWorkspace
 import org.eclipse.n4js.internal.InternalN4JSWorkspace
 import org.eclipse.n4js.n4jsx.internal.N4JSXRuntimeCore
@@ -45,6 +44,7 @@ import org.eclipse.n4js.parser.BadEscapementAwareMessageProvider
 import org.eclipse.n4js.parser.N4JSHiddenTokenHelper
 import org.eclipse.n4js.parser.N4JSSemicolonInjectingParser
 import org.eclipse.n4js.parser.PropertyNameAwareElementFactory
+import org.eclipse.n4js.postprocessing.N4JSPostProcessor
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore
 import org.eclipse.n4js.preferences.FileBasedExternalLibraryPreferenceStore
 import org.eclipse.n4js.projectModel.IN4JSCore
@@ -84,6 +84,8 @@ import org.eclipse.n4js.validation.N4JSElementKeywordProvider
 import org.eclipse.n4js.validation.N4JSResourceValidator
 import org.eclipse.n4js.validation.validators.N4JSProjectSetupValidator
 import org.eclipse.n4js.xsemantics.InternalTypeSystem
+import org.eclipse.xsemantics.runtime.StringRepresentation
+import org.eclipse.xsemantics.runtime.validation.XsemanticsValidatorErrorGenerator
 import org.eclipse.xtext.conversion.IValueConverterService
 import org.eclipse.xtext.conversion.impl.STRINGValueConverter
 import org.eclipse.xtext.documentation.IEObjectDocumentationProvider
@@ -118,7 +120,7 @@ import org.eclipse.xtext.util.OnChangeEvictingCache
 import org.eclipse.xtext.validation.ConfigurableIssueCodesProvider
 import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.IssueSeveritiesProvider
-import org.eclipse.n4js.postprocessing.N4JSPostProcessor
+import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -536,5 +538,10 @@ class N4JSXRuntimeModule extends AbstractN4JSXRuntimeModule {
 	 */
 	def Class<? extends XpectAwareFileExtensionCalculator> bindXpectAwareFileExtensionCalculator() {
 		return XpectAwareFileExtensionCalculator;
+	}
+
+	/** Bind N4JSX composite generator */
+	def Class<? extends ICompositeGenerator> bindICompositeGenerator() {
+		return N4JSXCompositeGenerator;
 	}
 }

@@ -21,7 +21,6 @@ Require-Bundle: com.google.inject,
  org.eclipse.n4js.utils,
  org.eclipse.n4js.tests.helper,
  org.eclipse.n4js.generator,
- org.eclipse.n4js.n4jsx.generator,
  org.eclipse.n4js.generator.common;bundle-version="0.0.1",
  org.eclipse.n4js.transpiler.es
 

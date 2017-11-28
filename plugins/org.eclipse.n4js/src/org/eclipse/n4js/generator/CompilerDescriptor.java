@@ -8,15 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.common;
+package org.eclipse.n4js.generator;
 
 import java.util.Map;
 
+import org.eclipse.n4js.utils.ComponentDescriptor;
 import org.eclipse.xtext.generator.OutputConfiguration;
 
 import com.google.common.collect.Maps;
-
-import org.eclipse.n4js.utils.ComponentDescriptor;
 
 /**
  * Value object to store the compiler configuration. It also holds the changes to the changes to the before store

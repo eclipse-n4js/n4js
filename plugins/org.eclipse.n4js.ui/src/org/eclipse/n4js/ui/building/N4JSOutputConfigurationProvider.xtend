@@ -11,11 +11,11 @@
 package org.eclipse.n4js.ui.building
 
 import com.google.inject.Inject
-import org.eclipse.n4js.generator.common.CompilerDescriptor
+import org.eclipse.n4js.generator.CompilerDescriptor
 import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import org.eclipse.xtext.generator.OutputConfiguration
-import org.eclipse.n4js.generator.common.ICompositeGenerator
+import org.eclipse.n4js.generator.ICompositeGenerator
 
 /**
  */

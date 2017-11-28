@@ -61,8 +61,8 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.N4JSCompositeGenerator;
-import org.eclipse.n4js.generator.common.SubGeneratorRegistry;
+import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -316,11 +316,11 @@ public class N4jscBase implements IApplication {
 	private SubGeneratorRegistry subGeneratorRegistry;
 
 	@Inject
-	private N4JSCompositeGenerator n4jsCompositeGenerator;
+	private ICompositeGenerator n4jsCompositeGenerator;
 
 	// TODO IDE-2493 remove workaround for multi-language problem
 	// @Inject (from N4JSX injector; will be done manually in #initInjection())
-	private N4JSXCompositeGenerator n4jsxCompositeGenerator;
+	private ICompositeGenerator n4jsxCompositeGenerator;
 
 	// TODO IDE-2493 remove duplicated singletons
 	/**
@@ -975,7 +975,7 @@ public class N4jscBase implements IApplication {
 		// created by two different injectors. As a result,
 		// two subGeneratorRegistry instances are created even though they are singletons!
 		// We are merging languages so this should go away soon.
-		this.n4jsxCompositeGenerator.setSubGeneratorRegistry(subGeneratorRegistry);
+		((N4JSXCompositeGenerator) this.n4jsxCompositeGenerator).setSubGeneratorRegistry(subGeneratorRegistry);
 		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 

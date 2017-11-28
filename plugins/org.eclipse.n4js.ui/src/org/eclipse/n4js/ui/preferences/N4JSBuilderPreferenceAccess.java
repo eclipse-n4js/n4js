@@ -13,9 +13,9 @@ package org.eclipse.n4js.ui.preferences;
 import java.util.Collection;
 
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.CompilerProperties;
-import org.eclipse.n4js.generator.common.ICompositeGenerator;
+import org.eclipse.n4js.generator.CompilerDescriptor;
+import org.eclipse.n4js.generator.CompilerProperties;
+import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;

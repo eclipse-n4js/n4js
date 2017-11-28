@@ -16,9 +16,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
+import org.eclipse.n4js.generator.ISubGenerator;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
-import org.eclipse.n4js.generator.common.ISubGenerator;
-import org.eclipse.n4js.generator.common.SubGeneratorRegistry;
+import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 

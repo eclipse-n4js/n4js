@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.ICompositeGenerator;
+import org.eclipse.n4js.generator.CompilerDescriptor;
+import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.ui.shared.contribution.ISharedStateContributionRegistry;
 

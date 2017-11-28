@@ -24,6 +24,8 @@ import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
+import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
 import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
@@ -674,5 +676,10 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends DocumentBasedDirtyResource> bindDocumentBasedDirtyResource() {
 		return PrevStateAwareDocumentBasedDirtyResource.class;
+	}
+
+	/** Bind N4JS composite generator */
+	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
+		return N4JSCompositeGenerator.class;
 	}
 }

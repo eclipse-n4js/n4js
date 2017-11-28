@@ -35,6 +35,10 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.n4js.generator.ISubGenerator
+import org.eclipse.n4js.generator.CompilerDescriptor
+import org.eclipse.n4js.generator.GeneratorOption
+import org.eclipse.n4js.generator.CompilerProperties
 
 /**
  */
