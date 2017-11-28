@@ -36,9 +36,14 @@ public class N4JSXCompositeGenerator extends N4JSCompositeGenerator {
 
 	@Inject
 	private IN4JSCore n4jsCore;
-
-	@Inject
+	// Cannot use @Inject because this instance is a global singleton
+	// TODO: FIXME after GH-368 is merged.
 	private SubGeneratorRegistry subGeneratorRegistry;
+
+	/** Set subgenerator registry. */
+	public void setSubGeneratorRegistry(SubGeneratorRegistry subGeneratorRegistry) {
+		this.subGeneratorRegistry = subGeneratorRegistry;
+	}
 
 	@Override
 	public boolean isApplicableTo(Resource input) {

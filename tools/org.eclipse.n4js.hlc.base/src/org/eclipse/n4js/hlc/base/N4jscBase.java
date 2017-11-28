@@ -970,6 +970,12 @@ public class N4jscBase implements IApplication {
 		this.n4jsxFileExtensionsRegistry = n4jsxInjector.getInstance(FileExtensionsRegistry.class);
 		this.n4jsxFileBasedWorkspace = n4jsxInjector.getInstance(FileBasedWorkspace.class);
 		this.n4jsxCompositeGenerator = n4jsxInjector.getInstance(N4JSXCompositeGenerator.class);
+		// TODO: FIXME after GH-368 is merged. OMG this is so ugly. We need this because n4jsCompositeGenerator and
+		// n4jsxCompositeGenerator are
+		// created by two different injectors. As a result,
+		// two subGeneratorRegistry instances are created even though they are singletons!
+		// We are merging languages so this should go away soon.
+		this.n4jsxCompositeGenerator.setSubGeneratorRegistry(subGeneratorRegistry);
 		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 
