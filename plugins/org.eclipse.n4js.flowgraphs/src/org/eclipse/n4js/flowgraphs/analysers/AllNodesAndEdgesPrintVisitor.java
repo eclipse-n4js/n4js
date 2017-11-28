@@ -91,7 +91,7 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 		@Override
 		protected void visit(ControlFlowElement cfe) {
 			if (isDeadCode()) {
-				allDeadNodesGV.add(cfe);
+				allDeadNodesBW.add(cfe);
 			}
 		}
 

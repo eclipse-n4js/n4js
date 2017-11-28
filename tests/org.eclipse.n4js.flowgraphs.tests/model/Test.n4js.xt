@@ -14,20 +14,23 @@
 
 
 
-function ReturnStatement2() {
-	/* XPECT allPaths ---
-		"start" -> 1 -> 2 -> 3 -> "finally" -> "end",
-		"start" -> 1 -> 2 -> return; -> "finally"
+
+
+function ReturnStatement1() {
+	/* ReturnStatement1 XPECT allEdges ---
+		"start" --> 1, 1 --> 2, 2 --> throw 2;, 3 --> "end", throw 2; -Throw-> 3
+	--- */
+	/* IfStatement2 XPECT allMergeBranches ---
 	--- */
 	"start";
 	try {
 		1;
-		if (2)
-			return;
-		3;
+		throw 2;
+
 	} finally {
-		"finally";
+	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code." at "3;"
+		3;
 	}
-	// XPECT nowarnings --> "Dead code. No execution possible after try statement." at ""end";"
+	// ThrowTryFinallyStatement1 XPECT warnings --> "Dead code. No execution possible after try statement." at ""end";"
 	"end";
 }
