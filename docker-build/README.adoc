@@ -5,6 +5,9 @@ The container comes with java & maven & node installed.
 
 == Usage
 
+Build the Docker image to compile the project within.
+The following command must be called from the checkout-base path:
+
 .Build Docker image
 [source,bash]
 ----
@@ -14,21 +17,40 @@ docker build -t n4js-build docker-build
 NOTE: The whole build process requires quite some memory.
 On systems, on which Docker runs inside a VM (i.e. Windows and macOS),
 the amount of memory available to containers must be increased to at least 6GB.
-If the build fails abruptely without any error message,
+If the build fails abruptly without any error message,
 chances are high that adding more memory to the container will help.
 
 .Run n4js Build in Docker
 [source,bash]
 ----
-docker run                                    \
-       -ti                                      \ # acquire interactive terminal
-       --rm                                     \ # remove container when not needed anymore
-       -u `id -u`:`id -g`                         \ # use local user on the host to avoid file permission issues
-       -v m2_repo:/root/.m2/repository          \ # create volume for .m2/repository (speeds up subsequent builds)
-       -v $(pwd):/workspace                     \ # mount the project sources in /workspace
-       n4js-build                               \ # name of the image from the previous step
-       mvn package -Dmaven.test.failure.ignore  \ # run the desired tool
+docker run                                      \
+       -ti                                      \
+       --rm                                     \
+       -u `id -u`:`id -g`                       \
+       -v m2_repo:/root/.m2/repository          \
+       -v $(pwd):/workspace                     \
+       n4js-build                               \
+       mvn package -Dmaven.test.failure.ignore
 ----
+
+run::
+	command to run
+-ti::
+	 acquire interactive terminal
+--rm::
+	 remove container when not needed anymore
+-u +++`id -u`:`id -g`+++::
+	 use local user on the host to avoid file permission issues
+-v m2_repo:/root/.m2/repository::
+	 create volume for .m2/repository (speeds up subsequent builds)
+-v $(pwd):/workspace::
+	 mount the project sources in /workspace
+n4js-build::
+	 name of the image from the previous step
+mvn package -Dmaven.test.failure.ignore::
+	 run the desired tool
+
+
 
 Or just use the `build.sh` script in the root directory of this project.
 
