@@ -24,10 +24,10 @@ Contributors:
    
    <extension
       point="org.eclipse.n4js.utils.fileExtensions">
-	     <transpilableFileExtensions extensions="n4js, js"/>
-	     <runnableFileExtensions extensions="n4js, js"/>
-	     <testFileExtensions extensions="n4js"/>
-	     <typableFileExtensions extensions="n4jsd, n4js, js"/>
+	     <transpilableFileExtensions extensions="n4js, js, n4jsx, n4js"/>
+	     <runnableFileExtensions extensions="n4js, js, n4jsx, jsx"/>
+	     <testFileExtensions extensions="n4js, n4jsx"/>
+	     <typableFileExtensions extensions="n4jsd, n4js, js, n4jsx, jsx"/>
 	     <rawFileExtensions extensions="js"/>
    </extension>
 </plugin>

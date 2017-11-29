@@ -448,7 +448,7 @@ Contributors:
                      checkEnabled="false">
                   <test
                         property="org.eclipse.n4js.ui.fileExtension"
-                        value="n4js, js">
+                        value="n4js, js, n4jsx, jsx">
                   </test>
                </visibleWhen>
             </command>
