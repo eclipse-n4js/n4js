@@ -20,8 +20,6 @@ import java.util.Collection;
  * Global hook for static information about the current setup. Contains file extensions, library names, and other
  * "useful" strings.
  */
-// TODO avoid GlobalGod class.
-// Break down, specialize, narrow the scope of usage.
 public final class N4JSGlobals {
 
 	/**
@@ -72,10 +70,11 @@ public final class N4JSGlobals {
 	public static final String MANGELHAFT_ASSERT = MANGELHAFT + ".assert";
 
 	/**
-	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION}, {@link #N4JS_FILE_EXTENSION},
-	 * {@link #JS_FILE_EXTENSION}.
+	 * Unmodifiable list containing {@link #N4JSD_FILE_EXTENSION},
+	 * {@link #N4JS_FILE_EXTENSION},{@link #N4JSX_FILE_EXTENSION}, {@link #JS_FILE_EXTENSION},
+	 * {@link #JSX_FILE_EXTENSION}.
 	 */
-	// TODO what about N4MF ?
+	// TODO TODO IDE-2493 multiple languages topic
 	// Clarify usage and why N4MF is excluded
 	public static final Collection<String> ALL_N4_FILE_EXTENSIONS = unmodifiableCollection(newLinkedHashSet(asList(
 			N4JS_FILE_EXTENSION,

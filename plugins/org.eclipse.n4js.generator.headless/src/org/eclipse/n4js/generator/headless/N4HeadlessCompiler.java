@@ -1103,7 +1103,6 @@ public class N4HeadlessCompiler {
 		if (ext == null)
 			return false;
 
-		// FIXME: This will not work with N4JSX.
 		return N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(ext.toLowerCase());
 	}
 
