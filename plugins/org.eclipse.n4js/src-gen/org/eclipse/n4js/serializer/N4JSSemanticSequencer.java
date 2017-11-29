@@ -497,8 +497,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.IDENTIFIER_REF:
 				if (rule == grammarAccess.getPrimaryExpressionRule()
-						|| rule == grammarAccess.getJSXElementNameExpressionRule()
-						|| action == grammarAccess.getJSXElementNameExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_0()
 						|| rule == grammarAccess.getIdentifierRefRule()
 						|| rule == grammarAccess.getLeftHandSideExpressionRule()
 						|| action == grammarAccess.getLeftHandSideExpressionAccess().getParameterizedCallExpressionTargetAction_1_0()
@@ -536,7 +534,9 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 						|| rule == grammarAccess.getAssignmentExpressionRule()
 						|| action == grammarAccess.getAssignmentExpressionAccess().getAssignmentExpressionLhsAction_4_1_0_0_0()
 						|| rule == grammarAccess.getExpressionRule()
-						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()) {
+						|| action == grammarAccess.getExpressionAccess().getCommaExpressionExprsAction_1_0()
+						|| rule == grammarAccess.getJSXElementNameExpressionRule()
+						|| action == grammarAccess.getJSXElementNameExpressionAccess().getParameterizedPropertyAccessExpressionTargetAction_1_0()) {
 					sequence_IdentifierRef(context, (IdentifierRef) semanticObject); 
 					return; 
 				}
@@ -11033,8 +11033,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns IdentifierRef
 	 *     PrimaryExpression returns IdentifierRef
-	 *     JSXElementNameExpression returns IdentifierRef
-	 *     JSXElementNameExpression.ParameterizedPropertyAccessExpression_1_0 returns IdentifierRef
 	 *     IdentifierRef<Yield> returns IdentifierRef
 	 *     IdentifierRef returns IdentifierRef
 	 *     LeftHandSideExpression<Yield> returns IdentifierRef
@@ -11595,6 +11593,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Expression.CommaExpression_1_0<In> returns IdentifierRef
 	 *     Expression.CommaExpression_1_0<Yield> returns IdentifierRef
 	 *     Expression.CommaExpression_1_0 returns IdentifierRef
+	 *     JSXElementNameExpression returns IdentifierRef
+	 *     JSXElementNameExpression.ParameterizedPropertyAccessExpression_1_0 returns IdentifierRef
 	 *
 	 * Constraint:
 	 *     id=[IdentifiableElement|BindingIdentifier]
@@ -13167,8 +13167,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Contexts:
 	 *     PrimaryExpression<Yield> returns JSXElement
 	 *     PrimaryExpression returns JSXElement
-	 *     JSXElement returns JSXElement
-	 *     JSXChild returns JSXElement
 	 *     LeftHandSideExpression<Yield> returns JSXElement
 	 *     LeftHandSideExpression returns JSXElement
 	 *     LeftHandSideExpression.ParameterizedCallExpression_1_0<Yield> returns JSXElement
@@ -13727,6 +13725,8 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     Expression.CommaExpression_1_0<In> returns JSXElement
 	 *     Expression.CommaExpression_1_0<Yield> returns JSXElement
 	 *     Expression.CommaExpression_1_0 returns JSXElement
+	 *     JSXElement returns JSXElement
+	 *     JSXChild returns JSXElement
 	 *
 	 * Constraint:
 	 *     (jsxElementName=JSXElementName jsxAttributes+=JSXAttribute* (jsxChildren+=JSXChild* jsxClosingName=JSXElementName)?)

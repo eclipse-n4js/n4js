@@ -2632,97 +2632,6 @@ norm1_PrimaryExpression:
 	)
 ;
 
-// Rule JSXElement
-ruleJSXElement:
-	'<'
-	ruleJSXElementName
-	ruleJSXAttributes
-	(
-		'>'
-		ruleJSXChild
-		*
-		ruleJSXClosingElement
-		    |
-		'/'
-		'>'
-	)
-;
-
-// Rule JSXClosingElement
-ruleJSXClosingElement:
-	'<'
-	'/'
-	ruleJSXElementName
-	'>'
-;
-
-// Rule JSXChild
-ruleJSXChild:
-	(
-		ruleJSXElement
-		    |
-		ruleJSXExpression
-	)
-;
-
-// Rule JSXExpression
-ruleJSXExpression:
-	'{'
-	ruleAssignmentExpression
-	'}'
-;
-
-// Rule JSXElementName
-ruleJSXElementName:
-	ruleJSXElementNameExpression
-;
-
-// Rule JSXElementNameExpression
-ruleJSXElementNameExpression:
-	ruleIdentifierRef
-	(
-		ruleParameterizedPropertyAccessExpressionTail
-	)*
-;
-
-// Rule JSXAttributes
-ruleJSXAttributes:
-	ruleJSXAttribute
-	*
-;
-
-// Rule JSXAttribute
-ruleJSXAttribute:
-	(
-		ruleJSXSpreadAttribute
-		    |
-		ruleJSXPropertyAttribute
-	)
-;
-
-// Rule JSXSpreadAttribute
-ruleJSXSpreadAttribute:
-	'{'
-	'...'
-	ruleAssignmentExpression
-	'}'
-;
-
-// Rule JSXPropertyAttribute
-ruleJSXPropertyAttribute:
-	ruleIdentifierName
-	(
-		'='
-		(
-			ruleStringLiteral
-			    |
-			'{'
-			ruleAssignmentExpression
-			'}'
-		)
-	)?
-;
-
 // Rule ParenExpression
 ruleParenExpression:
 	'('
@@ -8180,6 +8089,97 @@ norm1_LiteralOrComputedPropertyName:
 		norm3_AssignmentExpression
 		']'
 	)
+;
+
+// Rule JSXElement
+ruleJSXElement:
+	'<'
+	ruleJSXElementName
+	ruleJSXAttributes
+	(
+		'>'
+		ruleJSXChild
+		*
+		ruleJSXClosingElement
+		    |
+		'/'
+		'>'
+	)
+;
+
+// Rule JSXClosingElement
+ruleJSXClosingElement:
+	'<'
+	'/'
+	ruleJSXElementName
+	'>'
+;
+
+// Rule JSXChild
+ruleJSXChild:
+	(
+		ruleJSXElement
+		    |
+		ruleJSXExpression
+	)
+;
+
+// Rule JSXExpression
+ruleJSXExpression:
+	'{'
+	ruleAssignmentExpression
+	'}'
+;
+
+// Rule JSXElementName
+ruleJSXElementName:
+	ruleJSXElementNameExpression
+;
+
+// Rule JSXElementNameExpression
+ruleJSXElementNameExpression:
+	ruleIdentifierRef
+	(
+		ruleParameterizedPropertyAccessExpressionTail
+	)*
+;
+
+// Rule JSXAttributes
+ruleJSXAttributes:
+	ruleJSXAttribute
+	*
+;
+
+// Rule JSXAttribute
+ruleJSXAttribute:
+	(
+		ruleJSXSpreadAttribute
+		    |
+		ruleJSXPropertyAttribute
+	)
+;
+
+// Rule JSXSpreadAttribute
+ruleJSXSpreadAttribute:
+	'{'
+	'...'
+	ruleAssignmentExpression
+	'}'
+;
+
+// Rule JSXPropertyAttribute
+ruleJSXPropertyAttribute:
+	ruleIdentifierName
+	(
+		'='
+		(
+			ruleStringLiteral
+			    |
+			'{'
+			ruleAssignmentExpression
+			'}'
+		)
+	)?
 ;
 
 // Rule TypeRef
