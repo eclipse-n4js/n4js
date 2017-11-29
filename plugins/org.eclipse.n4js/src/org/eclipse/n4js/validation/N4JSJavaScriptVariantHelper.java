@@ -179,7 +179,7 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 	public boolean isStrictMode(EObject eobj) {
 		String fileExt = fileExtensionCalculator.getXpectAwareFileExtension(eobj);
 		if (EXT_N4JS.equals(fileExt) || EXT_N4JSD.equals(fileExt) || EXT_N4JSX.equals(fileExt)) {
-			// Both N4JS and N4JSD are strict mode
+			// N4JS, N4JSX and N4JSD are strict mode
 			return true;
 		} else
 			return super.isStrictMode(eobj);
