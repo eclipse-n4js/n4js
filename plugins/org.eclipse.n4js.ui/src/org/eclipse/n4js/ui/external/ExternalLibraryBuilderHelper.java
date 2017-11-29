@@ -25,6 +25,7 @@ import static org.eclipse.n4js.utils.resources.ExternalProjectBuildOrderProvider
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.BuildManager;
@@ -32,11 +33,15 @@ import org.eclipse.core.internal.resources.BuildConfiguration;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -243,7 +248,13 @@ public class ExternalLibraryBuilderHelper {
 	private void doPerformOperation(final IBuildConfiguration[] configs, final BuildOperation operation,
 			final IProgressMonitor monitor) {
 
-		if (!Arrays2.isEmpty(configs)) {
+		if (Arrays2.isEmpty(configs)) {
+			return;
+		}
+
+		final ISchedulingRule rule = getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
 
 			final List<ExternalProject> projects = transform(configs, config -> (ExternalProject) config.getProject());
 			final List<IBuildConfiguration> buildOrder = newArrayList(getBuildOrder(projects));
@@ -275,8 +286,22 @@ public class ExternalLibraryBuilderHelper {
 				LOGGER.info(prefix + "ing external library: " + project.getName());
 				operation.run(this, project, subMonitor.newChild(1));
 			}
+		} finally {
+			Job.getJobManager().endRule(rule);
 		}
+	}
 
+	/**
+	 * Returns the {@link ISchedulingRule scheduling rule} used by {@link ExternalLibraryBuilderHelper} while
+	 * {@link #clean(IBuildConfiguration[], IProgressMonitor) cleaning} or
+	 * {@link #build(IBuildConfiguration[], IProgressMonitor) building} external libraries.
+	 *
+	 * This method corresponds to {@link IncrementalProjectBuilder#getRule(int, Map)}.
+	 */
+	public ISchedulingRule getRule() {
+		// FIXME add comment explaining rationale of this scheduling rule
+		return ResourcesPlugin.getWorkspace().getRoot();
+		// return ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(); // FIXME explain why not using this
 	}
 
 	/**
