@@ -164,8 +164,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		} catch (Error ex) {
 			if (context !== null && context.eResource.errors.empty) {
 				throw ex;
+			}else{
+				// swallow exception, we got a parse error anyway
 			}
-		// swallow exception, we got a parse error anyway
 		}
 
 		return IScope.NULLSCOPE;
