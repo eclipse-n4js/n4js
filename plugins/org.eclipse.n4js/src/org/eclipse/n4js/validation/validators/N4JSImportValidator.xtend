@@ -22,7 +22,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4jsx.helpers.ReactHelper
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.organize.imports.ImportProvidedElement
 import org.eclipse.n4js.organize.imports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef

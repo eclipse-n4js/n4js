@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXElementName
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4jsx.helpers.ReactHelper
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.UnknownTypeRef
 import org.eclipse.n4js.utils.ResourceType

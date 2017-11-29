@@ -4,11 +4,11 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4jsx.helpers
+package org.eclipse.n4js.n4jsx
 
 import com.google.inject.Inject
 import java.io.File
@@ -41,10 +41,10 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
  * for calculating types related to React (e.g. of props property) etc.
  */
 class ReactHelper {
-	@Inject	protected N4JSTypeSystem ts
-	@Inject protected TypeSystemHelper tsh
-	@Inject	private IResourceScopeCache resourceScopeCacheHelper
-	@Inject IScopeProvider scopeProvider;
+	@Inject private N4JSTypeSystem ts
+	@Inject private TypeSystemHelper tsh
+	@Inject private IResourceScopeCache resourceScopeCacheHelper
+	@Inject private IScopeProvider scopeProvider;
 
 	public final static String REACT_PROJECT_ID = "react"
 	public final static String REACT_FILE_NAME = "index"
@@ -54,7 +54,8 @@ class ReactHelper {
 	public final static String REACT_NAMESPACE = REACT_PROJECT_ID.toFirstUpper;
 	public final static String REACT_SCOPE_PREFIX = REACT_FILE_NAME
 	public final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
-	public final static String REACT_DEFINITION_FILE = REACT_PROJECT_ID + File.separatorChar + REACT_FILE_NAME + "." + N4JSGlobals.N4JSD_FILE_EXTENSION
+	public final static String REACT_DEFINITION_FILE = REACT_PROJECT_ID + File.separatorChar + REACT_FILE_NAME + "." +
+		N4JSGlobals.N4JSD_FILE_EXTENSION
 
 	/**
 	 * Check if a module is a React module.
@@ -65,7 +66,7 @@ class ReactHelper {
 
 	/**
 	 * Look up React.Element in the index.
-	 *
+	 * 
 	 * @param context the EObject serving the context to look for React.Element.
 	 */
 	def public TClassifier lookUpReactElement(EObject context) {
@@ -75,7 +76,7 @@ class ReactHelper {
 
 	/**
 	 * Look up React.Component in the index.
-	 *
+	 * 
 	 * @param context the EObject serving the context to look for React.Component.
 	 */
 	def public TClassifier lookUpReactComponent(EObject context) {
@@ -85,7 +86,7 @@ class ReactHelper {
 
 	/**
 	 * Lookup React component/element type. For increased efficiency, the found results are cached.
-	 *
+	 * 
 	 * @param context the EObject serving the context to look for React classifiers.
 	 * @param reactClassifierName the name of React classifier.
 	 */
@@ -94,11 +95,11 @@ class ReactHelper {
 		val String key = REACT_KEY + "." + reactClassifierName;
 		return resourceScopeCacheHelper.get(key, resource, [
 			val tModule = lookUpReactTModule(resource);
-			if (tModule !== null) {
-				val tClassifier = tModule.topLevelTypes.filter(TClassifier).findFirst[name==reactClassifierName];
-				return tClassifier;
-			}
-			return null;
+			if (tModule === null)
+				return null;
+
+			val tClassifier = tModule.topLevelTypes.filter(TClassifier).findFirst[name == reactClassifierName];
+			return tClassifier;
 		]);
 	}
 
@@ -118,7 +119,7 @@ class ReactHelper {
 
 	/**
 	 * Calculate the type that an JSX element is binding to, usually class/function type
-	 *
+	 * 
 	 * @param jsxElem the input JSX element
 	 * @return the typeref that the JSX element is binding to and null if not found
 	 */
@@ -126,17 +127,16 @@ class ReactHelper {
 		val expr = jsxElem.jsxElementName.expression;
 		val G = expr.newRuleEnvironment;
 		val exprResult = ts.type(G, expr);
-		if (exprResult.failed) {
+		if (exprResult.failed)
 			return null;
-		} else {
-			return exprResult.value;
-		}
+
+		return exprResult.value;
 	}
 
 	/**
 	 * Calculate the "props" type of an JSX element. It is either the first type parameter of React.Component class or
 	 * the type of the first parameter of a functional React component
-	 *
+	 * 
 	 * @param jsxElement the input JSX element
 	 * @return the typeref if exists and null otherwise
 	 */
@@ -158,7 +158,8 @@ class ReactHelper {
 			tsh.addSubstitutions(G, TypeUtils.createTypeRef(tclass));
 			// Substitute type variables in the 'props' and return the result
 			// Note: after substTypeVariablesInTypeRef is called, the rule environment G is unchanged so do not ask G for result as this caused bug IDE-2540
-			val reactComponentPropsTypeRef = ts.substTypeVariablesInTypeRef(G, TypeUtils.createTypeRef(reactComponentProps));
+			val reactComponentPropsTypeRef = ts.substTypeVariablesInTypeRef(G,
+				TypeUtils.createTypeRef(reactComponentProps));
 			return reactComponentPropsTypeRef;
 
 		} else if (exprTypeRef instanceof FunctionTypeExprOrRef) {
@@ -173,14 +174,13 @@ class ReactHelper {
 
 	/**
 	 * Return the type of a field or return type of a getter.
-	 *
+	 * 
 	 * @param member MUST be either a field or getter (otherwise an exception is thrown).
 	 */
 	def public TypeRef typeRefOfFieldOrGetter(TMember member, TypeRef context) {
-		if (member instanceof TField || member instanceof TGetter) {
+		if (member instanceof TField || member instanceof TGetter)
 			return ts.tau(member, context);
-		} else {
-			throw new IllegalArgumentException(member + " must be either a TField or TGetter");
-		}
+
+		throw new IllegalArgumentException(member + " must be either a TField or TGetter");
 	}
 }
