@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.CompositeGenerator;
 import org.eclipse.n4js.generator.common.CompilerDescriptor;
 import org.eclipse.n4js.generator.common.GeneratorException;
@@ -1097,13 +1096,15 @@ public class N4HeadlessCompiler {
 	 * @return <code>true</code> if the resource with the given URI should be loaded and <code>false</code> otherwise
 	 */
 	private boolean shouldLoadResource(final URI uri) {
-		if (uri == null)
+		ResourceType resourceType = ResourceType.getResourceType(uri);
+		switch (resourceType) {
+		case UNKOWN:
 			return false;
-		final String ext = uri.fileExtension();
-		if (ext == null)
+		case N4MF:
 			return false;
-
-		return N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(ext.toLowerCase());
+		default:
+			return true;
+		}
 	}
 
 	/**

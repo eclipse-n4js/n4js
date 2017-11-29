@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSRuntimeCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -142,15 +141,6 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		}
 	}
 
-	/**
-	 * Return true if the URI is a recognized N4JS file. Sub-languages should override this method to provide additional
-	 * file extensions!
-	 */
-	protected boolean isN4File(final URI uri) {
-		final String ext = uri != null ? uri.fileExtension() : null;
-		return N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(ext);
-	}
-
 	private void attachResourceDescriptionsData(ResourceSet resourceSet) {
 		installIndex(resourceSet);
 	}
@@ -201,6 +191,33 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 	 */
 	protected boolean isJsFile(URI uri) {
 		ResourceType resourceType = ResourceType.getResourceType(uri);
-		return resourceType.equals(ResourceType.JS) || resourceType.equals(ResourceType.JSX);
+		switch (resourceType) {
+		case JS:
+			return true;
+		case JSX:
+			return true;
+		default:
+			return false;
+		}
 	}
+
+	/**
+	 * Check for non-JS, non-N4MF known files.
+	 *
+	 * @param uri
+	 *            to test
+	 * @boolean if ends in .js or .js.xt
+	 */
+	private boolean isN4File(final URI uri) {
+		ResourceType resourceType = ResourceType.getResourceType(uri);
+		switch (resourceType) {
+		case UNKOWN:
+			return false;
+		case N4MF:
+			return false;
+		default:
+			return true;
+		}
+	}
+
 }
