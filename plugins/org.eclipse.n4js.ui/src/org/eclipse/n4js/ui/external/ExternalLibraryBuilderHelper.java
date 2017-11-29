@@ -40,6 +40,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
@@ -168,6 +169,8 @@ public class ExternalLibraryBuilderHelper {
 
 	/**
 	 * Full builds the projects given as an array of build configuration.
+	 * <p>
+	 * For information on locking see {@link #getRule()}.
 	 *
 	 * @param buildConfigs
 	 *            the build configurations representing the projects to be built.
@@ -235,6 +238,8 @@ public class ExternalLibraryBuilderHelper {
 	/**
 	 * Performs a clean (without rebuild) on the projects given as an array of build configuration. The clean order is
 	 * identical with the order of the elements in the {@code buildOrder} argument.
+	 * <p>
+	 * For information on locking see {@link #getRule()}.
 	 *
 	 * @param buildConfigs
 	 *            the build configurations representing the the projects to be cleaned.
@@ -295,13 +300,26 @@ public class ExternalLibraryBuilderHelper {
 	 * Returns the {@link ISchedulingRule scheduling rule} used by {@link ExternalLibraryBuilderHelper} while
 	 * {@link #clean(IBuildConfiguration[], IProgressMonitor) cleaning} or
 	 * {@link #build(IBuildConfiguration[], IProgressMonitor) building} external libraries.
-	 *
+	 * <p>
+	 * Clients that want to use a custom scheduling rule around several invocations of the clean/build methods of
+	 * {@code ExternalLibraryBuilderHelper} must use a scheduling rule at least as wide as the rule returned by this
+	 * method (custom rule must "contain" rule returned by this method); otherwise an {@link IllegalArgumentException}
+	 * will be thrown as per specification of method {@link IJobManager#beginRule(ISchedulingRule, IProgressMonitor)
+	 * beginRule()}. However, this is optional, i.e. client code need not use a custom scheduling rule at all if there
+	 * is only a single call to a clean/build method or if no locking is required between subsequent calls.
+	 * <p>
 	 * This method corresponds to {@link IncrementalProjectBuilder#getRule(int, Map)}.
 	 */
 	public ISchedulingRule getRule() {
-		// FIXME add comment explaining rationale of this scheduling rule
+		// Rationale for using workspace root as scheduling rule:
+		// 1) the external libraries are not in the ordinary Eclipse workspace, so in theory it would be tempting to say
+		// we do not need a lock on the workspace; however, when cleaning/building external libraries we use the Xtext
+		// builder and because it is working on state shared across the entire Eclipse instance (e.g. the singleton
+		// QueuedBuildData), we have to make sure no other Xtext build is running in parallel while we are building
+		// the external libraries. Otherwise we might run into ConcurrentModificationExcpetions, etc.
+		// 2) we do not use IResourceRuleFactory#buildRule() because we want to control the scope of the scheduling rule
+		// ourselves to make sure no other build is happening anywhere at the same time (within same Eclipse instance).
 		return ResourcesPlugin.getWorkspace().getRoot();
-		// return ResourcesPlugin.getWorkspace().getRuleFactory().buildRule(); // FIXME explain why not using this
 	}
 
 	/**
