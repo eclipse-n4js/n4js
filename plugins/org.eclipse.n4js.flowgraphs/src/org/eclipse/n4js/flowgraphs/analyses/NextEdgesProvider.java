@@ -220,6 +220,8 @@ abstract class NextEdgesProvider {
 			return 2;
 		case LoopReenter:
 			return 1;
+		case LoopInfinite:
+			return 1;
 		default:
 			return -1;
 		}

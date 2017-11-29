@@ -174,14 +174,12 @@ class ForFactory {
 			nodes.add(entryNode);
 			nodes.addAll(initNodes);
 			Node beforeBodyNode = ListUtils.filterNulls(nodes).getLast();
-			cNode.connectInternalSucc(beforeBodyNode, bodyNode, loopCatchNode, updatesNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopEnter, beforeBodyNode, bodyNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
 
 			LinkedList<Node> loopCycle = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();
-			Node loopTgt = loopCycle.getFirst();
-			if (loopSrc != loopTgt) {
-				cNode.connectInternalSucc(ControlFlowType.LoopEnter, loopSrc, loopTgt);
-			}
+			cNode.connectInternalSucc(ControlFlowType.LoopInfinite, loopSrc, bodyNode);
 			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}
 

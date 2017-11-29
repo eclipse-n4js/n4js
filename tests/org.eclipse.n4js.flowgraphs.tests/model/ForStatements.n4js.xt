@@ -27,27 +27,17 @@
 function ForStatement1() {
 	// ForStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement1 XPECT allEdges ---
-		"start" --> ;, ; -LoopEnter-> ;
+		"start" -LoopEnter-> ;, ; -LoopInfinite-> ;
 	--- */
 	/* ForStatement1 XPECT allBranches ---
-		B0: "start" -> ;[B1|b2],
-		B1: [B0] -> ;[B3|b4],
-		B3: [B1] -> ;[b5],
-		b2: [B0] -> [b6],
-		b4: [B1] -> [b6],
-		b5: [B3] -> [b6],
-		b6: [b2|b4|b5]"end"
+		B0: "start" -> ;[B1|b2], B1: [B0] -> ;[b3], b2: [B0] -> [b4], b3: [B1] -> [b4],
+		b4: [b2|b3]"end"
 	--- */
 	/* ForStatement1 backward XPECT allBranches direction 'Backward' ---
-		B1: [b0] -> ;[B2|B3],
-		B2: [B1] -> [B6],
-		B3: [B1] -> ;[B4|B5],
-		B4: [B3] -> [B6],
-		B5: [B3] -> ; -> [B6],
-		B6: [B2|B4|B5]"start",
-		b0: "end"[B1]
+		B1: [b0] -> ;[B2|B3], B2: [B1] -> [B4], B3: [B1] -> ; -> [B4],
+		B4: [B2|B3]"start", b0: "end"[B1]
 	--- */
-	// ForStatement1 XPECT allPaths --> "start" -> ; -> ; -> ;
+	// ForStatement1 XPECT allPaths --> "start" -> ; -> ;
 	// ForStatement1 backward XPECT allPaths direction 'Backward' --> "end"
 	// ForStatement1 XPECT path from '"start"' notTo '"end"' -->
 	// ForStatement1 XPECT path from '"start"' to ' ;' -->
@@ -67,27 +57,17 @@ function ForStatement1() {
 function ForStatement2() {
 	// ForStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement2 XPECT allEdges ---
-		"start" --> 5, 5 -LoopEnter-> 5
+		"start" -LoopEnter-> 5, 5 -LoopInfinite-> 5
 	--- */
 	/* ForStatement2 XPECT allBranches ---
-		B0: "start" -> 5[B1|b2],
-		B1: [B0] -> 5[B3|b4],
-		B3: [B1] -> 5[b5],
-		b2: [B0] -> [b6],
-		b4: [B1] -> [b6],
-		b5: [B3] -> [b6],
-		b6: [b2|b4|b5]"end"
+		B0: "start" -> 5[B1|b2], B1: [B0] -> 5[b3], b2: [B0] -> [b4], b3: [B1] -> [b4],
+		b4: [b2|b3]"end"
 	--- */
 	/* ForStatement2 backward XPECT allBranches direction 'Backward' ---
-		B1: [b0] -> 5[B2|B3],
-		B2: [B1] -> [B6],
-		B3: [B1] -> 5[B4|B5],
-		B4: [B3] -> [B6],
-		B5: [B3] -> 5 -> [B6],
-		B6: [B2|B4|B5]"start",
-		b0: "end"[B1]
+		B1: [b0] -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 5 -> [B4],
+		B4: [B2|B3]"start", b0: "end"[B1]
 	--- */
-	// ForStatement2 XPECT allPaths --> "start" -> 5 -> 5 -> 5
+	// ForStatement2 XPECT allPaths --> "start" -> 5 -> 5
 	// ForStatement2 backward XPECT allPaths direction 'Backward' --> "end"
 	// ForStatement2 XPECT path from '"start"' notTo '"end"' -->
 	// ForStatement2 XPECT path from '"start"' to '5' -->
@@ -159,27 +139,17 @@ function ForStatement3() {
 function ForStatement4() {
 	// ForStatement4 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement4 XPECT allEdges ---
-		"start" --> 1, 1 --> 5, 3 -LoopEnter-> 5, 5 --> 3
+		"start" --> 1, 1 -LoopEnter-> 5, 3 -LoopInfinite-> 5, 5 --> 3
 	--- */
 	/* ForStatement4 XPECT allBranches ---
-		B0: "start" -> 1 -> 5 -> 3[B1|b2],
-		B1: [B0] -> 5 -> 3[B3|b4],
-		B3: [B1] -> 5 -> 3[b5],
-		b2: [B0] -> [b6],
-		b4: [B1] -> [b6],
-		b5: [B3] -> [b6],
-		b6: [b2|b4|b5]"end"
+		B0: "start" -> 1 -> 5 -> 3[B1|b2], B1: [B0] -> 5 -> 3[b3], b2: [B0] -> [b4],
+		b3: [B1] -> [b4], b4: [b2|b3]"end"
 	--- */
 	/* ForStatement4 backward XPECT allBranches direction 'Backward' ---
-		B1: [b0] -> 3 -> 5[B2|B3],
-		B2: [B1] -> [B6],
-		B3: [B1] -> 3 -> 5[B4|B5],
-		B4: [B3] -> [B6],
-		B5: [B3] -> 3 -> 5 -> [B6],
-		B6: [B2|B4|B5]1 -> "start",
-		b0: "end"[B1]
+		B1: [b0] -> 3 -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 3 -> 5 -> [B4],
+		B4: [B2|B3]1 -> "start", b0: "end"[B1]
 	--- */
-	// ForStatement4 XPECT allPaths --> "start" -> 1 -> 5 -> 3 -> 5 -> 3 -> 5 -> 3
+	// ForStatement4 XPECT allPaths --> "start" -> 1 -> 5 -> 3 -> 5 -> 3
 	// ForStatement4 backward XPECT allPaths direction 'Backward' --> "end"
 	// ForStatement4 XPECT path from '"start"' notTo '"end"' -->
 	// ForStatement4 XPECT path from '3' to '5' -->
@@ -189,7 +159,7 @@ function ForStatement4() {
 	// ForStatement4 XPECT succs at '"start"' --> 1
 	// ForStatement4 XPECT succs at '1' --> 5
 	// ForStatement4 XPECT succs at '5' --> 3
-	// ForStatement4 XPECT succs type 'LoopEnter' at '3' --> 5
+	// ForStatement4 XPECT succs type 'LoopInfinite' at '3' --> 5
 	// ForStatement4 XPECT preds at 'for' --> "start"
 	// ForStatement4 XPECT succs at 'for' --> "end"
 	"start";
@@ -303,34 +273,24 @@ function ForStatement6() {
 function ForStatement7() {
 	// ForStatement7 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement7 XPECT allEdges ---
-		"start" --> 5, 3 -LoopEnter-> 5, 5 --> 3
+		"start" -LoopEnter-> 5, 3 -LoopInfinite-> 5, 5 --> 3
 	--- */
 	/* ForStatement7 XPECT allBranches ---
-		B0: "start" -> 5 -> 3[B1|b2],
-		B1: [B0] -> 5 -> 3[B3|b4],
-		B3: [B1] -> 5 -> 3[b5],
-		b2: [B0] -> [b6],
-		b4: [B1] -> [b6],
-		b5: [B3] -> [b6],
-		b6: [b2|b4|b5]"end"
+		B0: "start" -> 5 -> 3[B1|b2], B1: [B0] -> 5 -> 3[b3], b2: [B0] -> [b4],
+		b3: [B1] -> [b4], b4: [b2|b3]"end"
 	--- */
 	/* ForStatement7 backward XPECT allBranches direction 'Backward' ---
-		B1: [b0] -> 3 -> 5[B2|B3],
-		B2: [B1] -> [B6],
-		B3: [B1] -> 3 -> 5[B4|B5],
-		B4: [B3] -> [B6],
-		B5: [B3] -> 3 -> 5 -> [B6],
-		B6: [B2|B4|B5]"start",
-		b0: "end"[B1]
+		B1: [b0] -> 3 -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 3 -> 5 -> [B4],
+		B4: [B2|B3]"start", b0: "end"[B1]
 	--- */
-	// ForStatement7 XPECT allPaths --> "start" -> 5 -> 3 -> 5 -> 3 -> 5 -> 3
+	// ForStatement7 XPECT allPaths --> "start" -> 5 -> 3 -> 5 -> 3
 	// ForStatement7 backward XPECT allPaths direction 'Backward' --> "end"
 	// ForStatement7 XPECT path from '"start"' notTo '"end"' -->
 	// ForStatement7 XPECT path from '5' notTo '"end"' -->
 	// ForStatement7 XPECT commonPreds of '5' and '3' --> 3, 5
 	// ForStatement7 XPECT succs at '"start"' --> 5
 	// ForStatement7 XPECT succs at '5' --> 3
-	// ForStatement7 XPECT succs type 'LoopEnter' at '3' --> 5
+	// ForStatement7 XPECT succs type 'LoopInfinite' at '3' --> 5
 	// ForStatement7 XPECT preds at 'for' --> "start"
 	// ForStatement7 XPECT succs at 'for' --> "end"
 	"start";
@@ -390,27 +350,17 @@ function ForStatement8() {
 function ForStatement9() {
 	// ForStatement9 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement9 XPECT allEdges ---
-		"start" --> 1, 1 --> 5, 5 -LoopEnter-> 5
+		"start" --> 1, 1 -LoopEnter-> 5, 5 -LoopInfinite-> 5
 	--- */
 	/* ForStatement9 XPECT allBranches ---
-		B0: "start" -> 1 -> 5[B1|b2],
-		B1: [B0] -> 5[B3|b4],
-		B3: [B1] -> 5[b5],
-		b2: [B0] -> [b6],
-		b4: [B1] -> [b6],
-		b5: [B3] -> [b6],
-		b6: [b2|b4|b5]"end"
+		B0: "start" -> 1 -> 5[B1|b2], B1: [B0] -> 5[b3], b2: [B0] -> [b4],
+		b3: [B1] -> [b4], b4: [b2|b3]"end"
 	--- */
 	/* ForStatement9 backward XPECT allBranches direction 'Backward' ---
-		B1: [b0] -> 5[B2|B3],
-		B2: [B1] -> [B6],
-		B3: [B1] -> 5[B4|B5],
-		B4: [B3] -> [B6],
-		B5: [B3] -> 5 -> [B6],
-		B6: [B2|B4|B5]1 -> "start",
-		b0: "end"[B1]
+		B1: [b0] -> 5[B2|B3], B2: [B1] -> [B4], B3: [B1] -> 5 -> [B4],
+		B4: [B2|B3]1 -> "start", b0: "end"[B1]
 	--- */
-	// ForStatement9 XPECT allPaths --> "start" -> 1 -> 5 -> 5 -> 5
+	// ForStatement9 XPECT allPaths --> "start" -> 1 -> 5 -> 5
 	// ForStatement9 backward XPECT allPaths direction 'Backward' --> "end"
 	// ForStatement9 XPECT path from '"start"' notTo '"end"' -->
 	// ForStatement9 XPECT path from '5' notTo '"end"' -->
@@ -1086,36 +1036,19 @@ function ForStatementContinue3() {
 function ForStatementContinue4() {
 	// ForStatementContinue4 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementContinue4 XPECT allEdges ---
-		"start" --> continue;, continue; -Continue|LoopEnter-> continue;
+		"start" -LoopEnter-> continue;, continue; -Continue|LoopInfinite-> continue;
 	--- */
 	/* ForStatementContinue4 XPECT allBranches ---
-		B0: "start" -> continue;[b1|B2], B12: [B9][B13], B13: [b11|B12][b14],
-		B16: [b5|b15], B2: [B0] -> [B3], B3: [b1|B2][B4|b5], B4: [B3]continue;[b6|B7],
-		B7: [B4] -> [B8], B8: [b6|B7][B9|b10], B9: [B8]continue;[b11|B12], b10: [B8] ->  -> [b15],
-		b11: [B9][B13], b14: [B13] ->  -> [b15], b15: [b10|b14]"end"[B16], b1: [B0] -> [B3],
-		b5: [B3] ->  -> "end"[B16], b6: [B4] -> [B8]
+		B0: "start" -> continue;[b1|B2], B10: [b5|b9]"end", B2: [B0] -> [B3],
+		B3: [b1|B2][B4|b5], B4: [B3]continue;[b6|B7], B7: [B4][B8], B8: [b6|B7][b9], b1: [B0] -> [B3],
+		b5: [B3] ->  -> [B10], b6: [B4][B8], b9: [B8] ->  -> [B10]
 	--- */
 	/* ForStatementContinue4 backward XPECT allBranches direction 'Backward' ---
-		B10: [b9] -> [B11],
-		B11: [B8|B10]continue;[B12|B13],
-		B12: [B11] -> [B18],
-		B13: [B11][B14|b15],
-		B14: [B13] -> [B17],
-		B16: [b15] -> [B17],
-		B17: [B14|B16]continue; -> [B18],
-		B18: [B6|B12|B17]"start",
-		B1: [b0][B2|b3], B2: [B1] -> [B5],
-		B4: [b3] -> [B5],
-		B5: [B2|B4]continue;[B6|B7],
-		B6: [B5] -> [B18],
-		B7: [B5][B8|b9],
-		B8: [B7] -> [B11],
-		b0: "end"[B1],
-		b15: [B13][B16],
-		b3: [B1][B4],
-		b9: [B7][B10]
+		B10: [b9] -> [B11], B11: [B8|B10]continue; -> [B12], B12: [B6|B11]"start",
+		B1: [b0][B2|b3], B2: [B1] -> [B5], B4: [b3] -> [B5], B5: [B2|B4]continue;[B6|B7],
+		B6: [B5] -> [B12], B7: [B5][B8|b9], B8: [B7] -> [B11], b0: "end"[B1], b3: [B1][B4], b9: [B7][B10]
 	--- */
-	// ForStatementContinue4 XPECT allPaths --> "start" -> continue; -> continue; -> continue;
+	// ForStatementContinue4 XPECT allPaths --> "start" -> continue; -> continue;
 	// ForStatementContinue4 backward XPECT allPaths direction 'Backward' --> "end"
 	// ForStatementContinue4 XPECT path from '"start"' notTo '"end"' -->
 	// ForStatementContinue4 XPECT path from 'continue;' to 'continue;' -->

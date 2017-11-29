@@ -22,6 +22,7 @@ import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
+import org.eclipse.n4js.n4jsx.n4JSX.JSXElement;
 import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
@@ -97,6 +98,16 @@ final public class OrderedEContentProvider {
 	}
 
 	static private class InternalFactoryDispatcherX extends N4JSXSwitch<List<EObject>> {
-		// stub for future order adjustments in N4JSX elements
+
+		// TODO: Remove this and change order in N4JSX.ecore
+		@Override
+		public List<EObject> caseJSXElement(JSXElement feature) {
+			List<EObject> orderedEContents = new LinkedList<>();
+			orderedEContents.add(feature.getJsxElementName());
+			orderedEContents.addAll(feature.getJsxAttributes());
+			orderedEContents.addAll(feature.getJsxChildren());
+			orderedEContents.add(feature.getJsxClosingName());
+			return orderedEContents;
+		}
 	}
 }

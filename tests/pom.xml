@@ -67,6 +67,12 @@ Contributors:
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
 
+		
+		<!-- flow graph tests -->
+		<module>org.eclipse.n4js.flowgraph.tests</module>
+		<module>org.eclipse.n4js.flowgraph.ui.tests</module>
+
+
 		<!-- ************************************** JUnit Plugin Tests -->
 
 		<!-- JS tests -->

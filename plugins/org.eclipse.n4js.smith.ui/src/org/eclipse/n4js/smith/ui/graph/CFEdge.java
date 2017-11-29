@@ -81,6 +81,7 @@ public class CFEdge extends Edge {
 				switch (cfType) {
 				case LoopEnter:
 				case LoopReenter:
+				case LoopInfinite:
 				case Break:
 				case Continue:
 				case Return:
@@ -216,6 +217,7 @@ public class CFEdge extends Edge {
 			case Throw:
 			case LoopEnter:
 			case LoopReenter:
+			case LoopInfinite:
 				if (!label.isEmpty())
 					label += "|";
 				label += cfType.name();
