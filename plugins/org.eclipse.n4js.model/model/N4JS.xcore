@@ -2217,14 +2217,9 @@ class JSXSpreadAttribute extends JSXAttribute {
 	contains Expression expression
 }
 
-
 class JSXElement extends Expression, JSXChild {
 	contains JSXElementName jsxElementName
-	contains JSXElementName jsxClosingName
 	contains JSXAttribute[] jsxAttributes
 	contains JSXChild[] jsxChildren
+	contains JSXElementName jsxClosingName
 }
-
-
-
-

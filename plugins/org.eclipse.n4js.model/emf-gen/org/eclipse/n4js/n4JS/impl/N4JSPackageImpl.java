@@ -6294,7 +6294,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getJSXElement_JsxClosingName() {
+	public EReference getJSXElement_JsxAttributes() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(1);
 	}
 
@@ -6303,7 +6303,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getJSXElement_JsxAttributes() {
+	public EReference getJSXElement_JsxChildren() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(2);
 	}
 
@@ -6312,7 +6312,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EReference getJSXElement_JsxChildren() {
+	public EReference getJSXElement_JsxClosingName() {
 		return (EReference)jsxElementEClass.getEStructuralFeatures().get(3);
 	}
 
@@ -7188,9 +7188,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		jsxElementEClass = createEClass(JSX_ELEMENT);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ELEMENT_NAME);
-		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_ATTRIBUTES);
 		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CHILDREN);
+		createEReference(jsxElementEClass, JSX_ELEMENT__JSX_CLOSING_NAME);
 
 		// Create enums
 		variableStatementKeywordEEnum = createEEnum(VARIABLE_STATEMENT_KEYWORD);
@@ -8336,9 +8336,9 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEClass(jsxElementEClass, JSXElement.class, "JSXElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getJSXElement_JsxElementName(), this.getJSXElementName(), null, "jsxElementName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxAttributes(), this.getJSXAttribute(), null, "jsxAttributes", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 		initEReference(getJSXElement_JsxChildren(), this.getJSXChild(), null, "jsxChildren", null, 0, -1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getJSXElement_JsxClosingName(), this.getJSXElementName(), null, "jsxClosingName", null, 0, 1, JSXElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		// Initialize enums and add enum literals
 		initEEnum(variableStatementKeywordEEnum, VariableStatementKeyword.class, "VariableStatementKeyword");

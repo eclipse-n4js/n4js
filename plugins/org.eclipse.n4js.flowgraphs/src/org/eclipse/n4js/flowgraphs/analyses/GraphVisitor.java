@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
-	private boolean lastVisitedCFEIsDead = false;
 
 	/** see {@link GraphVisitorInternal#GraphVisitorInternal(Mode...)} */
 	protected GraphVisitor(Mode... modes) {
@@ -41,7 +40,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	final protected void visit(Node node) {
 		if (node instanceof RepresentingNode) {
 			ControlFlowElement cfe = node.getRepresentedControlFlowElement();
-			lastVisitedCFEIsDead = node.isUnreachable();
 			visit(cfe);
 		}
 	}
@@ -73,16 +71,6 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	 */
 	protected void visit(ControlFlowElement cfe) {
 		// overwrite me
-	}
-
-	/** @return true iff the last visited {@link ControlFlowElement} was not dead. */
-	final public boolean isLiveCFE() {
-		return !lastVisitedCFEIsDead;
-	}
-
-	/** @return true iff the last visited {@link ControlFlowElement} was dead. */
-	final public boolean isDeadCFE() {
-		return lastVisitedCFEIsDead;
 	}
 
 }

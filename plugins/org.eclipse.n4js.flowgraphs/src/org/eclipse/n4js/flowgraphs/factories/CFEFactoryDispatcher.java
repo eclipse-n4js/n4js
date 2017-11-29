@@ -48,17 +48,20 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
  * {@link EObject}s.
  */
 final public class CFEFactoryDispatcher {
-	static private ReentrantASTIterator astIter;
 
 	/**
 	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
-	static public ComplexNode build(ReentrantASTIterator pAstIter, EObject cfe) {
-		astIter = pAstIter;
-		return new InternalFactoryDispatcher().doSwitch(cfe);
+	static public ComplexNode build(ReentrantASTIterator astIter, EObject cfe) {
+		return new InternalFactoryDispatcher(astIter).doSwitch(cfe);
 	}
 
 	static private class InternalFactoryDispatcher extends N4JSSwitch<ComplexNode> {
+		private final ReentrantASTIterator astIter;
+
+		InternalFactoryDispatcher(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
 
 		@Override
 		public ComplexNode caseAbstractCaseClause(AbstractCaseClause feature) {

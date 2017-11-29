@@ -142,9 +142,9 @@ public class GraphVisitorGuideInternal {
 	}
 
 	private void mergeEdgeGuides() {
-		LinkedList<EdgeGuide> joinGuideGroup = guideWorklist.getJoinGroups();
+		List<EdgeGuide> joinGuideGroup = guideWorklist.getJoinGroups();
 		if (!joinGuideGroup.isEmpty()) {
-			EdgeGuide firstEG = joinGuideGroup.getFirst();
+			EdgeGuide firstEG = joinGuideGroup.get(0);
 			Node endNode = firstEG.getNextNode(); // end node is the same of all EGs in the list
 			for (EdgeGuide eg : joinGuideGroup) {
 				Node startNode = eg.getPrevNode();

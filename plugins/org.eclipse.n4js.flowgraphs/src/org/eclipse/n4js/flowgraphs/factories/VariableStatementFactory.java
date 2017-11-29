@@ -23,7 +23,13 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 import org.eclipse.n4js.n4JS.VariableStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link VariableStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link VariableStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class VariableStatementFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, VariableStatement varDeclStmt) {
@@ -33,7 +39,7 @@ class VariableStatementFactory {
 		List<Node> varDeclNodes = new LinkedList<>();
 		for (int n = 0; n < varDeclStmt.getVarDeclsOrBindings().size(); n++) {
 			VariableDeclarationOrBinding varDOB = varDeclStmt.getVarDeclsOrBindings().get(n);
-			Node varDeclNode = DelNodeFactory.create(astpp, "declaration_" + n, varDeclStmt, varDOB);
+			Node varDeclNode = DelegatingNodeFactory.create(astpp, "declaration_" + n, varDeclStmt, varDOB);
 			varDeclNodes.add(varDeclNode);
 		}
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), varDeclStmt);

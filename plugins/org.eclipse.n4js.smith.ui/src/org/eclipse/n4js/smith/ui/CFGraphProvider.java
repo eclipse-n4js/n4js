@@ -35,6 +35,9 @@ import org.eclipse.n4js.smith.ui.graph.CFEdge;
 import org.eclipse.n4js.smith.ui.graph.Edge;
 import org.eclipse.n4js.smith.ui.graph.GraphProvider;
 import org.eclipse.n4js.smith.ui.graph.Node;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -122,13 +125,21 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 		@Override
 		protected void visit(ControlFlowElement cfe) {
-			addNode(cfe);
+			addNode(cfe, isDeadCodeNode());
 		}
 
-		private void addNode(ControlFlowElement cfe) {
+		private void addNode(ControlFlowElement cfe, boolean isDeadCode) {
 			if (!nodeMap.containsKey(cfe)) {
 				String label = FGUtils.getSourceText(cfe);
-				Node node = new Node(cfe, label, cfe.getClass().getSimpleName());
+				String description = cfe.getClass().getSimpleName();
+				Node node;
+				if (isDeadCode) {
+					Display displ = Display.getCurrent();
+					Color grey = displ.getSystemColor(SWT.COLOR_GRAY);
+					node = new Node(cfe, label, description, grey);
+				} else {
+					node = new Node(cfe, label, description);
+				}
 				nodeMap.put(cfe, node);
 			}
 		}
@@ -156,17 +167,36 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 
 			@Override
 			protected void visit(FlowEdge edge) {
-				addNode(edge.start);
-				addNode(edge.end);
+				addNode(edge.start, isDeadCodeNode());
+				addNode(edge.end, isDeadCodeNode());
 				Node sNode = nodeMap.get(edge.start);
 				Node eNode = nodeMap.get(edge.end);
-				Edge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes);
+				CFEdge cfEdge = new CFEdge("CF", sNode, eNode, edge.cfTypes, isDeadCodeNode());
 
 				if (!edgesMap.containsKey(edge.start)) {
 					edgesMap.put(edge.start, new LinkedList<>());
 				}
 				List<Edge> cfEdges = edgesMap.get(edge.start);
 				cfEdges.add(cfEdge);
+
+				removeDuplicatedDeadEdge(eNode, cfEdge, cfEdges);
+			}
+
+			private void removeDuplicatedDeadEdge(Node eNode, CFEdge cfEdge, List<Edge> cfEdges) {
+				CFEdge removeEdge = null;
+				for (Edge e : cfEdges) {
+					if (cfEdge != e && e.getEndNodes().get(0) == eNode) {
+						removeEdge = (CFEdge) e;
+						break;
+					}
+				}
+				if (removeEdge != null) {
+					if (removeEdge.isDead) {
+						cfEdges.remove(removeEdge);
+					} else {
+						cfEdges.remove(cfEdge);
+					}
+				}
 			}
 
 		}

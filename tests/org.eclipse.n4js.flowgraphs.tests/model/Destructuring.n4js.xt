@@ -283,8 +283,7 @@ function Destructuring8(q) {
 	--- */
 	/* Destructuring8 XPECT allBranches ---
 		B0: "start" -> 5 -> {x: 5} -> {prop2: {x: 5}}[B1|B2],
-		B1: [B0] -> q -> {q} -> "" -> {q: ""} -> {q} = {q: ""} -> ({q} = {q: ""}) -> [B3],
-		B2: [B0] -> [B3],
+		B1: [B0] -> q -> {q} -> "" -> {q: ""} -> {q} = {q: ""} -> ({q} = {q: ""}) -> [B3], B2: [B0] -> [B3],
 		B3: [B1|B2]x = ({q} = {q: ""}) -> {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}} -> var {prop2: x = ({q} = {q: ""})} = {prop2: {x: 5}}; -> "end"
 	--- */
 	/* Destructuring8 XPECT allPaths ---
@@ -445,4 +444,3 @@ function DestructuringAssignmentPadding1(x) {
 	[,,x] = [1,2,3];
 	"end";
 }
-

@@ -22,9 +22,9 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxElementName <em>Jsx Element Name</em>}</li>
- *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxAttributes <em>Jsx Attributes</em>}</li>
  *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxChildren <em>Jsx Children</em>}</li>
+ *   <li>{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}</li>
  * </ul>
  *
  * @see org.eclipse.n4js.n4JS.N4JSPackage#getJSXElement()
@@ -59,32 +59,6 @@ public interface JSXElement extends Expression, JSXChild {
 	void setJsxElementName(JSXElementName value);
 
 	/**
-	 * Returns the value of the '<em><b>Jsx Closing Name</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Jsx Closing Name</em>' containment reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Jsx Closing Name</em>' containment reference.
-	 * @see #setJsxClosingName(JSXElementName)
-	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getJSXElement_JsxClosingName()
-	 * @model containment="true"
-	 * @generated
-	 */
-	JSXElementName getJsxClosingName();
-
-	/**
-	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Jsx Closing Name</em>' containment reference.
-	 * @see #getJsxClosingName()
-	 * @generated
-	 */
-	void setJsxClosingName(JSXElementName value);
-
-	/**
 	 * Returns the value of the '<em><b>Jsx Attributes</b></em>' containment reference list.
 	 * The list contents are of type {@link org.eclipse.n4js.n4JS.JSXAttribute}.
 	 * <!-- begin-user-doc -->
@@ -115,5 +89,31 @@ public interface JSXElement extends Expression, JSXChild {
 	 * @generated
 	 */
 	EList<JSXChild> getJsxChildren();
+
+	/**
+	 * Returns the value of the '<em><b>Jsx Closing Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Jsx Closing Name</em>' containment reference isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Jsx Closing Name</em>' containment reference.
+	 * @see #setJsxClosingName(JSXElementName)
+	 * @see org.eclipse.n4js.n4JS.N4JSPackage#getJSXElement_JsxClosingName()
+	 * @model containment="true"
+	 * @generated
+	 */
+	JSXElementName getJsxClosingName();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Jsx Closing Name</em>' containment reference.
+	 * @see #getJsxClosingName()
+	 * @generated
+	 */
+	void setJsxClosingName(JSXElementName value);
 
 } // JSXElement

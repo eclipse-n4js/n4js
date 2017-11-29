@@ -14866,22 +14866,13 @@ public interface N4JSPackage extends EPackage {
 	int JSX_ELEMENT__JSX_ELEMENT_NAME = EXPRESSION_FEATURE_COUNT + 0;
 
 	/**
-	 * The feature id for the '<em><b>Jsx Closing Name</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int JSX_ELEMENT__JSX_CLOSING_NAME = EXPRESSION_FEATURE_COUNT + 1;
-
-	/**
 	 * The feature id for the '<em><b>Jsx Attributes</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_ELEMENT__JSX_ATTRIBUTES = EXPRESSION_FEATURE_COUNT + 2;
+	int JSX_ELEMENT__JSX_ATTRIBUTES = EXPRESSION_FEATURE_COUNT + 1;
 
 	/**
 	 * The feature id for the '<em><b>Jsx Children</b></em>' containment reference list.
@@ -14890,7 +14881,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int JSX_ELEMENT__JSX_CHILDREN = EXPRESSION_FEATURE_COUNT + 3;
+	int JSX_ELEMENT__JSX_CHILDREN = EXPRESSION_FEATURE_COUNT + 2;
+
+	/**
+	 * The feature id for the '<em><b>Jsx Closing Name</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int JSX_ELEMENT__JSX_CLOSING_NAME = EXPRESSION_FEATURE_COUNT + 3;
 
 	/**
 	 * The number of structural features of the '<em>JSX Element</em>' class.
@@ -20521,17 +20521,6 @@ public interface N4JSPackage extends EPackage {
 	EReference getJSXElement_JsxElementName();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Jsx Closing Name</em>'.
-	 * @see org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName()
-	 * @see #getJSXElement()
-	 * @generated
-	 */
-	EReference getJSXElement_JsxClosingName();
-
-	/**
 	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.JSXElement#getJsxAttributes <em>Jsx Attributes</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -20552,6 +20541,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getJSXElement_JsxChildren();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName <em>Jsx Closing Name</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Jsx Closing Name</em>'.
+	 * @see org.eclipse.n4js.n4JS.JSXElement#getJsxClosingName()
+	 * @see #getJSXElement()
+	 * @generated
+	 */
+	EReference getJSXElement_JsxClosingName();
 
 	/**
 	 * Returns the meta object for enum '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}'.
@@ -25273,14 +25273,6 @@ public interface N4JSPackage extends EPackage {
 		EReference JSX_ELEMENT__JSX_ELEMENT_NAME = eINSTANCE.getJSXElement_JsxElementName();
 
 		/**
-		 * The meta object literal for the '<em><b>Jsx Closing Name</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference JSX_ELEMENT__JSX_CLOSING_NAME = eINSTANCE.getJSXElement_JsxClosingName();
-
-		/**
 		 * The meta object literal for the '<em><b>Jsx Attributes</b></em>' containment reference list feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -25295,6 +25287,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EReference JSX_ELEMENT__JSX_CHILDREN = eINSTANCE.getJSXElement_JsxChildren();
+
+		/**
+		 * The meta object literal for the '<em><b>Jsx Closing Name</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference JSX_ELEMENT__JSX_CLOSING_NAME = eINSTANCE.getJSXElement_JsxClosingName();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.VariableStatementKeyword <em>Variable Statement Keyword</em>}' enum.

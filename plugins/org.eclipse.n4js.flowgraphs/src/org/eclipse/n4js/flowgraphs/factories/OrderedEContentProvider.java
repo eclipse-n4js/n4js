@@ -19,6 +19,8 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorGuideInternal;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
@@ -27,6 +29,9 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
  * important for the {@link GraphVisitorGuideInternal} which walks through the AST in forward/backward direction.
  * Unfortunately, the correct order cannot be retrieved from the method {@link EObject#eContents()}, since it relies on
  * the Ecore model. This class adjusts this order when necessary.
+ * <p/>
+ * Wrong AST order can result in a failing asserting with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER}.
  */
 final public class OrderedEContentProvider {
 
@@ -68,6 +73,16 @@ final public class OrderedEContentProvider {
 		}
 
 		@Override
+		public List<EObject> caseVariableBinding(VariableBinding feature) {
+			List<EObject> orderedEContents = new LinkedList<>();
+			if (feature.getExpression() != null)
+				orderedEContents.add(feature.getExpression());
+			if (feature.getPattern() != null)
+				orderedEContents.add(feature.getPattern());
+			return orderedEContents;
+		}
+
+		@Override
 		public List<EObject> caseCaseClause(CaseClause feature) {
 			List<EObject> orderedEContents = new LinkedList<>();
 			orderedEContents.add(feature.getExpression());
@@ -75,6 +90,14 @@ final public class OrderedEContentProvider {
 			return orderedEContents;
 		}
 
+		@Override
+		public List<EObject> caseJSXElement(JSXElement feature) {
+			List<EObject> orderedEContents = new LinkedList<>();
+			orderedEContents.add(feature.getJsxElementName());
+			orderedEContents.addAll(feature.getJsxAttributes());
+			orderedEContents.addAll(feature.getJsxChildren());
+			orderedEContents.add(feature.getJsxClosingName());
+			return orderedEContents;
+		}
 	}
-
 }
