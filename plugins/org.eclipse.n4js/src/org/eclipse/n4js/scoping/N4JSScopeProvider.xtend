@@ -181,7 +181,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return getScopeForContext(context, reference)
 	}
 
-	/** shortcut to concrete scopes based on reference sniffing. May return {@link IScope#NULLSCOPE} if no suitable scope found */
+	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
 	private def getScopeByShortcut(EObject context, EReference reference) {
 		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
 			return new ValidatingScope(getTypeScope(context, reference, false),
