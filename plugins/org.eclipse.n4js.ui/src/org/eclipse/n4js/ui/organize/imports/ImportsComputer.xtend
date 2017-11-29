@@ -63,9 +63,6 @@ public class ImportsComputer {
 	private ImportsFactory importsFactory;
 
 	@Inject
-	private IReferenceFilter referenceFilter;
-
-	@Inject
 	private ImportProvidedElementLabelprovider importProvidedElementLabelprovider;
 
 	@Inject
@@ -83,7 +80,8 @@ public class ImportsComputer {
 	@Inject
 	private VariableVisibilityChecker varVisibilityChecker;
 	
-	@Inject private UnresolveProxyCrossRefHelper crossRef;
+	@Inject
+	private UnresolveProxyCrossRefHelper crossRef;
 
 	/** Adapter used to mark programmatically created AST-Elements without a corresponding parse tree node. */
 	private final Adapter nodelessMarker = new AdapterImpl();
@@ -201,8 +199,7 @@ public class ImportsComputer {
 		IN4JSProject contextProject, Set<String> namesThatWeBroke) {
 		val Multimap<String, ImportableObject> resolutions = LinkedHashMultimap.create();
 
-		val Iterable<ReferenceProxyInfo> unresolved = crossRef.findProxyCrossRefInfo(script).filter[referenceFilter.test(it)].
-			filter[it.eobject instanceof MemberAccess === false]
+		val Iterable<ReferenceProxyInfo> unresolved = crossRef.findProxyCrossRefInfo(script).filter[it.eobject instanceof MemberAccess === false]
 
 		val brokenNames = new HashSet<String>();
 		brokenNames.addAll(namesThatWeBroke)
