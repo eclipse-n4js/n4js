@@ -24,7 +24,7 @@ import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerTestFeatures;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerDataRecorder;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
@@ -222,16 +222,16 @@ public class FlowgraphsXpectMethod {
 	public void allMergeBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion referenceOffset) {
 
-		N4JSFlowAnalyzerTestFeatures.setEnabled(true);
+		N4JSFlowAnalyzerDataRecorder.setEnabled(true);
 		GraphVisitor gv = new DummyForwardBackwardVisitor();
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
 		getFlowAnalyzer(referenceCFE).accept(gv);
-		N4JSFlowAnalyzerTestFeatures.setEnabled(false);
+		N4JSFlowAnalyzerDataRecorder.setEnabled(false);
 		performBranchAnalysis(referenceOffset, null, referenceOffset);
 		List<String> edgeStrings = new LinkedList<>();
 
 		int groupIdx = 0;
-		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyzerTestFeatures.getMergedEdges();
+		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyzerDataRecorder.getMergedEdges();
 
 		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
 			Node startNode = pair.getKey();

@@ -46,7 +46,7 @@ public class N4JSXTest extends AbstractN4jscTest {
 		String react = wsRoot + "/react";
 		String p1Root = wsRoot + "/" + "P1";
 
-		new N4jscBase().doMain("--debug", "--verbose", "-pl", wsRoot, "-t", "projects", p1Root, react);
+		new N4jscBase().doMain("-pl", wsRoot, "-t", "projects", p1Root, react);
 		assertFilesCompiledToES(1, p1Root);
 	}
 

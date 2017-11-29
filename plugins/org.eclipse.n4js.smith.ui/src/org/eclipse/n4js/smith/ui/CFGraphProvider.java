@@ -187,6 +187,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 				for (Edge e : cfEdges) {
 					if (cfEdge != e && e.getEndNodes().get(0) == eNode) {
 						removeEdge = (CFEdge) e;
+						break;
 					}
 				}
 				if (removeEdge != null) {

@@ -18,7 +18,8 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
- * Walks in {@literal Mode#Backward} and {@literal Mode#Forward} direction through the code.
+ * Does nothing. Can be used to trigger the control flow graph to be walked through. Walks in {@literal Mode#Forward}
+ * and {@literal Mode#Backward} direction through the code.
  */
 public class DummyForwardBackwardVisitor extends GraphVisitor {
 

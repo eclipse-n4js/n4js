@@ -65,7 +65,7 @@ public class EdgeGuideMerged extends EdgeGuide {
 			branchWalkers.add(joinedWalker);
 		}
 
-		TestFeaturesPackageProxy.addMergedEdges(edgeGuides);
+		DataRecorderPackageProxy.addMergedEdges(edgeGuides);
 	}
 
 	@Override
