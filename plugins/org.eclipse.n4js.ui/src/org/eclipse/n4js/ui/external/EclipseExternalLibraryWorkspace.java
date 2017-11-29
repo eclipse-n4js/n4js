@@ -447,7 +447,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	/**
 	 * Updates the internal state based on the available external project root locations.
-	 *
 	 * <p>
 	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
 	 * available when injecting this instance.
