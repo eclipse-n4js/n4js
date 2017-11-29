@@ -870,12 +870,7 @@ public class N4jscBase implements IApplication {
 		return string == null || string.trim().length() == 0;
 	}
 
-	/**
-	 * Creates the injector for the test and injects all fields with the initialized injector.
-	 *
-	 * TODO injection setup + EMF registration performed in n4jsc.jar (i.e. in this method) requires major refactoring
-	 * (problem is that the N4JS-specific injector is used to inject 'this', i.e. an instance of class N4jsc)
-	 */
+	/** Creates the injector for the test and injects all fields with the initialized injector. */
 	private void initInjection(Properties properties) {
 
 		// STEP 1: set up language N4JS
