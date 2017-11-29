@@ -78,13 +78,13 @@ public enum ResourceType {
 		if (uri == null)
 			return UNKOWN;
 
-		ResourceType resurceType = naiveGetResourceType(uri);
+		ResourceType resourceType = naiveGetResourceType(uri);
 
-		switch (resurceType) {
+		switch (resourceType) {
 		case XT:
 			return naiveGetResourceType(uri.trimFileExtension());
 		default:
-			return resurceType;
+			return resourceType;
 		}
 	}
 
@@ -97,8 +97,8 @@ public enum ResourceType {
 		if (uri == null)
 			return false;
 
-		ResourceType resurceType = naiveGetResourceType(uri);
-		switch (resurceType) {
+		ResourceType resourceType = naiveGetResourceType(uri);
+		switch (resourceType) {
 		case XT:
 			ResourceType innerResourceType = naiveGetResourceType(uri.trimFileExtension());
 			return XT.equals(innerResourceType) == false
