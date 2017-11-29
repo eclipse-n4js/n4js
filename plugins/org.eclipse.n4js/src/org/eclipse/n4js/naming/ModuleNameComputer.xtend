@@ -68,7 +68,6 @@ class ModuleNameComputer {
 			val location = sourceContainer.location
 			if(uri.uriStartsWith(location)) {
 				var relativeURI = uri.deresolve(location.appendSegment(""))
-				 // support Xpect tests with files *.n4sj.xt and *.xt
 				if (ResourceType.xtHidesOtherExtension(uri) || (N4JSGlobals.XT_FILE_EXTENSION == uri.fileExtension.toLowerCase)) {
 					relativeURI = relativeURI.trimFileExtension.trimFileExtension
 				} else {
