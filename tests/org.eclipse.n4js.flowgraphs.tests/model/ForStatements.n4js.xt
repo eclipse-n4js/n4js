@@ -27,8 +27,7 @@
 function ForStatement1() {
 	// ForStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement1 XPECT allEdges ---
-		"start" --> ;,
-		; -Repeat-> ;
+		"start" --> ;, ; -LoopEnter-> ;
 	--- */
 	/* ForStatement1 XPECT allBranches ---
 		B0: "start" -> ;[B1|b2],
@@ -68,8 +67,7 @@ function ForStatement1() {
 function ForStatement2() {
 	// ForStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement2 XPECT allEdges ---
-		"start" --> 5,
-		5 -Repeat-> 5
+		"start" --> 5, 5 -LoopEnter-> 5
 	--- */
 	/* ForStatement2 XPECT allBranches ---
 		B0: "start" -> 5[B1|b2],
@@ -109,12 +107,8 @@ function ForStatement2() {
 function ForStatement3() {
 	// ForStatement3 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement3 XPECT allEdges ---
-		"start" --> 1,
-		1 --> 2,
-		2 -Repeat-> 5,
-		5 --> 3,
-		3 --> 2,
-		2 -Exit-> "end"
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, 5 --> 3
 	--- */
 	/* ForStatement3 XPECT allBranches ---
 		B0: "start" -> 1 -> 2[B1|B2],
@@ -152,7 +146,7 @@ function ForStatement3() {
 	// ForStatement3 XPECT succs at '"start"' --> 1
 	// ForStatement3 XPECT succs at '1' --> 2
 	// ForStatement3 XPECT succs at '2' --> 5, "end"
-	// ForStatement3 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement3 XPECT succs type 'LoopEnter' at '2' --> 5
 	// ForStatement3 XPECT succs at '5' --> 3
 	// ForStatement3 XPECT succs at '3' --> 2
 	// ForStatement3 XPECT preds at 'for' --> "start"
@@ -165,10 +159,7 @@ function ForStatement3() {
 function ForStatement4() {
 	// ForStatement4 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement4 XPECT allEdges ---
-		"start" --> 1,
-		1 --> 5,
-		5 --> 3,
-		3 -Repeat-> 5
+		"start" --> 1, 1 --> 5, 3 -LoopEnter-> 5, 5 --> 3
 	--- */
 	/* ForStatement4 XPECT allBranches ---
 		B0: "start" -> 1 -> 5 -> 3[B1|b2],
@@ -198,7 +189,7 @@ function ForStatement4() {
 	// ForStatement4 XPECT succs at '"start"' --> 1
 	// ForStatement4 XPECT succs at '1' --> 5
 	// ForStatement4 XPECT succs at '5' --> 3
-	// ForStatement4 XPECT succs type 'Repeat' at '3' --> 5
+	// ForStatement4 XPECT succs type 'LoopEnter' at '3' --> 5
 	// ForStatement4 XPECT preds at 'for' --> "start"
 	// ForStatement4 XPECT succs at 'for' --> "end"
 	"start";
@@ -210,11 +201,8 @@ function ForStatement4() {
 function ForStatement5() {
 	// ForStatement5 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement5 XPECT allEdges ---
-		"start" --> 1,
-		1 --> 2,
-		2 -Repeat-> 5,
-		5 --> 2,
-		2 -Exit-> "end"
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		5 -LoopRepeat-> 2
 	--- */
 	/* ForStatement5 XPECT allBranches ---
 		B0: "start" -> 1 -> 2[B1|B2],
@@ -252,7 +240,7 @@ function ForStatement5() {
 	// ForStatement5 XPECT succs at '"start"' --> 1
 	// ForStatement5 XPECT succs at '1' --> 2
 	// ForStatement5 XPECT succs at '2' --> 5, "end"
-	// ForStatement5 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement5 XPECT succs type 'LoopEnter' at '2' --> 5
 	// ForStatement5 XPECT succs at '5' --> 2
 	// ForStatement5 XPECT preds at 'for' --> "start"
 	// ForStatement5 XPECT succs at 'for' --> "end"
@@ -264,11 +252,8 @@ function ForStatement5() {
 function ForStatement6() {
 	// ForStatement6 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement6 XPECT allEdges ---
-		"start" --> 2,
-		2 -Repeat-> 5,
-		5 --> 3,
-		3 --> 2,
-		2 -Exit-> "end"
+		"start" --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end", 3 -LoopRepeat-> 2,
+		5 --> 3
 	--- */
 	/* ForStatement6 XPECT allBranches ---
 		B0: "start" -> 2[B1|B2],
@@ -305,7 +290,7 @@ function ForStatement6() {
 	// ForStatement6 XPECT commonPreds of '"end"' and '5' --> 2, 5
 	// ForStatement6 XPECT succs at '"start"' --> 2
 	// ForStatement6 XPECT succs at '2' --> 5, "end"
-	// ForStatement6 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement6 XPECT succs type 'LoopEnter' at '2' --> 5
 	// ForStatement6 XPECT succs at '5' --> 3
 	// ForStatement6 XPECT succs at '3' --> 2
 	// ForStatement6 XPECT preds at 'for' --> "start"
@@ -318,9 +303,7 @@ function ForStatement6() {
 function ForStatement7() {
 	// ForStatement7 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement7 XPECT allEdges ---
-		"start" --> 5,
-		5 --> 3,
-		3 -Repeat-> 5
+		"start" --> 5, 3 -LoopEnter-> 5, 5 --> 3
 	--- */
 	/* ForStatement7 XPECT allBranches ---
 		B0: "start" -> 5 -> 3[B1|b2],
@@ -347,7 +330,7 @@ function ForStatement7() {
 	// ForStatement7 XPECT commonPreds of '5' and '3' --> 3, 5
 	// ForStatement7 XPECT succs at '"start"' --> 5
 	// ForStatement7 XPECT succs at '5' --> 3
-	// ForStatement7 XPECT succs type 'Repeat' at '3' --> 5
+	// ForStatement7 XPECT succs type 'LoopEnter' at '3' --> 5
 	// ForStatement7 XPECT preds at 'for' --> "start"
 	// ForStatement7 XPECT succs at 'for' --> "end"
 	"start";
@@ -359,10 +342,7 @@ function ForStatement7() {
 function ForStatement8() {
 	// ForStatement8 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement8 XPECT allEdges ---
-		"start" --> 2,
-		2 -Repeat-> 5,
-		5 --> 2,
-		2 -Exit-> "end"
+		"start" --> 2, 2 -LoopEnter-> 5, 2 -LoopExit-> "end", 5 -LoopRepeat-> 2
 	--- */
 	/* ForStatement8 XPECT allBranches ---
 		B0: "start" -> 2[B1|B2],
@@ -398,7 +378,7 @@ function ForStatement8() {
 	// ForStatement8 XPECT commonPreds of '2' and '5' --> 2, 5
 	// ForStatement8 XPECT succs at '"start"' --> 2
 	// ForStatement8 XPECT succs at '2' --> 5, "end"
-	// ForStatement8 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatement8 XPECT succs type 'LoopEnter' at '2' --> 5
 	// ForStatement8 XPECT succs at '5' --> 2
 	// ForStatement8 XPECT preds at 'for' --> "start"
 	// ForStatement8 XPECT succs at 'for' --> "end"
@@ -410,9 +390,7 @@ function ForStatement8() {
 function ForStatement9() {
 	// ForStatement9 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatement9 XPECT allEdges ---
-		"start" --> 1,
-		1 --> 5,
-		5 -Repeat-> 5
+		"start" --> 1, 1 --> 5, 5 -LoopEnter-> 5
 	--- */
 	/* ForStatement9 XPECT allBranches ---
 		B0: "start" -> 1 -> 5[B1|b2],
@@ -453,16 +431,9 @@ function ForStatement9() {
 function ForStatementDestructuring(arr : Array<number>) {
 	// ForStatementDestructuring XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementDestructuring XPECT allEdges ---
-		"start" --> arr,
-		arr --> a4,
-		a4 --> b4,
-		b4 --> c4,
-		c4 --> [a4\,b4\,c4] = arr,
-		[a4\,b4\,c4] = arr --> 2,
-		2 -Exit-> "end",
-		2 -Repeat-> "loop",
-		"loop" --> 3,
-		3 --> 2
+		"loop" --> 3, "start" --> arr, 2 -LoopEnter-> "loop", 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, [a4\,b4\,c4] = arr --> 2, a4 --> b4, arr --> a4, b4 --> c4,
+		c4 --> [a4\,b4\,c4] = arr
 	--- */
 	/* ForStatementDestructuring XPECT allBranches ---
 		B0: "start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2[B1|B2],
@@ -473,14 +444,9 @@ function ForStatementDestructuring(arr : Array<number>) {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatementDestructuring backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> 3 -> "loop" -> 2[B3|B4],
-		B2: [B0] -> [a4\,b4\,c4] = arr -> [B7],
-		B3: [B1] -> 3 -> "loop" -> 2[B5|B6],
-		B4: [B1] -> [a4\,b4\,c4] = arr -> [B7],
-		B5: [B3] -> 3 -> "loop",
-		B6: [B3] -> [a4\,b4\,c4] = arr -> [B7],
-		B7: [B2|B4|B6]c4 -> b4 -> a4 -> arr -> "start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B7], B2: [B0] -> 3 -> "loop" -> 2[B3|B4],
+		B3: [B2] -> [B7], B4: [B2] -> 3 -> "loop" -> 2[B5|B6], B5: [B4] -> [B7], B6: [B4] -> 3 -> "loop",
+		B7: [B1|B3|B5][a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
 	--- */
 	/* ForStatementDestructuring XPECT allPaths ---
 		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "end",
@@ -511,14 +477,8 @@ function ForStatementDestructuring(arr : Array<number>) {
 function ForOfStatement1() {
 	// ForOfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForOfStatement1 XPECT allEdges ---
-		"start" --> i,
-		i --> 1,
-		1 --> 2,
-		2 --> [1\,2],
-		[1\,2] -Repeat-> 3,
-		[1\,2] -Exit-> "end",
-		3 -Repeat-> 3,
-		3 -Exit-> "end"
+		"start" --> i, 1 --> 2, 2 --> [1\,2], 3 -LoopEnter|LoopRepeat-> 3,
+		3 -LoopExit|LoopRepeat-> "end", [1\,2] -LoopEnter-> 3, [1\,2] -LoopExit-> "end", i --> 1
 	--- */
 	/* ForOfStatement1 XPECT allBranches ---
 		B0: "start" -> i -> 1 -> 2 -> [1\,2][B1|B2],
@@ -558,7 +518,7 @@ function ForOfStatement1() {
 	// ForOfStatement1 XPECT succs at 'i' --> 1
 	// ForOfStatement1 XPECT succs at '1' --> 2
 	// ForOfStatement1 XPECT succs at '2' --> [1\,2]
-	// ForOfStatement1 XPECT succs type 'Repeat' at '[1,2]' --> 3
+	// ForOfStatement1 XPECT succs type 'LoopEnter' at '[1,2]' --> 3
 	// ForOfStatement1 XPECT succs at '[1,2]' --> 3, "end"
 	// ForOfStatement1 XPECT succs at '3' --> 3, "end"
 	// ForOfStatement1 XPECT preds at 'for' --> "start"
@@ -571,14 +531,8 @@ function ForOfStatement1() {
 function ForOfStatement2(x) {
 	// ForOfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForOfStatement2 XPECT allEdges ---
-		"start" --> x,
-		x --> 1,
-		1 --> 2,
-		2 --> [1\,2],
-		[1\,2] -Repeat-> 5,
-		[1\,2] -Exit-> "end",
-		5 -Exit-> "end",
-		5 -Repeat-> 5
+		"start" --> x, 1 --> 2, 2 --> [1\,2], 5 -LoopEnter|LoopRepeat-> 5,
+		5 -LoopExit|LoopRepeat-> "end", [1\,2] -LoopEnter-> 5, [1\,2] -LoopExit-> "end", x --> 1
 	--- */
 	/* ForOfStatement2 XPECT allBranches ---
 		B0: "start" -> x -> 1 -> 2 -> [1\,2][B1|B2],
@@ -618,7 +572,7 @@ function ForOfStatement2(x) {
 	// ForOfStatement2 XPECT succs at '2' --> [1\,2]
 	// ForOfStatement2 XPECT succs at '[1,2]' --> "end", 5
 	// ForOfStatement2 XPECT succs at '5' --> "end", 5
-	// ForOfStatement2 XPECT succs type 'Repeat' at '[1,2]' --> 5
+	// ForOfStatement2 XPECT succs type 'LoopEnter' at '[1,2]' --> 5
 	// ForOfStatement2 XPECT preds at 'for' --> "start"
 	// ForOfStatement2 XPECT succs at 'for' --> "end"
 	"start";
@@ -629,15 +583,9 @@ function ForOfStatement2(x) {
 function ForOfStatementDestructuring(it : Array<Iterable2<Object,Object>>) {
 	// ForOfStatementDestructuring XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForOfStatementDestructuring XPECT allEdges ---
-		"start" --> a1,
-		a1 --> b1,
-		b1 --> c1,
-		c1 --> [a1\,b1\,c1],
-		[a1\,b1\,c1] --> it,
-		it -Repeat-> "loop",
-		it -Exit-> "end",
-		"loop" -Exit-> "end",
-		"loop" -Repeat-> "loop"
+		"loop" -LoopEnter|LoopRepeat-> "loop", "loop" -LoopExit|LoopRepeat-> "end",
+		"start" --> a1, [a1\,b1\,c1] --> it, a1 --> b1, b1 --> c1, c1 --> [a1\,b1\,c1],
+		it -LoopEnter-> "loop", it -LoopExit-> "end"
 	--- */
 	/* ForOfStatementDestructuring XPECT allBranches ---
 		B0: "start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it[B1|B2],
@@ -686,14 +634,8 @@ function ForOfStatementDestructuring(it : Array<Iterable2<Object,Object>>) {
 function ForInStatement1() {
 	// ForInStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForInStatement1 XPECT allEdges ---
-		"start" --> i,
-		i --> 1,
-		1 --> 2,
-		2 --> [1\,2],
-		[1\,2] -Repeat-> 3,
-		[1\,2] -Exit-> "end",
-		3 -Repeat-> 3,
-		3 -Exit-> "end"
+		"start" --> i, 1 --> 2, 2 --> [1\,2], 3 -LoopEnter|LoopRepeat-> 3,
+		3 -LoopExit|LoopRepeat-> "end", [1\,2] -LoopEnter-> 3, [1\,2] -LoopExit-> "end", i --> 1
 	--- */
 	/* ForInStatement1 XPECT allBranches ---
 		B0: "start" -> i -> 1 -> 2 -> [1\,2][B1|B2],
@@ -733,7 +675,7 @@ function ForInStatement1() {
 	// ForInStatement1 XPECT succs at 'i' --> 1
 	// ForInStatement1 XPECT succs at '1' --> 2
 	// ForInStatement1 XPECT succs at '2' --> [1\,2]
-	// ForInStatement1 XPECT succs type 'Repeat' at '[1,2]' --> 3
+	// ForInStatement1 XPECT succs type 'LoopEnter' at '[1,2]' --> 3
 	// ForInStatement1 XPECT succs at '[1,2]' --> 3, "end"
 	// ForInStatement1 XPECT succs at '3' --> 3, "end"
 	// ForInStatement1 XPECT preds at 'for' --> "start"
@@ -746,12 +688,8 @@ function ForInStatement1() {
 function ForInStatement2(x) {
 	// ForInStatement2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForInStatement2 XPECT allEdges ---
-		"start" --> x,
-		x --> "Hello",
-		"Hello" -Exit-> "end",
-		"Hello" -Repeat-> 5,
-		5 -Exit-> "end",
-		5 -Repeat-> 5
+		"Hello" -LoopEnter-> 5, "Hello" -LoopExit-> "end", "start" --> x,
+		5 -LoopEnter|LoopRepeat-> 5, 5 -LoopExit|LoopRepeat-> "end", x --> "Hello"
 	--- */
 	/* ForInStatement2 XPECT allBranches ---
 		B0: "start" -> x -> "Hello"[B1|B2],
@@ -789,7 +727,7 @@ function ForInStatement2(x) {
 	// ForInStatement2 XPECT succs at 'x' --> "Hello"
 	// ForInStatement2 XPECT succs at '"Hello"' --> "end", 5
 	// ForInStatement2 XPECT succs at '5' --> "end", 5
-	// ForInStatement2 XPECT succs type 'Repeat' at '"Hello"' --> 5
+	// ForInStatement2 XPECT succs type 'LoopEnter' at '"Hello"' --> 5
 	// ForInStatement2 XPECT preds at 'for' --> "start"
 	// ForInStatement2 XPECT succs at 'for' --> "end"
 	"start";
@@ -800,13 +738,8 @@ function ForInStatement2(x) {
 function ForStatementVarDecl1() {
 	// ForStatementVarDecl1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementVarDecl1 XPECT allEdges ---
-		"start" --> 0,
-		0 --> i=0,
-		i=0 --> 2,
-		2 -Repeat-> 5,
-		5 --> 3,
-		3 --> 2,
-		2 -Exit-> "end"
+		"start" --> 0, 0 --> i=0, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, 5 --> 3, i=0 --> 2
 	--- */
 	/* ForStatementVarDecl1 XPECT allBranches ---
 		B0: "start" -> 0 -> i=0 -> 2[B1|B2],
@@ -844,7 +777,7 @@ function ForStatementVarDecl1() {
 	// ForStatementVarDecl1 XPECT succs at '0' --> i=0
 	// ForStatementVarDecl1 XPECT succs at 'i=0' --> 2
 	// ForStatementVarDecl1 XPECT succs at '2' --> 5, "end"
-	// ForStatementVarDecl1 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatementVarDecl1 XPECT succs type 'LoopEnter' at '2' --> 5
 	// ForStatementVarDecl1 XPECT succs at '5' --> 3
 	// ForStatementVarDecl1 XPECT succs at '3' --> 2
 	// ForStatementVarDecl1 XPECT preds at 'for' --> "start"
@@ -857,15 +790,8 @@ function ForStatementVarDecl1() {
 function ForStatementVarDecl2() {
 	// ForStatementVarDecl2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementVarDecl2 XPECT allEdges ---
-		"start" --> 0,
-		0 --> i=0,
-		i=0 --> 1,
-		1 --> j=1,
-		j=1 --> 2,
-		2 -Repeat-> 5,
-		5 --> 3,
-		3 --> 2,
-		2 -Exit-> "end"
+		"start" --> 0, 0 --> i=0, 1 --> j=1, 2 -LoopEnter-> 5, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, 5 --> 3, i=0 --> 1, j=1 --> 2
 	--- */
 	/* ForStatementVarDecl2 XPECT allBranches ---
 		B0: "start" -> 0 -> i=0 -> 1 -> j=1 -> 2[B1|B2],
@@ -905,7 +831,7 @@ function ForStatementVarDecl2() {
 	// ForStatementVarDecl2 XPECT succs at '1' --> j=1
 	// ForStatementVarDecl2 XPECT succs at 'j=1' --> 2
 	// ForStatementVarDecl2 XPECT succs at '2' --> 5, "end"
-	// ForStatementVarDecl2 XPECT succs type 'Repeat' at '2' --> 5
+	// ForStatementVarDecl2 XPECT succs type 'LoopEnter' at '2' --> 5
 	// ForStatementVarDecl2 XPECT succs at '5' --> 3
 	// ForStatementVarDecl2 XPECT succs at '3' --> 2
 	// ForStatementVarDecl2 XPECT preds at 'for' --> "start"
@@ -922,11 +848,8 @@ function ForStatementVarDecl2() {
 function ForStatementBreak1() {
 	// ForStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementBreak1 XPECT allEdges ---
-		"start" --> 1, 1 --> 2,
-		2 -Exit-> "end",
-		2 -Repeat-> break;,
-		3 --> 2,
-		break; -Break-> "end"
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> break;, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, break; -Break-> "end"
 	--- */
 	/* ForStatementBreak1 XPECT allBranches ---
 		B0: "start" -> 1 -> 2[B1|B2], B1: [B0] -> break;[b3|B4], B2: [B0] -> [B9],
@@ -963,7 +886,7 @@ function ForStatementBreak1() {
 	// ForStatementBreak1 XPECT succs at '"start"' --> 1
 	// ForStatementBreak1 XPECT succs at '1' --> 2
 	// ForStatementBreak1 XPECT succs at '2' --> break;, "end"
-	// ForStatementBreak1 XPECT succs type 'Repeat' at '2' --> break;
+	// ForStatementBreak1 XPECT succs type 'LoopEnter' at '2' --> break;
 	// ForStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 	// ForStatementBreak1 XPECT succs at '3' --> 2
 	// ForStatementBreak1 XPECT preds at 'for' --> "start"
@@ -977,12 +900,8 @@ function ForStatementBreak1() {
 function ForStatementContinue1() {
 	// ForStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementContinue1 XPECT allEdges ---
-		"start" --> 1,
-		1 --> 2,
-		2 -Repeat-> continue;,
-		continue; -Continue-> 3,
-		3 --> 2,
-		2 -Exit-> "end"
+		"start" --> 1, 1 --> 2, 2 -LoopEnter-> continue;, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, continue; -Continue-> 3
 	--- */
 	/* ForStatementContinue1 XPECT allBranches ---
 		B0: "start" -> 1 -> 2[B1|B2], B10: [b8|B9]3 -> 2 -> [B11],
@@ -1032,7 +951,7 @@ function ForStatementContinue1() {
 	// ForStatementContinue1 XPECT succs at '"start"' --> 1
 	// ForStatementContinue1 XPECT succs at '1' --> 2
 	// ForStatementContinue1 XPECT succs at '2' --> continue;, "end"
-	// ForStatementContinue1 XPECT succs type 'Repeat' at '2' --> continue;
+	// ForStatementContinue1 XPECT succs type 'LoopEnter' at '2' --> continue;
 	// ForStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 3
 	// ForStatementContinue1 XPECT succs at '3' --> 2
 	// ForStatementContinue1 XPECT preds at 'for' --> "start"
@@ -1045,11 +964,8 @@ function ForStatementContinue1() {
 function ForStatementContinue2() {
 	// ForStatementContinue2 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementContinue2 XPECT allEdges ---
-		"start" --> 2,
-		2 -Repeat-> continue;,
-		continue; -Continue-> 3,
-		3 --> 2,
-		2 -Exit-> "end"
+		"start" --> 2, 2 -LoopEnter-> continue;, 2 -LoopExit-> "end",
+		3 -LoopRepeat-> 2, continue; -Continue-> 3
 	--- */
 	/* ForStatementContinue2 XPECT allBranches ---
 		B0: "start" -> 2[B1|B2], B10: [b8|B9]3 -> 2 -> [B11], B11: [B2|B7|B10]"end",
@@ -1097,7 +1013,7 @@ function ForStatementContinue2() {
 	// ForStatementContinue2 XPECT commonPreds of '"end"' and '3' --> 2, 3
 	// ForStatementContinue2 XPECT succs at '"start"' --> 2
 	// ForStatementContinue2 XPECT succs at '2' --> continue;, "end"
-	// ForStatementContinue2 XPECT succs type 'Repeat' at '2' --> continue;
+	// ForStatementContinue2 XPECT succs type 'LoopEnter' at '2' --> continue;
 	// ForStatementContinue2 XPECT succs type 'Continue' at 'continue;' --> 3
 	// ForStatementContinue2 XPECT succs at '3' --> 2
 	// ForStatementContinue2 XPECT preds at 'for' --> "start"
@@ -1110,10 +1026,8 @@ function ForStatementContinue2() {
 function ForStatementContinue3() {
 	// ForStatementContinue3 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementContinue3 XPECT allEdges ---
-		"start" --> 2,
-		2 -Repeat-> continue;,
-		continue; -Continue-> 2,
-		2 -Exit-> "end"
+		"start" --> 2, 2 -LoopEnter-> continue;, 2 -LoopExit-> "end",
+		continue; -Continue|LoopRepeat-> 2
 	--- */
 	/* ForStatementContinue3 XPECT allBranches ---
 		B0: "start" -> 2[B1|B2], B10: [b8|B9]2 -> [B11], B11: [B2|B7|B10]"end",
@@ -1159,7 +1073,7 @@ function ForStatementContinue3() {
 	// ForStatementContinue3 XPECT commonPreds of '"end"' and 'continue;' --> 2, continue;
 	// ForStatementContinue3 XPECT succs at '"start"' --> 2
 	// ForStatementContinue3 XPECT succs at '2' --> continue;, "end"
-	// ForStatementContinue3 XPECT succs type 'Repeat' at '2' --> continue;
+	// ForStatementContinue3 XPECT succs type 'LoopEnter' at '2' --> continue;
 	// ForStatementContinue3 XPECT succs type 'Continue' at 'continue;' --> 2
 	// ForStatementContinue3 XPECT succs at 'continue;' --> 2
 	// ForStatementContinue3 XPECT preds at 'for' --> "start"
@@ -1172,8 +1086,7 @@ function ForStatementContinue3() {
 function ForStatementContinue4() {
 	// ForStatementContinue4 XPECT cfContainer --> FunctionDeclaration::Block
 	/* ForStatementContinue4 XPECT allEdges ---
-		"start" --> continue;,
-		continue; -Continue|Repeat-> continue;
+		"start" --> continue;, continue; -Continue|LoopEnter-> continue;
 	--- */
 	/* ForStatementContinue4 XPECT allBranches ---
 		B0: "start" -> continue;[b1|B2], B12: [B9][B13], B13: [b11|B12][b14],

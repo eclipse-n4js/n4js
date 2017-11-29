@@ -22,6 +22,10 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * Used for all non-statements. Children nodes are retrieved from
  * {@link CFEChildren#get(ReentrantASTIterator, ControlFlowElement)}.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 class StandardCFEFactory {
 	static final String ENTRY_NODE = "entry";

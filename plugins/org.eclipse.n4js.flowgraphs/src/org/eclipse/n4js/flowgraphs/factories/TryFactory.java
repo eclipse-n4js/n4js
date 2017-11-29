@@ -25,7 +25,13 @@ import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 import org.eclipse.n4js.n4JS.TryStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link TryStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link TryStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class TryFactory {
 
 	static final String CATCH_NODE_NAME = "catch";

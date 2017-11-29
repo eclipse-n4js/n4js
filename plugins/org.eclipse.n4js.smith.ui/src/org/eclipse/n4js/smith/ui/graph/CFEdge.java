@@ -79,7 +79,7 @@ public class CFEdge extends Edge {
 		} else {
 			for (ControlFlowType cfType : cfTypes) {
 				switch (cfType) {
-				case Repeat:
+				case LoopEnter:
 				case Break:
 				case Continue:
 				case Return:
@@ -213,7 +213,7 @@ public class CFEdge extends Edge {
 			case Continue:
 			case Return:
 			case Throw:
-			case Repeat:
+			case LoopEnter:
 				if (!label.isEmpty())
 					label += "|";
 				label += cfType.name();

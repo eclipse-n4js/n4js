@@ -13,9 +13,6 @@ package org.eclipse.n4js.flowgraphs.factories;
 import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
 import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -24,7 +21,13 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link WhileStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link WhileStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class WhileFactory {
 
 	static final String CONDITION_NODE_NAME = "condition";
@@ -47,13 +50,10 @@ class WhileFactory {
 		cNode.addNode(bodyNode);
 		cNode.addNode(exitNode);
 
-		List<Node> nodes = new LinkedList<>();
 		cNode.connectInternalSucc(entryNode, conditionNode);
-
-		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
-		cNode.connectInternalSucc(nodes);
-		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
-		cNode.connectInternalSucc(bodyNode, conditionNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, bodyNode, conditionNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);

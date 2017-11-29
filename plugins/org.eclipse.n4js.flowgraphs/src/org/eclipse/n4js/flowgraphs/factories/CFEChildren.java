@@ -75,6 +75,10 @@ import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
  * All {@link Expression}s can have a set of children in the sense, that these children are also respected by the
  * control flow. This class provides the function {@link #get(ReentrantASTIterator, ControlFlowElement)} that returns
  * all control flow relevant sub-expressions of a given {@link Expression}.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 final class CFEChildren {
 

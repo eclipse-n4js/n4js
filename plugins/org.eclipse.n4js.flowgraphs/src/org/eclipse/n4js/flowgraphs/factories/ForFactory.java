@@ -25,7 +25,13 @@ import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ForStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link ForStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class ForFactory {
 
 	static final String LOOPCATCH_NODE_NAME = "loopCatch";
@@ -95,9 +101,10 @@ class ForFactory {
 		nodes.add(getIteratorNode);
 		nodes.add(hasNextNode);
 		cNode.connectInternalSucc(nodes);
-		cNode.connectInternalSucc(ControlFlowType.Exit, hasNextNode, exitNode);
-		cNode.connectInternalSucc(ControlFlowType.Repeat, hasNextNode, nextNode);
-		cNode.connectInternalSucc(nextNode, bodyNode, hasNextNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, hasNextNode, exitNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopEnter, hasNextNode, nextNode);
+		cNode.connectInternalSucc(nextNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, bodyNode, hasNextNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
@@ -156,9 +163,11 @@ class ForFactory {
 		cNode.connectInternalSucc(nodes);
 
 		if (conditionNode != null) {
-			cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
-			cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
+			Node beforeBodyNode = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode).getLast();
+			cNode.connectInternalSucc(ControlFlowType.LoopRepeat, beforeBodyNode, conditionNode);
 
 		} else {
 			nodes.clear();
@@ -171,7 +180,7 @@ class ForFactory {
 			Node loopSrc = loopCycle.getLast();
 			Node loopTgt = loopCycle.getFirst();
 			if (loopSrc != loopTgt) {
-				cNode.connectInternalSucc(ControlFlowType.Repeat, loopSrc, loopTgt);
+				cNode.connectInternalSucc(ControlFlowType.LoopEnter, loopSrc, loopTgt);
 			}
 			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}

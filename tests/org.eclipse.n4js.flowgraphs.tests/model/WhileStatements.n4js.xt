@@ -218,7 +218,7 @@ function WhileStatement1() {
 	// WhileStatement1 XPECT commonPreds of '1' and '"end"' --> 1
 	// WhileStatement1 XPECT succs at '"start"' --> 1
 	// WhileStatement1 XPECT succs at '1' --> 2, "end"
-	// WhileStatement1 XPECT succs type 'Repeat' at '1' --> 2
+	// WhileStatement1 XPECT succs type 'LoopEnter' at '1' --> 2
 	// WhileStatement1 XPECT succs at '2' --> 1
 	// WhileStatement1 XPECT preds at 'while' --> "start"
 	// WhileStatement1 XPECT succs at 'while' --> "end"
@@ -271,7 +271,7 @@ function WhileStatementBreak1() {
 	// WhileStatementBreak1 XPECT commonPreds of '2' and '"end"' --> 1, 2
 	// WhileStatementBreak1 XPECT succs at '"start"' --> 1
 	// WhileStatementBreak1 XPECT succs at '1' --> 2, "end"
-	// WhileStatementBreak1 XPECT succs type 'Repeat' at '1' --> 2
+	// WhileStatementBreak1 XPECT succs type 'LoopEnter' at '1' --> 2
 	// WhileStatementBreak1 XPECT succs at '2' --> break;
 	// WhileStatementBreak1 XPECT succs type 'Break' at 'break;' --> "end"
 	// WhileStatementBreak1 XPECT succs at '3' --> 1
@@ -326,7 +326,7 @@ function WhileStatementContinue1() {
 	// WhileStatementContinue1 XPECT commonPreds of '2' and '"end"' --> 1, 2
 	// WhileStatementContinue1 XPECT succs at '"start"' --> 1
 	// WhileStatementContinue1 XPECT succs at '1' --> 2, "end"
-	// WhileStatementContinue1 XPECT succs type 'Repeat' at '1' --> 2
+	// WhileStatementContinue1 XPECT succs type 'LoopEnter' at '1' --> 2
 	// WhileStatementContinue1 XPECT succs at '2' --> continue;
 	// WhileStatementContinue1 XPECT succs type 'Continue' at 'continue;' --> 1
 	// WhileStatementContinue1 XPECT succs at '3' --> 1

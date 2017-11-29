@@ -27,7 +27,13 @@ import org.eclipse.n4js.n4JS.DefaultClause;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class SwitchFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, SwitchStatement switchStmt) {

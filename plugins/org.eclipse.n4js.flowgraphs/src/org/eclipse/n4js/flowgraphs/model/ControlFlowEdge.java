@@ -50,10 +50,10 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		this.cfType = finallyPathContext.cfType;
 	}
 
-	/** @return true iff {@link #cfType} is {@literal ControlFlowType.Repeat} */
-	public boolean isRepeat() {
+	/** @return true iff {@link #cfType} is {@literal ControlFlowType.LoopEnter} */
+	public boolean isLoopEnter() {
 		switch (cfType) {
-		case Repeat:
+		case LoopEnter:
 			return true;
 		default:
 			return false;

@@ -35,10 +35,12 @@ public enum ControlFlowType {
 	Break,
 	/** Continue edges are caused by {@link ContinueStatement}s */
 	Continue,
-	/** Repeat edges are caused by loops and flow from the condition to the body */
-	Repeat,
-	/** Exit edges are caused by loops and flow from the condition to the exit of the control statement */
-	Exit,
+	/** LoopEnter edges are caused by loops and flow into the body */
+	LoopEnter,
+	/** LoopExit edges are caused by loops and flow from the condition to the exit of the control statement */
+	LoopExit,
+	/** LoopRepeat edges are caused by loops and flow from the body to the condition */
+	LoopRepeat,
 	/** DeadCode edges target a node that is represents dead code */
 	DeadCode,
 	/** Used to mark {@link CatchToken}s that can catch {@link JumpToken} due to thrown N4JS errors */
@@ -47,10 +49,12 @@ public enum ControlFlowType {
 	CatchesAll;
 
 	/** Set of all control flow types except for {@literal ControlFlowType.Repeat} */
-	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return, Exit };
+	static public final ControlFlowType[] NonRepeatTypes = { Successor, Break, Continue, Throw, Return, LoopEnter,
+			LoopExit };
 
 	/** Set of all control flow types except for {@literal ControlFlowType.DeadCode} */
-	static public final ControlFlowType[] NonDeadTypes = { Successor, Break, Continue, Throw, Return, Repeat, Exit };
+	static public final ControlFlowType[] NonDeadTypes = { Successor, Break, Continue, Throw, Return, LoopEnter,
+			LoopExit, LoopRepeat };
 
 	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {

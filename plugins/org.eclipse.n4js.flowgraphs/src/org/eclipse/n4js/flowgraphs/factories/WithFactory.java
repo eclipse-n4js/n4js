@@ -21,7 +21,13 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.WithStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link WithStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link WithStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class WithFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, WithStatement withStmt) {

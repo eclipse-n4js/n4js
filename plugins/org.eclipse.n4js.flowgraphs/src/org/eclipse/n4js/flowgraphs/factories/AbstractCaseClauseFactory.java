@@ -25,7 +25,13 @@ import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.Statement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class AbstractCaseClauseFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, AbstractCaseClause abstrCaseClause) {
@@ -37,7 +43,8 @@ class AbstractCaseClauseFactory {
 
 		if (abstrCaseClause instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) abstrCaseClause;
-			caseConditionNode = DelegatingNodeFactory.create(astpp, "condition", caseClause, caseClause.getExpression());
+			caseConditionNode = DelegatingNodeFactory.create(astpp, "condition", caseClause,
+					caseClause.getExpression());
 		}
 
 		EList<Statement> stmts = abstrCaseClause.getStatements();

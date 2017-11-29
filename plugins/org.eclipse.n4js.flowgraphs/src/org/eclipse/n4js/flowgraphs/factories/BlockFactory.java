@@ -25,7 +25,13 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.Statement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class BlockFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, org.eclipse.n4js.n4JS.Block block) {
