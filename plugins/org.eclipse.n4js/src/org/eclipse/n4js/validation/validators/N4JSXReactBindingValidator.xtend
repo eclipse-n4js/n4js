@@ -288,7 +288,7 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 		val attributesInSpreadOperatorType = tsh.structuralTypesHelper.collectStructuralMembers(G, exprTypeResult.value,
 				TypingStrategy.STRUCTURAL).filter[m | (m instanceof TField) || (m instanceof TGetter)];
 
-		//commented out but not deleted for now since the Stdlib team is still arguing about if this check makes sense
+		//commented out but not deleted for now since still it is not clear if this check makes sense
 		//spreadAttribute.checkUnknownAttributeInSpreadOperator(jsxElem, attributesInSpreadOperatorType, fieldsOrGettersInProps);
 
 		// Type check each attribute in spreader operator against the corresponding props type's field/getter
