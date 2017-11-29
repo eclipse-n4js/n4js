@@ -22,9 +22,9 @@
 	B0: [while (1) 2;](entry) -> [while (1) 2;](condition),
 	B0: [while (1) 2;](entry) -> [while (1) 2;](condition),
 	B0: [while (1) 2;](entry) -> [while (1) 2;](condition),
-	F1: [1](entryExit) -Exit-> [while (1) 2;](exit),
-	F1: [1](entryExit) -Exit-> [while (1) 2;](exit),
-	F1: [1](entryExit) -Exit-> [while (1) 2;](exit)
+	F1: [1](entryExit) -LoopExit-> [while (1) 2;](exit),
+	F1: [1](entryExit) -LoopExit-> [while (1) 2;](exit),
+	F1: [1](entryExit) -LoopExit-> [while (1) 2;](exit)
 --- */
 function WhileStatement() {
 	"start";

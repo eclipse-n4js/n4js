@@ -41,6 +41,8 @@ public enum ControlFlowType {
 	LoopExit,
 	/** LoopRepeat edges are caused by loops and flow from the body to the condition */
 	LoopRepeat,
+	/** LoopReenter edges are caused by do-loops and flow from the condition to the body */
+	LoopReenter,
 	/** DeadCode edges target a node that is represents dead code */
 	DeadCode,
 	/** Used to mark {@link CatchToken}s that can catch {@link JumpToken} due to thrown N4JS errors */
@@ -54,7 +56,7 @@ public enum ControlFlowType {
 
 	/** Set of all control flow types except for {@literal ControlFlowType.DeadCode} */
 	static public final ControlFlowType[] NonDeadTypes = { Successor, Break, Continue, Throw, Return, LoopEnter,
-			LoopExit, LoopRepeat };
+			LoopExit, LoopRepeat, LoopReenter };
 
 	/** @return a filtered list that contains only {@link ControlFlowType}s of the given types */
 	static public List<ControlFlowType> filter(Iterable<ControlFlowType> list, ControlFlowType... onlyThese) {

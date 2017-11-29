@@ -30,36 +30,23 @@ export @Internal public class AnnotationList {}
 function DoStatement1() {
 	// DoStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* DoStatement1 XPECT allEdges ---
-		"start" --> 1,
-		1 --> 2,
-		2 -Repeat-> 1,
-		2 -Exit-> "end"
+		"start" --> 1, 1 --> 2, 2 -LoopExit-> "end", 2 -LoopReenter-> 1
 	--- */
 	/* DoStatement1 XPECT allBranches ---
-		B0: "start" -> 1 -> 2[B1|B2],
-		B1: [B0] -> 1 -> 2[B3|B4],
-		B2: [B0] -> [B5],
-		B3: [B1] -> 1 -> 2 -> [B5],
-		B4: [B1] -> [B5],
-		B5: [B2|B3|B4]"end"
+		B0: "start" -> 1 -> 2[B1|B2], B1: [B0] -> 1 -> 2 -> [B3], B2: [B0] -> [B3],
+		B3: [B1|B2]"end"
 	--- */
 	/* DoStatement1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2 -> 1[B1|B2],
-		B1: [B0] -> [B5],
-		B2: [B0] -> 2 -> 1[B3|B4],
-		B3: [B2] -> [B5],
-		B4: [B2] -> 2 -> 1 -> [B5],
-		B5: [B1|B3|B4]"start"
+		B0: "end" -> 2 -> 1[B1|B2], B1: [B0] -> [B3], B2: [B0] -> 2 -> 1 -> [B3],
+		B3: [B1|B2]"start"
 	--- */
 	/* DoStatement1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
-		"start" -> 1 -> 2 -> 1 -> 2 -> "end",
-		"start" -> 1 -> 2 -> 1 -> 2 -> 1 -> 2 -> "end"
+		"start" -> 1 -> 2 -> 1 -> 2 -> "end"
 	--- */
 	/* DoStatement1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> 1 -> "start",
-		"end" -> 2 -> 1 -> 2 -> 1 -> "start",
-		"end" -> 2 -> 1 -> 2 -> 1 -> 2 -> 1 -> "start"
+		"end" -> 2 -> 1 -> 2 -> 1 -> "start"
 	--- */
 	// DoStatement1 XPECT path from '"start"' to '"end"' -->
 	// DoStatement1 XPECT path from '2' to '1' -->
@@ -79,20 +66,18 @@ function DoStatement1() {
 function DoStatementBreak1() {
 	// DoStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* DoStatementBreak1 XPECT allEdges ---
-		"start" --> 1, 1 --> break;, 2 --> 3, 3 -Exit-> "end", 3 -Repeat-> 1,
+		"start" --> 1, 1 --> break;, 2 --> 3, 3 -LoopExit-> "end", 3 -LoopReenter-> 1,
 		break; -Break-> "end"
 	--- */
 	/* DoStatementBreak1 XPECT allBranches ---
-		B0: "start" -> 1 -> break;[b1|B2], B10: [B7] -> [B11],
-		B11: [B2|B4|B6|B8|b9|B10]"end", B2: [B0] -> [B11], B3: [b1] -> 1 -> break;[b5|B6], B4: [b1] -> [B11],
-		B6: [B3] -> [B11], B7: [b5] -> 1 -> break;[b9|B10], B8: [b5] -> [B11], b1: [B0] -> 2 -> 3[B3|B4],
-		b5: [B3] -> 2 -> 3[B7|B8], b9: [B7] -> 2 -> 3 -> [B11]
+		B0: "start" -> 1 -> break;[b1|B2], B2: [B0] -> [B7],
+		B3: [b1] -> 1 -> break;[b5|B6], B4: [b1] -> [B7], B6: [B3] -> [B7], B7: [B2|B4|b5|B6]"end",
+		b1: [B0] -> 2 -> 3[B3|B4], b5: [B3] -> 2 -> 3 -> [B7]
 	--- */
 	/* DoStatementBreak1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|b2], B10: [b9] -> break; -> 1 -> [B11], B11: [B5|B8|B10]"start",
-		B1: [B0] -> [B4], B3: [b2] -> [B4], B4: [B1|B3]break; -> 1[B5|b6], B5: [B4] -> [B11],
-		B7: [b6] -> break; -> 1[B8|b9], B8: [B7] -> [B11], b2: [B0] -> 3 -> 2[B3], b6: [B4] -> 3 -> 2[B7],
-		b9: [B7] -> 3 -> 2[B10]
+		B0: "end"[B1|b2], B1: [B0] -> [B4], B3: [b2] -> [B4],
+		B4: [B1|B3]break; -> 1[B5|b6], B5: [B4] -> [B8], B7: [b6] -> break; -> 1 -> [B8], B8: [B5|B7]"start",
+		b2: [B0] -> 3 -> 2[B3], b6: [B4] -> 3 -> 2[B7]
 	--- */
 	// DoStatementBreak1 XPECT allPaths --> "start" -> 1 -> break; -> "end"
 	/* DoStatementBreak1 backward XPECT allPaths direction 'Backward' ---
@@ -125,31 +110,27 @@ function DoStatementBreak1() {
 function DoStatementContinue1() {
 	// DoStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* DoStatementContinue1 XPECT allEdges ---
-		"start" --> 1, 1 --> continue;, 2 --> 3, 3 -Exit-> "end", 3 -Repeat-> 1,
-		continue; -Continue-> 3
+		"start" --> 1, 1 --> continue;, 2 --> 3, 3 -LoopExit-> "end",
+		3 -LoopReenter-> 1, continue; -Continue-> 3
 	--- */
 	/* DoStatementContinue1 XPECT allBranches ---
-		B0: "start" -> 1 -> continue;[b1|B2], B10: [B8] -> [B14], B12: [B9] -> [B13],
-		B13: [b11|B12]3 -> [B14], B14: [B5|B10|B13]"end", B2: [B0] -> [B3], B3: [b1|B2]3[B4|B5],
-		B4: [B3] -> 1 -> continue;[b6|B7], B5: [B3] -> [B14], B7: [B4] -> [B8], B8: [b6|B7]3[B9|B10],
-		B9: [B8] -> 1 -> continue;[b11|B12], b11: [B9] -> 2 -> [B13], b1: [B0] -> 2 -> [B3], b6: [B4] -> 2 -> [B8]
+		B0: "start" -> 1 -> continue;[b1|B2], B2: [B0] -> [B3], B3: [b1|B2]3[B4|B5],
+		B4: [B3] -> 1 -> continue;[b6|B7], B5: [B3] -> [B9], B7: [B4] -> [B8], B8: [b6|B7]3 -> [B9], B9: [B5|B8]"end",
+		b1: [B0] -> 2 -> [B3], b6: [B4] -> 2 -> [B8]
 	--- */
 	/* DoStatementContinue1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 3[B1|b2], B10: [B7|B9]continue; -> 1[B11|B12],
-		B11: [B10] -> [B17], B12: [B10] -> 3[B13|b14], B13: [B12] -> [B16], B15: [b14] -> [B16],
-		B16: [B13|B15]continue; -> 1 -> [B17], B17: [B5|B11|B16]"start", B1: [B0] -> [B4], B3: [b2] -> [B4],
-		B4: [B1|B3]continue; -> 1[B5|B6], B5: [B4] -> [B17], B6: [B4] -> 3[B7|b8], B7: [B6] -> [B10], B9: [b8] -> [B10],
-		b14: [B12] -> 2[B15], b2: [B0] -> 2[B3], b8: [B6] -> 2[B9]
+		B0: "end" -> 3[B1|b2], B10: [B7|B9]continue; -> 1 -> [B11],
+		B11: [B5|B10]"start", B1: [B0] -> [B4], B3: [b2] -> [B4], B4: [B1|B3]continue; -> 1[B5|B6],
+		B5: [B4] -> [B11], B6: [B4] -> 3[B7|b8], B7: [B6] -> [B10], B9: [b8] -> [B10], b2: [B0] -> 2[B3],
+		b8: [B6] -> 2[B9]
 	--- */
 	/* DoStatementContinue1 XPECT allPaths ---
 		"start" -> 1 -> continue; -> 3 -> "end",
-		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end",
-		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end"
+		"start" -> 1 -> continue; -> 3 -> 1 -> continue; -> 3 -> "end"
 	--- */
 	/* DoStatementContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 3 -> continue; -> 1 -> "start",
-		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> "start",
-		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> "start"
+		"end" -> 3 -> continue; -> 1 -> 3 -> continue; -> 1 -> "start"
 	--- */
 	// DoStatementContinue1 XPECT path from '"start"' to '"end"' -->
 	// DoStatementContinue1 XPECT path from '"start"' notTo '2' -->
@@ -178,10 +159,7 @@ function DoStatementContinue1() {
 function WhileStatement1() {
 	// WhileStatement1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* WhileStatement1 XPECT allEdges ---
-		"start" --> 1,
-		1 -Repeat-> 2,
-		2 --> 1,
-		1 -Exit-> "end"
+		"start" --> 1, 1 -LoopEnter-> 2, 1 -LoopExit-> "end", 2 -LoopRepeat-> 1
 	--- */
 	/* WhileStatement1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2],
@@ -232,8 +210,8 @@ function WhileStatement1() {
 function WhileStatementBreak1() {
 	// WhileStatementBreak1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* WhileStatementBreak1 XPECT allEdges ---
-		"start" --> 1, 1 -Exit-> "end", 1 -Repeat-> 2, 2 --> break;, 3 --> 1,
-		break; -Break-> "end"
+		"start" --> 1, 1 -LoopEnter-> 2, 1 -LoopExit-> "end", 2 --> break;,
+		3 -LoopRepeat-> 1, break; -Break-> "end"
 	--- */
 	/* WhileStatementBreak1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B1: [B0] -> 2 -> break;[b3|B4], B2: [B0] -> [B9],
@@ -258,7 +236,8 @@ function WhileStatementBreak1() {
 		"start" -> 1 -> 2 -> break; -> "end"
 	--- */
 	/* WhileStatementBreak1 backward XPECT allPaths direction 'Backward' ---
-		"end" -> 1 -> "start", "end" -> break; -> 2 -> 1 -> "start"
+		"end" -> 1 -> "start",
+		"end" -> break; -> 2 -> 1 -> "start"
 	--- */
 	// WhileStatementBreak1 XPECT path from '"start"' to '"end"' -->
 	// WhileStatementBreak1 XPECT path from '"start"' notTo '3' -->
@@ -290,8 +269,8 @@ function WhileStatementBreak1() {
 function WhileStatementContinue1() {
 	// WhileStatementContinue1 XPECT cfContainer --> FunctionDeclaration::Block
 	/* WhileStatementContinue1 XPECT allEdges ---
-		"start" --> 1, 1 -Exit-> "end", 1 -Repeat-> 2, 2 --> continue;, 3 --> 1,
-		continue; -Continue-> 1
+		"start" --> 1, 1 -LoopEnter-> 2, 1 -LoopExit-> "end", 2 --> continue;,
+		3 -LoopRepeat-> 1, continue; -Continue-> 1
 	--- */
 	/* WhileStatementContinue1 XPECT allBranches ---
 		B0: "start" -> 1[B1|B2], B10: [B2|B6|B7|b9]"end",
@@ -313,7 +292,8 @@ function WhileStatementContinue1() {
 	--- */
 	/* WhileStatementContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 1 -> "start", "end" -> 1 -> continue; -> 2 -> 1 -> "start",
-		"end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> "start", "end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> continue; -> 2
+		"end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> "start",
+		"end" -> 1 -> continue; -> 2 -> 1 -> continue; -> 2 -> 1 -> continue; -> 2
 	--- */
 	// WhileStatementContinue1 XPECT path from '"start"' to '"end"' -->
 	// WhileStatementContinue1 XPECT path from '"start"' notTo '3' -->

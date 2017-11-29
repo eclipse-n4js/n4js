@@ -142,10 +142,9 @@ public class EdgeGuideQueue {
 	/** @return a {@link EdgeGuide} String that contains all sort properties */
 	public String getEdgeString(EdgeGuide eg) {
 		String egs = "[";
-		egs += eg.isMerged() ? "J " : "j ";
-		egs += eg.deadContext.isForwardDeadFlow() ? "D " : "d ";
-		egs += eg.finallyContext.finallyBlockContexts.isEmpty() ? "f " : "F ";
 		egs += eg.getNextNode().astPosition;
+		egs += eg.deadContext.isForwardDeadFlow() ? " D " : " d ";
+		egs += eg.finallyContext.finallyBlockContexts.isEmpty() ? "f" : "F";
 		egs += "] " + eg.getEdge().toString();
 		return egs;
 	}

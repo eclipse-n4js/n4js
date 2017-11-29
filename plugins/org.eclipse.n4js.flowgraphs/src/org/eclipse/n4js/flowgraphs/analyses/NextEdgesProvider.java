@@ -202,8 +202,9 @@ abstract class NextEdgesProvider {
 		List<ControlFlowEdge> filteredEdges = new LinkedList<>(); // copy of the original pred/succ list of Node
 		for (ControlFlowEdge cfEdge : edges) {
 			boolean copyEdge = true;
-			if (cfEdge.isLoopEnter()) {
-				copyEdge = getOccurences(cfEdge) < 2;
+			int maxOccurences = getMaxOccurences(cfEdge.cfType);
+			if (maxOccurences > 0) {
+				copyEdge = getOccurences(cfEdge) < maxOccurences;
 				incrOccurence(cfEdge);
 			}
 			if (copyEdge && cfEdge.cfType.isInOrEmpty(flowTypes)) {
@@ -211,6 +212,17 @@ abstract class NextEdgesProvider {
 			}
 		}
 		return filteredEdges;
+	}
+
+	private int getMaxOccurences(ControlFlowType cfType) {
+		switch (cfType) {
+		case LoopEnter:
+			return 2;
+		case LoopReenter:
+			return 1;
+		default:
+			return -1;
+		}
 	}
 
 	private int getOccurences(ControlFlowEdge edge) {

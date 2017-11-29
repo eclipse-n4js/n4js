@@ -50,16 +50,6 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		this.cfType = finallyPathContext.cfType;
 	}
 
-	/** @return true iff {@link #cfType} is {@literal ControlFlowType.LoopEnter} */
-	public boolean isLoopEnter() {
-		switch (cfType) {
-		case LoopEnter:
-			return true;
-		default:
-			return false;
-		}
-	}
-
 	/** There should be no two edges with same start and end nodes. */
 	@Override
 	public int compareTo(ControlFlowEdge edge) {
