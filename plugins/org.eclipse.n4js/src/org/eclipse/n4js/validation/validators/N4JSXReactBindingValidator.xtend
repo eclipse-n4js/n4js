@@ -91,8 +91,8 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 			case N4JSX: return
 			case JSX: return
 			default: {
-				val message = IssueCodes.getMessageForJSXELEMENT_IN_NON_JSX_RESOURCE(resType.name)
-				addIssue(message,jsxElem,IssueCodes.JSXELEMENT_IN_NON_JSX_RESOURCE);
+				val message = IssueCodes.getMessageForJSX_JSXELEMENT_IN_NON_JSX_RESOURCE(resType.name)
+				addIssue(message,jsxElem,IssueCodes.JSX_JSXELEMENT_IN_NON_JSX_RESOURCE);
 			}
 		}
 	}
@@ -108,12 +108,12 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 
 		if ((jsxElem.jsxClosingName !==null) && !(openingName == closingName)) {
 			//Only check if the closing element exists, e.g. not null
-			val message = IssueCodes.getMessageForJSXELEMENT_OPENING_CLOSING_ELEMENT_NOT_MATCH(openingName, closingName);
+			val message = IssueCodes.getMessageForJSX_JSXELEMENT_OPENING_CLOSING_ELEMENT_NOT_MATCH(openingName, closingName);
 			addIssue(
 				message,
 				jsxElem,
 				N4JSPackage.Literals.JSX_ELEMENT__JSX_CLOSING_NAME,
-				IssueCodes.JSXELEMENT_OPENING_CLOSING_ELEMENT_NOT_MATCH
+				IssueCodes.JSX_JSXELEMENT_OPENING_CLOSING_ELEMENT_NOT_MATCH
 			);
 		}
 	}
@@ -134,20 +134,20 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 				// See Req. IDE-241118
 				// If the JSX element name starts with lower case, warning if it is unknown HTML tag
 				if (!htmlTags.contains(refName)) {
-					val message = IssueCodes.getMessageForHTMLTAG_UNKNOWN(refName);
+					val message = IssueCodes.getMessageForJSX_HTMLTAG_UNKNOWN(refName);
 					addIssue(
 						message,
 						jsxElem,
 						N4JSPackage.Literals.JSX_ELEMENT__JSX_ELEMENT_NAME,
-						IssueCodes.HTMLTAG_UNKNOWN
+						IssueCodes.JSX_HTMLTAG_UNKNOWN
 					);
 				}
 			} else {
 				// JSX element name starts with an upper case, error because it does not bind to a class or function
 				// See Req. IDE-241115
 				val message = IssueCodes.
-					getMessageForREACT_ELEMENT_NOT_FUNCTION_OR_CLASS_ERROR(exprTypeRef.typeRefAsString);
-				addIssue(message, expr, IssueCodes.REACT_ELEMENT_NOT_FUNCTION_OR_CLASS_ERROR);
+					getMessageForJSX_REACT_ELEMENT_NOT_FUNCTION_OR_CLASS_ERROR(exprTypeRef.typeRefAsString);
+				addIssue(message, expr, IssueCodes.JSX_REACT_ELEMENT_NOT_FUNCTION_OR_CLASS_ERROR);
 			}
 			return;
 		}
@@ -175,20 +175,20 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 		val String refName = expr.refName
 		if ((refName !== null) && (!refName.isEmpty) && Character::isLowerCase(refName.charAt(0))) {
 			if (isFunctionalComponent) {
-				val message = IssueCodes.getMessageForREACT_FUNCTIONAL_COMPONENT_CANNOT_START_WITH_LOWER_CASE(refName);
+				val message = IssueCodes.getMessageForJSX_REACT_FUNCTIONAL_COMPONENT_CANNOT_START_WITH_LOWER_CASE(refName);
 				addIssue(
 					message,
 					jsxElem,
 					N4JSPackage.Literals.JSX_ELEMENT__JSX_ELEMENT_NAME,
-					IssueCodes.REACT_FUNCTIONAL_COMPONENT_CANNOT_START_WITH_LOWER_CASE
+					IssueCodes.JSX_REACT_FUNCTIONAL_COMPONENT_CANNOT_START_WITH_LOWER_CASE
 				);
 			} else {
-				val message = IssueCodes.getMessageForREACT_CLASS_COMPONENT_CANNOT_START_WITH_LOWER_CASE(refName);
+				val message = IssueCodes.getMessageForJSX_REACT_CLASS_COMPONENT_CANNOT_START_WITH_LOWER_CASE(refName);
 				addIssue(
 					message,
 					jsxElem,
 					N4JSPackage.Literals.JSX_ELEMENT__JSX_ELEMENT_NAME,
-					IssueCodes.REACT_CLASS_COMPONENT_CANNOT_START_WITH_LOWER_CASE
+					IssueCodes.JSX_REACT_CLASS_COMPONENT_CANNOT_START_WITH_LOWER_CASE
 				);
 			}
 		}
@@ -208,11 +208,11 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 		val result = ts.subtype(G, exprTypeRef.returnTypeRef, TypeUtils.createTypeRef(elementClassTypeRef));
 		if (result.failed) {
 			val message = IssueCodes.
-				getMessageForREACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR(exprTypeRef.returnTypeRef.typeRefAsString);
+				getMessageForJSX_REACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR(exprTypeRef.returnTypeRef.typeRefAsString);
 			addIssue(
 				message,
 				expr,
-				IssueCodes.REACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR
+				IssueCodes.JSX_REACT_ELEMENT_FUNCTION_NOT_REACT_ELEMENT_ERROR
 			);
 		}
 	}
@@ -232,8 +232,8 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 		val tclassTypeRef = TypeUtils.createTypeRef(tclass);
 		val resultSubType = ts.subtype(G, tclassTypeRef, TypeUtils.createTypeRef(componentClassTypeRef))
 		if (resultSubType.failed) {
-			val message = IssueCodes.getMessageForREACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR();
-			addIssue(message, expr, IssueCodes.REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR);
+			val message = IssueCodes.getMessageForJSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR();
+			addIssue(message, expr, IssueCodes.JSX_REACT_ELEMENT_CLASS_NOT_REACT_ELEMENT_ERROR);
 		}
 	}
 
@@ -253,13 +253,13 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 		//they are mainly intended for error cases, not valid code. Probably it should be any+ instead.
 		//This requires refactoring else where
 		if (result.value instanceof UnknownTypeRef) {
-			val message = IssueCodes.getMessageForJSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS(propertyAttribute.propertyAsText,
+			val message = IssueCodes.getMessageForJSX_JSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS(propertyAttribute.propertyAsText,
 				jsxElem?.jsxElementName?.expression?.refName);
 					addIssue(
 						message,
 						propertyAttribute,
 						N4JSPackage.Literals.JSX_PROPERTY_ATTRIBUTE__PROPERTY,
-						IssueCodes.JSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS
+						IssueCodes.JSX_JSXSPROPERTYATTRIBUTE_NOT_DECLARED_IN_PROPS
 					);
 		}
 	}
@@ -301,13 +301,13 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 				val fieldOrGetterInPropsTypeRef = ts.tau(fieldOrGetterInProps, propsType);
 				val result = ts.subtype(G, attributeInSpreadOperatorTypeRef, fieldOrGetterInPropsTypeRef);
 				if (result.failed) {
-					val message = IssueCodes.getMessageForJSXSPREADATTRIBUTE_WRONG_SUBTYPE(attributeInSpreadOperator.name,
+					val message = IssueCodes.getMessageForJSX_JSXSPREADATTRIBUTE_WRONG_SUBTYPE(attributeInSpreadOperator.name,
 						attributeInSpreadOperatorTypeRef.typeRefAsString, fieldOrGetterInPropsTypeRef.typeRefAsString);
 					addIssue(
 						message,
 						spreadAttribute,
 						N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__EXPRESSION,
-						IssueCodes.JSXSPREADATTRIBUTE_WRONG_SUBTYPE
+						IssueCodes.JSX_JSXSPREADATTRIBUTE_WRONG_SUBTYPE
 					);
 				}
 			}
@@ -378,12 +378,12 @@ class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (!missingFieldsStringRep.isEmpty) {
 			val message = IssueCodes.
-				getMessageForJSXPROPERTY_ATTRIBUTE_NON_OPTIONAL_PROPERTY_NOT_SPECIFIED(missingFieldsStringRep);
+				getMessageForJSX_JSXPROPERTY_ATTRIBUTE_NON_OPTIONAL_PROPERTY_NOT_SPECIFIED(missingFieldsStringRep);
 			addIssue(
 				message,
 				jsxElem,
 				N4JSPackage.Literals.JSX_ELEMENT__JSX_ELEMENT_NAME,
-				IssueCodes.JSXPROPERTY_ATTRIBUTE_NON_OPTIONAL_PROPERTY_NOT_SPECIFIED
+				IssueCodes.JSX_JSXPROPERTY_ATTRIBUTE_NON_OPTIONAL_PROPERTY_NOT_SPECIFIED
 			);
 		}
 	}

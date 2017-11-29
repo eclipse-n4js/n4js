@@ -113,8 +113,8 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		if (reactHelper.isReactModule(module)) {
 			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE) {
 						addIssue(
-							IssueCodes.getMessageForREACT_NAMESPACE_NOT_ALLOWED(),
-							importSpecifier, IssueCodes.REACT_NAMESPACE_NOT_ALLOWED);
+							IssueCodes.getMessageForJSX_REACT_NAMESPACE_NOT_ALLOWED(),
+							importSpecifier, IssueCodes.JSX_REACT_NAMESPACE_NOT_ALLOWED);
 			}
 		}
 	}
