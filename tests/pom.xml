@@ -69,8 +69,8 @@ Contributors:
 
 		
 		<!-- flow graph tests -->
-		<module>org.eclipse.n4js.flowgraph.tests</module>
-		<module>org.eclipse.n4js.flowgraph.ui.tests</module>
+		<module>org.eclipse.n4js.flowgraphs.tests</module>
+		<module>org.eclipse.n4js.flowgraphs.ui.tests</module>
 
 
 		<!-- ************************************** JUnit Plugin Tests -->
