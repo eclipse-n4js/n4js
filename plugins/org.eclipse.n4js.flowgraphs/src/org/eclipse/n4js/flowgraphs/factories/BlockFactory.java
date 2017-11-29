@@ -25,22 +25,29 @@ import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.Statement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link org.eclipse.n4js.n4JS.Block}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class BlockFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, org.eclipse.n4js.n4JS.Block block) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), block);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), block);
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), block);
 		List<Node> blockNodes = new LinkedList<>();
 
 		EList<Statement> stmts = block.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = DelNodeFactory.create(astpp, "stmt_" + i, block, stmt);
+			Node blockNode = DelegatingNodeFactory.create(astpp, "stmt_" + i, block, stmt);
 			blockNodes.add(blockNode);
 		}
+
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), block);
 
 		cNode.addNode(entryNode);
 		for (Node blockNode : blockNodes)
@@ -57,7 +64,6 @@ class BlockFactory {
 		cNode.setExitNode(exitNode);
 
 		if (FGUtils.isCFContainer(block)) {
-			// if (block == astpp.container()) { // TODO
 			exitNode.addCatchToken(new CatchToken(ControlFlowType.CatchesAll));
 		}
 

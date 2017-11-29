@@ -275,12 +275,12 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** @return true iff the last visited node was not dead. */
-	final public boolean isLive() {
+	final public boolean isLiveCode() {
 		return !lastVisitedNodeIsDead;
 	}
 
 	/** @return true iff the last visited node was dead. */
-	final public boolean isDead() {
+	final public boolean isDeadCodeNode() {
 		return lastVisitedNodeIsDead;
 	}
 

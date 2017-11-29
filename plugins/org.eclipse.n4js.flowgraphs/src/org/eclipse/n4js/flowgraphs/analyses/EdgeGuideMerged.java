@@ -64,6 +64,8 @@ public class EdgeGuideMerged extends EdgeGuide {
 			BranchWalkerInternal joinedWalker = explorer.callJoinBranchWalkers(walkers);
 			branchWalkers.add(joinedWalker);
 		}
+
+		DataRecorderPackageProxy.addMergedEdges(edgeGuides);
 	}
 
 	@Override

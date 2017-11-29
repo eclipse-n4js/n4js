@@ -24,7 +24,13 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class VariableDeclarationFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, VariableDeclaration vd) {
@@ -34,7 +40,7 @@ class VariableDeclarationFactory {
 		Node expressionNode = null;
 
 		if (vd.getExpression() != null) {
-			expressionNode = DelNodeFactory.create(astpp, "expression", vd, vd.getExpression());
+			expressionNode = DelegatingNodeFactory.create(astpp, "expression", vd, vd.getExpression());
 		}
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), vd);
 

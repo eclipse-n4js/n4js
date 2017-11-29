@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.PaintEvent;
@@ -63,9 +64,10 @@ public class EditorOverlay implements PaintListener {
 	}
 
 	private void draw() {
-		if (hoveredElement != null || !selectedElements.isEmpty()) {
-			XtextEditor editor = EditorUtils.getActiveXtextEditor();
-			styledText = editor.getInternalSourceViewer().getTextWidget();
+		XtextEditor editor = EditorUtils.getActiveXtextEditor();
+		if (editor != null && (hoveredElement != null || !selectedElements.isEmpty())) {
+			ISourceViewer isv = editor.getInternalSourceViewer();
+			styledText = isv.getTextWidget();
 			drawSelection();
 		} else {
 			clear();

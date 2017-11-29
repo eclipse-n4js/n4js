@@ -30,24 +30,31 @@ import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.ScriptElement;
 import org.eclipse.n4js.n4JS.Statement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link Script}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link Script}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class ScriptFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, Script script) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), script);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), script);
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), script);
 		List<Node> scriptNodes = new LinkedList<>();
 
 		EList<ScriptElement> scriptElems = script.getScriptElements();
 		for (int n = 0; n < scriptElems.size(); n++) {
 			ScriptElement scriptElem = getScriptElementAt(script, n);
 			if (isControlFlowStatement(scriptElem)) {
-				Node blockNode = DelNodeFactory.create(astpp, "stmt_" + n, script, (Statement) scriptElem);
+				Node blockNode = DelegatingNodeFactory.create(astpp, "stmt_" + n, script, (Statement) scriptElem);
 				scriptNodes.add(blockNode);
 			}
 		}
+
+		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), script);
 
 		cNode.addNode(entryNode);
 		for (Node scriptNode : scriptNodes)
