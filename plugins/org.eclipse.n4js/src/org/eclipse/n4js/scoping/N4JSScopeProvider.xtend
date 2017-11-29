@@ -603,18 +603,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	/** Returns scope for the JSXElement (obtained from context) or {@link IScope#NULLSCOPE} */
 	private def getJSXElementScope(EObject context, EReference reference) {
 
-		// Otherwise, if we are within a JSX element context but cannot bind JSX element, ignore binding for now
-		var JSXElementName jsxElName;
-		for (var ei = context; ei !== null; ei = ei.eContainer) {
-			if (ei instanceof JSXElementName) {
-				jsxElName = ei;
-			}
-		}
-		if (jsxElName !== null) {
-			val scope = getN4JSScope(context, reference)
-			return new DynamicPseudoScope(scope);
-		}
+		if(EcoreUtil2.getContainerOfType(context, JSXElementName) === null)
+			return IScope.NULLSCOPE;
 
-		return IScope.NULLSCOPE;
+		val scope = getN4JSScope(context, reference)
+		return new DynamicPseudoScope(scope);
 	}
 }
