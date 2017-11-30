@@ -41,9 +41,6 @@ Contributors:
 		<module>org.eclipse.n4js.tests.helper.sdk</module>
 		<module>org.eclipse.n4js.jsdoc2spec.sdk</module>
 		<module>org.eclipse.n4js.smith.sdk</module>
-
-		<module>org.eclipse.n4js.n4jsx.sdk</module>
-		<module>org.eclipse.n4js.n4jsx.xpect.sdk</module>
 	</modules>
 
 	<build>

@@ -22,8 +22,6 @@ import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * This class returns the child elements of each {@link ControlFlowElement} in order of the AST traversal. This order is
@@ -40,10 +38,6 @@ final public class OrderedEContentProvider {
 	static public List<EObject> eContents(EObject eObj) {
 		if (eObj == null) {
 			return Collections.emptyList();
-		}
-		List<EObject> list = new InternalFactoryDispatcherX().doSwitch(eObj);
-		if (list != null) {
-			return list;
 		}
 		return new InternalFactoryDispatcher().doSwitch(eObj);
 	}
@@ -95,19 +89,5 @@ final public class OrderedEContentProvider {
 			return orderedEContents;
 		}
 
-	}
-
-	static private class InternalFactoryDispatcherX extends N4JSXSwitch<List<EObject>> {
-
-		// TODO: Remove this and change order in N4JSX.ecore
-		@Override
-		public List<EObject> caseJSXElement(JSXElement feature) {
-			List<EObject> orderedEContents = new LinkedList<>();
-			orderedEContents.add(feature.getJsxElementName());
-			orderedEContents.addAll(feature.getJsxAttributes());
-			orderedEContents.addAll(feature.getJsxChildren());
-			orderedEContents.add(feature.getJsxClosingName());
-			return orderedEContents;
-		}
 	}
 }
