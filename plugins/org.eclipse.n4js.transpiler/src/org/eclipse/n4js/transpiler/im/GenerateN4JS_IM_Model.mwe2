@@ -18,18 +18,17 @@ var projectName = "org.eclipse.n4js.transpiler"
 var projectPath = "../${projectName}"
 
 Workflow {
-    bean = StandaloneSetup {
-    	scanClassPath = true
-    	platformUri = "${projectPath}/.."
+	bean = StandaloneSetup {
+		scanClassPath = true
+		platformUri = "${projectPath}/.."
+		registerGenModelFile = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
+	}
 
-    	registerGenModelFile = "platform:/resource/org.eclipse.emf.ecore/model/Ecore.genmodel"
-    }
+	component = DirectoryCleaner {
+		directory = "${projectPath}/emf-gen"
+	}
 
-    component = DirectoryCleaner {
-    	directory = "${projectPath}/emf-gen"
-    }
-
-    component = de.itemis.xcore2java.XcoreReader {
+	component = de.itemis.xcore2java.XcoreReader {
 		register = org.eclipse.n4js.generation.xcore.CachedSetup : xcoreSetup {
 			delegate = org.eclipse.n4js.generation.xcore.NewlineAwareXcoreStandaloneSetup {}
 		}

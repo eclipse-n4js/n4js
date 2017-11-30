@@ -12,7 +12,7 @@ package org.eclipse.n4js.flowgraphs.analyses;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,8 +20,6 @@ import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
-
-import com.google.common.collect.Lists;
 
 /**
  * Provides the next {@link ControlFlowEdge} or {@link Node} with regard to a specific traverse direction. Also provides
@@ -31,7 +29,7 @@ import com.google.common.collect.Lists;
  * <b>Attention:</b> {@link ControlFlowEdge}s of type {@literal ControlFlowType.Repeat} are followed at most twice.
  */
 abstract class NextEdgesProvider {
-	private final Map<ControlFlowEdge, Integer> repeatEdges = new HashMap<>();
+	private final Map<ControlFlowEdge, Integer> loopEnterEdges = new HashMap<>();
 
 	/** Traverses edges from start to end */
 	static class Forward extends NextEdgesProvider {
@@ -39,7 +37,12 @@ abstract class NextEdgesProvider {
 		}
 
 		Forward(Map<ControlFlowEdge, Integer> repeatEdges) {
-			super.repeatEdges.putAll(repeatEdges);
+			super.loopEnterEdges.putAll(repeatEdges);
+		}
+
+		@Override
+		protected boolean isForward() {
+			return true;
 		}
 
 		@Override
@@ -76,7 +79,7 @@ abstract class NextEdgesProvider {
 
 		@Override
 		protected Forward copy() {
-			return new Forward(new HashMap<>(super.repeatEdges));
+			return new Forward(new HashMap<>(super.loopEnterEdges));
 		}
 	}
 
@@ -86,7 +89,12 @@ abstract class NextEdgesProvider {
 		}
 
 		Backward(Map<ControlFlowEdge, Integer> repeatEdges) {
-			super.repeatEdges.putAll(repeatEdges);
+			super.loopEnterEdges.putAll(repeatEdges);
+		}
+
+		@Override
+		protected boolean isForward() {
+			return false;
 		}
 
 		@Override
@@ -123,9 +131,12 @@ abstract class NextEdgesProvider {
 
 		@Override
 		protected Backward copy() {
-			return new Backward(new HashMap<>(super.repeatEdges));
+			return new Backward(new HashMap<>(super.loopEnterEdges));
 		}
 	}
+
+	/** @return true iff this edge provider traverses in forward direction */
+	abstract boolean isForward();
 
 	/** @return the next node with regard to the traverse direction */
 	abstract protected Node getNextNode(ControlFlowEdge edge);
@@ -156,17 +167,16 @@ abstract class NextEdgesProvider {
 
 	/** Resets the counter of traversed {@literal ControlFlowType.Repeat} edges. */
 	protected void reset() {
-		repeatEdges.clear();
+		loopEnterEdges.clear();
 	}
 
 	protected void join(NextEdgesProvider edgesProvider) {
-		for (Map.Entry<ControlFlowEdge, Integer> repeatCounter : edgesProvider.repeatEdges.entrySet()) {
-			ControlFlowEdge rEdge = repeatCounter.getKey();
-			Integer countOther = repeatCounter.getValue();
-			int count = getOccurences(rEdge);
-			incrOccurence(rEdge);
-			int newCount = Math.min(count + countOther, 2);
-			repeatEdges.put(rEdge, newCount);
+		for (Map.Entry<ControlFlowEdge, Integer> repeatCounter : edgesProvider.loopEnterEdges.entrySet()) {
+			ControlFlowEdge edge = repeatCounter.getKey();
+			Integer otherCount = repeatCounter.getValue();
+			int myCount = getOccurences(edge);
+			int newCount = Math.max(myCount, otherCount);
+			loopEnterEdges.put(edge, newCount);
 		}
 	}
 
@@ -175,14 +185,11 @@ abstract class NextEdgesProvider {
 	 *
 	 * @param nextNode
 	 *            start location
-	 * @param cfTypes
-	 *            Resulting edges have one of the given {@link ControlFlowType}. Iff null/empty, all edges are part of
-	 *            the result.
 	 * @return all following edges of the given node.
 	 */
-	protected List<ControlFlowEdge> getNextEdges(Node nextNode, ControlFlowType... cfTypes) {
+	protected List<ControlFlowEdge> getNextEdges(Node nextNode, ControlFlowType... flowTypes) {
 		Iterable<ControlFlowEdge> nextEdges = getPlainNextEdges(nextNode);
-		List<ControlFlowEdge> filteredEdges = filter(nextEdges, cfTypes);
+		List<ControlFlowEdge> filteredEdges = filter(nextEdges, flowTypes);
 		return filteredEdges;
 	}
 
@@ -191,31 +198,42 @@ abstract class NextEdgesProvider {
 	 * all edges whose {@link ControlFlowType} is not in the given set {@code cfTypes} iff {@code cfTypes} is neither
 	 * null nor empty.
 	 */
-	protected List<ControlFlowEdge> filter(Iterable<ControlFlowEdge> edges, ControlFlowType... cfTypes) {
-		List<ControlFlowEdge> filteredEdges = Lists.newLinkedList(edges); // copy of the original pred/succ list of Node
-		for (Iterator<ControlFlowEdge> edgeIt = filteredEdges.iterator(); edgeIt.hasNext();) {
-			ControlFlowEdge edge = edgeIt.next();
-
-			boolean removeEdge = false;
-			removeEdge |= !edge.cfType.isInOrEmpty(cfTypes);
-			removeEdge |= getOccurences(edge) >= 2;
-			if (removeEdge) {
-				edgeIt.remove();
+	protected List<ControlFlowEdge> filter(Iterable<ControlFlowEdge> edges, ControlFlowType... flowTypes) {
+		List<ControlFlowEdge> filteredEdges = new LinkedList<>(); // copy of the original pred/succ list of Node
+		for (ControlFlowEdge cfEdge : edges) {
+			boolean copyEdge = true;
+			int maxOccurences = getMaxOccurences(cfEdge.cfType);
+			if (maxOccurences > 0) {
+				copyEdge = getOccurences(cfEdge) < maxOccurences;
+				incrOccurence(cfEdge);
 			}
-			if (edge.isRepeat()) {
-				incrOccurence(edge);
+			if (copyEdge && cfEdge.cfType.isInOrEmpty(flowTypes)) {
+				filteredEdges.add(cfEdge);
 			}
 		}
 		return filteredEdges;
 	}
 
+	private int getMaxOccurences(ControlFlowType cfType) {
+		switch (cfType) {
+		case LoopEnter:
+			return 2;
+		case LoopReenter:
+			return 1;
+		case LoopInfinite:
+			return 1;
+		default:
+			return -1;
+		}
+	}
+
 	private int getOccurences(ControlFlowEdge edge) {
-		Integer count = repeatEdges.getOrDefault(edge, 0);
+		Integer count = loopEnterEdges.getOrDefault(edge, 0);
 		return count;
 	}
 
 	private void incrOccurence(ControlFlowEdge edge) {
 		int count = getOccurences(edge) + 1;
-		repeatEdges.put(edge, count);
+		loopEnterEdges.put(edge, count);
 	}
 }

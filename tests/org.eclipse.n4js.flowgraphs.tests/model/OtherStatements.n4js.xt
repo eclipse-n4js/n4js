@@ -29,8 +29,6 @@ export @Internal public class AnnotationList {}
 
 function Block1() {
 	// Block1 XPECT cfContainer --> FunctionDeclaration::Block
-	// Block1 XPECT allIslandElems -->
-	// Block1 XPECT allCatchBlocks -->
 	/* Block1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> "end"
@@ -52,8 +50,6 @@ function Block1() {
 
 function Block2() {
 	// Block2 XPECT cfContainer --> FunctionDeclaration::Block
-	// Block2 XPECT allIslandElems -->
-	// Block2 XPECT allCatchBlocks -->
 	/* Block2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -80,8 +76,6 @@ function Block2() {
 
 function Block3() {
 	// Block3 XPECT cfContainer --> FunctionDeclaration::Block
-	// Block3 XPECT allIslandElems -->
-	// Block3 XPECT allCatchBlocks -->
 	/* Block3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -109,8 +103,6 @@ function Block3() {
 
 function Debugger1() {
 	// Debugger1 XPECT cfContainer --> FunctionDeclaration::Block
-	// Debugger1 XPECT allIslandElems -->
-	// Debugger1 XPECT allCatchBlocks -->
 	/* Debugger1 XPECT allEdges ---
 		"start" --> debugger;, debugger; --> "end"
 	--- */
@@ -129,8 +121,6 @@ function Debugger1() {
 
 function IfStatement1() {
 	// IfStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// IfStatement1 XPECT allIslandElems -->
-	// IfStatement1 XPECT allCatchBlocks -->
 	/* IfStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -178,8 +168,6 @@ function IfStatement1() {
 
 function IfStatement2() {
 	// IfStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// IfStatement2 XPECT allIslandElems -->
-	// IfStatement2 XPECT allCatchBlocks -->
 	/* IfStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -187,7 +175,9 @@ function IfStatement2() {
 		1 --> "end"
 	--- */
 	/* IfStatement2 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2], B1: [B0] -> [B3], B2: [B0] -> 2 -> [B3],
+		B0: "start" -> 1[B1|B2],
+		B1: [B0] -> 2 -> [B3],
+		B2: [B0] -> [B3],
 		B3: [B1|B2]"end"
 	--- */
 	/* IfStatement2 backward XPECT allBranches direction 'Backward' ---
@@ -222,8 +212,6 @@ function IfStatement2() {
 
 function EmptyStatement() {
 	// EmptyStatement XPECT cfContainer --> FunctionDeclaration::Block
-	// EmptyStatement XPECT allIslandElems -->
-	// EmptyStatement XPECT allCatchBlocks -->
 	/* EmptyStatement XPECT allEdges ---
 		"start" --> ;,
 		; --> "end"
@@ -242,15 +230,22 @@ function EmptyStatement() {
 
 function ReturnStatement1() {
 	// ReturnStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// ReturnStatement1 XPECT allIslandElems -->
-	// ReturnStatement1 XPECT allCatchBlocks -->
 	/* ReturnStatement1 XPECT allEdges ---
 		"start" --> return;
 	--- */
-	// ReturnStatement1 XPECT allBranches --> B0: "start" -> return;
-	// ReturnStatement1 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return; -> "start", B2: [B0]"end"
+	/* ReturnStatement1 XPECT allBranches ---
+		B0: "start" -> return;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
+	--- */
+	/* ReturnStatement1 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]return; -> "start",
+		b2: [B0]"end"[B3]
+	--- */
 	// ReturnStatement1 XPECT allPaths --> "start" -> return;
-	// ReturnStatement1 backward XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+	// ReturnStatement1 backward XPECT allPaths direction 'Backward' -->  return; -> "start"
 	// ReturnStatement1 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement1 XPECT commonPreds of 'return;' and '"end"' -->
 	// ReturnStatement1 XPECT succs at '"start"' --> return;
@@ -264,16 +259,23 @@ function ReturnStatement1() {
 
 function ReturnStatement2() : int {
 	// ReturnStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// ReturnStatement2 XPECT allIslandElems -->
-	// ReturnStatement2 XPECT allCatchBlocks -->
 	/* ReturnStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> return 1;
 	--- */
-	// ReturnStatement2 XPECT allBranches --> B0: "start" -> 1 -> return 1;
-	// ReturnStatement2 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return 1; -> 1 -> "start", B2: [B0]"end"
+	/* ReturnStatement2 XPECT allBranches ---
+		B0: "start" -> 1 -> return 1;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+		b1: [B0] -> "end"[B3]
+	--- */
+	/* ReturnStatement2 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]return 1; -> 1 -> "start",
+		b2: [B0]"end"[B3]
+	--- */
 	// ReturnStatement2 XPECT allPaths --> "start" -> 1 -> return 1;
-	// ReturnStatement2 backward XPECT allPaths direction 'Backward' --> "end", return 1; -> 1 -> "start"
+	// ReturnStatement2 backward XPECT allPaths direction 'Backward' -->  return 1; -> 1 -> "start"
 	// ReturnStatement2 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement2 XPECT commonPreds of 'return 1;' and '"end"' -->
 	// ReturnStatement2 XPECT succs at '"start"' --> 1
@@ -288,34 +290,25 @@ function ReturnStatement2() : int {
 
 function ReturnStatement3() {
 	// ReturnStatement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// ReturnStatement3 XPECT allIslandElems -->
-	// ReturnStatement3 XPECT allCatchBlocks -->
 	/* ReturnStatement3 XPECT allEdges ---
 		"start" --> 1,
 		1 --> return;,
 		1 --> "end"
 	--- */
 	/* ReturnStatement3 XPECT allBranches ---
-		B0: "start" -> 1[B1|B2],
-		B1: [B0] -> "end"[B3],
-		B2: [B0] -> return;[B3],
-		B3: [B1|B2]
+		B0: "start" -> 1[B1|B2], B1: [B0] -> return;[b3|B4], B2: [B0] -> [B5],
+		B4: [B1][B6], B5: [B2|b3]"end"[B6], B6: [B4|B5], b3: [B1] -> [B5]
 	--- */
 	/* ReturnStatement3 backward XPECT allBranches direction 'Backward' ---
-		B0: [B1|B2],
-		B1: [B0]return; -> 1 -> "start",
-		B2: [B0]"end"[B3|B4],
-		B3: [B2] -> 1 -> "start",
-		B4: [B2]
+		B0: [B1|B2], B1: [B0][B6], B2: [B0]"end"[B3|b4], B3: [B2] -> [B7],
+		B5: [b4] -> [B6], B6: [B1|B5]return; -> [B7], B7: [B3|B6]1 -> "start", b4: [B2][B5]
 	---	*/
 	/* ReturnStatement3 XPECT allPaths ---
 	   "start" -> 1 -> return;,
 	   "start" -> 1 -> "end"
 	--- */
 	/* ReturnStatement3 backward XPECT allPaths direction 'Backward' ---
-		"end",
-		"end" -> 1 -> "start",
-		return; -> 1 -> "start"
+		"end" -> 1 -> "start", return; -> 1 -> "start"
 	---	*/
 	// ReturnStatement3 XPECT path from '"start"' to '"end"' -->
 	// ReturnStatement3 XPECT path from 'return;' notTo '"end"' -->
@@ -335,15 +328,22 @@ function ReturnStatement3() {
 // ReturnStatement4 XPECT warnings --> "Variable names should start with lower case letter." at "ReturnStatement4"
 let ReturnStatement4 = function() {
 	// ReturnStatement4 XPECT cfContainer --> FunctionExpression::Block
-	// ReturnStatement4 XPECT allIslandElems -->
-	// ReturnStatement4 XPECT allCatchBlocks -->
 	/* ReturnStatement4 XPECT allEdges ---
 		"start" --> return;
 	--- */
-	// ReturnStatement4 XPECT allBranches --> B0: "start" -> return;
-	// ReturnStatement4 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return; -> "start", B2: [B0]"end"
+	/* ReturnStatement4 XPECT allBranches ---
+	   B0: "start" -> return;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+	   b1: [B0] -> "end"[B3]
+	--- */
+	/* ReturnStatement4 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|b2],
+		B1: [B0][B4],
+		B3: [b2] -> [B4],
+		B4: [B1|B3]return; -> "start",
+		b2: [B0]"end"[B3]
+	--- */
 	// ReturnStatement4 XPECT allPaths --> "start" -> return;
-	// ReturnStatement4 backward XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+	// ReturnStatement4 backward XPECT allPaths direction 'Backward' -->  return; -> "start"
 	// ReturnStatement4 XPECT path from '"start"' notTo '"end"' -->
 	// ReturnStatement4 XPECT commonPreds of 'return;' and '"end"' -->
 	// ReturnStatement4 XPECT succs at '"start"' --> return;
@@ -359,15 +359,22 @@ let ReturnStatement4 = function() {
 class ReturnStatement5 {
     get getterReturnStatement5() {
 		// ReturnStatement5 XPECT cfContainer --> N4GetterDeclaration::Block
-		// ReturnStatement5 XPECT allIslandElems -->
-		// ReturnStatement5 XPECT allCatchBlocks -->
     	/* ReturnStatement5 XPECT allEdges ---
 			"start" --> return;
 		--- */
-		// ReturnStatement5 XPECT allBranches --> B0: "start" -> return;
-		// ReturnStatement5 backward XPECT allBranches direction 'Backward' --> B0: [B1|B2], B1: [B0]return; -> "start", B2: [B0]"end"
+		/* ReturnStatement5 XPECT allBranches ---
+			B0: "start" -> return;[b1|B2], B2: [B0][B3], B3: [b1|B2],
+			b1: [B0] -> "end"[B3]
+		--- */
+		/* ReturnStatement5 backward XPECT allBranches direction 'Backward' ---
+			B0: [B1|b2],
+			B1: [B0][B4],
+			B3: [b2] -> [B4],
+			B4: [B1|B3]return; -> "start",
+			b2: [B0]"end"[B3]
+		--- */
 		// ReturnStatement5 XPECT allPaths --> "start" -> return;
-		// ReturnStatement5 backward XPECT allPaths direction 'Backward' --> "end", return; -> "start"
+		// ReturnStatement5 backward XPECT allPaths direction 'Backward' -->  return; -> "start"
 		// ReturnStatement5 XPECT path from '"start"' notTo '"end"' -->
 		// ReturnStatement5 XPECT commonPreds of 'return;' and '"end"' -->
 		// ReturnStatement5 XPECT succs at '"start"' --> return;
@@ -384,8 +391,6 @@ class ReturnStatement5 {
 
 function WithStatement1() {
 	// WithStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// WithStatement1 XPECT allIslandElems -->
-	// WithStatement1 XPECT allCatchBlocks -->
 	/* WithStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -410,8 +415,6 @@ function WithStatement1() {
 
 function WithStatement2() {
 	// WithStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// WithStatement2 XPECT allIslandElems -->
-	// WithStatement2 XPECT allCatchBlocks -->
 	/* WithStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> 2,
@@ -437,8 +440,6 @@ function WithStatement2() {
 
 function VariableStatement1() {
 	// VariableStatement1 XPECT cfContainer --> FunctionDeclaration::Block
-	// VariableStatement1 XPECT allIslandElems -->
-	// VariableStatement1 XPECT allCatchBlocks -->
 	/* VariableStatement1 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
@@ -461,8 +462,6 @@ function VariableStatement1() {
 
 function VariableStatement2() {
 	// VariableStatement2 XPECT cfContainer --> FunctionDeclaration::Block
-	// VariableStatement2 XPECT allIslandElems -->
-	// VariableStatement2 XPECT allCatchBlocks -->
 	/* VariableStatement2 XPECT allEdges ---
 		"start" --> 1,
 		1 --> x = 1,
@@ -485,8 +484,6 @@ function VariableStatement2() {
 
 function VariableStatement3() {
 	// VariableStatement3 XPECT cfContainer --> FunctionDeclaration::Block
-	// VariableStatement3 XPECT allIslandElems -->
-	// VariableStatement3 XPECT allCatchBlocks -->
 	/* VariableStatement3 XPECT allEdges ---
 		"start" --> x,
 		x --> y,

@@ -36,7 +36,6 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.generator.common.GeneratorException;
@@ -1116,14 +1115,15 @@ public class N4HeadlessCompiler {
 	 * @return <code>true</code> if the resource with the given URI should be loaded and <code>false</code> otherwise
 	 */
 	private boolean shouldLoadResource(final URI uri) {
-		if (uri == null)
+		ResourceType resourceType = ResourceType.getResourceType(uri);
+		switch (resourceType) {
+		case UNKOWN:
 			return false;
-		final String ext = uri.fileExtension();
-		if (ext == null)
+		case N4MF:
 			return false;
-
-		// FIXME: This will not work with N4JSX.
-		return N4JSGlobals.ALL_N4_FILE_EXTENSIONS.contains(ext.toLowerCase());
+		default:
+			return true;
+		}
 	}
 
 	/**
@@ -1243,7 +1243,16 @@ public class N4HeadlessCompiler {
 		final ResourceType resourceType = ResourceType.getResourceType(uri);
 
 		// We only want to index raw JS files if they are contained in an N4JS source container.
-		return resourceType != ResourceType.JS || n4jsCore.findN4JSSourceContainer(uri).isPresent();
+		switch (resourceType) {
+		case JS:
+			return n4jsCore.findN4JSSourceContainer(uri).isPresent();
+		case JSX:
+			return n4jsCore.findN4JSSourceContainer(uri).isPresent();
+		case UNKOWN:
+			return false;
+		default:
+			return true;
+		}
 	}
 
 	/*

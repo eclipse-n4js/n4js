@@ -126,6 +126,7 @@ import org.eclipse.xtext.xtext.generator.parser.antlr.splitting.simpleExpression
 
 import static org.eclipse.n4js.formatting2.N4JSFormatterPreferenceKeys.*
 import static org.eclipse.n4js.formatting2.N4JSGenericFormatter.*
+import org.eclipse.n4js.n4JS.JSXElement
 
 class N4JSFormatter extends TypeExpressionsFormatter {
 
@@ -925,7 +926,8 @@ class N4JSFormatter extends TypeExpressionsFormatter {
 			RegularExpressionLiteral,
 			StringLiteral,
 			ThisLiteral,
-			SuperLiteral
+			SuperLiteral,
+			JSXElement
 			: return
 		}
 		throw new UnsupportedOperationException("expression "+exp.class.simpleName+" not yet implemented.");

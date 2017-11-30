@@ -123,7 +123,7 @@ abstract public class GraphExplorerInternal {
 	final BranchWalkerInternal callFirstBranchWalker(GraphVisitorInternal parentGraphVisitorInternal) {
 		parentGraphVisitor = parentGraphVisitorInternal;
 		firstBranch = firstBranchWalker();
-		firstBranch.callInitialize(this);
+		firstBranch.callInitialize(this, (BranchWalkerInternal) null);
 		return firstBranch;
 	}
 

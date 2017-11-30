@@ -27,46 +27,46 @@ var obj = {
 };
 var array = [4,5,1,2,3,4];
 
-// Simple variable declaration XPECT warnings --> "The value of the local variable aVariable is not used" at "aVariable"
+// Simple variable declaration XPECT warnings --> "The local variable aVariable is never used" at "aVariable"
 var aVariable = "s";
 var anotherVariable = "a";
 
-// Object desctructuring assignment XPECT warnings --> "The value of the local variable b is not used" at "b"
+// Object desctructuring assignment XPECT warnings --> "The local variable b is never used" at "b"
 var {a,b,c} = obj
 
-// Array desctructing assignment XPECT warnings --> "The value of the local variable e is not used" at "e"
+// Array desctructing assignment XPECT warnings --> "The local variable e is never used" at "e"
 var [d,,,e,,f] = array
 
 var dar = new D();
 
-// Double variable declaration XPECT warnings --> "The value of the local variable h is not used" at "h"
+// Double variable declaration XPECT warnings --> "The local variable h is never used" at "h"
 var g,h = 2;
 
-// Single const variable XPECT warnings --> "The value of the local variable j is not used" at "j"
+// Single const variable XPECT warnings --> "The local variable j is never used" at "j"
 const j = 3;
 
 function constObjectDesctructering() {
-	// Object destructuring assignment using const XPECT warnings --> "The value of the local variable b is not used" at "b"
+	// Object destructuring assignment using const XPECT warnings --> "The local variable b is never used" at "b"
 	const {a, b, c} = obj;
 
 	console.log(a, c);
 }
 
 function letObjectDesctructering() {
-	// Object destructuring assignment using let XPECT warnings --> "The value of the local variable c is not used" at "c"
+	// Object destructuring assignment using let XPECT warnings --> "The local variable c is never used" at "c"
 	let {a, b, c} = obj;
 
 	console.log(a, b);
 }
 
 
-// Double variable let declaration XPECT warnings --> "The value of the local variable l is not used" at "l"
+// Double variable let declaration XPECT warnings --> "The local variable l is never used" at "l"
 let k, l = 4;
 
-// Array destructuring assignment using const XPECT warnings --> "The value of the local variable o is not used" at "o"
+// Array destructuring assignment using const XPECT warnings --> "The local variable o is never used" at "o"
 const [m,,,n,,o] = array;
 
-// Array destructuring assignment using let XPECT warnings --> "The value of the local variable s is not used" at "s"
+// Array destructuring assignment using let XPECT warnings --> "The local variable s is never used" at "s"
 let [p,,,r,,s] = array;
 
 //// Uses
@@ -79,7 +79,7 @@ console.log(k, m, n, p, r)
 var z = anotherVariable;
 
 function fct(dar1 : D) {
-	// Shadowing declaration inside a function XPECT warnings --> "The value of the local variable a is not used" at "a"
+	// Shadowing declaration inside a function XPECT warnings --> "The local variable a is never used" at "a"
 	var a,dar = 2;
 
 	// Use from parent scope

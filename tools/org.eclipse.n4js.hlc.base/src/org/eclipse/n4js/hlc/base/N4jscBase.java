@@ -73,9 +73,6 @@ import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.n4JS.N4JSPackage;
-import org.eclipse.n4js.n4jsx.N4JSXGlobals;
-import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
-import org.eclipse.n4js.n4jsx.generator.N4JSXCompositeGenerator;
 import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
@@ -269,13 +266,6 @@ public class N4jscBase implements IApplication {
 	@Inject
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
 
-	// TODO IDE-2493 remove duplicated singletons
-	/**
-	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
-	 */
-	// @Inject (from N4JSX injector; will be done manually in #initInjection())
-	private FileBasedWorkspace n4jsxFileBasedWorkspace;
-
 	@Inject
 	private TestCatalogSupplier testCatalogSupplier;
 
@@ -317,17 +307,6 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private ICompositeGenerator n4jsCompositeGenerator;
-
-	// TODO IDE-2493 remove workaround for multi-language problem
-	// @Inject (from N4JSX injector; will be done manually in #initInjection())
-	private ICompositeGenerator n4jsxCompositeGenerator;
-
-	// TODO IDE-2493 remove duplicated singletons
-	/**
-	 * Due to issues described in {@code IDE-2493} we need to duplicate singletons that have state.
-	 */
-	// @Inject (from N4JSX injector; will be done manually in #initInjection())
-	private FileExtensionsRegistry n4jsxFileExtensionsRegistry;
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -432,7 +411,6 @@ public class N4jscBase implements IApplication {
 
 			// Register composite generators
 			headless.registerCompositeGenerator(n4jsCompositeGenerator);
-			headless.registerCompositeGenerator(n4jsxCompositeGenerator);
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated
 			if (!Platform.isRunning()) {
@@ -440,14 +418,14 @@ public class N4jscBase implements IApplication {
 				testerRegistry.register(nodeTesterDescriptorProvider.get());
 
 			}
-			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION);
+			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
 			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
-			registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSXGlobals.N4JSX_FILE_EXTENSION,
-					N4JSGlobals.JS_FILE_EXTENSION, N4JSXGlobals.JSX_FILE_EXTENSION);
+					N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
+			registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION,
+					N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 			registerTypableFiles(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.N4JS_FILE_EXTENSION,
-					N4JSXGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-					N4JSXGlobals.JSX_FILE_EXTENSION);
+					N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
+					N4JSGlobals.JSX_FILE_EXTENSION);
 			registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
 
 			if (listRunners) {
@@ -620,7 +598,6 @@ public class N4jscBase implements IApplication {
 	private void registerTestableFiles(String... extensions) {
 		for (String extension : extensions) {
 			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
 		}
 	}
 
@@ -630,7 +607,6 @@ public class N4jscBase implements IApplication {
 	private void registerRunnableFiles(String... extensions) {
 		for (String extension : extensions) {
 			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.RUNNABLE_FILE_EXTENSION);
 		}
 	}
 
@@ -640,7 +616,6 @@ public class N4jscBase implements IApplication {
 	private void registerTranspilableFiles(String... extensions) {
 		for (String extension : extensions) {
 			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
 		}
 	}
 
@@ -650,7 +625,6 @@ public class N4jscBase implements IApplication {
 	private void registerTypableFiles(String... extensions) {
 		for (String extension : extensions) {
 			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TYPABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TYPABLE_FILE_EXTENSION);
 		}
 	}
 
@@ -660,7 +634,6 @@ public class N4jscBase implements IApplication {
 	private void registerRawFiles(String... extensions) {
 		for (String extension : extensions) {
 			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-			n4jsxFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
 		}
 	}
 
@@ -918,12 +891,7 @@ public class N4jscBase implements IApplication {
 		return string == null || string.trim().length() == 0;
 	}
 
-	/**
-	 * Creates the injector for the test and injects all fields with the initialized injector.
-	 *
-	 * TODO injection setup + EMF registration performed in n4jsc.jar (i.e. in this method) requires major refactoring
-	 * (problem is that the N4JS-specific injector is used to inject 'this', i.e. an instance of class N4jsc)
-	 */
+	/** Creates the injector for the test and injects all fields with the initialized injector. */
 	private void initInjection(Properties properties) {
 
 		// STEP 1: set up language N4JS
@@ -957,26 +925,6 @@ public class N4jscBase implements IApplication {
 		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
-
-		// STEP 2: set up language N4JSX
-
-		// By default, the ISetup classes generated by Xtext trigger the setup of parent languages (for example,
-		// setup of N4JSX triggers setup of N4JS, i.e. method #createInjectorAndDoEMFRegistration() in the generated
-		// class N4JSXStandaloneSetupGenerated invokes #doSetup() of class N4JSStandaloneSetup). In the following line,
-		// we have to avoid this implicit setup of N4JS, because N4JS was already initialized (another initialization
-		// would create a second injector for the language N4JS, which might lead to follow-up issues, e.g. multiple
-		// instances of singletons per language).
-		Injector n4jsxInjector = N4JSXStandaloneSetup.doSetupWithoutParentLanguages();
-		this.n4jsxFileExtensionsRegistry = n4jsxInjector.getInstance(FileExtensionsRegistry.class);
-		this.n4jsxFileBasedWorkspace = n4jsxInjector.getInstance(FileBasedWorkspace.class);
-		this.n4jsxCompositeGenerator = n4jsxInjector.getInstance(N4JSXCompositeGenerator.class);
-		// TODO: FIXME after GH-368 is merged. OMG this is so ugly. We need this because n4jsCompositeGenerator and
-		// n4jsxCompositeGenerator are
-		// created by two different injectors. As a result,
-		// two subGeneratorRegistry instances are created even though they are singletons!
-		// We are merging languages so this should go away soon.
-		((N4JSXCompositeGenerator) this.n4jsxCompositeGenerator).setSubGeneratorRegistry(subGeneratorRegistry);
-		headless.setInstancesFromN4JSXInjector(n4jsxFileBasedWorkspace);
 	}
 
 	/**
@@ -1156,7 +1104,7 @@ public class N4jscBase implements IApplication {
 					"Require option for projectlocations.");
 
 		HeadlessHelper.registerProjects(convertToFilesAddTargetPlatformAndCheckWritableDir(projectLocations),
-				n4jsFileBasedWorkspace, n4jsxFileBasedWorkspace);
+				n4jsFileBasedWorkspace);
 	}
 
 	/**

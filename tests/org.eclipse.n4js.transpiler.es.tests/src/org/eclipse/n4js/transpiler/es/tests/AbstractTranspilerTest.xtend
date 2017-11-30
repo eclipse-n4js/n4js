@@ -67,6 +67,9 @@ abstract class AbstractTranspilerTest {
 
 	@Inject protected EcmaScriptSubGenerator esSubGen
 
+	@Inject
+	private TranspilerDebugUtils transpilerDebugUtils;
+
 
 	/** Find first element of given type in original AST; throw assertion error if not found. */
 	def protected <T extends EObject> T findFirstInAST(TranspilerState state, Class<T> typeToSearch) {
@@ -127,8 +130,8 @@ abstract class AbstractTranspilerTest {
 	 * Perform some consistency checks on the transpiler state. For example, this asserts that no node in the
 	 * intermediate model has a direct cross-reference to the original AST or an original TModule element.
 	 */
-	def public static void validateState(TranspilerState state) throws AssertionError {
-		TranspilerDebugUtils.validateState(state, false);
+	def public void validateState(TranspilerState state) throws AssertionError {
+		transpilerDebugUtils.validateState(state, false);
 	}
 
 

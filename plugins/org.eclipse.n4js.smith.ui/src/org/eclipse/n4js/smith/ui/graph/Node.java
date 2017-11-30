@@ -34,6 +34,8 @@ public class Node {
 	/** Description displayed as hover text in the graph */
 	protected String description;
 
+	/** Background color of the node */
+	protected Color color;
 	/** X-coordinate of the rectangle */
 	protected float x;
 	/** Y-coordinate of the rectangle */
@@ -59,11 +61,24 @@ public class Node {
 		this(element, title, description, 10, 10, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 	}
 
+	/** Constructor, using default rectangle size */
+	public Node(Object element, String title, String description, Color color) {
+		this(element, title, description, color, 10, 10, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	}
+
 	/** Constructor */
 	public Node(Object element, String title, String description, float x, float y, float width, float height) {
+		this(element, title, description, GraphUtils.getColor(200, 200, 255), x, y, width, height);
+	}
+
+	/** Constructor */
+	public Node(Object element, String title, String description, Color color, float x, float y, float width,
+			float height) {
+
 		this.element = element;
 		this.title = title;
 		this.description = description;
+		this.color = color;
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -184,7 +199,7 @@ public class Node {
 	 * Paints the Node
 	 */
 	public void paint(GC gc) {
-		gc.setBackground(GraphUtils.getColor(200, 200, 255));
+		gc.setBackground(color);
 		gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
 
 		gc.fillRoundRectangle(Math.round(x), Math.round(y), Math.round(width), Math.round(height), 5, 5);

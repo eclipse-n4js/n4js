@@ -17,11 +17,12 @@
 				Folder "resourcedescriptions" {
 					ThisFile {}
 				}
-				Folder "jsxbackend" {
-					File "react.n4jsd" { from = "../../reactFiles/react.n4jsd" }
-				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react/index.n4jsd" }
+			File "manifest.n4mf" { from = "../../react/manifest.n4mf" }
 		}
 	}
 
@@ -29,7 +30,7 @@
  */
 
 
-import * as React from "jsxbackend/react"
+import * as React from "react"
 
 
 class ~Props {
@@ -49,11 +50,12 @@ React.PropConstraint, React.PropType, React.PropTypes, React.PureComponent, Reac
 React.createElement, React.isValidElement, React.renderToStaticMarkup, React.renderToString,
 ReferenceError, RegExp, String, Symbol, SyntaxError, TEMP_ReturnTypeOfMatchExec, TypeError,
 URIError, any, boolean, cloneElement, console, createElement, i18nKey, int,
-isValidElement, jsxbackend.react.Component, jsxbackend.react.ComponentProps,
-jsxbackend.react.Element, jsxbackend.react.PropConstraint, jsxbackend.react.PropType,
-jsxbackend.react.PropTypes, jsxbackend.react.PureComponent, jsxbackend.react.cloneElement,
-jsxbackend.react.createElement, jsxbackend.react.isValidElement, jsxbackend.react.renderToStaticMarkup,
-jsxbackend.react.renderToString, number, pathSelector, renderToStaticMarkup, renderToString,
+isValidElement, index.Component, index.ComponentProps,
+index.Element, index.PropConstraint, index.PropType,
+index.PropTypes, index.PureComponent, index.cloneElement,
+index.createElement, index.isValidElement,
+index.renderToStaticMarkup, index.renderToString, number, pathSelector,
+renderToStaticMarkup, renderToString,
 resourcedescriptions.FunctionComponentDescriptions.NamedFnComponent, resourcedescriptions.FunctionComponentDescriptions.Props, string, symbol,
 typeName, void
 --- */

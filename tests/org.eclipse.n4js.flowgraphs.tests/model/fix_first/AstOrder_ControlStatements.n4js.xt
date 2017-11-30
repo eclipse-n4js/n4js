@@ -1,0 +1,228 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * The order of all features of AST node instances is tested here.
+ * Example:
+ *   The 'while' statement has the two features 'expression' and 'statement'.
+ *   Their order must be: first 'expression', then 'statement'.
+ */
+
+
+
+/* ThrowStatement XPECT astOrder ---
+	0: function ThrowStatement() { throw 1; },
+	1: { throw 1; },
+	2: throw 1;,
+	3: 1
+--- */
+function ThrowStatement() {
+	throw 1;
+}
+
+
+/* TryCatchFinallyStatement XPECT astOrder ---
+	0: function TryCatchFinallyStatement() { try { 1; } catch (e) { 2; } finally { 3; } },
+	1: { try { 1; } catch (e) { 2; } finally { 3; } },
+	2: try { 1; } catch (e) { 2; } finally { 3; },
+	3: { 1; },
+	4: 1;,
+	5: 1,
+	6: { 2; },
+	7: 2;,
+	8: 2,
+	9: { 3; },
+	10: 3;,
+	11: 3
+--- */
+function TryCatchFinallyStatement() {
+	try {
+		1;
+	} catch (e) {
+		2;
+	} finally {
+		3;
+	}
+}
+
+
+/* SwitchCaseDefault XPECT astOrder ---
+	0: function SwitchCaseDefault() { switch (1) { case 2: 3; case 4: 5; default: 6; } },
+	1: { switch (1) { case 2: 3; case 4: 5; default: 6; } },
+	2: switch (1) { case 2: 3; case 4: 5; default: 6; },
+	3: 1,
+	4: case 2: 3;,
+	5: 2,
+	6: 3;,
+	7: 3,
+	8: case 4: 5;,
+	9: 4,
+	10: 5;,
+	11: 5,
+	12: default: 6;,
+	13: 6;,
+	14: 6
+--- */
+function SwitchCaseDefault() {
+	switch (1) {
+		case 2: 3;
+		case 4: 5;
+		default: 6;
+	}
+}
+
+
+/* DoStatement XPECT astOrder ---
+	0: function DoStatement() { do { 1; } while (2); },
+	1: { do { 1; } while (2); },
+	2: do { 1; } while (2);,
+	3: { 1; },
+	4: 1;,
+	5: 1,
+	6: 2
+--- */
+function DoStatement() {
+	do {
+		1;
+	} while (2);
+}
+
+
+/* WhileStatement XPECT astOrder ---
+	0: function WhileStatement() { while (1) { 2; } }\n,
+	1: { while (1) { 2; } },
+	2: while (1) { 2; },
+	3: 1,
+	4: { 2; },
+	5: 2;,
+	6: 2
+--- */
+function WhileStatement() {
+	while (1) {
+		2;
+	}
+}
+
+
+
+/* ForStatement XPECT astOrder ---
+	0: function ForStatement() { for (1;2;3) 5; },
+	1: { for (1;2;3) 5; },
+	2: for (1;2;3) 5;,
+	3: 1,
+	4: 2,
+	5: 5;,
+	6: 5,
+	7: 3
+--- */
+function ForStatement() {
+	for (1;2;3) 5;
+}
+
+
+/* ForOfStatement1 XPECT astOrder ---
+	0: function ForOfStatement1() { for (var i of [1\,2]) 3; },
+	1: { for (var i of [1\,2]) 3; },
+	2: for (var i of [1\,2]) 3;,
+	3: i,
+	4: [1\,2],
+	5: 1,
+	6: 2,
+	7: 3;,
+	8: 3
+--- */
+function ForOfStatement1() {
+	for (var i of [1,2]) 3;
+}
+
+
+/* ForOfStatement2 XPECT astOrder ---
+	0: function ForOfStatement2(x) { for (x of [1\,2]) 5; },
+	1: { for (x of [1\,2]) 5; },
+	2: for (x of [1\,2]) 5;,
+	3: x,
+	4: [1\,2],
+	5: 1,
+	6: 2,
+	7: 5;,
+	8: 5
+--- */
+function ForOfStatement2(x) {
+	for (x of [1,2]) 5;
+}
+
+
+/* ForInStatement1 XPECT astOrder ---
+	0: function ForInStatement1() { for (var i in [1\,2]) 3; },
+	1: { for (var i in [1\,2]) 3; },
+	2: for (var i in [1\,2]) 3;,
+	3: i,
+	4: [1\,2],
+	5: 1,
+	6: 2,
+	7: 3;,
+	8: 3
+--- */
+function ForInStatement1() {
+	for (var i in [1,2]) 3;
+}
+
+
+/* ForInStatement2 XPECT astOrder ---
+	0: function ForInStatement2(x) { for (x in "Hello") 5; },
+	1: { for (x in "Hello") 5; },
+	2: for (x in "Hello") 5;,
+	3: x,
+	4: "Hello",
+	5: 5;,
+	6: 5
+--- */
+function ForInStatement2(x) {
+	for (x in "Hello") 5;
+}
+
+
+/* ForStatementVarDecl1 XPECT astOrder ---
+	0: function ForStatementVarDecl1() { for (var i=0; 2; 3) 5; },
+	1: { for (var i=0; 2; 3) 5; },
+	2: for (var i=0; 2; 3) 5;,
+	3: i=0,
+	4: 0,
+	5: 2,
+	6: 5;,
+	7: 5,
+	8: 3
+--- */
+function ForStatementVarDecl1() {
+	for (var i=0; 2; 3) 5;
+}
+
+
+/* ForStatementVarDecl2 XPECT astOrder ---
+	0: function ForStatementVarDecl2() { for (var i=0\, j=1; 2; 3) 5; }\n,
+	1: { for (var i=0\, j=1; 2; 3) 5; },
+	2: for (var i=0\, j=1; 2; 3) 5;,
+	3: i=0,
+	4: 0,
+	5: j=1,
+	6: 1,
+	7: 2,
+	8: 5;,
+	9: 5,
+	10: 3
+--- */
+function ForStatementVarDecl2() {
+	for (var i=0, j=1; 2; 3) 5;
+}
