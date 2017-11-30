@@ -16,6 +16,7 @@ import java.util.Collections;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.xtext.resource.IResourceDescription;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionChangeEvent;
+import org.eclipse.xtext.ui.editor.DirtyStateEditorSupport;
 import org.eclipse.xtext.ui.editor.DirtyStateManager;
 import org.eclipse.xtext.ui.editor.DocumentBasedDirtyResource;
 import org.eclipse.xtext.ui.editor.IDirtyResource;
@@ -97,8 +98,12 @@ public class PrevStateAwareDirtyStateManager extends DirtyStateManager {
 		try {
 			Field field = declaredFields[0];
 			field.setAccessible(true);
-			N4JSDirtyStateEditorSupport thingy = (N4JSDirtyStateEditorSupport) field.get(dirtyResource);
-			myDirtyResource = thingy.getDirtyResource();
+
+			Object fieldValue = field.get(dirtyResource);
+
+			if (fieldValue instanceof DirtyStateEditorSupport) {
+				myDirtyResource = ((DirtyStateEditorSupport) fieldValue).getDirtyResource();
+			}
 		} catch (IllegalArgumentException | IllegalAccessException e) {
 			// ignore
 		}
