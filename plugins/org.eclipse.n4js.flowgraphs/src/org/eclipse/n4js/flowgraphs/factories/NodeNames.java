@@ -38,5 +38,6 @@ public class NodeNames {
 	static final String TRY = "try";
 	static final String CATCH = "catch";
 	static final String FINALLY = "finally";
+	static final String TARGET = "target";
 
 }

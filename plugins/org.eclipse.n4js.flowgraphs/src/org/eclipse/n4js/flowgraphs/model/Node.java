@@ -195,7 +195,9 @@ abstract public class Node implements ControlFlowable {
 
 	/** Adds {@link EffectInfo} to this node */
 	public void addEffectInfo(EffectInfo ei) {
-		effectInfos.add(ei);
+		if (ei != null) {
+			effectInfos.add(ei);
+		}
 	}
 
 	/** @return true, iff this node has at least one jump token. */

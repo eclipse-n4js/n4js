@@ -326,7 +326,7 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseParameterizedCallExpression(ParameterizedCallExpression pce) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "target", pce, pce.getTarget());
+			addDelegatingNode(cfc, NodeNames.TARGET, pce, pce.getTarget());
 			for (int i = 0; i < pce.getArguments().size(); i++) {
 				Argument arg = pce.getArguments().get(i);
 				addDelegatingNode(cfc, "arg_" + i, pce, arg.getExpression());

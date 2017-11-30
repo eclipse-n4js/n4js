@@ -77,6 +77,7 @@ final public class OrderedEContentProvider {
 			return orderedEContents;
 		}
 
+		// TODO: Remove this and change order in N4JSX.ecore
 		@Override
 		public List<EObject> caseVariableBinding(VariableBinding feature) {
 			List<EObject> orderedEContents = new LinkedList<>();

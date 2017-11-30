@@ -11,6 +11,10 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import org.eclipse.n4js.flowgraphs.model.Symbol;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
@@ -20,7 +24,52 @@ public class SymbolFactory {
 
 	/**  */
 	public static Symbol create(VariableDeclaration vd) {
-		return new Symbol();
+		return new SymbolOfVariableDeclaration(vd);
 	}
 
+	/** */
+	public static Symbol create(Expression expr) {
+		if (expr instanceof IdentifierRef) {
+			return new SymbolOfIdentifierRef((IdentifierRef) expr);
+		}
+		if (expr instanceof ParameterizedPropertyAccessExpression) {
+			return new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) expr);
+		}
+		if (expr instanceof IndexedAccessExpression) {
+			return new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
+		}
+		return null;
+	}
+
+	static class SymbolOfVariableDeclaration extends Symbol {
+		final VariableDeclaration vd;
+
+		SymbolOfVariableDeclaration(VariableDeclaration vd) {
+			this.vd = vd;
+		}
+	}
+
+	static class SymbolOfIdentifierRef extends Symbol {
+		final IdentifierRef ir;
+
+		SymbolOfIdentifierRef(IdentifierRef ir) {
+			this.ir = ir;
+		}
+	}
+
+	static class SymbolOfParameterizedPropertyAccessExpression extends Symbol {
+		final ParameterizedPropertyAccessExpression ppae;
+
+		SymbolOfParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression ppae) {
+			this.ppae = ppae;
+		}
+	}
+
+	static class SymbolOfIndexedAccessExpression extends Symbol {
+		final IndexedAccessExpression iae;
+
+		SymbolOfIndexedAccessExpression(IndexedAccessExpression iae) {
+			this.iae = iae;
+		}
+	}
 }

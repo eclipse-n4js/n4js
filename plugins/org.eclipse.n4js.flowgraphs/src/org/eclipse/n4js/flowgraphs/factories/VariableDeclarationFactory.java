@@ -53,6 +53,7 @@ class VariableDeclarationFactory {
 
 		if (vd.eContainer() instanceof BindingElement) {
 			// In this case, the expression is the default value
+			// TODO: improve this: find out if this is true or false
 			cNode.connectInternalSucc(entryNode, exitNode);
 		}
 

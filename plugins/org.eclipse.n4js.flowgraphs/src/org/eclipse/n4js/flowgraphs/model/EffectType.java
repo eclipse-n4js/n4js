@@ -19,7 +19,7 @@ public enum EffectType {
 
 	/** Happens when a variable is declared */
 	Declaration,
-	/** Happens when a variable is written/defined */
+	/** Happens when a variable is written (a.k.a. defined) */
 	Write,
 	/** Happens when a variable is read */
 	Read,
