@@ -758,6 +758,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				// (i.e. transition from resource load state "Loaded" to "Created", not to "Loaded from Description")
 			}
 
+			// Clear AST meta cache and Xtext cache
+			this.setASTMetaInfoCache(null);
 			getCache().clear(this);
 		}
 	}
@@ -851,6 +853,8 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				fullyInitialized = newFullyInitialized;
 				isInitializing = false;
 				try {
+					// Clear AST meta cache and Xtext cache
+					this.setASTMetaInfoCache(null);
 					getCache().clear(this);
 				} catch (RuntimeException e) {
 					// don't rethrow as there might have been an exception in the try block.
