@@ -1224,7 +1224,16 @@ public class N4HeadlessCompiler {
 		final ResourceType resourceType = ResourceType.getResourceType(uri);
 
 		// We only want to index raw JS files if they are contained in an N4JS source container.
-		return resourceType != ResourceType.JS || n4jsCore.findN4JSSourceContainer(uri).isPresent();
+		switch (resourceType) {
+		case JS:
+			return n4jsCore.findN4JSSourceContainer(uri).isPresent();
+		case JSX:
+			return n4jsCore.findN4JSSourceContainer(uri).isPresent();
+		case UNKOWN:
+			return false;
+		default:
+			return true;
+		}
 	}
 
 	/*

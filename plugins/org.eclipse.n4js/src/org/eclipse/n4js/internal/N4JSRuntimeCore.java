@@ -182,13 +182,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		}
 	}
 
-	/**
-	 * Check for raw JS-files
-	 *
-	 * @param uri
-	 *            to test
-	 * @boolean if ends in .js or .js.xt
-	 */
+	/** Check for raw JS or JSX files. This includes xpect based files. */
 	protected boolean isJsFile(URI uri) {
 		ResourceType resourceType = ResourceType.getResourceType(uri);
 		switch (resourceType) {
@@ -201,13 +195,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		}
 	}
 
-	/**
-	 * Check for non-JS, non-N4MF known files.
-	 *
-	 * @param uri
-	 *            to test
-	 * @boolean if ends in .js or .js.xt
-	 */
+	/** Check for non-JS, non-N4MF known files. This does NOT include xpect based files. */
 	private boolean isN4File(final URI uri) {
 		ResourceType resourceType = ResourceType.getResourceType(uri);
 		switch (resourceType) {
@@ -216,7 +204,7 @@ public class N4JSRuntimeCore extends AbstractN4JSCore implements IN4JSRuntimeCor
 		case N4MF:
 			return false;
 		default:
-			return true;
+			return !ResourceType.xtHidesOtherExtension(uri);
 		}
 	}
 
