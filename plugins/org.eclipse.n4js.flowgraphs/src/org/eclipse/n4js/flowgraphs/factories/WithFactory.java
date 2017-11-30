@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,10 +30,12 @@ class WithFactory {
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, WithStatement withStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), withStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), withStmt);
-		Node expressionNode = DelegatingNodeFactory.create(astpp, "expression", withStmt, withStmt.getExpression());
-		Node statementNode = DelegatingNodeFactory.create(astpp, "statement", withStmt, withStmt.getStatement());
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), withStmt);
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), withStmt);
+		Node expressionNode = DelegatingNodeFactory.create(astpp, NodeNames.EXPRESSION, withStmt,
+				withStmt.getExpression());
+		Node statementNode = DelegatingNodeFactory.create(astpp, NodeNames.STATEMENT, withStmt,
+				withStmt.getStatement());
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), withStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(expressionNode);

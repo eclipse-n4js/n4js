@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
@@ -30,20 +27,14 @@ import org.eclipse.n4js.n4JS.WhileStatement;
  */
 class WhileFactory {
 
-	static final String CONDITION_NODE_NAME = "condition";
-
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, WhileStatement whileStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), whileStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), whileStmt);
-		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, CONDITION_NODE_NAME, whileStmt,
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), whileStmt);
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, whileStmt,
 				whileStmt.getExpression());
-
-		Node bodyNode = null;
-		if (whileStmt.getStatement() != null) {
-			bodyNode = DelegatingNodeFactory.create(astpp, "body", whileStmt, whileStmt.getStatement());
-		}
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), whileStmt);
+		Node bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, whileStmt, whileStmt.getStatement());
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), whileStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

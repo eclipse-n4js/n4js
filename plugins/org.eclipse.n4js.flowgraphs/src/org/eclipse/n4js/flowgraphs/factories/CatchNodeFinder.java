@@ -223,17 +223,17 @@ public class CatchNodeFinder {
 		public Node getCatchingNode(ControlFlowElement cfe, ComplexNodeMapper cnMapper) {
 			if (cfe instanceof DoStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				Node conditionNode = cn.getNode(DoWhileFactory.CONDITION_NODE_NAME);
+				Node conditionNode = cn.getNode(NodeNames.CONDITION);
 				return conditionNode.getEntry();
 			}
 			if (cfe instanceof ForStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				Node conditionNode = cn.getNode(ForFactory.LOOPCATCH_NODE_NAME);
+				Node conditionNode = cn.getNode(NodeNames.LOOPCATCH);
 				return conditionNode.getEntry();
 			}
 			if (cfe instanceof WhileStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				Node conditionNode = cn.getNode(WhileFactory.CONDITION_NODE_NAME);
+				Node conditionNode = cn.getNode(NodeNames.CONDITION);
 				return conditionNode.getEntry();
 			}
 			throw new IllegalStateException("Method 'isCatchingType' should be true first");
@@ -318,10 +318,10 @@ public class CatchNodeFinder {
 				ComplexNode cnTryStmt = cnMapper.get(tryStmt);
 				Node catchNode = null;
 				if (tryStmt.getCatch() != null) {
-					catchNode = cnTryStmt.getNode(TryFactory.CATCH_NODE_NAME);
+					catchNode = cnTryStmt.getNode(NodeNames.CATCH);
 				}
 				if (catchNode == null && tryStmt.getFinally() != null) {
-					catchNode = cnTryStmt.getNode(TryFactory.FINALLY_NODE_NAME);
+					catchNode = cnTryStmt.getNode(NodeNames.FINALLY);
 				}
 				Objects.requireNonNull(catchNode);
 				return catchNode;
@@ -329,7 +329,7 @@ public class CatchNodeFinder {
 			if (container instanceof CatchBlock) {
 				TryStatement tryStmt = (TryStatement) container.eContainer();
 				ComplexNode cnTryStmt = cnMapper.get(tryStmt);
-				Node catchNode = cnTryStmt.getNode(TryFactory.FINALLY_NODE_NAME);
+				Node catchNode = cnTryStmt.getNode(NodeNames.FINALLY);
 				Objects.requireNonNull(catchNode);
 				return catchNode;
 			}

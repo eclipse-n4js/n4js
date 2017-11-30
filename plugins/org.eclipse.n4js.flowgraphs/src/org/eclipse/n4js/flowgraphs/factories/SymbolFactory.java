@@ -8,9 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.model;
+package org.eclipse.n4js.flowgraphs.factories;
 
-/** Marker interface */
-public interface GraphElement {
-	// nothing to declare
+import org.eclipse.n4js.flowgraphs.model.Symbol;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
+
+/**
+ * Creates {@link Symbol}s depending on the given AST element
+ */
+public class SymbolFactory {
+
+	/**  */
+	public static Symbol create(VariableDeclaration vd) {
+		return new Symbol();
+	}
+
 }

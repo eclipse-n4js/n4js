@@ -21,7 +21,7 @@ class DebuggerStatementFactory {
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, DebuggerStatement empty) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), empty);
 
-		Node entryAndExitNode = new RepresentingNode(StandardCFEFactory.ENTRY_EXIT_NODE, astpp.pos(), empty);
+		Node entryAndExitNode = new RepresentingNode(NodeNames.ENTRY_EXIT, astpp.pos(), empty);
 
 		cNode.addNode(entryAndExitNode);
 

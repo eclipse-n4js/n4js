@@ -11,7 +11,7 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 /** Represents any kind of edges between two {@link Node}s. */
-abstract public class AbstractEdge implements GraphElement {
+abstract public class AbstractEdge {
 	/** Start node of the edge */
 	public final Node start;
 	/** End node of the edge */
