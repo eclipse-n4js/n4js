@@ -32,7 +32,7 @@ public class SubGeneratorRegistry {
 	private final static Logger LOGGER = Logger.getLogger(SubGeneratorRegistry.class);
 
 	/* The extension point to subgenerators */
-	private static final String SUBGENERATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.generator.common.subgenerator";
+	private static final String SUBGENERATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.generator.subgenerator";
 	private static final String ATT_SUB_GENERATOR_CLASS = "class";
 
 	private boolean isInitialized = false;

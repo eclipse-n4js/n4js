@@ -22,11 +22,13 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * This composite generator manages all subgenerators. It delegates the generation logics to its children
  * (subgenerators).
  */
+@Singleton
 public class N4JSCompositeGenerator implements ICompositeGenerator {
 
 	private static final Logger LOGGER = Logger.getLogger(N4JSCompositeGenerator.class);
