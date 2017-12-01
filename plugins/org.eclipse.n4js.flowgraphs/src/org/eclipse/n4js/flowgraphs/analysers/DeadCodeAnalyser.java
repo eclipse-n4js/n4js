@@ -26,6 +26,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ExpressionStatement;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.ReturnStatement;
+import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
@@ -127,10 +128,10 @@ public class DeadCodeAnalyser extends GraphVisitor {
 	 * <i>No block can contain more than one single dead code region.</i>
 	 */
 	private Collection<Set<ControlFlowElement>> separateOnTheirBlocks(Set<ControlFlowElement> unreachableElems) {
-		Map<Block, Set<ControlFlowElement>> unreachablesMap = new HashMap<>();
+		Map<EObject, Set<ControlFlowElement>> unreachablesMap = new HashMap<>();
 		for (ControlFlowElement unreachableElem : unreachableElems) {
 			HashSet<ControlFlowElement> moreUnreachableElems = new HashSet<>();
-			Block cfeBlock = getReachableBlock(unreachableElems, unreachableElem, moreUnreachableElems);
+			EObject cfeBlock = getReachableBlock(unreachableElems, unreachableElem, moreUnreachableElems);
 			if (cfeBlock == null)
 				continue;
 
@@ -146,7 +147,7 @@ public class DeadCodeAnalyser extends GraphVisitor {
 	}
 
 	/** Finds the nearest reachable {@link Block} of the given {@link ControlFlowElement} */
-	private Block getReachableBlock(Set<ControlFlowElement> unreachableElems, ControlFlowElement unreachableElem,
+	private EObject getReachableBlock(Set<ControlFlowElement> unreachableElems, ControlFlowElement unreachableElem,
 			Set<ControlFlowElement> moreUnreachableElems) {
 
 		EObject elemContainer = unreachableElem.eContainer();
@@ -154,9 +155,10 @@ public class DeadCodeAnalyser extends GraphVisitor {
 			moreUnreachableElems.add((ExpressionStatement) elemContainer);
 		}
 
-		Block block = EcoreUtil2.getContainerOfType(unreachableElem, Block.class);
-		if (block == null) // can be null in case of broken ASTs
-			return null;
+		EObject block = EcoreUtil2.getContainerOfType(unreachableElem, Block.class);
+		if (block == null) {
+			block = EcoreUtil2.getContainerOfType(unreachableElem, Script.class);
+		}
 
 		EObject blockContainer = block.eContainer();
 		boolean isDeadContainer = blockContainer instanceof ControlFlowElement;
