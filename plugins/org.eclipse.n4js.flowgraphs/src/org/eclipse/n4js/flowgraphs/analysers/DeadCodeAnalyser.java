@@ -131,7 +131,7 @@ public class DeadCodeAnalyser extends GraphVisitor {
 		Map<EObject, Set<ControlFlowElement>> unreachablesMap = new HashMap<>();
 		for (ControlFlowElement unreachableElem : unreachableElems) {
 			HashSet<ControlFlowElement> moreUnreachableElems = new HashSet<>();
-			EObject cfeBlock = getReachableBlock(unreachableElems, unreachableElem, moreUnreachableElems);
+			EObject cfeBlock = getReachableContainer(unreachableElems, unreachableElem, moreUnreachableElems);
 			if (cfeBlock == null)
 				continue;
 
@@ -147,7 +147,7 @@ public class DeadCodeAnalyser extends GraphVisitor {
 	}
 
 	/** Finds the nearest reachable {@link Block} of the given {@link ControlFlowElement} */
-	private EObject getReachableBlock(Set<ControlFlowElement> unreachableElems, ControlFlowElement unreachableElem,
+	private EObject getReachableContainer(Set<ControlFlowElement> unreachableElems, ControlFlowElement unreachableElem,
 			Set<ControlFlowElement> moreUnreachableElems) {
 
 		EObject elemContainer = unreachableElem.eContainer();
@@ -168,7 +168,7 @@ public class DeadCodeAnalyser extends GraphVisitor {
 		if (isDeadContainer) {
 			ControlFlowElement cfe = (ControlFlowElement) blockContainer;
 			moreUnreachableElems.add(cfe);
-			return getReachableBlock(unreachableElems, cfe, moreUnreachableElems);
+			return getReachableContainer(unreachableElems, cfe, moreUnreachableElems);
 		}
 
 		return block;

@@ -36,7 +36,7 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
 		super(start, end);
-		assert cfType.isBackwards() == start.astPosition > end.astPosition : "Edge has wrong direction";
+		assert cfType.isBackwards() == (start.astPosition > end.astPosition) : "Edge has wrong direction";
 		this.finallyPathContext = null;
 		this.cfType = cfType;
 	}

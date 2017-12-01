@@ -86,9 +86,9 @@ abstract class NextEdgesProvider {
 		int getMaxOccurences(ControlFlowType cfType) {
 			switch (cfType) {
 			case LoopEnter:
-				return 2;
+				return 2; // repeat while/for loop bodies twice
 			case LoopReenter:
-				return 1;
+				return 1; // repeat do loop once twice
 			case LoopInfinite:
 				return 1;
 			default:
