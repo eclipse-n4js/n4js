@@ -34,15 +34,13 @@
 
 /* XPECT contentAssistList at 'Fu<|>nc' proposals exactly ---
 	Func - linking/ImportMe,
- 	Function,
- 	function
+ 	Function
 ---	*/
 <Func myProp="My prop"/>
 
 
 /* XPECT contentAssistList at 'Cl<|>s' proposals exactly ---
 	cloneElement - index,
-	Cls - linking/ImportMe,
-	class
+	Cls - linking/ImportMe
 ---	*/
 var a = <Cls prop={5}/>;

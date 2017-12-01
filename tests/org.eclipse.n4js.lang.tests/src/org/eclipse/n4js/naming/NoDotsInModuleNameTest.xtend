@@ -39,6 +39,7 @@ import org.junit.runner.RunWith
 @InjectWith(N4JSInjectorProvider)
 @RunWith(XtextRunner)
 class NoDotsInModuleNameTest {
+
 	@Inject
 	private extension ParseHelper<Script>;
 	@Inject

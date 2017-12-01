@@ -13,11 +13,11 @@ package org.eclipse.n4js.ui.building;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
+import java.time.Instant;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -32,6 +32,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.NoopExternalLibraryWorkspace;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
@@ -126,10 +129,12 @@ import com.google.inject.Injector;
  */
 @SuppressWarnings("restriction")
 public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderState {
-
-	/** Intended for internal implementations to share logs. */
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = Logger.getLogger(N4JSGenerateImmediatelyBuilderState.class);
+	static private final DataCollector dcBuild = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Build");
+	static private final DataCollector dcValidations = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Validations", "Build");
+	static private final DataCollector dcTranspilation = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Transpilation", "Build");
 
 	@Inject
 	private RegistryBuilderParticipant builderParticipant;
@@ -173,6 +178,8 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 	protected Collection<Delta> doUpdate(BuildData buildData, ResourceDescriptionsData newData,
 			IProgressMonitor monitor) {
 
+		Measurement mes = dcBuild.getMeasurement("build " + Instant.now());
+
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() >>>");
 		monitor.subTask("Building " + buildData.getProjectName());
 		logBuildData(buildData, " of before #doUpdate");
@@ -197,6 +204,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 		builderStateLogger.log("Modified deltas: " + modifiedDeltas);
 		builderStateLogger.log("N4JSGenerateImmediatelyBuilderState.doUpdate() <<<");
 
+		mes.end();
 		return modifiedDeltas;
 	}
 
@@ -223,9 +231,12 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 
 	@Override
 	protected void updateMarkers(Delta delta, ResourceSet resourceSet, IProgressMonitor monitor) {
+		Measurement mes = dcValidations.getMeasurement("validation");
 		SubMonitor subMonitor = SubMonitor.convert(monitor, 2);
 		super.updateMarkers(delta, resourceSet, subMonitor.split(1));
+
 		if (resourceSet != null) { // resourceSet is null during clean build
+			mes = dcTranspilation.getMeasurement("transpilation");
 			IBuildParticipantInstruction instruction = (IBuildParticipantInstruction) EcoreUtil.getAdapter(
 					resourceSet.eAdapters(), IBuildParticipantInstruction.class);
 			if (instruction == null) {
@@ -237,6 +248,7 @@ public class N4JSGenerateImmediatelyBuilderState extends N4ClusteringBuilderStat
 				handleCoreException(e);
 			}
 		}
+		mes.end();
 	}
 
 	@Override

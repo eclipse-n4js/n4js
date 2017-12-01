@@ -11,19 +11,18 @@
 package org.eclipse.n4js.n4jsx.ecmatestsuite;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.resource.XtextResourceSet;
-
 import org.eclipse.n4js.JSLibSingleTestConfig;
+import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.analysis.Analyser;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.tests.ecmatestsuite.ECMA5TestSuite;
-import org.eclipse.n4js.n4jsx.tests.helper.N4JSXInjectorProvider;
+import org.eclipse.xtext.resource.XtextResourceSet;
+import org.eclipse.xtext.testing.InjectWith;
 
 /**
  *
  */
-@InjectWith(N4JSXInjectorProvider.class)
+@InjectWith(N4JSInjectorProvider.class)
 public class ECMA5TestSuiteForJSX extends ECMA5TestSuite {
 
 	@Override
