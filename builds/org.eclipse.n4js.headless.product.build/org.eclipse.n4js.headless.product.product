@@ -93,8 +93,6 @@
       <plugin id="org.eclipse.n4js.common.unicode"/>
       <plugin id="org.eclipse.n4js.external.libraries"/>
       <plugin id="org.eclipse.n4js.flowgraphs"/>
-      <plugin id="org.eclipse.n4js.generator"/>
-      <plugin id="org.eclipse.n4js.generator.common"/>
       <plugin id="org.eclipse.n4js.generator.headless"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>
       <plugin id="org.eclipse.n4js.model"/>
