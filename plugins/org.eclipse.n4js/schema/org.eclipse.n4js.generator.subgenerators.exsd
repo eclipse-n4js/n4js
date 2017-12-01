@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="org.eclipse.n4js.generator.common" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.n4js.generator" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="org.eclipse.n4js.generator.common" id="org.eclipse.n4js.generator.common.subgenerator" name="Generators"/>
+         <meta.schema plugin="org.eclipse.n4js.generator" id="org.eclipse.n4js.generator.subgenerator" name="Generators"/>
       </appinfo>
       <documentation>
          [Enter description of this extension point.]
@@ -55,7 +55,7 @@
                   
                </documentation>
                <appinfo>
-                  <meta.attribute kind="java" basedOn=":org.eclipse.n4js.generator.common.ISubGenerator"/>
+                  <meta.attribute kind="java" basedOn=":org.eclipse.n4js.generator.ISubGenerator"/>
                </appinfo>
             </annotation>
          </attribute>
