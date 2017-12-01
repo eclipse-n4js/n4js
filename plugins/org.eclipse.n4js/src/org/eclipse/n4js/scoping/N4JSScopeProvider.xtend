@@ -22,6 +22,9 @@ import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ImportDeclaration
+import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.n4JS.JSXElementName
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LabelledStatement
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassifierDefinition
@@ -40,6 +43,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
@@ -65,6 +69,7 @@ import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.FilteringScope
 import org.eclipse.xtext.EcoreUtil2
@@ -93,6 +98,7 @@ import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
  * on how and when to use it
  */
 class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScopeProvider, IContentAssistScopeProvider {
+	
 
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
 
@@ -127,6 +133,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject extension VariableVisibilityChecker
 
 	@Inject extension ProjectUtils;
+	
+	@Inject extension ReactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
 
@@ -142,39 +150,62 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return delegate;
 	}
 
+	/** Dispatches to concrete scopes based on the context and reference inspection */
 	override getScope(EObject context, EReference reference) {
 		try {
-			if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
-				return new ValidatingScope(getTypeScope(context, reference, false),
-					context.getTypesFilterCriteria(reference));
+			// dispatch based on language variant
+			val resourceType = ResourceType.getResourceType(context)
+			switch (resourceType) {
+				case ResourceType.N4JSX	: return getN4JSXScope(context, reference)
+				case ResourceType.JSX	: return getN4JSXScope(context, reference)
+				default					: return getN4JSScope(context, reference)
 			}
 
-			// early catch:
-			if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
-				return scope_LabelledStatement(context);
-			}
-
-			// otherwise use context:
-			switch (context) {
-				ImportDeclaration:
-					return scope_ImportedModule(context, reference)
-				NamedImportSpecifier:
-					return scope_ImportedElement(context, reference)
-				IdentifierRef:
-					return scope_IdentifierRef_id(context, reference)
-				ParameterizedPropertyAccessExpression:
-					return scope_PropertyAccessExpression_property(context, reference)
-				N4FieldAccessor:
-					return Scopes.scopeFor(EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition).ownedFields)
-			}
 		} catch (Error ex) {
-			if (context!==null && context.eResource.errors.empty) {
+			if (context !== null && context.eResource.errors.empty) {
 				throw ex;
+			}else{
+				// swallow exception, we got a parse error anyway
 			}
-			// swallow exception, we got a parse error anyway
 		}
 
 		return IScope.NULLSCOPE;
+	}
+
+	private def getN4JSScope(EObject context, EReference reference) {
+		// maybe can use scope shortcut
+		val maybeScopeShortcut = getScopeByShortcut(context, reference);
+		if (maybeScopeShortcut !== IScope.NULLSCOPE)
+			return maybeScopeShortcut;
+
+		// otherwise use context:
+		return getScopeForContext(context, reference)
+	}
+
+	/** shortcut to concrete scopes based on reference sniffing. Will return {@link IScope#NULLSCOPE} if no suitable scope found */
+	private def getScopeByShortcut(EObject context, EReference reference) {
+		if (reference == TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE) {
+			return new ValidatingScope(getTypeScope(context, reference, false),
+				context.getTypesFilterCriteria(reference));
+		}
+
+		if (reference.EReferenceType == N4JSPackage.Literals.LABELLED_STATEMENT) {
+			return scope_LabelledStatement(context);
+		}
+
+		return IScope.NULLSCOPE;
+	}
+	
+	/** dispatch to internal methods based on the context */
+	private def getScopeForContext(EObject context, EReference reference) {
+		switch (context) {
+			ImportDeclaration						: return scope_ImportedModule(context, reference)
+			NamedImportSpecifier					: return scope_ImportedElement(context, reference)
+			IdentifierRef							: return scope_IdentifierRef_id(context, reference)
+			ParameterizedPropertyAccessExpression	: return scope_PropertyAccessExpression_property(context, reference)
+			N4FieldAccessor							: return Scopes.scopeFor(EcoreUtil2.getContainerOfType(context, N4ClassifierDefinition).ownedFields)
+			default									: return IScope.NULLSCOPE
+		}
 	}
 
 	override getScopeForContentAssist(EObject context, EReference reference) {
@@ -532,5 +563,51 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	private def <T extends EObject> T ancestor(EObject obj, Class<T> ancestorType) {
 		if (obj === null) return null;
 		return EcoreUtil2.getContainerOfType(obj.eContainer, ancestorType);
+	}
+	
+	
+	private def getN4JSXScope(EObject context, EReference reference) {
+		val jsxPropertyAttributeScope = getJSXPropertyAttributeScope(context, reference)
+		if(jsxPropertyAttributeScope !== IScope.NULLSCOPE)
+			return jsxPropertyAttributeScope
+
+		val jsxElementScope = getJSXElementScope(context, reference)
+		if(jsxElementScope !== IScope.NULLSCOPE)
+			return jsxElementScope
+
+		//delegate to host -> N4JS scope
+		return getN4JSScope(context, reference);
+	}
+	/** Returns scope for the {@link JSXPropertyAttribute} (obtained from context) or {@link IScope#NULLSCOPE} */
+	private def getJSXPropertyAttributeScope(EObject context, EReference reference) {
+		if (reference == N4JSPackage.Literals.JSX_PROPERTY_ATTRIBUTE__PROPERTY) {
+			if (context instanceof JSXPropertyAttribute) {
+				val jsxElem = (context.eContainer as JSXElement);
+				val TypeRef propsTypeRef = jsxElem.getPropsType();
+				val checkVisibility = true;
+				val staticAccess = false;
+				if (propsTypeRef !== null) {
+					// Prevent "Cannot resolve to element" error message of unknown attributes since
+					// we want to issue a warning instead
+					val memberScope = memberScopingHelper.createMemberScope(propsTypeRef, context, checkVisibility,
+						staticAccess);
+					return new DynamicPseudoScope(memberScope);
+				} else {
+					val scope = getN4JSScope(context, reference);
+					return new DynamicPseudoScope(scope);
+				}
+			}
+		}
+		return IScope.NULLSCOPE;
+	}
+	
+	/** Returns scope for the JSXElement (obtained from context) or {@link IScope#NULLSCOPE} */
+	private def getJSXElementScope(EObject context, EReference reference) {
+
+		if(EcoreUtil2.getContainerOfType(context, JSXElementName) === null)
+			return IScope.NULLSCOPE;
+
+		val scope = getN4JSScope(context, reference)
+		return new DynamicPseudoScope(scope);
 	}
 }

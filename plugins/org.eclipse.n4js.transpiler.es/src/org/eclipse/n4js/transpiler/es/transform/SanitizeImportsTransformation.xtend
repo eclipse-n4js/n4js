@@ -15,10 +15,10 @@ import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.n4jsx.helpers.ReactHelper
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation

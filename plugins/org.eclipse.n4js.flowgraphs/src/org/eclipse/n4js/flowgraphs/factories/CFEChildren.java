@@ -40,6 +40,12 @@ import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.JSXAttribute;
+import org.eclipse.n4js.n4JS.JSXChild;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -66,13 +72,6 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXChild;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXExpression;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * All {@link Expression}s can have a set of children in the sense, that these children are also respected by the
@@ -89,10 +88,6 @@ final class CFEChildren {
 	 * Returns all control flow relevant sub-expressions of the given {@link Expression}.
 	 */
 	static List<Node> get(ReentrantASTIterator astIter, ControlFlowElement expr) {
-		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX(astIter).doSwitch(expr);
-		if (n4jsxExpressionList != null) {
-			return n4jsxExpressionList;
-		}
 		return new InternalExpressionChildren(astIter).doSwitch(expr);
 	}
 
@@ -422,21 +417,6 @@ final class CFEChildren {
 			List<Node> cfc = new LinkedList<>();
 			addDelegatingNode(cfc, NodeNames.EXPRESSION, ye, ye.getExpression());
 			return cfc;
-		}
-
-	}
-
-	static private class InternalExpressionChildrenX extends N4JSXSwitch<List<Node>> {
-		private final ReentrantASTIterator astIter;
-
-		InternalExpressionChildrenX(ReentrantASTIterator astIter) {
-			this.astIter = astIter;
-		}
-
-		void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
-				ControlFlowElement delegate) {
-
-			CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
 		}
 
 		@Override

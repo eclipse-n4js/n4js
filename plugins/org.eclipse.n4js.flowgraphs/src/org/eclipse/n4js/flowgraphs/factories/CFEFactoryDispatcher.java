@@ -28,6 +28,8 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Script;
@@ -40,9 +42,6 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * Provides function {@link #build(ReentrantASTIterator, EObject)} to create instances of {@link ComplexNode} for given
@@ -54,10 +53,6 @@ final public class CFEFactoryDispatcher {
 	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
 	static public ComplexNode build(ReentrantASTIterator astIter, EObject cfe) {
-		ComplexNode cnx = new InternalFactoryDispatcherX(astIter).doSwitch(cfe);
-		if (cnx != null) {
-			return cnx;
-		}
 		return new InternalFactoryDispatcher(astIter).doSwitch(cfe);
 	}
 
@@ -199,14 +194,6 @@ final public class CFEFactoryDispatcher {
 		public ComplexNode caseObjectBindingPattern(ObjectBindingPattern feature) {
 			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
-	}
-
-	static private class InternalFactoryDispatcherX extends N4JSXSwitch<ComplexNode> {
-		private final ReentrantASTIterator astIter;
-
-		InternalFactoryDispatcherX(ReentrantASTIterator astIter) {
-			this.astIter = astIter;
-		}
 
 		@Override
 		public ComplexNode caseJSXSpreadAttribute(JSXSpreadAttribute feature) {
@@ -218,4 +205,5 @@ final public class CFEFactoryDispatcher {
 			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 	}
+
 }
