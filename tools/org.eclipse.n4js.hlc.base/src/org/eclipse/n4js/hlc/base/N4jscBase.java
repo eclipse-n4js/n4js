@@ -925,6 +925,10 @@ public class N4jscBase implements IApplication {
 		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/master
 	}
 
 	/**
