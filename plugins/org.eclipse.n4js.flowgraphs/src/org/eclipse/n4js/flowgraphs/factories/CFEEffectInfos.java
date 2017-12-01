@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import java.util.Map;
+
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
@@ -30,16 +32,16 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
 class CFEEffectInfos {
 
-	static void set(ComplexNodeMapper cnMapper, ComplexNode cNode, ControlFlowElement cfe) {
-		new InternalEffectInfos(cnMapper, cNode).doSwitch(cfe);
+	static void set(Map<ControlFlowElement, ComplexNode> cnMap, ComplexNode cNode, ControlFlowElement cfe) {
+		new InternalEffectInfos(cnMap, cNode).doSwitch(cfe);
 	}
 
 	static private class InternalEffectInfos extends N4JSSwitch<Void> {
-		final ComplexNodeMapper cnMapper;
+		final Map<ControlFlowElement, ComplexNode> cnMap;
 		final ComplexNode cNode;
 
-		InternalEffectInfos(ComplexNodeMapper cnMapper, ComplexNode cNode) {
-			this.cnMapper = cnMapper;
+		InternalEffectInfos(Map<ControlFlowElement, ComplexNode> cnMap, ComplexNode cNode) {
+			this.cnMap = cnMap;
 			this.cNode = cNode;
 		}
 
@@ -139,7 +141,7 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseIdentifierRef(IdentifierRef feature) {
-			setRead(feature);
+			setRead(feature, NodeNames.ENTRY_EXIT);
 			return null;
 		}
 
@@ -150,15 +152,22 @@ class CFEEffectInfos {
 		}
 
 		private void setRead(Expression feature) {
-			Node exitNode = cNode.getNode(NodeNames.EXIT);
+			setRead(feature, NodeNames.EXIT);
+		}
+
+		private void setRead(Expression feature, String nodeName) {
+			Node exitNode = cNode.getNode(nodeName);
 			Symbol symbol = SymbolFactory.create(feature);
 			EffectInfo eiDecl = new EffectInfo(EffectType.Read, symbol);
 			exitNode.addEffectInfo(eiDecl);
 		}
 
 		private void clearEffectsOfExitNode(Expression feature) {
-			ComplexNode cn = cnMapper.get(feature);
+			ComplexNode cn = cnMap.get(feature);
 			Node exitNode = cn.getNode(NodeNames.EXIT);
+			if (exitNode == null) {
+				exitNode = cn.getNode(NodeNames.ENTRY_EXIT);
+			}
 			exitNode.effectInfos.clear();
 		}
 	}

@@ -52,7 +52,12 @@ public class UsedBeforeDeclaredAnalyser2 extends FastFlowVisitor {
 	protected void visitNext(FastFlowBranch currentBranch, ControlFlowElement cfe) {
 
 		if (cfe instanceof VariableDeclaration) {
-			currentBranch.activate(new CVLocationDataEntry(cfe));
+			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(cfe);
+			if (userData != null) {
+				userData.idRefs.clear();
+			} else {
+				currentBranch.activate(new CVLocationDataEntry(cfe));
+			}
 
 		} else if (cfe instanceof IdentifierRef) {
 			IdentifierRef ir = (IdentifierRef) cfe;
