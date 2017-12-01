@@ -228,12 +228,12 @@ public class CatchNodeFinder {
 			}
 			if (cfe instanceof ForStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				Node conditionNode = cn.getNode(NodeNames.LOOPCATCH);
+				Node conditionNode = cn.getNode(NodeNames.CONTINUE_CATCH);
 				return conditionNode.getEntry();
 			}
 			if (cfe instanceof WhileStatement) {
 				ComplexNode cn = cnMapper.get(cfe);
-				Node conditionNode = cn.getNode(NodeNames.CONDITION);
+				Node conditionNode = cn.getNode(NodeNames.CONTINUE_CATCH);
 				return conditionNode.getEntry();
 			}
 			throw new IllegalStateException("Method 'isCatchingType' should be true first");

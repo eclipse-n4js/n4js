@@ -67,12 +67,10 @@ class ForFactory {
 			getObjectKeysNode = new HelperNode(NodeNames.GET_OBJECT_KEYS, astpp.pos(), forStmt);
 		}
 		Node getIteratorNode = new HelperNode(NodeNames.GET_ITERATOR, astpp.pos(), forStmt);
-		Node hasNextNode = new HelperNode(NodeNames.LOOPCATCH, astpp.pos(), forStmt);
+		Node hasNextNode = new HelperNode(NodeNames.HAS_NEXT, astpp.pos(), forStmt);
 		Node nextNode = new HelperNode(NodeNames.NEXT, astpp.pos(), forStmt);
-		Node bodyNode = null;
-		if (forStmt.getStatement() != null) {
-			bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
-		}
+		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
+		Node catchContinueNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
 		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
@@ -86,6 +84,7 @@ class ForFactory {
 		cNode.addNode(hasNextNode);
 		cNode.addNode(nextNode);
 		cNode.addNode(bodyNode);
+		cNode.addNode(catchContinueNode);
 		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
@@ -99,8 +98,8 @@ class ForFactory {
 		cNode.connectInternalSucc(nodes);
 		cNode.connectInternalSucc(ControlFlowType.LoopExit, hasNextNode, exitNode);
 		cNode.connectInternalSucc(ControlFlowType.LoopEnter, hasNextNode, nextNode);
-		cNode.connectInternalSucc(nextNode, bodyNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, bodyNode, hasNextNode);
+		cNode.connectInternalSucc(nextNode, bodyNode, catchContinueNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, catchContinueNode, hasNextNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
@@ -137,7 +136,7 @@ class ForFactory {
 			conditionNode = DelegatingNodeFactory.create(astpp, NodeNames.CONDITION, forStmt, forStmt.getExpression());
 		}
 		bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
-		Node loopCatchNode = new HelperNode(NodeNames.LOOPCATCH, astpp.pos(), forStmt);
+		Node loopCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
 			updatesNode = DelegatingNodeFactory.create(astpp, NodeNames.UPDATES, forStmt, forStmt.getUpdateExpr());
 		}

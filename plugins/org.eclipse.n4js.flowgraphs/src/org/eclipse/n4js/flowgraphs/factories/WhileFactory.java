@@ -34,24 +34,27 @@ class WhileFactory {
 		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, whileStmt,
 				whileStmt.getExpression());
 		Node bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, whileStmt, whileStmt.getStatement());
+		Node continueCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), whileStmt);
 		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), whileStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);
 		cNode.addNode(bodyNode);
+		cNode.addNode(continueCatchNode);
 		cNode.addNode(exitNode);
 
 		cNode.connectInternalSucc(entryNode, conditionNode);
 		cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
-		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, bodyNode, conditionNode);
 		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+		cNode.connectInternalSucc(bodyNode, continueCatchNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, continueCatchNode, conditionNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(whileStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
-		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
+		continueCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}

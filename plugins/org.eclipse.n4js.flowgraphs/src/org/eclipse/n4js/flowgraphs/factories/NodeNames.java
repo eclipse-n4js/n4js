@@ -28,8 +28,8 @@ public class NodeNames {
 	static final String BODY = "body";
 	static final String INITS = "inits";
 	static final String UPDATES = "updates";
+	static final String HAS_NEXT = "hasNext";
 	static final String NEXT = "next";
-	static final String LOOPCATCH = "loopCatch";
 	static final String GET_OBJECT_KEYS = "getObjectKeys";
 	static final String GET_ITERATOR = "getIterator";
 	static final String JUMP = "jump";
@@ -39,5 +39,6 @@ public class NodeNames {
 	static final String CATCH = "catch";
 	static final String FINALLY = "finally";
 	static final String TARGET = "target";
+	static final String CONTINUE_CATCH = "continueCatch";
 
 }
