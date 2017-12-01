@@ -32,7 +32,7 @@ class ConditionalExpressionFactory {
 		ComplexNode cNode = new ComplexNode(astpp.container(), condExpr);
 
 		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), condExpr);
-		Node conditionNode = DelegatingNodeFactory.create(astpp, NodeNames.CONDITION, condExpr,
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, condExpr,
 				condExpr.getExpression());
 		Node thenNode = DelegatingNodeFactory.create(astpp, NodeNames.THEN, condExpr, condExpr.getTrueExpression());
 		Node elseNode = DelegatingNodeFactory.create(astpp, NodeNames.ELSE, condExpr, condExpr.getFalseExpression());

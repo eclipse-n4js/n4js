@@ -32,7 +32,6 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
-import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
@@ -210,15 +209,6 @@ final class CFEChildren {
 				Expression expr = ce.getExprs().get(i);
 				addDelegatingNode(cfc, "expression_" + i, ce, expr);
 			}
-			return cfc;
-		}
-
-		@Override
-		public List<Node> caseConditionalExpression(ConditionalExpression ce) {
-			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "condition", ce, ce.getExpression());
-			addDelegatingNode(cfc, "then", ce, ce.getTrueExpression());
-			addDelegatingNode(cfc, "else", ce, ce.getFalseExpression());
 			return cfc;
 		}
 

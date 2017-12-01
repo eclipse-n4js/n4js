@@ -66,8 +66,11 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseAssignmentExpression(AssignmentExpression feature) {
-			clearEffectsOfExitNode(feature.getLhs());
+			if (feature.getLhs() == null) {
+				return null;
+			}
 
+			clearEffectsOfExitNode(feature.getLhs());
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
 			Symbol symbol = SymbolFactory.create(feature.getLhs());
@@ -79,8 +82,11 @@ class CFEEffectInfos {
 
 		@Override
 		public Void casePostfixExpression(PostfixExpression feature) {
-			clearEffectsOfExitNode(feature.getExpression());
+			if (feature.getExpression() == null) {
+				return null;
+			}
 
+			clearEffectsOfExitNode(feature.getExpression());
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
@@ -97,8 +103,11 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseUnaryExpression(UnaryExpression feature) {
-			clearEffectsOfExitNode(feature.getExpression());
+			if (feature.getExpression() == null) {
+				return null;
+			}
 
+			clearEffectsOfExitNode(feature.getExpression());
 			boolean addEffects = false;
 			addEffects |= feature.getOp() == UnaryOperator.INC;
 			addEffects |= feature.getOp() == UnaryOperator.DEC;
@@ -122,8 +131,11 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseParameterizedCallExpression(ParameterizedCallExpression feature) {
-			clearEffectsOfExitNode(feature.getTarget());
+			if (feature.getTarget() == null) {
+				return null;
+			}
 
+			clearEffectsOfExitNode(feature.getTarget());
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
 			Symbol symbol = SymbolFactory.create(feature.getTarget());
@@ -141,7 +153,7 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseIdentifierRef(IdentifierRef feature) {
-			setRead(feature, NodeNames.ENTRY_EXIT);
+			setRead(feature);
 			return null;
 		}
 
@@ -152,11 +164,7 @@ class CFEEffectInfos {
 		}
 
 		private void setRead(Expression feature) {
-			setRead(feature, NodeNames.EXIT);
-		}
-
-		private void setRead(Expression feature, String nodeName) {
-			Node exitNode = cNode.getNode(nodeName);
+			Node exitNode = cNode.getExit();
 			Symbol symbol = SymbolFactory.create(feature);
 			EffectInfo eiDecl = new EffectInfo(EffectType.Read, symbol);
 			exitNode.addEffectInfo(eiDecl);
@@ -164,10 +172,7 @@ class CFEEffectInfos {
 
 		private void clearEffectsOfExitNode(Expression feature) {
 			ComplexNode cn = cnMap.get(feature);
-			Node exitNode = cn.getNode(NodeNames.EXIT);
-			if (exitNode == null) {
-				exitNode = cn.getNode(NodeNames.ENTRY_EXIT);
-			}
+			Node exitNode = cn.getExit();
 			exitNode.effectInfos.clear();
 		}
 	}

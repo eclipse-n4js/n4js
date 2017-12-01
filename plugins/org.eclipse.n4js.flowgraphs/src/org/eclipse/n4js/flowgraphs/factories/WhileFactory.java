@@ -33,7 +33,8 @@ class WhileFactory {
 		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), whileStmt);
 		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, whileStmt,
 				whileStmt.getExpression());
-		Node bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, whileStmt, whileStmt.getStatement());
+		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, whileStmt,
+				whileStmt.getStatement());
 		Node continueCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), whileStmt);
 		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), whileStmt);
 
