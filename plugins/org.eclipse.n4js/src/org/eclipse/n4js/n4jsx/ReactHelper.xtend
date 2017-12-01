@@ -111,9 +111,10 @@ class ReactHelper {
 		return resourceScopeCacheHelper.get(key, resource, [
 			val scope = (scopeProvider as N4JSScopeProvider).getScopeForImplicitImports(resource as N4JSResource);
 			val desc = scope.getSingleElement(QualifiedName.create(REACT_PROJECT_ID));
-			var tModule = desc?.EObjectOrProxy as TModule;
-			tModule = EcoreUtil2.resolve(tModule, resource) as TModule;
-			return tModule;
+			if(desc === null)
+				return null
+			val tModule =  EcoreUtil2.resolve(desc.EObjectOrProxy, resource)
+			return tModule as TModule;
 		]);
 	}
 
