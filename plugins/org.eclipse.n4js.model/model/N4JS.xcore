@@ -798,8 +798,8 @@ abstract class VariableDeclarationOrBinding extends ControlFlowElement {
 }
 
 class VariableBinding extends VariableDeclarationOrBinding {
-	contains BindingPattern pattern
 	contains Expression expression
+	contains BindingPattern pattern
 }
 
 class ExportedVariableBinding extends VariableBinding {
