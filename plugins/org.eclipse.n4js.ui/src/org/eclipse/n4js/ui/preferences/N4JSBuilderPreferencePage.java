@@ -11,7 +11,6 @@
 package org.eclipse.n4js.ui.preferences;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +24,6 @@ import org.eclipse.jface.preference.IPreferencePageContainer;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.CompilerProperties;
 import org.eclipse.n4js.generator.ICompositeGenerator;
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.xtext.builder.DerivedResourceCleanerJob;
 import org.eclipse.xtext.builder.EclipseOutputConfigurationProvider;
@@ -67,14 +65,11 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 	 * Initializes default compiler configuration.
 	 */
 	@Inject
-	public N4JSBuilderPreferencePage(ComposedGeneratorRegistry composedGeneratorRegistry) {
+	public N4JSBuilderPreferencePage(ICompositeGenerator compositeGenerator) {
 		super(new ArrayList<Triple<String, String, CompilerDescriptor>>());
-		Collection<ICompositeGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
-		for (ICompositeGenerator composedGenerator : composedGenerators) {
-			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
-				this.components.add(Tuples.create(compilerDescriptor.getIdentifier(), compilerDescriptor.getName(),
-						compilerDescriptor));
-			}
+		for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
+			this.components.add(Tuples.create(compilerDescriptor.getIdentifier(), compilerDescriptor.getName(),
+					compilerDescriptor));
 		}
 	}
 

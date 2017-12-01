@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.building
 
 import com.google.inject.Inject
 import org.eclipse.n4js.generator.CompilerDescriptor
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry
 import org.eclipse.xtext.generator.IOutputConfigurationProvider
 import org.eclipse.xtext.generator.OutputConfiguration
 import org.eclipse.n4js.generator.ICompositeGenerator
@@ -21,7 +20,7 @@ import org.eclipse.n4js.generator.ICompositeGenerator
  */
 class N4JSOutputConfigurationProvider implements IOutputConfigurationProvider {
 	@Inject
-	private ComposedGeneratorRegistry composedGeneratorRegistry;
+	private ICompositeGenerator compositeGenerator;
 
 	/**
 	 * This method is called in org.eclipse.xtext.generator.Delegate and in
@@ -31,14 +30,11 @@ class N4JSOutputConfigurationProvider implements IOutputConfigurationProvider {
 	 */
 	override getOutputConfigurations() {
 		val outputConfigurations = <OutputConfiguration>newLinkedHashSet
-		val composedGenerators = composedGeneratorRegistry.getComposedGenerators();
-		for (ICompositeGenerator composedGenerator : composedGenerators) {
-			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
+			for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
 				if (compilerDescriptor.getOutputConfiguration() !== null) {
 					outputConfigurations.add(compilerDescriptor.getOutputConfiguration());
 				}
 			}
-		}
 		return outputConfigurations
 	}
 }

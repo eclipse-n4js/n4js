@@ -410,7 +410,7 @@ public class N4jscBase implements IApplication {
 			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JSX_FILE_EXTENSION);
 
 			// Register composite generators
-			headless.registerCompositeGenerator(n4jsCompositeGenerator);
+			headless.setCompositeGenerator(n4jsCompositeGenerator);
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated
 			if (!Platform.isRunning()) {

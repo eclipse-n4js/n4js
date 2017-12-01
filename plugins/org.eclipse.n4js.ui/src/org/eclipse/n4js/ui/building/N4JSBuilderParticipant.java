@@ -31,9 +31,9 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.n4js.ui.building.instructions.BuildInstruction;
 import org.eclipse.n4js.ui.building.instructions.CleanInstruction;
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.builder.BuilderParticipant;
@@ -75,7 +75,7 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 	private Injector injector;
 
 	@Inject
-	private ComposedGeneratorRegistry composedGeneratorRegistry;
+	private ICompositeGenerator compositeGenerator;
 
 	/**
 	 * Intentionally package visible producer for the {@link IBuildParticipantInstruction}.
@@ -110,7 +110,7 @@ public class N4JSBuilderParticipant extends BuilderParticipant {
 				outputConfigurations.values());
 		BuildInstruction buildInstruction = new BuildInstruction(project, outputConfigurations,
 				getDerivedResourceMarkers(), access,
-				generatorMarkers, storage2UriMapper, composedGeneratorRegistry, injector);
+				generatorMarkers, storage2UriMapper, compositeGenerator, injector);
 		return buildInstruction;
 	}
 

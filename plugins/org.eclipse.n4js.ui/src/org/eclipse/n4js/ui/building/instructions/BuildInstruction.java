@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.building.instructions;
 
 import static com.google.common.collect.Sets.newLinkedHashSet;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,7 +58,7 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 	private final IStorage2UriMapper storage2UriMapper;
 	private final Injector injector;
 	private final Set<IFile> derivedResources = newLinkedHashSet();
-	private final ComposedGeneratorRegistry composedGeneratorRegistry;
+	private final ICompositeGenerator compositeGenerator;
 
 	/**
 	 * Create a build instruction for the given project.
@@ -69,13 +68,13 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 			IDerivedResourceMarkers derivedResourceMarkers,
 			EclipseResourceFileSystemAccess2 access,
 			Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers,
-			IStorage2UriMapper storage2UriMapper, ComposedGeneratorRegistry composedGeneratorRegistry,
+			IStorage2UriMapper storage2UriMapper, ICompositeGenerator compositeGenerator,
 			Injector injector) {
 		super(project, outputConfigurations, derivedResourceMarkers);
 		this.access = access;
 		this.generatorMarkers = generatorMarkers;
 		this.storage2UriMapper = storage2UriMapper;
-		this.composedGeneratorRegistry = composedGeneratorRegistry;
+		this.compositeGenerator = compositeGenerator;
 		this.injector = injector;
 	}
 
@@ -196,11 +195,7 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 		Resource resource = resourceSet.getResource(delta.getUri(), true);
 		if (shouldGenerate(resource, aProject)) {
 			try {
-				// generator.doGenerate(resource, access);
-				Collection<ICompositeGenerator> composedGenerators = composedGeneratorRegistry.getComposedGenerators();
-				for (ICompositeGenerator composedGenerator : composedGenerators) {
-					composedGenerator.doGenerate(resource, access);
-				}
+				compositeGenerator.doGenerate(resource, access);
 			} catch (RuntimeException e) {
 				if (e instanceof GeneratorException) {
 					N4JSActivator

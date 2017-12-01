@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -70,6 +71,16 @@ public class SubGeneratorRegistry {
 			return Collections.emptyList();
 		}
 		return generators.get(fileExtension);
+	}
+
+	/**
+	 * Return all registered generators.
+	 */
+	public Collection<ISubGenerator> getGenerators() {
+		if (!isInitialized) {
+			initialize();
+		}
+		return generators.values().stream().flatMap(List::stream).collect(Collectors.toList());
 	}
 
 	/**

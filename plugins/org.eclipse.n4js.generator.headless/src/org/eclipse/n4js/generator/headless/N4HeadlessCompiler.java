@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -106,8 +105,19 @@ import com.google.inject.Provider;
  */
 public class N4HeadlessCompiler {
 
-	/** The list of composite generators, each of which is responsible for a language. */
-	private final List<ICompositeGenerator> compositeGenerators = new ArrayList<>();
+	/** The composite generator that manages all subgenerators. */
+	@Inject
+	private ICompositeGenerator compositeGenerator;
+
+	/** Get composite generator. */
+	public ICompositeGenerator getCompositeGenerator() {
+		return compositeGenerator;
+	}
+
+	/** Set composite generator. */
+	public void setCompositeGenerator(ICompositeGenerator compositeGenerator) {
+		this.compositeGenerator = compositeGenerator;
+	}
 
 	/** Abstraction to the file system, used by the generators */
 	private final JavaIoFileSystemAccess fsa;
@@ -166,39 +176,18 @@ public class N4HeadlessCompiler {
 		this.fsa = fsa;
 	}
 
-	/**
-	 * Register a composite generator.
-	 */
-	public void registerCompositeGenerator(ICompositeGenerator compositeGenerator) {
-		this.compositeGenerators.add(compositeGenerator);
-	}
-
-	/**
-	 * Unregister a composite generator.
-	 */
-	public void unregisterCompositeGenerator(ICompositeGenerator compositeGenerator) {
-		this.compositeGenerators.remove(compositeGenerator);
-	}
-
-	/**
-	 * Clear all registered composite generator.
-	 */
-	public void clearCompositeGenerators() {
-		this.compositeGenerators.clear();
-	}
-
 	/** Build an output configuration from a composite generator. */
-	private Map<String, OutputConfiguration> buildOutputConfigurations(ICompositeGenerator compositeGenerator) {
+	private Map<String, OutputConfiguration> buildOutputConfigurations(ICompositeGenerator compGenerator) {
 		Map<String, OutputConfiguration> result = new HashMap<>();
-		for (CompilerDescriptor desc : compositeGenerator.getCompilerDescriptors()) {
+		for (CompilerDescriptor desc : compGenerator.getCompilerDescriptors()) {
 			result.put(desc.getIdentifier(), desc.getOutputConfiguration());
 		}
 		return result;
 	}
 
 	/** Configure FileSystemAccess (FSA) from a composite generator and a project */
-	private void configureFSAOutput(ICompositeGenerator compositeGenerator, IN4JSProject project) {
-		Map<String, OutputConfiguration> outputs = buildOutputConfigurations(compositeGenerator);
+	private void configureFSAOutput(ICompositeGenerator compGenerator, IN4JSProject project) {
+		Map<String, OutputConfiguration> outputs = buildOutputConfigurations(compGenerator);
 		configureFSA(project, outputs);
 	}
 
@@ -1413,19 +1402,15 @@ public class N4HeadlessCompiler {
 						if (logger.isVerbose()) {
 							logger.info("  Generating resource " + resource.getURI());
 						}
+
+						// Ask composite generator to try to generate the current resource
 						if (logger.isVerbose()) {
-							logger.info(
-									"  will generate with  " + compositeGenerators.size() + " composite generators");
+							logger.info("  generating  " + compositeGenerator.getClass().getName());
 						}
-						// Ask each composite generator to try to generate the current resource
-						for (ICompositeGenerator compositeGenerator : compositeGenerators) {
-							if (logger.isVerbose()) {
-								logger.info("  generating  " + compositeGenerator.getClass().getName());
-							}
-							// Configure FSA for the composite generator and the project
-							configureFSAOutput(compositeGenerator, markedProject.project);
-							compositeGenerator.doGenerate(resource, fsa);
-						}
+						// Configure FSA for the composite generator and the project
+						configureFSAOutput(compositeGenerator, markedProject.project);
+						compositeGenerator.doGenerate(resource, fsa);
+
 						rec.markEndCompile(resource);
 					} catch (GeneratorException e) {
 						rec.markBrokenCompile(e);

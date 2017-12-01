@@ -12,7 +12,6 @@ Contributors:
 <?eclipse version="3.0"?>
 
 <plugin>
-   <extension-point id="composedgenerator" name="N4JS Composed Generator" schema="schema/composedgenerator.exsd"/>
    <extension-point id="resourceDescriptionsPersisterContribution" name="Resource Descriptions Persister Contribution" schema="schema/resourceDescriptionsPersisterContribution.exsd"/>
    <extension-point id="workingSetManager" name="N4JS Working Set Manager" schema="schema/workingSetManager.exsd"/>
 
@@ -21,13 +20,6 @@ Contributors:
   A specialized Types representation is registered for n4ts files that are loaded
   with the built-in scheme, e.g. 'n4scheme:/global.n4ts'
 -->
-	<extension
-         point="org.eclipse.n4js.ui.composedgenerator">
-      <generator
-            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.generator.N4JSCompositeGenerator">
-      </generator>
-   </extension>
-
    <extension
          point="org.eclipse.n4js.generator.common.subgenerator">
       <subgenerator
