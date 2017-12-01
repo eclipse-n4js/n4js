@@ -35,10 +35,6 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.n4js.generator.ISubGenerator
-import org.eclipse.n4js.generator.CompilerDescriptor
-import org.eclipse.n4js.generator.GeneratorOption
-import org.eclipse.n4js.generator.CompilerProperties
 
 /**
  */
@@ -133,7 +129,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val fileExtension = input.URI.xpectAwareFileExtension;
 
 		return (autobuildEnabled
-			&& (input.hasValidFileExtension || "n4jsx".equals(fileExtension) || "jsx".equals(fileExtension)) // TODO IDE-2416
+			&& (applicableFileExtensions(input).contains(fileExtension))
 			&& projectUtils.isSource(input.URI)
 			&& (projectUtils.isNoValidate(input.URI)
 				|| projectUtils.isExternal(input.URI)
@@ -222,18 +218,6 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		}
 
 		return targetFilePath;
-	}
-
-
-	// TODO is it possible to add a filter before even activating this generator?
-	// background: currently also n4mf files are passed to the generator
-	/**
-	 * Checking if a resource will be as source to the generator.
-	 */
-	def hasValidFileExtension(Resource resource) {
-		val resourceType = ResourceType.getResourceType(resource);
-		return resourceType.equals(ResourceType.JS)
-				|| resourceType.equals(ResourceType.N4JS);
 	}
 
 	/**

@@ -13,10 +13,7 @@ package org.eclipse.n4js.generator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -36,41 +33,17 @@ public class SubGeneratorRegistry {
 
 	/* The extension point to subgenerators */
 	private static final String SUBGENERATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.generator.common.subgenerator";
-
-	private static final String ATT_FILE_EXTENSION = "fileExtension";
 	private static final String ATT_SUB_GENERATOR_CLASS = "class";
 
 	private boolean isInitialized = false;
-	private final Map<String, List<ISubGenerator>> generators = new HashMap<>();
+	private final List<ISubGenerator> generators = new ArrayList<>();
 
 	/**
 	 * Register a generator. This method should only be invoked by client code directly in headless mode. When running
 	 * in Eclipse, register extensions will be registered via the 'generators' extension point.
-	 *
-	 * @param fileExtension
-	 *            without the leading dot e.g. {@code txt} (not {@code .txt})
 	 */
-	public void register(ISubGenerator generator, String fileExtension) {
-		if (!generators.containsKey(fileExtension)) {
-			List<ISubGenerator> l = new ArrayList<>();
-			generators.put(fileExtension, l);
-		}
-
-		generators.get(fileExtension).add(generator);
-	}
-
-	/**
-	 * Return registered file extensions.
-	 */
-	public Collection<ISubGenerator> getGenerators(String fileExtension) {
-		if (!isInitialized) {
-			initialize();
-		}
-
-		if (!generators.containsKey(fileExtension)) {
-			return Collections.emptyList();
-		}
-		return generators.get(fileExtension);
+	public void register(ISubGenerator generator) {
+		generators.add(generator);
 	}
 
 	/**
@@ -80,7 +53,7 @@ public class SubGeneratorRegistry {
 		if (!isInitialized) {
 			initialize();
 		}
-		return generators.values().stream().flatMap(List::stream).collect(Collectors.toList());
+		return Collections.unmodifiableCollection(this.generators);
 	}
 
 	/**
@@ -100,10 +73,9 @@ public class SubGeneratorRegistry {
 				final IConfigurationElement[] configElems = extension.getConfigurationElements();
 				for (IConfigurationElement elem : configElems) {
 					try {
-						String fileExtension = elem.getAttribute(ATT_FILE_EXTENSION);
 						ISubGenerator generator = (ISubGenerator) elem
 								.createExecutableExtension(ATT_SUB_GENERATOR_CLASS);
-						register(generator, fileExtension);
+						register(generator);
 					} catch (Exception ex) {
 						LOGGER.error(
 								"Error while reading extensions for extension point "

@@ -49,13 +49,6 @@
 
    <element name="subgenerator">
       <complexType>
-         <attribute name="fileExtension" type="string">
-            <annotation>
-               <documentation>
-                  
-               </documentation>
-            </annotation>
-         </attribute>
          <attribute name="class" type="string">
             <annotation>
                <documentation>

@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.n4js.HeadlessCompilerFactory;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSInjectorProvider;
 import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
@@ -133,8 +132,7 @@ public class ScenarioTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
-		subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator.get());
 		hlc.setCompositeGenerator(n4jsCompositeGenerator);
 	}
 

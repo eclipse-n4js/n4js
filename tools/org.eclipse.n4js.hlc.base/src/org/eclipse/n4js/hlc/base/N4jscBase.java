@@ -403,11 +403,8 @@ public class N4jscBase implements IApplication {
 			// help.
 			initInjection(refProperties());
 
-			// Register subgenerators
-			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JS_FILE_EXTENSION);
-			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JS_FILE_EXTENSION);
-			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.N4JSX_FILE_EXTENSION);
-			subGeneratorRegistry.register(ecmaScriptSubGenerator.get(), N4JSGlobals.JSX_FILE_EXTENSION);
+			// Register ECMAScript subgenerator
+			subGeneratorRegistry.register(ecmaScriptSubGenerator.get());
 
 			// Register composite generators
 			headless.setCompositeGenerator(n4jsCompositeGenerator);

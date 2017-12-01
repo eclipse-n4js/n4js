@@ -23,7 +23,6 @@ Contributors:
    <extension
          point="org.eclipse.n4js.generator.subgenerator">
       <subgenerator
-            fileExtension="n4js"
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator">
       </subgenerator>
    </extension>

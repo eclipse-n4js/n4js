@@ -15,10 +15,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.CancelIndicatorBaseExtractor;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.GeneratorOption;
@@ -173,5 +176,16 @@ public class EcmaScriptSubGenerator extends AbstractSubGenerator {
 		final Writer buffCode = new StringWriter();
 		ecmaScriptTranspiler.transpile(resourceCasted, options, buffCode, Optional.absent());
 		return buffCode.toString();
+	}
+
+	/** This subgenerator is applicable to N4JS, JS, N4JSX, JSX file extension. */
+	@Override
+	public Set<String> applicableFileExtensions(Resource input) {
+		Set<String> resourceTypes = new HashSet<>();
+		resourceTypes.add(N4JSGlobals.JS_FILE_EXTENSION);
+		resourceTypes.add(N4JSGlobals.N4JS_FILE_EXTENSION);
+		resourceTypes.add(N4JSGlobals.N4JSX_FILE_EXTENSION);
+		resourceTypes.add(N4JSGlobals.JSX_FILE_EXTENSION);
+		return resourceTypes;
 	}
 }
