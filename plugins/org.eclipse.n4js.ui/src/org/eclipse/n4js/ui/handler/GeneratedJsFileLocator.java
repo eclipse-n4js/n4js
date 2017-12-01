@@ -23,8 +23,8 @@ import com.google.inject.Inject;
 
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.common.CompilerUtils;
-import org.eclipse.n4js.generator.common.GeneratorException;
+import org.eclipse.n4js.generator.CompilerUtils;
+import org.eclipse.n4js.generator.GeneratorException;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;

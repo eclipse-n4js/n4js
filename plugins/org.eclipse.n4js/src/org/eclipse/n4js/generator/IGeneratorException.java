@@ -8,7 +8,19 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
+package org.eclipse.n4js.generator;
+
 /**
- *
  */
-package org.eclipse.n4js.generator.common;
+public interface IGeneratorException {
+
+	/**
+	 * @return the file
+	 */
+	public String getFile() ;
+
+	/**
+	 * @return the line
+	 */
+	public int getLine();
+}

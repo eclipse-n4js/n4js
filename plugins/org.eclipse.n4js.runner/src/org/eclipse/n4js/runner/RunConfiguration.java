@@ -22,7 +22,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.jetty.util.ajax.JSON;
-import org.eclipse.n4js.generator.common.CompilerUtils;
+import org.eclipse.n4js.generator.CompilerUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;

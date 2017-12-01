@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.common
+package org.eclipse.n4js.generator
 
 import com.google.inject.Inject
 import java.nio.file.Path
@@ -16,7 +16,7 @@ import java.nio.file.Paths
 import org.eclipse.emf.common.EMFPlugin
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
-import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport.Severity
+import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils

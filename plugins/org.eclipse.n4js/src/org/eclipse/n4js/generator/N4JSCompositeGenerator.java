@@ -24,8 +24,8 @@ import org.eclipse.xtext.generator.IFileSystemAccess;
 import com.google.inject.Inject;
 
 /**
- * A composite generator is responsible for a language. A composite generator delegates the generation logics to its
- * children (subgenerators).
+ * This composite generator manages all subgenerators. It delegates the generation logics to its children
+ * (subgenerators).
  */
 public class N4JSCompositeGenerator implements ICompositeGenerator {
 

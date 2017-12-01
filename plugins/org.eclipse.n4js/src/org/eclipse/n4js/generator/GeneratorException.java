@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.common;
+package org.eclipse.n4js.generator;
 
 /**
  * Wraps exceptions occurred during transpilation / compilation / generation.

@@ -20,7 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport;
+import org.eclipse.n4js.generator.IGeneratorMarkerSupport;
 
 import com.google.inject.Singleton;
 
