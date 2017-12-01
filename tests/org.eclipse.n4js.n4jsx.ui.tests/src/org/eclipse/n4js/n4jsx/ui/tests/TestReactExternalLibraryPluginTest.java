@@ -15,6 +15,8 @@ import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDe
 import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.TEST_DEFINITION_LOCATION;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.net.URI;
