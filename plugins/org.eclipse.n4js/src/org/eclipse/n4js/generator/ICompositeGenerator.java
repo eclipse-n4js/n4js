@@ -31,4 +31,7 @@ public interface ICompositeGenerator extends IBaseGenerator {
 	 * @return the list of sub-generators.
 	 */
 	Collection<ISubGenerator> getSubGenerators();
+
+	/** @return sub-generators responsible for a certain file extension. */
+	Collection<ISubGenerator> getSubGenerators(String fileExtension);
 }

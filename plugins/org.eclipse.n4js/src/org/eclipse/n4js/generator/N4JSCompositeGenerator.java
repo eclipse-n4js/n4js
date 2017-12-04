@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.external.ExternalLibraryUriHelper;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.xtext.generator.IFileSystemAccess;
 
 import com.google.inject.Inject;
@@ -42,11 +43,14 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	@Inject
 	private SubGeneratorRegistry subGeneratorRegistry;
 
+	@Inject
+	private XpectAwareFileExtensionCalculator xpectAwareFileExtensionCalculator;
+
 	@Override
 	public void doGenerate(Resource input, IFileSystemAccess fsa) {
 		if (isApplicableTo(input)) {
-			// Delegate to subgenerators only when the composite generator is applicable to the resource
-			for (ISubGenerator subgenerator : getSubGenerators()) {
+			String fileExtension = xpectAwareFileExtensionCalculator.getXpectAwareFileExtension(input.getURI());
+			for (ISubGenerator subgenerator : getSubGenerators(fileExtension)) {
 				subgenerator.doGenerate(input, fsa);
 			}
 		}
@@ -86,5 +90,11 @@ public class N4JSCompositeGenerator implements ICompositeGenerator {
 	public Collection<ISubGenerator> getSubGenerators() {
 		// Ask the global generator registry to retrieve all registered generators
 		return subGeneratorRegistry.getGenerators();
+	}
+
+	@Override
+	public Collection<ISubGenerator> getSubGenerators(String fileExtension) {
+		// Ask the global generator registry to retrieve all registered generators
+		return subGeneratorRegistry.getGenerators(fileExtension);
 	}
 }

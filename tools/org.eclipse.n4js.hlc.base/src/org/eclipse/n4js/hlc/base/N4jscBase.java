@@ -61,6 +61,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.ISubGenerator;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
@@ -400,7 +401,11 @@ public class N4jscBase implements IApplication {
 			initInjection(refProperties());
 
 			// Register ECMAScript subgenerator
-			subGeneratorRegistry.register(ecmaScriptSubGenerator.get());
+			ISubGenerator subgenerator = ecmaScriptSubGenerator.get();
+			subGeneratorRegistry.register(subgenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
+			subGeneratorRegistry.register(subgenerator, N4JSGlobals.JS_FILE_EXTENSION);
+			subGeneratorRegistry.register(subgenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
+			subGeneratorRegistry.register(subgenerator, N4JSGlobals.JSX_FILE_EXTENSION);
 
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated

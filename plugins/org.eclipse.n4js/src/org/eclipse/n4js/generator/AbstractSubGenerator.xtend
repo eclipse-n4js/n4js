@@ -22,8 +22,8 @@ import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.utils.CompilerHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtend.lib.annotations.Accessors
@@ -35,7 +35,6 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.n4js.utils.CompilerHelper
 
 /**
  */
@@ -71,9 +70,6 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	@Inject
 	extension N4JSPreferenceAccess
-
-	@Inject
-	extension XpectAwareFileExtensionCalculator
 
 	override getCompilerDescriptor() {
 		if (compilerDescriptor === null) {
@@ -126,12 +122,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	override shouldBeCompiled(Resource input, CancelIndicator monitor) {
 		val autobuildEnabled = isActive(input)
-		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase;
-		val fileExtension = input.URI.xpectAwareFileExtension;
+		val isXPECTMode = N4JSGlobals.XT_FILE_EXTENSION == input.URI.fileExtension.toLowerCase
 
-		return (autobuildEnabled
-			&& (applicableFileExtensions(input).contains(fileExtension))
-			&& projectUtils.isSource(input.URI)
+		return (autobuildEnabled && projectUtils.isSource(input.URI)
 			&& (projectUtils.isNoValidate(input.URI)
 				|| projectUtils.isExternal(input.URI)
 				// if platform is running (but not in XPECT mode) the generator is called from the builder, hence cannot have any validation errors

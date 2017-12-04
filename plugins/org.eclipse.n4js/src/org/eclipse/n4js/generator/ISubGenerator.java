@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.generator;
 
-import java.util.Set;
-
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.xtext.util.CancelIndicator;
@@ -50,9 +48,4 @@ public interface ISubGenerator extends IBaseGenerator {
 	 * @return the compiled result as String
 	 */
 	public String getCompileResultAsText(Script root, GeneratorOption[] options);
-
-	/**
-	 * Return the set of applicable file extensions.
-	 */
-	public Set<String> applicableFileExtensions(Resource input);
 }
