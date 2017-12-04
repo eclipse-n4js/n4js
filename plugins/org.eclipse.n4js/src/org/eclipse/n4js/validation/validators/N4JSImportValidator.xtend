@@ -29,6 +29,7 @@ import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
@@ -105,7 +106,22 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			}
 		}
 	}
-	
+
+	/**
+	 * We need jsx resources to depend on jsx backend. We are patching imports in the transpiler (to add the import to jsx backend if it is missing),
+	 * but transpiler will crash if that import will be invalid, i.e. project has no dependency on jsx backend. It would be ideal to add validation 
+	 * on manifest and not transpile, at least jsx files. Unfortunately changes to the manifest are a bit disconnected to changes of the individual 
+	 * files, e.g. adding jsx file does not trigger manifest validation. Also errors in the manifest do not prevent single file compilation. 
+	 * @see https://github.com/eclipse/n4js/issues/346
+	 */
+	@Check
+	def checkProjectDependsOnReact(Script script) {
+		val resourceType = ResourceType.getResourceType(script)
+		if (ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType)
+			if (reactHelper.lookUpReactTModule(script.eResource) === null)
+				addIssue(IssueCodes.getMessageForJSX_REACT_NOT_RESOLVED(), script, JSX_REACT_NOT_RESOLVED);
+	}
+
 	/** Make sure the namespace to react module is React. */
 	@Check
 	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
