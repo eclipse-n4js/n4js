@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.eclipse.n4js.HeadlessCompilerFactory;
 import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -63,9 +62,6 @@ public class ScenarioTest {
 
 	@Inject
 	private SubGeneratorRegistry subGeneratorRegistry;
-
-	@Inject
-	private N4JSCompositeGenerator n4jsCompositeGenerator;
 
 	@Inject
 	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
@@ -133,7 +129,6 @@ public class ScenarioTest {
 	@Before
 	public void setUp() throws Exception {
 		subGeneratorRegistry.register(ecmaScriptSubGenerator.get());
-		hlc.setCompositeGenerator(n4jsCompositeGenerator);
 	}
 
 	/**
@@ -472,6 +467,5 @@ public class ScenarioTest {
 	@After
 	public void tearDown() {
 		subGeneratorRegistry.reset();
-		hlc.setCompositeGenerator(null);
 	}
 }

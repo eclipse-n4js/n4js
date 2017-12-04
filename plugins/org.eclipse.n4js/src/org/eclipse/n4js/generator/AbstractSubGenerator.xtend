@@ -35,6 +35,7 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.n4js.utils.CompilerHelper
 
 /**
  */
@@ -51,7 +52,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	IN4JSCore core
 
 	@Inject
-	CompilerUtils compilerUtils
+	CompilerHelper compilerUtils
 
 	@Inject
 	IResourceValidator resVal

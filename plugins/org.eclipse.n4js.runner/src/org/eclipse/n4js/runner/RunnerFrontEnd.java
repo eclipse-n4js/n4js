@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.CompilerUtils;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.CompilerHelper;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
@@ -51,7 +51,7 @@ public class RunnerFrontEnd {
 	private IN4JSCore in4jscore;
 
 	@Inject
-	private CompilerUtils compilerUtils;
+	private CompilerHelper compilerHelper;
 
 	@Inject
 	private RunnerHelper runnerHelper;
@@ -270,7 +270,7 @@ public class RunnerFrontEnd {
 	private void configureExecutionData(RunConfiguration config) {
 		final URI userSelection = config.getUserSelection();
 		if (userSelection != null && (hasValidFileExtension(userSelection.toString()))) {
-			final String userSelection_targetFileName = compilerUtils.getTargetFileName(userSelection, null);
+			final String userSelection_targetFileName = compilerHelper.getTargetFileName(userSelection, null);
 			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION, userSelection_targetFileName);
 		} else {
 			// this can happen if the RunConfiguration 'config' is actually a TestConfiguration, because then the user

@@ -109,16 +109,6 @@ public class N4HeadlessCompiler {
 	@Inject
 	private ICompositeGenerator compositeGenerator;
 
-	/** Get composite generator. */
-	public ICompositeGenerator getCompositeGenerator() {
-		return compositeGenerator;
-	}
-
-	/** Set composite generator. */
-	public void setCompositeGenerator(ICompositeGenerator compositeGenerator) {
-		this.compositeGenerator = compositeGenerator;
-	}
-
 	/** Abstraction to the file system, used by the generators */
 	private final JavaIoFileSystemAccess fsa;
 

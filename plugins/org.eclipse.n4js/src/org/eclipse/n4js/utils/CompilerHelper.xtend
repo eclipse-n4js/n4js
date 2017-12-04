@@ -8,21 +8,22 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator
+package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.generator.ExceptionHandler
+import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.projectModel.IN4JSProject
 
 /**
  */
  @Singleton
-public class CompilerUtils {
+public class CompilerHelper {
 	@Inject ProjectUtils projectUtils
 
 	@Inject extension ExceptionHandler
@@ -58,7 +59,7 @@ public class CompilerUtils {
 		return targetFilePath;
 	}
 	
-		/**
+	/**
 	 * Returns the name of the target file (without path) to which the source is to be compiled to.
 	 * Default implementation returns a configured project Name with version + file name + extension.
 	 * E.g., "proj/p/A.js" for a file A in proj and a compiledFileExtension of "js".
