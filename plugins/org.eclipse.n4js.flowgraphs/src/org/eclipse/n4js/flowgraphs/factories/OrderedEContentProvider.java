@@ -19,6 +19,7 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorGuideInternal;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
@@ -78,5 +79,14 @@ final public class OrderedEContentProvider {
 			return orderedEContents;
 		}
 
+		@Override
+		public List<EObject> caseVariableBinding(VariableBinding feature) {
+			List<EObject> orderedEContents = new LinkedList<>();
+			if (feature.getExpression() != null)
+				orderedEContents.add(feature.getExpression());
+			if (feature.getPattern() != null)
+				orderedEContents.add(feature.getPattern());
+			return orderedEContents;
+		}
 	}
 }

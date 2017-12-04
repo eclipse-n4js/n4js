@@ -34,9 +34,9 @@ import java.util.Set;
  */
 abstract public class GraphExplorerInternal {
 	final Set<BranchWalkerInternal> activeBranches = new HashSet<>();
-	final List<BranchWalkerInternal> passedBranches = new LinkedList<>();
-	final List<BranchWalkerInternal> failedBranchs = new LinkedList<>();
-	final List<BranchWalkerInternal> allBranches = new LinkedList<>();
+	final LinkedList<BranchWalkerInternal> passedBranches = new LinkedList<>();
+	final LinkedList<BranchWalkerInternal> failedBranchs = new LinkedList<>();
+	final LinkedList<BranchWalkerInternal> allBranches = new LinkedList<>();
 	/** Quantor, specified in constructor */
 	protected final Quantor quantor;
 	/** Default verdict, specified in constructor */

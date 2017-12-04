@@ -10,15 +10,10 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.FastFlowVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -27,71 +22,52 @@ import org.eclipse.n4js.n4JS.VariableDeclaration;
  * Analysis to detect uses of {@link IdentifierRef}s that are located in the control flow before their corresponding
  * variables are declared.
  */
-public class UsedBeforeDeclaredAnalyser extends GraphVisitor {
-	static int branCount = 0;
+public class UsedBeforeDeclaredAnalyser extends FastFlowVisitor {
 
-	/** Constructor */
-	public UsedBeforeDeclaredAnalyser() {
-		super(Mode.Backward);
-	}
+	static class CVLocationDataEntry extends ActivationLocation {
+		final ControlFlowElement cfe;
+		final List<IdentifierRef> idRefs = new LinkedList<>();
 
-	@Override
-	protected void visit(ControlFlowElement cfe) {
-		if (cfe instanceof VariableDeclaration) {
-			super.requestActivation(new CheckVariablePathExplorer((VariableDeclaration) cfe));
+		CVLocationDataEntry(ControlFlowElement cfe) {
+			this.cfe = cfe;
+		}
+
+		@Override
+		public Object getKey() {
+			return cfe;
 		}
 	}
 
 	/** @return all {@link IdentifierRef}s that are used before declared */
 	public List<IdentifierRef> getUsedButNotDeclaredIdentifierRefs() {
 		List<IdentifierRef> idRefs = new LinkedList<>();
-
-		for (GraphExplorerInternal explorer : getActivatedExplorers()) {
-			CheckVariablePathExplorer cvExplorer = (CheckVariablePathExplorer) explorer;
-			idRefs.addAll(cvExplorer.checkLists);
+		for (ActivationLocation actLoc : getAllActivationLocations()) {
+			CVLocationDataEntry userData = (CVLocationDataEntry) actLoc;
+			idRefs.addAll(userData.idRefs);
 		}
 		return idRefs;
 	}
 
-	class CheckVariablePathExplorer extends GraphExplorer {
-		final VariableDeclaration vd;
-		HashSet<IdentifierRef> checkLists = new HashSet<>();
+	@Override
+	protected void visitNext(FastFlowBranch currentBranch, ControlFlowElement cfe) {
 
-		CheckVariablePathExplorer(VariableDeclaration vd) {
-			this.vd = vd;
-		}
+		if (cfe instanceof VariableDeclaration) {
+			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(cfe);
+			if (userData != null) {
+				userData.idRefs.clear();
+			} else {
+				currentBranch.activate(new CVLocationDataEntry(cfe));
+			}
 
-		@Override
-		protected BranchWalkerInternal firstBranchWalker() {
-			return new CheckVariablePathWalker();
-		}
+		} else if (cfe instanceof IdentifierRef) {
+			IdentifierRef ir = (IdentifierRef) cfe;
 
-		@Override
-		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
-			return new CheckVariablePathWalker();
-		}
-	}
-
-	class CheckVariablePathWalker extends BranchWalker {
-
-		CheckVariablePathWalker() {
-			branCount++;
-		}
-
-		@Override
-		protected CheckVariablePathWalker forkPath() {
-			return new CheckVariablePathWalker();
-		}
-
-		@Override
-		protected void visit(ControlFlowElement cfe) {
-			if (cfe instanceof IdentifierRef) {
-				IdentifierRef ir = (IdentifierRef) cfe;
-
-				CheckVariablePathExplorer explorer = (CheckVariablePathExplorer) getExplorer();
-				explorer.checkLists.add(ir);
+			CVLocationDataEntry userData = (CVLocationDataEntry) currentBranch.getActivationLocation(ir.getId());
+			if (userData != null) {
+				userData.idRefs.add(ir);
 			}
 		}
+
 	}
 
 }
