@@ -16,11 +16,4 @@
 
 
 
-class A{}
-class C {
-	public <T> foo(): T {return null;}
-	public <T> bar(t: T): void {}
-}
 
-var c: C;
-<.foo();
