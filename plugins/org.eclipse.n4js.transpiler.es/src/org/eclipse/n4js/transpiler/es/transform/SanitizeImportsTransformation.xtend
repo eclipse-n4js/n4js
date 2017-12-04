@@ -84,6 +84,10 @@ class SanitizeImportsTransformation extends Transformation {
 		val jsxBackendsName = steFor_React
 		// We lookup react's module using react helper.
 		val iMod = reactHelper.lookUpReactTModule(state.resource)
+		
+		if(iMod === null)
+			throw new RuntimeException("Cannot locate JSX backend for the " + state.resource.URI)
+		
 		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
 		val iDecl = _ImportDecl(null, iSpec);
 		insertBefore(state.im.scriptElements.get(0), iDecl);
