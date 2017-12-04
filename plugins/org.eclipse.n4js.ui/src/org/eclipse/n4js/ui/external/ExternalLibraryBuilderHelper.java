@@ -176,6 +176,10 @@ public class ExternalLibraryBuilderHelper {
 	 *            the build configurations representing the projects to be built.
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
+	 *             more info, see {@link #getRule() here}.
 	 */
 	public void build(final IBuildConfiguration[] buildConfigs, final IProgressMonitor monitor) {
 		doPerformOperation(buildConfigs, BuildOperation.BUILD, monitor);
@@ -245,6 +249,10 @@ public class ExternalLibraryBuilderHelper {
 	 *            the build configurations representing the the projects to be cleaned.
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
+	 *             more info, see {@link #getRule() here}.
 	 */
 	public void clean(final IBuildConfiguration[] buildConfigs, final IProgressMonitor monitor) {
 		doPerformOperation(buildConfigs, BuildOperation.CLEAN, monitor);
