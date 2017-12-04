@@ -23,15 +23,21 @@ import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.BinaryLogicalExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class BinaryLogicalExpressionFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, BinaryLogicalExpression lbExpr) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), lbExpr);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), lbExpr);
-		Node lhsNode = DelNodeFactory.create(astpp, "lhs", lbExpr, lbExpr.getLhs());
-		Node rhsNode = DelNodeFactory.create(astpp, "rhs", lbExpr, lbExpr.getRhs());
+		Node lhsNode = DelegatingNodeFactory.create(astpp, "lhs", lbExpr, lbExpr.getLhs());
+		Node rhsNode = DelegatingNodeFactory.create(astpp, "rhs", lbExpr, lbExpr.getRhs());
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), lbExpr);
 
 		cNode.addNode(entryNode);

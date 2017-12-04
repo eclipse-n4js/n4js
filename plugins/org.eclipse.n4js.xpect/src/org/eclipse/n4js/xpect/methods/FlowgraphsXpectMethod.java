@@ -13,20 +13,26 @@ package org.eclipse.n4js.xpect.methods;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.ASTIterator;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerDataRecorder;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
+import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
+import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -35,6 +41,7 @@ import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.xbase.lib.Pair;
 import org.xpect.XpectImport;
 import org.xpect.expectation.IStringExpectation;
 import org.xpect.expectation.StringExpectation;
@@ -46,15 +53,10 @@ import org.xpect.runner.Xpect;
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	// @Inject
-	// private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
-
 	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 		flowAnalyzer.createGraphs(script);
-		// ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
-		// flowAnalyzer = cache.getFlowAnalyses();
 		return flowAnalyzer;
 	}
 
@@ -210,6 +212,39 @@ public class FlowgraphsXpectMethod {
 			cfe = getCFE(offset);
 		}
 		return cfe;
+	}
+
+	/**
+	 * This xpect method can evaluate all branches that are merged at the given node name.
+	 */
+	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
+	@Xpect
+	public void allMergeBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion referenceOffset) {
+
+		N4JSFlowAnalyzerDataRecorder.setEnabled(true);
+		GraphVisitor gv = new DummyForwardBackwardVisitor();
+		ControlFlowElement referenceCFE = getCFE(referenceOffset);
+		getFlowAnalyzer(referenceCFE).accept(gv);
+		N4JSFlowAnalyzerDataRecorder.setEnabled(false);
+		performBranchAnalysis(referenceOffset, null, referenceOffset);
+		List<String> edgeStrings = new LinkedList<>();
+
+		int groupIdx = 0;
+		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyzerDataRecorder.getMergedEdges();
+
+		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
+			Node startNode = pair.getKey();
+			List<ControlFlowEdge> edges = pair.getValue();
+			for (ControlFlowEdge edge : edges) {
+				String c = edge.start == startNode ? "B" : "F";
+				edgeStrings.add(c + groupIdx + ": " + edge.toString());
+			}
+			groupIdx++;
+		}
+
+		Collections.sort(edgeStrings);
+		expectation.assertEquals(edgeStrings);
 	}
 
 	/**

@@ -22,6 +22,10 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * Used for all non-statements. Children nodes are retrieved from
  * {@link CFEChildren#get(ReentrantASTIterator, ControlFlowElement)}.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 class StandardCFEFactory {
 	static final String ENTRY_NODE = "entry";
@@ -36,8 +40,11 @@ class StandardCFEFactory {
 		return buildComplexNode(astpp, cfe, false);
 	}
 
-	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe, boolean isRepresenting) {
+	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe,
+			boolean isRepresenting) {
+
 		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
+
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();
@@ -48,19 +55,16 @@ class StandardCFEFactory {
 
 		Node exitNode;
 		String extName;
-		int extID;
 		if (argumentNodes.isEmpty()) {
-			entryNode = null; //
+			entryNode = null;
 			extName = ENTRY_EXIT_NODE;
-			extID = astpp.pos();
 		} else {
 			extName = EXIT_NODE;
-			extID = argumentNodes.get(argumentNodes.size() - 1).id + 1;
 		}
 		if (isRepresenting) {
-			exitNode = new RepresentingNode(extName, extID, cfe);
+			exitNode = new RepresentingNode(extName, astpp.pos(), cfe);
 		} else {
-			exitNode = new HelperNode(extName, extID, cfe);
+			exitNode = new HelperNode(extName, astpp.pos(), cfe);
 		}
 
 		cNode.addNode(entryNode);

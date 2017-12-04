@@ -27,14 +27,20 @@ import org.eclipse.n4js.n4JS.DefaultClause;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.SwitchStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link SwitchStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class SwitchFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, SwitchStatement switchStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), switchStmt);
 
 		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), switchStmt);
-		Node pivotNode = DelNodeFactory.create(astpp, "pivot", switchStmt, switchStmt.getExpression());
+		Node pivotNode = DelegatingNodeFactory.createOrHelper(astpp, "pivot", switchStmt, switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -46,10 +52,10 @@ class SwitchFactory {
 			AbstractCaseClause cc = caseClauses.get(n);
 			Node caseNode = null;
 			if (cc instanceof CaseClause) {
-				caseNode = DelNodeFactory.create(astpp, "case_" + n, switchStmt, cc);
+				caseNode = DelegatingNodeFactory.create(astpp, "case_" + n, switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = DelNodeFactory.create(astpp, "default", switchStmt, cc);
+				caseNode = DelegatingNodeFactory.create(astpp, "default", switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);

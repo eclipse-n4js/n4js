@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -114,6 +115,7 @@ abstract public class Node implements ControlFlowable {
 	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
 	 */
 	public void addInternalSuccessor(Node node, ControlFlowType cfType) {
+		assert node != this : "Self loops are not allowed";
 		EdgeDescription sed = new EdgeDescription(node, cfType);
 		internalSucc.put(sed.node, sed);
 	}
@@ -239,6 +241,14 @@ abstract public class Node implements ControlFlowable {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	/** @return a String that contains the node name and the {@link ControlFlowElement} */
+	public String getExtendedString() {
+		String s = "";
+		s += "[" + FGUtils.getSourceText(getControlFlowElement()) + "]";
+		s += "(" + getName() + ") ";
+		return s;
 	}
 
 	private class EdgeDescription {

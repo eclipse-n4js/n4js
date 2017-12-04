@@ -11,7 +11,6 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 
 import com.google.common.collect.ComparisonChain;
@@ -37,6 +36,7 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
 		super(start, end);
+		assert cfType.isBackwards() || start.astPosition < end.astPosition : "Edge has wrong direction";
 		this.finallyPathContext = null;
 		this.cfType = cfType;
 	}
@@ -49,16 +49,6 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 		super(start, end);
 		this.finallyPathContext = finallyPathContext;
 		this.cfType = finallyPathContext.cfType;
-	}
-
-	/** @return true iff {@link #cfType} is {@literal ControlFlowType.Repeat} */
-	public boolean isRepeat() {
-		switch (cfType) {
-		case Repeat:
-			return true;
-		default:
-			return false;
-		}
 	}
 
 	/** There should be no two edges with same start and end nodes. */
@@ -95,14 +85,12 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	@Override
 	public String toString() {
 		String s = "";
-		s += "[" + FGUtils.getSourceText(start.getControlFlowElement()) + "]";
-		s += "(" + start + ") ";
+		s += start.getExtendedString();
 		if (cfType != ControlFlowType.Successor) {
 			s += "-" + cfType.name();
 		}
 		s += "-> ";
-		s += "[" + FGUtils.getSourceText(end.getControlFlowElement()) + "]";
-		s += "(" + end + ")";
+		s += end.getExtendedString();
 		return s;
 	}
 }

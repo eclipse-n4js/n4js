@@ -33,8 +33,8 @@ import org.eclipse.n4js.n4JS.Script;
 public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	final Set<FlowEdge> allEdges = new HashSet<>();
 	final List<ControlFlowElement> allNodes = new LinkedList<>();
-	final List<ControlFlowElement> allLiveNodes = new LinkedList<>();
-	final List<ControlFlowElement> allDeadNodes = new LinkedList<>();
+	final Set<ControlFlowElement> allDeadNodesGV = new HashSet<>();
+	final Set<ControlFlowElement> allDeadNodesBW = new HashSet<>();
 
 	/**
 	 * Constructor.
@@ -54,6 +54,17 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		allNodes.add(cfe);
+		if (isDeadCodeNode()) {
+			allDeadNodesGV.add(cfe);
+		}
+	}
+
+	@Override
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+		assert allDeadNodesGV.size() == allDeadNodesBW.size();
+		assert allDeadNodesGV.containsAll(allDeadNodesBW);
+		allDeadNodesGV.clear();
+		allDeadNodesBW.clear();
 	}
 
 	class AllNodesAndEdgesExplorer extends GraphExplorer {
@@ -75,6 +86,13 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 		@Override
 		protected BranchWalker forkPath() {
 			return new AllNodesAndEdgesBranchWalker();
+		}
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			if (isDeadCodeNode()) {
+				allDeadNodesBW.add(cfe);
+			}
 		}
 
 		@Override

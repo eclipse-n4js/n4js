@@ -13,11 +13,29 @@
 /* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
 
 
-var arr : Array<number>;
 
 
 
-for(var [a4,b4,c4] = arr; 2; 3) {
-	"loop";
+function f1() {
+
+   var b1 : boolean = true;
+
+   y: do  {
+       x: do  {
+           if ( b1 )
+           {
+               break x;
+               // XPECT warnings --> "Dead code. No execution possible after break." at "f1();"
+         	   f1();	// Dead
+           } else {
+               break y;
+           }
+       // XPECT warnings --> "Dead code." at "true ) return; f1();"
+       } while ( true )
+       return;
+       f1();  // Dead
+
+   // XPECT warnings --> "Dead code." at "true"
+   } while ( true )
+
 }
-
