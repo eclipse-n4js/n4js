@@ -15,10 +15,10 @@ interface I {
 	m : string;
 }
 
+let i: I;
 //XPECT elementKeyword at 'i'--> variable
 i.m;
 
-let i: I;
 //XPECT elementKeyword at 'm'--> field
 i.m;
 

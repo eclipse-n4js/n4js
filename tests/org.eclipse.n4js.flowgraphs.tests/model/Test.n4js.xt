@@ -16,26 +16,11 @@
 
 
 
-function f1() {
-
-   var b1 : boolean = true;
-
-   y: do  {
-       x: do  {
-           if ( b1 )
-           {
-               break x;
-               // XPECT warnings --> "Dead code. No execution possible after break." at "f1();"
-         	   f1();	// Dead
-           } else {
-               break y;
-           }
-       // XPECT warnings --> "Dead code." at "true ) return; f1();"
-       } while ( true )
-       return;
-       f1();  // Dead
-
-   // XPECT warnings --> "Dead code." at "true"
-   } while ( true )
-
+class A{}
+class C {
+	public <T> foo(): T {return null;}
+	public <T> bar(t: T): void {}
 }
+
+var c: C;
+<.foo();
