@@ -175,12 +175,6 @@ public class N4HeadlessCompiler {
 		return result;
 	}
 
-	/** Configure FileSystemAccess (FSA) from a composite generator and a project */
-	private void configureFSAOutput(ICompositeGenerator compGenerator, IN4JSProject project) {
-		Map<String, OutputConfiguration> outputs = buildOutputConfigurations(compGenerator);
-		configureFSA(project, outputs);
-	}
-
 	/**
 	 * Invoked by {@code N4jscBase} to set instances of injected types from the N4JSX injector. This is a work-around
 	 * for the known issue of IDE-2493.
@@ -1354,7 +1348,7 @@ public class N4HeadlessCompiler {
 	/**
 	 * Generates code for all resources in the given project.
 	 *
-	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject, Map)}
+	 * FileSystemAccess has to be correctly configured, see {@link #configureFSA(IN4JSProject)}
 	 *
 	 * @param markedProject
 	 *            project to compile.
@@ -1397,8 +1391,7 @@ public class N4HeadlessCompiler {
 						if (logger.isVerbose()) {
 							logger.info("  generating  " + compositeGenerator.getClass().getName());
 						}
-						// Configure FSA for the composite generator and the project
-						configureFSAOutput(compositeGenerator, markedProject.project);
+						configureFSA(markedProject.project);
 						compositeGenerator.doGenerate(resource, fsa);
 
 						rec.markEndCompile(resource);
@@ -1486,7 +1479,8 @@ public class N4HeadlessCompiler {
 	 * @param project
 	 *            project to be compiled
 	 */
-	private void configureFSA(IN4JSProject project, Map<String, OutputConfiguration> outputConfigToBeWrapped) {
+	private void configureFSA(IN4JSProject project) {
+		Map<String, OutputConfiguration> outputConfigToBeWrapped = buildOutputConfigurations(this.compositeGenerator);
 		File currentDirectory = new File(".");
 		File projectLocation = new File(project.getLocation().toFileString());
 
