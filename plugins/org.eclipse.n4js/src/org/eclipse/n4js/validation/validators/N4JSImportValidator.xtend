@@ -41,6 +41,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
+import org.eclipse.n4js.n4JS.JSXElement
 
 /** Validations for the import statements. */
 @Log
@@ -117,9 +118,12 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def checkProjectDependsOnReact(Script script) {
 		val resourceType = ResourceType.getResourceType(script)
-		if (ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType)
-			if (reactHelper.lookUpReactTModule(script.eResource) === null)
-				addIssue(IssueCodes.getMessageForJSX_REACT_NOT_RESOLVED(), script, JSX_REACT_NOT_RESOLVED);
+		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
+			return
+
+		val firstJSXElement = script.eAllContents.findFirst[it instanceof JSXElement]
+		if (firstJSXElement !== null && reactHelper.lookUpReactTModule(script.eResource) === null)
+			addIssue(IssueCodes.getMessageForJSX_REACT_NOT_RESOLVED(), firstJSXElement, JSX_REACT_NOT_RESOLVED);
 	}
 
 	/** Make sure the namespace to react module is React. */
