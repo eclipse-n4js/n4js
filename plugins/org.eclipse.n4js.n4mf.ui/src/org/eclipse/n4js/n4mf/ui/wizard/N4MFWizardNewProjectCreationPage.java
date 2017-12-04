@@ -17,6 +17,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.base.Strings.nullToEmpty;
 import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
+import static org.eclipse.jface.databinding.viewers.ViewersObservables.observeSingleSelection;
+import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.n4js.n4mf.ProjectType.API;
 import static org.eclipse.n4js.n4mf.ProjectType.LIBRARY;
 import static org.eclipse.n4js.n4mf.ProjectType.TEST;
@@ -26,8 +28,6 @@ import static org.eclipse.n4js.n4mf.ui.internal.N4MFActivator.ORG_ECLIPSE_N4JS_N
 import static org.eclipse.n4js.n4mf.ui.wizard.N4MFProjectInfo.IMPLEMENTATION_ID_PROP_NAME;
 import static org.eclipse.n4js.n4mf.ui.wizard.N4MFProjectInfo.IMPLEMENTED_PROJECTS_PROP_NAME;
 import static org.eclipse.n4js.n4mf.ui.wizard.N4MFProjectInfo.PROJECT_TYPE_PROP_NAME;
-import static org.eclipse.jface.databinding.viewers.ViewersObservables.observeSingleSelection;
-import static org.eclipse.jface.layout.GridDataFactory.fillDefaults;
 import static org.eclipse.swt.SWT.BORDER;
 import static org.eclipse.swt.SWT.CHECK;
 import static org.eclipse.swt.SWT.FILL;
@@ -36,6 +36,7 @@ import static org.eclipse.swt.SWT.Modify;
 import static org.eclipse.swt.SWT.READ_ONLY;
 import static org.eclipse.xtext.util.Strings.toFirstUpper;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -44,6 +45,10 @@ import java.util.regex.Pattern;
 import org.eclipse.core.databinding.DataBindingContext;
 import org.eclipse.core.databinding.beans.BeanProperties;
 import org.eclipse.core.databinding.beans.PojoProperties;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.databinding.swt.WidgetProperties;
 import org.eclipse.jface.databinding.viewers.ViewersObservables;
 import org.eclipse.jface.dialogs.Dialog;
@@ -53,6 +58,9 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ComboViewer;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.n4js.n4mf.N4mfPackage;
+import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.layout.GridData;
@@ -67,10 +75,6 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.xtext.resource.IResourceDescriptions;
 
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.n4mf.N4mfPackage;
-import org.eclipse.n4js.n4mf.ProjectType;
-import org.eclipse.n4js.n4mf.ui.internal.N4MFActivator;
 
 /**
  * Wizard page for configuring a new N4JS project.
@@ -114,27 +118,25 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 		createVendorIdControls(dbc, control);
 
-		final ComboViewer projectType = new ComboViewer(control, READ_ONLY);
-		projectType.setLabelProvider(new ProjectTypeLabelProvider());
-		projectType.setContentProvider(ArrayContentProvider.getInstance());
-		projectType.getControl().setLayoutData(fillDefaults().grab(true, false).create());
-		projectType.setInput(ProjectType.values());
+		ComboViewer projectTypeCombo = new ComboViewer(control, READ_ONLY);
+		projectTypeCombo.setLabelProvider(new ProjectTypeLabelProvider());
+		projectTypeCombo.setContentProvider(ArrayContentProvider.getInstance());
+		projectTypeCombo.getControl().setLayoutData(fillDefaults().grab(true, false).create());
+		projectTypeCombo.setInput(ProjectType.values());
 
-		// A composite to hold the changing UI component (additional library project options / additional test project
-		// options)
-		final Composite changingComposite = new Composite(control, NONE);
+		Composite projectTypePropertyControls = new Composite(control, NONE);
 		StackLayout changingStackLayout = new StackLayout();
-		changingComposite.setLayout(changingStackLayout);
-		changingComposite.setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).create());
+		projectTypePropertyControls.setLayout(changingStackLayout);
+		projectTypePropertyControls.setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).create());
 
-		Composite defaultOptions = initDefaultOptionsUI(dbc, changingComposite);
-		Composite libraryProjectOptionsGroup = initLibraryOptionsUI(dbc, changingComposite);
-		Composite testProjectOptionsGroup = initTestProjectUI(dbc, changingComposite);
+		Composite defaultOptions = initDefaultOptionsUI(dbc, projectTypePropertyControls);
+		Composite libraryProjectOptionsGroup = initLibraryOptionsUI(dbc, projectTypePropertyControls);
+		Composite testProjectOptionsGroup = initTestProjectUI(dbc, projectTypePropertyControls);
 
-		initProjectTypeBinding(dbc, projectType);
+		initProjectTypeBinding(dbc, projectTypeCombo);
 
 		// Configure stack layout to show advanced options
-		projectType.addPostSelectionChangedListener(e -> {
+		projectTypeCombo.addPostSelectionChangedListener(e -> {
 			switch (projectInfo.getProjectType()) {
 			case LIBRARY:
 				changingStackLayout.topControl = libraryProjectOptionsGroup;
@@ -145,7 +147,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 			default:
 				changingStackLayout.topControl = defaultOptions;
 			}
-			changingComposite.layout(true);
+			projectTypePropertyControls.layout(true);
 			setPageComplete(validatePage());
 		});
 
@@ -173,7 +175,7 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		final Label vendorIdLabel = new Label(composite, SWT.NONE);
 		vendorIdLabel.setText("Vendor id:");
 
-		final Text vendorIdText = new Text(composite, SWT.BORDER);
+		Text vendorIdText = new Text(composite, SWT.BORDER);
 		vendorIdText.setLayoutData(fillDefaults().align(FILL, FILL).grab(true, true).create());
 
 		projectInfo.addPropertyChangeListener(event -> {
@@ -203,7 +205,8 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 	private Composite initLibraryOptionsUI(DataBindingContext dbc, Composite parent) {
 		// Additional library project options
 		final Group libraryProjectOptionsGroup = new Group(parent, NONE);
-		libraryProjectOptionsGroup.setLayout(GridLayoutFactory.fillDefaults().numColumns(2).equalWidth(false).create());
+		libraryProjectOptionsGroup
+				.setLayout(GridLayoutFactory.fillDefaults().margins(12, 5).numColumns(2).equalWidth(false).create());
 
 		emptyPlaceholder(libraryProjectOptionsGroup);
 
@@ -268,10 +271,10 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 
 	@Override
 	protected boolean validatePage() {
-		final boolean valid = super.validatePage();
+		boolean valid = super.validatePage(); // run default validation
+		valid = (valid && validateIsExistingProjectPath()); // check if existing project
 
 		if (valid) {
-
 			String errorMsg = null;
 			final String projectName = getProjectName();
 			final String vendorId = projectInfo.getVendorId();
@@ -386,6 +389,52 @@ public class N4MFWizardNewProjectCreationPage extends WizardNewProjectCreationPa
 		dbc.bindList(
 				ViewersObservables.observeMultiSelection(apiViewer),
 				PojoProperties.list(N4MFProjectInfo.class, IMPLEMENTED_PROJECTS_PROP_NAME).observe(projectInfo));
+	}
+
+	/**
+	 * Checks whether the specified project path points to an existing project and sets an according error message.
+	 *
+	 * Returns <code>true</code> otherwise.
+	 *
+	 * This method assumes that {@link #getProjectName()} returns a valid project name.
+	 */
+	private boolean validateIsExistingProjectPath() {
+		IPath projectLocation = getLocationPath();
+		final String projectName = getProjectName();
+
+		// if workspace is project location (default location)
+		if (projectLocation.equals(Platform.getLocation())) {
+			// add project name since #getLocationPath does not return the full project location
+			projectLocation = projectLocation.append(projectName);
+		}
+
+		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+		boolean workspaceProjectExists = root.getProject(projectName).exists();
+
+		// check for an existing manifest
+		IPath manifestPath = projectLocation.append("manifest.n4mf");
+		File existingManifest = new File(manifestPath.toString());
+
+		// check for an existing file with the path of the project folder
+		File existingFileAtProjectDirectory = new File(projectLocation.toString());
+		boolean projectDirectoryIsExistingFile = existingFileAtProjectDirectory.exists()
+				&& existingFileAtProjectDirectory.isFile();
+
+		boolean isExistingNonWorkspaceProject = existingManifest.exists() && !workspaceProjectExists;
+
+		if (projectDirectoryIsExistingFile) {
+			// set error message if there is already at the specified project location
+			setErrorMessage("There already exists a file at the location '" + projectLocation.toString() + "'.");
+			return false;
+		} else if (isExistingNonWorkspaceProject) {
+			// set error message if the specified directory already represents an N4JS project
+			setErrorMessage(
+					"There already exists an N4JS project at the specified location. Please use 'File > Import...' to add it to the workspace.");
+			return false;
+		} else {
+			// otherwise the project location does not exist yet
+			return true;
+		}
 	}
 
 	private Collection<String> getAvailableApiProjectIds() {

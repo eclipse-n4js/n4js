@@ -10,44 +10,41 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link DoStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link DoStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class DoWhileFactory {
 	static final String CONDITION_NODE_NAME = "condition";
 
-	static ComplexNode buildComplexNode(DoStatement doStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(doStmt);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, DoStatement doStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), doStmt);
 
-		Node entryNode = new HelperNode("entry", intPos++, doStmt);
-		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, intPos++, doStmt, doStmt.getExpression());
-		Node bodyNode = new DelegatingNode("body", intPos++, doStmt, doStmt.getStatement());
-		Node exitNode = new DelegatingNode("exit", intPos++, doStmt);
+		Node entryNode = new HelperNode("entry", astpp.pos(), doStmt);
+		Node bodyNode = DelegatingNodeFactory.create(astpp, "body", doStmt, doStmt.getStatement());
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, CONDITION_NODE_NAME, doStmt,
+				doStmt.getExpression());
+		Node exitNode = new HelperNode("exit", astpp.pos(), doStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);
 		cNode.addNode(conditionNode);
 		cNode.addNode(exitNode);
 
-		List<Node> nodes = new LinkedList<>();
-		nodes.add(entryNode);
-		nodes.add(bodyNode);
-		nodes.add(conditionNode);
-		cNode.connectInternalSucc(nodes);
-
-		cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
-		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
+		cNode.connectInternalSucc(entryNode, bodyNode, conditionNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopReenter, conditionNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);

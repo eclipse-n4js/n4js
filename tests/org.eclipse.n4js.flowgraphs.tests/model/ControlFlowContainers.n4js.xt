@@ -36,6 +36,7 @@ function FunctionBody() {
 	"FB2";
 }
 
+// Script XPECT cfContainer of '"Script3"' --> Script
 "Script3";
 
 class C {
@@ -104,9 +105,11 @@ class AnnotationConfigurable1 {
     field;
 }
 
-// AnnotationExpressionList XPECT cfContainer of '@This(Object)' --> FunctionExpression::ExpressionAnnotationList
+// AnnotationExpressionList XPECT cfContainer of '@This("param")' --> Script
+// AnnotationExpressionList XPECT cfContainer of '"param"' --> LiteralAnnotationArgument::StringLiteral
 // AnnotationExpressionList XPECT warnings --> "Variable names should start with lower case letter." at "AnnotationExpressionList"
-var AnnotationExpressionList = @This(Object) function() {}
+// AnnotationExpressionList XPECT errors --> "The annotation @This expects a TypeRef here." at ""param""
+var AnnotationExpressionList = @This("param") function() {}
 
 
 class ComputedPropertyName1 {
@@ -132,3 +135,12 @@ export public var expVS1;
 // ThrowInScript XPECT succs at '2' --> throw 2;
 1;
 throw 2;
+
+
+function top() {
+	// top nested XPECT succs at '"nested";' -->
+	function nested() {
+		"nested";
+	}
+	"top";
+}

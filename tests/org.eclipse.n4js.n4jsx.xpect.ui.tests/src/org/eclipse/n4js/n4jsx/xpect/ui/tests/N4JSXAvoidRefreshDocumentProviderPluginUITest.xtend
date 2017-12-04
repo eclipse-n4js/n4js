@@ -15,11 +15,13 @@ import org.eclipse.core.internal.resources.Workspace
 import org.eclipse.core.resources.ResourcesPlugin
 import org.eclipse.n4js.N4JSUiInjectorProvider
 import org.eclipse.n4js.tests.helper.documentprovider.CountPostChangeBroadcastChangeNotificationManager
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.eclipse.xtext.ui.XtextProjectHelper
 import org.eclipse.xtext.ui.testing.AbstractEditorTest
 import org.eclipse.xtext.xbase.lib.util.ReflectExtensions
+import org.junit.BeforeClass
 import org.junit.Test
 import org.junit.runner.RunWith
 
@@ -37,10 +39,15 @@ class N4JSXAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 	@Inject
 	ReflectExtensions reflectExtensions
 
-	val N4JSX_EDITOR_ID = 'org.eclipse.n4js.n4jsx.N4JSX'
+	val N4JSX_EDITOR_ID = 'org.eclipse.n4js.N4JS'
 	val PROJECT_NAME = 'testProject'
 	val MF_FILE = 'manifest.nfmf'
 	val SRC = 'src';
+	
+	@BeforeClass
+	static def enablePlatformLogger() {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	override setUp() throws Exception {
 		super.setUp()
@@ -49,7 +56,7 @@ class N4JSXAvoidRefreshDocumentProviderPluginUITest extends AbstractEditorTest {
 
 	@Test
 	public def void noRefreshWhenOpenningN4JSXFileTest() {
-		val content = '<div/>';		
+		val content = '<div/>';
 		val n4jsxFile = createFileWithContent(content)
 		val workspace = ResourcesPlugin.getWorkspace() as Workspace
 		val notificationManager = reflectExtensions.get(workspace, "notificationManager")

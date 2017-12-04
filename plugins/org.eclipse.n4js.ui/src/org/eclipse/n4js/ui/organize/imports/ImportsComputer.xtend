@@ -49,8 +49,6 @@ import org.eclipse.xtext.resource.XtextResource
 import static org.eclipse.n4js.ui.organize.imports.XtextResourceUtils.*
 import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.EXPORT_DEFAULT_NAME
 
-import static extension org.eclipse.n4js.ui.organize.imports.UnresolveProxyCrossRefUtil.*
-
 /**
  * Computes imports required by the given resource. In principle removes unused imports, adds missing imports, sorts imports - all in one go.
  * Does not actually change the resource, but prepares final state that callers can apply to the resource.
@@ -63,9 +61,6 @@ public class ImportsComputer {
 
 	@Inject
 	private ImportsFactory importsFactory;
-
-	@Inject
-	private IReferenceFilter referenceFilter;
 
 	@Inject
 	private ImportProvidedElementLabelprovider importProvidedElementLabelprovider;
@@ -84,6 +79,9 @@ public class ImportsComputer {
 
 	@Inject
 	private VariableVisibilityChecker varVisibilityChecker;
+	
+	@Inject
+	private UnresolveProxyCrossRefHelper crossRef;
 
 	/** Adapter used to mark programmatically created AST-Elements without a corresponding parse tree node. */
 	private final Adapter nodelessMarker = new AdapterImpl();
@@ -201,8 +199,7 @@ public class ImportsComputer {
 		IN4JSProject contextProject, Set<String> namesThatWeBroke) {
 		val Multimap<String, ImportableObject> resolutions = LinkedHashMultimap.create();
 
-		val Iterable<ReferenceProxyInfo> unresolved = script.findProxyCrossRefInfo.filter[referenceFilter.test(it)].
-			filter[it.eobject instanceof MemberAccess === false]
+		val Iterable<ReferenceProxyInfo> unresolved = crossRef.findProxyCrossRefInfo(script).filter[it.eobject instanceof MemberAccess === false]
 
 		val brokenNames = new HashSet<String>();
 		brokenNames.addAll(namesThatWeBroke)
@@ -212,6 +209,7 @@ public class ImportsComputer {
 
 		return resolutions
 	}
+
 
 	/**
 	 * Obtains index based on the provided resource. Matches all broken names against object descriptions in the index.

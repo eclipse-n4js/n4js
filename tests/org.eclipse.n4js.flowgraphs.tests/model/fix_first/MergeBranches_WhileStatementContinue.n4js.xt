@@ -1,0 +1,47 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.tests.N4JSFlowGraphTest END_SETUP */
+
+
+/**
+ * Note: Tests of kind 'allMergeBranches' need to have single files for each test.
+ */
+
+
+/* WhileStatementContinue XPECT allMergeBranches ---
+	B1: [continue;](jumpNode) -Continue-> [while (1) { 2; continue; 3; }](condition),
+	B1: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	B2: [continue;](jumpNode) -Continue-> [while (1) { 2; continue; 3; }](condition),
+	B2: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	B3: [continue;](jumpNode) -Continue-> [while (1) { 2; continue; 3; }](condition),
+	B3: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	B4: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
+	B4: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
+	B4: [while (1) { 2; continue; 3; }](entry) -> [while (1) { 2; continue; 3; }](condition),
+	F0: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	F0: [continue;](jumpNode) -DeadCode-> [continue;](exit),
+	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit),
+	F5: [1](entryExit) -LoopExit-> [while (1) { 2; continue; 3; }](exit)
+--- */
+function WhileStatementContinue() {
+	"start";
+	while (1) {
+		2;
+		continue;
+		// WhileStatementContinue XPECT warnings --> "Dead code. No execution possible after continue." at "3;"
+		3;
+	}
+	"end";
+}

@@ -48,6 +48,9 @@ class WildcardPathFilter {
 	}
 
 	private def static Pair<List<String>, List<String>> collectAllFoldersAndFilesByWildcardPath(String absoluteProjectPath, String matchString, boolean addFileExtensionPattern) {
+		if(!(new File(absoluteProjectPath)).exists)
+			return #[]->#[]
+		
 		val newMatchString = matchString.replace("\\", File.separator).replace("/", File.separator).adaptWildcard(addFileExtensionPattern)
 		val separator = File.separator + ".."
 		val splittedMatchStringParts = newMatchString.split(Pattern.quote(separator)).iterator

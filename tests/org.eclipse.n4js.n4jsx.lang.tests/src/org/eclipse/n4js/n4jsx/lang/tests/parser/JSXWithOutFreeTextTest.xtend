@@ -12,15 +12,16 @@ package org.eclipse.n4js.n4jsx.lang.tests.parser
 
 import org.eclipse.n4js.n4JS.ExpressionStatement
 import org.eclipse.n4js.n4JS.FunctionDeclaration
+import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.n4JS.JSXExpression
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.n4js.n4jsx.tests.helper.parser.AbstractN4JSXParserTest
-import org.junit.Test
-import org.eclipse.n4js.n4JS.TemplateSegment
-import org.eclipse.n4js.n4jsx.n4JSX.JSXExpression
-import org.eclipse.n4js.n4JS.TemplateLiteral
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.StringLiteral
+import org.eclipse.n4js.n4JS.TemplateLiteral
+import org.eclipse.n4js.n4JS.TemplateSegment
+import org.junit.Test
+
+import static org.junit.Assert.assertEquals
 
 class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 

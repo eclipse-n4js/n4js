@@ -17,6 +17,9 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -30,10 +33,8 @@ import org.eclipse.n4js.n4JS.Script;
 public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	final Set<FlowEdge> allEdges = new HashSet<>();
 	final List<ControlFlowElement> allNodes = new LinkedList<>();
-	final Set<ControlFlowElement> allForwardCFEs = new HashSet<>();
-	final Set<ControlFlowElement> allBackwardCFEs = new HashSet<>();
-	final Set<ControlFlowElement> allIslandsCFEs = new HashSet<>();
-	final Set<ControlFlowElement> allCatchBlocksCFEs = new HashSet<>();
+	final Set<ControlFlowElement> allDeadNodesGV = new HashSet<>();
+	final Set<ControlFlowElement> allDeadNodesBW = new HashSet<>();
 
 	/**
 	 * Constructor.
@@ -42,31 +43,65 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	 *            if not null, only graph elements within (transitive) are found, otherwise all elements of the script
 	 */
 	public AllNodesAndEdgesPrintVisitor(ControlFlowElement container) {
-		super(container, Mode.Forward, Mode.Backward, Mode.Islands, Mode.CatchBlocks);
+		super(container, Mode.Forward);
+	}
+
+	@Override
+	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+		requestActivation(new AllNodesAndEdgesExplorer());
 	}
 
 	@Override
 	protected void visit(ControlFlowElement cfe) {
 		allNodes.add(cfe);
-		switch (getCurrentMode()) {
-		case Forward:
-			allForwardCFEs.add(cfe);
-			break;
-		case Backward:
-			allBackwardCFEs.add(cfe);
-			break;
-		case Islands:
-			allIslandsCFEs.add(cfe);
-			break;
-		case CatchBlocks:
-			allCatchBlocksCFEs.add(cfe);
-			break;
+		if (isDeadCodeNode()) {
+			allDeadNodesGV.add(cfe);
 		}
 	}
 
 	@Override
-	protected void visit(ControlFlowElement start, ControlFlowElement end, FlowEdge edge) {
-		allEdges.add(edge);
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+		assert allDeadNodesGV.size() == allDeadNodesBW.size();
+		assert allDeadNodesGV.containsAll(allDeadNodesBW);
+		allDeadNodesGV.clear();
+		allDeadNodesBW.clear();
+	}
+
+	class AllNodesAndEdgesExplorer extends GraphExplorer {
+
+		@Override
+		protected BranchWalker joinBranches(List<BranchWalker> branchWalkers) {
+			return new AllNodesAndEdgesBranchWalker();
+		}
+
+		@Override
+		protected BranchWalkerInternal firstBranchWalker() {
+			return new AllNodesAndEdgesBranchWalker();
+		}
+
+	}
+
+	class AllNodesAndEdgesBranchWalker extends BranchWalker {
+
+		@Override
+		protected BranchWalker forkPath() {
+			return new AllNodesAndEdgesBranchWalker();
+		}
+
+		@Override
+		protected void visit(ControlFlowElement cfe) {
+			if (isDeadCodeNode()) {
+				allDeadNodesBW.add(cfe);
+			}
+		}
+
+		@Override
+		protected void visit(FlowEdge edge) {
+			if (!edge.isDead()) {
+				allEdges.add(edge);
+			}
+		}
+
 	}
 
 	/** @return all found {@link ControlFlowElement}s as Strings */
@@ -76,15 +111,6 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 			nodeStrings.add(FGUtils.getSourceText(node));
 		}
 		return nodeStrings;
-	}
-
-	/** @return all found {@link ControlFlowElement}s during {@literal Mode.Islands} as Strings */
-	public List<String> getAllIslandsNodeStrings() {
-		List<String> islandsStrings = new LinkedList<>();
-		for (ControlFlowElement node : allIslandsCFEs) {
-			islandsStrings.add(FGUtils.getSourceText(node));
-		}
-		return islandsStrings;
 	}
 
 	/** @return all found {@link ControlFlowEdge}s as Strings */
