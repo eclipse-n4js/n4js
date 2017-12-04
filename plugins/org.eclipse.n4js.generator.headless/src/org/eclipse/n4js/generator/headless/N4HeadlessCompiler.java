@@ -124,9 +124,6 @@ public class N4HeadlessCompiler {
 	@Inject
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
 
-	// @Inject // IDE-2493 see setter for more information
-	private FileBasedWorkspace n4jsxFileBasedWorkspace;
-
 	@Inject
 	private N4JSModel n4jsModel;
 
@@ -173,14 +170,6 @@ public class N4HeadlessCompiler {
 			result.put(desc.getIdentifier(), desc.getOutputConfiguration());
 		}
 		return result;
-	}
-
-	/**
-	 * Invoked by {@code N4jscBase} to set instances of injected types from the N4JSX injector. This is a work-around
-	 * for the known issue of IDE-2493.
-	 */
-	public void setInstancesFromN4JSXInjector(FileBasedWorkspace n4jsxFileBasedWorkspace) {
-		this.n4jsxFileBasedWorkspace = n4jsxFileBasedWorkspace;
 	}
 
 	/*
@@ -474,12 +463,6 @@ public class N4HeadlessCompiler {
 		for (URI projectURI : projectURIs) {
 			try {
 				n4jsFileBasedWorkspace.registerProject(projectURI);
-				if (n4jsxFileBasedWorkspace != null) {
-					// note: in production, 'n4jsxFileBasedWorkspace' should always be non-null, but there are tests
-					// that create instances of N4HeadlessCompiler from scratch without creating an injector for N4JSX
-					// (see HeadlessCompilerFactory and GH-350)
-					n4jsxFileBasedWorkspace.registerProject(projectURI);
-				}
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);
 			}
