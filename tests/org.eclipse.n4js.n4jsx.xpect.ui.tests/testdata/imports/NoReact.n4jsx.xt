@@ -28,8 +28,8 @@
 
 
 /*
-JSX files need to depend on react. Even if user does not add it, it is added by the transpiler.
-Added import will cause exceptions if react will not be reachable from JSX file. 
+JSX files need to import react. Even if user does not do it, import is added by the transpiler.
+Transpiler will throw exception if react will not be reachable from JSX file. 
 Validation prevents react file from being compiled if react is not reachable.
 XPECT errors ---
 "Cannot resolve JSX implementation." at "<div></div>"
