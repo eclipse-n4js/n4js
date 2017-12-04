@@ -3580,22 +3580,22 @@ public interface N4JSPackage extends EPackage {
 	int VARIABLE_BINDING = 42;
 
 	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int VARIABLE_BINDING__EXPRESSION = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 0;
-
-	/**
 	 * The feature id for the '<em><b>Pattern</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int VARIABLE_BINDING__PATTERN = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 1;
+	int VARIABLE_BINDING__PATTERN = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 0;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int VARIABLE_BINDING__EXPRESSION = VARIABLE_DECLARATION_OR_BINDING_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>Variable Binding</em>' class.
@@ -3644,15 +3644,6 @@ public interface N4JSPackage extends EPackage {
 	int EXPORTED_VARIABLE_BINDING = 43;
 
 	/**
-	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int EXPORTED_VARIABLE_BINDING__EXPRESSION = VARIABLE_BINDING__EXPRESSION;
-
-	/**
 	 * The feature id for the '<em><b>Pattern</b></em>' containment reference.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3660,6 +3651,15 @@ public interface N4JSPackage extends EPackage {
 	 * @ordered
 	 */
 	int EXPORTED_VARIABLE_BINDING__PATTERN = VARIABLE_BINDING__PATTERN;
+
+	/**
+	 * The feature id for the '<em><b>Expression</b></em>' containment reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int EXPORTED_VARIABLE_BINDING__EXPRESSION = VARIABLE_BINDING__EXPRESSION;
 
 	/**
 	 * The feature id for the '<em><b>Defined Variable</b></em>' reference.
@@ -16600,17 +16600,6 @@ public interface N4JSPackage extends EPackage {
 	EClass getVariableBinding();
 
 	/**
-	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.VariableBinding#getExpression <em>Expression</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference '<em>Expression</em>'.
-	 * @see org.eclipse.n4js.n4JS.VariableBinding#getExpression()
-	 * @see #getVariableBinding()
-	 * @generated
-	 */
-	EReference getVariableBinding_Expression();
-
-	/**
 	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.VariableBinding#getPattern <em>Pattern</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -16620,6 +16609,17 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EReference getVariableBinding_Pattern();
+
+	/**
+	 * Returns the meta object for the containment reference '{@link org.eclipse.n4js.n4JS.VariableBinding#getExpression <em>Expression</em>}'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the containment reference '<em>Expression</em>'.
+	 * @see org.eclipse.n4js.n4JS.VariableBinding#getExpression()
+	 * @see #getVariableBinding()
+	 * @generated
+	 */
+	EReference getVariableBinding_Expression();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.ExportedVariableBinding <em>Exported Variable Binding</em>}'.
@@ -22005,20 +22005,20 @@ public interface N4JSPackage extends EPackage {
 		EClass VARIABLE_BINDING = eINSTANCE.getVariableBinding();
 
 		/**
-		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference VARIABLE_BINDING__EXPRESSION = eINSTANCE.getVariableBinding_Expression();
-
-		/**
 		 * The meta object literal for the '<em><b>Pattern</b></em>' containment reference feature.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
 		 * @generated
 		 */
 		EReference VARIABLE_BINDING__PATTERN = eINSTANCE.getVariableBinding_Pattern();
+
+		/**
+		 * The meta object literal for the '<em><b>Expression</b></em>' containment reference feature.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EReference VARIABLE_BINDING__EXPRESSION = eINSTANCE.getVariableBinding_Expression();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.ExportedVariableBindingImpl <em>Exported Variable Binding</em>}' class.
