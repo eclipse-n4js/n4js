@@ -29,12 +29,12 @@ class N4JSOutputConfigurationProvider implements IOutputConfigurationProvider {
 	 * page these differences will be overlaid by the caller of this method.
 	 */
 	override getOutputConfigurations() {
-		val outputConfigurations = <OutputConfiguration>newLinkedHashSet
-			for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
-				if (compilerDescriptor.getOutputConfiguration() !== null) {
-					outputConfigurations.add(compilerDescriptor.getOutputConfiguration());
-				}
+		val outputConfigurations = <OutputConfiguration>newLinkedHashSet;
+		for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
+			if (compilerDescriptor.getOutputConfiguration() !== null) {
+				outputConfigurations.add(compilerDescriptor.getOutputConfiguration());
 			}
-		return outputConfigurations
+		}
+		return outputConfigurations;
 	}
 }

@@ -15,7 +15,9 @@ import java.util.Set;
 
 /**
  * A composite generator is responsible for a language. A composite generator delegates the generation logics to its
- * children (subgenerators).
+ * children (subgenerators). When adding additional generators to a particular language, do not customize this class;
+ * instead create new subclass of {@code ISubGenerator} (probably use {@code AbstractSubGenerator} as a base) and add
+ * extension to extension point org.eclipse.n4js.generator.subgenerator
  */
 public interface ICompositeGenerator extends IBaseGenerator {
 
