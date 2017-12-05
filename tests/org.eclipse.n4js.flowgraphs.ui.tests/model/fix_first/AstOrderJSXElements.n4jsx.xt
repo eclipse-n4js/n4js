@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-/* XPECT_SETUP org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphTest
+/* XPECT_SETUP org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphPluginTest
 
    Workspace {
 		Project "N4JSXFlowgraphTest" {
