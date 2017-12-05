@@ -22,16 +22,23 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link ConditionalExpression}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class ConditionalExpressionFactory {
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ConditionalExpression condExpr) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), condExpr);
 
 		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), condExpr);
-		Node conditionNode = DelNodeFactory.create(astpp, "condition", condExpr, condExpr.getExpression());
-		Node thenNode = DelNodeFactory.create(astpp, "then", condExpr, condExpr.getTrueExpression());
-		Node elseNode = DelNodeFactory.create(astpp, "else", condExpr, condExpr.getFalseExpression());
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, "condition", condExpr,
+				condExpr.getExpression());
+		Node thenNode = DelegatingNodeFactory.create(astpp, "then", condExpr, condExpr.getTrueExpression());
+		Node elseNode = DelegatingNodeFactory.create(astpp, "else", condExpr, condExpr.getFalseExpression());
 		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), condExpr);
 
 		cNode.addNode(entryNode);

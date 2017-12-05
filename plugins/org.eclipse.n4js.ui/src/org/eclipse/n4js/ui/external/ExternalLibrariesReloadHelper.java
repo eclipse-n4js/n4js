@@ -19,12 +19,12 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.external.ExternalProjectsCollector;
 import org.eclipse.n4js.external.NpmManager;
@@ -69,17 +69,24 @@ public class ExternalLibrariesReloadHelper {
 	public void reloadLibraries(final boolean refreshNpmDefinitions, final IProgressMonitor monitor)
 			throws InvocationTargetException {
 
-		final SubMonitor subMonitor = SubMonitor.convert(monitor, refreshNpmDefinitions ? 3 : 2);
-
+		final ISchedulingRule rule = builderHelper.getRule();
 		try {
-			final SubMonitor waitMonitor = subMonitor.newChild(1);
-			waitForWorkspaceLock(waitMonitor);
-			if (monitor instanceof Cancelable) {
-				((Cancelable) monitor).setCancelable(false); // No cancel is allowed from now on.
-			}
+			Job.getJobManager().beginRule(rule, monitor);
+			reloadLibrariesInternal(refreshNpmDefinitions, monitor);
 		} catch (final OperationCanceledException e) {
 			LOGGER.info("User abort.");
-			return;
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
+
+	private void reloadLibrariesInternal(final boolean refreshNpmDefinitions, final IProgressMonitor monitor)
+			throws InvocationTargetException {
+
+		final SubMonitor subMonitor = SubMonitor.convert(monitor, refreshNpmDefinitions ? 2 : 1);
+
+		if (monitor instanceof Cancelable) {
+			((Cancelable) monitor).setCancelable(false); // No cancel is allowed from now on.
 		}
 
 		if (monitor.isCanceled()) {
@@ -110,19 +117,7 @@ public class ExternalLibrariesReloadHelper {
 				.collectProjectsWithDirectExternalDependencies(toBuild);
 
 		builderHelper.build(toBuild, subMonitor.newChild(1));
+
 		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
 	}
-
-	private void waitForWorkspaceLock(final IProgressMonitor monitor) {
-		// Wait for the workspace lock to avoid starting the external build.
-		final IWorkspaceRoot root = getWorkspace().getRoot();
-		try {
-			Job.getJobManager().beginRule(root, monitor);
-		} catch (final OperationCanceledException e) {
-			return;
-		} finally {
-			Job.getJobManager().endRule(root);
-		}
-	}
-
 }

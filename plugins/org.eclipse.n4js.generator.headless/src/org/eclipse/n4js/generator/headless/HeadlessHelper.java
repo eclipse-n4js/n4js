@@ -33,13 +33,11 @@ public class HeadlessHelper {
 	 *            list of project roots
 	 * @param n4jsFileBasedWorkspace
 	 *            instance of FileBasedWorkspace to configure (in N4JS injector)
-	 * @param n4jsxFileBasedWorkspace
-	 *            instance of FileBasedWorkspace to configure (in N4JSX injector).
 	 * @throws N4JSCompileException
 	 *             in error Case.
 	 */
-	public static void registerProjects(List<File> projectLocations, FileBasedWorkspace n4jsFileBasedWorkspace,
-			FileBasedWorkspace n4jsxFileBasedWorkspace) throws N4JSCompileException {
+	public static void registerProjects(List<File> projectLocations, FileBasedWorkspace n4jsFileBasedWorkspace)
+			throws N4JSCompileException {
 		// make absolute, since downstream URI conversion doesn't work if relative dir only.
 		List<File> absProjectRoots = HeadlessHelper.toAbsoluteFileList(projectLocations);
 
@@ -54,7 +52,6 @@ public class HeadlessHelper {
 
 			try {
 				n4jsFileBasedWorkspace.registerProject(puri);
-				n4jsxFileBasedWorkspace.registerProject(puri);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + puri + "'", e);
 			}

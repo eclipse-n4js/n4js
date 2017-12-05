@@ -10,6 +10,10 @@
  */
 package org.eclipse.n4js.validation.validators
 
+import java.util.List
+import java.util.Map
+import javax.inject.Inject
+import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.EmptyStatement
 import org.eclipse.n4js.n4JS.ExportDeclaration
 import org.eclipse.n4js.n4JS.ImportDeclaration
@@ -18,6 +22,7 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.organize.imports.ImportProvidedElement
 import org.eclipse.n4js.organize.imports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -27,10 +32,6 @@ import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import java.util.List
-import java.util.Map
-import javax.inject.Inject
-import org.eclipse.emf.ecore.EObject
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
@@ -40,8 +41,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 import static extension org.eclipse.n4js.n4JS.N4JSASTUtils.*
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 
-/**
- */
+/** Validations for the import statements. */
 @Log
 class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
@@ -50,6 +50,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
+	
+	@Inject
+	private ReactHelper reactHelper;
 
 	/**
 	 * NEEEDED
@@ -99,6 +102,19 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 							importSpecifier, IMP_STATIC_NAMESPACE_IMPORT_PLAIN_JS);
 					}
 				}
+			}
+		}
+	}
+	
+	/** Make sure the namespace to react module is React. */
+	@Check
+	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
+		val module = importSpecifier.importedModule
+		if (reactHelper.isReactModule(module)) {
+			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE) {
+						addIssue(
+							IssueCodes.getMessageForJSX_REACT_NAMESPACE_NOT_ALLOWED(),
+							importSpecifier, IssueCodes.JSX_REACT_NAMESPACE_NOT_ALLOWED);
 			}
 		}
 	}
@@ -291,7 +307,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	def private handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
+	private def handleNotImportedTypeRefs(Script script, List<ImportSpecifier> specifiersWithIssues,
 		Map<EObject, String> eObjectToIssueCode) {
 		val importedProvidedElementsWithIssuesByModule = specifiersWithIssues.mapToImportProvidedElements.groupBy [
 			tmodule

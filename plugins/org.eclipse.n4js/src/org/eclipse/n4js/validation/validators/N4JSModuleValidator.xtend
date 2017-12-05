@@ -73,8 +73,9 @@ class N4JSModuleValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Check
 	def void checkModuleSpecifier(Script script) {
-		if (script.module.qualifiedName.contains(".")) {
-			val qualifiedName = qualifiedNameConverter.toQualifiedName(script.module.qualifiedName);
+		val moduleQN = script.module.qualifiedName
+		if (moduleQN.contains(".")) {
+			val qualifiedName = qualifiedNameConverter.toQualifiedName(moduleQN);
 
 			// Determine which parts of the module specifier contains a dot so that we 
 			// can provide a informative error message

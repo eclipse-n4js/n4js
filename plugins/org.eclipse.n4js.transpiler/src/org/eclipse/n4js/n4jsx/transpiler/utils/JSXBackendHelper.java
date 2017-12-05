@@ -28,7 +28,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4jsx.helpers.ReactHelper;
+import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.naming.ModuleNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;

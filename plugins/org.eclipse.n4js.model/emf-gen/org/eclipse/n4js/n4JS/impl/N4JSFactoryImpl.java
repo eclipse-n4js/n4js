@@ -182,6 +182,12 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.ARRAY_BINDING_PATTERN: return createArrayBindingPattern();
 			case N4JSPackage.BINDING_PROPERTY: return createBindingProperty();
 			case N4JSPackage.BINDING_ELEMENT: return createBindingElement();
+			case N4JSPackage.JSX_ELEMENT_NAME: return createJSXElementName();
+			case N4JSPackage.JSX_TEXT: return createJSXText();
+			case N4JSPackage.JSX_EXPRESSION: return createJSXExpression();
+			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: return createJSXPropertyAttribute();
+			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
+			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -1429,6 +1435,66 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public BindingElement createBindingElement() {
 		BindingElementImpl bindingElement = new BindingElementImpl();
 		return bindingElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSXElementName createJSXElementName() {
+		JSXElementNameImpl jsxElementName = new JSXElementNameImpl();
+		return jsxElementName;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSXText createJSXText() {
+		JSXTextImpl jsxText = new JSXTextImpl();
+		return jsxText;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSXExpression createJSXExpression() {
+		JSXExpressionImpl jsxExpression = new JSXExpressionImpl();
+		return jsxExpression;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSXPropertyAttribute createJSXPropertyAttribute() {
+		JSXPropertyAttributeImpl jsxPropertyAttribute = new JSXPropertyAttributeImpl();
+		return jsxPropertyAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSXSpreadAttribute createJSXSpreadAttribute() {
+		JSXSpreadAttributeImpl jsxSpreadAttribute = new JSXSpreadAttributeImpl();
+		return jsxSpreadAttribute;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public JSXElement createJSXElement() {
+		JSXElementImpl jsxElement = new JSXElementImpl();
+		return jsxElement;
 	}
 
 	/**
