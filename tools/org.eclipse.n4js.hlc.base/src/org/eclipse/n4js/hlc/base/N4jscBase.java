@@ -61,8 +61,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.ISubGenerator;
-import org.eclipse.n4js.generator.SubGeneratorRegistry;
+import org.eclipse.n4js.generator.headless.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -85,7 +84,6 @@ import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
 import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
-import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -300,10 +298,7 @@ public class N4jscBase implements IApplication {
 	private FileExtensionsRegistry n4jsFileExtensionsRegistry;
 
 	@Inject
-	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
-
-	@Inject
-	private SubGeneratorRegistry subGeneratorRegistry;
+	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
 
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
@@ -400,20 +395,16 @@ public class N4jscBase implements IApplication {
 			// help.
 			initInjection(refProperties());
 
-			// Register ECMAScript subgenerator
-			ISubGenerator subgenerator = ecmaScriptSubGenerator.get();
-			subGeneratorRegistry.register(subgenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
-			subGeneratorRegistry.register(subgenerator, N4JSGlobals.JS_FILE_EXTENSION);
-			subGeneratorRegistry.register(subgenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
-			subGeneratorRegistry.register(subgenerator, N4JSGlobals.JSX_FILE_EXTENSION);
+			// Register extensions manually
+			headlessExtensionRegistrationHelper.registerExtensionsManually();
 
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated
 			if (!Platform.isRunning()) {
 				runnerRegistry.register(nodeRunnerDescriptorProvider.get());
 				testerRegistry.register(nodeTesterDescriptorProvider.get());
-
 			}
+
 			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
 			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
 					N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
