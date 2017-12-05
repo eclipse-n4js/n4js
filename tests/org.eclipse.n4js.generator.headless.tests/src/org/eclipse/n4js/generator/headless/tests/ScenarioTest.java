@@ -23,36 +23,28 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.n4js.HeadlessCompilerFactory;
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.N4JSInjectorProvider;
-import org.eclipse.n4js.generator.ISubGenerator;
 import org.eclipse.n4js.generator.SubGeneratorRegistry;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
+import org.eclipse.n4js.generator.headless.N4JSHeadlessStandaloneSetup;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
-import org.eclipse.xtext.testing.InjectWith;
-import org.eclipse.xtext.testing.XtextRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
+import com.google.inject.Injector;
 
 /**
  * Test data is organized in txt-files (content concatenated) under "/testdata".
  */
-@RunWith(XtextRunner.class)
-@InjectWith(N4JSInjectorProvider.class)
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class ScenarioTest {
 
@@ -63,14 +55,16 @@ public class ScenarioTest {
 	static String CMPLR = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 
 	@Inject
+	private N4HeadlessCompiler hlc;
+
+	@Inject
 	private SubGeneratorRegistry subGeneratorRegistry;
 
 	@Inject
-	private Provider<EcmaScriptSubGenerator> ecmaScriptSubGenerator;
-
-	private final N4HeadlessCompiler hlc = HeadlessCompilerFactory.createCompilerWithDefaults();
+	private EcmaScriptSubGenerator ecmaScriptSubGenerator;
 
 	/**
+	 * Called once
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -126,15 +120,17 @@ public class ScenarioTest {
 	}
 
 	/**
-	 *
+	 * Setup before each test.
 	 */
 	@Before
 	public void setUp() throws Exception {
-		ISubGenerator subgenerator = ecmaScriptSubGenerator.get();
-		subGeneratorRegistry.register(subgenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
-		subGeneratorRegistry.register(subgenerator, N4JSGlobals.JS_FILE_EXTENSION);
-		subGeneratorRegistry.register(subgenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
-		subGeneratorRegistry.register(subgenerator, N4JSGlobals.JSX_FILE_EXTENSION);
+		Injector injector = new N4JSHeadlessStandaloneSetup(null).createInjectorAndDoEMFRegistration();
+		injector.injectMembers(this);
+
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JS_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
+		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
 	}
 
 	/**
@@ -185,6 +181,7 @@ public class ScenarioTest {
 	 */
 	@Test(expected = N4JSCompileException.class)
 	public void testScenario03brokenN4jsSyntax() throws N4JSCompileException {
+
 		File root = new File(workspace, "scenario03");
 		List<File> pProjectRoots = Arrays.asList(//
 				new File(root, "wsp1") // A
@@ -380,6 +377,7 @@ public class ScenarioTest {
 		assertNotExists(root, "nest/wsp2/B/src-gen/" + CMPLR + "/B/packB/B.js");
 		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D.js");
 		assertNotExists(root, "nest/wsp2/D/src-gen/" + CMPLR + "/D/packD/D2.js");
+
 	}
 
 	/**
@@ -465,13 +463,5 @@ public class ScenarioTest {
 	 */
 	private static void assertNotExists(File root, String path) {
 		assertFalse("File " + path + " should not be there.", new File(root, path).exists());
-	}
-
-	/**
-	 * Tear down after each test run.
-	 */
-	@After
-	public void tearDown() {
-		subGeneratorRegistry.reset();
 	}
 }

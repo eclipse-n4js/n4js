@@ -703,7 +703,8 @@ public class N4HeadlessCompiler {
 			Multimap<IN4JSProject, IN4JSProject> dependencies) {
 
 		// Set the mark
-		markables.get(markee).markWith(marker);
+		MarkedProject projectToMark = markables.get(markee);
+		projectToMark.markWith(marker);
 
 		// Recursively apply to all dependencies of the given markee
 		for (IN4JSProject dependency : dependencies.get(markee))
