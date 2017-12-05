@@ -52,7 +52,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 /**
  * Validation of React bindings including naming convention (components in upper case and HTML tags in lower case)
  */
-class N4JSXReactBindingValidator extends AbstractN4JSDeclarativeValidator {
+class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	@Inject private N4JSTypeSystem ts;
 	@Inject private TypeSystemHelper tsh
 	@Inject private extension ReactHelper reactHelper;
