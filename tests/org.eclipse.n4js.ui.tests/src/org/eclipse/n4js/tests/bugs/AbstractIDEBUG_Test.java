@@ -16,7 +16,7 @@ import static com.google.common.collect.Sets.newHashSet;
 import static org.apache.log4j.Logger.getLogger;
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace;
 import static org.eclipse.n4js.tests.bugs.AbstractIDEBUG_Test.WorkspaceInitializer.createInitializer;
-import static org.eclipse.n4js.tests.util.ProjectUtils.importProject;
+import static org.eclipse.n4js.tests.util.ProjectTestsUtils.importProject;
 import static org.eclipse.ui.PlatformUI.isWorkbenchRunning;
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.cleanWorkspace;
 

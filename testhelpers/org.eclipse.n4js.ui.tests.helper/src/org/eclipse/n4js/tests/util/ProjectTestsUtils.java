@@ -66,10 +66,11 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 
 /**
+ * Utilities for for tests that setup / assert N4JS projects.
  */
-public class ProjectUtils {
+public class ProjectTestsUtils {
 
-	private static Logger LOGGER = Logger.getLogger(ProjectUtils.class);
+	private static Logger LOGGER = Logger.getLogger(ProjectTestsUtils.class);
 
 	/**
 	 * Imports a project into the running JUnit test workspace. Usage:

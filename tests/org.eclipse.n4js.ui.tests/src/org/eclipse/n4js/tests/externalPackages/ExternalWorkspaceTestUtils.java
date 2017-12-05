@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 
 import com.google.common.base.StandardSystemProperty;
 
@@ -39,7 +39,7 @@ public class ExternalWorkspaceTestUtils {
 				.remove((new File(USER_HOME)).toPath().toUri());// remove default
 		externalLibraryPreferenceStore.add(location.toUri());
 		externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		ProjectUtils.waitForAutoBuild();
+		ProjectTestsUtils.waitForAutoBuild();
 	}
 
 	/**

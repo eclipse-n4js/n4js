@@ -41,7 +41,7 @@ import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -108,7 +108,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		waitForAutoBuild();
 		for (final String projectName : ALL_PROJECT_IDS) {
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-			ProjectUtils.importProject(projectsRoot, projectName);
+			ProjectTestsUtils.importProject(projectsRoot, projectName);
 		}
 		waitForAutoBuild();
 	}
@@ -298,7 +298,7 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 
 		for (final String libProjectName : newArrayList(PB, PD)) {
 			final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-			ProjectUtils.importProject(projectsRoot, libProjectName);
+			ProjectTestsUtils.importProject(projectsRoot, libProjectName);
 			waitForAutoBuildCheckIndexRigid();
 		}
 

@@ -35,7 +35,7 @@ import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
@@ -112,7 +112,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	// @Test
 	public void testInstallReactNpmThenRun() throws Exception {
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-		ProjectUtils.importProject(projectsRoot, PA);
+		ProjectTestsUtils.importProject(projectsRoot, PA);
 		waitForAutoBuild();
 
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PA);
@@ -145,7 +145,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	@Test
 	public void testReactAlias() throws Exception {
 		final File projectsRoot = new File(getResourceUri(PROBANDS, WORKSPACE_LOC));
-		ProjectUtils.importProject(projectsRoot, PB);
+		ProjectTestsUtils.importProject(projectsRoot, PB);
 		waitForAutoBuild();
 
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PB);

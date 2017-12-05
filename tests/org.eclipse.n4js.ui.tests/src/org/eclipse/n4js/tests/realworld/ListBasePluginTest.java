@@ -29,7 +29,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
-import org.eclipse.n4js.tests.util.ProjectUtils;
+import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.xtext.ui.MarkerTypes;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
@@ -85,7 +85,7 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testListBase() throws Exception {
-		IProject project = ProjectUtils.importProject(new File("probands"), "ListBase");
+		IProject project = ProjectTestsUtils.importProject(new File("probands"), "ListBase");
 		IResourcesSetupUtil.waitForBuild();
 		IFile underscore_js = project.getFile("src/underscore/underscore.n4js");
 		assertTrue(underscore_js.exists());
