@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
 
+import com.google.common.base.Splitter;
 import com.google.inject.Singleton;
 
 /**
@@ -32,12 +33,22 @@ import com.google.inject.Singleton;
 @Singleton
 public class SubGeneratorRegistry {
 
+	private static SubGeneratorRegistry singleton;
+
+	/** Return the singleton instance of this class. */
+	public static synchronized SubGeneratorRegistry getInstance() {
+		if (singleton == null) {
+			singleton = new SubGeneratorRegistry();
+		}
+		return singleton;
+	}
+
 	private final static Logger LOGGER = Logger.getLogger(SubGeneratorRegistry.class);
 
 	/* The extension point to subgenerators */
-	private static final String SUBGENERATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.generator.common.subgenerator";
+	private static final String SUBGENERATORS_EXTENSIONS_POINT_ID = "org.eclipse.n4js.generator.subgenerator";
 
-	private static final String ATT_FILE_EXTENSION = "fileExtension";
+	private static final String ATT_FILE_EXTENSIONS = "fileExtensions";
 	private static final String ATT_SUB_GENERATOR_CLASS = "class";
 
 	private boolean isInitialized = false;
@@ -100,10 +111,15 @@ public class SubGeneratorRegistry {
 				final IConfigurationElement[] configElems = extension.getConfigurationElements();
 				for (IConfigurationElement elem : configElems) {
 					try {
-						String fileExtension = elem.getAttribute(ATT_FILE_EXTENSION);
+						String fileExtensions = elem.getAttribute(ATT_FILE_EXTENSIONS);
+						List<String> fileExtensionList = Splitter.on(',').trimResults().omitEmptyStrings()
+								.splitToList(fileExtensions);
 						ISubGenerator generator = (ISubGenerator) elem
 								.createExecutableExtension(ATT_SUB_GENERATOR_CLASS);
-						register(generator, fileExtension);
+						for (String fileExtension : fileExtensionList) {
+							register(generator, fileExtension);
+						}
+
 					} catch (Exception ex) {
 						LOGGER.error(
 								"Error while reading extensions for extension point "

@@ -11,5 +11,5 @@ Contributors:
 -->
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="org.eclipse.n4js.generator.subgenerator" name="Subgenerators" schema="schema/org.eclipse.n4js.generator.subgenerators.exsd"/>
+   <extension-point id="org.eclipse.n4js.generator.subgenerator" name="Subgenerator" schema="schema/org.eclipse.n4js.generator.subgenerator.exsd"/>
 </plugin>
