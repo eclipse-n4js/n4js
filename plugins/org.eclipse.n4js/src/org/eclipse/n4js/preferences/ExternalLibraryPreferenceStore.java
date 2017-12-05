@@ -177,7 +177,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 
 						if (null == folder || !folder.isDirectory()) {
 							if (LOGGER.isDebugEnabled()) {
-								LOGGER.info("No resources were found under: " + folder + ".");
+								LOGGER.debug("Not a directory: " + folder + ".");
 							}
 							return emptyList();
 						}
@@ -185,7 +185,7 @@ public interface ExternalLibraryPreferenceStore extends Iterable<URI> {
 						final File[] files = folder.listFiles();
 						if (Arrays2.isEmpty(files)) {
 							if (LOGGER.isDebugEnabled()) {
-								LOGGER.info("No resources were found under: " + folder + ".");
+								LOGGER.debug("No resources were found under: " + folder + ".");
 							}
 							return emptyList();
 						}
