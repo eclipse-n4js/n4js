@@ -38,6 +38,7 @@ import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.building.instructions.IBuildParticipantInstruction;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.clustering.ClusteringBuilderState;
@@ -54,6 +55,8 @@ import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.impl.DefaultResourceDescriptionDelta;
 import org.eclipse.xtext.resource.impl.ResourceDescriptionsData;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -205,14 +208,16 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		return modifiedDeltas;
 	}
 
-	@SuppressWarnings("unused")
 	private void logBuildData(BuildData buildData, String... tags) {
 		// This log call sometimes yields a ConcurrentModificationException (see GHOLD-296)
 		// We disable it as a temporary fix only until GHOLD-296 is resolved.
 		// TODO Uncomment the following code when GHOLD-296 is resolved and remove the SuppressWarnings annotation.
 
-		/* @formatter:off */
-		/*
+		// UPDATE as of Nov 2017 (mor):
+		// commented logging back in after (hopefully) fixing the ConcurrentModificationException
+		// (but keeping these comments for reference, for now; if this does not cause problems over the next few weeks,
+		// this comment and the previous comments in this method can be removed)
+
 		String tag = Arrays2.isEmpty(tags) ? "" : Joiner.on(" - ").join(tags);
 		String header = "---------------------- Build data" + tag + " --------------------------------------";
 		builderStateLogger.log(header);
@@ -222,8 +227,6 @@ public class N4JSGenerateImmediatelyBuilderState extends ClusteringBuilderState 
 		builderStateLogger.log("URI queue: " + buildData.getURIQueue());
 		builderStateLogger.log("All remaining URIs: " + buildData.getAllRemainingURIs());
 		builderStateLogger.log(Strings.repeat("-", header.length()) + "\n");
-		*/
-		/* @formatter:on */
 	}
 
 	@Override
