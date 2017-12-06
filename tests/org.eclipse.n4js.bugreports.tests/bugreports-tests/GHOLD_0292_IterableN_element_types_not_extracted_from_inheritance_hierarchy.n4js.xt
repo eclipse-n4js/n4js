@@ -20,7 +20,7 @@ interface I<T1,T2> extends Iterable2<T1,T2> {}
 interface J<T1,T2> extends I<T1,T2> {}
 
 let ij: intersection{I<any,A>, J<any,A>};
-// XPECT noerrors -->
+// XPECT warnings -->"Variable a is used before it is declared" at "a"
 [,a] = ij;
 
 

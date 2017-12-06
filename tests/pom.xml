@@ -67,11 +67,6 @@ Contributors:
 		<!-- access control tests -->
 		<module>org.eclipse.n4js.accesscontrol.tests</module>
 
-		
-		<!-- flow graph tests -->
-		<module>org.eclipse.n4js.flowgraphs.tests</module>
-		<!-- <module>org.eclipse.n4js.flowgraphs.ui.tests</module> TODO: reactivate -->
-
 
 		<!-- ************************************** JUnit Plugin Tests -->
 
@@ -117,6 +112,10 @@ Contributors:
 		<module>org.eclipse.n4js.n4jsx.spec.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.xpect.ui.tests</module>
 		<module>org.eclipse.n4js.n4jsx.ui.tests</module>
+
+		<!-- *************************************** flow graph tests -->
+		<module>org.eclipse.n4js.flowgraphs.tests</module>
+		<module>org.eclipse.n4js.flowgraphs.ui.tests</module>
 
 	</modules>
 

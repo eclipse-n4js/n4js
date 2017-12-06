@@ -21,7 +21,10 @@ stderr:
 ~~~ */
 
 // not ok (simple case)
-// XPECT warnings --> "Reference to variable n within the initializer expression of the declaration of n." at "n"
+// XPECT warnings ---
+// "Reference to variable n within the initializer expression of the declaration of n." at "n"
+// "Variable n is used before it is declared" at "n"
+// ---
 var n = n + 1;
 
 // ok (class expression  not in version 0.1)
