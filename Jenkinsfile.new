@@ -55,7 +55,6 @@ pipeline {
             // There should be a better way, see issue
             // https://issues.jenkins-ci.org/browse/JENKINS-41272
             when {
-                branch 'master'
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
             }
             steps {
