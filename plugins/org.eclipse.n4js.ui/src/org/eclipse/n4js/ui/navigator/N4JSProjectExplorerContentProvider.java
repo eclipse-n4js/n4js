@@ -23,12 +23,20 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
-import org.eclipse.core.resources.IResourceChangeListener;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
+import org.eclipse.n4js.ui.workingsets.WorkingSet;
+import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
+import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
+import org.eclipse.n4js.utils.collections.Arrays2;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.ui.navigator.ICommonContentExtensionSite;
@@ -39,14 +47,6 @@ import org.eclipse.xtext.util.Arrays;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.ui.navigator.internal.N4JSProjectExplorerHelper;
-import org.eclipse.n4js.ui.workingsets.WorkingSet;
-import org.eclipse.n4js.ui.workingsets.WorkingSetManager;
-import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 /**
  * Customized content provider for tuning the Project Explorer view with N4JS specific content.
@@ -74,37 +74,51 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 	@Inject
 	public N4JSProjectExplorerContentProvider(final ExternalLibraryPreferenceStore store) {
 		store.addListener(this);
-		getWorkspace().addResourceChangeListener(new IResourceChangeListener() {
+		int eventMask = IResourceChangeEvent.PRE_BUILD | IResourceChangeEvent.POST_CHANGE;
+		getWorkspace().addResourceChangeListener(this::cleanBuildOrManifestChangedEvent, eventMask);
+	}
 
-			@Override
-			public void resourceChanged(final IResourceChangeEvent event) {
+	private void cleanBuildOrManifestChangedEvent(final IResourceChangeEvent event) {
+		if (null == event) {
+			return;
+		}
 
-				if (null == event || null == event.getDelta()) {
-					return;
-				}
-
-				try {
-					event.getDelta().accept(delta -> {
-
-						final IResource resource = delta.getResource();
-						if (resource instanceof IFile) {
-							final IFile file = (IFile) resource;
-							if (IN4JSProject.N4MF_MANIFEST.equals(file.getName())) {
-								final IProject project = file.getProject();
-								if (null != project && project.isAccessible()) {
-									virtualNodeCache.remove(project);
-								}
-							}
-						}
-
-						return true;
-					});
-
-				} catch (final CoreException e) {
-					LOGGER.error("Error while refreshing virtual nodes in navigator.", e);
-				}
+		int buildKind = event.getBuildKind();
+		if (buildKind == IncrementalProjectBuilder.CLEAN_BUILD) {
+			Object obj = event.getSource();
+			if (obj instanceof IProject) {
+				IProject project = (IProject) obj;
+				virtualNodeCache.remove(project);
 			}
-		});
+			if (obj instanceof IWorkspace) {
+				virtualNodeCache.clear();
+			}
+			return;
+		}
+
+		if (null == event.getDelta()) {
+			return;
+		}
+		try {
+			event.getDelta().accept(delta -> {
+
+				IResource resource = delta.getResource();
+				if (resource instanceof IFile) {
+					IFile file = (IFile) resource;
+					if (IN4JSProject.N4MF_MANIFEST.equals(file.getName())) {
+						IProject project = file.getProject();
+						if (null != project && project.isAccessible()) {
+							virtualNodeCache.remove(project);
+						}
+					}
+				}
+
+				return true;
+			});
+
+		} catch (final CoreException e) {
+			LOGGER.error("Error while refreshing virtual nodes in navigator.", e);
+		}
 	}
 
 	@Override

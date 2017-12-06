@@ -341,7 +341,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 		addAll(workspaceProjectsToRebuild, collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
 		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
-
 	}
 
 	@Override

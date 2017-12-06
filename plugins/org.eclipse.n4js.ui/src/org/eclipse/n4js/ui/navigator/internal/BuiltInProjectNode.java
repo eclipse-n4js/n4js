@@ -12,16 +12,16 @@ package org.eclipse.n4js.ui.navigator.internal;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Predicates.notNull;
 import static com.google.common.collect.FluentIterable.from;
 
 import java.io.File;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.n4js.utils.collections.Arrays2;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Node for representing an external N4JS library in the Project Explorer view.
@@ -65,7 +65,14 @@ import org.eclipse.n4js.utils.collections.Arrays2;
 				.transform(p -> p.getLocation())
 				.transform(uri -> uri.toFileString())
 				.transform(uri -> new File(uri))
-				.transform(file -> new ResourceNode(this, file))
+				.transform(file -> {
+					try {
+						return new ResourceNode(this, file);
+					} catch (Exception e) {
+						return null;
+					}
+				})
+				.filter(notNull())
 				.toArray(ResourceNode.class);
 
 		return null != manifestNode ? Arrays2.add(children, manifestNode) : children;

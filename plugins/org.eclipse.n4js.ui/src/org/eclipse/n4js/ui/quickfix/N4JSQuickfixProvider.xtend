@@ -647,7 +647,7 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
 	def tryInstallMissingDependencyFromNpm(Issue issue, extension IssueResolutionAcceptor acceptor) {
 
-		accept(issue, 'Get dependency', 'Download missing dependency from npm.', null, [ element , context |
+		accept(issue, 'Install npm dependency to workspace', 'Download and install missing dependency from npm.', null, [ element , context |
 
 				val doc = context.xtextDocument;
 				val documentText = doc.get(issue.offset, issue.length);
