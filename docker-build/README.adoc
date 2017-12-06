@@ -14,21 +14,26 @@ docker build -t n4js-build docker-build
 NOTE: The whole build process requires quite some memory.
 On systems, on which Docker runs inside a VM (i.e. Windows and macOS),
 the amount of memory available to containers must be increased to at least 6GB.
-If the build fails abruptely without any error message,
+If the build fails abruptly without any error message,
 chances are high that adding more memory to the container will help.
 
 .Run n4js Build in Docker
 [source,bash]
 ----
 docker run                                    \
-       -ti                                      \ # acquire interactive terminal
-       --rm                                     \ # remove container when not needed anymore
-       -u `id -u`:`id -g`                         \ # use local user on the host to avoid file permission issues
-       -v m2_repo:/root/.m2/repository          \ # create volume for .m2/repository (speeds up subsequent builds)
-       -v $(pwd):/workspace                     \ # mount the project sources in /workspace
-       n4js-build                               \ # name of the image from the previous step
-       mvn package -Dmaven.test.failure.ignore  \ # run the desired tool
+       -ti                                      \ # <1>
+       --rm                                     \ # <2>
+       -v m2_repo:/root/.m2/repository          \ # <3>
+       -v $(pwd):/workspace                     \ # <4>
+       n4js-build                               \ # <5>
+       mvn package -Dmaven.test.failure.ignore  \ # <6>
 ----
+<1> acquire interactive terminal
+<2> remove container when not needed anymore
+<3> create volume for .m2/repository (speeds up subsequent builds)
+<4> mount the project sources in `/workspace`
+<5> name of the image from the previous step
+<6> run the desired tool
 
 Or just use the `build.sh` script in the root directory of this project.
 
