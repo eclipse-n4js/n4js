@@ -30,10 +30,13 @@ import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
 
 /**
+ * Helper class for computing names for generated files based on the provided resource.
+ * Used in the compiler when generating files with proper name in a proper location. Used also to compute proper values for 
+ * import statements (in the compiled code) etc.
  * Provides utilities for generating resource (file or module) descriptors that are based on containing project and its properties.
  */
 @Singleton
-public class ProjectUtils {
+public class ResourceNameComputer {
 	@Inject private N4JSQualifiedNameProvider qualifiedNameProvider;
 	@Inject private IQualifiedNameConverter converter;
 	@Inject private SpecifierConverter specifierConverter;
@@ -41,7 +44,7 @@ public class ProjectUtils {
 
 	/**
 	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project-0.0.1
-	 * Convenience method. Delegates to {@link ProjectUtils#formatDescriptor}
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
 	 * For delegation project is calculated from provided URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
@@ -53,7 +56,7 @@ public class ProjectUtils {
 
 	/**
 	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
-	 * Convenience method. Delegates to {@link ProjectUtils#formatDescriptor}
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
 	 * For delegation both project and unitPath are calculated from provided URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
@@ -66,7 +69,7 @@ public class ProjectUtils {
 
 	/**
 	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
-	 * Convenience method. Delegates to {@link ProjectUtils#formatDescriptor}
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
 	 * For delegation both project and unitPath are calculated from provided URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
@@ -253,7 +256,7 @@ public class ProjectUtils {
 	 * (separated with a dash '-’) appended.
 	 * <p>
 	 * Based on provided file resource URI and extension will generate descriptor in form of
-	 * Project-0.0.1/module/path/Module Convenience method. Delegates to {@link ProjectUtils#formatDescriptor} For
+	 * Project-0.0.1/module/path/Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
 	 * delegation both project and unitPath are calculated from provided {@link TModule}.
 	 * <p>
 	 * Example: <code>project-1.0.0/p/C</code> for class C in file/module C in package p of project with version 1.0.0.
@@ -262,12 +265,12 @@ public class ProjectUtils {
 	 * @module {@link TModule} for which we generate descriptor
 	 */
 	def public String getCompleteModuleSpecifier(TModule module) {
-		return ProjectUtils.formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", false);
+		return ResourceNameComputer.formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", false);
 	}
 
 	/**
 	 * Based on provided file resource URI and extension will generate descriptor in form of
-	 * Project_0_0_1_module_path_Module Convenience method. Delegates to {@link ProjectUtils#formatDescriptor} For
+	 * Project_0_0_1_module_path_Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
 	 * delegation both project and unitPath are calculated from provided {@link TModule}. Characters that would be
 	 * invalid in a Javascript identifier will be replaced with the unicode sign e.g. _u002e for the dot character (_ is
 	 * used instead of / as Javascript would translate the unicode sign again to the not allowed character).

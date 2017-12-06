@@ -18,7 +18,6 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PromisifyExpression
 import org.eclipse.n4js.n4JS.RelationalExpression
 import org.eclipse.n4js.n4JS.RelationalOperator
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesBefore
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -35,6 +34,7 @@ import org.eclipse.n4js.utils.PromisifyHelper
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * Some expressions need special handling, this is done in this transformation.
@@ -49,7 +49,7 @@ import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 @ExcludesBefore(AsyncAwaitTransformation)
 class ExpressionTransformation extends Transformation {
 
-	@Inject private ProjectUtils qualifiedNameComputer;
+	@Inject private ResourceNameComputer qualifiedNameComputer;
 	@Inject private PromisifyHelper promisifyHelper;
 
 

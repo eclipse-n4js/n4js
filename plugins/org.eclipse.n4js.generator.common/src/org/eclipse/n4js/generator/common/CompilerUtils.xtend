@@ -12,18 +12,18 @@ package org.eclipse.n4js.generator.common
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  */
  @Singleton
 public class CompilerUtils {
-	@Inject ProjectUtils projectUtils
+	@Inject ResourceNameComputer projectUtils
 
 	@Inject extension ExceptionHandler
 

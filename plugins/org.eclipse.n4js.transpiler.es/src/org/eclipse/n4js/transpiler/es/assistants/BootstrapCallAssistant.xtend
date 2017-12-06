@@ -71,7 +71,7 @@ import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.projectModel.ProjectUtils
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * An {@link TransformationAssistant assistant} to create call expressions for invoking <code>$makeClass</code>,
@@ -86,7 +86,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
-	@Inject private ProjectUtils projectUtils;
+	@Inject private ResourceNameComputer projectUtils;
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	/**

@@ -16,7 +16,6 @@ import org.eclipse.n4js.n4JS.CastExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.NullType
@@ -35,6 +34,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.AnnotationDefinition.*
 import static org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static org.eclipse.n4js.validation.IssueCodes.*
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * Validations related to callsites targeting N4Injector methods.
@@ -47,7 +47,7 @@ class N4JSInjectorCallsitesValidator extends AbstractN4JSDeclarativeValidator {
 	private N4JSTypeSystem ts;
 
 	@Inject
-	ProjectUtils qualifiedNameComputer;
+	ResourceNameComputer qualifiedNameComputer;
 
 	/**
 	 * NEEEDED

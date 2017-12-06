@@ -46,7 +46,7 @@ import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
-import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
@@ -94,7 +94,7 @@ public class TestDiscoveryHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private ProjectUtils qualifiedNameComputer;
+	private ResourceNameComputer qualifiedNameComputer;
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 

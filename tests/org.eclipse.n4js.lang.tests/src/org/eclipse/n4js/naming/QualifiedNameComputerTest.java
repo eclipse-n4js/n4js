@@ -16,7 +16,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.MockWorkspace;
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.xtext.resource.XtextResourceSet;
@@ -43,7 +43,7 @@ public class QualifiedNameComputerTest {
 	private Type type;
 
 	@Inject
-	ProjectUtils qnc;
+	ResourceNameComputer qnc;
 
 	@Inject
 	private Provider<XtextResourceSet> resourceSetProvider;
@@ -57,7 +57,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getQualifiedModuleName(org.eclipse.n4js.n4JS.Script)} .
+	 * Test method for {@link ResourceNameComputer#getQualifiedModuleName(org.eclipse.n4js.n4JS.Script)} .
 	 */
 	@Test
 	public void testGetQualifiedModuleName() {
@@ -66,7 +66,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getSimpleTypeName(org.eclipse.n4js.ts.types.Type)}.
+	 * Test method for {@link ResourceNameComputer#getSimpleTypeName(org.eclipse.n4js.ts.types.Type)}.
 	 */
 	@Test
 	public void testGetSimpleTypeName() {
@@ -74,7 +74,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getFullyQualifiedTypeName(org.eclipse.n4js.ts.types.Type)} .
+	 * Test method for {@link ResourceNameComputer#getFullyQualifiedTypeName(org.eclipse.n4js.ts.types.Type)} .
 	 */
 	@Test
 	public void testGetQualifiedTypeName() {
@@ -82,7 +82,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getModuleSpecifier(org.eclipse.n4js.n4JS.Script)} .
+	 * Test method for {@link ResourceNameComputer#getModuleSpecifier(org.eclipse.n4js.n4JS.Script)} .
 	 */
 	@Test
 	public void testGetModuleSpecifier() {
@@ -92,7 +92,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getCompleteModuleSpecifier(org.eclipse.n4js.ts.types.TModule)} .
+	 * Test method for {@link ResourceNameComputer#getCompleteModuleSpecifier(org.eclipse.n4js.ts.types.TModule)} .
 	 */
 	@Test
 	public void testGetCompleteModuleSpecifier() {
@@ -100,7 +100,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.ts.types.TModule)} .
+	 * Test method for {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.ts.types.TModule)} .
 	 */
 	@Test
 	public void testGetCompleteModuleSpecifierAsIdentifier() {
@@ -109,7 +109,7 @@ public class QualifiedNameComputerTest {
 	}
 
 	/**
-	 * Test method for {@link ProjectUtils#getCompleteTypeSpecifier(org.eclipse.n4js.ts.types.Type)} .
+	 * Test method for {@link ResourceNameComputer#getCompleteTypeSpecifier(org.eclipse.n4js.ts.types.Type)} .
 	 */
 	@Test
 	public void testGetCompleteTypeSpecifier() {

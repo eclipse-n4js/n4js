@@ -33,7 +33,7 @@ import org.eclipse.n4js.naming.ModuleNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.ProjectResolveHelper;
-import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.transpiler.InformationRegistry;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.XtextUtilN4;
@@ -70,7 +70,7 @@ public final class JSXBackendHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private ProjectUtils projectUtils;
+	private ResourceNameComputer projectUtils;
 	@Inject
 	private ProjectResolveHelper projectResolver;
 	@Inject
@@ -111,7 +111,7 @@ public final class JSXBackendHelper {
 	}
 
 	/**
-	 * Similar to {@link ProjectUtils#getCompleteModuleSpecifier(TModule)} but for artificial modules that were patched
+	 * Similar to {@link ResourceNameComputer#getCompleteModuleSpecifier(TModule)} but for artificial modules that were patched
 	 * in by the transpiler for JSX backend.
 	 */
 	public String jsxBackendModuleSpecifier(TModule module, Resource resource) {
@@ -122,11 +122,11 @@ public final class JSXBackendHelper {
 			throw new RuntimeException(
 					"Cannot handle resource without containing project. Resource URI was: " + uri);
 		}
-		return ProjectUtils.formatDescriptor(optionalProject.get(), module.getModuleSpecifier(), "-", ".", "/", false);
+		return ResourceNameComputer.formatDescriptor(optionalProject.get(), module.getModuleSpecifier(), "-", ".", "/", false);
 	}
 
 	/**
-	 * Similar to {@link ProjectUtils#getCompleteModuleSpecifierAsIdentifier(TModule)} but for artificial modules that
+	 * Similar to {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(TModule)} but for artificial modules that
 	 * were patched in by the transpiler for JSX backend.
 	 */
 	public String getJsxBackendCompleteModuleSpecifierAsIdentifier(TModule module) {

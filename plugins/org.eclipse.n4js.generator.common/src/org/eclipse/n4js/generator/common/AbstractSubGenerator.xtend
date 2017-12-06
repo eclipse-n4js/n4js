@@ -19,7 +19,6 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.generator.common.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.projectModel.StaticPolyfillHelper
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
@@ -37,6 +36,7 @@ import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
 import org.eclipse.emf.common.util.URI
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  */
@@ -47,7 +47,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	private CompilerDescriptor compilerDescriptor = null
 
 	@Inject
-	ProjectUtils projectUtils
+	ResourceNameComputer projectUtils
 	
 	@Inject 
 	StaticPolyfillHelper staticPolyfillHelper
