@@ -34,9 +34,11 @@ pipeline {
         cron   ('H   1 * * *') // Nightly build every day a 1am
     }
     stages {
-        stage('build') {
+        stage('ci') {
+            when {
+                expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
+            }
             steps {
-                sh "cat ~/.m2/settings.xml"
                 script {
                     def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
                     def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
@@ -46,11 +48,11 @@ pipeline {
                         'execute-plugin-ui-tests'
                     ].join(',')
 
-                    sh "${xvfb} mvn -U clean install -P${profiles} ${options}"
+                    sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
                 }
             }
         }
-        stage('long-running-tests') {
+        stage('nightly') {
             // Run in nightly build only
             // There should be a better way, see issue
             // https://issues.jenkins-ci.org/browse/JENKINS-41272
@@ -71,7 +73,7 @@ pipeline {
                         'execute-accesscontrol-tests '
                     ].join(',')
 
-                    sh "${xvfb} mvn -U verify -P${profiles} ${options}"
+                    sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
                 }
             }
         }
