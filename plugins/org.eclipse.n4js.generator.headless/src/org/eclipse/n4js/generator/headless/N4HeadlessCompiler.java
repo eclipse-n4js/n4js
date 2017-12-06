@@ -155,6 +155,8 @@ public class N4HeadlessCompiler {
 	/** if set additional log will be written to this filename */
 	private String logFile = null;
 
+	private Map<String, OutputConfiguration> initialOutputConfiguration;
+
 	/**
 	 * Private constructor to prevent accidental instantiation.
 	 */
@@ -164,12 +166,16 @@ public class N4HeadlessCompiler {
 	}
 
 	/** Build an output configuration from a composite generator. */
-	private Map<String, OutputConfiguration> buildOutputConfigurations(ICompositeGenerator compGenerator) {
-		Map<String, OutputConfiguration> result = new HashMap<>();
-		for (CompilerDescriptor desc : compGenerator.getCompilerDescriptors()) {
-			result.put(desc.getIdentifier(), desc.getOutputConfiguration());
+	private Map<String, OutputConfiguration> getInitialOutputConfigurations() {
+		if (initialOutputConfiguration == null) {
+			initialOutputConfiguration = new HashMap<>();
+			for (CompilerDescriptor desc : compositeGenerator.getCompilerDescriptors()) {
+				initialOutputConfiguration.put(desc.getIdentifier(), desc.getOutputConfiguration());
+			}
+
 		}
-		return result;
+		return initialOutputConfiguration;
+		// return result;
 	}
 
 	/*
@@ -1463,7 +1469,7 @@ public class N4HeadlessCompiler {
 	 *            project to be compiled
 	 */
 	private void configureFSA(IN4JSProject project) {
-		Map<String, OutputConfiguration> outputConfigToBeWrapped = buildOutputConfigurations(this.compositeGenerator);
+		Map<String, OutputConfiguration> outputConfigToBeWrapped = getInitialOutputConfigurations();
 		File currentDirectory = new File(".");
 		File projectLocation = new File(project.getLocation().toFileString());
 
