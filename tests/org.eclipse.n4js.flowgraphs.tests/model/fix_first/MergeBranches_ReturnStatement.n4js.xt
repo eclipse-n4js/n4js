@@ -21,10 +21,10 @@
 
 
 /* ReturnStatement XPECT allMergeBranches ---
-	B0: [return;](jumpNode) -DeadCode-> [return;](exit),
-	B0: [return;](jumpNode) -Return-> [{ "start"; return; "end"; }](exit),
+	B0: [return;](jump) -DeadCode-> [return;](exit),
+	B0: [return;](jump) -Return-> [{ "start"; return; "end"; }](exit),
 	F1: ["end"](entryExit) -> [{ "start"; return; "end"; }](exit),
-	F1: [return;](jumpNode) -Return-> [{ "start"; return; "end"; }](exit)
+	F1: [return;](jump) -Return-> [{ "start"; return; "end"; }](exit)
 --- */
 function ReturnStatement() {
 	"start";

@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -35,10 +32,10 @@ class BinaryLogicalExpressionFactory {
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, BinaryLogicalExpression lbExpr) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), lbExpr);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), lbExpr);
-		Node lhsNode = DelegatingNodeFactory.create(astpp, "lhs", lbExpr, lbExpr.getLhs());
-		Node rhsNode = DelegatingNodeFactory.create(astpp, "rhs", lbExpr, lbExpr.getRhs());
-		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), lbExpr);
+		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), lbExpr);
+		Node lhsNode = DelegatingNodeFactory.create(astpp, NodeNames.LHS, lbExpr, lbExpr.getLhs());
+		Node rhsNode = DelegatingNodeFactory.create(astpp, NodeNames.RHS, lbExpr, lbExpr.getRhs());
+		Node exitNode = new RepresentingNode(NodeNames.EXIT, astpp.pos(), lbExpr);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(lhsNode);

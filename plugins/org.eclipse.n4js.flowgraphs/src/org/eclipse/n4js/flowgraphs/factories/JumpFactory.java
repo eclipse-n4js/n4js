@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -77,17 +74,17 @@ class JumpFactory {
 			JumpToken jumptoken) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), stmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), stmt);
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), stmt);
 		cNode.addNode(entryNode);
 
 		Node expression = null;
 		if (expr != null) {
-			expression = DelegatingNodeFactory.create(astpp, "expression", stmt, expr);
+			expression = DelegatingNodeFactory.create(astpp, NodeNames.EXPRESSION, stmt, expr);
 			cNode.addNode(expression);
 		}
-		Node jumpNode = new RepresentingNode("jumpNode", astpp.pos(), stmt);
+		Node jumpNode = new RepresentingNode(NodeNames.JUMP, astpp.pos(), stmt);
 		cNode.addNode(jumpNode);
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), stmt);
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), stmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();

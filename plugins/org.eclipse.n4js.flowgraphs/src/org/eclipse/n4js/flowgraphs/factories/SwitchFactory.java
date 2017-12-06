@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,8 +36,9 @@ class SwitchFactory {
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, SwitchStatement switchStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), switchStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), switchStmt);
-		Node pivotNode = DelegatingNodeFactory.createOrHelper(astpp, "pivot", switchStmt, switchStmt.getExpression());
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), switchStmt);
+		Node pivotNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.PIVOT, switchStmt,
+				switchStmt.getExpression());
 
 		cNode.addNode(entryNode);
 		cNode.addNode(pivotNode);
@@ -55,12 +53,12 @@ class SwitchFactory {
 				caseNode = DelegatingNodeFactory.create(astpp, "case_" + n, switchStmt, cc);
 			}
 			if (cc instanceof DefaultClause) {
-				caseNode = DelegatingNodeFactory.create(astpp, "default", switchStmt, cc);
+				caseNode = DelegatingNodeFactory.create(astpp, NodeNames.DEFAULT, switchStmt, cc);
 			}
 			caseNodes.add(caseNode);
 			cNode.addNode(caseNode);
 		}
-		Node exitNode = new HelperNode(EXIT_NODE, astpp.pos(), switchStmt);
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), switchStmt);
 		cNode.addNode(exitNode);
 
 		List<Node> cfs = new LinkedList<>();

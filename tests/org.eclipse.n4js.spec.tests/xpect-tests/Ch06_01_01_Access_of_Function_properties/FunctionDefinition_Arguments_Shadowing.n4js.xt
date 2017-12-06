@@ -46,11 +46,11 @@ function a2(a : string, b : number)  {
 // variable shadows arguments, late binding.
 function a3(a : string, b : number)  {
 
-	// arguments shadowed by variable called arguments XPECT  errors --> "string is not a subtype of number." at "arguments"
-	var l : number = arguments;
-
 	// arguments shadowed by variable called arguments XPECT  errors --> "arguments is a reserved identifier." at "arguments"
 	var arguments : string = "foo";
+
+	// arguments shadowed by variable called arguments XPECT  errors --> "string is not a subtype of number." at "arguments"
+	var l : number = arguments;
 }
 
 // function definition shadows arguments, late binding.
