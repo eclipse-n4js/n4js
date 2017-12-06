@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static org.eclipse.n4js.flowgraphs.factories.NodeNames.LHS;
+import static org.eclipse.n4js.flowgraphs.factories.NodeNames.RHS;
+
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +32,6 @@ import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.BindingProperty;
 import org.eclipse.n4js.n4JS.CastExpression;
 import org.eclipse.n4js.n4JS.CommaExpression;
-import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.Expression;
@@ -37,6 +39,12 @@ import org.eclipse.n4js.n4JS.ExpressionAnnotationList;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.JSXAttribute;
+import org.eclipse.n4js.n4JS.JSXChild;
+import org.eclipse.n4js.n4JS.JSXElement;
+import org.eclipse.n4js.n4JS.JSXExpression;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.Literal;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
@@ -63,47 +71,51 @@ import org.eclipse.n4js.n4JS.UnaryExpression;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.YieldExpression;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXChild;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXExpression;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
  * All {@link Expression}s can have a set of children in the sense, that these children are also respected by the
  * control flow. This class provides the function {@link #get(ReentrantASTIterator, ControlFlowElement)} that returns
  * all control flow relevant sub-expressions of a given {@link Expression}.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 final class CFEChildren {
-	static private ReentrantASTIterator astIter;
 
 	/**
 	 * Returns all control flow relevant sub-expressions of the given {@link Expression}.
 	 */
-	static List<Node> get(ReentrantASTIterator pAstIter, ControlFlowElement expr) {
-		astIter = pAstIter;
-		List<Node> n4jsxExpressionList = new InternalExpressionChildrenX().doSwitch(expr);
-		if (n4jsxExpressionList != null) {
-			return n4jsxExpressionList;
-		}
-		return new InternalExpressionChildren().doSwitch(expr);
+	static List<Node> get(ReentrantASTIterator astIter, ControlFlowElement expr) {
+		return new InternalExpressionChildren(astIter).doSwitch(expr);
 	}
 
-	static void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe, ControlFlowElement delegate) {
+	static void addDelegatingNode(ReentrantASTIterator astIter, List<Node> cfc, String name, ControlFlowElement cfe,
+			ControlFlowElement delegate) {
+
 		if (delegate != null) {
-			DelegatingNode delegatingNode = DelNodeFactory.create(astIter, name, cfe, delegate);
+			DelegatingNode delegatingNode = DelegatingNodeFactory.create(astIter, name, cfe, delegate);
 			cfc.add(delegatingNode);
 		}
 	}
 
-	static void addHelperNode(List<Node> cfc, String name, int id, ControlFlowElement cfe) {
-		Node node = new HelperNode(name, id, cfe);
-		cfc.add(node);
-	}
-
 	static private class InternalExpressionChildren extends N4JSSwitch<List<Node>> {
+		private final ReentrantASTIterator astIter;
+
+		InternalExpressionChildren(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
+
+		void addDelegatingNode(List<Node> cfc, String name, ControlFlowElement cfe,
+				ControlFlowElement delegate) {
+
+			CFEChildren.addDelegatingNode(astIter, cfc, name, cfe, delegate);
+		}
+
+		void addHelperNode(List<Node> cfc, String name, ControlFlowElement cfe) {
+			Node node = new HelperNode(name, astIter.pos(), cfe);
+			cfc.add(node);
+		}
 
 		@Override
 		public List<Node> caseAdditiveExpression(AdditiveExpression ae) {
@@ -117,8 +129,8 @@ final class CFEChildren {
 		public List<Node> caseAssignmentExpression(AssignmentExpression ae) {
 			List<Node> cfc = new LinkedList<>();
 			Expression lhs = ae.getLhs();
-			addDelegatingNode(cfc, "lhs", ae, lhs);
-			addDelegatingNode(cfc, "rhs", ae, ae.getRhs());
+			addDelegatingNode(cfc, LHS, ae, lhs);
+			addDelegatingNode(cfc, RHS, ae, ae.getRhs());
 			return cfc;
 		}
 
@@ -129,9 +141,8 @@ final class CFEChildren {
 				int i = al.getElements().indexOf(aElem);
 				String name = "arrayElem_" + i;
 				Expression exp = aElem.getExpression();
-				int id = i + 1;
 				if (exp == null) {
-					addHelperNode(cfc, name, id, al);
+					addHelperNode(cfc, name, al);
 				} else {
 					addDelegatingNode(cfc, name, al, exp);
 				}
@@ -142,7 +153,7 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseAwaitExpression(AwaitExpression ae) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", ae, ae.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ae, ae.getExpression());
 			return cfc;
 		}
 
@@ -187,7 +198,7 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseCastExpression(CastExpression ce) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", ce, ce.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ce, ce.getExpression());
 			return cfc;
 		}
 
@@ -198,15 +209,6 @@ final class CFEChildren {
 				Expression expr = ce.getExprs().get(i);
 				addDelegatingNode(cfc, "expression_" + i, ce, expr);
 			}
-			return cfc;
-		}
-
-		@Override
-		public List<Node> caseConditionalExpression(ConditionalExpression ce) {
-			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "condition", ce, ce.getExpression());
-			addDelegatingNode(cfc, "then", ce, ce.getTrueExpression());
-			addDelegatingNode(cfc, "else", ce, ce.getFalseExpression());
 			return cfc;
 		}
 
@@ -302,14 +304,14 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseParenExpression(ParenExpression pe) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", pe, pe.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, pe, pe.getExpression());
 			return cfc;
 		}
 
 		@Override
 		public List<Node> caseParameterizedCallExpression(ParameterizedCallExpression pce) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "target", pce, pce.getTarget());
+			addDelegatingNode(cfc, NodeNames.TARGET, pce, pce.getTarget());
 			for (int i = 0; i < pce.getArguments().size(); i++) {
 				Argument arg = pce.getArguments().get(i);
 				addDelegatingNode(cfc, "arg_" + i, pce, arg.getExpression());
@@ -328,14 +330,14 @@ final class CFEChildren {
 		@Override
 		public List<Node> casePostfixExpression(PostfixExpression pe) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", pe, pe.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, pe, pe.getExpression());
 			return cfc;
 		}
 
 		@Override
 		public List<Node> casePromisifyExpression(PromisifyExpression pe) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", pe, pe.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, pe, pe.getExpression());
 			return cfc;
 		}
 
@@ -388,14 +390,14 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseUnaryExpression(UnaryExpression ue) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", ue, ue.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ue, ue.getExpression());
 			return cfc;
 		}
 
 		@Override
 		public List<Node> caseVariableBinding(VariableBinding vb) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", vb, vb.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, vb, vb.getExpression());
 			addDelegatingNode(cfc, "pattern", vb, vb.getPattern());
 			return cfc;
 		}
@@ -403,13 +405,9 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseYieldExpression(YieldExpression ye) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", ye, ye.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, ye, ye.getExpression());
 			return cfc;
 		}
-
-	}
-
-	static private class InternalExpressionChildrenX extends N4JSXSwitch<List<Node>> {
 
 		@Override
 		public List<Node> caseJSXElement(JSXElement jsxel) {
@@ -439,14 +437,14 @@ final class CFEChildren {
 		@Override
 		public List<Node> caseJSXExpression(JSXExpression jsxEx) {
 			List<Node> cfc = new LinkedList<>();
-			// getDelegatingNode(cfc, "expression", jsxEx.getExpression()));
+			// getDelegatingNode(cfc, EXPRESSION_NODE, jsxEx.getExpression()));
 			return cfc;
 		}
 
 		@Override
 		public List<Node> caseJSXSpreadAttribute(JSXSpreadAttribute jsxSA) {
 			List<Node> cfc = new LinkedList<>();
-			addDelegatingNode(cfc, "expression", jsxSA, jsxSA.getExpression());
+			addDelegatingNode(cfc, NodeNames.EXPRESSION, jsxSA, jsxSA.getExpression());
 			return cfc;
 		}
 

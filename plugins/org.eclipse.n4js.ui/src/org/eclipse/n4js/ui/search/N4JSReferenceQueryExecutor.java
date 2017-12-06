@@ -17,17 +17,21 @@ import java.util.Optional;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.JSXElementName;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
+import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.n4JS.N4MemberDeclaration;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.n4js.ts.types.util.NameStaticPair;
+import org.eclipse.n4js.ts.ui.search.LabelledReferenceDescription;
 import org.eclipse.n4js.ts.ui.search.LabellingReferenceQueryExecutor;
 import org.eclipse.n4js.utils.ContainerTypesHelper;
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector;
 import org.eclipse.n4js.validation.validators.utils.MemberCube;
 import org.eclipse.n4js.validation.validators.utils.MemberMatrix;
 import org.eclipse.xtext.EcoreUtil2;
+import org.eclipse.xtext.resource.IReferenceDescription;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -38,14 +42,14 @@ import com.google.inject.Inject;
 public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor {
 	@Inject
 	ContainerTypesHelper containerTypesHelper;
-	/** Flag indicating whether overriden members should be considered or not while finding references. */
+	/** Flag indicating whether overridden members should be considered or not while finding references. */
 	public static boolean considerOverridenMethods = false;
 	/** Flag indicating whether named import specifier should be ignored. */
 	public static boolean ignoreNamedImportSpecifier = true;
 
-	/***
-	 * Here, we add overriden/overrding members or super/subclasses if needed depending on user preferences when finding
-	 * references.
+	/**
+	 * Here, we add overridden/overriding members or super/subclasses if needed depending on user preferences when
+	 * finding references.
 	 */
 	@Override
 	protected Iterable<URI> getTargetURIs(EObject primaryTarget) {
@@ -91,6 +95,25 @@ public class N4JSReferenceQueryExecutor extends LabellingReferenceQueryExecutor 
 		}
 
 		return newResult;
+	}
+
+	/**
+	 * Returns <code>true</code> if the reference should be presented to the user.
+	 */
+	@Override
+	protected boolean isRelevantToUser(IReferenceDescription referenceDescription) {
+		if (referenceDescription instanceof LabelledReferenceDescription) {
+			EObject source = ((LabelledReferenceDescription) referenceDescription).getSource();
+			if (source.eContainer() instanceof JSXElementName && source.eContainer()
+					.eContainingFeature() == N4JSPackage.eINSTANCE.getJSXElement_JsxClosingName()) {
+				// Do not show JSX element's closing tag
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			return super.isRelevantToUser(referenceDescription);
+		}
 	}
 
 	private MemberMatrix getMemberMatrix(TMember member) {

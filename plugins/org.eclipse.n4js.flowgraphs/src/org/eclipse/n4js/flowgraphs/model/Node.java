@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
+import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
@@ -54,6 +55,8 @@ abstract public class Node implements ControlFlowable {
 	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
+	/** List of all {@link EffectInfo}s of this node */
+	final public List<EffectInfo> effectInfos = new ArrayList<>();
 
 	/** Set during graph traversal. */
 	private Reachability reachability = Reachability.Unknown;
@@ -114,6 +117,7 @@ abstract public class Node implements ControlFlowable {
 	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
 	 */
 	public void addInternalSuccessor(Node node, ControlFlowType cfType) {
+		assert node != this : "Self loops are not allowed";
 		EdgeDescription sed = new EdgeDescription(node, cfType);
 		internalSucc.put(sed.node, sed);
 	}
@@ -189,6 +193,13 @@ abstract public class Node implements ControlFlowable {
 		catchToken.add(ct);
 	}
 
+	/** Adds {@link EffectInfo} to this node */
+	public void addEffectInfo(EffectInfo ei) {
+		if (ei != null) {
+			effectInfos.add(ei);
+		}
+	}
+
 	/** @return true, iff this node has at least one jump token. */
 	public boolean isJump() {
 		return !jumpToken.isEmpty();
@@ -239,6 +250,14 @@ abstract public class Node implements ControlFlowable {
 	@Override
 	public String toString() {
 		return getName();
+	}
+
+	/** @return a String that contains the node name and the {@link ControlFlowElement} */
+	public String getExtendedString() {
+		String s = "";
+		s += "[" + FGUtils.getSourceText(getControlFlowElement()) + "]";
+		s += "(" + getName() + ") ";
+		return s;
 	}
 
 	private class EdgeDescription {

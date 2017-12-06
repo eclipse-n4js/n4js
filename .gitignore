@@ -25,6 +25,8 @@ m2repo/
 ########################################
 plugins/org.eclipse.n4js/.antlr-generator-*.*
 plugins/org.eclipse.n4js.ts/.antlr-generator-*.*
+plugins/org.eclipse.n4js.n4mf/.antlr-generator-*.*
+plugins/org.eclipse.n4js.regex/.antlr-generator-*.*
 ########################################
 # Maven 
 ########################################

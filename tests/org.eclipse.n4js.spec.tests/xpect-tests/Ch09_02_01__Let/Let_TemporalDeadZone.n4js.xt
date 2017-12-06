@@ -16,7 +16,7 @@ function foo() {
 	// <-- temporal dead zone (TDZ) of 'l' starts
 
 
-	// XPECT noerrors -->
+	// XPECT warnings --> "Variable l is used before it is declared" at "l"
 	l; // ReferenceError at runtime, due to TDZ (but see **)
 
 	let fun = function() {

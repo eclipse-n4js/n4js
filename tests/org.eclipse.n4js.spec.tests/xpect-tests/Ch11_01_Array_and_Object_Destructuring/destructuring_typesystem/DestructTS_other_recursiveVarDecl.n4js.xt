@@ -17,7 +17,7 @@
 // (the error messages are unrelated and not important here)
 //
 
-
+// XPECT warnings --> "Variable a is used before it is declared" at "a"
 // XPECT errors --> "Object destructuring pattern cannot be applied to a value of type 'any': any is not a subtype of Object." at "{a,b}"
 var {a,b} = a; // important: a appears on LHS and RHS
 

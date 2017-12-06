@@ -49,6 +49,7 @@ import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator
 import org.eclipse.xtext.validation.AbstractDeclarativeValidator.State
 import org.eclipse.xtext.validation.ComposedChecks
+import org.eclipse.n4js.validation.validators.N4JSXValidator
 
 /**
  * Validation rules for N4JS.
@@ -72,34 +73,37 @@ import org.eclipse.xtext.validation.ComposedChecks
  * @see TypesValidator
  */
 @ComposedChecks(validators=#[
-	IDEBUGValidator,
+
 	// N4JSStrictValidator,
-	N4JSNameValidator,
+	IDEBUGValidator,
+	N4JSAccessModifierValidator,
+	N4JSAnnotationValidator,
 	N4JSClassifierValidator,
-	N4JSMemberRedefinitionValidator,
 	N4JSClassValidator,
-	N4JSInterfaceValidator,
+	N4JSDeclaredNameValidator,
+	N4JSDependencyInjectionValidator,
+	N4JSDestructureValidator,
+	N4JSEnumValidator,
+	N4JSExpressionValidator,
+	N4JSExternalValidator,
 	N4JSFunctionValidator,
 	N4JSImportValidator,
-	N4JSTypeValidator,
-	N4JSExpressionValidator,
-	N4JSMemberValidator,
-	N4JSExternalValidator,
-	N4JSAccessModifierValidator,
-	N4JSSuperValidator,
-	N4JSLambdaValidator,
-	N4JSVariableValidator,
-	N4JSDeclaredNameValidator,
-	N4JSStatementValidator,
-	N4JSAnnotationValidator,
-	N4JSEnumValidator,
-	N4JSSyntaxValidator,
-	N4JSDependencyInjectionValidator,
 	N4JSInjectorCallsitesValidator,
+	N4JSInterfaceValidator,
+	N4JSLambdaValidator,
+	N4JSMemberRedefinitionValidator,
+	N4JSMemberValidator,
 	N4JSModuleValidator,
-	N4JSDestructureValidator,
+	N4JSNameValidator,
+	N4JSStatementValidator,
+	N4JSSuperValidator,
+	N4JSSyntaxValidator,
+	N4JSTypeValidator,
+	N4JSVariableValidator,
+	N4JSXValidator,
 	ThirdPartyValidator,
 	UnsupportedFeatureValidator
+
 ])
 @Log
 class N4JSValidator extends InternalTypeSystemValidator {

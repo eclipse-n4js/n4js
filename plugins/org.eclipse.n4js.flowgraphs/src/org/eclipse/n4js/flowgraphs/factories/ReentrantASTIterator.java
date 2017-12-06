@@ -27,6 +27,8 @@ import org.eclipse.n4js.n4JS.Script;
  * processed, its AST position is known. Now, its succeeding node can be created with the correct AST position.
  */
 public class ReentrantASTIterator {
+	static final String ASSERTION_MSG_AST_ORDER = "DelegatingNode or AST order erroneous";
+
 	final private Set<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 	final private ASTIterator astIt;
@@ -48,6 +50,7 @@ public class ReentrantASTIterator {
 
 	/** Creates {@link ComplexNode}s for every {@link ControlFlowElement}. */
 	public void visitUtil(ControlFlowElement termNode) {
+		termNode = CFEMapper.map(termNode);
 		while (astIt.hasNext()) {
 			ControlFlowElement cfe = astIt.next();
 			ControlFlowElement mappedCFE = CFEMapper.map(cfe);
@@ -55,16 +58,20 @@ public class ReentrantASTIterator {
 				if (mappedCFE != null && !cnMap.containsKey(mappedCFE)) {
 					ComplexNode cn = CFEFactoryDispatcher.build(this, mappedCFE);
 					if (cn != null) {
+						assert astPositionCounter - 1 == cn.getExit().astPosition : ASSERTION_MSG_AST_ORDER;
+
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
+
+						CFEEffectInfos.set(cnMap, cn, mappedCFE);
 					}
 				}
-
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {
-					break;
+					return;
 				}
 			}
 		}
+		assert termNode == null : ASSERTION_MSG_AST_ORDER;
 	}
 
 	/** @return the current container */

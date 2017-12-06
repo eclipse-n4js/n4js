@@ -24,9 +24,7 @@ Contributors:
 	</parent>
 
 	<modules>
-		<!--
-			Test helpers bundled for sdk. 
-		-->
+		<!-- Test helpers bundled for sdk. -->
 		<module>org.eclipse.n4js.tests.helper</module>
 		<module>org.eclipse.n4js.ui.tests.helper</module>
 		<module>org.eclipse.n4js.n4mf.tests.helper</module>
@@ -36,7 +34,6 @@ Contributors:
 		<module>org.eclipse.n4js.ts.tests.helper</module>
 		<module>org.eclipse.n4js.ts.ui.tests.helper</module>
 		<module>org.eclipse.n4js.tester.tests.helper</module>
-		<module>org.eclipse.n4js.n4jsx.tests.helper</module>
 	</modules>
 
 </project>

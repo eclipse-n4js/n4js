@@ -13,6 +13,14 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.tests.N4JSXpectTest END_SETUP */
 
 
+
+// XPECT warnings --> "Dead code." at "3"
+for (1;2;3) {
+	break;
+}
+
+
+
 function f1() {
 	/* Forward XPECT allPaths ---
 		"start" -> 1 -> "x" -> throw "x"; -> 3 -> 6

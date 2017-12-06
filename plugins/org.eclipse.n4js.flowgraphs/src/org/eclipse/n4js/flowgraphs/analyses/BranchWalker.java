@@ -106,7 +106,7 @@ abstract public class BranchWalker extends BranchWalkerInternal {
 			for (BranchWalkerInternal predBWI : bw.getPathPredecessors()) {
 				BranchWalker predBW = (BranchWalker) predBWI;
 				EdgeInfo incompleteInfoCpy = new EdgeInfo(incompleteInfo);
-				boolean omitUpdate = !predBW.isDeadCode() && bw.isDeadCode();
+				boolean omitUpdate = !predBW.isDeadCodeBranch() && bw.isDeadCodeBranch();
 				if (!omitUpdate) {
 					incompleteInfoCpy.update(predBW);
 				}
