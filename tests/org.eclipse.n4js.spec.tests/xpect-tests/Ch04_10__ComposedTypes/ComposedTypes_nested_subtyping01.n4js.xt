@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface A {}
+interface B {}
+interface C {}
+interface D {}
+interface E {}
+
+
+
+//
+// should work
+//
+
+
+let c1 : (A | B) & C;
+let c2 : (A & C) | (B & C);
+
+// XPECT noerrors -->
+c1 = c2;
+// XPECT noerrors -->
+c2 = c1;
+
+
+let d1 : (A | B) & (C | D);
+let d2 : (A & C) | (B & C) | (A & D) | (B & D);
+
+// XPECT noerrors -->
+d1 = d2;
+// XPECT noerrors -->
+d2 = d1;
+
+
+let e1 : A & (B | (C & (D | E)));
+let e2 : A & (B | C & D | C & E);
+let e3 : A & B | (A & C & D | A & C & E);
+
+// XPECT noerrors -->
+e1 = e2;
+// XPECT noerrors -->
+e1 = e3;
+// XPECT noerrors -->
+e2 = e1;
+// XPECT noerrors -->
+e2 = e3;
+// XPECT noerrors -->
+e3 = e1;
+// XPECT noerrors -->
+e3 = e2;

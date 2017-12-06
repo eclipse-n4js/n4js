@@ -1,0 +1,54 @@
+/*
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+
+/* XPECT_SETUP org.eclipse.n4js.spec.tests.N4JSSpecTest END_SETUP */
+
+
+interface A {}
+interface B {}
+interface C {}
+interface D {}
+interface E {}
+
+
+//
+// should not work
+//
+
+let c1 : (A | B) & C;
+let c2 : (A & C) | B;
+
+// XPECT errors --> "union{intersection{A,C},B} is not a subtype of intersection{union{A,B},C}." at "c2"
+c1 = c2;
+
+
+let d1 : (A | B) & (C | D);
+let d2 : (A & C) | (B & C) | (A & D);
+
+// XPECT errors --> "intersection{union{A,B},union{C,D}} is not a subtype of union{intersection{A,C},intersection{B,C},intersection{A,D}}." at "d1"
+d2 = d1;
+
+
+let e1 : A & (B | (C & (D | E)));
+let e2 : A & (B | C & D | C);
+let e3 : B | (A & C & D | A & C & E);
+
+// XPECT errors --> "intersection{A,union{B,intersection{C,D},C}} is not a subtype of intersection{A,union{B,intersection{C,union{D,E}}}}." at "e2"
+e1 = e2;
+
+// XPECT errors --> "union{B,union{intersection{A,C,D},intersection{A,C,E}}} is not a subtype of intersection{A,union{B,intersection{C,union{D,E}}}}." at "e3"
+e1 = e3;
+
+// XPECT errors --> "union{B,union{intersection{A,C,D},intersection{A,C,E}}} is not a subtype of intersection{A,union{B,intersection{C,D},C}}." at "e3"
+e2 = e3;
+
+// XPECT errors --> "intersection{A,union{B,intersection{C,D},C}} is not a subtype of union{B,union{intersection{A,C,D},intersection{A,C,E}}}." at "e2"
+e3 = e2;
