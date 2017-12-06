@@ -41,8 +41,8 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
-import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
@@ -69,7 +69,7 @@ class ModuleWrappingTransformation extends Transformation {
 	JSXBackendHelper jsx;
 
 	@Inject
-	extension QualifiedNameComputer qnameComputer
+	extension ProjectUtils qnameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject

@@ -25,7 +25,7 @@ import org.eclipse.n4js.n4JS.N4SetterDeclaration;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.TypeDefiningElement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.projectModel.StaticPolyfillHelper;
 import org.eclipse.n4js.ts.types.TClassifier;
 import org.eclipse.n4js.ts.types.TMember;
 import org.eclipse.xtext.util.IAcceptor;
@@ -47,18 +47,18 @@ public class InferredElements {
 	 *            acceptor for all elements
 	 */
 	public void collectInferredElements(EObject astElement, IAcceptor<? super EObject> result,
-			ProjectUtils projectUtils) {
-		new Impl(result, projectUtils).doSwitch(astElement);
+			StaticPolyfillHelper staticPolyfillHelper) {
+		new Impl(result, staticPolyfillHelper).doSwitch(astElement);
 	}
 
 	private static class Impl extends N4JSSwitch<Void> {
 		private final IAcceptor<? super EObject> result;
-		private final ProjectUtils projectUtils;
+		private final StaticPolyfillHelper staticPolyfillHelper;
 
 		private Impl(IAcceptor<? super EObject> result,
-				ProjectUtils projectUtils) {
+				StaticPolyfillHelper staticPolyfillHelper) {
 			this.result = result;
-			this.projectUtils = projectUtils;
+			this.staticPolyfillHelper = staticPolyfillHelper;
 		}
 
 		@Override
@@ -123,7 +123,7 @@ public class InferredElements {
 			// If this member is replaced by a polyfill's member, we accept that polyfill'member as well.
 			// Note that we enable this for static polyfill. We may want to extend this to runtime polyfill as well.
 			if (tmember.getContainingModule().isStaticPolyfillAware()) {
-				N4ClassDeclaration filler = projectUtils.getStaticPolyfill(tclassFilled);
+				N4ClassDeclaration filler = staticPolyfillHelper.getStaticPolyfill(tclassFilled);
 				// Search for the polyfill's member
 				Optional<N4MemberDeclaration> fillerMember = filler.getOwnedMembers().stream()
 						.filter(mem -> mem.eClass() == memberDecl.eClass() &&

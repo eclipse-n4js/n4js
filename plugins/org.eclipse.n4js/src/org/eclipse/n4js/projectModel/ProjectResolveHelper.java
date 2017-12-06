@@ -1,0 +1,79 @@
+/**
+ * Copyright (c) 2017 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+package org.eclipse.n4js.projectModel;
+
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.internal.N4JSModel;
+
+import com.google.common.base.Optional;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+/**
+ * Helper that based on provided {@link URI}s resolved the {@link IN4JSProject}, or related package / file name.
+ */
+@Singleton
+public class ProjectResolveHelper {
+
+	@Inject
+	private IN4JSCore n4jsCore;
+
+	@Inject
+	private N4JSModel model;
+
+	/**
+	 * Resolves project from provided URI.
+	 */
+	public IN4JSProject resolveProject(URI n4jsSourceURI) {
+		final Optional<? extends IN4JSProject> optionalProject = n4jsCore.findProject(n4jsSourceURI);
+		if (!optionalProject.isPresent()) {
+			throw new RuntimeException(
+					"Cannot handle resource without containing project. Resource URI was: " + n4jsSourceURI + ".");
+		}
+		return optionalProject.get();
+	}
+
+	/**
+	 * Convenience method for {@link ProjectResolveHelper#resolvePackageAndFileName(URI, IN4JSProject)}, for which
+	 * {@link IN4JSProject} is resolved based on the provided {@link URI}
+	 *
+	 * @see #resolvePackageAndFileName(URI, IN4JSProject)
+	 */
+	public String resolvePackageAndFileName(URI uri) {
+		final IN4JSProject project = n4jsCore.findProject(uri).orNull();
+		return resolvePackageAndFileName(uri, project);
+	}
+
+	/**
+	 * Resolves package and filename from provided {@link URI} against {@link IN4JSProject}. Provided project must be
+	 * {@link IN4JSProject#exists()}. In returned string file extension of the actual file is trimmed.
+	 */
+	public String resolvePackageAndFileName(URI uri, IN4JSProject project) {
+		final String msg = "Cannot locate source container for module " + uri.lastSegment() + ".";
+		if (null == project) {
+			throw new RuntimeException(msg + " Provided project was null.");
+		}
+		if (!project.exists()) {
+			throw new RuntimeException(
+					msg + " Does project '" + project.getProjectId() + "' exists and opened in the workspace?");
+		}
+
+		final Optional<? extends IN4JSSourceContainer> optionalSourceContainer = model
+				.findN4JSExternalSourceContainer(project, uri);
+		if (!optionalSourceContainer.isPresent()) {
+			throw new RuntimeException(msg);
+		}
+
+		return uri.deresolve(optionalSourceContainer.get().getLocation().appendSegment(""))
+				.trimFileExtension()
+				.toString();
+	}
+}

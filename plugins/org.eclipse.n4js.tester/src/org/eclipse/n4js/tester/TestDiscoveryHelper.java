@@ -43,10 +43,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
-import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.tester.domain.ID;
 import org.eclipse.n4js.tester.domain.TestCase;
@@ -94,7 +94,7 @@ public class TestDiscoveryHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private QualifiedNameComputer qualifiedNameComputer;
+	private ProjectUtils qualifiedNameComputer;
 	@Inject
 	private ContainerTypesHelper containerTypesHelper;
 

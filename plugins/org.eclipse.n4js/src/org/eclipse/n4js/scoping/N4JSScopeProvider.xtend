@@ -45,7 +45,6 @@ import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
@@ -87,6 +86,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.projectModel.EObjectDescriptionHelper
 
 /**
  * This class contains custom scoping description.
@@ -132,7 +132,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject extension VariableVisibilityChecker
 
-	@Inject extension ProjectUtils;
+	@Inject EObjectDescriptionHelper descriptionsHelper;
 	
 	@Inject extension ReactHelper;
 
@@ -301,7 +301,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		// filter out clashing module name (can be main module with the same name but in different project)
 		return new FilteringScope(projectImportEnabledScope, [
-			if (it === null) false else !it.isDescriptionOfModuleWith(importDeclaration);
+			if (it === null) false else !descriptionsHelper.isDescriptionOfModuleWith(it, importDeclaration);
 		]);
 	}
 

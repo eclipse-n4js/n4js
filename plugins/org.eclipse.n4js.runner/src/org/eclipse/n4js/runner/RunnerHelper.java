@@ -31,12 +31,13 @@ import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.common.CompilerUtils;
+import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
+import org.eclipse.n4js.projectModel.FindArtifactHelper;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
-import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -59,7 +60,7 @@ public class RunnerHelper {
 	private IN4JSCore n4jsCore;
 
 	@Inject
-	private ProjectUtils projectUtils;
+	private FindArtifactHelper artifactHelper;
 
 	@Inject
 	private CompilerUtils compilerUtils;
@@ -161,7 +162,7 @@ public class RunnerHelper {
 					ProjectType pt = p.getProjectType();
 					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
 				})
-				.flatMap(p -> projectUtils.getInitModulesAsURIs(p).stream()
+				.flatMap(p -> getInitModulesAsURIs(p).stream()
 						.map(bmURI -> compilerUtils.getTargetFileName(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
 				.collect(Collectors.toList());
 	}
@@ -173,7 +174,7 @@ public class RunnerHelper {
 		List<String> execModules = extendedDeps.stream()
 				.filter(p -> ProjectType.RUNTIME_ENVIRONMENT.equals(p.getProjectType()))
 				.map(re -> {
-					Optional<URI> execModuleAsURI = projectUtils.getExecModuleAsURI(re);
+					Optional<URI> execModuleAsURI = getExecModuleAsURI(re);
 					if (!execModuleAsURI.isPresent()) {
 						return null;
 					}
@@ -265,6 +266,29 @@ public class RunnerHelper {
 		final RecursionGuard<URI> guard = new RecursionGuard<>();
 		recursiveDependencyCollector(sourceContainerAware, dependencies, guard);
 		return dependencies;
+	}
+
+	/**
+	 * Same as {@link IN4JSProject#getExecModule()}, but returns the execution module as URI.
+	 */
+	private Optional<URI> getExecModuleAsURI(IN4JSProject project) {
+		Optional<BootstrapModule> oExecModule = project.getExecModule();
+		if (oExecModule.isPresent()) {
+			return Optional.of(artifactHelper.findArtifact(project, oExecModule.get().getModuleSpecifierWithWildcard(),
+					Optional.of(".js")));
+		}
+		return Optional.absent();
+	}
+
+	/**
+	 * Same as {@link IN4JSProject#getInitModules()}, but returns the initialization modules as URIs.
+	 */
+	private List<URI> getInitModulesAsURIs(IN4JSProject project) {
+		return project.getInitModules().stream()
+
+				.map(bm -> artifactHelper.findArtifact(project, bm.getModuleSpecifierWithWildcard(),
+						Optional.of(".js")))
+				.filter(module -> module != null).collect(Collectors.toList());
 	}
 
 	private void recursiveDependencyCollector(IN4JSSourceContainerAware sourceContainer,

@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es.assistants
 
 import com.google.common.collect.ArrayListMultimap
 import com.google.inject.Inject
+import java.util.List
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.AnnotationDefinition.RetentionPolicy
 import org.eclipse.n4js.n4JS.AnnotableElement
@@ -43,8 +44,6 @@ import org.eclipse.n4js.n4JS.SetterDeclaration
 import org.eclipse.n4js.n4JS.Statement
 import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.naming.QualifiedNameComputer
-import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.transpiler.TransformationAssistant
 import org.eclipse.n4js.transpiler.assistants.TypeAssistant
 import org.eclipse.n4js.transpiler.es.transform.ClassDeclarationTransformation
@@ -65,7 +64,6 @@ import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import java.util.List
 import org.eclipse.xtext.util.Strings
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -73,6 +71,7 @@ import static org.eclipse.n4js.transpiler.utils.TranspilerUtils.*
 
 import static extension org.eclipse.n4js.ts.utils.TypeUtils.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.projectModel.ProjectUtils
 
 /**
  * An {@link TransformationAssistant assistant} to create call expressions for invoking <code>$makeClass</code>,
@@ -87,7 +86,6 @@ class BootstrapCallAssistant extends TransformationAssistant {
 
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
-	@Inject private extension QualifiedNameComputer
 	@Inject private ProjectUtils projectUtils;
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
@@ -415,9 +413,8 @@ class BootstrapCallAssistant extends TransformationAssistant {
 		};
 
 
-
 		val origin = projectUtils.generateProjectDescriptor(state.resource.URI);
-		val fqn = type.fullyQualifiedTypeName_WITH_LEGACY_SUPPORT;
+		val fqn = projectUtils.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(type);
 
 		return _VariableDeclaration("metaClass")=>[
 			expression = _NewExpr(_IdentRef(metaClassSTE), _ObjLit(
@@ -426,7 +423,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				"fqn" -> _StringLiteral(fqn),
 				"n4superType" -> n4superType,
 				"allImplementedInterfaces" -> _ArrLit(
-					allImplementedInterfaces.map[fullyQualifiedTypeName_WITH_LEGACY_SUPPORT].map[_StringLiteral(it)]
+					allImplementedInterfaces.map[projectUtils.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(it)].map[_StringLiteral(it)]
 				),
 				"ownedMembers" -> _ArrLit(
 					ownedMembers.map[createMemberDescriptor]

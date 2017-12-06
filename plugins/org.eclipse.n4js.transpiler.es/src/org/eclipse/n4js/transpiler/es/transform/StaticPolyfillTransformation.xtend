@@ -11,6 +11,7 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.inject.Inject
+import java.util.Set
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -19,7 +20,7 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
-import org.eclipse.n4js.projectModel.ProjectUtils
+import org.eclipse.n4js.projectModel.StaticPolyfillHelper
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
@@ -31,19 +32,17 @@ import org.eclipse.n4js.ts.types.TEnumLiteral
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TModule
-import java.util.Set
 import org.eclipse.xtext.EcoreUtil2
 
-import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*;
-import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*;
+import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
+import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 
 /**
  */
 class StaticPolyfillTransformation extends Transformation {
 
-	@Inject
-	private ProjectUtils projectUtils;
+	@Inject private StaticPolyfillHelper staticPolyfillHelper;
 
 	/**
 	 * While inserting members into classes, we add here the elements referenced in the initializer expressions, fpar
@@ -72,7 +71,7 @@ class StaticPolyfillTransformation extends Transformation {
 	override transform() {
 		val isAware = state.resource.script.isContainedInStaticPolyfillAware;
 		if(isAware) {
-			val fillingResource = projectUtils.getStaticPolyfillResource(state.resource);
+			val fillingResource = staticPolyfillHelper.getStaticPolyfillResource(state.resource);
 			if(fillingResource!==null) {
 				referencedElements.clear();
 				collectNodes(state.im, N4ClassDeclaration, false).forEach[doStaticPolyfilling];
@@ -83,7 +82,7 @@ class StaticPolyfillTransformation extends Transformation {
 
 	def private void doStaticPolyfilling(N4ClassDeclaration classDecl) {
 		val defCls = state.info.getOriginalDefinedType(classDecl);
-		val filler = projectUtils.getStaticPolyfill(defCls);
+		val filler = staticPolyfillHelper.getStaticPolyfill(defCls);
 		if(filler!==null) {
 			doStaticPolyfilling(classDecl, filler);
 		}

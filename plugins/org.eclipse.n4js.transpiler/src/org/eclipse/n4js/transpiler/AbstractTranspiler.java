@@ -15,7 +15,7 @@ import java.nio.file.Path;
 
 import org.eclipse.n4js.generator.common.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
-import org.eclipse.n4js.naming.QualifiedNameComputer;
+import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.print.PrettyPrinter;
 import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
@@ -56,7 +56,7 @@ public abstract class AbstractTranspiler {
 	private ScopeManager scopeManager;
 
 	@Inject
-	private QualifiedNameComputer qnComputer;
+	private ProjectUtils qnComputer;
 
 	@Inject
 	private TranspilerDebugUtils transpilerDebugUtils;
