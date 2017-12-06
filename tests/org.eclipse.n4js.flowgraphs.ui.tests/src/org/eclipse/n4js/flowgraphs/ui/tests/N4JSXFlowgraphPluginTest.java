@@ -42,6 +42,6 @@ import org.xpect.xtext.lib.tests.ValidationTest;
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "model", fileExtensions = "xt")
 @XpectImport({ SuppressIssuesSetup.class })
-public class N4JSXFlowgraphTest {
+public class N4JSXFlowgraphPluginTest {
 	//
 }

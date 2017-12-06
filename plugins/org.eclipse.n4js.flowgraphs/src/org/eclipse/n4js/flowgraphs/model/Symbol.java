@@ -11,7 +11,7 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 @SuppressWarnings("javadoc")
-abstract public class Symbol implements GraphElement {
+abstract public class Symbol {
 	// TODO GH-235
 
 	// final Object token;

@@ -218,7 +218,7 @@ public class ControlFlowGraphFactory {
 	}
 
 	private static FinallyBlock getEnteringFinallyBlock(Node catchNode) {
-		if (catchNode.name.equals(TryFactory.FINALLY_NODE_NAME)) {
+		if (catchNode.name.equals(NodeNames.FINALLY)) {
 			ControlFlowElement cfe = catchNode.getDelegatedControlFlowElement();
 			EObject cfeContainer = cfe.eContainer();
 			return (FinallyBlock) cfeContainer;

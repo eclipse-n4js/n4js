@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,12 +31,12 @@ class ConditionalExpressionFactory {
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ConditionalExpression condExpr) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), condExpr);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), condExpr);
-		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, "condition", condExpr,
+		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), condExpr);
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, condExpr,
 				condExpr.getExpression());
-		Node thenNode = DelegatingNodeFactory.create(astpp, "then", condExpr, condExpr.getTrueExpression());
-		Node elseNode = DelegatingNodeFactory.create(astpp, "else", condExpr, condExpr.getFalseExpression());
-		Node exitNode = new RepresentingNode(EXIT_NODE, astpp.pos(), condExpr);
+		Node thenNode = DelegatingNodeFactory.create(astpp, NodeNames.THEN, condExpr, condExpr.getTrueExpression());
+		Node elseNode = DelegatingNodeFactory.create(astpp, NodeNames.ELSE, condExpr, condExpr.getFalseExpression());
+		Node exitNode = new RepresentingNode(NodeNames.EXIT, astpp.pos(), condExpr);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);

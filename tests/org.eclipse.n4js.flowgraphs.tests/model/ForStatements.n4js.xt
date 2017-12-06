@@ -99,14 +99,8 @@ function ForStatement3() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatement3 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 3 -> 5 -> 2[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 3 -> 5 -> 2[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 3 -> 5,
-		B7: [B1|B3|B5]1 -> "start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]1 -> "start"
 	--- */
 	/* ForStatement3 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -116,8 +110,7 @@ function ForStatement3() {
 	/* ForStatement3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> 1 -> "start",
 		"end" -> 2 -> 3 -> 5 -> 2 -> 1 -> "start",
-		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 1 -> "start",
-		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 1 -> "start"
 	--- */
 	// ForStatement3 XPECT path from '"start"' to '"end"' -->
 	// ForStatement3 XPECT path from '3' to '2' -->
@@ -183,14 +176,8 @@ function ForStatement5() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatement5 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 5 -> 2[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 5 -> 2[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 5,
-		B7: [B1|B3|B5]1 -> "start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 5 -> 2 -> [B5], B5: [B1|B3|B4]1 -> "start"
 	--- */
 	/* ForStatement5 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -200,8 +187,7 @@ function ForStatement5() {
 	/* ForStatement5 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> 1 -> "start",
 		"end" -> 2 -> 5 -> 2 -> 1 -> "start",
-		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 1 -> "start",
-		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 5
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 1 -> "start"
 	--- */
 	// ForStatement5 XPECT path from '"start"' to '"end"' -->
 	// ForStatement5 XPECT path from '5' to '"end"' -->
@@ -234,14 +220,8 @@ function ForStatement6() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatement6 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 3 -> 5 -> 2[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 3 -> 5 -> 2[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 3 -> 5,
-		B7: [B1|B3|B5]"start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]"start"
 	--- */
 	/* ForStatement6 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -251,8 +231,7 @@ function ForStatement6() {
 	/* ForStatement6 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> "start",
 		"end" -> 2 -> 3 -> 5 -> 2 -> "start",
-		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> "start",
-		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5
+		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> "start"
 	--- */
 	// ForStatement6 XPECT path from '"start"' to '"end"' -->
 	// ForStatement6 XPECT path from '2' to '3' -->
@@ -313,14 +292,8 @@ function ForStatement8() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatement8 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 5 -> 2[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 5 -> 2[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 5,
-		B7: [B1|B3|B5]"start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 5 -> 2 -> [B5], B5: [B1|B3|B4]"start"
 	--- */
 	/* ForStatement8 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -330,8 +303,7 @@ function ForStatement8() {
 	/* ForStatement8 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> "start",
 		"end" -> 2 -> 5 -> 2 -> "start",
-		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> "start",
-		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> 5
+		"end" -> 2 -> 5 -> 2 -> 5 -> 2 -> "start"
 	--- */
 	// ForStatement8 XPECT path from '"start"' to '"end"' -->
 	// ForStatement8 XPECT path from '5' to '"end"' -->
@@ -394,9 +366,9 @@ function ForStatementDestructuring(arr : Array<number>) {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatementDestructuring backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2], B1: [B0] -> [B7], B2: [B0] -> 3 -> "loop" -> 2[B3|B4],
-		B3: [B2] -> [B7], B4: [B2] -> 3 -> "loop" -> 2[B5|B6], B5: [B4] -> [B7], B6: [B4] -> 3 -> "loop",
-		B7: [B1|B3|B5][a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> "loop" -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> "loop" -> 2 -> [B5],
+		B5: [B1|B3|B4][a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
 	--- */
 	/* ForStatementDestructuring XPECT allPaths ---
 		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "end",
@@ -404,7 +376,6 @@ function ForStatementDestructuring(arr : Array<number>) {
 		"start" -> arr -> a4 -> b4 -> c4 -> [a4\,b4\,c4] = arr -> 2 -> "loop" -> 3 -> 2 -> "loop" -> 3 -> 2 -> "end"
 	--- */
 	/* ForStatementDestructuring backward XPECT allPaths direction 'Backward' ---
-		"end" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop",
 		"end" -> 2 -> 3 -> "loop" -> 2 -> 3 -> "loop" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
 		"end" -> 2 -> 3 -> "loop" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start",
 		"end" -> 2 -> [a4\,b4\,c4] = arr -> c4 -> b4 -> a4 -> arr -> "start"
@@ -439,14 +410,8 @@ function ForOfStatement1() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForOfStatement1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 3[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 3[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 3,
-		B7: [B1|B3|B5][1\,2] -> 2 -> 1 -> i -> "start"
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 3 -> [B5], B5: [B1|B3|B4][1\,2] -> 2 -> 1 -> i -> "start"
 	--- */
 	/* ForOfStatement1 XPECT allPaths ---
 		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
@@ -454,7 +419,6 @@ function ForOfStatement1() {
 		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
 	--- */
 	/* ForOfStatement1 backward XPECT allPaths direction 'Backward' ---
-		"end" -> 3 -> 3 -> 3,
 		"end" -> 3 -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
 		"end" -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
 		"end" -> [1\,2] -> 2 -> 1 -> i -> "start"
@@ -493,14 +457,8 @@ function ForOfStatement2(x) {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForOfStatement2 backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 5[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 5[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 5,
-		B7: [B1|B3|B5][1\,2] -> 2 -> 1 -> x -> "start"
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 5 -> [B5], B5: [B1|B3|B4][1\,2] -> 2 -> 1 -> x -> "start"
 	--- */
 	/* ForOfStatement2 XPECT allPaths ---
 		"start" -> x -> 1 -> 2 -> [1\,2] -> "end",
@@ -508,7 +466,6 @@ function ForOfStatement2(x) {
 		"start" -> x -> 1 -> 2 -> [1\,2] -> 5 -> 5 -> "end"
 	--- */
 	/* ForOfStatement2 backward XPECT allPaths direction 'Backward' ---
-		"end" -> 5 -> 5 -> 5,
 		"end" -> 5 -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
 		"end" -> 5 -> [1\,2] -> 2 -> 1 -> x -> "start",
 		"end" -> [1\,2] -> 2 -> 1 -> x -> "start"
@@ -546,14 +503,9 @@ function ForOfStatementDestructuring(it : Array<Iterable2<Object,Object>>) {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForOfStatementDestructuring backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> "loop"[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> "loop"[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> "loop",
-		B7: [B1|B3|B5]it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start"
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> "loop"[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> "loop" -> [B5],
+		B5: [B1|B3|B4]it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start"
 	--- */
 	/* ForOfStatementDestructuring XPECT allPaths ---
 		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "end",
@@ -561,7 +513,6 @@ function ForOfStatementDestructuring(it : Array<Iterable2<Object,Object>>) {
 		"start" -> a1 -> b1 -> c1 -> [a1\,b1\,c1] -> it -> "loop" -> "loop" -> "end"
 	--- */
 	/* ForOfStatementDestructuring backward XPECT allPaths direction 'Backward' ---
-		"end" -> "loop" -> "loop" -> "loop",
 		"end" -> "loop" -> "loop" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
 		"end" -> "loop" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start",
 		"end" -> it -> [a1\,b1\,c1] -> c1 -> b1 -> a1 -> "start"
@@ -596,14 +547,8 @@ function ForInStatement1() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForInStatement1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 3[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 3[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 3,
-		B7: [B1|B3|B5][1\,2] -> 2 -> 1 -> i -> "start"
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 3 -> [B5], B5: [B1|B3|B4][1\,2] -> 2 -> 1 -> i -> "start"
 	--- */
 	/* ForInStatement1 XPECT allPaths ---
 		"start" -> i -> 1 -> 2 -> [1\,2] -> "end",
@@ -611,7 +556,6 @@ function ForInStatement1() {
 		"start" -> i -> 1 -> 2 -> [1\,2] -> 3 -> 3 -> "end"
 	--- */
 	/* ForInStatement1 backward XPECT allPaths direction 'Backward' ---
-		"end" -> 3 -> 3 -> 3,
 		"end" -> 3 -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
 		"end" -> 3 -> [1\,2] -> 2 -> 1 -> i -> "start",
 		"end" -> [1\,2] -> 2 -> 1 -> i -> "start"
@@ -650,14 +594,8 @@ function ForInStatement2(x) {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForInStatement2 backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 5[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 5[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 5,
-		B7: [B1|B3|B5]"Hello" -> x -> "start"
+		B0: "end"[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 5[B3|B4], B3: [B2] -> [B5],
+		B4: [B2] -> 5 -> [B5], B5: [B1|B3|B4]"Hello" -> x -> "start"
 	--- */
 	/* ForInStatement2 XPECT allPaths ---
 		"start" -> x -> "Hello" -> "end",
@@ -667,8 +605,7 @@ function ForInStatement2(x) {
 	/* ForInStatement2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> "Hello" -> x -> "start",
 		"end" -> 5 -> "Hello" -> x -> "start",
-		"end" -> 5 -> 5 -> "Hello" -> x -> "start",
-		"end" -> 5 -> 5 -> 5
+		"end" -> 5 -> 5 -> "Hello" -> x -> "start"
 	--- */
 	// ForInStatement2 XPECT path from '"start"' to '"end"' -->
 	// ForInStatement2 XPECT path from 'x' to '5' -->
@@ -700,14 +637,8 @@ function ForStatementVarDecl1() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatementVarDecl1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 3 -> 5 -> 2[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 3 -> 5 -> 2[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 3 -> 5,
-		B7: [B1|B3|B5]i=0 -> 0 -> "start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]i=0 -> 0 -> "start"
 	--- */
 	/* ForStatementVarDecl1 XPECT allPaths ---
 		"start" -> 0 -> i=0 -> 2 -> "end",
@@ -715,7 +646,6 @@ function ForStatementVarDecl1() {
 		"start" -> 0 -> i=0 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
 	--- */
 	/* ForStatementVarDecl1 backward XPECT allPaths direction 'Backward' ---
-		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5,
 		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> i=0 -> 0 -> "start",
 		"end" -> 2 -> 3 -> 5 -> 2 -> i=0 -> 0 -> "start",
 		"end" -> 2 -> i=0 -> 0 -> "start"
@@ -752,14 +682,8 @@ function ForStatementVarDecl2() {
 		B5: [B2|B3|B4]"end"
 	--- */
 	/* ForStatementVarDecl2 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B1: [B0] -> [B7],
-		B2: [B0] -> 3 -> 5 -> 2[B3|B4],
-		B3: [B2] -> [B7],
-		B4: [B2] -> 3 -> 5 -> 2[B5|B6],
-		B5: [B4] -> [B7],
-		B6: [B4] -> 3 -> 5,
-		B7: [B1|B3|B5]j=1 -> 1 -> i=0 -> 0 -> "start"
+		B0: "end" -> 2[B1|B2], B1: [B0] -> [B5], B2: [B0] -> 3 -> 5 -> 2[B3|B4],
+		B3: [B2] -> [B5], B4: [B2] -> 3 -> 5 -> 2 -> [B5], B5: [B1|B3|B4]j=1 -> 1 -> i=0 -> 0 -> "start"
 	--- */
 	/* ForStatementVarDecl2 XPECT allPaths ---
 		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> "end",
@@ -767,7 +691,6 @@ function ForStatementVarDecl2() {
 		"start" -> 0 -> i=0 -> 1 -> j=1 -> 2 -> 5 -> 3 -> 2 -> 5 -> 3 -> 2 -> "end"
 	--- */
 	/* ForStatementVarDecl2 backward XPECT allPaths direction 'Backward' ---
-		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> 3 -> 5,
 		"end" -> 2 -> 3 -> 5 -> 2 -> 3 -> 5 -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start",
 		"end" -> 2 -> 3 -> 5 -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start",
 		"end" -> 2 -> j=1 -> 1 -> i=0 -> 0 -> "start"
@@ -807,17 +730,9 @@ function ForStatementBreak1() {
 		B9: [B2|B4|B6|b7|B8]"end", b3: [B1] -> 3 -> 2[B5|B6], b7: [B5] -> 3 -> 2 -> [B9]
 	--- */
 	/* ForStatementBreak1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end"[B1|B2],
-		B10: [B4|B7]1 -> "start",
-		B1: [B0] -> [B3],
-		B2: [B0] -> break; -> [B3],
-		B3: [B1|B2]2[B4|b5],
-		B4: [B3] -> [B10],
-		B6: [b5] -> break; -> 2[B7|b8],
-		B7: [B6] -> [B10],
-		B9: [b8] -> break;,
-		b5: [B3] -> 3[B6],
-		b8: [B6] -> 3[B9]
+		B0: "end"[B1|B2], B10: [B4|B7|B9]1 -> "start", B1: [B0] -> [B3],
+		B2: [B0] -> break; -> [B3], B3: [B1|B2]2[B4|b5], B4: [B3] -> [B10], B6: [b5] -> break; -> 2[B7|b8],
+		B7: [B6] -> [B10], B9: [b8] -> break; -> 2 -> [B10], b5: [B3] -> 3[B6], b8: [B6] -> 3[B9]
 	--- */
 	/* ForStatementBreak1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -860,26 +775,10 @@ function ForStatementContinue1() {
 		b3: [B1] -> [B5], b8: [B6] -> [B10]
 	--- */
 	/* ForStatementContinue1 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B11: [b10] -> [B12],
-		B12: [B9|B11]continue; -> 2[B13|B14],
-		B13: [B12] -> [B19],
-		B14: [B12] -> 3[B15|b16],
-		B15: [B14] -> [B18],
-		B17: [b16] -> [B18],
-		B18: [B15|B17]continue;,
-		B19: [B1|B7|B13]1 -> "start",
-		B1: [B0] -> [B19],
-		B2: [B0] -> 3[B3|b4],
-		B3: [B2] -> [B6],
-		B5: [b4] -> [B6],
-		B6: [B3|B5]continue; -> 2[B7|B8],
-		B7: [B6] -> [B19],
-		B8: [B6] -> 3[B9|b10],
-		B9: [B8] -> [B12],
-		b10: [B8][B11],
-		b16: [B14][B17],
-		b4: [B2][B5]
+		B0: "end" -> 2[B1|B2], B11: [b10] -> [B12],
+		B12: [B9|B11]continue; -> 2 -> [B13], B13: [B1|B7|B12]1 -> "start", B1: [B0] -> [B13], B2: [B0] -> 3[B3|b4],
+		B3: [B2] -> [B6], B5: [b4] -> [B6], B6: [B3|B5]continue; -> 2[B7|B8], B7: [B6] -> [B13],
+		B8: [B6] -> 3[B9|b10], B9: [B8] -> [B12], b10: [B8][B11], b4: [B2][B5]
 	--- */
 	/* ForStatementContinue1 XPECT allPaths ---
 		"start" -> 1 -> 2 -> "end",
@@ -889,8 +788,7 @@ function ForStatementContinue1() {
 	/* ForStatementContinue1 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> 1 -> "start",
 		"end" -> 2 -> 3 -> continue; -> 2 -> 1 -> "start",
-		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 1 -> "start",
-		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 3 -> continue;
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 1 -> "start"
 	--- */
 	// ForStatementContinue1 XPECT path from '"start"' to '"end"' -->
 	// ForStatementContinue1 XPECT path from '3' to '"end"' -->
@@ -923,26 +821,10 @@ function ForStatementContinue2() {
 		B6: [B5] -> continue;[b8|B9], B7: [B5] -> [B11], B9: [B6] -> [B10], b3: [B1] -> [B5], b8: [B6] -> [B10]
 	--- */
 	/* ForStatementContinue2 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B11: [b10] -> [B12],
-		B12: [B9|B11]continue; -> 2[B13|B14],
-		B13: [B12] -> [B19],
-		B14: [B12] -> 3[B15|b16],
-		B15: [B14] -> [B18],
-		B17: [b16] -> [B18],
-		B18: [B15|B17]continue;,
-		B19: [B1|B7|B13]"start",
-		B1: [B0] -> [B19],
-		B2: [B0] -> 3[B3|b4],
-		B3: [B2] -> [B6],
-		B5: [b4] -> [B6],
-		B6: [B3|B5]continue; -> 2[B7|B8],
-		B7: [B6] -> [B19],
-		B8: [B6] -> 3[B9|b10],
-		B9: [B8] -> [B12],
-		b10: [B8][B11],
-		b16: [B14][B17],
-		b4: [B2][B5]
+		B0: "end" -> 2[B1|B2], B11: [b10] -> [B12],
+		B12: [B9|B11]continue; -> 2 -> [B13], B13: [B1|B7|B12]"start", B1: [B0] -> [B13], B2: [B0] -> 3[B3|b4],
+		B3: [B2] -> [B6], B5: [b4] -> [B6], B6: [B3|B5]continue; -> 2[B7|B8], B7: [B6] -> [B13],
+		B8: [B6] -> 3[B9|b10], B9: [B8] -> [B12], b10: [B8][B11], b4: [B2][B5]
 	--- */
 	/* ForStatementContinue2 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -952,8 +834,7 @@ function ForStatementContinue2() {
 	/* ForStatementContinue2 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> "start",
 		"end" -> 2 -> 3 -> continue; -> 2 -> "start",
-		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> "start",
-		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> 3 -> continue;
+		"end" -> 2 -> 3 -> continue; -> 2 -> 3 -> continue; -> 2 -> "start"
 	--- */
 	// ForStatementContinue2 XPECT path from '"start"' to '"end"' -->
 	// ForStatementContinue2 XPECT path from '3' to '"end"' -->
@@ -985,26 +866,10 @@ function ForStatementContinue3() {
 		B6: [B5] -> continue;[b8|B9], B7: [B5] -> [B11], B9: [B6] -> [B10], b3: [B1] -> [B5], b8: [B6] -> [B10]
 	--- */
 	/* ForStatementContinue3 backward XPECT allBranches direction 'Backward' ---
-		B0: "end" -> 2[B1|B2],
-		B11: [b10] -> [B12],
-		B12: [B9|B11]continue; -> 2[B13|B14],
-		B13: [B12] -> [B19],
-		B14: [B12][B15|b16],
-		B15: [B14] -> [B18],
-		B17: [b16] -> [B18],
-		B18: [B15|B17]continue;,
-		B19: [B1|B7|B13]"start",
-		B1: [B0] -> [B19],
-		B2: [B0][B3|b4],
-		B3: [B2] -> [B6],
-		B5: [b4] -> [B6],
-		B6: [B3|B5]continue; -> 2[B7|B8],
-		B7: [B6] -> [B19],
-		B8: [B6][B9|b10],
-		B9: [B8] -> [B12],
-		b10: [B8][B11],
-		b16: [B14][B17],
-		b4: [B2][B5]
+		B0: "end" -> 2[B1|B2], B11: [b10] -> [B12],
+		B12: [B9|B11]continue; -> 2 -> [B13], B13: [B1|B7|B12]"start", B1: [B0] -> [B13], B2: [B0][B3|b4], B3: [B2] -> [B6],
+		B5: [b4] -> [B6], B6: [B3|B5]continue; -> 2[B7|B8], B7: [B6] -> [B13], B8: [B6][B9|b10],
+		B9: [B8] -> [B12], b10: [B8][B11], b4: [B2][B5]
 	--- */
 	/* ForStatementContinue3 XPECT allPaths ---
 		"start" -> 2 -> "end",
@@ -1014,8 +879,7 @@ function ForStatementContinue3() {
 	/* ForStatementContinue3 backward XPECT allPaths direction 'Backward' ---
 		"end" -> 2 -> "start",
 		"end" -> 2 -> continue; -> 2 -> "start",
-		"end" -> 2 -> continue; -> 2 -> continue; -> 2 -> "start",
-		"end" -> 2 -> continue; -> 2 -> continue; -> 2 -> continue;
+		"end" -> 2 -> continue; -> 2 -> continue; -> 2 -> "start"
 	--- */
 	// ForStatementContinue3 XPECT path from '"start"' to '"end"' -->
 	// ForStatementContinue3 XPECT path from 'continue;' to '"end"' -->
@@ -1061,5 +925,49 @@ function ForStatementContinue4() {
 	"start";
 	for (;;) continue;
 	// ForStatementContinue4 XPECT warnings --> "Dead code. No execution possible after for statement." at ""end";"
+	"end";
+}
+
+function ForStatementInContinue1() {
+	// ForStatementInContinue1 XPECT cfContainer --> FunctionDeclaration::Block
+	/* ForStatementInContinue1 XPECT allEdges ---
+		"start" --> i,
+		1 --> [1],
+		[1] -LoopEnter-> continue;,
+		[1] -LoopExit-> "end",
+		i --> 1
+	--- */
+	/* ForStatementInContinue1 XPECT allBranches ---
+		B0: "start" -> i -> 1 -> [1][B1|B2], B10: [B4|B8|B9],
+		B1: [B0] -> continue;[b3|B4], B2: [B0] -> [B9], B4: [B1][B10], B5: [b3] -> continue;[b7|B8],
+		B6: [b3] -> [B9], B8: [B5][B10], B9: [B2|B6|b7]"end"[B10], b3: [B1][B5|B6], b7: [B5] -> [B9]
+	--- */
+	/* ForStatementInContinue1 backward XPECT allBranches direction 'Backward' ---
+		B0: [B1|B2], B10: [B4|B7|B9][1] -> 1 -> i -> "start",
+		B1: [B0]continue; -> [B3], B2: [B0]"end" -> [B3], B3: [B1|B2][B4|b5], B4: [B3][B10],
+		B6: [b5] ->  -> continue;[B7|b8], B7: [B6] -> [B10], B9: [b8] -> continue; -> [B10], b5: [B3][B6], b8: [B6][B9]
+	--- */
+	/* ForStatementInContinue1 XPECT allPaths ---
+		"start" -> i -> 1 -> [1] -> "end",
+		"start" -> i -> 1 -> [1] -> continue;
+	--- */
+	/* ForStatementInContinue1 backward XPECT allPaths direction 'Backward' ---
+		"end" -> [1] -> 1 -> i -> "start",
+		continue; -> [1] -> 1 -> i -> "start"
+	--- */
+	// ForStatementInContinue1 XPECT path from '"start"' to '"end"' -->
+	// ForStatementInContinue1 XPECT path from 'continue;' notTo '"end"' -->
+	// ForStatementInContinue1 XPECT commonPreds of 'continue;' and '[1]' --> [1]
+	// ForStatementInContinue1 XPECT commonPreds of '"end"' and 'continue;' --> [1]
+	// ForStatementInContinue1 XPECT succs at '"start"' --> i
+	// ForStatementInContinue1 XPECT succs at '[1]' --> continue;, "end"
+	// ForStatementInContinue1 XPECT succs type 'LoopEnter' at '[1]' --> continue;
+	// ForStatementInContinue1 XPECT succs type 'Continue' at 'continue;' -->
+	// ForStatementInContinue1 XPECT succs at 'continue;' -->
+	// ForStatementInContinue1 XPECT preds at 'for' --> "start"
+	// ForStatementInContinue1 XPECT succs at 'for' --> "end"
+	"start";
+	for (var i in [1])
+		continue;
 	"end";
 }

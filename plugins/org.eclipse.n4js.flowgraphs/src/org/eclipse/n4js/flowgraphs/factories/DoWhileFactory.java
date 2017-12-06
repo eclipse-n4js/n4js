@@ -26,16 +26,15 @@ import org.eclipse.n4js.n4JS.LabelledStatement;
  * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 class DoWhileFactory {
-	static final String CONDITION_NODE_NAME = "condition";
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, DoStatement doStmt) {
 		ComplexNode cNode = new ComplexNode(astpp.container(), doStmt);
 
-		Node entryNode = new HelperNode("entry", astpp.pos(), doStmt);
-		Node bodyNode = DelegatingNodeFactory.create(astpp, "body", doStmt, doStmt.getStatement());
-		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, CONDITION_NODE_NAME, doStmt,
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), doStmt);
+		Node bodyNode = DelegatingNodeFactory.create(astpp, NodeNames.BODY, doStmt, doStmt.getStatement());
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, doStmt,
 				doStmt.getExpression());
-		Node exitNode = new HelperNode("exit", astpp.pos(), doStmt);
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), doStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(bodyNode);

@@ -68,6 +68,7 @@ function case2b() {
 
 function case3a() {
 	for(let i:number;;) {
+		// XPECT warnings --> "Variable i is used before it is declared" at "i"
 		// XPECT type of 'i' --> string
 		i; // <-- note: this binds to the below 'i' that shadows the above 'i' (this is ES6!), but will throw ReferenceError at runtime due to temporal dead zone which we cannot validate
 		let i:string; // <-- this shadowing is legal in ES6
@@ -80,6 +81,7 @@ function case3a() {
 }
 function case3b() {
 	for(let i in undefined) {
+		// XPECT warnings --> "Variable i is used before it is declared" at "i"
 		// XPECT type of 'i' --> string
 		i;
 		let i:string;
@@ -91,6 +93,7 @@ function case3b() {
 }
 function case3c() {
 	for(let i of undefined) {
+		// XPECT warnings --> "Variable i is used before it is declared" at "i"
 		// XPECT type of 'i' --> string
 		i;
 		let i:string;
@@ -190,8 +193,9 @@ function case7(param) {
 	try {
 		// XPECT noerrors -->
 		let param: string;
-	// TODO ES6 would allow this name for the catch variable XPECT errors --> "Catch variable param shadows parameter param (line 189)." at "param"
+	// TODO ES6 would allow this name for the catch variable XPECT errors --> "Catch variable param shadows parameter param (line 192)." at "param"
 	} catch(param) {
+		// XPECT warnings --> "Variable param is used before it is declared" at "param"
 		// XPECT type of 'param' --> number
 		param; // <-- note: this binds to the below 'param' that shadows the above 'param' (this is ES6!), but will throw ReferenceError at runtime due to temporal dead zone which we cannot validate
 		// XPECT noerrors -->
