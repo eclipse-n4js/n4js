@@ -911,7 +911,7 @@ public class N4HeadlessCompiler {
 			// Only load a project if it was requested to be compile or if other requested projects depend on it.
 			if (markedProject.hasMarkers()) {
 				recorder.markProcessing(markedProject.project);
-				// configureFSA(markedProject.project);
+				configureFSA(markedProject.project);
 
 				try {
 					// Add to loaded projects immediately so that the project gets unloaded even if loading fails.
@@ -1375,7 +1375,6 @@ public class N4HeadlessCompiler {
 						if (logger.isVerbose()) {
 							logger.info("  generating  " + compositeGenerator.getClass().getName());
 						}
-						configureFSA(markedProject.project);
 						compositeGenerator.doGenerate(resource, fsa);
 
 						rec.markEndCompile(resource);
