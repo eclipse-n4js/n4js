@@ -8,10 +8,11 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.ui;
+package org.eclipse.n4js.ui.generator;
 
 import static org.eclipse.core.resources.IResource.DEPTH_ZERO;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -29,6 +30,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class GeneratorMarkerSupport implements IGeneratorMarkerSupport {
+
+	private static final Logger LOGGER = Logger.getLogger(GeneratorMarkerSupport.class);
 
 	private final IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
 
@@ -54,7 +57,7 @@ public class GeneratorMarkerSupport implements IGeneratorMarkerSupport {
 			marker.setAttribute(IMarker.SEVERITY, severityEclipse);
 			marker.setAttribute(IMarker.LINE_NUMBER, 1);
 		} catch (CoreException e) {
-			GeneratorUiActivator.getInstance().getLog().log(e.getStatus());
+			LOGGER.error(e.getStatus());
 			String resInfo = "";
 			if (res != null) {
 				if (res.getURI() != null) {
@@ -72,7 +75,7 @@ public class GeneratorMarkerSupport implements IGeneratorMarkerSupport {
 		try {
 			toIFile(res).deleteMarkers(MARKER__ORG_ECLIPSE_IDE_N4JS_UI_COMPILER_ERROR, true, DEPTH_ZERO);
 		} catch (CoreException e) {
-			GeneratorUiActivator.getInstance().getLog().log(e.getStatus());
+			LOGGER.error(e.getStatus());
 			// Problems with marker must not affect the actual build.
 		}
 	}
@@ -83,7 +86,7 @@ public class GeneratorMarkerSupport implements IGeneratorMarkerSupport {
 			return toIFile(res).findMarkers(MARKER__ORG_ECLIPSE_IDE_N4JS_UI_COMPILER_ERROR, true,
 					DEPTH_ZERO).length > 0;
 		} catch (CoreException e) {
-			GeneratorUiActivator.getInstance().getLog().log(e.getStatus());
+			LOGGER.error(e.getStatus());
 		}
 		return false;
 	}
