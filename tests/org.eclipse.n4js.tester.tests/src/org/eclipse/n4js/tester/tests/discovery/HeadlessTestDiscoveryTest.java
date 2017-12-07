@@ -28,10 +28,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSStandaloneSetup;
-import org.eclipse.n4js.fileextensions.FileExtensionType;
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.headless.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.tester.TestDiscoveryHelper;
@@ -90,10 +88,10 @@ public class HeadlessTestDiscoveryTest {
 	private TestDiscoveryHelper helper;
 
 	@Inject
-	private FileExtensionsRegistry fileExtensionsRegistry;
+	private FileBasedWorkspace fbWorkspace;
 
 	@Inject
-	private FileBasedWorkspace fbWorkspace;
+	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
 
 	/***/
 	@Before
@@ -101,24 +99,8 @@ public class HeadlessTestDiscoveryTest {
 		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT.getAbsolutePath()));
 		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT_IDEBUG_572.getAbsolutePath()));
 		fbWorkspace.registerProject(URI.createFileURI(TEST_N4JSX_PROJECT.getAbsolutePath()));
-		// Register test file extensions
-		fileExtensionsRegistry.register(N4JSGlobals.N4JS_FILE_EXTENSION, FileExtensionType.TESTABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.N4JSX_FILE_EXTENSION, FileExtensionType.TESTABLE_FILE_EXTENSION);
-		// Register runnable file extensions
-		fileExtensionsRegistry.register(N4JSGlobals.N4JS_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.JS_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.N4JSX_FILE_EXTENSION,
-				FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.JSX_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		// Register transpilable file extensions
-		fileExtensionsRegistry.register(N4JSGlobals.N4JS_FILE_EXTENSION,
-				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.N4JSX_FILE_EXTENSION,
-				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.JS_FILE_EXTENSION,
-				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSGlobals.JSX_FILE_EXTENSION,
-				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
+		// Register extensions
+		headlessExtensionRegistrationHelper.registerExtensionsManually();
 	}
 
 	/***/

@@ -9,4 +9,5 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.n4js.tester.tests.helper,
  com.google.guava,
  org.eclipse.xtend.lib,
- org.junit
+ org.junit,
+ org.eclipse.n4js.generator.headless
