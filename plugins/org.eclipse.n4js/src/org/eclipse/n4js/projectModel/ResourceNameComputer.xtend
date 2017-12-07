@@ -13,20 +13,20 @@ package org.eclipse.n4js.projectModel
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
-import org.eclipse.n4js.n4mf.DeclaredVersion
-import org.eclipse.n4js.n4mf.ProjectDescription
-import org.eclipse.n4js.naming.SpecifierConverter
-import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.Type
-import org.eclipse.xtext.EcoreUtil2
-import org.eclipse.xtext.naming.IQualifiedNameConverter
-import org.eclipse.n4js.ts.types.TypeDefs
-import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.n4mf.DeclaredVersion
+import org.eclipse.n4js.naming.N4JSQualifiedNameConverter
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider
+import org.eclipse.n4js.naming.SpecifierConverter
+import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider
+import org.eclipse.n4js.ts.types.TModule
+import org.eclipse.n4js.ts.types.Type
+import org.eclipse.n4js.ts.types.TypeDefs
+import org.eclipse.xtext.EcoreUtil2
+import org.eclipse.xtext.naming.IQualifiedNameConverter
+import org.eclipse.xtext.naming.QualifiedName
+
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
 
 /**
@@ -37,6 +37,14 @@ import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
  */
 @Singleton
 public class ResourceNameComputer {
+	/** 
+	 * https://github.com/eclipse/n4js/issues/394
+	 * 
+	 * for simplifying node js compilation target we wan't to avoid project name and version in the compiled code segments
+	 * Hide this behind the flag, as when adding anticipated other compilation 
+	 */
+	private static final boolean USE_SIMPLE_DESCRIPTOR = true;
+
 	@Inject private N4JSQualifiedNameProvider qualifiedNameProvider;
 	@Inject private IQualifiedNameConverter converter;
 	@Inject private SpecifierConverter specifierConverter;
@@ -95,7 +103,7 @@ public class ResourceNameComputer {
 	 * @param includeProjectVersion  tells if project version should be included or not. If false, then sep1 and sep2
 	 *                               will be ignored.
 	 */
-	def public final static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
+	private def final static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
 		String sep3, boolean includeProjectVersion) {
 		return if (includeProjectVersion) {
 			project.projectId + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + unitPath;
@@ -104,13 +112,11 @@ public class ResourceNameComputer {
 		};
 	}
 
-	def public final static formatDescriptor(ProjectDescription project, String unitPath, String sep1, String sep2,
-		String sep3) {
-		return project.projectId + sep1 + projectVersionToStringWithoutQualifier(project.projectVersion, sep2) + sep3 +
-			unitPath;
-	}
-
-	def public final formatDescriptorAsIdentifier(IN4JSProject project, String unitPath, String sep1, String sep2,
+	/**
+	 * Similar to {@link #formatDescriptor(IN4JSProject, String, String, String, String, boolean), but ensures that values computed from
+	 * {@link IN4JSProject project} and {@String unitPath} are valid JS identifiers. Needed in some cases like generated import statements.
+	 */
+	private def final formatDescriptorAsIdentifier(IN4JSProject project, String unitPath, String sep1, String sep2,
 		String sep3, boolean includeProjectVersion) {
 		return if (includeProjectVersion) {
 			project.projectId.getValidJavascriptIdentifierName + sep1 +
@@ -120,17 +126,11 @@ public class ResourceNameComputer {
 		}
 	}
 
-	def public final formatDescriptorAsModuleParameterName(ProjectDescription project, String unitPath, String sep1,
-		String sep2, String sep3) {
-		return project.projectId.getValidJavascriptIdentifierName + sep1 +
-			projectVersionToStringWithoutQualifier(project.projectVersion, sep2) + sep3 + unitPath.getValidUnitPath;
-	}
-
-	public def String getValidUnitPath(String unitPath) {
+	private def final String getValidUnitPath(String unitPath) {
 		return unitPath.split('/').map[getValidJavascriptIdentifierName].join('/');
 	}
 
-	public def String getValidJavascriptIdentifierName(String moduleSpecifier) {
+	private def String getValidJavascriptIdentifierName(String moduleSpecifier) {
 		if (moduleSpecifier === null || moduleSpecifier.length === 0) {
 			return moduleSpecifier;
 		}
@@ -264,8 +264,44 @@ public class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
+	def public String getCompleteModuleSpecifier(IN4JSProject project, TModule module) {
+		return ResourceNameComputer.formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/",
+			false);
+	}
+
+	/**
+	 * The versioned module specifier is used only internally. It is derived from the module specifier with the version
+	 * (separated with a dash '-’) appended.
+	 * <p>
+	 * Based on provided file resource URI and extension will generate descriptor in form of
+	 * Project-0.0.1/module/path/Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
+	 * delegation both project and unitPath are calculated from provided {@link TModule}.
+	 * <p>
+	 * Example: <code>project-1.0.0/p/C</code> for class C in file/module C in package p of project with version 1.0.0.
+	 * </p>
+	 * 
+	 * @module {@link TModule} for which we generate descriptor
+	 */
 	def public String getCompleteModuleSpecifier(TModule module) {
-		return ResourceNameComputer.formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", false);
+		return getCompleteModuleSpecifier(resolveProject(module), module);
+	}
+
+	/**
+	 * Based on provided file resource URI and extension will generate descriptor in form of
+	 * Project_0_0_1_module_path_Module Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor} For
+	 * delegation both project and unitPath are calculated from provided {@link TModule}. Characters that would be
+	 * invalid in a Javascript identifier will be replaced with the unicode sign e.g. _u002e for the dot character (_ is
+	 * used instead of / as Javascript would translate the unicode sign again to the not allowed character).
+	 * <p>
+	 * Example: <code>_import_project_1_0_0_p_C</code> for class C in file/module C in package p of project with version
+	 * 1.0.0.
+	 * </p>
+	 * 
+	 * @module {@link TModule} for which we generate descriptor
+	 */
+	def public String getCompleteModuleSpecifierAsIdentifier(IN4JSProject project, TModule module) {
+		return getValidJavascriptIdentifierName(
+			formatDescriptorAsIdentifier(project, module.getModuleSpecifier(), "_", "_", "_", false));
 	}
 
 	/**
@@ -282,9 +318,7 @@ public class ResourceNameComputer {
 	 * @module {@link TModule} for which we generate descriptor
 	 */
 	def public String getCompleteModuleSpecifierAsIdentifier(TModule module) {
-		return getValidJavascriptIdentifierName(
-			formatDescriptorAsIdentifier(resolveProject(module), module.getModuleSpecifier(), "_", "_",
-				"_", false));
+		return getCompleteModuleSpecifierAsIdentifier(resolveProject(module), module);
 	}
 
 	def private IN4JSProject resolveProject(TModule module) {

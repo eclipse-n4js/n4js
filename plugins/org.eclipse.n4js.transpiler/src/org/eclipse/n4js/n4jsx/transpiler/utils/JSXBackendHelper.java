@@ -111,8 +111,8 @@ public final class JSXBackendHelper {
 	}
 
 	/**
-	 * Similar to {@link ResourceNameComputer#getCompleteModuleSpecifier(TModule)} but for artificial modules that were patched
-	 * in by the transpiler for JSX backend.
+	 * Delegates to {@link ResourceNameComputer#getCompleteModuleSpecifier(IN4JSProject, TModule)} but for artificial
+	 * modules that were patched in by the transpiler for JSX backend.
 	 */
 	public String jsxBackendModuleSpecifier(TModule module, Resource resource) {
 		URI uri = getOrFindJSXBackend(resource, module.getQualifiedName());
@@ -122,21 +122,17 @@ public final class JSXBackendHelper {
 			throw new RuntimeException(
 					"Cannot handle resource without containing project. Resource URI was: " + uri);
 		}
-		return ResourceNameComputer.formatDescriptor(optionalProject.get(), module.getModuleSpecifier(), "-", ".", "/", false);
+		return projectUtils.getCompleteModuleSpecifier(optionalProject.get(), module);
 	}
 
 	/**
-	 * Similar to {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(TModule)} but for artificial modules that
-	 * were patched in by the transpiler for JSX backend.
+	 * Delegates to {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(IN4JSProject, TModule)} but for
+	 * artificial modules that were patched in by the transpiler for JSX backend.
 	 */
 	public String getJsxBackendCompleteModuleSpecifierAsIdentifier(TModule module) {
 		URI uri = getOrFindJSXBackend(module.eResource(), module.getQualifiedName());
-
 		IN4JSProject resolveProject = projectResolver.resolveProject(uri);
-
-		String specifier = projectUtils.formatDescriptorAsIdentifier(resolveProject, module.getModuleSpecifier(), "_",
-				"_", "_", false);
-		return projectUtils.getValidJavascriptIdentifierName(specifier);
+		return projectUtils.getCompleteModuleSpecifierAsIdentifier(resolveProject, module);
 	}
 
 	/**
