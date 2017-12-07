@@ -20,6 +20,8 @@ import org.eclipse.n4js.findReferences.ConcreteSyntaxAwareReferenceFinder;
 import org.eclipse.n4js.findReferences.InferredElementsTargetURICollector;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
+import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.generator.N4JSCompositeGenerator;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
@@ -552,4 +554,8 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 		return XpectAwareFileExtensionCalculator.class;
 	}
 
+	/** Bind N4JS composite generator */
+	public Class<? extends ICompositeGenerator> bindICompositeGenerator() {
+		return N4JSCompositeGenerator.class;
+	}
 }
