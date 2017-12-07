@@ -160,6 +160,27 @@ public class NpmManager {
 	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor)
 			throws IllegalBinaryStateException {
 
+		return installDependencies(versionedNPMs, monitor, true);
+	}
+
+	/**
+	 * Installs the given npm packages in a blocking fashion.
+	 *
+	 * This method tries to install all packages even if installation for some of them fail. In such cases it will try
+	 * log encountered errors but it will try to proceed for all remaining packages. Details about issues are in the
+	 * returned status.
+	 *
+	 * @param versionedNPMs
+	 *            map of name to version data for the packages to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @param triggerCleanbuild
+	 *            iff true, a clean build is triggered on all affected workspace projects.
+	 * @return a status representing the outcome of the install process.
+	 */
+	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
+			boolean triggerCleanbuild) throws IllegalBinaryStateException {
+
 		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
 
 		checkNPM();
@@ -178,7 +199,7 @@ public class NpmManager {
 
 			Collection<File> adaptedPackages = adaptNPMPackages(monitor, status, addedDependencies);
 
-			cleanBuildDependencies(monitor, status, toBeDeleted, adaptedPackages);
+			cleanBuildDependencies(monitor, status, toBeDeleted, adaptedPackages, triggerCleanbuild);
 
 			return status;
 
@@ -291,7 +312,8 @@ public class NpmManager {
 	}
 
 	private void cleanBuildDependencies(final IProgressMonitor monitor, final MultiStatus status,
-			final Iterable<java.net.URI> toBeDeleted, final Collection<File> adaptedPackages) {
+			final Iterable<java.net.URI> toBeDeleted, final Collection<File> adaptedPackages,
+			boolean triggerCleanbuild) {
 
 		logger.logInfo("Registering new projects... [step 4 of 4]");
 		monitor.setTaskName("Registering new projects... [step 4 of 4]");
@@ -304,7 +326,7 @@ public class NpmManager {
 			logger.logInfo("Call " + externalLibraryWorkspace + " to register " + toBeUpdated + " and de-register "
 					+ toBeDeleted);
 
-			externalLibraryWorkspace.registerProjects(adaptionResult, monitor);
+			externalLibraryWorkspace.registerProjects(adaptionResult, monitor, triggerCleanbuild);
 		} else {
 			logger.logInfo("Platform is not running.");
 		}

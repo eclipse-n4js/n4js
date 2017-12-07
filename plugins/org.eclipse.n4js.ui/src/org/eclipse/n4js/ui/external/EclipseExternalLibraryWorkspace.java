@@ -299,7 +299,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	}
 
 	@Override
-	public void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor) {
+	public void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor, boolean triggerCleanbuild) {
 		checkState(result.isOK(), "Expected OK result: " + result);
 		ensureInitialized();
 
@@ -339,8 +339,11 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		}
 		subMonitor.worked(1);
 
-		addAll(workspaceProjectsToRebuild, collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
-		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		if (triggerCleanbuild) {
+			addAll(workspaceProjectsToRebuild,
+					collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
+			scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		}
 	}
 
 	@Override
