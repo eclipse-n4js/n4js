@@ -152,13 +152,26 @@ ArrayTypeRef returns ParameterizedTypeRef:
 	arrayTypeLiteral?="[" typeArgs+=TypeArgument "]";
 
 ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
-	definedTypingStrategy=TypingStrategyUseSiteOperator
-	TypeAndTypeArguments
+	StructuralTypeAndTypeArguments
 	('with' TStructMemberList)?;
 
-fragment TypeAndTypeArguments returns ParameterizedTypeRef:
-	declaredType=[Type|TypeReferenceName] (->TypeArguments)?
+TypeAndTypeArguments returns VersionedParameterizedTypeRef:
+	DeclaredType 
+	VersionRequest?
+	(->TypeArguments)?
 ;
+
+StructuralTypeAndTypeArguments returns VersionedParameterizedTypeRefStructural:
+	definedTypingStrategy=TypingStrategyUseSiteOperator 
+	DeclaredType 
+	VersionRequest?
+	(->TypeArguments)?
+;
+fragment DeclaredType* :
+	declaredType=[Type|TypeReferenceName]
+;
+
+fragment VersionRequest*: '#' requestedVersion=INT;
 
 fragment TypeArguments *:
 	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'

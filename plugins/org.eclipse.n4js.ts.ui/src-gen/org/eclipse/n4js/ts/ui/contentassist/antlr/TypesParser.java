@@ -162,8 +162,10 @@ public class TypesParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getGroup_4(), "rule__IntersectionTypeExpressionOLD__Group_4__0");
 					put(grammarAccess.getArrayTypeRefAccess().getGroup(), "rule__ArrayTypeRef__Group__0");
 					put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup(), "rule__ParameterizedTypeRefStructural__Group__0");
-					put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_2(), "rule__ParameterizedTypeRefStructural__Group_2__0");
+					put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_1(), "rule__ParameterizedTypeRefStructural__Group_1__0");
 					put(grammarAccess.getTypeAndTypeArgumentsAccess().getGroup(), "rule__TypeAndTypeArguments__Group__0");
+					put(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getGroup(), "rule__StructuralTypeAndTypeArguments__Group__0");
+					put(grammarAccess.getVersionRequestAccess().getGroup(), "rule__VersionRequest__Group__0");
 					put(grammarAccess.getTypeArgumentsAccess().getGroup(), "rule__TypeArguments__Group__0");
 					put(grammarAccess.getTypeArgumentsAccess().getGroup_2(), "rule__TypeArguments__Group_2__0");
 					put(grammarAccess.getTStructMemberListAccess().getGroup(), "rule__TStructMemberList__Group__0");
@@ -306,8 +308,9 @@ public class TypesParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1(), "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1");
 					put(grammarAccess.getArrayTypeRefAccess().getArrayTypeLiteralAssignment_0(), "rule__ArrayTypeRef__ArrayTypeLiteralAssignment_0");
 					put(grammarAccess.getArrayTypeRefAccess().getTypeArgsAssignment_1(), "rule__ArrayTypeRef__TypeArgsAssignment_1");
-					put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0(), "rule__ParameterizedTypeRefStructural__DefinedTypingStrategyAssignment_0");
-					put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0");
+					put(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0(), "rule__StructuralTypeAndTypeArguments__DefinedTypingStrategyAssignment_0");
+					put(grammarAccess.getDeclaredTypeAccess().getDeclaredTypeAssignment(), "rule__DeclaredType__DeclaredTypeAssignment");
+					put(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1(), "rule__VersionRequest__RequestedVersionAssignment_1");
 					put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__TypeArguments__TypeArgsAssignment_1");
 					put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__TypeArguments__TypeArgsAssignment_2_1");
 					put(grammarAccess.getTStructMemberListAccess().getAstStructuralMembersAssignment_1_0(), "rule__TStructMemberList__AstStructuralMembersAssignment_1_0");

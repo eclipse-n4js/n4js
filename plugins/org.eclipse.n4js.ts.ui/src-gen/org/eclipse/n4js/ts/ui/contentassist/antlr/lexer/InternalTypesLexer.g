@@ -170,6 +170,8 @@ In : 'in';
 
 Of : 'of';
 
+NumberSign : '#';
+
 Ampersand : '&';
 
 LeftParenthesis : '(';

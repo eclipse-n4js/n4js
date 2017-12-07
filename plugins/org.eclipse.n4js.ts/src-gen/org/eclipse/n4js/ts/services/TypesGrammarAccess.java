@@ -2856,8 +2856,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//ParameterizedTypeRefStructural:
-	//	definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	TypeAndTypeArguments ('with' TStructMemberList)?;
+	//	StructuralTypeAndTypeArguments ('with' TStructMemberList)?;
 	public TypeExpressionsGrammarAccess.ParameterizedTypeRefStructuralElements getParameterizedTypeRefStructuralAccess() {
 		return gaTypeExpressions.getParameterizedTypeRefStructuralAccess();
 	}
@@ -2866,14 +2865,49 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//fragment TypeAndTypeArguments returns ParameterizedTypeRef:
-	//	declaredType=[Type|super::TypeReferenceName] -> TypeArguments?;
+	//TypeAndTypeArguments VersionedParameterizedTypeRef:
+	//	DeclaredType
+	//	VersionRequest?
+	//	-> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
 	}
 	
 	public ParserRule getTypeAndTypeArgumentsRule() {
 		return getTypeAndTypeArgumentsAccess().getRule();
+	}
+	
+	//StructuralTypeAndTypeArguments VersionedParameterizedTypeRefStructural:
+	//	definedTypingStrategy=TypingStrategyUseSiteOperator
+	//	DeclaredType
+	//	VersionRequest?
+	//	-> TypeArguments?;
+	public TypeExpressionsGrammarAccess.StructuralTypeAndTypeArgumentsElements getStructuralTypeAndTypeArgumentsAccess() {
+		return gaTypeExpressions.getStructuralTypeAndTypeArgumentsAccess();
+	}
+	
+	public ParserRule getStructuralTypeAndTypeArgumentsRule() {
+		return getStructuralTypeAndTypeArgumentsAccess().getRule();
+	}
+	
+	//fragment DeclaredType *:
+	//	declaredType=[Type|super::TypeReferenceName];
+	public TypeExpressionsGrammarAccess.DeclaredTypeElements getDeclaredTypeAccess() {
+		return gaTypeExpressions.getDeclaredTypeAccess();
+	}
+	
+	public ParserRule getDeclaredTypeRule() {
+		return getDeclaredTypeAccess().getRule();
+	}
+	
+	//fragment VersionRequest *:
+	//	'#' requestedVersion=INT;
+	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
+		return gaTypeExpressions.getVersionRequestAccess();
+	}
+	
+	public ParserRule getVersionRequestRule() {
+		return getVersionRequestAccess().getRule();
 	}
 	
 	//fragment TypeArguments *:

@@ -873,8 +873,7 @@ ruleArrayTypeRef:
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
-	ruleTypingStrategyUseSiteOperator
-	ruleTypeAndTypeArguments
+	ruleStructuralTypeAndTypeArguments
 	(
 		'with'
 		ruleTStructMemberList
@@ -883,11 +882,34 @@ ruleParameterizedTypeRefStructural:
 
 // Rule TypeAndTypeArguments
 ruleTypeAndTypeArguments:
-	ruleTypeReferenceName
+	ruleDeclaredType
+	ruleVersionRequest?
 	(
 		('<')=>
 		ruleTypeArguments
 	)?
+;
+
+// Rule StructuralTypeAndTypeArguments
+ruleStructuralTypeAndTypeArguments:
+	ruleTypingStrategyUseSiteOperator
+	ruleDeclaredType
+	ruleVersionRequest?
+	(
+		('<')=>
+		ruleTypeArguments
+	)?
+;
+
+// Rule DeclaredType
+ruleDeclaredType:
+	ruleTypeReferenceName
+;
+
+// Rule VersionRequest
+ruleVersionRequest:
+	'#'
+	RULE_INT
 ;
 
 // Rule TypeArguments

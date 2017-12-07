@@ -42,8 +42,9 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
-			ruleN4ClassDeclaration
+			ruleN4IDLClassDeclaration
 		)
 		    |
 		(
@@ -54,8 +55,9 @@ ruleScriptElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
-			ruleN4InterfaceDeclaration
+			ruleN4IDLInterfaceDeclaration
 		)
 		    |
 		(
@@ -64,8 +66,9 @@ ruleScriptElement:
 			'enum'
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
-			ruleN4EnumDeclaration
+			ruleN4IDLEnumDeclaration
 		)
 		    |
 		ruleImportDeclaration
@@ -73,6 +76,19 @@ ruleScriptElement:
 		ruleExportDeclaration
 		    |
 		ruleRootStatement
+		    |
+		(
+			(ruleN4Modifier
+			*
+			'enum'
+			ruleBindingIdentifier
+			?
+			ruleVersionDeclaration?
+			)=>
+			ruleN4IDLEnumDeclaration
+		)
+		    |
+		ruleMigrationDeclaration
 	)
 ;
 
@@ -233,8 +249,9 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
-			ruleN4ClassDeclaration
+			ruleN4IDLClassDeclaration
 		)
 		    |
 		(
@@ -245,8 +262,9 @@ ruleExportableElement:
 			?
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
-			ruleN4InterfaceDeclaration
+			ruleN4IDLInterfaceDeclaration
 		)
 		    |
 		(
@@ -255,8 +273,9 @@ ruleExportableElement:
 			'enum'
 			ruleBindingIdentifier
 			?
+			ruleVersionDeclaration?
 			)=>
-			ruleN4EnumDeclaration
+			ruleN4IDLEnumDeclaration
 		)
 		    |
 		(
@@ -2649,11 +2668,13 @@ norm1_ParenExpression:
 // Rule IdentifierRef
 ruleIdentifierRef:
 	ruleBindingIdentifier
+	ruleVersionRequest?
 ;
 
 // Rule IdentifierRef
 norm1_IdentifierRef:
 	norm1_BindingIdentifier
+	ruleVersionRequest?
 ;
 
 // Rule SuperLiteral
@@ -6244,8 +6265,8 @@ ruleQualifiedTypeReferenceName:
 	)?
 ;
 
-// Rule N4ClassDeclaration
-ruleN4ClassDeclaration:
+// Rule N4IDLClassDeclaration
+ruleN4IDLClassDeclaration:
 	(
 		(ruleN4Modifier
 		*
@@ -6254,6 +6275,7 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6262,6 +6284,7 @@ ruleN4ClassDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
 	ruleClassExtendsClause?
@@ -6371,8 +6394,8 @@ norm1_N4ClassExpression:
 	norm1_Members
 ;
 
-// Rule N4InterfaceDeclaration
-ruleN4InterfaceDeclaration:
+// Rule N4IDLInterfaceDeclaration
+ruleN4IDLInterfaceDeclaration:
 	(
 		(ruleN4Modifier
 		*
@@ -6381,6 +6404,7 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
@@ -6389,6 +6413,7 @@ ruleN4InterfaceDeclaration:
 		?
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 	)
 	ruleTypeVariables?
 	ruleInterfaceImplementsList?
@@ -6415,20 +6440,22 @@ ruleInterfaceImplementsList:
 	)*
 ;
 
-// Rule N4EnumDeclaration
-ruleN4EnumDeclaration:
+// Rule N4IDLEnumDeclaration
+ruleN4IDLEnumDeclaration:
 	(
 		(ruleN4Modifier
 		*
 		'enum'
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 		)=>
 		ruleN4Modifier
 		*
 		'enum'
 		ruleBindingIdentifier
 		?
+		ruleVersionDeclaration?
 	)
 	'{'
 	(
@@ -8182,6 +8209,33 @@ ruleJSXPropertyAttribute:
 	)?
 ;
 
+// Rule VersionDeclaration
+ruleVersionDeclaration:
+	'#'
+	RULE_INT
+;
+
+// Rule MigrationDeclaration
+ruleMigrationDeclaration:
+	'migration'
+	'('
+	ruleFormalParameter
+	(
+		','
+		ruleFormalParameter
+	)*
+	')'
+	'->'
+	'('
+	ruleFormalParameter
+	(
+		','
+		ruleFormalParameter
+	)*
+	')'
+	ruleFunctionBody
+;
+
 // Rule TypeRef
 ruleTypeRef:
 	ruleIntersectionTypeExpression
@@ -8445,8 +8499,7 @@ ruleArrayTypeRef:
 
 // Rule ParameterizedTypeRefStructural
 ruleParameterizedTypeRefStructural:
-	ruleTypingStrategyUseSiteOperator
-	ruleTypeAndTypeArguments
+	ruleStructuralTypeAndTypeArguments
 	(
 		'with'
 		ruleTStructMemberList
@@ -8455,11 +8508,34 @@ ruleParameterizedTypeRefStructural:
 
 // Rule TypeAndTypeArguments
 ruleTypeAndTypeArguments:
-	ruleTypeReferenceName
+	ruleDeclaredType
+	ruleVersionRequest?
 	(
 		('<')=>
 		ruleTypeArguments
 	)?
+;
+
+// Rule StructuralTypeAndTypeArguments
+ruleStructuralTypeAndTypeArguments:
+	ruleTypingStrategyUseSiteOperator
+	ruleDeclaredType
+	ruleVersionRequest?
+	(
+		('<')=>
+		ruleTypeArguments
+	)?
+;
+
+// Rule DeclaredType
+ruleDeclaredType:
+	ruleTypeReferenceName
+;
+
+// Rule VersionRequest
+ruleVersionRequest:
+	'#'
+	RULE_INT
 ;
 
 // Rule TypeArguments

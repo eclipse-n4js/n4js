@@ -53,12 +53,14 @@ Script: {Script}
  */
 ScriptElement:
 	  AnnotatedScriptElement
-	| N4ClassDeclaration<Yield=false>
-	| N4InterfaceDeclaration<Yield=false>
-	| N4EnumDeclaration<Yield=false>
+	| N4IDLClassDeclaration<Yield=false>
+	| N4IDLInterfaceDeclaration<Yield=false>
+	| N4IDLEnumDeclaration<Yield=false>
 	| ImportDeclaration
 	| ExportDeclaration
 	| RootStatement<Yield=false>
+	| N4IDLEnumDeclaration<Yield=false>
+	| MigrationDeclaration
 ;
 
 
@@ -131,9 +133,9 @@ ExportSpecifier:
 
 ExportableElement:
 	  AnnotatedExportableElement<Yield=false>
-	| N4ClassDeclaration<Yield=false>
-	| N4InterfaceDeclaration<Yield=false>
-	| N4EnumDeclaration<Yield=false>
+	| N4IDLClassDeclaration<Yield=false>
+	| N4IDLInterfaceDeclaration<Yield=false>
+	| N4IDLEnumDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
 	| ExportedVariableStatement
 ;
@@ -584,8 +586,9 @@ PrimaryExpression <Yield> returns Expression:
 
 ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
-IdentifierRef <Yield>:
+IdentifierRef <Yield> returns VersionedIdentifierRef:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+	VersionRequest?
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1230,11 +1233,13 @@ QualifiedTypeReferenceName:
 
 
 // cf. N4JSSpec §14
-N4ClassDeclaration <Yield>:
+N4IDLClassDeclaration <Yield>:
 	=>(
-		{N4ClassDeclaration}
+		{N4IDLClassDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'class' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'class' typingStrategy=TypingStrategyDefSiteOperator? 
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
 	ClassExtendsClause<Yield>?
@@ -1273,11 +1278,13 @@ N4ClassExpression <Yield>:
 	Members<Yield>;
 
 // cf. N4JSSpec §16
-N4InterfaceDeclaration <Yield>:
+N4IDLInterfaceDeclaration <Yield>:
 	=> (
-		{N4InterfaceDeclaration}
+		{N4IDLInterfaceDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'interface' typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier<Yield>?
+		'interface' typingStrategy=TypingStrategyDefSiteOperator? 
+		name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	TypeVariables?
 	InterfaceImplementsList?
@@ -1294,11 +1301,12 @@ fragment InterfaceImplementsList*:
 ;
 
 // cf. N4JSSpec §13
-N4EnumDeclaration <Yield>:
+N4IDLEnumDeclaration <Yield>:
 	=>(
-		{N4EnumDeclaration}
+		{N4IDLEnumDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>?
+		VersionDeclaration?
 	)
 	'{'
 		(literals+=N4EnumLiteral (',' literals+=N4EnumLiteral)*)?
@@ -1527,3 +1535,24 @@ JSXPropertyAttribute:
 	property=[types::IdentifiableElement|IdentifierName] ('=' (jsxAttributeValue=StringLiteral | ('{'
 	jsxAttributeValue=AssignmentExpression<In=false, Yield=false> '}')))?;
 
+
+// ****************************************************************************************************
+// N4IDL related rules
+// ****************************************************************************************************
+
+/* Version related rules */
+
+
+/*
+ * Version declaration, used in type declarations and types refs of migration parameters and returns.
+ */
+fragment VersionDeclaration*: '#' declaredVersion=INT;
+
+
+MigrationDeclaration:
+	'migration'
+	'(' fpars+=FormalParameter<false> (',' fpars+=FormalParameter<false>)* ')'
+	'->'
+	'(' frets+=FormalParameter<false> (',' frets+=FormalParameter<false>)* ')'
+	FunctionBody<false,false>
+;
