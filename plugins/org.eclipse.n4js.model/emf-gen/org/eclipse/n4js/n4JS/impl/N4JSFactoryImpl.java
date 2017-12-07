@@ -188,6 +188,12 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: return createJSXPropertyAttribute();
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
 			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
+			case N4JSPackage.N4IDL_CLASS_DECLARATION: return createN4IDLClassDeclaration();
+			case N4JSPackage.N4IDL_INTERFACE_DECLARATION: return createN4IDLInterfaceDeclaration();
+			case N4JSPackage.N4IDL_ENUM_DECLARATION: return createN4IDLEnumDeclaration();
+			case N4JSPackage.MIGRATION_DECLARATION: return createMigrationDeclaration();
+			case N4JSPackage.VERSIONED_IDENTIFIER_REF: return createVersionedIdentifierRef();
+			case N4JSPackage.VERSIONED_NAMED_IMPORT_SPECIFIER: return createVersionedNamedImportSpecifier();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -1495,6 +1501,66 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public JSXElement createJSXElement() {
 		JSXElementImpl jsxElement = new JSXElementImpl();
 		return jsxElement;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public N4IDLClassDeclaration createN4IDLClassDeclaration() {
+		N4IDLClassDeclarationImpl n4IDLClassDeclaration = new N4IDLClassDeclarationImpl();
+		return n4IDLClassDeclaration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public N4IDLInterfaceDeclaration createN4IDLInterfaceDeclaration() {
+		N4IDLInterfaceDeclarationImpl n4IDLInterfaceDeclaration = new N4IDLInterfaceDeclarationImpl();
+		return n4IDLInterfaceDeclaration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public N4IDLEnumDeclaration createN4IDLEnumDeclaration() {
+		N4IDLEnumDeclarationImpl n4IDLEnumDeclaration = new N4IDLEnumDeclarationImpl();
+		return n4IDLEnumDeclaration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public MigrationDeclaration createMigrationDeclaration() {
+		MigrationDeclarationImpl migrationDeclaration = new MigrationDeclarationImpl();
+		return migrationDeclaration;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionedIdentifierRef createVersionedIdentifierRef() {
+		VersionedIdentifierRefImpl versionedIdentifierRef = new VersionedIdentifierRefImpl();
+		return versionedIdentifierRef;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionedNamedImportSpecifier createVersionedNamedImportSpecifier() {
+		VersionedNamedImportSpecifierImpl versionedNamedImportSpecifier = new VersionedNamedImportSpecifierImpl();
+		return versionedNamedImportSpecifier;
 	}
 
 	/**

@@ -1210,3 +1210,47 @@ class TypeVariableMapping {
 	refers TypeVariable typeVar
 	contains TypeArgument typeArg
 }
+
+/*
+ * This is a base class for all AST nodes that represent a reference to a versioned object and where the user can
+ * explicitly request a specific version. Currently, this includes ParameterizedTypeRef (for explicitly versioned
+ * parameter types and local variables in N4IDL migration scripts) and IdentifierRef (for explicitly versioned
+ * references to identifiers as the callee of a NewExpression).
+ *
+ * If an instance of this class does not have an explicitly requested version (set by the parser), then the type system
+ * may compute the requested version from context information and store the result in the requestedVersion attribute.
+ *
+ * The latter only happens in N4IDL via N4IDLVersionResolver.
+ */
+abstract class VersionedReference {
+	BigDecimal requestedVersion
+
+	/*
+	 * Indicates whether this type reference has an explicitly requested version. A requested version can either be
+	 * set by the parser when the user explicitly requests a specific version in source code, or by the type system
+	 * when computing the implicitly requested version, e.g. for property access expressions.
+	 */
+	op boolean hasRequestedVersion() {
+		return requestedVersion !== null
+	}
+
+	op int getRequestedVersionOrZero() {
+		if (hasRequestedVersion) requestedVersion.intValue else 0
+	}
+}
+
+class VersionedParameterizedTypeRef extends ParameterizedTypeRef, VersionedReference {
+	op int getVersion() {
+		/*
+		 * If a specific version was requested, then we return that, otherwise we delegate to the overridden method,
+		 * which will delegate to the declared type.
+		 */
+		if (hasRequestedVersion) requestedVersion.intValue else super.version
+	}
+}
+
+
+class VersionedFunctionTypeRef extends VersionedParameterizedTypeRef, FunctionTypeRef {}
+
+class VersionedParameterizedTypeRefStructural extends VersionedParameterizedTypeRef, ParameterizedTypeRefStructural {}
+

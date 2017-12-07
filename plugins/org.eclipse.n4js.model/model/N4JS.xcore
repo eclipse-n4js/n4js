@@ -30,6 +30,8 @@ import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefIterable
+import org.eclipse.n4js.ts.typeRefs.Versionable
+import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.ComposedMemberCache
 import org.eclipse.n4js.ts.types.IdentifiableElement
@@ -2223,3 +2225,82 @@ class JSXElement extends Expression, JSXChild {
 	contains JSXChild[] jsxChildren
 	contains JSXElementName jsxClosingName
 }
+
+
+// ****************************************************************************************************
+// N4IDL extension
+// ****************************************************************************************************
+
+/*
+ * This is a base class for all AST nodes where the user can explicitly declare a specific version.
+ */
+abstract class VersionedElement {
+	/*
+	 * The version as declared by the user in the source code. Unlike the requestedVersion attribute of class
+	 * VersionedReference, the value of this attribute is set by the parser and never changed by the type system.
+	 */
+	BigDecimal declaredVersion
+	/*
+	 * Indicates whether this type reference has an explicitly declared version.
+	 */
+	op boolean hasDeclaredVersion() {
+		return declaredVersion !== null
+	}
+	op int getDeclaredVersionOrZero() {
+		if (hasDeclaredVersion) declaredVersion.intValue else 0
+	}
+}
+
+/**
+ * IDL classes are like N4JS classes, except that they support declaring a version.
+ */
+class N4IDLClassDeclaration extends N4ClassDeclaration, Versionable, VersionedElement {
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return declaredVersionOrZero
+	}
+}
+
+/**
+ * IDL interfaces are like N4JS interfaces, except that they support declaring a version.
+ */
+class N4IDLInterfaceDeclaration extends N4InterfaceDeclaration, Versionable, VersionedElement {
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return declaredVersionOrZero
+	}
+}
+
+/**
+ * IDL enums are like N4JS interfaces, except that they support declaring a version.
+ */
+class N4IDLEnumDeclaration extends N4EnumDeclaration, Versionable, VersionedElement {
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return declaredVersionOrZero
+	}
+}
+
+/*
+ * Migrations are like functions, except that they allow for multiple return values.
+ */
+class MigrationDeclaration extends FunctionDeclaration {
+	contains FormalParameter[] frets
+}
+
+class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
+	/*
+	 * Override VersionedElement#getVersion() to return the declared version.
+	 */
+	op int getVersion() {
+		return requestedVersionOrZero
+	}
+}
+
+class VersionedNamedImportSpecifier extends NamedImportSpecifier, VersionedReference {}

@@ -174,6 +174,33 @@ public interface TypeRefsFactory extends EFactory {
 	TypeVariableMapping createTypeVariableMapping();
 
 	/**
+	 * Returns a new object of class '<em>Versioned Parameterized Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Versioned Parameterized Type Ref</em>'.
+	 * @generated
+	 */
+	VersionedParameterizedTypeRef createVersionedParameterizedTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Versioned Function Type Ref</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Versioned Function Type Ref</em>'.
+	 * @generated
+	 */
+	VersionedFunctionTypeRef createVersionedFunctionTypeRef();
+
+	/**
+	 * Returns a new object of class '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return a new object of class '<em>Versioned Parameterized Type Ref Structural</em>'.
+	 * @generated
+	 */
+	VersionedParameterizedTypeRefStructural createVersionedParameterizedTypeRefStructural();
+
+	/**
 	 * Returns the package supported by this factory.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
