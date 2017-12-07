@@ -377,7 +377,7 @@ public class N4jscBase implements IApplication {
 			initInjection(refProperties());
 
 			// Register extensions manually
-			headlessExtensionRegistrationHelper.registerExtensionsManually();
+			headlessExtensionRegistrationHelper.registerExtensions();
 
 			if (listRunners) {
 				printAvailableRunners(System.out);

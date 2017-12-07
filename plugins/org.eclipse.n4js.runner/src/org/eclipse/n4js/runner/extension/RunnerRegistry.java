@@ -51,10 +51,10 @@ public class RunnerRegistry {
 	 */
 	public void register(IRunnerDescriptor runnerDescriptor) {
 		final String runnerId = runnerDescriptor.getId();
-		if (!descriptors.containsKey(runnerId)) {
-			descriptors.put(runnerId, runnerDescriptor);
-		}
-		// TODO: throw new IllegalArgumentException("cannot register two runners with the same ID: " + runnerId);
+		if (descriptors.containsKey(runnerId))
+			throw new IllegalArgumentException("cannot register two runners with the same ID: " + runnerId);
+
+		descriptors.put(runnerId, runnerDescriptor);
 	}
 
 	/**
@@ -127,5 +127,11 @@ public class RunnerRegistry {
 				}
 			}
 		}
+	}
+
+	/** Reset the registry */
+	public void reset() {
+		isInitialized = false;
+		descriptors.clear();
 	}
 }

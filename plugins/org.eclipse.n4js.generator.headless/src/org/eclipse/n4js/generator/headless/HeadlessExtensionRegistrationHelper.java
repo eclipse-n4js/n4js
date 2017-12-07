@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.generator.headless;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
@@ -53,13 +54,13 @@ public class HeadlessExtensionRegistrationHelper {
 	 * Register extensions manually. This method should become obsolete when extension point fully works in headless
 	 * case.
 	 */
-	public void registerExtensionsManually() {
+	public void registerExtensions() {
 		// Wire registers related to the extension points
 		// in non-OSGI mode extension points are not automatically populated
-		// if (!Platform.isRunning()) {
-		runnerRegistry.register(nodeRunnerDescriptorProvider.get());
-		testerRegistry.register(nodeTesterDescriptorProvider.get());
-		// }
+		if (!Platform.isRunning()) {
+			runnerRegistry.register(nodeRunnerDescriptorProvider.get());
+			testerRegistry.register(nodeTesterDescriptorProvider.get());
+		}
 
 		// Register file extensions
 		registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
@@ -77,6 +78,14 @@ public class HeadlessExtensionRegistrationHelper {
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JS_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.N4JSX_FILE_EXTENSION);
 		subGeneratorRegistry.register(ecmaScriptSubGenerator, N4JSGlobals.JSX_FILE_EXTENSION);
+	}
+
+	/** Unregister all extensions */
+	public void unregisterExtensions() {
+		runnerRegistry.reset();
+		testerRegistry.reset();
+		n4jsFileExtensionsRegistry.reset();
+		subGeneratorRegistry.reset();
 	}
 
 	/**

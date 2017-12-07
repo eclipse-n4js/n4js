@@ -51,10 +51,9 @@ public class TesterRegistry {
 	 */
 	public void register(ITesterDescriptor testerDescriptor) {
 		final String testerId = testerDescriptor.getId();
-		if (!descriptors.containsKey(testerId)) {
-			descriptors.put(testerId, testerDescriptor);
-		}
-		// throw new IllegalArgumentException("cannot register two testers with the same ID: " + testerId);
+		if (descriptors.containsKey(testerId))
+			throw new IllegalArgumentException("cannot register two testers with the same ID: " + testerId);
+		descriptors.put(testerId, testerDescriptor);
 	}
 
 	/**
@@ -118,5 +117,11 @@ public class TesterRegistry {
 				}
 			}
 		}
+	}
+
+	/** Reset the registry */
+	public void reset() {
+		isInitialized = false;
+		descriptors.clear();
 	}
 }

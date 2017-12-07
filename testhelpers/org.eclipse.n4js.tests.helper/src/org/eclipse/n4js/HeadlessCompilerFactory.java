@@ -42,7 +42,7 @@ public class HeadlessCompilerFactory {
 		N4HeadlessCompiler instance = localinjector.getInstance(N4HeadlessCompiler.class);
 		HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper = localinjector
 				.getInstance(HeadlessExtensionRegistrationHelper.class);
-		headlessExtensionRegistrationHelper.registerExtensionsManually();
+		headlessExtensionRegistrationHelper.registerExtensions();
 		return instance;
 	}
 

@@ -16,3 +16,4 @@ Require-Bundle: org.eclipse.xtext.generator,
  org.eclipse.n4js.tester.nodejs
 Export-Package: org.eclipse.n4js.generator.headless,
  org.eclipse.n4js.generator.headless.logging
+Import-Package: org.eclipse.core.runtime

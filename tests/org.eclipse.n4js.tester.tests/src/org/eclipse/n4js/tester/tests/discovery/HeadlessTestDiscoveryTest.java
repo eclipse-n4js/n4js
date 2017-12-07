@@ -39,6 +39,7 @@ import org.eclipse.n4js.tester.domain.TestTree;
 import org.eclipse.n4js.tester.tests.InjectedModules;
 import org.eclipse.n4js.tester.tests.JUnitGuiceClassRunner;
 import org.eclipse.n4js.tester.tests.WithParentInjector;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -100,7 +101,7 @@ public class HeadlessTestDiscoveryTest {
 		fbWorkspace.registerProject(URI.createFileURI(TEST_PROJECT_IDEBUG_572.getAbsolutePath()));
 		fbWorkspace.registerProject(URI.createFileURI(TEST_N4JSX_PROJECT.getAbsolutePath()));
 		// Register extensions
-		headlessExtensionRegistrationHelper.registerExtensionsManually();
+		headlessExtensionRegistrationHelper.registerExtensions();
 	}
 
 	/***/
@@ -300,5 +301,11 @@ public class HeadlessTestDiscoveryTest {
 
 	private static final String createFqn(String... segments) {
 		return String.join(FQN_DELIMITER, segments);
+	}
+
+	/** Reset extensions */
+	@After
+	public void tearDown() {
+		headlessExtensionRegistrationHelper.unregisterExtensions();
 	}
 }
