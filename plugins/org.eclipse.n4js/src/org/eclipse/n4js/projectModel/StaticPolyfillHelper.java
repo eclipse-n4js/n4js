@@ -12,6 +12,8 @@ package org.eclipse.n4js.projectModel;
 
 import static org.eclipse.n4js.utils.N4JSLanguageUtils.isContainedInStaticPolyfillAware;
 
+import java.util.Objects;
+
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
@@ -114,7 +116,7 @@ public final class StaticPolyfillHelper {
 																								// equal."
 			final IN4JSSourceContainer filledSrcContainer = n4jsCore.findN4JSSourceContainer(res.getURI()).get();
 			for (IN4JSSourceContainer srcConti : project.getSourceContainers()) {
-				if (filledSrcContainer != srcConti) {
+				if (!Objects.equals(filledSrcContainer, srcConti)) {
 					final URI uri = srcConti.findArtifact(fqn, fileExtension);
 					if (uri != null) {
 						return uri;
