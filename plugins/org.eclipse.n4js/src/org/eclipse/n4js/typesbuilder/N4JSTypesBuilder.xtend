@@ -79,7 +79,6 @@ public class N4JSTypesBuilder {
 	@Inject private SpecifierConverter specifierConverter
 	@Inject protected JavaScriptVariantHelper jsVariantHelper;
 
-
 	/**
 	 * When demand-loading an AST for a resource that already has a TModule (usually retrieved from the index) by
 	 * calling SyntaxRelatedTElement#getAstElement(), we are facing a challenge: we could simply replace the original
@@ -345,10 +344,6 @@ public class N4JSTypesBuilder {
 	}
 
 	def protected dispatch void createType(N4ClassDeclaration n4Class, TModule target, boolean preLinkingPhase) {
-		n4Class.createTClass(target, preLinkingPhase)
-	}
-
-	def protected dispatch void createType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase) {
 		n4Class.createTClass(target, preLinkingPhase)
 	}
 
