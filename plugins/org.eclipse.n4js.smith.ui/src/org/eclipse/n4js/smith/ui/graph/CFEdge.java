@@ -28,13 +28,17 @@ import com.google.common.collect.Lists;
  * differently to improve to visual appearance w.r.t. crossings of other edges.
  */
 public class CFEdge extends Edge {
-	final TreeSet<ControlFlowType> cfTypes;
+	/** Set of all {@link ControlFlowType}s */
+	final public TreeSet<ControlFlowType> cfTypes;
+	/** True iff this edge is within or leads into dead code */
+	final public boolean isDead;
 
 	/**
 	 * Constructor
 	 */
-	public CFEdge(String label, Node startNode, Node endNode, Set<ControlFlowType> cfTypes) {
+	public CFEdge(String label, Node startNode, Node endNode, Set<ControlFlowType> cfTypes, boolean isDead) {
 		super(label, false, startNode, Lists.newArrayList(endNode), Collections.emptyList());
+		this.isDead = isDead;
 		this.cfTypes = new TreeSet<>(cfTypes);
 	}
 
@@ -68,23 +72,28 @@ public class CFEdge extends Edge {
 	/** Sets the color of the {@link GC} depending on the edge type. */
 	void setColor(GC gc) {
 		Display displ = Display.getCurrent();
-		Color color = null;
+		Color color = GraphUtils.getColor(50, 50, 50);
 
-		ControlFlowType cfType = cfTypes.first();
-		switch (cfType) {
-		case Repeat:
-			color = displ.getSystemColor(SWT.COLOR_GREEN);
-			break;
-		case Break:
-		case Continue:
-		case Return:
-			color = displ.getSystemColor(SWT.COLOR_BLUE);
-			break;
-		case Throw:
-			color = displ.getSystemColor(SWT.COLOR_RED);
-			break;
-		default:
-			color = GraphUtils.getColor(50, 50, 50);
+		if (isDead || cfTypes.contains(ControlFlowType.DeadCode)) {
+			color = displ.getSystemColor(SWT.COLOR_GRAY);
+		} else {
+			for (ControlFlowType cfType : cfTypes) {
+				switch (cfType) {
+				case LoopEnter:
+				case LoopReenter:
+				case LoopInfinite:
+				case Break:
+				case Continue:
+				case Return:
+					color = displ.getSystemColor(SWT.COLOR_BLUE);
+					break;
+				case Throw:
+					color = displ.getSystemColor(SWT.COLOR_RED);
+					break;
+				default:
+					break;
+				}
+			}
 		}
 		gc.setForeground(color);
 	}
@@ -206,7 +215,9 @@ public class CFEdge extends Edge {
 			case Continue:
 			case Return:
 			case Throw:
-			case Repeat:
+			case LoopEnter:
+			case LoopReenter:
+			case LoopInfinite:
 				if (!label.isEmpty())
 					label += "|";
 				label += cfType.name();

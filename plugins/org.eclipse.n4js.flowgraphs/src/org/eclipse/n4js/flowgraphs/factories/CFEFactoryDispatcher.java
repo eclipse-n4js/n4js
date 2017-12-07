@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.ArrayBindingPattern;
@@ -25,7 +26,10 @@ import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.EmptyStatement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.IfStatement;
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute;
+import org.eclipse.n4js.n4JS.JSXSpreadAttribute;
 import org.eclipse.n4js.n4JS.ObjectBindingPattern;
 import org.eclipse.n4js.n4JS.ReturnStatement;
 import org.eclipse.n4js.n4JS.Script;
@@ -38,167 +42,168 @@ import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 import org.eclipse.n4js.n4JS.WithStatement;
 import org.eclipse.n4js.n4JS.util.N4JSSwitch;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXPropertyAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.JSXSpreadAttribute;
-import org.eclipse.n4js.n4jsx.n4JSX.util.N4JSXSwitch;
 
 /**
- * Provides function {@link #build(ControlFlowElement)} to create instances of {@link ComplexNode} for given
- * {@link ControlFlowElement}s.
+ * Provides function {@link #build(ReentrantASTIterator, EObject)} to create instances of {@link ComplexNode} for given
+ * {@link EObject}s.
  */
 final public class CFEFactoryDispatcher {
 
 	/**
-	 * Builds a {@link ComplexNode} from a given {@link ControlFlowElement}
+	 * Builds a {@link ComplexNode} from a given {@link EObject}, i.e. {@link ControlFlowElement}.
 	 */
-	static public ComplexNode build(ControlFlowElement cfe) {
-		ComplexNode cnx = new InternalFactoryDispatcherX().doSwitch(cfe);
-		if (cnx != null) {
-			return cnx;
-		}
-		return new InternalFactoryDispatcher().doSwitch(cfe);
+	static public ComplexNode build(ReentrantASTIterator astIter, EObject cfe) {
+		return new InternalFactoryDispatcher(astIter).doSwitch(cfe);
 	}
 
 	static private class InternalFactoryDispatcher extends N4JSSwitch<ComplexNode> {
+		private final ReentrantASTIterator astIter;
+
+		InternalFactoryDispatcher(ReentrantASTIterator astIter) {
+			this.astIter = astIter;
+		}
 
 		@Override
 		public ComplexNode caseAbstractCaseClause(AbstractCaseClause feature) {
-			return AbstractCaseClauseFactory.buildComplexNode(feature);
+			return AbstractCaseClauseFactory.buildComplexNode(astIter, feature);
 		}
 
 		// AnnotationList are ignored
 
 		@Override
 		public ComplexNode caseBlock(Block feature) {
-			return BlockFactory.buildComplexNode(feature);
+			return BlockFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseBreakStatement(BreakStatement feature) {
-			return JumpFactory.buildComplexNode(feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseContinueStatement(ContinueStatement feature) {
-			return JumpFactory.buildComplexNode(feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseDebuggerStatement(DebuggerStatement feature) {
-			return DebuggerStatementFactory.buildComplexNode(feature);
+			return DebuggerStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseDoStatement(DoStatement feature) {
-			return DoWhileFactory.buildComplexNode(feature);
+			return DoWhileFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseEmptyStatement(EmptyStatement feature) {
-			return EmptyStatementFactory.buildComplexNode(feature);
+			return EmptyStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseForStatement(ForStatement feature) {
-			return ForFactory.buildComplexNode(feature);
+			return ForFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseIfStatement(IfStatement feature) {
-			return IfFactory.buildComplexNode(feature);
+			return IfFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseReturnStatement(ReturnStatement feature) {
-			return JumpFactory.buildComplexNode(feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseSwitchStatement(SwitchStatement feature) {
-			return SwitchFactory.buildComplexNode(feature);
+			return SwitchFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseThrowStatement(ThrowStatement feature) {
-			return JumpFactory.buildComplexNode(feature);
+			return JumpFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseTryStatement(TryStatement feature) {
-			return TryFactory.buildComplexNode(feature);
+			return TryFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableStatement(VariableStatement feature) {
-			return VariableStatementFactory.buildComplexNode(feature);
+			return VariableStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseWhileStatement(WhileStatement feature) {
-			return WhileFactory.buildComplexNode(feature);
+			return WhileFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseWithStatement(WithStatement feature) {
-			return WithFactory.buildComplexNode(feature);
+			return WithFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseScript(Script feature) {
-			return ScriptFactory.buildComplexNode(feature);
+			return ScriptFactory.buildComplexNode(astIter, feature);
+		}
+
+		@Override
+		public ComplexNode caseFunctionDeclaration(FunctionDeclaration feature) {
+			return EmptyStatementFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseConditionalExpression(ConditionalExpression feature) {
-			return ConditionalExpressionFactory.buildComplexNode(feature);
+			return ConditionalExpressionFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseBinaryLogicalExpression(BinaryLogicalExpression feature) {
-			return BinaryLogicalExpressionFactory.buildComplexNode(feature);
+			return BinaryLogicalExpressionFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseExpression(Expression feature) {
-			return StandardCFEFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableBinding(VariableBinding feature) {
-			return StandardCFEFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseVariableDeclaration(VariableDeclaration feature) {
-			return VariableDeclarationFactory.buildComplexNode(feature);
+			return VariableDeclarationFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseBindingElement(BindingElement feature) {
-			return StandardCFEFactory.buildComplexNodeHidden(feature);
+			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseArrayBindingPattern(ArrayBindingPattern feature) {
-			return StandardCFEFactory.buildComplexNodeHidden(feature);
+			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseObjectBindingPattern(ObjectBindingPattern feature) {
-			return StandardCFEFactory.buildComplexNodeHidden(feature);
+			return StandardCFEFactory.buildComplexNodeHidden(astIter, feature);
 		}
-	}
-
-	static private class InternalFactoryDispatcherX extends N4JSXSwitch<ComplexNode> {
 
 		@Override
 		public ComplexNode caseJSXSpreadAttribute(JSXSpreadAttribute feature) {
-			return StandardCFEFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 
 		@Override
 		public ComplexNode caseJSXPropertyAttribute(JSXPropertyAttribute feature) {
-			return StandardCFEFactory.buildComplexNode(feature);
+			return StandardCFEFactory.buildComplexNode(astIter, feature);
 		}
 	}
+
 }

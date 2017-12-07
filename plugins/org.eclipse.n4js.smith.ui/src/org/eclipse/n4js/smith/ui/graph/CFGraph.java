@@ -19,7 +19,6 @@ import java.util.NavigableMap;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.smith.ui.CFGraphProvider;
 import org.eclipse.swt.custom.StyledText;
@@ -38,9 +37,8 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	final ILocationInFileProvider locFileProvider;
 	final XtextEditor editor;
 	final StyledText styledText;
-	final NavigableMap<ControlFlowElement, Node> nodeMap = new TreeMap<>(new CFEComparator());
+	final NavigableMap<CFNode, ControlFlowElement> nodeMap = new TreeMap<>(new CFEComparator());
 	private CFGraphProvider gProvider;
-	private N4JSFlowAnalyzer flowAnalyzer;
 	private boolean layoutDone;
 
 	/**
@@ -58,13 +56,12 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		clear();
 		nodeMap.clear();
 		gProvider = provider;
-		flowAnalyzer = provider.getFlowAnalyses();
 
 		Collection<ControlFlowElement> cfes = gProvider.getElements(input);
 		for (ControlFlowElement cfe : cfes) {
-			Node node = gProvider.getNode(cfe);
+			CFNode node = (CFNode) gProvider.getNode(cfe);
 			nodes.add(node);
-			nodeMap.put(cfe, node);
+			nodeMap.put(node, cfe);
 
 			List<Edge> succs = gProvider.getConnectedEdges(node, null);
 			edges.addAll(succs);
@@ -80,13 +77,13 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		int posInLine = 10;
 		int lineCounter = 0;
 
-		Set<Entry<ControlFlowElement, Node>> entries = nodeMap.entrySet();
-		Iterator<Entry<ControlFlowElement, Node>> entriesIt = entries.iterator();
+		Set<Entry<CFNode, ControlFlowElement>> entries = nodeMap.entrySet();
+		Iterator<Entry<CFNode, ControlFlowElement>> entriesIt = entries.iterator();
 
 		while (entriesIt.hasNext()) {
-			Entry<ControlFlowElement, Node> entry = entriesIt.next();
-			ControlFlowElement cfe = entry.getKey();
-			Node node = entry.getValue();
+			Entry<CFNode, ControlFlowElement> entry = entriesIt.next();
+			CFNode node = entry.getKey();
+			ControlFlowElement cfe = entry.getValue();
 
 			int line = getLineEnd(cfe);
 			boolean lineChange = lastLine != line;
@@ -103,22 +100,10 @@ public class CFGraph extends Graph<CFGraphProvider> {
 		layoutDone = true;
 	}
 
-	/** @return offset of the source code region of the given {@link ControlFlowElement} */
-	private int getOffset(ControlFlowElement cfe) {
-		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
-		return tr.getOffset();
-	}
-
 	/** @return offset end of the source code region of the given {@link ControlFlowElement} */
 	private int getOffsetEnd(ControlFlowElement cfe) {
 		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
 		return tr.getOffset() + tr.getLength();
-	}
-
-	/** @return length of the source code region of the given {@link ControlFlowElement} */
-	private int getLength(ControlFlowElement cfe) {
-		ITextRegion tr = locFileProvider.getFullTextRegion(cfe);
-		return tr.getLength();
 	}
 
 	/** @return line number of the source code region's end of the given {@link ControlFlowElement} */
@@ -133,42 +118,20 @@ public class CFGraph extends Graph<CFGraphProvider> {
 	 * <ul>
 	 * <li/>All CFEs of one source code line are grouped together
 	 * <li/>The CFEs of one line are ordered in the direction of the control flow.
-	 * <li/>In case two CFEs are parallel to each other (regarding the control flow), their order is not specified but
-	 * stable in the sense, that it does not change between two calls.
 	 * </ul>
 	 */
-	private class CFEComparator implements Comparator<ControlFlowElement> {
+	private class CFEComparator implements Comparator<CFNode> {
 		@Override
-		public int compare(ControlFlowElement cfe1, ControlFlowElement cfe2) {
+		public int compare(CFNode cfn1, CFNode cfn2) {
+			ControlFlowElement cfe1 = cfn1.getControlFlowElement();
+			ControlFlowElement cfe2 = cfn2.getControlFlowElement();
+
 			int line1 = getLineEnd(cfe1);
 			int line2 = getLineEnd(cfe2);
 			int offset = line1 - line2;
 
 			if (offset == 0) {
-				if (flowAnalyzer.isSuccessor(cfe1, cfe2))
-					return -10;
-
-				if (flowAnalyzer.isSuccessor(cfe2, cfe1))
-					return 10;
-
-				if (flowAnalyzer.isTransitiveSuccessor(cfe1, cfe2))
-					return -1;
-
-				if (flowAnalyzer.isTransitiveSuccessor(cfe2, cfe1))
-					return 1;
-			}
-
-			if (offset == 0) {
-				offset = getOffset(cfe1) - getOffset(cfe2);
-			}
-			if (offset == 0) {
-				offset = getLength(cfe1) - getLength(cfe2);
-			}
-
-			if (offset == 0) {
-
-				System.out.println("hashcode");
-				offset = cfe1.hashCode() - cfe2.hashCode();
+				offset = cfn1.nodeIdx - cfn2.nodeIdx;
 			}
 
 			return offset;

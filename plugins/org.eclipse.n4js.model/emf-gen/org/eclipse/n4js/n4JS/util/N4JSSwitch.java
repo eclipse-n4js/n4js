@@ -1765,6 +1765,66 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
+			case N4JSPackage.JSX_CHILD: {
+				JSXChild jsxChild = (JSXChild)theEObject;
+				T result = caseJSXChild(jsxChild);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_ELEMENT_NAME: {
+				JSXElementName jsxElementName = (JSXElementName)theEObject;
+				T result = caseJSXElementName(jsxElementName);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_TEXT: {
+				JSXText jsxText = (JSXText)theEObject;
+				T result = caseJSXText(jsxText);
+				if (result == null) result = caseJSXChild(jsxText);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_EXPRESSION: {
+				JSXExpression jsxExpression = (JSXExpression)theEObject;
+				T result = caseJSXExpression(jsxExpression);
+				if (result == null) result = caseJSXChild(jsxExpression);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_ATTRIBUTE: {
+				JSXAttribute jsxAttribute = (JSXAttribute)theEObject;
+				T result = caseJSXAttribute(jsxAttribute);
+				if (result == null) result = caseControlFlowElement(jsxAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: {
+				JSXPropertyAttribute jsxPropertyAttribute = (JSXPropertyAttribute)theEObject;
+				T result = caseJSXPropertyAttribute(jsxPropertyAttribute);
+				if (result == null) result = caseJSXAttribute(jsxPropertyAttribute);
+				if (result == null) result = caseMemberAccess(jsxPropertyAttribute);
+				if (result == null) result = caseControlFlowElement(jsxPropertyAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: {
+				JSXSpreadAttribute jsxSpreadAttribute = (JSXSpreadAttribute)theEObject;
+				T result = caseJSXSpreadAttribute(jsxSpreadAttribute);
+				if (result == null) result = caseJSXAttribute(jsxSpreadAttribute);
+				if (result == null) result = caseControlFlowElement(jsxSpreadAttribute);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
+			case N4JSPackage.JSX_ELEMENT: {
+				JSXElement jsxElement = (JSXElement)theEObject;
+				T result = caseJSXElement(jsxElement);
+				if (result == null) result = caseExpression(jsxElement);
+				if (result == null) result = caseJSXChild(jsxElement);
+				if (result == null) result = caseTypableElement(jsxElement);
+				if (result == null) result = caseControlFlowElement(jsxElement);
+				if (result == null) result = defaultCase(theEObject);
+				return result;
+			}
 			default: return defaultCase(theEObject);
 		}
 	}
@@ -4181,6 +4241,126 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseBindingElement(BindingElement object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Child</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Child</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXChild(JSXChild object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Element Name</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Element Name</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXElementName(JSXElementName object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Text</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Text</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXText(JSXText object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Expression</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Expression</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXExpression(JSXExpression object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXAttribute(JSXAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Property Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Property Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXPropertyAttribute(JSXPropertyAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Spread Attribute</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Spread Attribute</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXSpreadAttribute(JSXSpreadAttribute object) {
+		return null;
+	}
+
+	/**
+	 * Returns the result of interpreting the object as an instance of '<em>JSX Element</em>'.
+	 * <!-- begin-user-doc -->
+	 * This implementation returns null;
+	 * returning a non-null result will terminate the switch.
+	 * <!-- end-user-doc -->
+	 * @param object the target of the switch.
+	 * @return the result of interpreting the object as an instance of '<em>JSX Element</em>'.
+	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+	 * @generated
+	 */
+	public T caseJSXElement(JSXElement object) {
 		return null;
 	}
 

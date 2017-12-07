@@ -20,7 +20,7 @@ Sources {
 		"model",
 		"model_ui"
 	}
-	external {
-		"jsxbackend"
-	}
+}
+ProjectDependencies {
+    react
 }

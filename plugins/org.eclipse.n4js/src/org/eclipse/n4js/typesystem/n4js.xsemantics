@@ -64,7 +64,6 @@ Contributors:
 
 validatorExtends AbstractMessageAdjustingN4JSValidator // AbstractN4JSValidator
 
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.List
 import org.eclipse.emf.common.util.ECollections
 import org.eclipse.emf.ecore.EObject
@@ -98,6 +97,8 @@ import org.eclipse.n4js.n4JS.GetterDeclaration
 import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.IndexedAccessExpression
 import org.eclipse.n4js.n4JS.IntLiteral
+import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.MultiplicativeExpression
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
@@ -140,6 +141,7 @@ import org.eclipse.n4js.n4JS.UnaryOperator
 import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.YieldExpression
+import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.postprocessing.ASTMetaInfoUtils
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
 import org.eclipse.n4js.ts.typeRefs.BoundThisTypeRef
@@ -191,7 +193,6 @@ import org.eclipse.n4js.ts.utils.TypeHelper
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesbuilder.N4JSFunctionDefinitionTypesBuilder
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper
 import org.eclipse.n4js.typesystem.VersionResolver
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.N4JSLanguageUtils
@@ -199,6 +200,7 @@ import org.eclipse.n4js.utils.PromisifyHelper
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.xtext.scoping.IEObjectDescriptionWithError
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.naming.IQualifiedNameConverter
 
@@ -218,8 +220,8 @@ inject MemberScopingHelper memberScopingHelper
 inject PromisifyHelper promisifyHelper
 inject JavaScriptVariantHelper jsVariantHelper
 inject VersionResolver versionResolver
-inject UnsupportedExpressionTypeHelper expressionTypeHelper
 inject IQualifiedNameConverter qualifiedNameConverter
+inject ReactHelper reactHelper
 
 judgments {
 
@@ -1100,19 +1102,6 @@ from {
  	T = this.applyRuleTypeTypeDefiningElement(G, _trace_, e).value;
 }
 
-/*
- * This rule introduces a variation point to the type system.
- * In particular, it allows sub languages to type newly introduced
- * expression types that are unknown to N4JS. To use the variation point,
- * a sub language can use dependency injection to inject a custom implementation
- * of UnsupportedExpressionTypeHelper
- */
-rule typeUnsupportedExpression
-	G |- Expression e: TypeRef T
-from {
-	T = expressionTypeHelper.typeExpression(e, G)
-}
-
 /* ----------------------------------------------------------------------
  * AST nodes: statements
  * -------------------------------------------------------------------- */
@@ -1256,6 +1245,19 @@ rule typeModuleNamespace
 from {
 	T = t.createTypeRef
 }
+
+
+rule typeJSXElement
+	G |- JSXElement expr: TypeRef T
+from {
+	val classifierReactElement = reactHelper.lookUpReactElement(expr);
+	if (classifierReactElement !== null) {
+		T = classifierReactElement.ref;
+	} else {
+		T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
+	}
+}
+
 
 
 // **********************************************************************
@@ -2317,18 +2319,23 @@ from {
 		T = G.anyTypeRef
 	}
 }
-/*
- * This rule defines a variant point for defining expected type for new kinds of expressions in a new sub-language.
- * By doing this, subtype checking is done automatically by N4JS infrastructure for these new expressions as well
- *
- * Other extension point is the rule typeUnsupportedExpression
- */
-rule expectedTypeInUnsupportedContainer
-	G |- EObject container |> Expression expr: TypeRef T
-from {
-	T = expressionTypeHelper.expectedExpressionTypeInEObject(container, expr, G)
-}
 
+rule expectedTypeInJSXPropertyAttribute
+	G |- JSXPropertyAttribute container |> Expression expr: TypeRef T
+from {
+	T = TypeRefsFactory.eINSTANCE.createUnknownTypeRef;
+	val jsxElem = container.eContainer();
+	if (jsxElem instanceof JSXElement) {
+		val propsTypeRef = reactHelper.getPropsType(jsxElem);
+		if (propsTypeRef !== null) {
+			val G2 = G.wrap;
+			typeSystemHelper.addSubstitutions(G2, propsTypeRef);
+			G2.addThisType(propsTypeRef);
+			G2 |- container.getProperty() : var TypeRef propertyTypeRef
+			G2 |- propertyTypeRef ~> T
+		}
+	}
+}
 
 
 // **********************************************************************

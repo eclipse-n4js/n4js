@@ -10,71 +10,68 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.LabelledStatement;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link ForStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link ForStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class ForFactory {
 
-	static final String LOOPCATCH_NODE_NAME = "loopCatch";
-
-	static ComplexNode buildComplexNode(ForStatement forStmt) {
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ForStatement forStmt) {
 		if (forStmt.isForIn())
-			return buildForInOf(forStmt, true);
+			return buildForInOf(astpp, forStmt, true);
 		if (forStmt.isForOf())
-			return buildForInOf(forStmt, false);
+			return buildForInOf(astpp, forStmt, false);
 		if (forStmt.isForPlain())
-			return buildForPlain(forStmt);
+			return buildForPlain(astpp, forStmt);
 
 		return null;
 	}
 
-	private static ComplexNode buildForInOf(ForStatement forStmt, boolean forInSemantics) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(forStmt);
+	private static ComplexNode buildForInOf(ReentrantASTIterator astpp, ForStatement forStmt, boolean forInSemantics) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), forStmt);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, forStmt);
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), forStmt);
 		List<Node> declNodes = new LinkedList<>();
 		List<Node> initNodes = new LinkedList<>();
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
-				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("decl_" + i, intPos++, forStmt, varDecl);
-					declNodes.add(initNode);
-					i++;
-				}
+				Node initNode = DelegatingNodeFactory.create(astpp, "decl_" + i, forStmt, vdob);
+				declNodes.add(initNode);
+				i++;
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", intPos++, forStmt, forStmt.getInitExpr());
+			Node initNode = DelegatingNodeFactory.create(astpp, NodeNames.INITS, forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
-		Node expressionNode = new DelegatingNode("expression", intPos++, forStmt, forStmt.getExpression());
+		Node expressionNode = DelegatingNodeFactory.create(astpp, NodeNames.EXPRESSION, forStmt,
+				forStmt.getExpression());
 		Node getObjectKeysNode = null;
-		if (forInSemantics)
-			getObjectKeysNode = new HelperNode("getObjectKeys", intPos++, forStmt);
-		Node getIteratorNode = new HelperNode("getIterator", intPos++, forStmt);
-		Node hasNextNode = new HelperNode(LOOPCATCH_NODE_NAME, intPos++, forStmt);
-		Node nextNode = new HelperNode("next", intPos++, forStmt);
-		Node bodyNode = null;
-		if (forStmt.getStatement() != null)
-			bodyNode = new DelegatingNode("body", intPos++, forStmt, forStmt.getStatement());
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, forStmt);
+		if (forInSemantics) {
+			getObjectKeysNode = new HelperNode(NodeNames.GET_OBJECT_KEYS, astpp.pos(), forStmt);
+		}
+		Node getIteratorNode = new HelperNode(NodeNames.GET_ITERATOR, astpp.pos(), forStmt);
+		Node hasNextNode = new HelperNode(NodeNames.HAS_NEXT, astpp.pos(), forStmt);
+		Node nextNode = new HelperNode(NodeNames.NEXT, astpp.pos(), forStmt);
+		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
+		Node catchContinueNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
 		for (Node declNode : declNodes)
@@ -87,6 +84,7 @@ class ForFactory {
 		cNode.addNode(hasNextNode);
 		cNode.addNode(nextNode);
 		cNode.addNode(bodyNode);
+		cNode.addNode(catchContinueNode);
 		cNode.addNode(exitNode);
 
 		List<Node> nodes = new LinkedList<>();
@@ -98,9 +96,10 @@ class ForFactory {
 		nodes.add(getIteratorNode);
 		nodes.add(hasNextNode);
 		cNode.connectInternalSucc(nodes);
-		cNode.connectInternalSucc(ControlFlowType.Exit, hasNextNode, exitNode);
-		cNode.connectInternalSucc(ControlFlowType.Repeat, hasNextNode, nextNode);
-		cNode.connectInternalSucc(nextNode, bodyNode, hasNextNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, hasNextNode, exitNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopEnter, hasNextNode, nextNode);
+		cNode.connectInternalSucc(nextNode, bodyNode, catchContinueNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, catchContinueNode, hasNextNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
@@ -112,12 +111,11 @@ class ForFactory {
 		return cNode;
 	}
 
-	private static ComplexNode buildForPlain(ForStatement forStmt) {
-		int intPos = 0;
-		ComplexNode cNode = new ComplexNode(forStmt);
+	private static ComplexNode buildForPlain(ReentrantASTIterator astpp, ForStatement forStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), forStmt);
 
 		List<Node> initNodes = new LinkedList<>();
-		Node entryNode = new HelperNode(ENTRY_NODE, intPos++, forStmt);
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), forStmt);
 		Node conditionNode = null;
 		Node bodyNode = null;
 		Node updatesNode = null;
@@ -125,28 +123,24 @@ class ForFactory {
 		if (forStmt.getVarDeclsOrBindings() != null) {
 			int i = 0;
 			for (VariableDeclarationOrBinding vdob : forStmt.getVarDeclsOrBindings()) {
-				for (VariableDeclaration varDecl : vdob.getVariableDeclarations()) {
-					Node initNode = new DelegatingNode("init_" + i, intPos++, forStmt, varDecl);
-					initNodes.add(initNode);
-					i++;
-				}
+				Node initNode = DelegatingNodeFactory.create(astpp, "init_" + i, forStmt, vdob);
+				initNodes.add(initNode);
+				i++;
 			}
 		}
 		if (forStmt.getInitExpr() != null) {
-			Node initNode = new DelegatingNode("inits", intPos++, forStmt, forStmt.getInitExpr());
+			Node initNode = DelegatingNodeFactory.create(astpp, NodeNames.INITS, forStmt, forStmt.getInitExpr());
 			initNodes.add(initNode);
 		}
 		if (forStmt.getExpression() != null) {
-			conditionNode = new DelegatingNode("condition", intPos++, forStmt, forStmt.getExpression());
+			conditionNode = DelegatingNodeFactory.create(astpp, NodeNames.CONDITION, forStmt, forStmt.getExpression());
 		}
-		if (forStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", intPos++, forStmt, forStmt.getStatement());
-		}
-		Node loopCatchNode = new HelperNode(LOOPCATCH_NODE_NAME, intPos++, forStmt);
+		bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, forStmt, forStmt.getStatement());
+		Node loopCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), forStmt);
 		if (forStmt.getUpdateExpr() != null) {
-			updatesNode = new DelegatingNode("updates", intPos++, forStmt, forStmt.getUpdateExpr());
+			updatesNode = DelegatingNodeFactory.create(astpp, NodeNames.UPDATES, forStmt, forStmt.getUpdateExpr());
 		}
-		Node exitNode = new HelperNode(EXIT_NODE, intPos++, forStmt);
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), forStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(exitNode);
@@ -164,21 +158,24 @@ class ForFactory {
 		cNode.connectInternalSucc(nodes);
 
 		if (conditionNode != null) {
-			cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
-			cNode.connectInternalSucc(ControlFlowType.Exit, conditionNode, exitNode);
-			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode, conditionNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
+			Node beforeBodyNode = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode).getLast();
+			cNode.connectInternalSucc(ControlFlowType.LoopRepeat, beforeBodyNode, conditionNode);
 
 		} else {
 			nodes.clear();
 			nodes.add(entryNode);
 			nodes.addAll(initNodes);
 			Node beforeBodyNode = ListUtils.filterNulls(nodes).getLast();
-			cNode.connectInternalSucc(beforeBodyNode, bodyNode, loopCatchNode, updatesNode);
+			cNode.connectInternalSucc(ControlFlowType.LoopEnter, beforeBodyNode, bodyNode);
+			cNode.connectInternalSucc(bodyNode, loopCatchNode, updatesNode);
 
 			LinkedList<Node> loopCycle = ListUtils.filterNulls(bodyNode, loopCatchNode, updatesNode);
 			Node loopSrc = loopCycle.getLast();
-			Node loopTgt = loopCycle.getFirst();
-			cNode.connectInternalSucc(ControlFlowType.Repeat, loopSrc, loopTgt);
+			cNode.connectInternalSucc(ControlFlowType.LoopInfinite, loopSrc, bodyNode);
+			cNode.connectInternalSucc(ControlFlowType.DeadCode, loopSrc, exitNode);
 		}
 
 		cNode.setEntryNode(entryNode);

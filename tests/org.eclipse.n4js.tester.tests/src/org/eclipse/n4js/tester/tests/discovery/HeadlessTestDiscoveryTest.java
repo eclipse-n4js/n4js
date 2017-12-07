@@ -29,11 +29,10 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
-import org.eclipse.n4js.n4jsx.N4JSXGlobals;
-import org.eclipse.n4js.n4jsx.N4JSXStandaloneSetup;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.tester.TestDiscoveryHelper;
 import org.eclipse.n4js.tester.TesterModule;
@@ -84,7 +83,7 @@ public class HeadlessTestDiscoveryTest {
 	/***/
 	@WithParentInjector
 	public static Injector getParentInjector() {
-		return new N4JSXStandaloneSetup().createInjectorAndDoEMFRegistration();
+		return new N4JSStandaloneSetup().createInjectorAndDoEMFRegistration();
 	}
 
 	@Inject
@@ -104,21 +103,21 @@ public class HeadlessTestDiscoveryTest {
 		fbWorkspace.registerProject(URI.createFileURI(TEST_N4JSX_PROJECT.getAbsolutePath()));
 		// Register test file extensions
 		fileExtensionsRegistry.register(N4JSGlobals.N4JS_FILE_EXTENSION, FileExtensionType.TESTABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSXGlobals.N4JSX_FILE_EXTENSION, FileExtensionType.TESTABLE_FILE_EXTENSION);
+		fileExtensionsRegistry.register(N4JSGlobals.N4JSX_FILE_EXTENSION, FileExtensionType.TESTABLE_FILE_EXTENSION);
 		// Register runnable file extensions
 		fileExtensionsRegistry.register(N4JSGlobals.N4JS_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
 		fileExtensionsRegistry.register(N4JSGlobals.JS_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSXGlobals.N4JSX_FILE_EXTENSION,
+		fileExtensionsRegistry.register(N4JSGlobals.N4JSX_FILE_EXTENSION,
 				FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSXGlobals.JSX_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
+		fileExtensionsRegistry.register(N4JSGlobals.JSX_FILE_EXTENSION, FileExtensionType.RUNNABLE_FILE_EXTENSION);
 		// Register transpilable file extensions
 		fileExtensionsRegistry.register(N4JSGlobals.N4JS_FILE_EXTENSION,
 				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSXGlobals.N4JSX_FILE_EXTENSION,
+		fileExtensionsRegistry.register(N4JSGlobals.N4JSX_FILE_EXTENSION,
 				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
 		fileExtensionsRegistry.register(N4JSGlobals.JS_FILE_EXTENSION,
 				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		fileExtensionsRegistry.register(N4JSXGlobals.JSX_FILE_EXTENSION,
+		fileExtensionsRegistry.register(N4JSGlobals.JSX_FILE_EXTENSION,
 				FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
 	}
 
@@ -262,14 +261,14 @@ public class HeadlessTestDiscoveryTest {
 	@Test
 	public void testDiscoveryN4JSXForSingleExistingProject() {
 		final TestTree actual = helper.collectTests(toURI(TEST_N4JSX_PROJECT));
-		assertTestSuiteCount(actual, 3);
 		assertTestSuiteNames(actual,
 				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D"),
 				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E"),
 				createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_4, "F"));
-		assertTestCaseCount(actual, 7);
+		assertTestSuiteCount(actual, 3);
 		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "D"), 2);
 		assertTestCaseCountForSuite(actual, createFqn(TEST_SRC_STRUCTURE, TEST_N4JSX_CLASS_3, "E"), 2);
+		assertTestCaseCount(actual, 7);
 	}
 
 	private void assertTestSuiteCount(final TestTree actual, final int expected) {

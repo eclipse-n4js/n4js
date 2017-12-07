@@ -19,7 +19,7 @@ Sources {
 	source {
 		"model"
 	}
-	external {
-		"jsxbackend"
-	}
+}
+ProjectDependencies {
+    react
 }

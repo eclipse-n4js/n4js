@@ -15,18 +15,17 @@ import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4jsx.ReactHelper
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils
-import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TypesFactory
 import org.eclipse.n4js.utils.N4JSLanguageUtils
-import org.eclipse.n4js.n4jsx.n4JSX.JSXElement
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -41,7 +40,10 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 class SanitizeImportsTransformation extends Transformation {
 
 	@Inject
-	JSXBackendHelper jsx;
+	private ReactHelper reactHelper;
+
+	@Inject
+	private JSXBackendHelper jsxBackendHelper;
 
 	override analyze() {
 	}
@@ -74,24 +76,22 @@ class SanitizeImportsTransformation extends Transformation {
 			return
 
 		val jsxUsedOriginalImports = state.info.browseOriginalImports_internal.filter [
-			it.value.qualifiedName.endsWith(jsx.getBackendModuleName())
-		].map[it.key.importSpecifiers].flatten.filter[isUsed]
+			jsxBackendHelper.isJsxBackendModule(value) && value.qualifiedName.equals(ReactHelper.REACT_PROJECT_ID)
+		].map[key.importSpecifiers].flatten.filter[isUsed]
 		if (!jsxUsedOriginalImports.nullOrEmpty)
 			return;
 
 		val jsxBackendsName = steFor_React
-		val iMod = _Module(jsx.jsxBackendModuleQualifiedName(state.resource))
-		iMod.n4jsdModule = true
+		// We lookup react's module using react helper.
+		val iMod = reactHelper.lookUpReactTModule(state.resource)
+		
+		if(iMod === null)
+			throw new RuntimeException("Cannot locate JSX backend for " + state.resource.URI)
+		
 		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
-		val iDecl = _ImportDecl(iMod, iSpec);
+		val iDecl = _ImportDecl(null, iSpec);
 		insertBefore(state.im.scriptElements.get(0), iDecl);
 		state.info.setImportedModule_internal(iDecl, iMod);
-	}
-
-	private static def TModule _Module(String qn) {
-		val result = TypesFactory.eINSTANCE.createTModule
-		result.qualifiedName = qn
-		return result;
 	}
 
 	/**
@@ -193,7 +193,7 @@ class SanitizeImportsTransformation extends Transformation {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
 
-			if(ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(importSpec)){
+			if(ste === null && jsxBackendHelper.isJsxBackendImportSpecifier(importSpec, state.info)){
 				return true
 			}
 

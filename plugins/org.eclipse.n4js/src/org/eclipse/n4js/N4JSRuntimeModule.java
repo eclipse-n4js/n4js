@@ -59,12 +59,10 @@ import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.CustomInternalTypeSystem;
-import org.eclipse.n4js.typesystem.DefaultUnsupportedExpressionTypeHelper;
 import org.eclipse.n4js.typesystem.N4JSStringRepresenation;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator;
 import org.eclipse.n4js.typesystem.N4JSVersionResolver;
-import org.eclipse.n4js.typesystem.UnsupportedExpressionTypeHelper;
 import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
@@ -545,14 +543,6 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends VersionResolver> bindVersionResolver() {
 		return N4JSVersionResolver.class;
-	}
-
-	/**
-	 * Bind a helper for typing expression types which are unknown in N4JS. This is a variation point for sub languages
-	 * that need to extend N4JS's type system.
-	 */
-	public Class<? extends UnsupportedExpressionTypeHelper> bindUnsupportedExpressionTypeHelper() {
-		return DefaultUnsupportedExpressionTypeHelper.class;
 	}
 
 	/**

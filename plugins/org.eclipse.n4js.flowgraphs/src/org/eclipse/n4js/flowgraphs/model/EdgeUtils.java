@@ -33,8 +33,6 @@ public class EdgeUtils {
 
 	/** Adds a {@link ControlFlowEdge} from n1 to n2 with the given {@link ControlFlowType}. */
 	static public ControlFlowEdge connectCF(Node n1, Node n2, ControlFlowType cfType) {
-		assert (n1 != n2) : "CF-Edge with same Start/End-Nodes";
-
 		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, cfType);
 		n1.addSuccessor(cfEdge);
 		n2.addPredecessor(cfEdge);
@@ -47,8 +45,6 @@ public class EdgeUtils {
 	 * <b>Attention:</b> Use this only when the edge connects to a {@link FinallyBlock}.
 	 */
 	public static ControlFlowEdge connectCF(Node n1, Node n2, JumpToken jumpContext) {
-		assert (n1 != n2) : "CF-Edge with same Start/End-Nodes";
-
 		ControlFlowEdge cfEdge = new ControlFlowEdge(n1, n2, jumpContext);
 		n1.addSuccessor(cfEdge);
 		n2.addPredecessor(cfEdge);

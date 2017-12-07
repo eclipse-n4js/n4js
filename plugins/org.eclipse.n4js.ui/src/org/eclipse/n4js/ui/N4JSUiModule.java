@@ -77,8 +77,6 @@ import org.eclipse.n4js.ui.labeling.N4JSContentAssistLabelProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHoverProvider;
 import org.eclipse.n4js.ui.labeling.N4JSHyperlinkLabelProvider;
 import org.eclipse.n4js.ui.logging.N4jsUiLoggingInitializer;
-import org.eclipse.n4js.ui.organize.imports.IReferenceFilter;
-import org.eclipse.n4js.ui.organize.imports.N4JSReferencesFilter;
 import org.eclipse.n4js.ui.outline.MetaTypeAwareComparator;
 import org.eclipse.n4js.ui.outline.N4JSFilterLocalTypesOutlineContribution;
 import org.eclipse.n4js.ui.outline.N4JSFilterNonPublicMembersOutlineContribution;
@@ -601,11 +599,6 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	/** Performance workaround, see https://github.com/NumberFour/n4js/issues/246 */
 	public Class<? extends ContentFormatter> bindContentFormatter() {
 		return FixedContentFormatter.class;
-	}
-
-	/** Languages variation point for the organize imports */
-	public Class<? extends IReferenceFilter> bindContentReferenceFilter() {
-		return N4JSReferencesFilter.class;
 	}
 
 	/**
