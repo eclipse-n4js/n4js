@@ -78,4 +78,12 @@ pipeline {
             }
         }
     }
+    post {
+        always {
+            archive '**/*.jar'
+            archive '**/*.pom'
+            archive '**/*.xml'
+            junit 'reports/**/*.xml'
+        }
+    }
 }
