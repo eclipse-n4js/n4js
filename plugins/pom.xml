@@ -82,6 +82,8 @@ Contributors:
 		<!-- npm exporter -->
 		<module>org.eclipse.n4js.npmexporter</module>
 		<module>org.eclipse.n4js.npmexporter.ui</module>
+		<!-- headless helper -->
+		<module>org.eclipse.n4js.headless.helper</module>
 	</modules>
 
 	<properties>
