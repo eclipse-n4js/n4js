@@ -41,10 +41,21 @@ public class ResourceNameComputer {
 	 * https://github.com/eclipse/n4js/issues/394
 	 * 
 	 * for simplifying node js compilation target we wan't to avoid project name and version in the compiled code segments
-	 * Hide this behind the flag, as when adding anticipated other compilation 
+	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
+	 * or we might make this configurable in the manifest.
 	 */
-	private static final boolean USE_SIMPLE_DESCRIPTOR = true;
-
+	public static final boolean USE_SIMPLE_DESCRIPTOR = true;
+	
+	/** 
+	 * (pre-eclipse ticket)
+	 * IDE-2069
+	 * 
+	 * as part of adding node.js support, version information was suppressed in the compiled code segments.
+	 * Hidden behind feature flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
+	 * or we might make this configurable in the manifest.
+	 */
+	public static final boolean USE_VERSIONS = false
+	
 	@Inject private N4JSQualifiedNameProvider qualifiedNameProvider;
 	@Inject private IQualifiedNameConverter converter;
 	@Inject private SpecifierConverter specifierConverter;
@@ -59,7 +70,7 @@ public class ResourceNameComputer {
 	 * @fileExtension String with containing project info (a.k.a. origin)
 	 */
 	def generateProjectDescriptor(URI n4jsSourceURI) {
-		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", false);
+		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR);
 	}
 
 	/**
@@ -72,7 +83,7 @@ public class ResourceNameComputer {
 	 */
 	def generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
 		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI),
-			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", false) + fileExtension;
+			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR) + fileExtension;
 	}
 
 	/**
@@ -85,7 +96,7 @@ public class ResourceNameComputer {
 	 */
 	def generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
 		formatDescriptor(project, projectResolver.resolvePackageAndFileName(n4jsSourceURI, project), "-", ".", "/",
-			false) + fileExtension;
+			USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR) + fileExtension;
 	}
 
 	/**
@@ -102,35 +113,34 @@ public class ResourceNameComputer {
 	 * @param unitPath  a path like string, can be derived from file Path, module specifier, or constructed manually.
 	 * @param includeProjectVersion  tells if project version should be included or not. If false, then sep1 and sep2
 	 *                               will be ignored.
+	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
 	 */
 	private def final static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
-		String sep3, boolean includeProjectVersion) {
-		return if (includeProjectVersion) {
-			project.projectId + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + unitPath;
-		} else {
-			project.projectId + sep3 + unitPath;
-		};
-	}
+		String sep3, boolean includeProjectVersion, boolean asJsIdentifier, boolean useSimpleDescriptor) {
 
-	/**
-	 * Similar to {@link #formatDescriptor(IN4JSProject, String, String, String, String, boolean), but ensures that values computed from
-	 * {@link IN4JSProject project} and {@String unitPath} are valid JS identifiers. Needed in some cases like generated import statements.
-	 */
-	private def final formatDescriptorAsIdentifier(IN4JSProject project, String unitPath, String sep1, String sep2,
-		String sep3, boolean includeProjectVersion) {
-		return if (includeProjectVersion) {
-			project.projectId.getValidJavascriptIdentifierName + sep1 +
-				projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + unitPath.getValidUnitPath;
-		} else {
-			project.projectId.getValidJavascriptIdentifierName + sep3 + unitPath.getValidUnitPath;
+		var projectID = project.projectId
+		var path = unitPath
+		if (asJsIdentifier) {
+			projectID = getValidJavascriptIdentifierName(project.projectId)
+			path = getValidUnitPath(unitPath)
 		}
+
+		if (useSimpleDescriptor) {
+			return path;
+		}
+
+		if (includeProjectVersion) {
+			return projectID + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
+		}
+
+		return projectID + sep3 + path;
 	}
 
-	private def final String getValidUnitPath(String unitPath) {
+	private static def final String getValidUnitPath(String unitPath) {
 		return unitPath.split('/').map[getValidJavascriptIdentifierName].join('/');
 	}
 
-	private def String getValidJavascriptIdentifierName(String moduleSpecifier) {
+	private static def String getValidJavascriptIdentifierName(String moduleSpecifier) {
 		if (moduleSpecifier === null || moduleSpecifier.length === 0) {
 			return moduleSpecifier;
 		}
@@ -147,7 +157,7 @@ public class ResourceNameComputer {
 		return sb.toString();
 	}
 
-	def private toUnicode(char charAtPos) {
+	def static private toUnicode(char charAtPos) {
 		return "_u" + Integer.toHexString(charAtPos.bitwiseOr(0x10000)).substring(1);
 	}
 
@@ -265,8 +275,7 @@ public class ResourceNameComputer {
 	 * @module {@link TModule} for which we generate descriptor
 	 */
 	def public String getCompleteModuleSpecifier(IN4JSProject project, TModule module) {
-		return ResourceNameComputer.formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/",
-			false);
+		return formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR);
 	}
 
 	/**
@@ -301,7 +310,7 @@ public class ResourceNameComputer {
 	 */
 	def public String getCompleteModuleSpecifierAsIdentifier(IN4JSProject project, TModule module) {
 		return getValidJavascriptIdentifierName(
-			formatDescriptorAsIdentifier(project, module.getModuleSpecifier(), "_", "_", "_", false));
+			formatDescriptor(project, module.getModuleSpecifier(), "_", "_", "_", USE_VERSIONS, true, USE_SIMPLE_DESCRIPTOR));
 	}
 
 	/**
