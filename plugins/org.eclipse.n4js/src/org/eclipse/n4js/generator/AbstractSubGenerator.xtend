@@ -325,7 +325,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 			return Paths.get("")
 		}
 
-		//otherwise strip resource to get locl path, i.e. Project/a/b/c/Input.XX => Project/a/b/c/
+		//otherwise strip resource to get local path, i.e. Project/a/b/c/Input.XX => Project/a/b/c/
 		return localOutputFilePath.subpath(0,localOutputFilePath.nameCount - 1)
 	}
 
