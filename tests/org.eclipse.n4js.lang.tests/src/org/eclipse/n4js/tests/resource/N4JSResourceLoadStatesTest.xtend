@@ -441,7 +441,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		rows.makeEqualLengthAndAppend(" | ");
 		rows.forEach[row, i | row.append(if(i===0) "reconciled" else loadStateInfos.get(i-1).reconciled.label)];
 
-		println('[cols="1h,1,1,1,1,1,1,1",options="header"]');
+		println('[cols="1h,1,1,1,1,1,1,1,1",options="header"]');
 		println('|===');
 		println(rows.join('\n'));
 		println('|===');
