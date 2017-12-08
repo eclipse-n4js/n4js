@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeEvent;
+import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
@@ -85,6 +86,8 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 
 		int buildKind = event.getBuildKind();
 		if (buildKind == IncrementalProjectBuilder.CLEAN_BUILD) {
+			// use case: clean build
+
 			Object obj = event.getSource();
 			if (obj instanceof IProject) {
 				IProject project = (IProject) obj;
@@ -106,9 +109,19 @@ public class N4JSProjectExplorerContentProvider extends WorkbenchContentProvider
 				if (resource instanceof IFile) {
 					IFile file = (IFile) resource;
 					if (IN4JSProject.N4MF_MANIFEST.equals(file.getName())) {
-						IProject project = file.getProject();
-						if (null != project && project.isAccessible()) {
-							virtualNodeCache.remove(project);
+						if (delta.getKind() == IResourceDelta.REMOVED) {
+							if ((delta.getFlags() & IResourceDelta.MOVED_TO) != 0) {
+								// use case: rename of a project to/from the name of a shipped library
+								virtualNodeCache.clear();
+							}
+						}
+
+						if (delta.getKind() == IResourceDelta.CHANGED) {
+							IProject project = file.getProject();
+							if (null != project && project.isAccessible()) {
+								// use case: changes in a manifest.n4mf file
+								virtualNodeCache.remove(project);
+							}
 						}
 					}
 				}

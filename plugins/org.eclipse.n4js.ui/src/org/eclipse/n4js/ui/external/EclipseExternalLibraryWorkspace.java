@@ -333,7 +333,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 				.filter(p -> !eclipseWorkspaceProjectNamesFilter.apply(p.getName()));
 
 		// Build recently added projects that do not exist in workspace.
-		// XXX akitta: consider filtering out external projects that exists in index already. (@ higher priority level)
+		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(projectsToBuild)) {
 			builderHelper.build(projectsToBuild, subMonitor.newChild(1));
 		}
