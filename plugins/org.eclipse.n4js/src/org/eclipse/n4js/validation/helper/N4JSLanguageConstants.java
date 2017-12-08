@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.validation.IssueCodes;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Contains constants for the N4JS language.
@@ -148,9 +148,12 @@ public abstract class N4JSLanguageConstants {
 
 	/**
 	 * The sub-folder in a project's output folder that contains the generated output files of the transpiler that is to
-	 * be used during all testing.
+	 * be used during all testing. At some point we will have multiple transpilers, we will somehow decide/check which
+	 * one is used and get proper segment from it.
 	 *
-	 * TODO this is temporary, should be improved (only added here to have a single point where this is defined)
+	 * For now, just use the same transpiler that we use during testing.
+	 *
+	 * TODO IDE-1487 handle multiple sub generators
 	 */
 	public static final String TRANSPILER_SUBFOLDER_FOR_TESTS = "es";
 
