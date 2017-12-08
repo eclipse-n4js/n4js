@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.generator.headless;
+package org.eclipse.n4js.headless.helper;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;

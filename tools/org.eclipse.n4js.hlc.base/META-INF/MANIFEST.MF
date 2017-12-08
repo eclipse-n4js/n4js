@@ -13,12 +13,9 @@ Require-Bundle: org.eclipse.n4js,
  org.eclipse.n4js.utils,
  org.kohsuke.args4j;bundle-version="2.0.21",
  org.eclipse.n4js.runner,
- org.eclipse.n4js.runner.nodejs,
  org.eclipse.n4js.tester,
- org.eclipse.n4js.tester.nodejs,
  org.eclipse.n4js.external.libraries,
  org.eclipse.core.runtime,
- org.eclipse.n4js.transpiler.es,
- org.eclipse.equinox.app
+ org.eclipse.n4js.headless.helper
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: org.eclipse.n4js.hlc.base
