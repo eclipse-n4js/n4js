@@ -322,6 +322,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	private void registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor,
 			boolean triggerCleanbuild) {
+
 		checkState(result.isOK(), "Expected OK result: " + result);
 		ensureInitialized();
 
