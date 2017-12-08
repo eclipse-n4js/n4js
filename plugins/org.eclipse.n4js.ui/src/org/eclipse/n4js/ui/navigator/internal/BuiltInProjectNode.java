@@ -65,13 +65,7 @@ import org.eclipse.swt.graphics.Image;
 				.transform(p -> p.getLocation())
 				.transform(uri -> uri.toFileString())
 				.transform(uri -> new File(uri))
-				.transform(file -> {
-					try {
-						return new ResourceNode(this, file);
-					} catch (Exception e) {
-						return null;
-					}
-				})
+				.transform(file -> ResourceNode.create(this, file))
 				.filter(notNull())
 				.toArray(ResourceNode.class);
 
@@ -88,7 +82,7 @@ import org.eclipse.swt.graphics.Image;
 			if (null != manifestLocation) {
 				final File manifest = new File(manifestLocation.toFileString());
 				if (manifest.exists() && manifest.isFile()) {
-					manifestNode = new ResourceNode(this, manifest);
+					manifestNode = ResourceNode.create(this, manifest);
 				}
 			}
 		}

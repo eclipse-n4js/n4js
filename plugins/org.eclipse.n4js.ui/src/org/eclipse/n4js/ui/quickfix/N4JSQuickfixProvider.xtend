@@ -660,11 +660,11 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 
 			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
 				multipleInvocations = false;
-				invokeNpmManager(element, true);
+				invokeNpmManager(element, !multipleInvocations);
 			}
 			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
 				multipleInvocations = true;
-				invokeNpmManager(element, false);
+				invokeNpmManager(element, !multipleInvocations);
 			}
 			override void computeFinalChanges() throws Exception {
 				if (multipleInvocations) {
