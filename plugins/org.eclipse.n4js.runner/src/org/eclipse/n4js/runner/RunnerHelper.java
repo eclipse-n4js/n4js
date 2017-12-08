@@ -30,6 +30,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.FindArtifactHelper;
@@ -98,7 +99,9 @@ public class RunnerHelper {
 			return null;
 		}
 
-		final String outPath = toAbsolutePath(project, relativeOutputPathStr + File.separator + getCompilerSegment());
+		final String projectRelativePath = AbstractSubGenerator.calculateOutputDirectory(relativeOutputPathStr,
+				N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS);
+		final String outPath = toAbsolutePath(project, projectRelativePath);
 
 		// TODO no one should apply null check on the target platform location except the HLC
 		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
@@ -136,20 +139,6 @@ public class RunnerHelper {
 		final Path projectPath = project.getLocationPath().toAbsolutePath();
 		final Path absolutePath = projectPath.resolve(projectRelativePath);
 		return absolutePath.toString();
-	}
-
-	/**
-	 * Returns path segment contributed by used compiler.
-	 */
-	private String getCompilerSegment() {
-		// TODO IDE-1487 handle multiple sub generators
-		/*
-		 * At some point we will have multiple transpilers, we will somehow decide/check which one is used and get
-		 * proper segment from it.
-		 *
-		 * For now, just use the same transpiler that we use during testing.
-		 */
-		return N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 	}
 
 	/**
