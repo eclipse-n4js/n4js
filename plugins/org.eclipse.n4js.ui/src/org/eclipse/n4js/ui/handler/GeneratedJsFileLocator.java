@@ -19,7 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.GeneratorException;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.utils.CompilerHelper;
@@ -76,19 +76,15 @@ public class GeneratedJsFileLocator {
 		if (fileUri.isPlatform()) {
 			final Optional<? extends IN4JSProject> project = core.findProject(fileUri);
 			if (project.isPresent()) {
-				try {
-					final String targetFileName = compilerHelper.getTargetFileName(fileUri, JS_FILE_EXTENSION);
-					final String targetFileRelativeLocation = project.get().getOutputPath() + "/"
-					// TODO replace hard coded ES5 sub-generator ID once it is clear how to use various
-					// sub-generators for runners (IDE-1487)
-							+ genID + "/" + targetFileName;
-					final IFile targetFile = file.getProject().getFile(targetFileRelativeLocation);
-					if (targetFile.exists()) {
-						return targetFile;
-					}
-				} catch (final GeneratorException e) {
-					// file is not contained in a source container.
-					return null;
+				final String targetFileName = compilerHelper.getTargetFileName(fileUri, JS_FILE_EXTENSION);
+				// TODO replace hard coded ES5 sub-generator ID once it is clear how to use various
+				// sub-generators for runners (IDE-1487)
+				final String targetFileRelativeLocation = AbstractSubGenerator
+						.calculateOutputDirectory(project.get().getOutputPath(), genID)
+						+ "/" + targetFileName;
+				final IFile targetFile = file.getProject().getFile(targetFileRelativeLocation);
+				if (targetFile.exists()) {
+					return targetFile;
 				}
 			}
 		}
