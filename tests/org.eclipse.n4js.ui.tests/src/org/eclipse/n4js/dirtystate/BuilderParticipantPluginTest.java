@@ -228,7 +228,9 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		IFile childFile = createTestFile(moduleFolder, "Child", TestFiles.classChild());
 
 		assertMarkers("brother file should have no errors", brotherFile, 0);
-		assertMarkers("sister file should have no errors", sisterFile, 0);
+		// expected markers
+		// Variable brother is used before it is declared
+		assertMarkers("sister file should have one errors", sisterFile, 1);
 		assertMarkers("child file should have no errors", childFile, 0);
 
 		sisterFile.setContents(new StringInputStream(TestFiles.classSisterNew().toString()), true, true, monitor());
@@ -239,6 +241,7 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		// Couldn't resolve reference to TMember 'getBrother'. at brother = sister.getBrother;
 		assertMarkers("brother file should have errors as using old method of sister", brotherFile, 2);
 		// expected markers
+		// Variable brother is used before it is declared
 		// Couldn't resolve reference to TMember 'getBrother'. at brother.getSister().getBrother
 		// Couldn't resolve reference to TMember 'getBrother'. at var brotherChildAge =
 		// sister.getBrother().getChild().age;
@@ -248,12 +251,14 @@ public class BuilderParticipantPluginTest extends AbstractBuilderParticipantTest
 		// Consequential error, not reported anymore:
 		// --> Couldn't resolve reference to TMember 'age'. at var brotherChildAge = sister.getBrother().getChild().age;
 		// Additional warning: The value of the local variable sister is not used
-		assertMarkers("new sister file should have errors as calling oldMethod via brother file", sisterFile, 3);
+		assertMarkers("new sister file should have errors as calling oldMethod via brother file", sisterFile, 4);
 
 		sisterFile.setContents(new StringInputStream(TestFiles.classSister().toString()), true, true, monitor());
 		waitForAutoBuild();
 
-		assertMarkers("sister file should have no errors anymore", sisterFile, 0);
+		// expected markers
+		// Variable brother is used before it is declared
+		assertMarkers("sister file should have still one error", sisterFile, 1);
 		assertMarkers("brother file should have no errors anymore", brotherFile, 0);
 	}
 

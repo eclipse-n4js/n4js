@@ -13,6 +13,7 @@ package org.eclipse.n4js.flowgraphs.analyses;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,11 +98,13 @@ abstract public class FastFlowVisitor extends GraphVisitor {
 
 	/** @return all {@link ActivationLocation}s that this Visitor found */
 	public Collection<ActivationLocation> getAllActivationLocations() {
-		if (ffExplorer == null || ffExplorer.getAllBranches().isEmpty()) {
-			return Collections.emptyList();
+		Collection<ActivationLocation> actLocs = new LinkedList<>();
+		for (GraphExplorerInternal expl : getActivatedExplorers()) {
+			FFBranch lastFFB = (FFBranch) expl.allBranches.getLast();
+			Collection<ActivationLocation> branchValues = lastFFB.actLocs.values();
+			actLocs.addAll(branchValues);
 		}
-		FFBranch lastFFB = (FFBranch) ffExplorer.allBranches.get(ffExplorer.allBranches.size() - 1);
-		return lastFFB.actLocs.values();
+		return actLocs;
 	}
 
 	/** Constructor */
@@ -114,6 +117,11 @@ abstract public class FastFlowVisitor extends GraphVisitor {
 		if (this.ffExplorer == null) {
 			visitNext(iffb, cfe);
 		}
+	}
+
+	@Override
+	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+		this.ffExplorer = null;
 	}
 
 	private class FFExplorer extends GraphExplorer {

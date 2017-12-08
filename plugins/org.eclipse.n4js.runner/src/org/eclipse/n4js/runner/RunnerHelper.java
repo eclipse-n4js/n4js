@@ -30,7 +30,6 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
 import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.generator.common.CompilerUtils;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.FindArtifactHelper;
@@ -41,6 +40,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
+import org.eclipse.n4js.utils.CompilerHelper;
 import org.eclipse.n4js.utils.RecursionGuard;
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
@@ -63,7 +63,7 @@ public class RunnerHelper {
 	private FindArtifactHelper artifactHelper;
 
 	@Inject
-	private CompilerUtils compilerUtils;
+	private CompilerHelper compilerHelper;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
@@ -163,7 +163,7 @@ public class RunnerHelper {
 					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
 				})
 				.flatMap(p -> getInitModulesAsURIs(p).stream()
-						.map(bmURI -> compilerUtils.getTargetFileName(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
+						.map(bmURI -> compilerHelper.getTargetFileName(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
 				.collect(Collectors.toList());
 	}
 
@@ -178,7 +178,7 @@ public class RunnerHelper {
 					if (!execModuleAsURI.isPresent()) {
 						return null;
 					}
-					return compilerUtils.getTargetFileName(re, execModuleAsURI.get(), null);
+					return compilerHelper.getTargetFileName(re, execModuleAsURI.get(), null);
 				})
 				.filter(s -> !Strings.isNullOrEmpty(s))
 				.collect(Collectors.toList());

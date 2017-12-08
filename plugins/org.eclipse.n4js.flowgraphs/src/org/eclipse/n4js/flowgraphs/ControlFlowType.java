@@ -89,7 +89,6 @@ public enum ControlFlowType {
 	/** @return true iff this {@link ControlFlowType} points in backwards direction */
 	public boolean isBackwards() {
 		switch (this) {
-		case Continue:
 		case LoopRepeat:
 		case LoopReenter:
 		case LoopInfinite:

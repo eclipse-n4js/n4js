@@ -28,9 +28,6 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
  */
 class StandardCFEFactory {
-	static final String ENTRY_NODE = "entry";
-	static final String EXIT_NODE = "exit";
-	static final String ENTRY_EXIT_NODE = "entryExit";
 
 	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe) {
 		return buildComplexNode(astpp, cfe, true);
@@ -45,7 +42,7 @@ class StandardCFEFactory {
 
 		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
 
-		HelperNode entryNode = new HelperNode(ENTRY_NODE, astpp.pos(), cfe);
+		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();
 		List<Node> args = CFEChildren.get(astpp, cfe);
@@ -57,9 +54,9 @@ class StandardCFEFactory {
 		String extName;
 		if (argumentNodes.isEmpty()) {
 			entryNode = null;
-			extName = ENTRY_EXIT_NODE;
+			extName = NodeNames.ENTRY_EXIT;
 		} else {
-			extName = EXIT_NODE;
+			extName = NodeNames.EXIT;
 		}
 		if (isRepresenting) {
 			exitNode = new RepresentingNode(extName, astpp.pos(), cfe);

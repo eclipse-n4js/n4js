@@ -32,7 +32,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.compressors.CompressorException
 import org.apache.commons.compress.compressors.CompressorStreamFactory
-import org.eclipse.n4js.generator.common.AbstractSubGenerator
+import org.eclipse.n4js.generator.AbstractSubGenerator
 import org.eclipse.n4js.npmexporter.validation.IssueConsumer
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator

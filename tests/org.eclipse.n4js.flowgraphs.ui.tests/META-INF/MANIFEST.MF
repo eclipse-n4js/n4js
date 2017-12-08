@@ -26,4 +26,5 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.ts.ui,
  org.eclipse.n4js.xpect,
  org.eclipse.n4js.xpect.ui,
+ org.eclipse.n4js.ui.tests.helper,
  org.eclipse.n4js.flowgraphs

@@ -43,13 +43,14 @@ import com.google.common.base.Splitter;
 @FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
 public class ScenarioTest {
 
-	static File workspace = new File("target/testscenarios");
-	static File scenarioRepository = new File("testdata");
+	static final File workspace = new File("target/testscenarios");
+	static final File scenarioRepository = new File("testdata");
 
 	/** compiler path segment as "es" in "...src-gen/es/A/..." */
-	static String CMPLR = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
+	static final String CMPLR = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 
 	/**
+	 * Called once
 	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -105,7 +106,7 @@ public class ScenarioTest {
 	}
 
 	/**
-	 *
+	 * Setup before each test.
 	 */
 	@Before
 	public void setUp() throws Exception {
