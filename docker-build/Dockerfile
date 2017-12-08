@@ -5,6 +5,7 @@ LABEL version="0.1.0" \
       maintainer="N4JS Team <n4js-dev@eclipse.org>"
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Berlin
 
 VOLUME /workspace
 WORKDIR /workspace
