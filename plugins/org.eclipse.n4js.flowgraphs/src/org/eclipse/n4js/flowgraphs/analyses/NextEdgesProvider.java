@@ -81,6 +81,20 @@ abstract class NextEdgesProvider {
 		protected Forward copy() {
 			return new Forward(new HashMap<>(super.loopEnterEdges));
 		}
+
+		@Override
+		int getMaxOccurences(ControlFlowType cfType) {
+			switch (cfType) {
+			case LoopEnter:
+				return 2; // repeat while/for loop bodies twice
+			case LoopReenter:
+				return 1; // repeat do loop once twice
+			case LoopInfinite:
+				return 1;
+			default:
+				return -1;
+			}
+		}
 	}
 
 	/** Traverses edges from end to start */
@@ -133,6 +147,20 @@ abstract class NextEdgesProvider {
 		protected Backward copy() {
 			return new Backward(new HashMap<>(super.loopEnterEdges));
 		}
+
+		@Override
+		int getMaxOccurences(ControlFlowType cfType) {
+			switch (cfType) {
+			case LoopRepeat:
+				return 2;
+			case LoopReenter:
+				return 1;
+			case LoopInfinite:
+				return 1;
+			default:
+				return -1;
+			}
+		}
 	}
 
 	/** @return true iff this edge provider traverses in forward direction */
@@ -164,6 +192,9 @@ abstract class NextEdgesProvider {
 
 	/** @return the all unfiltered next edges with regard to the traverse direction */
 	abstract protected Collection<ControlFlowEdge> getPlainNextEdges(Node nextNode);
+
+	/** @return the limit of edge occurrences */
+	abstract int getMaxOccurences(ControlFlowType cfType);
 
 	/** Resets the counter of traversed {@literal ControlFlowType.Repeat} edges. */
 	protected void reset() {
@@ -212,19 +243,6 @@ abstract class NextEdgesProvider {
 			}
 		}
 		return filteredEdges;
-	}
-
-	private int getMaxOccurences(ControlFlowType cfType) {
-		switch (cfType) {
-		case LoopEnter:
-			return 2;
-		case LoopReenter:
-			return 1;
-		case LoopInfinite:
-			return 1;
-		default:
-			return -1;
-		}
 	}
 
 	private int getOccurences(ControlFlowEdge edge) {

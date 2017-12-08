@@ -25,6 +25,7 @@ import static org.eclipse.n4js.utils.resources.ExternalProjectBuildOrderProvider
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.events.BuildManager;
@@ -32,11 +33,16 @@ import org.eclipse.core.internal.resources.BuildConfiguration;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.IJobManager;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -163,11 +169,17 @@ public class ExternalLibraryBuilderHelper {
 
 	/**
 	 * Full builds the projects given as an array of build configuration.
+	 * <p>
+	 * For information on locking see {@link #getRule()}.
 	 *
 	 * @param buildConfigs
 	 *            the build configurations representing the projects to be built.
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
+	 *             more info, see {@link #getRule() here}.
 	 */
 	public void build(final IBuildConfiguration[] buildConfigs, final IProgressMonitor monitor) {
 		doPerformOperation(buildConfigs, BuildOperation.BUILD, monitor);
@@ -230,11 +242,17 @@ public class ExternalLibraryBuilderHelper {
 	/**
 	 * Performs a clean (without rebuild) on the projects given as an array of build configuration. The clean order is
 	 * identical with the order of the elements in the {@code buildOrder} argument.
+	 * <p>
+	 * For information on locking see {@link #getRule()}.
 	 *
 	 * @param buildConfigs
 	 *            the build configurations representing the the projects to be cleaned.
 	 * @param monitor
 	 *            the monitor for the progress. Must not be {@code null}.
+	 *
+	 * @throws IllegalArgumentException
+	 *             if a scheduling rule is in effect that does not contain the rule returned by {@link #getRule()}. For
+	 *             more info, see {@link #getRule() here}.
 	 */
 	public void clean(final IBuildConfiguration[] buildConfigs, final IProgressMonitor monitor) {
 		doPerformOperation(buildConfigs, BuildOperation.CLEAN, monitor);
@@ -243,7 +261,13 @@ public class ExternalLibraryBuilderHelper {
 	private void doPerformOperation(final IBuildConfiguration[] configs, final BuildOperation operation,
 			final IProgressMonitor monitor) {
 
-		if (!Arrays2.isEmpty(configs)) {
+		if (Arrays2.isEmpty(configs)) {
+			return;
+		}
+
+		final ISchedulingRule rule = getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
 
 			final List<ExternalProject> projects = transform(configs, config -> (ExternalProject) config.getProject());
 			final List<IBuildConfiguration> buildOrder = newArrayList(getBuildOrder(projects));
@@ -275,8 +299,35 @@ public class ExternalLibraryBuilderHelper {
 				LOGGER.info(prefix + "ing external library: " + project.getName());
 				operation.run(this, project, subMonitor.newChild(1));
 			}
+		} finally {
+			Job.getJobManager().endRule(rule);
 		}
+	}
 
+	/**
+	 * Returns the {@link ISchedulingRule scheduling rule} used by {@link ExternalLibraryBuilderHelper} while
+	 * {@link #clean(IBuildConfiguration[], IProgressMonitor) cleaning} or
+	 * {@link #build(IBuildConfiguration[], IProgressMonitor) building} external libraries.
+	 * <p>
+	 * Clients that want to use a custom scheduling rule around several invocations of the clean/build methods of
+	 * {@code ExternalLibraryBuilderHelper} must use a scheduling rule at least as wide as the rule returned by this
+	 * method (custom rule must "contain" rule returned by this method); otherwise an {@link IllegalArgumentException}
+	 * will be thrown as per specification of method {@link IJobManager#beginRule(ISchedulingRule, IProgressMonitor)
+	 * beginRule()}. However, this is optional, i.e. client code need not use a custom scheduling rule at all if there
+	 * is only a single call to a clean/build method or if no locking is required between subsequent calls.
+	 * <p>
+	 * This method corresponds to {@link IncrementalProjectBuilder#getRule(int, Map)}.
+	 */
+	public ISchedulingRule getRule() {
+		// Rationale for using workspace root as scheduling rule:
+		// 1) the external libraries are not in the ordinary Eclipse workspace, so in theory it would be tempting to say
+		// we do not need a lock on the workspace; however, when cleaning/building external libraries we use the Xtext
+		// builder and because it is working on state shared across the entire Eclipse instance (e.g. the singleton
+		// QueuedBuildData), we have to make sure no other Xtext build is running in parallel while we are building
+		// the external libraries. Otherwise we might run into ConcurrentModificationExcpetions, etc.
+		// 2) we do not use IResourceRuleFactory#buildRule() because we want to control the scope of the scheduling rule
+		// ourselves to make sure no other build is happening anywhere at the same time (within same Eclipse instance).
+		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
 	/**

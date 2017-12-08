@@ -27,7 +27,7 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
  * This class returns the child elements of each {@link ControlFlowElement} in order of the AST traversal. This order is
  * important for the {@link GraphVisitorGuideInternal} which walks through the AST in forward/backward direction.
  * Unfortunately, the correct order cannot be retrieved from the method {@link EObject#eContents()}, since it relies on
- * the Ecore model. This class adjusts this order when necessary.
+ * the xcore model. This class adjusts this order when necessary.
  * <p/>
  * Wrong AST order can result in a failing asserting with the message
  * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER}.
@@ -72,6 +72,14 @@ final public class OrderedEContentProvider {
 		}
 
 		@Override
+		public List<EObject> caseCaseClause(CaseClause feature) {
+			List<EObject> orderedEContents = new LinkedList<>();
+			orderedEContents.add(feature.getExpression());
+			orderedEContents.addAll(feature.getStatements());
+			return orderedEContents;
+		}
+
+		@Override
 		public List<EObject> caseVariableBinding(VariableBinding feature) {
 			List<EObject> orderedEContents = new LinkedList<>();
 			if (feature.getExpression() != null)
@@ -80,14 +88,5 @@ final public class OrderedEContentProvider {
 				orderedEContents.add(feature.getPattern());
 			return orderedEContents;
 		}
-
-		@Override
-		public List<EObject> caseCaseClause(CaseClause feature) {
-			List<EObject> orderedEContents = new LinkedList<>();
-			orderedEContents.add(feature.getExpression());
-			orderedEContents.addAll(feature.getStatements());
-			return orderedEContents;
-		}
-
 	}
 }

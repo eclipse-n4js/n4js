@@ -19,7 +19,6 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion
-import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser2
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -74,6 +73,7 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
+import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser
 
 /**
  */
@@ -128,10 +128,10 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 
 		val dcv = new DeadCodeAnalyser();
-		val cvgv1 = new UsedBeforeDeclaredAnalyser2();
+		val cvgv1 = new UsedBeforeDeclaredAnalyser();
 
 		flowAnalyzer.createGraphs(script);
-		flowAnalyzer.accept(dcv );
+		flowAnalyzer.accept(dcv, cvgv1 );
 
 		internalCheckDeadCode(dcv);
 		internalCheckUsedBeforeDeclared(cvgv1);
@@ -153,7 +153,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		}
 	}
 
-	private def void internalCheckUsedBeforeDeclared(UsedBeforeDeclaredAnalyser2 ubda) {
+	private def void internalCheckUsedBeforeDeclared(UsedBeforeDeclaredAnalyser ubda) {
 		val usedBeforeDeclared = ubda.getUsedButNotDeclaredIdentifierRefs();
 
 		for (IdentifierRef idRef : usedBeforeDeclared) {

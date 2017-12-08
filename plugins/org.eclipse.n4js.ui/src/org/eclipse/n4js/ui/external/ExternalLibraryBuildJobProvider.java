@@ -14,7 +14,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -49,9 +48,7 @@ public class ExternalLibraryBuildJobProvider {
 		return new ExternalLibraryBuildJob(builderHelper, toBuild, toClean);
 	}
 
-	/* default */ static class ExternalLibraryBuildJob extends WorkspaceJob {
-
-		private static final ISchedulingRule BUILD_RULE = ResourcesPlugin.getWorkspace().getRuleFactory().buildRule();
+	private static class ExternalLibraryBuildJob extends WorkspaceJob {
 
 		private final Iterable<IProject> toBuild;
 		private final Iterable<IProject> toClean;
@@ -65,7 +62,7 @@ public class ExternalLibraryBuildJobProvider {
 			this.toBuild = checkNotNull(toBuild, "toBuild");
 			this.toClean = checkNotNull(toClean, "toClean");
 			setSystem(true);
-			setRule(BUILD_RULE);
+			setRule(builderHelper.getRule());
 		}
 
 		@Override

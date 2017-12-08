@@ -61,6 +61,7 @@ import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.headless.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -296,6 +297,9 @@ public class N4jscBase implements IApplication {
 	@Inject
 	private FileExtensionsRegistry n4jsFileExtensionsRegistry;
 
+	@Inject
+	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
+
 	@Override
 	public Object start(IApplicationContext context) throws Exception {
 		int exitCode;
@@ -391,12 +395,16 @@ public class N4jscBase implements IApplication {
 			// help.
 			initInjection(refProperties());
 
+			// Register extensions manually
+			headlessExtensionRegistrationHelper.registerExtensionsManually();
+
 			// Wire registers related to the extension points
 			// in non-OSGI mode extension points are not automatically populated
 			if (!Platform.isRunning()) {
 				runnerRegistry.register(nodeRunnerDescriptorProvider.get());
 				testerRegistry.register(nodeTesterDescriptorProvider.get());
 			}
+
 			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
 			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
 					N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
@@ -904,7 +912,6 @@ public class N4jscBase implements IApplication {
 		final Injector injector = Guice.createInjector(overridenModule);
 		new N4JSStandaloneSetup().register(injector);
 		injector.injectMembers(this);
-
 	}
 
 	/**

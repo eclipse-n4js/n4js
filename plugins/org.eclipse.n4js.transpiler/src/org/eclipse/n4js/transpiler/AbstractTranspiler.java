@@ -13,7 +13,7 @@ package org.eclipse.n4js.transpiler;
 import java.io.Writer;
 import java.nio.file.Path;
 
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.resource.N4JSResource;

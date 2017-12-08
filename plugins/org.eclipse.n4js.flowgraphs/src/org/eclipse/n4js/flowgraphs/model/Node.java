@@ -55,6 +55,8 @@ abstract public class Node implements ControlFlowable {
 	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
 	final public List<CatchToken> catchToken = new ArrayList<>();
+	/** List of all {@link EffectInfo}s of this node */
+	final public List<EffectInfo> effectInfos = new ArrayList<>();
 
 	/** Set during graph traversal. */
 	private Reachability reachability = Reachability.Unknown;
@@ -189,6 +191,13 @@ abstract public class Node implements ControlFlowable {
 	/** Adds a {@link CatchToken} to this node. */
 	public void addCatchToken(CatchToken ct) {
 		catchToken.add(ct);
+	}
+
+	/** Adds {@link EffectInfo} to this node */
+	public void addEffectInfo(EffectInfo ei) {
+		if (ei != null) {
+			effectInfos.add(ei);
+		}
 	}
 
 	/** @return true, iff this node has at least one jump token. */
