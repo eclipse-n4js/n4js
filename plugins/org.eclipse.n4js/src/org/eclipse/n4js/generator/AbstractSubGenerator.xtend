@@ -285,11 +285,8 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val outputPath = n4jsCore.getOutputPath(input.URI)
 		// src-gen/es5
 		val outputDirectory = calculateOutputDirectory(outputPath, compilerID)
-
-		// Project/a/b/c/Input.XX
-		val localOutputFilePath = Paths.get(projectUtils.generateFileDescriptor(input.URI, ".XX"))
 		// Project/a/b/c
-		val localOutputDir = localOutputFilePath.subpath(0,localOutputFilePath.nameCount - 1)
+		val localOutputDir = getLocalOutputDir(input)
 
 		// --- source locations ---
 		// src/a/b/c
@@ -310,6 +307,26 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		val rel = fullOutpath.relativize(fullSourcePath)
 
 		return rel
+	}
+	
+	/**
+	 * Calculates local output path for a given resource.
+	 * Depending on the configuration this path can be in various forms, {@code Project-1.0.0/a/b/c/},
+	 * {@code Project/a/b/c/} or just {@code a/b/c/}
+	 *  
+	 */
+	private def Path getLocalOutputDir(N4JSResource input){
+		// Project/a/b/c/Input.XX
+		val localOutputFilePath = Paths.get(projectUtils.generateFileDescriptor(input.URI, ".XX"))
+
+		// if calculated path  has just one element, e.g. "Input.XX"
+		// then local path segment is empty
+		if(localOutputFilePath.nameCount<2){
+			return Paths.get("")
+		}
+
+		//otherwise strip resource to get locl path, i.e. Project/a/b/c/Input.XX => Project/a/b/c/
+		return localOutputFilePath.subpath(0,localOutputFilePath.nameCount - 1)
 	}
 
 	/**
