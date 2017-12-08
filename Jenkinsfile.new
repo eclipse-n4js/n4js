@@ -83,7 +83,7 @@ pipeline {
             archive '**/*.jar'
             archive '**/*.pom'
             archive '**/*.xml'
-            junit 'reports/**/*.xml'
+            junit 'target/surefire-reports/**/*.xml'
         }
     }
 }
