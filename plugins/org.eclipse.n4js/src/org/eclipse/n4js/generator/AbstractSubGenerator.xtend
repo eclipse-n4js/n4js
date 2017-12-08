@@ -42,6 +42,15 @@ import org.eclipse.emf.common.util.URI
  */
 @Log
 abstract class AbstractSubGenerator implements ISubGenerator {
+	
+	/** 
+	 * https://github.com/eclipse/n4js/issues/394
+	 * 
+	 * for simplifying node js compilation target we wan't to compiler id in the compiled code segments
+	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
+	 * or we might make this configurable in the manifest.
+	 */
+	public static final boolean USE_COMPILER_ID = false;
 
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
@@ -337,13 +346,24 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * @param compilerID ID of the compiler, which is a subfolder in the output path (e.g. "es5")
 	 */
 	def static String calculateOutputDirectory(String outputPath, String compilerID) {
-		"./" + outputPath + "/" + compilerID
+		return calculateOutputDirectory(outputPath, compilerID, org.eclipse.n4js.generator.AbstractSubGenerator.USE_COMPILER_ID)
+	}
+
+	/** private method to hide feature flag */
+	private def static String calculateOutputDirectory(String outputPath, String compilerID, boolean incluseCompilerID) {
+		var path = "./" + outputPath
+		
+		if(incluseCompilerID){
+			path +=  "/" + compilerID
+		}
+
+		return path
 	}
 
 	/** Access to compiler ID */
 	def abstract String getCompilerID()
 
-    /** Access to compiler descriptor  */
+	/** Access to compiler descriptor  */
 	def abstract protected CompilerDescriptor getDefaultDescriptor()
 
 	/** Answers: Is this compiler activated for the input at hand? */
@@ -369,10 +389,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		return true;
 	}
 
-	/** Checking if this resource represents a static polyfill, which will contribute to a filled resource.
+	/** 
+	 * Checking if this resource represents a static polyfill, which will contribute to a filled resource.
 	 **/
-	def boolean isStaticPolyfillingModule(Resource resource)
-	{
+	def boolean isStaticPolyfillingModule(Resource resource) {
 		val TModule tmodule = (N4JSResource::getModule(resource));
 		if (null !== tmodule) {
 			return tmodule.isStaticPolyfillModule;
