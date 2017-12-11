@@ -365,10 +365,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		if (triggerCleanbuild) {
 			Iterable<IProject> depPjs = collector.collectProjectsWithDirectExternalDependencies(projectsToBuild);
 			addAll(workspaceProjectsToRebuild, depPjs);
-
-			if (getWorkspace().getDescription().isAutoBuilding()) {
-				scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
-			}
+			scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
 		}
 	}
 
