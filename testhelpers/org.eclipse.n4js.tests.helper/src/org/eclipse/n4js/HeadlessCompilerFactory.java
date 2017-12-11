@@ -12,9 +12,9 @@ package org.eclipse.n4js;
 
 import java.util.Properties;
 
-import org.eclipse.n4js.generator.headless.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessStandaloneSetup;
+import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 
 import com.google.inject.Injector;
 
@@ -42,7 +42,7 @@ public class HeadlessCompilerFactory {
 		N4HeadlessCompiler instance = localinjector.getInstance(N4HeadlessCompiler.class);
 		HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper = localinjector
 				.getInstance(HeadlessExtensionRegistrationHelper.class);
-		headlessExtensionRegistrationHelper.registerExtensionsManually();
+		headlessExtensionRegistrationHelper.registerExtensions();
 		return instance;
 	}
 
