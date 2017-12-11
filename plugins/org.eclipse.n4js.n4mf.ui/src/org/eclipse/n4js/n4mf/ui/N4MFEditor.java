@@ -12,13 +12,18 @@ package org.eclipse.n4js.n4mf.ui;
 
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.actions.ContributionItemFactory;
+import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.part.IShowInSource;
+import org.eclipse.ui.part.IShowInTargetList;
+import org.eclipse.ui.part.ShowInContext;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 
 /**
  * Customized N4JS manifest editor implementation.
  */
-public class N4MFEditor extends XtextEditor {
+public class N4MFEditor extends XtextEditor implements IShowInSource, IShowInTargetList {
 
 	@Override
 	protected void editorContextMenuAboutToShow(final IMenuManager menu) {
@@ -36,4 +41,20 @@ public class N4MFEditor extends XtextEditor {
 		}
 	}
 
+	/**
+	 * Provides input so that the Project Explorer can locate the editor's input in its tree.
+	 */
+	@Override
+	public ShowInContext getShowInContext() {
+		FileEditorInput fei = (FileEditorInput) getEditorInput();
+		return new ShowInContext(fei.getFile(), null);
+	}
+
+	/**
+	 * List Project Explorer as target in Navigator -> Show In.
+	 */
+	@Override
+	public String[] getShowInTargetIds() {
+		return new String[] { IPageLayout.ID_PROJECT_EXPLORER };
+	}
 }
