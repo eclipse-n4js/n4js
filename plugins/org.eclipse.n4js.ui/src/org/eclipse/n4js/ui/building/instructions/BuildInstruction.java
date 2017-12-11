@@ -32,6 +32,10 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.generator.GeneratorException;
+import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.ui.generator.GeneratorMarkerSupport;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.xtext.builder.EclipseResourceFileSystemAccess2;
 import org.eclipse.xtext.generator.OutputConfiguration;
 import org.eclipse.xtext.resource.IResourceDescription.Delta;
@@ -40,11 +44,6 @@ import org.eclipse.xtext.ui.resource.IStorage2UriMapper;
 import org.eclipse.xtext.util.Pair;
 
 import com.google.inject.Injector;
-
-import org.eclipse.n4js.generator.common.GeneratorException;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
-import org.eclipse.n4js.generator.ui.GeneratorMarkerSupport;
-import org.eclipse.n4js.ui.internal.N4JSActivator;
 
 /**
  * A {@link IBuildParticipantInstruction instruction} for a build. This is used to support clustering in the generator
@@ -59,6 +58,7 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 	private final IStorage2UriMapper storage2UriMapper;
 	private final Injector injector;
 	private final Set<IFile> derivedResources = newLinkedHashSet();
+	private final ICompositeGenerator compositeGenerator;
 
 	/**
 	 * Create a build instruction for the given project.
@@ -68,11 +68,13 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 			IDerivedResourceMarkers derivedResourceMarkers,
 			EclipseResourceFileSystemAccess2 access,
 			Map<OutputConfiguration, Iterable<IMarker>> generatorMarkers,
-			IStorage2UriMapper storage2UriMapper, Injector injector) {
+			IStorage2UriMapper storage2UriMapper, ICompositeGenerator compositeGenerator,
+			Injector injector) {
 		super(project, outputConfigurations, derivedResourceMarkers);
 		this.access = access;
 		this.generatorMarkers = generatorMarkers;
 		this.storage2UriMapper = storage2UriMapper;
+		this.compositeGenerator = compositeGenerator;
 		this.injector = injector;
 	}
 
@@ -193,12 +195,7 @@ public class BuildInstruction extends AbstractBuildParticipantInstruction {
 		Resource resource = resourceSet.getResource(delta.getUri(), true);
 		if (shouldGenerate(resource, aProject)) {
 			try {
-				// generator.doGenerate(resource, access);
-				List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
-				for (IComposedGenerator composedGenerator : composedGenerators) {
-					injector.injectMembers(composedGenerator);
-					composedGenerator.doGenerate(resource, access);
-				}
+				compositeGenerator.doGenerate(resource, access);
 			} catch (RuntimeException e) {
 				if (e instanceof GeneratorException) {
 					N4JSActivator

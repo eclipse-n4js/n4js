@@ -6,11 +6,11 @@ Bundle-Version: 0.0.1.qualifier
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.n4js.runner.ui,
  org.eclipse.n4js.runner,
  org.eclipse.ui.workbench,
  org.eclipse.n4js.runner.chrome,
  org.eclipse.debug.ui,
  org.eclipse.n4js.ui,
- org.eclipse.jface
+ org.eclipse.jface,
+ org.eclipse.n4js.runner.ui
 Export-Package: org.eclipse.n4js.runner.chrome.ui

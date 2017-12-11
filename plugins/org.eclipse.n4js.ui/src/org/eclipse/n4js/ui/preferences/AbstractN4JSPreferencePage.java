@@ -64,7 +64,7 @@ import com.google.common.collect.Sets;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import org.eclipse.n4js.generator.common.CompilerProperties;
+import org.eclipse.n4js.generator.CompilerProperties;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.ComponentDescriptor;
 import org.eclipse.n4js.utils.IComponentProperties;

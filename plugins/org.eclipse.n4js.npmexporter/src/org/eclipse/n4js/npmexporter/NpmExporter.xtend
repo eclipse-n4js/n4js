@@ -14,7 +14,7 @@ import com.google.common.base.Charsets
 import com.google.common.io.Files
 import com.google.common.net.UrlEscapers
 import com.google.inject.Inject
-import org.eclipse.n4js.generator.common.AbstractSubGenerator
+import org.eclipse.n4js.generator.AbstractSubGenerator
 import org.eclipse.n4js.npmexporter.validation.IssueConsumer
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.projectModel.ProjectUtils
