@@ -42,13 +42,6 @@ pipeline {
                         branches: [[name: '*/CD-631*']],
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']
-                        ],
-                        doGenerateSubmoduleConfigurations: false,
-                        userRemoteConfigs: [
-                            [
-                                credentialsId: '0cc40a91-781a-4458-8087-021c72d95caf',
-                                url: 'https://github.com/eclipse/n4js'
-                            ]
                         ]
                     ]
                 )
