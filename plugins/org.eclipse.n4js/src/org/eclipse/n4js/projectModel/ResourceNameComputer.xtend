@@ -40,11 +40,12 @@ public class ResourceNameComputer {
 	/** 
 	 * https://github.com/eclipse/n4js/issues/394
 	 * 
-	 * for simplifying node js compilation target we wan't to avoid project name and version in the compiled code segments
+	 * for simplifying node js compilation target we want to avoid project name and version in the compiled code location segments.
+	 * Instead we use node style specifiers that resolve to the project root. 
 	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
 	 * or we might make this configurable in the manifest.
 	 */
-	public static final boolean USE_SIMPLE_DESCRIPTOR = true;
+	public static final boolean USE_NODE_DESCRIPTOR = true;
 	
 	/** 
 	 * (pre-eclipse ticket)
@@ -70,7 +71,7 @@ public class ResourceNameComputer {
 	 * @fileExtension String with containing project info (a.k.a. origin)
 	 */
 	def generateProjectDescriptor(URI n4jsSourceURI) {
-		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR);
+		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, USE_NODE_DESCRIPTOR);
 	}
 
 	/**
@@ -83,7 +84,7 @@ public class ResourceNameComputer {
 	 */
 	def generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
 		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI),
-			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR) + fileExtension;
+			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + fileExtension;
 	}
 
 	/**
@@ -96,7 +97,7 @@ public class ResourceNameComputer {
 	 */
 	def generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
 		formatDescriptor(project, projectResolver.resolvePackageAndFileName(n4jsSourceURI, project), "-", ".", "/",
-			USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR) + fileExtension;
+			USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + fileExtension;
 	}
 
 	/**
@@ -116,7 +117,7 @@ public class ResourceNameComputer {
 	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
 	 */
 	private def final static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
-		String sep3, boolean includeProjectVersion, boolean asJsIdentifier, boolean useSimpleDescriptor) {
+		String sep3, boolean includeProjectVersion, boolean asJsIdentifier, boolean useNodeDescriptor) {
 
 		var projectID = project.projectId
 		var path = unitPath
@@ -125,8 +126,8 @@ public class ResourceNameComputer {
 			path = getValidUnitPath(unitPath)
 		}
 
-		if (useSimpleDescriptor) {
-			return path;
+		if (useNodeDescriptor) {
+			return projectID + sep3 + project.outputPath + sep3 + path;
 		}
 
 		if (includeProjectVersion) {
@@ -275,7 +276,7 @@ public class ResourceNameComputer {
 	 * @module {@link TModule} for which we generate descriptor
 	 */
 	def public String getCompleteModuleSpecifier(IN4JSProject project, TModule module) {
-		return formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", USE_VERSIONS, false, USE_SIMPLE_DESCRIPTOR);
+		return formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR);
 	}
 
 	/**
@@ -310,7 +311,7 @@ public class ResourceNameComputer {
 	 */
 	def public String getCompleteModuleSpecifierAsIdentifier(IN4JSProject project, TModule module) {
 		return getValidJavascriptIdentifierName(
-			formatDescriptor(project, module.getModuleSpecifier(), "_", "_", "_", USE_VERSIONS, true, USE_SIMPLE_DESCRIPTOR));
+			formatDescriptor(project, module.getModuleSpecifier(), "_", "_", "_", USE_VERSIONS, true, USE_NODE_DESCRIPTOR));
 	}
 
 	/**

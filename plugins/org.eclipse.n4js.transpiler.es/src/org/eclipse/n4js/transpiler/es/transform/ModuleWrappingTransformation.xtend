@@ -42,6 +42,7 @@ import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
@@ -58,7 +59,6 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * Module/Script wrapping transformation.
@@ -69,7 +69,7 @@ class ModuleWrappingTransformation extends Transformation {
 	JSXBackendHelper jsx;
 
 	@Inject
-	extension ResourceNameComputer qnameComputer
+	ResourceNameComputer qnameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
@@ -265,13 +265,13 @@ class ModuleWrappingTransformation extends Transformation {
 					if (isJSXBackendImport) {
 						jsx.jsxBackendModuleSpecifier(module, state.resource)
 					} else {
-						module.completeModuleSpecifier
+						qnameComputer.getCompleteModuleSpecifier(module)
 					}
 
 				val fparName = if (isJSXBackendImport) {
 						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
 					} else {
-						"$_import_"+module.completeModuleSpecifierAsIdentifier
+						"$_import_" + qnameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 					}
 
 				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
