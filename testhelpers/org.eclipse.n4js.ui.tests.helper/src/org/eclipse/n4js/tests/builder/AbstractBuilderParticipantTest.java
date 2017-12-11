@@ -247,14 +247,14 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
 	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
-		if (initShippedCode) {
-			shippedCodeInitializeTestHelper.setupBuiltIns();
-		}
 		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
 		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
 		externalLibraryPreferenceStore.add(nodeModulesLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 		assertTrue("Error while saving external library preference changes.", result.isOK());
+		if (initShippedCode) {
+			shippedCodeInitializeTestHelper.setupBuiltIns();
+		}
 		waitForAutoBuild();
 	}
 
