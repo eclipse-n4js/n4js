@@ -76,6 +76,7 @@ import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
+import org.eclipse.n4js.n4mf.SimpleProjectDependency
 
 /**
  * N4JS quick fixes.
@@ -679,9 +680,13 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 			}
 
 			def Collection<? extends IChange> invokeNpmManager(EObject element, boolean triggerCleanbuild) throws Exception {
-				val dependency = element as ProjectDependency;
+				val dependency = element as SimpleProjectDependency;
 				val packageName = dependency.project.projectId;
-				val packageVersion = dependency.versionConstraint.npmFormat;
+				val packageVersion = if (dependency instanceof ProjectDependency) {
+						dependency.versionConstraint.npmFormat;
+					} else {
+						"";
+					};
 
 				val errorStatusRef = new AtomicReference;
 				val illegalBinaryExcRef = new AtomicReference

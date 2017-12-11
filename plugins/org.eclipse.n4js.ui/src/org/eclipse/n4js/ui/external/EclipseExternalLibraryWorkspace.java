@@ -335,7 +335,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		final Iterable<IProject> projectsToClean = from(result.getToBeBuilt().getToBeDeleted())
 				.transform(uri -> getProject(new File(uri).getName())).filter(notNull());
 
-		final Collection<IProject> workspaceProjectsToRebuild = newHashSet(
+		final Set<IProject> workspaceProjectsToRebuild = newHashSet(
 				collector.collectProjectsWithDirectExternalDependencies(projectsToClean));
 
 		// Clean projects.
@@ -363,9 +363,12 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		subMonitor.worked(1);
 
 		if (triggerCleanbuild) {
-			addAll(workspaceProjectsToRebuild,
-					collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
-			scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+			Iterable<IProject> depPjs = collector.collectProjectsWithDirectExternalDependencies(projectsToBuild);
+			addAll(workspaceProjectsToRebuild, depPjs);
+
+			if (getWorkspace().getDescription().isAutoBuilding()) {
+				scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+			}
 		}
 	}
 
