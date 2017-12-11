@@ -34,6 +34,27 @@ pipeline {
         cron   ('H   1 * * *') // Nightly build every day a 1am
     }
     stages {
+        stage('checkout') {
+            steps {
+                checkout(
+                    [
+                        $class: 'GitSCM',
+                        branches: [[name: '*/CD-631*']],
+                        extensions: [
+                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']
+                        ],
+                        doGenerateSubmoduleConfigurations: false,
+                        userRemoteConfigs: [
+                            [
+                                credentialsId: '0cc40a91-781a-4458-8087-021c72d95caf',
+                                url: 'https://github.com/eclipse/n4js'
+                            ]
+                        ]
+                    ]
+                )
+            }
+        }
+
         stage('ci') {
             when {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
@@ -52,6 +73,7 @@ pipeline {
                 }
             }
         }
+
         stage('nightly') {
             // Run in nightly build only
             // There should be a better way, see issue
@@ -78,6 +100,7 @@ pipeline {
             }
         }
     }
+
     post {
         always {
             archive '**/*.jar'
