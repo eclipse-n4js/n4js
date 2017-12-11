@@ -56,6 +56,12 @@ public final class N4JSGlobals {
 	 * Files extension of XT source files (<b>not</b> including the separator dot).
 	 */
 	public static final String XT_FILE_EXTENSION = "xt";
+
+	/**
+	 * Files extension of N4IDL source files (<b>not</b> including the separator dot).
+	 */
+	public static final String N4IDL_FILE_EXTENSION = "n4idl";
+
 	/**
 	 * Vendor ID
 	 */

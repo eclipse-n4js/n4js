@@ -11,6 +11,10 @@
 package org.eclipse.n4js.scoping.imports
 
 import com.google.inject.Inject
+import com.google.inject.Provider
+import java.util.HashMap
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
@@ -22,19 +26,17 @@ import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescripti
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
 import org.eclipse.n4js.scoping.builtin.GlobalObjectScope
+import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MergedScope
-import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
+import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
-import java.util.HashMap
-import java.util.Map
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
@@ -42,15 +44,9 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.MapBasedScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
-import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 
 /** internal helper collection type */
-class QName2IEODesc extends HashMap<QualifiedName, IEObjectDescription> {
-}
-
-/** internal helper collection type */
-class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {
-}
+class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
 
 /**
  * Helper for {@link N4JSScopeProvider N4JSScopeProvider}
@@ -67,6 +63,9 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker
+	
+	@Inject
+	private Provider<ImportedElementsMap> elementsMapProvider
 
 	@Inject MemberScopeFactory memberScopeFactory
 
@@ -90,6 +89,51 @@ class ImportedElementsScopingHelper {
 		return scriptScope
 	}
 
+	/**
+	 * Builds a new map-based scope with the given parent scope and the given iterable of elements.
+	 */
+	protected def IScope buildMapBasedScope(IScope parent, Iterable<IEObjectDescription> elements) {
+		return MapBasedScope.createScope(parent, elements);
+	}
+	
+	/**
+	 * Creates a new {@link IEObjectDescription} for the given element with the given qualified name.
+	 * 
+	 * This description will be used in scoping result.
+	 */
+	private def IEObjectDescription createEObjectDescription(QualifiedName name, EObject element) {
+		return EObjectDescription.create(name, element);
+	}
+	
+	/**
+	 * Creates a new QualifiedNamed for the given named import specifier. 
+	 * 
+	 * Determines the local name of the imported element based on the given import specifier.
+	 */
+	private def QualifiedName createQualifiedNameForAlias(NamedImportSpecifier specifier,
+		TExportableElement importedElement) {
+		val importedName = if (specifier.isDefaultImport) {
+				// we got a default import of the form: import localName from "some/module"
+				// -> use the string 'localName' (but this is not the alias property!)
+				specifier.importedElementAsText
+			} else {
+				specifier.alias ?: importedElement.exportedName ?: importedElement.name
+		};
+		return QualifiedName.create(importedName)
+	}
+	
+	private def QualifiedName createImportedQualifiedTypeName(Type type) {
+		return QualifiedName.create(getImportedName(type));
+	}
+	
+	private def String getImportedName(Type type) {
+		return type.exportedName ?: type.name; 
+	} 
+	
+	private def QualifiedName createImportedQualifiedTypeName(String namespace, Type type) {
+		return QualifiedName.create(namespace, getImportedName(type));
+	}
+
 	private def IScope findImportedElements(Script script, IScope parentScope, boolean includeVariables) {
 		val contextResource = script.eResource;
 		val imports = script.scriptElements.filter(ImportDeclaration)
@@ -97,9 +141,9 @@ class ImportedElementsScopingHelper {
 		if (imports.empty) return parentScope
 
 		/** broken/invisible imported eObjects descriptions (in case of broken state of imports this can be {@link AmbiguousImportDescription})*/
-		val invalidImports = new QName2IEODesc
+		val invalidImports = elementsMapProvider.get();
 		/** valid imported eObjects descriptions (in case of broken state of imports this can be {@link AmbiguousImportDescription})*/
-		val validImports = new QName2IEODesc
+		val validImports = elementsMapProvider.get();
 		val originatorMap = new IEODesc2ISpec
 
 		for (imp : imports) {
@@ -122,14 +166,15 @@ class ImportedElementsScopingHelper {
 		// local broken elements are hidden by parent scope, both are hidden by valid local elements
 		val invalidLocalScope = new SimpleScope(invalidImports.values)
 		val localBaseScope = new MergedScope(invalidLocalScope, parentScope)
-		val localValidScope = MapBasedScope.createScope(localBaseScope, validImports.values)
+		val localValidScope = buildMapBasedScope(localBaseScope, validImports.values)
 
 		return new OriginAwareScope(localValidScope, originatorMap);
 	}
 
-	private def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
-		Resource contextResource, IEODesc2ISpec originatorMap, QName2IEODesc validImports, QName2IEODesc invalidImports,
-		boolean importVariables) {
+	protected def void processNamedImportSpecifier(NamedImportSpecifier specifier, ImportDeclaration imp,
+		Resource contextResource, IEODesc2ISpec originatorMap,
+		ImportedElementsMap validImports,
+		ImportedElementsMap invalidImports, boolean importVariables) {
 		val element = specifier.importedElement
 		if (element !== null && !element.eIsProxy) {
 
@@ -137,21 +182,14 @@ class ImportedElementsScopingHelper {
 				return;
 			}
 
-			val importedName = if(specifier.isDefaultImport) {
-				// we got a default import of the form: import localName from "some/module"
-				// -> use the string 'localName' (but this is not the alias property!)
-				specifier.importedElementAsText
-			} else {
-				specifier.alias ?: element.exportedName ?: element.name
-			};
-			val importedQName = QualifiedName.create(importedName)
+			val importedQName = createQualifiedNameForAlias(specifier, element);
 			val typeVisibility = isVisible(contextResource, element);
 			if (typeVisibility.visibility) {
 				val ieod = validImports.putOrError(element, importedQName, IssueCodes.IMP_AMBIGUOUS);
 				originatorMap.putWithOrigin(ieod, specifier)
 				val originalName = QualifiedName.create(element.name)
-				if (specifier.alias !== null && !invalidImports.containsKey(originalName)) {
-					element.handleAliasedAccess(originalName, importedName, invalidImports, originatorMap, specifier)
+				if (specifier.alias !== null && !invalidImports.containsElement(originalName)) {
+					element.handleAliasedAccess(originalName, importedQName.toString, invalidImports, originatorMap, specifier)
 				}
 			} else {
 				element.handleInvisible(invalidImports, importedQName, typeVisibility.accessModifierSuggestion,
@@ -166,12 +204,12 @@ class ImportedElementsScopingHelper {
 		Script script,
 		Resource contextResource,
 		IEODesc2ISpec originatorMap,
-		QName2IEODesc validImports,
-		QName2IEODesc invalidImports,
+		ImportedElementsMap validImports,
+		ImportedElementsMap invalidImports,
 		boolean importVariables
 	) {
-		if(specifier.alias === null){
-			return;//if broken code, e.g. "import * as 123 as N from 'some/Module'"
+		if (specifier.alias === null) {
+			return; // if broken code, e.g. "import * as 123 as N from 'some/Module'"
 		}
 
 		// add namespace to scope
@@ -192,7 +230,7 @@ class ImportedElementsScopingHelper {
 				val qn = QualifiedName.create(namespaceName, varName)
 				if (varVisibility.visibility) {
 					val originalName = QualifiedName.create(varName)
-					if (!invalidImports.containsKey(originalName)) {
+					if (!invalidImports.containsElement(originalName)) {
 						importedVar.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap,
 							specifier)
 					}
@@ -206,8 +244,8 @@ class ImportedElementsScopingHelper {
 		// add types
 		for (importedType : imp.module.topLevelTypes) {
 			val typeVisibility = typeVisibilityChecker.isVisible(contextResource, importedType);
-			val typeName = importedType.exportedName ?: importedType.name;
-			val qn = QualifiedName.create(namespaceName, typeName)
+
+			val qn = createImportedQualifiedTypeName(namespaceName, importedType)
 			if (typeVisibility.visibility) {
 				if (!importVariables) {
 					// when we are not importing variables we ask for types, types are not access expressions,
@@ -215,8 +253,8 @@ class ImportedElementsScopingHelper {
 					val ieod = validImports.putOrError(importedType, qn, IssueCodes.IMP_AMBIGUOUS)
 					originatorMap.putWithOrigin(ieod, specifier)
 				}
-				val originalName = QualifiedName.create(typeName)
-				if (!invalidImports.containsKey(originalName)) {
+				val originalName = createImportedQualifiedTypeName(importedType)
+				if (!invalidImports.containsElement(originalName)) {
 					importedType.handleNamespacedAccess(originalName, qn, invalidImports, originatorMap, specifier)
 				}
 			} else {
@@ -227,22 +265,22 @@ class ImportedElementsScopingHelper {
 	}
 
 	private def handleAliasedAccess(IdentifiableElement element, QualifiedName originalName, String importedName,
-		QName2IEODesc invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
-		val invalidAccess = new PlainAccessOfAliasedImportDescription(EObjectDescription.create(originalName, element),
+		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
+		val invalidAccess = new PlainAccessOfAliasedImportDescription(createEObjectDescription(originalName, element),
 			importedName)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
 	}
 
 	private def handleNamespacedAccess(IdentifiableElement importedType, QualifiedName originalName, QualifiedName qn,
-		QName2IEODesc invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
+		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
 		val invalidAccess = new PlainAccessOfNamespacedImportDescription(
-			EObjectDescription.create(originalName, importedType), qn.toString)
+			createEObjectDescription(originalName, importedType), qn.toString)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
 	}
 
-	private def handleInvisible(IdentifiableElement importedElement, QName2IEODesc invalidImports, QualifiedName qn,
+	private def handleInvisible(IdentifiableElement importedElement, ImportedElementsMap invalidImports, QualifiedName qn,
 		String visibilitySuggestion, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
 		// TODO IDEBUG-702 val invalidAccess = new InvisibleTypeOrVariableDescription(EObjectDescription.create(qn, importedElement))
 		val invalidAccess = invalidImports.putOrError(importedElement, qn, null)
@@ -286,13 +324,22 @@ class ImportedElementsScopingHelper {
 		else
 			return new AbstractTypeVisibilityChecker.TypeVisibility(false);
 	}
+	
+	/**
+	 * Returns {@code true} if an import of the given {@link IEObjectDescription} should be 
+	 * regarded as ambiguous with the given {@link IdentifiableElement}. 
+	 */
+	protected def boolean isAmbiguous(IEObjectDescription existing, IdentifiableElement element) {
+		return true;
+	}
 
-	private def IEObjectDescription putOrError(Map<QualifiedName, IEObjectDescription> result,
+	private def IEObjectDescription putOrError(ImportedElementsMap result,
 		IdentifiableElement element, QualifiedName importedName, String issueCode) {
 		// TODO IDEBUG-702 refactor InvisibleTypeOrVariableDescription / AmbiguousImportDescription relation
 		var IEObjectDescription ret = null;
-		val IEObjectDescription existing = result.get(importedName)
-		if (existing !== null) {
+		val existing = result.getElements(importedName)
+		
+		if (!existing.empty && existing.findFirst[isAmbiguous(it, element)] !== null) {
 			if (issueCode !== null) {
 				switch existing {
 					AmbiguousImportDescription: {
@@ -300,7 +347,7 @@ class ImportedElementsScopingHelper {
 						ret = existing
 					}
 					default: {
-						val error = new AmbiguousImportDescription(existing, issueCode, element)
+						val error = new AmbiguousImportDescription(existing.head, issueCode, element)
 						result.put(importedName, error)
 						error.elements += element;
 						ret = error
@@ -309,9 +356,9 @@ class ImportedElementsScopingHelper {
 			}
 		} else if (issueCode === null) {
 			result.put(importedName,
-				ret = new InvisibleTypeOrVariableDescription(EObjectDescription.create(importedName, element)))
+				ret = new InvisibleTypeOrVariableDescription(createEObjectDescription(importedName, element)))
 		} else {
-			result.put(importedName, ret = EObjectDescription.create(importedName, element))
+			result.put(importedName, ret = createEObjectDescription(importedName, element))
 		}
 		return ret;
 	}

@@ -47,10 +47,7 @@ import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
 import org.eclipse.n4js.resource.N4JSResource
-import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription
 import org.eclipse.n4js.scoping.accessModifiers.MemberVisibilityChecker
-import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker
-import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker
 import org.eclipse.n4js.scoping.accessModifiers.VisibilityAwareCtorScope
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.scoping.members.MemberScopingHelper
@@ -87,6 +84,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
 
 /**
  * This class contains custom scoping description.
@@ -122,15 +120,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 	@Inject MemberScopingHelper memberScopingHelper
 
-	@Inject extension LocallyKnownTypesScopingHelper
+	@Inject extension LocallyKnownTypesScopingHelper locallyKnownTypesScopingHelper
 
 	@Inject extension ImportedElementsScopingHelper
 
 	@Inject extension SourceElementExtensions
-
-	@Inject extension TypeVisibilityChecker
-
-	@Inject extension VariableVisibilityChecker
 
 	@Inject extension ProjectUtils;
 	
@@ -141,6 +135,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject MemberVisibilityChecker checker;
 
 	@Inject ContainerTypesHelper containerTypesHelper;
+	
+	@Inject TopLevelElementsCollector topLevelElementCollector
+	
+	@Inject N4IDLVersionAwareScopeProvider n4idlVersionAwareScopeProvider
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -158,6 +156,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			switch (resourceType) {
 				case ResourceType.N4JSX	: return getN4JSXScope(context, reference)
 				case ResourceType.JSX	: return getN4JSXScope(context, reference)
+				case ResourceType.N4IDL : return getN4IDLScope(context, reference)
 				default					: return getN4JSScope(context, reference)
 			}
 
@@ -172,7 +171,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return IScope.NULLSCOPE;
 	}
 
-	private def getN4JSScope(EObject context, EReference reference) {
+	protected def getN4JSScope(EObject context, EReference reference) {
 		// maybe can use scope shortcut
 		val maybeScopeShortcut = getScopeByShortcut(context, reference);
 		if (maybeScopeShortcut !== IScope.NULLSCOPE)
@@ -283,6 +282,15 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val result = new SimpleScope(parent, elements);
 		return result;
 	}
+	
+	/**
+	 * Returns a scope with all the locally known types of the given Script.
+	 * 
+	 * May be overridden by subclasses.
+	 */
+	protected def IScope getScopeWithLocallyKnownTypes(Script context, EReference reference, IScopeProvider delegate) {
+		locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, reference, delegate)
+	}
 
 	private def IScope getAllLabels(Script script) {
 		return Scopes.scopeFor(script.eAllContents.filter(LabelledStatement).toIterable);
@@ -336,7 +344,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * bind e1 or e2 by retrieving all (not only exported, see below!) top level elements of
 	 * importedModule (variables, types; functions are types!). All elements enables better error handling and quick fixes, as links are not broken.
 	 */
-	private def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
+	protected def IScope scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		val declaration = EcoreUtil2.getContainerOfType(specifier, ImportDeclaration);
 		return scope_AllTopLevelElementsFromModule(declaration.module, declaration.eResource);
 	}
@@ -441,30 +449,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (importedModule === null) {
 			return IScope.NULLSCOPE;
 		}
-
-		val visible = newArrayList;
-		val invisible = newArrayList;
-		importedModule.topLevelTypes.forEach [
-			val typeVisiblity = isVisible(contextResource, it);
-			if (typeVisiblity.visibility) {
-				visible.add(EObjectDescription.create(exportedName ?: name, it));
-			} else {
-				invisible.add(
-					new InvisibleTypeOrVariableDescription(EObjectDescription.create(name, it),
-						typeVisiblity.accessModifierSuggestion));
-			}
-		];
-		importedModule.variables.forEach [
-			val typeVisiblity = isVisible(contextResource, it);
-			if (typeVisiblity.visibility) {
-				visible.add(EObjectDescription.create(exportedName ?: name, it));
-			} else {
-				invisible.add(
-					new InvisibleTypeOrVariableDescription(EObjectDescription.create(name, it),
-						typeVisiblity.accessModifierSuggestion));
-			}
-		];
-		return MapBasedScope.createScope(IScope.NULLSCOPE, visible + invisible);
+		
+		buildMapBasedScope(IScope.NULLSCOPE, 
+			topLevelElementCollector.getTopLevelElements(importedModule, contextResource));
 	}
 
 	/*
@@ -503,10 +490,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	def public IScope getTypeScope(EObject context, EReference reference, boolean fromStaticContext) {
 		switch context {
 			Script: {
-				return scopeWithLocallyKnownTypes(context, reference, delegate);
+				return getScopeWithLocallyKnownTypes(context, reference, delegate);
 			}
 			TModule: {
-				return scopeWithLocallyKnownTypes(context.astElement as Script, reference, delegate);
+				return getScopeWithLocallyKnownTypes(context.astElement as Script, reference, delegate);
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;
@@ -565,6 +552,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return EcoreUtil2.getContainerOfType(obj.eContainer, ancestorType);
 	}
 	
+	private def getN4IDLScope(EObject context, EReference reference) {
+		return n4idlVersionAwareScopeProvider.getScope(context, reference);
+	}
 	
 	private def getN4JSXScope(EObject context, EReference reference) {
 		val jsxPropertyAttributeScope = getJSXPropertyAttributeScope(context, reference)

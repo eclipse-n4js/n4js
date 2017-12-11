@@ -51,6 +51,9 @@ import org.eclipse.n4js.transpiler.sourcemap.FilePosition;
 
 	@Override
 	public Appendable append(CharSequence csq) throws IOException {
+		if (null == csq) {
+			return this;
+		}
 		append(csq, 0, csq.length());
 		return this;
 	}

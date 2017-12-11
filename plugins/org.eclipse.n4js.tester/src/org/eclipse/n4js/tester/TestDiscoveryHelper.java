@@ -369,7 +369,7 @@ public class TestDiscoveryHelper {
 	 * Returns the name to be used in the test catalog for the given {@link TClass}. We use the fully qualified name for
 	 * this purpose.
 	 */
-	private String getClassName(final TClass clazz) {
+	protected String getClassName(final TClass clazz) {
 		return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
 	}
 

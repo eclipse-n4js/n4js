@@ -12,6 +12,7 @@ package org.eclipse.n4js.transpiler.es;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.generator.common.GeneratorOption;
@@ -120,8 +121,8 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 	 * </ul>
 	 */
 	@Override
-	protected Transformation[] computeTransformationsToBeExecuted(TranspilerState state) {
-		return new Transformation[] {
+	protected Iterable<Transformation> computeTransformationsToBeExecuted(TranspilerState state) {
+		return Arrays.asList(
 				jsxTransformationProvider.get(),
 				staticPolyfillTransformationProvider.get(),
 				memberPatchingTransformationProvider.get(),
@@ -143,8 +144,7 @@ public class EcmaScriptTranspiler extends AbstractTranspiler {
 				arrowFunction_Part2_TransformationProvider.get(),
 				trimTransformation.get(),
 				sanitizeImportsTransformationProvider.get(),
-				moduleWrappingTransformationProvider.get()
-		};
+				moduleWrappingTransformationProvider.get());
 	}
 
 	/**

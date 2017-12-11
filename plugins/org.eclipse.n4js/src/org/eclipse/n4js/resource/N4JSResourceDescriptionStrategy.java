@@ -118,17 +118,57 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 		return false;
 	}
 
+	/**
+	 * Creates the additional user data map for elements of type {@link TClass}.
+	 *
+	 * @param immutableUserData
+	 *            Map with basic entries which should be used to initialize a new user data map. This map is immutable
+	 *            and can thus not be modified.
+	 * @param tClass
+	 *            The {@link TClass} element to create user data for.
+	 * @returns An immutable user-data map
+	 */
+	protected Map<String, String> createClassUserData(final Map<String, String> immutableUserData,
+			final TClass tClass) {
+		Map<String, String> userData = newHashMap();
+		if (tClass.isExported()) {
+			userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
+		}
+		userData.put(ABSTRACT_KEY, Boolean.toString(tClass.isAbstract()));
+		userData.put(FINAL_KEY, Boolean.toString(tClass.isFinal()));
+		userData.put(POLYFILL_KEY, Boolean.toString(tClass.isPolyfill()));
+		userData.put(STATIC_POLYFILL_KEY, Boolean.toString(tClass.isStaticPolyfill()));
+		userData.put(
+				TEST_CLASS_KEY,
+				Boolean.toString(tClass.getOwnedMembers().stream()
+						.filter(m -> m instanceof TMethod)
+						.anyMatch(m -> AnnotationDefinition.TEST_METHOD.hasAnnotation(m))));
+		return userData;
+	}
+
+	/**
+	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
+	 * of <code>null</code> (currently all non-exported variables) will be ignored.
+	 */
+	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
+		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
+		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
+			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type);
+			acceptor.accept(eod);
+		}
+	}
+
 	private void internalCreateEObjectDescriptionForRoot(final TModule module,
 			IAcceptor<IEObjectDescription> acceptor) {
 		// user data: serialized representation
-		final Map<String, String> userData = createUserData(module);
+		final Map<String, String> userData = createModuleUserData(module);
 		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(module);
 
 		IEObjectDescription eod = new EObjectDescription(qualifiedName, module, userData);
 		acceptor.accept(eod);
 	}
 
-	private Map<String, String> createUserData(final TModule module) {
+	private Map<String, String> createModuleUserData(final TModule module) {
 		// TODO GH-230 consider disallowing serializing reconciled modules to index with fail-safe behavior:
 		// if (module.isPreLinkingPhase() || module.isReconciled()) {
 		if (module.isPreLinkingPhase()) {
@@ -172,36 +212,12 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 				// Add additional user data for descriptions representing a TClass
 				if (type instanceof TClass) {
 					final TClass tClass = (TClass) type;
-					userData = newHashMap(userData);
-					if (tClass.isExported()) {
-						userData.put(EXPORTED_CLASS_KEY, Boolean.toString(tClass.isExported()));
-					}
-					userData.put(ABSTRACT_KEY, Boolean.toString(tClass.isAbstract()));
-					userData.put(FINAL_KEY, Boolean.toString(tClass.isFinal()));
-					userData.put(POLYFILL_KEY, Boolean.toString(tClass.isPolyfill()));
-					userData.put(STATIC_POLYFILL_KEY, Boolean.toString(tClass.isStaticPolyfill()));
-					userData.put(
-							TEST_CLASS_KEY,
-							Boolean.toString(tClass.getOwnedMembers().stream()
-									.filter(m -> m instanceof TMethod)
-									.anyMatch(m -> AnnotationDefinition.TEST_METHOD.hasAnnotation(m))));
+					userData = createClassUserData(userData, tClass);
 				}
 
 				IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
 				acceptor.accept(eod);
 			}
-		}
-	}
-
-	/**
-	 * Create EObjectDescriptions for variables for which N4JSQualifiedNameProvider provides a FQN; variables with a FQN
-	 * of <code>null</code> (currently all non-exported variables) will be ignored.
-	 */
-	private void internalCreateEObjectDescription(TVariable type, IAcceptor<IEObjectDescription> acceptor) {
-		QualifiedName qualifiedName = qualifiedNameProvider.getFullyQualifiedName(type);
-		if (qualifiedName != null) { // e.g. non-exported variables will return null for FQN
-			IEObjectDescription eod = EObjectDescription.create(qualifiedName, type);
-			acceptor.accept(eod);
 		}
 	}
 

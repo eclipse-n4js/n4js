@@ -89,6 +89,7 @@ Contributors:
                 <test property="org.eclipse.core.resources.extension"  value="n4jsd"/>
                 <test property="org.eclipse.core.resources.extension"  value="js"/>
                 <test property="org.eclipse.core.resources.extension"  value="jsx"/>
+                <test property="org.eclipse.core.resources.extension"  value="n4idl"/>
                </or>
           </adapt>
       </definition>
@@ -101,7 +102,7 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
             contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
             default="true"
-            extensions="n4js,n4jsx,n4jsd,js,jsx"
+            extensions="n4js,n4jsx,n4idl,n4jsd,js,jsx"
             id="org.eclipse.n4js.N4JS"
             icon="platform:/plugin/org.eclipse.ui/icons/full/obj16/file_obj.png"
             name="N4JS Editor">

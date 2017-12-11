@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.eclipse.n4js.generator.common.GeneratorOption;
-import org.eclipse.n4js.utils.collections.Arrays2;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.Iterables;
 
 /**
  * Contains some annotation classes for declaring dependencies between {@link Transformation}s.
@@ -39,7 +39,7 @@ public abstract class TransformationDependency {
 	 * Notes:
 	 * <ol>
 	 * <li>removing inactive optional transformations from a set of transformations is implemented in
-	 * {@link TransformationDependency#filterByTranspilerOptions(Transformation[], GeneratorOption[])
+	 * {@link TransformationDependency#filterByTranspilerOptions(Iterable, GeneratorOption[])
 	 * #filterByTranspilerOptions()},
 	 * <li>validation of all other transformation dependencies happens <em>after</em> removal of inactive optional
 	 * transformations, see step 1 in {@link AbstractTranspiler#transform(TranspilerState)},
@@ -151,9 +151,9 @@ public abstract class TransformationDependency {
 	 * are {@link #isActiveIn(Transformation, GeneratorOption[]) inactive}, based on the given {@link GeneratorOption
 	 * generator options}.
 	 */
-	public static final Transformation[] filterByTranspilerOptions(Transformation[] transformations,
+	public static final Iterable<Transformation> filterByTranspilerOptions(Iterable<Transformation> transformations,
 			GeneratorOption[] options) {
-		return Stream.of(transformations).filter(t -> isActiveIn(t, options)).toArray(len -> new Transformation[len]);
+		return Iterables.filter(transformations, t -> isActiveIn(t, options));
 	}
 
 	/**
@@ -225,10 +225,11 @@ public abstract class TransformationDependency {
 	 * Asserts that all dependencies of the transformations in the given sequence of transformations are fulfilled or
 	 * throws an {@link AssertionError} otherwise.
 	 */
-	public static final void assertDependencies(Transformation[] transformations) {
+	public static final void assertDependencies(Iterable<Transformation> transformations) {
 		@SuppressWarnings("unchecked")
-		final Class<? extends Transformation>[] sequence = Arrays2.transform(transformations, t -> t.getClass())
-				.toArray(new Class[0]);
+		Class<? extends Transformation>[] sequence = StreamSupport.stream(transformations.spliterator(), false)
+				.map(t -> t.getClass())
+				.toArray(Class[]::new);
 		final List<String> errMsgs = check(sequence);
 		if (!errMsgs.isEmpty()) {
 			throw new AssertionError("one or more dependencies between transformations are violated:\n" +

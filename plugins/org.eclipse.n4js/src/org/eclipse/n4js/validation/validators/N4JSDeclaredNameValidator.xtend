@@ -12,6 +12,17 @@ package org.eclipse.n4js.validation.validators
 
 import com.google.common.collect.Sets
 import com.google.inject.Inject
+import java.util.ArrayList
+import java.util.Collections
+import java.util.HashSet
+import java.util.Iterator
+import java.util.List
+import java.util.ListIterator
+import java.util.Set
+import java.util.stream.Collectors
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EStructuralFeature
+import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.AnnotableElement
 import org.eclipse.n4js.n4JS.Block
@@ -26,6 +37,9 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
+import org.eclipse.n4js.n4JS.N4IDLClassDeclaration
+import org.eclipse.n4js.n4JS.N4IDLEnumDeclaration
+import org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -55,17 +69,6 @@ import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.ValidatorMessageHelper
-import java.util.ArrayList
-import java.util.Collections
-import java.util.HashSet
-import java.util.Iterator
-import java.util.List
-import java.util.ListIterator
-import java.util.Set
-import java.util.stream.Collectors
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.xtext.EcoreUtil2
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.util.IResourceScopeCache
@@ -595,6 +598,12 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Does not check value of the returned name, so it can be null or empty string.
 	 */
 	def protected String getDeclaredName(EObject eo) {
+		switch (eo) {
+			N4IDLClassDeclaration    : return eo.name + "#" + eo.declaredVersion
+			N4IDLInterfaceDeclaration: return eo.name + "#" + eo.declaredVersion
+			N4IDLEnumDeclaration	 : return eo.name + "#" + eo.declaredVersion 
+		}
+		
 		if (eo instanceof FunctionDeclaration || eo instanceof FunctionExpression || eo instanceof N4TypeDefinition ||
 			eo instanceof Variable) {
 			return eo.findName
@@ -623,7 +632,12 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	def protected String getDeclaredNameForGlobalScopeComparision(EObject eo) {
-		return eo.declaredName
+		switch (eo) {
+			N4IDLClassDeclaration    : eo.name
+			N4IDLInterfaceDeclaration: eo.name
+			N4IDLEnumDeclaration	 : eo.name
+			default                  : eo.declaredName
+		}
 	}
 
 	/** helper dispatch because we lack one uniform interface for getName */

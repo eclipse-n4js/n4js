@@ -23,6 +23,8 @@ import org.eclipse.n4js.formatting2.N4JSSimpleFormattingPreferenceProvider;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.internal.N4JSRuntimeCore;
+import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider;
+import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider;
 import org.eclipse.n4js.naming.N4JSImportedNamesAdapter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.naming.N4JSQualifiedNameProvider;
@@ -59,10 +61,10 @@ import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
 import org.eclipse.n4js.ts.validation.TypesKeywordProvider;
 import org.eclipse.n4js.typesbuilder.N4JSTypesBuilder;
 import org.eclipse.n4js.typesystem.CustomInternalTypeSystem;
+import org.eclipse.n4js.typesystem.N4IDLVersionResolver;
 import org.eclipse.n4js.typesystem.N4JSStringRepresenation;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.N4JSValidatorErrorGenerator;
-import org.eclipse.n4js.typesystem.N4JSVersionResolver;
 import org.eclipse.n4js.typesystem.VersionResolver;
 import org.eclipse.n4js.utils.di.scopes.ScopeManager;
 import org.eclipse.n4js.utils.di.scopes.TransformationScoped;
@@ -542,7 +544,7 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 * versions in the type system.
 	 */
 	public Class<? extends VersionResolver> bindVersionResolver() {
-		return N4JSVersionResolver.class;
+		return N4IDLVersionResolver.class;
 	}
 
 	/**
@@ -550,6 +552,15 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends XpectAwareFileExtensionCalculator> bindXpectAwareFileExtensionCalculator() {
 		return XpectAwareFileExtensionCalculator.class;
+	}
+
+	//// N4IDL specific bindings
+
+	/**
+	 * Binds a scope provider for version scopes.
+	 */
+	public Class<? extends VersionScopeProvider> bindVersionScopeProvider() {
+		return N4IDLVersionAwareScopeProvider.class;
 	}
 
 }
