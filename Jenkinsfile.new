@@ -39,10 +39,12 @@ pipeline {
                 checkout(
                     [
                         $class: 'GitSCM',
-                        branches: [[name: '*/CD-631*']],
+                        userRemoteConfigs: [
+                            [url: 'https://github.com/eclipse/n4js']
+                        ]
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']
-                        ]
+                        ],
                     ]
                 )
             }
