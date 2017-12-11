@@ -19,7 +19,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.ExportedVariableDeclaration;
 import org.eclipse.n4js.n4JS.FunctionOrFieldAccessor;
 import org.eclipse.n4js.n4JS.IdentifierRef;

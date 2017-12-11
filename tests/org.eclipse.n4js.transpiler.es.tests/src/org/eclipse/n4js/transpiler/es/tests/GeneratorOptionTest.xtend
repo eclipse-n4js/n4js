@@ -15,7 +15,7 @@ import org.eclipse.n4js.N4JSInjectorProviderWithMockProject
 import org.eclipse.n4js.N4JSParseHelper
 import org.eclipse.n4js.N4JSTestHelper
 import org.eclipse.n4js.N4JSValidationTestHelper
-import org.eclipse.n4js.generator.common.GeneratorOption
+import org.eclipse.n4js.generator.GeneratorOption
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
 import org.junit.Test

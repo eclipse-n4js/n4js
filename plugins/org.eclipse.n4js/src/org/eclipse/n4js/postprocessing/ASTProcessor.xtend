@@ -113,7 +113,7 @@ public class ASTProcessor extends AbstractProcessor {
 		log(0, "### processing resource: " + resource.URI);
 
 		val script = resource.script;
-		val cache = resource.getASTMetaInfoCache(); // we're during post-processing, so cache should be available now
+		val cache = resource.getASTMetaInfoCacheVerifyContext(); // we're during post-processing, so cache should be available now
 		val G = resource.newRuleEnvironment;
 		G.addCancelIndicator(cancelIndicator);
 		try {

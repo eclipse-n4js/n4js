@@ -38,21 +38,21 @@ public class ASTMetaInfoUtils {
 	 * Convenience method for {@link ASTMetaInfoCache#getTypeFailSafe(TypableElement)}.
 	 */
 	public static Result<TypeRef> getTypeFailSafe(TypableElement astNode) {
-		return ((N4JSResource) astNode.eResource()).getASTMetaInfoCache().getTypeFailSafe(astNode);
+		return ((N4JSResource) astNode.eResource()).getASTMetaInfoCacheVerifyContext().getTypeFailSafe(astNode);
 	}
 
 	/**
 	 * Convenience method for {@link ASTMetaInfoCache#getInferredTypeArgs(ParameterizedCallExpression)}.
 	 */
 	public static List<TypeRef> getInferredTypeArgs(ParameterizedCallExpression callExpr) {
-		return ((N4JSResource) callExpr.eResource()).getASTMetaInfoCache().getInferredTypeArgs(callExpr);
+		return ((N4JSResource) callExpr.eResource()).getASTMetaInfoCacheVerifyContext().getInferredTypeArgs(callExpr);
 	}
 
 	/**
 	 * Convenience method for {@link ASTMetaInfoCache#getCompileTimeValue(Expression)}.
 	 */
 	public static CompileTimeValue getCompileTimeValue(Expression expr) {
-		return ((N4JSResource) expr.eResource()).getASTMetaInfoCache().getCompileTimeValue(expr);
+		return ((N4JSResource) expr.eResource()).getASTMetaInfoCacheVerifyContext().getCompileTimeValue(expr);
 	}
 
 	/**
@@ -60,6 +60,6 @@ public class ASTMetaInfoUtils {
 	 * variable declaration is exported.
 	 */
 	public static List<EObject> getLocalVariableReferences(VariableDeclaration varDecl) {
-		return ((N4JSResource) varDecl.eResource()).getASTMetaInfoCache().getLocalVariableReferences(varDecl);
+		return ((N4JSResource) varDecl.eResource()).getASTMetaInfoCacheVerifyContext().getLocalVariableReferences(varDecl);
 	}
 }

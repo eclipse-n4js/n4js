@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;
