@@ -20,7 +20,7 @@ import org.eclipse.xtext.scoping.impl.MultimapBasedScope
  * Adapts {@link LocallyKnownTypesScopingHelper} by creating an instance of {@link MultimapBasedScope} as the scope for
  * locally known types, for example those defined within the same module.
  */
-class MultiMapBasedLocallyKnownTypesScopingHelper extends LocallyKnownTypesScopingHelper {
+class MultiLocallyKnownTypesScopingHelper extends LocallyKnownTypesScopingHelper {
 
 	override protected buildMapBasedScope(IScope importScope, TModule localModule) {
 		return MultimapBasedScope.createScope(importScope, localModule.topLevelTypes.map [ topLevelType |

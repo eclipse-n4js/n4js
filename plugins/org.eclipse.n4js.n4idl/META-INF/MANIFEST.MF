@@ -38,6 +38,5 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js
 Export-Package: com.enfore.n4idl.services,
  org.eclipse.n4js.n4idl,
- org.eclipse.n4js.n4idl.formatting2,
  org.eclipse.n4js.n4idl.validation
 Import-Package: org.eclipse.n4js.tester

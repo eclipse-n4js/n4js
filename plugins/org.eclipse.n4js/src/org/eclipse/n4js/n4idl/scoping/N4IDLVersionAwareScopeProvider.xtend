@@ -25,7 +25,7 @@ import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.MultimapBasedScope
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.n4js.n4idl.scoping.utils.MultiMapBasedLocallyKnownTypesScopingHelper
+import org.eclipse.n4js.n4idl.scoping.utils.MultiLocallyKnownTypesScopingHelper
 
 /**
  * Adapts {@link N4JSScopeProvider} by wrapping the created scopes inside an instance of {@link N4IDLVersionAwareScope}.
@@ -36,7 +36,7 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 	private VersionHelper versionHelper;
 	
 	@Inject
-	private MultiMapBasedLocallyKnownTypesScopingHelper multiLocallyKnownTypesScopingHelper
+	private MultiLocallyKnownTypesScopingHelper multiLocallyKnownTypesScopingHelper
 
 	override getVersionScope(TClassifier classifier) {
 		return super.getScope(classifier.containingModule,

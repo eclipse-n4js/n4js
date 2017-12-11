@@ -13,13 +13,11 @@ package com.enfore.n4idl;
 import java.util.Properties;
 
 import org.eclipse.n4js.n4idl.N4IDLRuntimeModule;
-import org.eclipse.n4js.n4idl.formatting2.N4IDLFormatter;
 import org.eclipse.n4js.n4idl.validation.N4IDLValidator;
 import org.eclipse.xtext.Constants;
 import org.eclipse.xtext.IGrammarAccess;
 import org.eclipse.xtext.formatting2.FormatterPreferenceValuesProvider;
 import org.eclipse.xtext.formatting2.FormatterPreferences;
-import org.eclipse.xtext.formatting2.IFormatter2;
 import org.eclipse.xtext.naming.IQualifiedNameProvider;
 import org.eclipse.xtext.naming.SimpleNameProvider;
 import org.eclipse.xtext.parser.ITokenToStringConverter;
@@ -129,11 +127,6 @@ public abstract class AbstractN4IDLRuntimeModule extends DefaultRuntimeModule {
 		binder.bind(IResourceDescriptions.class)
 				.annotatedWith(Names.named(ResourceDescriptionsProvider.PERSISTED_DESCRIPTIONS))
 				.to(ResourceSetBasedResourceDescriptions.class);
-	}
-
-	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
-	public Class<? extends IFormatter2> bindIFormatter2() {
-		return N4IDLFormatter.class;
 	}
 
 	// contributed by org.eclipse.xtext.xtext.generator.formatting.Formatter2Fragment2
