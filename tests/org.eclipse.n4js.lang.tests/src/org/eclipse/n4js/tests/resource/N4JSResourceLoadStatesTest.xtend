@@ -27,7 +27,6 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtend.lib.annotations.Data
 import org.junit.Test
-import org.eclipse.n4js.postprocessing.ASTMetaInfoCache
 
 /**
  * Test the various load states an N4JSResource can be in.
