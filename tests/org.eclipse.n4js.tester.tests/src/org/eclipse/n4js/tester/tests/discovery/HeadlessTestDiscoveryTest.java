@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSStandaloneSetup;
-import org.eclipse.n4js.headless.helper.HeadlessExtensionRegistrationHelper;
+import org.eclipse.n4js.hlc.base.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.internal.FileBasedWorkspace;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.tester.TestDiscoveryHelper;

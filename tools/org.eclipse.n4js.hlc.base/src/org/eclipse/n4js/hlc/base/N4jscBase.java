@@ -63,7 +63,6 @@ import org.eclipse.n4js.generator.headless.N4JSCompileException;
 import org.eclipse.n4js.generator.headless.N4JSHeadlessGeneratorModule;
 import org.eclipse.n4js.generator.headless.logging.ConfigurableHeadlessLogger;
 import org.eclipse.n4js.generator.headless.logging.IHeadlessLogger;
-import org.eclipse.n4js.headless.helper.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.hlc.base.running.HeadlessRunner;
 import org.eclipse.n4js.hlc.base.testing.HeadlessTester;
 import org.eclipse.n4js.internal.FileBasedWorkspace;

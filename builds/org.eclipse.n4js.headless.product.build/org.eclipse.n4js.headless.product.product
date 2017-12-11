@@ -94,7 +94,6 @@
       <plugin id="org.eclipse.n4js.external.libraries"/>
       <plugin id="org.eclipse.n4js.flowgraphs"/>
       <plugin id="org.eclipse.n4js.generator.headless"/>
-      <plugin id="org.eclipse.n4js.headless.helper"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>
       <plugin id="org.eclipse.n4js.model"/>
       <plugin id="org.eclipse.n4js.n4mf"/>
