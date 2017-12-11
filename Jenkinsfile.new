@@ -41,10 +41,10 @@ pipeline {
                         $class: 'GitSCM',
                         userRemoteConfigs: [
                             [url: 'https://github.com/eclipse/n4js']
-                        ]
+                        ],
                         extensions: [
                             [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']
-                        ],
+                        ]
                     ]
                 )
             }
