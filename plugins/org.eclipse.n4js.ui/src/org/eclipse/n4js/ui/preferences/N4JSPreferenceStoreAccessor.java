@@ -14,8 +14,8 @@ import org.eclipse.xtext.ui.editor.preferences.PreferenceStoreAccessImpl;
 
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.CompilerProperties;
+import org.eclipse.n4js.generator.CompilerDescriptor;
+import org.eclipse.n4js.generator.CompilerProperties;
 
 /**
  * Inpired by org.eclipse.xtext.ui.editor.syntaxcoloring.PreferenceStoreAccessor.

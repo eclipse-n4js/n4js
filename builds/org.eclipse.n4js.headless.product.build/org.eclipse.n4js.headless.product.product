@@ -37,7 +37,6 @@
       <plugin id="com.google.inject"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="com.jcraft.jsch"/>
-      <plugin id="org.eclipse.xsemantics.runtime"/>
       <plugin id="javaewah"/>
       <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
@@ -94,8 +93,6 @@
       <plugin id="org.eclipse.n4js.common.unicode"/>
       <plugin id="org.eclipse.n4js.external.libraries"/>
       <plugin id="org.eclipse.n4js.flowgraphs"/>
-      <plugin id="org.eclipse.n4js.generator"/>
-      <plugin id="org.eclipse.n4js.generator.common"/>
       <plugin id="org.eclipse.n4js.generator.headless"/>
       <plugin id="org.eclipse.n4js.hlc.base"/>
       <plugin id="org.eclipse.n4js.model"/>
@@ -117,6 +114,7 @@
       <plugin id="org.eclipse.team.core"/>
       <plugin id="org.eclipse.text"/>
       <plugin id="org.eclipse.xpand"/>
+      <plugin id="org.eclipse.xsemantics.runtime"/>
       <plugin id="org.eclipse.xtend"/>
       <plugin id="org.eclipse.xtend.lib"/>
       <plugin id="org.eclipse.xtend.lib.macro"/>

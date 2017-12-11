@@ -57,10 +57,7 @@ Contributors:
 		<module>org.eclipse.n4js.n4mf</module>
 		<module>org.eclipse.n4js.n4mf.ui</module>
 		<!-- transpiler -->
-		<module>org.eclipse.n4js.generator</module>
-		<module>org.eclipse.n4js.generator.common</module>
 		<module>org.eclipse.n4js.generator.headless</module>
-		<module>org.eclipse.n4js.generator.ui</module>
 		<module>org.eclipse.n4js.transpiler</module>
 		<module>org.eclipse.n4js.transpiler.es</module>
 		<!-- jsdoc -->
@@ -85,7 +82,6 @@ Contributors:
 		<!-- npm exporter -->
 		<module>org.eclipse.n4js.npmexporter</module>
 		<module>org.eclipse.n4js.npmexporter.ui</module>
-
 	</modules>
 
 	<properties>
