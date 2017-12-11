@@ -200,7 +200,8 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 		private boolean isSameProblem(IMarker marker) {
 			URI myUriToProblem = issue.getUriToProblem();
 
-			if (issueUtil.getCode(marker).equals(org.eclipse.n4js.validation.IssueCodes.NON_EXISTING_PROJECT)) {
+			String code = issueUtil.getCode(marker);
+			if (code != null && code.equals(org.eclipse.n4js.validation.IssueCodes.NON_EXISTING_PROJECT)) {
 				myUriToProblem = myUriToProblem.appendFragment(Integer.toString(marker.hashCode()));
 			}
 
