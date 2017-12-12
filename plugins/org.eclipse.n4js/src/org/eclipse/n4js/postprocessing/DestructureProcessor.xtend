@@ -92,13 +92,17 @@ package class DestructureProcessor extends AbstractProcessor {
 	 */
 	def Result<TypeRef> handleForwardReferenceWhileTypingDestructuringPattern(RuleEnvironment G, TypableElement node,
 		ASTMetaInfoCache cache) {
-
-		log(0, "===START of other identifiable sub-tree");
-		val G_fresh = RuleEnvironmentExtensions.wrap(G); // don't use a new, empty environment here (required for recursion guards)
-		astProcessor.processSubtree(G_fresh, node, cache, 0); // note how we reset the indent level
-		cache.forwardProcessedSubTrees.add(node);
-		log(0, "===END of other identifiable sub-tree");
-		return cache.getType(node);
+		try {
+			log(0, "===START of other identifiable sub-tree");
+			val G_fresh = RuleEnvironmentExtensions.wrap(G); // don't use a new, empty environment here (required for recursion guards)
+			astProcessor.processSubtree(G_fresh, node, cache, 0); // note how we reset the indent level
+			cache.forwardProcessedSubTrees.add(node);
+			log(0, "===END of other identifiable sub-tree");
+			return cache.getType(node);
+		} catch (Exception e) {
+			// GH-395: An exception can occur in the example: var [a,b] = [0,b];
+			return new Result(TypeRefsFactory.eINSTANCE.createUnknownTypeRef());
+		}
 	}
 
 	def boolean isForwardReferenceWhileTypingDestructuringPattern(EObject obj) {
