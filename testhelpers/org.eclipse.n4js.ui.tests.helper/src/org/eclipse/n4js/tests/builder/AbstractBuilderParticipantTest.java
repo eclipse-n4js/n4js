@@ -248,34 +248,44 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 	/** Sets up the known external library locations with the {@code node_modules} folder. */
 	protected void setupExternalLibraries(boolean initShippedCode) throws Exception {
 		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
+
 		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		externalLibraryPreferenceStore.add(nodeModulesLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
+		File nodeModuleLocationFile = new File(nodeModulesLocation);
+		if (!nodeModuleLocationFile.exists()) {
+			nodeModuleLocationFile.createNewFile();
+		}
+
 		if (initShippedCode) {
 			shippedCodeInitializeTestHelper.setupBuiltIns();
+		} else {
+			externalLibraryPreferenceStore.add(nodeModulesLocation);
+			final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
+			assertTrue("Error while saving external library preference changes.", result.isOK());
 		}
 		waitForAutoBuild();
 	}
 
 	/** Tears down the external libraries. */
 	protected void tearDownExternalLibraries(boolean tearDownShippedCode) throws Exception {
+		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
+
 		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
 		externalLibraryPreferenceStore.remove(nodeModulesLocation);
 		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
 		assertTrue("Error while saving external library preference changes.", result.isOK());
-		waitForAutoBuild();
-		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
 
 		if (tearDownShippedCode) {
 			shippedCodeInitializeTestHelper.teardowneBuiltIns();
 		}
+
 		// cleanup leftovers in the file system
 		File nodeModuleLocationFile = new File(nodeModulesLocation);
 		assertTrue("Provided npm location does not exist.", nodeModuleLocationFile.exists());
 		assertTrue("Provided npm location is not a folder.", nodeModuleLocationFile.isDirectory());
 		FileDeleter.delete(nodeModuleLocationFile);
 		assertFalse("Provided npm location should be deleted.", nodeModuleLocationFile.exists());
+
+		waitForAutoBuild();
 
 		super.tearDown();
 	}
