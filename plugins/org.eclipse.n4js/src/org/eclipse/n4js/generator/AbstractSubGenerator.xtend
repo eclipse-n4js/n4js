@@ -14,17 +14,19 @@ import com.google.inject.Inject
 import java.nio.file.Path
 import java.nio.file.Paths
 import org.eclipse.emf.common.EMFPlugin
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
+import org.eclipse.n4js.projectModel.ResourceNameComputer
+import org.eclipse.n4js.projectModel.StaticPolyfillHelper
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.CompilerHelper
 import org.eclipse.n4js.utils.Log
-import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
@@ -34,11 +36,10 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
-import org.eclipse.n4js.projectModel.ResourceNameComputer
-import org.eclipse.n4js.projectModel.StaticPolyfillHelper
-import org.eclipse.emf.common.util.URI
 
 /**
+ * All sub generators should extend this class. It provides basic blocks of the logic, and
+ * shared implementations.
  */
 @Log
 abstract class AbstractSubGenerator implements ISubGenerator {
@@ -55,35 +56,25 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	@Accessors
 	private CompilerDescriptor compilerDescriptor = null
 
-	@Inject
-	ResourceNameComputer projectUtils
+	@Inject protected ResourceNameComputer projectUtils
 	
-	@Inject 
-	StaticPolyfillHelper staticPolyfillHelper
+	@Inject protected StaticPolyfillHelper staticPolyfillHelper
 
-	@Inject
-	IN4JSCore n4jsCore
+	@Inject protected IN4JSCore n4jsCore
 
-	@Inject
-	CompilerHelper compilerUtils
+	@Inject protected CompilerHelper compilerUtils
 
-	@Inject
-	IResourceValidator resVal
+	@Inject protected IResourceValidator resVal
 
-	@Inject
-	N4JSCache cache
+	@Inject protected N4JSCache cache
 
-	@Inject
-	IGeneratorMarkerSupport genMarkerSupport
+	@Inject protected IGeneratorMarkerSupport genMarkerSupport
 
-	@Inject
-	OperationCanceledManager operationCanceledManager;
+	@Inject protected OperationCanceledManager operationCanceledManager
 
-	@Inject
-	extension GeneratorExceptionHandler
+	@Inject protected GeneratorExceptionHandler exceptionHandler
 
-	@Inject
-	extension N4JSPreferenceAccess
+	@Inject protected N4JSPreferenceAccess preferenceAccess
 
 	override getCompilerDescriptor() {
 		if (compilerDescriptor === null) {
@@ -130,7 +121,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 				throw e;
 			}
 			var msg = if (e.message === null) "type=" + e.class.name else "message=" + e.message;
-			handleError('''Severe error occurred in transpiler=«compilerID» «msg».''',  e);
+			exceptionHandler.handleError('''Severe error occurred in transpiler=«compilerID» «msg».''',  e);
 		}
 	}
 
@@ -220,31 +211,12 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * Returns the name of the target file (without path) to which the source is to be compiled to.
 	 * Default implementation returns a configured project Name with version + file name + extension.
 	 * E.g., "proj-0.0.1/p/A.js" for a file A in proj.
+	 * 
+	 * Convenience method, to provide all necessary API for the sub-classes.
+	 * Delegates to {@link CompilerHelper#getTargetFileName}.
 	 */
 	def String getTargetFileName(Resource n4jsSourceFile, String compiledFileExtension) {
-		/*
-		 * handle double extension for xpect, e.g. foo.n4js.xt
-		 *
-		 * assuming hasValidFileExtension was called, so care only about double extension
-		 */
-		var souceURI =
-			//TODO: need a uniform way to handle multiple languages here
-			if (ResourceType.xtHidesOtherExtension(n4jsSourceFile.URI) || (N4JSGlobals.XT_FILE_EXTENSION  == n4jsSourceFile.URI.fileExtension.toLowerCase)) {
-				n4jsSourceFile.URI.trimFileExtension
-			} else {
-				n4jsSourceFile.URI
-			}
-
-		val String targetFilePath = try {
-			projectUtils.generateFileDescriptor(souceURI, "." + compiledFileExtension)
-		} catch (Throwable t) {
-
-			//TODO a bit generic error handling
-			handleError(t.message, t)
-			null
-		}
-
-		return targetFilePath;
+		return compilerUtils.getTargetFileName(n4jsSourceFile, compiledFileExtension)
 	}
 
 	/**
@@ -256,13 +228,13 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/** The file-extension of the compiled result */
 	def String getCompiledFileExtension(Resource input) {
-		getPreference(input, getCompilerID(), CompilerProperties.COMPILED_FILE_EXTENSION,
+		preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.COMPILED_FILE_EXTENSION,
 			getDefaultDescriptor())
 	}
 
 	/** The file-extension of the source-map to the compiled result */
 	def String getCompiledFileSourceMapExtension(Resource input) {
-		getPreference(input, getCompilerID(), CompilerProperties.COMPILED_FILE_SOURCEMAP_EXTENSION,
+		preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.COMPILED_FILE_SOURCEMAP_EXTENSION,
 			getDefaultDescriptor())
 	}
 
@@ -346,7 +318,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * @param compilerID ID of the compiler, which is a subfolder in the output path (e.g. "es5")
 	 */
 	def static String calculateOutputDirectory(String outputPath, String compilerID) {
-		return calculateOutputDirectory(outputPath, compilerID, org.eclipse.n4js.generator.AbstractSubGenerator.USE_COMPILER_ID)
+		return calculateOutputDirectory(outputPath, compilerID, AbstractSubGenerator.USE_COMPILER_ID)
 	}
 
 	/** private method to hide feature flag */
@@ -368,7 +340,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/** Answers: Is this compiler activated for the input at hand? */
 	def boolean isActive(Resource input) {
-		Boolean.valueOf(getPreference(input, getCompilerID(), CompilerProperties.IS_ACTIVE, getDefaultDescriptor()))
+		Boolean.valueOf(preferenceAccess.getPreference(input, getCompilerID(), CompilerProperties.IS_ACTIVE, getDefaultDescriptor()))
 	}
 
 	/** Checking the availability of a static polyfill, which will override the compilation of this module.
@@ -376,7 +348,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	def boolean isNotStaticallyPolyfilled(Resource resource) {
 		//		val TModule tmodule = (N4JSResource::getModule(resource) ); // for some reason xtend cannot see static getModule ?!
 		if (resource instanceof N4JSResource) {
-			val TModule tmodule = compilerUtils.retrieveModule(resource)
+			val TModule tmodule = N4JSResource.getModule(resource)
 			// 1. resource must be StaticPolyfillAware and
 			// 2. there must exist a polyfilling instance (second instance with same fqn)
 			if (tmodule.isStaticPolyfillAware) {
@@ -393,7 +365,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * Checking if this resource represents a static polyfill, which will contribute to a filled resource.
 	 **/
 	def boolean isStaticPolyfillingModule(Resource resource) {
-		val TModule tmodule = (N4JSResource::getModule(resource));
+		val TModule tmodule = (N4JSResource.getModule(resource));
 		if (null !== tmodule) {
 			return tmodule.isStaticPolyfillModule;
 		}
