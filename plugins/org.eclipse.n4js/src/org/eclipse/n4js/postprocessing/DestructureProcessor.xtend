@@ -12,6 +12,8 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.BindingElement
@@ -25,13 +27,13 @@ import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRefsFactory
+import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.utils.EcoreUtilN4
 import org.eclipse.xsemantics.runtime.Result
 import org.eclipse.xsemantics.runtime.RuleEnvironment
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.util.EcoreUtil
-import org.eclipse.n4js.ts.types.TypableElement
+
+import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
  * Deals with destructuring patterns during post processing of an N4JS resource (only the destructuring pattern;
@@ -92,6 +94,13 @@ package class DestructureProcessor extends AbstractProcessor {
 	 */
 	def Result<TypeRef> handleForwardReferenceWhileTypingDestructuringPattern(RuleEnvironment G, TypableElement node,
 		ASTMetaInfoCache cache) {
+
+		val parent = node.eContainer();
+		val isCyclicForwardReference = cache.astNodesCurrentlyBeingTyped.contains(node);
+		if(isCyclicForwardReference && parent instanceof VariableBinding && (parent as VariableBinding).expression===node) {
+			// we get here when typing the second 'b' in 'var [a,b] = [0,b,2];'
+			return new Result(G.anyTypeRef);
+		}
 
 		log(0, "===START of other identifiable sub-tree");
 		val G_fresh = RuleEnvironmentExtensions.wrap(G); // don't use a new, empty environment here (required for recursion guards)
