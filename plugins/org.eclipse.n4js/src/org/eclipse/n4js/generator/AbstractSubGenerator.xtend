@@ -80,7 +80,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	OperationCanceledManager operationCanceledManager;
 
 	@Inject
-	extension ExceptionHandler
+	extension GeneratorExceptionHandler
 
 	@Inject
 	extension N4JSPreferenceAccess

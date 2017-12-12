@@ -14,11 +14,11 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
-import org.eclipse.n4js.generator.ExceptionHandler
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.projectModel.ResourceNameComputer
+import org.eclipse.n4js.generator.GeneratorExceptionHandler
 
 /**
  */
@@ -26,7 +26,7 @@ import org.eclipse.n4js.projectModel.ResourceNameComputer
 public class CompilerHelper {
 	@Inject ResourceNameComputer resourceNameComputer
 
-	@Inject ExceptionHandler generatorExceptionHandler
+	@Inject GeneratorExceptionHandler generatorExceptionHandler
 
 	/**
 	 * Convenience method, delegates to {@link #getTargetFileName(URI , String)} with the URI of the given resource.

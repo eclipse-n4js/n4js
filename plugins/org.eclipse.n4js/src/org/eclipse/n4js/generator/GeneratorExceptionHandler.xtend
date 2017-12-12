@@ -10,13 +10,15 @@
  */
 package org.eclipse.n4js.generator
 
-import org.eclipse.n4js.utils.Log
-
 /**
+ * Code generator exception handler.
  */
-@Log
-class ExceptionHandler {
+class GeneratorExceptionHandler {
 
+	/**
+	 * Prints provided message to the out stream, and the stack trace of the provided cause.
+	 * Afterwards throws new {@link GeneratorException} wrapping provided cause.
+	 */
 	def handleError(String message, Throwable cause) {
 		println(message)
 		cause.printStackTrace
