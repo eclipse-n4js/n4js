@@ -11,6 +11,7 @@
 package org.eclipse.n4js.projectModel;
 
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.internal.N4JSModel;
 
 import com.google.common.base.Optional;
@@ -30,6 +31,16 @@ public class ProjectResolveHelper {
 	private N4JSModel model;
 
 	/**
+	 * Convenience method for {@link ProjectResolveHelper#resolveProject(URI)}, for which {@link URI} is resolved based
+	 * on the provided {@link Resource}
+	 *
+	 * @see #resolveProject(URI)
+	 */
+	public IN4JSProject resolveProject(Resource resource) {
+		return resolveProject(resource.getURI());
+	}
+
+	/**
 	 * Resolves project from provided URI.
 	 */
 	public IN4JSProject resolveProject(URI n4jsSourceURI) {
@@ -39,6 +50,16 @@ public class ProjectResolveHelper {
 					"Cannot handle resource without containing project. Resource URI was: " + n4jsSourceURI + ".");
 		}
 		return optionalProject.get();
+	}
+
+	/**
+	 * Convenience method for {@link ProjectResolveHelper#resolvePackageAndFileName(URI)}, for which {@link URI} is
+	 * resolved based on the provided {@link Resource}
+	 *
+	 * @see #resolvePackageAndFileName(URI)
+	 */
+	public String resolvePackageAndFileName(Resource resource) {
+		return resolvePackageAndFileName(resource.getURI());
 	}
 
 	/**

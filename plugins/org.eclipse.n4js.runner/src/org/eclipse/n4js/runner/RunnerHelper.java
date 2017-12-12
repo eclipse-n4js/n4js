@@ -34,6 +34,7 @@ import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.FindArtifactHelper;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -41,9 +42,7 @@ import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
-import org.eclipse.n4js.utils.CompilerHelper;
 import org.eclipse.n4js.utils.RecursionGuard;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -64,7 +63,7 @@ public class RunnerHelper {
 	private FindArtifactHelper artifactHelper;
 
 	@Inject
-	private CompilerHelper compilerHelper;
+	private ResourceNameComputer compilerHelper;
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
@@ -99,8 +98,7 @@ public class RunnerHelper {
 			return null;
 		}
 
-		final String projectRelativePath = AbstractSubGenerator.calculateOutputDirectory(relativeOutputPathStr,
-				N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS);
+		final String projectRelativePath = AbstractSubGenerator.calculateOutputDirectory(project);
 		final String outPath = toAbsolutePath(project, projectRelativePath);
 
 		// TODO no one should apply null check on the target platform location except the HLC
@@ -152,7 +150,7 @@ public class RunnerHelper {
 					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
 				})
 				.flatMap(p -> getInitModulesAsURIs(p).stream()
-						.map(bmURI -> compilerHelper.getTargetFileName(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
+						.map(bmURI -> compilerHelper.generateFileDescriptor(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
 				.collect(Collectors.toList());
 	}
 
@@ -167,7 +165,7 @@ public class RunnerHelper {
 					if (!execModuleAsURI.isPresent()) {
 						return null;
 					}
-					return compilerHelper.getTargetFileName(re, execModuleAsURI.get(), null);
+					return compilerHelper.generateFileDescriptor(re, execModuleAsURI.get(), null);
 				})
 				.filter(s -> !Strings.isNullOrEmpty(s))
 				.collect(Collectors.toList());

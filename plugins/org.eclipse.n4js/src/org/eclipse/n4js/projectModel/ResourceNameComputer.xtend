@@ -28,12 +28,16 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 
 import static org.eclipse.emf.ecore.util.EcoreUtil.getRootContainer
+import com.google.common.base.Strings
+import org.eclipse.emf.ecore.resource.Resource
 
 /**
- * Helper class for computing names for generated files based on the provided resource.
- * Used in the compiler when generating files with proper name in a proper location. Used also to compute proper values for 
- * import statements (in the compiled code) etc.
- * Provides utilities for generating resource (file or module) descriptors that are based on containing project and its properties.
+ * Helper class for computing descriptors for compiled files. Descriptors are used for file names and paths of generated files,
+ * but also for meta data about them, e.g. for calculating import statements between compiled files or assembling code 
+ * execution runtime paths.
+ * 
+ * Note that paths computed here are relative to the output folder of the specific compiler, for a specific project.
+ * Callers interested in full project relative path need to call concrete compiler for more information.
  */
 @Singleton
 public class ResourceNameComputer {
@@ -63,14 +67,25 @@ public class ResourceNameComputer {
 	@Inject private ProjectResolveHelper projectResolver;
 
 	/**
+	 * Based on provided URI generates project in form of Project-0.0.1
+	 * Convenience method, delegates to {@link ResourceNameComputer#generateProjectDescriptor(IN4JSProject project)} with project
+	 * derived from the URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 */
+	def generateProjectDescriptor(URI n4jsSourceURI) {
+		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, false);
+	}
+
+	/**
 	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project-0.0.1
 	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
 	 * For delegation project is calculated from provided URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
 	 */
-	def generateProjectDescriptor(URI n4jsSourceURI) {
-		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, USE_NODE_DESCRIPTOR);
+	def generateProjectDescriptor(IN4JSProject project) {
+		formatDescriptor(project, "", "-", ".", "", USE_VERSIONS, false, false);
 	}
 
 	/**
@@ -81,9 +96,22 @@ public class ResourceNameComputer {
 	 * @n4jsSourceURI URI from file resource
 	 * @fileExtension String containing desired extensions, should include dot
 	 */
+	def generateFileDescriptor(Resource resource, String fileExtension) {
+		formatDescriptor(projectResolver.resolveProject(resource),
+			projectResolver.resolvePackageAndFileName(resource), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + normalizeFileExtension(fileExtension);
+	}
+	
+	/**
+	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
+	 * For delegation both project and unitPath are calculated from provided URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 * @fileExtension String containing desired extensions, should include dot
+	 */
 	def generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
 		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI),
-			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + fileExtension;
+			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + normalizeFileExtension(fileExtension);
 	}
 
 	/**
@@ -96,7 +124,16 @@ public class ResourceNameComputer {
 	 */
 	def generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
 		formatDescriptor(project, projectResolver.resolvePackageAndFileName(n4jsSourceURI, project), "-", ".", "/",
-			USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + fileExtension;
+			USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + normalizeFileExtension(fileExtension);
+	}
+	private def String normalizeFileExtension(String fileExtension){
+		if(Strings.isNullOrEmpty(fileExtension))
+			return ""
+		
+		if(fileExtension.startsWith("."))
+			return fileExtension
+
+		return "." + fileExtension;
 	}
 
 	/**
@@ -114,9 +151,10 @@ public class ResourceNameComputer {
 	 * @param includeProjectVersion  tells if project version should be included or not. If false, then sep1 and sep2
 	 *                               will be ignored.
 	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
+	 * @param makeSimpleDescriptor  tells if simple form of descriptor is to be used.
 	 */
 	private def final static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
-		String sep3, boolean includeProjectVersion, boolean asJsIdentifier, boolean useNodeDescriptor) {
+		String sep3, boolean includeProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
 
 		var projectID = project.projectId
 		var path = unitPath
@@ -125,8 +163,8 @@ public class ResourceNameComputer {
 			path = getValidUnitPath(unitPath)
 		}
 
-		if (useNodeDescriptor) {
-			return projectID + sep3 + project.outputPath + sep3 + path;
+		if (makeSimpleDescriptor) {
+			return path;
 		}
 
 		if (includeProjectVersion) {

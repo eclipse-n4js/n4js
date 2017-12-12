@@ -102,10 +102,7 @@ class NpmExporter {
 		}
 
 		// copy files from original output folder to targetFolder
-//		val Path project_loc = project.locationPath;
-		val String project_out = project.outputPath;
-		// TODO improve generator-access, here ES-transpiler is directly referenced
-		val String project_transpiledContent = AbstractSubGenerator.calculateOutputDirectory(project_out, es5SubGen.compilerID )
+		val String project_transpiledContent = AbstractSubGenerator.calculateOutputDirectory(project)
 		val Path transpiledContentFolder = project_loc.resolve(project_transpiledContent);
 
 		val transpiledContentFolderAsFile = transpiledContentFolder.toFile;

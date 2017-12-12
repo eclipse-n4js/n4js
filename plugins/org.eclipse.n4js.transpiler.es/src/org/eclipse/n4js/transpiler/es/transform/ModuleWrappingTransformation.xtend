@@ -16,6 +16,7 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.generator.AbstractSubGenerator
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -42,7 +43,6 @@ import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
@@ -59,12 +59,23 @@ import static org.eclipse.n4js.n4JS.EqualityOperator.*
 import static org.eclipse.n4js.n4JS.UnaryOperator.*
 
 import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * Module/Script wrapping transformation.
  */
 @ExcludesAfter(/* if present, must come before: */ DestructuringTransformation)
 class ModuleWrappingTransformation extends Transformation {
+	
+	/** 
+	 * https://github.com/eclipse/n4js/issues/394
+	 * 
+	 * for simplifying node js compilation target we want use imports relative to project root
+	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
+	 * or we might make this configurable in the manifest.
+	 */
+	private static final boolean USE_PROJECT_RELATIVE_IMPORT = true;
+	
 	@Inject
 	JSXBackendHelper jsx;
 
@@ -274,17 +285,7 @@ class ModuleWrappingTransformation extends Transformation {
 						"$_import_" + qnameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 					}
 
-				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-
-				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
-					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
-						moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
-					} else {
-						moduleSpecifierAdjustment.prefix + '/' + completeModuleSpecifier
-					}
-				} else {
-					completeModuleSpecifier
-				};
+				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier, USE_PROJECT_RELATIVE_IMPORT)
 
 				var moduleEntry = map.get( completeModuleSpecifier )
 				if( moduleEntry === null ) {
@@ -332,6 +333,31 @@ class ModuleWrappingTransformation extends Transformation {
 		}
 
 		return map;
+	}
+
+	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier,
+		boolean useProjectRelativePath) {
+		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
+
+		if(moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
+			return moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
+
+	
+		var specifier = completeModuleSpecifier
+		if(useProjectRelativePath){
+			val depProject = n4jsCore.findProject(module.eResource.URI).orNull
+			if(depProject !== null){
+				val projectRelativeSegment = AbstractSubGenerator.calculateOutputDirectory(n4jsCore.getOutputPath(module.eResource.URI))
+				val depProjectPath = depProject.locationPath.toString;
+				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
+				val depRelativeSpecifier = depProjecOutputPath.substring(depProjectPath.length - depProject.projectId.length)
+				specifier =  depRelativeSpecifier + '/' + completeModuleSpecifier
+			}
+		}
+		if (moduleSpecifierAdjustment !== null) 
+			return  moduleSpecifierAdjustment.prefix + '/' + specifier
+
+		return specifier
 	}
 
 	/**

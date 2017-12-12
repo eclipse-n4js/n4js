@@ -20,12 +20,10 @@ import org.eclipse.n4js.N4JSGlobals
 import org.eclipse.n4js.generator.IGeneratorMarkerSupport.Severity
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.projectModel.IN4JSCore
-import org.eclipse.n4js.projectModel.ResourceNameComputer
 import org.eclipse.n4js.projectModel.StaticPolyfillHelper
 import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.utils.CompilerHelper
 import org.eclipse.n4js.utils.Log
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
@@ -36,6 +34,9 @@ import org.eclipse.xtext.validation.IResourceValidator
 import org.eclipse.xtext.validation.Issue
 
 import static org.eclipse.xtext.diagnostics.Severity.*
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.projectModel.IN4JSProject
+import org.eclipse.n4js.projectModel.ResourceNameComputer
 
 /**
  * All sub generators should extend this class. It provides basic blocks of the logic, and
@@ -47,7 +48,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	/** 
 	 * https://github.com/eclipse/n4js/issues/394
 	 * 
-	 * for simplifying node js compilation target we wan't to compiler id in the compiled code segments
+	 * for simplifying node js compilation target we want to skip compiler id in the compiled code segments
 	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
 	 * or we might make this configurable in the manifest.
 	 */
@@ -62,7 +63,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	@Inject protected IN4JSCore n4jsCore
 
-	@Inject protected CompilerHelper compilerUtils
+	@Inject protected ResourceNameComputer resourceNameComputer
 
 	@Inject protected IResourceValidator resVal
 
@@ -213,10 +214,10 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * E.g., "proj-0.0.1/p/A.js" for a file A in proj.
 	 * 
 	 * Convenience method, to provide all necessary API for the sub-classes.
-	 * Delegates to {@link CompilerHelper#getTargetFileName}.
+	 * Delegates to {@link GeneratedResourceNameComputer#getTargetFileName}.
 	 */
 	def String getTargetFileName(Resource n4jsSourceFile, String compiledFileExtension) {
-		return compilerUtils.getTargetFileName(n4jsSourceFile, compiledFileExtension)
+		return resourceNameComputer.generateFileDescriptor(n4jsSourceFile, compiledFileExtension)
 	}
 
 	/**
@@ -267,7 +268,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		// src-gen/es5
 		val outputDirectory = calculateOutputDirectory(outputPath, compilerID)
 		// Project/a/b/c
-		val localOutputDir = getLocalOutputDir(input)
+		val outputRelativeLocation = getOutputRelativeLocation(input)
 
 		// --- source locations ---
 		// src/a/b/c
@@ -280,7 +281,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		}
 
 		// /home/user/workspace/Project/src-gen/es5/Project-0.0.1/a/b/c
-		val fullOutpath = projectPath.resolve(outputDirectory).normalize.resolve(localOutputDir).normalize
+		val fullOutpath = projectPath.resolve(outputDirectory).normalize.resolve(outputRelativeLocation).normalize
 		// /home/user/workspace/Project/src/a/b/c
 		val fullSourcePath = projectPath.resolve(completetSource).normalize
 
@@ -296,7 +297,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * {@code Project/a/b/c/} or just {@code a/b/c/}
 	 *  
 	 */
-	private def Path getLocalOutputDir(N4JSResource input){
+	private def Path getOutputRelativeLocation(N4JSResource input){
 		// Project/a/b/c/Input.XX
 		val localOutputFilePath = Paths.get(projectUtils.generateFileDescriptor(input.URI, ".XX"))
 
@@ -309,7 +310,38 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 		//otherwise strip resource to get local path, i.e. Project/a/b/c/Input.XX => Project/a/b/c/
 		return localOutputFilePath.subpath(0,localOutputFilePath.nameCount - 1)
 	}
+	
+	/**
+	 * Convenience for {@link AbstractSubGenerator#calculateOutputDirectory(String, String)},
+	 * uses default compiler ID.
+	 *
+	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
+	 */
+	def final static String calculateOutputDirectory(IN4JSProject project) {
+		return calculateOutputDirectory(project, N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS);
+	}
+	
+		/**
+	 * Convenience for {@link AbstractSubGenerator#calculateOutputDirectory(String, String)},
+	 * uses default compiler ID.
+	 *
+	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
+	 */
+	def final static String calculateOutputDirectory(String outputPath) {
+		return calculateOutputDirectory(outputPath, N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS);
+	}
 
+	/**
+	 * Simply concatenates the outputPath with the compilerID, e.g.
+	 * for "src-gen" and "es5", this returns "src-gen/es5".
+	 *
+	 * @param outputPath usually src-gen by default
+	 * @param compilerID ID of the compiler, which is a subfolder in the output path (e.g. "es5")
+	 */
+	def static String calculateOutputDirectory(IN4JSProject project, String compilerID) {
+		return calculateOutputDirectory(project.outputPath, compilerID, AbstractSubGenerator.USE_COMPILER_ID)
+	}
+	
 	/**
 	 * Simply concatenates the outputPath with the compilerID, e.g.
 	 * for "src-gen" and "es5", this returns "src-gen/es5".
