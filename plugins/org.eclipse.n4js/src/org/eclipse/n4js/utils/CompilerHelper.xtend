@@ -24,39 +24,22 @@ import org.eclipse.n4js.projectModel.ResourceNameComputer
  */
  @Singleton
 public class CompilerHelper {
-	@Inject ResourceNameComputer projectUtils
+	@Inject ResourceNameComputer resourceNameComputer
 
-	@Inject extension ExceptionHandler
+	@Inject ExceptionHandler generatorExceptionHandler
 
 	/**
 	 * Convenience method, delegates to {@link #getTargetFileName(URI , String)} with the URI of the given resource.
 	 */
 	def String getTargetFileName(Resource n4jsSourceFile, String compiledFileExtension) {
-		getTargetFileName(n4jsSourceFile.URI, compiledFileExtension);
+		return safeGetTargetFileName(null, n4jsSourceFile.URI, compiledFileExtension)
 	}
 
 	/**
-	 * Returns the name of the target file (without path) to which the source is to be compiled to.
-	 * Default implementation returns a configured project Name with version + file name + extension.
-	 * E.g., "proj/p/A.js" for a file A in proj and a compiledFileExtension of "js".
-	 * <p>
-	 * The compiledFileExtension should not include the separator dot; it may be <code>null</code>
-	 * and then no extension is appended.
+	 * Convenience method, delegates to {@link #getTargetFileName(IN4JSProject, URI , String)} with the {@code null} project.
 	 */
 	def String getTargetFileName(URI n4jsSourceURI, String compiledFileExtension) {
-
-		val extStr = if(compiledFileExtension!==null && compiledFileExtension.length>0) "." + compiledFileExtension else "";
-
-		val String targetFilePath = try {
-			projectUtils.generateFileDescriptor(n4jsSourceURI, extStr)
-		} catch (Throwable t) {
-
-			//TODO a bit generic error handling
-			handleError(t.message, t)
-			null
-		}
-
-		return targetFilePath;
+		return safeGetTargetFileName(null, n4jsSourceURI, compiledFileExtension)
 	}
 	
 	/**
@@ -68,16 +51,23 @@ public class CompilerHelper {
 	 * and then no extension is appended.
 	 */
 	def String getTargetFileName(IN4JSProject project, URI n4jsSourceURI, String compiledFileExtension) {
+		return safeGetTargetFileName(project, n4jsSourceURI, compiledFileExtension)
+	}
+	
+	/** Delegates to {@link ResourceNameComputer#generateFileDescriptor} but takes care to prepare data. */
+	private def String safeGetTargetFileName(IN4JSProject project, URI n4jsSourceURI, String compiledFileExtension) {
 
 		val extStr = if(compiledFileExtension!==null && compiledFileExtension.length>0) "." + compiledFileExtension else "";
 
-		val String targetFilePath = try {
-			projectUtils.generateFileDescriptor(project,n4jsSourceURI, extStr)
+		var String targetFilePath = null
+		try {
+			if(project === null)
+				targetFilePath = resourceNameComputer.generateFileDescriptor(n4jsSourceURI, extStr)
+			else
+				targetFilePath = resourceNameComputer.generateFileDescriptor(project,n4jsSourceURI, extStr)
 		} catch (Throwable t) {
-
-			//TODO a bit generic error handling
-			handleError(t.message, t)
-			null
+			generatorExceptionHandler.handleError(t.message, t)
+			targetFilePath = null
 		}
 
 		return targetFilePath;

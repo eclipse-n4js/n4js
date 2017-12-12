@@ -68,7 +68,6 @@ public class ResourceNameComputer {
 	 * For delegation project is calculated from provided URI.
 	 * 
 	 * @n4jsSourceURI URI from file resource
-	 * @fileExtension String with containing project info (a.k.a. origin)
 	 */
 	def generateProjectDescriptor(URI n4jsSourceURI) {
 		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, USE_NODE_DESCRIPTOR);
