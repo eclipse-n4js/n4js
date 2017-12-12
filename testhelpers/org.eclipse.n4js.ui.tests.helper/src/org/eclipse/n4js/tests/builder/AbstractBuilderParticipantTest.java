@@ -47,7 +47,6 @@ import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -254,6 +253,7 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		if (!nodeModuleLocationFile.exists()) {
 			nodeModuleLocationFile.createNewFile();
 		}
+		assertTrue("Provided npm location should be available.", nodeModuleLocationFile.exists());
 
 		if (initShippedCode) {
 			shippedCodeInitializeTestHelper.setupBuiltIns();
@@ -282,8 +282,8 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 		File nodeModuleLocationFile = new File(nodeModulesLocation);
 		assertTrue("Provided npm location does not exist.", nodeModuleLocationFile.exists());
 		assertTrue("Provided npm location is not a folder.", nodeModuleLocationFile.isDirectory());
-		FileDeleter.delete(nodeModuleLocationFile);
-		assertFalse("Provided npm location should be deleted.", nodeModuleLocationFile.exists());
+		// FileDeleter.delete(nodeModuleLocationFile);
+		// assertFalse("Provided npm location should be deleted.", nodeModuleLocationFile.exists());
 
 		waitForAutoBuild();
 
