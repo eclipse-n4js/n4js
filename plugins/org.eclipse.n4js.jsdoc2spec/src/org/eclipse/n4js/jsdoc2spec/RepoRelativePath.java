@@ -117,17 +117,6 @@ public class RepoRelativePath {
 			return "";
 		}
 		String repoPath = absFileName.substring(startIdx, endIdx);
-
-		if (repoPath.contains("mesos")) {
-			System.out.println("========");
-			System.out.println("o.O found mesos");
-			System.out.println(" absFileName " + absFileName);
-			System.out.println(" repoName " + repoName);
-			System.out.println(" projName " + projName);
-			System.out.println(" repoPath " + repoPath);
-			System.out.println("------");
-		}
-
 		return repoPath;
 	}
 
