@@ -56,9 +56,11 @@ pipeline {
                 script {
                         sh """\
                                 pwd
+                                git status
                                 ls -la
                                 cd n4js
                                 pwd
+                                git status
                                 ls -la
                            """
                    }
