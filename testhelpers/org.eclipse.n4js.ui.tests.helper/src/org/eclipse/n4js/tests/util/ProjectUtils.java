@@ -142,8 +142,9 @@ public class ProjectUtils {
 	 *
 	 * @param projectSourceFolder
 	 *            folder potentially containing "_project", that is a potential workspace-project
+	 * @returns <code>true</code> if a .project file was created. <code>false</code> otherwise.
 	 */
-	public static void prepareDotProject(File projectSourceFolder) {
+	public static boolean prepareDotProject(File projectSourceFolder) {
 		File dotProject = new File(projectSourceFolder, ".project");
 		File dotProjectTemplate = new File(projectSourceFolder, "_project");
 
@@ -160,7 +161,10 @@ public class ProjectUtils {
 				throw new IllegalStateException("unable to prepare .project-file", e);
 			}
 			dotProject.deleteOnExit();
+			return true;
 		}
+
+		return false;
 	}
 
 	/***/

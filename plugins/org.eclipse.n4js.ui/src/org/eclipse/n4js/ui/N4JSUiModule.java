@@ -90,6 +90,7 @@ import org.eclipse.n4js.ui.utils.CancelIndicatorUiExtractor;
 import org.eclipse.n4js.ui.validation.ManifestAwareResourceValidator;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBroker;
 import org.eclipse.n4js.ui.workingsets.WorkingSetManagerBrokerImpl;
+import org.eclipse.n4js.ui.workingsets.WorkspaceRepositoriesProvider;
 import org.eclipse.n4js.utils.process.OutputStreamProvider;
 import org.eclipse.n4js.utils.ui.editor.AvoidRefreshDocumentProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -658,6 +659,11 @@ public class N4JSUiModule extends org.eclipse.n4js.ui.AbstractN4JSUiModule {
 	@Override
 	public Class<? extends IHyperlinkDetector> bindIHyperlinkDetector() {
 		return N4JSHyperlinkDetector.class;
+	}
+
+	/** */
+	public Class<? extends WorkspaceRepositoriesProvider> bindWorkspaceRepositoryProvider() {
+		return WorkspaceRepositoriesProvider.class;
 	}
 
 	@Override
