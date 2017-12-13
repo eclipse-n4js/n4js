@@ -40,7 +40,6 @@ public class RepoRelativePath {
 		URI uri = resource.getURI();
 		Optional<? extends IN4JSProject> optProj = n4jsCore.findProject(uri);
 		if (optProj.isPresent()) {
-			final String mesos = "mesos";
 			IN4JSProject project = optProj.get();
 			Path path = project.getLocationPath();
 
@@ -60,10 +59,6 @@ public class RepoRelativePath {
 				if (files.length > 0) {
 					String repoName = null;
 
-					boolean hadExCIE = false;
-					boolean prOrigin = false;
-					boolean hadLastS = false;
-					boolean repoHafG = false;
 					File config = new File(files[0], "config");
 					if (config.exists()) {
 						try {
@@ -73,29 +68,23 @@ public class RepoRelativePath {
 							cfg.fromText(configStr);
 							String originURL = cfg.getString("remote", "origin", "url");
 							if (originURL != null && !originURL.isEmpty()) {
-								prOrigin = true;
 								int lastSlash = originURL.lastIndexOf('/');
 								if (lastSlash >= 0) {
-									hadLastS = true;
 									repoName = originURL.substring(lastSlash + 1);
 								} else {
 									repoName = originURL;
 								}
 								if (repoName.endsWith(".git")) {
-									repoHafG = true;
 									repoName = repoName.substring(0, repoName.length() - 4);
 								}
 							}
 						} catch (ConfigInvalidException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-							hadExCIE = true;
 						}
 					}
-					boolean nullRepo = false;
 					if (repoName == null) {
 						repoName = f.getName();
-						nullRepo = true;
 					}
 
 					String projName = project.getProjectId();
@@ -107,23 +96,6 @@ public class RepoRelativePath {
 						repoPath = repoPath.replace(File.separatorChar, '/');
 					}
 
-					if (repoName.contains(mesos) || repoPath.contains(mesos) || projName.contains(mesos)
-							|| projPath.contains(mesos)) {
-						System.out.println("========");
-						System.out.println("o.O found mesos");
-						System.out.println(" repoName " + repoName);
-						System.out.println(" repoPath " + repoPath);
-						System.out.println(" projName " + projName);
-						System.out.println(" projPath " + projPath);
-						System.out.println("------");
-						System.out.println(" nullRepo " + nullRepo);
-						System.out.println(" hadExCIE " + hadExCIE);
-						System.out.println(" prOrigin " + prOrigin);
-						System.out.println(" hadLastS " + hadLastS);
-						System.out.println(" repoHafG " + repoHafG);
-
-					}
-
 					return new RepoRelativePath(repoName, repoPath, projName, projPath, -1);
 
 				} else {
@@ -132,7 +104,6 @@ public class RepoRelativePath {
 
 			}
 		}
-		System.out.println("o.O null RepoRelativePath");
 		return null;
 	}
 
@@ -146,6 +117,17 @@ public class RepoRelativePath {
 			return "";
 		}
 		String repoPath = absFileName.substring(startIdx, endIdx);
+
+		if (repoPath.contains("mesos")) {
+			System.out.println("========");
+			System.out.println("o.O found mesos");
+			System.out.println(" absFileName " + absFileName);
+			System.out.println(" repoName " + repoName);
+			System.out.println(" projName " + projName);
+			System.out.println(" repoPath " + repoPath);
+			System.out.println("------");
+		}
+
 		return repoPath;
 	}
 
