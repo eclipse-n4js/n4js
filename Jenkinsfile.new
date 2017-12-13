@@ -72,16 +72,18 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
             }
             steps {
-                script {
-                    def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
-                    def profiles = [
-                        'buildProduct',
-                        'execute-plugin-tests',
-                        'execute-plugin-ui-tests'
-                    ].join(',')
+                dir('n4js') {
+                    script {
+                        def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
+                        def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                        def profiles = [
+                            'buildProduct',
+                            'execute-plugin-tests',
+                            'execute-plugin-ui-tests'
+                        ].join(',')
 
-                    sh "cd n4js; ${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                    }
                 }
             }
         }
