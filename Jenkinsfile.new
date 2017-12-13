@@ -82,7 +82,8 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
+                        // see https://issues.jenkins-ci.org/browse/JENKINS-33510
+                        sh "cd n4js && ${xvfb} mvn -U clean verify -P${profiles} ${options}"
                     }
                 }
             }
