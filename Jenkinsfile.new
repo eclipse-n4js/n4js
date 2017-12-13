@@ -82,7 +82,7 @@ pipeline {
                             'execute-plugin-ui-tests'
                         ].join(',')
 
-                        // see https://issues.jenkins-ci.org/browse/JENKINS-33510
+                        // force working dir, see https://issues.jenkins-ci.org/browse/JENKINS-33510
                         sh "cd n4js && ${xvfb} mvn -U clean verify -P${profiles} ${options}"
                     }
                 }
