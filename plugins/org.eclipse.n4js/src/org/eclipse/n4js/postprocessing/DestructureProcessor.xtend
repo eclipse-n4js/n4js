@@ -97,9 +97,14 @@ package class DestructureProcessor extends AbstractProcessor {
 
 		val parent = node.eContainer();
 		val isCyclicForwardReference = cache.astNodesCurrentlyBeingTyped.contains(node);
-		if(isCyclicForwardReference && parent instanceof VariableBinding && (parent as VariableBinding).expression===node) {
-			// we get here when typing the second 'b' in 'var [a,b] = [0,b,2];'
-			return new Result(G.anyTypeRef);
+		if(isCyclicForwardReference) {
+			if(parent instanceof VariableBinding && (parent as VariableBinding).expression===node) {
+				// we get here when typing the second 'b' in 'var [a,b] = [0,b,2];'
+				return new Result(G.anyTypeRef);
+			} else if(parent instanceof ForStatement && (parent as ForStatement).expression===node) {
+				// we get here when typing the second 'a' in 'for(var [a] of [[a]]) {}'
+				return new Result(G.anyTypeRef);
+			}
 		}
 
 		log(0, "===START of other identifiable sub-tree");
