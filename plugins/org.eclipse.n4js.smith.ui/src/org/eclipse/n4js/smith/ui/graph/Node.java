@@ -150,6 +150,11 @@ public class Node {
 		this.height = height;
 	}
 
+	/** @return background color of this node */
+	public Color getBackgroundColor() {
+		return color;
+	}
+
 	/** @returns true iff the given point lies within the node's bounds */
 	public boolean contains(@SuppressWarnings("hiding") float x, @SuppressWarnings("hiding") float y) {
 		return getBounds().contains(x, y);
@@ -199,7 +204,7 @@ public class Node {
 	 * Paints the Node
 	 */
 	public void paint(GC gc) {
-		gc.setBackground(color);
+		gc.setBackground(getBackgroundColor());
 		gc.setForeground(gc.getDevice().getSystemColor(SWT.COLOR_BLACK));
 
 		gc.fillRoundRectangle(Math.round(x), Math.round(y), Math.round(width), Math.round(height), 5, 5);

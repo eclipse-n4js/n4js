@@ -29,7 +29,8 @@ import org.eclipse.n4js.n4mf.ProjectReference;
 public class NoopExternalLibraryWorkspace extends ExternalLibraryWorkspace {
 
 	@Override
-	public void registerProjects(final NpmProjectAdaptionResult result, final IProgressMonitor monitor) {
+	public void registerProjects(final NpmProjectAdaptionResult result, final IProgressMonitor monitor,
+			boolean triggerCleanbuild) {
 		// NOOP
 	}
 

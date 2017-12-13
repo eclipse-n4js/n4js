@@ -49,6 +49,8 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.ExternalProjectCacheLoader;
@@ -247,6 +249,16 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	@Override
 	public void storeUpdated(final ExternalLibraryPreferenceStore store, final IProgressMonitor monitor) {
+		final ISchedulingRule rule = builderHelper.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
+			storeUpdatedInternal(store, monitor);
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
+
+	private void storeUpdatedInternal(final ExternalLibraryPreferenceStore store, final IProgressMonitor monitor) {
 		ensureInitialized();
 		final Set<java.net.URI> oldLocations = newLinkedHashSet(locations);
 		final Set<java.net.URI> newLocation = newLinkedHashSet(store.getLocations());
@@ -289,7 +301,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 		addAll(workspaceProjectsToRebuild, collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
 		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
-
 	}
 
 	private void invalidateCache(final ExternalLibraryPreferenceStore store) {
@@ -299,7 +310,19 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	}
 
 	@Override
-	public void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor) {
+	public void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor, boolean triggerCleanbuild) {
+		final ISchedulingRule rule = builderHelper.getRule();
+		try {
+			Job.getJobManager().beginRule(rule, monitor);
+			registerProjectsInternal(result, monitor, triggerCleanbuild);
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
+	}
+
+	private void registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor,
+			boolean triggerCleanbuild) {
+
 		checkState(result.isOK(), "Expected OK result: " + result);
 		ensureInitialized();
 
@@ -312,7 +335,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		final Iterable<IProject> projectsToClean = from(result.getToBeBuilt().getToBeDeleted())
 				.transform(uri -> getProject(new File(uri).getName())).filter(notNull());
 
-		final Collection<IProject> workspaceProjectsToRebuild = newHashSet(
+		final Set<IProject> workspaceProjectsToRebuild = newHashSet(
 				collector.collectProjectsWithDirectExternalDependencies(projectsToClean));
 
 		// Clean projects.
@@ -333,15 +356,17 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 				.filter(p -> !eclipseWorkspaceProjectNamesFilter.apply(p.getName()));
 
 		// Build recently added projects that do not exist in workspace.
-		// XXX akitta: consider filtering out external projects that exists in index already. (@ higher priority level)
+		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(projectsToBuild)) {
 			builderHelper.build(projectsToBuild, subMonitor.newChild(1));
 		}
 		subMonitor.worked(1);
 
-		addAll(workspaceProjectsToRebuild, collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
-		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
-
+		if (triggerCleanbuild) {
+			Iterable<IProject> depPjs = collector.collectProjectsWithDirectExternalDependencies(projectsToBuild);
+			addAll(workspaceProjectsToRebuild, depPjs);
+			scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		}
 	}
 
 	@Override
@@ -447,7 +472,6 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 
 	/**
 	 * Updates the internal state based on the available external project root locations.
-	 *
 	 * <p>
 	 * This cannot be done in construction time, because it might happen that N4MF is not initialized yet, hence not
 	 * available when injecting this instance.

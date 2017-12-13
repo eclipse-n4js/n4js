@@ -67,6 +67,9 @@ public abstract class AbstractBuilderTest {
 
 	/** {@code .n4js} file extension */
 	public static final String F_EXT = "." + N4JSGlobals.N4JS_FILE_EXTENSION;
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	@Inject
 	private IResourceSetProvider resourceSetProvider;

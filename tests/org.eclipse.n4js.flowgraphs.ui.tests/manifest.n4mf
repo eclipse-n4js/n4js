@@ -10,7 +10,7 @@
  */
 
 // manifest used by projects in model
-ProjectId: N4JSXSpecTest
+ProjectId: N4JSXFlowgraphTest
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
 ProjectType: library

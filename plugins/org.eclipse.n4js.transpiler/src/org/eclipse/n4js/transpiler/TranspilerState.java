@@ -12,7 +12,7 @@ package org.eclipse.n4js.transpiler;
 
 import java.util.HashMap;
 
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.NamedElement;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TransformationDependency.Optional;

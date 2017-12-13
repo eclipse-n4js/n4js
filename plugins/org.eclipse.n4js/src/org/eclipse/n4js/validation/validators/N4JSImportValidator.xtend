@@ -22,7 +22,6 @@ import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.organize.imports.ImportProvidedElement
 import org.eclipse.n4js.organize.imports.ImportStateCalculator
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
@@ -50,9 +49,6 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
-	
-	@Inject
-	private ReactHelper reactHelper;
 
 	/**
 	 * NEEEDED
@@ -102,19 +98,6 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 							importSpecifier, IMP_STATIC_NAMESPACE_IMPORT_PLAIN_JS);
 					}
 				}
-			}
-		}
-	}
-	
-	/** Make sure the namespace to react module is React. */
-	@Check
-	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
-		val module = importSpecifier.importedModule
-		if (reactHelper.isReactModule(module)) {
-			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE) {
-						addIssue(
-							IssueCodes.getMessageForJSX_REACT_NAMESPACE_NOT_ALLOWED(),
-							importSpecifier, IssueCodes.JSX_REACT_NAMESPACE_NOT_ALLOWED);
 			}
 		}
 	}

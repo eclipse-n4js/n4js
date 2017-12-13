@@ -59,8 +59,11 @@ public class ReentrantASTIterator {
 					ComplexNode cn = CFEFactoryDispatcher.build(this, mappedCFE);
 					if (cn != null) {
 						assert astPositionCounter - 1 == cn.getExit().astPosition : ASSERTION_MSG_AST_ORDER;
+
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
+
+						CFEEffectInfos.set(cnMap, cn, mappedCFE);
 					}
 				}
 				if (termNode == cfe || (termNode == mappedCFE && termNode != null)) {

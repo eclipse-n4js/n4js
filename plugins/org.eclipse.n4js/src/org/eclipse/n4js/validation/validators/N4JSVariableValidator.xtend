@@ -46,6 +46,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 	@Check
 	def void checkVariableDeclaration(VariableDeclaration varDecl) {
 		if(varDecl.expression!==null) {
+			// TODO: GH-331, remove cases where also the 'UsedBeforeDeclared' issue is raised
 			val refs = varDecl.expression.collectIdentifierRefsTo(varDecl,newArrayList);
 			for(IdentifierRef currRef : refs) {
 				val message = IssueCodes.getMessageForAST_VAR_DECL_RECURSIVE(varDecl.name)

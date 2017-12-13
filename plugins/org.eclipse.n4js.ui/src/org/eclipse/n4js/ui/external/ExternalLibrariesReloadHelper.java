@@ -69,7 +69,7 @@ public class ExternalLibrariesReloadHelper {
 	public void reloadLibraries(final boolean refreshNpmDefinitions, final IProgressMonitor monitor)
 			throws InvocationTargetException {
 
-		final ISchedulingRule rule = getWorkspace().getRoot();
+		final ISchedulingRule rule = builderHelper.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
 			reloadLibrariesInternal(refreshNpmDefinitions, monitor);

@@ -32,12 +32,10 @@ import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.ui.graph.CFEdge;
+import org.eclipse.n4js.smith.ui.graph.CFNode;
 import org.eclipse.n4js.smith.ui.graph.Edge;
 import org.eclipse.n4js.smith.ui.graph.GraphProvider;
 import org.eclipse.n4js.smith.ui.graph.Node;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.xtext.EcoreUtil2;
 
 /**
@@ -46,7 +44,7 @@ import org.eclipse.xtext.EcoreUtil2;
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
 	N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
-	Map<ControlFlowElement, Node> nodeMap = new HashMap<>();
+	Map<ControlFlowElement, CFNode> nodeMap = new HashMap<>();
 	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
 	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
 
@@ -107,6 +105,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	}
 
 	private class NodesEdgesCollector extends GraphVisitor {
+		private int nodeIdx = 0;
 
 		NodesEdgesCollector() {
 			super(Mode.Forward);
@@ -132,14 +131,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 			if (!nodeMap.containsKey(cfe)) {
 				String label = FGUtils.getSourceText(cfe);
 				String description = cfe.getClass().getSimpleName();
-				Node node;
-				if (isDeadCode) {
-					Display displ = Display.getCurrent();
-					Color grey = displ.getSystemColor(SWT.COLOR_GRAY);
-					node = new Node(cfe, label, description, grey);
-				} else {
-					node = new Node(cfe, label, description);
-				}
+				CFNode node = new CFNode(cfe, label, description, nodeIdx++, isDeadCode);
 				nodeMap.put(cfe, node);
 			}
 		}

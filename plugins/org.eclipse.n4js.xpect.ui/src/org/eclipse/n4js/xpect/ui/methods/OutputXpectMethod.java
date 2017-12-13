@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
