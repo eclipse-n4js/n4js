@@ -34,6 +34,7 @@ pipeline {
         cron   ('H   1 * * *') // Nightly build every day a 1am
     }
     stages {
+
         stage('checkout') {
             steps {
                 checkout(
@@ -48,6 +49,16 @@ pipeline {
                     ]
                 )
             }
+        }
+
+        stage('fs browse') {
+            sh """\
+                    pwd
+                    ls -la
+                    cd n4js
+                    pwd
+                    ls -la
+               """
         }
 
         stage('ci') {
