@@ -39,12 +39,14 @@ import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.external.libraries.PackageJson;
+import org.eclipse.n4js.external.libraries.ShippedCodeAccess;
 import org.eclipse.n4js.utils.ProcessExecutionCommandStatus;
 import org.eclipse.n4js.utils.StatusHelper;
 import org.eclipse.n4js.utils.git.GitUtils;
 import org.eclipse.n4js.utils.resources.ExternalProject;
 import org.eclipse.xtext.util.Pair;
 import org.eclipse.xtext.util.Strings;
+import org.eclipse.xtext.util.Tuples;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
@@ -149,120 +151,210 @@ public class NpmManager {
 	 * log encountered errors but it will try to proceed for all remaining packages. Details about issues are in the
 	 * returned status.
 	 *
-	 * @param versionedPackages
+	 * @param versionedNPMs
 	 *            map of name to version data for the packages to be installed via package manager.
 	 * @param monitor
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installDependencies(final Map<String, String> versionedPackages, final IProgressMonitor monitor)
+	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor)
 			throws IllegalBinaryStateException {
 
-		final MultiStatus status = statusHelper
-				.createMultiStatus("Status of installing multiple npm dependencies.");
+		return installDependencies(versionedNPMs, monitor, true);
+	}
+
+	/**
+	 * Installs the given npm packages in a blocking fashion.
+	 *
+	 * This method tries to install all packages even if installation for some of them fail. In such cases it will try
+	 * log encountered errors but it will try to proceed for all remaining packages. Details about issues are in the
+	 * returned status.
+	 *
+	 * @param versionedNPMs
+	 *            map of name to version data for the packages to be installed via package manager.
+	 * @param monitor
+	 *            the monitor for the blocking install process.
+	 * @param triggerCleanbuild
+	 *            iff true, a clean build is triggered on all affected workspace projects.
+	 * @return a status representing the outcome of the install process.
+	 */
+	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
+			boolean triggerCleanbuild) throws IllegalBinaryStateException {
+
+		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
 
 		checkNPM();
 
-		final Set<String> requestedPackages = versionedPackages.keySet();
+		Set<String> requestedNPMs = versionedNPMs.keySet();
+
 		try {
 
-			logger.logInfo(LINE_DOUBLE);
-			logger.logInfo("Installing  npm packages : " + String.join(", ", requestedPackages));
-			logger.logInfo(LINE_DOUBLE);
+			Set<String> oldNPMs = getOldNPMs(monitor, requestedNPMs);
 
-			monitor.beginTask("Installing npm packages...", 10);
+			installUninstallNPMs(versionedNPMs, monitor, status, requestedNPMs, oldNPMs);
 
-			final Set<String> oldDependencies = from(
-					externalLibraryWorkspace.getProjects(locationProvider.getTargetPlatformNodeModulesLocation()))
-							.transform(p -> p.getName()).toSet();
-			monitor.worked(1); // Intentionally cheating for better user experience.
+			Pair<Collection<String>, Iterable<java.net.URI>> changedDeps = getChangedDependencies(monitor, oldNPMs);
+			Collection<String> addedDependencies = changedDeps.getFirst();
+			Iterable<java.net.URI> toBeDeleted = changedDeps.getSecond();
 
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Installing packages... [step 1 of 4]");
-			monitor.setTaskName("Installing packages... [step 1 of 4]");
-			// calculate already installed to skip
-			final Set<String> packagesNamesToInstall = difference(requestedPackages, oldDependencies);
-			final Set<String> packagesToInstall = versionedPackages.entrySet().stream()
-					// skip already installed
-					.filter(e -> packagesNamesToInstall.contains(e.getKey()))
-					// [name, @">=1.0.0 <2.0.0"] to [name@">=1.0.0 <2.0.0"]
-					.map(e -> e.getKey() + Strings.emptyIfNull(e.getValue()))
-					.collect(Collectors.toSet());
+			Collection<File> adaptedPackages = adaptNPMPackages(monitor, status, addedDependencies);
 
-			IStatus installStatus = batchInstallUninstall(monitor, packagesToInstall, true);
-
-			// log possible errors, but proceed with the process
-			// assume that at least some packages were installed correctly and can be adapted
-			if (!installStatus.isOK()) {
-				logger.logInfo("Some packages could not be installed due to errors, see log for details.");
-				status.merge(installStatus);
-			}
-			monitor.worked(2);
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Calculating dependency changes... [step 2 of 4]");
-			monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
-			Map<String, String> afterDependencies = locationProvider.getTargetPlatformContent().dependencies;
-			if (null == afterDependencies) {
-				afterDependencies = newHashMap();
-			}
-			final Set<String> newDependencies = afterDependencies.keySet();
-			final File nodeModulesFolder = new File(locationProvider.getTargetPlatformNodeModulesLocation());
-
-			final Collection<String> deletedDependencies = difference(oldDependencies, newDependencies);
-			final Collection<String> addedDependencies = difference(newDependencies, oldDependencies);
-			final Iterable<java.net.URI> toBeDeleted = from(deletedDependencies)
-					.transform(name -> new File(nodeModulesFolder, name).toURI());
-			logger.logInfo("Dependency changes have been successfully calculated.");
-			monitor.worked(1);
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
-			monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
-			final Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter.adaptPackages(addedDependencies);
-			final IStatus adaptionStatus = result.getFirst();
-
-			// log possible errors, but proceed with the process
-			// assume that at least some packages were installed correctly and can be adapted
-			if (!adaptionStatus.isOK()) {
-				logger.logError(adaptionStatus);
-				status.merge(adaptionStatus);
-			}
-
-			final Collection<File> adaptedPackages = result.getSecond();
-			logger.logInfo("Packages structures has been adapted to N4JS project structure.");
-			monitor.worked(2);
-
-			logger.logInfo(LINE_SINGLE);
-			logger.logInfo("Registering new projects... [step 4 of 4]");
-			monitor.setTaskName("Registering new projects... [step 4 of 4]");
-			// nothing to do in the headless case. TODO inject logic instead?
-			if (Platform.isRunning()) {
-				logger.logInfo("Platform is running.");
-				final Iterable<java.net.URI> toBeUpdated = from(adaptedPackages).transform(file -> file.toURI());
-				final NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated,
-						toBeDeleted);
-				logger.logInfo("Call " + externalLibraryWorkspace + " to register " + toBeUpdated + " and de-register "
-						+ toBeDeleted);
-				externalLibraryWorkspace.registerProjects(adaptionResult, monitor);
-			} else {
-				logger.logInfo("Platform is not running.");
-			}
-			logger.logInfo("Finished registering projects.");
-
-			if (status.isOK())
-				logger.logInfo("Successfully finished installing  packages.");
-			else
-				logger.logInfo("There were errors during installation, see logs for details.");
-
-			logger.logInfo(LINE_DOUBLE);
+			cleanBuildDependencies(monitor, status, toBeDeleted, adaptedPackages, triggerCleanbuild);
 
 			return status;
 
 		} finally {
 			monitor.done();
 		}
+	}
 
+	private Set<String> getOldNPMs(final IProgressMonitor monitor, final Set<String> requestedNPMs) {
+		logger.logInfo(LINE_DOUBLE);
+		logger.logInfo("Installing  npm packages : " + String.join(", ", requestedNPMs));
+		logger.logInfo(LINE_DOUBLE);
+
+		monitor.beginTask("Installing npm packages...", 10);
+
+		URI targetPlatformNodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+		final Set<String> oldNPMs = from(externalLibraryWorkspace.getProjects(targetPlatformNodeModulesLocation))
+				.transform(p -> p.getName()).toSet();
+
+		monitor.worked(1); // Intentionally cheating for better user experience.
+		return oldNPMs;
+	}
+
+	private void installUninstallNPMs(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
+			final MultiStatus status, final Set<String> requestedNPMs, final Set<String> oldNPMs) {
+
+		logger.logInfo(LINE_SINGLE);
+		logger.logInfo("Installing packages... [step 1 of 4]");
+		monitor.setTaskName("Installing packages... [step 1 of 4]");
+		// calculate already installed to skip
+		final Set<String> npmNamesToInstall = difference(requestedNPMs, oldNPMs);
+		final Set<String> npmsToInstall = versionedNPMs.entrySet().stream()
+				// skip already installed
+				.filter(e -> npmNamesToInstall.contains(e.getKey()))
+				// [name, @">=1.0.0 <2.0.0"] to [name@">=1.0.0 <2.0.0"]
+				.map(e -> e.getKey() + Strings.emptyIfNull(e.getValue()))
+				.collect(Collectors.toSet());
+
+		IStatus installStatus = batchInstallUninstall(monitor, npmsToInstall, true);
+
+		// log possible errors, but proceed with the process
+		// assume that at least some packages were installed correctly and can be adapted
+		if (!installStatus.isOK()) {
+			logger.logInfo("Some packages could not be installed due to errors, see log for details.");
+			status.merge(installStatus);
+		}
+		monitor.worked(2);
+	}
+
+	private Pair<Collection<String>, Iterable<java.net.URI>> getChangedDependencies(final IProgressMonitor monitor,
+			Set<String> oldNPMs) {
+
+		logger.logInfo(LINE_SINGLE);
+		logger.logInfo("Calculating dependency changes... [step 2 of 4]");
+		monitor.setTaskName("Calculating dependency changes... [step 2 of 4]");
+
+		externalLibraryWorkspace.updateState();
+		URI targetPlatformNodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
+
+		Map<String, String> afterDependencies = locationProvider.getTargetPlatformContent().dependencies;
+		if (null == afterDependencies) {
+			afterDependencies = newHashMap();
+		}
+		final Set<String> newDependencies = new HashSet<>(afterDependencies.keySet());
+
+		Set<String> newNpmProjectNames = new HashSet<>();
+		Iterable<IProject> newNPMs = externalLibraryWorkspace.getProjects(targetPlatformNodeModulesLocation);
+		for (IProject newNPM : newNPMs) {
+			newNpmProjectNames.add(newNPM.getName());
+		}
+
+		Set<String> overwrittenShippedLibNames = getOverwrittenShippedLibs(newNpmProjectNames);
+		newDependencies.addAll(overwrittenShippedLibNames);
+
+		final Collection<String> addedDependencies = difference(newDependencies, oldNPMs);
+		final Collection<String> deletedDependencies = difference(oldNPMs, newDependencies);
+		final File nodeModulesFolder = new File(targetPlatformNodeModulesLocation);
+		final Iterable<java.net.URI> toBeDeleted = from(deletedDependencies)
+				.transform(name -> new File(nodeModulesFolder, name).toURI());
+		monitor.worked(1);
+		logger.logInfo("Dependency changes have been successfully calculated.");
+
+		Pair<Collection<String>, Iterable<java.net.URI>> changedDeps = Tuples.pair(addedDependencies, toBeDeleted);
+
+		return changedDeps;
+	}
+
+	private Collection<File> adaptNPMPackages(final IProgressMonitor monitor, final MultiStatus status,
+			final Collection<String> addedDependencies) {
+
+		logger.logInfo(LINE_SINGLE);
+		logger.logInfo("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
+		monitor.setTaskName("Adapting npm package structure to N4JS project structure... [step 3 of 4]");
+		final Pair<IStatus, Collection<File>> result = npmPackageToProjectAdapter.adaptPackages(addedDependencies);
+		final IStatus adaptionStatus = result.getFirst();
+
+		// log possible errors, but proceed with the process
+		// assume that at least some packages were installed correctly and can be adapted
+		if (!adaptionStatus.isOK()) {
+			logger.logError(adaptionStatus);
+			status.merge(adaptionStatus);
+		}
+
+		final Collection<File> adaptedPackages = result.getSecond();
+		logger.logInfo("Packages structures has been adapted to N4JS project structure.");
+		monitor.worked(2);
+
+		logger.logInfo(LINE_SINGLE);
+		return adaptedPackages;
+	}
+
+	private void cleanBuildDependencies(final IProgressMonitor monitor, final MultiStatus status,
+			final Iterable<java.net.URI> toBeDeleted, final Collection<File> adaptedPackages,
+			boolean triggerCleanbuild) {
+
+		logger.logInfo("Registering new projects... [step 4 of 4]");
+		monitor.setTaskName("Registering new projects... [step 4 of 4]");
+		// nothing to do in the headless case. TODO inject logic instead?
+		if (Platform.isRunning()) {
+			logger.logInfo("Platform is running.");
+			final Iterable<java.net.URI> toBeUpdated = from(adaptedPackages).transform(file -> file.toURI());
+			final NpmProjectAdaptionResult adaptionResult = NpmProjectAdaptionResult.newOkResult(toBeUpdated,
+					toBeDeleted);
+			logger.logInfo("Call " + externalLibraryWorkspace + " to register " + toBeUpdated + " and de-register "
+					+ toBeDeleted);
+
+			externalLibraryWorkspace.registerProjects(adaptionResult, monitor, triggerCleanbuild);
+		} else {
+			logger.logInfo("Platform is not running.");
+		}
+		logger.logInfo("Finished registering projects.");
+
+		if (status.isOK())
+			logger.logInfo("Successfully finished installing  packages.");
+		else
+			logger.logInfo("There were errors during installation, see logs for details.");
+
+		logger.logInfo(LINE_DOUBLE);
+	}
+
+	private Set<String> getOverwrittenShippedLibs(Set<String> newNpmProjectNames) {
+		Set<String> overwrittenShippedLibNames = new HashSet<>();
+		Iterable<String> ps = ShippedCodeAccess.getAllShippedPaths();
+		for (String shippedLibPath : ps) {
+			URI uri = new File(shippedLibPath).toURI();
+			Iterable<IProject> slProjects = externalLibraryWorkspace.getProjects(uri);
+
+			for (IProject slProject : slProjects) {
+				String slpName = slProject.getName();
+				if (newNpmProjectNames.contains(slpName)) {
+					overwrittenShippedLibNames.add(slpName);
+				}
+			}
+		}
+		return overwrittenShippedLibNames;
 	}
 
 	/**
