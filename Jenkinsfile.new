@@ -52,13 +52,17 @@ pipeline {
         }
 
         stage('fs browse') {
-            sh """\
-                    pwd
-                    ls -la
-                    cd n4js
-                    pwd
-                    ls -la
-               """
+                    steps {
+                script {
+                        sh """\
+                                pwd
+                                ls -la
+                                cd n4js
+                                pwd
+                                ls -la
+                           """
+                   }
+               }
         }
 
         stage('ci') {
