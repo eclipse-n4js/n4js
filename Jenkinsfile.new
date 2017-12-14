@@ -35,36 +35,16 @@ pipeline {
     }
     stages {
 
-        stage('checkout') {
-            steps {
-                checkout(
-                    [
-                        $class: 'GitSCM',
-                        userRemoteConfigs: [
-                            [url: 'https://github.com/eclipse/n4js']
-                        ],
-                        extensions: [
-                            [$class: 'RelativeTargetDirectory', relativeTargetDir: 'n4js']
-                        ]
-                    ]
-                )
-            }
-        }
-
         stage('fs browse') {
-                    steps {
+            steps {
                 script {
                         sh """\
                                 pwd
                                 git status
                                 ls -la
-                                cd n4js
-                                pwd
-                                git status
-                                ls -la
                            """
-                   }
-               }
+                }
+            }
         }
 
         stage('ci') {
@@ -72,19 +52,16 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 5..23 }
             }
             steps {
-                dir('n4js') {
-                    script {
-                        def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                        def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
-                        def profiles = [
-                            'buildProduct',
-                            'execute-plugin-tests',
-                            'execute-plugin-ui-tests'
-                        ].join(',')
+                script {
+                    def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
+                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                    def profiles = [
+                        'buildProduct',
+                        'execute-plugin-tests',
+                        'execute-plugin-ui-tests'
+                    ].join(',')
 
-                        // force working dir, see https://issues.jenkins-ci.org/browse/JENKINS-33510
-                        sh "cd n4js && ${xvfb} mvn -U clean verify -P${profiles} ${options}"
-                    }
+                    sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
                 }
             }
         }
@@ -97,23 +74,20 @@ pipeline {
                 expression { return Calendar.instance.get(Calendar.HOUR_OF_DAY) in 0..4 }
             }
             steps {
-                dir('n4js') {
-                    script {
-                        def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
-                        def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
-                        def profiles = [
-                            'buildProduct',
-                            'execute-plugin-tests',
-                            'execute-plugin-ui-tests',
-                            'execute-ecma-tests',
-                            'execute-performance-tests',
-                            'execute-swtbot-performance-tests',
-                            'execute-accesscontrol-tests '
-                        ].join(',')
-    
-                        // force working dir, see https://issues.jenkins-ci.org/browse/JENKINS-33510
-                        sh "cd n4js && ${xvfb} mvn -U clean verify -P${profiles} ${options}"
-                    }
+                script {
+                    def xvfb = 'xvfb-run -a --server-args="-screen 0 1024x768x24" '
+                    def options = '-Dmaven.test.failure.ignore -e -DWORKSPACE=' + env.WORKSPACE
+                    def profiles = [
+                        'buildProduct',
+                        'execute-plugin-tests',
+                        'execute-plugin-ui-tests',
+                        'execute-ecma-tests',
+                        'execute-performance-tests',
+                        'execute-swtbot-performance-tests',
+                        'execute-accesscontrol-tests '
+                    ].join(',')
+
+                    sh "${xvfb} mvn -U clean verify -P${profiles} ${options}"
                 }
             }
         }
