@@ -52,9 +52,9 @@ public final class EObjectDescriptionHelper {
 			return false;
 		}
 
-		// check if not a main module, assume true
+		// if not a main module we assume true
 		final String mainModuelUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
-		if (mainModuelUserData == null || !Boolean.getBoolean(mainModuelUserData)) {
+		if (mainModuelUserData == null || !Boolean.valueOf(mainModuelUserData)) {
 			return true;
 		}
 
