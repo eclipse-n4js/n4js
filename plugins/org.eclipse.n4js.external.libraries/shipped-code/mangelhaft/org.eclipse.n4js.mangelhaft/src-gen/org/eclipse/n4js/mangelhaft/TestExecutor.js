@@ -3,12 +3,12 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/assert/AssertionError',
-		'org/eclipse/n4js/mangelhaft/types/ResultGroup',
-		'org/eclipse/n4js/mangelhaft/types/ResultGroups',
-		'org/eclipse/n4js/mangelhaft/types/TestResult',
-		'org/eclipse/n4js/mangelhaft/types/TestSpy',
-		'org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet'
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestResult',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet'
 	], function($n4Export) {
 		var AssertionError, ResultGroup, ResultGroups, TestResult, TestSpy, PreconditionNotMet, TestExecutor;
 		TestExecutor = function TestExecutor(spy) {
@@ -321,7 +321,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestExecutor',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.TestExecutor.TestExecutor',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

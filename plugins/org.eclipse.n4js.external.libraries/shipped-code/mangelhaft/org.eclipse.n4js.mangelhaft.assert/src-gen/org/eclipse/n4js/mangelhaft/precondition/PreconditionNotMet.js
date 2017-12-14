@@ -23,7 +23,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'PreconditionNotMet',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.assert',
 						fqn: 'org.eclipse.n4js.mangelhaft.precondition.PreconditionNotMet.PreconditionNotMet',
 						n4superType: undefined,
 						allImplementedInterfaces: [],

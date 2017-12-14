@@ -3,8 +3,8 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/types/ITestReporter',
-		'org/eclipse/n4js/mangelhaft/types/TestSpy'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ITestReporter',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy'
 	], function($n4Export) {
 		var ITestReporter, TestSpy, IDEReporter;
 		IDEReporter = function IDEReporter(endpoint, timeoutBufferOverride) {
@@ -189,7 +189,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'IDEReporter',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.reporter.ide',
 						fqn: 'org.eclipse.n4js.mangelhaft.reporter.ide.IDEReporter.IDEReporter',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [

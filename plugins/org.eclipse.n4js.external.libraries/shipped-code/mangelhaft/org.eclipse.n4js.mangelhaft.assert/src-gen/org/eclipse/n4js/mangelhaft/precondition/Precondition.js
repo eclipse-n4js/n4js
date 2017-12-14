@@ -3,8 +3,8 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/assert/Assert',
-		'org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet'
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/Assert',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet'
 	], function($n4Export) {
 		var Assert, PreconditionNotMet, Precondition;
 		Precondition = function Precondition() {
@@ -31,7 +31,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'Precondition',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.assert',
 						fqn: 'org.eclipse.n4js.mangelhaft.precondition.Precondition.Precondition',
 						n4superType: Assert.n4type,
 						allImplementedInterfaces: [],

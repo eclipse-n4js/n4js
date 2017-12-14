@@ -3,7 +3,7 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/types/Nvp'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/Nvp'
 	], function($n4Export) {
 		var Nvp, TypedNvp, TestMethodDescriptor;
 		TypedNvp = function TypedNvp(spec) {
@@ -38,7 +38,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TypedNvp',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestMethodDescriptor.TypedNvp',
 						n4superType: Nvp.n4type,
 						allImplementedInterfaces: [],
@@ -92,7 +92,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestMethodDescriptor',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestMethodDescriptor.TestMethodDescriptor',
 						n4superType: TypedNvp.n4type,
 						allImplementedInterfaces: [],

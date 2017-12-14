@@ -3,7 +3,7 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/types/DispatchQueue'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/DispatchQueue'
 	], function($n4Export) {
 		var DispatchQueue, TestSpy;
 		TestSpy = function TestSpy() {
@@ -73,7 +73,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestSpy',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestSpy.TestSpy',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

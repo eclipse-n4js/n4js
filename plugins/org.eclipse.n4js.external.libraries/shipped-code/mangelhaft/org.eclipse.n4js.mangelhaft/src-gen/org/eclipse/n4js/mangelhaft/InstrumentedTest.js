@@ -3,9 +3,9 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/types/IInstrumentedTest',
-		'org/eclipse/n4js/mangelhaft/types/TestFunctionType',
-		'org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/IInstrumentedTest',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor'
 	], function($n4Export) {
 		var IInstrumentedTest, TestFunctionType, TestMethodDescriptor, getAllPropertyNames, InstrumentedTest;
 		getAllPropertyNames = function getAllPropertyNames(objProt, propNames) {
@@ -281,7 +281,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'InstrumentedTest',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.InstrumentedTest.InstrumentedTest',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [

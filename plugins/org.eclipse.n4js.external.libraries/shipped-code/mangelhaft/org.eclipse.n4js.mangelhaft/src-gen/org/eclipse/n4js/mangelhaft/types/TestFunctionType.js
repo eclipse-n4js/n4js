@@ -36,7 +36,7 @@
 				], function(instanceProto, staticProto) {
 					var metaClass = new N4EnumType({
 						name: 'TestFunctionType',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestFunctionType.TestFunctionType',
 						n4superType: undefined,
 						allImplementedInterfaces: [],

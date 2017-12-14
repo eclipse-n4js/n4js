@@ -3,9 +3,9 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/assert/AssertionError',
-		'org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
-		'org/eclipse/n4js/mangelhaft/assert/DeepEqual'
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/AssertionError',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/assert/DeepEqual'
 	], function($n4Export) {
 		var AssertionError, PreconditionNotMet, deepEqual, getTypeName, DEFAULT_TIMEOUT, DEFAULT_POLLING_INTERVAL, isUndefinedOrNull, isArguments, expectedException, Assert;
 		getTypeName = function getTypeName(val) {
@@ -361,7 +361,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'Assert',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.assert',
 						fqn: 'org.eclipse.n4js.mangelhaft.assert.Assert.Assert',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

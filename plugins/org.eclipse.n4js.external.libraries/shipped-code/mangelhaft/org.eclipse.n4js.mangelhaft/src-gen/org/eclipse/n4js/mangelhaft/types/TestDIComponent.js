@@ -12,7 +12,7 @@
 				$makeClass(TestDIComponent, N4Object, [], {}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestDIComponent',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestDIComponent.TestDIComponent',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

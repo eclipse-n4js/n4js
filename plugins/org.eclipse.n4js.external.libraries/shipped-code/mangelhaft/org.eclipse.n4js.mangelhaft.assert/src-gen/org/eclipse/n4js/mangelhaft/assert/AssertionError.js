@@ -107,7 +107,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'AssertionError',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.assert',
 						fqn: 'org.eclipse.n4js.mangelhaft.assert.AssertionError.AssertionError',
 						n4superType: undefined,
 						allImplementedInterfaces: [],

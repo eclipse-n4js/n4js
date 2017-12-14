@@ -68,7 +68,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'ResultGroup',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.ResultGroup.ResultGroup',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

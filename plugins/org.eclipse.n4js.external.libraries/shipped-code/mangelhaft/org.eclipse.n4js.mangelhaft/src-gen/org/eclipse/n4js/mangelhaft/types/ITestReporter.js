@@ -24,7 +24,7 @@
 				$makeInterface(ITestReporter, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'ITestReporter',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.ITestReporter.ITestReporter',
 						n4superType: undefined,
 						allImplementedInterfaces: [],

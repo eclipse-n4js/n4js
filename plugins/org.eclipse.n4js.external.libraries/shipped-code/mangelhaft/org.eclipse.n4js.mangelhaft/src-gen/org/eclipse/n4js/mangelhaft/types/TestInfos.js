@@ -29,7 +29,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestInfos',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestInfos.TestInfos',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

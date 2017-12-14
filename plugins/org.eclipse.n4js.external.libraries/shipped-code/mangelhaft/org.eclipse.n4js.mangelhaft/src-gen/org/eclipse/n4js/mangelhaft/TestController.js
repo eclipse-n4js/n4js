@@ -3,15 +3,15 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/InstrumentedTest',
-		'org/eclipse/n4js/mangelhaft/TestExecutor',
-		'org/eclipse/n4js/mangelhaft/types/ResultGroup',
-		'org/eclipse/n4js/mangelhaft/types/ResultGroups',
-		'org/eclipse/n4js/mangelhaft/types/TestFunctionType',
-		'org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor',
-		'org/eclipse/n4js/mangelhaft/types/TestSpy',
-		'org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
-		'n4js/lang/N4Injector'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/InstrumentedTest',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestExecutor',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroup',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/ResultGroups',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestFunctionType',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestMethodDescriptor',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestSpy',
+		'org.eclipse.n4js.mangelhaft.assert/src-gen/org/eclipse/n4js/mangelhaft/precondition/PreconditionNotMet',
+		'n4js.lang/src-gen/n4js/lang/N4Injector'
 	], function($n4Export) {
 		var InstrumentedTest, TestExecutor, ResultGroup, ResultGroups, TestFunctionType, TestMethodDescriptor, TestSpy, PreconditionNotMet, N4Injector, TestController;
 		TestController = function TestController() {
@@ -240,7 +240,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestController',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.TestController.TestController',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

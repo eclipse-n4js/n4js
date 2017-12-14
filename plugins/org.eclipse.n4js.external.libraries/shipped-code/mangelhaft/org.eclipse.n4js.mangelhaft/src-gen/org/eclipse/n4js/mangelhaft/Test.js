@@ -43,7 +43,7 @@
 				$makeInterface(IFIXME, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'IFIXME',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.Test.IFIXME',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -71,7 +71,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'FIXME1',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.Test.FIXME1',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [
@@ -105,7 +105,7 @@
 				$makeInterface(IFIXME2, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'IFIXME2',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.Test.IFIXME2',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -142,7 +142,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'FIXME2',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.Test.FIXME2',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [

@@ -99,7 +99,7 @@
 				$makeInterface(InjectedTypeMeta, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'InjectedTypeMeta',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.InjectedTypeMeta',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -158,7 +158,7 @@
 				$makeInterface(InjectedClassMeta, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'InjectedClassMeta',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.InjectedClassMeta',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -210,7 +210,7 @@
 				$makeInterface(BindingInfo, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'BindingInfo',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.BindingInfo',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -258,7 +258,7 @@
 				$makeInterface(ProvideMethodInfo, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'ProvideMethodInfo',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.ProvideMethodInfo',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -306,7 +306,7 @@
 				$makeInterface(BinderMeta, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'BinderMeta',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.BinderMeta',
 						n4superType: undefined,
 						allImplementedInterfaces: [
@@ -351,7 +351,7 @@
 				$makeInterface(DIComponentMeta, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'DIComponentMeta',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.DIComponentMeta',
 						n4superType: undefined,
 						allImplementedInterfaces: [
@@ -387,7 +387,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: '_$',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector._$',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],
@@ -418,7 +418,7 @@
 				$makeClass(DIConfigurationError, Error, [], {}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'DIConfigurationError',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.DIConfigurationError',
 						n4superType: undefined,
 						allImplementedInterfaces: [],
@@ -441,7 +441,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'DIUnsatisfiedBindingError',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.DIUnsatisfiedBindingError',
 						n4superType: DIConfigurationError.n4type,
 						allImplementedInterfaces: [],
@@ -869,7 +869,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'N4Injector',
-						origin: '',
+						origin: 'n4js.lang',
 						fqn: 'n4js.lang.N4Injector.N4Injector',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

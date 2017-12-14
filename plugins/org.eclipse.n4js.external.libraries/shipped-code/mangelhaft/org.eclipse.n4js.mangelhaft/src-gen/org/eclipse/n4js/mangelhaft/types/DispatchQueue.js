@@ -244,7 +244,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'DispatchQueue',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.DispatchQueue.DispatchQueue',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],
@@ -433,7 +433,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'ListenerDS',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.DispatchQueue.ListenerDS',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

@@ -25,7 +25,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'Nvp',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.Nvp.Nvp',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],

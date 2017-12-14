@@ -23,7 +23,7 @@
 				}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestError',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.TestError.TestError',
 						n4superType: undefined,
 						allImplementedInterfaces: [],

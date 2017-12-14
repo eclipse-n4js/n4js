@@ -102,7 +102,7 @@
 				$makeInterface(IInstrumentedTest, function(instanceProto, staticProto) {
 					var metaClass = new N4Interface({
 						name: 'IInstrumentedTest',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft',
 						fqn: 'org.eclipse.n4js.mangelhaft.types.IInstrumentedTest.IInstrumentedTest',
 						n4superType: undefined,
 						allImplementedInterfaces: [],

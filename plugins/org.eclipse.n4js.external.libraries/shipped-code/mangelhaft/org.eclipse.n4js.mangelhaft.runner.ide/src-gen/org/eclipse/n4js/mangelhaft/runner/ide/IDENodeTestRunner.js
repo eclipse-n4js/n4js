@@ -3,11 +3,11 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'org/eclipse/n4js/mangelhaft/TestController',
-		'org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter',
-		'n4js/lang/N4Injector',
-		'org/eclipse/n4js/mangelhaft/Test',
-		'org/eclipse/n4js/mangelhaft/types/TestDIComponent'
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/TestController',
+		'org.eclipse.n4js.mangelhaft.reporter.ide/src-gen/org/eclipse/n4js/mangelhaft/reporter/ide/IDEReporter',
+		'n4js.lang/src-gen/n4js/lang/N4Injector',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/Test',
+		'org.eclipse.n4js.mangelhaft/src-gen/org/eclipse/n4js/mangelhaft/types/TestDIComponent'
 	], function($n4Export) {
 		var TestController, IDEReporter, N4Injector, FIXME1, FIXME2, IFIXME, IFIXME2, TestDIComponent, IDENodeTestRunner, TestBinder, Root, parentinj, root, main;
 		IDENodeTestRunner = function IDENodeTestRunner() {
@@ -78,7 +78,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'IDENodeTestRunner',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.runner.ide',
 						fqn: 'org.eclipse.n4js.mangelhaft.runner.ide.IDENodeTestRunner.IDENodeTestRunner',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],
@@ -137,7 +137,7 @@
 				$makeClass(TestBinder, N4Object, [], {}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'TestBinder',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.runner.ide',
 						fqn: 'org.eclipse.n4js.mangelhaft.runner.ide.IDENodeTestRunner.TestBinder',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],
@@ -190,7 +190,7 @@
 				}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
 						name: 'Root',
-						origin: '',
+						origin: 'org.eclipse.n4js.mangelhaft.runner.ide',
 						fqn: 'org.eclipse.n4js.mangelhaft.runner.ide.IDENodeTestRunner.Root',
 						n4superType: N4Object.n4type,
 						allImplementedInterfaces: [],
