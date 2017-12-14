@@ -15,14 +15,11 @@ import java.nio.file.Path;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jgit.errors.ConfigInvalidException;
-import org.eclipse.jgit.lib.Config;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.xtext.nodemodel.ICompositeNode;
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils;
-import org.eclipse.xtext.util.Files;
 
 import com.google.common.base.Optional;
 
@@ -59,31 +56,18 @@ public class RepoRelativePath {
 				if (files.length > 0) {
 					String repoName = null;
 
-					File config = new File(files[0], "config");
-					if (config.exists()) {
-						try {
-							String configStr = Files.readFileIntoString(config.getAbsolutePath());
-							Config cfg = new Config();
-
-							cfg.fromText(configStr);
-							String originURL = cfg.getString("remote", "origin", "url");
-							if (originURL != null && !originURL.isEmpty()) {
-								int lastSlash = originURL.lastIndexOf('/');
-								if (lastSlash >= 0) {
-									repoName = originURL.substring(lastSlash + 1);
-								} else {
-									repoName = originURL;
-								}
-								if (repoName.endsWith(".git")) {
-									repoName = repoName.substring(0, repoName.length() - 4);
-								}
-							}
-						} catch (ConfigInvalidException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+					File gitFolder = files[0];
+					File config = new File(gitFolder, "config");
+					if (!config.exists()) {
+						System.out.println("Processed location does not look like valid git location: " + gitFolder);
+						f = f.getParentFile();
+						continue;
 					}
-					if (repoName == null) {
+
+					File gitParentFolder = gitFolder.getParentFile();
+					if (gitParentFolder != null && gitParentFolder.exists()) {
+						repoName = gitParentFolder.getName();
+					} else {
 						repoName = f.getName();
 					}
 
