@@ -31,7 +31,7 @@
     if (!global.System || !global.System.import) {
         global.System = staticSystem;
     }
-    require("n4js-es5/rt.js");
+    require("n4js-es5/src-gen/rt.js");
 
     exports.staticSystem = staticSystem;
 
