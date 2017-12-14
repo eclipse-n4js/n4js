@@ -12,10 +12,10 @@ package org.eclipse.n4js.external;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
-import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
-import static org.eclipse.core.resources.IncrementalProjectBuilder.FULL_BUILD;
+import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD;
 import static org.eclipse.core.runtime.IStatus.ERROR;
 import static org.eclipse.core.runtime.Status.OK_STATUS;
+import static org.eclipse.n4js.N4JSPluginId.N4JS_PLUGIN_ID;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IBuildConfiguration;
@@ -58,7 +58,7 @@ public class RebuildWorkspaceProjectsJob extends WorkspaceJob {
 	@Override
 	public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 		try {
-			ResourcesPlugin.getWorkspace().build(configs, FULL_BUILD, true, monitor);
+			ResourcesPlugin.getWorkspace().build(configs, CLEAN_BUILD, true, monitor);
 			return OK_STATUS;
 		} catch (final CoreException e) {
 			final String message = "Error while rebuilding workspace content.";
