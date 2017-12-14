@@ -1,0 +1,15 @@
+ProjectId: express
+ProjectType: library
+ProjectVersion: 4.0.0-incomplete
+VendorId: npm
+Output: "."
+MainModule: "index"
+ModuleLoader: commonjs
+Sources {
+    source {
+        "src"
+    }
+}
+RequiredRuntimeLibraries {
+    n4js-runtime-node
+}
