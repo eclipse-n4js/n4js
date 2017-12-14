@@ -39,7 +39,7 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 	private MultiLocallyKnownTypesScopingHelper multiLocallyKnownTypesScopingHelper
 
 	override getVersionScope(TClassifier classifier) {
-		return super.getScope(classifier.containingModule,
+		return getN4JSScope(classifier.containingModule,
 			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 	}
 

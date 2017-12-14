@@ -8,13 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.n4idl.validation.validators
+package org.eclipse.n4js.validation
 
 import com.google.inject.Inject
-import org.eclipse.n4js.n4idl.validation.IssueCodes
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator
+import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.validation.Check
 import org.eclipse.xtext.validation.EValidatorRegistrar
 

@@ -17,8 +17,6 @@ import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.ecore.EPackage
 import org.eclipse.n4js.n4idl.validation.validators.N4IDLDeclaredNameValidator
-import org.eclipse.n4js.n4idl.validation.validators.N4IDLFunctionValidator
-import org.eclipse.n4js.n4idl.validation.validators.N4IDLVersionValidator
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
@@ -81,7 +79,6 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSMemberRedefinitionValidator,
 	N4JSClassValidator,
 	N4JSInterfaceValidator,
-	N4IDLFunctionValidator,
 	N4JSImportValidator,
 	N4JSTypeValidator,
 	N4JSExpressionValidator,
@@ -100,8 +97,7 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSInjectorCallsitesValidator,
 	N4JSModuleValidator,
 	N4JSDestructureValidator,
-	UnsupportedFeatureValidator,
-	N4IDLVersionValidator
+	UnsupportedFeatureValidator
 ])
 @Log
 class N4IDLValidator extends InternalTypeSystemValidator {

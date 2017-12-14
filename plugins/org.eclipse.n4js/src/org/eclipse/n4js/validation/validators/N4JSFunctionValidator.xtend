@@ -74,6 +74,7 @@ import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser
+import org.eclipse.n4js.n4JS.MigrationDeclaration
 
 /**
  */
@@ -558,6 +559,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 					return;
 				}
 			}
+			
+			// MigrationDeclarations do not have a name by default
+			if (functionDeclaration instanceof MigrationDeclaration) {
+				return;
+			}
+			
 			// not on "default export":
 			// add message "function declarations must have a name"
 			if( functionDeclaration.body !== null) {

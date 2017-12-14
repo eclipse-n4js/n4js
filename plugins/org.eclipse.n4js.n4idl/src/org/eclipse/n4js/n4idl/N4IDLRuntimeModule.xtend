@@ -17,16 +17,13 @@ import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
 import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider
 import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
 import org.eclipse.n4js.n4idl.validation.N4IDLImportValidator
-import org.eclipse.n4js.n4idl.validation.N4IDLJavaScriptVariantHelper
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.scoping.imports.ImportedElementsMap
 import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.typesystem.VersionResolver
-import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.validators.N4JSImportValidator
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.xtext.service.SingletonBinding
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -425,13 +422,13 @@ class N4IDLRuntimeModule extends AbstractN4IDLRuntimeModule {
 //				.to(N4JSSimpleFormattingPreferenceProvider);
 //	}
 
-	/***
-	 * Bind JavaScriptVariantHelper
-	 */
-	@SingletonBinding
-	def Class<? extends JavaScriptVariantHelper> bindJavaScriptVariantHelper() {
-		return N4IDLJavaScriptVariantHelper;
-	}
+//	/***
+//	 * Bind JavaScriptVariantHelper
+//	 */
+//	@SingletonBinding
+//	def Class<? extends JavaScriptVariantHelper> bindJavaScriptVariantHelper() {
+//		return N4IDLJavaScriptVariantHelper;
+//	}
 
 	/**
 	 * Bind type version resolver (used in N4JS.xsemantics). This customization point is used in N4IDL to support
