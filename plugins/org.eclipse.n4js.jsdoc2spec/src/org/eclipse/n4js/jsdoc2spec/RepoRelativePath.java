@@ -128,9 +128,9 @@ public class RepoRelativePath {
 		return null;
 	}
 
-	private static String getRepoPath(String absFileName, String projName, String repoName) {
+	private static String getRepoPath(String absFileName, String projName, String repoCloneName) {
 		int startIdx = -1;
-		String repoNameSlashes = "/" + repoName + "/";
+		String repoNameSlashes = "/" + repoCloneName + "/";
 		String projNameSlashes = "/" + projName + "/";
 		startIdx = absFileName.indexOf(repoNameSlashes) + repoNameSlashes.length();
 		int endIdx = absFileName.indexOf(projNameSlashes);
@@ -143,7 +143,7 @@ public class RepoRelativePath {
 			System.out.println("(o.O)");
 			System.out.println(" absFileName " + absFileName);
 			System.out.println(" projName " + projName);
-			System.out.println(" repoName " + repoName);
+			System.out.println(" repoName " + repoCloneName);
 		}
 		return repoPath;
 	}
