@@ -16,7 +16,6 @@ import java.util.List
 import org.eclipse.emf.common.util.BasicDiagnostic
 import org.eclipse.emf.common.util.Diagnostic
 import org.eclipse.emf.ecore.EPackage
-import org.eclipse.n4js.n4idl.validation.validators.N4IDLDeclaredNameValidator
 import org.eclipse.n4js.ts.validation.TypesValidator
 import org.eclipse.n4js.utils.Log
 import org.eclipse.n4js.validation.AbstractMessageAdjustingN4JSValidator.MethodWrapperCancelable
@@ -88,7 +87,6 @@ import org.eclipse.xtext.validation.ComposedChecks
 	N4JSSuperValidator,
 	N4JSLambdaValidator,
 	N4JSVariableValidator,
-	N4IDLDeclaredNameValidator,
 	N4JSStatementValidator,
 	N4JSAnnotationValidator,
 	N4JSEnumValidator,
