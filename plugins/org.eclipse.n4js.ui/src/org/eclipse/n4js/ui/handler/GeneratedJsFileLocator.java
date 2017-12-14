@@ -22,9 +22,9 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
-import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -36,6 +36,7 @@ public class GeneratedJsFileLocator {
 	@Inject
 	private IN4JSCore core;
 
+	@Inject
 	private ResourceNameComputer resourceNameComputer;
 
 	@Inject
