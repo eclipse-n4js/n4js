@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -84,8 +83,9 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 	/** Finds a script for the given input and then triggers a control flow analyses. */
 	private void performFlowAnalyses(Object input) {
 		Script script = findScript(input);
-		Objects.nonNull(script);
-		flowAnalyzer.createGraphs(script);
+		if (script != null) {
+			flowAnalyzer.createGraphs(script);
+		}
 	}
 
 	/** Searches the script node in the given input. */
