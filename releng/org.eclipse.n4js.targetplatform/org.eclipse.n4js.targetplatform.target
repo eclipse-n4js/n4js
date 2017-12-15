@@ -60,8 +60,8 @@
       <repository location="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
-      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201710301651"/>
-      <repository location="https://ci.eclipse.org/n4js/view/xpect/job/xpect_yoosiba/job/EclipseJenkins/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+      <unit id="org.eclipse.xpect.xtext.lib" version="0.2.0.201712151701"/>
+      <repository location="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
       <unit id="org.eclipse.license.feature.group" version="1.0.1.v20140414-1359"/>

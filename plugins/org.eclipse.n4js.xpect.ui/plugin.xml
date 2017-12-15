@@ -273,35 +273,35 @@ Contributors:
 
    <!-- Register .n4js file extension to XPECT -->
     <extension
-          point="org.xpect.testSuite">
+          point="org.eclipse.xpect.testSuite">
       <testSuite
             class="org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass"
             fileExtension="n4js">
       </testSuite>
     </extension>
     <extension
-          point="org.xpect.testSuite">
+          point="org.eclipse.xpect.testSuite">
       <testSuite
             class="org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass"
             fileExtension="n4jsx">
       </testSuite>
     </extension>
     <extension
-          point="org.xpect.testSuite">
+          point="org.eclipse.xpect.testSuite">
       <testSuite
             class="org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass"
             fileExtension="n4jsd">
       </testSuite>
     </extension>
     <extension
-          point="org.xpect.testSuite">
+          point="org.eclipse.xpect.testSuite">
       <testSuite
             class="org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass"
             fileExtension="js">
       </testSuite>
     </extension>
     <extension
-          point="org.xpect.testSuite">
+          point="org.eclipse.xpect.testSuite">
       <testSuite
             class="org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestClass"
             fileExtension="jsx">
@@ -309,7 +309,7 @@ Contributors:
     </extension>
 
     <extension
-         point="org.xpect.fileExtensions">
+         point="org.eclipse.xpect.fileExtensions">
       <fileExtension
             fileExtension="xt">
       </fileExtension>

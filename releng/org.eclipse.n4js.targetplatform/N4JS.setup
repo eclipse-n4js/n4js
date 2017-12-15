@@ -252,7 +252,7 @@
         name="org.eclipse.xpect.sdk.feature.group"
         versionRange="[0.2.0,0.2.1)"/>
     <repository
-        url="https://ci.eclipse.org/n4js/view/xpect/job/xpect_yoosiba/job/EclipseJenkins/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+        url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
   </setupTask>
   <setupTask
       xsi:type="setup.p2:P2Task"

@@ -30,9 +30,7 @@ import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
-import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -40,18 +38,13 @@ import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.EObjectCoveringRegion;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter.IEObjectCoveringRegion;
 import org.eclipse.n4js.xpect.methods.scoping.IN4JSCommaSeparatedValuesExpectation;
 import org.eclipse.n4js.xpect.methods.scoping.N4JSCommaSeparatedValuesExpectation;
-import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.xbase.lib.Pair;
-import org.xpect.XpectImport;
-import org.xpect.expectation.IStringExpectation;
-import org.xpect.expectation.StringExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
 
 /**
  */
