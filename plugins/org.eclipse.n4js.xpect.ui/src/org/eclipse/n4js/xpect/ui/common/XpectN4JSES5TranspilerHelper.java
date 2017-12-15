@@ -17,6 +17,7 @@ import static com.google.common.collect.FluentIterable.from;
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static org.eclipse.n4js.utils.io.FileUtils.createDirectory;
+import static org.eclipse.n4js.utils.io.FileUtils.createNestedDirectory;
 import static org.eclipse.n4js.utils.io.FileUtils.getTempFolder;
 
 import java.io.BufferedReader;
@@ -79,6 +80,15 @@ import com.google.inject.Inject;
  * {@link EcmaScriptSubGenerator} for compilation and {@link NodeRunner} for execution.
  */
 public class XpectN4JSES5TranspilerHelper {
+
+	/**
+	 * https://github.com/eclipse/n4js/issues/394
+	 *
+	 * for simplifying node js compilation target we want to skip compiler id in the compiled code segments Hide this
+	 * behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators, or we
+	 * might make this configurable in the manifest.
+	 */
+	public static final boolean USE_COMPILED_OUTPUT = true;
 
 	@Inject
 	private IN4JSCore core;
@@ -380,7 +390,7 @@ public class XpectN4JSES5TranspilerHelper {
 	 * is consumed from js-code.
 	 */
 	private String jsModulePathToRun(Script script) {
-		ArrayList<String> pathSegements = newArrayList(getProjectId(script));
+		ArrayList<String> pathSegements = newArrayList(getCompiledFileBasePath(script));
 		pathSegements.addAll(moduleQualifiedNameSegments(script));
 		String fileToRun = Joiner.on('/').join(pathSegements);
 		return fileToRun;
@@ -548,8 +558,8 @@ public class XpectN4JSES5TranspilerHelper {
 		// Compile script to get file content.
 		final String content = compile(script, options, replaceQuotes);
 
-		final String projectId = getProjectId(script);
-		Path parentPath = createDirectory(getTempFolder(), projectId); // TODO IDE-
+		String path = getCompiledFileBasePath(script);
+		Path parentPath = createNestedDirectory(getTempFolder(), path); // TODO IDE-
 
 		// Get folder structure from qualified names.
 		final LinkedList<String> segments = moduleQualifiedNameSegments(script);
@@ -580,7 +590,16 @@ public class XpectN4JSES5TranspilerHelper {
 		return newLinkedList(on(N4JSQualifiedNameConverter.DELIMITER).split(script.getModule().getQualifiedName()));
 	}
 
-	private String getProjectId(final Script script) {
-		return script.getModule().getProjectId();
+	private String getCompiledFileBasePath(final Script script) {
+		String path = script.getModule().getProjectId();
+		if (USE_COMPILED_OUTPUT) {
+			IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
+			if (project != null) {
+				path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			} else {
+				path += "/src-gen/";
+			}
+		}
+		return path;
 	}
 }

@@ -707,7 +707,7 @@ class ModuleWrappingTransformation extends Transformation {
 			System.registerDynamic([], true, function(require, exports, module) {
 				«cs»
 			});
-		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+		})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 		'''
 	}
 
@@ -716,7 +716,7 @@ class ModuleWrappingTransformation extends Transformation {
 
 		// (function(System) {
 		//     < ... statement ...>
-		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(module) : global.System);
+		// })(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(module) : global.System);
 
 		val ret = _ExprStmnt( _CallExpr (
 			_Parenthesis(

@@ -370,7 +370,7 @@ public class TestDiscoveryHelper {
 		if (USE_COMPILED_OUTPUT) {
 			IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
 			if (project != null) {
-				origin = origin + "/" + AbstractSubGenerator.calculateOutputDirectory(project);
+				origin = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
 			}
 		}
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,

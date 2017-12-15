@@ -352,6 +352,16 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	def static String calculateOutputDirectory(String outputPath, String compilerID) {
 		return calculateOutputDirectory(outputPath, compilerID, AbstractSubGenerator.USE_COMPILER_ID)
 	}
+	
+	/**
+	 * Convenience for {@link AbstractSubGenerator#calculateOutputDirectory(String, String)},
+	 * uses default compiler ID.
+	 *
+	 * TODO IDE-1487 currently there is no notion of default compiler. We fake call to the ES5 sub generator.
+	 */
+	def final static String calculateProjectBasedOutputDirectory(IN4JSProject project) {
+		return project.projectId + "/" + calculateOutputDirectory(project, N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS);
+	}
 
 	/** private method to hide feature flag */
 	private def static String calculateOutputDirectory(String outputPath, String compilerID, boolean incluseCompilerID) {

@@ -76,6 +76,32 @@ public abstract class FileUtils {
 	}
 
 	/**
+	 * Creates a new directory nested with the given parent folder and desredSubPath. The newly created folder will be
+	 * deleted on graceful VM shutdown.
+	 *
+	 * @param parent
+	 *            the path of the parent folder.
+	 * @param nestedPath
+	 *            the nested path to the created folder.
+	 * @return the path to the new directory.
+	 */
+	public static Path createNestedDirectory(final Path parent, final String nestedPath) {
+		if (!parent.toFile().isDirectory())
+			throw new RuntimeException(
+					"Invalid parent at " + parent + ".");
+
+		Path desiredPath = parent.resolve(nestedPath);
+		final File file = new File(desiredPath.toUri());
+		if (!file.exists())
+			if (!file.mkdirs())
+				throw new RuntimeException(
+						"Error while trying to create folder at " + parent + " with " + nestedPath + ".");
+
+		file.deleteOnExit();
+		return file.toPath();
+	}
+
+	/**
 	 * Creates a new temp directory with the given parent. The newly created folder will be deleted on graceful VM
 	 * shutdown.
 	 *
