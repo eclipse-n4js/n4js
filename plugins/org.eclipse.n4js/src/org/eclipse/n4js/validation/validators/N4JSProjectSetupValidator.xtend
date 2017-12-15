@@ -661,7 +661,7 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 				// Type cannot be resolved neither from index, hence project does not exist in workspace.
 				// Nor from used libraries of the current project.
 				if (null === project || null === project.projectType) {
-					addNonExistingProjectIssue(it.eContainer, id, features.last, references.indexOf(it));
+					addIssue(getMessageForNON_EXISTING_PROJECT(id), it, NON_EXISTING_PROJECT);
 				} else {
 					// Create only one single validation issue for a particular project reference.
 					var valid = true;
@@ -759,10 +759,6 @@ class N4JSProjectSetupValidator extends AbstractN4JSDeclarativeValidator {
 		addIssue(getMessageForINVALID_PROJECT_TYPE_REF(projectId, type.label, feature.label),
 			eObject, feature, index, INVALID_PROJECT_TYPE_REF
 		);
-	}
-
-	private def addNonExistingProjectIssue(EObject eObject, String projectId, EStructuralFeature feature, int index) {
-		addIssue(getMessageForNON_EXISTING_PROJECT(projectId), eObject, feature, index, NON_EXISTING_PROJECT);
 	}
 
 	private def addDuplicateProjectReferenceIssue(EObject eObject, EStructuralFeature feature, int index) {

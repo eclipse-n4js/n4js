@@ -21,7 +21,6 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
-import org.eclipse.n4js.flowgraphs.model.JumpToken;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
@@ -33,80 +32,67 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * <p>
  * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
  * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
- * a {@link PathExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
+ * a {@link GraphExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
  * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored. The path
- * exploration is done in parallel for every {@link PathExplorerInternal} of every {@link GraphVisitorInternal}.
+ * exploration is done in parallel for every {@link GraphExplorerInternal} of every {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyzer flowAnalyzer;
-	private final Collection<? extends GraphVisitorInternal> walkers;
+	private final Collection<? extends GraphVisitorInternal> visitors;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
-	private final Set<ControlFlowEdge> walkerVisitedEdges = new HashSet<>();
+	private final EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
 
 	/** Constructor */
-	public GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer,
-			Collection<? extends GraphVisitorInternal> walkers) {
+	GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer, Collection<? extends GraphVisitorInternal> visitors) {
 		this.flowAnalyzer = flowAnalyzer;
-		this.walkers = walkers;
+		this.visitors = visitors;
 	}
 
 	/** Call before any of the {@code walkthrough} methods is called. */
-	public void init() {
-		for (GraphVisitorInternal walker : walkers) {
+	void init() {
+		for (GraphVisitorInternal walker : visitors) {
 			walker.setFlowAnalyses(flowAnalyzer);
 			walker.callInitialize();
 		}
 	}
 
 	/** Call after all of the {@code walkthrough} methods have been called. */
-	public void terminate() {
-		for (GraphVisitorInternal walker : walkers) {
+	void terminate() {
+		for (GraphVisitorInternal walker : visitors) {
 			walker.setFlowAnalyses(flowAnalyzer);
 			walker.callTerminate();
 		}
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.Forward} */
-	public Set<Node> walkthroughForward(ComplexNode cn) {
-		return walkthrough(cn, Mode.Forward);
+	void walkthroughForward(ComplexNode cn) {
+		walkthrough(cn, Mode.Forward);
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.Backward} */
-	public Set<Node> walkthroughBackward(ComplexNode cn) {
-		return walkthrough(cn, Mode.Backward);
+	void walkthroughBackward(ComplexNode cn) {
+		walkthrough(cn, Mode.Backward);
 	}
 
-	/** Traverses the control flow graph in {@literal Mode.CatchBlocks} */
-	public Set<Node> walkthroughCatchBlocks(ComplexNode cn) {
-		return walkthrough(cn, Mode.CatchBlocks);
-	}
-
-	/** Traverses the control flow graph in {@literal Mode.Islands} */
-	public Set<Node> walkthroughIsland(ComplexNode cn) {
-		return walkthrough(cn, Mode.Islands);
-	}
-
-	private Set<Node> walkthrough(ComplexNode cn, Mode mode) {
+	private void walkthrough(ComplexNode cn, Mode mode) {
 		walkerVisitedNodes.clear();
-		walkerVisitedEdges.clear();
+		cn.getEntry().setReachable();
+		cn.getExit().setReachable();
 
-		for (GraphVisitorInternal walker : walkers) {
+		for (GraphVisitorInternal walker : visitors) {
 			walker.setFlowAnalyses(flowAnalyzer);
 			walker.setContainerAndMode(cn.getControlFlowContainer(), mode);
 			walker.callInitializeModeInternal();
 		}
 
-		Set<Node> allVisitedNodes = new HashSet<>();
 		List<NextEdgesProvider> edgeProviders = getEdgeProviders(mode);
 		for (NextEdgesProvider edgeProvider : edgeProviders) {
-			Set<Node> visitedNodes = walkthrough(cn, edgeProvider);
-			allVisitedNodes.addAll(visitedNodes);
+			walkthrough(cn, edgeProvider);
 		}
 
-		for (GraphVisitorInternal walker : walkers) {
+		for (GraphVisitorInternal walker : visitors) {
 			walker.callTerminateMode();
 		}
-		return allVisitedNodes;
 	}
 
 	private List<NextEdgesProvider> getEdgeProviders(Mode mode) {
@@ -118,56 +104,56 @@ public class GraphVisitorGuideInternal {
 		case Backward:
 			edgeProviders.add(new NextEdgesProvider.Backward());
 			break;
-		case Islands:
-			edgeProviders.add(new NextEdgesProvider.Forward());
-			edgeProviders.add(new NextEdgesProvider.Backward());
-			break;
-		case CatchBlocks:
-			edgeProviders.add(new NextEdgesProvider.Forward());
-			break;
 		}
 		return edgeProviders;
 	}
 
-	private Set<Node> walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<ControlFlowEdge> allVisitedEdges = new HashSet<>();
-		LinkedList<EdgeGuide> currEdgeGuides = new LinkedList<>();
-		List<EdgeGuide> nextEGs = getFirstEdgeGuides(cn, edgeProvider);
-		currEdgeGuides.addAll(nextEGs);
+	private void walkthrough(ComplexNode cn, NextEdgesProvider edgeProvider) {
+		List<BranchWalkerInternal> activatedPaths = initVisit();
+		guideWorklist.initialize(cn, edgeProvider, activatedPaths);
 
 		Node lastVisitNode = null;
 
-		for (EdgeGuide currEdgeGuide : currEdgeGuides) {
+		for (EdgeGuide currEdgeGuide : guideWorklist.getCurrentEdgeGuides()) {
 			Node visitNode = currEdgeGuide.getPrevNode();
-			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			lastVisitNode = visitNode;
 		}
 
-		while (!currEdgeGuides.isEmpty()) {
+		while (guideWorklist.hasNext()) {
 			flowAnalyzer.checkCancelled();
 
-			EdgeGuide currEdgeGuide = currEdgeGuides.removeFirst();
-			boolean alreadyVisitedAndObsolete = allVisitedEdges.contains(currEdgeGuide.edge);
-			alreadyVisitedAndObsolete &= currEdgeGuide.activePaths.isEmpty();
-			if (alreadyVisitedAndObsolete) {
-				continue;
-			}
+			EdgeGuide currEdgeGuide = guideWorklist.next();
 
 			Node visitNode = currEdgeGuide.getNextNode();
-			lastVisitNode = visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			visitNode(lastVisitNode, currEdgeGuide, visitNode);
+			lastVisitNode = visitNode;
 
-			allVisitedEdges.add(currEdgeGuide.edge);
-			nextEGs = getNextEdgeGuides(currEdgeGuide);
-			currEdgeGuides.addAll(0, nextEGs); // adding to the front: deep search / to the back: breadth search
+			mergeEdgeGuides();
 		}
+	}
 
-		Set<Node> allVisitedNodes = new HashSet<>();
-		for (ControlFlowEdge edge : allVisitedEdges) {
-			allVisitedNodes.add(edge.start);
-			allVisitedNodes.add(edge.end);
+	private List<BranchWalkerInternal> initVisit() {
+		List<BranchWalkerInternal> activatedPaths = new LinkedList<>();
+		for (GraphVisitorInternal walker : visitors) {
+			activatedPaths.addAll(walker.activateRequestedExplorers());
 		}
-		allVisitedNodes.add(edgeProvider.getStartNode(cn));
+		return activatedPaths;
+	}
 
-		return allVisitedNodes;
+	private void mergeEdgeGuides() {
+		List<EdgeGuide> joinGuideGroup = guideWorklist.getJoinGroups();
+		if (!joinGuideGroup.isEmpty()) {
+			EdgeGuide firstEG = joinGuideGroup.get(0);
+			Node endNode = firstEG.getNextNode(); // end node is the same of all EGs in the list
+			for (EdgeGuide eg : joinGuideGroup) {
+				Node startNode = eg.getPrevNode();
+				// Before merging the join group, the edges are visited.
+				callVisitOnEdge(startNode, eg, endNode);
+			}
+			EdgeGuide mergedEG = guideWorklist.mergeJoinGroup(joinGuideGroup);
+			callVisitOnNode(mergedEG, endNode);
+		}
 	}
 
 	private Node visitNode(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
@@ -179,126 +165,58 @@ public class GraphVisitorGuideInternal {
 		return visitNode;
 	}
 
+	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
+	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
+		ControlFlowEdge egEdge = currEdgeGuide.getEdge();
+		ControlFlowEdge visitedEdge = currEdgeGuide.getEdge();
+
+		if (!guideWorklist.edgeVisited(egEdge)) {
+			for (GraphVisitorInternal visitor : visitors) {
+				visitor.callVisit(lastVisitNode, visitNode, visitedEdge);
+			}
+		}
+
+		for (GraphVisitorInternal walker : visitors) {
+			List<BranchWalkerInternal> activatedPaths = walker.activateRequestedExplorers();
+			currEdgeGuide.addActiveBranches(activatedPaths);
+		}
+
+		for (Iterator<BranchWalkerInternal> branchWalkerIt = currEdgeGuide.getBranchIterable()
+				.iterator(); branchWalkerIt.hasNext();) {
+
+			BranchWalkerInternal branchWalker = branchWalkerIt.next();
+			branchWalker.callVisit(lastVisitNode, visitNode, visitedEdge);
+
+			if (!branchWalker.isActive()) {
+				branchWalkerIt.remove();
+			}
+		}
+	}
+
 	/** This method must be kept in sync with {@link #callVisitOnEdge(Node, EdgeGuide, Node)} */
 	private void callVisitOnNode(EdgeGuide currEdgeGuide, Node visitNode) {
 		if (!walkerVisitedNodes.contains(visitNode)) {
-			for (GraphVisitorInternal walker : walkers) {
-				walker.callVisit(visitNode);
+			for (GraphVisitorInternal visitor : visitors) {
+				visitor.callVisit(visitNode);
 			}
 		}
 		walkerVisitedNodes.add(visitNode);
 
-		for (GraphVisitorInternal walker : walkers) {
-			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
-			currEdgeGuide.activePaths.addAll(activatedPaths);
+		for (GraphVisitorInternal walker : visitors) {
+			List<BranchWalkerInternal> activatedBranchWalkers = walker.activateRequestedExplorers();
+			currEdgeGuide.addActiveBranches(activatedBranchWalkers);
 		}
 
-		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
-			PathWalkerInternal activePath = actPathIt.next();
+		for (Iterator<BranchWalkerInternal> branchWalkerIt = currEdgeGuide.getBranchIterable()
+				.iterator(); branchWalkerIt.hasNext();) {
 
-			activePath.callVisit(visitNode);
+			BranchWalkerInternal branchWalker = branchWalkerIt.next();
+			branchWalker.callVisit(visitNode);
 
-			if (!activePath.isActive()) {
-				actPathIt.remove();
+			if (!branchWalker.isActive()) {
+				branchWalkerIt.remove();
 			}
 		}
-	}
-
-	/** This method must be kept in sync with {@link #callVisitOnNode(EdgeGuide, Node)} */
-	private void callVisitOnEdge(Node lastVisitNode, EdgeGuide currEdgeGuide, Node visitNode) {
-		if (!walkerVisitedEdges.contains(currEdgeGuide.edge)) {
-			for (GraphVisitorInternal walker : walkers) {
-				walker.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
-			}
-		}
-		walkerVisitedEdges.add(currEdgeGuide.edge);
-
-		for (GraphVisitorInternal walker : walkers) {
-			List<PathWalkerInternal> activatedPaths = walker.activateRequestedPathExplorers();
-			currEdgeGuide.activePaths.addAll(activatedPaths);
-		}
-
-		for (Iterator<PathWalkerInternal> actPathIt = currEdgeGuide.activePaths.iterator(); actPathIt.hasNext();) {
-			PathWalkerInternal activePath = actPathIt.next();
-
-			activePath.callVisit(lastVisitNode, visitNode, currEdgeGuide.edge);
-
-			if (!activePath.isActive()) {
-				actPathIt.remove();
-			}
-		}
-	}
-
-	/**
-	 * Computes the initial set of {@link EdgeGuide}s based on the start {@link ControlFlowEdge}s of the given
-	 * {@link ComplexNode}.
-	 */
-	private List<EdgeGuide> getFirstEdgeGuides(ComplexNode cn, NextEdgesProvider edgeProvider) {
-		Set<PathWalkerInternal> activatedPaths = new HashSet<>();
-		for (GraphVisitorInternal walker : walkers) {
-			activatedPaths.addAll(walker.activateRequestedPathExplorers());
-		}
-
-		Node node = edgeProvider.getStartNode(cn);
-		List<ControlFlowEdge> nextEdges = edgeProvider.getNextEdges(node);
-		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
-
-		List<EdgeGuide> nextEGs = new LinkedList<>();
-		if (nextEdgeIt.hasNext()) {
-			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, activatedPaths);
-			nextEGs.add(eg);
-		}
-
-		while (nextEdgeIt.hasNext()) {
-			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : activatedPaths) {
-				PathWalkerInternal forkedPath = aPath.callFork();
-				forkedPaths.add(forkedPath);
-			}
-			EdgeGuide eg = new EdgeGuide(edgeProvider.copy(), nextEdge, forkedPaths);
-			nextEGs.add(eg);
-		}
-		return nextEGs;
-	}
-
-	/**
-	 * Computes the next {@link EdgeGuide}s based on the next {@link ControlFlowEdge}s. For memory performance reasons,
-	 * the current {@link EdgeGuide} is reused and its edge is replaced by the next edge.
-	 */
-	private List<EdgeGuide> getNextEdgeGuides(EdgeGuide currEG) {
-		List<EdgeGuide> nextEGs = new LinkedList<>();
-		List<ControlFlowEdge> nextEdges = currEG.getNextEdges();
-		Iterator<ControlFlowEdge> nextEdgeIt = nextEdges.iterator();
-
-		if (nextEdgeIt.hasNext()) {
-			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			currEG.edge = nextEdge;
-			nextEGs.add(currEG);
-		}
-
-		while (nextEdgeIt.hasNext()) {
-			ControlFlowEdge nextEdge = nextEdgeIt.next();
-			Set<PathWalkerInternal> forkedPaths = new HashSet<>();
-			for (PathWalkerInternal aPath : currEG.activePaths) {
-				PathWalkerInternal forkedPath = aPath.callFork();
-				forkedPaths.add(forkedPath);
-			}
-
-			NextEdgesProvider epCopy = currEG.edgeProvider.copy();
-			Set<JumpToken> fbContexts = currEG.finallyBlockContexts;
-			EdgeGuide edgeGuide = new EdgeGuide(epCopy, nextEdge, forkedPaths, fbContexts);
-			nextEGs.add(edgeGuide);
-		}
-
-		if (nextEGs.isEmpty()) {
-			for (PathWalkerInternal aPath : currEG.activePaths) {
-				aPath.deactivate();
-			}
-		}
-
-		return nextEGs;
 	}
 
 }

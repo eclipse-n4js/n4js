@@ -14,12 +14,10 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
+import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
-import org.eclipse.n4js.n4JS.Block;
-import org.eclipse.n4js.n4JS.CatchBlock;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 
@@ -27,17 +25,27 @@ import org.eclipse.n4js.n4JS.Script;
  * Stores information about all control flow graphs of one {@link Script}.
  */
 public class FlowGraph {
-	final private TreeSet<ControlFlowElement> cfContainers;
-	final private TreeSet<Block> cfCatchBlocks;
+	final private Script script;
+	final private Set<ControlFlowElement> cfContainers;
 	final private Map<ControlFlowElement, ComplexNode> cnMap;
 
 	/** Constructor. */
-	public FlowGraph(TreeSet<ControlFlowElement> cfContainers, TreeSet<Block> cfCatchBlocks,
+	public FlowGraph(Script script, Set<ControlFlowElement> cfContainers,
 			Map<ControlFlowElement, ComplexNode> cnMap) {
 
+		this.script = script;
 		this.cfContainers = cfContainers;
-		this.cfCatchBlocks = cfCatchBlocks;
 		this.cnMap = cnMap;
+	}
+
+	/** @return the script of this {@link FlowGraph} */
+	public Script getScript() {
+		return script;
+	}
+
+	/** @return the URI String of the script of this {@link FlowGraph} */
+	public String getScriptName() {
+		return script.eResource().getURI().toString();
 	}
 
 	/** @return all {@link ComplexNode}s of the script. */
@@ -59,26 +67,16 @@ public class FlowGraph {
 		return cn.getControlFlowContainer();
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getAllContainers()} */
-	public TreeSet<ControlFlowElement> getAllContainers() {
-		return cfContainers;
-	}
-
-	/** @return all {@link Block}s whose containers are of type {@link CatchBlock} */
-	public TreeSet<Block> getCatchBlocks() {
-		return cfCatchBlocks;
-	}
-
-	/** see {@link N4JSFlowAnalyzer#getCatchBlocksOfContainer(ControlFlowElement)} */
-	public List<Block> getCatchBlocksOfContainer(ControlFlowElement container) {
-		List<Block> catchBlockOfContainer = new LinkedList<>();
-		for (Block catchBlock : cfCatchBlocks) {
-			ControlFlowElement cbContainer = getContainer(catchBlock);
-			if (cbContainer == container) {
-				catchBlockOfContainer.add(catchBlock);
-			}
+	/** see {@link N4JSFlowAnalyzer#getAllContainers()}. */
+	public Collection<ControlFlowElement> getAllContainers() {
+		// The order of containers is reversed.
+		// This causes fail-fast behavior regarding the assertion 'isVisited()'
+		// in {@link DeadFlowContext.Backward#setDeadCode(Node)}
+		List<ControlFlowElement> containerList = new LinkedList<>();
+		for (ControlFlowElement cfe : cfContainers) {
+			containerList.add(0, cfe);
 		}
-		return catchBlockOfContainer;
+		return containerList;
 	}
 
 }

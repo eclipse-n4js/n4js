@@ -74,7 +74,9 @@ class ModuleWrappingTransformation extends Transformation {
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-
+	
+	@Inject
+	private JSXBackendHelper JSXBackendHelper;
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -223,7 +225,7 @@ class ModuleWrappingTransformation extends Transformation {
 								target = refToFPar;
 							];
 						};
-					if (current.ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(current.tobeReplacedIM)) {
+					if (current.ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(current.tobeReplacedIM, state.info)) {
 						statements += _ExprStmnt(_IdentRef(steFor_React)._AssignmentExpr(rhs))
 					} else {
 						statements += _ExprStmnt(_IdentRef(current.ste)._AssignmentExpr(rhs)) => [
@@ -256,24 +258,25 @@ class ModuleWrappingTransformation extends Transformation {
 
 				val module = state.info.getImportedModule(elementIM);
 
+				val isJSXBackendImport = JSXBackendHelper.isJsxBackendModule(module)
+
 				// calculate names in output
 				val completeModuleSpecifier =
-					if (JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)) {
+					if (isJSXBackendImport) {
 						jsx.jsxBackendModuleSpecifier(module, state.resource)
 					} else {
 						module.completeModuleSpecifier
 					}
 
-				val fparName = if (JSXBackendHelper.isJsxBackendImportDeclaration(elementIM)) {
+				val fparName = if (isJSXBackendImport) {
 						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
 					} else {
 						"$_import_"+module.completeModuleSpecifierAsIdentifier
 					}
 
-
-
 				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
-				val actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
+
+				var actualModuleSpecifier = if(moduleSpecifierAdjustment!==null) {
 					if(moduleSpecifierAdjustment.usePlainModuleSpecifier) {
 						moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
 					} else {
@@ -289,7 +292,6 @@ class ModuleWrappingTransformation extends Transformation {
 					map.put( completeModuleSpecifier, moduleEntry )
 				}
 				val finalModuleEntry = moduleEntry
-
 
 				// local name : as used in Script
 				// actual name : exported name.
@@ -656,7 +658,7 @@ class ModuleWrappingTransformation extends Transformation {
 	def private boolean isExported(SymbolTableEntry ste) {
 		return exportedSTEs.contains(ste);
 	}
-	
+
 	/** returns adjustments to be used based on the module loader specified for the provided module. May be null. */
 	def private ModuleSpecifierAdjustment getModuleSpecifierAdjustment(TModule module) {
 		val resourceURI = module?.eResource?.URI;

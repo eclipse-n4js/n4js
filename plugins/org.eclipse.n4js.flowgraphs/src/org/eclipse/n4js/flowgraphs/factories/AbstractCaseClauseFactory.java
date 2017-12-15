@@ -10,9 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,28 +22,36 @@ import org.eclipse.n4js.n4JS.AbstractCaseClause;
 import org.eclipse.n4js.n4JS.CaseClause;
 import org.eclipse.n4js.n4JS.Statement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link AbstractCaseClause}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class AbstractCaseClauseFactory {
 
-	static ComplexNode buildComplexNode(AbstractCaseClause abstrCaseClause) {
-		ComplexNode cNode = new ComplexNode(abstrCaseClause);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, AbstractCaseClause abstrCaseClause) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), abstrCaseClause);
 
-		Node entryNode = new HelperNode(ENTRY_NODE, abstrCaseClause);
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), abstrCaseClause);
 		List<Node> stmtNodes = new LinkedList<>();
-		Node exitNode = new HelperNode(EXIT_NODE, abstrCaseClause);
 		Node caseConditionNode = null;
 
 		if (abstrCaseClause instanceof CaseClause) {
 			CaseClause caseClause = (CaseClause) abstrCaseClause;
-			caseConditionNode = new DelegatingNode("condition", caseClause, caseClause.getExpression());
+			caseConditionNode = DelegatingNodeFactory.create(astpp, NodeNames.CONDITION, caseClause,
+					caseClause.getExpression());
 		}
 
 		EList<Statement> stmts = abstrCaseClause.getStatements();
 		for (int i = 0; i < stmts.size(); i++) {
 			Statement stmt = stmts.get(i);
-			Node blockNode = new DelegatingNode("stmt_" + i, abstrCaseClause, stmt);
+			Node blockNode = new DelegatingNode("stmt_" + i, astpp.pos(), abstrCaseClause, stmt);
 			stmtNodes.add(blockNode);
+			astpp.visitUtil(blockNode.getDelegatedControlFlowElement());
 		}
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), abstrCaseClause);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(caseConditionNode);

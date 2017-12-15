@@ -18,6 +18,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.emf.ecore.InternalEObject
 import org.eclipse.n4js.AbstractN4JSTest
+import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.typeRefs.DeferredTypeRef
@@ -26,7 +27,6 @@ import org.eclipse.n4js.ts.types.TMethod
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.xtend.lib.annotations.Data
 import org.junit.Test
-import org.eclipse.n4js.n4JS.IdentifierRef
 
 /**
  * Test the various load states an N4JSResource can be in.
@@ -49,6 +49,9 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 	private static enum Module {
 		NULL, STUBS, DEFERRED, AVAILABLE
 	}
+	private static enum ASTMetaCache {
+		NULL, AVAILABLE
+	}
 
 	@Data
 	static class StateInfo {
@@ -56,6 +59,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		ParseResult parseResult;
 		AST ast;
 		Module module;
+		ASTMetaCache astMetaCache;
 		Boolean loaded;
 		Boolean fullyInitialized;
 		Boolean fullyProcessed;
@@ -65,16 +69,16 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 	static val Boolean INDETERMINATE = null;
 
 	static val loadStateInfos = #[
-		new StateInfo(State.CREATED,                      ParseResult.NULL,      AST.NULL,      Module.NULL,      false,          false, false, false ),
-		new StateInfo(State.CREATED_PRIME,                ParseResult.NULL,      AST.NULL,      Module.NULL,      false,          true,  false, false ),
-		new StateInfo(State.LOADED,                       ParseResult.AVAILABLE, AST.LAZY,      Module.NULL,      true,           false, false, false ),
-		new StateInfo(State.PRE_LINKED,                   ParseResult.AVAILABLE, AST.LAZY,      Module.STUBS,     true,           true,  false, false ),
-		new StateInfo(State.FULLY_INITIALIZED,            ParseResult.AVAILABLE, AST.LAZY,      Module.DEFERRED,  true,           true,  false, false ),
-		new StateInfo(State.FULLY_PROCESSED,              ParseResult.AVAILABLE, AST.AVAILABLE, Module.AVAILABLE, true,           true,  true,  false ),
-		new StateInfo(State.LOADED_FROM_DESC,             ParseResult.NULL,      AST.PROXY,     Module.AVAILABLE, INDETERMINATE,  true,  true,  false ),
-		new StateInfo(State.LOADED_FROM_DESC_PRIME,       ParseResult.NULL,      AST.PROXY,     Module.DEFERRED,  INDETERMINATE,  true,  true,  false ),
-		new StateInfo(State.FULLY_INITIALIZED_RECONCILED, ParseResult.AVAILABLE, AST.LAZY,      Module.AVAILABLE, INDETERMINATE,  true,  false, true  ),
-		new StateInfo(State.FULLY_PROCESSED_RECONCILED,   ParseResult.AVAILABLE, AST.AVAILABLE, Module.AVAILABLE, INDETERMINATE,  true,  true,  true  )
+		new StateInfo(State.CREATED,                      ParseResult.NULL,      AST.NULL,      Module.NULL,      ASTMetaCache.NULL,      false,          false, false, false ),
+		new StateInfo(State.CREATED_PRIME,                ParseResult.NULL,      AST.NULL,      Module.NULL,      ASTMetaCache.NULL,      false,          true,  false, false ),
+		new StateInfo(State.LOADED,                       ParseResult.AVAILABLE, AST.LAZY,      Module.NULL,      ASTMetaCache.NULL,      true,           false, false, false ),
+		new StateInfo(State.PRE_LINKED,                   ParseResult.AVAILABLE, AST.LAZY,      Module.STUBS,     ASTMetaCache.NULL,      true,           true,  false, false ),
+		new StateInfo(State.FULLY_INITIALIZED,            ParseResult.AVAILABLE, AST.LAZY,      Module.DEFERRED,  ASTMetaCache.NULL,      true,           true,  false, false ),
+		new StateInfo(State.FULLY_PROCESSED,              ParseResult.AVAILABLE, AST.AVAILABLE, Module.AVAILABLE, ASTMetaCache.AVAILABLE, true,           true,  true,  false ),
+		new StateInfo(State.LOADED_FROM_DESC,             ParseResult.NULL,      AST.PROXY,     Module.AVAILABLE, ASTMetaCache.NULL,      INDETERMINATE,  true,  true,  false ),
+		new StateInfo(State.LOADED_FROM_DESC_PRIME,       ParseResult.NULL,      AST.PROXY,     Module.DEFERRED,  ASTMetaCache.NULL,      INDETERMINATE,  true,  true,  false ),
+		new StateInfo(State.FULLY_INITIALIZED_RECONCILED, ParseResult.AVAILABLE, AST.LAZY,      Module.AVAILABLE, ASTMetaCache.NULL,      INDETERMINATE,  true,  false, true  ),
+		new StateInfo(State.FULLY_PROCESSED_RECONCILED,   ParseResult.AVAILABLE, AST.AVAILABLE, Module.AVAILABLE, ASTMetaCache.AVAILABLE, INDETERMINATE,  true,  true,  true  )
 	];
 
 
@@ -334,6 +338,15 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 				throw new IllegalStateException("unknown literal: " + info.module);
 			}
 		}
+		switch (info.astMetaCache) {
+			case NULL: {
+				assertNull("in state " + state + " the ASTMetaInfoCache should be null", res.getASTMetaInfoCache)
+			}
+			case AVAILABLE: {
+				assertNotNull("in state " + state + " the ASTMetaInfoCache should *not* be null", res.getASTMetaInfoCacheVerifyContext)
+			}
+		}
+
 		if(info.loaded!==INDETERMINATE) {
 			assertEquals("in state " + state + " flag 'loaded' should be " + info.loaded,
 				info.loaded, res.loaded);
@@ -417,6 +430,8 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		rows.makeEqualLengthAndAppend(" | ");
 		rows.forEach[row, i | row.append(if(i===0) "TModule" else loadStateInfos.get(i-1).module.label)];
 		rows.makeEqualLengthAndAppend(" | ");
+		rows.forEach[row, i | row.append(if(i===0) "ASTMetaInfoCache" else loadStateInfos.get(i-1).astMetaCache.label)];
+		rows.makeEqualLengthAndAppend(" | ");
 		rows.forEach[row, i | row.append(if(i===0) "loaded" else loadStateInfos.get(i-1).loaded.label)];
 		rows.makeEqualLengthAndAppend(" | ");
 		rows.forEach[row, i | row.append(if(i===0) "fullyInitialized" else loadStateInfos.get(i-1).fullyInitialized.label)];
@@ -425,7 +440,7 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		rows.makeEqualLengthAndAppend(" | ");
 		rows.forEach[row, i | row.append(if(i===0) "reconciled" else loadStateInfos.get(i-1).reconciled.label)];
 
-		println('[cols="1h,1,1,1,1,1,1,1",options="header"]');
+		println('[cols="1h,1,1,1,1,1,1,1,1",options="header"]');
 		println('|===');
 		println(rows.join('\n'));
 		println('|===');
@@ -468,6 +483,8 @@ class N4JSResourceLoadStatesTest extends AbstractN4JSTest {
 		Module.STUBS -> "with stubs",
 		Module.DEFERRED -> "with DeferredTypeRefs",
 		Module.AVAILABLE -> "available",
+		ASTMetaCache.NULL -> "`null`",
+		ASTMetaCache.AVAILABLE -> "available",
 		INDETERMINATE -> "indeterminate"
 	);
 }

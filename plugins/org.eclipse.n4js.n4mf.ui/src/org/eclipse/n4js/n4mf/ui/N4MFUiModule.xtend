@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -20,6 +20,10 @@ import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.ui.editor.hyperlinking.IHyperlinkHelper
 import org.eclipse.xtext.ui.editor.model.XtextDocumentProvider
 import org.eclipse.xtext.ui.wizard.IProjectCreator
+import org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator
+import org.eclipse.n4js.ui.quickfix.N4JSMarkerResolutionGenerator
+import org.eclipse.xtext.ui.util.IssueUtil
+import org.eclipse.n4js.ui.quickfix.N4JSIssue
 
 /**
  * Use this class to register components to be used within the Eclipse IDE.
@@ -58,5 +62,18 @@ class N4MFUiModule extends AbstractN4MFUiModule {
 	/** Workaround for the problem: file is refreshed when opened */
 	def Class<? extends XtextDocumentProvider> bindXtextDocumentProvider() {
 		return AvoidRefreshDocumentProvider;
+	}
+
+	def configureMarkerResolutionGenerator(com.google.inject.Binder binder) {
+		if (org.eclipse.ui.PlatformUI.isWorkbenchRunning()) {
+			binder.bind(MarkerResolutionGenerator).to(N4JSMarkerResolutionGenerator);
+		}
+	}
+
+	/**
+	 * Bind custom IssueUtil.
+	 */
+	def Class<? extends IssueUtil> bindIssueUtil() {
+		return N4JSIssue.Util;
 	}
 }

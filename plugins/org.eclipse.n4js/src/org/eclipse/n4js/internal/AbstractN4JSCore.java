@@ -103,14 +103,19 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 
 		List<String> relativeResolvedPaths = new ArrayList<>();
 		for (ModuleFilterSpecifier spec : moduleFilter.getModuleSpecifiers()) {
-			String moduleSpecWithWildcard = spec.getModuleSpecifierWithWildcard();
-			moduleSpecWithWildcard = ((spec.getSourcePath() != null) ? spec.getSourcePath()
-					: projectRelativeSourcePath) + "/" + moduleSpecWithWildcard;
-			List<String> resolvedPaths = WildcardPathFilter.collectPathsByWildcardPath(absoluteLocationPath,
-					moduleSpecWithWildcard);
-			for (String resolvedPath : resolvedPaths) {
-				relativeResolvedPaths.add(resolvedPath);
-			}
+			String specPath = spec.getSourcePath();
+			if (specPath != null)
+				if (projectRelativeSourcePath.equals(specPath) == false)
+					// different source container, different filter path
+					// nothing will be found here
+					continue;
+
+			String basePathToCheck = absoluteLocationPath + "/"
+					+ (specPath != null ? specPath : projectRelativeSourcePath);
+			String pathsToFind = "/" + spec.getModuleSpecifierWithWildcard();
+			List<String> resolvedPaths = WildcardPathFilter.collectPathsByWildcardPath(basePathToCheck,
+					pathsToFind);
+			relativeResolvedPaths.addAll(resolvedPaths);
 		}
 		return relativeResolvedPaths;
 	}

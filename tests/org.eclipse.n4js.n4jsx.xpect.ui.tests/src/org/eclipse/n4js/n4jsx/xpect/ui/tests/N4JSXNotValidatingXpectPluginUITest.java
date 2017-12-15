@@ -18,7 +18,7 @@ import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
-
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.xpect.config.Config;
 import org.eclipse.n4js.xpect.config.VarDef;
 import org.eclipse.n4js.xpect.config.XpEnvironmentData;
@@ -51,6 +51,7 @@ import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
 @RunWith(XpectRunner.class)
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata_nonvalidating", fileExtensions = "xt")
 public class N4JSXNotValidatingXpectPluginUITest {
-	//
-
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 }

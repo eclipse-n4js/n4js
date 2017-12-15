@@ -37,8 +37,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.generator.common.AbstractSubGenerator;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -258,8 +258,8 @@ public class XpectN4JSES5TranspilerHelper {
 
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
-		if (Platform.isRunning()
-				&& (((ReadOutWorkspaceConfiguration) readOutConfiguration).getXpectConfiguredWorkspace() == null)) {
+		// && (((ReadOutWorkspaceConfiguration) readOutConfiguration).getXpectConfiguredWorkspace() == null)
+		if (Platform.isRunning()) {
 			// If we are in the IDE, execute the test the same as for "Run in Node.js" and this way avoid
 			// the effort of calculating dependencies etc.
 

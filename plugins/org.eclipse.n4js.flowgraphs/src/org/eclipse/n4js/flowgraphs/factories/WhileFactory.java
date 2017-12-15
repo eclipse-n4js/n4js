@@ -10,57 +10,52 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.ENTRY_NODE;
-import static org.eclipse.n4js.flowgraphs.factories.StandardCFEFactory.EXIT_NODE;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.CatchToken;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.DelegatingNode;
 import org.eclipse.n4js.flowgraphs.model.HelperNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.WhileStatement;
 
-/** Creates instances of {@link ComplexNode}s for AST elements of type {@link WhileStatement}s. */
+/**
+ * Creates instances of {@link ComplexNode}s for AST elements of type {@link WhileStatement}s.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class WhileFactory {
 
-	static final String CONDITION_NODE_NAME = "condition";
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, WhileStatement whileStmt) {
+		ComplexNode cNode = new ComplexNode(astpp.container(), whileStmt);
 
-	static ComplexNode buildComplexNode(WhileStatement whileStmt) {
-		ComplexNode cNode = new ComplexNode(whileStmt);
-
-		Node entryNode = new HelperNode(ENTRY_NODE, whileStmt);
-		Node exitNode = new HelperNode(EXIT_NODE, whileStmt);
-		Node conditionNode = new DelegatingNode(CONDITION_NODE_NAME, whileStmt, whileStmt.getExpression());
-		Node bodyNode = null;
-
-		if (whileStmt.getStatement() != null) {
-			bodyNode = new DelegatingNode("body", whileStmt, whileStmt.getStatement());
-		}
+		Node entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), whileStmt);
+		Node conditionNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.CONDITION, whileStmt,
+				whileStmt.getExpression());
+		Node bodyNode = DelegatingNodeFactory.createOrHelper(astpp, NodeNames.BODY, whileStmt,
+				whileStmt.getStatement());
+		Node continueCatchNode = new HelperNode(NodeNames.CONTINUE_CATCH, astpp.pos(), whileStmt);
+		Node exitNode = new HelperNode(NodeNames.EXIT, astpp.pos(), whileStmt);
 
 		cNode.addNode(entryNode);
 		cNode.addNode(conditionNode);
 		cNode.addNode(bodyNode);
+		cNode.addNode(continueCatchNode);
 		cNode.addNode(exitNode);
 
-		List<Node> nodes = new LinkedList<>();
-		nodes.add(entryNode);
-		nodes.add(conditionNode);
-		nodes.add(exitNode);
-		cNode.connectInternalSucc(nodes);
-		cNode.connectInternalSucc(ControlFlowType.Repeat, conditionNode, bodyNode);
-		cNode.connectInternalSucc(bodyNode, conditionNode);
+		cNode.connectInternalSucc(entryNode, conditionNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopEnter, conditionNode, bodyNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopExit, conditionNode, exitNode);
+		cNode.connectInternalSucc(bodyNode, continueCatchNode);
+		cNode.connectInternalSucc(ControlFlowType.LoopRepeat, continueCatchNode, conditionNode);
 
 		cNode.setEntryNode(entryNode);
 		cNode.setExitNode(exitNode);
 
 		LabelledStatement lblStmt = ASTUtils.getLabelledStatement(whileStmt);
 		exitNode.addCatchToken(new CatchToken(ControlFlowType.Break, lblStmt));
-		conditionNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
+		continueCatchNode.addCatchToken(new CatchToken(ControlFlowType.Continue, lblStmt));
 
 		return cNode;
 	}

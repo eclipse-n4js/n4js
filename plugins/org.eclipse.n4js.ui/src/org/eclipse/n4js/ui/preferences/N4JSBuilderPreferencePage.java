@@ -12,7 +12,6 @@ package org.eclipse.n4js.ui.preferences;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -22,6 +21,9 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferencePageContainer;
+import org.eclipse.n4js.generator.CompilerDescriptor;
+import org.eclipse.n4js.generator.CompilerProperties;
+import org.eclipse.n4js.generator.ICompositeGenerator;
 import org.eclipse.ui.preferences.IWorkbenchPreferenceContainer;
 import org.eclipse.xtext.builder.DerivedResourceCleanerJob;
 import org.eclipse.xtext.builder.EclipseOutputConfigurationProvider;
@@ -34,11 +36,6 @@ import org.eclipse.xtext.util.Tuples;
 import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
-import org.eclipse.n4js.generator.common.CompilerDescriptor;
-import org.eclipse.n4js.generator.common.CompilerProperties;
-import org.eclipse.n4js.generator.common.IComposedGenerator;
-import org.eclipse.n4js.ui.building.instructions.ComposedGeneratorRegistry;
 
 /**
  * Copied and adapted from org.eclipse.xtext.builder.preferences.BuilderPreferencePage.
@@ -67,17 +64,13 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 	/**
 	 * Initializes default compiler configuration.
 	 */
-	public N4JSBuilderPreferencePage() {
+	@Inject
+	public N4JSBuilderPreferencePage(ICompositeGenerator compositeGenerator) {
 		super(new ArrayList<Triple<String, String, CompilerDescriptor>>());
-
-		List<IComposedGenerator> composedGenerators = ComposedGeneratorRegistry.getComposedGenerators();
-		for (IComposedGenerator composedGenerator : composedGenerators) {
-			for (CompilerDescriptor compilerDescriptor : composedGenerator.getCompilerDescriptors()) {
-				this.components.add(Tuples.create(compilerDescriptor.getIdentifier(), compilerDescriptor.getName(),
-						compilerDescriptor));
-			}
+		for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
+			this.components.add(Tuples.create(compilerDescriptor.getIdentifier(), compilerDescriptor.getName(),
+					compilerDescriptor));
 		}
-
 	}
 
 	@Override
@@ -226,7 +219,8 @@ public class N4JSBuilderPreferencePage extends AbstractN4JSPreferencePage<Compil
 				MessageDialog dialog = new MessageDialog(this.getShell(), strings[0], null, strings[1],
 						MessageDialog.QUESTION,
 						new String[] { IDialogConstants.YES_LABEL, IDialogConstants.NO_LABEL,
-								IDialogConstants.CANCEL_LABEL }, 2);
+								IDialogConstants.CANCEL_LABEL },
+						2);
 				int res = dialog.open();
 				if (res == 0) {
 					doBuild = true;

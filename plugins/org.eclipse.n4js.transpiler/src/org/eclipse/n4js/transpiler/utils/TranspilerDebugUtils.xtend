@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.utils
 
+import com.google.inject.Inject
 import java.io.PrintWriter
 import java.io.StringWriter
 import java.io.Writer
@@ -20,27 +21,31 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
+import org.eclipse.n4js.transpiler.InformationRegistry
 import org.eclipse.n4js.transpiler.TranspilerState
 import org.eclipse.n4js.transpiler.im.Script_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.IdentifiableElement
+import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.UtilN4
 import org.eclipse.xtext.EcoreUtil2
-
-import static extension org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper.*
 
 /**
  * Some utilities for transpiler debugging, mainly dumping a {@link TranspilerState} to {@code stdout}, etc.
  */
 class TranspilerDebugUtils {
 
+	@Inject
+	private JSXBackendHelper JSXBackendHelper;
+
 	/**
 	 * Perform some consistency checks on the transpiler state. For example, this asserts that no node in the
 	 * intermediate model has a direct cross-reference to the original AST or an original TModule element.
 	 */
-	def public static void validateState(TranspilerState state, boolean allowDanglingSecondaryReferencesInSTEs) throws AssertionError {
+	def public void validateState(TranspilerState state, boolean allowDanglingSecondaryReferencesInSTEs) throws AssertionError {
 		// IM should not contain entities from n4js.xcore / TypeRefs.xcore for which a replacement in IM.xcore exists
 		val replacedEClasses = #[
 			N4JSPackage.eINSTANCE.parameterizedPropertyAccessExpression,
@@ -53,7 +58,7 @@ class TranspilerDebugUtils {
 		assertFalse(
 			"intermediate model should not have a cross-reference to an element outside the intermediate model"
 			+ " (except for SymbolTableEntry)",
-			state.im.eAllContents.filter[!(allowedCrossRefToOutside)].exists[hasCrossRefToOutsideOf(state)]);
+			state.im.eAllContents.filter[!(allowedCrossRefToOutside(state.info))].exists[hasCrossRefToOutsideOf(state)]);
 		// symbol table should exist
 		val st = state.im.symbolTable;
 		assertNotNull("intermediate model should have a symbol table", st);
@@ -83,12 +88,13 @@ class TranspilerDebugUtils {
 		}
 	}
 
-	def private static allowedCrossRefToOutside(EObject it) {
+	def private allowedCrossRefToOutside(EObject eobj, InformationRegistry info) {
 		//TODO IDE-2416 added for JSX workarounds, if possible remove, only SymbolTableEntry should be allowed
-		switch it {
+		switch eobj {
 			SymbolTableEntry: true
-			ImportDeclaration: jsxBackendImportDeclaration
-			ImportSpecifier: jsxBackendImportSpecifier
+			TModule: JSXBackendHelper.isJsxBackendModule(eobj)
+			ImportDeclaration: JSXBackendHelper.isJsxBackendImportDeclaration(eobj, info)
+			ImportSpecifier: JSXBackendHelper.isJsxBackendImportSpecifier(eobj, info)
 			default: false
 		}
 	}

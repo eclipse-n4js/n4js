@@ -14,11 +14,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.URI;
-
-import com.google.inject.ImplementedBy;
-
 import org.eclipse.n4js.internal.InternalN4JSWorkspace;
 import org.eclipse.n4js.n4mf.ProjectDescription;
+
+import com.google.inject.ImplementedBy;
 
 /**
  * Representation of a workspace (with possible multiple workspace roots) that is used for storing external library
@@ -35,8 +34,11 @@ public abstract class ExternalLibraryWorkspace extends InternalN4JSWorkspace {
 	 *            the project adaption result to update/delete projects.
 	 * @param monitor
 	 *            the monitor for the project registration process.
+	 * @param triggerCleanbuild
+	 *            if true, a clean build is triggered on all affected workspace projects.
 	 */
-	public abstract void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor);
+	public abstract void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor,
+			boolean triggerCleanbuild);
 
 	/**
 	 * Returns with all available external projects.

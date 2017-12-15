@@ -31,12 +31,12 @@ public class HeadlessHelper {
 	 *
 	 * @param projectLocations
 	 *            list of project roots
-	 * @param fbWorkspace
-	 *            FileBasedWorkspace to configure
+	 * @param n4jsFileBasedWorkspace
+	 *            instance of FileBasedWorkspace to configure (in N4JS injector)
 	 * @throws N4JSCompileException
 	 *             in error Case.
 	 */
-	public static void registerProjects(List<File> projectLocations, FileBasedWorkspace fbWorkspace)
+	public static void registerProjects(List<File> projectLocations, FileBasedWorkspace n4jsFileBasedWorkspace)
 			throws N4JSCompileException {
 		// make absolute, since downstream URI conversion doesn't work if relative dir only.
 		List<File> absProjectRoots = HeadlessHelper.toAbsoluteFileList(projectLocations);
@@ -51,7 +51,7 @@ public class HeadlessHelper {
 			projectURIs.add(puri);
 
 			try {
-				fbWorkspace.registerProject(puri);
+				n4jsFileBasedWorkspace.registerProject(puri);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + puri + "'", e);
 			}

@@ -12,18 +12,17 @@
 /* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
 
 	Workspace {
-		JavaProject "N4JSXPECTTests" {
+		Project "N4JSXXpectTests" {
 			Folder "model" {
 				Folder "scoping" {
 					ThisFile {}
 				}
-				Folder "jsxbackend" {
-					Folder "react" {
-						File "index.n4jsd" { from = "../../react/index.n4jsd" }
-					}
-				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react/index.n4jsd" }
+			File "manifest.n4mf" { from = "../../react/manifest.n4mf" }
 		}
 	}
 
@@ -34,12 +33,12 @@
 export public let simpleSelfClosing = <div/>;
 
 
-/* XPECT scope at '<di|v'  ---
-jsxbackend.react.Component, jsxbackend.react.ComponentProps,
-jsxbackend.react.Element, jsxbackend.react.PropConstraint, jsxbackend.react.PropType,
-jsxbackend.react.PropTypes, jsxbackend.react.PureComponent, jsxbackend.react.cloneElement,
-jsxbackend.react.createElement, jsxbackend.react.isValidElement, jsxbackend.react.renderToStaticMarkup,
-jsxbackend.react.renderToString, null, number, parseFloat, parseInt, pathSelector, propertyIsEnumerable, propsA,
+/* XPECT scope at '<|div'  ---
+index/Component, index/ComponentProps,
+index/Element, index/PropConstraint, index/PropType,
+index/PropTypes, index/PureComponent, index/cloneElement,
+index/createElement, index/isValidElement, index/renderToStaticMarkup,
+index/renderToString, null, Number, parseFloat, parseInt, propertyIsEnumerable, propsA,
 propsB, ...
 --- */
 export public let simpleOpenClose = <div></div>

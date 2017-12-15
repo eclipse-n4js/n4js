@@ -19,37 +19,50 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.RepresentingNode;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
-/** Used for all non-statements. Children nodes are retrieved from {@link CFEChildren#get(ControlFlowElement)}. */
+/**
+ * Used for all non-statements. Children nodes are retrieved from
+ * {@link CFEChildren#get(ReentrantASTIterator, ControlFlowElement)}.
+ * <p/>
+ * <b>Attention:</b> The order of {@link Node#astPosition}s is important, and thus the order of Node instantiation! In
+ * case this order is inconsistent to {@link OrderedEContentProvider}, the assertion with the message
+ * {@link ReentrantASTIterator#ASSERTION_MSG_AST_ORDER} is thrown.
+ */
 class StandardCFEFactory {
-	static final String ENTRY_NODE = "entry";
-	static final String EXIT_NODE = "exit";
-	static final String ENTRY_EXIT_NODE = "entryExit";
 
-	static ComplexNode buildComplexNode(ControlFlowElement cfe) {
-		return buildComplexNode(cfe, true);
+	static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe) {
+		return buildComplexNode(astpp, cfe, true);
 	}
 
-	static ComplexNode buildComplexNodeHidden(ControlFlowElement cfe) {
-		return buildComplexNode(cfe, false);
+	static ComplexNode buildComplexNodeHidden(ReentrantASTIterator astpp, ControlFlowElement cfe) {
+		return buildComplexNode(astpp, cfe, false);
 	}
 
-	private static ComplexNode buildComplexNode(ControlFlowElement cfe, boolean isRepresenting) {
-		ComplexNode cNode = new ComplexNode(cfe);
+	private static ComplexNode buildComplexNode(ReentrantASTIterator astpp, ControlFlowElement cfe,
+			boolean isRepresenting) {
+
+		ComplexNode cNode = new ComplexNode(astpp.container(), cfe);
+
+		HelperNode entryNode = new HelperNode(NodeNames.ENTRY, astpp.pos(), cfe);
 
 		List<Node> argumentNodes = new LinkedList<>();
-
-		List<Node> args = CFEChildren.get(cfe);
+		List<Node> args = CFEChildren.get(astpp, cfe);
 		for (Node argNode : args) {
 			argumentNodes.add(argNode);
 		}
 
-		HelperNode entryNode = null;
-		String exitNodeName = ENTRY_EXIT_NODE;
-		if (!argumentNodes.isEmpty()) {
-			entryNode = new HelperNode(ENTRY_NODE, cfe);
-			exitNodeName = EXIT_NODE;
+		Node exitNode;
+		String extName;
+		if (argumentNodes.isEmpty()) {
+			entryNode = null;
+			extName = NodeNames.ENTRY_EXIT;
+		} else {
+			extName = NodeNames.EXIT;
 		}
-		Node exitNode = (isRepresenting) ? new RepresentingNode(exitNodeName, cfe) : new HelperNode(exitNodeName, cfe);
+		if (isRepresenting) {
+			exitNode = new RepresentingNode(extName, astpp.pos(), cfe);
+		} else {
+			exitNode = new HelperNode(extName, astpp.pos(), cfe);
+		}
 
 		cNode.addNode(entryNode);
 		for (Node arg : argumentNodes)

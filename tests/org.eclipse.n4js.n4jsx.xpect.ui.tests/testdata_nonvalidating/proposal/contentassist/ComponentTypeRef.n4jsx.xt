@@ -18,13 +18,12 @@
 					ThisFile {}
 					File "ImportMe.n4jsx" {}
 				}
-				Folder "jsxbackend" {
-					Folder "react" {
-						File "index.n4jsd" { from = "../../../react/index.n4jsd" }
-					}
-				}
 			}
 			File "manifest.n4mf" { from="../../../manifest_nv.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../../react/index.n4jsd" }
+			File "manifest.n4mf" { from = "../../../react/manifest.n4mf" }
 		}
 	}
 
@@ -35,15 +34,13 @@
 
 /* XPECT contentAssistList at 'Fu<|>nc' proposals exactly ---
 	Func - linking/ImportMe,
- 	Function,
- 	function
+ 	Function
 ---	*/
 <Func myProp="My prop"/>
 
 
 /* XPECT contentAssistList at 'Cl<|>s' proposals exactly ---
-	cloneElement - jsxbackend/react/index,
-	Cls - linking/ImportMe,
-	class
+	cloneElement - index,
+	Cls - linking/ImportMe
 ---	*/
 var a = <Cls prop={5}/>;

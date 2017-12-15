@@ -25,13 +25,15 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+import org.eclipse.n4js.n4jsx.ReactHelper;
 import org.eclipse.n4js.naming.ModuleNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.ProjectUtils;
+import org.eclipse.n4js.transpiler.InformationRegistry;
 import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.utils.XtextUtilN4;
 import org.eclipse.xtext.naming.IQualifiedNameConverter;
@@ -47,7 +49,11 @@ import com.google.inject.Inject;
 public final class JSXBackendHelper {
 	private final static String JSX_BACKEND_MODULE_NAME = "react";
 	private final static String JSX_BACKEND_FACADE_NAME = "React";
+	private final static String JSX_REACT_MODULE_FILE_NAME = "index";
 	private final static String JSX_BACKEND_ELEMENT_FACTORY_NAME = "createElement";
+	private final static String JSX_BACKEND_DEFINITION_NAME = JSX_BACKEND_MODULE_NAME + File.separatorChar
+			+ JSX_REACT_MODULE_FILE_NAME + "."
+			+ N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 	/**
 	 * Local cache of JSX backends.
@@ -67,9 +73,12 @@ public final class JSXBackendHelper {
 	@Inject
 	XtextUtilN4 xtextUtil;
 
-	/** @return name of the JSX backend module, i.e. "react" */
-	public String getBackendModuleName() {
-		return JSX_BACKEND_MODULE_NAME;
+	@Inject
+	ReactHelper reactHelper;
+
+	/** @return name of the JSX backend module file name, i.e. "index" */
+	public String getBackendReactModuleFileName() {
+		return JSX_REACT_MODULE_FILE_NAME;
 	}
 
 	/** @return name of the JSX backend facade, i.e "React" */
@@ -82,18 +91,20 @@ public final class JSXBackendHelper {
 		return JSX_BACKEND_ELEMENT_FACTORY_NAME;
 	}
 
+	/** Checks if given module looks like JSX backend module, e.g. "react" */
+	public boolean isJsxBackendModule(TModule module) {
+		return reactHelper.isReactModule(module);
+	}
+
 	/** Checks if given import declaration looks like JSX backend import, e.g. "(...) from "react" */
-	public static boolean isJsxBackendImportDeclaration(ImportDeclaration declaration) {
-		return declaration.getImportSpecifiers().stream().anyMatch(specifier -> isJsxBackendImportSpecifier(specifier));
+	public boolean isJsxBackendImportDeclaration(ImportDeclaration declaration, InformationRegistry info) {
+		// 'false' here means: we turn off checking intermediate model element.
+		return isJsxBackendModule(info.getImportedModule(declaration, false));
 	}
 
 	/** Checks if given import specifier looks like JSX backend import, e.g. "import * as React from "react" */
-	public static boolean isJsxBackendImportSpecifier(ImportSpecifier specifier) {
-		if ((specifier instanceof NamespaceImportSpecifier)
-				&& (JSX_BACKEND_FACADE_NAME.equalsIgnoreCase(((NamespaceImportSpecifier) specifier).getAlias()))) {
-			return true;
-		}
-		return false;
+	public boolean isJsxBackendImportSpecifier(ImportSpecifier specifier, InformationRegistry info) {
+		return isJsxBackendImportDeclaration((ImportDeclaration) specifier.eContainer(), info);
 	}
 
 	/**
@@ -108,8 +119,7 @@ public final class JSXBackendHelper {
 			throw new RuntimeException(
 					"Cannot handle resource without containing project. Resource URI was: " + uri);
 		}
-		return ProjectUtils.formatDescriptor(optionalProject.get(),
-				module.getModuleSpecifier(), "-", ".", "/", false);
+		return ProjectUtils.formatDescriptor(optionalProject.get(), module.getModuleSpecifier(), "-", ".", "/", false);
 	}
 
 	/**
@@ -249,6 +259,6 @@ public final class JSXBackendHelper {
 		if (sqn == null)
 			return false;
 
-		return sqn.endsWith(JSX_BACKEND_MODULE_NAME + File.separatorChar + "index.n4jsd"); // i.e. react/index.n4jsd
+		return sqn.endsWith(JSX_BACKEND_DEFINITION_NAME); // i.e. react/index.n4jsd
 	}
 }

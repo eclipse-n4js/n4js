@@ -13,20 +13,26 @@ package org.eclipse.n4js.xpect.methods;
 import static org.junit.Assert.fail;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerDataRecorder;
+import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
-import org.eclipse.n4js.flowgraphs.analysers.AllPathPrintVisitor;
+import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
-import org.eclipse.n4js.n4JS.Block;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
+import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.xpect.common.N4JSOffsetAdapter;
@@ -40,22 +46,49 @@ import org.eclipse.xpect.expectation.IStringExpectation;
 import org.eclipse.xpect.expectation.StringExpectation;
 import org.eclipse.xpect.parameter.ParameterParser;
 import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xtext.xbase.lib.Pair;
+import org.xpect.XpectImport;
+import org.xpect.expectation.IStringExpectation;
+import org.xpect.expectation.StringExpectation;
+import org.xpect.parameter.ParameterParser;
+import org.xpect.runner.Xpect;
 
 /**
  */
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	// @Inject
-	// private ASTMetaInfoCacheHelper astMetaInfoCacheHelper;
-
 	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
 		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
 		flowAnalyzer.createGraphs(script);
-		// ASTMetaInfoCache cache = astMetaInfoCacheHelper.getOrCreate((N4JSResource) eo.eResource());
-		// flowAnalyzer = cache.getFlowAnalyses();
 		return flowAnalyzer;
+	}
+
+	/**
+	 * This xpect method can evaluate the direct predecessors of a code element. The predecessors can be limited when
+	 * specifying the edge type.
+	 * <p>
+	 * <b>Attention:</b> The type parameter <i>does not</i> work on self loops!
+	 */
+	@ParameterParser(syntax = "('of' arg2=OFFSET)?")
+	@Xpect
+	public void astOrder(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset) {
+
+		EObject context = offset.getEObject();
+		Iterator<ControlFlowElement> astIter = new ASTIterator(context);
+
+		int idx = 0;
+		List<String> astElements = new LinkedList<>();
+		while (astIter.hasNext()) {
+			ControlFlowElement cfe = astIter.next();
+			String elem = idx + ": " + FGUtils.getSourceText(cfe);
+			astElements.add(elem);
+			idx++;
+		}
+
+		expectation.assertEquals(astElements);
 	}
 
 	/**
@@ -187,6 +220,54 @@ public class FlowgraphsXpectMethod {
 	}
 
 	/**
+	 * This xpect method can evaluate all branches that are merged at the given node name.
+	 */
+	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
+	@Xpect
+	public void allMergeBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion referenceOffset) {
+
+		N4JSFlowAnalyzerDataRecorder.setEnabled(true);
+		GraphVisitor gv = new DummyForwardBackwardVisitor();
+		ControlFlowElement referenceCFE = getCFE(referenceOffset);
+		getFlowAnalyzer(referenceCFE).accept(gv);
+		N4JSFlowAnalyzerDataRecorder.setEnabled(false);
+		performBranchAnalysis(referenceOffset, null, referenceOffset);
+		List<String> edgeStrings = new LinkedList<>();
+
+		int groupIdx = 0;
+		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyzerDataRecorder.getMergedEdges();
+
+		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
+			Node startNode = pair.getKey();
+			List<ControlFlowEdge> edges = pair.getValue();
+			for (ControlFlowEdge edge : edges) {
+				String c = edge.start == startNode ? "B" : "F";
+				edgeStrings.add(c + groupIdx + ": " + edge.toString());
+			}
+			groupIdx++;
+		}
+
+		Collections.sort(edgeStrings);
+		expectation.assertEquals(edgeStrings);
+	}
+
+	/**
+	 * This xpect method can evaluate all branches from a given start code element. If no start code element is
+	 * specified, the first code element of the containing function.
+	 */
+	@ParameterParser(syntax = "('from' arg1=OFFSET)? ('direction' arg2=STRING)? ('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg3=OFFSET)?")
+	@Xpect
+	public void allBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
+			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
+
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> branchStrings = appw.getBranchStrings();
+
+		expectation.assertEquals(branchStrings);
+	}
+
+	/**
 	 * This xpect method can evaluate all paths from a given start code element. If no start code element is specified,
 	 * the first code element of the containing function.
 	 */
@@ -195,6 +276,15 @@ public class FlowgraphsXpectMethod {
 	public void allPaths(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion offset, String directionName, IEObjectCoveringRegion referenceOffset) {
 
+		AllBranchPrintVisitor appw = performBranchAnalysis(offset, directionName, referenceOffset);
+		List<String> pathStrings = appw.getPathStrings();
+
+		expectation.assertEquals(pathStrings);
+	}
+
+	private AllBranchPrintVisitor performBranchAnalysis(IEObjectCoveringRegion offset, String directionName,
+			IEObjectCoveringRegion referenceOffset) {
+
 		EObjectCoveringRegion offsetImpl = (EObjectCoveringRegion) offset;
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
 		ControlFlowElement startCFE = getCFEWithReference(offsetImpl, referenceOffsetImpl);
@@ -202,11 +292,9 @@ public class FlowgraphsXpectMethod {
 		GraphVisitorInternal.Mode direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
-		AllPathPrintVisitor appw = new AllPathPrintVisitor(container, startCFE, direction);
+		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
 		getFlowAnalyzer(referenceCFE).accept(appw);
-		List<String> pathStrings = appw.getPathStrings();
-
-		expectation.assertEquals(pathStrings);
+		return appw;
 	}
 
 	private GraphVisitorInternal.Mode getDirection(String directionName) {
@@ -267,20 +355,6 @@ public class FlowgraphsXpectMethod {
 		return cfe;
 	}
 
-	/** This xpect method can evaluate all common predecessors of two {@link ControlFlowElement}s. */
-	@ParameterParser(syntax = "('pleaseNeverUseThisParameterSinceItExistsOnlyToGetAReferenceOffset' arg1=OFFSET)?")
-	@Xpect
-	public void allIslandElems(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion referenceOffset) {
-
-		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		ControlFlowElement container = getFlowAnalyzer(referenceCFE).getContainer(referenceCFE);
-		AllNodesAndEdgesPrintVisitor anaepw = new AllNodesAndEdgesPrintVisitor(container);
-		getFlowAnalyzer(referenceCFE).accept(anaepw);
-		List<String> nodeStrings = anaepw.getAllIslandsNodeStrings();
-		expectation.assertEquals(nodeStrings);
-	}
-
 	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
 	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
 	@Xpect
@@ -294,21 +368,4 @@ public class FlowgraphsXpectMethod {
 		expectation.assertEquals(containerStr);
 	}
 
-	/** This xpect method can evaluate the control flow container of a given {@link ControlFlowElement}. */
-	@ParameterParser(syntax = "('of' arg1=OFFSET)?")
-	@Xpect
-	public void allCatchBlocks(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
-			IEObjectCoveringRegion offset) {
-
-		ControlFlowElement cfe = getCFE(offset);
-		ControlFlowElement container = getFlowAnalyzer(cfe).getContainer(cfe);
-		List<Block> catchBlocks = getFlowAnalyzer(cfe).getCatchBlocksOfContainer(container);
-
-		List<String> catchBlockStrs = new LinkedList<>();
-		for (Block catchBlock : catchBlocks) {
-			String catchBlockStr = FGUtils.getSourceText(catchBlock);
-			catchBlockStrs.add(catchBlockStr);
-		}
-		expectation.assertEquals(catchBlockStrs);
-	}
 }

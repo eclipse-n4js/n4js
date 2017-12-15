@@ -14,12 +14,11 @@ Require-Bundle: org.eclipse.n4js.ts.model,
  org.eclipse.emf.mwe2.launch;resolution:=optional,
  org.eclipse.xtext.xbase.lib,
  org.eclipse.xsemantics.runtime,
- org.eclipse.n4js.n4jsx.model
+ org.eclipse.n4js.model,
+ org.eclipse.equinox.common
 Export-Package: org.eclipse.n4js.flowgraphs,
  org.eclipse.n4js.flowgraphs.analysers,
  org.eclipse.n4js.flowgraphs.analyses,
  org.eclipse.n4js.flowgraphs.model
-Import-Package: org.eclipse.core.runtime,
- org.eclipse.n4js.n4JS,
- org.eclipse.n4js.n4JS.util
+Import-Package: org.eclipse.n4js.smith
 

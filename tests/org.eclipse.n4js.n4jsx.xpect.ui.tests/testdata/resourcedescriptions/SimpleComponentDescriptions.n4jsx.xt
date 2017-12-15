@@ -12,18 +12,17 @@
 /* XPECT_SETUP org.eclipse.n4js.n4jsx.xpect.ui.tests.N4JSXXpectPluginTest
 
 	Workspace {
-		Project "N4JSXPECTTests" {
+		Project "N4JSXXpectTests" {
 			Folder "model" {
 				Folder "resourcedescriptions" {
 					ThisFile {}
 				}
-				Folder "jsxbackend" {
-					Folder "react" {
-						File "index.n4jsd" { from = "../../react/index.n4jsd" }
-					}
-				}
 			}
 			File "manifest.n4mf" { from="../../manifest.n4mf" }
+		}
+		Project "react" {
+			File "index.n4jsd" { from = "../../react/index.n4jsd" }
+			File "manifest.n4mf" { from = "../../react/manifest.n4mf" }
 		}
 	}
 

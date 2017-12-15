@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.n4jsx.xpect.ui.tests;
 
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.xpect.methods.FindReferencesXpectMethod;
 import org.eclipse.n4js.xpect.methods.TypeXpectMethod;
 import org.eclipse.n4js.xpect.methods.scoping.ScopeXpectMethod;
@@ -41,5 +42,7 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 @XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "testdata", fileExtensions = "xt")
 @XpectImport({ SuppressIssuesSetup.class })
 public class N4JSXXpectPluginTest {
-	//
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 }

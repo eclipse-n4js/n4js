@@ -13,7 +13,7 @@ package org.eclipse.n4js.transpiler;
 import java.io.Writer;
 import java.nio.file.Path;
 
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.resource.N4JSResource;
@@ -57,6 +57,9 @@ public abstract class AbstractTranspiler {
 
 	@Inject
 	private QualifiedNameComputer qnComputer;
+
+	@Inject
+	private TranspilerDebugUtils transpilerDebugUtils;
 
 	/**
 	 * Returns an optional preamble that will be prepended to the output code in each output file. Use '\n' as line
@@ -211,7 +214,7 @@ public abstract class AbstractTranspiler {
 				}
 
 				if (DEBUG_PERFORM_VALIDATIONS) {
-					TranspilerDebugUtils.validateState(state, true);
+					transpilerDebugUtils.validateState(state, true);
 				}
 			}
 

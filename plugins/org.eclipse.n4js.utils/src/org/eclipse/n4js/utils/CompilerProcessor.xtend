@@ -43,7 +43,7 @@ class CompilerProcessor extends AbstractFieldProcessor {
 						annotatedField.initializer.addError(value + " have to resolve to a class on the classpath.")
 					} else {
 						val clazz = resolvedType as ClassDeclaration
-						val subGeneratorInterface = "org.eclipse.n4js.generator.common.ISubGenerator"
+						val subGeneratorInterface = "org.eclipse.n4js.generator.ISubGenerator"
 						if(!clazz.implementsInterface(subGeneratorInterface)) {
 							annotatedField.initializer.addError("The class " + value + " have to implement the interface " + subGeneratorInterface + ", but only implements " + clazz.implementedInterfaces.map[name])
 						}
