@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.N4JSUiInjectorProvider;
+import org.eclipse.n4js.tests.util.EclipseGracefulUIShutdownEnabler;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
@@ -62,6 +63,10 @@ import com.google.inject.Injector;
 public abstract class AbstractBuilderTest extends Assert implements IResourceDescription.Event.Listener {
 
 	private static final Logger LOGGER = getLogger(AbstractBuilderTest.class);
+
+	static {
+		EclipseGracefulUIShutdownEnabler.enableOnce();
+	}
 
 	/***/
 	public static final String F_EXT = ".n4js";

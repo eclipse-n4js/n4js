@@ -39,12 +39,10 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.varia.NullAppender;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
@@ -59,9 +57,6 @@ import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
 import org.eclipse.n4js.external.libraries.TargetPlatformModel;
-import org.eclipse.n4js.fileextensions.FileExtensionType;
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.headless.HeadlessExtensionRegistrationHelper;
 import org.eclipse.n4js.generator.headless.HeadlessHelper;
 import org.eclipse.n4js.generator.headless.N4HeadlessCompiler;
 import org.eclipse.n4js.generator.headless.N4JSCompileException;
@@ -76,14 +71,11 @@ import org.eclipse.n4js.n4mf.N4MFStandaloneSetup;
 import org.eclipse.n4js.n4mf.N4mfPackage;
 import org.eclipse.n4js.regex.RegularExpressionStandaloneSetup;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
-import org.eclipse.n4js.runner.extension.RunnerRegistry;
-import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.tester.CliTestTreeTransformer;
 import org.eclipse.n4js.tester.TestCatalogSupplier;
 import org.eclipse.n4js.tester.TestTreeTransformer;
 import org.eclipse.n4js.tester.TesterModule;
 import org.eclipse.n4js.tester.extension.TesterRegistry;
-import org.eclipse.n4js.tester.nodejs.NodeTester.NodeTesterDescriptorProvider;
 import org.eclipse.n4js.ts.TypeExpressionsStandaloneSetup;
 import org.eclipse.n4js.ts.TypesStandaloneSetup;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -253,13 +245,7 @@ public class N4jscBase implements IApplication {
 	private HeadlessRunner headlessRunner;
 
 	@Inject
-	private RunnerRegistry runnerRegistry;
-
-	@Inject
 	private HeadlessTester headlessTester;
-
-	@Inject
-	private TesterRegistry testerRegistry;
 
 	@Inject
 	private FileBasedWorkspace n4jsFileBasedWorkspace;
@@ -274,10 +260,7 @@ public class N4jscBase implements IApplication {
 	private NpmManager npmManager;
 
 	@Inject
-	private NodeRunnerDescriptorProvider nodeRunnerDescriptorProvider;
-
-	@Inject
-	private NodeTesterDescriptorProvider nodeTesterDescriptorProvider;
+	private TesterRegistry testerRegistry;
 
 	@Inject
 	private Provider<NodeJsBinary> nodeJsBinaryProvider;
@@ -293,9 +276,6 @@ public class N4jscBase implements IApplication {
 
 	@Inject
 	private TypeDefinitionGitLocationProvider gitLocationProvider;
-
-	@Inject
-	private FileExtensionsRegistry n4jsFileExtensionsRegistry;
 
 	@Inject
 	private HeadlessExtensionRegistrationHelper headlessExtensionRegistrationHelper;
@@ -396,24 +376,7 @@ public class N4jscBase implements IApplication {
 			initInjection(refProperties());
 
 			// Register extensions manually
-			headlessExtensionRegistrationHelper.registerExtensionsManually();
-
-			// Wire registers related to the extension points
-			// in non-OSGI mode extension points are not automatically populated
-			if (!Platform.isRunning()) {
-				runnerRegistry.register(nodeRunnerDescriptorProvider.get());
-				testerRegistry.register(nodeTesterDescriptorProvider.get());
-			}
-
-			registerTestableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION);
-			registerRunnableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-					N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
-			registerTranspilableFiles(N4JSGlobals.N4JS_FILE_EXTENSION, N4JSGlobals.N4JSX_FILE_EXTENSION,
-					N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
-			registerTypableFiles(N4JSGlobals.N4JSD_FILE_EXTENSION, N4JSGlobals.N4JS_FILE_EXTENSION,
-					N4JSGlobals.N4JSX_FILE_EXTENSION, N4JSGlobals.JS_FILE_EXTENSION,
-					N4JSGlobals.JSX_FILE_EXTENSION);
-			registerRawFiles(N4JSGlobals.JS_FILE_EXTENSION, N4JSGlobals.JSX_FILE_EXTENSION);
+			headlessExtensionRegistrationHelper.registerExtensions();
 
 			if (listRunners) {
 				printAvailableRunners(System.out);
@@ -576,51 +539,6 @@ public class N4jscBase implements IApplication {
 			// dump all information to error-stream.
 			e.userDump(System.err);
 			throw new ExitCodeException(EXITCODE_CLEAN_ERROR);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#TESTABLE_FILE_EXTENSION}
-	 */
-	private void registerTestableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#RUNNABLE_FILE_EXTENSION}
-	 */
-	private void registerRunnableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.RUNNABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#TRANSPILABLE_FILE_EXTENSION}
-	 */
-	private void registerTranspilableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TRANSPILABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#TYPABLE_FILE_EXTENSION}
-	 */
-	private void registerTypableFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TYPABLE_FILE_EXTENSION);
-		}
-	}
-
-	/**
-	 * Registers files to {@link FileExtensionType#RAW_FILE_EXTENSION}
-	 */
-	private void registerRawFiles(String... extensions) {
-		for (String extension : extensions) {
-			n4jsFileExtensionsRegistry.register(extension, FileExtensionType.TESTABLE_FILE_EXTENSION);
 		}
 	}
 

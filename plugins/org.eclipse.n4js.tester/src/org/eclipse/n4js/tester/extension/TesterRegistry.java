@@ -18,13 +18,12 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.RegistryFactory;
+import org.eclipse.n4js.tester.ITester;
+import org.eclipse.n4js.tester.TestConfiguration;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.tester.ITester;
-import org.eclipse.n4js.tester.TestConfiguration;
 
 /**
  * Utility for working with the 'testers' extension point.
@@ -118,5 +117,11 @@ public class TesterRegistry {
 				}
 			}
 		}
+	}
+
+	/** Reset the registry */
+	public void reset() {
+		isInitialized = false;
+		descriptors.clear();
 	}
 }

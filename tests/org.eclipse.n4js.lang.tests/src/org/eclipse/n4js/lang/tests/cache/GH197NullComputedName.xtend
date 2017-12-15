@@ -73,7 +73,7 @@ class GH197NullComputedName extends AbstractParserTest {
 		val res = script.eResource as N4JSResource
 		res.performPostProcessing(null)
 		
-		val cache = res.getASTMetaInfoCache();
+		val cache = res.getASTMetaInfoCacheVerifyContext();
 		val allTypableASTNodes = script.eAllContents.filter(TypableElement);
 		// The type of each typable element must have been cached 
 		while (allTypableASTNodes.hasNext) {

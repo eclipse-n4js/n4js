@@ -11,32 +11,23 @@
 package org.eclipse.n4js.n4jsx.ui.tests;
 
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
-import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.PUBLIC_DEFINITION_LOCATION;
-import static org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocation.TEST_DEFINITION_LOCATION;
 import static org.eclipse.n4js.projectModel.IN4JSProject.N4MF_MANIFEST;
 import static org.eclipse.n4js.runner.nodejs.NodeRunner.ID;
 
 import java.io.File;
-import java.net.URI;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.external.NpmManager;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider;
-import org.eclipse.n4js.external.TypeDefinitionGitLocationProvider.TypeDefinitionGitLocationProviderImpl;
-import org.eclipse.n4js.preferences.ExternalLibraryPreferenceStore;
 import org.eclipse.n4js.runner.RunConfiguration;
 import org.eclipse.n4js.runner.RunnerFrontEnd;
 import org.eclipse.n4js.runner.ui.RunnerFrontEndUI;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectTestsUtils;
-import org.eclipse.n4js.utils.io.FileDeleter;
 import org.eclipse.n4js.utils.process.OutputRedirection;
 import org.eclipse.n4js.utils.process.ProcessExecutor;
 import org.eclipse.n4js.utils.process.ProcessResult;
@@ -64,9 +55,6 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	private static final String CLIENT_MODULE = "src/A.n4jsx";
 
 	@Inject
-	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
-
-	@Inject
 	private RunnerFrontEndUI runnerFrontEndUI;
 
 	@Inject
@@ -76,13 +64,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	private ProcessExecutor processExecutor;
 
 	@Inject
-	private TargetPlatformInstallLocationProvider locationProvider;
-
-	@Inject
 	private NpmManager npmManager;
-
-	@Inject
-	private TypeDefinitionGitLocationProvider gitLocationProvider;
 
 	/**
 	 * Checks whether the platform is running or not.
@@ -97,12 +79,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	 */
 	@Before
 	public void setup() throws Exception {
-		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(TEST_DEFINITION_LOCATION);
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		externalLibraryPreferenceStore.add(nodeModulesLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-		waitForAutoBuild();
+		setupExternalLibraries(false);
 	}
 
 	/**
@@ -171,21 +148,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 	@After
 	@Override
 	public void tearDown() throws Exception {
-		final URI nodeModulesLocation = locationProvider.getTargetPlatformNodeModulesLocation();
-		externalLibraryPreferenceStore.remove(nodeModulesLocation);
-		final IStatus result = externalLibraryPreferenceStore.save(new NullProgressMonitor());
-		assertTrue("Error while saving external library preference changes.", result.isOK());
-		waitForAutoBuild();
-		((TypeDefinitionGitLocationProviderImpl) gitLocationProvider).setGitLocation(PUBLIC_DEFINITION_LOCATION);
-
-		// cleanup leftovers in the file system
-		File nodeModuleLocationFile = new File(nodeModulesLocation);
-		assertTrue("Provided npm location does not exist.", nodeModuleLocationFile.exists());
-		assertTrue("Provided npm location is not a folder.", nodeModuleLocationFile.isDirectory());
-		FileDeleter.delete(nodeModuleLocationFile);
-		assertFalse("Provided npm location should be deleted.", nodeModuleLocationFile.exists());
-
-		super.tearDown();
+		tearDownExternalLibraries(false);
 	}
 
 	private ProcessResult runClient() {

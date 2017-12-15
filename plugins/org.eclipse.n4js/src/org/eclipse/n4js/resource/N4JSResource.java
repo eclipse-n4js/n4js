@@ -269,7 +269,7 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 	 * transition from "Fully Initialized" to "Fully Processed", i.e. during post-processing) or throws an exception if
 	 * the cache is unavailable (in all other states).
 	 */
-	public ASTMetaInfoCache getASTMetaInfoCache() {
+	public ASTMetaInfoCache getASTMetaInfoCacheVerifyContext() {
 		if (astMetaInfoCache == null) {
 			if (!isFullyProcessed() && !isPostProcessing()) {
 				// getter invoked in wrong state
@@ -280,6 +280,14 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 				throw new NullPointerException("AST meta-info cache missing");
 			}
 		}
+		return astMetaInfoCache;
+	}
+
+	/**
+	 * Retrieve the ASTMetaInfo. Unlike {@code getASTMetaInfoCacheVerifyContext}, this method does not check if the call
+	 * is allowed in the current call context.
+	 */
+	public ASTMetaInfoCache getASTMetaInfoCache() {
 		return astMetaInfoCache;
 	}
 
