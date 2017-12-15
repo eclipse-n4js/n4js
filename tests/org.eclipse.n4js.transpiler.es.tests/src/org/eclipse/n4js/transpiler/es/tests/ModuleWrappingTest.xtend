@@ -48,7 +48,19 @@ import org.junit.runners.MethodSorters
 import static org.junit.Assert.*
 
 /**
- * All tests herein starting with temp_ should be replaced with textual comparisions.
+ * All tests herein starting with temp_ should be replaced with textual comparisons.
+ * <pre>
+ * %% Template:
+ * def _00_XX() throws Throwable  {
+ *     val script =
+ *         '''
+ *         '''
+ *     val moduleWrapped =
+ *         '''
+ *         '''
+ *     assertCompileResult(script,moduleWrapped)
+ * }
+ * </pre>
  */
 @RunWith(XtextRunner)
 @InjectWith(N4JSInjectorProviderWithMockProject)
@@ -58,23 +70,16 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 	@Inject extension ParseHelper<Script>
 	@Inject extension ResourceHelper
 
-
-
-
-
 	/** builder-patter-like additional Script after #installExportedScript was called. */
 	def ResourceSet andInstallOtherExportedScript(ResourceSet rs) throws Throwable {
 		val otherExportedScript =
-   		'''
-   		export public class C1 { public m1(){} }
-   		export public class C2 { public m2(){} }
-   		'''
-   		otherExportedScript.resource(URI.createURI("src/OtherExportedStuff."+N4JSGlobals.N4JS_FILE_EXTENSION),rs);
+		'''
+		export public class C1 { public m1(){} }
+		export public class C2 { public m2(){} }
+		'''
+		otherExportedScript.resource(URI.createURI("src/OtherExportedStuff."+N4JSGlobals.N4JS_FILE_EXTENSION),rs);
 		return rs;
 	}
-
-
-
 
 	/** Testing  a completely empty script.  */
 	@Test
@@ -108,9 +113,9 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 	@Test
 	def _02_singleStatement() throws Throwable {
-   		val script = '''console.log('"hi"')'''
-   		val moduleWrapped =
-   		'''
+		val script = '''console.log('"hi"')'''
+		val moduleWrapped =
+		'''
 			'use strict';
 			System.register([], function($n4Export) {
 
@@ -121,14 +126,14 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 			        }
 			    };
 			});
-   		'''.cjsPatched;
-   		// current behaviour replaces quotes and inserts a semicolon.
+		'''.cjsPatched;
+		// current behaviour replaces quotes and inserts a semicolon.
 		assertCompileResult(script,moduleWrapped)
 	}
 
 	@Test
 	def structure_02_singleStatement() throws Throwable {
-   		val script = '''console.log('hi')'''
+		val script = '''console.log('hi')'''
 		// Expected textual output:
 		//   		val moduleWrapped =
 		//   		'''
@@ -186,12 +191,12 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 	@Test
 	def _03_hoisted_declared_variable() throws Throwable {
-   		val script = '''
+		val script = '''
 		console.log('hi')
 		var a;
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 		'use strict';
 		System.register([], function($n4Export) {
 		    var a;
@@ -203,21 +208,21 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		        }
 		    };
 		});
-   		'''.cjsPatched;
+		'''.cjsPatched;
 		assertCompileResult(script,moduleWrapped)
 	}
 
 	@Ignore // interfaces not yet implemented.
 	@Test
 	def _03b_hoisted_multiple() throws Throwable {
-   		val script = '''
+		val script = '''
 		class C{}
 		interface F {}
 		function f () {}
 		var  v = 'val';
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 		'use strict';
 		System.register([], function($n4Export) {
 		    var f, v, C, F;
@@ -233,29 +238,29 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		        }
 		    };
 		});
-   		'''.cjsPatched;
+		'''.cjsPatched;
 		assertCompileResult(script,moduleWrapped)
 	}
 
 	@Test
 	def _04_unused_Imports() throws Throwable {
-   		val script = '''
+		val script = '''
 		import { C1 } from "ExportedStuff"
 		import { C2 } from "ExportedStuff"
 		var c2: C2 = new C2();
 		c2.m2();
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 			'use strict';
-			System.register(['test/ExportedStuff'],
+			System.register(['ExportedStuff'],
 			function ($n4Export ){
 			   var C2 ,
 			       c2
 			   ;
 			   return {
-			            setters  : [function ($_import_test_ExportedStuff ){
-			                          C2 = $_import_test_ExportedStuff.C2;
+			            setters  : [function ($_import_ExportedStuff ){
+			                          C2 = $_import_ExportedStuff.C2;
 			                        }                                                    ],
 			            execute  : function (){
 			            			 c2 = new C2();
@@ -264,48 +269,41 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 			          }                                                                    ;
 			 }                                                                              );
 
-   		'''.cjsPatched;
-
-
-
+		'''.cjsPatched;
 
 		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
-   		scriptNode.resolveLazyRefs
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"), resSet)
+		scriptNode.resolveLazyRefs
 
+		val import = scriptNode.scriptElements.filter(ImportDeclaration).head
+		assertFalse(import.module.eIsProxy)
+		assertFalse((import.importSpecifiers.head as NamedImportSpecifier).importedElement.eIsProxy)
 
-   		val import = scriptNode.scriptElements.filter(ImportDeclaration).head
-   		assertFalse( import.module.eIsProxy   )
-   		assertFalse( (import.importSpecifiers.head as NamedImportSpecifier).importedElement.eIsProxy   )
-
-
-		assertCompileResult(scriptNode,moduleWrapped)
+		assertCompileResult(scriptNode, moduleWrapped)
 	}
-
-
 
 	@Test
 	def _05_named_imports() throws Throwable {
-   		val script = '''
+		val script = '''
 		import { C1 } from "ExportedStuff"
 		import { C2 } from "ExportedStuff"
 
 		console.log(C1)
 		console.log(C2)
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 		'use strict';
-		System.register(['test/ExportedStuff'],
+		System.register(['ExportedStuff'],
 		function ($n4Export ){
 		   var C1 ,
 		       C2
 		   ;
 		   return {
-		            setters  : [function ($_import_test_ExportedStuff ){
-		                          C1 = $_import_test_ExportedStuff.C1;
-		                          C2 = $_import_test_ExportedStuff.C2;
+		            setters  : [function ($_import_ExportedStuff ){
+		                          C1 = $_import_ExportedStuff.C1;
+		                          C2 = $_import_ExportedStuff.C2;
 		                        }                                                    ],
 		            execute  : function (){
 		                         console.log(C1);
@@ -314,12 +312,12 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		          }                                                                    ;
 		 }                                                                              );
 
-   		'''.cjsPatched;
+		'''.cjsPatched;
 
-   		// Prepare ResourceSet to contain exportedScript:
+		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
-   		scriptNode.resolveLazyRefs
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+		scriptNode.resolveLazyRefs
 
 
 		assertCompileResult(scriptNode,moduleWrapped)
@@ -327,7 +325,7 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 	@Test
 	def _06_multiple_named_imports() throws Throwable {
-   		val script = '''
+		val script = '''
 		import { C1 } from "ExportedStuff"
 		import { C2 as XX } from "ExportedStuff"
 		import { C2 } from "OtherExportedStuff"
@@ -336,22 +334,22 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		console.log(C2)
 		console.log(XX)
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 		'use strict';
-		System.register(['test/ExportedStuff', 'test/OtherExportedStuff'],
+		System.register(['ExportedStuff', 'OtherExportedStuff'],
 		function ($n4Export ){
 		   var C1 ,
 		       XX ,
 		       C2
 		   ;
 		   return {
-		            setters  : [function ($_import_test_ExportedStuff ){
-		                          C1 = $_import_test_ExportedStuff.C1;
-		                          XX = $_import_test_ExportedStuff.C2;
+		            setters  : [function ($_import_ExportedStuff ){
+		                          C1 = $_import_ExportedStuff.C1;
+		                          XX = $_import_ExportedStuff.C2;
 		                        }
-		                        , function ($_import_test_OtherExportedStuff ){
-								  C2 = $_import_test_OtherExportedStuff.C2;
+		                        , function ($_import_OtherExportedStuff ){
+								  C2 = $_import_OtherExportedStuff.C2;
 								}],
 		            execute  : function (){
 		                         console.log(C1);
@@ -360,21 +358,21 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		                       }
 		          };
 		});
-   		'''.cjsPatched;
+		'''.cjsPatched;
 
-   		// Prepare ResourceSet to contain exportedScript:
+		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
 					.andInstallOtherExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
-   		scriptNode.resolveLazyRefs
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+		scriptNode.resolveLazyRefs
 
 		assertCompileResult(scriptNode,moduleWrapped)
 	}
 
 	@Test
 	def _07_namespace_import() throws Throwable {
-   		val script = '''
+		val script = '''
 		import { C2 } from "OtherExportedStuff"
 		import * as Namespace from "ExportedStuff"
 
@@ -382,20 +380,20 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		console.log(C2)
 		console.log(Namespace.C2)
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 		'use strict';
-		System.register(['test/OtherExportedStuff', 'test/ExportedStuff'],
+		System.register(['OtherExportedStuff', 'ExportedStuff'],
 		function ($n4Export ){
 		   var C2 ,
 		       Namespace
 		   ;
 		   return {
-		            setters  : [function ($_import_test_OtherExportedStuff ){
-		                          C2 = $_import_test_OtherExportedStuff.C2;
+		            setters  : [function ($_import_OtherExportedStuff ){
+		                          C2 = $_import_OtherExportedStuff.C2;
 		                        }
-								 , function ($_import_test_ExportedStuff ){
-								  Namespace = $_import_test_ExportedStuff;
+								 , function ($_import_ExportedStuff ){
+								  Namespace = $_import_ExportedStuff;
 								}],
 		            execute  : function (){
 		                         console.log(Namespace.C1);
@@ -404,13 +402,13 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		                       }
 		          };
 		 } );
-   		'''.cjsPatched;
+		'''.cjsPatched;
 
-   		// Prepare ResourceSet to contain exportedScript:
+		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
 					.andInstallOtherExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
 		scriptNode.resolveLazyRefs
 
 		assertCompileResult(scriptNode,moduleWrapped)
@@ -418,12 +416,12 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 	@Test
 	def _08_exports() throws Throwable  {
-   		val script = '''
+		val script = '''
 		export var a;
 		export function f(){}
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 			'use strict';
 			System.register([], function($n4Export) {
 				var a, f;
@@ -434,13 +432,13 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 					execute: function() {}
 				};
 			});
-   		'''.cjsPatched;
+		'''.cjsPatched;
 		assertCompileResult(script,moduleWrapped)
 	}
 
 	@Test
 	def _09_Class_declaration_field_init() throws Throwable  {
-   		val script = '''
+		val script = '''
 			import { C1 } from "ExportedStuff"
 			export public class A {
 				C1 c1 = new C1();
@@ -454,10 +452,10 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				}
 			}
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 			'use strict';
-			System.register(['test/ExportedStuff'],
+			System.register(['ExportedStuff'],
 			function ($n4Export ){
 			    var C1 ,
 			        A
@@ -471,8 +469,8 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				$n4Export('A', A);
 
 			    return {
-			             setters  : [function ($_import_test_ExportedStuff ){
-			                           C1 = $_import_test_ExportedStuff.C1;
+			             setters  : [function ($_import_ExportedStuff ){
+			                           C1 = $_import_ExportedStuff.C1;
 			                         }                                                      ],
 			             execute  : function (){
 			                          $makeClass(A, N4Object, [], {
@@ -522,13 +520,13 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 			              }«/* End Execute function */»
 			           }  ;«/* End return OL */»
 			  }  );
-   		'''.cjsPatched;
+		'''.cjsPatched;
 
-      		// Prepare ResourceSet to contain exportedScript:
+		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
 					.andInstallOtherExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
 		scriptNode.resolveLazyRefs
 
 		assertCompileResult(scriptNode,moduleWrapped)
@@ -536,7 +534,7 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 	}
 	@Test
 	def _10_Class_declaration_static_field_init() throws Throwable  {
-   		val script = '''
+		val script = '''
 			import { C1 } from "ExportedStuff"
 			export public class A {
 				static c1: C1 = new C1();
@@ -550,10 +548,10 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				}
 			}
 		'''
-   		val moduleWrapped =
-   		'''
+		val moduleWrapped =
+		'''
 			'use strict';
-			System.register(['test/ExportedStuff'],
+			System.register(['ExportedStuff'],
 			function ($n4Export ){
 			    var C1 ,
 			        A
@@ -565,8 +563,8 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 				$n4Export('A', A);
 
 			    return {
-			             setters  : [function ($_import_test_ExportedStuff ){
-			                           C1 = $_import_test_ExportedStuff.C1;
+			             setters  : [function ($_import_ExportedStuff ){
+			                           C1 = $_import_ExportedStuff.C1;
 			                         }                                                      ],
 			             execute  : function (){
 			                          $makeClass(A, N4Object, [], {
@@ -617,13 +615,13 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 			                        }
 			           }  ;
 			  }  );
-   		'''.cjsPatched;
+		'''.cjsPatched;
 
-      		// Prepare ResourceSet to contain exportedScript:
+		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
 					.andInstallOtherExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
 		scriptNode.resolveLazyRefs
 
 		assertCompileResult(scriptNode,moduleWrapped)
@@ -632,7 +630,7 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 	@Test
 	def void structure_10_Class_declaration_static_field_init() throws Throwable  {
-   		val script = '''
+		val script = '''
 			import { C1 } from "ExportedStuff"
 			export public class A {
 				static c1: C1 = new C1();
@@ -662,8 +660,8 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		//				$n4Export("A", A);
 		//
 		//			    return {
-		//			             setters  : [function ($_import_test_ExportedStuff ){
-		//			                           C1 = $_import_test_ExportedStuff.C1;
+		//			             setters  : [function ($_import_ExportedStuff ){
+		//			                           C1 = $_import_ExportedStuff.C1;
 		//			                         }                                                      ],
 		//			             execute  : function (){
 		//			                          $makeClass(A, Object, {
@@ -690,11 +688,11 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 		//   		'''
 
-      		// Prepare ResourceSet to contain exportedScript:
+		// Prepare ResourceSet to contain exportedScript:
 		val resSet = installExportedScript
 					.andInstallOtherExportedScript;
 
-   		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
+		val Script scriptNode = script.parse(URI.createURI("src/A.n4js"),resSet)
 		scriptNode.resolveLazyRefs
 
 
@@ -714,7 +712,7 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		val fe_with_n4Export =  (system_register_excprStmt.expression as ParameterizedCallExpression).arguments.get(1).expression as FunctionExpression;
 		assertEquals("$n4Export", fe_with_n4Export.fpars.get(0).name )
 
-	    // §1
+		// §1
 		val assignClassInit = (fe_with_n4Export.body.statements.get(1) as ExpressionStatement).expression as AssignmentExpression
 		assertEquals( "A",(assignClassInit.lhs as IdentifierRef_IM).id_IM.name )
 
@@ -762,13 +760,12 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 	@Test
 	def _11_external_JS_module_wrap_function() throws Throwable  {
-   		val script = '''
-   			var x = 5;
+		val script = '''
+			var x = 5;
 		'''
 
 		// Expectation
-		val moduleWrapped =
-		'''
+		val moduleWrapped = '''
 			System.registerDynamic([], true, function(require, exports, module) {
 				var x = 5;
 			});
@@ -776,51 +773,32 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 
 		val wrapResult = ModuleWrappingTransformation.wrapPlainJSCode(script);
 
-		"Wrapped plain JS-content is not as expected.".assertSameExceptWhiteSpace( moduleWrapped, wrapResult.toString );
+		"Wrapped plain JS-content is not as expected.".assertSameExceptWhiteSpace(moduleWrapped, wrapResult.toString);
 	}
 
 	@Test
 	def _12_external_JS_module_wrap_resource() throws Throwable  {
-   		val script = '''
-   			var x = 5;
+		val script = '''
+			var x = 5;
 		'''
-   		val moduleWrapped =
-   		'''
-   		System.registerDynamic([], true, function(require, exports, module) {
-   			var x = 5;
-   		});
-   		'''.cjsPatched(false);
+		val moduleWrapped = '''
+			System.registerDynamic([], true, function(require, exports, module) {
+				var x = 5;
+			});
+		'''.cjsPatched(false);
 
-   		val jsResource = script.installJSScript();
-   		val scriptNode = jsResource.contents.get(0) as Script;
+		val jsResource = script.installJSScript();
+		val scriptNode = jsResource.contents.get(0) as Script;
 
-		assertCompileResult(scriptNode,moduleWrapped)
+		assertCompileResult(scriptNode, moduleWrapped)
 	}
 
-
-
-// %% Template:
-//	def _00_XX() throws Throwable  {
-//   		val script = '''
-//		'''
-//   		val moduleWrapped =
-//   		'''
-//   		'''
-//		assertCompileResult(script,moduleWrapped)
-//	}
-
-
-
-
-	/* Helper method transpiling and checking.  */
-	def assertCompileResult(String script, String expectedTranspilerText ) throws Throwable  {
+	/** Helper method transpiling and checking.  */
+	def assertCompileResult(String script, String expectedTranspilerText) throws Throwable  {
 		val scriptNode = script.parse()
 		scriptNode.resolveLazyRefs
 
-		assertCompileResult(scriptNode,expectedTranspilerText)
+		assertCompileResult(scriptNode, expectedTranspilerText)
 	}
-
-
-
 
 }
