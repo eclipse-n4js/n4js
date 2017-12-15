@@ -104,7 +104,7 @@ public interface TypeDefinitionGitLocationProvider {
 		/**
 		 * Type definition location for testing purposes.
 		 */
-		TEST_DEFINITION_LOCATION("n4jsd-sandbox", "git@github.com:NumberFour/n4jsd-sandbox.git", GitUtils.getMasterBranch());
+		TEST_DEFINITION_LOCATION("n4jsd-sandbox", "https://github.com/NumberFour/n4jsd-sandbox.git", GitUtils.getMasterBranch());
 
 		private static final String N4JSD_URL_SYSTEM_PROPERTY_PREFIX = "numberfour.n4jsd-repository.url";
 
