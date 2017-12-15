@@ -33,7 +33,7 @@
             "ideExecData": execData,
             "test-catalog": tryJSON(execData.testTree),
             "test-mode": true,
-            "main": "org.eclipse.n4js.mangelhaft.runner.ide/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
+            "main": "org.eclipse.n4js.mangelhaft.runner.ide/src-gen/org/eclipse/n4js/mangelhaft/runner/ide/IDENodeTestRunner"
         }, true /* exitOnError */);
     } else {
         console.warn("No $executionData given.");
