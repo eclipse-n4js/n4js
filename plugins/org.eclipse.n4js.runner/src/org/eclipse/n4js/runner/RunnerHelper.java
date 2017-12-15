@@ -34,11 +34,11 @@ import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
 import org.eclipse.n4js.projectModel.FindArtifactHelper;
-import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSArchive;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainerAware;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
 import org.eclipse.n4js.runner.extension.RuntimeEnvironment;
@@ -86,7 +86,13 @@ public class RunnerHelper {
 		Set<String> projectPaths = new HashSet<>();
 		projectPaths.addAll(getProjectResourcePaths(project));
 		projectPaths.add(getProjectOutputPath(project));
+		projectPaths.add(getProjectPath(project));
 		return projectPaths;
+	}
+
+	/** get path to the project itself */
+	private String getProjectPath(IN4JSProject project) {
+		return project.getLocationPath().getParent().normalize().toAbsolutePath().toString();
 	}
 
 	/**
@@ -136,7 +142,7 @@ public class RunnerHelper {
 		}
 		final Path projectPath = project.getLocationPath().toAbsolutePath();
 		final Path absolutePath = projectPath.resolve(projectRelativePath);
-		return absolutePath.toString();
+		return absolutePath.normalize().toString();
 	}
 
 	/**
