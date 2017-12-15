@@ -14,6 +14,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.jface.text.contentassist.ICompletionProposal;
 import org.eclipse.n4js.n4JS.N4JSPackage;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.scoping.IContentAssistScopeProvider;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
 import org.eclipse.n4js.ts.scoping.N4TSQualifiedNameProvider;
@@ -59,6 +61,9 @@ public class ImportsAwareReferenceProposalCreator {
 	private FQNImporter.Factory fqnImporterFactory;
 
 	@Inject
+	IN4JSCore n4jsCore;
+
+	@Inject
 	private void setValueConverter(IValueConverterService service, N4JSGrammarAccess grammarAccess) {
 		@SuppressWarnings({ "unchecked", "rawtypes" })
 		IValueConverter<String> converter = (IValueConverter) ((IValueConverterService.Introspectable) service)
@@ -98,6 +103,14 @@ public class ImportsAwareReferenceProposalCreator {
 				if (!acceptor.canAcceptMoreProposals())
 					return;
 				if (filter.apply(candidate)) {
+					// Turn index main module into project id, e.g. index.Element -> react.Element, if needed
+					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
+					boolean mainModuleExist = project != null && project.getMainModule() != null;
+					@SuppressWarnings("null") // project can not be null at this point
+					QualifiedName candidateName = mainModuleExist ? QualifiedName.create(project.getProjectId(),
+							candidate.getQualifiedName().getLastSegment().toString())
+							: candidate.getQualifiedName();
+
 					final ICompletionProposal proposal = getProposal(candidate,
 							model,
 							scope,
@@ -107,7 +120,10 @@ public class ImportsAwareReferenceProposalCreator {
 							proposalFactory);
 					if (proposal instanceof ConfigurableCompletionProposal
 							&& candidate.getName().getSegmentCount() > 1) {
-						((ConfigurableCompletionProposal) proposal).setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
+						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
+						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
+								candidateName);
+						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME,
 								candidate.getQualifiedName());
 					}
 					acceptor.accept(proposal);

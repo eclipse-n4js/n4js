@@ -55,26 +55,39 @@ public class ImportsFactory {
 		return createNamedImport(imp.getName(), contextProject, imp.getTe(), nodelessMarker);
 	}
 
+	private QualifiedName getQualifiedName(TExportableElement te) {
+		// Turn index main module into project id, e.g. index.Element -> react.Element, if needed
+		IN4JSProject targetProject = core.findProject(te.eResource().getURI()).orNull();
+		String moduleQN;
+		if (targetProject != null && targetProject.getMainModule() != null) {
+			moduleQN = targetProject.getProjectId();
+		} else {
+			moduleQN = te.getContainingModule().getQualifiedName();
+		}
+		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
+		return qn;
+	}
+
+	/** Get the target project of a qualified name in a context project */
+	private IN4JSProject getTargetProject(IN4JSProject contextProject, QualifiedName qualifiedName) {
+		String firstSegment = qualifiedName.getFirstSegment();
+		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
+		return project;
+	}
+
 	/** Creates a new named import of 'name' from 'module' */
 	private ImportDeclaration createNamedImport(String name, IN4JSProject contextProject, TExportableElement te,
 			Adapter nodelessMarker) {
-
-		String moduleQN = te.getContainingModule().getQualifiedName();
-		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
-		String firstSegment = qn.getFirstSegment();
-		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
-
+		QualifiedName qn = getQualifiedName(te);
+		IN4JSProject project = getTargetProject(contextProject, qn);
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamedImport);
-
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
 	private ImportDeclaration createDefaultImport(String name, IN4JSProject contextProject, TExportableElement te,
 			Adapter nodelessMarker) {
-		String moduleQN = te.getContainingModule().getQualifiedName();
-		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
-		String firstSegment = qn.getFirstSegment();
-		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
+		QualifiedName qn = getQualifiedName(te);
+		IN4JSProject project = getTargetProject(contextProject, qn);
 
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addDefaultImport);
 	}
@@ -82,11 +95,8 @@ public class ImportsFactory {
 	/** Creates a new default import with name 'name' from object description. */
 	private ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject, TExportableElement te,
 			Adapter nodelessMarker) {
-		String moduleQN = te.getContainingModule().getQualifiedName();
-		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
-		String firstSegment = qn.getFirstSegment();
-
-		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
+		QualifiedName qn = getQualifiedName(te);
+		IN4JSProject project = getTargetProject(contextProject, qn);
 
 		if (project == null) {
 
