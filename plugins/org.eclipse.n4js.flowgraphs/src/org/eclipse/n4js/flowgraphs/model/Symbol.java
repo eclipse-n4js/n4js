@@ -10,8 +10,29 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.IdentifierRef;
+
 @SuppressWarnings("javadoc")
 abstract public class Symbol {
+
+	/**
+	 * @param expression
+	 *            an expression such as {@link IdentifierRef} that represents this {@link Symbol}
+	 * @return true iff this symbol is representing the given expression (aliasing is ignored)
+	 */
+	public boolean is(Expression expression) {
+		return false;
+	}
+
+	/**
+	 * @return the declaration, or null iff the declaration is available only with help of the type system
+	 */
+	public EObject getDeclaration() {
+		return null;
+	}
+
 	// TODO GH-235
 
 	// final Object token;

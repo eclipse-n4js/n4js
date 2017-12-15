@@ -10,12 +10,15 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.ts.types.IdentifiableElement;
+import org.eclipse.n4js.ts.types.TVariable;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
@@ -54,6 +57,21 @@ public class SymbolFactory {
 
 		SymbolOfIdentifierRef(IdentifierRef ir) {
 			this.ir = ir;
+		}
+
+		@Override
+		public EObject getDeclaration() {
+			VariableDeclaration varDecl = null;
+			IdentifiableElement id = ir.getId();
+			if (id instanceof TVariable) {
+				TVariable tvar = (TVariable) id;
+				varDecl = (VariableDeclaration) tvar.getAstElement();
+				return varDecl;
+			} else {
+				// id instanceof FormalParameter
+				// id instanceof VariableDeclaration
+				return id;
+			}
 		}
 	}
 
