@@ -39,6 +39,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && isDereference(cfe)) {
@@ -117,12 +118,12 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public Assumption copy() {
+		public AssumptionWithContext copy() {
 			return new IsReasonableNullGuard(symbol, alwaysNullBefore, alwaysNotNullBefore);
 		}
 
 		@Override
-		public void mergeWith(Assumption assumption) {
+		public void mergeWith(AssumptionWithContext assumption) {
 			IsReasonableNullGuard irng = (IsReasonableNullGuard) assumption;
 			alwaysNullBefore |= irng.alwaysNullBefore;
 			alwaysNotNullBefore |= irng.alwaysNotNullBefore;

@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.analyses.Assumption;
 import org.eclipse.n4js.flowgraphs.analyses.AssumptionWithContext;
 import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
@@ -53,6 +52,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && effect.type == EffectType.MethodCall) {
@@ -89,12 +89,12 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public Assumption copy() {
+		public AssumptionWithContext copy() {
 			return new IsInPrestate(symbol, preStates);
 		}
 
 		@Override
-		public void mergeWith(Assumption assumption) {
+		public void mergeWith(AssumptionWithContext assumption) {
 			IsInPrestate iip = (IsInPrestate) assumption;
 			preStates.retainAll(iip.preStates);
 		}
@@ -147,12 +147,12 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 
 		@Override
-		public Assumption copy() {
+		public AssumptionWithContext copy() {
 			return new IsReasonableStateGuard(symbol, inStates, postStates);
 		}
 
 		@Override
-		public void mergeWith(Assumption assumption) {
+		public void mergeWith(AssumptionWithContext assumption) {
 			IsReasonableStateGuard irg = (IsReasonableStateGuard) assumption;
 			postStates.addAll(irg.postStates);
 		}

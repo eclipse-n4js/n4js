@@ -40,19 +40,6 @@ abstract public class Assumption {
 		return false;
 	}
 
-	/** @return a copy of this instance */
-	public Assumption copy() {
-		throw new IllegalStateException();
-	}
-
-	/**
-	 * @param assumption
-	 *            the {@link Assumption} this {@link Assumption} will be merged with
-	 */
-	public void mergeWith(Assumption assumption) {
-		throw new IllegalStateException();
-	}
-
 	/** Deactivates this {@link Assumption} */
 	public void deactivate() {
 		active = false;

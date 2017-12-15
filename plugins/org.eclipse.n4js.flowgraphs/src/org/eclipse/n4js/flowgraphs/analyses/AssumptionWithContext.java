@@ -29,10 +29,13 @@ abstract public class AssumptionWithContext extends Assumption {
 		return true;
 	}
 
-	@Override
-	abstract public Assumption copy();
+	/** @return a copy of this instance */
+	abstract public AssumptionWithContext copy();
 
-	@Override
-	abstract public void mergeWith(Assumption assumption);
+	/**
+	 * @param assumption
+	 *            the {@link Assumption} this {@link Assumption} will be merged with
+	 */
+	abstract public void mergeWith(AssumptionWithContext assumption);
 
 }
