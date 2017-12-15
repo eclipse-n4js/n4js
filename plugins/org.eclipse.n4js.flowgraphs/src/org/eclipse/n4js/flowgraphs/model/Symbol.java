@@ -27,6 +27,24 @@ abstract public class Symbol {
 	}
 
 	/**
+	 * @param alias
+	 *            the {@link Symbol} in question
+	 * @return true iff this {@link Symbol} is identical to the given {@link Symbol}
+	 */
+	public boolean is(Symbol alias) {
+		return false;
+	}
+
+	/**
+	 * @param symbol
+	 *            the {@link Symbol} in question
+	 * @return true iff this {@link Symbol} is aliased with the given {@link Symbol}
+	 */
+	public boolean alias(Symbol symbol) {
+		return false;
+	}
+
+	/**
 	 * @return the declaration, or null iff the declaration is available only with help of the type system
 	 */
 	public EObject getDeclaration() {

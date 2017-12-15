@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -42,7 +43,7 @@ public class UsedBeforeDeclaredAnalyserFastVersion extends GraphVisitor {
 
 	/** Constructor */
 	public UsedBeforeDeclaredAnalyserFastVersion() {
-		super(Mode.Backward);
+		super(TraverseDirection.Backward);
 	}
 
 	@Override

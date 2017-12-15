@@ -13,6 +13,8 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import java.math.BigDecimal;
 
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
+import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
@@ -27,16 +29,14 @@ import org.eclipse.n4js.n4JS.NumericLiteral;
  * This analysis computes all cases where an implicit assumption of a variable being not zero conflicts either with an
  * explicit guard that assures this variable to be zero or with an explicit assignment of zero.
  */
-public class DivisionByZeroAnalyser {
+public class DivisionByZeroAnalyser extends DataFlowVisitor {
 
-	public void visitEffect(EffectType effect, Symbol symbol, ControlFlowElement cfe) {
-		if (isDivisor(symbol, cfe)) {
-			IsNotZero symbolNotZero = new IsNotZero(symbol);
+	@Override
+	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
+		if (isDivisor(effect.symbol, cfe)) {
+			IsNotZero symbolNotZero = new IsNotZero(effect.symbol);
 			assume(symbolNotZero);
 		}
-	}
-
-	protected void assume(Assumption a) {
 	}
 
 	boolean isDivisor(Symbol symbol, ControlFlowElement cfe) {
@@ -49,14 +49,37 @@ public class DivisionByZeroAnalyser {
 		return false;
 	}
 
+	static private EqualityOperator getZeroCheckOperator(Symbol alias, ControlFlowElement readOperation) {
+		if (readOperation instanceof EqualityExpression) {
+			EqualityExpression eqExpr = (EqualityExpression) readOperation;
+			EqualityOperator equalityOperator = eqExpr.getOp();
+			if (equalityOperator == EqualityOperator.EQ || equalityOperator == EqualityOperator.NEQ) {
+				Expression otherExpr = alias.is(eqExpr.getLhs()) ? eqExpr.getRhs() : eqExpr.getLhs();
+				if (isZeroLiteral(otherExpr)) {
+					return equalityOperator;
+				}
+			}
+		}
+		return null;
+	}
+
+	static private boolean isZeroLiteral(Expression expr) {
+		if (expr instanceof NumericLiteral) {
+			NumericLiteral numLit = (NumericLiteral) expr;
+			BigDecimal litValue = numLit.getValue();
+			return litValue.equals(0);
+		}
+		return false;
+	}
+
 	static class IsNotZero extends Assumption {
 		IsNotZero(Symbol symbol) {
 			super(symbol);
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectType effect, Symbol alias, ControlFlowElement cfe) {
-			if (effect == EffectType.Write && cfe instanceof AssignmentExpression) {
+		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				Expression rhs = ae.getRhs();
 				return isZeroLiteral(rhs);
@@ -64,38 +87,15 @@ public class DivisionByZeroAnalyser {
 			return true;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectType effect, Symbol alias, ControlFlowElement cfe, boolean must,
-				boolean inverse) {
-			EqualityOperator equalityOperator = getEqualityOperator(cfe);
-			if (!inverse && equalityOperator == EqualityOperator.EQ) {
-				EqualityExpression eqExpr = (EqualityExpression) cfe;
-				Expression otherExpr = alias.is(eqExpr.getLhs()) ? eqExpr.getRhs() : eqExpr.getLhs();
-				return isZeroLiteral(otherExpr);
-			}
-			if (inverse && equalityOperator == EqualityOperator.NEQ) {
-				EqualityExpression eqExpr = (EqualityExpression) cfe;
-				Expression otherExpr = alias.is(eqExpr.getLhs()) ? eqExpr.getRhs() : eqExpr.getLhs();
-				return isZeroLiteral(otherExpr);
+		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
+			EqualityOperator equalityOperator = getZeroCheckOperator(effect.symbol, cfe);
+			if (equalityOperator != null) {
+				boolean mustBeZero = inverse == (equalityOperator == EqualityOperator.NEQ);
+				return !mustBeZero;
 			}
 			return true;
-		}
-
-		private boolean isZeroLiteral(Expression expr) {
-			if (expr instanceof NumericLiteral) {
-				NumericLiteral numLit = (NumericLiteral) expr;
-				BigDecimal litValue = numLit.getValue();
-				return litValue.equals(0);
-			}
-			return false;
-		}
-
-		private EqualityOperator getEqualityOperator(ControlFlowElement readOperation) {
-			if (readOperation instanceof EqualityExpression) {
-				EqualityExpression eqExpr = (EqualityExpression) readOperation;
-				return eqExpr.getOp();
-			}
-			return null;
 		}
 	}
 }

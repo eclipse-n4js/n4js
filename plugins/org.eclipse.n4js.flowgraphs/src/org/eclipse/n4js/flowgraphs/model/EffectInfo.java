@@ -12,8 +12,10 @@ package org.eclipse.n4js.flowgraphs.model;
 
 /** Holds information of one effect to a single variable */
 public class EffectInfo {
-	final EffectType type;
-	final Symbol symbol;
+	/** The type of the effect */
+	public final EffectType type;
+	/** The symbol that is affected */
+	public final Symbol symbol;
 
 	/** Constructor */
 	public EffectInfo(EffectType type, Symbol symbol) {

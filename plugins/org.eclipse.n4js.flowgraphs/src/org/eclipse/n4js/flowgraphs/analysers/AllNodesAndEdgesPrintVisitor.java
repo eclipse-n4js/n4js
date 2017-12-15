@@ -21,6 +21,7 @@ import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
@@ -43,11 +44,11 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	 *            if not null, only graph elements within (transitive) are found, otherwise all elements of the script
 	 */
 	public AllNodesAndEdgesPrintVisitor(ControlFlowElement container) {
-		super(container, Mode.Forward);
+		super(container, TraverseDirection.Forward);
 	}
 
 	@Override
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+	protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 		requestActivation(new AllNodesAndEdgesExplorer());
 	}
 
@@ -60,7 +61,7 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 		assert allDeadNodesGV.size() == allDeadNodesBW.size();
 		assert allDeadNodesGV.containsAll(allDeadNodesBW);
 		allDeadNodesGV.clear();

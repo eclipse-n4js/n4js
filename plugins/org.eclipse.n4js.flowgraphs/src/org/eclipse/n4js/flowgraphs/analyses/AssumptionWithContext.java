@@ -35,12 +35,4 @@ abstract public class AssumptionWithContext extends Assumption {
 	@Override
 	abstract public void mergeWith(Assumption assumption);
 
-	/**
-	 * Called finally after the last copy of this {@link Assumption} was deactivated
-	 *
-	 * @return true iff the assumption holds
-	 */
-	public boolean holdsAfterall() {
-		return true;
-	}
 }

@@ -29,8 +29,7 @@ import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -284,7 +283,7 @@ public class FlowgraphsXpectMethod {
 		EObjectCoveringRegion referenceOffsetImpl = (EObjectCoveringRegion) referenceOffset;
 		ControlFlowElement startCFE = getCFEWithReference(offsetImpl, referenceOffsetImpl);
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
-		GraphVisitorInternal.Mode direction = getDirection(directionName);
+		TraverseDirection direction = getDirection(directionName);
 
 		ControlFlowElement container = FGUtils.getCFContainer(referenceCFE);
 		AllBranchPrintVisitor appw = new AllBranchPrintVisitor(container, startCFE, direction);
@@ -292,10 +291,10 @@ public class FlowgraphsXpectMethod {
 		return appw;
 	}
 
-	private GraphVisitorInternal.Mode getDirection(String directionName) {
-		GraphVisitorInternal.Mode direction = Mode.Forward;
+	private TraverseDirection getDirection(String directionName) {
+		TraverseDirection direction = TraverseDirection.Forward;
 		if (directionName != null && !directionName.isEmpty()) {
-			direction = GraphVisitorInternal.Mode.valueOf(directionName);
+			direction = TraverseDirection.valueOf(directionName);
 			if (direction == null) {
 				fail("Unknown direction");
 			}

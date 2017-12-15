@@ -28,6 +28,7 @@ import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.smith.ui.graph.CFEdge;
@@ -108,7 +109,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		private int nodeIdx = 0;
 
 		NodesEdgesCollector() {
-			super(Mode.Forward);
+			super(TraverseDirection.Forward);
 		}
 
 		@Override
@@ -118,7 +119,7 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		}
 
 		@Override
-		protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+		protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 			requestActivation(new EdgesExplorer());
 		}
 

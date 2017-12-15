@@ -109,7 +109,7 @@ abstract public class FastFlowVisitor extends GraphVisitor {
 
 	/** Constructor */
 	public FastFlowVisitor() {
-		super(Mode.Backward);
+		super(TraverseDirection.Backward);
 	}
 
 	@Override
@@ -120,7 +120,7 @@ abstract public class FastFlowVisitor extends GraphVisitor {
 	}
 
 	@Override
-	protected void terminateMode(Mode curMode, ControlFlowElement curContainer) {
+	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 		this.ffExplorer = null;
 	}
 

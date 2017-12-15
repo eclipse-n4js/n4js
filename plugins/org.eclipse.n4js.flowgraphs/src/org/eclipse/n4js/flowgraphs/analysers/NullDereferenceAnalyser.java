@@ -12,6 +12,8 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
 import org.eclipse.n4js.flowgraphs.analyses.AssumptionWithContext;
+import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
@@ -27,23 +29,22 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
  * This analysis computes all cases where an implicit assumption of a variable being not null conflicts either with an
  * explicit guard that assures this variable to be null, or with an explicit assignment of null.
  */
-public class NullDereferenceAnalyser {
+public class NullDereferenceAnalyser extends DataFlowVisitor {
 
-	public void visitEffect(EffectType effect, Symbol symbol, ControlFlowElement cfe) {
+	@Override
+	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
 		if (isDereference(cfe)) {
-			IsNotNull symbolNotNull = new IsNotNull(symbol);
+			IsNotNull symbolNotNull = new IsNotNull(effect.symbol);
 			assume(symbolNotNull);
 		}
 	}
 
-	public void visitGuard(EffectType effect, Symbol symbol, ControlFlowElement cfe, boolean must, boolean inverse) {
+	@Override
+	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && isDereference(cfe)) {
-			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(symbol);
+			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(effect.symbol);
 			assume(isReasonableNullGuard);
 		}
-	}
-
-	protected void assume(Assumption a) {
 	}
 
 	boolean isDereference(ControlFlowElement cfe) {
@@ -73,8 +74,8 @@ public class NullDereferenceAnalyser {
 		}
 
 		@Override
-		public boolean holdsOnEffect(EffectType effect, Symbol alias, ControlFlowElement cfe) {
-			if (effect == EffectType.Write && cfe instanceof AssignmentExpression) {
+		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				if (ae.getRhs() instanceof NullLiteral) {
 					return false;
@@ -85,16 +86,16 @@ public class NullDereferenceAnalyser {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectType effect, Symbol alias, ControlFlowElement cfe, boolean must,
-				boolean inverse) {
-
+		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 			if (must) {
-				EqualityOperator equalityOperator = getNullCheckOperator(alias, cfe);
-				if (!inverse && equalityOperator == EqualityOperator.EQ) {
-					return false;
-				}
-				if (inverse && equalityOperator == EqualityOperator.NEQ) {
-					return false;
+				EqualityOperator equalityOperator = getNullCheckOperator(effect.symbol, cfe);
+				if (equalityOperator != null) {
+					if (!inverse && equalityOperator == EqualityOperator.EQ) {
+						return false;
+					}
+					if (inverse && equalityOperator == EqualityOperator.NEQ) {
+						return false;
+					}
 				}
 			}
 			return true;
@@ -102,7 +103,6 @@ public class NullDereferenceAnalyser {
 	}
 
 	static class IsReasonableNullGuard extends AssumptionWithContext {
-		private boolean active = true;
 		private boolean alwaysNullBefore = false;
 		private boolean alwaysNotNullBefore = false;
 
@@ -129,37 +129,32 @@ public class NullDereferenceAnalyser {
 		}
 
 		@Override
-		public boolean isActive() {
-			return active;
-		}
-
-		@Override
-		public boolean holdsOnEffect(EffectType effect, Symbol alias, ControlFlowElement cfe) {
-			if (effect == EffectType.Write && cfe instanceof AssignmentExpression) {
+		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				if (ae.getRhs() instanceof NullLiteral) {
 					alwaysNullBefore = true;
 				} else {
 					alwaysNotNullBefore = true;
 				}
-				active = false;
+				deactivate();
 			}
 			return true;
 		}
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectType effect, Symbol alias, ControlFlowElement cfe, boolean must,
-				boolean inverse) {
-
+		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 			if (must) {
-				EqualityOperator equalityOperator = getNullCheckOperator(alias, cfe);
-				if (inverse == (equalityOperator == EqualityOperator.NEQ)) {
-					alwaysNullBefore = true;
-				} else {
-					alwaysNotNullBefore = true;
+				EqualityOperator equalityOperator = getNullCheckOperator(effect.symbol, cfe);
+				if (equalityOperator != null) {
+					if (inverse == (equalityOperator == EqualityOperator.NEQ)) {
+						alwaysNullBefore = true;
+					} else {
+						alwaysNotNullBefore = true;
+					}
+					deactivate();
 				}
-				active = false;
 			}
 			return true;
 		}

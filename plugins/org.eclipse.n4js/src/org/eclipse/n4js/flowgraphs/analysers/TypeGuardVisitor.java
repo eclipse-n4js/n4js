@@ -15,6 +15,7 @@ import java.util.List;
 import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.UnaryExpression;
@@ -22,7 +23,6 @@ import org.eclipse.n4js.n4JS.UnaryOperator;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
-
 import org.eclipse.xsemantics.runtime.RuleEnvironment;
 
 /**
@@ -34,7 +34,7 @@ public class TypeGuardVisitor extends GraphVisitor {
 	final ControlFlowElement cfElem;
 
 	TypeGuardVisitor(N4JSTypeSystem ts, TypeRef reqTypeRef, ControlFlowElement cfElem) {
-		super(Mode.Backward);
+		super(TraverseDirection.Backward);
 		this.ts = ts;
 		this.reqTypeRef = reqTypeRef;
 		this.cfElem = cfElem;

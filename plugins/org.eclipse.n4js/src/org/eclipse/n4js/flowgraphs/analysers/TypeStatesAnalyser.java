@@ -16,6 +16,8 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
 import org.eclipse.n4js.flowgraphs.analyses.AssumptionWithContext;
+import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -29,7 +31,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
  * This analysis computes all cases where succeeding and type state relevant method calls on the same receiver instance
  * conflict with each other regarding their state conditions.
  */
-public class TypeStatesAnalyser {
+public class TypeStatesAnalyser extends DataFlowVisitor {
 	static final String ANNOTATION_INSTATE = "InState";
 	static final String ANNOTATION_PRESTATE = "PreState";
 	static final String ANNOTATION_POSTSTATE = "PostState";
@@ -40,27 +42,26 @@ public class TypeStatesAnalyser {
 		this.ts = ts;
 	}
 
-	public void visitEffect(EffectType effect, Symbol symbol, ControlFlowElement cfe) {
-		if (effect == EffectType.MethodCall) {
+	@Override
+	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
+		if (effect.type == EffectType.MethodCall) {
 			Set<String> preStates = getDeclaredStates(cfe, ANNOTATION_PRESTATE);
 			if (!preStates.isEmpty()) {
-				IsInPrestate isInPreState = new IsInPrestate(symbol, preStates);
+				IsInPrestate isInPreState = new IsInPrestate(effect.symbol, preStates);
 				assume(isInPreState);
 			}
 		}
 	}
 
-	public void visitGuard(EffectType effect, Symbol symbol, ControlFlowElement cfe, boolean must, boolean inverse) {
-		if (must && effect == EffectType.MethodCall) {
+	@Override
+	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
+		if (must && effect.type == EffectType.MethodCall) {
 			Set<String> inState = getDeclaredStates(cfe, ANNOTATION_INSTATE);
 			if (!inState.isEmpty()) {
-				IsReasonableStateGuard isInPreState = new IsReasonableStateGuard(symbol, inState);
+				IsReasonableStateGuard isInPreState = new IsReasonableStateGuard(effect.symbol, inState);
 				assume(isInPreState);
 			}
 		}
-	}
-
-	protected void assume(Assumption a) {
 	}
 
 	private Set<String> getDeclaredStates(ControlFlowElement container, String stateName) {
@@ -80,7 +81,6 @@ public class TypeStatesAnalyser {
 	}
 
 	class IsInPrestate extends AssumptionWithContext {
-		private boolean active = true;
 		private final Set<String> preStates;
 
 		IsInPrestate(Symbol symbol, Set<String> preStates) {
@@ -100,16 +100,11 @@ public class TypeStatesAnalyser {
 		}
 
 		@Override
-		public boolean isActive() {
-			return active;
-		}
-
-		@Override
-		public boolean holdsOnEffect(EffectType effect, Symbol alias, ControlFlowElement container) {
-			if (effect == EffectType.MethodCall) {
+		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStates = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
-					active = false; // deactivate this assumption since the predecessor was found here
+					deactivate(); // deactivate this assumption since the predecessor was found here
 					postStates.removeAll(preStates);
 					boolean allPostStatesAreValidPreStates = postStates.isEmpty();
 					return allPostStatesAreValidPreStates;
@@ -120,10 +115,9 @@ public class TypeStatesAnalyser {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectType effect, Symbol alias, ControlFlowElement cfe, boolean must,
-				boolean inverse) {
+		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 
-			if (must && effect == EffectType.MethodCall) {
+			if (must && effect.type == EffectType.MethodCall) {
 				Collection<String> inStates = getDeclaredStates(cfe, ANNOTATION_INSTATE);
 				if (!inStates.isEmpty()) {
 					if (inverse) {
@@ -139,7 +133,6 @@ public class TypeStatesAnalyser {
 	}
 
 	class IsReasonableStateGuard extends AssumptionWithContext {
-		private boolean active = true;
 		private final Set<String> inStates;
 		private final Set<String> postStates;
 
@@ -165,17 +158,12 @@ public class TypeStatesAnalyser {
 		}
 
 		@Override
-		public boolean isActive() {
-			return active;
-		}
-
-		@Override
-		public boolean holdsOnEffect(EffectType effect, Symbol alias, ControlFlowElement container) {
-			if (effect == EffectType.MethodCall) {
+		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
+			if (effect.type == EffectType.MethodCall) {
 				Collection<String> postStatesOfMethodCall = getDeclaredStates(container, ANNOTATION_POSTSTATE);
 				if (!postStates.isEmpty()) {
 					postStates.addAll(postStatesOfMethodCall);
-					active = false;
+					deactivate();
 				}
 			}
 			return true;
@@ -183,14 +171,13 @@ public class TypeStatesAnalyser {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectType effect, Symbol alias, ControlFlowElement cfe, boolean must,
-				boolean inverse) {
+		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 
-			if (must && !inverse && effect == EffectType.MethodCall) {
+			if (must && !inverse && effect.type == EffectType.MethodCall) {
 				Collection<String> inStatesAfterGuard = getDeclaredStates(cfe, ANNOTATION_INSTATE);
 				if (!inStatesAfterGuard.isEmpty()) {
 					postStates.addAll(inStatesAfterGuard);
-					active = false;
+					deactivate();
 				}
 			}
 			return true;

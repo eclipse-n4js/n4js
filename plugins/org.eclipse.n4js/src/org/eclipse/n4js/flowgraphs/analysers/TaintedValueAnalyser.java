@@ -14,7 +14,8 @@ import org.eclipse.emf.common.util.ECollections;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
-import org.eclipse.n4js.flowgraphs.model.EffectType;
+import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Annotation;
 import org.eclipse.n4js.n4JS.Argument;
@@ -32,7 +33,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem;
  * This analysis computes all cases where two explicitly declared annotations of type @Tainted and @Untainted conflict
  * with each other.
  */
-public class TaintedValueAnalyser {
+public class TaintedValueAnalyser extends DataFlowVisitor {
 	final N4JSTypeSystem ts;
 
 	/** Constructor */
@@ -40,18 +41,16 @@ public class TaintedValueAnalyser {
 		this.ts = ts;
 	}
 
-	public void visitEffect(EffectType effect, Symbol symbol, ControlFlowElement cfe) {
-		if (isUntaintedArgument(symbol, cfe)) {
-			IsUntainted isUntainted = new IsUntainted(symbol);
+	@Override
+	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
+		if (isUntaintedArgument(effect.symbol, cfe)) {
+			IsUntainted isUntainted = new IsUntainted(effect.symbol);
 			assume(isUntainted);
 		}
-		if (isUntaintedAssignee(symbol, cfe)) {
-			IsUntainted isUntainted = new IsUntainted(symbol);
+		if (isUntaintedAssignee(effect.symbol, cfe)) {
+			IsUntainted isUntainted = new IsUntainted(effect.symbol);
 			assume(isUntainted);
 		}
-	}
-
-	protected void assume(Assumption a) {
 	}
 
 	boolean isUntaintedArgument(Symbol symbol, ControlFlowElement cfe) {

@@ -21,6 +21,7 @@ import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
 import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
@@ -33,7 +34,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	 * Constructor.
 	 */
 	public AllBranchPrintVisitor() {
-		this(null, null, Mode.Forward);
+		this(null, null, TraverseDirection.Forward);
 	}
 
 	/**
@@ -45,7 +46,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	 *            the container of which all paths are computed. Must not be null.
 	 */
 	public AllBranchPrintVisitor(ControlFlowElement container) {
-		this(container, null, Mode.Forward);
+		this(container, null, TraverseDirection.Forward);
 	}
 
 	/**
@@ -60,7 +61,7 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	 *            beginning from the first element of one of the containers in the script.
 	 */
 	public AllBranchPrintVisitor(ControlFlowElement container, ControlFlowElement startElement) {
-		this(container, startElement, Mode.Forward);
+		this(container, startElement, TraverseDirection.Forward);
 	}
 
 	/**
@@ -75,13 +76,14 @@ public class AllBranchPrintVisitor extends GraphVisitor {
 	 *            the direction of the paths. Use only with {@literal Direction.Forward} and
 	 *            {@literal Direction.Backward}
 	 */
-	public AllBranchPrintVisitor(ControlFlowElement container, ControlFlowElement startElement, Mode direction) {
+	public AllBranchPrintVisitor(ControlFlowElement container, ControlFlowElement startElement,
+			TraverseDirection direction) {
 		super(container, direction);
 		this.startElement = startElement;
 	}
 
 	@Override
-	protected void initializeMode(Mode curDirection, ControlFlowElement curContainer) {
+	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		if (startElement == null) {
 			super.requestActivation(new AllBranchPrintExplorer());
 		}

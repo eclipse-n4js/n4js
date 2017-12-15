@@ -26,13 +26,13 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<ControlFlowEdge> visitedEdgesInternal = new HashSet<>();
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
-	/** see {@link GraphVisitorInternal#GraphVisitorInternal(Mode...)} */
-	protected GraphVisitor(Mode... modes) {
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(TraverseDirection...)} */
+	protected GraphVisitor(TraverseDirection... modes) {
 		this(null, modes);
 	}
 
-	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, Mode...)} */
-	public GraphVisitor(ControlFlowElement container, Mode... modes) {
+	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, TraverseDirection...)} */
+	public GraphVisitor(ControlFlowElement container, TraverseDirection... modes) {
 		super(container, modes);
 	}
 
@@ -45,7 +45,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	}
 
 	@Override
-	final protected void initializeModeInternal(Mode curMode, ControlFlowElement curContainer) {
+	final protected void initializeModeInternal(TraverseDirection curMode, ControlFlowElement curContainer) {
 		visitedEdgesInternal.clear();
 		visitedEdges.clear();
 		initializeMode(curMode, curContainer);
@@ -59,7 +59,7 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	protected void initializeMode(Mode curMode, ControlFlowElement curContainer) {
+	protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
 		// overwrite me
 	}
 

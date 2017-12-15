@@ -18,23 +18,23 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal.Mode;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
- * This class executes a control flow analyzes in a specific {@link Mode} that are defined as
+ * This class executes a control flow analyzes in a specific {@link TraverseDirection} that are defined as
  * {@link GraphVisitorInternal}s. The execution is triggered from {@link GraphVisitorAnalysis}.
  * <p>
  * Use the API of this class in the following order: Initialize first, then use any of the walkthrough methods in any
  * order, and call {@link #terminate()} at last.
  * <p>
- * For every {@link Mode}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an arbitrary (but
- * loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests an activation of
- * a {@link GraphExplorerInternal}, all paths starting from the current {@link Node} are explored. For this mechanism,
- * the {@link EdgeGuide} class is used, which stores information about all paths that are currently explored. The path
- * exploration is done in parallel for every {@link GraphExplorerInternal} of every {@link GraphVisitorInternal}.
+ * For every {@link TraverseDirection}, all reachable {@link Node}s and {@link ControlFlowEdge}s are visited in an
+ * arbitrary (but loosely control flow related) order. In case one of the given {@link GraphVisitorInternal}s requests
+ * an activation of a {@link GraphExplorerInternal}, all paths starting from the current {@link Node} are explored. For
+ * this mechanism, the {@link EdgeGuide} class is used, which stores information about all paths that are currently
+ * explored. The path exploration is done in parallel for every {@link GraphExplorerInternal} of every
+ * {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
 	private final N4JSFlowAnalyzer flowAnalyzer;
@@ -66,15 +66,15 @@ public class GraphVisitorGuideInternal {
 
 	/** Traverses the control flow graph in {@literal Mode.Forward} */
 	void walkthroughForward(ComplexNode cn) {
-		walkthrough(cn, Mode.Forward);
+		walkthrough(cn, TraverseDirection.Forward);
 	}
 
 	/** Traverses the control flow graph in {@literal Mode.Backward} */
 	void walkthroughBackward(ComplexNode cn) {
-		walkthrough(cn, Mode.Backward);
+		walkthrough(cn, TraverseDirection.Backward);
 	}
 
-	private void walkthrough(ComplexNode cn, Mode mode) {
+	private void walkthrough(ComplexNode cn, TraverseDirection mode) {
 		walkerVisitedNodes.clear();
 		cn.getEntry().setReachable();
 		cn.getExit().setReachable();
@@ -95,7 +95,7 @@ public class GraphVisitorGuideInternal {
 		}
 	}
 
-	private List<NextEdgesProvider> getEdgeProviders(Mode mode) {
+	private List<NextEdgesProvider> getEdgeProviders(TraverseDirection mode) {
 		List<NextEdgesProvider> edgeProviders = new LinkedList<>();
 		switch (mode) {
 		case Forward:
