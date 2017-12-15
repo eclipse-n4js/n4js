@@ -13,7 +13,6 @@ package org.eclipse.n4js.naming;
 import static org.junit.Assert.assertEquals;
 
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.n4js.MockWorkspace;
 import org.eclipse.n4js.N4JSInjectorProviderWithMockProject;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.ResourceNameComputer;
@@ -96,15 +95,16 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetCompleteModuleSpecifier() {
-		assertEquals(MockWorkspace.TEST_PROJECT__PROJECT_ID + "/p/C", qnc.getCompleteModuleSpecifier(module));
+		assertEquals("p/C", qnc.getCompleteModuleSpecifier(module));
 	}
 
 	/**
-	 * Test method for {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.ts.types.TModule)} .
+	 * Test method for
+	 * {@link ResourceNameComputer#getCompleteModuleSpecifierAsIdentifier(org.eclipse.n4js.ts.types.TModule)} .
 	 */
 	@Test
 	public void testGetCompleteModuleSpecifierAsIdentifier() {
-		assertEquals(MockWorkspace.TEST_PROJECT__PROJECT_ID + "_p_u002fC",
+		assertEquals("p_u002fC",
 				qnc.getCompleteModuleSpecifierAsIdentifier(module));
 	}
 
@@ -113,6 +113,6 @@ public class QualifiedNameComputerTest {
 	 */
 	@Test
 	public void testGetCompleteTypeSpecifier() {
-		assertEquals(MockWorkspace.TEST_PROJECT__PROJECT_ID + "/p/C/C", qnc.getCompleteTypeSpecifier(type));
+		assertEquals("p/C/C", qnc.getCompleteTypeSpecifier(type));
 	}
 }
