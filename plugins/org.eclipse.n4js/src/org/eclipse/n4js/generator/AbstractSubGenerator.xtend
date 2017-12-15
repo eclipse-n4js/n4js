@@ -355,7 +355,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/** private method to hide feature flag */
 	private def static String calculateOutputDirectory(String outputPath, String compilerID, boolean incluseCompilerID) {
-		var path = "./" + outputPath
+		var path = outputPath
 		
 		if(incluseCompilerID){
 			path +=  "/" + compilerID

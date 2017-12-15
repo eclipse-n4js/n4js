@@ -42,6 +42,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -71,6 +72,15 @@ import com.google.inject.Inject;
  * Helper to collect all tests in a given N4JS project, sub-folder, or file.
  */
 public class TestDiscoveryHelper {
+
+	/**
+	 * https://github.com/eclipse/n4js/issues/394
+	 *
+	 * for simplifying node js compilation target we want to skip compiler id in the compiled code segments Hide this
+	 * behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators, or we
+	 * might make this configurable in the manifest.
+	 */
+	public static final boolean USE_COMPILED_OUTPUT = true;
 
 	@Inject
 	private FileExtensionsRegistry fileExtensionRegistry;
@@ -356,8 +366,15 @@ public class TestDiscoveryHelper {
 	}
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
+		String origin = module.getProjectId();
+		if (USE_COMPILED_OUTPUT) {
+			IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
+			if (project != null) {
+				origin = origin + "/" + AbstractSubGenerator.calculateOutputDirectory(project);
+			}
+		}
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
-				module.getProjectId(), method.getName(), method.getName(), EcoreUtil.getURI(method));
+				origin, method.getName(), method.getName(), EcoreUtil.getURI(method));
 		return testCase;
 	}
 
