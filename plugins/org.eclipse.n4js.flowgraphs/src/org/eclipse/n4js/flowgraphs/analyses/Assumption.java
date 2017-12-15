@@ -25,10 +25,22 @@ abstract public class Assumption {
 	/** Initial symbol this assumption refers to */
 	public final Symbol symbol;
 	private boolean active = true;
+	private boolean failed = false;
+	private DataFlowVisitor dataFlowVisitor;
 
 	/** Constructor */
 	public Assumption(Symbol symbol) {
 		this.symbol = symbol;
+	}
+
+	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
+	void setDataFlowVisitor(DataFlowVisitor dataFlowVisitor) {
+		this.dataFlowVisitor = dataFlowVisitor;
+	}
+
+	/** @return the {@link DataFlowVisitor} this {@link Assumption} belongs to */
+	public DataFlowVisitor getDataFlowVisitor() {
+		return dataFlowVisitor;
 	}
 
 	/**
@@ -41,18 +53,28 @@ abstract public class Assumption {
 	}
 
 	/** Deactivates this {@link Assumption} */
-	public void deactivate() {
+	protected void deactivate() {
 		active = false;
 	}
 
+	/** @return true iff this assumption failed */
+	public boolean isFailed() {
+		return failed;
+	}
+
 	/**
-	 * By default, {@link Assumption}s are active. In case the method {@link #deactivate()} was called, this
-	 * {@link Assumption} is inactive.
+	 * By default, {@link Assumption}s are active, i.e. the holdOn methods get called. In case the method
+	 * {@link #deactivate()} was called, this {@link Assumption} is inactive.
 	 *
 	 * @return true iff {@link #deactivate()} was never called before on this {@link Assumption}
 	 */
 	final public boolean isActive() {
 		return active;
+	}
+
+	void callHoldsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
+		boolean holds = holdsOnDataflow(lhs, rhs, cfe);
+		handleHolds(holds);
 	}
 
 	/**
@@ -63,12 +85,17 @@ abstract public class Assumption {
 	 *            the {@link Symbol} whose value is overwritten
 	 * @param rhs
 	 *            the {@link Symbol} that provides the new value
-	 * @param container
+	 * @param cfe
 	 *            the {@link ControlFlowElement} that triggers the dataflow
 	 * @return true iff the assumption holds on the given dataflow
 	 */
-	public boolean holdsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement container) {
+	public boolean holdsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
 		return true;
+	}
+
+	void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
+		boolean holds = holdsOnEffect(effect, cfe);
+		handleHolds(holds);
 	}
 
 	/**
@@ -82,6 +109,11 @@ abstract public class Assumption {
 	 */
 	public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement container) {
 		return true;
+	}
+
+	void callHoldsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
+		boolean holds = holdsOnGuard(effect, cfe, must, inverse);
+		handleHolds(holds);
 	}
 
 	/**
@@ -105,12 +137,31 @@ abstract public class Assumption {
 		return true;
 	}
 
+	void callHoldsAfterall() {
+		boolean holds = holdsAfterall();
+		handleHolds(holds);
+	}
+
 	/**
-	 * Called finally after the last copy of this {@link Assumption} was deactivated
+	 * Called finally after the last copy of this {@link Assumption} was deactivated. Ignores {@link #isActive()}.
 	 *
 	 * @return true iff the assumption holds
 	 */
 	public boolean holdsAfterall() {
 		return true;
+	}
+
+	/** Deactivates this {@link Assumption} */
+	private void failed() {
+		failed = true;
+	}
+
+	/** Handles behavior of the assumption based on the result of the holdOn methods */
+	protected void handleHolds(boolean holds) {
+		if (!holds) {
+			getDataFlowVisitor().failedAssumptions.add(this);
+			failed();
+			deactivate();
+		}
 	}
 }

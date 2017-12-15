@@ -37,5 +37,4 @@ abstract public class AssumptionWithContext extends Assumption {
 	 *            the {@link Assumption} this {@link Assumption} will be merged with
 	 */
 	abstract public void mergeWith(AssumptionWithContext assumption);
-
 }

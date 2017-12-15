@@ -25,6 +25,7 @@ abstract public class DataFlowVisitor {
 	protected final TraverseDirection direction;
 	Collection<Assumption> newAssumptions = new LinkedList<>();
 	Collection<Assumption> allAssumptions = new LinkedList<>();
+	Collection<Assumption> failedAssumptions = new LinkedList<>();
 
 	/** Constructor. Default {@link TraverseDirection} is {@link TraverseDirection#Backward} */
 	public DataFlowVisitor() {
@@ -67,6 +68,7 @@ abstract public class DataFlowVisitor {
 
 	/** Adds an assumption to the data flow engine */
 	protected void assume(Assumption assumption) {
+		assumption.setDataFlowVisitor(this);
 		newAssumptions.add(assumption);
 	}
 

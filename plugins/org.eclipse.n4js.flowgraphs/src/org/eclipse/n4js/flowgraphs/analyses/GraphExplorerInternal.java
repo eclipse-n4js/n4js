@@ -43,6 +43,8 @@ abstract public class GraphExplorerInternal {
 	protected final boolean passAsDefault;
 	/** First branch created by {@link #firstBranchWalker()} */
 	private BranchWalkerInternal firstBranch;
+	/** Last branch of this {@link GraphExplorerInternal} */
+	private BranchWalkerInternal lastBranch;
 	/** Parent {@link GraphVisitorInternal}. Always set once. */
 	private GraphVisitorInternal parentGraphVisitor;
 	/** Current state of this {@link GraphExplorerInternal} */
@@ -124,6 +126,7 @@ abstract public class GraphExplorerInternal {
 		parentGraphVisitor = parentGraphVisitorInternal;
 		firstBranch = firstBranchWalker();
 		firstBranch.callInitialize(this, (BranchWalkerInternal) null);
+		lastBranch = firstBranch;
 		return firstBranch;
 	}
 
@@ -141,6 +144,7 @@ abstract public class GraphExplorerInternal {
 			bW.deactivate();
 		}
 		activeBranch.callInitialize(this, branchWalkers);
+		lastBranch = activeBranch;
 		return activeBranch;
 	}
 
@@ -212,6 +216,11 @@ abstract public class GraphExplorerInternal {
 	/** @return the first {@link BranchWalkerInternal} of this {@link GraphExplorerInternal} instance. */
 	final public BranchWalkerInternal getFirstBranch() {
 		return firstBranch;
+	}
+
+	/** @return the last {@link BranchWalkerInternal} of this {@link GraphExplorerInternal} instance. */
+	final public BranchWalkerInternal getLastBranch() {
+		return lastBranch;
 	}
 
 }
