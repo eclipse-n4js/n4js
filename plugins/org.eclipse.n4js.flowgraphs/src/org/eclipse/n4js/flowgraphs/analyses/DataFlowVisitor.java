@@ -21,7 +21,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
  */
 abstract public class DataFlowVisitor {
 	/** {@link TraverseDirection} of this visitor */
-	protected final TraverseDirection mode;
+	protected final TraverseDirection direction;
 	Collection<Assumption> assumptions = new LinkedList<>();
 
 	/** Constructor. Default {@link TraverseDirection} is {@link TraverseDirection#Backward} */
@@ -31,7 +31,7 @@ abstract public class DataFlowVisitor {
 
 	/** Constructor. */
 	public DataFlowVisitor(TraverseDirection mode) {
-		this.mode = mode;
+		this.direction = mode;
 	}
 
 	/**

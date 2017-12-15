@@ -27,26 +27,26 @@ abstract public class GraphVisitorInternal {
 	/** Container, specified in constructor */
 	protected final ControlFlowElement container;
 	/** Modes, specified in constructor */
-	protected final TraverseDirection[] modes;
+	protected final TraverseDirection[] directions;
 
 	private final List<GraphExplorerInternal> activationRequests = new LinkedList<>();
 	private final List<GraphExplorerInternal> activatedExplorers = new LinkedList<>();
 	private final List<GraphExplorerInternal> activeExplorers = new LinkedList<>();
 
 	private ControlFlowElement currentContainer;
-	private TraverseDirection currentMode;
+	private TraverseDirection currentDirection;
 	private boolean activeMode = false;
 	private boolean lastVisitedNodeIsDead = false;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param modes
+	 * @param directions
 	 *            sets the {@link TraverseDirection}s for this instance. Default direction is {@literal Mode.Forward} if
 	 *            no direction is given.
 	 */
-	protected GraphVisitorInternal(TraverseDirection... modes) {
-		this(null, modes);
+	protected GraphVisitorInternal(TraverseDirection... directions) {
+		this(null, directions);
 	}
 
 	/**
@@ -55,15 +55,15 @@ abstract public class GraphVisitorInternal {
 	 * @param container
 	 *            sets the containing {@link ControlFlowElement} for this instance. Iff the given container is
 	 *            {@code null}, this {@link GraphVisitorInternal} is applied on all containers.
-	 * @param modes
-	 *            sets the modes for this instance. Default modes are {@literal Mode.Forward} and
+	 * @param directions
+	 *            sets the directions for this instance. Default directions are {@literal Mode.Forward} and
 	 *            {@literal Mode.CatchBlocks} if no direction is given.
 	 */
-	protected GraphVisitorInternal(ControlFlowElement container, TraverseDirection... modes) {
-		if (modes.length == 0) {
-			modes = new TraverseDirection[] { TraverseDirection.Forward };
+	protected GraphVisitorInternal(ControlFlowElement container, TraverseDirection... directions) {
+		if (directions.length == 0) {
+			directions = new TraverseDirection[] { TraverseDirection.Forward };
 		}
-		this.modes = modes;
+		this.directions = directions;
 		this.container = container;
 	}
 
@@ -77,12 +77,12 @@ abstract public class GraphVisitorInternal {
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
 	 *
-	 * @param curMode
+	 * @param curDirection
 	 *            direction of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	protected void initializeModeInternal(TraverseDirection curMode, ControlFlowElement curContainer) {
+	protected void initializeModeInternal(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		// overwrite me
 	}
 
@@ -106,7 +106,7 @@ abstract public class GraphVisitorInternal {
 	 * @param lastVisitNode
 	 *            nodes that were visited before
 	 * @param currentNode
-	 *            end node of the edge in terms of current mode
+	 *            end node of the edge in terms of current direction
 	 * @param edge
 	 *            traversed edge
 	 */
@@ -117,12 +117,12 @@ abstract public class GraphVisitorInternal {
 	/**
 	 * Called before {@link #terminate()} and after any visit-method is called.
 	 *
-	 * @param curMode
+	 * @param curDirection
 	 *            direction of previous calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of previous calls to visit-methods
 	 */
-	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+	protected void terminateMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		// overwrite me
 	}
 
@@ -149,7 +149,7 @@ abstract public class GraphVisitorInternal {
 	 */
 	final void callInitializeModeInternal() {
 		if (activeMode) {
-			initializeModeInternal(getCurrentMode(), null);
+			initializeModeInternal(getCurrentDirection(), null);
 		}
 	}
 
@@ -159,7 +159,7 @@ abstract public class GraphVisitorInternal {
 	 */
 	final void callTerminateMode() {
 		if (activeMode) {
-			terminateMode(getCurrentMode(), null);
+			terminateMode(getCurrentDirection(), null);
 		}
 	}
 
@@ -188,11 +188,11 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/**
-	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentMode} and {@link #currentContainer}.
+	 * Only called from {@link GraphVisitorGuideInternal}. Sets {@link #currentDirection} and {@link #currentContainer}.
 	 */
-	final void setContainerAndMode(ControlFlowElement curContainer, TraverseDirection curMode) {
+	final void setContainerAndMode(ControlFlowElement curContainer, TraverseDirection curDirection) {
 		this.currentContainer = curContainer;
-		this.currentMode = curMode;
+		this.currentDirection = curDirection;
 		checkActive();
 	}
 
@@ -201,8 +201,8 @@ abstract public class GraphVisitorInternal {
 		boolean containerActive = (container == null || container == currentContainer);
 
 		if (containerActive) {
-			for (TraverseDirection dir : modes) {
-				if (dir == currentMode) {
+			for (TraverseDirection dir : directions) {
+				if (dir == currentDirection) {
 					activeMode = true;
 					break;
 				}
@@ -263,8 +263,8 @@ abstract public class GraphVisitorInternal {
 	}
 
 	/** @return the current direction */
-	final public TraverseDirection getCurrentMode() {
-		return currentMode;
+	final public TraverseDirection getCurrentDirection() {
+		return currentDirection;
 	}
 
 	/** @return true iff the last visited node was not dead. */

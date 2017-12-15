@@ -27,13 +27,13 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	final private Set<FlowEdge> visitedEdges = new HashSet<>();
 
 	/** see {@link GraphVisitorInternal#GraphVisitorInternal(TraverseDirection...)} */
-	protected GraphVisitor(TraverseDirection... modes) {
-		this(null, modes);
+	protected GraphVisitor(TraverseDirection... directions) {
+		this(null, directions);
 	}
 
 	/** see {@link GraphVisitorInternal#GraphVisitorInternal(ControlFlowElement, TraverseDirection...)} */
-	public GraphVisitor(ControlFlowElement container, TraverseDirection... modes) {
-		super(container, modes);
+	public GraphVisitor(ControlFlowElement container, TraverseDirection... directions) {
+		super(container, directions);
 	}
 
 	@Override
@@ -54,12 +54,12 @@ abstract public class GraphVisitor extends GraphVisitorInternal {
 	/**
 	 * Called after {@link #initialize()} and before any visit-method is called.
 	 *
-	 * @param curMode
-	 *            mode of succeeding calls to visit-methods
+	 * @param curDirection
+	 *            direction of succeeding calls to visit-methods
 	 * @param curContainer
 	 *            containing {@link ControlFlowElement} of succeeding calls to visit-methods
 	 */
-	protected void initializeMode(TraverseDirection curMode, ControlFlowElement curContainer) {
+	protected void initializeMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		// overwrite me
 	}
 
