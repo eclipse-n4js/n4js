@@ -214,7 +214,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	 * E.g., "proj-0.0.1/p/A.js" for a file A in proj.
 	 * 
 	 * Convenience method, to provide all necessary API for the sub-classes.
-	 * Delegates to {@link GeneratedResourceNameComputer#getTargetFileName}.
+	 * Delegates to {@link ResourceNameComputer#getTargetFileName}.
 	 */
 	def String getTargetFileName(Resource n4jsSourceFile, String compiledFileExtension) {
 		return resourceNameComputer.generateFileDescriptor(n4jsSourceFile, compiledFileExtension)
