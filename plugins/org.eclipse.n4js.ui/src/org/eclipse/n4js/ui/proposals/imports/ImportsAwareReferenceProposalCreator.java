@@ -103,13 +103,16 @@ public class ImportsAwareReferenceProposalCreator {
 				if (!acceptor.canAcceptMoreProposals())
 					return;
 				if (filter.apply(candidate)) {
-					// Turn index main module into project id, e.g. index.Element -> react.Element, if needed
+					// In case of main module, adjust the qualified name, e.g. index.Element -> react.Element
 					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
 					boolean mainModuleExist = project != null && project.getMainModule() != null;
-					@SuppressWarnings("null") // project can not be null at this point
-					QualifiedName candidateName = mainModuleExist ? QualifiedName.create(project.getProjectId(),
-							candidate.getQualifiedName().getLastSegment().toString())
-							: candidate.getQualifiedName();
+					QualifiedName candidateName;
+					if (mainModuleExist && project != null) {
+						candidateName = QualifiedName.create(project.getProjectId(),
+								candidate.getQualifiedName().getLastSegment().toString());
+					} else {
+						candidateName = candidate.getQualifiedName();
+					}
 
 					final ICompletionProposal proposal = getProposal(candidate,
 							model,
@@ -123,6 +126,7 @@ public class ImportsAwareReferenceProposalCreator {
 						ConfigurableCompletionProposal castedProposal = (ConfigurableCompletionProposal) proposal;
 						castedProposal.setAdditionalData(FQNImporter.KEY_QUALIFIED_NAME,
 								candidateName);
+						// Original qualified name is the qualified name before adjustment
 						castedProposal.setAdditionalData(FQNImporter.KEY_ORIGINAL_QUALIFIED_NAME,
 								candidate.getQualifiedName());
 					}
