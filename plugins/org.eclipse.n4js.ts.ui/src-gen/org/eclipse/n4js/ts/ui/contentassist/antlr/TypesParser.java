@@ -308,8 +308,9 @@ public class TypesParser extends AbstractContentAssistParser {
 					put(grammarAccess.getIntersectionTypeExpressionOLDAccess().getTypeRefsAssignment_4_1(), "rule__IntersectionTypeExpressionOLD__TypeRefsAssignment_4_1");
 					put(grammarAccess.getArrayTypeRefAccess().getArrayTypeLiteralAssignment_0(), "rule__ArrayTypeRef__ArrayTypeLiteralAssignment_0");
 					put(grammarAccess.getArrayTypeRefAccess().getTypeArgsAssignment_1(), "rule__ArrayTypeRef__TypeArgsAssignment_1");
+					put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0");
 					put(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0(), "rule__StructuralTypeAndTypeArguments__DefinedTypingStrategyAssignment_0");
-					put(grammarAccess.getDeclaredTypeAccess().getDeclaredTypeAssignment(), "rule__DeclaredType__DeclaredTypeAssignment");
+					put(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_1(), "rule__StructuralTypeAndTypeArguments__DeclaredTypeAssignment_1");
 					put(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1(), "rule__VersionRequest__RequestedVersionAssignment_1");
 					put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__TypeArguments__TypeArgsAssignment_1");
 					put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__TypeArguments__TypeArgsAssignment_2_1");

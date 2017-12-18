@@ -131,9 +131,6 @@ import org.eclipse.n4js.n4JS.N4EnumLiteral;
 import org.eclipse.n4js.n4JS.N4FieldAccessor;
 import org.eclipse.n4js.n4JS.N4FieldDeclaration;
 import org.eclipse.n4js.n4JS.N4GetterDeclaration;
-import org.eclipse.n4js.n4JS.N4IDLClassDeclaration;
-import org.eclipse.n4js.n4JS.N4IDLEnumDeclaration;
-import org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration;
 import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.N4JSPackage;
@@ -1415,27 +1412,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass versionedElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass n4IDLClassDeclarationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass n4IDLInterfaceDeclarationEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass n4IDLEnumDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -5558,6 +5534,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getN4ClassDeclaration__GetVersion() {
+		return n4ClassDeclarationEClass.getEOperations().get(1);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getN4ClassExpression() {
 		return n4ClassExpressionEClass;
 	}
@@ -5621,6 +5606,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EOperation getN4InterfaceDeclaration__GetVersion() {
+		return n4InterfaceDeclarationEClass.getEOperations().get(3);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getN4EnumDeclaration() {
 		return n4EnumDeclarationEClass;
 	}
@@ -5641,6 +5635,15 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	public EOperation getN4EnumDeclaration__GetDefinedTypeAsEnum() {
 		return n4EnumDeclarationEClass.getEOperations().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EOperation getN4EnumDeclaration__GetVersion() {
+		return n4EnumDeclarationEClass.getEOperations().get(1);
 	}
 
 	/**
@@ -6406,60 +6409,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 */
 	public EOperation getVersionedElement__GetDeclaredVersionOrZero() {
 		return versionedElementEClass.getEOperations().get(1);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getN4IDLClassDeclaration() {
-		return n4IDLClassDeclarationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getN4IDLClassDeclaration__GetVersion() {
-		return n4IDLClassDeclarationEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getN4IDLInterfaceDeclaration() {
-		return n4IDLInterfaceDeclarationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getN4IDLInterfaceDeclaration__GetVersion() {
-		return n4IDLInterfaceDeclarationEClass.getEOperations().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EClass getN4IDLEnumDeclaration() {
-		return n4IDLEnumDeclarationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EOperation getN4IDLEnumDeclaration__GetVersion() {
-		return n4IDLEnumDeclarationEClass.getEOperations().get(0);
 	}
 
 	/**
@@ -7264,6 +7213,7 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		n4ClassDeclarationEClass = createEClass(N4_CLASS_DECLARATION);
 		createEOperation(n4ClassDeclarationEClass, N4_CLASS_DECLARATION___IS_ABSTRACT);
+		createEOperation(n4ClassDeclarationEClass, N4_CLASS_DECLARATION___GET_VERSION);
 
 		n4ClassExpressionEClass = createEClass(N4_CLASS_EXPRESSION);
 		createEAttribute(n4ClassExpressionEClass, N4_CLASS_EXPRESSION__NAME);
@@ -7273,10 +7223,12 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_DEFINED_TYPE_AS_INTERFACE);
 		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS);
 		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS);
+		createEOperation(n4InterfaceDeclarationEClass, N4_INTERFACE_DECLARATION___GET_VERSION);
 
 		n4EnumDeclarationEClass = createEClass(N4_ENUM_DECLARATION);
 		createEReference(n4EnumDeclarationEClass, N4_ENUM_DECLARATION__LITERALS);
 		createEOperation(n4EnumDeclarationEClass, N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM);
+		createEOperation(n4EnumDeclarationEClass, N4_ENUM_DECLARATION___GET_VERSION);
 
 		n4EnumLiteralEClass = createEClass(N4_ENUM_LITERAL);
 		createEAttribute(n4EnumLiteralEClass, N4_ENUM_LITERAL__NAME);
@@ -7387,15 +7339,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEAttribute(versionedElementEClass, VERSIONED_ELEMENT__DECLARED_VERSION);
 		createEOperation(versionedElementEClass, VERSIONED_ELEMENT___HAS_DECLARED_VERSION);
 		createEOperation(versionedElementEClass, VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO);
-
-		n4IDLClassDeclarationEClass = createEClass(N4IDL_CLASS_DECLARATION);
-		createEOperation(n4IDLClassDeclarationEClass, N4IDL_CLASS_DECLARATION___GET_VERSION);
-
-		n4IDLInterfaceDeclarationEClass = createEClass(N4IDL_INTERFACE_DECLARATION);
-		createEOperation(n4IDLInterfaceDeclarationEClass, N4IDL_INTERFACE_DECLARATION___GET_VERSION);
-
-		n4IDLEnumDeclarationEClass = createEClass(N4IDL_ENUM_DECLARATION);
-		createEOperation(n4IDLEnumDeclarationEClass, N4IDL_ENUM_DECLARATION___GET_VERSION);
 
 		migrationDeclarationEClass = createEClass(MIGRATION_DECLARATION);
 		createEReference(migrationDeclarationEClass, MIGRATION_DECLARATION__FRETS);
@@ -7657,12 +7600,18 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		n4ClassDefinitionEClass.getESuperTypes().add(this.getThisTarget());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassDefinition());
 		n4ClassDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDeclaration());
+		n4ClassDeclarationEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
+		n4ClassDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
 		n4ClassExpressionEClass.getESuperTypes().add(this.getN4ClassDefinition());
 		n4ClassExpressionEClass.getESuperTypes().add(this.getPrimaryExpression());
 		n4ClassExpressionEClass.getESuperTypes().add(this.getAnnotableExpression());
 		n4ClassExpressionEClass.getESuperTypes().add(this.getNamedElement());
 		n4InterfaceDeclarationEClass.getESuperTypes().add(this.getN4ClassifierDeclaration());
+		n4InterfaceDeclarationEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
+		n4InterfaceDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
 		n4EnumDeclarationEClass.getESuperTypes().add(this.getN4TypeDeclaration());
+		n4EnumDeclarationEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
+		n4EnumDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
 		n4EnumLiteralEClass.getESuperTypes().add(this.getNamedElement());
 		n4EnumLiteralEClass.getESuperTypes().add(theTypesPackage.getTypableElement());
 		n4MemberDeclarationEClass.getESuperTypes().add(this.getAnnotableElement());
@@ -7702,15 +7651,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 		jsxElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
-		n4IDLClassDeclarationEClass.getESuperTypes().add(this.getN4ClassDeclaration());
-		n4IDLClassDeclarationEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
-		n4IDLClassDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
-		n4IDLInterfaceDeclarationEClass.getESuperTypes().add(this.getN4InterfaceDeclaration());
-		n4IDLInterfaceDeclarationEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
-		n4IDLInterfaceDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
-		n4IDLEnumDeclarationEClass.getESuperTypes().add(this.getN4EnumDeclaration());
-		n4IDLEnumDeclarationEClass.getESuperTypes().add(theTypeRefsPackage.getVersionable());
-		n4IDLEnumDeclarationEClass.getESuperTypes().add(this.getVersionedElement());
 		migrationDeclarationEClass.getESuperTypes().add(this.getFunctionDeclaration());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
@@ -8414,6 +8354,8 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4ClassDeclaration__IsAbstract(), theEcorePackage.getEBoolean(), "isAbstract", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getN4ClassDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(n4ClassExpressionEClass, N4ClassExpression.class, "N4ClassExpression", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4ClassExpression_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4ClassExpression.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
@@ -8426,10 +8368,14 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 
 		initEOperation(getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs(), theTypeRefsPackage.getParameterizedTypeRefIterable(), "getImplementedOrExtendedInterfaceRefs", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
+		initEOperation(getN4InterfaceDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
 		initEClass(n4EnumDeclarationEClass, N4EnumDeclaration.class, "N4EnumDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getN4EnumDeclaration_Literals(), this.getN4EnumLiteral(), null, "literals", null, 0, -1, N4EnumDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getN4EnumDeclaration__GetDefinedTypeAsEnum(), theTypesPackage.getTEnum(), "getDefinedTypeAsEnum", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEOperation(getN4EnumDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(n4EnumLiteralEClass, N4EnumLiteral.class, "N4EnumLiteral", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEAttribute(getN4EnumLiteral_Name(), theEcorePackage.getEString(), "name", null, 0, 1, N4EnumLiteral.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -8573,18 +8519,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getVersionedElement__HasDeclaredVersion(), theEcorePackage.getEBoolean(), "hasDeclaredVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getVersionedElement__GetDeclaredVersionOrZero(), theEcorePackage.getEInt(), "getDeclaredVersionOrZero", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(n4IDLClassDeclarationEClass, N4IDLClassDeclaration.class, "N4IDLClassDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getN4IDLClassDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(n4IDLInterfaceDeclarationEClass, N4IDLInterfaceDeclaration.class, "N4IDLInterfaceDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getN4IDLInterfaceDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(n4IDLEnumDeclarationEClass, N4IDLEnumDeclaration.class, "N4IDLEnumDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-		initEOperation(getN4IDLEnumDeclaration__GetVersion(), theEcorePackage.getEInt(), "getVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEClass(migrationDeclarationEClass, MigrationDeclaration.class, "MigrationDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getMigrationDeclaration_Frets(), this.getFormalParameter(), null, "frets", null, 0, -1, MigrationDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

@@ -16,6 +16,7 @@ import java.util.List;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4JS.NamedImportSpecifier;
+import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TModule;
 
@@ -25,10 +26,11 @@ import org.eclipse.n4js.ts.types.TModule;
 public class ImportProvidedElement {
 
 	/** name as used in script (can be alias) */
-	public String localname;
+	private final String localname;
 
 	/** name as provided by TModule */
-	public String exportedName;
+	private final String exportedName;
+
 	/** Prefix to be used when creating IPE for namespace itself */
 	public final static String NAMESPACE_PREFIX = "NAMESPACE_";
 
@@ -40,6 +42,9 @@ public class ImportProvidedElement {
 
 	/** usage-flag in script (statements & expressions) */
 	public boolean used;
+
+	/** Version of the element if versionable. A value of 0 indicates no declared version. */
+	private final int version;
 
 	/**
 	 * In case of ambiguous imports the scoping gives a List imported things from other modules (variables, functions,
@@ -66,11 +71,53 @@ public class ImportProvidedElement {
 		this.exportedName = exportedName;
 		this.importSpec = importer;
 		this.tmodule = ((ImportDeclaration) importer.eContainer()).getModule();
+		this.version = 0;
+	}
+
+	/**
+	 * @param localName
+	 *            local name for the imported entity
+	 * @param exportedName
+	 *            name under which entity was exported
+	 * @param importer
+	 *            import-specifier, referencing the import-declaration.
+	 * @param version
+	 *            the version of the imported entity
+	 *
+	 */
+	public ImportProvidedElement(String localName, String exportedName, ImportSpecifier importer, int version) {
+		this.localname = localName;
+		this.exportedName = exportedName;
+		this.importSpec = importer;
+		this.tmodule = ((ImportDeclaration) importer.eContainer()).getModule();
+		this.version = version;
 	}
 
 	/** set the used flag to true */
 	public void markUsed() {
 		used = true;
+	}
+
+	/**
+	 * Returns the name of the element as used in the script.
+	 */
+	public String getLocalName() {
+		if (this.version != 0) {
+			return this.localname + N4IDLGlobals.VERSION_SEPARATOR + this.version;
+		} else {
+			return this.localname;
+		}
+	}
+
+	/**
+	 * Returns the name of the elements as provided by TModule.
+	 */
+	public String getExportedName() {
+		if (this.version != 0) {
+			return this.exportedName + N4IDLGlobals.VERSION_SEPARATOR + this.version;
+		} else {
+			return this.exportedName;
+		}
 	}
 
 	/**

@@ -53,7 +53,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 	/**
 	 * NEEEDED
-	 * 
+	 *
 	 * when removed check methods will be called twice once by N4JSValidator, and once by
 	 * AbstractDeclarativeN4JSValidator
 	 */
@@ -147,9 +147,9 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Computes a user-faced name for the given {@link NamedImportSpecifier} 
+	 * Computes a user-faced name for the given {@link NamedImportSpecifier}
 	 * that can be used in error/warning messages.
-	 * 
+	 *
 	 * @param spec
 	 * @return name from NamedImportSpecifier or AST-text if unresolved.
 	 */
@@ -160,7 +160,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 		} else
 			spec.importedElementName
 	}
-	
+
 	/** Mark all imports that don't appear in the header.
 	 * @param script the script
 	 */
@@ -314,7 +314,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			if (conflict !== null) {
 				typeRefs.forEach [ typeRef |
 					val typeRefName = typeRef.typeRefUsedName;
-					if (conflict.exists[ipe|ipe.localname == typeRefName]) {
+					if (conflict.exists[ipe|ipe.getLocalName() == typeRefName]) {
 						regUnresolvedImport(typeRef, typeRefName, eObjectToIssueCode);
 					}
 				]
@@ -363,7 +363,7 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 
 		/**
 		 * Adds an issue for duplicate named import specifiers.
-		 * 
+		 *
 		 * @param specifier The first import of the element
 		 * @param duplicate The duplicated import of the element
 		 * @param duplicateImportDeclaration The import declaration of the duplicated import
@@ -441,4 +441,3 @@ class N4JSImportValidator extends AbstractN4JSDeclarativeValidator {
 			}
 
 		}
-		

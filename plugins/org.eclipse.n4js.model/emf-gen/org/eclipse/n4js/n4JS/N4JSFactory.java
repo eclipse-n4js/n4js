@@ -1119,33 +1119,6 @@ public interface N4JSFactory extends EFactory {
 	JSXElement createJSXElement();
 
 	/**
-	 * Returns a new object of class '<em>N4IDL Class Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>N4IDL Class Declaration</em>'.
-	 * @generated
-	 */
-	N4IDLClassDeclaration createN4IDLClassDeclaration();
-
-	/**
-	 * Returns a new object of class '<em>N4IDL Interface Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>N4IDL Interface Declaration</em>'.
-	 * @generated
-	 */
-	N4IDLInterfaceDeclaration createN4IDLInterfaceDeclaration();
-
-	/**
-	 * Returns a new object of class '<em>N4IDL Enum Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>N4IDL Enum Declaration</em>'.
-	 * @generated
-	 */
-	N4IDLEnumDeclaration createN4IDLEnumDeclaration();
-
-	/**
 	 * Returns a new object of class '<em>Migration Declaration</em>'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->

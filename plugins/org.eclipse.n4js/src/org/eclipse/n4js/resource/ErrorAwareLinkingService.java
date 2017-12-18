@@ -21,6 +21,7 @@ import org.eclipse.emf.ecore.resource.Resource.Diagnostic;
 import org.eclipse.n4js.n4JS.DefaultImportSpecifier;
 import org.eclipse.n4js.n4JS.N4JSPackage;
 import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.scoping.UsageAwareObjectDescription;
 import org.eclipse.n4js.scoping.utils.UnresolvableObjectDescription;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -86,18 +87,26 @@ public class ErrorAwareLinkingService extends DefaultLinkingService {
 			final IScope scope = getScope(context, ref);
 			QualifiedName qualifiedLinkName = qualifiedNameConverter.toQualifiedName(crossRefString);
 			IEObjectDescription eObjectDescription = scope.getSingleElement(qualifiedLinkName);
+
 			if (IEObjectDescriptionWithError.isErrorDescription(eObjectDescription) && context.eResource() != null
 					&& !n4jsCore.isNoValidate(context.eResource().getURI())) {
 				addError(context, node, IEObjectDescriptionWithError.getDescriptionWithError(eObjectDescription));
 			} else if (eObjectDescription instanceof UnresolvableObjectDescription) {
 				return Collections.<EObject> singletonList((EObject) context.eGet(ref, false));
 			}
+
 			if (eObjectDescription != null) {
 				EObject candidate = eObjectDescription.getEObjectOrProxy();
 				if (!candidate.eIsProxy() && candidate.eResource() == null) {
 					// Error is necessary since EMF catches all exceptions in EcoreUtil#resolve
 					throw new AssertionError("Found an instance without resource and without URI");
 				}
+
+				// if supported, mark object description as used
+				if (eObjectDescription instanceof UsageAwareObjectDescription<?>) {
+					((UsageAwareObjectDescription<?>) eObjectDescription).markAsUsed();
+				}
+
 				return Collections.singletonList(candidate);
 			}
 		}

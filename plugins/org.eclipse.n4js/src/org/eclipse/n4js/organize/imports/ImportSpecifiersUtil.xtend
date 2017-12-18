@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
@@ -15,6 +15,7 @@ import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
+import org.eclipse.n4js.n4JS.VersionedNamedImportSpecifier
 import org.eclipse.n4js.ts.types.TExportableElement
 
 /**
@@ -31,6 +32,10 @@ class ImportSpecifiersUtil {
 				switch (specifier) {
 					NamespaceImportSpecifier:
 						return namespaceToProvidedElements(specifier)
+					VersionedNamedImportSpecifier:
+						return newArrayList(
+							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
+								specifier as ImportSpecifier, specifier.requestedVersionOrZero))
 					NamedImportSpecifier:
 						return newArrayList(
 							new ImportProvidedElement(specifier.usedName, specifier.importedElementName,
@@ -67,7 +72,7 @@ class ImportSpecifiersUtil {
 	 * Computes 'actual' name of the namespace for {@link ImportProvidedElement} entry.
 	 * If processed namespace refers to unresolved module, will return dummy name,
 	 * otherwise returns artificial name composed of prefix and target module qualified name
-	 * 
+	 *
 	 */
 	public static def String computeNamespaceActualName(NamespaceImportSpecifier specifier) {
 		if (specifier.importedModule.eIsProxy)
@@ -107,7 +112,7 @@ class ImportSpecifiersUtil {
 	/**
 	 * Returns true if the module that is target of the import declaration containing provided import specifier is invalid (null, proxy, no name).
 	 * Additionally for {@link NamedImportSpecifier} instances checks if linker failed to resolve target (is null, proxy, or has no name)
-	 * 
+	 *
 	 * @param spec - the ImportSpecifier to investigate
 	 * @return true import looks broken
 	 * */

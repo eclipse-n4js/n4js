@@ -53,13 +53,12 @@ Script: {Script}
  */
 ScriptElement:
 	  AnnotatedScriptElement
-	| N4IDLClassDeclaration<Yield=false>
-	| N4IDLInterfaceDeclaration<Yield=false>
-	| N4IDLEnumDeclaration<Yield=false>
+	| N4ClassDeclaration<Yield=false>
+	| N4InterfaceDeclaration<Yield=false>
+	| N4EnumDeclaration<Yield=false>
 	| ImportDeclaration
 	| ExportDeclaration
 	| RootStatement<Yield=false>
-	| N4IDLEnumDeclaration<Yield=false>
 	| MigrationDeclaration
 ;
 
@@ -133,9 +132,9 @@ ExportSpecifier:
 
 ExportableElement:
 	  AnnotatedExportableElement<Yield=false>
-	| N4IDLClassDeclaration<Yield=false>
-	| N4IDLInterfaceDeclaration<Yield=false>
-	| N4IDLEnumDeclaration<Yield=false>
+	| N4ClassDeclaration<Yield=false>
+	| N4InterfaceDeclaration<Yield=false>
+	| N4EnumDeclaration<Yield=false>
 	| FunctionDeclaration<Yield=false>
 	| ExportedVariableStatement
 ;
@@ -205,6 +204,7 @@ fragment ImportSpecifiersExceptDefault returns ImportDeclaration:
 NamedImportSpecifier:
 		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>]
 	|	importedElement=[types::TExportableElement|IdentifierName] 'as' alias=BindingIdentifier<Yield=false>
+	|	VersionedImportIdentifier
 ;
 
 DefaultImportSpecifier:
@@ -586,9 +586,9 @@ PrimaryExpression <Yield> returns Expression:
 
 ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
-IdentifierRef <Yield> returns VersionedIdentifierRef:
+IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
-	VersionRequest?
+	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1187,7 +1187,7 @@ TypeRefForCast returns types::StaticBaseTypeRef:
 	| ThisTypeRef
 	| TypeTypeRef
 	| ArrowFunctionTypeExpression
-	
+
 	| FunctionTypeExpressionOLD
 	| UnionTypeExpressionOLD
 	| IntersectionTypeExpressionOLD;
@@ -1233,11 +1233,10 @@ QualifiedTypeReferenceName:
 
 
 // cf. N4JSSpec §14
-N4IDLClassDeclaration <Yield>:
+N4ClassDeclaration <Yield>:
 	=>(
-		{N4IDLClassDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'class' typingStrategy=TypingStrategyDefSiteOperator? 
+		'class' typingStrategy=TypingStrategyDefSiteOperator?
 		name=BindingIdentifier<Yield>?
 		VersionDeclaration?
 	)
@@ -1278,11 +1277,10 @@ N4ClassExpression <Yield>:
 	Members<Yield>;
 
 // cf. N4JSSpec §16
-N4IDLInterfaceDeclaration <Yield>:
+N4InterfaceDeclaration <Yield>:
 	=> (
-		{N4IDLInterfaceDeclaration}
 		(declaredModifiers+=N4Modifier)*
-		'interface' typingStrategy=TypingStrategyDefSiteOperator? 
+		'interface' typingStrategy=TypingStrategyDefSiteOperator?
 		name=BindingIdentifier<Yield>?
 		VersionDeclaration?
 	)
@@ -1301,9 +1299,9 @@ fragment InterfaceImplementsList*:
 ;
 
 // cf. N4JSSpec §13
-N4IDLEnumDeclaration <Yield>:
+N4EnumDeclaration <Yield>:
 	=>(
-		{N4IDLEnumDeclaration}
+		{N4EnumDeclaration}
 		(declaredModifiers+=N4Modifier)*
 		'enum' name=BindingIdentifier<Yield>?
 		VersionDeclaration?
@@ -1454,7 +1452,7 @@ SingleNameBinding <Yield, AllowType> returns BindingElement:
 ;
 
 BindingElement <Yield>:
-	BindingElementImpl<Yield>  
+	BindingElementImpl<Yield>
 ;
 
 BindingRestElement <Yield> returns BindingElement:
@@ -1555,4 +1553,10 @@ MigrationDeclaration:
 	'->'
 	'(' frets+=FormalParameter<false> (',' frets+=FormalParameter<false>)* ')'
 	FunctionBody<false,false>
+;
+
+
+VersionedImportIdentifier returns VersionedNamedImportSpecifier:
+		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest
+	|	importedElement=[types::TExportableElement|IdentifierName] VersionRequest 'as' alias=BindingIdentifier<Yield=false>
 ;

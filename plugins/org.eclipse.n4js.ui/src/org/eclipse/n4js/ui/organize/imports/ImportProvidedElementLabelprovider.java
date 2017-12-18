@@ -71,7 +71,7 @@ public class ImportProvidedElementLabelprovider implements ILabelProvider {
 		if (element instanceof ImportProvidedElement) {
 			ImportProvidedElement ele = ((ImportProvidedElement) element);
 			TModule tm = ((ImportDeclaration) ele.importSpec.eContainer()).getModule();
-			return ele.localname + " from " + findLocation(tm);
+			return ele.getLocalName() + " from " + findLocation(tm);
 		}
 		if (element instanceof IEObjectDescription) {
 			IEObjectDescription ieod = (IEObjectDescription) element;

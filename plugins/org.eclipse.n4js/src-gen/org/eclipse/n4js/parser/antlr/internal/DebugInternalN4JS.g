@@ -44,7 +44,7 @@ ruleScriptElement:
 			?
 			ruleVersionDeclaration?
 			)=>
-			ruleN4IDLClassDeclaration
+			ruleN4ClassDeclaration
 		)
 		    |
 		(
@@ -57,7 +57,7 @@ ruleScriptElement:
 			?
 			ruleVersionDeclaration?
 			)=>
-			ruleN4IDLInterfaceDeclaration
+			ruleN4InterfaceDeclaration
 		)
 		    |
 		(
@@ -68,7 +68,7 @@ ruleScriptElement:
 			?
 			ruleVersionDeclaration?
 			)=>
-			ruleN4IDLEnumDeclaration
+			ruleN4EnumDeclaration
 		)
 		    |
 		ruleImportDeclaration
@@ -76,17 +76,6 @@ ruleScriptElement:
 		ruleExportDeclaration
 		    |
 		ruleRootStatement
-		    |
-		(
-			(ruleN4Modifier
-			*
-			'enum'
-			ruleBindingIdentifier
-			?
-			ruleVersionDeclaration?
-			)=>
-			ruleN4IDLEnumDeclaration
-		)
 		    |
 		ruleMigrationDeclaration
 	)
@@ -251,7 +240,7 @@ ruleExportableElement:
 			?
 			ruleVersionDeclaration?
 			)=>
-			ruleN4IDLClassDeclaration
+			ruleN4ClassDeclaration
 		)
 		    |
 		(
@@ -264,7 +253,7 @@ ruleExportableElement:
 			?
 			ruleVersionDeclaration?
 			)=>
-			ruleN4IDLInterfaceDeclaration
+			ruleN4InterfaceDeclaration
 		)
 		    |
 		(
@@ -275,7 +264,7 @@ ruleExportableElement:
 			?
 			ruleVersionDeclaration?
 			)=>
-			ruleN4IDLEnumDeclaration
+			ruleN4EnumDeclaration
 		)
 		    |
 		(
@@ -411,6 +400,8 @@ ruleNamedImportSpecifier:
 		ruleIdentifierName
 		'as'
 		ruleBindingIdentifier
+		    |
+		ruleVersionedImportIdentifier
 	)
 ;
 
@@ -2667,14 +2658,22 @@ norm1_ParenExpression:
 
 // Rule IdentifierRef
 ruleIdentifierRef:
-	ruleBindingIdentifier
-	ruleVersionRequest?
+	(
+		ruleBindingIdentifier
+		    |
+		ruleBindingIdentifier
+		ruleVersionRequest
+	)
 ;
 
 // Rule IdentifierRef
 norm1_IdentifierRef:
-	norm1_BindingIdentifier
-	ruleVersionRequest?
+	(
+		norm1_BindingIdentifier
+		    |
+		norm1_BindingIdentifier
+		ruleVersionRequest
+	)
 ;
 
 // Rule SuperLiteral
@@ -6265,8 +6264,8 @@ ruleQualifiedTypeReferenceName:
 	)?
 ;
 
-// Rule N4IDLClassDeclaration
-ruleN4IDLClassDeclaration:
+// Rule N4ClassDeclaration
+ruleN4ClassDeclaration:
 	(
 		(ruleN4Modifier
 		*
@@ -6394,8 +6393,8 @@ norm1_N4ClassExpression:
 	norm1_Members
 ;
 
-// Rule N4IDLInterfaceDeclaration
-ruleN4IDLInterfaceDeclaration:
+// Rule N4InterfaceDeclaration
+ruleN4InterfaceDeclaration:
 	(
 		(ruleN4Modifier
 		*
@@ -6440,8 +6439,8 @@ ruleInterfaceImplementsList:
 	)*
 ;
 
-// Rule N4IDLEnumDeclaration
-ruleN4IDLEnumDeclaration:
+// Rule N4EnumDeclaration
+ruleN4EnumDeclaration:
 	(
 		(ruleN4Modifier
 		*
@@ -8236,6 +8235,19 @@ ruleMigrationDeclaration:
 	ruleFunctionBody
 ;
 
+// Rule VersionedImportIdentifier
+ruleVersionedImportIdentifier:
+	(
+		ruleBindingIdentifier
+		ruleVersionRequest
+		    |
+		ruleIdentifierName
+		ruleVersionRequest
+		'as'
+		ruleBindingIdentifier
+	)
+;
+
 // Rule TypeRef
 ruleTypeRef:
 	ruleIntersectionTypeExpression
@@ -8508,7 +8520,7 @@ ruleParameterizedTypeRefStructural:
 
 // Rule TypeAndTypeArguments
 ruleTypeAndTypeArguments:
-	ruleDeclaredType
+	ruleTypeReferenceName
 	ruleVersionRequest?
 	(
 		('<')=>
@@ -8519,17 +8531,12 @@ ruleTypeAndTypeArguments:
 // Rule StructuralTypeAndTypeArguments
 ruleStructuralTypeAndTypeArguments:
 	ruleTypingStrategyUseSiteOperator
-	ruleDeclaredType
+	ruleTypeReferenceName
 	ruleVersionRequest?
 	(
 		('<')=>
 		ruleTypeArguments
 	)?
-;
-
-// Rule DeclaredType
-ruleDeclaredType:
-	ruleTypeReferenceName
 ;
 
 // Rule VersionRequest

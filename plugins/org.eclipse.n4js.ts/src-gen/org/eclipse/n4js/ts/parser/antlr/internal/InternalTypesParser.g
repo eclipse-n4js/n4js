@@ -4765,17 +4765,22 @@ ruleTypeAndTypeArguments returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		{
-			if ($current==null) {
-				$current = createModelElement(grammarAccess.getTypeAndTypeArgumentsRule());
-			}
-			newCompositeNode(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeParserRuleCall_0());
-		}
-		this_DeclaredType_0=ruleDeclaredType[$current]
-		{
-			$current = $this_DeclaredType_0.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getTypeAndTypeArgumentsRule());
+					}
+				}
+				{
+					newCompositeNode(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeTypeCrossReference_0_0());
+				}
+				ruleTypeReferenceName
+				{
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 		(
 			{
 				if ($current==null) {
@@ -4841,17 +4846,22 @@ ruleStructuralTypeAndTypeArguments returns [EObject current=null]
 				}
 			)
 		)
-		{
-			if ($current==null) {
-				$current = createModelElement(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-			}
-			newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeParserRuleCall_1());
-		}
-		this_DeclaredType_1=ruleDeclaredType[$current]
-		{
-			$current = $this_DeclaredType_1.current;
-			afterParserOrEnumRuleCall();
-		}
+		(
+			(
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
+					}
+				}
+				{
+					newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeTypeCrossReference_1_0());
+				}
+				ruleTypeReferenceName
+				{
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
 		(
 			{
 				if ($current==null) {
@@ -4879,33 +4889,6 @@ ruleStructuralTypeAndTypeArguments returns [EObject current=null]
 				afterParserOrEnumRuleCall();
 			}
 		)?
-	)
-;
-
-
-// Rule DeclaredType
-ruleDeclaredType[EObject in_current]  returns [EObject current=in_current]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getDeclaredTypeRule());
-				}
-			}
-			{
-				newCompositeNode(grammarAccess.getDeclaredTypeAccess().getDeclaredTypeTypeCrossReference_0());
-			}
-			ruleTypeReferenceName
-			{
-				afterParserOrEnumRuleCall();
-			}
-		)
 	)
 ;
 

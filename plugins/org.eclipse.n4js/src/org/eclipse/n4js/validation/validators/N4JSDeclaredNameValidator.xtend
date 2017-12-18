@@ -37,9 +37,8 @@ import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4ClassExpression
-import org.eclipse.n4js.n4JS.N4IDLClassDeclaration
-import org.eclipse.n4js.n4JS.N4IDLEnumDeclaration
-import org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4EnumDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.N4JSPackage
 import org.eclipse.n4js.n4JS.N4TypeDeclaration
@@ -78,6 +77,7 @@ import org.eclipse.xtext.validation.EValidatorRegistrar
 import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.n4JS.VersionedElement
 
 /**
  */
@@ -598,12 +598,10 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Does not check value of the returned name, so it can be null or empty string.
 	 */
 	def protected String getDeclaredName(EObject eo) {
-		switch (eo) {
-			N4IDLClassDeclaration    : return eo.name + "#" + eo.declaredVersion
-			N4IDLInterfaceDeclaration: return eo.name + "#" + eo.declaredVersion
-			N4IDLEnumDeclaration	 : return eo.name + "#" + eo.declaredVersion 
+		if (eo instanceof VersionedElement && eo instanceof NamedElement) {
+			return (eo as NamedElement).name + "#" + (eo as VersionedElement).declaredVersion;
 		}
-		
+
 		if (eo instanceof FunctionDeclaration || eo instanceof FunctionExpression || eo instanceof N4TypeDefinition ||
 			eo instanceof Variable) {
 			return eo.findName
@@ -633,9 +631,9 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 
 	def protected String getDeclaredNameForGlobalScopeComparision(EObject eo) {
 		switch (eo) {
-			N4IDLClassDeclaration    : eo.name
-			N4IDLInterfaceDeclaration: eo.name
-			N4IDLEnumDeclaration	 : eo.name
+			N4ClassDeclaration    : eo.name
+			N4InterfaceDeclaration: eo.name
+			N4EnumDeclaration	 : eo.name
 			default                  : eo.declaredName
 		}
 	}

@@ -1493,6 +1493,8 @@ public class N4JSSwitch<T> extends Switch<T> {
 				T result = caseN4ClassDeclaration(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassDefinition(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4ClassDeclaration);
+				if (result == null) result = caseVersionable(n4ClassDeclaration);
+				if (result == null) result = caseVersionedElement(n4ClassDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4ClassDeclaration);
 				if (result == null) result = caseThisTarget(n4ClassDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4ClassDeclaration);
@@ -1531,6 +1533,8 @@ public class N4JSSwitch<T> extends Switch<T> {
 				N4InterfaceDeclaration n4InterfaceDeclaration = (N4InterfaceDeclaration)theEObject;
 				T result = caseN4InterfaceDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDeclaration(n4InterfaceDeclaration);
+				if (result == null) result = caseVersionable(n4InterfaceDeclaration);
+				if (result == null) result = caseVersionedElement(n4InterfaceDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4InterfaceDeclaration);
 				if (result == null) result = caseN4ClassifierDefinition(n4InterfaceDeclaration);
 				if (result == null) result = caseGenericDeclaration(n4InterfaceDeclaration);
@@ -1551,6 +1555,8 @@ public class N4JSSwitch<T> extends Switch<T> {
 				N4EnumDeclaration n4EnumDeclaration = (N4EnumDeclaration)theEObject;
 				T result = caseN4EnumDeclaration(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDeclaration(n4EnumDeclaration);
+				if (result == null) result = caseVersionable(n4EnumDeclaration);
+				if (result == null) result = caseVersionedElement(n4EnumDeclaration);
 				if (result == null) result = caseN4TypeDefinition(n4EnumDeclaration);
 				if (result == null) result = caseAnnotableScriptElement(n4EnumDeclaration);
 				if (result == null) result = caseModifiableElement(n4EnumDeclaration);
@@ -1829,72 +1835,6 @@ public class N4JSSwitch<T> extends Switch<T> {
 			case N4JSPackage.VERSIONED_ELEMENT: {
 				VersionedElement versionedElement = (VersionedElement)theEObject;
 				T result = caseVersionedElement(versionedElement);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4JSPackage.N4IDL_CLASS_DECLARATION: {
-				N4IDLClassDeclaration n4IDLClassDeclaration = (N4IDLClassDeclaration)theEObject;
-				T result = caseN4IDLClassDeclaration(n4IDLClassDeclaration);
-				if (result == null) result = caseN4ClassDeclaration(n4IDLClassDeclaration);
-				if (result == null) result = caseVersionable(n4IDLClassDeclaration);
-				if (result == null) result = caseVersionedElement(n4IDLClassDeclaration);
-				if (result == null) result = caseN4ClassDefinition(n4IDLClassDeclaration);
-				if (result == null) result = caseN4ClassifierDeclaration(n4IDLClassDeclaration);
-				if (result == null) result = caseN4ClassifierDefinition(n4IDLClassDeclaration);
-				if (result == null) result = caseThisTarget(n4IDLClassDeclaration);
-				if (result == null) result = caseN4TypeDeclaration(n4IDLClassDeclaration);
-				if (result == null) result = caseGenericDeclaration(n4IDLClassDeclaration);
-				if (result == null) result = caseN4TypeDefinition(n4IDLClassDeclaration);
-				if (result == null) result = caseAnnotableScriptElement(n4IDLClassDeclaration);
-				if (result == null) result = caseModifiableElement(n4IDLClassDeclaration);
-				if (result == null) result = caseExportableElement(n4IDLClassDeclaration);
-				if (result == null) result = caseNamedElement(n4IDLClassDeclaration);
-				if (result == null) result = caseAnnotableElement(n4IDLClassDeclaration);
-				if (result == null) result = caseTypeDefiningElement(n4IDLClassDeclaration);
-				if (result == null) result = caseScriptElement(n4IDLClassDeclaration);
-				if (result == null) result = caseTypableElement(n4IDLClassDeclaration);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4JSPackage.N4IDL_INTERFACE_DECLARATION: {
-				N4IDLInterfaceDeclaration n4IDLInterfaceDeclaration = (N4IDLInterfaceDeclaration)theEObject;
-				T result = caseN4IDLInterfaceDeclaration(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseN4InterfaceDeclaration(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseVersionable(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseVersionedElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseN4ClassifierDeclaration(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseN4TypeDeclaration(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseN4ClassifierDefinition(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseGenericDeclaration(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseThisTarget(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseN4TypeDefinition(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseAnnotableScriptElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseModifiableElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseExportableElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseNamedElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseAnnotableElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseTypeDefiningElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseScriptElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = caseTypableElement(n4IDLInterfaceDeclaration);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
-			case N4JSPackage.N4IDL_ENUM_DECLARATION: {
-				N4IDLEnumDeclaration n4IDLEnumDeclaration = (N4IDLEnumDeclaration)theEObject;
-				T result = caseN4IDLEnumDeclaration(n4IDLEnumDeclaration);
-				if (result == null) result = caseN4EnumDeclaration(n4IDLEnumDeclaration);
-				if (result == null) result = caseVersionable(n4IDLEnumDeclaration);
-				if (result == null) result = caseVersionedElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseN4TypeDeclaration(n4IDLEnumDeclaration);
-				if (result == null) result = caseN4TypeDefinition(n4IDLEnumDeclaration);
-				if (result == null) result = caseAnnotableScriptElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseModifiableElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseExportableElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseNamedElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseAnnotableElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseTypeDefiningElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseScriptElement(n4IDLEnumDeclaration);
-				if (result == null) result = caseTypableElement(n4IDLEnumDeclaration);
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
@@ -4494,51 +4434,6 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionedElement(VersionedElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>N4IDL Class Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>N4IDL Class Declaration</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseN4IDLClassDeclaration(N4IDLClassDeclaration object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>N4IDL Interface Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>N4IDL Interface Declaration</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseN4IDLInterfaceDeclaration(N4IDLInterfaceDeclaration object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>N4IDL Enum Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>N4IDL Enum Declaration</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseN4IDLEnumDeclaration(N4IDLEnumDeclaration object) {
 		return null;
 	}
 

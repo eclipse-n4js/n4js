@@ -43,6 +43,7 @@ import org.eclipse.n4js.n4JS.TypeDefiningElement
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement
 import org.eclipse.n4js.n4JS.extensions.SourceElementExtensions
+import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.projectModel.ProjectUtils
@@ -84,7 +85,6 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
-import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
 
 /**
  * This class contains custom scoping description.
@@ -96,7 +96,7 @@ import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
  * on how and when to use it
  */
 class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScopeProvider, IContentAssistScopeProvider {
-	
+
 
 	public final static String NAMED_DELEGATE = "org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider.delegate";
 
@@ -127,7 +127,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject extension SourceElementExtensions
 
 	@Inject extension ProjectUtils;
-	
+
 	@Inject extension ReactHelper;
 
 	@Inject JavaScriptVariantHelper jsVariantHelper;
@@ -135,9 +135,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject MemberVisibilityChecker checker;
 
 	@Inject ContainerTypesHelper containerTypesHelper;
-	
+
 	@Inject TopLevelElementsCollector topLevelElementCollector
-	
+
 	@Inject N4IDLVersionAwareScopeProvider n4idlVersionAwareScopeProvider
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
@@ -194,7 +194,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		return IScope.NULLSCOPE;
 	}
-	
+
 	/** dispatch to internal methods based on the context */
 	private def getScopeForContext(EObject context, EReference reference) {
 		switch (context) {
@@ -210,6 +210,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	override getScopeForContentAssist(EObject context, EReference reference) {
 
 		val scope = getScope(context, reference);
+
+
 
 		if (scope === IScope.NULLSCOPE) {
 
@@ -282,10 +284,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		val result = new SimpleScope(parent, elements);
 		return result;
 	}
-	
+
 	/**
 	 * Returns a scope with all the locally known types of the given Script.
-	 * 
+	 *
 	 * May be overridden by subclasses.
 	 */
 	protected def IScope getScopeWithLocallyKnownTypes(Script context, EReference reference, IScopeProvider delegate) {
@@ -449,8 +451,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (importedModule === null) {
 			return IScope.NULLSCOPE;
 		}
-		
-		buildMapBasedScope(IScope.NULLSCOPE, 
+
+		buildMapBasedScope(IScope.NULLSCOPE,
 			topLevelElementCollector.getTopLevelElements(importedModule, contextResource));
 	}
 
@@ -551,11 +553,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		if (obj === null) return null;
 		return EcoreUtil2.getContainerOfType(obj.eContainer, ancestorType);
 	}
-	
+
 	private def getN4IDLScope(EObject context, EReference reference) {
 		return n4idlVersionAwareScopeProvider.getScope(context, reference);
 	}
-	
+
 	private def getN4JSXScope(EObject context, EReference reference) {
 		val jsxPropertyAttributeScope = getJSXPropertyAttributeScope(context, reference)
 		if(jsxPropertyAttributeScope !== IScope.NULLSCOPE)
@@ -590,7 +592,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		}
 		return IScope.NULLSCOPE;
 	}
-	
+
 	/** Returns scope for the JSXElement (obtained from context) or {@link IScope#NULLSCOPE} */
 	private def getJSXElementScope(EObject context, EReference reference) {
 

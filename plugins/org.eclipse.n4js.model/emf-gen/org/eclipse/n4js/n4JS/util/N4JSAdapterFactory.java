@@ -762,18 +762,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 				return createVersionedElementAdapter();
 			}
 			@Override
-			public Adapter caseN4IDLClassDeclaration(N4IDLClassDeclaration object) {
-				return createN4IDLClassDeclarationAdapter();
-			}
-			@Override
-			public Adapter caseN4IDLInterfaceDeclaration(N4IDLInterfaceDeclaration object) {
-				return createN4IDLInterfaceDeclarationAdapter();
-			}
-			@Override
-			public Adapter caseN4IDLEnumDeclaration(N4IDLEnumDeclaration object) {
-				return createN4IDLEnumDeclarationAdapter();
-			}
-			@Override
 			public Adapter caseMigrationDeclaration(MigrationDeclaration object) {
 				return createMigrationDeclarationAdapter();
 			}
@@ -3198,48 +3186,6 @@ public class N4JSAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createVersionedElementAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4IDLClassDeclaration <em>N4IDL Class Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.N4IDLClassDeclaration
-	 * @generated
-	 */
-	public Adapter createN4IDLClassDeclarationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration <em>N4IDL Interface Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration
-	 * @generated
-	 */
-	public Adapter createN4IDLInterfaceDeclarationAdapter() {
-		return null;
-	}
-
-	/**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.N4IDLEnumDeclaration <em>N4IDL Enum Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * This default implementation returns null so that we can easily ignore cases;
-	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
-	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.n4js.n4JS.N4IDLEnumDeclaration
-	 * @generated
-	 */
-	public Adapter createN4IDLEnumDeclarationAdapter() {
 		return null;
 	}
 

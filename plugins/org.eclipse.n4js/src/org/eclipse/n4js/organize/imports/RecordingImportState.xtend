@@ -139,7 +139,7 @@ class RecordingImportState {
 		var ret = newHashSet()
 		for (e : allUsedTypeNameToSpecifierTuples) {
 			if (e.used && e.importSpec.eContainer === null) {
-				ret.add(e.localname)
+				ret.add(e.getLocalName())
 			}
 		}
 		return ret

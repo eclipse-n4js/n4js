@@ -119,9 +119,13 @@ public class PreparationStep {
 						ImPackage.eINSTANCE.getIdentifierRef_IM())
 				.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
 						ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
+				.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
+						ImPackage.eINSTANCE.getIdentifierRef_IM())
 				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
 						ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
 				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
+						ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
+				.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
 						ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
 				.build();
 

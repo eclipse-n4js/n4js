@@ -882,7 +882,7 @@ ruleParameterizedTypeRefStructural:
 
 // Rule TypeAndTypeArguments
 ruleTypeAndTypeArguments:
-	ruleDeclaredType
+	ruleTypeReferenceName
 	ruleVersionRequest?
 	(
 		('<')=>
@@ -893,17 +893,12 @@ ruleTypeAndTypeArguments:
 // Rule StructuralTypeAndTypeArguments
 ruleStructuralTypeAndTypeArguments:
 	ruleTypingStrategyUseSiteOperator
-	ruleDeclaredType
+	ruleTypeReferenceName
 	ruleVersionRequest?
 	(
 		('<')=>
 		ruleTypeArguments
 	)?
-;
-
-// Rule DeclaredType
-ruleDeclaredType:
-	ruleTypeReferenceName
 ;
 
 // Rule VersionRequest

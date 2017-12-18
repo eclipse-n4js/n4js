@@ -11221,13 +11221,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION__TYPING_STRATEGY = N4_CLASS_DEFINITION_FEATURE_COUNT + 4;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION__DECLARED_VERSION = N4_CLASS_DEFINITION_FEATURE_COUNT + 5;
+
+	/**
 	 * The number of structural features of the '<em>N4 Class Declaration</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_FEATURE_COUNT = N4_CLASS_DEFINITION_FEATURE_COUNT + 5;
+	int N4_CLASS_DECLARATION_FEATURE_COUNT = N4_CLASS_DEFINITION_FEATURE_COUNT + 6;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -11392,13 +11401,40 @@ public interface N4JSPackage extends EPackage {
 	int N4_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DEFINITION_OPERATION_COUNT + 6;
 
 	/**
+	 * The operation id for the '<em>Has Declared Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___HAS_DECLARED_VERSION = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
+
+	/**
+	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_CLASS_DEFINITION_OPERATION_COUNT + 9;
+
+	/**
 	 * The operation id for the '<em>Is Abstract</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 7;
+	int N4_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DEFINITION_OPERATION_COUNT + 10;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_CLASS_DECLARATION___GET_VERSION = N4_CLASS_DEFINITION_OPERATION_COUNT + 11;
 
 	/**
 	 * The number of operations of the '<em>N4 Class Declaration</em>' class.
@@ -11407,7 +11443,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 8;
+	int N4_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DEFINITION_OPERATION_COUNT + 12;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
@@ -11709,13 +11745,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION__TYPING_STRATEGY = N4_CLASSIFIER_DECLARATION__TYPING_STRATEGY;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION__DECLARED_VERSION = N4_CLASSIFIER_DECLARATION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Super Interface Refs</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS = N4_CLASSIFIER_DECLARATION_FEATURE_COUNT + 0;
+	int N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS = N4_CLASSIFIER_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>N4 Interface Declaration</em>' class.
@@ -11724,7 +11769,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION_FEATURE_COUNT = N4_CLASSIFIER_DECLARATION_FEATURE_COUNT + 1;
+	int N4_INTERFACE_DECLARATION_FEATURE_COUNT = N4_CLASSIFIER_DECLARATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -11862,13 +11907,31 @@ public interface N4JSPackage extends EPackage {
 	int N4_INTERFACE_DECLARATION___GET_OWNED_SETTERS = N4_CLASSIFIER_DECLARATION___GET_OWNED_SETTERS;
 
 	/**
+	 * The operation id for the '<em>Has Declared Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___HAS_DECLARED_VERSION = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Defined Type As Interface</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION___GET_DEFINED_TYPE_AS_INTERFACE = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 0;
+	int N4_INTERFACE_DECLARATION___GET_DEFINED_TYPE_AS_INTERFACE = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 3;
 
 	/**
 	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
@@ -11877,7 +11940,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 1;
+	int N4_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
@@ -11886,7 +11949,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 2;
+	int N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 5;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_INTERFACE_DECLARATION___GET_VERSION = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 6;
 
 	/**
 	 * The number of operations of the '<em>N4 Interface Declaration</em>' class.
@@ -11895,7 +11967,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_INTERFACE_DECLARATION_OPERATION_COUNT = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 3;
+	int N4_INTERFACE_DECLARATION_OPERATION_COUNT = N4_CLASSIFIER_DECLARATION_OPERATION_COUNT + 7;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumDeclarationImpl <em>N4 Enum Declaration</em>}' class.
@@ -11944,13 +12016,22 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION__NAME = N4_TYPE_DECLARATION__NAME;
 
 	/**
+	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION__DECLARED_VERSION = N4_TYPE_DECLARATION_FEATURE_COUNT + 0;
+
+	/**
 	 * The feature id for the '<em><b>Literals</b></em>' containment reference list.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION__LITERALS = N4_TYPE_DECLARATION_FEATURE_COUNT + 0;
+	int N4_ENUM_DECLARATION__LITERALS = N4_TYPE_DECLARATION_FEATURE_COUNT + 1;
 
 	/**
 	 * The number of structural features of the '<em>N4 Enum Declaration</em>' class.
@@ -11959,7 +12040,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION_FEATURE_COUNT = N4_TYPE_DECLARATION_FEATURE_COUNT + 1;
+	int N4_ENUM_DECLARATION_FEATURE_COUNT = N4_TYPE_DECLARATION_FEATURE_COUNT + 2;
 
 	/**
 	 * The operation id for the '<em>Get All Annotations</em>' operation.
@@ -12034,13 +12115,40 @@ public interface N4JSPackage extends EPackage {
 	int N4_ENUM_DECLARATION___IS_EXTERNAL = N4_TYPE_DECLARATION___IS_EXTERNAL;
 
 	/**
+	 * The operation id for the '<em>Has Declared Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___HAS_DECLARED_VERSION = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
+
+	/**
+	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_TYPE_DECLARATION_OPERATION_COUNT + 2;
+
+	/**
 	 * The operation id for the '<em>Get Defined Type As Enum</em>' operation.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = N4_TYPE_DECLARATION_OPERATION_COUNT + 0;
+	int N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = N4_TYPE_DECLARATION_OPERATION_COUNT + 3;
+
+	/**
+	 * The operation id for the '<em>Get Version</em>' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 * @ordered
+	 */
+	int N4_ENUM_DECLARATION___GET_VERSION = N4_TYPE_DECLARATION_OPERATION_COUNT + 4;
 
 	/**
 	 * The number of operations of the '<em>N4 Enum Declaration</em>' class.
@@ -12049,7 +12157,7 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 * @ordered
 	 */
-	int N4_ENUM_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 1;
+	int N4_ENUM_DECLARATION_OPERATION_COUNT = N4_TYPE_DECLARATION_OPERATION_COUNT + 5;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl <em>N4 Enum Literal</em>}' class.
@@ -14975,819 +15083,6 @@ public interface N4JSPackage extends EPackage {
 	int VERSIONED_ELEMENT_OPERATION_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4IDLClassDeclarationImpl <em>N4IDL Class Declaration</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.N4IDLClassDeclarationImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IDLClassDeclaration()
-	 * @generated
-	 */
-	int N4IDL_CLASS_DECLARATION = 170;
-
-	/**
-	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__DEFINED_TYPE = N4_CLASS_DECLARATION__DEFINED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Owned Members Raw</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__OWNED_MEMBERS_RAW = N4_CLASS_DECLARATION__OWNED_MEMBERS_RAW;
-
-	/**
-	 * The feature id for the '<em><b>Super Class Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__SUPER_CLASS_REF = N4_CLASS_DECLARATION__SUPER_CLASS_REF;
-
-	/**
-	 * The feature id for the '<em><b>Super Class Expression</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__SUPER_CLASS_EXPRESSION = N4_CLASS_DECLARATION__SUPER_CLASS_EXPRESSION;
-
-	/**
-	 * The feature id for the '<em><b>Implemented Interface Refs</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__IMPLEMENTED_INTERFACE_REFS = N4_CLASS_DECLARATION__IMPLEMENTED_INTERFACE_REFS;
-
-	/**
-	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__ANNOTATION_LIST = N4_CLASS_DECLARATION__ANNOTATION_LIST;
-
-	/**
-	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__DECLARED_MODIFIERS = N4_CLASS_DECLARATION__DECLARED_MODIFIERS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__NAME = N4_CLASS_DECLARATION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__TYPE_VARS = N4_CLASS_DECLARATION__TYPE_VARS;
-
-	/**
-	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__TYPING_STRATEGY = N4_CLASS_DECLARATION__TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION__DECLARED_VERSION = N4_CLASS_DECLARATION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>N4IDL Class Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION_FEATURE_COUNT = N4_CLASS_DECLARATION_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get All Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_ALL_ANNOTATIONS = N4_CLASS_DECLARATION___GET_ALL_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_MEMBERS = N4_CLASS_DECLARATION___GET_OWNED_MEMBERS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_CTOR = N4_CLASS_DECLARATION___GET_OWNED_CTOR;
-
-	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_CALLABLE_CTOR = N4_CLASS_DECLARATION___GET_OWNED_CALLABLE_CTOR;
-
-	/**
-	 * The operation id for the '<em>Get Owned Methods</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_METHODS = N4_CLASS_DECLARATION___GET_OWNED_METHODS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Fields</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_FIELDS = N4_CLASS_DECLARATION___GET_OWNED_FIELDS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Getters</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_GETTERS = N4_CLASS_DECLARATION___GET_OWNED_GETTERS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Setters</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_OWNED_SETTERS = N4_CLASS_DECLARATION___GET_OWNED_SETTERS;
-
-	/**
-	 * The operation id for the '<em>Get Defined Type As Class</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_DEFINED_TYPE_AS_CLASS = N4_CLASS_DECLARATION___GET_DEFINED_TYPE_AS_CLASS;
-
-	/**
-	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_SUPER_CLASSIFIER_REFS = N4_CLASS_DECLARATION___GET_SUPER_CLASSIFIER_REFS;
-
-	/**
-	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_CLASS_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS;
-
-	/**
-	 * The operation id for the '<em>Get Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_ANNOTATIONS = N4_CLASS_DECLARATION___GET_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___IS_EXPORTED = N4_CLASS_DECLARATION___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Is Exported As Default</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_CLASS_DECLARATION___IS_EXPORTED_AS_DEFAULT;
-
-	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_EXPORTED_NAME = N4_CLASS_DECLARATION___GET_EXPORTED_NAME;
-
-	/**
-	 * The operation id for the '<em>Is Toplevel</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___IS_TOPLEVEL = N4_CLASS_DECLARATION___IS_TOPLEVEL;
-
-	/**
-	 * The operation id for the '<em>Get Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_NAME = N4_CLASS_DECLARATION___GET_NAME;
-
-	/**
-	 * The operation id for the '<em>Is External</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___IS_EXTERNAL = N4_CLASS_DECLARATION___IS_EXTERNAL;
-
-	/**
-	 * The operation id for the '<em>Is Abstract</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___IS_ABSTRACT = N4_CLASS_DECLARATION___IS_ABSTRACT;
-
-	/**
-	 * The operation id for the '<em>Has Declared Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___HAS_DECLARED_VERSION = N4_CLASS_DECLARATION_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_CLASS_DECLARATION_OPERATION_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION___GET_VERSION = N4_CLASS_DECLARATION_OPERATION_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>N4IDL Class Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_CLASS_DECLARATION_OPERATION_COUNT = N4_CLASS_DECLARATION_OPERATION_COUNT + 4;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4IDLInterfaceDeclarationImpl <em>N4IDL Interface Declaration</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.N4IDLInterfaceDeclarationImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IDLInterfaceDeclaration()
-	 * @generated
-	 */
-	int N4IDL_INTERFACE_DECLARATION = 171;
-
-	/**
-	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__DEFINED_TYPE = N4_INTERFACE_DECLARATION__DEFINED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__ANNOTATION_LIST = N4_INTERFACE_DECLARATION__ANNOTATION_LIST;
-
-	/**
-	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__DECLARED_MODIFIERS = N4_INTERFACE_DECLARATION__DECLARED_MODIFIERS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__NAME = N4_INTERFACE_DECLARATION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Owned Members Raw</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__OWNED_MEMBERS_RAW = N4_INTERFACE_DECLARATION__OWNED_MEMBERS_RAW;
-
-	/**
-	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__TYPE_VARS = N4_INTERFACE_DECLARATION__TYPE_VARS;
-
-	/**
-	 * The feature id for the '<em><b>Typing Strategy</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__TYPING_STRATEGY = N4_INTERFACE_DECLARATION__TYPING_STRATEGY;
-
-	/**
-	 * The feature id for the '<em><b>Super Interface Refs</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS = N4_INTERFACE_DECLARATION__SUPER_INTERFACE_REFS;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION__DECLARED_VERSION = N4_INTERFACE_DECLARATION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>N4IDL Interface Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION_FEATURE_COUNT = N4_INTERFACE_DECLARATION_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get All Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_ALL_ANNOTATIONS = N4_INTERFACE_DECLARATION___GET_ALL_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Get Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_ANNOTATIONS = N4_INTERFACE_DECLARATION___GET_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___IS_EXPORTED = N4_INTERFACE_DECLARATION___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Is Exported As Default</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_INTERFACE_DECLARATION___IS_EXPORTED_AS_DEFAULT;
-
-	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_EXPORTED_NAME = N4_INTERFACE_DECLARATION___GET_EXPORTED_NAME;
-
-	/**
-	 * The operation id for the '<em>Is Toplevel</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___IS_TOPLEVEL = N4_INTERFACE_DECLARATION___IS_TOPLEVEL;
-
-	/**
-	 * The operation id for the '<em>Get Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_NAME = N4_INTERFACE_DECLARATION___GET_NAME;
-
-	/**
-	 * The operation id for the '<em>Is External</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___IS_EXTERNAL = N4_INTERFACE_DECLARATION___IS_EXTERNAL;
-
-	/**
-	 * The operation id for the '<em>Get Owned Members</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_MEMBERS = N4_INTERFACE_DECLARATION___GET_OWNED_MEMBERS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Ctor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_CTOR = N4_INTERFACE_DECLARATION___GET_OWNED_CTOR;
-
-	/**
-	 * The operation id for the '<em>Get Owned Callable Ctor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_CALLABLE_CTOR = N4_INTERFACE_DECLARATION___GET_OWNED_CALLABLE_CTOR;
-
-	/**
-	 * The operation id for the '<em>Get Owned Methods</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_METHODS = N4_INTERFACE_DECLARATION___GET_OWNED_METHODS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Fields</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_FIELDS = N4_INTERFACE_DECLARATION___GET_OWNED_FIELDS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Getters</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_GETTERS = N4_INTERFACE_DECLARATION___GET_OWNED_GETTERS;
-
-	/**
-	 * The operation id for the '<em>Get Owned Setters</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_OWNED_SETTERS = N4_INTERFACE_DECLARATION___GET_OWNED_SETTERS;
-
-	/**
-	 * The operation id for the '<em>Get Defined Type As Interface</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_DEFINED_TYPE_AS_INTERFACE = N4_INTERFACE_DECLARATION___GET_DEFINED_TYPE_AS_INTERFACE;
-
-	/**
-	 * The operation id for the '<em>Get Super Classifier Refs</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS = N4_INTERFACE_DECLARATION___GET_SUPER_CLASSIFIER_REFS;
-
-	/**
-	 * The operation id for the '<em>Get Implemented Or Extended Interface Refs</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS;
-
-	/**
-	 * The operation id for the '<em>Has Declared Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___HAS_DECLARED_VERSION = N4_INTERFACE_DECLARATION_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_INTERFACE_DECLARATION_OPERATION_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION___GET_VERSION = N4_INTERFACE_DECLARATION_OPERATION_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>N4IDL Interface Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_INTERFACE_DECLARATION_OPERATION_COUNT = N4_INTERFACE_DECLARATION_OPERATION_COUNT + 4;
-
-	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.N4IDLEnumDeclarationImpl <em>N4IDL Enum Declaration</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.N4IDLEnumDeclarationImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IDLEnumDeclaration()
-	 * @generated
-	 */
-	int N4IDL_ENUM_DECLARATION = 172;
-
-	/**
-	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION__DEFINED_TYPE = N4_ENUM_DECLARATION__DEFINED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION__ANNOTATION_LIST = N4_ENUM_DECLARATION__ANNOTATION_LIST;
-
-	/**
-	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION__DECLARED_MODIFIERS = N4_ENUM_DECLARATION__DECLARED_MODIFIERS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION__NAME = N4_ENUM_DECLARATION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Literals</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION__LITERALS = N4_ENUM_DECLARATION__LITERALS;
-
-	/**
-	 * The feature id for the '<em><b>Declared Version</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION__DECLARED_VERSION = N4_ENUM_DECLARATION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>N4IDL Enum Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION_FEATURE_COUNT = N4_ENUM_DECLARATION_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get All Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_ALL_ANNOTATIONS = N4_ENUM_DECLARATION___GET_ALL_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Get Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_ANNOTATIONS = N4_ENUM_DECLARATION___GET_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___IS_EXPORTED = N4_ENUM_DECLARATION___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Is Exported As Default</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___IS_EXPORTED_AS_DEFAULT = N4_ENUM_DECLARATION___IS_EXPORTED_AS_DEFAULT;
-
-	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_EXPORTED_NAME = N4_ENUM_DECLARATION___GET_EXPORTED_NAME;
-
-	/**
-	 * The operation id for the '<em>Is Toplevel</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___IS_TOPLEVEL = N4_ENUM_DECLARATION___IS_TOPLEVEL;
-
-	/**
-	 * The operation id for the '<em>Get Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_NAME = N4_ENUM_DECLARATION___GET_NAME;
-
-	/**
-	 * The operation id for the '<em>Is External</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___IS_EXTERNAL = N4_ENUM_DECLARATION___IS_EXTERNAL;
-
-	/**
-	 * The operation id for the '<em>Get Defined Type As Enum</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM;
-
-	/**
-	 * The operation id for the '<em>Has Declared Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___HAS_DECLARED_VERSION = N4_ENUM_DECLARATION_OPERATION_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get Declared Version Or Zero</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_DECLARED_VERSION_OR_ZERO = N4_ENUM_DECLARATION_OPERATION_COUNT + 2;
-
-	/**
-	 * The operation id for the '<em>Get Version</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION___GET_VERSION = N4_ENUM_DECLARATION_OPERATION_COUNT + 3;
-
-	/**
-	 * The number of operations of the '<em>N4IDL Enum Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int N4IDL_ENUM_DECLARATION_OPERATION_COUNT = N4_ENUM_DECLARATION_OPERATION_COUNT + 4;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MigrationDeclarationImpl <em>Migration Declaration</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15795,7 +15090,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMigrationDeclaration()
 	 * @generated
 	 */
-	int MIGRATION_DECLARATION = 173;
+	int MIGRATION_DECLARATION = 170;
 
 	/**
 	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
@@ -16057,7 +15352,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVersionedIdentifierRef()
 	 * @generated
 	 */
-	int VERSIONED_IDENTIFIER_REF = 174;
+	int VERSIONED_IDENTIFIER_REF = 171;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -16157,7 +15452,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVersionedNamedImportSpecifier()
 	 * @generated
 	 */
-	int VERSIONED_NAMED_IMPORT_SPECIFIER = 175;
+	int VERSIONED_NAMED_IMPORT_SPECIFIER = 172;
 
 	/**
 	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
@@ -16257,7 +15552,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
-	int VARIABLE_STATEMENT_KEYWORD = 176;
+	int VARIABLE_STATEMENT_KEYWORD = 173;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -16267,7 +15562,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
-	int PROPERTY_NAME_KIND = 177;
+	int PROPERTY_NAME_KIND = 174;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -16277,7 +15572,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
-	int POSTFIX_OPERATOR = 178;
+	int POSTFIX_OPERATOR = 175;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -16287,7 +15582,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
-	int UNARY_OPERATOR = 179;
+	int UNARY_OPERATOR = 176;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -16297,7 +15592,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
-	int MULTIPLICATIVE_OPERATOR = 180;
+	int MULTIPLICATIVE_OPERATOR = 177;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -16307,7 +15602,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
-	int ADDITIVE_OPERATOR = 181;
+	int ADDITIVE_OPERATOR = 178;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -16317,7 +15612,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
-	int RELATIONAL_OPERATOR = 182;
+	int RELATIONAL_OPERATOR = 179;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -16327,7 +15622,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
-	int EQUALITY_OPERATOR = 183;
+	int EQUALITY_OPERATOR = 180;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -16337,7 +15632,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
-	int BINARY_BITWISE_OPERATOR = 184;
+	int BINARY_BITWISE_OPERATOR = 181;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -16347,7 +15642,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
-	int BINARY_LOGICAL_OPERATOR = 185;
+	int BINARY_LOGICAL_OPERATOR = 182;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -16357,7 +15652,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
-	int SHIFT_OPERATOR = 186;
+	int SHIFT_OPERATOR = 183;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -16367,7 +15662,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
-	int ASSIGNMENT_OPERATOR = 187;
+	int ASSIGNMENT_OPERATOR = 184;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -16377,7 +15672,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
-	int N4_MODIFIER = 188;
+	int N4_MODIFIER = 185;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -16387,7 +15682,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_EXPRESSION = 189;
+	int ITERATOR_OF_EXPRESSION = 186;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -16397,7 +15692,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_YIELD_EXPRESSION = 190;
+	int ITERATOR_OF_YIELD_EXPRESSION = 187;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -16407,7 +15702,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_STATEMENT = 191;
+	int ITERATOR_OF_STATEMENT = 188;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -16417,7 +15712,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_RETURN_STATEMENT = 192;
+	int ITERATOR_OF_RETURN_STATEMENT = 189;
 
 
 	/**
@@ -20945,6 +20240,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4ClassDeclaration__IsAbstract();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4ClassDeclaration#getVersion() <em>Get Version</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Version</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4ClassDeclaration#getVersion()
+	 * @generated
+	 */
+	EOperation getN4ClassDeclaration__GetVersion();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4ClassExpression <em>N4 Class Expression</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -21017,6 +20322,16 @@ public interface N4JSPackage extends EPackage {
 	EOperation getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs();
 
 	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4InterfaceDeclaration#getVersion() <em>Get Version</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Version</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4InterfaceDeclaration#getVersion()
+	 * @generated
+	 */
+	EOperation getN4InterfaceDeclaration__GetVersion();
+
+	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4EnumDeclaration <em>N4 Enum Declaration</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -21046,6 +20361,16 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getN4EnumDeclaration__GetDefinedTypeAsEnum();
+
+	/**
+	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4EnumDeclaration#getVersion() <em>Get Version</em>}' operation.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @return the meta object for the '<em>Get Version</em>' operation.
+	 * @see org.eclipse.n4js.n4JS.N4EnumDeclaration#getVersion()
+	 * @generated
+	 */
+	EOperation getN4EnumDeclaration__GetVersion();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4EnumLiteral <em>N4 Enum Literal</em>}'.
@@ -21923,66 +21248,6 @@ public interface N4JSPackage extends EPackage {
 	 * @generated
 	 */
 	EOperation getVersionedElement__GetDeclaredVersionOrZero();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4IDLClassDeclaration <em>N4IDL Class Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>N4IDL Class Declaration</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4IDLClassDeclaration
-	 * @generated
-	 */
-	EClass getN4IDLClassDeclaration();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IDLClassDeclaration#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4IDLClassDeclaration#getVersion()
-	 * @generated
-	 */
-	EOperation getN4IDLClassDeclaration__GetVersion();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration <em>N4IDL Interface Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>N4IDL Interface Declaration</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration
-	 * @generated
-	 */
-	EClass getN4IDLInterfaceDeclaration();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration#getVersion()
-	 * @generated
-	 */
-	EOperation getN4IDLInterfaceDeclaration__GetVersion();
-
-	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.N4IDLEnumDeclaration <em>N4IDL Enum Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>N4IDL Enum Declaration</em>'.
-	 * @see org.eclipse.n4js.n4JS.N4IDLEnumDeclaration
-	 * @generated
-	 */
-	EClass getN4IDLEnumDeclaration();
-
-	/**
-	 * Returns the meta object for the '{@link org.eclipse.n4js.n4JS.N4IDLEnumDeclaration#getVersion() <em>Get Version</em>}' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the '<em>Get Version</em>' operation.
-	 * @see org.eclipse.n4js.n4JS.N4IDLEnumDeclaration#getVersion()
-	 * @generated
-	 */
-	EOperation getN4IDLEnumDeclaration__GetVersion();
 
 	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.MigrationDeclaration <em>Migration Declaration</em>}'.
@@ -25997,6 +25262,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_CLASS_DECLARATION___IS_ABSTRACT = eINSTANCE.getN4ClassDeclaration__IsAbstract();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_CLASS_DECLARATION___GET_VERSION = eINSTANCE.getN4ClassDeclaration__GetVersion();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4ClassExpressionImpl <em>N4 Class Expression</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -26057,6 +25330,14 @@ public interface N4JSPackage extends EPackage {
 		EOperation N4_INTERFACE_DECLARATION___GET_IMPLEMENTED_OR_EXTENDED_INTERFACE_REFS = eINSTANCE.getN4InterfaceDeclaration__GetImplementedOrExtendedInterfaceRefs();
 
 		/**
+		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_INTERFACE_DECLARATION___GET_VERSION = eINSTANCE.getN4InterfaceDeclaration__GetVersion();
+
+		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumDeclarationImpl <em>N4 Enum Declaration</em>}' class.
 		 * <!-- begin-user-doc -->
 		 * <!-- end-user-doc -->
@@ -26081,6 +25362,14 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation N4_ENUM_DECLARATION___GET_DEFINED_TYPE_AS_ENUM = eINSTANCE.getN4EnumDeclaration__GetDefinedTypeAsEnum();
+
+		/**
+		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
+		 * <!-- begin-user-doc -->
+		 * <!-- end-user-doc -->
+		 * @generated
+		 */
+		EOperation N4_ENUM_DECLARATION___GET_VERSION = eINSTANCE.getN4EnumDeclaration__GetVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4EnumLiteralImpl <em>N4 Enum Literal</em>}' class.
@@ -26811,60 +26100,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO = eINSTANCE.getVersionedElement__GetDeclaredVersionOrZero();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4IDLClassDeclarationImpl <em>N4IDL Class Declaration</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.N4IDLClassDeclarationImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IDLClassDeclaration()
-		 * @generated
-		 */
-		EClass N4IDL_CLASS_DECLARATION = eINSTANCE.getN4IDLClassDeclaration();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation N4IDL_CLASS_DECLARATION___GET_VERSION = eINSTANCE.getN4IDLClassDeclaration__GetVersion();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4IDLInterfaceDeclarationImpl <em>N4IDL Interface Declaration</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.N4IDLInterfaceDeclarationImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IDLInterfaceDeclaration()
-		 * @generated
-		 */
-		EClass N4IDL_INTERFACE_DECLARATION = eINSTANCE.getN4IDLInterfaceDeclaration();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation N4IDL_INTERFACE_DECLARATION___GET_VERSION = eINSTANCE.getN4IDLInterfaceDeclaration__GetVersion();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.N4IDLEnumDeclarationImpl <em>N4IDL Enum Declaration</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.N4IDLEnumDeclarationImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4IDLEnumDeclaration()
-		 * @generated
-		 */
-		EClass N4IDL_ENUM_DECLARATION = eINSTANCE.getN4IDLEnumDeclaration();
-
-		/**
-		 * The meta object literal for the '<em><b>Get Version</b></em>' operation.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EOperation N4IDL_ENUM_DECLARATION___GET_VERSION = eINSTANCE.getN4IDLEnumDeclaration__GetVersion();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.MigrationDeclarationImpl <em>Migration Declaration</em>}' class.

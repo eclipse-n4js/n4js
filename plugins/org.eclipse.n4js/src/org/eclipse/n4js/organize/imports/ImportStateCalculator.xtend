@@ -22,6 +22,8 @@ import org.eclipse.n4js.utils.Log
 
 import static extension org.eclipse.n4js.organize.imports.ScriptDependencyResolver.*
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
+import org.eclipse.n4js.ts.types.TVersionable
+import org.eclipse.n4js.ts.types.TExportableElement
 
 /**
  * Analyzes all imports in a script. Builds up a data structure of {@link RecordingImportState} to capture the findings.
@@ -56,11 +58,11 @@ class ImportStateCalculator {
 
 		//TODO refactor this, those composed collections should be encapsulated as specific types with proper get/set methods
 		for (ipe : importProvidedElements) {
-			val pN2IPE = lN2IPE.findFirst[it.key == ipe.localname];
+			val pN2IPE = lN2IPE.findFirst[it.key == ipe.getLocalName()];
 			if(pN2IPE !== null){
 				pN2IPE.value.add(ipe)
 			}else{
-				lN2IPE.add(ipe.localname -> newArrayList(ipe))
+				lN2IPE.add(ipe.getLocalName() -> newArrayList(ipe))
 			}
 			val pM2IPE = lM2IPE.findFirst[it.key == ipe.tmodule];
 			if(pM2IPE !== null){
@@ -85,7 +87,7 @@ class ImportStateCalculator {
 			val mod = scriptDep.dependencyModule
 			val pM2IPE = lM2IPE.findFirst[it.key == mod]
 			if(pM2IPE !== null){
-				pM2IPE.value.filter[it.exportedName == scriptDep.actualName && it.localname == scriptDep.localName ].forEach[ it.markUsed];
+				pM2IPE.value.filter[it.exportedName == scriptDep.actualName && it.getLocalName() == scriptDep.localName ].forEach[ it.markUsed];
 			}
 		}
 
@@ -124,12 +126,12 @@ class ImportStateCalculator {
 						true
 					}
 				].toList
-				if (x.size > 1) 
+				if (x.size > 1)
 					reg.registerDuplicateImportsOfSameElement(act, pair.key, x)
 			}
 		}
 	}
-	
+
 	/**
 	 * Registers conflicting or duplicate (based on local name checks) imports in the provided {@link RecordingImportState}
 	 */
@@ -191,7 +193,7 @@ class ImportStateCalculator {
 			val followingDeclarationSpecifiers = importDeclaration.importSpecifiers.filter(NamedImportSpecifier)
 			if ((!firstDeclarationSpecifiers.empty) &&
 				firstDeclarationSpecifiers.size === followingDeclarationSpecifiers.size) {
-				if (firstDeclarationSpecifiers.allFollowingMatchByNameAndAlias(followingDeclarationSpecifiers))
+				if (firstDeclarationSpecifiers.allFollowingMatchByNameAliasAndVersion(followingDeclarationSpecifiers))
 					duplicates.add(importDeclaration)
 			}
 		]
@@ -200,15 +202,31 @@ class ImportStateCalculator {
 			reg.registerDuplicatesOfImportDeclaration(firstDeclaration, duplicates);
 	}
 
-	private def boolean allFollowingMatchByNameAndAlias(Iterable<NamedImportSpecifier> firstDeclarationSpecifiers,
+	private def boolean allFollowingMatchByNameAliasAndVersion(Iterable<NamedImportSpecifier> firstDeclarationSpecifiers,
 		Iterable<NamedImportSpecifier> followingDeclarationSpecifiers) {
 
 		firstDeclarationSpecifiers.forall [ namedImportSpecifier |
 			followingDeclarationSpecifiers.exists [ otherNamedImportSpecifier |
+				val namedImportedElement = namedImportSpecifier.importedElement;
+				val otherImportedElement = otherNamedImportSpecifier.importedElement;
+
 				namedImportSpecifier.alias == otherNamedImportSpecifier.alias &&
-					namedImportSpecifier.importedElement.name == otherNamedImportSpecifier.importedElement.name
+					namedImportedElement.name == otherImportedElement.name &&
+					getVersion(namedImportedElement) == getVersion(otherImportedElement)
 			]
 		]
+	}
+
+	/**
+	 * Determines the version of the given exportable element.
+	 *
+	 * If the element is not a {@link TVersionable} this method returns {@code 0}.
+	 */
+	private def int getVersion(TExportableElement element) {
+		switch (element) {
+			TVersionable: element.declaredVersion
+			default: 0
+		}
 	}
 
 	/**

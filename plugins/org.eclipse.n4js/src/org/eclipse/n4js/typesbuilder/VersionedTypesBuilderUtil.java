@@ -23,7 +23,10 @@ public class VersionedTypesBuilderUtil {
 
 	/**
 	 * Sets the declared version of the given type model instance to the declared version of the given AST element in
-	 * case the given ast element provides version information (implements VersionedElement).
+	 * case the given AST element provides version information.
+	 *
+	 * An AST element is considered to provide version information if it implements {@link VersionedElement} and the
+	 * {@link VersionedElement#getDeclaredVersion()} returns a non-null value. .
 	 */
 	/* package */ static void setTypeVersion(TVersionable versionable, EObject astElement) {
 		if (astElement instanceof VersionedElement) {

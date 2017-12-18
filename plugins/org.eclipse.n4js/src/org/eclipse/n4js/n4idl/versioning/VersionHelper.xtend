@@ -14,9 +14,10 @@ import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.N4IDLClassDeclaration
-import org.eclipse.n4js.n4JS.N4IDLEnumDeclaration
-import org.eclipse.n4js.n4JS.N4IDLInterfaceDeclaration
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
+import org.eclipse.n4js.n4JS.N4EnumDeclaration
+import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
+import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ContainerType
@@ -79,9 +80,9 @@ class VersionHelper {
 			VersionedReference case object.hasRequestedVersion:	return object.requestedVersionOrZero
 			IdentifierRef:										return computeMaximumVersion(object.id)
 			Expression:                  					   	return computeMaximumVersion(ts.tau(object))
-			N4IDLClassDeclaration:       					  	return computeMaximumVersion(object.definedType as TClass)
-			N4IDLInterfaceDeclaration:       					return computeMaximumVersion(object.definedType as TInterface)
-			N4IDLEnumDeclaration:       						return computeMaximumVersion(object.definedType as TEnum)
+			N4ClassDeclaration case isVersioned(object):	  	return computeMaximumVersion(object.definedType as TClass)
+			N4InterfaceDeclaration case isVersioned(object):	return computeMaximumVersion(object.definedType as TInterface)
+			N4EnumDeclaration case isVersioned(object):		return computeMaximumVersion(object.definedType as TEnum)
 			TClassifier:                 					   	return computeMaximumVersion(object)
 			default:                    					    return computeMaximumVersion(object.eContainer)
 		}
@@ -116,8 +117,8 @@ class VersionHelper {
 		val Iterable<IEObjectDescription> elements = scope.getElements(name);
 
 		return elements
-			.filter[getEObjectOrProxy instanceof TClassifier] // if the scope returned bogus elements
-			.map[getEObjectOrProxy as TClassifier] // convert to classifiers
+			.filter[EObjectOrProxy instanceof TClassifier] // if the scope returned bogus elements
+			.map[EObjectOrProxy as TClassifier] // convert to classifiers
 			.filter[version > lowerLimit] // filter by their version
 			.fold(Integer.MAX_VALUE)[u, c|Integer.min(u, c.version - 1)]; // select the smallest one
 	}
@@ -141,7 +142,7 @@ class VersionHelper {
 		val Iterable<IEObjectDescription> elements = scope.getElements(name);
 
 		return elements
-			.map[getEObjectOrProxy] // map to the described objects
+			.map[EObjectOrProxy] // map to the described objects
 			.filter(TClassifier) // only consider non-null classifiers
 			.filter[it.version <= version] // filter by the given version limit
 			.reduce[l, c | if (l.version > c.version) l else c]; // select an element with maximal version
@@ -173,5 +174,15 @@ class VersionHelper {
 			return result as T;
 		}
 		return member;
+	}
+
+	/**
+	 * Returns {@code true} if the given {@link VersionedElement} is
+	 * considered to be versioned.
+	 *
+	 * A return value of {@code true} indicates a non-null value for the field {@link VersionedElement#declaredVersion}.
+	 */
+	private def boolean isVersioned(VersionedElement element) {
+		return element.declaredVersion !== null && element.declaredVersion.intValue != 0;
 	}
 }

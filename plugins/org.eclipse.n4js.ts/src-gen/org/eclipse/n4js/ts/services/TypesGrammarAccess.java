@@ -2751,7 +2751,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getArrowFunctionTypeExpressionAccess().getRule();
 	}
 	
-	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard 
+	//// TODO extract FormalParameterContainer and use returns FormalParameterContainer instead of wildcard
 	//fragment TAnonymousFormalParameterList *:
 	//	(fpars+=TAnonymousFormalParameter (',' fpars+=TAnonymousFormalParameter)*)?;
 	public TypeExpressionsGrammarAccess.TAnonymousFormalParameterListElements getTAnonymousFormalParameterListAccess() {
@@ -2866,8 +2866,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//TypeAndTypeArguments VersionedParameterizedTypeRef:
-	//	DeclaredType
-	//	VersionRequest?
+	//	declaredType=[Type|super::TypeReferenceName] VersionRequest?
 	//	-> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
@@ -2879,8 +2878,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//StructuralTypeAndTypeArguments VersionedParameterizedTypeRefStructural:
 	//	definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	DeclaredType
-	//	VersionRequest?
+	//	declaredType=[Type|super::TypeReferenceName] VersionRequest?
 	//	-> TypeArguments?;
 	public TypeExpressionsGrammarAccess.StructuralTypeAndTypeArgumentsElements getStructuralTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getStructuralTypeAndTypeArgumentsAccess();
@@ -2888,16 +2886,6 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getStructuralTypeAndTypeArgumentsRule() {
 		return getStructuralTypeAndTypeArgumentsAccess().getRule();
-	}
-	
-	//fragment DeclaredType *:
-	//	declaredType=[Type|super::TypeReferenceName];
-	public TypeExpressionsGrammarAccess.DeclaredTypeElements getDeclaredTypeAccess() {
-		return gaTypeExpressions.getDeclaredTypeAccess();
-	}
-	
-	public ParserRule getDeclaredTypeRule() {
-		return getDeclaredTypeAccess().getRule();
 	}
 	
 	//fragment VersionRequest *:
