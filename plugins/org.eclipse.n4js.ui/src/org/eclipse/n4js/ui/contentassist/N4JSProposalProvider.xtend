@@ -16,7 +16,6 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EReference
 import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
-import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator
@@ -46,9 +45,6 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 
 	@Inject
 	IQualifiedNameConverter qualifiedNameConverter
-
-	@Inject
-	IN4JSCore n4jsCore;
 
 	override completeRuleCall(RuleCall ruleCall, ContentAssistContext contentAssistContext,
 			ICompletionProposalAcceptor acceptor) {

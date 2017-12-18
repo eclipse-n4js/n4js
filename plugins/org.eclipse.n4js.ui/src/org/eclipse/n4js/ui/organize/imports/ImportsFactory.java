@@ -50,14 +50,14 @@ public class ImportsFactory {
 			return createNamespaceImport(imp.getName(), contextProject, imp.getTe(), nodelessMarker);
 
 		if (imp.isExportedAsDefault())
-			return createDefaultImport(imp.getName(), contextProject, imp.getTe(), nodelessMarker);
+			return createDefaultImport(imp.getName(), imp.getTe(), nodelessMarker);
 
-		return createNamedImport(imp.getName(), contextProject, imp.getTe(), nodelessMarker);
+		return createNamedImport(imp.getName(), imp.getTe(), nodelessMarker);
 	}
 
 	private QualifiedName getQualifiedName(TExportableElement te) {
-		// Turn index main module into project id, e.g. index.Element -> react.Element, if needed
-		IN4JSProject targetProject = core.findProject(te.eResource().getURI()).orNull();
+		// Turn index main module into project id, e.g. index -> react, if needed
+		IN4JSProject targetProject = getTargetProject(te);
 		String moduleQN;
 		if (targetProject != null && targetProject.getMainModule() != null) {
 			moduleQN = targetProject.getProjectId();
@@ -68,47 +68,45 @@ public class ImportsFactory {
 		return qn;
 	}
 
-	/** Get the target project of a qualified name in a context project */
-	private IN4JSProject getTargetProject(IN4JSProject contextProject, QualifiedName qualifiedName) {
-		String firstSegment = qualifiedName.getFirstSegment();
-		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
-		return project;
+	/** Get the target project of an exportable element */
+	private IN4JSProject getTargetProject(TExportableElement te) {
+		IN4JSProject targetProject = core.findProject(te.eResource().getURI()).orNull();
+		return targetProject;
 	}
 
 	/** Creates a new named import of 'name' from 'module' */
-	private ImportDeclaration createNamedImport(String name, IN4JSProject contextProject, TExportableElement te,
+	private ImportDeclaration createNamedImport(String name, TExportableElement te,
 			Adapter nodelessMarker) {
+		IN4JSProject targetProject = getTargetProject(te);
 		QualifiedName qn = getQualifiedName(te);
-		IN4JSProject project = getTargetProject(contextProject, qn);
-		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamedImport);
+
+		return createImportDeclaration(qn, name, targetProject, nodelessMarker, this::addNamedImport);
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
-	private ImportDeclaration createDefaultImport(String name, IN4JSProject contextProject, TExportableElement te,
+	private ImportDeclaration createDefaultImport(String name, TExportableElement te,
 			Adapter nodelessMarker) {
+		IN4JSProject targetProject = getTargetProject(te);
 		QualifiedName qn = getQualifiedName(te);
-		IN4JSProject project = getTargetProject(contextProject, qn);
 
-		return createImportDeclaration(qn, name, project, nodelessMarker, this::addDefaultImport);
+		return createImportDeclaration(qn, name, targetProject, nodelessMarker, this::addDefaultImport);
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
 	private ImportDeclaration createNamespaceImport(String name, IN4JSProject contextProject, TExportableElement te,
 			Adapter nodelessMarker) {
+		IN4JSProject targetProject = getTargetProject(te);
 		QualifiedName qn = getQualifiedName(te);
-		IN4JSProject project = getTargetProject(contextProject, qn);
 
-		if (project == null) {
-
+		if (targetProject == null) {
 			IN4JSProject projectByNamespace = ImportSpecifierUtil.getDependencyWithID(name, contextProject);
 			IN4JSProject projectByEObject = core.findProject(te.eResource().getURI()).orNull();
 
 			if (projectByNamespace != null && projectByEObject != null
 					&& projectByNamespace.getLocation() == projectByEObject.getLocation())
-
-				project = projectByNamespace;
+				targetProject = projectByNamespace;
 		}
-		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamespaceImport);
+		return createImportDeclaration(qn, name, targetProject, nodelessMarker, this::addNamespaceImport);
 	}
 
 	@SuppressWarnings("null")
