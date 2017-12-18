@@ -13,11 +13,11 @@ package org.eclipse.n4js.jsdoc2spec;
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.jsdoc2spec.xpect.SpecADocXpectMethod;
 import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.runner.XpectTestFiles;
-import org.xpect.runner.XpectTestFiles.FileRoot;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectTestFiles;
+import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 
 /**
  * Test class for all Xpect tests in folder xpect-tests; this test class is also configured in the plugin.xml so that is

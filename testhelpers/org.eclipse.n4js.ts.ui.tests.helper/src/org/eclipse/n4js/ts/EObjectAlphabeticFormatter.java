@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.xpect.xtext.lib.util.EObjectFormatter;
 
 import com.google.common.collect.Lists;
 
@@ -24,7 +25,7 @@ import com.google.common.collect.Lists;
  *
  * This was already filed as a pull request against Xpect.
  */
-public class EObjectFormatter extends org.xpect.xtext.lib.util.EObjectFormatter {
+public class EObjectAlphabeticFormatter extends EObjectFormatter {
 
 	@Override
 	public String format(EObject object) {
@@ -53,13 +54,13 @@ public class EObjectFormatter extends org.xpect.xtext.lib.util.EObjectFormatter 
 	}
 
 	@Override
-	public EObjectFormatter resolveCrossReferences() {
-		return (EObjectFormatter) super.resolveCrossReferences();
+	public EObjectAlphabeticFormatter resolveCrossReferences() {
+		return (EObjectAlphabeticFormatter) super.resolveCrossReferences();
 	}
 
 	@Override
-	public EObjectFormatter showIndex() {
-		return (EObjectFormatter) super.showIndex();
+	public EObjectAlphabeticFormatter showIndex() {
+		return (EObjectAlphabeticFormatter) super.showIndex();
 	}
 
 }

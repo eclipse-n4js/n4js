@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.xpect.expectation.impl.ExpectationCollection;
+import org.eclipse.xpect.expectation.impl.ExpectationCollection;
 
 import com.google.common.base.Preconditions;
 

@@ -12,13 +12,13 @@ Contributors:
 <?eclipse version="3.4"?>
 <plugin>
    <extension
-         point="org.xpect.fileExtensions">
+         point="org.eclipse.xpect.fileExtensions">
       <fileExtension
             fileExtension="xt">
       </fileExtension>
    </extension>
    <extension
-         point="org.xpect.testSuite">
+         point="org.eclipse.xpect.testSuite">
       <testSuite
             class="org.eclipse.n4js.expectmatrix.tests.N4JSExpectMatrixTest"
             fileExtension="xt">
