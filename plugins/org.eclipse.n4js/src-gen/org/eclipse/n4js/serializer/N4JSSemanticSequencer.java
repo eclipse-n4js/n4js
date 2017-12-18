@@ -137,6 +137,7 @@ import org.eclipse.n4js.ts.serializer.TypeExpressionsSemanticSequencer;
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.IntersectionTypeExpression;
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefNominal;
 import org.eclipse.n4js.ts.typeRefs.ThisTypeRefStructural;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
@@ -1355,8 +1356,67 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				}
 				else break;
 			case TypeRefsPackage.PARAMETERIZED_TYPE_REF:
-				sequence_ArrayTypeRef(context, (ParameterizedTypeRef) semanticObject); 
-				return; 
+				if (rule == grammarAccess.getArrayTypeRefRule()) {
+					sequence_ArrayTypeRef(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()) {
+					sequence_ArrayTypeRef_TypeAndTypeArguments_TypeArguments(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefRule()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
+						|| rule == grammarAccess.getTypeArgumentRule()) {
+					sequence_ArrayTypeRef_TypeAndTypeArguments_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeArgInTypeTypeRefRule()
+						|| rule == grammarAccess.getParameterizedTypeRefRule()
+						|| rule == grammarAccess.getParameterizedTypeRefNominalRule()
+						|| rule == grammarAccess.getTypeAndTypeArgumentsRule()) {
+					sequence_TypeAndTypeArguments_TypeArguments(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefWithModifiersRule()) {
+					sequence_TypeAndTypeArguments_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()) {
+					sequence_TypeAndTypeArguments_TypeArguments_TypeRefWithoutModifiers(context, (ParameterizedTypeRef) semanticObject); 
+					return; 
+				}
+				else break;
+			case TypeRefsPackage.PARAMETERIZED_TYPE_REF_STRUCTURAL:
+				if (rule == grammarAccess.getTypeRefForCastRule()
+						|| rule == grammarAccess.getTypeRefFunctionTypeExpressionRule()
+						|| rule == grammarAccess.getParameterizedTypeRefRule()
+						|| rule == grammarAccess.getParameterizedTypeRefStructuralRule()) {
+					sequence_StructuralTypeAndTypeArguments_TStructMemberList_TypeArguments(context, (ParameterizedTypeRefStructural) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefRule()
+						|| action == grammarAccess.getTypeRefAccess().getUnionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getIntersectionTypeExpressionRule()
+						|| action == grammarAccess.getIntersectionTypeExpressionAccess().getIntersectionTypeExpressionTypeRefsAction_1_0()
+						|| rule == grammarAccess.getPrimaryTypeExpressionRule()
+						|| rule == grammarAccess.getTypeRefWithModifiersRule()
+						|| rule == grammarAccess.getTypeArgumentRule()) {
+					sequence_StructuralTypeAndTypeArguments_TStructMemberList_TypeArguments_TypeRefWithModifiers_TypeRefWithoutModifiers(context, (ParameterizedTypeRefStructural) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getTypeRefWithoutModifiersRule()) {
+					sequence_StructuralTypeAndTypeArguments_TStructMemberList_TypeArguments_TypeRefWithoutModifiers(context, (ParameterizedTypeRefStructural) semanticObject); 
+					return; 
+				}
+				else if (rule == grammarAccess.getStructuralTypeAndTypeArgumentsRule()) {
+					sequence_StructuralTypeAndTypeArguments_TypeArguments(context, (ParameterizedTypeRefStructural) semanticObject); 
+					return; 
+				}
+				else break;
 			case TypeRefsPackage.THIS_TYPE_REF_NOMINAL:
 				if (rule == grammarAccess.getTypeRefForCastRule()
 						|| rule == grammarAccess.getTypeArgInTypeTypeRefRule()
@@ -3388,13 +3448,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
+	 *             )
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 

@@ -2865,9 +2865,9 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getParameterizedTypeRefStructuralAccess().getRule();
 	}
 	
-	//TypeAndTypeArguments VersionedParameterizedTypeRef:
-	//	declaredType=[Type|super::TypeReferenceName] VersionRequest?
-	//	-> TypeArguments?;
+	//TypeAndTypeArguments ParameterizedTypeRef:
+	//	(declaredType=[Type|super::TypeReferenceName] | {VersionedParameterizedTypeRef}
+	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.TypeAndTypeArgumentsElements getTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getTypeAndTypeArgumentsAccess();
 	}
@@ -2876,10 +2876,10 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getTypeAndTypeArgumentsAccess().getRule();
 	}
 	
-	//StructuralTypeAndTypeArguments VersionedParameterizedTypeRefStructural:
-	//	definedTypingStrategy=TypingStrategyUseSiteOperator
-	//	declaredType=[Type|super::TypeReferenceName] VersionRequest?
-	//	-> TypeArguments?;
+	//StructuralTypeAndTypeArguments ParameterizedTypeRefStructural:
+	//	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|super::TypeReferenceName] |
+	//	{VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
+	//	declaredType=[Type|super::TypeReferenceName] VersionRequest) -> TypeArguments?;
 	public TypeExpressionsGrammarAccess.StructuralTypeAndTypeArgumentsElements getStructuralTypeAndTypeArgumentsAccess() {
 		return gaTypeExpressions.getStructuralTypeAndTypeArgumentsAccess();
 	}

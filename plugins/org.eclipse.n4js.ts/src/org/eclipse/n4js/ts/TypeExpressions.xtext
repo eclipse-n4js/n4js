@@ -155,18 +155,17 @@ ParameterizedTypeRefStructural returns ParameterizedTypeRefStructural:
 	StructuralTypeAndTypeArguments
 	('with' TStructMemberList)?;
 
-TypeAndTypeArguments returns VersionedParameterizedTypeRef:
-	declaredType=[Type|TypeReferenceName]
-	VersionRequest?
+TypeAndTypeArguments returns ParameterizedTypeRef:
+	(declaredType=[Type|TypeReferenceName]
+	 | {VersionedParameterizedTypeRef} declaredType=[Type|TypeReferenceName] VersionRequest)
 	(->TypeArguments)?
 ;
 
-StructuralTypeAndTypeArguments returns VersionedParameterizedTypeRefStructural:
-	definedTypingStrategy=TypingStrategyUseSiteOperator
-	declaredType=[Type|TypeReferenceName]
-	VersionRequest?
-	(->TypeArguments)?
-;
+StructuralTypeAndTypeArguments returns ParameterizedTypeRefStructural:
+	(definedTypingStrategy=TypingStrategyUseSiteOperator declaredType=[Type|TypeReferenceName]
+	| {VersionedParameterizedTypeRefStructural} definedTypingStrategy=TypingStrategyUseSiteOperator
+	declaredType=[Type|TypeReferenceName] VersionRequest)
+	(-> TypeArguments)?;
 
 fragment VersionRequest*: '#' requestedVersion=INT;
 

@@ -347,6 +347,10 @@ public class N4JSTypesBuilder {
 		n4Class.createTClass(target, preLinkingPhase)
 	}
 
+	def protected dispatch void createType(N4ClassExpression n4Class, TModule target, boolean preLinkingPhase) {
+		n4Class.createTClass(target, preLinkingPhase)
+	}
+
 	def protected dispatch void createType(N4InterfaceDeclaration n4Interface, TModule target, boolean preLinkingPhase) {
 		n4Interface.createTInterface(target, preLinkingPhase)
 	}

@@ -882,8 +882,12 @@ ruleParameterizedTypeRefStructural:
 
 // Rule TypeAndTypeArguments
 ruleTypeAndTypeArguments:
-	ruleTypeReferenceName
-	ruleVersionRequest?
+	(
+		ruleTypeReferenceName
+		    |
+		ruleTypeReferenceName
+		ruleVersionRequest
+	)
 	(
 		('<')=>
 		ruleTypeArguments
@@ -892,9 +896,14 @@ ruleTypeAndTypeArguments:
 
 // Rule StructuralTypeAndTypeArguments
 ruleStructuralTypeAndTypeArguments:
-	ruleTypingStrategyUseSiteOperator
-	ruleTypeReferenceName
-	ruleVersionRequest?
+	(
+		ruleTypingStrategyUseSiteOperator
+		ruleTypeReferenceName
+		    |
+		ruleTypingStrategyUseSiteOperator
+		ruleTypeReferenceName
+		ruleVersionRequest
+	)
 	(
 		('<')=>
 		ruleTypeArguments

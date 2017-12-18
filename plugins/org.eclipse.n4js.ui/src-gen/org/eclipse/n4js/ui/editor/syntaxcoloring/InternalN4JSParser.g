@@ -20021,18 +20021,28 @@ ruleTypeAndTypeArguments
 (
 	(
 		(
-			DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1=ruleTypeReferenceName{
-				announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0());
-			}
+			(
+				DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1=ruleTypeReferenceName{
+					announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_0_1.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_0());
+				}
+			)
+		)
+		    |
+		(
+			(
+				(
+					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_1_0_1=ruleTypeReferenceName{
+						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_1_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_1_0_1.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_1_1());
+					}
+				)
+			)
+			VersionRequestParserRuleCall_0_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_0_1_2.start, $VersionRequestParserRuleCall_0_1_2.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_0_1_2()); }
 		)
 	)
 	(
-		VersionRequestParserRuleCall_1=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1.start, $VersionRequestParserRuleCall_1.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_1()); }
-	)?
-	(
 		(LessThanSign
 		)=>
-		TypeArgumentsParserRuleCall_2=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_2.start, $TypeArgumentsParserRuleCall_2.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_2()); }
+		TypeArgumentsParserRuleCall_1=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_1.start, $TypeArgumentsParserRuleCall_1.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_1()); }
 	)?
 )
 ;
@@ -20050,25 +20060,44 @@ ruleStructuralTypeAndTypeArguments
 (
 	(
 		(
-			DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0=ruleTypingStrategyUseSiteOperator{
-				announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0());
-			}
+			(
+				(
+					DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0=ruleTypingStrategyUseSiteOperator{
+						announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0_0_0());
+					}
+				)
+			)
+			(
+				(
+					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1=ruleTypeReferenceName{
+						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_0_1());
+					}
+				)
+			)
 		)
-	)
-	(
+		    |
 		(
-			DeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1=ruleTypeReferenceName{
-				announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_1_0_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_1());
-			}
+			(
+				(
+					DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0=ruleTypingStrategyUseSiteOperator{
+						announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0_1_1());
+					}
+				)
+			)
+			(
+				(
+					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1=ruleTypeReferenceName{
+						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_1_2());
+					}
+				)
+			)
+			VersionRequestParserRuleCall_0_1_3=ruleVersionRequest{ announce($VersionRequestParserRuleCall_0_1_3.start, $VersionRequestParserRuleCall_0_1_3.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_0_1_3()); }
 		)
 	)
-	(
-		VersionRequestParserRuleCall_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_2.start, $VersionRequestParserRuleCall_2.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_2()); }
-	)?
 	(
 		(LessThanSign
 		)=>
-		TypeArgumentsParserRuleCall_3=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_3.start, $TypeArgumentsParserRuleCall_3.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_3()); }
+		TypeArgumentsParserRuleCall_1=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_1.start, $TypeArgumentsParserRuleCall_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_1()); }
 	)?
 )
 ;
