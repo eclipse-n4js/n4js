@@ -26,12 +26,12 @@ import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.n4js.xpect.ui.runner.N4IDEXpectTestFilesCollector.N4IDEXpectTestURIProvider;
 import org.junit.runner.RunWith;
-import org.xpect.XpectImport;
-import org.xpect.runner.IXpectURIProvider;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectSuiteClasses;
-import org.xpect.xtext.lib.tests.ResourceDescriptionTest;
-import org.xpect.xtext.lib.tests.ValidationTest;
+import org.eclipse.xpect.XpectImport;
+import org.eclipse.xpect.runner.IXpectURIProvider;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.xtext.lib.tests.ResourceDescriptionTest;
+import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 
 /**
  * Main and only entry point for executing xpect in the product. Uses custom setup {@link N4IDEXpectFileSetup}.
