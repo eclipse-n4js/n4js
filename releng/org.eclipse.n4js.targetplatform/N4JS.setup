@@ -384,7 +384,7 @@
         <repository
             url="https://ci.eclipse.org/xsemantics/job/xsemantics-nightly/lastSuccessfulBuild/artifact/releng/org.eclipse.xsemantics.repository/target/repository/"/>
         <repository
-            url="https://ci.eclipse.org/n4js/view/xpect/job/xpect_yoosiba/job/EclipseJenkins/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
+            url="https://ci.eclipse.org/xpect/job/Xpect-Integration-Release/lastSuccessfulBuild/artifact/org.eclipse.xpect.releng/p2-repository/target/repository/"/>
         <repository
             url="http://download.eclipse.org/cbi/updates/license/1.0.1.v20140414-1359"/>
         <repository
