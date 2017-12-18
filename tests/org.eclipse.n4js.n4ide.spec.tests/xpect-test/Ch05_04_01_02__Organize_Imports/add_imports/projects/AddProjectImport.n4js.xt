@@ -35,7 +35,6 @@
 + import {Application} 
 | [/|from "express";]
 | [|/]** third comment *\/
-  var placeholder:string;
   let a: Application
   console.log(a);
 --- */
@@ -44,7 +43,6 @@
 /** first comment */
 /** second comment */
 /** third comment */
-var placeholder:string;
 
 /* XPECT errors ---
 "Couldn't resolve reference to Type 'Application'." at "Application"
