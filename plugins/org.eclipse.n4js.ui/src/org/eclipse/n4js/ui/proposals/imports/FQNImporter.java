@@ -233,9 +233,6 @@ public class FQNImporter extends ReplacementTextApplier {
 			return;
 		}
 
-		// IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-		// boolean mainModuleExist = project != null && project.getMainModule() != null;
-
 		// we could create an import statement if there is no conflict
 		if (qualifiedName.getSegmentCount() == 1) {
 			// type name is a simple name - no need to hassle with imports
