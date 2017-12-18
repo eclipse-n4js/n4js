@@ -67,8 +67,7 @@ public class N4IDEXpectFileSetup {
 	 */
 	private static final boolean ENCODE_PLATFORM_RESOURCE_URIS = System
 			.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs") != null
-			&&
-			!"false".equalsIgnoreCase(System
+			&& !"false".equalsIgnoreCase(System
 					.getProperty("org.eclipse.emf.common.util.URI.encodePlatformResourceURIs"));
 
 	@Inject
