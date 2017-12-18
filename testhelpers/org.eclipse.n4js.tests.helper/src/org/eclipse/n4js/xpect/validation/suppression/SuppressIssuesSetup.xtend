@@ -19,16 +19,16 @@ import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.util.CancelIndicator
 import org.eclipse.xtext.validation.CheckMode
 import org.eclipse.xtext.validation.Issue
-import org.xpect.XpectImport
-import org.xpect.XpectReplace
-import org.xpect.setup.ISetupInitializer
-import org.xpect.setup.XpectSetupFactory
-import org.xpect.state.Creates
-import org.xpect.text.IRegion
-import org.xpect.xtext.lib.setup.ThisResource
-import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.IssuesByLine
-import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.IssuesByLineProvider
-import org.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResourceValidator
+import org.eclipse.xpect.XpectImport
+import org.eclipse.xpect.XpectReplace
+import org.eclipse.xpect.setup.ISetupInitializer
+import org.eclipse.xpect.setup.XpectSetupFactory
+import org.eclipse.xpect.state.Creates
+import org.eclipse.xpect.text.IRegion
+import org.eclipse.xpect.xtext.lib.setup.ThisResource
+import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.IssuesByLine
+import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.IssuesByLineProvider
+import org.eclipse.xpect.xtext.lib.tests.ValidationTestModuleSetup.TestingResourceValidator
 
 /**
  * This setup factory filters issues based on their issue code before

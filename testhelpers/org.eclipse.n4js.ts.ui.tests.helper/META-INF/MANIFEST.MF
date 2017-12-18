@@ -11,6 +11,6 @@ Require-Bundle: org.eclipse.n4js.ts,
  org.eclipse.xtext.testing,
  org.eclipse.ui.workbench;resolution:=optional,
  org.eclipse.n4js.ts.tests.helper;bundle-version="0.0.1",
- org.xpect.xtext.lib;bundle-version="0.2.0"
+ org.eclipse.xpect.xtext.lib;bundle-version="0.2.0"
 Export-Package: org.eclipse.n4js.ts
 
