@@ -103,11 +103,12 @@ public class ImportsAwareReferenceProposalCreator {
 				if (!acceptor.canAcceptMoreProposals())
 					return;
 				if (filter.apply(candidate)) {
+					QualifiedName qfn = candidate.getQualifiedName();
+					String tmodule = qfn.getSegment(qfn.getSegmentCount() - 2);
 					// In case of main module, adjust the qualified name, e.g. index.Element -> react.Element
 					IN4JSProject project = n4jsCore.findProject(candidate.getEObjectURI()).orNull();
-					boolean mainModuleExist = project != null && project.getMainModule() != null;
 					QualifiedName candidateName;
-					if (mainModuleExist && project != null) {
+					if (project != null && tmodule != null && tmodule.equals(project.getMainModule())) {
 						candidateName = QualifiedName.create(project.getProjectId(),
 								candidate.getQualifiedName().getLastSegment().toString());
 					} else {

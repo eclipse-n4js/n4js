@@ -58,9 +58,10 @@ public class ImportsFactory {
 	/** Creates a new named import of 'name' from 'module' */
 	private ImportDeclaration createNamedImport(String name, IN4JSProject contextProject, TExportableElement te,
 			Adapter nodelessMarker) {
+		TModule tmodule = te.getContainingModule();
 		IN4JSProject targetProject = core.findProject(te.eResource().getURI()).orNull();
 		String moduleQN;
-		if (targetProject != null && targetProject.getMainModule() != null) {
+		if (targetProject != null && tmodule.getQualifiedName().toString().equals(targetProject.getMainModule())) {
 			// If the project has a main module, use project import instead.
 			moduleQN = targetProject.getProjectId();
 		} else {
