@@ -11,16 +11,16 @@ Contributors:
 -->
 <?eclipse version="3.4"?>
 <plugin>
-	<extension point="org.xpect.testSuite">
+	<extension point="org.eclipse.xpect.testSuite">
 		<testSuite class="org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphPluginTest" fileExtension="n4js" />
 	</extension>
-	<extension point="org.xpect.testSuite">
+	<extension point="org.eclipse.xpect.testSuite">
 		<testSuite class="org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphPluginTest" fileExtension="js" />
 	</extension>
-	<extension point="org.xpect.testSuite">
+	<extension point="org.eclipse.xpect.testSuite">
 		<testSuite class="org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphPluginTest" fileExtension="n4jsx" />
 	</extension>
-	<extension point="org.xpect.testSuite">
+	<extension point="org.eclipse.xpect.testSuite">
 		<testSuite class="org.eclipse.n4js.flowgraphs.ui.tests.N4JSXFlowgraphPluginTest" fileExtension="jsx" />
 	</extension>
 </plugin>

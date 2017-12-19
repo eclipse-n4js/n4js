@@ -310,17 +310,19 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 	}
 
 	@Override
-	public void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor) {
+	public void registerProjects(NpmProjectAdaptionResult result, IProgressMonitor monitor, boolean triggerCleanbuild) {
 		final ISchedulingRule rule = builderHelper.getRule();
 		try {
 			Job.getJobManager().beginRule(rule, monitor);
-			registerProjectsInternal(result, monitor);
+			registerProjectsInternal(result, monitor, triggerCleanbuild);
 		} finally {
 			Job.getJobManager().endRule(rule);
 		}
 	}
 
-	private void registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor) {
+	private void registerProjectsInternal(NpmProjectAdaptionResult result, IProgressMonitor monitor,
+			boolean triggerCleanbuild) {
+
 		checkState(result.isOK(), "Expected OK result: " + result);
 		ensureInitialized();
 
@@ -333,7 +335,7 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 		final Iterable<IProject> projectsToClean = from(result.getToBeBuilt().getToBeDeleted())
 				.transform(uri -> getProject(new File(uri).getName())).filter(notNull());
 
-		final Collection<IProject> workspaceProjectsToRebuild = newHashSet(
+		final Set<IProject> workspaceProjectsToRebuild = newHashSet(
 				collector.collectProjectsWithDirectExternalDependencies(projectsToClean));
 
 		// Clean projects.
@@ -354,14 +356,17 @@ public class EclipseExternalLibraryWorkspace extends ExternalLibraryWorkspace im
 				.filter(p -> !eclipseWorkspaceProjectNamesFilter.apply(p.getName()));
 
 		// Build recently added projects that do not exist in workspace.
-		// XXX akitta: consider filtering out external projects that exists in index already. (@ higher priority level)
+		// Also includes projects that exist already in the index, but are shadowed.
 		if (!Iterables.isEmpty(projectsToBuild)) {
 			builderHelper.build(projectsToBuild, subMonitor.newChild(1));
 		}
 		subMonitor.worked(1);
 
-		addAll(workspaceProjectsToRebuild, collector.collectProjectsWithDirectExternalDependencies(projectsToBuild));
-		scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		if (triggerCleanbuild) {
+			Iterable<IProject> depPjs = collector.collectProjectsWithDirectExternalDependencies(projectsToBuild);
+			addAll(workspaceProjectsToRebuild, depPjs);
+			scheduler.scheduleBuildIfNecessary(workspaceProjectsToRebuild);
+		}
 	}
 
 	@Override

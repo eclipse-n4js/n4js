@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.scoping.IScopeProvider
-import org.xpect.setup.XpectSetupComponent
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * This Component generates a visibility-filtered list of feature names from a type. The type is loaded when evaluating

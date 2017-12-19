@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.ui.navigator.internal;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.collect.FluentIterable.from;
 import static org.eclipse.ui.ISharedImages.IMG_OBJ_FILE;
 import static org.eclipse.ui.ISharedImages.IMG_OBJ_FOLDER;
@@ -27,11 +25,10 @@ import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 import org.eclipse.swt.graphics.Image;
 
 import com.google.common.collect.FluentIterable;
-
-import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 
 /**
  * Represents a {@link File file} resource in the file system as a node in the Project Explorer.
@@ -44,6 +41,14 @@ import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 
 	private final File file;
 
+	static public ResourceNode create(final Node parent, final File file) {
+		if (file == null || !file.exists()) {
+			return null;
+		}
+		ResourceNode resourceNode = new ResourceNode(parent, file);
+		return resourceNode;
+	}
+
 	/**
 	 * Creates a new node instance representing a file resource.
 	 *
@@ -52,10 +57,8 @@ import org.eclipse.n4js.ui.ImageDescriptorCache.ImageRef;
 	 * @param file
 	 *            the wrapped file that the new node instance represents.
 	 */
-	/* default */ ResourceNode(final Node parent, final File file) {
+	private ResourceNode(final Node parent, final File file) {
 		super(parent);
-		checkNotNull(file, "file");
-		checkArgument(file.exists(), "File '" + file + "' does not exist.");
 		this.file = file;
 	}
 

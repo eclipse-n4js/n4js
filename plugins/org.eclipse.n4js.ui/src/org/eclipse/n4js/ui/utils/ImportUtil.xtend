@@ -76,7 +76,6 @@ public class ImportUtil {
 		]
 	}
 
-
 	private def ContentAssistContext[] createContentAssistContexts(ISourceViewer viewer, int offset, XtextResource resource, boolean allowCompletion) {
 		try {
 			val result = contentAssistContextFactory.create(viewer, offset, resource);

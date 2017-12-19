@@ -25,6 +25,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.n4js.utils.Diff;
+import org.eclipse.n4js.utils.StatusHelper;
 import org.osgi.service.prefs.BackingStoreException;
 import org.osgi.service.prefs.Preferences;
 
@@ -32,9 +34,6 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.utils.Diff;
-import org.eclipse.n4js.utils.StatusHelper;
 
 /**
  * Base working set manager which does not allow working set addition, removal and/or edition. The order of the working
@@ -305,6 +304,23 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 		}
 
 		return visibleWorkingSets;
+	}
+
+	/**
+	 * Reloads this working set manager by invalidating its cache and re-triggering the initialization logic.
+	 */
+	protected void reload() {
+		discardWorkingSetCaches();
+		saveState(new NullProgressMonitor());
+
+		if (workingSetManagerBroker.isWorkingSetTopLevel()) {
+			final WorkingSetManager activeManager = workingSetManagerBroker.getActiveManager();
+			if (activeManager != null) {
+				if (activeManager.getId().equals(getId())) {
+					workingSetManagerBroker.refreshNavigator();
+				}
+			}
+		}
 	}
 
 }

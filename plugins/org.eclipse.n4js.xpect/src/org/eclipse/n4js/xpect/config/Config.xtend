@@ -11,7 +11,7 @@
 package org.eclipse.n4js.xpect.config
 
 import java.util.List
-import org.xpect.setup.XpectSetupComponent
+import org.eclipse.xpect.setup.XpectSetupComponent
 
 /**
  * Configuration of switches and values affecting the performance of the test-run.
