@@ -19,6 +19,10 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion
+import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser
+import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.NullDereferenceResult
+import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser
+import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitorHost
 import org.eclipse.n4js.n4JS.ArrowFunction
 import org.eclipse.n4js.n4JS.Block
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -73,7 +77,6 @@ import static org.eclipse.xtext.util.Strings.toFirstUpper
 import static extension com.google.common.base.Strings.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.EcoreUtilN4.*
-import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser
 
 /**
  */
@@ -129,12 +132,16 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 		val dcv = new DeadCodeAnalyser();
 		val cvgv1 = new UsedBeforeDeclaredAnalyser();
+		
+		val nda = new NullDereferenceAnalyser();
+		val dfvh = new DataFlowVisitorHost(nda);
 
 		flowAnalyzer.createGraphs(script);
-		flowAnalyzer.accept(dcv, cvgv1 );
+		flowAnalyzer.accept(dcv, dfvh, cvgv1 );
 
 		internalCheckDeadCode(dcv);
 		internalCheckUsedBeforeDeclared(cvgv1);
+		internalCheckNullDereference(nda);
 	}
 
 	// Req.107
@@ -158,8 +165,8 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 		for (IdentifierRef idRef : usedBeforeDeclared) {
 			val String varName = idRef.id.name;
-			var String msg = getMessageForAST_USED_BEFORE_DECLARED(varName);
-			addIssue(msg, idRef, AST_USED_BEFORE_DECLARED);
+			var String msg = getMessageForCFG_USED_BEFORE_DECLARED(varName);
+			addIssue(msg, idRef, CFG_USED_BEFORE_DECLARED);
 		}
 	}
 
@@ -167,12 +174,21 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val reachablePred = deadCodeRegion.getReachablePredecessor();
 		if (reachablePred === null)
 			return null;
-		
+
 		val String keyword = keywordProvider.keyword(reachablePred);
 		if (Strings.isNullOrEmpty(keyword)) {
 			return reachablePred.eClass.name;
 		}
 		return keyword;
+	}
+
+	private def void internalCheckNullDereference(NullDereferenceAnalyser nda) {
+		val nullDerefs = nda.getNullDereferences();
+		for (NullDereferenceResult ndr : nullDerefs) {
+			val String varName = ndr.checkedSymbol.name;
+			var String msg = getMessageForDFG_NULL_DEREFERENCE(varName);
+			addIssue(msg, ndr.cfe, DFG_NULL_DEREFERENCE);
+		}
 	}
 
 	/*

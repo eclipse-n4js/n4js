@@ -23,6 +23,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analyses.DirectPathAnalyses;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorAnalysis;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analyses.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -177,8 +178,8 @@ public class N4JSFlowAnalyzer {
 	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
 	 * then backward beginning from an arbitrary element.
 	 */
-	public void accept(GraphVisitor... graphVisitors) {
-		List<GraphVisitor> graphVisitorList = Lists.newArrayList(graphVisitors);
+	public void accept(GraphVisitorInternal... graphVisitors) {
+		List<GraphVisitorInternal> graphVisitorList = Lists.newArrayList(graphVisitors);
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
 		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("createGraph_" + cfg.getScriptName());
 		gva.analyseScript(this, graphVisitorList);

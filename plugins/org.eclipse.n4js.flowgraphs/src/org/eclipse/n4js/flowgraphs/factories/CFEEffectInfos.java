@@ -107,7 +107,6 @@ class CFEEffectInfos {
 				return null;
 			}
 
-			clearEffectsOfExitNode(feature.getExpression());
 			boolean addEffects = false;
 			addEffects |= feature.getOp() == UnaryOperator.INC;
 			addEffects |= feature.getOp() == UnaryOperator.DEC;
@@ -115,6 +114,7 @@ class CFEEffectInfos {
 				return null;
 			}
 
+			clearEffectsOfExitNode(feature.getExpression());
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
@@ -135,7 +135,6 @@ class CFEEffectInfos {
 				return null;
 			}
 
-			clearEffectsOfExitNode(feature.getTarget());
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
 			Symbol symbol = SymbolFactory.create(feature.getTarget());

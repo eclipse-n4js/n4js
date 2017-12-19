@@ -108,7 +108,7 @@ class StaticScopingTest {
 			}
 		'''.parse
 
-		val issues = validate(script).filter[it.code != IssueCodes.AST_LOCAL_VAR_UNUSED]
+		val issues = validate(script).filter[it.code != IssueCodes.CFG_LOCAL_VAR_UNUSED]
 		Assert.assertEquals(issues.join(", "), 0, issues.size)
 
 		val thisInMethod1 = script.eAllContents.filter(ThisLiteral).head
@@ -138,7 +138,7 @@ class StaticScopingTest {
 			var z2 = new C()
 		'''.parse
 
-		val issues = validate(script).filter[it.code != IssueCodes.AST_LOCAL_VAR_UNUSED];
+		val issues = validate(script).filter[it.code != IssueCodes.CFG_LOCAL_VAR_UNUSED];
 		Assert.assertEquals(issues.join(", "), 0, issues.size)
 
 		val G = script.newRuleEnvironment;

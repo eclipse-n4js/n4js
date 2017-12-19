@@ -24,8 +24,10 @@ abstract public class DataFlowVisitor {
 	/** {@link TraverseDirection} of this visitor */
 	protected final TraverseDirection direction;
 	Collection<Assumption> newAssumptions = new LinkedList<>();
-	Collection<Assumption> allAssumptions = new LinkedList<>();
-	Collection<Assumption> failedAssumptions = new LinkedList<>();
+	/** All {@link Assumption}s created by this {@link DataFlowVisitor} */
+	protected Collection<Assumption> allAssumptions = new LinkedList<>();
+	/** All {@link Assumption}s that failed */
+	protected Collection<Assumption> failedAssumptions = new LinkedList<>();
 
 	/** Constructor. Default {@link TraverseDirection} is {@link TraverseDirection#Backward} */
 	public DataFlowVisitor() {

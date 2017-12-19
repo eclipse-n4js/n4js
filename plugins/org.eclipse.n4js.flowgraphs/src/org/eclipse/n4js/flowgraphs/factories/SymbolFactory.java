@@ -10,6 +10,9 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
@@ -24,24 +27,40 @@ import org.eclipse.n4js.ts.types.TVariable;
  * Creates {@link Symbol}s depending on the given AST element
  */
 public class SymbolFactory {
+	static private Map<Symbol, Symbol> symbols = new HashMap<>();
 
 	/**  */
 	public static Symbol create(VariableDeclaration vd) {
-		return new SymbolOfVariableDeclaration(vd);
+		Symbol newSymbol = new SymbolOfVariableDeclaration(vd);
+		if (!symbols.containsKey(newSymbol)) {
+			symbols.put(newSymbol, newSymbol);
+		}
+		Symbol symbol = symbols.get(newSymbol);
+		return symbol;
 	}
 
 	/** */
 	public static Symbol create(Expression expr) {
+		Symbol newSymbol = null;
 		if (expr instanceof IdentifierRef) {
-			return new SymbolOfIdentifierRef((IdentifierRef) expr);
+			newSymbol = new SymbolOfIdentifierRef((IdentifierRef) expr);
 		}
 		if (expr instanceof ParameterizedPropertyAccessExpression) {
-			return new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) expr);
+			newSymbol = new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) expr);
 		}
 		if (expr instanceof IndexedAccessExpression) {
-			return new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
+			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
 		}
-		return null;
+
+		Symbol symbol = null;
+		if (newSymbol != null) {
+			if (!symbols.containsKey(newSymbol)) {
+				symbols.put(newSymbol, newSymbol);
+			}
+			symbol = symbols.get(newSymbol);
+		}
+
+		return symbol;
 	}
 
 	static class SymbolOfVariableDeclaration extends Symbol {
@@ -49,6 +68,21 @@ public class SymbolFactory {
 
 		SymbolOfVariableDeclaration(VariableDeclaration vd) {
 			this.vd = vd;
+		}
+
+		@Override
+		public VariableDeclaration getASTLocation() {
+			return vd;
+		}
+
+		@Override
+		public String getName() {
+			return vd.getName();
+		}
+
+		@Override
+		public EObject getDeclaration() {
+			return vd;
 		}
 	}
 
@@ -60,6 +94,16 @@ public class SymbolFactory {
 		}
 
 		@Override
+		public IdentifierRef getASTLocation() {
+			return ir;
+		}
+
+		@Override
+		public String getName() {
+			return ir.getId().getName();
+		}
+
+		@Override
 		public EObject getDeclaration() {
 			VariableDeclaration varDecl = null;
 			IdentifiableElement id = ir.getId();
@@ -68,7 +112,7 @@ public class SymbolFactory {
 				varDecl = (VariableDeclaration) tvar.getAstElement();
 				return varDecl;
 			} else {
-				// id instanceof FormalParameter
+				// id instanceof FormalParameter, or
 				// id instanceof VariableDeclaration
 				return id;
 			}
@@ -81,6 +125,16 @@ public class SymbolFactory {
 		SymbolOfParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression ppae) {
 			this.ppae = ppae;
 		}
+
+		@Override
+		public ParameterizedPropertyAccessExpression getASTLocation() {
+			return ppae;
+		}
+
+		@Override
+		public String getName() {
+			return ppae.getProperty().getName();
+		}
 	}
 
 	static class SymbolOfIndexedAccessExpression extends Symbol {
@@ -88,6 +142,16 @@ public class SymbolFactory {
 
 		SymbolOfIndexedAccessExpression(IndexedAccessExpression iae) {
 			this.iae = iae;
+		}
+
+		@Override
+		public IndexedAccessExpression getASTLocation() {
+			return iae;
+		}
+
+		@Override
+		public String getName() {
+			return "Array Access";
 		}
 	}
 }

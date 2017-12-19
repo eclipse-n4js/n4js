@@ -10,8 +10,12 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
 import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
@@ -32,8 +36,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
-		if (isDereference(cfe)) {
-			IsNotNull symbolNotNull = new IsNotNull(cfe, effect.symbol);
+		Expression dereferencer = getDereferencer(cfe);
+		if (dereferencer != null) {
+			Symbol tgtSymbol = SymbolFactory.create(dereferencer);
+			IsNotNull symbolNotNull = new IsNotNull(dereferencer, tgtSymbol);
 			assume(symbolNotNull);
 		}
 	}
@@ -41,17 +47,38 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-		if (must && isDereference(cfe)) {
-			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(cfe, effect.symbol);
+		Expression dereferencer = getDereferencer(cfe);
+		if (must && dereferencer != null) {
+			Symbol tgtSymbol = SymbolFactory.create(dereferencer);
+			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(dereferencer, tgtSymbol);
 			assume(isReasonableNullGuard);
 		}
 	}
 
-	boolean isDereference(ControlFlowElement cfe) {
-		boolean isDereference = false;
-		isDereference |= cfe instanceof FieldAccessor;
-		isDereference |= cfe instanceof ParameterizedPropertyAccessExpression;
-		return isDereference;
+	private Expression getDereferencer(ControlFlowElement cfe) {
+		Expression dereferencer = null;
+		if (cfe instanceof FieldAccessor) {
+			FieldAccessor fa = (FieldAccessor) cfe;
+			// fa.get
+		}
+		if (cfe instanceof ParameterizedPropertyAccessExpression) {
+			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) cfe;
+			Expression target = ppae.getTarget();
+			dereferencer = target;
+		}
+		return dereferencer;
+	}
+
+	/** @return a list of all AST locations where a null pointer dereference can happen */
+	public List<NullDereferenceResult> getNullDereferences() {
+		List<NullDereferenceResult> nullDerefs = new LinkedList<>();
+		for (Assumption ass : failedAssumptions) {
+			IsNotNull inn = (IsNotNull) ass;
+			ControlFlowElement astLocation = inn.creationSite;
+			NullDereferenceResult ndr = new NullDereferenceResult(astLocation, inn.symbol, inn.failedSymbol);
+			nullDerefs.add(ndr);
+		}
+		return nullDerefs;
 	}
 
 	static private EqualityOperator getNullCheckOperator(Symbol alias, ControlFlowElement readOperation) {
@@ -66,6 +93,22 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			}
 		}
 		return null;
+	}
+
+	/** Result of a null or undefined dereference */
+	static public class NullDereferenceResult {
+		/** AST location */
+		public final ControlFlowElement cfe;
+		/** {@link Symbol} that was checked for null or undefined */
+		public final Symbol checkedSymbol;
+		/** Aliased {@link Symbol} that failed a check */
+		public final Symbol causingSymbol;
+
+		NullDereferenceResult(ControlFlowElement cfe, Symbol checkedSymbol, Symbol causingSymbol) {
+			this.cfe = cfe;
+			this.checkedSymbol = checkedSymbol;
+			this.causingSymbol = causingSymbol;
+		}
 	}
 
 	static class IsNotNull extends Assumption {
@@ -88,6 +131,8 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
 				if (ae.getRhs() instanceof NullLiteral) {
 					return false;
+				} else {
+					deactivateAlias(effect.symbol);
 				}
 			}
 			return true;

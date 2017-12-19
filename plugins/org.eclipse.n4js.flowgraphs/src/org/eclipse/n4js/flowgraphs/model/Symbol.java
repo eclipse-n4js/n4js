@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs.model;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 
@@ -32,16 +33,7 @@ abstract public class Symbol {
 	 * @return true iff this {@link Symbol} is identical to the given {@link Symbol}
 	 */
 	public boolean is(Symbol alias) {
-		return false;
-	}
-
-	/**
-	 * @param symbol
-	 *            the {@link Symbol} in question
-	 * @return true iff this {@link Symbol} is aliased with the given {@link Symbol}
-	 */
-	public boolean alias(Symbol symbol) {
-		return false;
+		return equals(alias);
 	}
 
 	/**
@@ -51,112 +43,37 @@ abstract public class Symbol {
 		return null;
 	}
 
-	// TODO GH-235
+	/** @return the name of this {@link Symbol} */
+	abstract public String getName();
 
-	// final Object token;
-	//
-	// abstract public boolean exists();
-	//
-	// abstract public AccessType getAccessType();
-	//
-	// abstract public String getName();
-	//
-	// abstract public boolean isLocal();
-	//
-	// abstract public boolean isPrimitive();
-	//
-	// abstract public String getTypeName();
-	//
-	// @Override
-	// public String toString() {
-	// return this.getName();
-	// }
-	//
-	// public Object getToken() {
-	// return token;
-	// }
-	//
-	// public Symbol(Object token) {
-	// this.token = token;
-	// }
-	//
-	// public static class SymbolNew extends Symbol {
-	// final private Expression astExpression;
-	// final private String name;
-	//
-	// public SymbolNew(Object token, Expression astExpression, String name) {
-	// super(token);
-	// this.astExpression = astExpression;
-	// this.name = name;
-	// }
-	//
-	// @Override
-	// public boolean exists() {
-	// return false;
-	// }
-	//
-	// @Override
-	// public AccessType getAccessType() {
-	// return AccessType.local;
-	// }
-	//
-	// @Override
-	// public String getName() {
-	// return name;
-	// }
-	//
-	// @Override
-	// public boolean isLocal() {
-	// return true;
-	// }
-	//
-	// @Override
-	// public boolean isPrimitive() {
-	// return Symbols.isPrimitive(token);
-	// }
-	//
-	// @Override
-	// public String getTypeName() {
-	// return Symbols.getReturnTypeName(astExpression);
-	// }
-	// }
-	//
-	// public static class SymbolWithToken extends Symbol {
-	//
-	// public SymbolWithToken(Object token) {
-	// super(token);
-	// }
-	//
-	// @Override
-	// public boolean exists() {
-	// return true;
-	// }
-	//
-	// @Override
-	// public AccessType getAccessType() {
-	// if (isLocal())
-	// return AccessType.local;
-	// return AccessType.other;
-	// }
-	//
-	// @Override
-	// public String getName() {
-	// return Symbols.getSymbolName(token);
-	// }
-	//
-	// @Override
-	// public boolean isLocal() {
-	// return Symbols.isLocalSymbol(token);
-	// }
-	//
-	// @Override
-	// public boolean isPrimitive() {
-	// return Symbols.isPrimitive(token);
-	// }
-	//
-	// @Override
-	// public String getTypeName() {
-	// return Symbols.getTypeName(token);
-	// }
-	// }
+	/** @return the location in the AST from which this {@link Symbol} was created */
+	abstract public ControlFlowElement getASTLocation();
+
+	protected Object getSymbolKey() {
+		Object key = getDeclaration();
+		if (key == null) {
+			return getASTLocation();
+		}
+		return key;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Symbol))
+			return false;
+
+		Symbol s = (Symbol) obj;
+		return getSymbolKey().equals(s.getSymbolKey());
+	}
+
+	@Override
+	public int hashCode() {
+		return getSymbolKey().hashCode();
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 }

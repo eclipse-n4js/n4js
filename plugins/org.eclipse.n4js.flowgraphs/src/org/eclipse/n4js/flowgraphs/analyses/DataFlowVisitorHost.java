@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,7 +30,7 @@ import org.eclipse.n4js.n4JS.Expression;
 /**
  *
  */
-abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
+public class DataFlowVisitorHost extends GraphVisitorInternal {
 	final Collection<DataFlowVisitor> dfVisitors;
 	private DataFlowExplorer dfExplorer;
 
@@ -41,7 +42,13 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 		return directions.toArray(new TraverseDirection[directions.size()]);
 	}
 
-	DataFlowVisitorHost(Collection<DataFlowVisitor> dfVisitors) {
+	/** Constructor */
+	public DataFlowVisitorHost(DataFlowVisitor... dfVisitors) {
+		this(Arrays.asList(dfVisitors));
+	}
+
+	/** Constructor */
+	public DataFlowVisitorHost(Collection<DataFlowVisitor> dfVisitors) {
 		super(getDirections(dfVisitors));
 		this.dfVisitors = dfVisitors;
 	}
@@ -106,22 +113,26 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 		protected void visit(Node node) {
 			ControlFlowElement cfe = node.getControlFlowElement();
 			for (EffectInfo effect : node.effectInfos) { // TODO: optimize: remove loop by passed all infos
-				handleVisitEffect(cfe, effect);
-				if (cfe instanceof AssignmentExpression) {
-					AssignmentExpression ae = (AssignmentExpression) cfe;
-					handleDataFlow(ae);
+				boolean handledDataFlow = handleDataFlow(cfe);
+				if (!handledDataFlow) {
+					handleVisitEffect(cfe, effect);
 				}
 			}
 		}
 
-		private void handleDataFlow(AssignmentExpression ae) {
-			Expression lhs = ae.getLhs();
-			Expression rhs = ae.getRhs();
-			Symbol lSymbol = SymbolFactory.create(lhs);
-			Symbol rSymbol = SymbolFactory.create(rhs);
-			if (lSymbol != null && rSymbol != null) {
-				callHoldOnDataflow(ae, lSymbol, rSymbol);
+		private boolean handleDataFlow(ControlFlowElement cfe) {
+			if (cfe instanceof AssignmentExpression) {
+				AssignmentExpression ae = (AssignmentExpression) cfe;
+				Expression lhs = ae.getLhs();
+				Expression rhs = ae.getRhs();
+				Symbol lSymbol = SymbolFactory.create(lhs);
+				Symbol rSymbol = SymbolFactory.create(rhs);
+				if (lSymbol != null && rSymbol != null) {
+					callHoldOnDataflow(ae, lSymbol, rSymbol);
+					return true;
+				}
 			}
+			return false;
 		}
 
 		private void handleVisitEffect(ControlFlowElement cfe, EffectInfo effect) {
@@ -141,7 +152,7 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 		private void callHoldsOnEffect(ControlFlowElement cfe, EffectInfo effect) {
 			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 				Assumption ass = assIter.next();
-				if (ass.isActive()) {
+				if (ass.isActive() && ass.aliases.contains(effect.symbol)) {
 					ass.callHoldsOnEffect(effect, cfe);
 				}
 				if (ass.isFailed()) {
@@ -153,7 +164,7 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 		private void callHoldOnDataflow(AssignmentExpression ae, Symbol lSymbol, Symbol rSymbol) {
 			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 				Assumption ass = assIter.next();
-				if (ass.isActive()) {
+				if (ass.isActive() && ass.aliases.contains(lSymbol)) {
 					ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
 				}
 				if (ass.isFailed()) {

@@ -60,7 +60,7 @@ public class ListBasePluginTest extends AbstractBuilderParticipantTest {
 			new Predicate<IMarker>() {
 
 				private final List<String> EXPECTED_ERROR_CODES = Arrays.asList(
-						IssueCodes.AST_LOCAL_VAR_UNUSED,
+						IssueCodes.CFG_LOCAL_VAR_UNUSED,
 						IssueCodes.CLF_NAME_CONTAINS_DISCOURAGED_CHARACTER);
 
 				@Override

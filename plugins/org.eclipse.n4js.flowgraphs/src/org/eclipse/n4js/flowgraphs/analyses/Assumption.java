@@ -27,34 +27,45 @@ import org.eclipse.n4js.n4JS.IfStatement;
  *
  */
 abstract public class Assumption {
-	/** Key for identification of this {@link Assumption}. Use {@link #getKey(ControlFlowElement, Symbol, Class)} */
+	/** Key for identification of this {@link Assumption}. Use {@link #getKey(ControlFlowElement, Symbol)} */
 	public final Object key;
+	/** {@link ControlFlowElement} where this {@link Assumption} was created */
+	public final ControlFlowElement creationSite;
 	/** Initial symbol this assumption refers to */
 	public final Symbol symbol;
 	/** Set of all symbols that are transitively assigned to {@link #symbol} */
 	public final Set<Symbol> aliases = new HashSet<>();
+	/** The {@link Symbol} that caused this {@link Assumption} to fail */
+	public Symbol failedSymbol;
+
 	private boolean active = true;
 	private boolean failed = false;
 	private DataFlowVisitor dataFlowVisitor;
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
-		this.key = getKey(cfe, symbol, getClass());
+		this.key = getKey(cfe, symbol);
+		this.creationSite = cfe;
 		this.symbol = symbol;
+		this.aliases.add(symbol);
 	}
 
 	/** Constructor to create a copy */
 	public Assumption(Assumption assumption) {
 		this.key = assumption.key;
+		this.creationSite = assumption.creationSite;
 		this.symbol = assumption.symbol;
 		this.aliases.addAll(assumption.aliases);
+		this.dataFlowVisitor = assumption.dataFlowVisitor;
 	}
 
 	/** Constructor for merging {@link Assumption}s */
 	public Assumption(Collection<Assumption> assumptions) {
 		Assumption firstAss = assumptions.iterator().next();
 		this.key = firstAss.key;
+		this.creationSite = firstAss.creationSite;
 		this.symbol = firstAss.symbol;
+		this.dataFlowVisitor = firstAss.dataFlowVisitor;
 		for (Assumption ass : assumptions) {
 			assert this.symbol == ass.symbol;
 			this.aliases.addAll(ass.aliases);
@@ -62,8 +73,8 @@ abstract public class Assumption {
 	}
 
 	/** @return a key that is based on the given objects */
-	protected Object getKey(ControlFlowElement cfe, Symbol pSymbol, Class<? extends Assumption> clazz) {
-		return Objects.hash(cfe, pSymbol, clazz);
+	protected Object getKey(ControlFlowElement cfe, Symbol pSymbol) {
+		return Objects.hash(cfe, pSymbol, getClass());
 	}
 
 	/** @return a copy of this instance */
@@ -90,6 +101,11 @@ abstract public class Assumption {
 		return dataFlowVisitor;
 	}
 
+	/** Deactivates the given {@link Symbol}, i.e. further aliases of this {@link Symbol} are ignored */
+	public void deactivateAlias(Symbol ignoreSymbol) {
+		aliases.remove(ignoreSymbol);
+	}
+
 	/** Deactivates this {@link Assumption} */
 	protected void deactivate() {
 		active = false;
@@ -112,7 +128,9 @@ abstract public class Assumption {
 
 	void callHoldsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
 		boolean holds = holdsOnDataflow(lhs, rhs, cfe);
-		handleHolds(holds);
+		handleHolds(rhs, holds);
+		aliases.remove(lhs);
+		aliases.add(rhs);
 	}
 
 	/**
@@ -133,7 +151,7 @@ abstract public class Assumption {
 
 	void callHoldsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 		boolean holds = holdsOnEffect(effect, cfe);
-		handleHolds(holds);
+		handleHolds(effect.symbol, holds);
 	}
 
 	/**
@@ -151,7 +169,7 @@ abstract public class Assumption {
 
 	void callHoldsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		boolean holds = holdsOnGuard(effect, cfe, must, inverse);
-		handleHolds(holds);
+		handleHolds(effect.symbol, holds);
 	}
 
 	/**
@@ -177,7 +195,7 @@ abstract public class Assumption {
 
 	void callHoldsAfterall() {
 		boolean holds = holdsAfterall();
-		handleHolds(holds);
+		handleHolds(null, holds);
 	}
 
 	/**
@@ -195,11 +213,17 @@ abstract public class Assumption {
 	}
 
 	/** Handles behavior of the assumption based on the result of the holdOn methods */
-	protected void handleHolds(boolean holds) {
+	protected void handleHolds(Symbol pFailedSymbol, boolean holds) {
 		if (!holds) {
 			getDataFlowVisitor().failedAssumptions.add(this);
 			failed();
+			failedSymbol = pFailedSymbol;
 			deactivate();
+			return;
+		}
+		if (aliases.isEmpty()) {
+			deactivate();
+			return;
 		}
 	}
 }
