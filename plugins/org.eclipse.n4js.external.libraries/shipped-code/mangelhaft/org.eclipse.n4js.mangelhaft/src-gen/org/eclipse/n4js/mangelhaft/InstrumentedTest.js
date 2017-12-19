@@ -433,5 +433,5 @@
 			}
 		};
 	});
-})(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
+})(typeof module !== 'undefined' && module.exports ? require('n4js-node/src-gen/index').System(require, module) : System);
 //# sourceMappingURL=InstrumentedTest.map
