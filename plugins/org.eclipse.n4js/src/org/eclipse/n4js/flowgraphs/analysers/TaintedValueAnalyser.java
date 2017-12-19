@@ -44,11 +44,11 @@ public class TaintedValueAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
 		if (isUntaintedArgument(effect.symbol, cfe)) {
-			IsUntainted isUntainted = new IsUntainted(effect.symbol);
+			IsUntainted isUntainted = new IsUntainted(cfe, effect.symbol);
 			assume(isUntainted);
 		}
 		if (isUntaintedAssignee(effect.symbol, cfe)) {
-			IsUntainted isUntainted = new IsUntainted(effect.symbol);
+			IsUntainted isUntainted = new IsUntainted(cfe, effect.symbol);
 			assume(isUntainted);
 		}
 	}
@@ -103,13 +103,23 @@ public class TaintedValueAnalyser extends DataFlowVisitor {
 	}
 
 	class IsUntainted extends Assumption {
-		IsUntainted(Symbol symbol) {
-			super(symbol);
+		IsUntainted(ControlFlowElement cfe, Symbol symbol) {
+			super(cfe, symbol);
+		}
+
+		IsUntainted(IsUntainted copy) {
+			super(copy);
+		}
+
+		@Override
+		public Assumption copy() {
+			return new IsUntainted(this);
 		}
 
 		@Override
 		public boolean holdsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
 			return !assignedSymbolIsAnnotatedWith(rhs, "Tainted");
 		}
+
 	}
 }

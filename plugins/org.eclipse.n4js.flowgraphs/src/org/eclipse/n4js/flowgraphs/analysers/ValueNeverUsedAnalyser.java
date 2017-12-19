@@ -31,7 +31,7 @@ public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
 		if (effect.type == EffectType.Write) {
-			IsUsedSubsequently isUsedSubsequently = new IsUsedSubsequently(effect.symbol);
+			IsUsedSubsequently isUsedSubsequently = new IsUsedSubsequently(cfe, effect.symbol);
 			assume(isUsedSubsequently);
 		}
 	}
@@ -39,8 +39,17 @@ public class ValueNeverUsedAnalyser extends DataFlowVisitor {
 	static class IsUsedSubsequently extends Assumption {
 		private boolean isUsedSubsequently = false;
 
-		IsUsedSubsequently(Symbol symbol) {
-			super(symbol);
+		IsUsedSubsequently(ControlFlowElement cfe, Symbol symbol) {
+			super(cfe, symbol);
+		}
+
+		IsUsedSubsequently(IsUsedSubsequently copy) {
+			super(copy);
+		}
+
+		@Override
+		public Assumption copy() {
+			return new IsUsedSubsequently(this);
 		}
 
 		@Override

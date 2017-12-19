@@ -10,6 +10,11 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
@@ -22,15 +27,57 @@ import org.eclipse.n4js.n4JS.IfStatement;
  *
  */
 abstract public class Assumption {
+	/** Key for identification of this {@link Assumption}. Use {@link #getKey(ControlFlowElement, Symbol, Class)} */
+	public final Object key;
 	/** Initial symbol this assumption refers to */
 	public final Symbol symbol;
+	/** Set of all symbols that are transitively assigned to {@link #symbol} */
+	public final Set<Symbol> aliases = new HashSet<>();
 	private boolean active = true;
 	private boolean failed = false;
 	private DataFlowVisitor dataFlowVisitor;
 
 	/** Constructor */
-	public Assumption(Symbol symbol) {
+	public Assumption(ControlFlowElement cfe, Symbol symbol) {
+		this.key = getKey(cfe, symbol, getClass());
 		this.symbol = symbol;
+	}
+
+	/** Constructor to create a copy */
+	public Assumption(Assumption assumption) {
+		this.key = assumption.key;
+		this.symbol = assumption.symbol;
+		this.aliases.addAll(assumption.aliases);
+	}
+
+	/** Constructor for merging {@link Assumption}s */
+	public Assumption(Collection<Assumption> assumptions) {
+		Assumption firstAss = assumptions.iterator().next();
+		this.key = firstAss.key;
+		this.symbol = firstAss.symbol;
+		for (Assumption ass : assumptions) {
+			assert this.symbol == ass.symbol;
+			this.aliases.addAll(ass.aliases);
+		}
+	}
+
+	/** @return a key that is based on the given objects */
+	protected Object getKey(ControlFlowElement cfe, Symbol pSymbol, Class<? extends Assumption> clazz) {
+		return Objects.hash(cfe, pSymbol, clazz);
+	}
+
+	/** @return a copy of this instance */
+	abstract public Assumption copy();
+
+	/**
+	 * <b>Node:</b> Call this method when overwriting it.
+	 *
+	 * @param assumption
+	 *            the {@link Assumption} this {@link Assumption} will be merged with
+	 */
+	public void mergeWith(Assumption assumption) {
+		assert this.symbol == assumption.symbol;
+		this.aliases.addAll(assumption.aliases);
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
@@ -41,15 +88,6 @@ abstract public class Assumption {
 	/** @return the {@link DataFlowVisitor} this {@link Assumption} belongs to */
 	public DataFlowVisitor getDataFlowVisitor() {
 		return dataFlowVisitor;
-	}
-
-	/**
-	 * Some {@link Assumption} have a state on their own. This makes copying and merging them necessary.
-	 *
-	 * @return true iff instances will be copied and merged during analysis
-	 */
-	public boolean isCopyNecessary() {
-		return false;
 	}
 
 	/** Deactivates this {@link Assumption} */

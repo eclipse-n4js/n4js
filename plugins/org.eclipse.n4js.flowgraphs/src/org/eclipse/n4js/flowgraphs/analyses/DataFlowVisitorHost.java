@@ -56,10 +56,7 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 	protected void terminateMode(TraverseDirection curDirection, ControlFlowElement curContainer) {
 		if (dfExplorer != null) {
 			DataFlowBranch dfb = (DataFlowBranch) dfExplorer.getLastBranch();
-			for (Assumption ass : dfb.simpleAssumptions) {
-				ass.callHoldsAfterall();
-			}
-			for (Assumption ass : dfb.contextAssumptions.values()) {
+			for (Assumption ass : dfb.assumptions.values()) {
 				ass.callHoldsAfterall();
 			}
 		}
@@ -68,26 +65,22 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 	class DataFlowExplorer extends GraphExplorerInternal {
 		@Override
 		protected BranchWalkerInternal firstBranchWalker() {
-			return new DataFlowBranch(new AliasTable(getCurrentDirection()));
+			return new DataFlowBranch();
 		}
 
 		@Override
 		protected BranchWalkerInternal joinBranchWalkers(List<BranchWalkerInternal> branchWalkers) {
-			DataFlowBranch mergedDFB = new DataFlowBranch(new AliasTable(getCurrentDirection()));
+			DataFlowBranch mergedDFB = new DataFlowBranch();
 			for (BranchWalkerInternal bwi : branchWalkers) {
 				DataFlowBranch dfb = (DataFlowBranch) bwi;
-				mergedDFB.aliasTable.mergeWith(dfb.aliasTable);
-				mergedDFB.simpleAssumptions.addAll(dfb.simpleAssumptions);
 
-				for (Map.Entry<Class<? extends AssumptionWithContext>, AssumptionWithContext> entry : dfb.contextAssumptions
-						.entrySet()) {
-
-					Class<? extends AssumptionWithContext> key = entry.getKey();
-					if (mergedDFB.contextAssumptions.containsKey(key)) {
-						AssumptionWithContext awc = mergedDFB.contextAssumptions.get(key);
-						awc.mergeWith(entry.getValue());
+				for (Map.Entry<Object, Assumption> entry : dfb.assumptions.entrySet()) {
+					Object key = entry.getKey();
+					if (mergedDFB.assumptions.containsKey(key)) {
+						Assumption ass = mergedDFB.assumptions.get(key);
+						ass.mergeWith(entry.getValue());
 					} else {
-						mergedDFB.contextAssumptions.put(key, entry.getValue());
+						mergedDFB.assumptions.put(key, entry.getValue());
 					}
 				}
 			}
@@ -96,19 +89,16 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 	}
 
 	class DataFlowBranch extends BranchWalkerInternal {
-		final AliasTable aliasTable;
-		final Set<Assumption> simpleAssumptions = new HashSet<>();
-		final Map<Class<? extends AssumptionWithContext>, AssumptionWithContext> contextAssumptions = new HashMap<>();
-
-		DataFlowBranch(AliasTable aliasTable) {
-			this.aliasTable = aliasTable;
-		}
+		final Map<Object, Assumption> assumptions = new HashMap<>();
 
 		@Override
 		protected BranchWalkerInternal fork() {
-			DataFlowBranch dfb = new DataFlowBranch(aliasTable.getCopy());
-			dfb.simpleAssumptions.addAll(simpleAssumptions);
-			dfb.contextAssumptions.putAll(contextAssumptions);
+			DataFlowBranch dfb = new DataFlowBranch();
+			for (Map.Entry<Object, Assumption> entry : assumptions.entrySet()) {
+				Object key = entry.getKey();
+				Assumption ass = entry.getValue();
+				dfb.assumptions.put(key, ass.copy());
+			}
 			return dfb;
 		}
 
@@ -130,37 +120,26 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 			Symbol lSymbol = SymbolFactory.create(lhs);
 			Symbol rSymbol = SymbolFactory.create(rhs);
 			if (lSymbol != null && rSymbol != null) {
-				aliasTable.addAlias(lSymbol, rSymbol);
-
-				callHoldOnDataflow(simpleAssumptions, ae, lSymbol, rSymbol);
-				callHoldOnDataflow(contextAssumptions.values(), ae, lSymbol, rSymbol);
+				callHoldOnDataflow(ae, lSymbol, rSymbol);
 			}
 		}
 
 		private void handleVisitEffect(ControlFlowElement cfe, EffectInfo effect) {
 			for (DataFlowVisitor dfv : dfVisitors) {
-				callHoldsOnEffect(simpleAssumptions, cfe, effect);
-				callHoldsOnEffect(contextAssumptions.values(), cfe, effect);
+				callHoldsOnEffect(cfe, effect);
 				dfv.visitEffect(effect, cfe);
 
 				Collection<Assumption> newAssumptions = dfv.moveNewAssumptions();
 				Iterator<Assumption> assIter = newAssumptions.iterator();
 				while (assIter.hasNext()) {
 					Assumption ass = assIter.next();
-					if (ass instanceof AssumptionWithContext) {
-						AssumptionWithContext awc = (AssumptionWithContext) ass;
-						contextAssumptions.put(awc.getClass(), awc);
-						assIter.remove();
-					}
+					assumptions.put(ass.key, ass);
 				}
-				simpleAssumptions.addAll(newAssumptions);
 			}
 		}
 
-		private void callHoldsOnEffect(Collection<? extends Assumption> assumptions, ControlFlowElement cfe,
-				EffectInfo effect) {
-
-			for (Iterator<? extends Assumption> assIter = assumptions.iterator(); assIter.hasNext();) {
+		private void callHoldsOnEffect(ControlFlowElement cfe, EffectInfo effect) {
+			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 				Assumption ass = assIter.next();
 				if (ass.isActive()) {
 					ass.callHoldsOnEffect(effect, cfe);
@@ -171,10 +150,8 @@ abstract public class DataFlowVisitorHost extends GraphVisitorInternal {
 			}
 		}
 
-		private void callHoldOnDataflow(Collection<? extends Assumption> assumptions, AssignmentExpression ae,
-				Symbol lSymbol, Symbol rSymbol) {
-
-			for (Iterator<? extends Assumption> assIter = assumptions.iterator(); assIter.hasNext();) {
+		private void callHoldOnDataflow(AssignmentExpression ae, Symbol lSymbol, Symbol rSymbol) {
+			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 				Assumption ass = assIter.next();
 				if (ass.isActive()) {
 					ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);

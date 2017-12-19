@@ -34,7 +34,7 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
 		if (isDivisor(effect.symbol, cfe)) {
-			IsNotZero symbolNotZero = new IsNotZero(effect.symbol);
+			IsNotZero symbolNotZero = new IsNotZero(cfe, effect.symbol);
 			assume(symbolNotZero);
 		}
 	}
@@ -73,8 +73,17 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 	}
 
 	static class IsNotZero extends Assumption {
-		IsNotZero(Symbol symbol) {
-			super(symbol);
+		IsNotZero(ControlFlowElement cfe, Symbol symbol) {
+			super(cfe, symbol);
+		}
+
+		IsNotZero(IsNotZero copy) {
+			super(copy);
+		}
+
+		@Override
+		public Assumption copy() {
+			return new IsNotZero(this);
 		}
 
 		@Override

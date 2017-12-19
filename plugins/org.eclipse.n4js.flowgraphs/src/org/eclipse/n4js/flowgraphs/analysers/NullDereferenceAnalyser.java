@@ -11,7 +11,6 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
-import org.eclipse.n4js.flowgraphs.analyses.AssumptionWithContext;
 import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
@@ -34,7 +33,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
 		if (isDereference(cfe)) {
-			IsNotNull symbolNotNull = new IsNotNull(effect.symbol);
+			IsNotNull symbolNotNull = new IsNotNull(cfe, effect.symbol);
 			assume(symbolNotNull);
 		}
 	}
@@ -43,7 +42,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && isDereference(cfe)) {
-			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(effect.symbol);
+			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(cfe, effect.symbol);
 			assume(isReasonableNullGuard);
 		}
 	}
@@ -70,8 +69,17 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	static class IsNotNull extends Assumption {
-		IsNotNull(Symbol symbol) {
-			super(symbol);
+		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
+			super(cfe, symbol);
+		}
+
+		IsNotNull(IsNotNull copy) {
+			super(copy);
+		}
+
+		@Override
+		public Assumption copy() {
+			return new IsNotNull(this);
 		}
 
 		@Override
@@ -103,27 +111,36 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 	}
 
-	static class IsReasonableNullGuard extends AssumptionWithContext {
+	static class IsReasonableNullGuard extends Assumption {
 		private boolean alwaysNullBefore = false;
 		private boolean alwaysNotNullBefore = false;
 
-		IsReasonableNullGuard(Symbol symbol) {
-			this(symbol, false, false);
+		IsReasonableNullGuard(ControlFlowElement cfe, Symbol symbol) {
+			this(cfe, symbol, false, false);
 		}
 
-		IsReasonableNullGuard(Symbol symbol, boolean alwaysNullBefore, boolean alwaysNotNullBefore) {
-			super(symbol);
+		IsReasonableNullGuard(ControlFlowElement cfe, Symbol symbol, boolean alwaysNullBefore,
+				boolean alwaysNotNullBefore) {
+
+			super(cfe, symbol);
 			this.alwaysNullBefore = alwaysNullBefore;
 			this.alwaysNotNullBefore = alwaysNotNullBefore;
 		}
 
-		@Override
-		public AssumptionWithContext copy() {
-			return new IsReasonableNullGuard(symbol, alwaysNullBefore, alwaysNotNullBefore);
+		IsReasonableNullGuard(IsReasonableNullGuard copy) {
+			super(copy);
+			this.alwaysNullBefore = copy.alwaysNullBefore;
+			this.alwaysNotNullBefore = copy.alwaysNotNullBefore;
 		}
 
 		@Override
-		public void mergeWith(AssumptionWithContext assumption) {
+		public Assumption copy() {
+			return new IsReasonableNullGuard(this);
+		}
+
+		@Override
+		public void mergeWith(Assumption assumption) {
+			super.mergeWith(assumption);
 			IsReasonableNullGuard irng = (IsReasonableNullGuard) assumption;
 			alwaysNullBefore |= irng.alwaysNullBefore;
 			alwaysNotNullBefore |= irng.alwaysNotNullBefore;

@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.analyses.AssumptionWithContext;
+import org.eclipse.n4js.flowgraphs.analyses.Assumption;
 import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
@@ -46,7 +46,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		if (effect.type == EffectType.MethodCall) {
 			Set<String> preStates = getDeclaredStates(cfe, ANNOTATION_PRESTATE);
 			if (!preStates.isEmpty()) {
-				IsInPrestate isInPreState = new IsInPrestate(effect.symbol, preStates);
+				IsInPrestate isInPreState = new IsInPrestate(cfe, effect.symbol, preStates);
 				assume(isInPreState);
 			}
 		}
@@ -58,7 +58,7 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		if (must && effect.type == EffectType.MethodCall) {
 			Set<String> inState = getDeclaredStates(cfe, ANNOTATION_INSTATE);
 			if (!inState.isEmpty()) {
-				IsReasonableStateGuard isInPreState = new IsReasonableStateGuard(effect.symbol, inState);
+				IsReasonableStateGuard isInPreState = new IsReasonableStateGuard(cfe, effect.symbol, inState);
 				assume(isInPreState);
 			}
 		}
@@ -80,21 +80,27 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		return states;
 	}
 
-	class IsInPrestate extends AssumptionWithContext {
+	class IsInPrestate extends Assumption {
 		private final Set<String> preStates;
 
-		IsInPrestate(Symbol symbol, Set<String> preStates) {
-			super(symbol);
+		IsInPrestate(ControlFlowElement cfe, Symbol symbol, Set<String> preStates) {
+			super(cfe, symbol);
 			this.preStates = preStates;
 		}
 
-		@Override
-		public AssumptionWithContext copy() {
-			return new IsInPrestate(symbol, preStates);
+		IsInPrestate(IsInPrestate copy) {
+			super(copy);
+			this.preStates = copy.preStates;
 		}
 
 		@Override
-		public void mergeWith(AssumptionWithContext assumption) {
+		public Assumption copy() {
+			return new IsInPrestate(this);
+		}
+
+		@Override
+		public void mergeWith(Assumption assumption) {
+			super.mergeWith(assumption);
 			IsInPrestate iip = (IsInPrestate) assumption;
 			preStates.retainAll(iip.preStates);
 		}
@@ -132,27 +138,34 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 		}
 	}
 
-	class IsReasonableStateGuard extends AssumptionWithContext {
+	class IsReasonableStateGuard extends Assumption {
 		private final Set<String> inStates;
 		private final Set<String> postStates;
 
-		IsReasonableStateGuard(Symbol symbol, Set<String> inStates) {
-			this(symbol, inStates, new HashSet<>());
+		IsReasonableStateGuard(ControlFlowElement cfe, Symbol symbol, Set<String> inStates) {
+			this(cfe, symbol, inStates, new HashSet<>());
 		}
 
-		IsReasonableStateGuard(Symbol symbol, Set<String> inStates, Set<String> postStates) {
-			super(symbol);
+		IsReasonableStateGuard(ControlFlowElement cfe, Symbol symbol, Set<String> inStates, Set<String> postStates) {
+			super(cfe, symbol);
 			this.inStates = inStates;
 			this.postStates = postStates;
 		}
 
-		@Override
-		public AssumptionWithContext copy() {
-			return new IsReasonableStateGuard(symbol, inStates, postStates);
+		IsReasonableStateGuard(IsReasonableStateGuard copy) {
+			super(copy);
+			this.inStates = copy.inStates;
+			this.postStates = copy.postStates;
 		}
 
 		@Override
-		public void mergeWith(AssumptionWithContext assumption) {
+		public Assumption copy() {
+			return new IsReasonableStateGuard(this);
+		}
+
+		@Override
+		public void mergeWith(Assumption assumption) {
+			super.mergeWith(assumption);
 			IsReasonableStateGuard irg = (IsReasonableStateGuard) assumption;
 			postStates.addAll(irg.postStates);
 		}
