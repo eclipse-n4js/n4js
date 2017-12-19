@@ -99,7 +99,7 @@ pipeline {
 
     post {
         always {
-            archive 'bilds/**/target/*.zip'
+            archive 'builds/**/target/*.zip'
             junit '**/surefire-reports/**/*.xml'
         }
     }
