@@ -138,13 +138,6 @@ public class RepoRelativePath {
 			return "";
 		}
 		String repoPath = absFileName.substring(startIdx, endIdx);
-
-		if (repoPath.contains("PR-408") || repoPath.contains("CD-631")) {
-			System.out.println("(o.O)");
-			System.out.println(" absFileName " + absFileName);
-			System.out.println(" projName " + projName);
-			System.out.println(" repoName " + repoCloneName);
-		}
 		return repoPath;
 	}
 
