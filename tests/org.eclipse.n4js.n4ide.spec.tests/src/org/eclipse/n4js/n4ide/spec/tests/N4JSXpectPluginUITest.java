@@ -17,6 +17,7 @@ import org.eclipse.n4js.xpect.ui.methods.ProposalXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.contentassist.ContentAssistXpectMethod;
 import org.eclipse.n4js.xpect.ui.methods.quickfix.QuickFixXpectMethod;
 import org.eclipse.n4js.xpect.validation.suppression.SuppressIssuesSetup;
+import org.junit.runner.RunWith;
 import org.eclipse.xpect.XpectImport;
 import org.eclipse.xpect.lib.XpectTestResultTest;
 import org.eclipse.xpect.runner.XpectRunner;
@@ -24,7 +25,6 @@ import org.eclipse.xpect.runner.XpectSuiteClasses;
 import org.eclipse.xpect.runner.XpectTestFiles;
 import org.eclipse.xpect.runner.XpectTestFiles.FileRoot;
 import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
-import org.junit.runner.RunWith;
 
 /**
  * Plugin linking test
@@ -45,7 +45,7 @@ import org.junit.runner.RunWith;
 })
 
 @RunWith(XpectRunner.class)
-@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-test/Ch05_04_01_02__Organize_Imports", fileExtensions = "xt")
+@XpectTestFiles(relativeTo = FileRoot.PROJECT, baseDir = "xpect-test", fileExtensions = "xt")
 @XpectImport({ SuppressIssuesSetup.class })
 public class N4JSXpectPluginUITest {
 	//
