@@ -61,7 +61,7 @@ public class ImportsAwareReferenceProposalCreator {
 	private FQNImporter.Factory fqnImporterFactory;
 
 	@Inject
-	IN4JSCore n4jsCore;
+	private IN4JSCore n4jsCore;
 
 	@Inject
 	private void setValueConverter(IValueConverterService service, N4JSGrammarAccess grammarAccess) {
