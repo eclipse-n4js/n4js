@@ -258,7 +258,10 @@ public final class JSXBackendHelper {
 		String sqn = uri.toString();
 		if (sqn == null)
 			return false;
-
-		return sqn.endsWith(JSX_BACKEND_DEFINITION_NAME); // i.e. react/index.n4jsd
+		// TODO: FIXME as part of GH-358
+		return sqn.endsWith(JSX_BACKEND_DEFINITION_NAME)
+				|| sqn.endsWith(JSX_BACKEND_MODULE_NAME + "." + N4JSGlobals.N4JSD_FILE_EXTENSION); // i.e.
+																									// react/index.n4jsd
+																									// or react.n4jsd
 	}
 }
