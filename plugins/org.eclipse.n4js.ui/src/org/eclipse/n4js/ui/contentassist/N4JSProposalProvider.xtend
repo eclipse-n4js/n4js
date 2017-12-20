@@ -12,14 +12,14 @@ package org.eclipse.n4js.ui.contentassist
 
 import com.google.common.base.Predicate
 import com.google.inject.Inject
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.emf.ecore.EReference
+import org.eclipse.jface.viewers.StyledString
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.n4js.ui.proposals.imports.ImportsAwareReferenceProposalCreator
 import org.eclipse.n4js.ui.proposals.linkedEditing.N4JSCompletionProposal
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.emf.ecore.EReference
-import org.eclipse.jface.viewers.StyledString
 import org.eclipse.swt.graphics.Image
 import org.eclipse.xtext.CrossReference
 import org.eclipse.xtext.Keyword
@@ -178,5 +178,4 @@ class N4JSProposalProvider extends AbstractN4JSProposalProvider {
 			null,
 			null);
 	}
-
 }
