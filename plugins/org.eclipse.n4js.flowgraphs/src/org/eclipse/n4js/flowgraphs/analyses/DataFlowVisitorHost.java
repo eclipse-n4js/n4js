@@ -127,7 +127,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 				Expression rhs = ae.getRhs();
 				Symbol lSymbol = SymbolFactory.create(lhs);
 				Symbol rSymbol = SymbolFactory.create(rhs);
-				if (lSymbol != null && rSymbol != null) {
+				if (lSymbol != null && rSymbol != null && rSymbol.isVariableSymbol()) {
 					callHoldOnDataflow(ae, lSymbol, rSymbol);
 					return true;
 				}

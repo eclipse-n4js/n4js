@@ -63,26 +63,6 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (!(obj instanceof ControlFlowEdge))
-			return false;
-
-		ControlFlowEdge edge = (ControlFlowEdge) obj;
-		boolean equals = true;
-		equals &= start.id == edge.start.id;
-		equals &= end.id == edge.end.id;
-		return equals;
-	}
-
-	@Override
-	public int hashCode() {
-		long hashCode = 0;
-		hashCode += start.hashCode();
-		hashCode += end.hashCode();
-		return (int) (hashCode % Integer.MAX_VALUE);
-	}
-
-	@Override
 	public String toString() {
 		String s = "";
 		s += start.getExtendedString();

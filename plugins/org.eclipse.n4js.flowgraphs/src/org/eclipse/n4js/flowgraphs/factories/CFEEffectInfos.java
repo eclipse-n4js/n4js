@@ -48,18 +48,15 @@ class CFEEffectInfos {
 		@Override
 		public Void caseVariableDeclaration(VariableDeclaration feature) {
 			Node entryNode = cNode.getNode(NodeNames.ENTRY);
-			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
 			Symbol symbol = SymbolFactory.create(feature);
 			EffectInfo eiDecl = new EffectInfo(EffectType.Declaration, symbol);
 			entryNode.addEffectInfo(eiDecl);
 
-			if (expressionNode != null) {
-				symbol = SymbolFactory.create(feature);
-				eiDecl = new EffectInfo(EffectType.Write, symbol);
-				exitNode.addEffectInfo(eiDecl);
-			}
+			symbol = SymbolFactory.create(feature);
+			eiDecl = new EffectInfo(EffectType.Write, symbol);
+			exitNode.addEffectInfo(eiDecl);
 
 			return null;
 		}

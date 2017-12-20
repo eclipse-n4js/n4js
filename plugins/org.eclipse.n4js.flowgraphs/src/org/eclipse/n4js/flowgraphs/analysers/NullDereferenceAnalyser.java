@@ -25,8 +25,10 @@ import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FieldAccessor;
+import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /**
  * This analysis computes all cases where an implicit assumption of a variable being not null conflicts either with an
@@ -75,7 +77,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		for (Assumption ass : failedAssumptions) {
 			IsNotNull inn = (IsNotNull) ass;
 			ControlFlowElement astLocation = inn.creationSite;
-			NullDereferenceResult ndr = new NullDereferenceResult(astLocation, inn.symbol, inn.failedSymbol);
+			NullDereferenceResult ndr = new NullDereferenceResult(astLocation, inn);
 			nullDerefs.add(ndr);
 		}
 		return nullDerefs;
@@ -103,15 +105,20 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public final Symbol checkedSymbol;
 		/** Aliased {@link Symbol} that failed a check */
 		public final Symbol causingSymbol;
+		/** Undefined or Null {@link Symbol} that was assigned to {@link #causingSymbol} */
+		public final Symbol nullOrUndefinedSymbol;
 
-		NullDereferenceResult(ControlFlowElement cfe, Symbol checkedSymbol, Symbol causingSymbol) {
+		NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
 			this.cfe = cfe;
-			this.checkedSymbol = checkedSymbol;
-			this.causingSymbol = causingSymbol;
+			this.checkedSymbol = inn.symbol;
+			this.causingSymbol = inn.failedSymbol;
+			this.nullOrUndefinedSymbol = inn.nullOrUndefinedSymbol;
 		}
 	}
 
 	static class IsNotNull extends Assumption {
+		Symbol nullOrUndefinedSymbol;
+
 		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
 			super(cfe, symbol);
 		}
@@ -127,12 +134,33 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 		@Override
 		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
-			if (effect.type == EffectType.Write && cfe instanceof AssignmentExpression) {
-				AssignmentExpression ae = (AssignmentExpression) cfe;
-				if (ae.getRhs() instanceof NullLiteral) {
-					return false;
+			if (effect.type == EffectType.Write) {
+				Expression value = null;
+				if (cfe instanceof AssignmentExpression) {
+					AssignmentExpression ae = (AssignmentExpression) cfe;
+					value = ae.getRhs();
+				}
+				if (cfe instanceof VariableDeclaration) {
+					VariableDeclaration vd = (VariableDeclaration) cfe;
+					Expression initExpr = vd.getExpression();
+					if (initExpr == null) {
+						value = N4JSFactory.eINSTANCE.createNullLiteral();
+					} else {
+						value = initExpr;
+					}
+				}
+
+				nullOrUndefinedSymbol = SymbolFactory.create(value);
+				if (nullOrUndefinedSymbol != null) {
+					if (nullOrUndefinedSymbol.isNullLiteral()) {
+						return false;
+					} else if (nullOrUndefinedSymbol.isUndefinedLiteral()) {
+						return false;
+					}
 				} else {
-					deactivateAlias(effect.symbol);
+					if (value != null) {
+						deactivateAlias(effect.symbol);
+					}
 				}
 			}
 			return true;

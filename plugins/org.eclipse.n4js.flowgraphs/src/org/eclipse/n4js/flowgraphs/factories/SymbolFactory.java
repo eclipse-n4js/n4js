@@ -11,13 +11,18 @@
 package org.eclipse.n4js.flowgraphs.factories;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.NullLiteral;
+import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
@@ -32,9 +37,7 @@ public class SymbolFactory {
 	/**  */
 	public static Symbol create(VariableDeclaration vd) {
 		Symbol newSymbol = new SymbolOfVariableDeclaration(vd);
-		if (!symbols.containsKey(newSymbol)) {
-			symbols.put(newSymbol, newSymbol);
-		}
+		symbols.putIfAbsent(newSymbol, newSymbol);
 		Symbol symbol = symbols.get(newSymbol);
 		return symbol;
 	}
@@ -44,19 +47,19 @@ public class SymbolFactory {
 		Symbol newSymbol = null;
 		if (expr instanceof IdentifierRef) {
 			newSymbol = new SymbolOfIdentifierRef((IdentifierRef) expr);
-		}
-		if (expr instanceof ParameterizedPropertyAccessExpression) {
+		} else if (expr instanceof ParameterizedPropertyAccessExpression) {
 			newSymbol = new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) expr);
-		}
-		if (expr instanceof IndexedAccessExpression) {
+		} else if (expr instanceof IndexedAccessExpression) {
 			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
+		} else if (expr instanceof NullLiteral) {
+			newSymbol = new SymbolOfNullLiteral((NullLiteral) expr);
+		} else if (expr instanceof NumericLiteral && ((NumericLiteral) expr).getValue().equals(0)) {
+			newSymbol = new SymbolOfZeroLiteral((NumericLiteral) expr);
 		}
 
 		Symbol symbol = null;
 		if (newSymbol != null) {
-			if (!symbols.containsKey(newSymbol)) {
-				symbols.put(newSymbol, newSymbol);
-			}
+			symbols.putIfAbsent(newSymbol, newSymbol);
 			symbol = symbols.get(newSymbol);
 		}
 
@@ -117,6 +120,15 @@ public class SymbolFactory {
 				return id;
 			}
 		}
+
+		@Override
+		public boolean isUndefinedLiteral() {
+			IdentifiableElement id = ir.getId();
+			if (id == null) {
+				return false;
+			}
+			return "undefined".equals(id.getName());
+		}
 	}
 
 	static class SymbolOfParameterizedPropertyAccessExpression extends Symbol {
@@ -133,7 +145,43 @@ public class SymbolFactory {
 
 		@Override
 		public String getName() {
-			return ppae.getProperty().getName();
+			String name = ppae.getProperty().getName();
+			Expression tgtExpr = ppae.getTarget();
+			Symbol tgtSymbol = SymbolFactory.create(tgtExpr);
+			if (tgtSymbol != null) {
+				name = tgtSymbol.getName() + "." + name;
+			}
+
+			return name;
+		}
+
+		@Override
+		public EObject getDeclaration() {
+			return ppae.getProperty();
+		}
+
+		@Override
+		public Expression getContext() {
+			return ppae.getTarget();
+		}
+
+		@Override
+		protected Object getSymbolKey() {
+			List<Object> keyChain = new LinkedList<>();
+			keyChain.add(getDeclaration());
+			Expression tgtExpr = getContext();
+			Symbol tgtSymbol = SymbolFactory.create(tgtExpr);
+			while (tgtSymbol != null) {
+				keyChain.add(tgtSymbol.getDeclaration());
+				tgtExpr = tgtSymbol.getContext();
+				tgtSymbol = SymbolFactory.create(tgtExpr);
+				tgtSymbol = null;
+			}
+			if (tgtExpr != null) {
+				keyChain.add(tgtExpr);
+			}
+			int hash = Objects.hash(keyChain.toArray(new Object[keyChain.size()]));
+			return hash;
 		}
 	}
 
@@ -152,6 +200,52 @@ public class SymbolFactory {
 		@Override
 		public String getName() {
 			return "Array Access";
+		}
+	}
+
+	static class SymbolOfNullLiteral extends Symbol {
+		final NullLiteral nl;
+
+		SymbolOfNullLiteral(NullLiteral nl) {
+			this.nl = nl;
+		}
+
+		@Override
+		public NullLiteral getASTLocation() {
+			return nl;
+		}
+
+		@Override
+		public String getName() {
+			return "null literal";
+		}
+
+		@Override
+		public boolean isNullLiteral() {
+			return true;
+		}
+	}
+
+	static class SymbolOfZeroLiteral extends Symbol {
+		final NumericLiteral nl;
+
+		SymbolOfZeroLiteral(NumericLiteral nl) {
+			this.nl = nl;
+		}
+
+		@Override
+		public NumericLiteral getASTLocation() {
+			return nl;
+		}
+
+		@Override
+		public String getName() {
+			return nl.getValueAsString();
+		}
+
+		@Override
+		public boolean isZeroLiteral() {
+			return nl.getValue().equals(0);
 		}
 	}
 }
