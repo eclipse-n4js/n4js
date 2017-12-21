@@ -229,6 +229,14 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 		this.addEntry(EXT_JSX, VARIANT_MODE_STRINGREP, EXT_JSX);
 		this.addEntry(EXT_N4IDL, VARIANT_MODE_STRINGREP, EXT_N4IDL);
 		this.addEntry(EXT_IDL, VARIANT_MODE_STRINGREP, EXT_IDL);
+
+		this.addEntry(EXT_N4JS, MULTI_QN_SCOPE, false);
+		this.addEntry(EXT_N4JSD, MULTI_QN_SCOPE, false);
+		this.addEntry(EXT_N4JSX, MULTI_QN_SCOPE, false);
+		this.addEntry(EXT_JSX, MULTI_QN_SCOPE, false);
+		this.addEntry(EXT_N4IDL, MULTI_QN_SCOPE, true);
+		this.addEntry(EXT_IDL, MULTI_QN_SCOPE, true);
+
 	}
 
 	/**

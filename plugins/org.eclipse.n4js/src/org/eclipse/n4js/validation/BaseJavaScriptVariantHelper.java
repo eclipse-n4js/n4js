@@ -15,12 +15,11 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.N4JSGlobals;
+import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 
 /**
  * This class provides the base implementation for {@link JavaScriptVariantHelper} following chain of responsibility
@@ -186,6 +185,11 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 * String representation of variant mode, e.g. "n4js", "js"
 	 */
 	public static final ValidationFeature<String> VARIANT_MODE_STRINGREP = new ValidationFeature<>(EXT_JS);
+
+	/**
+	 * Variant allows for multiple elements with the same qualified name in one scope.
+	 */
+	public static final ValidationFeature<Boolean> MULTI_QN_SCOPE = new ValidationFeature<>(false);
 
 	/**
 	 * This class encapsulates a pair of file extension and validation feature and should serve as keys for
@@ -608,10 +612,18 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	}
 
 	/**
-	 * Return true if "use strict" is declared. Override this method for sub-languages!
+	 * Returns true if "use strict" is declared. Override this method for sub-languages!
 	 */
 	@Override
 	public boolean isStrictMode(EObject eobj) {
 		return JavaScriptVariant.isContainedInStrictFunctionOrScript(eobj);
+	}
+
+	/**
+	 * Returns {@code true} if the script allows for distinct elements with the same qualified name in a scope.
+	 */
+	@Override
+	public boolean isMultiQNScope(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), MULTI_QN_SCOPE);
 	}
 }

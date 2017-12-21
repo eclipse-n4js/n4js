@@ -12,7 +12,6 @@ package org.eclipse.n4js.n4idl
 
 import com.enfore.n4idl.AbstractN4IDLRuntimeModule
 import com.google.inject.Provider
-import org.eclipse.n4js.n4idl.scoping.N4IDLImportedElementsScopingHelper
 import org.eclipse.n4js.n4idl.scoping.N4IDLVersionAwareScopeProvider
 import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider
 import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap
@@ -20,7 +19,6 @@ import org.eclipse.n4js.n4idl.validation.N4IDLImportValidator
 import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator
 import org.eclipse.n4js.scoping.imports.ImportedElementsMap
-import org.eclipse.n4js.scoping.imports.ImportedElementsScopingHelper
 import org.eclipse.n4js.typesystem.VersionResolver
 import org.eclipse.n4js.validation.validators.N4JSImportValidator
 import org.eclipse.xtext.scoping.IScopeProvider
@@ -459,38 +457,38 @@ class N4IDLRuntimeModule extends AbstractN4IDLRuntimeModule {
 	def Class<? extends XpectAwareFileExtensionCalculator> bindXpectAwareFileExtensionCalculator() {
 		return XpectAwareFileExtensionCalculator;
 	}
-	
+
 //	/**
 //	 * Bind N4IDL EcmaScriptTranspiler.
 //	 */
 //	def Class<? extends EcmaScriptTranspiler> bindEcmaScriptTranspiler() {
 //		return N4IDLTranspiler;
 //	}
-//	
+//
 //	/**
 //	 * Bind N4IDL specific transpilation preparation step.
 //	 */
 //	def Class<? extends AST2IMCopierProvider> bindAST2IMCopierProvider() {
 //		return N4IDLAST2IMCopier.Provider;
 //	}
-//	
+//
 //	def Class<? extends ExportCallAssistant> bindExportCallAssistant() {
 //		return N4IDLExportCallAssistant;
 //	}
-//	
-//	
+//
+//
 //	def Class<? extends ImportRewriteAssistant> bindImportRewriteAssistant() {
 //		return VersionAwareImportRewriteAssistant;
 //	}
-	
+
 	def Class<? extends N4JSImportValidator> bindImportValidator() {
 		return N4IDLImportValidator;
 	}
-	
-	def Class<? extends ImportedElementsScopingHelper> bindImportedElementsScopingHelper() {
-		return N4IDLImportedElementsScopingHelper;
-	}
-	
+
+//	def Class<? extends ImportedElementsScopingHelper> bindImportedElementsScopingHelper() {
+//		return N4IDLImportedElementsScopingHelper;
+//	}
+
 	def Provider<? extends ImportedElementsMap> provideImportedElementsMap() {
 		return new Provider<ImportedElementsMap> {
 			override get() {

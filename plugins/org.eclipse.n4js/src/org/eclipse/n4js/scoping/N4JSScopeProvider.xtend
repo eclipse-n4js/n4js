@@ -57,6 +57,7 @@ import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MainModuleAwareSelectableBasedScope
 import org.eclipse.n4js.scoping.utils.N4JSTypesScopeFilter
 import org.eclipse.n4js.scoping.utils.ProjectImportEnablingScope
+import org.eclipse.n4js.scoping.utils.ScopesHelper
 import org.eclipse.n4js.ts.scoping.ValidatingScope
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExpression
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -79,7 +80,6 @@ import org.eclipse.xtext.scoping.IScopeProvider
 import org.eclipse.xtext.scoping.Scopes
 import org.eclipse.xtext.scoping.impl.AbstractScopeProvider
 import org.eclipse.xtext.scoping.impl.IDelegatingScopeProvider
-import org.eclipse.xtext.scoping.impl.MapBasedScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
@@ -139,6 +139,8 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	@Inject TopLevelElementsCollector topLevelElementCollector
 
 	@Inject N4IDLVersionAwareScopeProvider n4idlVersionAwareScopeProvider
+
+	@Inject ScopesHelper scopesHelper
 
 	protected def IScope delegateGetScope(EObject context, EReference reference) {
 		return delegate.getScope(context, reference)
@@ -285,15 +287,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		return result;
 	}
 
-	/**
-	 * Returns a scope with all the locally known types of the given Script.
-	 *
-	 * May be overridden by subclasses.
-	 */
-	protected def IScope getScopeWithLocallyKnownTypes(Script context, EReference reference, IScopeProvider delegate) {
-		locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, reference, delegate)
-	}
-
 	private def IScope getAllLabels(Script script) {
 		return Scopes.scopeFor(script.eAllContents.filter(LabelledStatement).toIterable);
 	}
@@ -404,13 +397,9 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 		var IScope scope = getImportedIdentifiables(baseScope, script);
 
 		for (scopeList : scopeLists.reverseView) {
-			scope = buildMapBasedScope(scope, scopeList);
+			scope = scopesHelper.mapBasedScopeFor(context, scope, scopeList);
 		}
 		return scope;
-	}
-
-	protected def buildMapBasedScope(IScope scope, Iterable<IEObjectDescription> descriptions) {
-		return MapBasedScope.createScope(scope, descriptions);
 	}
 
 	private def IScope getScriptBaseScope(Script script, EObject context, EReference ref) {
@@ -452,7 +441,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 			return IScope.NULLSCOPE;
 		}
 
-		buildMapBasedScope(IScope.NULLSCOPE,
+		scopesHelper.mapBasedScopeFor(importedModule, IScope.NULLSCOPE,
 			topLevelElementCollector.getTopLevelElements(importedModule, contextResource));
 	}
 
@@ -492,10 +481,10 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	def public IScope getTypeScope(EObject context, EReference reference, boolean fromStaticContext) {
 		switch context {
 			Script: {
-				return getScopeWithLocallyKnownTypes(context, reference, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, reference, delegate);
 			}
 			TModule: {
-				return getScopeWithLocallyKnownTypes(context.astElement as Script, reference, delegate);
+				return locallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context.astElement as Script, reference, delegate);
 			}
 			N4FieldDeclaration: {
 				val isStaticContext = context.static;

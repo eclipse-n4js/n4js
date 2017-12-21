@@ -20,12 +20,7 @@ import org.eclipse.n4js.n4idl.versioning.VersionHelper
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
-import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.impl.MultimapBasedScope
-import org.eclipse.n4js.n4JS.Script
-import org.eclipse.xtext.scoping.IScopeProvider
-import org.eclipse.n4js.n4idl.scoping.utils.MultiLocallyKnownTypesScopingHelper
 
 /**
  * Adapts {@link N4JSScopeProvider} by wrapping the created scopes inside an instance of {@link N4IDLVersionAwareScope}.
@@ -34,9 +29,6 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 
 	@Inject
 	private VersionHelper versionHelper;
-	
-	@Inject
-	private MultiLocallyKnownTypesScopingHelper multiLocallyKnownTypesScopingHelper
 
 	override getVersionScope(TClassifier classifier) {
 		return getN4JSScope(classifier.containingModule,
@@ -50,22 +42,18 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 			reference === N4JSPackage.Literals.IDENTIFIER_REF__ID
 		) {
 			val int contextVersion = versionHelper.computeMaximumVersion(context);
-			
+
 			// do not filter by version, if context version is infinity
 //			if (contextVersion == Integer.MAX_VALUE) {
 //				return scope;
 //			}
-			
+
 			return new N4IDLVersionAwareScope(scope, contextVersion);
 		}
 
 		return scope;
 	}
 
-	override buildMapBasedScope(IScope scope, Iterable<IEObjectDescription> descriptions) {
-		return MultimapBasedScope.createScope(scope, descriptions, false);
-	}
-	
 	override protected scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		if (specifier instanceof VersionedNamedImportSpecifier) {
 			return new N4IDLVersionAwareScope(super.scope_ImportedElement(specifier, reference), specifier.requestedVersion.intValue);
@@ -73,9 +61,5 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 			super.scope_ImportedElement(specifier, reference)
 		}
 	}
-	
-	override protected getScopeWithLocallyKnownTypes(Script context, EReference reference, IScopeProvider delegate) {
-		return multiLocallyKnownTypesScopingHelper.scopeWithLocallyKnownTypes(context, reference, delegate);
-	}
-	
+
 }

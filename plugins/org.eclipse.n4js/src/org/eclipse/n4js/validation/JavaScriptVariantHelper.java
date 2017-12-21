@@ -276,4 +276,10 @@ public interface JavaScriptVariantHelper {
 	 */
 	public String variantMode(EObject eobj);
 
+	/**
+	 * Return {@code true} if in the context of the given {@link EObject}, there can be distinct elements with the same
+	 * qualified name in a scope.
+	 */
+	public boolean isMultiQNScope(EObject eobj);
+
 }

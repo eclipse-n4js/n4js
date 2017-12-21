@@ -30,7 +30,9 @@ import org.eclipse.n4js.scoping.builtin.NoPrimitiveTypesScope
 import org.eclipse.n4js.scoping.members.MemberScope.MemberScopeFactory
 import org.eclipse.n4js.scoping.utils.LocallyKnownTypesScopingHelper
 import org.eclipse.n4js.scoping.utils.MergedScope
+import org.eclipse.n4js.scoping.utils.ScopesHelper
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
+import org.eclipse.n4js.ts.typeRefs.Versionable
 import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TExportableElement
@@ -41,7 +43,6 @@ import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
-import org.eclipse.xtext.scoping.impl.MapBasedScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
 
@@ -63,11 +64,15 @@ class ImportedElementsScopingHelper {
 
 	@Inject
 	private VariableVisibilityChecker variableVisibilityChecker
-	
+
 	@Inject
 	private Provider<ImportedElementsMap> elementsMapProvider
 
-	@Inject MemberScopeFactory memberScopeFactory
+	@Inject
+	private MemberScopeFactory memberScopeFactory
+
+	@Inject
+	private ScopesHelper scopesHelper;
 
 	def IScope getImportedIdentifiables(IScope parentScope, Script script) {
 		val IScope scriptScope = cache.get(script -> 'importedIdentifiables', script.eResource) [|
@@ -90,24 +95,17 @@ class ImportedElementsScopingHelper {
 	}
 
 	/**
-	 * Builds a new map-based scope with the given parent scope and the given iterable of elements.
-	 */
-	protected def IScope buildMapBasedScope(IScope parent, Iterable<IEObjectDescription> elements) {
-		return MapBasedScope.createScope(parent, elements);
-	}
-	
-	/**
 	 * Creates a new {@link IEObjectDescription} for the given element with the given qualified name.
-	 * 
+	 *
 	 * This description will be used in scoping result.
 	 */
 	private def IEObjectDescription createEObjectDescription(QualifiedName name, EObject element) {
 		return EObjectDescription.create(name, element);
 	}
-	
+
 	/**
-	 * Creates a new QualifiedNamed for the given named import specifier. 
-	 * 
+	 * Creates a new QualifiedNamed for the given named import specifier.
+	 *
 	 * Determines the local name of the imported element based on the given import specifier.
 	 */
 	private def QualifiedName createQualifiedNameForAlias(NamedImportSpecifier specifier,
@@ -121,15 +119,15 @@ class ImportedElementsScopingHelper {
 		};
 		return QualifiedName.create(importedName)
 	}
-	
+
 	private def QualifiedName createImportedQualifiedTypeName(Type type) {
 		return QualifiedName.create(getImportedName(type));
 	}
-	
+
 	private def String getImportedName(Type type) {
-		return type.exportedName ?: type.name; 
-	} 
-	
+		return type.exportedName ?: type.name;
+	}
+
 	private def QualifiedName createImportedQualifiedTypeName(String namespace, Type type) {
 		return QualifiedName.create(namespace, getImportedName(type));
 	}
@@ -166,7 +164,7 @@ class ImportedElementsScopingHelper {
 		// local broken elements are hidden by parent scope, both are hidden by valid local elements
 		val invalidLocalScope = new SimpleScope(invalidImports.values)
 		val localBaseScope = new MergedScope(invalidLocalScope, parentScope)
-		val localValidScope = buildMapBasedScope(localBaseScope, validImports.values)
+		val localValidScope = scopesHelper.mapBasedScopeFor(script, localBaseScope, validImports.values)
 
 		return new OriginAwareScope(localValidScope, originatorMap);
 	}
@@ -324,13 +322,18 @@ class ImportedElementsScopingHelper {
 		else
 			return new AbstractTypeVisibilityChecker.TypeVisibility(false);
 	}
-	
+
 	/**
-	 * Returns {@code true} if an import of the given {@link IEObjectDescription} should be 
-	 * regarded as ambiguous with the given {@link IdentifiableElement}. 
+	 * Returns {@code true} if an import of the given {@link IEObjectDescription} should be
+	 * regarded as ambiguous with the given {@link IdentifiableElement}.
 	 */
 	protected def boolean isAmbiguous(IEObjectDescription existing, IdentifiableElement element) {
-		return true;
+		// make sure ambiguity is only detected in case of the same imported version of a name
+		if (existing.getEObjectOrProxy instanceof Versionable && element instanceof Versionable) {
+			return (existing.getEObjectOrProxy as Versionable).version == (element as Versionable).version;
+		} else {
+			return true;
+		}
 	}
 
 	private def IEObjectDescription putOrError(ImportedElementsMap result,
@@ -338,7 +341,7 @@ class ImportedElementsScopingHelper {
 		// TODO IDEBUG-702 refactor InvisibleTypeOrVariableDescription / AmbiguousImportDescription relation
 		var IEObjectDescription ret = null;
 		val existing = result.getElements(importedName)
-		
+
 		if (!existing.empty && existing.findFirst[isAmbiguous(it, element)] !== null) {
 			if (issueCode !== null) {
 				switch existing {
