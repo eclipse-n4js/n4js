@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.n4jsx.transpiler.utils;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,7 +24,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4jsx.ReactHelper;
@@ -47,13 +45,7 @@ import com.google.inject.Inject;
  * work for other backends once their support is added.
  */
 public final class JSXBackendHelper {
-	private final static String JSX_BACKEND_MODULE_NAME = "react";
-	private final static String JSX_BACKEND_FACADE_NAME = "React";
-	private final static String JSX_REACT_MODULE_FILE_NAME = "index";
 	private final static String JSX_BACKEND_ELEMENT_FACTORY_NAME = "createElement";
-	private final static String JSX_BACKEND_DEFINITION_NAME = JSX_BACKEND_MODULE_NAME + File.separatorChar
-			+ JSX_REACT_MODULE_FILE_NAME + "."
-			+ N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 	/**
 	 * Local cache of JSX backends.
@@ -76,14 +68,9 @@ public final class JSXBackendHelper {
 	@Inject
 	ReactHelper reactHelper;
 
-	/** @return name of the JSX backend module file name, i.e. "index" */
-	public String getBackendReactModuleFileName() {
-		return JSX_REACT_MODULE_FILE_NAME;
-	}
-
 	/** @return name of the JSX backend facade, i.e "React" */
 	public String getBackendFacadeName() {
-		return JSX_BACKEND_FACADE_NAME;
+		return ReactHelper.REACT_NAMESPACE;
 	}
 
 	/** @return name of the JSX element factory name, i.e "createElement" */
@@ -178,7 +165,7 @@ public final class JSXBackendHelper {
 	 */
 	private final void populateBackendsCache(Resource resource) {
 		jsxBackends.putAll(
-				visibleBackends(resource, JSXBackendHelper::looksLikeReactUri)
+				visibleBackends(resource, reactHelper::looksLikeReactUri)
 						.stream()
 						.collect(Collectors.toMap(
 								uri -> qualifiedNameConverter.toString(nameComputer.getQualifiedModuleName(uri)),
@@ -233,7 +220,6 @@ public final class JSXBackendHelper {
 	/**
 	 * Provides URI for JSX Backend. URI is cached in local map {@link JSXBackendHelper#jsxBackends}. If there is no URI
 	 * for given QN, performs lookup via scope of the provided resource. and returned.
-	 *
 	 */
 	private final URI getOrFindJSXBackend(Resource resource, String qualifiedName) {
 		if (jsxBackends.isEmpty()) {
@@ -248,20 +234,5 @@ public final class JSXBackendHelper {
 		}
 
 		return backendURI;
-	}
-
-	/** @return {@code true} if provided {@code URI} looks like JSX backend file. */
-	private static boolean looksLikeReactUri(URI uri) {
-		if (uri == null)
-			return false;
-
-		String sqn = uri.toString();
-		if (sqn == null)
-			return false;
-		// TODO: FIXME as part of GH-358
-		return sqn.endsWith(JSX_BACKEND_DEFINITION_NAME)
-				|| sqn.endsWith(JSX_BACKEND_MODULE_NAME + "." + N4JSGlobals.N4JSD_FILE_EXTENSION); // i.e.
-																									// react/index.n4jsd
-																									// or react.n4jsd
 	}
 }

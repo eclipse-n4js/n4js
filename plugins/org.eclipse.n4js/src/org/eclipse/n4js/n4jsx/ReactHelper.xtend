@@ -11,9 +11,11 @@
 package org.eclipse.n4js.n4jsx
 
 import com.google.inject.Inject
+import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
 import org.eclipse.n4js.n4JS.JSXElement
+import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
@@ -43,6 +45,7 @@ class ReactHelper {
 	@Inject private TypeSystemHelper tsh
 	@Inject private IResourceScopeCache resourceScopeCacheHelper
 	@Inject private IScopeProvider scopeProvider;
+	@Inject private IN4JSCore n4jsCore;
 
 	public final static String REACT_PROJECT_ID = "react"
 	public final static String REACT_COMPONENT = "Component"
@@ -52,10 +55,27 @@ class ReactHelper {
 	public final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
 
 	/**
+	 * Check if a URI looks like React.
+	 */
+	def public boolean looksLikeReactUri(URI uri) {
+		if (uri === null || uri.toString === null)
+			return false;
+
+		val n4jsProjectOptional = n4jsCore.findProject(uri);
+		if (n4jsProjectOptional.isPresent() && n4jsProjectOptional.get().getProjectId().equals(ReactHelper.REACT_PROJECT_ID)) {
+			val n4jsProject = n4jsProjectOptional.get();
+			val moduleName = uri.trimFileExtension.lastSegment;
+			return n4jsProject.mainModule.equals(moduleName);
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Check if a module is a React module.
 	 */
 	def public boolean isReactModule(TModule module) {
-		return (module !== null && REACT_PROJECT_ID.equals(module.projectId))
+		return (module !== null && module.isMainModule && REACT_PROJECT_ID.equals(module.projectId))
 	}
 
 	/**
