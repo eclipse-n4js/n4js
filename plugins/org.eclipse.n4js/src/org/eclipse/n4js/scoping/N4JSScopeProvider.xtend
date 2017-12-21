@@ -328,7 +328,6 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	 * Same as {@link #scope_ImportedModule(EObject,EReference)}, but also includes the current module.
 	 */
 	private def IScope scope_ImportedAndCurrentModule(EObject importDeclaration, EReference reference) {
-
 		return delegateGetScope(importDeclaration, reference);
 	}
 
