@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.utils;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -70,6 +71,14 @@ public enum ResourceType {
 		return getResourceType(resource.getURI());
 	}
 
+	// todo
+	/**
+	 */
+	public static ResourceType getResourceType(IResource resource) {
+		String fileExtension = resource.getFileExtension();
+		return naiveGetResourceType(fileExtension);
+	}
+
 	/**
 	 * Based on the provided {@link URI} determines type of the resource. Null safe (in that case returns
 	 * {@link #UNKOWN} ).
@@ -113,8 +122,15 @@ public enum ResourceType {
 	 * not handle nested extension. Internal use only.
 	 */
 	private static ResourceType naiveGetResourceType(URI uri) {
-		String fileExtension = uri.fileExtension();
+		return naiveGetResourceType(uri.fileExtension());
+	}
 
+	// todo
+	/**
+	 * Tries to determine file resource type based on {@code URI} file extension. Does not check if data is valid. Does
+	 * not handle nested extension. Internal use only.
+	 */
+	private static ResourceType naiveGetResourceType(String fileExtension) {
 		if (Strings.isNullOrEmpty(fileExtension))
 			return UNKOWN;
 
