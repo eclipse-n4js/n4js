@@ -169,4 +169,3 @@ def gitCheckout(String checkoutDir, Object gitRemote, Object branch, String refC
                                                                        [$class: 'CloneOption', depth: 0, noTags: false, reference: refCache, shallow: true]]
                                 , userRemoteConfigs                : gitRemote]
 }
-
