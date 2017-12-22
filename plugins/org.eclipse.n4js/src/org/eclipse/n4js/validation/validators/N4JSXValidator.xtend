@@ -370,6 +370,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 					addIssue(
 						message,
 						varDecl,
+						findNameFeature(varDecl).value,
 						IssueCodes.JSX_VAR_DECL_NOT_REACT
 					);
 		}
