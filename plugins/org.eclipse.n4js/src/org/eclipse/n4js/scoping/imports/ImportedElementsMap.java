@@ -10,10 +10,15 @@
  */
 package org.eclipse.n4js.scoping.imports;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.n4idl.scoping.utils.MultiImportedElementsMap;
+import org.eclipse.n4js.validation.JavaScriptVariant;
+import org.eclipse.n4js.validation.JavaScriptVariantHelper;
 import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.inject.ImplementedBy;
+import com.google.inject.Inject;
 
 /**
  * A map that can be used to collect imported elements and keep track of them by their {@link QualifiedName}.
@@ -39,4 +44,25 @@ public interface ImportedElementsMap {
 	 * Returns all {@link IEObjectDescription} that were put into this maa.
 	 */
 	Iterable<IEObjectDescription> values();
+
+	/**
+	 * A provider for {@link ImportedElementsMap} instances.
+	 */
+	public static class Provider {
+
+		@Inject
+		private JavaScriptVariantHelper javaScriptVariantHelper;
+
+		/**
+		 * Returns a new instanceof of {@link ImportedElementsMap} based on the {@link JavaScriptVariant} of the given
+		 * context.
+		 */
+		public ImportedElementsMap get(EObject context) {
+			if (javaScriptVariantHelper.isMultiQNScope(context)) {
+				return new MultiImportedElementsMap();
+			} else {
+				return new SingleImportedElementsMap();
+			}
+		}
+	}
 }

@@ -55,6 +55,7 @@ import org.eclipse.n4js.resource.XpectAwareFileExtensionCalculator;
 import org.eclipse.n4js.scoping.N4JSGlobalScopeProvider;
 import org.eclipse.n4js.scoping.N4JSScopeProvider;
 import org.eclipse.n4js.scoping.builtin.ScopeRegistrar;
+import org.eclipse.n4js.scoping.imports.ImportedElementsMap;
 import org.eclipse.n4js.scoping.imports.N4JSImportedNamespaceAwareLocalScopeProvider;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.scoping.builtin.ResourceSetWithBuiltInScheme;
@@ -561,6 +562,12 @@ public class N4JSRuntimeModule extends org.eclipse.n4js.AbstractN4JSRuntimeModul
 	 */
 	public Class<? extends VersionScopeProvider> bindVersionScopeProvider() {
 		return N4IDLVersionAwareScopeProvider.class;
+	}
+
+	/**
+	 */
+	public Class<? extends ImportedElementsMap.Provider> bindImportedElementsMapProvider() {
+		return ImportedElementsMap.Provider.class;
 	}
 
 }

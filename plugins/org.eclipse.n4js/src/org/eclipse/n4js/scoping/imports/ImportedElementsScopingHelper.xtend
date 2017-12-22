@@ -11,7 +11,6 @@
 package org.eclipse.n4js.scoping.imports
 
 import com.google.inject.Inject
-import com.google.inject.Provider
 import java.util.HashMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
@@ -66,7 +65,7 @@ class ImportedElementsScopingHelper {
 	private VariableVisibilityChecker variableVisibilityChecker
 
 	@Inject
-	private Provider<ImportedElementsMap> elementsMapProvider
+	private ImportedElementsMap.Provider elementsMapProvider
 
 	@Inject
 	private MemberScopeFactory memberScopeFactory
@@ -139,9 +138,9 @@ class ImportedElementsScopingHelper {
 		if (imports.empty) return parentScope
 
 		/** broken/invisible imported eObjects descriptions (in case of broken state of imports this can be {@link AmbiguousImportDescription})*/
-		val invalidImports = elementsMapProvider.get();
+		val invalidImports = elementsMapProvider.get(script);
 		/** valid imported eObjects descriptions (in case of broken state of imports this can be {@link AmbiguousImportDescription})*/
-		val validImports = elementsMapProvider.get();
+		val validImports = elementsMapProvider.get(script);
 		val originatorMap = new IEODesc2ISpec
 
 		for (imp : imports) {
