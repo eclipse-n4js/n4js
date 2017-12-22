@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-ProjectId: java_project
+ProjectId: Project2
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
 ProjectType: library

@@ -9,7 +9,7 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-ProjectId: SuperCallValidation
+ProjectId: SuperMethodAccess
 ProjectType: library
 ProjectVersion: 0.0.1
 VendorId: org.eclipse.n4js
