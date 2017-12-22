@@ -12,6 +12,10 @@ package org.eclipse.n4js.ui.building;
 
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -83,9 +87,18 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			SubMonitor monitorMF = sm.newChild(1);
 			SubMonitor monitorPJ = sm.newChild(99);
 			super.doBuild(getManifestTBB(toBeBuilt), monitorMF, type);
-			if (isErrorFree()) {
+			List<String> errMsgsInManifest = getErrorMsgsInManifest();
+			if (errMsgsInManifest.isEmpty()) {
 				// Only build the project if the manifest file is error free
 				super.doBuild(toBeBuilt, monitorPJ, type);
+			} else {
+				String completeLogMsg = "";
+				completeLogMsg += "Errors in Manifest. Project is not built.\n";
+				completeLogMsg += "Manifest errors:\n";
+				for (String errMsg : errMsgsInManifest) {
+					completeLogMsg += errMsg + "\n";
+				}
+				LOGGER.log(Level.WARN, completeLogMsg);
 			}
 
 			getProject().touch(monitor);
@@ -123,15 +136,17 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		return manifestTBB;
 	}
 
-	private boolean isErrorFree() throws CoreException {
+	private List<String> getErrorMsgsInManifest() throws CoreException {
+		List<String> errMsgs = new LinkedList<>();
 		IMarker[] markersInManifests = getProject().findMarkers(null, true, IResource.DEPTH_ONE);
 		for (IMarker marker : markersInManifests) {
 			Integer severityType = (Integer) marker.getAttribute(IMarker.SEVERITY);
 			ResourceType rType = ResourceType.getResourceType(marker.getResource());
 			if (rType == ResourceType.N4MF && severityType.intValue() == IMarker.SEVERITY_ERROR) {
-				return false;
+				String msg = (String) marker.getAttribute(IMarker.MESSAGE);
+				errMsgs.add(msg);
 			}
 		}
-		return true;
+		return errMsgs;
 	}
 }
