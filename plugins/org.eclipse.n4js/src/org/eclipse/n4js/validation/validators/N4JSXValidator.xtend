@@ -49,6 +49,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.FormalParameter
 
 /**
  * Validation of React bindings including naming convention (components in upper case and HTML tags in lower case)
@@ -372,6 +373,27 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 						varDecl,
 						findNameFeature(varDecl).value,
 						IssueCodes.JSX_VAR_DECL_NOT_REACT
+					);
+		}
+	}
+
+	/**
+	 * Check that function parameter is not named React in N4JSX file to avoid naming clash.
+	 */
+	@Check
+	def void checFormalParameterNotNamedReact(FormalParameter formalParam) {
+		val resourceType = ResourceType.getResourceType(formalParam)
+		// This check is only applicable to N4JSX/JSX file
+		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
+			return;
+
+		if (formalParam.name == ReactHelper.REACT_NAMESPACE) {
+			val message = IssueCodes.getMessageForJSX_FORMAL_PARAM_NOT_REACT();
+					addIssue(
+						message,
+						formalParam,
+						findNameFeature(formalParam).value,
+						IssueCodes.JSX_FORMAL_PARAM_NOT_REACT
 					);
 		}
 	}
