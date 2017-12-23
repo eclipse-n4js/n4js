@@ -20,12 +20,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.xtext.common.types.access.TypeResource;
 import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
-import org.xpect.expectation.IStringExpectation;
-import org.xpect.expectation.StringExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.tests.LinkingTest;
-import org.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
+import org.eclipse.xpect.expectation.IStringExpectation;
+import org.eclipse.xpect.expectation.StringExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.tests.LinkingTest;
+import org.eclipse.xpect.xtext.lib.util.XtextOffsetAdapter.ICrossEReferenceAndEObject;
 
 import com.google.common.base.Joiner;
 

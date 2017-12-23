@@ -14,6 +14,8 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ui.changes.ChangeManager;
+import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.model.edit.IModification;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
@@ -21,9 +23,6 @@ import org.eclipse.xtext.ui.editor.model.edit.ISemanticModification;
 import org.eclipse.xtext.ui.editor.model.edit.SemanticModificationWrapper;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
 import org.eclipse.xtext.validation.Issue;
-
-import org.eclipse.n4js.ui.changes.ChangeManager;
-import org.eclipse.n4js.ui.changes.IChange;
 
 /**
  * In Xtext, an {@link ISemanticModification} is an alternative form of an {@link IModification}, but instead of letting
@@ -87,6 +86,8 @@ public class N4ModificationWrapper implements IModification {
 						issue.getOffset(),
 						issue.getLength(),
 						element);
+
+				modification.computeFinalChanges();
 				changeManager.applyAll(changes);
 			}
 		});

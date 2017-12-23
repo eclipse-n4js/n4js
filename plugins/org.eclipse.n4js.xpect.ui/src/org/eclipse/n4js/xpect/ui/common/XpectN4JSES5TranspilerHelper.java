@@ -37,8 +37,8 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.AnnotationDefinition;
-import org.eclipse.n4js.generator.common.AbstractSubGenerator;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.naming.N4JSQualifiedNameConverter;
 import org.eclipse.n4js.projectModel.IN4JSCore;
@@ -55,6 +55,9 @@ import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.n4js.xpect.common.DuplicateResourceAwareFileSetupContext;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
+import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
+import org.eclipse.xpect.xtext.lib.setup.emf.ResourceFactory;
+import org.eclipse.xpect.xtext.lib.setup.workspace.Workspace;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -66,9 +69,6 @@ import org.eclipse.xtext.validation.CheckMode;
 import org.eclipse.xtext.validation.IResourceValidator;
 import org.eclipse.xtext.validation.Issue;
 import org.junit.Assert;
-import org.xpect.xtext.lib.setup.FileSetupContext;
-import org.xpect.xtext.lib.setup.emf.ResourceFactory;
-import org.xpect.xtext.lib.setup.workspace.Workspace;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Optional;
@@ -130,7 +130,7 @@ public class XpectN4JSES5TranspilerHelper {
 	 * Reads out Xpect ResourceSet configuration to retrieve EMF resources from there.
 	 */
 	public static class ReadOutResourceSetConfiguration extends ReadOutConfiguration {
-		private org.xpect.xtext.lib.setup.emf.ResourceSet configuredResourceSet;
+		private org.eclipse.xpect.xtext.lib.setup.emf.ResourceSet configuredResourceSet;
 
 		ReadOutResourceSetConfiguration(FileSetupContext ctx, IN4JSCore resourceSet) {
 			super(ctx, resourceSet);
@@ -140,7 +140,7 @@ public class XpectN4JSES5TranspilerHelper {
 		 * @param xpectResourceSet
 		 *            the Xpect configuration item to be read out
 		 */
-		public void add(org.xpect.xtext.lib.setup.emf.ResourceSet xpectResourceSet) {
+		public void add(org.eclipse.xpect.xtext.lib.setup.emf.ResourceSet xpectResourceSet) {
 			this.configuredResourceSet = xpectResourceSet;
 		}
 
@@ -152,8 +152,8 @@ public class XpectN4JSES5TranspilerHelper {
 			final List<Resource> configuredResources = newArrayList();
 			if (configuredResourceSet != null) {
 				for (ResourceFactory factory : configuredResourceSet.getFactories()) {
-					if (factory instanceof org.xpect.xtext.lib.setup.emf.Resource) {
-						org.xpect.xtext.lib.setup.emf.Resource res = (org.xpect.xtext.lib.setup.emf.Resource) factory;
+					if (factory instanceof org.eclipse.xpect.xtext.lib.setup.emf.Resource) {
+						org.eclipse.xpect.xtext.lib.setup.emf.Resource res = (org.eclipse.xpect.xtext.lib.setup.emf.Resource) factory;
 						try {
 							if (fileSetupCtx != null) {
 								Resource createdRes = res.create(fileSetupCtx, resourceSet);
@@ -186,7 +186,7 @@ public class XpectN4JSES5TranspilerHelper {
 		 * @param workspace
 		 *            the Xpect configuration item to be read out
 		 */
-		public void add(org.xpect.xtext.lib.setup.workspace.Workspace workspace) {
+		public void add(org.eclipse.xpect.xtext.lib.setup.workspace.Workspace workspace) {
 			this.configuredWorkspace = workspace;
 		}
 
@@ -244,7 +244,8 @@ public class XpectN4JSES5TranspilerHelper {
 	 *            the system loader to use (SYSTEM_JS[default], COMMON_JS,...)
 	 * @return output streams concatenated
 	 */
-	public String doCompileAndExecute(final XtextResource resource, org.xpect.setup.ISetupInitializer<Object> init,
+	public String doCompileAndExecute(final XtextResource resource,
+			org.eclipse.xpect.setup.ISetupInitializer<Object> init,
 			FileSetupContext fileSetupContext, boolean decorateStdStreams, ResourceTweaker resourceTweaker,
 			GeneratorOption[] options, SystemLoaderInfo systemLoader) throws IOException {
 
@@ -344,7 +345,7 @@ public class XpectN4JSES5TranspilerHelper {
 	 * Load Xpect configuration
 	 */
 	private void loadXpectConfiguration(
-			org.xpect.setup.ISetupInitializer<Object> init, FileSetupContext fileSetupContext) {
+			org.eclipse.xpect.setup.ISetupInitializer<Object> init, FileSetupContext fileSetupContext) {
 		if (Platform.isRunning()) {
 			readOutConfiguration = new ReadOutWorkspaceConfiguration(fileSetupContext, core, fileExtensionProvider);
 		} else {

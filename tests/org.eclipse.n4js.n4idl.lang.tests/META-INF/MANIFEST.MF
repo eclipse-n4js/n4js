@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
-Bundle-SymbolicName: com.enfore.n4idl.lang.tests
+Bundle-SymbolicName: org.eclipse.n4js.n4idl.lang.tests
 Bundle-Vendor: %providerName
 Bundle-Version: 0.0.1.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8

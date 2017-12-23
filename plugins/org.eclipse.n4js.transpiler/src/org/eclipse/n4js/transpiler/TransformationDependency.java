@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;

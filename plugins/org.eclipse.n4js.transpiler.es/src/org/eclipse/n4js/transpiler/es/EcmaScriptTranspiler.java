@@ -15,7 +15,7 @@ import java.io.Writer;
 import java.util.Arrays;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.AbstractTranspiler;

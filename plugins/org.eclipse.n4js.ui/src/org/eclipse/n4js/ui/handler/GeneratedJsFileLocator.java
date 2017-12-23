@@ -12,22 +12,21 @@ package org.eclipse.n4js.ui.handler;
 
 import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Optional.fromNullable;
-import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 import static org.eclipse.emf.common.util.URI.createPlatformResourceURI;
+import static org.eclipse.n4js.N4JSGlobals.JS_FILE_EXTENSION;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.n4js.fileextensions.FileExtensionType;
+import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
+import org.eclipse.n4js.generator.GeneratorException;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.utils.CompilerHelper;
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.fileextensions.FileExtensionType;
-import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.common.CompilerUtils;
-import org.eclipse.n4js.generator.common.GeneratorException;
-import org.eclipse.n4js.projectModel.IN4JSCore;
-import org.eclipse.n4js.projectModel.IN4JSProject;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 /**
  * Service class for locating generated JS files for N4JS files.
@@ -37,7 +36,7 @@ public class GeneratedJsFileLocator {
 	private IN4JSCore core;
 
 	@Inject
-	private CompilerUtils compilerUtils;
+	private CompilerHelper compilerHelper;
 
 	@Inject
 	private FileExtensionBasedPropertTester tester;
@@ -78,7 +77,7 @@ public class GeneratedJsFileLocator {
 			final Optional<? extends IN4JSProject> project = core.findProject(fileUri);
 			if (project.isPresent()) {
 				try {
-					final String targetFileName = compilerUtils.getTargetFileName(fileUri, JS_FILE_EXTENSION);
+					final String targetFileName = compilerHelper.getTargetFileName(fileUri, JS_FILE_EXTENSION);
 					final String targetFileRelativeLocation = project.get().getOutputPath() + "/"
 					// TODO replace hard coded ES5 sub-generator ID once it is clear how to use various
 					// sub-generators for runners (IDE-1487)

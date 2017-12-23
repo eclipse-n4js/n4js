@@ -11,6 +11,17 @@
 package org.eclipse.n4js.ui.quickfix
 
 import com.google.inject.Inject
+import java.util.ArrayList
+import java.util.Collection
+import java.util.Collections
+import java.util.Map
+import java.util.concurrent.atomic.AtomicReference
+import org.eclipse.core.resources.IMarker
+import org.eclipse.core.resources.ResourcesPlugin
+import org.eclipse.core.runtime.CoreException
+import org.eclipse.emf.common.util.URI
+import org.eclipse.emf.ecore.EObject
+import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.binaries.IllegalBinaryStateException
 import org.eclipse.n4js.external.NpmManager
@@ -28,6 +39,7 @@ import org.eclipse.n4js.n4JS.N4Modifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.PropertyNameOwner
+import org.eclipse.n4js.n4mf.ProjectDependency
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement
@@ -51,12 +63,6 @@ import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.n4js.validation.IssueUserDataKeys
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import java.util.ArrayList
-import java.util.concurrent.atomic.AtomicReference
-import org.eclipse.core.resources.IMarker
-import org.eclipse.emf.common.util.URI
-import org.eclipse.emf.ecore.EObject
-import org.eclipse.jface.dialogs.ProgressMonitorDialog
 import org.eclipse.xtext.diagnostics.Diagnostic
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext
@@ -64,12 +70,13 @@ import org.eclipse.xtext.ui.editor.quickfix.Fix
 import org.eclipse.xtext.ui.editor.quickfix.IssueResolutionAcceptor
 import org.eclipse.xtext.validation.Issue
 
+import static org.eclipse.core.resources.IncrementalProjectBuilder.CLEAN_BUILD
+import static org.eclipse.jface.dialogs.MessageDialog.openError
 import static org.eclipse.n4js.ui.changes.ChangeProvider.*
 import static org.eclipse.n4js.ui.quickfix.QuickfixUtil.*
-import static org.eclipse.jface.dialogs.MessageDialog.openError
 
 import static extension org.eclipse.n4js.external.version.VersionConstraintFormatUtil.npmFormat
-import static extension org.eclipse.n4js.n4mf.utils.parsing.ManifestValuesParsingUtil.parseDependency
+import org.eclipse.n4js.n4mf.SimpleProjectDependency
 
 /**
  * N4JS quick fixes.
@@ -644,24 +651,50 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 		});
 	}
 
+
+
 	@Fix(IssueCodes.NON_EXISTING_PROJECT)
-	def tryInstallMissingDependencyFromNpm(Issue issue, extension IssueResolutionAcceptor acceptor) {
+	def tryInstallMissingDependencyFromNpm(Issue issue, IssueResolutionAcceptor acceptor) {
 
-		accept(issue, 'Get dependency', 'Download missing dependency from npm.', null, [ element , context |
+		val modification = new N4Modification() {
+			var boolean multipleInvocations;
 
-				val doc = context.xtextDocument;
-				val documentText = doc.get(issue.offset, issue.length);
+			override Collection<? extends IChange> computeChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				multipleInvocations = false;
+				invokeNpmManager(element, !multipleInvocations);
+			}
+			override Collection<? extends IChange> computeOneOfMultipleChanges(IModificationContext context, IMarker marker, int offset, int length, EObject element) throws Exception {
+				multipleInvocations = true;
+				invokeNpmManager(element, !multipleInvocations);
+			}
+			override void computeFinalChanges() throws Exception {
+				if (multipleInvocations) {
+					new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
+						try {
+							ResourcesPlugin.getWorkspace().build(CLEAN_BUILD, monitor);
+						} catch (IllegalBinaryStateException e) {
+						} catch (CoreException e) {
+						}
+					]);
+				}
+			}
 
-				val dependency = documentText.parseDependency.getAST;
+			def Collection<? extends IChange> invokeNpmManager(EObject element, boolean triggerCleanbuild) throws Exception {
+				val dependency = element as SimpleProjectDependency;
 				val packageName = dependency.project.projectId;
-				val packageVersion = dependency.versionConstraint.npmFormat;
+				val packageVersion = if (dependency instanceof ProjectDependency) {
+						dependency.versionConstraint.npmFormat;
+					} else {
+						"";
+					};
 
 				val errorStatusRef = new AtomicReference;
 				val illegalBinaryExcRef = new AtomicReference
 
 				new ProgressMonitorDialog(UIUtils.shell).run(true, false, [monitor |
 					try {
-						val status = npmManager.installDependency(packageName, packageVersion, monitor);
+						val Map<String, String> package = Collections.singletonMap(packageName, packageVersion);
+						val status = npmManager.installDependencies(package, monitor, triggerCleanbuild);
 						if (!status.OK) {
 							errorStatusRef.set(status);
 						}
@@ -683,6 +716,10 @@ class N4JSQuickfixProvider extends AbstractN4JSQuickfixProvider {
 					]);
 				}
 
-		]);
+			return #[];
+			}
+		}
+
+		acceptor.accept(issue, 'Install npm package to workspace', 'Download and install missing dependency from npm.', null, modification);
 	}
 }

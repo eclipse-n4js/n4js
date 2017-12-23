@@ -58,14 +58,21 @@ public class ImportsFactory {
 	/** Creates a new named import of 'name' from 'module' */
 	private ImportDeclaration createNamedImport(String name, IN4JSProject contextProject, TExportableElement te,
 			Adapter nodelessMarker) {
-
-		String moduleQN = te.getContainingModule().getQualifiedName();
+		TModule tmodule = te.getContainingModule();
+		IN4JSProject targetProject = core.findProject(te.eResource().getURI()).orNull();
+		String moduleQN;
+		if (targetProject != null && tmodule.getQualifiedName().toString().equals(targetProject.getMainModule())) {
+			// If the project has a main module, use project import instead.
+			moduleQN = targetProject.getProjectId();
+		} else {
+			// Standard case
+			moduleQN = te.getContainingModule().getQualifiedName();
+		}
 		QualifiedName qn = qualifiedNameConverter.toQualifiedName(moduleQN);
 		String firstSegment = qn.getFirstSegment();
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
 
 		return createImportDeclaration(qn, name, project, nodelessMarker, this::addNamedImport);
-
 	}
 
 	/** Creates a new default import with name 'name' from object description. */
@@ -87,9 +94,7 @@ public class ImportsFactory {
 		String firstSegment = qn.getFirstSegment();
 
 		IN4JSProject project = ImportSpecifierUtil.getDependencyWithID(firstSegment, contextProject);
-
 		if (project == null) {
-
 			IN4JSProject projectByNamespace = ImportSpecifierUtil.getDependencyWithID(name, contextProject);
 			IN4JSProject projectByEObject = core.findProject(te.eResource().getURI()).orNull();
 

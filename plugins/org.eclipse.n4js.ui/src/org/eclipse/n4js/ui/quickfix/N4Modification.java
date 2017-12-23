@@ -14,11 +14,10 @@ import java.util.Collection;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.xtext.ui.editor.model.IXtextDocument;
 import org.eclipse.xtext.ui.editor.model.edit.IModification;
 import org.eclipse.xtext.ui.editor.model.edit.IModificationContext;
-
-import org.eclipse.n4js.ui.changes.IChange;
 
 /**
  * Quick fixes define possible modifications by implementing {@link IModification}. This abstract class serves the same
@@ -44,6 +43,8 @@ public abstract class N4Modification {
 	 * Note that the marker, offset and length may refer to a different marker than the one the N4Modification has been
 	 * created for (in case the resolution is being applied to multiple markers in one step). Therefore, always use the
 	 * values provided as argument instead of any cached values!
+	 * <p>
+	 * Is called iff this N4Modification is applied once only.
 	 *
 	 * @param context
 	 *            the modification context (basically a pointer to an {@link IXtextDocument}).
@@ -65,6 +66,22 @@ public abstract class N4Modification {
 			int offset,
 			int length,
 			EObject element) throws Exception;
+
+	/**
+	 * Called if the N4Modification is applied at multiple markers. As default, this method delegates to
+	 * {@link #computeChanges(IModificationContext, IMarker, int, int, EObject)}.
+	 *
+	 * @see #computeChanges(IModificationContext, IMarker, int, int, EObject)
+	 */
+	public Collection<? extends IChange> computeOneOfMultipleChanges(
+			IModificationContext context,
+			IMarker marker,
+			int offset,
+			int length,
+			EObject element) throws Exception {
+
+		return computeChanges(context, marker, offset, length, element);
+	}
 
 	/**
 	 * Checks if the receiving N4Modification supports multi-apply, i.e. being applied to multiple issues / markers at
@@ -91,5 +108,12 @@ public abstract class N4Modification {
 	 */
 	public boolean isApplicableTo(@SuppressWarnings("unused") IMarker marker) {
 		return true;
+	}
+
+	/**
+	 * Is called after the last N4Modification was applied.
+	 */
+	public void computeFinalChanges() throws Exception {
+		// empty by default
 	}
 }

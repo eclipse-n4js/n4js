@@ -11,6 +11,7 @@
 package org.eclipse.n4js.ui.quickfix;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.core.resources.IMarker;
@@ -21,6 +22,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.text.source.IAnnotationModel;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.n4js.ui.changes.ChangeManager;
+import org.eclipse.n4js.ui.changes.IChange;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IMarkerResolution;
 import org.eclipse.ui.IPageLayout;
@@ -38,9 +41,6 @@ import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.validation.Issue;
 
 import com.google.inject.Inject;
-
-import org.eclipse.n4js.ui.changes.ChangeManager;
-import org.eclipse.n4js.ui.changes.IChange;
 
 /**
  * Adds support for applying a single quick fix to multiple markers in one step (optional). This functionality is
@@ -109,7 +109,6 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 				// applying an N4Modification to one or more markers
 
 				try {
-
 					// collect all changes
 					final List<IChange> changes = new ArrayList<>();
 					for (IMarker currMarker : markers) {
@@ -118,18 +117,25 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 							continue;
 
 						final Issue currIssue = issueUtil.createIssue(currMarker);
-						final IModificationContext currContext =
-								modificationContextFactory.createModificationContext(currIssue);
+						final IModificationContext currContext = modificationContextFactory
+								.createModificationContext(currIssue);
 						final int offset = MarkerUtilities.getCharStart(currMarker);
 						final int length = MarkerUtilities.getCharEnd(currMarker) - offset;
 						final EObject element = getElementForMarker(currContext, currMarker);
-						changes.addAll(
-								getN4Modification().computeChanges(
-										currContext,
-										currMarker,
-										offset, length,
-										element));
+
+						Collection<? extends IChange> changeSet = null;
+						if (markers.length == 1) {
+							changeSet = getN4Modification().computeChanges(
+									currContext, currMarker, offset, length, element);
+						} else {
+							changeSet = getN4Modification().computeOneOfMultipleChanges(
+									currContext, currMarker, offset, length, element);
+						}
+
+						changes.addAll(changeSet);
 					}
+
+					getN4Modification().computeFinalChanges();
 
 					// perform changes
 					changeManager.applyAll(changes);
@@ -138,8 +144,7 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 					throw new WrappedException(
 							"exception while applying resolution for quick fix '" + resolution.getLabel() + "'", e);
 				}
-			}
-			else {
+			} else {
 				// support for applying modifications other than N4Modification
 
 				// applying a single quick fix to multiple markers only supported for N4Modifications (see
@@ -193,7 +198,13 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 		}
 
 		private boolean isSameProblem(IMarker marker) {
-			final URI myUriToProblem = issue.getUriToProblem();
+			URI myUriToProblem = issue.getUriToProblem();
+
+			String code = issueUtil.getCode(marker);
+			if (code != null && code.equals(org.eclipse.n4js.validation.IssueCodes.NON_EXISTING_PROJECT)) {
+				myUriToProblem = myUriToProblem.appendFragment(Integer.toString(marker.hashCode()));
+			}
+
 			return myUriToProblem != null && myUriToProblem.equals(issueUtil.getUriToProblem(marker));
 		}
 	}
@@ -224,8 +235,7 @@ public class N4JSMarkerResolutionGenerator extends MarkerResolutionGenerator {
 			}
 			if (validResolutions.size() < resolutions.size())
 				showError_MultiApplyNotSupported();
-		}
-		else {
+		} else {
 			// all are valid
 			validResolutions.addAll(resolutions);
 		}

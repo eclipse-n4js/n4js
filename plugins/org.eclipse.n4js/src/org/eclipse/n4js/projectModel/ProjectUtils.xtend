@@ -430,16 +430,15 @@ public class ProjectUtils {
 			return false;
 		}
 
-		// check if  not a main module, assume true
 		val mainModuelUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
-		if (mainModuelUserData === null || !Boolean.getBoolean(mainModuelUserData)) {
-			return true;
+		val isMainModule = mainModuelUserData !== null && Boolean.valueOf(mainModuelUserData);
+		if (isMainModule) {
+			// for main modules we check containing project
+			val targetProject = n4jsCore.findProject(eoDescription.EObjectURI).orNull;
+			val currentProject = n4jsCore.findProject(eObject.eResource.URI).orNull;
+			return targetProject == currentProject;
 		}
 
-		// for main modules we check containing project
-		val targetProject = n4jsCore.findProject(eoDescription.EObjectURI).orNull;
-		val currentProject = n4jsCore.findProject(eObject.eResource.URI).orNull;
-
-		return targetProject == currentProject;
+		return true;
 	}
 }

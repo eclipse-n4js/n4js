@@ -14,20 +14,20 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.n4js.generator.common.GeneratorOption;
+import org.eclipse.n4js.generator.GeneratorOption;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
 import org.eclipse.n4js.xpect.common.XpectCommentRemovalUtil;
 import org.eclipse.n4js.xpect.ui.common.XpectN4JSES5TranspilerHelper;
+import org.eclipse.xpect.expectation.IStringExpectation;
+import org.eclipse.xpect.expectation.StringExpectation;
+import org.eclipse.xpect.expectation.impl.AbstractExpectation;
+import org.eclipse.xpect.parameter.ParameterParser;
+import org.eclipse.xpect.runner.Xpect;
+import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
+import org.eclipse.xpect.xtext.lib.setup.ThisResource;
 import org.eclipse.xtext.resource.XtextResource;
 import org.junit.Assert;
-import org.xpect.expectation.IStringExpectation;
-import org.xpect.expectation.StringExpectation;
-import org.xpect.expectation.impl.AbstractExpectation;
-import org.xpect.parameter.ParameterParser;
-import org.xpect.runner.Xpect;
-import org.xpect.xtext.lib.setup.FileSetupContext;
-import org.xpect.xtext.lib.setup.ThisResource;
 
 import com.google.common.base.Joiner;
 import com.google.inject.Inject;
@@ -71,7 +71,7 @@ public class OutputXpectMethod {
 	@ParameterParser(syntax = "( 'with' arg4=ID )?")
 	public void output(@StringExpectation(whitespaceSensitive = true) IStringExpectation expectation, // arg0
 			@ThisResource XtextResource resource, // arg1
-			org.xpect.setup.ISetupInitializer<Object> init, // arg2
+			org.eclipse.xpect.setup.ISetupInitializer<Object> init, // arg2
 			FileSetupContext fileSetupContext, // arg3
 			String systemLoader // arg4
 	) throws IOException {
@@ -115,7 +115,7 @@ public class OutputXpectMethod {
 	@ParameterParser(syntax = "( 'with' arg4=ID )?")
 	public void outputRegex(@StringExpectation(whitespaceSensitive = true) IStringExpectation expectation, // arg0
 			@ThisResource XtextResource resource, // arg1
-			org.xpect.setup.ISetupInitializer<Object> init, // arg2
+			org.eclipse.xpect.setup.ISetupInitializer<Object> init, // arg2
 			FileSetupContext fileSetupContext, // arg3
 			String systemLoader // arg4
 	) throws IOException {
