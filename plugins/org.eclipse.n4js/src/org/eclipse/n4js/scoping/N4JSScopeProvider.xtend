@@ -213,10 +213,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 
 		val scope = getScope(context, reference);
 
-
-
 		if (scope === IScope.NULLSCOPE) {
-
 			// used for type references in JSDoc (see JSDocCompletionProposalComputer):
 			if (reference == N4JSPackage.Literals.IMPORT_DECLARATION__MODULE) {
 				return scope_ImportedAndCurrentModule(context, reference);

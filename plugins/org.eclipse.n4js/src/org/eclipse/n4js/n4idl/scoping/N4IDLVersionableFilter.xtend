@@ -19,16 +19,16 @@ import org.eclipse.xtext.resource.IEObjectDescription
 /**
  * An {@link N4IDLVersionableFilter} can be used to filter versionable elements
  * according to N4IDL versioning rules.
- * 
+ *
  * The filter ignores any non-versionable elements and will never filter them out.
  */
 class N4IDLVersionableFilter {
 	private final int contextVersion;
-	
+
 	new(int contextVersion) {
 		this.contextVersion = contextVersion;
 	}
-	
+
 	/**
 	 * Returns a filtered view of the given iterable that only contains the descriptions of elements such that either of the following conditions hold:
 	 * <ul>
@@ -60,12 +60,12 @@ class N4IDLVersionableFilter {
 			.map[EObjectOrProxy as TVersionable] // map to TVersionable
 			.filter[return version <= contextVersion] // only consider elements up to the context version
 			.fold(-1)[u, c| Integer.max(u, c.version)] // select the maximum version
-				
+
 		return max;
 	}
-	
+
 	public def int getContextVersion() {
 		return this.contextVersion;
 	}
-	
+
 }

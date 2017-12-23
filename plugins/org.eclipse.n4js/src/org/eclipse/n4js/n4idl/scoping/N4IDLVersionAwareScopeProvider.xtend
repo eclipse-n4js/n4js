@@ -21,6 +21,7 @@ import org.eclipse.n4js.scoping.N4JSScopeProvider
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.xtext.scoping.IScope
+import org.eclipse.n4js.naming.QualifiedNameComputer
 
 /**
  * Adapts {@link N4JSScopeProvider} by wrapping the created scopes inside an instance of {@link N4IDLVersionAwareScope}.
@@ -29,6 +30,9 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 
 	@Inject
 	private VersionHelper versionHelper;
+
+	@Inject
+	private QualifiedNameComputer qualifiedNameComputer;
 
 	override getVersionScope(TClassifier classifier) {
 		return getN4JSScope(classifier.containingModule,
@@ -43,12 +47,7 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 		) {
 			val int contextVersion = versionHelper.computeMaximumVersion(context);
 
-			// do not filter by version, if context version is infinity
-//			if (contextVersion == Integer.MAX_VALUE) {
-//				return scope;
-//			}
-
-			return new N4IDLVersionAwareScope(scope, contextVersion);
+			return new N4IDLVersionAwareScope(scope, contextVersion, qualifiedNameComputer);
 		}
 
 		return scope;
@@ -56,7 +55,7 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 
 	override protected scope_ImportedElement(NamedImportSpecifier specifier, EReference reference) {
 		if (specifier instanceof VersionedNamedImportSpecifier) {
-			return new N4IDLVersionAwareScope(super.scope_ImportedElement(specifier, reference), specifier.requestedVersion.intValue);
+			return new N4IDLVersionAwareScope(super.scope_ImportedElement(specifier, reference), specifier.requestedVersion.intValue, qualifiedNameComputer);
 		} else {
 			super.scope_ImportedElement(specifier, reference)
 		}
