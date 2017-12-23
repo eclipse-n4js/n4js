@@ -1,0 +1,57 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+class B # 1 {
+	a: A
+	foo: string
+
+	bar() {
+		// XPECT version of this.a --> 1
+		this.a
+	}
+}
+
+class B # 2 {
+	a: A
+	bar: string
+
+	foo() {
+		// XPECT version of this.a --> 2
+		this.a
+	}
+}
+
+class A #1 {
+	b: B
+	c: C
+
+	foo() {
+		// XPECT version of this.b --> 1
+		this.b;
+
+		// XPECT version of this.c --> 1
+		this.c
+	}
+}
+
+class A # 2 {
+	b: B
+	c: C
+
+	foo() {
+		// XPECT version of this.b --> 2
+		this.b;
+
+		// XPECT version of this.c --> 1
+		this.c
+	}
+}
+
+class C # 1 {
+	a: A
+	b: B
+
+	foo() {
+		// XPECT version of this.a --> 2
+		this.a
+	}
+}

@@ -1,0 +1,30 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+class B # 1 {
+}
+
+class B # 2 {
+}
+
+class B # 3 {
+}
+
+class A # 1 {
+	// XPECT version of B --> 2
+	b: B
+}
+
+class A # 3 {
+	// XPECT version of B --> 3
+	b: B
+}
+
+class C # 1 {
+	// XPECT version of B --> 1
+	b: B
+}
+
+class C # 2 {
+	// XPECT version of B --> 3
+	b: B
+}

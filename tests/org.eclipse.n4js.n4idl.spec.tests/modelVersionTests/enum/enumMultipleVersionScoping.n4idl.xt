@@ -1,0 +1,20 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+// XPECT version of E --> 1
+enum E # 1 {
+	BLUE
+}
+
+// XPECT version of E --> 2
+enum E # 2 {
+	GREEN
+}
+
+// XPECT version of C --> 1
+class C # 1 {
+	// XPECT version of E --> 1
+	e1: E # 1;
+	// XPECT version of E --> 2
+	e2: E # 2;
+}
+

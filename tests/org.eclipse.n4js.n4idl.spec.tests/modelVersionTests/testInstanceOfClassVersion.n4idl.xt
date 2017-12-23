@@ -1,0 +1,15 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP  */
+
+class A  # 1 {
+	foo() { }
+}
+
+
+class A # 2 {
+	bar() { }
+}
+
+class B # 1  {
+	// XPECT version of 'A' --> 2
+	private a: A;
+}

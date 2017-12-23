@@ -1,0 +1,24 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest
+
+	ResourceSet {
+		ThisFile {}
+		Resource "ToImport.n4idl" {from="ToImport.n4idl"}
+	}
+
+   END_SETUP
+ */
+
+// XPECT noerrors
+import {A#1} from "imports/ToImport"
+// XPECT noerrors
+import {A#2} from "imports/ToImport"
+
+class Client#1 {
+	// XPECT noerrors
+	a : A#1
+}
+
+class Client#2 {
+	// XPECT noerrors
+	a : A#2
+}

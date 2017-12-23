@@ -1,0 +1,22 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+interface I # 1 { }
+
+interface I # 2  { }
+
+interface I # 3  { }
+
+interface J # 1 {
+	i: I;
+}
+
+interface J # 2 {
+	// XPECT errors --> "Requested version 3 exceeds the maximal version 2 of the current context." at "I # 3"
+	i: I # 3;
+}
+
+interface J # 3 {
+	// XPECT noerrors
+	i: I;
+}
+

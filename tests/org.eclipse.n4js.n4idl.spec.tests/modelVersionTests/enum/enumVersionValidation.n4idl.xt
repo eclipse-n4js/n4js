@@ -1,0 +1,28 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+enum E # 1 {
+	VAL1
+}
+
+enum E # 2  {
+	VAL2
+}
+
+enum E # 3  {
+	VAL3
+}
+
+class C # 1 {
+	i: E;
+}
+
+class C # 2 {
+	// XPECT errors --> "Requested version 3 exceeds the maximal version 2 of the current context." at "E # 3"
+	e: E # 3;
+}
+
+class C # 3 {
+	// XPECT noerrors
+	e: E;
+}
+

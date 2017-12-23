@@ -1,0 +1,29 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP  */
+migration (a1: A # 1) -> (a2: A # 2)
+{
+	// X_PECT type of 'a2' --> [2-99]
+	// X_PECT version of 'C' --> 2
+	//a2.c = new C();
+	// X_PECT version of A1 --> 1
+	//A2.c.i = A1.i;
+}
+
+class A # 1 {
+	i: int;
+	foo() { }
+}
+
+class A # 2 {
+	// X_PECT version of 'C' --> 2
+	c: C;
+	foo() { }
+	bar() { }
+}
+
+class C # 1 {
+	i: int;
+}
+
+class C # 2 {
+
+}

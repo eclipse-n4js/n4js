@@ -1,0 +1,27 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+// XPECT noerrors
+class A # 1 {
+
+}
+
+// XPECT noerrors
+class A # 2 {
+
+}
+
+
+class B # 1 {
+
+}
+
+// XPECT errors --> "Class B#1 duplicates class B#1 (line 14)." at "B"
+class B # 1 {
+
+}
+
+
+// XPECT errors --> "Class Infinity shadows field Infinity from global scope." at "Infinity"
+class Infinity # 1 {
+
+}

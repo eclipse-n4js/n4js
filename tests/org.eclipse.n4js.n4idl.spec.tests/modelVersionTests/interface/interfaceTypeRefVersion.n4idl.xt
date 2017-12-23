@@ -1,0 +1,30 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+interface J # 1 {
+}
+
+interface J # 2 {
+}
+
+interface J # 3 {
+}
+
+interface I # 1 {
+	// XPECT version of J --> 2
+	b: J
+}
+
+interface I # 3 {
+	// XPECT version of J --> 3
+	b: J
+}
+
+interface K # 1 {
+	// XPECT version of J --> 1
+	b: J
+}
+
+interface K # 2 {
+	// XPECT version of J --> 3
+	b: J
+}

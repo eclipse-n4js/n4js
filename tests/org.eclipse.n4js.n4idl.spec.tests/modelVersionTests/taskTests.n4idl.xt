@@ -1,0 +1,32 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+// XPECT version of B --> 1
+class B # 1 {
+	foo: string
+}
+
+// XPECT version of B --> 2
+class B # 2 {
+	bar: string
+}
+
+// X_PECT version of A --> 1
+class A #1 {
+	// XPECT version of B --> 2
+	b: B
+
+	foo() {
+		// XPECT version of this --> 1
+		this;
+		
+		// XPECT version of this.b --> 2
+		this.b;
+	
+		// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'xxx'." at "xxx"
+		this.b.xxx;
+		// XPECT errors --> "Couldn't resolve reference to IdentifiableElement 'foo'." at "foo"
+		this.b.foo;
+		// XPECT noerrors
+		this.b.bar;
+	}
+}

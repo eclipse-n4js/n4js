@@ -1,0 +1,11 @@
+/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
+
+// B represents the versions 1 and 2 (because there is no explicit version 2 of B)
+class B # 1 {
+	// XPECT type of a --> A#2
+	a: A;
+}
+
+class A # 1 {}
+
+class A # 2 {}

@@ -1,0 +1,6 @@
+export public class A#1 {
+	field1 : int
+}
+export public class A#2 {
+	field2 : string
+}
