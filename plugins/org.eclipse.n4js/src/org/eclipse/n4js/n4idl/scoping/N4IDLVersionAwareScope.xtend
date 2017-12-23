@@ -12,7 +12,6 @@ package org.eclipse.n4js.n4idl.scoping
 
 import java.util.Objects
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4idl.scoping.N4IDLVersionableFilter
 import org.eclipse.n4js.ts.types.TClassifier
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
@@ -82,9 +81,9 @@ class N4IDLVersionAwareScope implements IScope {
 	private def IEObjectDescription selectElement(Iterable<IEObjectDescription> descriptions) {
 		return filter.filterElements(descriptions).head();
 	}
-	
+
 	override toString() {
 		return "N4IDLVersionAwareScope[contextVersion = " + this.filter.contextVersion + "] -> " + delegate.toString;
 	}
-	
+
 }

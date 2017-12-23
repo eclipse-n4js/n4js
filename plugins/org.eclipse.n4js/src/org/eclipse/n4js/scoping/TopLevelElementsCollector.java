@@ -14,13 +14,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.n4js.resource.N4JSEObjectDescription;
 import org.eclipse.n4js.scoping.accessModifiers.AbstractTypeVisibilityChecker.TypeVisibility;
 import org.eclipse.n4js.scoping.accessModifiers.InvisibleTypeOrVariableDescription;
 import org.eclipse.n4js.scoping.accessModifiers.TypeVisibilityChecker;
 import org.eclipse.n4js.scoping.accessModifiers.VariableVisibilityChecker;
 import org.eclipse.n4js.ts.types.TExportableElement;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 
 import com.google.common.collect.Iterables;
@@ -60,7 +60,7 @@ public class TopLevelElementsCollector {
 				visible.add(createObjectDescription(it));
 			} else {
 				invisible.add(
-						new InvisibleTypeOrVariableDescription(EObjectDescription.create(it.getName(), it),
+						new InvisibleTypeOrVariableDescription(createObjectDescription(it),
 								typeVisiblity.accessModifierSuggestion));
 			}
 		});
@@ -71,7 +71,7 @@ public class TopLevelElementsCollector {
 				visible.add(createObjectDescription(it));
 			} else {
 				invisible.add(
-						new InvisibleTypeOrVariableDescription(EObjectDescription.create(it.getName(), it),
+						new InvisibleTypeOrVariableDescription(createObjectDescription(it),
 								typeVisiblity.accessModifierSuggestion));
 			}
 		});
@@ -87,9 +87,9 @@ public class TopLevelElementsCollector {
 	private IEObjectDescription createObjectDescription(TExportableElement element) {
 		String exportedName = element.getExportedName();
 		if (null != exportedName) {
-			return EObjectDescription.create(exportedName, element);
+			return N4JSEObjectDescription.create(exportedName, element);
 		} else {
-			return EObjectDescription.create(element.getName(), element);
+			return N4JSEObjectDescription.create(element.getName(), element);
 		}
 	}
 }

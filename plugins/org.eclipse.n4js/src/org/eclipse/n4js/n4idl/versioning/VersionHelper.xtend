@@ -17,7 +17,6 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
-import org.eclipse.n4js.n4JS.VersionedElement
 import org.eclipse.n4js.n4idl.scoping.VersionScopeProvider
 import org.eclipse.n4js.ts.typeRefs.VersionedReference
 import org.eclipse.n4js.ts.types.ContainerType
@@ -34,6 +33,8 @@ import org.eclipse.xtext.naming.IQualifiedNameConverter
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
+
+import static org.eclipse.n4js.n4idl.versioning.VersionUtils.isVersioned
 
 /**
  * Contains helper methods to determine version related information of objects as well as to find a specific version
@@ -176,13 +177,4 @@ class VersionHelper {
 		return member;
 	}
 
-	/**
-	 * Returns {@code true} if the given {@link VersionedElement} is
-	 * considered to be versioned.
-	 *
-	 * A return value of {@code true} indicates a non-null value for the field {@link VersionedElement#declaredVersion}.
-	 */
-	private def boolean isVersioned(VersionedElement element) {
-		return element.declaredVersion !== null && element.declaredVersion.intValue != 0;
-	}
 }

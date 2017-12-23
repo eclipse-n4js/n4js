@@ -142,6 +142,11 @@ public class OriginAwareScope implements IScope {
 		public void markAsUsed() {
 			markImportSpecifierAsUsed(origins.get(this.getDelegate()));
 		}
+
+		@Override
+		public String toString() {
+			return getDelegate().toString();
+		}
 	}
 
 	private class UsageAwareImportDescriptionWithError<T extends IEObjectDescriptionWithError>

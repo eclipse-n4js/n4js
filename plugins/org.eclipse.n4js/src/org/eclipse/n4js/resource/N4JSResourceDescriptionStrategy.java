@@ -215,7 +215,7 @@ public class N4JSResourceDescriptionStrategy extends DefaultResourceDescriptionS
 					userData = createClassUserData(userData, tClass);
 				}
 
-				IEObjectDescription eod = EObjectDescription.create(qualifiedName, type, userData);
+				IEObjectDescription eod = N4JSEObjectDescription.create(qualifiedName, type, userData);
 				acceptor.accept(eod);
 			}
 		}

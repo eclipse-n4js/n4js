@@ -39,11 +39,11 @@ import org.eclipse.n4js.ts.types.TVariable
 import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.validation.IssueCodes
 import org.eclipse.xtext.naming.QualifiedName
-import org.eclipse.xtext.resource.EObjectDescription
 import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 import org.eclipse.xtext.scoping.impl.SimpleScope
 import org.eclipse.xtext.util.IResourceScopeCache
+import org.eclipse.n4js.resource.N4JSEObjectDescription
 
 /** internal helper collection type */
 class IEODesc2ISpec extends HashMap<IEObjectDescription, ImportSpecifier> {}
@@ -91,15 +91,6 @@ class ImportedElementsScopingHelper {
 			return result;
 		]
 		return scriptScope
-	}
-
-	/**
-	 * Creates a new {@link IEObjectDescription} for the given element with the given qualified name.
-	 *
-	 * This description will be used in scoping result.
-	 */
-	private def IEObjectDescription createEObjectDescription(QualifiedName name, EObject element) {
-		return EObjectDescription.create(name, element);
 	}
 
 	/**
@@ -263,7 +254,7 @@ class ImportedElementsScopingHelper {
 
 	private def handleAliasedAccess(IdentifiableElement element, QualifiedName originalName, String importedName,
 		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
-		val invalidAccess = new PlainAccessOfAliasedImportDescription(createEObjectDescription(originalName, element),
+		val invalidAccess = new PlainAccessOfAliasedImportDescription(N4JSEObjectDescription.create(originalName, element),
 			importedName)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
@@ -272,7 +263,7 @@ class ImportedElementsScopingHelper {
 	private def handleNamespacedAccess(IdentifiableElement importedType, QualifiedName originalName, QualifiedName qn,
 		ImportedElementsMap invalidImports, IEODesc2ISpec originatorMap, ImportSpecifier specifier) {
 		val invalidAccess = new PlainAccessOfNamespacedImportDescription(
-			createEObjectDescription(originalName, importedType), qn.toString)
+			N4JSEObjectDescription.create(originalName, importedType), qn.toString)
 		invalidImports.put(originalName, invalidAccess)
 	// TODO IDEBUG-702 originatorMap.putWithOrigin(invalidAccess, specifier)
 	}
@@ -358,9 +349,9 @@ class ImportedElementsScopingHelper {
 			}
 		} else if (issueCode === null) {
 			result.put(importedName,
-				ret = new InvisibleTypeOrVariableDescription(createEObjectDescription(importedName, element)))
+				ret = new InvisibleTypeOrVariableDescription(N4JSEObjectDescription.create(importedName, element)))
 		} else {
-			result.put(importedName, ret = createEObjectDescription(importedName, element))
+			result.put(importedName, ret = N4JSEObjectDescription.create(importedName, element))
 		}
 		return ret;
 	}
