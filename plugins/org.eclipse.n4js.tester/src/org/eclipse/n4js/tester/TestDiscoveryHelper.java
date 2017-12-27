@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
 import org.eclipse.n4js.n4JS.N4MethodDeclaration;
+import org.eclipse.n4js.n4idl.N4IDLGlobals;
 import org.eclipse.n4js.naming.QualifiedNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
@@ -369,8 +370,13 @@ public class TestDiscoveryHelper {
 	 * Returns the name to be used in the test catalog for the given {@link TClass}. We use the fully qualified name for
 	 * this purpose.
 	 */
-	protected String getClassName(final TClass clazz) {
-		return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
+	private String getClassName(TClass clazz) {
+		if (clazz.getDeclaredVersion() > 0) {
+			return qualifiedNameComputer.getFullyQualifiedTypeName(clazz) + N4IDLGlobals.COMPILED_VERSION_SEPARATOR
+					+ clazz.getDeclaredVersion();
+		} else {
+			return qualifiedNameComputer.getFullyQualifiedTypeName(clazz);
+		}
 	}
 
 	private Map<URI, TModule> loadModules(final Iterable<URI> moduleUris, final IResourceDescriptions index,

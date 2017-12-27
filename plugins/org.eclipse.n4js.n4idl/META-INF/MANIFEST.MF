@@ -33,8 +33,6 @@ Require-Bundle: org.eclipse.xtext;visibility:=reexport,
  org.eclipse.n4js.external.libraries,
  org.eclipse.core.jobs,
  org.eclipse.xtext.builder,
- org.eclipse.n4js.transpiler.es,
- org.eclipse.n4js.transpiler,
  org.eclipse.n4js
 Export-Package: com.enfore.n4idl.services,
  org.eclipse.n4js.n4idl,

@@ -15,8 +15,10 @@ import java.util.LinkedHashMap
 import java.util.List
 import java.util.Map
 import java.util.Set
+import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.AdditiveOperator
+import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
 import org.eclipse.n4js.n4JS.ExportDeclaration
@@ -40,16 +42,21 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
+import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
+import org.eclipse.n4js.transpiler.TranspilerBuilderBlocks
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportAssignment
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportEntry
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.ts.types.IdentifiableElement
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
@@ -74,7 +81,7 @@ class ModuleWrappingTransformation extends Transformation {
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-	
+
 	@Inject
 	private JSXBackendHelper JSXBackendHelper;
 
@@ -221,7 +228,7 @@ class ModuleWrappingTransformation extends Transformation {
 						} else {
 							// NamedImportSpecifiers require property access.
 							_PropertyAccessExpr => [
-								property_IM = getSymbolTableEntryInternal(current.ste.exportedName, true) // ref to what we import.
+								property_IM =  getEntryForNamedImportedElement(current.ste) // ref to what we import.
 								target = refToFPar;
 							];
 						};
@@ -237,6 +244,20 @@ class ModuleWrappingTransformation extends Transformation {
 			// tracing
 			state.tracer.copyTrace(entry.tobeReplacedImportSpecifier, it)
 		]
+	}
+
+
+	/**
+	 * Returns the STE to use to import a named element from another module.
+	 */
+	private def SymbolTableEntry getEntryForNamedImportedElement(SymbolTableEntryOriginal importedElementEntry) {
+		val IdentifiableElement originalTarget = importedElementEntry.getOriginalTarget();
+
+		// if applicable use versioned internal name for internal STE
+		if (VersionUtils.isVersionable(originalTarget)) {
+			return getSymbolTableEntryInternal(N4IDLTranspilerUtils.getVersionedInternalName(originalTarget), true);
+		}
+		return getSymbolTableEntryInternal(importedElementEntry.exportedName, true);
 	}
 
 	/**
@@ -517,7 +538,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val container = expr.eContainer;
 				if( container.isAppendableStatement ) {
 					// case 1 : contained in simple statement, then we can issue as 2nd statement just after.
-					insertAfter(container, _ExprStmnt( _N4ExportExpr(ste,steFor_$n4Export)));
+					insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 				} else {
 					// case 2: contained in other expression, must in-line the export call.
 					switch (expr.op) {
@@ -565,7 +586,7 @@ class ModuleWrappingTransformation extends Transformation {
 				val container = expr.eContainer;
 				if( container.isAppendableStatement) {
 					// case 1 : contained in simple statement, then we can issue es 2nd statement just after.
-					insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+					insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 				} else {
 					switch (expr.op) {
 						case INC: exprReplacement(expr, ste)
@@ -586,7 +607,7 @@ class ModuleWrappingTransformation extends Transformation {
 				if( ste.isExported ) {
 					val container = expr.eContainer
 					if( container.isAppendableStatement ) {
-						insertAfter(container, _ExprStmnt(_N4ExportExpr(ste,steFor_$n4Export)));
+						insertAfter(container, _ExprStmnt(createExportExpression(ste)));
 					}
 					else { // non toplevel, have to inject
 						exprReplacement(expr, ste);
@@ -613,7 +634,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 * Only applicable if {@code expr1} evaluates (while actually setting) to the new value of x.
 	 * This is true to Assignment- and Unary-Expressions <b>but not</b> for PostfixExprssion
 	 *
-	 * <p> 
+	 * <p>
 	 * Note: only <pre>++x</pre> and <pre>--x</pre> are setting the value of <pre>x</pre>.
 	 * other Unary-Expressions are not setting the value. Caller needs to take care of this, as
 	 * expression operator is not checked in this method.
@@ -628,7 +649,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 *
 	 */
 	private final def void exprReplacement(Expression expr, SymbolTableEntry ste) {
-		
+
 		// The new code snippet, the ObjectLiteral will be replaced by init-function
 		val replaceExp =
 			_Parenthesis(
@@ -756,5 +777,52 @@ class ModuleWrappingTransformation extends Transformation {
 		// tracing
 		state.tracer.copyTrace(binding, assignmentStmnt);
 		return assignmentStmnt;
+	}
+
+	protected def ParameterizedCallExpression createExportExpression(SymbolTableEntry entry, Expression expression) {
+		// check if the entry points to a versionable element
+		if (entry instanceof SymbolTableEntryOriginal) {
+			val IdentifiableElement originalTarget = entry.originalTarget;
+
+			if (VersionUtils.isVersionable(originalTarget)) {
+				return createVersionedExportExpression(originalTarget, expression);
+			}
+		}
+		// otherwise create a default export expression
+		return _N4ExportExpr(entry, expression, steFor_$n4Export);
+	}
+
+	/**
+	 * Creates an export expression that exports an versioned element under
+	 * its versioned internal name.
+	 *
+	 * @param element The versioned internal name
+	 * @param expression The expression to export.
+	 */
+	protected def ParameterizedCallExpression createVersionedExportExpression(IdentifiableElement element, Expression expression) {
+		if (!VersionUtils.isVersionable(element)) {
+			throw new IllegalArgumentException("Cannot export non-versionable element " + element + " as versionable.");
+		}
+
+		val ParameterizedCallExpression callExpression = TranspilerBuilderBlocks._CallExpr();
+
+		callExpression.setTarget(TranspilerBuilderBlocks._IdentRef(steFor_$n4Export()));
+		val EList<Argument> arguments = callExpression.getArguments();
+
+		arguments.add(TranspilerBuilderBlocks._Argument(TranspilerBuilderBlocks._StringLiteral(N4IDLTranspilerUtils.getVersionedInternalName(element))));
+		arguments.add(TranspilerBuilderBlocks._Argument(expression));
+
+		return callExpression;
+	}
+
+	/**
+	 * Creates an export expression by the name of the given symbol table entry that exports a simple (identifier) reference
+	 * to the entry.
+	 *
+	 * Delegates to #createExportExpression(SymbolTableEntry, Expression).
+	 *
+	 */
+	final def protected ParameterizedCallExpression createExportExpression(SymbolTableEntry entry) {
+		return createExportExpression(entry, _IdentRef( entry ));
 	}
 }

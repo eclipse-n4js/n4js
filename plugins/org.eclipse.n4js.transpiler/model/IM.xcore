@@ -25,6 +25,7 @@ package org.eclipse.n4js.transpiler.im
 
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.IdentifierRef
+import org.eclipse.n4js.n4JS.VersionedIdentifierRef
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.N4GetterDeclaration
 import org.eclipse.n4js.n4JS.N4MemberDeclaration
@@ -36,9 +37,11 @@ import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.Type
 
 
 
@@ -372,3 +375,21 @@ class StringLiteralForSTE extends StringLiteral {
 		return entry?.name
 	}
 }
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRef}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedParameterizedTypeRef_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRef {}
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedParameterizedTypeRefStructural_IM extends ParameterizedTypeRef_IM, VersionedParameterizedTypeRefStructural {}
+
+/*
+ * SymbolTable-aware replacement for {@link VersionedParameterizedTypeRefStructural}.
+ * Original property {@link ParameterizedTypeRef.declaredType} is always {@code null}.
+ */
+class VersionedIdentifierRef_IM extends IdentifierRef_IM, VersionedIdentifierRef {}

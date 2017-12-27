@@ -36,6 +36,7 @@ import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.n4JS.Variable;
+import org.eclipse.n4js.n4idl.transpiler.utils.N4IDLTranspilerUtils;
 import org.eclipse.n4js.resource.N4JSResource;
 import org.eclipse.n4js.transpiler.TranspilerState.STECache;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
@@ -110,6 +111,10 @@ public class PreparationStep {
 		return resultCasted;
 	}
 
+	/**
+	 * A custom implementation of {@link org.eclipse.emf.ecore.util.EcoreUtil.Copier} that copies the N4JS AST model to
+	 * the N4JS transpiler intermediate representation.
+	 */
 	private static final class AST2IMCopier extends EcoreUtil.Copier {
 
 		private static final ImmutableMap<EClass, EClass> ECLASS_REPLACEMENT = ImmutableMap.<EClass, EClass> builder()
@@ -120,19 +125,21 @@ public class PreparationStep {
 				.put(N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression(),
 						ImPackage.eINSTANCE.getParameterizedPropertyAccessExpression_IM())
 				.put(N4JSPackage.eINSTANCE.getVersionedIdentifierRef(),
-						ImPackage.eINSTANCE.getIdentifierRef_IM())
+						ImPackage.eINSTANCE.getVersionedIdentifierRef_IM())
 				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRef(),
 						ImPackage.eINSTANCE.getParameterizedTypeRef_IM())
 				.put(TypeRefsPackage.eINSTANCE.getParameterizedTypeRefStructural(),
 						ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
 				.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRef(),
-						ImPackage.eINSTANCE.getParameterizedTypeRefStructural_IM())
+						ImPackage.eINSTANCE.getVersionedParameterizedTypeRef_IM())
+				.put(TypeRefsPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural(),
+						ImPackage.eINSTANCE.getVersionedParameterizedTypeRefStructural_IM())
 				.build();
 
 		private static final EReference[] REWIRED_REFERENCES = {
 				N4JSPackage.eINSTANCE.getIdentifierRef_Id(),
 				N4JSPackage.eINSTANCE.getParameterizedPropertyAccessExpression_Property(),
-				TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType()
+				TypeRefsPackage.eINSTANCE.getParameterizedTypeRef_DeclaredType(),
 		};
 
 		private final Tracer tracer;
@@ -219,6 +226,20 @@ public class PreparationStep {
 		}
 
 		@Override
+		public EObject copy(EObject originalObject) {
+			final EObject copy = super.copy(originalObject);
+
+			if (copy instanceof N4TypeDeclaration) {
+				// set name to internal versioned variant (e.g. A -> A$2)
+				((N4TypeDeclaration) copy)
+						.setName(N4IDLTranspilerUtils
+								.getVersionedInternalName((N4TypeDeclaration) originalObject));
+			}
+
+			return copy;
+		}
+
+		@Override
 		protected void copyReference(EReference eReference, EObject eObject, EObject copyEObject) {
 			final boolean needsRewiring = Arrays.contains(REWIRED_REFERENCES, eReference);
 			if (needsRewiring) {
@@ -236,7 +257,7 @@ public class PreparationStep {
 		}
 
 		// TODO IDE-2010 consider improving performance of following method!
-		public void createRemainingSymbolTableEntries() {
+		private void createRemainingSymbolTableEntries() {
 			// so far, we have created symbol table entries for all referenced elements on the fly;
 			// now we will create entries for the remaining elements in the TModule
 			final TreeIterator<EObject> iter1 = script.getModule().eAllContents();
@@ -306,14 +327,20 @@ public class PreparationStep {
 			final SymbolTableEntryOriginal e = steCache.mapOriginal.get(elem);
 			if (e != null)
 				return e;
-			if (create)
-				return createSymbolTableEntry(elem);
+			if (create) {
+				String versionedName = N4IDLTranspilerUtils.getVersionedInternalName(elem);
+				return createSymbolTableEntry(versionedName, elem);
+			}
 			return null;
 		}
 
-		private SymbolTableEntryOriginal createSymbolTableEntry(IdentifiableElement elem) {
+		/**
+		 * Creates a new {@link SymbolTableEntryOriginal} for the given {@link IdentifiableElement} using the given
+		 * name.
+		 */
+		private SymbolTableEntryOriginal createSymbolTableEntry(String name, IdentifiableElement elem) {
 			final SymbolTableEntryOriginal entry = ImFactory.eINSTANCE.createSymbolTableEntryOriginal();
-			entry.setName(elem.getName());
+			entry.setName(name);
 			entry.setOriginalTarget(elem);
 			// compute properties 'elementsOfThisName' and 'importSpecifier' from 'elem'
 			if (elem instanceof Variable) {

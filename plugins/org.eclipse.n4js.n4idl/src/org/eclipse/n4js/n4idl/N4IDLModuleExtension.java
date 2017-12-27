@@ -12,9 +12,7 @@ package org.eclipse.n4js.n4idl;
 
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.n4idl.scoping.N4IDLAwareTopLevelElementsCollector;
-import org.eclipse.n4js.n4idl.tester.N4IDLAwareTestDiscoveryHelper;
 import org.eclipse.n4js.scoping.TopLevelElementsCollector;
-import org.eclipse.n4js.tester.TestDiscoveryHelper;
 import org.eclipse.xtext.service.AbstractGenericModule;
 
 /**
@@ -31,10 +29,10 @@ public class N4IDLModuleExtension extends AbstractGenericModule {
 		return N4IDLAwareTopLevelElementsCollector.class;
 	}
 
-	/**
-	 * Binds an N4IDL-aware {@link TestDiscoveryHelper}.
-	 */
-	public Class<? extends TestDiscoveryHelper> bindTestDiscoveryHelper() {
-		return N4IDLAwareTestDiscoveryHelper.class;
-	}
+	// /**
+	// * Binds an N4IDL-aware {@link TestDiscoveryHelper}.
+	// */
+	// public Class<? extends TestDiscoveryHelper> bindTestDiscoveryHelper() {
+	// return N4IDLAwareTestDiscoveryHelper.class;
+	// }
 }

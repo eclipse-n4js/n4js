@@ -51,6 +51,7 @@ import org.eclipse.n4js.n4JS.TypeProvidingElement;
 import org.eclipse.n4js.n4JS.TypedElement;
 import org.eclipse.n4js.n4JS.VariableEnvironmentElement;
 
+import org.eclipse.n4js.n4JS.VersionedIdentifierRef;
 import org.eclipse.n4js.transpiler.im.*;
 
 import org.eclipse.n4js.ts.typeRefs.BaseTypeRef;
@@ -62,6 +63,9 @@ import org.eclipse.n4js.ts.typeRefs.TypeArgument;
 import org.eclipse.n4js.ts.typeRefs.TypeRef;
 import org.eclipse.n4js.ts.typeRefs.Versionable;
 
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef;
+import org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural;
+import org.eclipse.n4js.ts.typeRefs.VersionedReference;
 import org.eclipse.n4js.ts.types.TypableElement;
 
 /**
@@ -191,6 +195,18 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseStringLiteralForSTE(StringLiteralForSTE object) {
 				return createStringLiteralForSTEAdapter();
+			}
+			@Override
+			public Adapter caseVersionedParameterizedTypeRef_IM(VersionedParameterizedTypeRef_IM object) {
+				return createVersionedParameterizedTypeRef_IMAdapter();
+			}
+			@Override
+			public Adapter caseVersionedParameterizedTypeRefStructural_IM(VersionedParameterizedTypeRefStructural_IM object) {
+				return createVersionedParameterizedTypeRefStructural_IMAdapter();
+			}
+			@Override
+			public Adapter caseVersionedIdentifierRef_IM(VersionedIdentifierRef_IM object) {
+				return createVersionedIdentifierRef_IMAdapter();
 			}
 			@Override
 			public Adapter caseVariableEnvironmentElement(VariableEnvironmentElement object) {
@@ -359,6 +375,22 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 			@Override
 			public Adapter caseStringLiteral(StringLiteral object) {
 				return createStringLiteralAdapter();
+			}
+			@Override
+			public Adapter caseVersionedReference(VersionedReference object) {
+				return createVersionedReferenceAdapter();
+			}
+			@Override
+			public Adapter caseVersionedParameterizedTypeRef(VersionedParameterizedTypeRef object) {
+				return createVersionedParameterizedTypeRefAdapter();
+			}
+			@Override
+			public Adapter caseVersionedParameterizedTypeRefStructural(VersionedParameterizedTypeRefStructural object) {
+				return createVersionedParameterizedTypeRefStructuralAdapter();
+			}
+			@Override
+			public Adapter caseVersionedIdentifierRef(VersionedIdentifierRef object) {
+				return createVersionedIdentifierRefAdapter();
 			}
 			@Override
 			public Adapter defaultCase(EObject object) {
@@ -629,6 +661,48 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringLiteralForSTEAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM <em>Versioned Parameterized Type Ref IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM
+	 * @generated
+	 */
+	public Adapter createVersionedParameterizedTypeRef_IMAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM <em>Versioned Parameterized Type Ref Structural IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM
+	 * @generated
+	 */
+	public Adapter createVersionedParameterizedTypeRefStructural_IMAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM <em>Versioned Identifier Ref IM</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM
+	 * @generated
+	 */
+	public Adapter createVersionedIdentifierRef_IMAdapter() {
 		return null;
 	}
 
@@ -1217,6 +1291,62 @@ public class ImAdapterFactory extends AdapterFactoryImpl {
 	 * @generated
 	 */
 	public Adapter createStringLiteralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedReference <em>Versioned Reference</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.VersionedReference
+	 * @generated
+	 */
+	public Adapter createVersionedReferenceAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef <em>Versioned Parameterized Type Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRef
+	 * @generated
+	 */
+	public Adapter createVersionedParameterizedTypeRefAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural <em>Versioned Parameterized Type Ref Structural</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.ts.typeRefs.VersionedParameterizedTypeRefStructural
+	 * @generated
+	 */
+	public Adapter createVersionedParameterizedTypeRefStructuralAdapter() {
+		return null;
+	}
+
+	/**
+	 * Creates a new adapter for an object of class '{@link org.eclipse.n4js.n4JS.VersionedIdentifierRef <em>Versioned Identifier Ref</em>}'.
+	 * <!-- begin-user-doc -->
+	 * This default implementation returns null so that we can easily ignore cases;
+	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
+	 * <!-- end-user-doc -->
+	 * @return the new adapter.
+	 * @see org.eclipse.n4js.n4JS.VersionedIdentifierRef
+	 * @generated
+	 */
+	public Adapter createVersionedIdentifierRefAdapter() {
 		return null;
 	}
 

@@ -78,6 +78,9 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 			case ImPackage.DELEGATING_SETTER_DECLARATION: return createDelegatingSetterDeclaration();
 			case ImPackage.DELEGATING_METHOD_DECLARATION: return createDelegatingMethodDeclaration();
 			case ImPackage.STRING_LITERAL_FOR_STE: return createStringLiteralForSTE();
+			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_IM: return createVersionedParameterizedTypeRef_IM();
+			case ImPackage.VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM: return createVersionedParameterizedTypeRefStructural_IM();
+			case ImPackage.VERSIONED_IDENTIFIER_REF_IM: return createVersionedIdentifierRef_IM();
 			default:
 				throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
 		}
@@ -221,6 +224,36 @@ public class ImFactoryImpl extends EFactoryImpl implements ImFactory {
 	public StringLiteralForSTE createStringLiteralForSTE() {
 		StringLiteralForSTEImpl stringLiteralForSTE = new StringLiteralForSTEImpl();
 		return stringLiteralForSTE;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionedParameterizedTypeRef_IM createVersionedParameterizedTypeRef_IM() {
+		VersionedParameterizedTypeRef_IMImpl versionedParameterizedTypeRef_IM = new VersionedParameterizedTypeRef_IMImpl();
+		return versionedParameterizedTypeRef_IM;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionedParameterizedTypeRefStructural_IM createVersionedParameterizedTypeRefStructural_IM() {
+		VersionedParameterizedTypeRefStructural_IMImpl versionedParameterizedTypeRefStructural_IM = new VersionedParameterizedTypeRefStructural_IMImpl();
+		return versionedParameterizedTypeRefStructural_IM;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public VersionedIdentifierRef_IM createVersionedIdentifierRef_IM() {
+		VersionedIdentifierRef_IMImpl versionedIdentifierRef_IM = new VersionedIdentifierRef_IMImpl();
+		return versionedIdentifierRef_IM;
 	}
 
 	/**

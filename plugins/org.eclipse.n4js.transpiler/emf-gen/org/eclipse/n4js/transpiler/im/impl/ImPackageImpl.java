@@ -42,6 +42,9 @@ import org.eclipse.n4js.transpiler.im.SymbolTableEntryIMOnly;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal;
 
+import org.eclipse.n4js.transpiler.im.VersionedIdentifierRef_IM;
+import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRefStructural_IM;
+import org.eclipse.n4js.transpiler.im.VersionedParameterizedTypeRef_IM;
 import org.eclipse.n4js.ts.typeRefs.TypeRefsPackage;
 
 import org.eclipse.n4js.ts.types.TypesPackage;
@@ -178,6 +181,27 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * @generated
 	 */
 	private EClass stringLiteralForSTEEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedParameterizedTypeRef_IMEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedParameterizedTypeRefStructural_IMEClass = null;
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	private EClass versionedIdentifierRef_IMEClass = null;
 
 	/**
 	 * Creates an instance of the model <b>Package</b>, registered with
@@ -743,6 +767,33 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EClass getVersionedParameterizedTypeRef_IM() {
+		return versionedParameterizedTypeRef_IMEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionedParameterizedTypeRefStructural_IM() {
+		return versionedParameterizedTypeRefStructural_IMEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
+	public EClass getVersionedIdentifierRef_IM() {
+		return versionedIdentifierRef_IMEClass;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public ImFactory getImFactory() {
 		return (ImFactory)getEFactoryInstance();
 	}
@@ -838,6 +889,12 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		createEReference(stringLiteralForSTEEClass, STRING_LITERAL_FOR_STE__ENTRY);
 		createEAttribute(stringLiteralForSTEEClass, STRING_LITERAL_FOR_STE__USE_EXPORTED_NAME);
 		createEOperation(stringLiteralForSTEEClass, STRING_LITERAL_FOR_STE___GET_VALUE_AS_STRING);
+
+		versionedParameterizedTypeRef_IMEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_IM);
+
+		versionedParameterizedTypeRefStructural_IMEClass = createEClass(VERSIONED_PARAMETERIZED_TYPE_REF_STRUCTURAL_IM);
+
+		versionedIdentifierRef_IMEClass = createEClass(VERSIONED_IDENTIFIER_REF_IM);
 	}
 
 	/**
@@ -898,6 +955,12 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		delegatingMethodDeclarationEClass.getESuperTypes().add(theN4JSPackage.getN4MethodDeclaration());
 		delegatingMethodDeclarationEClass.getESuperTypes().add(this.getDelegatingMember());
 		stringLiteralForSTEEClass.getESuperTypes().add(theN4JSPackage.getStringLiteral());
+		versionedParameterizedTypeRef_IMEClass.getESuperTypes().add(this.getParameterizedTypeRef_IM());
+		versionedParameterizedTypeRef_IMEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedParameterizedTypeRef());
+		versionedParameterizedTypeRefStructural_IMEClass.getESuperTypes().add(this.getParameterizedTypeRef_IM());
+		versionedParameterizedTypeRefStructural_IMEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedParameterizedTypeRefStructural());
+		versionedIdentifierRef_IMEClass.getESuperTypes().add(this.getIdentifierRef_IM());
+		versionedIdentifierRef_IMEClass.getESuperTypes().add(theN4JSPackage.getVersionedIdentifierRef());
 
 		// Initialize classes, features, and operations; add parameters
 		initEClass(script_IMEClass, Script_IM.class, "Script_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1000,6 +1063,12 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		initEAttribute(getStringLiteralForSTE_UseExportedName(), theEcorePackage.getEBoolean(), "useExportedName", null, 0, 1, StringLiteralForSTE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEOperation(getStringLiteralForSTE__GetValueAsString(), theEcorePackage.getEString(), "getValueAsString", 0, 1, !IS_UNIQUE, IS_ORDERED);
+
+		initEClass(versionedParameterizedTypeRef_IMEClass, VersionedParameterizedTypeRef_IM.class, "VersionedParameterizedTypeRef_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(versionedParameterizedTypeRefStructural_IMEClass, VersionedParameterizedTypeRefStructural_IM.class, "VersionedParameterizedTypeRefStructural_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+		initEClass(versionedIdentifierRef_IMEClass, VersionedIdentifierRef_IM.class, "VersionedIdentifierRef_IM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		// Create resource
 		createResource(eNS_URI);

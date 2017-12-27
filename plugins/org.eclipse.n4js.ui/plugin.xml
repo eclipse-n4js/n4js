@@ -26,6 +26,10 @@ Contributors:
             class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator"
             fileExtensions="n4js,js,n4jsx,jsx">
       </subgenerator>
+      <subgenerator
+            class="org.eclipse.n4js.ui.N4JSExecutableExtensionFactory:org.eclipse.n4js.n4idl.transpiler.N4IDLSubGenerator"
+            fileExtensions="n4idl">
+      </subgenerator>
    </extension>
 
     <extension
