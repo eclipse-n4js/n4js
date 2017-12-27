@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package com.enfore.n4idl.spec.tests;
+package org.eclipse.n4js.n4idl.spec.tests;
 
 import org.eclipse.n4js.N4JSStandaloneTestsModule;
 import org.eclipse.n4js.xpect.methods.ModelVersionXpectMethod;

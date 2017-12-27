@@ -8,23 +8,26 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package com.enfore.n4idl.lang.typesbuilder
+package org.eclipse.n4js.n4idl.lang.parser
 
+import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.tests.parser.AbstractParserTest
-import org.eclipse.n4js.ts.types.TClass
-import org.eclipse.n4js.ts.types.TModule
 import org.junit.Test
 
-public class N4IDLClassTypesBuilderTest extends AbstractParserTest {
+public class ParseVersionedClassTest extends AbstractParserTest {
 
 	@Test
 	def void testVersionedClass_01() {
 		val Script script = 'class C #1 {}'.parseSuccessfully
-		val TModule module = script.module
-		val TClass tclass = module.topLevelTypes.get(0) as TClass;
-		assertEquals("C", tclass.name);
-		assertEquals(1, tclass.version);
+		val decl = script.scriptElements.head as N4ClassDeclaration
+		assertEquals("C", decl.name)
+		assertEquals(1, decl.declaredVersion.intValue)
+	}
+
+	@Test
+	def void testUnVersionedClass_01() {
+		'class C {}'.parseWithError
 	}
 
 

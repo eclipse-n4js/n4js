@@ -1,4 +1,4 @@
-/* XPECT_SETUP com.enfore.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP  */
+/* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */
 migration (a1: A # 1) -> (a2: A # 2)
 {
 	// X_PECT type of 'a2' --> [2-99]

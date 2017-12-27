@@ -12,9 +12,9 @@ Contributors:
 <?eclipse version="3.4"?>
 <plugin>
 	<extension point="org.eclipse.xpect.testSuite">
-		<testSuite class="com.enfore.n4idl.spec.tests.N4IDLModelVersionTest" fileExtension="n4js" />
+		<testSuite class="org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest" fileExtension="n4js" />
 	</extension>
 	<extension point="org.eclipse.xpect.testSuite">
-		<testSuite class="com.enfore.n4idl.spec.tests.N4IDLModelVersionTest" fileExtension="n4idl" />
+		<testSuite class="org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest" fileExtension="n4idl" />
 	</extension>
 </plugin>

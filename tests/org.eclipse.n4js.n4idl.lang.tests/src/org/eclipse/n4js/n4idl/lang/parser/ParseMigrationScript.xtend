@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package com.enfore.n4idl.lang.parser
+package org.eclipse.n4js.n4idl.lang.parser
 
 import org.eclipse.n4js.n4JS.MigrationDeclaration
 import org.eclipse.n4js.n4JS.Script
@@ -20,11 +20,11 @@ public class ParseMigrationScript extends AbstractParserTest {
 	@Test
 	def void testEmptyMigrationScript() {
 		val Script script = '''
-		class C # 1 {}
-		// TODO: add after scoping is implemented: class C # 2 {}
-		migration (c1: C#1) -> (c2: C#2) {
-
-		}
+			class C # 1 {}
+			// TODO: add after scoping is implemented: class C # 2 {}
+			migration (c1: C#1) -> (c2: C#2) {
+			
+			}
 		'''.parseSuccessfully
 		val mig = script.scriptElements.get(1) as MigrationDeclaration
 		assertEquals(1, mig.fpars.head.declaredTypeRef.version)
