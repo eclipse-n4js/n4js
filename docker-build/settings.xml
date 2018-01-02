@@ -6,7 +6,7 @@
   <mirrors>
     <mirror>
       <id>public</id>
-      <mirrorOf>central</mirrorOf>
+      <mirrorOf>*</mirrorOf>
       <url>MAVEN_CENTRAL_URL</url>
     </mirror>
   </mirrors>
