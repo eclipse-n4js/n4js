@@ -13,7 +13,7 @@ package org.eclipse.n4js.postprocessing
 import com.google.common.base.Optional
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.n4js.misc.DestructureHelper
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope

@@ -8,14 +8,14 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.misc
+package org.eclipse.n4js.utils
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.n4js.n4JS.DestructNode
 import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.N4JSASTUtils
 import org.eclipse.n4js.n4JS.VariableBinding
@@ -39,11 +39,11 @@ import org.eclipse.n4js.ts.types.util.AllSuperTypeRefsCollector
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
-import org.eclipse.n4js.utils.ContainerTypesHelper
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.naming.QualifiedName
 import org.eclipse.xtext.scoping.IScope
 
-import static extension org.eclipse.n4js.misc.DestructNode.arePositional
+import static extension org.eclipse.n4js.n4JS.DestructNode.arePositional
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
