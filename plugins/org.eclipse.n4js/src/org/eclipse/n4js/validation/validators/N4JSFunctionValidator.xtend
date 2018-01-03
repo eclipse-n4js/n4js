@@ -186,11 +186,12 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 		val nullDerefs = nda.getNullDereferences();
 		for (NullDereferenceResult ndr : nullDerefs) {
 			val String varName = ndr.checkedSymbol.name;
+			val isOrMaybe = if (ndr.must) "is" else "may be";
 			var String nullOrUndefined = "null or undefined";
 			nullOrUndefined = if (ndr.nullOrUndefinedSymbol.isNullLiteral) "null" else nullOrUndefined;
 			nullOrUndefined = if (ndr.nullOrUndefinedSymbol.isUndefinedLiteral) "undefined" else nullOrUndefined;
 			val String reason = getReason(ndr);
-			var String msg = getMessageForDFG_NULL_DEREFERENCE(varName, nullOrUndefined, reason);
+			var String msg = getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
 			addIssue(msg, ndr.cfe, DFG_NULL_DEREFERENCE);
 		}
 	}

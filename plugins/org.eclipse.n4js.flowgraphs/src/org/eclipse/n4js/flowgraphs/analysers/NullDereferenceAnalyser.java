@@ -27,7 +27,6 @@ import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
@@ -64,10 +63,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 	private Expression getDereferencer(ControlFlowElement cfe) {
 		Expression dereferencer = null;
-		if (cfe instanceof FieldAccessor) {
-			FieldAccessor fa = (FieldAccessor) cfe;
-			// fa.get
-		}
 		if (cfe instanceof ParameterizedPropertyAccessExpression) {
 			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) cfe;
 			Expression target = ppae.getTarget();
@@ -117,12 +112,15 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public final Symbol causingSymbol;
 		/** Undefined or Null {@link Symbol} that was assigned to {@link #causingSymbol} */
 		public final Symbol nullOrUndefinedSymbol;
+		/** True iff the symbol must be null or undefined. False iff it can be null or undefined. */
+		public final boolean must;
 
 		NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
 			this.cfe = cfe;
 			this.checkedSymbol = inn.symbol;
 			this.causingSymbol = inn.failedSymbol;
 			this.nullOrUndefinedSymbol = inn.nullOrUndefinedSymbol;
+			this.must = inn.allFailed();
 		}
 	}
 

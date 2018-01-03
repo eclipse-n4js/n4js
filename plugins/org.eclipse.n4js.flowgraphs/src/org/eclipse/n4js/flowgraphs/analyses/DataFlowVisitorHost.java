@@ -97,6 +97,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 
 	class DataFlowBranch extends BranchWalkerInternal {
 		final Map<Object, Assumption> assumptions = new HashMap<>();
+		private int forkCount = 0;
 
 		@Override
 		protected BranchWalkerInternal fork() {
@@ -104,8 +105,12 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			for (Map.Entry<Object, Assumption> entry : assumptions.entrySet()) {
 				Object key = entry.getKey();
 				Assumption ass = entry.getValue();
-				dfb.assumptions.put(key, ass.copy());
+				if (forkCount > 0) {
+					ass = ass.copy();
+				}
+				dfb.assumptions.put(key, ass);
 			}
+			forkCount++;
 			return dfb;
 		}
 

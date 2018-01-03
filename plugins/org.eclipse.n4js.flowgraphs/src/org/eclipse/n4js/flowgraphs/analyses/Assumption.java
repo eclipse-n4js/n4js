@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -41,6 +40,8 @@ abstract public class Assumption {
 	private boolean active = true;
 	private boolean failed = false;
 	private DataFlowVisitor dataFlowVisitor;
+	private final Assumption originalAssumption;
+	private int meetCount = 0;
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
@@ -48,6 +49,7 @@ abstract public class Assumption {
 		this.creationSite = cfe;
 		this.symbol = symbol;
 		this.aliases.add(symbol);
+		this.originalAssumption = this;
 	}
 
 	/** Constructor to create a copy */
@@ -57,19 +59,7 @@ abstract public class Assumption {
 		this.symbol = assumption.symbol;
 		this.aliases.addAll(assumption.aliases);
 		this.dataFlowVisitor = assumption.dataFlowVisitor;
-	}
-
-	/** Constructor for merging {@link Assumption}s */
-	public Assumption(Collection<Assumption> assumptions) {
-		Assumption firstAss = assumptions.iterator().next();
-		this.key = firstAss.key;
-		this.creationSite = firstAss.creationSite;
-		this.symbol = firstAss.symbol;
-		this.dataFlowVisitor = firstAss.dataFlowVisitor;
-		for (Assumption ass : assumptions) {
-			assert this.symbol == ass.symbol;
-			this.aliases.addAll(ass.aliases);
-		}
+		this.originalAssumption = assumption.originalAssumption;
 	}
 
 	/** @return a key that is based on the given objects */
@@ -81,7 +71,7 @@ abstract public class Assumption {
 	abstract public Assumption copy();
 
 	/**
-	 * <b>Node:</b> Call this method when overwriting it.
+	 * <b>Note:</b> Call this method when overwriting it.
 	 *
 	 * @param assumption
 	 *            the {@link Assumption} this {@link Assumption} will be merged with
@@ -103,7 +93,8 @@ abstract public class Assumption {
 
 	/** Deactivates the given {@link Symbol}, i.e. further aliases of this {@link Symbol} are ignored */
 	public void deactivateAlias(Symbol ignoreSymbol) {
-		aliases.remove(ignoreSymbol);
+		this.aliases.remove(ignoreSymbol);
+		this.originalAssumption.meetCount++;
 	}
 
 	/** Deactivates this {@link Assumption} */
@@ -225,5 +216,15 @@ abstract public class Assumption {
 			deactivate();
 			return;
 		}
+	}
+
+	/** @return true iff all {@link Assumption}s failed that were copies from each other */
+	public boolean allFailed() {
+		return originalAssumption.meetCount == 0;
+	}
+
+	@Override
+	public String toString() {
+		return symbol.toString() + " " + getClass().getSimpleName();
 	}
 }
