@@ -21,17 +21,20 @@ import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.NumericLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TVariable;
+import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
  * Creates {@link Symbol}s depending on the given AST element
  */
 public class SymbolFactory {
+	static private Symbol undefined;
 	static private Map<Symbol, Symbol> symbols = new HashMap<>();
 
 	/**  */
@@ -53,7 +56,7 @@ public class SymbolFactory {
 			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
 		} else if (expr instanceof NullLiteral) {
 			newSymbol = new SymbolOfNullLiteral((NullLiteral) expr);
-		} else if (expr instanceof NumericLiteral && ((NumericLiteral) expr).getValue().equals(0)) {
+		} else if (expr instanceof NumericLiteral && new Integer(0).equals(((NumericLiteral) expr).getValue())) {
 			newSymbol = new SymbolOfZeroLiteral((NumericLiteral) expr);
 		}
 
@@ -64,6 +67,24 @@ public class SymbolFactory {
 		}
 
 		return symbol;
+	}
+
+	/** @return true iff the given {@link Expression} */
+	public static boolean isUndefined(Expression expr) {
+		Symbol undef = SymbolFactory.create(expr);
+		return undef != null && undef.isUndefinedLiteral();
+	}
+
+	/** @return a {@link Symbol} that represents {@code undefined} */
+	public static Symbol getUndefined() {
+		if (undefined == null) {
+			IdentifiableElement ieUndefined = TypesFactory.eINSTANCE.createIdentifiableElement();
+			IdentifierRef irUndefined = N4JSFactory.eINSTANCE.createIdentifierRef();
+			irUndefined.setId(ieUndefined);
+			ieUndefined.setName("undefined");
+			undefined = SymbolFactory.create(irUndefined);
+		}
+		return undefined;
 	}
 
 	static class SymbolOfVariableDeclaration extends Symbol {

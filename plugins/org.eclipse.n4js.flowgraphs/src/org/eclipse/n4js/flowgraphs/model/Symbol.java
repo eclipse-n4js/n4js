@@ -112,5 +112,4 @@ abstract public class Symbol {
 	public String toString() {
 		return getName();
 	}
-
 }

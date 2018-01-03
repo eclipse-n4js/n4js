@@ -10,17 +10,32 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
+
 /** Holds information of one effect to a single variable */
 public class EffectInfo {
 	/** The type of the effect */
 	public final EffectType type;
+	/** The location where the effect is triggered */
+	public final ControlFlowElement location;
 	/** The symbol that is affected */
 	public final Symbol symbol;
 
 	/** Constructor */
-	public EffectInfo(EffectType type, Symbol symbol) {
+	public EffectInfo(EffectType type, Expression location) {
 		this.type = type;
-		this.symbol = symbol;
+		this.location = location;
+		this.symbol = SymbolFactory.create(location);
+	}
+
+	/** Constructor */
+	public EffectInfo(EffectType type, VariableDeclaration location) {
+		this.type = type;
+		this.location = location;
+		this.symbol = SymbolFactory.create(location);
 	}
 
 	@Override

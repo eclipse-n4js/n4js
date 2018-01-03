@@ -10,13 +10,14 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
@@ -50,12 +51,10 @@ class CFEEffectInfos {
 			Node entryNode = cNode.getNode(NodeNames.ENTRY);
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
-			Symbol symbol = SymbolFactory.create(feature);
-			EffectInfo eiDecl = new EffectInfo(EffectType.Declaration, symbol);
+			EffectInfo eiDecl = new EffectInfo(EffectType.Declaration, feature);
 			entryNode.addEffectInfo(eiDecl);
 
-			symbol = SymbolFactory.create(feature);
-			eiDecl = new EffectInfo(EffectType.Write, symbol);
+			eiDecl = new EffectInfo(EffectType.Write, feature);
 			exitNode.addEffectInfo(eiDecl);
 
 			return null;
@@ -63,17 +62,24 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseAssignmentExpression(AssignmentExpression feature) {
-			if (feature.getLhs() == null) {
+			Expression lhs = feature.getLhs();
+			if (lhs == null) {
 				return null;
 			}
 
-			clearEffectsOfExitNode(feature.getLhs());
+			List<Expression> idRefs = new LinkedList<>();
+			if (DestructUtils.isDestructuring(lhs)) {
+				idRefs.addAll(DestructUtils.getDeclaredIdRefs(feature));
+			} else {
+				idRefs.add(lhs);
+			}
+
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
-
-			Symbol symbol = SymbolFactory.create(feature.getLhs());
-			EffectInfo eiDecl = new EffectInfo(EffectType.Write, symbol);
-			exitNode.addEffectInfo(eiDecl);
-
+			for (Expression assignedVar : idRefs) {
+				clearEffectsOfExitNode(assignedVar);
+				EffectInfo eiDecl = new EffectInfo(EffectType.Write, assignedVar);
+				exitNode.addEffectInfo(eiDecl);
+			}
 			return null;
 		}
 
@@ -87,12 +93,10 @@ class CFEEffectInfos {
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
-			Symbol symbol = SymbolFactory.create(feature.getExpression());
-			EffectInfo eiDecl = new EffectInfo(EffectType.Read, symbol);
+			EffectInfo eiDecl = new EffectInfo(EffectType.Read, feature.getExpression());
 			expressionNode.addEffectInfo(eiDecl);
 
-			symbol = SymbolFactory.create(feature.getExpression());
-			eiDecl = new EffectInfo(EffectType.Write, symbol);
+			eiDecl = new EffectInfo(EffectType.Write, feature.getExpression());
 			exitNode.addEffectInfo(eiDecl);
 
 			return null;
@@ -115,12 +119,10 @@ class CFEEffectInfos {
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
-			Symbol symbol = SymbolFactory.create(feature.getExpression());
-			EffectInfo eiDecl = new EffectInfo(EffectType.Write, symbol);
+			EffectInfo eiDecl = new EffectInfo(EffectType.Write, feature.getExpression());
 			expressionNode.addEffectInfo(eiDecl);
 
-			symbol = SymbolFactory.create(feature.getExpression());
-			eiDecl = new EffectInfo(EffectType.Read, symbol);
+			eiDecl = new EffectInfo(EffectType.Read, feature.getExpression());
 			exitNode.addEffectInfo(eiDecl);
 
 			return null;
@@ -134,8 +136,7 @@ class CFEEffectInfos {
 
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
-			Symbol symbol = SymbolFactory.create(feature.getTarget());
-			EffectInfo eiDecl = new EffectInfo(EffectType.MethodCall, symbol);
+			EffectInfo eiDecl = new EffectInfo(EffectType.MethodCall, feature.getTarget());
 			exitNode.addEffectInfo(eiDecl);
 
 			return null;
@@ -161,8 +162,7 @@ class CFEEffectInfos {
 
 		private void setRead(Expression feature) {
 			Node exitNode = cNode.getExit();
-			Symbol symbol = SymbolFactory.create(feature);
-			EffectInfo eiDecl = new EffectInfo(EffectType.Read, symbol);
+			EffectInfo eiDecl = new EffectInfo(EffectType.Read, feature);
 			exitNode.addEffectInfo(eiDecl);
 		}
 

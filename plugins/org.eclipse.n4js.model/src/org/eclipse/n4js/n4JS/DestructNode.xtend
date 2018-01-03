@@ -4,36 +4,16 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- *
+ * 
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
 package org.eclipse.n4js.n4JS
 
 import java.util.stream.Stream
+import org.eclipse.emf.common.util.BasicEList
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
-import org.eclipse.n4js.n4JS.ArrayBindingPattern
-import org.eclipse.n4js.n4JS.ArrayElement
-import org.eclipse.n4js.n4JS.ArrayLiteral
-import org.eclipse.n4js.n4JS.AssignmentExpression
-import org.eclipse.n4js.n4JS.BindingElement
-import org.eclipse.n4js.n4JS.BindingPattern
-import org.eclipse.n4js.n4JS.BindingProperty
-import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.ForStatement
-import org.eclipse.n4js.n4JS.IdentifierRef
-import org.eclipse.n4js.n4JS.N4JSASTUtils
-import org.eclipse.n4js.n4JS.N4JSFactory
-import org.eclipse.n4js.n4JS.N4JSPackage
-import org.eclipse.n4js.n4JS.ObjectBindingPattern
-import org.eclipse.n4js.n4JS.ObjectLiteral
-import org.eclipse.n4js.n4JS.PropertyNameOwner
-import org.eclipse.n4js.n4JS.PropertyNameValuePair
-import org.eclipse.n4js.n4JS.PropertyNameValuePairSingleName
-import org.eclipse.n4js.n4JS.VariableBinding
-import org.eclipse.n4js.n4JS.VariableDeclaration
-import org.eclipse.n4js.n4JS.VariableStatement
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtend.lib.annotations.Data
 
@@ -41,10 +21,10 @@ import org.eclipse.xtend.lib.annotations.Data
  * Destructuring patterns can appear in very different forms within the AST and in different contexts.
  * This helper class is used to transform those heterogeneous representations into a single, uniform
  * structure, that can be traversed more easily.
- *
+ * 
  * All fields are optional, i.e. may be 'null'. At most one of 'varRef', 'varDecl' and 'nestedPattern'
  * may be non-null; if all three are 'null' the node is a padding node.
- *
+ * 
  * <h2>Overview of Destructuring Patterns in the AST</h2>
  * Different forms:
  * <ol>
@@ -74,6 +54,7 @@ public class DestructNode {
 	VariableDeclaration varDecl;
 	DestructNode[] nestedNodes; // nested pattern that will be bound/assigned (or 'null' iff 'varName' is non-null)
 	Expression defaultExpr;
+	EObject assignedElem; // can be an Expression or an IdentifiableElement (in case of Getter/Setter/Method)
 	boolean rest;
 
 	/**
@@ -81,7 +62,7 @@ public class DestructNode {
 	 * (i.e. an array destructuring pattern).
 	 */
 	def boolean isPositional() {
-		propName===null
+		propName === null
 	}
 
 	/**
@@ -89,14 +70,14 @@ public class DestructNode {
 	 * (i.e. an array destructuring pattern).
 	 */
 	static def boolean arePositional(DestructNode[] nodes) {
-		nodes!==null && nodes.exists[positional]
+		nodes !== null && nodes.exists[positional]
 	}
 
 	/**
 	 * Tells if this is a padding node.
 	 */
 	def boolean isPadding() {
-		varRef===null && varDecl===null && nestedNodes===null
+		varRef === null && varDecl === null && nestedNodes === null
 	}
 
 	/**
@@ -104,9 +85,9 @@ public class DestructNode {
 	 * returns the variable's name, <code>null</code> otherwise.
 	 */
 	def String varName() {
-		if(varRef!==null)
+		if (varRef !== null)
 			varRef.id?.name
-		else if(varDecl!==null)
+		else if (varDecl !== null)
 			varDecl.name
 	}
 
@@ -114,10 +95,10 @@ public class DestructNode {
 	 * Returns the variable declaration contained in this node's astElement or <code>null</code>.
 	 */
 	def VariableDeclaration getVariableDeclaration() {
-		switch(astElement) {
+		switch (astElement) {
 			BindingElement:
 				astElement.varDecl
-			BindingProperty case astElement.value!==null:
+			BindingProperty case astElement.value !== null:
 				astElement.value.varDecl
 		}
 	}
@@ -126,22 +107,21 @@ public class DestructNode {
 	 * Returns the AST node and EStructuralFeature to be used when showing an error message
 	 * on the receiving node's propName attribute. Intended for issue generation in validations.
 	 */
-	def Pair<EObject,EStructuralFeature> getEObjectAndFeatureForPropName() {
-		if(propName!==null) {
-			switch(astElement) {
+	def Pair<EObject, EStructuralFeature> getEObjectAndFeatureForPropName() {
+		if (propName !== null) {
+			switch (astElement) {
 				PropertyNameValuePairSingleName:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameValuePairSingleName_IdentifierRef
-				BindingProperty case astElement.declaredName!==null:
+				BindingProperty case astElement.declaredName !== null:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
-				BindingProperty case astElement.value?.varDecl?.name!==null:
+				BindingProperty case astElement.value?.varDecl?.name !== null:
 					astElement.value.varDecl -> TypesPackage.eINSTANCE.identifiableElement_Name
 				PropertyNameOwner:
 					astElement -> N4JSPackage.eINSTANCE.propertyNameOwner_DeclaredName
 				default:
 					astElement -> null // show error on entire node
 			}
-		}
-		else {
+		} else {
 			astElement -> null // show error on entire node
 		}
 	}
@@ -150,82 +130,76 @@ public class DestructNode {
 	 * Returns the node with the given <code>astElement</code>.
 	 */
 	def DestructNode findNodeForElement(EObject astElement) {
-		stream.filter[it.astElement===astElement].findFirst.orElse(null)
+		stream.filter[it.astElement === astElement].findFirst.orElse(null)
 	}
 
 	/**
 	 * Returns stream of this node and all its descendants, i.e. directly and indirectly nested nodes.
 	 */
 	def Stream<DestructNode> stream() {
-		if(nestedNodes===null || nestedNodes.empty) {
+		if (nestedNodes === null || nestedNodes.empty) {
 			Stream.of(this)
 		} else {
 			Stream.concat(Stream.of(this), Stream.of(nestedNodes).flatMap[stream]);
 		}
 	}
 
-
-
-
 	/**
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
 	public static def DestructNode unify(VariableBinding binding) {
-		if(binding!==null
-			&& binding.pattern!==null
-			// note: binding.expression is mandatory in variable statements but optional in for..in/of statements
-			&& (binding.expression!==null || binding.eContainer instanceof ForStatement)
-		) {
+		if (binding !== null && binding.pattern !== null // note: binding.expression is mandatory in variable statements but optional in for..in/of statements
+		&& (binding.expression !== null || binding.eContainer instanceof ForStatement)) {
+
 			new DestructNode(
 				binding.pattern, // astElement
 				null, // propName
 				null, // varRef
 				null, // varDecl
-				toEntries(binding.pattern), // nestedNodes
+				toEntries(binding.pattern, binding.expression), // nestedNodes
 				binding.expression, // defaultExpr
+				binding.expression, // assignedExpr
 				false // rest
 			)
 		}
 	}
+
 	/**
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
 	public static def DestructNode unify(AssignmentExpression expr) {
-		if(expr!==null
-			&& expr.lhs!==null
-			&& expr.rhs!==null
-			&& N4JSASTUtils.isDestructuringAssignment(expr)
-		) {
+		if (expr !== null && expr.lhs !== null && expr.rhs !== null && N4JSASTUtils.isDestructuringAssignment(expr)) {
 			new DestructNode(
 				expr.lhs, // astElement
 				null, // propName
 				null, // varRef
 				null, // varDecl
-				toEntries(expr.lhs), // nestedNodes
+				toEntries(expr.lhs, expr.rhs), // nestedNodes
 				expr.rhs, // defaultExpr
+				expr.rhs, // assignedExpr
 				false // rest
 			)
 		}
 	}
+
 	/**
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
 	 */
 	public static def DestructNode unify(ForStatement stmnt) {
-		if(stmnt!==null
-			&& N4JSASTUtils.isDestructuringForStatement(stmnt)
-		) {
-			val valueToBeDestructured = if(stmnt.forOf) {
-				stmnt.expression
-			} else if(stmnt.forIn) {
-				N4JSFactory.eINSTANCE.createStringLiteral
-			} else {
-				// impossible because #isDestructuringForStatement() returned true
-				throw new IllegalStateException
-			};
-			if(N4JSASTUtils.containsDestructuringPattern(stmnt)) {
+		if (stmnt !== null && N4JSASTUtils.isDestructuringForStatement(stmnt)) {
+			val valueToBeDestructured = if (stmnt.forOf) {
+					stmnt.expression
+				} else if (stmnt.forIn) {
+					N4JSFactory.eINSTANCE.createStringLiteral
+				} else {
+					// impossible because #isDestructuringForStatement() returned true
+					throw new IllegalStateException
+				};
+
+			if (N4JSASTUtils.containsDestructuringPattern(stmnt)) {
 				// case: for(var [a,b] of arr) {}
 				val binding = stmnt.varDeclsOrBindings.filter(VariableBinding).head;
 				new DestructNode(
@@ -233,96 +207,234 @@ public class DestructNode {
 					null, // propName
 					null, // varRef
 					null, // varDecl
-					toEntries(binding.pattern), // nestedNodes
+					toEntries(binding.pattern, null), // nestedNodes
 					valueToBeDestructured, // defaultExpr
+					null, // assignedExpr
 					false // rest
 				)
-			}
-			else if(N4JSASTUtils.isLeftHandSideDestructuringPattern(stmnt.getInitExpr())) {
+			} else if (N4JSASTUtils.isLeftHandSideDestructuringPattern(stmnt.getInitExpr())) {
 				// case: for([a,b] of arr) {}
 				new DestructNode(
 					stmnt.initExpr, // astElement
 					null, // propName
 					null, // varRef
 					null, // varDecl
-					toEntries(stmnt.initExpr), // nestedNodes
+					toEntries(stmnt.initExpr, null), // nestedNodes
 					valueToBeDestructured, // defaultExpr
+					null, // assignedExpr
 					false // rest
 				)
 			}
 		}
 	}
 
-	private static def DestructNode[] toEntries(EObject pattern) {
-		switch(pattern) {
-		ArrayLiteral:
-			pattern.elements.map[toEntry]
-		ObjectLiteral:
-			pattern.propertyAssignments.filter(PropertyNameValuePair).map[toEntry]
-		ArrayBindingPattern:
-			pattern.elements.map[toEntry]
-		ObjectBindingPattern:
-			pattern.properties.map[toEntry]
-		default:
-			#[]
+	private static def DestructNode[] toEntries(EObject pattern, EObject rhs) {
+		switch (pattern) {
+			ArrayLiteral: {
+				val arrLit = rhs as ArrayLiteral;
+				val patElemIter = pattern.elements.iterator;
+				val arrElemIter = arrLit.elements.iterator;
+				val nestedDNs = new BasicEList<DestructNode>();
+				while (patElemIter.hasNext && arrElemIter.hasNext) {
+					val nestedNode = toEntry(patElemIter.next, arrElemIter.next);
+					nestedDNs.add(nestedNode);
+				}
+				return nestedDNs;
+			}
+			ObjectLiteral: {
+				val objLit = rhs as ObjectLiteral;
+				val patElemIter = pattern.propertyAssignments.iterator  ;
+				val objElemIter = objLit.propertyAssignments.iterator  ;
+				val nestedDNs = new BasicEList<DestructNode>();
+				while (patElemIter.hasNext && objElemIter.hasNext) {
+					val patElem = patElemIter.next as PropertyNameValuePair;
+					val litElem = objElemIter.next as PropertyNameValuePair;
+					val nestedNode = toEntry(patElem, litElem);
+					nestedDNs.add(nestedNode);
+				}
+				return nestedDNs;
+			}
+			ArrayBindingPattern: {
+				val arrLit = rhs as ArrayLiteral;
+				val patElemIter = pattern.elements.iterator;
+				val arrElemIter = arrLit.elements.iterator;
+				val nestedDNs = new BasicEList<DestructNode>();
+				while (patElemIter.hasNext && arrElemIter.hasNext) {
+					val nestedNode = toEntry(patElemIter.next, arrElemIter.next);
+					nestedDNs.add(nestedNode);
+				}
+				return nestedDNs;
+			}
+			ObjectBindingPattern: {
+				val objLit = rhs as ObjectLiteral;
+				val patElemIter = pattern.properties.iterator;
+				val objElemIter = objLit.propertyAssignments.iterator;
+				val nestedDNs = new BasicEList<DestructNode>();
+				while (patElemIter.hasNext && objElemIter.hasNext) {
+					val nestedNode = toEntry(patElemIter.next, objElemIter.next);
+					nestedDNs.add(nestedNode);
+				}
+				return nestedDNs;
+			}
+			default:
+				#[]
 		}
 	}
-	private static def DestructNode toEntry(ArrayElement elem) {
+
+	private static def DestructNode toEntry(ArrayElement elem, ArrayElement rhs) {
 		val expr = elem.expression; // note: ArrayPadding will return null for getExpression()
-		if(expr instanceof AssignmentExpression)
-			toEntry(elem, null, expr.lhs, expr.rhs, elem.spread)
+		if (expr instanceof AssignmentExpression)
+			toEntry(elem, null, expr.lhs, expr.rhs, elem.spread, rhs.expression)
 		else
-			toEntry(elem, null, expr, null, elem.spread)
+			toEntry(elem, null, expr, null, elem.spread, rhs.expression)
 	}
-	private static def DestructNode toEntry(PropertyNameValuePair pa) {
-		if(pa instanceof PropertyNameValuePairSingleName)
-			toEntry(pa, pa.name, pa.identifierRef, pa.expression, false)
+
+	private static def DestructNode toEntry(PropertyNameValuePair pa, PropertyNameValuePair rhs) {
+		if (pa instanceof PropertyNameValuePairSingleName)
+			toEntry(pa, pa.name, pa.identifierRef, pa.expression, false, rhs.expression)
 		else {
 			val expr = pa.expression;
-			if(expr instanceof AssignmentExpression)
-				toEntry(pa, pa.name, expr.lhs, expr.rhs, false)
+			if (expr instanceof AssignmentExpression)
+				toEntry(pa, pa.name, expr.lhs, expr.rhs, false, rhs.expression)
 			else
-				toEntry(pa, pa.name, expr, null, false)
+				toEntry(pa, pa.name, expr, null, false, rhs.expression)
 		}
 	}
-	private static def DestructNode toEntry(BindingElement elem) {
-		if(elem.varDecl!==null)
-			toEntry(elem, null, elem.varDecl, elem.varDecl.expression, elem.rest)
-		else if(elem.nestedPattern!==null)
-			toEntry(elem, null, elem.nestedPattern, elem.expression, elem.rest)
+
+	private static def DestructNode toEntry(BindingElement elem, ArrayElement rhs) {
+		if (elem.varDecl !== null)
+			toEntry(elem, null, elem.varDecl, elem.varDecl.expression, elem.rest, rhs.expression)
+		else if (elem.nestedPattern !== null)
+			toEntry(elem, null, elem.nestedPattern, elem.expression, elem.rest, rhs.expression)
 		else
-			toEntry(elem, null, null, null, false) // return dummy entry to not break indices
+			toEntry(elem, null, null, null, false, rhs.expression) // return dummy entry to not break indices
 	}
-	private static def DestructNode toEntry(BindingProperty prop) {
-		if(prop.value?.varDecl!==null)
-			toEntry(prop, prop.name, prop.value.varDecl, prop.value.varDecl.expression, false)
-		else if(prop.value?.nestedPattern!==null)
-			toEntry(prop, prop.name, prop.value.nestedPattern, prop.value.expression, false)
-		else
-			toEntry(prop, null, null, null, false)
+
+	private static def DestructNode toEntry(BindingProperty prop, PropertyAssignment rhs) {
+		if (prop.value?.varDecl !== null) {
+			val expr = getPropertyAssignmentExpression(rhs);
+			toEntry(prop, prop.name, prop.value.varDecl, prop.value.varDecl.expression, false, expr)
+
+		} else if (prop.value?.nestedPattern !== null) {
+			toEntry(prop, prop.name, prop.value.nestedPattern, prop.value.expression, false, rhs)
+
+		} else {
+			toEntry(prop, null, null, null, false, rhs)
+		}
 	}
+
 	/**
 	 * @param bindingTarget
 	 *              an IdentifierRef/VariableDeclaration or a nested pattern (which may be
 	 *              a BindingPattern, ArrayLiteral, or ObjectLiteral)
 	 */
-	private static def DestructNode toEntry(EObject astElement, String propName, EObject bindingTarget, Expression defaultExpr, boolean rest) {
-		if(bindingTarget===null) {
+	private static def DestructNode toEntry(EObject astElement, String propName, EObject bindingTarget,
+		Expression defaultExpr, boolean rest, EObject rhs) {
+
+		if (bindingTarget === null) {
 			// no target -> create a padding node
-			new DestructNode(astElement, propName, null, null, null, defaultExpr, rest)
-		}
-		else if(bindingTarget instanceof IdentifierRef) {
-			new DestructNode(astElement, propName, bindingTarget, null, null, defaultExpr, rest)
-		}
-		else if(bindingTarget instanceof VariableDeclaration) {
-			new DestructNode(astElement, propName, null, bindingTarget, null, defaultExpr, rest)
-		}
-		else if(bindingTarget instanceof ArrayLiteral || bindingTarget instanceof ObjectLiteral || bindingTarget instanceof BindingPattern) {
-			new DestructNode(astElement, propName, null, null, toEntries(bindingTarget), defaultExpr, rest)
-		}
-		else {
+			new DestructNode(astElement, propName, null, null, null, defaultExpr, null, rest)
+
+		} else if (bindingTarget instanceof IdentifierRef) {
+			new DestructNode(astElement, propName, bindingTarget, null, null, defaultExpr, rhs, rest)
+
+		} else if (bindingTarget instanceof VariableDeclaration) {
+			new DestructNode(astElement, propName, null, bindingTarget, null, defaultExpr, rhs, rest)
+
+		} else if (bindingTarget instanceof ArrayLiteral || bindingTarget instanceof ObjectLiteral ||
+			bindingTarget instanceof BindingPattern) {
+			new DestructNode(astElement, propName, null, null, toEntries(bindingTarget, rhs), defaultExpr, null, rest)
+
+		} else {
 			// invalid binding target (probably a corrupt AST) -> create a padding node
-			new DestructNode(astElement, propName, null, null, null, defaultExpr, rest)
+			new DestructNode(astElement, propName, null, null, null, defaultExpr, null, rest)
 		}
 	}
+
+	/**
+	 * Returns the expression or function of the given PropertyAssignment
+	 */
+	private static def EObject getPropertyAssignmentExpression(PropertyAssignment rhs) {
+		switch (rhs) {
+			PropertyGetterDeclaration:
+				return rhs.definedFunctionOrAccessor
+			PropertySetterDeclaration:
+				return rhs.definedFunctionOrAccessor
+			PropertyMethodDeclaration:
+				return rhs.definedFunctionOrAccessor
+			PropertyNameValuePair:
+				return rhs.expression
+			PropertyAssignmentAnnotationList:
+				return null
+		}
+	}
+
+	/** Returns a pair where its key is the assigned EObject and its value is the default EObject to the given lhs AST element */
+	public static def Pair<EObject, EObject> getValueFromDestructuring(EObject nodeElem) {
+		var EObject node = nodeElem;
+		var EObject topNode = null;
+		var EObject dNodeElem = null;
+		var boolean breakSearch = false;
+
+		while (!breakSearch) {
+			var EObject parent = node.eContainer();
+			dNodeElem = getDNodeElem(dNodeElem, parent, node);
+			topNode = getTopElem(topNode, parent);
+			breakSearch = parent instanceof Statement;
+			node = parent;
+		}
+
+		var DestructNode dNode = if (topNode instanceof AssignmentExpression) {
+				DestructNode.unify(topNode);
+			} else if (topNode instanceof VariableBinding) {
+				DestructNode.unify(topNode);
+			} else if (topNode instanceof ForStatement) {
+				DestructNode.unify(topNode);
+			} else {
+				null;
+			};
+
+		if (dNode !== null) {
+			dNode = dNode.findNodeForElement(dNodeElem);
+			if (dNode !== null) {
+				var EObject assgnValue = dNode.getAssignedElem();
+				var EObject defaultValue = dNode.getDefaultExpr();
+				return assgnValue -> defaultValue;
+			}
+		}
+
+		return null;
+	}
+
+	private static def EObject getDNodeElem(EObject dNodeElem, EObject parent, EObject node) {
+		if (dNodeElem !== null) {
+			return dNodeElem;
+		}
+		if (node instanceof BindingElement && parent instanceof BindingProperty) {
+			return parent;
+		}
+		if (node instanceof BindingElement || node instanceof ArrayElement || node instanceof PropertyAssignment) {
+			return node;
+		}
+	}
+
+	private static def EObject getTopElem(EObject oldTopNode, EObject parent) {
+		val EObject newTopNode = switch (parent) {
+			ForStatement:
+				parent
+			AssignmentExpression:
+				parent
+			VariableBinding:
+				parent
+			default:
+				null
+		};
+
+		if (newTopNode !== null) {
+			return newTopNode
+		} else {
+			oldTopNode;
+		}
+	}
+
 }

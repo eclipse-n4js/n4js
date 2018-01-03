@@ -13,18 +13,15 @@ package org.eclipse.n4js.flowgraphs.analysers;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.flowgraphs.analyses.Assumption;
 import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.factories.DestructUtils;
 import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
-import org.eclipse.n4js.n4JS.BindingElement;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
 import org.eclipse.n4js.n4JS.EqualityExpression;
@@ -32,15 +29,11 @@ import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.FieldAccessor;
 import org.eclipse.n4js.n4JS.ForStatement;
-import org.eclipse.n4js.n4JS.IdentifierRef;
-import org.eclipse.n4js.n4JS.N4JSFactory;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.WhileStatement;
-import org.eclipse.n4js.ts.types.IdentifiableElement;
-import org.eclipse.n4js.ts.types.TypesFactory;
 
 /**
  * This analysis computes all cases where an implicit assumption of a variable being not null conflicts either with an
@@ -78,6 +71,11 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		if (cfe instanceof ParameterizedPropertyAccessExpression) {
 			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) cfe;
 			Expression target = ppae.getTarget();
+			dereferencer = target;
+		}
+		if (cfe instanceof AssignmentExpression) {
+			AssignmentExpression ae = (AssignmentExpression) cfe;
+			Expression target = getDereferencer(ae.getLhs());
 			dereferencer = target;
 		}
 		return dereferencer;
@@ -129,8 +127,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	static class IsNotNull extends Assumption {
-		static Symbol undefined;
-
 		Symbol nullOrUndefinedSymbol;
 
 		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
@@ -141,17 +137,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			super(copy);
 		}
 
-		static Symbol getUndefined() {
-			if (undefined == null) {
-				IdentifiableElement ieUndefined = TypesFactory.eINSTANCE.createIdentifiableElement();
-				IdentifierRef irUndefined = N4JSFactory.eINSTANCE.createIdentifierRef();
-				irUndefined.setId(ieUndefined);
-				ieUndefined.setName("undefined");
-				undefined = SymbolFactory.create(irUndefined);
-			}
-			return undefined;
-		}
-
 		@Override
 		public Assumption copy() {
 			return new IsNotNull(this);
@@ -160,7 +145,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		@Override
 		public boolean holdsOnEffect(EffectInfo effect, ControlFlowElement cfe) {
 			if (effect.type == EffectType.Write) {
-				nullOrUndefinedSymbol = getNullOrUndefinedAssignee(cfe);
+				nullOrUndefinedSymbol = getNullOrUndefinedAssignee(effect, cfe);
 
 				if (nullOrUndefinedSymbol != null) {
 					if (nullOrUndefinedSymbol.isNullLiteral()) {
@@ -175,34 +160,36 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			return true;
 		}
 
-		private Symbol getNullOrUndefinedAssignee(ControlFlowElement cfe) {
+		private Symbol getNullOrUndefinedAssignee(EffectInfo effect, ControlFlowElement cfe) {
 			boolean parentIsLoop = false;
 
-			Expression value = null;
+			EObject value = null;
 			if (cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
-				value = ae.getRhs();
+
+				if (DestructUtils.isDestructuring(ae.getRhs())) {
+					value = DestructUtils.getValueFromDestructuring(effect.location);
+
+				} else {
+					value = ae.getRhs();
+				}
 			}
 			if (cfe instanceof VariableDeclaration) {
 				VariableDeclaration vd = (VariableDeclaration) cfe;
-				value = vd.getExpression();
-				if (value == null) {
-					EObject parent = cfe.eContainer();
-					if (parent instanceof BindingElement) {
-						// vb.getVariableDeclarations();
-						// DestructNode dn; // continue here
-						BindingElement be = (BindingElement) parent;
-						EObject beP = be.eContainer();
-						EObject bePP = beP.eContainer();
-						VariableBinding vb = (VariableBinding) bePP;
-						Object list = vb.getVariableDeclarations();
-						EStructuralFeature f = parent.eContainingFeature();
-						URI rui = EcoreUtil.getURI(parent);
-						value = be.getExpression();
+				VariableBinding vBinding = DestructUtils.getTopVariableBinding(vd);
+
+				EObject cfeForParent = vBinding != null ? vBinding.eContainer() : cfe;
+				EObject parent = cfeForParent.eContainer();
+				parentIsLoop |= parentIsLoop || parent instanceof ForStatement;
+				parentIsLoop |= parentIsLoop || parent instanceof WhileStatement;
+				parentIsLoop |= parentIsLoop || parent instanceof DoStatement;
+
+				if (!parentIsLoop) {
+					if (vBinding != null) {
+						value = DestructUtils.getValueFromDestructuring(effect.location);
+
 					} else {
-						parentIsLoop |= parentIsLoop || parent instanceof ForStatement;
-						parentIsLoop |= parentIsLoop || parent instanceof WhileStatement;
-						parentIsLoop |= parentIsLoop || parent instanceof DoStatement;
+						value = vd.getExpression();
 					}
 				}
 			}
@@ -210,9 +197,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			Symbol nullOrUndefined = null;
 			if (!parentIsLoop) {
 				if (value == null) {
-					nullOrUndefined = getUndefined();
+					nullOrUndefined = SymbolFactory.getUndefined();
 				} else {
-					nullOrUndefined = SymbolFactory.create(value);
+					Expression canCrash = (Expression) value;
+					nullOrUndefined = SymbolFactory.create(canCrash);
 				}
 			}
 			return nullOrUndefined;
