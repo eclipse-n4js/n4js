@@ -13,12 +13,10 @@ package org.eclipse.n4js.flowgraphs.model;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
@@ -210,19 +208,6 @@ public class ComplexNode implements ControlFlowable {
 	public boolean isControlStatement() {
 		ControlFlowElement cfe = getControlFlowElement();
 		return FGUtils.isControlStatement(cfe);
-	}
-
-	/** @return all {@link DependencyEdge}s that start or end at one of the nodes of this {@link ComplexNode}. */
-	@Deprecated
-	public Set<DependencyEdge> getDependencyEdges() {
-		Set<DependencyEdge> edges = new HashSet<>();
-		for (Node n : getNodes()) {
-			for (DependencyEdge e : n.startEdges)
-				edges.add(e);
-			for (DependencyEdge e : n.endEdges)
-				edges.add(e);
-		}
-		return edges;
 	}
 
 	@Override

@@ -23,7 +23,10 @@ import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IfStatement;
 
 /**
- *
+ * {@link Assumption}s are used to check if a specific {@link Symbol} or its aliases are used in a specific way or not.
+ * For this checking, the {@code hold} methods can be used.<br/>
+ * The life-cycle of {@link Assumption}s is aligned to the life-cycle of a branch. With every fork, the
+ * {@link Assumption} is forked and with every merge, the method {@link #mergeWith(Assumption)} is called.
  */
 abstract public class Assumption {
 	/** Key for identification of this {@link Assumption}. Use {@link #getKey(ControlFlowElement, Symbol)} */

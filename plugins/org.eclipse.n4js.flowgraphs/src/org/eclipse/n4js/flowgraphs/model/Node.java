@@ -13,7 +13,6 @@ package org.eclipse.n4js.flowgraphs.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -47,10 +46,6 @@ abstract public class Node implements ControlFlowable {
 	final public TreeSet<ControlFlowEdge> pred = new TreeSet<>();
 	/** List of all succeeding {@link ControlFlowEdge}s */
 	final public TreeSet<ControlFlowEdge> succ = new TreeSet<>();
-	/** List of all {@link DependencyEdge}s starting at this node */
-	final public List<DependencyEdge> startEdges = new LinkedList<>();
-	/** List of all {@link DependencyEdge}s ending at this node */
-	final public List<DependencyEdge> endEdges = new LinkedList<>();
 	/** List of all {@link JumpToken}s of this node */
 	final public Set<JumpToken> jumpToken = new HashSet<>();
 	/** List of all {@link CatchToken}s of this node */
@@ -137,16 +132,6 @@ abstract public class Node implements ControlFlowable {
 	void addPredecessor(ControlFlowEdge cfEdge) {
 		boolean addSucceeded = pred.add(cfEdge);
 		assert addSucceeded : "Adding an edge should always be successful";
-	}
-
-	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
-	void addOutgoingDependency(DependencyEdge depEdge) {
-		startEdges.add(depEdge);
-	}
-
-	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
-	void addIncomingDependency(DependencyEdge depEdge) {
-		endEdges.add(depEdge);
 	}
 
 	/** @return set of all internal predecessors. */
