@@ -98,13 +98,13 @@ public interface TypeDefinitionGitLocationProvider {
 		/**
 		 * The default location for the type definition file. Used in the production code.
 		 */
-		// TODO: change branch name back to GitUtils.getMasterBranch() before final merge!
+		// TODO GH-435: change branch name back to GitUtils.getMasterBranch() before final merge!
 		PUBLIC_DEFINITION_LOCATION("n4jsd", "https://github.com/NumberFour/n4jsd.git", "GH-435"),
 
 		/**
 		 * Type definition location for testing purposes.
 		 */
-		// TODO: change branch name back to GitUtils.getMasterBranch() before final merge!
+		// TODO GH-435: change branch name back to GitUtils.getMasterBranch() before final merge!
 		TEST_DEFINITION_LOCATION("n4jsd-sandbox", "https://github.com/NumberFour/n4jsd-sandbox.git", "GH-435");
 
 		private static final String N4JSD_URL_SYSTEM_PROPERTY_PREFIX = "numberfour.n4jsd-repository.url";
