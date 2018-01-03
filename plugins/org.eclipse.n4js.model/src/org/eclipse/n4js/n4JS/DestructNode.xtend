@@ -16,6 +16,7 @@ import org.eclipse.emf.ecore.EObject
 import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtend.lib.annotations.Data
+import java.util.Iterator
 
 /**
  * Destructuring patterns can appear in very different forms within the AST and in different contexts.
@@ -229,88 +230,80 @@ public class DestructNode {
 	}
 
 	private static def DestructNode[] toEntries(EObject pattern, EObject rhs) {
-		switch (pattern) {
-			ArrayLiteral: {
-				val arrLit = rhs as ArrayLiteral;
-				val patElemIter = pattern.elements.iterator;
-				val arrElemIter = arrLit.elements.iterator;
-				val nestedDNs = new BasicEList<DestructNode>();
-				while (patElemIter.hasNext && arrElemIter.hasNext) {
-					val nestedNode = toEntry(patElemIter.next, arrElemIter.next);
-					nestedDNs.add(nestedNode);
-				}
-				return nestedDNs;
-			}
-			ObjectLiteral: {
-				val objLit = rhs as ObjectLiteral;
-				val patElemIter = pattern.propertyAssignments.iterator  ;
-				val objElemIter = objLit.propertyAssignments.iterator  ;
-				val nestedDNs = new BasicEList<DestructNode>();
-				while (patElemIter.hasNext && objElemIter.hasNext) {
-					val patElem = patElemIter.next as PropertyNameValuePair;
-					val litElem = objElemIter.next as PropertyNameValuePair;
-					val nestedNode = toEntry(patElem, litElem);
-					nestedDNs.add(nestedNode);
-				}
-				return nestedDNs;
-			}
-			ArrayBindingPattern: {
-				val arrLit = rhs as ArrayLiteral;
-				val patElemIter = pattern.elements.iterator;
-				val arrElemIter = arrLit.elements.iterator;
-				val nestedDNs = new BasicEList<DestructNode>();
-				while (patElemIter.hasNext && arrElemIter.hasNext) {
-					val nestedNode = toEntry(patElemIter.next, arrElemIter.next);
-					nestedDNs.add(nestedNode);
-				}
-				return nestedDNs;
-			}
-			ObjectBindingPattern: {
-				val objLit = rhs as ObjectLiteral;
-				val patElemIter = pattern.properties.iterator;
-				val objElemIter = objLit.propertyAssignments.iterator;
-				val nestedDNs = new BasicEList<DestructNode>();
-				while (patElemIter.hasNext && objElemIter.hasNext) {
-					val nestedNode = toEntry(patElemIter.next, objElemIter.next);
-					nestedDNs.add(nestedNode);
-				}
-				return nestedDNs;
-			}
-			default:
-				#[]
+
+		val Iterator<? extends EObject> patElemIter = switch (pattern) {
+			ArrayLiteral:
+				pattern.elements.iterator
+			ObjectLiteral:
+				pattern.propertyAssignments.iterator
+			ArrayBindingPattern:
+				pattern.elements.iterator
+			ObjectBindingPattern:
+				pattern.properties.iterator
 		}
+
+		var Iterator<? extends EObject> rhsElemIter = switch (rhs) {
+			ArrayLiteral:
+				rhs.elements.iterator
+			ObjectLiteral:
+				rhs.propertyAssignments.iterator
+		}
+
+		val nestedDNs = new BasicEList<DestructNode>();
+		while (patElemIter.hasNext) {
+			val patElem = patElemIter.next;
+			val litElem = if (rhsElemIter === null) rhs else if (rhsElemIter.hasNext) rhsElemIter.next else null;
+
+			val nestedNode = switch (patElem) {
+				ArrayElement:
+					toEntry(patElem, litElem)
+				PropertyNameValuePair:
+					toEntry(patElem, litElem)
+				BindingElement:
+					toEntry(patElem, litElem)
+				BindingProperty:
+					toEntry(patElem, litElem)
+			}
+
+			nestedDNs.add(nestedNode);
+		}
+		return nestedDNs;
 	}
 
-	private static def DestructNode toEntry(ArrayElement elem, ArrayElement rhs) {
+	private static def DestructNode toEntry(ArrayElement elem, EObject rhs) {
+		val EObject rhsExpr = if (rhs instanceof ArrayElement) rhs.expression else rhs;
 		val expr = elem.expression; // note: ArrayPadding will return null for getExpression()
 		if (expr instanceof AssignmentExpression)
-			toEntry(elem, null, expr.lhs, expr.rhs, elem.spread, rhs.expression)
+			toEntry(elem, null, expr.lhs, expr.rhs, elem.spread, rhsExpr)
 		else
-			toEntry(elem, null, expr, null, elem.spread, rhs.expression)
+			toEntry(elem, null, expr, null, elem.spread, rhsExpr)
 	}
 
-	private static def DestructNode toEntry(PropertyNameValuePair pa, PropertyNameValuePair rhs) {
+	private static def DestructNode toEntry(PropertyNameValuePair pa, EObject rhs) {
+		val EObject rhsExpr = if (rhs instanceof PropertyNameValuePair) rhs.expression else rhs;
 		if (pa instanceof PropertyNameValuePairSingleName)
-			toEntry(pa, pa.name, pa.identifierRef, pa.expression, false, rhs.expression)
+			toEntry(pa, pa.name, pa.identifierRef, pa.expression, false, rhsExpr)
 		else {
 			val expr = pa.expression;
 			if (expr instanceof AssignmentExpression)
-				toEntry(pa, pa.name, expr.lhs, expr.rhs, false, rhs.expression)
+				toEntry(pa, pa.name, expr.lhs, expr.rhs, false, rhsExpr)
 			else
-				toEntry(pa, pa.name, expr, null, false, rhs.expression)
+				toEntry(pa, pa.name, expr, null, false, rhsExpr)
 		}
 	}
 
-	private static def DestructNode toEntry(BindingElement elem, ArrayElement rhs) {
+	private static def DestructNode toEntry(BindingElement elem, EObject rhs) {
+		val EObject expr = if (rhs instanceof ArrayElement) rhs.expression else rhs;
+
 		if (elem.varDecl !== null)
-			toEntry(elem, null, elem.varDecl, elem.varDecl.expression, elem.rest, rhs.expression)
+			toEntry(elem, null, elem.varDecl, elem.varDecl.expression, elem.rest, expr)
 		else if (elem.nestedPattern !== null)
-			toEntry(elem, null, elem.nestedPattern, elem.expression, elem.rest, rhs.expression)
+			toEntry(elem, null, elem.nestedPattern, elem.expression, elem.rest, expr)
 		else
-			toEntry(elem, null, null, null, false, rhs.expression) // return dummy entry to not break indices
+			toEntry(elem, null, null, null, false, expr) // return dummy entry to not break indices
 	}
 
-	private static def DestructNode toEntry(BindingProperty prop, PropertyAssignment rhs) {
+	private static def DestructNode toEntry(BindingProperty prop, EObject rhs) {
 		if (prop.value?.varDecl !== null) {
 			val expr = getPropertyAssignmentExpression(rhs);
 			toEntry(prop, prop.name, prop.value.varDecl, prop.value.varDecl.expression, false, expr)
@@ -354,7 +347,7 @@ public class DestructNode {
 	/**
 	 * Returns the expression or function of the given PropertyAssignment
 	 */
-	private static def EObject getPropertyAssignmentExpression(PropertyAssignment rhs) {
+	private static def EObject getPropertyAssignmentExpression(EObject rhs) {
 		switch (rhs) {
 			PropertyGetterDeclaration:
 				return rhs.definedFunctionOrAccessor

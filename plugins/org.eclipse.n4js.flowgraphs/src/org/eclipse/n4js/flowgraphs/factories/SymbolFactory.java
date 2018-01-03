@@ -187,7 +187,7 @@ public class SymbolFactory {
 		}
 
 		@Override
-		protected Object getSymbolKey() {
+		protected Object createSymbolKey() {
 			List<Object> keyChain = new LinkedList<>();
 			keyChain.add(getDeclaration());
 			Expression tgtExpr = getContext();
@@ -196,7 +196,6 @@ public class SymbolFactory {
 				keyChain.add(tgtSymbol.getDeclaration());
 				tgtExpr = tgtSymbol.getContext();
 				tgtSymbol = SymbolFactory.create(tgtExpr);
-				tgtSymbol = null;
 			}
 			if (tgtExpr != null) {
 				keyChain.add(tgtExpr);

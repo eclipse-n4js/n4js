@@ -79,7 +79,7 @@ abstract public class Symbol {
 	abstract public ControlFlowElement getASTLocation();
 
 	/** @return the same key for {@link Symbol}s to the same variable. The key is cached. */
-	protected Object getSymbolKey() {
+	protected Object createSymbolKey() {
 		Object key = getDeclaration();
 		if (key == null) {
 			key = getASTLocation();
@@ -87,9 +87,9 @@ abstract public class Symbol {
 		return key;
 	}
 
-	private Object internalGetSymbolKey() {
+	public final Object getSymbolKey() {
 		if (cachedKey == null) {
-			cachedKey = getSymbolKey();
+			cachedKey = createSymbolKey();
 		}
 		return cachedKey;
 	}
@@ -100,12 +100,12 @@ abstract public class Symbol {
 			return false;
 
 		Symbol s = (Symbol) obj;
-		return internalGetSymbolKey().equals(s.internalGetSymbolKey());
+		return getSymbolKey().equals(s.getSymbolKey());
 	}
 
 	@Override
 	public int hashCode() {
-		return internalGetSymbolKey().hashCode();
+		return getSymbolKey().hashCode();
 	}
 
 	@Override
