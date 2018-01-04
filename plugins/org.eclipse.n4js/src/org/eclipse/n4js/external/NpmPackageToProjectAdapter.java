@@ -97,7 +97,8 @@ public class NpmPackageToProjectAdapter {
 
 		@Override
 		public boolean apply(Path path) {
-			return path.endsWith(SUFFIX);
+			Path fileName = path.getFileName();
+			return fileName != null && fileName.toString().endsWith(SUFFIX);
 		}
 	};
 
