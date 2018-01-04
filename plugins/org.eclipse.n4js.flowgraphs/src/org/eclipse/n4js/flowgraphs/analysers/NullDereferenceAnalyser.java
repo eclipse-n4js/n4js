@@ -104,28 +104,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		return null;
 	}
 
-	/** Result of a null or undefined dereference */
-	static public class NullDereferenceResult {
-		/** AST location */
-		public final ControlFlowElement cfe;
-		/** {@link Symbol} that was checked for null or undefined */
-		public final Symbol checkedSymbol;
-		/** Aliased {@link Symbol} that failed a check */
-		public final Symbol causingSymbol;
-		/** Undefined or Null {@link Symbol} that was assigned to {@link #causingSymbol} */
-		public final Symbol nullOrUndefinedSymbol;
-		/** True iff the symbol must be null or undefined. False iff it can be null or undefined. */
-		public final boolean must;
-
-		NullDereferenceResult(ControlFlowElement cfe, IsNotNull inn) {
-			this.cfe = cfe;
-			this.checkedSymbol = inn.symbol;
-			this.causingSymbol = inn.failedSymbol;
-			this.nullOrUndefinedSymbol = inn.nullOrUndefinedSymbol;
-			this.must = inn.allFailed();
-		}
-	}
-
 	static class IsNotNull extends Assumption {
 		Symbol nullOrUndefinedSymbol;
 

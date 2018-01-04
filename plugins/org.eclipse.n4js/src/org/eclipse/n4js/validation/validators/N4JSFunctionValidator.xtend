@@ -20,7 +20,7 @@ import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser
-import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.NullDereferenceResult
+import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser
 import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitorHost
 import org.eclipse.n4js.n4JS.ArrowFunction
