@@ -17,6 +17,8 @@ import org.eclipse.emf.ecore.EStructuralFeature
 import org.eclipse.n4js.ts.types.TypesPackage
 import org.eclipse.xtend.lib.annotations.Data
 import java.util.Iterator
+import java.util.List
+import java.util.LinkedList
 
 /**
  * Destructuring patterns can appear in very different forms within the AST and in different contexts.
@@ -208,7 +210,7 @@ public class DestructNode {
 					null, // propName
 					null, // varRef
 					null, // varDecl
-					toEntries(binding.pattern, null), // nestedNodes
+					toEntries(binding.pattern, stmnt.expression), // nestedNodes
 					valueToBeDestructured, // defaultExpr
 					null, // assignedExpr
 					false // rest
@@ -344,9 +346,7 @@ public class DestructNode {
 		}
 	}
 
-	/**
-	 * Returns the expression or function of the given PropertyAssignment
-	 */
+	/** @return the expression or function of the given PropertyAssignment */
 	private static def EObject getPropertyAssignmentExpression(EObject rhs) {
 		switch (rhs) {
 			PropertyGetterDeclaration:
@@ -359,10 +359,42 @@ public class DestructNode {
 				return rhs.expression
 			PropertyAssignmentAnnotationList:
 				return null
+			default:
+				return rhs
 		}
 	}
 
-	/** Returns a pair where its key is the assigned EObject and its value is the default EObject to the given lhs AST element */
+	/** @return all {@link IdentifierRef} of variables that are written in the given assignment */
+	public def List<Expression> getAllDeclaredIdRefs() {
+		val List<Expression> idRefs = new LinkedList();
+		val Iterator<DestructNode> allNestedNodes = this.stream().iterator();
+
+		while (allNestedNodes.hasNext()) {
+			val EObject eobj = allNestedNodes.next().getAstElement();
+			if (eobj instanceof ArrayElement) {
+				val Expression expr = eobj.getExpression();
+				if (expr instanceof AssignmentExpression) {
+					idRefs.add((expr.getLhs()));
+				} else {
+					idRefs.add(expr);
+				}
+
+			} else if (eobj instanceof PropertyNameValuePairSingleName) {
+				idRefs.add(eobj.getIdentifierRef());
+
+			} else if (eobj instanceof PropertyNameValuePair) {
+				val Expression expr = eobj.getExpression();
+				if (expr instanceof AssignmentExpression) {
+					idRefs.add(expr.getLhs());
+				} else {
+					idRefs.add(expr);
+				}
+			}
+		}
+		return idRefs;
+	}
+
+	/** @return a pair where its key is the assigned EObject and its value is the default EObject to the given lhs AST element */
 	public static def Pair<EObject, EObject> getValueFromDestructuring(EObject nodeElem) {
 		var EObject node = nodeElem;
 		var EObject topNode = null;
@@ -430,4 +462,23 @@ public class DestructNode {
 		}
 	}
 
+
+	public static def List<Expression> getAllDeclaredIdRefs(EObject eobj) {
+		val DestructNode dnode = switch (eobj) {
+			ForStatement:
+				unify(eobj)
+			VariableBinding:
+				unify(eobj)
+			AssignmentExpression:
+				unify(eobj)
+			default:
+				null
+		};
+
+		if (dnode === null) {
+			return #[];
+		}
+
+		return dnode.allDeclaredIdRefs;
+	}
 }

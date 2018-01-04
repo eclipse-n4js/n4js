@@ -28,11 +28,13 @@ import org.eclipse.n4js.n4JS.EqualityExpression;
 import org.eclipse.n4js.n4JS.EqualityOperator;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.ForStatement;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.NullLiteral;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
-import org.eclipse.n4js.n4JS.VariableBinding;
+import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.WhileStatement;
+import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * This analysis computes all cases where an implicit assumption of a variable being not null conflicts either with an
@@ -159,49 +161,48 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		}
 
 		private Symbol getNullOrUndefinedAssignee(EffectInfo effect, ControlFlowElement cfe) {
-			boolean parentIsLoop = false;
+			Symbol nullOrUndefined = null;
 
-			EObject value = null;
 			if (cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
+				EObject value = null;
 
-				if (DestructUtils.isDestructuring(ae.getRhs())) {
+				if (N4JSASTUtils.isDestructuringAssignment(ae)) {
 					value = DestructUtils.getValueFromDestructuring(effect.location);
-
 				} else {
 					value = ae.getRhs();
 				}
+				nullOrUndefined = getSymbolForExpression(value);
 			}
 			if (cfe instanceof VariableDeclaration) {
 				VariableDeclaration vd = (VariableDeclaration) cfe;
-				VariableBinding vBinding = DestructUtils.getTopVariableBinding(vd);
-
-				EObject cfeForParent = vBinding != null ? vBinding.eContainer() : cfe;
-				EObject parent = cfeForParent.eContainer();
-				parentIsLoop |= parentIsLoop || parent instanceof ForStatement;
-				parentIsLoop |= parentIsLoop || parent instanceof WhileStatement;
-				parentIsLoop |= parentIsLoop || parent instanceof DoStatement;
+				Statement stmt = EcoreUtil2.getContainerOfType(cfe, Statement.class);
+				boolean parentIsLoop = false;
+				parentIsLoop |= parentIsLoop || stmt instanceof ForStatement;
+				parentIsLoop |= parentIsLoop || stmt instanceof WhileStatement;
+				parentIsLoop |= parentIsLoop || stmt instanceof DoStatement;
 
 				if (!parentIsLoop) {
-					if (vBinding != null) {
+					EObject value = null;
+					if (N4JSASTUtils.isInDestructuringPattern(vd)) {
 						value = DestructUtils.getValueFromDestructuring(effect.location);
-
 					} else {
 						value = vd.getExpression();
 					}
+					nullOrUndefined = getSymbolForExpression(value);
 				}
 			}
 
-			Symbol nullOrUndefined = null;
-			if (!parentIsLoop) {
-				if (value == null) {
-					nullOrUndefined = SymbolFactory.getUndefined();
-				} else {
-					Expression canCrash = (Expression) value;
-					nullOrUndefined = SymbolFactory.create(canCrash);
-				}
-			}
 			return nullOrUndefined;
+		}
+
+		private Symbol getSymbolForExpression(EObject value) {
+			if (value == null) {
+				return SymbolFactory.getUndefined();
+			} else {
+				Expression canCrash = (Expression) value;
+				return SymbolFactory.create(canCrash);
+			}
 		}
 
 		@SuppressWarnings("deprecation")

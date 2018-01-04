@@ -19,13 +19,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.factories.DestructUtils;
 import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.Expression;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 
 /**
  *
@@ -126,18 +130,29 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		}
 
 		private boolean handleDataFlow(ControlFlowElement cfe) {
+			boolean dataFlow = false;
+
 			if (cfe instanceof AssignmentExpression) {
 				AssignmentExpression ae = (AssignmentExpression) cfe;
-				Expression lhs = ae.getLhs();
-				Expression rhs = ae.getRhs();
-				Symbol lSymbol = SymbolFactory.create(lhs);
-				Symbol rSymbol = SymbolFactory.create(rhs);
-				if (lSymbol != null && rSymbol != null && rSymbol.isVariableSymbol()) {
-					callHoldOnDataflow(ae, lSymbol, rSymbol);
-					return true;
+
+				if (N4JSASTUtils.isDestructuringAssignment(ae)) {
+					DestructNode dNode = DestructNode.unify(ae);
+					for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
+						DestructNode dnChild = dnIter.next();
+						Expression lhs = dnChild.getVarRef();
+						EObject rhs = DestructUtils.getValueFromDestructuring(dnChild);
+						if (rhs instanceof Expression) {
+							dataFlow |= callHoldOnDataflow(ae, lhs, (Expression) rhs);
+						}
+					}
+				} else {
+					Expression lhs = ae.getLhs();
+					Expression rhs = ae.getRhs();
+					dataFlow = callHoldOnDataflow(ae, lhs, rhs);
 				}
 			}
-			return false;
+
+			return dataFlow;
 		}
 
 		private void handleVisitEffect(ControlFlowElement cfe, EffectInfo effect) {
@@ -166,16 +181,22 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			}
 		}
 
-		private void callHoldOnDataflow(AssignmentExpression ae, Symbol lSymbol, Symbol rSymbol) {
-			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
-				Assumption ass = assIter.next();
-				if (ass.isActive() && ass.aliases.contains(lSymbol)) {
-					ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
+		private boolean callHoldOnDataflow(AssignmentExpression ae, Expression lhs, Expression rhs) {
+			Symbol lSymbol = SymbolFactory.create(lhs);
+			Symbol rSymbol = SymbolFactory.create(rhs);
+			if (lSymbol != null && rSymbol != null && rSymbol.isVariableSymbol()) {
+				for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
+					Assumption ass = assIter.next();
+					if (ass.isActive() && ass.aliases.contains(lSymbol)) {
+						ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
+					}
+					if (ass.isFailed()) {
+						assIter.remove();
+					}
 				}
-				if (ass.isFailed()) {
-					assIter.remove();
-				}
+				return true;
 			}
+			return false;
 		}
 	}
 

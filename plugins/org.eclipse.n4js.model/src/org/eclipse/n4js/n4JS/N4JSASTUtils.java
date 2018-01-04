@@ -243,16 +243,39 @@ public abstract class N4JSASTUtils {
 		return null;
 	}
 
+	/** @return true iff the given {@link EObject} is located inside a destructuring pattern */
+	public static boolean isInDestructuringPattern(EObject obj) {
+		return isParentPartOfSameDestructuringPattern(obj);
+	}
+
+	/** @return true iff the given {@link EObject} is instanceof specific destructuring pattern classes */
+	public static boolean isDestructuringPatternElement(EObject eobj) {
+		boolean isDestrElem = false;
+		isDestrElem = isDestrElem || eobj instanceof ArrayLiteral;
+		isDestrElem = isDestrElem || eobj instanceof ArrayElement;
+		isDestrElem = isDestrElem || eobj instanceof ObjectLiteral;
+		isDestrElem = isDestrElem || eobj instanceof PropertyAssignment;
+		isDestrElem = isDestrElem || eobj instanceof BindingPattern;
+		isDestrElem = isDestrElem || eobj instanceof BindingElement;
+		isDestrElem = isDestrElem || eobj instanceof BindingProperty;
+		return isDestrElem;
+	}
+
 	private static boolean isParentPartOfSameDestructuringPattern(EObject obj) {
 		final EObject parent = obj != null ? obj.eContainer() : null;
-		return parent instanceof ArrayLiteral || parent instanceof ArrayElement
-				|| parent instanceof ObjectLiteral || parent instanceof PropertyAssignment
-				|| (parent instanceof AssignmentExpression
-						&& obj == ((AssignmentExpression) parent).getLhs()
-						&& (parent.eContainer() instanceof ArrayElement
-								|| parent.eContainer() instanceof PropertyAssignment))
-				|| parent instanceof BindingPattern || parent instanceof BindingElement
-				|| parent instanceof BindingProperty;
+
+		if (isDestructuringPatternElement(parent)) {
+			return true;
+		}
+		if (parent instanceof AssignmentExpression) {
+			AssignmentExpression ae = (AssignmentExpression) parent;
+			if (obj == ae.getLhs()) {
+				EObject parentParent = parent.eContainer();
+
+				return (parentParent instanceof ArrayElement || parentParent instanceof PropertyAssignment);
+			}
+		}
+		return false;
 	}
 
 	/**

@@ -20,9 +20,11 @@ import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
 import org.eclipse.n4js.n4JS.PostfixExpression;
@@ -68,8 +70,8 @@ class CFEEffectInfos {
 			}
 
 			List<Expression> idRefs = new LinkedList<>();
-			if (DestructUtils.isDestructuring(lhs)) {
-				idRefs.addAll(DestructUtils.getDeclaredIdRefs(feature));
+			if (N4JSASTUtils.isDestructuringAssignment(feature)) {
+				idRefs.addAll(DestructNode.getAllDeclaredIdRefs(feature));
 			} else {
 				idRefs.add(lhs);
 			}
