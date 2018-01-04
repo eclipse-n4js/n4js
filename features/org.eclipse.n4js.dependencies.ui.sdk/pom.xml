@@ -33,6 +33,7 @@ Contributors:
 					<excludes>
 
 						<plugin id="org.eclipse.swt" />
+						<plugin id="org.eclipse.jdt.junit.runners" />
 						<plugin id="org.eclipse.jdt" />
 						<plugin id="org.eclipse.gef" />
 						<plugin id="org.eclipse.draw2d" />
