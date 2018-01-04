@@ -60,6 +60,15 @@ abstract public class Symbol {
 		return !isUndefinedLiteral() && !isNullLiteral() && !isZeroLiteral();
 	}
 
+	/**
+	 * @param symbol
+	 *            another {@link Symbol}
+	 * @return true iff this and the given {@link Symbol} access the same property
+	 */
+	public boolean isStrucuralAlias(Symbol symbol) {
+		return false;
+	}
+
 	/** @return the declaration, or null iff the declaration is available only with help of the type system */
 	public EObject getDeclaration() {
 		return null;
@@ -69,6 +78,11 @@ abstract public class Symbol {
 	 * @return the context of the symbol, e.g. the target expression of a {@link ParameterizedPropertyAccessExpression}
 	 */
 	public Expression getContext() {
+		return null;
+	}
+
+	/** @return the context symbol, e.g. the symbol of the target expression */
+	public Symbol getContextSymbol() {
 		return null;
 	}
 

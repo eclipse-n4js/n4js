@@ -37,6 +37,8 @@ abstract public class Assumption {
 	public final Symbol symbol;
 	/** Set of all symbols that are transitively assigned to {@link #symbol} */
 	public final Set<Symbol> aliases = new HashSet<>();
+	/** Set of all symbols that might be indirectly assigned to {@link #symbol} through receiver change */
+	public final Set<Symbol> potentialAliases = new HashSet<>();
 	/** The {@link Symbol} that caused this {@link Assumption} to fail */
 	public Symbol failedSymbol;
 
@@ -61,6 +63,7 @@ abstract public class Assumption {
 		this.creationSite = assumption.creationSite;
 		this.symbol = assumption.symbol;
 		this.aliases.addAll(assumption.aliases);
+		this.potentialAliases.addAll(assumption.potentialAliases);
 		this.dataFlowVisitor = assumption.dataFlowVisitor;
 		this.originalAssumption = assumption.originalAssumption;
 	}
@@ -82,6 +85,7 @@ abstract public class Assumption {
 	public void mergeWith(Assumption assumption) {
 		assert this.symbol == assumption.symbol;
 		this.aliases.addAll(assumption.aliases);
+		this.potentialAliases.addAll(assumption.potentialAliases);
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */

@@ -37,7 +37,7 @@ public class SymbolFactory {
 	static private Symbol undefined;
 	static private Map<Symbol, Symbol> symbols = new HashMap<>();
 
-	/**  */
+	/** @return a {@link Symbol} based on the given {@link VariableDeclaration} */
 	public static Symbol create(VariableDeclaration vd) {
 		Symbol newSymbol = new SymbolOfVariableDeclaration(vd);
 		symbols.putIfAbsent(newSymbol, newSymbol);
@@ -45,7 +45,7 @@ public class SymbolFactory {
 		return symbol;
 	}
 
-	/** */
+	/** @return a {@link Symbol} based on the given {@link Expression}, or null */
 	public static Symbol create(Expression expr) {
 		Symbol newSymbol = null;
 		if (expr instanceof IdentifierRef) {
@@ -67,6 +67,36 @@ public class SymbolFactory {
 		}
 
 		return symbol;
+	}
+
+	/**
+	 * This method creates a {@link Symbol} based on a synthesized {@link ParameterizedPropertyAccessExpression}. It
+	 * assumes that the given list is ordered from right to left, starting with the most inner context symbol and ending
+	 * with a {@link Symbol} of the last {@link ParameterizedPropertyAccessExpression}.
+	 *
+	 * @param baseExpression
+	 *            {@link Expression} that is the target of the outer most {@link ParameterizedPropertyAccessExpression}
+	 * @param wrappers
+	 *            list of Symbols that represent {@link ParameterizedPropertyAccessExpression}s
+	 * @return a symbol created from the given base expression and list of contexts, or {@code null} iff contexts is
+	 *         empty.
+	 */
+	public static Symbol create(Expression baseExpression, List<Symbol> wrappers) {
+		if (wrappers.isEmpty()) {
+			return SymbolFactory.create(baseExpression);
+		}
+		Expression lastTarget = baseExpression;
+		for (Symbol wrapper : wrappers) {
+			ParameterizedPropertyAccessExpression ppae = ((SymbolOfParameterizedPropertyAccessExpression) wrapper).ppae;
+			ParameterizedPropertyAccessExpression copy = N4JSFactory.eINSTANCE
+					.createParameterizedPropertyAccessExpression();
+
+			copy.setProperty(ppae.getProperty());
+			copy.setTarget(lastTarget);
+			lastTarget = copy;
+		}
+
+		return new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) lastTarget);
 	}
 
 	/** @return true iff the given {@link Expression} */
@@ -154,9 +184,11 @@ public class SymbolFactory {
 
 	static class SymbolOfParameterizedPropertyAccessExpression extends Symbol {
 		final ParameterizedPropertyAccessExpression ppae;
+		final Symbol contextSymbol;
 
 		SymbolOfParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression ppae) {
 			this.ppae = ppae;
+			this.contextSymbol = getContextSymbol();
 		}
 
 		@Override
@@ -187,21 +219,38 @@ public class SymbolFactory {
 		}
 
 		@Override
+		public Symbol getContextSymbol() {
+			if (contextSymbol != null) {
+				return contextSymbol;
+			}
+			return SymbolFactory.create(getContext());
+		}
+
+		@Override
 		protected Object createSymbolKey() {
 			List<Object> keyChain = new LinkedList<>();
 			keyChain.add(getDeclaration());
-			Expression tgtExpr = getContext();
-			Symbol tgtSymbol = SymbolFactory.create(tgtExpr);
+			Expression lastContext = getContext();
+			Symbol tgtSymbol = getContextSymbol();
 			while (tgtSymbol != null) {
 				keyChain.add(tgtSymbol.getDeclaration());
-				tgtExpr = tgtSymbol.getContext();
-				tgtSymbol = SymbolFactory.create(tgtExpr);
+				lastContext = tgtSymbol.getContext();
+				tgtSymbol = tgtSymbol.getContextSymbol();
 			}
-			if (tgtExpr != null) {
-				keyChain.add(tgtExpr);
+			if (lastContext != null) {
+				keyChain.add(lastContext);
 			}
 			int hash = Objects.hash(keyChain.toArray(new Object[keyChain.size()]));
 			return hash;
+		}
+
+		@Override
+		public boolean isStrucuralAlias(Symbol symbol) {
+			if (!(symbol instanceof SymbolOfParameterizedPropertyAccessExpression))
+				return false;
+			SymbolOfParameterizedPropertyAccessExpression s = (SymbolOfParameterizedPropertyAccessExpression) symbol;
+
+			return ppae.getProperty().equals(s.ppae.getProperty());
 		}
 	}
 

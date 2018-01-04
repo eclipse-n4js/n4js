@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -184,11 +185,20 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		private boolean callHoldOnDataflow(AssignmentExpression ae, Expression lhs, Expression rhs) {
 			Symbol lSymbol = SymbolFactory.create(lhs);
 			Symbol rSymbol = SymbolFactory.create(rhs);
+
 			if (lSymbol != null && rSymbol != null && rSymbol.isVariableSymbol()) {
 				for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 					Assumption ass = assIter.next();
-					if (ass.isActive() && ass.aliases.contains(lSymbol)) {
-						ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
+
+					if (ass.isActive()) {
+						if (ass.aliases.contains(lhs)) {
+							ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
+						} else {
+							Symbol synthSymbol = getContextChangedSymbol(ass, lSymbol, rhs);
+							if (synthSymbol != null) {
+								ass.callHoldsOnDataflow(lSymbol, synthSymbol, ae);
+							}
+						}
 					}
 					if (ass.isFailed()) {
 						assIter.remove();
@@ -197,6 +207,28 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 				return true;
 			}
 			return false;
+		}
+
+		private Symbol getContextChangedSymbol(Assumption ass, Symbol lSymbol, Expression rExpression) {
+			Expression baseExpression = null;
+			List<Symbol> contexts = new LinkedList<>();
+			search: for (Symbol alias : ass.aliases) {
+				Symbol aliasTmp = alias;
+				contexts.add(aliasTmp);
+
+				while (aliasTmp.getContextSymbol() != null) {
+					aliasTmp = aliasTmp.getContextSymbol();
+					if (lSymbol.equals(aliasTmp)) {
+						baseExpression = rExpression;
+						break search;
+					}
+					contexts.add(0, aliasTmp);
+				}
+				contexts.clear();
+			}
+
+			Symbol synthSymbol = SymbolFactory.create(baseExpression, contexts);
+			return synthSymbol;
 		}
 	}
 
