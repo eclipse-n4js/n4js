@@ -20,7 +20,6 @@ import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +32,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
@@ -93,22 +93,11 @@ public class NpmPackageToProjectAdapter {
 
 	/** Default filter for copying N4JSD project contents during adaptation */
 	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
-		private final Path[] EXCLUDE = { Paths.get(".project"), Paths.get("manifest.n4mf"),
-				Paths.get("manifest.fragment") };
+		private final static String SUFFIX = "." + N4JSGlobals.N4JSD_FILE_EXTENSION;
 
 		@Override
 		public boolean apply(Path path) {
-			Path filename = path.getFileName();
-			if (filename == null)
-				return false;
-
-			for (Path exclude : EXCLUDE) {
-				if (filename.equals(exclude)) {
-					return false;
-				}
-			}
-
-			return true;
+			return path.endsWith(SUFFIX);
 		}
 	};
 
