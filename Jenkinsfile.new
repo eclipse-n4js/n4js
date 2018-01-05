@@ -99,7 +99,10 @@ pipeline {
 
     post {
         always {
-            archive 'builds/**/target/*.zip'
+            // zipped platform specific IDEs
+            archive '**/builds/**/target/products/*.zip'
+            // platform independent headless jar
+            archive '**/tools/**/target/n4jsc.jar'
             junit '**/surefire-reports/**/*.xml'
             deleteDir()
         }
