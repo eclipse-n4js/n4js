@@ -729,7 +729,6 @@ class ModuleWrappingTest extends AbstractTranspilerTest {
 		val assignments = EcoreUtil2.eAllOfType(ctor_A.body,AssignmentExpression)
 		assertEquals("there should not be any assignment in ctor.",0,assignments.size)
 
-
 		val ol_in_ret = (fe_with_n4Export.body.statements.get(3) as ReturnStatement).expression as ObjectLiteral
 		assertEquals("setters", ol_in_ret.propertyAssignments.get(0).name)
 		assertEquals("execute", ol_in_ret.propertyAssignments.get(1).name)

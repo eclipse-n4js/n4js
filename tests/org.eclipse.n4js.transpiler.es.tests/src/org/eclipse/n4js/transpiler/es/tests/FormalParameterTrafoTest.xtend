@@ -238,8 +238,6 @@ class FormalParameterTrafoTest extends AbstractTranspilerTest {
 
 	}
 
-
-
 	@Test
 	def void testVargs_InFunctionExpression_InsideAFunctionExpression_InsideOfMethod() {
 

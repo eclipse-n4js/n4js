@@ -86,13 +86,16 @@ public class RunnerHelper {
 		Set<String> projectPaths = new HashSet<>();
 		projectPaths.addAll(getProjectResourcePaths(project));
 		projectPaths.add(getProjectOutputPath(project));
-		projectPaths.add(getProjectPath(project));
+		// projectPaths.add(getProjectPath(project));
+		getProjectPath(project);
 		return projectPaths;
 	}
 
 	/** get path to the project itself */
 	private String getProjectPath(IN4JSProject project) {
-		return project.getLocationPath().getParent().normalize().toAbsolutePath().toString();
+		final String pp = project.getLocationPath().getParent().normalize().toAbsolutePath().toString();
+		System.out.println(project + " _add_ " + pp);
+		return pp;
 	}
 
 	/**

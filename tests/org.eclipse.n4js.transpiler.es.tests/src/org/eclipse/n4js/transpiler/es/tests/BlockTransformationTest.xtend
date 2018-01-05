@@ -39,8 +39,6 @@ class BlockTransformationTest extends AbstractTranspilerTest {
 
 	@Inject extension ParseHelper<Script>
 
-
-
 	@Test
 	def void testAsyncAwait() {
 
