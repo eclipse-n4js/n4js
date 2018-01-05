@@ -16,7 +16,7 @@ public class ReqTest {
 	 * @reqid 1000_a
 	 */
 	@Test
-	basics___Case(): string {}
+	_02_basics___1_Case(): string {}
 
 	/**
 	 * @spec Ext Description

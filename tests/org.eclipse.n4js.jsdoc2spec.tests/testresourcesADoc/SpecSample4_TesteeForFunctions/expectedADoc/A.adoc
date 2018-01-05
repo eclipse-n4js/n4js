@@ -44,9 +44,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 Spec for Var barvar
 
 ==== Semantics
-
-++Bar basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testBarBasics++[Test]
-
+. *++Bar basics++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testBarBasics++[[.small]#Test#])
 
 == Functions
 
@@ -63,5 +61,4 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 Spec for Function foofunc
 
 ==== Semantics
-
-++Func basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testFuncBasics++[Test]
+. *++Func basics++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testFuncBasics++[[.small]#Test#])
