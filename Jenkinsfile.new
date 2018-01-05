@@ -101,6 +101,7 @@ pipeline {
         always {
             archive 'builds/**/target/*.zip'
             junit '**/surefire-reports/**/*.xml'
+            deleteDir()
         }
     }
 }
