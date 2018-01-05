@@ -3,7 +3,7 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'PC/C'
+		'PC/src-gen/C'
 	], function($n4Export) {
 		var C, D;
 		D = function D() {

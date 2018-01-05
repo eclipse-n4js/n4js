@@ -3,27 +3,27 @@
 (function(System) {
 	'use strict';
 	System.register([
-		'PB/B'
+		'PA/src-gen/A'
 	], function($n4Export) {
-		var B, C;
-		C = function C() {
-			B.prototype.constructor.call(this);
-			console.log('External C<init>');
+		var A, B;
+		B = function B() {
+			A.prototype.constructor.call(this);
+			console.log('External B<init>');
 		};
-		$n4Export('C', C);
+		$n4Export('B', B);
 		return {
 			setters: [
-				function($_import_PB_B) {
-					B = $_import_PB_B.B;
+				function($_import_PA_A) {
+					A = $_import_PA_A.A;
 				}
 			],
 			execute: function() {
-				$makeClass(C, B, [], {}, {}, function(instanceProto, staticProto) {
+				$makeClass(B, A, [], {}, {}, function(instanceProto, staticProto) {
 					var metaClass = new N4Class({
-						name: 'C',
-						origin: 'PC',
-						fqn: 'C.C',
-						n4superType: B.n4type,
+						name: 'B',
+						origin: 'PB',
+						fqn: 'B.B',
+						n4superType: A.n4type,
 						allImplementedInterfaces: [],
 						ownedMembers: [
 							new N4Method({
@@ -38,9 +38,9 @@
 					});
 					return metaClass;
 				});
-				Object.defineProperty(C, '$di', {
+				Object.defineProperty(B, '$di', {
 					value: {
-						superType: B,
+						superType: A,
 						fieldsInjectedTypes: []
 					}
 				});
@@ -48,4 +48,4 @@
 		};
 	});
 })(typeof module !== 'undefined' && module.exports ? require('n4js-node/index').System(require, module) : System);
-//# sourceMappingURL=C.map
+//# sourceMappingURL=B.map
