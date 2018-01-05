@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.xpect.config;
 
-import org.xpect.setup.XpectSetupComponent;
+import org.eclipse.xpect.setup.XpectSetupComponent;
 
 /**
  * Simple Preference to be read in xpect-setup section.

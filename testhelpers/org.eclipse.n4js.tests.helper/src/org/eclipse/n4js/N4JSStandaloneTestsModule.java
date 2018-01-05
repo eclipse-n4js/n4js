@@ -17,7 +17,7 @@ import org.eclipse.xtext.service.SingletonBinding;
 import org.eclipse.xtext.testing.util.ParseHelper;
 import org.eclipse.xtext.testing.util.ResourceHelper;
 import org.eclipse.xtext.validation.IDiagnosticConverter;
-import org.xpect.setup.XpectGuiceModule;
+import org.eclipse.xpect.setup.XpectGuiceModule;
 
 /**
  * A Guice module that is used when running standalone tests.

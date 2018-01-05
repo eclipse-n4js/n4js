@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.junit.runner.Description;
-import org.xpect.runner.IXpectURIProvider;
-import org.xpect.runner.XpectRunner;
-import org.xpect.runner.XpectTestFiles;
-import org.xpect.runner.XpectURIProvider;
-import org.xpect.util.IBundleInfo;
-import org.xpect.util.IBundleInfo.Registry;
+import org.eclipse.xpect.runner.IXpectURIProvider;
+import org.eclipse.xpect.runner.XpectRunner;
+import org.eclipse.xpect.runner.XpectTestFiles;
+import org.eclipse.xpect.runner.XpectURIProvider;
+import org.eclipse.xpect.util.IBundleInfo;
+import org.eclipse.xpect.util.IBundleInfo.Registry;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

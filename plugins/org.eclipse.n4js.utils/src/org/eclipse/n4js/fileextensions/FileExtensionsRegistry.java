@@ -45,7 +45,7 @@ import com.google.inject.Singleton;
  * languages for Xpect tests.
  *
  */
-// TODO IDE-2509 how does this relate to org.xpect.registry.FileExtensionInfoRegistry
+// TODO IDE-2509 how does this relate to org.eclipse.xpect.registry.FileExtensionInfoRegistry
 @Singleton
 public class FileExtensionsRegistry {
 

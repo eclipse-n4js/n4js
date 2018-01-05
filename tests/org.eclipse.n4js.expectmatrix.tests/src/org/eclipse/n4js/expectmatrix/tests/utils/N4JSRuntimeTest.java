@@ -11,7 +11,7 @@
 package org.eclipse.n4js.expectmatrix.tests.utils;
 
 import org.junit.Ignore;
-import org.xpect.runner.XpectSuiteClasses;
+import org.eclipse.xpect.runner.XpectSuiteClasses;
 
 import org.eclipse.n4js.xpect.ui.methods.OutputXpectMethod;
 
