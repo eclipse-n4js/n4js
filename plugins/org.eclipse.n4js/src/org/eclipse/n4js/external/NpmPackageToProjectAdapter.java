@@ -20,7 +20,6 @@ import java.io.FileFilter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +32,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.external.libraries.PackageJson;
 import org.eclipse.n4js.external.libraries.TargetPlatformFactory;
@@ -50,6 +50,7 @@ import org.eclipse.n4js.utils.process.ProcessResult;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.util.Pair;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import com.google.inject.Inject;
@@ -90,8 +91,16 @@ public class NpmPackageToProjectAdapter {
 		}
 	};
 
-	/** Sub folder within the N4JSD project that contains the actual N4JSD files. */
-	private final static String N4JSD_SRC_FOLDER = "src";
+	/** Default filter for copying N4JSD project contents during adaptation */
+	private final static Predicate<Path> COPY_N4JSD_PREDICATE = new Predicate<Path>() {
+		private final static String SUFFIX = "." + N4JSGlobals.N4JSD_FILE_EXTENSION;
+
+		@Override
+		public boolean apply(Path path) {
+			Path fileName = path.getFileName();
+			return fileName != null && fileName.toString().endsWith(SUFFIX);
+		}
+	};
 
 	/**
 	 * Adapts npm packages in provided folder to the N4JS project structure. Only package folders which match requested
@@ -158,19 +167,16 @@ public class NpmPackageToProjectAdapter {
 						}
 						throw e;
 					}
-
 				}
 
 				if (n4jsdsFolder != null) {
-					addTypeDefinitions(packageRoot, packageJson, mainModule, manifest, n4jsdsFolder);
+					addTypeDefinitions(packageRoot, packageJson, manifest, n4jsdsFolder);
 				}
-
 			} catch (final Exception e) {
 				status.merge(
 						statusHelper.createError("Unexpected error occurred while adapting '" + packageRoot.getName()
 								+ "' npm package into N4JS format.", e));
 			}
-
 		}
 
 		return pair(status, adaptedProjects);
@@ -234,17 +240,6 @@ public class NpmPackageToProjectAdapter {
 	}
 
 	/**
-	 * Convenience overload.
-	 *
-	 * @see #addTypeDefinitions(File, PackageJson, String, File, File)
-	 */
-	IStatus addTypeDefinitions(File packageRoot, PackageJson packageJson, File manifest,
-			File definitionsFolder) {
-		String mainModule = computeMainModule(packageRoot);
-		return addTypeDefinitions(packageRoot, packageJson, mainModule, manifest, definitionsFolder);
-	}
-
-	/**
 	 * Add type definitions (N4JSDs) to the npm package. Types are added only if matching version is found.
 	 *
 	 * This method suppresses any potential issues as adding type definitions to some npm package does not affect
@@ -255,8 +250,6 @@ public class NpmPackageToProjectAdapter {
 	 *            npm package folder.
 	 * @param packageJson
 	 *            {@link TargetPlatformFactory package.json} of that package.
-	 * @param mainModule
-	 *            the main module
 	 * @param manifest
 	 *            file that will be adjusted according to manifest fragments.
 	 * @param definitionsFolder
@@ -264,7 +257,7 @@ public class NpmPackageToProjectAdapter {
 	 *
 	 * @return a status representing the outcome of performed the operation.
 	 */
-	IStatus addTypeDefinitions(File packageRoot, PackageJson packageJson, String mainModule, File manifest,
+	IStatus addTypeDefinitions(File packageRoot, PackageJson packageJson, File manifest,
 			File definitionsFolder) {
 
 		String packageName = packageRoot.getName();
@@ -311,26 +304,11 @@ public class NpmPackageToProjectAdapter {
 		}
 
 		File packageVersionedN4JSDProjectRoot = new File(packageN4JSDsRoot, closestMatchingVersion.toString());
-		File packageVersionedN4JSDSrcFolder = new File(packageVersionedN4JSDProjectRoot, N4JSD_SRC_FOLDER);
 		try {
-			/*
-			 * Changed the computation of the source and target path for the N4JSD files as follows for IDE-2429.
-			 *
-			 * The .n4jsd files are assumed to be in a folder called "src" within the N4JSD project root folder.
-			 *
-			 * Their target path is computed from the package root path and the main module path. The given main module
-			 * path contains the file name (without extension) of the main module of the NPM, potentially prepended by a
-			 * path that represents folders. An example would be "lib/index". The target path for the N4JSD files is
-			 * then assumed to be in a folder called "lib" within the package root path.
-			 */
-			Path sourcePath = packageVersionedN4JSDSrcFolder.toPath();
+			Path sourcePath = packageVersionedN4JSDProjectRoot.toPath();
 			Path targetPath = packageRoot.toPath();
 
-			Path mainModulePath = Paths.get(mainModule);
-			if (mainModulePath.getNameCount() > 1)
-				targetPath = targetPath.resolve(mainModulePath.getParent());
-
-			FileCopier.copy(sourcePath, targetPath);
+			FileCopier.copy(sourcePath, targetPath, COPY_N4JSD_PREDICATE);
 		} catch (IOException e) {
 			final String message = "Error while trying to update type definitions content for '" + packageName
 					+ "' npm package.";
