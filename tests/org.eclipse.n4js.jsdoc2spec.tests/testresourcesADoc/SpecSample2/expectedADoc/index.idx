@@ -14,8 +14,8 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			A.n4jsd
 				A::15::22::23
-				A#bar::20::24::45
-				B::24::49::62
+				A#bar::20::24::41
+				B::24::45::56
 	SpecSample2#test
 		NO_PACKAGE
 			ATests.n4js

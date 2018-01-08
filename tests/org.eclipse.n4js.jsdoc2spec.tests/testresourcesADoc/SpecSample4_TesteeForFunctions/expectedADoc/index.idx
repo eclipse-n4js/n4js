@@ -14,8 +14,8 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			A.n4jsd
 				bar2var::26::22::35
-				barvar::21::36::53
-				foofunc::15::57::74
+				barvar::21::36::51
+				foofunc::15::55::70
 	SpecSample4_TesteeForFunctions#test
 		NO_PACKAGE
 			ATests.n4js

@@ -29,9 +29,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 footnote:[Polyfilled from n4js:testresourcesADoc/SpecSample9_StaticPolyfill/poly]
 
 ==== Semantics
-
-++test++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]
-
+. *++test++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[[.small]#Test#])
 
 
 [[gsec:spec_X.X.foo]]
@@ -63,3 +61,4 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 --
 Add tests specifying semantics for ``++my(): void++``
 --
+

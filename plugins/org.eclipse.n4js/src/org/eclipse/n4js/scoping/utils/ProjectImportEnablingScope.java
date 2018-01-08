@@ -240,7 +240,7 @@ public class ProjectImportEnablingScope implements IScope {
 		final Map<String, IEObjectDescription> result = new HashMap<>();
 		for (IEObjectDescription desc : moduleSpecifierMatchesWithPossibleDuplicates) {
 			final IN4JSProject containingProject = n4jsCore.findProject(desc.getEObjectURI()).orNull();
-			if (projectId.equals(containingProject.getProjectId())) {
+			if (containingProject != null && projectId.equals(containingProject.getProjectId())) {
 				result.put(desc.getEObjectURI().toString(), desc);
 			}
 		}
