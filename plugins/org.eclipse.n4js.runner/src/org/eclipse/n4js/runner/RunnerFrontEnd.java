@@ -27,9 +27,10 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.projectModel.ResourceNameComputer;
+import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
+import org.eclipse.n4js.projectModel.ResourceNameComputer;
 import org.eclipse.n4js.runner.RunnerHelper.ApiUsage;
 import org.eclipse.n4js.runner.extension.IRunnerDescriptor;
 import org.eclipse.n4js.runner.extension.RunnerRegistry;
@@ -271,7 +272,10 @@ public class RunnerFrontEnd {
 		final URI userSelection = config.getUserSelection();
 		if (userSelection != null && (hasValidFileExtension(userSelection.toString()))) {
 			final String userSelection_targetFileName = compilerHelper.generateFileDescriptor(userSelection, null);
-			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION, userSelection_targetFileName);
+			IN4JSProject project = resolveProject(userSelection);
+			String base = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
+			config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
+					base + "/" + userSelection_targetFileName);
 		} else {
 			// this can happen if the RunConfiguration 'config' is actually a TestConfiguration, because then the user
 			// selection is allowed to point to a project or folder (and method CompilerUtils#getModuleName() above
@@ -281,6 +285,18 @@ public class RunnerFrontEnd {
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__INIT_MODULES, config.getInitModules());
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__PROJECT_NAME_MAPPING,
 				config.getApiImplProjectMapping());
+	}
+
+	/**
+	 * Resolves project from provided URI.
+	 */
+	private IN4JSProject resolveProject(URI n4jsSourceURI) {
+		final Optional<? extends IN4JSProject> optionalProject = in4jscore.findProject(n4jsSourceURI);
+		if (!optionalProject.isPresent()) {
+			throw new RuntimeException(
+					"Cannot handle resource without containing project. Resource URI was: " + n4jsSourceURI + ".");
+		}
+		return optionalProject.get();
 	}
 
 	/**

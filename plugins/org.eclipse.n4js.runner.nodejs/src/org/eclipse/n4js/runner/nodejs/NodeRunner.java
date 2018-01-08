@@ -17,6 +17,7 @@ import static com.google.common.collect.Sets.newLinkedHashSet;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -44,6 +45,8 @@ import com.google.inject.Provider;
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
 public class NodeRunner implements IRunner {
+	/** GH-394, with new compilation we generate different boot code. */
+	private static final boolean USE_NEW_BOOTSTRAP = true;
 	private final static String NODE_PATH_SEP = File.pathSeparator;
 
 	/** Environment key */
@@ -124,14 +127,19 @@ public class NodeRunner implements IRunner {
 			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
 					.split(runConfig.getCustomEnginePath())));
 
+			Path workingDirectory = Files.createTempDirectory("N4JSNodeBoot");
+			System.out.println(workingDirectory.toAbsolutePath().toString());
 			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
-			cmds = cb.createCmds(runOptions);
+			cmds = cb.createCmds(runOptions, workingDirectory);
 
-			File workingDirectory = Files.createTempDirectory(null).toFile();
-
-			paths.addAll(runConfig.getCoreProjectPaths());
+			if (!USE_NEW_BOOTSTRAP) {
+				paths.addAll(runConfig.getCoreProjectPaths());
+			}
 			if (runConfig.getAdditionalPath() != null && !runConfig.getAdditionalPath().isEmpty())
 				paths.add(runConfig.getAdditionalPath());
+
+			// TODO GH-394
+			paths.add(workingDirectory.resolve("node_modules").toAbsolutePath().toString());
 
 			String nodePaths = on(NODE_PATH_SEP).join(paths);
 
@@ -140,7 +148,7 @@ public class NodeRunner implements IRunner {
 
 			env = nodeJsBinary.updateEnvironment(env);
 
-			process = executor.exec(cmds, workingDirectory, env);
+			process = executor.exec(cmds, workingDirectory.toFile(), env);
 
 		} catch (IOException | RuntimeException | ExecutionException e) {
 			LOGGER.error(e);

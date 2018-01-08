@@ -55,6 +55,8 @@ import com.google.inject.Inject;
  * UI- or CLI-Interfaces should use this as a shared code-base.
  */
 public class RunnerHelper {
+	/** GH-394 we use different module wrapping (different imports), we need to calculate paths differently. */
+	public static boolean GH_394_USE_PROJECT_ROOT = true;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -84,17 +86,18 @@ public class RunnerHelper {
 
 	private Collection<String> getProjectPaths(IN4JSProject project) {
 		Set<String> projectPaths = new HashSet<>();
-		projectPaths.addAll(getProjectResourcePaths(project));
-		projectPaths.add(getProjectOutputPath(project));
-		// projectPaths.add(getProjectPath(project));
-		getProjectPath(project);
+		if (GH_394_USE_PROJECT_ROOT) {
+			projectPaths.add(getProjectPath(project));
+		} else {
+			projectPaths.addAll(getProjectResourcePaths(project));
+			projectPaths.add(getProjectOutputPath(project));
+		}
 		return projectPaths;
 	}
 
 	/** get path to the project itself */
 	private String getProjectPath(IN4JSProject project) {
-		final String pp = project.getLocationPath().getParent().normalize().toAbsolutePath().toString();
-		System.out.println(project + " _add_ " + pp);
+		final String pp = project.getLocationPath().normalize().toAbsolutePath().toString();
 		return pp;
 	}
 
@@ -159,7 +162,8 @@ public class RunnerHelper {
 					return ProjectType.RUNTIME_LIBRARY.equals(pt) || ProjectType.RUNTIME_ENVIRONMENT.equals(pt);
 				})
 				.flatMap(p -> getInitModulesAsURIs(p).stream()
-						.map(bmURI -> compilerHelper.generateFileDescriptor(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION)))
+						.map(bmURI -> getProjectRelativePath(p,
+								compilerHelper.generateFileDescriptor(p, bmURI, N4JSGlobals.JS_FILE_EXTENSION))))
 				.collect(Collectors.toList());
 	}
 
@@ -174,7 +178,9 @@ public class RunnerHelper {
 					if (!execModuleAsURI.isPresent()) {
 						return null;
 					}
-					return compilerHelper.generateFileDescriptor(re, execModuleAsURI.get(), null);
+					return getProjectRelativePath(re,
+							compilerHelper.generateFileDescriptor(re, execModuleAsURI.get(),
+									N4JSGlobals.JS_FILE_EXTENSION));
 				})
 				.filter(s -> !Strings.isNullOrEmpty(s))
 				.collect(Collectors.toList());
@@ -183,6 +189,12 @@ public class RunnerHelper {
 			return Optional.of(execModules.get(0));
 
 		return Optional.absent();
+	}
+
+	private String getProjectRelativePath(IN4JSProject project, String subPath) {
+		if (GH_394_USE_PROJECT_ROOT)
+			return AbstractSubGenerator.calculateProjectBasedOutputDirectory(project) + "/" + subPath;
+		return subPath;
 	}
 
 	/**

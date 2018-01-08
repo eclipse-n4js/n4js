@@ -328,8 +328,9 @@ public class RunExternalLibrariesPluginTest extends AbstractBuilderParticipantTe
 		final RunConfiguration config = runnerFrontEnd.createConfiguration(ID, null, moduleToRun);
 		final Process process = runnerFrontEndUI.runInUI(config);
 		final ProcessResult result = processExecutor.execute(process, "", OutputRedirection.REDIRECT);
-		assertTrue("Expected 0 error code for the process. Was: " + result.getExitCode(), result.isOK());
-		return result;
+		if (result.isOK())
+			return result;
+		throw new RuntimeException("Client exited with error.\n" + result);
 	}
 
 	private IProject getProjectByName(final String name) {

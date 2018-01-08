@@ -16,6 +16,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +35,13 @@ import com.google.inject.Provider;
  * configure runtime environment on their own.
  */
 public class NodeEngineCommandBuilder {
+	/** GH-394, with new compilation we generate different boot code. */
+	private static final boolean USE_NEW_BOOTSTRAP = true;
 
 	/** Command line option to signal COMMON_JS */
 	private static final String CJS_COMMAND = "cjs";
+
+	private final static String NODE_PATH_SEP = File.pathSeparator;
 
 	@Inject
 	private Provider<NodeJsBinary> nodeJsBinary;
@@ -44,7 +50,7 @@ public class NodeEngineCommandBuilder {
 	 * Creates commands for calling Node.js on command line. Data wrapped in passed parameter is used to configure node
 	 * itself, and to generate file that will be executed by Node.
 	 */
-	public String[] createCmds(NodeRunOptions nodeRunOptions) throws IOException {
+	public String[] createCmds(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
 
 		final ArrayList<String> commands = new ArrayList<>();
 
@@ -58,12 +64,8 @@ public class NodeEngineCommandBuilder {
 			}
 		}
 
-		final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
-				nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
-
-		final File elf = createTempFileFor(elfData.toString());
-
-		commands.add(elf.getCanonicalPath());
+		final String bootScript = generateBootCode(nodeRunOptions, workDir);
+		commands.add(bootScript);
 
 		if (nodeRunOptions.getSystemLoader() == SystemLoaderInfo.COMMON_JS) {
 			commands.add(CJS_COMMAND);
@@ -73,7 +75,50 @@ public class NodeEngineCommandBuilder {
 	}
 
 	/**
-	 * generates ELF code, according to N4JSDesign document, chap. 15 : Execution, section 15.2 N4JS Execution And
+	 * Generates JS code to the this that will be configured with data for execution.
+	 *
+	 * @param nodeRunOptions
+	 *            options used to generate boot code
+	 * @return path to the script that has to be called by node
+	 * @throws IOException
+	 *             for IO operations
+	 */
+	private String generateBootCode(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
+
+		if (USE_NEW_BOOTSTRAP) {
+			// 1 generate fake node project / folder
+			Path projectRootPath = workDir;
+			// Path projectRootPath = Files.createTempDirectory("N4JSNodeBoot");
+			// 2 generate ELF code in #1
+			final Path elf = Files.createTempFile(projectRootPath, "n4jsnode", "." + N4JSGlobals.JS_FILE_EXTENSION);
+			final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
+					nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
+			writeContentToFile(elfData.toString(), elf.toFile());
+
+			// 3 create 'node_modules' to the #1
+			final File node_modules = new File(projectRootPath.toFile(), "node_modules");
+			node_modules.mkdirs();
+			// 4 generate boot script in #1
+			final Path boot = Files.createTempFile(projectRootPath, "n4jsnodeRun", "." + N4JSGlobals.JS_FILE_EXTENSION);
+			String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
+			// - script has to configure symlinks to the 'node_modules' (#3)
+			// - script has to call elf code
+			writeContentToFile(NodeRunScriptTemplate.getRunScriptCore(node_modules.getCanonicalPath(),
+					elf.getFileName().toString(), paths), boot.toFile());
+
+			return boot.toAbsolutePath().toString();
+		} else {
+			// generate ELF code in temp location
+			final Path elf = Files.createTempFile("n4jsnode", "." + N4JSGlobals.JS_FILE_EXTENSION);
+			final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
+					nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
+			writeContentToFile(elfData.toString(), elf.toFile());
+			return elf.toAbsolutePath().toString();
+		}
+	}
+
+	/**
+	 * generates ELF code, according to N4JSDesign document, chap. 17 : Execution, section 17.2 N4JS Execution And
 	 * Linking File
 	 *
 	 * @param list
@@ -119,25 +164,10 @@ public class NodeEngineCommandBuilder {
 		return "require('" + moduleName + "');";
 	}
 
-	/**
-	 * Writes a file to a temporary file, returning the file path.
-	 *
-	 * @param content
-	 *            file content
-	 * @return file
-	 */
-	private static File createTempFileFor(String content) throws IOException {
-		final File temp = File.createTempFile("n4jsnode", "." + N4JSGlobals.JS_FILE_EXTENSION);
-		final BufferedWriter writer = new BufferedWriter(new FileWriter(temp));
-
-		try {
+	/** Writes given content to a given file. */
+	private static void writeContentToFile(String content, File file) throws IOException {
+		try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file));) {
 			writer.write(content);
-		} finally {
-			writer.close();
 		}
-
-		temp.deleteOnExit();
-
-		return temp;
 	}
 }
