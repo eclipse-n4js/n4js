@@ -14,6 +14,7 @@ import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.n4js.generator.CompilerDescriptor;
 import org.eclipse.n4js.generator.CompilerProperties;
 import org.eclipse.n4js.generator.ICompositeGenerator;
+import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
 import org.eclipse.xtext.builder.preferences.BuilderPreferenceAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreAccess;
 import org.eclipse.xtext.ui.editor.preferences.IPreferenceStoreInitializer;
@@ -29,7 +30,12 @@ import com.google.inject.Singleton;
 public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 
 	private IPreferenceStoreAccess preferenceStoreAccess;
+
+	@Inject
 	private ICompositeGenerator compositeGenerator;
+
+	@Inject
+	private EcmaScriptSubGenerator subGenerator;
 
 	/**
 	 * To initialize the default values of the compiler related preference store values
@@ -86,4 +92,22 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 			preferenceStore.setValue(key, enabled);
 		}
 	}
+
+	/** @return true iff the build is aborted in case of errors in the manifest file */
+	public boolean isAbortBuildOnMfErrors(Object context) {
+		IPreferenceStore preferenceStore = preferenceStoreAccess.getWritablePreferenceStore(context);
+		String key = CompilerProperties.IS_ABORTING_ON_MF_ERRORS.getKey(subGenerator.getCompilerID());
+		return preferenceStore.getBoolean(key);
+	}
+
+	/** Sets whether build is en-/disabled in case there are errors in the Manifest file (for all compilers) */
+	public void setAbortBuildOnMfErrors(Object context, boolean enabled) {
+		IPreferenceStore preferenceStore = preferenceStoreAccess.getWritablePreferenceStore(context);
+		String key = null;
+		for (CompilerDescriptor compilerDescriptor : compositeGenerator.getCompilerDescriptors()) {
+			key = CompilerProperties.IS_ABORTING_ON_MF_ERRORS.getKey(compilerDescriptor.getIdentifier());
+			preferenceStore.setValue(key, enabled);
+		}
+	}
+
 }

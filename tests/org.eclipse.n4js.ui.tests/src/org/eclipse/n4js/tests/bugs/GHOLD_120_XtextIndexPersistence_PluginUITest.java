@@ -28,6 +28,7 @@ import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.ui.building.ResourceDescriptionWithoutModuleUserData;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
+import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.builder.builderState.impl.ResourceDescriptionImpl;
 import org.eclipse.xtext.resource.IEObjectDescription;
@@ -83,6 +84,9 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
 
+	@Inject
+	private N4JSBuilderPreferenceAccess prefAccess;
+
 	/**
 	 * Initializes the N4JS built-in libraries. Does not matter before or after the test project import.
 	 */
@@ -117,6 +121,7 @@ public class GHOLD_120_XtextIndexPersistence_PluginUITest extends AbstractIDEBUG
 	public void checkNoCustomResourceDescriptionsLeaksToBuilderState() throws CoreException {
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT_NAME);
 		assertTrue("Test project is not accessible.", project.isAccessible());
+		prefAccess.setAbortBuildOnMfErrors(project, false);
 
 		// Since we do not know whether the built-in initialization or the test project import happened earlier...
 		// Make sure both test module and manifest get into the index.

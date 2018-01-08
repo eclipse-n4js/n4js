@@ -28,6 +28,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.internal.ProjectDescriptionLoadListener;
+import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
@@ -88,11 +89,11 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 			SubMonitor monitorPJ = sm.newChild(99);
 			super.doBuild(getManifestTBB(toBeBuilt), monitorMF, type);
 			List<String> errMsgsInManifest = getErrorMsgsInManifest();
-			if (errMsgsInManifest.isEmpty()) {
-				// Only build the project if the manifest file is error free
+			if (errMsgsInManifest.isEmpty() || !isAbortBuildOnMfErrors()) {
+				// Only build the project if the manifest file is error free OR if setting is disabled
 				super.doBuild(toBeBuilt, monitorPJ, type);
 			} else {
-				String completeLogMsg = "";
+				String completeLogMsg = "\n";
 				completeLogMsg += "Errors in Manifest. Project is not built.\n";
 				completeLogMsg += "Manifest errors:\n";
 				for (String errMsg : errMsgsInManifest) {
@@ -117,6 +118,14 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				.getInjector(ORG_ECLIPSE_N4JS_N4JS)
 				.getInstance(ProjectDescriptionLoadListener.class);
 		loadListener.updateProjectReferencesIfNecessary(getProject());
+	}
+
+	// question to reviewer: could we use for this and similar methods some extra class somewhere?
+	private boolean isAbortBuildOnMfErrors() {
+		final N4JSBuilderPreferenceAccess prefAcc = N4JSActivator.getInstance()
+				.getInjector(ORG_ECLIPSE_N4JS_N4JS)
+				.getInstance(N4JSBuilderPreferenceAccess.class);
+		return prefAcc.isAbortBuildOnMfErrors(getProject());
 	}
 
 	private ToBeBuilt getManifestTBB(ToBeBuilt toBeBuilt) {
