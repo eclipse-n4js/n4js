@@ -4721,28 +4721,129 @@ ruleParameterizedTypeRefStructural returns [EObject current=null]
 	leaveRule();
 }:
 	(
-		{
-			newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getStructuralTypeAndTypeArgumentsParserRuleCall_0());
-		}
-		this_StructuralTypeAndTypeArguments_0=ruleStructuralTypeAndTypeArguments
-		{
-			$current = $this_StructuralTypeAndTypeArguments_0.current;
-			afterParserOrEnumRuleCall();
-		}
 		(
-			otherlv_1=With
+			(
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0());
+						}
+						lv_definedTypingStrategy_0_0=ruleTypingStrategyUseSiteOperator
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getParameterizedTypeRefStructuralRule());
+							}
+							set(
+								$current,
+								"definedTypingStrategy",
+								lv_definedTypingStrategy_0_0,
+								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				(
+					(
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getParameterizedTypeRefStructuralRule());
+							}
+						}
+						{
+							newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeTypeCrossReference_0_0_1_0());
+						}
+						ruleTypeReferenceName
+						{
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+			)
+			    |
+			(
+				(
+					{
+						$current = forceCreateModelElement(
+							grammarAccess.getParameterizedTypeRefStructuralAccess().getVersionedParameterizedTypeRefStructuralAction_0_1_0(),
+							$current);
+					}
+				)
+				(
+					(
+						{
+							newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0());
+						}
+						lv_definedTypingStrategy_3_0=ruleTypingStrategyUseSiteOperator
+						{
+							if ($current==null) {
+								$current = createModelElementForParent(grammarAccess.getParameterizedTypeRefStructuralRule());
+							}
+							set(
+								$current,
+								"definedTypingStrategy",
+								lv_definedTypingStrategy_3_0,
+								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				(
+					(
+						{
+							if ($current==null) {
+								$current = createModelElement(grammarAccess.getParameterizedTypeRefStructuralRule());
+							}
+						}
+						{
+							newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeTypeCrossReference_0_1_2_0());
+						}
+						ruleTypeReferenceName
+						{
+							afterParserOrEnumRuleCall();
+						}
+					)
+				)
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getParameterizedTypeRefStructuralRule());
+					}
+					newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getVersionRequestParserRuleCall_0_1_3());
+				}
+				this_VersionRequest_5=ruleVersionRequest[$current]
+				{
+					$current = $this_VersionRequest_5.current;
+					afterParserOrEnumRuleCall();
+				}
+			)
+		)
+		(
+			(LessThanSign)=>
 			{
-				newLeafNode(otherlv_1, grammarAccess.getParameterizedTypeRefStructuralAccess().getWithKeyword_1_0());
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getParameterizedTypeRefStructuralRule());
+				}
+				newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getTypeArgumentsParserRuleCall_1());
+			}
+			this_TypeArguments_6=ruleTypeArguments[$current]
+			{
+				$current = $this_TypeArguments_6.current;
+				afterParserOrEnumRuleCall();
+			}
+		)?
+		(
+			otherlv_7=With
+			{
+				newLeafNode(otherlv_7, grammarAccess.getParameterizedTypeRefStructuralAccess().getWithKeyword_2_0());
 			}
 			{
 				if ($current==null) {
 					$current = createModelElement(grammarAccess.getParameterizedTypeRefStructuralRule());
 				}
-				newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getTStructMemberListParserRuleCall_1_1());
+				newCompositeNode(grammarAccess.getParameterizedTypeRefStructuralAccess().getTStructMemberListParserRuleCall_2_1());
 			}
-			this_TStructMemberList_2=ruleTStructMemberList[$current]
+			this_TStructMemberList_8=ruleTStructMemberList[$current]
 			{
-				$current = $this_TStructMemberList_2.current;
+				$current = $this_TStructMemberList_8.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?
@@ -4831,134 +4932,6 @@ ruleTypeAndTypeArguments returns [EObject current=null]
 			this_TypeArguments_4=ruleTypeArguments[$current]
 			{
 				$current = $this_TypeArguments_4.current;
-				afterParserOrEnumRuleCall();
-			}
-		)?
-	)
-;
-
-// Entry rule entryRuleStructuralTypeAndTypeArguments
-entryRuleStructuralTypeAndTypeArguments returns [EObject current=null]:
-	{ newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsRule()); }
-	iv_ruleStructuralTypeAndTypeArguments=ruleStructuralTypeAndTypeArguments
-	{ $current=$iv_ruleStructuralTypeAndTypeArguments.current; }
-	EOF;
-
-// Rule StructuralTypeAndTypeArguments
-ruleStructuralTypeAndTypeArguments returns [EObject current=null]
-@init {
-	enterRule();
-}
-@after {
-	leaveRule();
-}:
-	(
-		(
-			(
-				(
-					(
-						{
-							newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0());
-						}
-						lv_definedTypingStrategy_0_0=ruleTypingStrategyUseSiteOperator
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-							}
-							set(
-								$current,
-								"definedTypingStrategy",
-								lv_definedTypingStrategy_0_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)
-				(
-					(
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-							}
-						}
-						{
-							newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeTypeCrossReference_0_0_1_0());
-						}
-						ruleTypeReferenceName
-						{
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)
-			)
-			    |
-			(
-				(
-					{
-						$current = forceCreateModelElement(
-							grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getVersionedParameterizedTypeRefStructuralAction_0_1_0(),
-							$current);
-					}
-				)
-				(
-					(
-						{
-							newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0());
-						}
-						lv_definedTypingStrategy_3_0=ruleTypingStrategyUseSiteOperator
-						{
-							if ($current==null) {
-								$current = createModelElementForParent(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-							}
-							set(
-								$current,
-								"definedTypingStrategy",
-								lv_definedTypingStrategy_3_0,
-								"org.eclipse.n4js.ts.TypeExpressions.TypingStrategyUseSiteOperator");
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)
-				(
-					(
-						{
-							if ($current==null) {
-								$current = createModelElement(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-							}
-						}
-						{
-							newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeTypeCrossReference_0_1_2_0());
-						}
-						ruleTypeReferenceName
-						{
-							afterParserOrEnumRuleCall();
-						}
-					)
-				)
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-					}
-					newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_0_1_3());
-				}
-				this_VersionRequest_5=ruleVersionRequest[$current]
-				{
-					$current = $this_VersionRequest_5.current;
-					afterParserOrEnumRuleCall();
-				}
-			)
-		)
-		(
-			(LessThanSign)=>
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getStructuralTypeAndTypeArgumentsRule());
-				}
-				newCompositeNode(grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_1());
-			}
-			this_TypeArguments_6=ruleTypeArguments[$current]
-			{
-				$current = $this_TypeArguments_6.current;
 				afterParserOrEnumRuleCall();
 			}
 		)?

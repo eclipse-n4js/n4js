@@ -19997,13 +19997,53 @@ ruleParameterizedTypeRefStructural
 @init {
 }:
 (
-	StructuralTypeAndTypeArgumentsParserRuleCall_0=ruleStructuralTypeAndTypeArguments{ announce($StructuralTypeAndTypeArgumentsParserRuleCall_0.start, $StructuralTypeAndTypeArgumentsParserRuleCall_0.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getStructuralTypeAndTypeArgumentsParserRuleCall_0()); }
 	(
-		WithKeyword_1_0=With
+		(
+			(
+				(
+					DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0=ruleTypingStrategyUseSiteOperator{
+						announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0_0_0());
+					}
+				)
+			)
+			(
+				(
+					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1=ruleTypeReferenceName{
+						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeAssignment_0_0_1());
+					}
+				)
+			)
+		)
+		    |
+		(
+			(
+				(
+					DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0=ruleTypingStrategyUseSiteOperator{
+						announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getDefinedTypingStrategyAssignment_0_1_1());
+					}
+				)
+			)
+			(
+				(
+					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1=ruleTypeReferenceName{
+						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeAssignment_0_1_2());
+					}
+				)
+			)
+			VersionRequestParserRuleCall_0_1_3=ruleVersionRequest{ announce($VersionRequestParserRuleCall_0_1_3.start, $VersionRequestParserRuleCall_0_1_3.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getVersionRequestParserRuleCall_0_1_3()); }
+		)
+	)
+	(
+		(LessThanSign
+		)=>
+		TypeArgumentsParserRuleCall_1=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_1.start, $TypeArgumentsParserRuleCall_1.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getTypeArgumentsParserRuleCall_1()); }
+	)?
+	(
+		WithKeyword_2_0=With
 		 {
-			announce($WithKeyword_1_0, grammarAccess.getParameterizedTypeRefStructuralAccess().getWithKeyword_1_0());
+			announce($WithKeyword_2_0, grammarAccess.getParameterizedTypeRefStructuralAccess().getWithKeyword_2_0());
 		}
-		TStructMemberListParserRuleCall_1_1=ruleTStructMemberList{ announce($TStructMemberListParserRuleCall_1_1.start, $TStructMemberListParserRuleCall_1_1.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getTStructMemberListParserRuleCall_1_1()); }
+		TStructMemberListParserRuleCall_2_1=ruleTStructMemberList{ announce($TStructMemberListParserRuleCall_2_1.start, $TStructMemberListParserRuleCall_2_1.stop, grammarAccess.getParameterizedTypeRefStructuralAccess().getTStructMemberListParserRuleCall_2_1()); }
 	)?
 )
 ;
@@ -20043,61 +20083,6 @@ ruleTypeAndTypeArguments
 		(LessThanSign
 		)=>
 		TypeArgumentsParserRuleCall_1=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_1.start, $TypeArgumentsParserRuleCall_1.stop, grammarAccess.getTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_1()); }
-	)?
-)
-;
-
-// Entry rule entryRuleStructuralTypeAndTypeArguments
-entryRuleStructuralTypeAndTypeArguments
-	:
-	ruleStructuralTypeAndTypeArguments
-	EOF;
-
-// Rule StructuralTypeAndTypeArguments
-ruleStructuralTypeAndTypeArguments
-@init {
-}:
-(
-	(
-		(
-			(
-				(
-					DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0=ruleTypingStrategyUseSiteOperator{
-						announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_0_0_0.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0_0_0());
-					}
-				)
-			)
-			(
-				(
-					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1=ruleTypeReferenceName{
-						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_0_1_0_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_0_1());
-					}
-				)
-			)
-		)
-		    |
-		(
-			(
-				(
-					DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0=ruleTypingStrategyUseSiteOperator{
-						announce($DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0.start, $DefinedTypingStrategyTypingStrategyUseSiteOperatorParserRuleCall_0_1_1_0.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDefinedTypingStrategyAssignment_0_1_1());
-					}
-				)
-			)
-			(
-				(
-					DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1=ruleTypeReferenceName{
-						announce($DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1.start, $DeclaredTypeTypeTypeReferenceNameParserRuleCall_0_1_2_0_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_1_2());
-					}
-				)
-			)
-			VersionRequestParserRuleCall_0_1_3=ruleVersionRequest{ announce($VersionRequestParserRuleCall_0_1_3.start, $VersionRequestParserRuleCall_0_1_3.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_0_1_3()); }
-		)
-	)
-	(
-		(LessThanSign
-		)=>
-		TypeArgumentsParserRuleCall_1=ruleTypeArguments{ announce($TypeArgumentsParserRuleCall_1.start, $TypeArgumentsParserRuleCall_1.stop, grammarAccess.getStructuralTypeAndTypeArgumentsAccess().getTypeArgumentsParserRuleCall_1()); }
 	)?
 )
 ;
