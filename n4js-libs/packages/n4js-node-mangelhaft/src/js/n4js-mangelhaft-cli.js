@@ -24,7 +24,7 @@
         return json;
     }
 
-    var lib_run = require("n4js-node/src-gen/run");
+    var lib_run = require("n4js-node/src-gen/run.js");
 
     var execData = global.$executionData;
     if (execData) {

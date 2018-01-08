@@ -70,7 +70,7 @@
                 require("systemjs");
             }
         }
-        require("n4js-es5/src-gen/rt");
+        require("n4js-es5/src-gen/rt.js");
 
         return options;
     }
