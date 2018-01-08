@@ -21,8 +21,6 @@ import org.eclipse.n4js.n4JS.TemplateLiteral
 import org.eclipse.n4js.n4JS.TemplateSegment
 import org.junit.Test
 
-import static org.junit.Assert.assertEquals
-
 class JSXWithOutFreeTextTest extends AbstractN4JSXParserTest {
 
 	@Test

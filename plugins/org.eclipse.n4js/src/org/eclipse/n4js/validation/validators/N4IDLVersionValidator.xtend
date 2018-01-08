@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation
+package org.eclipse.n4js.validation.validators
 
 import com.google.inject.Inject
 import org.eclipse.n4js.n4idl.versioning.VersionHelper

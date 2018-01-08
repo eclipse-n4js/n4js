@@ -17,6 +17,6 @@ ProjectVersion: 0.0.1-SNAPSHOT
 Output: "META-INF"
 Sources {
 	source {
-		"modelVersionTests"
+		"xpect-test"
 	}
 }

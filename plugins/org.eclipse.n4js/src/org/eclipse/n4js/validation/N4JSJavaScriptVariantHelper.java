@@ -34,6 +34,13 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 	 * Constructor
 	 */
 	public N4JSJavaScriptVariantHelper() {
+		this.addEntry(EXT_N4JS, VARIANT_NAME, "N4JS");
+		this.addEntry(EXT_N4JSD, VARIANT_NAME, "N4JS Definition Files (n4jsd)");
+		this.addEntry(EXT_N4JSX, VARIANT_NAME, "N4JSX");
+		this.addEntry(EXT_JSX, VARIANT_NAME, "JSX");
+		this.addEntry(EXT_N4IDL, VARIANT_NAME, "N4JS Interface Definition Language Files (n4idl)");
+		this.addEntry(EXT_IDL, VARIANT_NAME, "Interface Definition Language Files (idl)");
+
 		this.addEntry(EXT_N4JS, DYNAMIC_PSEUDO_SCOPE, false);
 		this.addEntry(EXT_N4JSD, DYNAMIC_PSEUDO_SCOPE, false);
 		this.addEntry(EXT_N4JSX, DYNAMIC_PSEUDO_SCOPE, false);
@@ -237,6 +244,19 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 		this.addEntry(EXT_N4IDL, MULTI_QN_SCOPE, true);
 		this.addEntry(EXT_IDL, MULTI_QN_SCOPE, true);
 
+		this.addEntry(EXT_N4JS, VERSIONED_TYPES, false);
+		this.addEntry(EXT_N4JSD, VERSIONED_TYPES, false);
+		this.addEntry(EXT_N4JSX, VERSIONED_TYPES, false);
+		this.addEntry(EXT_JSX, VERSIONED_TYPES, false);
+		this.addEntry(EXT_N4IDL, VERSIONED_TYPES, true);
+		this.addEntry(EXT_IDL, VERSIONED_TYPES, true);
+
+		this.addEntry(EXT_N4JS, TOP_LEVEL_STATEMENTS, true);
+		this.addEntry(EXT_N4JSD, TOP_LEVEL_STATEMENTS, true);
+		this.addEntry(EXT_N4JSX, TOP_LEVEL_STATEMENTS, true);
+		this.addEntry(EXT_JSX, TOP_LEVEL_STATEMENTS, true);
+		this.addEntry(EXT_N4IDL, TOP_LEVEL_STATEMENTS, false);
+		this.addEntry(EXT_IDL, TOP_LEVEL_STATEMENTS, false);
 	}
 
 	/**

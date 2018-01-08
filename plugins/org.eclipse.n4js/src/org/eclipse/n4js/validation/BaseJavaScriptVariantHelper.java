@@ -72,6 +72,12 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	}
 
 	/**
+	 * A user-faced name for this JavaScript variant.
+	 */
+	public static final ValidationFeature<String> VARIANT_NAME = new ValidationFeature<>(
+			"<Unknown JavaScript Variant>");
+
+	/**
 	 * Dynamic pseudo scope should be activated?
 	 */
 	public static final ValidationFeature<Boolean> DYNAMIC_PSEUDO_SCOPE = new ValidationFeature<>(true);
@@ -190,6 +196,16 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	 * Variant allows for multiple elements with the same qualified name in one scope.
 	 */
 	public static final ValidationFeature<Boolean> MULTI_QN_SCOPE = new ValidationFeature<>(false);
+
+	/**
+	 * Variant allows for the declaration and reference of versioned types.
+	 */
+	public static final ValidationFeature<Boolean> VERSIONED_TYPES = new ValidationFeature<>(false);
+
+	/**
+	 * Variant allows for top-level statements in modules.
+	 */
+	public static final ValidationFeature<Boolean> TOP_LEVEL_STATEMENTS = new ValidationFeature<>(false);
 
 	/**
 	 * This class encapsulates a pair of file extension and validation feature and should serve as keys for
@@ -625,5 +641,27 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	@Override
 	public boolean isMultiQNScope(EObject eobj) {
 		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), MULTI_QN_SCOPE);
+	}
+
+	/**
+	 * Returns {@code true} if the script allows for the declaration and reference of versioned types.
+	 */
+	@Override
+	public boolean allowVersionedTypes(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), VERSIONED_TYPES);
+	}
+
+	/**
+	 * Returns {@code true} if the script allows for top-level statements as opposed to just type and function
+	 * declarations.
+	 */
+	@Override
+	public boolean allowTopLevelStatements(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), TOP_LEVEL_STATEMENTS);
+	}
+
+	@Override
+	public String getVariantName(EObject eobj) {
+		return get(fileExtensionCalculator.getXpectAwareFileExtension(eobj), VARIANT_NAME);
 	}
 }

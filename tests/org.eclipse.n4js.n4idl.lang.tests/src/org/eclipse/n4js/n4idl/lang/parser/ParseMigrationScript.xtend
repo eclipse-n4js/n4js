@@ -12,10 +12,10 @@ package org.eclipse.n4js.n4idl.lang.parser
 
 import org.eclipse.n4js.n4JS.MigrationDeclaration
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.tests.parser.AbstractParserTest
+import org.eclipse.n4js.n4idl.lang.AbstractN4IDLParserTest
 import org.junit.Test
 
-public class ParseMigrationScript extends AbstractParserTest {
+public class ParseMigrationScript extends AbstractN4IDLParserTest {
 
 	@Test
 	def void testEmptyMigrationScript() {
