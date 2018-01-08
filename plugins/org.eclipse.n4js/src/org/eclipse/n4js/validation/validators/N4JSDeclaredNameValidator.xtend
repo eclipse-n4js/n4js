@@ -78,6 +78,7 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
 import org.eclipse.n4js.n4JS.VersionedElement
+import org.eclipse.n4js.n4idl.versioning.VersionUtils
 
 /**
  */
@@ -598,7 +599,7 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 	 * Does not check value of the returned name, so it can be null or empty string.
 	 */
 	def protected String getDeclaredName(EObject eo) {
-		if (eo instanceof VersionedElement && eo instanceof NamedElement) {
+		if (VersionUtils.isVersioned(eo) && eo instanceof NamedElement) {
 			return (eo as NamedElement).name + "#" + (eo as VersionedElement).declaredVersion;
 		}
 
@@ -616,7 +617,8 @@ class N4JSDeclaredNameValidator extends AbstractN4JSDeclarativeValidator {
 				if (importedElem === null) {
 					return null
 				}
-				return importedElem.findName;
+				val n = importedElem.findName
+				return n;
 			}
 		}
 
