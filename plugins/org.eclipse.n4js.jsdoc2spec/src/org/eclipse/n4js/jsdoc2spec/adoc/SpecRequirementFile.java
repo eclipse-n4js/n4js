@@ -103,7 +103,7 @@ public class SpecRequirementFile extends SpecFile {
 		header += "include::{find}config.adoc[]\n";
 		header += "= Requirement " + requirement.getRequirementID();
 		header += "\n\n";
-		headerLineCount = StringCountUtils.countLines(header);
+		headerLineCount = StringCountUtils.countNewLines(header);
 		return header;
 	}
 }

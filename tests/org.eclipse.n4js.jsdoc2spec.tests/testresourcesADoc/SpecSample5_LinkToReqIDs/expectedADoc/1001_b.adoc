@@ -10,9 +10,11 @@ Contributors:
 ////
 
 
-. *++ext++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample5_LinkToReqIDs:test/ReqTest:ReqTest#ext___Case++[[.small]#++Case++#])
+. *++ext++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample5_LinkToReqIDs:test/ReqTest:ReqTest#ext___Case++[++Case++]#)
 +
-======
+--
+
 Ext Description
 
-======
+--
+
