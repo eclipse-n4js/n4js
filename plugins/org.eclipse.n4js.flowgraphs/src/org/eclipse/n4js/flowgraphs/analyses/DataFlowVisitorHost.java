@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,6 +30,7 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
  *
@@ -174,7 +174,15 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 				Assumption ass = assIter.next();
 				if (ass.isActive() && ass.aliases.contains(effect.symbol)) {
-					ass.callHoldsOnEffect(effect, cfe);
+					ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
+
+				} else {
+					for (Symbol alias : ass.aliases) {
+						if (effect.symbol.isStrucuralAlias(alias)) {
+							ass.callHoldsOnEffect(effect, cfe); // also called for structural aliases
+							break;
+						}
+					}
 				}
 				if (ass.isFailed()) {
 					assIter.remove();
@@ -191,14 +199,14 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 					Assumption ass = assIter.next();
 
 					if (ass.isActive()) {
-						if (ass.aliases.contains(lhs)) {
-							ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
-						} else {
-							Symbol synthSymbol = getContextChangedSymbol(ass, lSymbol, rhs);
-							if (synthSymbol != null) {
-								ass.callHoldsOnDataflow(lSymbol, synthSymbol, ae);
-							}
+						boolean callPerformed = callHoldOnDataflowOnAliases(ass, ae, lhs, lSymbol, rSymbol);
+						if (!callPerformed) {
+							callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, lSymbol, rSymbol);
 						}
+						if (!callPerformed) {
+							callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ae, rhs, lSymbol);
+						}
+						// if still (!callPerformed): not important
 					}
 					if (ass.isFailed()) {
 						assIter.remove();
@@ -209,26 +217,47 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			return false;
 		}
 
-		private Symbol getContextChangedSymbol(Assumption ass, Symbol lSymbol, Expression rExpression) {
-			Expression baseExpression = null;
-			List<Symbol> contexts = new LinkedList<>();
-			search: for (Symbol alias : ass.aliases) {
-				Symbol aliasTmp = alias;
-				contexts.add(aliasTmp);
+		private boolean callHoldOnDataflowOnAliases(Assumption ass, AssignmentExpression ae, Expression lhs,
+				Symbol lSymbol, Symbol rSymbol) {
 
-				while (aliasTmp.getContextSymbol() != null) {
-					aliasTmp = aliasTmp.getContextSymbol();
-					if (lSymbol.equals(aliasTmp)) {
-						baseExpression = rExpression;
-						break search;
-					}
-					contexts.add(0, aliasTmp);
-				}
-				contexts.clear();
+			if (ass.aliases.contains(lhs)) {
+				ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
+				return true;
+			}
+			return false;
+		}
+
+		private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, AssignmentExpression ae,
+				Expression rhs, Symbol lSymbol) {
+
+			Pair<Symbol, Symbol> cSymbols = SymbolContextUtils.getContextChangedSymbol(ass.aliases, lSymbol, rhs);
+			Symbol newLSymbol = cSymbols.getKey();
+			Symbol newRSymbol = cSymbols.getValue();
+			if (newRSymbol != null) {
+				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, ae);
+				return true;
+			}
+			return false;
+		}
+
+		private boolean callHoldOnDataflowOnFailedStructuralAliases(Assumption ass, Symbol lSymbol, Symbol rSymbol) {
+			Pair<Symbol, List<Symbol>> lSCA = SymbolContextUtils
+					.getSymbolAndContextsToAlias(ass.failingStructuralAliases, lSymbol);
+
+			if (lSCA.getKey() != null) {
+				ass.failOnStructuralAlias(lSCA.getKey());
+				return true;
 			}
 
-			Symbol synthSymbol = SymbolFactory.create(baseExpression, contexts);
-			return synthSymbol;
+			Pair<Symbol, List<Symbol>> rCSA = SymbolContextUtils
+					.getSymbolAndContextsToAlias(ass.failingStructuralAliases, rSymbol);
+
+			if (rCSA.getKey() != null) {
+				ass.failOnStructuralAlias(rCSA.getKey());
+				return true;
+			}
+
+			return false;
 		}
 	}
 

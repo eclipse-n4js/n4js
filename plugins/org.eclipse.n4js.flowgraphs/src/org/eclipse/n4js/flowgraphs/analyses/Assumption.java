@@ -10,10 +10,13 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.model.EffectInfo;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
@@ -37,8 +40,10 @@ abstract public class Assumption {
 	public final Symbol symbol;
 	/** Set of all symbols that are transitively assigned to {@link #symbol} */
 	public final Set<Symbol> aliases = new HashSet<>();
+	/***/
+	public final Set<Symbol> failingStructuralAliases = new HashSet<>();
 	/** Set of all symbols that might be indirectly assigned to {@link #symbol} through receiver change */
-	public final Set<Symbol> potentialAliases = new HashSet<>();
+	public final Map<EObject, Symbol> symbolForDeclaration = new HashMap<>();
 	/** The {@link Symbol} that caused this {@link Assumption} to fail */
 	public Symbol failedSymbol;
 
@@ -50,10 +55,12 @@ abstract public class Assumption {
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
+		assert cfe != null;
+		assert symbol != null;
 		this.key = getKey(cfe, symbol);
 		this.creationSite = cfe;
 		this.symbol = symbol;
-		this.aliases.add(symbol);
+		addAlias(symbol);
 		this.originalAssumption = this;
 	}
 
@@ -63,7 +70,8 @@ abstract public class Assumption {
 		this.creationSite = assumption.creationSite;
 		this.symbol = assumption.symbol;
 		this.aliases.addAll(assumption.aliases);
-		this.potentialAliases.addAll(assumption.potentialAliases);
+		this.failingStructuralAliases.addAll(assumption.failingStructuralAliases);
+		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);
 		this.dataFlowVisitor = assumption.dataFlowVisitor;
 		this.originalAssumption = assumption.originalAssumption;
 	}
@@ -85,12 +93,21 @@ abstract public class Assumption {
 	public void mergeWith(Assumption assumption) {
 		assert this.symbol == assumption.symbol;
 		this.aliases.addAll(assumption.aliases);
-		this.potentialAliases.addAll(assumption.potentialAliases);
+		this.failingStructuralAliases.addAll(assumption.failingStructuralAliases);
+		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);
 	}
 
 	/** Called only from {@link DataFlowVisitor#assume(Assumption)} */
 	void setDataFlowVisitor(DataFlowVisitor dataFlowVisitor) {
 		this.dataFlowVisitor = dataFlowVisitor;
+	}
+
+	/** Adds a new {@link Symbol} that is aliases with this assumption */
+	protected void addAlias(Symbol alias) {
+		this.aliases.add(alias);
+		if (alias.getContext() != null) {
+			this.symbolForDeclaration.put(alias.getDeclaration(), alias);
+		}
 	}
 
 	/** @return the {@link DataFlowVisitor} this {@link Assumption} belongs to */
@@ -125,10 +142,14 @@ abstract public class Assumption {
 	}
 
 	void callHoldsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
-		boolean holds = holdsOnDataflow(lhs, rhs, cfe);
-		handleHolds(rhs, holds);
-		aliases.remove(lhs);
-		aliases.add(rhs);
+		if (failingStructuralAliases.contains(rhs)) {
+			handleHolds(rhs, false);
+		} else {
+			boolean holds = holdsOnDataflow(lhs, rhs, cfe);
+			handleHolds(rhs, holds);
+			aliases.remove(lhs);
+			aliases.add(rhs);
+		}
 	}
 
 	/**
@@ -213,10 +234,16 @@ abstract public class Assumption {
 	/** Handles behavior of the assumption based on the result of the holdOn methods */
 	protected void handleHolds(Symbol pFailedSymbol, boolean holds) {
 		if (!holds) {
-			getDataFlowVisitor().failedAssumptions.add(this);
-			failed();
-			failedSymbol = pFailedSymbol;
-			deactivate();
+			if (aliases.contains(pFailedSymbol)) {
+				getDataFlowVisitor().failedAssumptions.add(this);
+				failed();
+				failedSymbol = pFailedSymbol;
+				deactivate();
+			} else {
+				// assume pFailedSymbol is a structural alias to one of the aliases, i.e.:
+				// aliases.stream().anyMatch(a -> pFailedSymbol.isStrucuralAlias(a));
+				failingStructuralAliases.add(pFailedSymbol);
+			}
 			return;
 		}
 		if (aliases.isEmpty()) {
@@ -233,5 +260,14 @@ abstract public class Assumption {
 	@Override
 	public String toString() {
 		return symbol.toString() + " " + getClass().getSimpleName();
+	}
+
+	/**
+	 */
+	public void failOnStructuralAlias(Symbol lSymbol) {
+		getDataFlowVisitor().failedAssumptions.add(this);
+		failed();
+		failedSymbol = lSymbol;
+		deactivate();
 	}
 }

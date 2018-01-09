@@ -198,7 +198,7 @@ class N4JSFunctionValidator extends AbstractN4JSDeclarativeValidator {
 
 	private def String getReason(NullDereferenceResult ndr) {
 		if (!ndr.checkedSymbol.is(ndr.causingSymbol)) {
-			return " due to previous variable " + ndr.causingSymbol.getName();
+			return "due to previous variable " + ndr.causingSymbol.getName();
 		}
 		return "";
 	}

@@ -47,8 +47,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		Expression dereferencer = getDereferencer(cfe);
 		if (dereferencer != null) {
 			Symbol tgtSymbol = SymbolFactory.create(dereferencer);
-			IsNotNull symbolNotNull = new IsNotNull(dereferencer, tgtSymbol);
-			assume(symbolNotNull);
+			if (tgtSymbol != null) {
+				IsNotNull symbolNotNull = new IsNotNull(dereferencer, tgtSymbol);
+				assume(symbolNotNull);
+			}
 		}
 	}
 

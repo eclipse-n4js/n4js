@@ -26,16 +26,22 @@ public class EffectInfo {
 
 	/** Constructor */
 	public EffectInfo(EffectType type, Expression location) {
-		this.type = type;
-		this.location = location;
-		this.symbol = SymbolFactory.create(location);
+		this(type, location, SymbolFactory.create(location));
 	}
 
 	/** Constructor */
 	public EffectInfo(EffectType type, VariableDeclaration location) {
+		this(type, location, SymbolFactory.create(location));
+	}
+
+	private EffectInfo(EffectType type, ControlFlowElement location, Symbol symbol) {
+		if (symbol == null) {
+			System.out.println(location);
+		}
+		assert symbol != null;
 		this.type = type;
 		this.location = location;
-		this.symbol = SymbolFactory.create(location);
+		this.symbol = symbol;
 	}
 
 	@Override

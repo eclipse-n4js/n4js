@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
@@ -56,6 +57,10 @@ public class SymbolFactory {
 			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
 		} else if (expr instanceof NullLiteral) {
 			newSymbol = new SymbolOfNullLiteral((NullLiteral) expr);
+			// } else if (expr instanceof ThisLiteral) {
+			// newSymbol = new SymbolOfThisLiteral((ThisLiteral) expr);
+			// } else if (expr instanceof SuperLiteral) {
+			// newSymbol = new SymbolOfSuperLiteral((SuperLiteral) expr);
 		} else if (expr instanceof NumericLiteral && new Integer(0).equals(((NumericLiteral) expr).getValue())) {
 			newSymbol = new SymbolOfZeroLiteral((NumericLiteral) expr);
 		}
@@ -85,7 +90,8 @@ public class SymbolFactory {
 		if (wrappers.isEmpty()) {
 			return SymbolFactory.create(baseExpression);
 		}
-		Expression lastTarget = baseExpression;
+
+		Expression lastTarget = EcoreUtil.copy(baseExpression);
 		for (Symbol wrapper : wrappers) {
 			ParameterizedPropertyAccessExpression ppae = ((SymbolOfParameterizedPropertyAccessExpression) wrapper).ppae;
 			ParameterizedPropertyAccessExpression copy = N4JSFactory.eINSTANCE
