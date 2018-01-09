@@ -24,6 +24,7 @@ include::{find}config.adoc[]
 === ++Function func++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample6_ExtendedSignature:src/A:func++[``++async function func(x: string, n: number=…, ...p: string): string++``]
 
 
@@ -42,6 +43,7 @@ Add tests specifying semantics for ``++func++``
 === ++Constructor constructor++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample6_ExtendedSignature:src/A:A#constructor++[``++public constructor(s: ~i~this): this[A]++``]
 
 
@@ -57,6 +59,7 @@ Add tests specifying semantics for ``++constructor(s: ~i~this): this[A]?++``
 === ++Method bar++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample6_ExtendedSignature:src/A:A#bar++[``++project async bar(): string++``]
 
 
@@ -72,6 +75,7 @@ Add tests specifying semantics for ``++async bar(): Promise<string,?>++``
 === ++Method baz++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample6_ExtendedSignature:src/A:A#baz++[``++@TestAPI @Final @Internal public baz(): string++``]
 
 
@@ -87,6 +91,7 @@ Add tests specifying semantics for ``++baz(): string++``
 === ++Method foo++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample6_ExtendedSignature:src/A:A#foo++[``++public foo(x: string, n: number=…, ...p: string): void++``]
 
 
@@ -102,6 +107,7 @@ Add tests specifying semantics for ``++foo(x: string, n: number=…, ...p: strin
 === ++Static method xgreet++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample6_ExtendedSignature:src/A:A@xgreet++[``++project xgreet(some: union{string,number}): void++``]
 
 
@@ -110,3 +116,4 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 --
 Add tests specifying semantics for ``++xgreet(some: union{string,number}): void++``
 --
+

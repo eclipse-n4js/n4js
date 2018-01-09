@@ -10,32 +10,21 @@
  */
 package org.eclipse.n4js.n4jsx.transpiler.utils;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.n4js.n4JS.ImportDeclaration;
 import org.eclipse.n4js.n4JS.ImportSpecifier;
 import org.eclipse.n4js.n4jsx.ReactHelper;
-import org.eclipse.n4js.naming.ModuleNameComputer;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.ProjectUtils;
 import org.eclipse.n4js.transpiler.InformationRegistry;
 import org.eclipse.n4js.ts.types.TModule;
-import org.eclipse.n4js.utils.XtextUtilN4;
-import org.eclipse.xtext.naming.IQualifiedNameConverter;
-import org.eclipse.xtext.resource.IContainer;
 
 import com.google.common.base.Optional;
 import com.google.inject.Inject;
@@ -55,18 +44,12 @@ public final class JSXBackendHelper {
 	private final Map<String, URI> jsxBackends = new HashMap<>();
 
 	@Inject
-	private IQualifiedNameConverter qualifiedNameConverter;
-	@Inject
-	private ModuleNameComputer nameComputer;
-	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
 	private ProjectUtils projectUtils;
-	@Inject
-	XtextUtilN4 xtextUtil;
 
 	@Inject
-	ReactHelper reactHelper;
+	private ReactHelper reactHelper;
 
 	/** @return name of the JSX backend facade, i.e "React" */
 	public String getBackendFacadeName() {
@@ -155,7 +138,7 @@ public final class JSXBackendHelper {
 	 * @throws RuntimeException
 	 *             when no JSX backend is available
 	 */
-	private final String getAnyBackend() {
+	private String getAnyBackend() {
 		return jsxBackends.keySet().stream().findAny()
 				.orElseThrow(() -> new RuntimeException("Compiler cannot locate JSX backend to use for this resource"));
 	}
@@ -163,65 +146,24 @@ public final class JSXBackendHelper {
 	/**
 	 * Populates {@link #jsxBackends} with backends visible from provided resource.
 	 */
-	private final void populateBackendsCache(Resource resource) {
-		jsxBackends.putAll(
-				visibleBackends(resource, reactHelper::looksLikeReactUri)
-						.stream()
-						.collect(Collectors.toMap(
-								uri -> qualifiedNameConverter.toString(nameComputer.getQualifiedModuleName(uri)),
-								Function.identity(),
-								// IDE-2505
-								JSXBackendHelper::stubMerger)));
-
+	private void populateBackendsCache(Resource resource) {
+		jsxBackends.clear();
+		addReactToBackendsCache(resource);
 	}
 
-	/**
-	 * Collects all {@link IContainer}s visible from provided resources. Returned collection is filter with provided
-	 * predicate.
-	 *
-	 * Similar to {code DefaultGlobalScopeProvider.getVisibleContainers(Resource)}.
-	 *
-	 * @param resource
-	 *            for which we look for visible containers
-	 * @param predicate
-	 *            used to filter collected containers
-	 * @return filtered set of visible containers
-	 */
-	private Set<URI> visibleBackends(Resource resource, Predicate<URI> predicate) {
-		Set<URI> backends = new HashSet<>();
-		List<IContainer> visibleContainers = xtextUtil.getVisibleContainers(resource);
-		visibleContainers.stream()
-				.map(container -> container.getResourceDescriptions())
-				.forEach(resourceDscriptions -> resourceDscriptions.iterator()
-						.forEachRemaining(candidateResourceDescription -> {
-							URI uri = candidateResourceDescription.getURI();
-							if (predicate.test(uri)) {
-								backends.add(uri);
-							}
-						}));
-		return Collections.unmodifiableSet(backends);
-	}
-
-	/**
-	 * Helper function that allows to deal with duplicate resources with that have the same FQN in the same scope. In
-	 * general this is configuration error and, normally, should not happen.Due to lack of proper validations, it can
-	 * happen. Validations preventing this situation are expected to be added with IDE-2505. Once that is done this
-	 * merger should be removed.
-	 *
-	 * For reasons described above, we provide just some merging function, without much thought about its internals.
-	 *
-	 */
-	private static URI stubMerger(URI first, URI second) {
-		if (first.lastSegment().compareToIgnoreCase(second.lastSegment()) > 0)
-			return first;
-		return second;
+	private void addReactToBackendsCache(Resource resource) {
+		TModule reactModule = reactHelper.lookUpReactTModule(resource);
+		if (reactModule != null) {
+			URI reactModuleURI = reactModule.eResource().getURI();
+			jsxBackends.put(ReactHelper.REACT_PROJECT_ID, reactModuleURI);
+		}
 	}
 
 	/**
 	 * Provides URI for JSX Backend. URI is cached in local map {@link JSXBackendHelper#jsxBackends}. If there is no URI
 	 * for given QN, performs lookup via scope of the provided resource. and returned.
 	 */
-	private final URI getOrFindJSXBackend(Resource resource, String qualifiedName) {
+	private URI getOrFindJSXBackend(Resource resource, String qualifiedName) {
 		if (jsxBackends.isEmpty()) {
 			populateBackendsCache(resource);
 		}
