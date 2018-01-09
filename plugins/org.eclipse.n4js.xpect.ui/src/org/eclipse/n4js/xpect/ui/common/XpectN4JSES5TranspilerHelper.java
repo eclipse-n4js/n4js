@@ -18,13 +18,13 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Lists.newLinkedList;
 import static org.eclipse.n4js.utils.io.FileUtils.createDirectory;
 import static org.eclipse.n4js.utils.io.FileUtils.createNestedDirectory;
-import static org.eclipse.n4js.utils.io.FileUtils.getTempFolder;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -266,6 +266,8 @@ public class XpectN4JSES5TranspilerHelper {
 
 		loadXpectConfiguration(init, fileSetupContext);
 
+		File artificialRoot = Files.createTempDirectory("n4jsXpect").toFile();
+
 		RunConfiguration runConfig;
 		// if Xpect configured workspace is null, this has been triggered directly in the IDE
 		// && (((ReadOutWorkspaceConfiguration) readOutConfiguration).getXpectConfiguredWorkspace() == null)
@@ -278,15 +280,14 @@ public class XpectN4JSES5TranspilerHelper {
 
 			boolean replaceQuotes = false;
 			// We have to generate JS code for the resource. Because if Xpect test is quickfixAndRun the resource
-			// contains
-			// errors and hence no generated JS code is available for execution.
+			// contains errors and hence no generated JS code is available for execution.
 			// Then sneak in the path to the generated JS code.
 			Script script = (Script) resource.getContents().get(0);
-			createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder
+			createTempJsFileWithScript(artificialRoot.toPath(), script, options, replaceQuotes);
 			runConfig = runnerFrontEnd.createConfiguration(NodeRunner.ID,
 					(implementationId == ChooseImplementationHelper.CANCEL) ? null : implementationId,
 					systemLoader.getId(),
-					resource.getURI().trimFileExtension(), getTempFolder().toAbsolutePath().toString());
+					resource.getURI().trimFileExtension(), artificialRoot.getAbsolutePath().toString());
 		} else {
 			// In the non-GUI case, we need to calculate dependencies etc. manually
 			final Iterable<Resource> dependencies = from(getDependentResources());
@@ -295,13 +296,15 @@ public class XpectN4JSES5TranspilerHelper {
 			// compile all file resources
 			StringBuilder errorResult = new StringBuilder();
 
+			Script testScript = (Script) resource.getContents().get(0);
+
 			// replace n4jsd resource with provided js resource
 			for (final Resource dep : from(dependencies).filter(r -> !r.getURI().equals(resource.getURI()))) {
 				if ("n4jsd".equalsIgnoreCase(dep.getURI().fileExtension())) {
-					compileImplementationOfN4JSDFile(errorResult, dep, options, replaceQuotes);
+					compileImplementationOfN4JSDFile(artificialRoot.toPath(), errorResult, dep, options, replaceQuotes);
 				} else if (isCompilable(dep, errorResult)) {
 					final Script script = (Script) dep.getContents().get(0);
-					createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder!
+					createTempJsFileWithScript(artificialRoot.toPath(), script, options, replaceQuotes);
 				}
 			}
 
@@ -311,16 +314,19 @@ public class XpectN4JSES5TranspilerHelper {
 
 			// No error so far
 			// determine module to run
-			Script script = (Script) resource.getContents().get(0);
-			createTempJsFileWithScript(script, options, replaceQuotes); // IDE-2094 use a specific temp-folder here!
-			String fileToRun = jsModulePathToRun(script);
+			createTempJsFileWithScript(artificialRoot.toPath(), testScript, options, replaceQuotes);
+			String fileToRun = jsModulePathToRun(testScript);
 
 			// Not in UI case, hence manually set up the resources
 			runConfig = runnerFrontEnd.createXpectOutputTestConfiguration(NodeRunner.ID,
 					fileToRun,
-					systemLoader);
+					systemLoader, artificialRoot.toPath().toString() + "/" + testScript.getModule().getProjectId());
 		}
 
+		return executeWithConfig(runConfig, decorateStdStreams);
+	}
+
+	private String executeWithConfig(final RunConfiguration runConfig, boolean decorateStdStreams) {
 		String executionResult;
 		List<String> combinedOutput = new ArrayList<>();
 		try {
@@ -515,7 +521,8 @@ public class XpectN4JSES5TranspilerHelper {
 		return hasErrors;
 	}
 
-	private void compileImplementationOfN4JSDFile(StringBuilder errorResult, Resource dep, GeneratorOption[] options,
+	private void compileImplementationOfN4JSDFile(final Path root, StringBuilder errorResult, Resource dep,
+			GeneratorOption[] options,
 			boolean replaceQuotes) {
 
 		Script script = (Script) dep.getContents().get(0);
@@ -543,7 +550,7 @@ public class XpectN4JSES5TranspilerHelper {
 							Resource externalDep = dep.getResourceSet().getResource(potentialExternalSourceURI, true);
 							script = (Script) externalDep.getContents().get(0);
 							if (isCompilable(externalDep, errorResult)) {
-								createTempJsFileWithScript(script, options, replaceQuotes);
+								createTempJsFileWithScript(root, script, options, replaceQuotes);
 							}
 						} catch (Exception e) {
 							throw new RuntimeException("Couldn't load " + potentialExternalSourceURI + ".", e);
@@ -554,13 +561,14 @@ public class XpectN4JSES5TranspilerHelper {
 		}
 	}
 
-	private File createTempJsFileWithScript(final Script script, GeneratorOption[] options, final boolean replaceQuotes)
+	private File createTempJsFileWithScript(final Path root, final Script script, GeneratorOption[] options,
+			final boolean replaceQuotes)
 			throws IOException {
 		// Compile script to get file content.
 		final String content = compile(script, options, replaceQuotes);
 
-		String path = getCompiledFileBasePath(script);
-		Path parentPath = createNestedDirectory(getTempFolder(), path); // TODO IDE-
+		String srcgenSegments = getCompiledFileBasePath(script);
+		Path srcgenPath = createNestedDirectory(root, srcgenSegments);
 
 		// Get folder structure from qualified names.
 		final LinkedList<String> segments = moduleQualifiedNameSegments(script);
@@ -568,10 +576,10 @@ public class XpectN4JSES5TranspilerHelper {
 		final String fileName = segments.removeLast();
 		// Recursively create temporary folder structure.
 		for (final String folderName : segments) {
-			parentPath = createDirectory(parentPath, folderName);
+			srcgenPath = createDirectory(srcgenPath, folderName);
 		}
 
-		final File file = new File(parentPath.toFile(), fileName + ".js");
+		final File file = new File(srcgenPath.toFile(), fileName + ".js");
 		if (!file.exists()) {
 			if (!file.createNewFile()) {
 				throw new RuntimeException("Exception when creating new file: " + file);
@@ -592,15 +600,14 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	private String getCompiledFileBasePath(final Script script) {
-		String path = script.getModule().getProjectId();
+		String path = script.getModule().getProjectId() + "/src-gen/";
 		if (USE_COMPILED_OUTPUT) {
 			IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
 			if (project != null) {
 				path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
-			} else {
-				path += "/src-gen/";
 			}
 		}
 		return path;
 	}
+
 }

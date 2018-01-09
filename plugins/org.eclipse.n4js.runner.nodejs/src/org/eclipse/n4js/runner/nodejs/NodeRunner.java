@@ -127,8 +127,8 @@ public class NodeRunner implements IRunner {
 			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
 					.split(runConfig.getCustomEnginePath())));
 
-			Path workingDirectory = Files.createTempDirectory("N4JSNodeBoot");
-			System.out.println(workingDirectory.toAbsolutePath().toString());
+			Path workingDirectory = Files.createTempDirectory("N4JSNodeRun");
+
 			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
 			cmds = cb.createCmds(runOptions, workingDirectory);
 

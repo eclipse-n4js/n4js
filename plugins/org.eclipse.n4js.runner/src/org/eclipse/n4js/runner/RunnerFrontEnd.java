@@ -10,8 +10,6 @@
  */
 package org.eclipse.n4js.runner;
 
-import static org.eclipse.n4js.utils.io.FileUtils.getTempFolder;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
@@ -176,7 +174,8 @@ public class RunnerFrontEnd {
 	 * Create runner-config customized for this Xpect test. cf. org.eclipse.n4js.xpect.XpectN4JSES5TranspilerHelper
 	 */
 	public RunConfiguration createXpectOutputTestConfiguration(String runnerId,
-			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader) {
+			String userSelectionNodePathResolvableTargetFileName, SystemLoaderInfo systemLoader,
+			String additionalPath) {
 
 		final IRunnerDescriptor runnerDesc = runnerRegistry.getDescriptor(runnerId);
 		final IRunner runner = runnerDesc.getRunner();
@@ -190,7 +189,7 @@ public class RunnerFrontEnd {
 
 		config.setUseCustomBootstrap(true);
 
-		config.setCoreProjectPaths(Lists.newArrayList(getTempFolder().toString()));
+		config.setCoreProjectPaths(Lists.newArrayList(additionalPath));
 
 		config.setExecutionData(RunConfiguration.EXEC_DATA_KEY__USER_SELECTION,
 				userSelectionNodePathResolvableTargetFileName);

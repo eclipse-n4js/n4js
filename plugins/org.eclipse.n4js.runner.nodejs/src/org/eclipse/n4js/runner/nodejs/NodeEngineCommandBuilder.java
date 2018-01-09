@@ -18,12 +18,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.runner.SystemLoaderInfo;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -84,13 +86,13 @@ public class NodeEngineCommandBuilder {
 	 *             for IO operations
 	 */
 	private String generateBootCode(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
-
+		// TODO GH-394 merge exec files
 		if (USE_NEW_BOOTSTRAP) {
 			// 1 generate fake node project / folder
 			Path projectRootPath = workDir;
 			// Path projectRootPath = Files.createTempDirectory("N4JSNodeBoot");
 			// 2 generate ELF code in #1
-			final Path elf = Files.createTempFile(projectRootPath, "n4jsnode", "." + N4JSGlobals.JS_FILE_EXTENSION);
+			final Path elf = Files.createTempFile(projectRootPath, "n4jsnodeELF", "." + N4JSGlobals.JS_FILE_EXTENSION);
 			final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
 					nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
 			writeContentToFile(elfData.toString(), elf.toFile());
@@ -99,17 +101,24 @@ public class NodeEngineCommandBuilder {
 			final File node_modules = new File(projectRootPath.toFile(), "node_modules");
 			node_modules.mkdirs();
 			// 4 generate boot script in #1
-			final Path boot = Files.createTempFile(projectRootPath, "n4jsnodeRun", "." + N4JSGlobals.JS_FILE_EXTENSION);
+			final Path boot = Files.createTempFile(projectRootPath, "n4jsnodeBOOT",
+					"." + N4JSGlobals.JS_FILE_EXTENSION);
 			String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
+			List<Pair<String, String>> path2name = new ArrayList<>();
+			for (int i = 0; i < paths.length; i++) {
+				String string = paths[i];
+				Path p = Paths.get(string);
+				path2name.add(new Pair<>(string, p.getFileName().toString()));
+			}
 			// - script has to configure symlinks to the 'node_modules' (#3)
 			// - script has to call elf code
-			writeContentToFile(NodeRunScriptTemplate.getRunScriptCore(node_modules.getCanonicalPath(),
-					elf.getFileName().toString(), paths), boot.toFile());
+			writeContentToFile(NodeBootScriptTemplate.getRunScriptCore(node_modules.getCanonicalPath(),
+					elf.getFileName().toString(), path2name), boot.toFile());
 
 			return boot.toAbsolutePath().toString();
 		} else {
 			// generate ELF code in temp location
-			final Path elf = Files.createTempFile("n4jsnode", "." + N4JSGlobals.JS_FILE_EXTENSION);
+			final Path elf = Files.createTempFile("n4jsnodeELF", "." + N4JSGlobals.JS_FILE_EXTENSION);
 			final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
 					nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
 			writeContentToFile(elfData.toString(), elf.toFile());
