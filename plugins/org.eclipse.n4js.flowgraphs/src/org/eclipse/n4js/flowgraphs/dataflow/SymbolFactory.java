@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.factories;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,7 +18,6 @@ import java.util.Objects;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;

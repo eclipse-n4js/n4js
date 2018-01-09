@@ -8,9 +8,8 @@
  * Contributors:
  *   Marcus Mews - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.model;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
-import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;

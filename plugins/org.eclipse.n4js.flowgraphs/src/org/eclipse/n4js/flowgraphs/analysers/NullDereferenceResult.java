@@ -11,7 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser.IsNotNull;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /** Result of a null or undefined dereference */

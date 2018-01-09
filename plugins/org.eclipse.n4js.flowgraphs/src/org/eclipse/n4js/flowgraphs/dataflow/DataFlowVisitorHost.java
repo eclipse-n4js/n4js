@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.factories.DestructUtils;
-import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
-import org.eclipse.n4js.flowgraphs.model.EffectInfo;
+import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.Node;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;

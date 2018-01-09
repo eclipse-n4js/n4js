@@ -20,6 +20,7 @@ import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.factories.CFEMapper;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 

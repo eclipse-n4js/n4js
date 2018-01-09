@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -17,8 +17,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.model.EffectInfo;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ConditionalExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

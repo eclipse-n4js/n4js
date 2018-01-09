@@ -8,13 +8,13 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.eclipse.n4js.flowgraphs.model.EffectInfo;
+import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**

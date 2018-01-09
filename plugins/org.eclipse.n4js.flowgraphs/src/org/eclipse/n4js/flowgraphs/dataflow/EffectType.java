@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.model;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 /**
  * Defines the type of an effect on a variable.

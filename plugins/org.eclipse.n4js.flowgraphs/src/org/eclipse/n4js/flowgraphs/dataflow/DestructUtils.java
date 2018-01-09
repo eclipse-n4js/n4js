@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.factories;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.DestructNode;

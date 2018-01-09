@@ -14,9 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
-import org.eclipse.n4js.flowgraphs.model.EffectInfo;
-import org.eclipse.n4js.flowgraphs.model.EffectType;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

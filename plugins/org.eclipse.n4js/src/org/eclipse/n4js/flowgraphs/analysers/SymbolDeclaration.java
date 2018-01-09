@@ -11,7 +11,7 @@
 package org.eclipse.n4js.flowgraphs.analysers;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 

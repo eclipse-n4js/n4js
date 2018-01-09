@@ -14,11 +14,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.analyses.Assumption;
-import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
-import org.eclipse.n4js.flowgraphs.model.EffectInfo;
-import org.eclipse.n4js.flowgraphs.model.EffectType;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
+import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
 import org.eclipse.n4js.ts.types.TAnnotation;

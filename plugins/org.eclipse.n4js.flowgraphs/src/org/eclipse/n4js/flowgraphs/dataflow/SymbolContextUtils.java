@@ -8,14 +8,12 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.dataflow;
 
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.factories.SymbolFactory;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.xtext.xbase.lib.Pair;
 

@@ -10,12 +10,12 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import org.eclipse.n4js.flowgraphs.analyses.Assumption;
-import org.eclipse.n4js.flowgraphs.analyses.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
-import org.eclipse.n4js.flowgraphs.model.EffectInfo;
-import org.eclipse.n4js.flowgraphs.model.EffectType;
-import org.eclipse.n4js.flowgraphs.model.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
+import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
+import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
