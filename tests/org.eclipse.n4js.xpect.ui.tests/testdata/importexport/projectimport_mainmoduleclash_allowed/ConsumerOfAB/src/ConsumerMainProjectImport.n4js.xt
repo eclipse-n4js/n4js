@@ -30,7 +30,7 @@
 					File "Main.n4js" { from="../../B/src/Main.n4js" }
 				}
 			File "manifest.n4mf" { from="../../B/manifest.n4mf"}
-			}
+		}
 	}
 
 	END_SETUP
