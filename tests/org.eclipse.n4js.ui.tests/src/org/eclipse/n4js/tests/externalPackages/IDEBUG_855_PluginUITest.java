@@ -29,6 +29,7 @@ import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.ui.external.ExternalLibrariesReloadHelper;
 import org.eclipse.n4js.ui.internal.ContributingResourceDescriptionPersister;
+import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
 import org.eclipse.xtext.builder.builderState.EMFBasedPersister;
 import org.eclipse.xtext.builder.builderState.IBuilderState;
 import org.eclipse.xtext.resource.IResourceDescription;
@@ -68,6 +69,9 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	@Inject
 	private ExternalLibraryPreferenceStore externalLibraryPreferenceStore;
 
+	@Inject
+	private N4JSBuilderPreferenceAccess prefAccess;
+
 	/**
 	 * Updates the known external library locations with the {@code node_modules} folder.
 	 */
@@ -102,9 +106,10 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testAllIndexElementsCanBeAddedToAResource() throws InvocationTargetException, CoreException {
-
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		assertTrue(PROJECT + " project is not accessible.", project.isAccessible());
+		prefAccess.setAbortBuildOnMfErrors(project, false);
+
 		final IFile clientModule = project.getFile(getResourceName(SRC_FOLDER, MODULE + "." + N4JS_FILE_EXTENSION));
 		assertTrue(clientModule + " client module is not accessible.", clientModule.isAccessible());
 
