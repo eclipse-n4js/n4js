@@ -53,7 +53,7 @@ public class SpecIdentifiableElementSection extends SpecSection {
 	}
 
 	/**
-	 * This constructor is for XPECT-tests only.
+	 * This constructor is for X-PECT-tests only.
 	 */
 	public SpecIdentifiableElementSection(IdentifiableElement element, RepoRelativePathHolder repoPathHolder) {
 		super(null, null);

@@ -25,13 +25,13 @@ include::{find}config.adoc[]
 === ++Method bar++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:src/X:X#bar++[``++project bar(): void++``]
 footnote:[Polyfilled from n4js:testresourcesADoc/SpecSample9_StaticPolyfill/poly]
 
 ==== Semantics
 
-++test++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]
-
+. *++test++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:tests/XTest:XTest#test++[Test]#)
 
 
 [[gsec:spec_X.X.foo]]
@@ -39,6 +39,7 @@ footnote:[Polyfilled from n4js:testresourcesADoc/SpecSample9_StaticPolyfill/poly
 === ++Method foo++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:src/X:X#foo++[``++project foo(): void++``]
 footnote:[Polyfilled from n4js:testresourcesADoc/SpecSample9_StaticPolyfill/poly]
 
@@ -55,6 +56,7 @@ Add tests specifying semantics for ``++foo(): void++``
 === ++Method my++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample9_StaticPolyfill:src/X:X#my++[``++project my(): void++``]
 
 
@@ -63,3 +65,4 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 --
 Add tests specifying semantics for ``++my(): void++``
 --
+
