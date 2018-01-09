@@ -25,6 +25,7 @@ include::{find}config.adoc[]
 === ++Method bar++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#bar++[``++project bar(n: number): string++``]
 
 ==== Description
@@ -33,8 +34,7 @@ spec for method A.bar from source code
 
 ==== Semantics
 
-++Bar basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[Test]
-
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[Test]#)
 
 
 [[gsec:spec_A.A.baz]]
@@ -42,6 +42,7 @@ spec for method A.bar from source code
 === ++Method baz++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#baz++[``++project baz(): string++``]
 
 ==== Description
@@ -64,6 +65,7 @@ Add tests specifying semantics for ``++baz(): string++``
 === ++Method foo++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:B#foo++[``++project foo(s: string): void++``]
 
 
@@ -85,8 +87,7 @@ Inherited from
 
 ==== Semantics
 
-++Bar again++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[Test]
-
+. *++Bar again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[Test]#)
 
 [[gsec:spec_D.A.baz]]
 [role=memberdoc]
@@ -97,6 +98,11 @@ Inherited from
 
 ==== Semantics
 
-++Baz again++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]
+. *++Baz again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]#)
++
+--
 
 Baz is supposed to do nothing.
+
+--
+
