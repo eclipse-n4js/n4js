@@ -15,7 +15,6 @@ import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
@@ -99,7 +98,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				for (String errMsg : errMsgsInManifest) {
 					completeLogMsg += errMsg + "\n";
 				}
-				LOGGER.log(Level.WARN, completeLogMsg);
+				LOGGER.warn(completeLogMsg);
 			}
 
 			getProject().touch(monitor);
