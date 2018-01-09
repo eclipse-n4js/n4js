@@ -27,14 +27,18 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SubMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.n4js.binaries.BinaryCommandFactory;
 import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
@@ -104,8 +108,7 @@ public class NpmManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installDependency(final String packageName, IProgressMonitor monitor)
-			throws IllegalBinaryStateException {
+	public IStatus installDependency(final String packageName, IProgressMonitor monitor) {
 		return installDependency(packageName, NO_VERSION, monitor);
 	}
 
@@ -118,8 +121,7 @@ public class NpmManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installDependency(final String packageName, final String packageVersion, IProgressMonitor monitor)
-			throws IllegalBinaryStateException {
+	public IStatus installDependency(final String packageName, final String packageVersion, IProgressMonitor monitor) {
 		return installDependencies(Collections.singletonMap(packageName, packageVersion), monitor);
 	}
 
@@ -136,8 +138,7 @@ public class NpmManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installDependencies(final Collection<String> unversionedPackages, final IProgressMonitor monitor)
-			throws IllegalBinaryStateException {
+	public IStatus installDependencies(final Collection<String> unversionedPackages, final IProgressMonitor monitor) {
 
 		Map<String, String> versionedPackages = unversionedPackages.stream()
 				.collect(Collectors.toMap((String name) -> name, (String name) -> NO_VERSION));
@@ -157,9 +158,7 @@ public class NpmManager {
 	 *            the monitor for the blocking install process.
 	 * @return a status representing the outcome of the install process.
 	 */
-	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor)
-			throws IllegalBinaryStateException {
-
+	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor) {
 		return installDependencies(versionedNPMs, monitor, true);
 	}
 
@@ -179,11 +178,20 @@ public class NpmManager {
 	 * @return a status representing the outcome of the install process.
 	 */
 	public IStatus installDependencies(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
-			boolean triggerCleanbuild) throws IllegalBinaryStateException {
+			boolean triggerCleanbuild) {
+		return runWithWorkspaceLock(() -> installDependenciesInternal(versionedNPMs, monitor, triggerCleanbuild));
+	}
+
+	private IStatus installDependenciesInternal(final Map<String, String> versionedNPMs, final IProgressMonitor monitor,
+			boolean triggerCleanbuild) {
 
 		MultiStatus status = statusHelper.createMultiStatus("Status of installing multiple npm dependencies.");
 
-		checkNPM();
+		IStatus binaryStatus = checkNPM();
+		if (!binaryStatus.isOK()) {
+			status.merge(binaryStatus);
+			return status;
+		}
 
 		Set<String> requestedNPMs = versionedNPMs.keySet();
 
@@ -366,8 +374,7 @@ public class NpmManager {
 	 *            the monitor for the blocking uninstall process.
 	 * @return a status representing the outcome of the uninstall process.
 	 */
-	public IStatus uninstallDependency(final String packageName, final IProgressMonitor monitor)
-			throws IllegalBinaryStateException {
+	public IStatus uninstallDependency(final String packageName, final IProgressMonitor monitor) {
 		return uninstallDependencies(Arrays.asList(packageName), monitor);
 	}
 
@@ -384,13 +391,20 @@ public class NpmManager {
 	 *            the monitor for the blocking uninstall process.
 	 * @return a status representing the outcome of the uninstall process.
 	 */
-	public IStatus uninstallDependencies(Collection<String> packageNames, final IProgressMonitor monitor)
-			throws IllegalBinaryStateException {
+	public IStatus uninstallDependencies(Collection<String> packageNames, final IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> uninstallDependenciesInternal(packageNames, monitor));
+	}
+
+	private IStatus uninstallDependenciesInternal(Collection<String> packageNames, final IProgressMonitor monitor) {
 
 		final MultiStatus status = statusHelper
 				.createMultiStatus("Status of uninstalling multiple npm dependencies.");
 
-		checkNPM();
+		IStatus binaryStatus = checkNPM();
+		if (!binaryStatus.isOK()) {
+			status.merge(binaryStatus);
+			return status;
+		}
 
 		final Set<String> requestedPackages = new HashSet<>(packageNames);
 		try {
@@ -484,6 +498,10 @@ public class NpmManager {
 	 * @return a status representing the outcome of the operation.
 	 */
 	public IStatus refreshInstalledNpmPackages(final IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> refreshInstalledNpmPackagesInternal(monitor));
+	}
+
+	private IStatus refreshInstalledNpmPackagesInternal(final IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
 		final Collection<String> packageNames = getAllNpmProjectsMapping().keySet();
@@ -517,7 +535,6 @@ public class NpmManager {
 		} finally {
 			subMonitor.done();
 		}
-
 	}
 
 	/**
@@ -530,6 +547,10 @@ public class NpmManager {
 	 * @return a status representing the outcome of the operation.
 	 */
 	public IStatus cleanCache(final IProgressMonitor monitor) {
+		return runWithWorkspaceLock(() -> cleanCacheInternal(monitor));
+	}
+
+	private IStatus cleanCacheInternal(final IProgressMonitor monitor) {
 		checkNotNull(monitor, "monitor");
 
 		final SubMonitor subMonitor = SubMonitor.convert(monitor, 1);
@@ -544,7 +565,6 @@ public class NpmManager {
 		} finally {
 			subMonitor.done();
 		}
-
 	}
 
 	/** Simple validation if the package name is not null or empty */
@@ -664,16 +684,16 @@ public class NpmManager {
 	}
 
 	/**
-	 * @throws IllegalBinaryStateException
-	 *             when binary cannot cannot be validated
+	 * Checks the npm binary.
 	 */
-	private void checkNPM() throws IllegalBinaryStateException {
+	private IStatus checkNPM() {
 		final NpmBinary npmBinary = npmBinaryProvider.get();
 		final IStatus npmBinaryStatus = npmBinary.validate();
 		if (!npmBinaryStatus.isOK()) {
-			// TODO refactor do not throw just return error status
-			throw new IllegalBinaryStateException(npmBinary, npmBinaryStatus);
+			return statusHelper.createError("npm binary invalid",
+					new IllegalBinaryStateException(npmBinary, npmBinaryStatus));
 		}
+		return statusHelper.OK();
 	}
 
 	/**
@@ -749,5 +769,15 @@ public class NpmManager {
 	private void performGitPull(final IProgressMonitor monitor) {
 		final URI repositoryLocation = locationProvider.getTargetPlatformLocalGitRepositoryLocation();
 		GitUtils.pull(new File(repositoryLocation).toPath(), monitor);
+	}
+
+	private static <T> T runWithWorkspaceLock(Supplier<T> operation) {
+		final ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
+		try {
+			Job.getJobManager().beginRule(rule, null);
+			return operation.get();
+		} finally {
+			Job.getJobManager().endRule(rule);
+		}
 	}
 }
