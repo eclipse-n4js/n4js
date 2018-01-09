@@ -10,7 +10,6 @@
  */
 package org.eclipse.n4js.xpect.ui.common;
 
-import static com.google.common.base.Optional.absent;
 import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.base.Splitter.on;
 import static com.google.common.collect.FluentIterable.from;
@@ -36,7 +35,6 @@ import java.util.concurrent.ExecutionException;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.AnnotationDefinition;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.generator.GeneratorOption;
@@ -54,16 +52,11 @@ import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
-import org.eclipse.n4js.xpect.common.DuplicateResourceAwareFileSetupContext;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
-import org.eclipse.xpect.xtext.lib.setup.emf.ResourceFactory;
-import org.eclipse.xpect.xtext.lib.setup.workspace.Workspace;
 import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.diagnostics.Severity;
 import org.eclipse.xtext.resource.FileExtensionProvider;
-import org.eclipse.xtext.resource.IResourceDescription;
-import org.eclipse.xtext.resource.IResourceDescriptions;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CheckMode;
@@ -80,6 +73,8 @@ import com.google.inject.Inject;
  * {@link EcmaScriptSubGenerator} for compilation and {@link NodeRunner} for execution.
  */
 public class XpectN4JSES5TranspilerHelper {
+
+	private final static String NL = "\n";
 
 	/**
 	 * https://github.com/eclipse/n4js/issues/394
@@ -109,122 +104,6 @@ public class XpectN4JSES5TranspilerHelper {
 	private ChooseImplementationHelper chooseImplHelper;
 
 	private ReadOutConfiguration readOutConfiguration;
-
-	/**
-	 * Java value object to passed to ISetupInitializer to let extract the configuration via reflection. Xpect look for
-	 * add-methods and checks its input parameter type whether there is a configuration of same type and then passes
-	 * this object to this add-method.
-	 */
-	public static abstract class ReadOutConfiguration {
-
-		/** Resource set initialized from {@link IN4JSCore} and wrapped into a delegate. */
-		protected final ResourceSet resourceSet;
-		/** The Xtext index for the resource set. */
-		protected final IResourceDescriptions index;
-		/** Context of the current running Xpect test. */
-		protected final FileSetupContext fileSetupCtx;
-
-		ReadOutConfiguration(final FileSetupContext ctx, final IN4JSCore core) {
-			this.resourceSet = core.createResourceSet(absent());
-			index = core.getXtextIndex(this.resourceSet);
-			this.fileSetupCtx = new DuplicateResourceAwareFileSetupContext(ctx);
-		}
-
-		/**
-		 * @return the resources retrieved from the Xpect resource set configuration
-		 */
-		public abstract List<Resource> getResources();
-	}
-
-	/**
-	 * Reads out Xpect ResourceSet configuration to retrieve EMF resources from there.
-	 */
-	public static class ReadOutResourceSetConfiguration extends ReadOutConfiguration {
-		private org.eclipse.xpect.xtext.lib.setup.emf.ResourceSet configuredResourceSet;
-
-		ReadOutResourceSetConfiguration(FileSetupContext ctx, IN4JSCore resourceSet) {
-			super(ctx, resourceSet);
-		}
-
-		/**
-		 * @param xpectResourceSet
-		 *            the Xpect configuration item to be read out
-		 */
-		public void add(org.eclipse.xpect.xtext.lib.setup.emf.ResourceSet xpectResourceSet) {
-			this.configuredResourceSet = xpectResourceSet;
-		}
-
-		/**
-		 * @return the resources retrieved from the Xpect resource set configuration
-		 */
-		@Override
-		public List<Resource> getResources() {
-			final List<Resource> configuredResources = newArrayList();
-			if (configuredResourceSet != null) {
-				for (ResourceFactory factory : configuredResourceSet.getFactories()) {
-					if (factory instanceof org.eclipse.xpect.xtext.lib.setup.emf.Resource) {
-						org.eclipse.xpect.xtext.lib.setup.emf.Resource res = (org.eclipse.xpect.xtext.lib.setup.emf.Resource) factory;
-						try {
-							if (fileSetupCtx != null) {
-								Resource createdRes = res.create(fileSetupCtx, resourceSet);
-								configuredResources.add(createdRes);
-							}
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-			return configuredResources;
-		}
-	}
-
-	/**
-	 * Reads out Xpect Workspace setup configuration to retrieve EMF resources from there.
-	 */
-	public static class ReadOutWorkspaceConfiguration extends ReadOutConfiguration {
-		private Workspace configuredWorkspace;
-		private final FileExtensionProvider fileExtensionProvider;
-
-		ReadOutWorkspaceConfiguration(FileSetupContext ctx, IN4JSCore core,
-				FileExtensionProvider fileExtensionProvider) {
-			super(ctx, core);
-			this.fileExtensionProvider = fileExtensionProvider;
-		}
-
-		/**
-		 * @param workspace
-		 *            the Xpect configuration item to be read out
-		 */
-		public void add(org.eclipse.xpect.xtext.lib.setup.workspace.Workspace workspace) {
-			this.configuredWorkspace = workspace;
-		}
-
-		/**
-		 * @return the workspace configured by Xpect, null if not configured by Xpect
-		 */
-		public Workspace getXpectConfiguredWorkspace() {
-			return configuredWorkspace;
-		}
-
-		/**
-		 * @return the resources retrieved from the Xpect resource set configuration
-		 */
-		@Override
-		public List<Resource> getResources() {
-			final List<Resource> configuredResources = newArrayList();
-			if (configuredWorkspace != null && fileSetupCtx != null) {
-				for (IResourceDescription res : index.getAllResourceDescriptions()) {
-					if (fileExtensionProvider.isValid(res.getURI().fileExtension())) {
-						configuredResources.add(resourceSet.getResource(res.getURI(), true));
-					}
-				}
-			}
-			return configuredResources;
-		}
-	}
-
-	private final String nl = "\n";
 
 	/**
 	 * Injection - method used to lazily initialize the runnerRegistry. Called after field-injection.
@@ -346,7 +225,7 @@ public class XpectN4JSES5TranspilerHelper {
 				combinedOutput.add("==>");
 			}
 
-			executionResult = Joiner.on(nl).join(combinedOutput);
+			executionResult = Joiner.on(NL).join(combinedOutput);
 		} catch (Exception e) {
 			executionResult = e.getMessage();
 			// TODO Debugging:
@@ -515,7 +394,7 @@ public class XpectN4JSES5TranspilerHelper {
 			errorResult.append("Couldn't compile resource " + dep.getURI() + " because it contains errors: ");
 			for (Issue errorIssue : errorIssues) {
 				errorResult
-						.append(nl + errorIssue.getMessage() + " at line " + errorIssue.getLineNumber());
+						.append(NL + errorIssue.getMessage() + " at line " + errorIssue.getLineNumber());
 			}
 		}
 		return hasErrors;
