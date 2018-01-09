@@ -115,7 +115,7 @@ import com.google.common.collect.Range;
  */
 public final class InferenceContext {
 
-	static final boolean DEBUG = false;
+	static final boolean DEBUG = true;
 
 	private final N4JSTypeSystem ts;
 	private final TypeSystemHelper tsh;

@@ -12,11 +12,13 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
+import java.util.ArrayList
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.misc.DestructNode
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
+import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.Expression
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
@@ -25,6 +27,9 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyAssignment
 import org.eclipse.n4js.n4JS.PropertyMethodDeclaration
 import org.eclipse.n4js.n4JS.RelationalExpression
+import org.eclipse.n4js.n4JS.VariableBinding
+import org.eclipse.n4js.n4JS.VariableDeclaration
+import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
 import org.eclipse.n4js.ts.types.TypableElement
 import org.eclipse.n4js.ts.types.util.Variance
@@ -34,9 +39,11 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.n4JS.ForStatement
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -155,12 +162,28 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)
 		// TODO integrate expectedType judgment into AST traversal and remove #isProblematicCaseOfExpectedType()
-		val expectedTypeRef = if (!rootPoly.isProblematicCaseOfExpectedType) {
+		var expectedTypeRef = if (!rootPoly.isProblematicCaseOfExpectedType) {
 				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
 			};
 
 		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
 		val typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
+		
+		var rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
+			DestructNode.unify(rootPoly.eContainer as VariableBinding)
+		} else if (rootPoly.eContainer instanceof AssignmentExpression) {
+			DestructNode.unify(rootPoly.eContainer as AssignmentExpression)
+		} else if (rootPoly.eContainer instanceof ForStatement) {
+			DestructNode.unify(rootPoly.eContainer as ForStatement)
+		}
+		else {
+			null
+		};
+
+		// In case of destructure pattern, add constraint type <: expected type
+		if (rootDestructNode !== null) {
+			expectedTypeRef = calculateExpectedTypeDestructurePattern(rootDestructNode, G)
+		}
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {
@@ -174,6 +197,55 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		// onSolved handlers registered by the #process*() methods of the other poly processors; see responsibilities of
 		// #processExpr(RuleEnvironment, Expression, TypeRef, InferenceContext, ASTMetaInfoCache)
 		infCtx.solve;
+	}
+
+	/** Calculate expected type of a destructure pattern based on its structure */
+	def TypeRef calculateExpectedTypeDestructurePattern(DestructNode destructNode, RuleEnvironment G) {
+		var typeArgs = new ArrayList<TypeArgument>();
+		val elemCount = destructNode.nestedNodes.size
+		for (nestedNode : destructNode.nestedNodes) {
+			val varDecl = nestedNode.varDecl
+			val varRef = nestedNode.varRef
+			if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
+				// Recursively calculate the expected type of the nested child
+				val elemExpectedType =  calculateExpectedTypeDestructurePattern(nestedNode, G)
+				typeArgs.add(elemExpectedType)
+			} else {
+				// If it is a variable declaration, simply retrieve the declared type
+				if (varDecl !== null) {
+					var declaredTypeRef = varDecl.declaredTypeRef;
+					if (declaredTypeRef !== null) {
+						typeArgs.add(declaredTypeRef);
+					} else {
+						typeArgs.add(G.topTypeRef)
+					}
+				} else if (varRef !== null) {
+					// It is a variable reference, retrieve the declared type of the variable
+					val varTypeRef = if (varRef.id instanceof VariableDeclaration) {
+						(varRef.id as VariableDeclaration).declaredTypeRef
+					} else {
+						null
+					}
+					if (varTypeRef !== null) {
+						typeArgs.add(varTypeRef);
+					} else {
+						typeArgs.add(G.topTypeRef)
+					}
+				}
+			}
+		}
+		var retTypeRef = if (elemCount == 1) {
+			 G.arrayTypeRef(typeArgs.get(0))
+		} else if (elemCount > 1){
+			G.iterableNTypeRef(elemCount, typeArgs);
+		} else {
+			null
+		}
+		// Wrap the expected type in an Array in case of ForStatement
+		if (destructNode.astElement.eContainer instanceof ForStatement) {
+			retTypeRef = G.arrayTypeRef(retTypeRef)
+		}
+		return retTypeRef;
 	}
 
 	/**
