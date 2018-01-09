@@ -33,7 +33,8 @@ public class EffectInfo {
 		this(type, location, SymbolFactory.create(location));
 	}
 
-	private EffectInfo(EffectType type, ControlFlowElement location, Symbol symbol) {
+	/** Constructor */
+	public EffectInfo(EffectType type, ControlFlowElement location, Symbol symbol) {
 		if (symbol == null) {
 			System.out.println(location);
 		}

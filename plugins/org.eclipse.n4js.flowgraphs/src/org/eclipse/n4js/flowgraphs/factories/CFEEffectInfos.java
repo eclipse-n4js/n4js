@@ -16,6 +16,8 @@ import java.util.Map;
 
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
+import org.eclipse.n4js.flowgraphs.dataflow.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
@@ -132,14 +134,18 @@ class CFEEffectInfos {
 
 		@Override
 		public Void caseParameterizedCallExpression(ParameterizedCallExpression feature) {
-			if (feature.getTarget() == null) {
+			Expression targetExpr = feature.getTarget();
+			if (targetExpr == null) {
 				return null;
 			}
 
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
-			EffectInfo eiDecl = new EffectInfo(EffectType.MethodCall, feature.getTarget());
-			exitNode.addEffectInfo(eiDecl);
+			Symbol symbol = SymbolFactory.create(targetExpr);
+			if (symbol != null) {
+				EffectInfo eiDecl = new EffectInfo(EffectType.MethodCall, targetExpr, symbol);
+				exitNode.addEffectInfo(eiDecl);
+			}
 
 			return null;
 		}
