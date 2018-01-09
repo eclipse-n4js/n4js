@@ -11,6 +11,47 @@
 
 /* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
 
-// Simple variable binding case
+// Case 1: Simple variable binding in destructure pattern
 // XPECT noerrors
-let [a: int, b: int] = [undefined, 0];
+let [a1: int, b1: int] = [undefined, 0];
+
+// Case 2: Nested variable binding in destructure pattern
+// XPECT noerrors
+let [[a2: int, c2: int], b2: int] = [[undefined, 1], 2];
+
+// Case 3: Simple reuse variable declaration in destructure pattern
+// XPECT noerrors
+let a3: int, b3: int;
+[a3, b3] = [undefined, 0];
+
+// Case 4: Nested reused variable declaration in destructure pattern
+// XPECT noerrors
+let a4: int, b4: int, c4: int;
+[[a3, c4], b3] = [[undefined, 1], 0];
+
+// Case 5: Simple variable binding in destructure pattern of ForStatement
+// XPECT noerrors
+for (var [a5: int  , b5: int ] of [[undefined, 1], [undefined, 3]]) {
+	console.log(a5);
+}
+
+// Case 6: Nested variable binding in destructure pattern of ForStatement
+// XPECT noerrors
+for (var [[a6: int, c6: int], b6: int ] of [[[undefined, 2], 1], [[undefined, 4], 3]]) {
+	console.log(a6);
+}
+
+// Case 7: Simple reused variable declaration in destructure pattern of ForStatement
+// XPECT noerrors
+var a7: int, b7: int;
+for ([a7, b7] of [[undefined, 1], [undefined, 3]]) {
+	console.log(a7);
+}
+
+// Case 8: Nested reused variable declaration in destructure pattern of ForStatement
+// XPECT noerrors
+var a8: int, b8: int, c8: int;
+for ([[a8, c8], b8] of [[[undefined, 2], 1], [[undefined, 4], 3]]) {
+	console.log(a8);
+}
+
