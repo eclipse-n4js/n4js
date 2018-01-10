@@ -772,12 +772,17 @@ public class NpmManager {
 	}
 
 	private static <T> T runWithWorkspaceLock(Supplier<T> operation) {
-		final ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
-		try {
-			Job.getJobManager().beginRule(rule, null);
+		if (Platform.isRunning()) {
+			final ISchedulingRule rule = ResourcesPlugin.getWorkspace().getRoot();
+			try {
+				Job.getJobManager().beginRule(rule, null);
+				return operation.get();
+			} finally {
+				Job.getJobManager().endRule(rule);
+			}
+		} else {
+			// locking not available/required in headless case
 			return operation.get();
-		} finally {
-			Job.getJobManager().endRule(rule);
 		}
 	}
 }
