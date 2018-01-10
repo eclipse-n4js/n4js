@@ -62,9 +62,14 @@ public final class JSXBackendHelper {
 		return JSX_BACKEND_ELEMENT_FACTORY_NAME;
 	}
 
-	/** Checks if given module looks like JSX backend module, e.g. "react" */
+	/** Checks if given module is a JSX backend module, e.g. "react" */
 	public boolean isJsxBackendModule(TModule module) {
 		return reactHelper.isReactModule(module);
+	}
+
+	/** Returns the JSX backend module. */
+	public TModule getJsxBackendModule(Resource resource) {
+		return reactHelper.lookUpReactTModule(resource);
 	}
 
 	/** Checks if given import declaration looks like JSX backend import, e.g. "(...) from "react" */

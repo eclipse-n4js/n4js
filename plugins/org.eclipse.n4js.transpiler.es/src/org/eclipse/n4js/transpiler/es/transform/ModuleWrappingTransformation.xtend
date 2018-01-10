@@ -40,7 +40,6 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
@@ -50,6 +49,7 @@ import org.eclipse.n4js.transpiler.es.transform.internal.ImportAssignment
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportEntry
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
@@ -65,8 +65,6 @@ import static extension org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  */
 @ExcludesAfter(/* if present, must come before: */ DestructuringTransformation)
 class ModuleWrappingTransformation extends Transformation {
-	@Inject
-	JSXBackendHelper jsx;
 
 	@Inject
 	extension QualifiedNameComputer qnameComputer
@@ -74,9 +72,6 @@ class ModuleWrappingTransformation extends Transformation {
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-	
-	@Inject
-	private JSXBackendHelper JSXBackendHelper;
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -220,18 +215,19 @@ class ModuleWrappingTransformation extends Transformation {
 							refToFPar;
 						} else {
 							// NamedImportSpecifiers require property access.
+							val steCasted = current.ste as SymbolTableEntryOriginal; // FIXME improve!!!!
 							_PropertyAccessExpr => [
-								property_IM = getSymbolTableEntryInternal(current.ste.exportedName, true) // ref to what we import.
+								property_IM = getSymbolTableEntryInternal(steCasted.exportedName, true) // ref to what we import.
 								target = refToFPar;
 							];
 						};
-					if (current.ste === null && JSXBackendHelper.isJsxBackendImportSpecifier(current.tobeReplacedIM, state.info)) {
-						statements += _ExprStmnt(_IdentRef(steFor_React)._AssignmentExpr(rhs))
-					} else {
-						statements += _ExprStmnt(_IdentRef(current.ste)._AssignmentExpr(rhs)) => [
+//					if (current.ste === null) {
+//						statements += _ExprStmnt(_AssignmentExpr(_IdentRef(steFor_React), rhs)) // FIXME !!!!!!
+//					} else {
+						statements += _ExprStmnt(_AssignmentExpr(_IdentRef(current.ste), rhs)) => [
 							state.tracer.copyTrace(current.tobeReplacedIM, it)
 						];
-					}
+//					}
 				}
 			]
 			// tracing
@@ -258,21 +254,10 @@ class ModuleWrappingTransformation extends Transformation {
 
 				val module = state.info.getImportedModule(elementIM);
 
-				val isJSXBackendImport = JSXBackendHelper.isJsxBackendModule(module)
-
 				// calculate names in output
-				val completeModuleSpecifier =
-					if (isJSXBackendImport) {
-						jsx.jsxBackendModuleSpecifier(module, state.resource)
-					} else {
-						module.completeModuleSpecifier
-					}
+				val completeModuleSpecifier = module.completeModuleSpecifier;
 
-				val fparName = if (isJSXBackendImport) {
-						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
-					} else {
-						"$_import_"+module.completeModuleSpecifierAsIdentifier
-					}
+				val fparName = "$_import_"+module.completeModuleSpecifierAsIdentifier;
 
 				val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
 

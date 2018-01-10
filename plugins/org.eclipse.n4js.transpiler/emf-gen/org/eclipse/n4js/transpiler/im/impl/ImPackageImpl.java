@@ -374,6 +374,15 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EReference getSymbolTableEntryInternal_ImportSpecifier() {
+		return (EReference)symbolTableEntryInternalEClass.getEStructuralFeatures().get(0);
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public EClass getReferencingElement_IM() {
 		return referencingElement_IMEClass;
 	}
@@ -785,6 +794,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		symbolTableEntryIMOnlyEClass = createEClass(SYMBOL_TABLE_ENTRY_IM_ONLY);
 
 		symbolTableEntryInternalEClass = createEClass(SYMBOL_TABLE_ENTRY_INTERNAL);
+		createEReference(symbolTableEntryInternalEClass, SYMBOL_TABLE_ENTRY_INTERNAL__IMPORT_SPECIFIER);
 
 		referencingElement_IMEClass = createEClass(REFERENCING_ELEMENT_IM);
 		createEReference(referencingElement_IMEClass, REFERENCING_ELEMENT_IM__REWIRED_TARGET);
@@ -920,6 +930,7 @@ public class ImPackageImpl extends EPackageImpl implements ImPackage {
 		initEClass(symbolTableEntryIMOnlyEClass, SymbolTableEntryIMOnly.class, "SymbolTableEntryIMOnly", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
 		initEClass(symbolTableEntryInternalEClass, SymbolTableEntryInternal.class, "SymbolTableEntryInternal", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getSymbolTableEntryInternal_ImportSpecifier(), theN4JSPackage.getNamespaceImportSpecifier(), null, "importSpecifier", null, 0, 1, SymbolTableEntryInternal.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(referencingElement_IMEClass, ReferencingElement_IM.class, "ReferencingElement_IM", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 		initEReference(getReferencingElement_IM_RewiredTarget(), this.getSymbolTableEntry(), this.getSymbolTableEntry_ReferencingElements(), "rewiredTarget", null, 0, 1, ReferencingElement_IM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

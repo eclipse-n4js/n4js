@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.transpiler.es.transform.internal
 
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.xtend.lib.annotations.Data
 
 /**
@@ -20,7 +20,8 @@ import org.eclipse.xtend.lib.annotations.Data
 @Data
 class ImportAssignment {
 	/* imported thing (symbol for exported thing from other file) */
-	SymbolTableEntryOriginal ste;
+	SymbolTableEntry ste;
+	/* will be null iff we have a namespace import */
 	String actualName;
 	ImportSpecifier tobeReplacedIM;
 	boolean isNameSpace;

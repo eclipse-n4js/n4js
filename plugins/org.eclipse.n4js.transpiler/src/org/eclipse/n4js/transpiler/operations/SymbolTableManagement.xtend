@@ -80,7 +80,7 @@ class SymbolTableManagement {
 
 	/**
 	 * Create a symbol table entry for an element in the intermediate model. This should only be used if the element
-	 * in the IM does <b>not</b> have a corresponding original target (either a TModule element or am element
+	 * in the IM does <b>not</b> have a corresponding original target (either a TModule element or an element
 	 * in the original AST, in case of non-exported variables), for example because it was newly created by an AST
 	 * transformation.
 	 */
@@ -207,7 +207,7 @@ class SymbolTableManagement {
 	/**
 	 * Search STE for the given name space import.
 	 */
-	def public static SymbolTableEntryOriginal findSymbolTableEntryForNamespaceImport(TranspilerState state, NamespaceImportSpecifier importspec) {
+	def public static SymbolTableEntry findSymbolTableEntryForNamespaceImport(TranspilerState state, NamespaceImportSpecifier importspec) {
 		// 1. linear version:
 		//		state.im.symbolTable.entries.filter(SymbolTableEntryOriginal)
 		//			.filter[it.importSpecifier === importspec]
@@ -223,10 +223,20 @@ class SymbolTableManagement {
 
 		// 3. only the originals:
 		// Should be safe to use the cache.
-		return state.steCache.mapOriginal.values.parallelStream()
-			.filter[it.importSpecifier === importspec]
-			.filter[it.originalTarget instanceof ModuleNamespaceVirtualType]
-			.findAny().orElse(null);
+val result = state.steCache.mapOriginal.values.parallelStream()
+	.filter[it.importSpecifier === importspec]
+	.filter[it.originalTarget instanceof ModuleNamespaceVirtualType]
+	.findAny().orElse(null);
+if(result!==null) {
+	return result;
+}
+return state.im.symbolTable.entries.filter(SymbolTableEntryInternal)
+	.filter[it.importSpecifier === importspec]
+	.head;
+//		return state.steCache.mapOriginal.values.parallelStream()
+//			.filter[it.importSpecifier === importspec]
+//			.filter[it.originalTarget instanceof ModuleNamespaceVirtualType]
+//			.findAny().orElse(null);
 	}
 
 

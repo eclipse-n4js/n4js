@@ -10,6 +10,7 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.List
 import java.util.stream.IntStream
@@ -20,11 +21,14 @@ import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXExpression
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
+import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.Script_IM
+import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -33,6 +37,12 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  *
  */
 class JSXTransformation extends Transformation {
+
+	private SymbolTableEntry ste_jsxBackendNamespace;
+	private SymbolTableEntry ste_jsxCreateElementMethod;
+
+	@Inject
+	private JSXBackendHelper jsxBackendHelper;
 
 
 	override assertPreConditions() {
@@ -64,12 +74,61 @@ class JSXTransformation extends Transformation {
 	 * let elem3 = &lt;div>{&lt;a>&lt;/a>}&lt;/div>;
 	 * let elem4 = &lt;div prop={&lt;a>&lt;/a>}>&lt;/div>;
 	 * </pre>
-	 *
 	 */
 	override transform() {
+		ste_jsxBackendNamespace = null;
+		ste_jsxCreateElementMethod = null;
+
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
-		collectNodes(state.im, JSXElement, true).forEach[transformJSXElement];
+		val jsxElements = collectNodes(state.im, JSXElement, true);
+		if(jsxElements.empty) {
+			return;
+		}
+		// we have at least one JSXElement
+		
+		prepareImportOfJSXBackend();
+		jsxElements.forEach[transformJSXElement];
 	}
+
+
+	/**
+	 * Adds namespace import for JSX backend (e.g. React), if it does not exist already.
+	 */
+	def private void prepareImportOfJSXBackend() {
+		val existingJSXBackendNamespaceImportSpecifier = state.info.browseOriginalImports_internal // FIXME why go via original AST here?????
+			.filter[jsxBackendHelper.isJsxBackendModule(it.value)]
+			.map[it.key.importSpecifiers]
+			.flatten
+			.filter(NamespaceImportSpecifier)
+			.head;
+
+		if(existingJSXBackendNamespaceImportSpecifier!==null) {
+			if(!existingJSXBackendNamespaceImportSpecifier.flaggedUsedInCode) {
+				existingJSXBackendNamespaceImportSpecifier.flaggedUsedInCode = true;
+			}
+			ste_jsxBackendNamespace = findSymbolTableEntryForNamespaceImport(existingJSXBackendNamespaceImportSpecifier);
+			ste_jsxCreateElementMethod = steFor_createElement();
+			return;
+		}
+
+		// create new namespace import for JSX backend
+		val jsxBackendModule = jsxBackendHelper.getJsxBackendModule(state.resource); // FIXME consider moving this to transpiler state operations
+		if(jsxBackendModule === null) {
+			throw new RuntimeException("cannot locate JSX backend for resource " + state.resource.URI);
+		}
+		val jsxBackendNamespaceName = "$jsxBackend";
+
+		val impSpec = _NamespaceImportSpecifier(jsxBackendNamespaceName, true);
+		val impDecl = _ImportDecl(null, impSpec);
+		insertBefore(state.im.scriptElements.get(0), impDecl);
+		state.info.setImportedModule_internal(impDecl, jsxBackendModule);
+
+		ste_jsxBackendNamespace = createSymbolTableEntryInternal(jsxBackendNamespaceName) => [
+			it.importSpecifier = impSpec;
+		];
+		ste_jsxCreateElementMethod = steFor_createElement();
+	}
+
 
 	def private void transformJSXElement(JSXElement elem) {
 		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
@@ -82,7 +141,7 @@ class JSXTransformation extends Transformation {
 	}
 	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
 		return _CallExpr(
-			_PropertyAccessExpr(steFor_React, steFor_createElement),
+			_PropertyAccessExpr(ste_jsxBackendNamespace, ste_jsxCreateElementMethod),
 			(
 				#[
 					elem.tagNameFromElement,

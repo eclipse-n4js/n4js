@@ -31,14 +31,15 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
 import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRefStructural
 import org.eclipse.n4js.ts.types.IdentifiableElement
-import org.eclipse.n4js.ts.types.Type
 import org.eclipse.n4js.ts.types.TExportableElement
+import org.eclipse.n4js.ts.types.Type
 
 
 
@@ -135,7 +136,7 @@ class SymbolTableEntryOriginal extends SymbolTableEntry {
 	 * </ul>
 	 * This value must never be <code>null</code>.
 	 * <p>
-	 * <b>WARNING: via this reference, you are leaving <strike>the american sector</strike> the intermediate model and
+	 * <b>WARNING: via this reference, you are leaving <strike>the American sector</strike> the intermediate model and
 	 * enter the original AST or TModule.</b>
 	 */
 	refers IdentifiableElement originalTarget
@@ -186,7 +187,13 @@ class SymbolTableEntryIMOnly extends SymbolTableEntry {
  * primarily identified by name. So when creating one or searching for them you only have to provide a name.
  */
 class SymbolTableEntryInternal extends SymbolTableEntry {
-	// no additional properties
+
+	/*
+	 * In case a namespace import is added programmatically by a transformation, then we do not have a
+	 * {@link ModuleNamespaceVirtualType} we can use as original target, so we use a {@code SymbolTableEntryInternal}.
+	 * In such a case, this references points to the corresponding {@link NamespaceImportSpecifier}.
+	 */
+	refers NamespaceImportSpecifier[0..1] importSpecifier
 }
 
 

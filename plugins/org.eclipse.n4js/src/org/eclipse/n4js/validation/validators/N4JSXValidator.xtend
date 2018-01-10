@@ -19,7 +19,6 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4jsx.ReactHelper
@@ -46,7 +45,6 @@ import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.JSX_PROPERTY_ATTRIBUTE_
 import static org.eclipse.n4js.n4JS.N4JSPackage.Literals.JSX_SPREAD_ATTRIBUTE__EXPRESSION
 import static org.eclipse.n4js.validation.IssueCodes.*
 
-import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 
 /**
@@ -122,19 +120,6 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		val firstJSXElement = script.eAllContents.findFirst[it instanceof JSXElement]
 		if (firstJSXElement !== null && reactHelper.lookUpReactTModule(script.eResource) === null)
 			addIssue(getMessageForJSX_REACT_NOT_RESOLVED(), firstJSXElement, JSX_REACT_NOT_RESOLVED);
-	}
-
-	/** Make sure the namespace to react module is React. */
-	@Check
-	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
-		val module = importSpecifier.importedModule
-		if (reactHelper.isReactModule(module)) {
-			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE) {
-						addIssue(
-							getMessageForJSX_REACT_NAMESPACE_NOT_ALLOWED(),
-							importSpecifier, JSX_REACT_NAMESPACE_NOT_ALLOWED);
-			}
-		}
 	}
 
 

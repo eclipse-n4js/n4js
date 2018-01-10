@@ -11,15 +11,11 @@
 package org.eclipse.n4js.transpiler.es.transform
 
 import com.google.common.base.Joiner
-import com.google.inject.Inject
 import org.eclipse.n4js.AnnotationDefinition
 import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.ImportSpecifier
-import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.n4jsx.ReactHelper
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper
 import org.eclipse.n4js.organize.imports.ScriptDependencyResolver
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -38,12 +34,6 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  * </ul>
  */
 class SanitizeImportsTransformation extends Transformation {
-
-	@Inject
-	private ReactHelper reactHelper;
-
-	@Inject
-	private JSXBackendHelper jsxBackendHelper;
 
 	override analyze() {
 	}
@@ -64,34 +54,6 @@ class SanitizeImportsTransformation extends Transformation {
 	override transform() {
 		addMissingImplicitImports();
 		removeUnusedImports();
-		patchJSX();
-	}
-
-	/**
-	 * Adds import for JSX backend, if necessary, i.e.
-	 * import was not present or import was unused (in consequence it is removed).
-	 */
-	private def patchJSX() {
-		if (null === state.resource.script.eAllContents.findFirst[it instanceof JSXElement])
-			return
-
-		val jsxUsedOriginalImports = state.info.browseOriginalImports_internal.filter [
-			jsxBackendHelper.isJsxBackendModule(value) && value.qualifiedName.equals(ReactHelper.REACT_PROJECT_ID)
-		].map[key.importSpecifiers].flatten.filter[isUsed]
-		if (!jsxUsedOriginalImports.nullOrEmpty)
-			return;
-
-		val jsxBackendsName = steFor_React
-		// We lookup react's module using react helper.
-		val iMod = reactHelper.lookUpReactTModule(state.resource)
-		
-		if(iMod === null)
-			throw new RuntimeException("Cannot locate JSX backend for " + state.resource.URI)
-		
-		val iSpec = _NamespaceImportSpecifier(jsxBackendsName.name, true)
-		val iDecl = _ImportDecl(null, iSpec);
-		insertBefore(state.im.scriptElements.get(0), iDecl);
-		state.info.setImportedModule_internal(iDecl, iMod);
 	}
 
 	/**
@@ -192,19 +154,26 @@ class SanitizeImportsTransformation extends Transformation {
 			} else if(importSpec instanceof NamespaceImportSpecifier) {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
-
-			if(ste === null && jsxBackendHelper.isJsxBackendImportSpecifier(importSpec, state.info)){
-				return true
-			}
+//if(ste===null) {
+//	return true;
+//}
 
 			// note: here it is not enough to return !ste.referencingElements.empty, because for performance reasons
 			// transformations are not required to remove obsolete entries from that list
 			val hasReference = ste.referencingElements.exists[TranspilerUtils.isIntermediateModelElement(it)];
 			if(hasReference) {
 				// we have an actual reference to the imported element
-				// -> now the import is used iff that kind of element requires an import
-				val target = ste.originalTarget;
-				return target!==null && ScriptDependencyResolver.shouldBeImported(state.resource.module, target);
+				if(ste instanceof SymbolTableEntryOriginal) {
+					// an original target is available
+					// -> now the import is used iff that original target actually requires an import (will be false in
+					// case of elements globally provided by runtime, etc.)
+					val target = ste.originalTarget;
+					return target!==null && ScriptDependencyResolver.shouldBeImported(state.resource.module, target);
+				} else {
+					// no original target available (import was programmatically created by a transpiler transformation)
+					// -> always assume the import is used
+					return true;
+				}
 			}
 			return false;
 		}

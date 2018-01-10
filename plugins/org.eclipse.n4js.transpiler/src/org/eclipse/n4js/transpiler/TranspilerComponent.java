@@ -257,7 +257,7 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
-	protected SymbolTableEntryOriginal findSymbolTableEntryForNamespaceImport(NamespaceImportSpecifier importspec) {
+	protected SymbolTableEntry findSymbolTableEntryForNamespaceImport(NamespaceImportSpecifier importspec) {
 		return SymbolTableManagement.findSymbolTableEntryForNamespaceImport(state, importspec);
 	}
 
@@ -673,12 +673,12 @@ public abstract class TranspilerComponent {
 	}
 
 	// ################################################################################################################
-	// JSX RELATED THINGS (TODO IDE-2416 remove this from n4js transpiler)
+	// JSX RELATED THINGS
 
 	/** "React" - retrieve the internal symbol table entry for the symbol "React" */
 	public SymbolTableEntryInternal steFor_React() {
 
-		return getSymbolTableEntryInternal(jsx.getBackendFacadeName(), true);
+		return getSymbolTableEntryInternal("$jsxBackend", true);
 	}
 
 	/** "createElement" - retrieve the internal symbol table entry for the symbol "createElement" */

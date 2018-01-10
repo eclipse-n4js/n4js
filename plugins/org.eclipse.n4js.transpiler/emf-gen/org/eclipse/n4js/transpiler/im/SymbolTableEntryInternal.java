@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.transpiler.im;
 
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier;
+
 
 /**
  * <!-- begin-user-doc -->
@@ -32,10 +34,43 @@ package org.eclipse.n4js.transpiler.im;
  * primarily identified by name. So when creating one or searching for them you only have to provide a name.
  * <!-- end-model-doc -->
  *
+ * <p>
+ * The following features are supported:
+ * </p>
+ * <ul>
+ *   <li>{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal#getImportSpecifier <em>Import Specifier</em>}</li>
+ * </ul>
  *
  * @see org.eclipse.n4js.transpiler.im.ImPackage#getSymbolTableEntryInternal()
  * @model
  * @generated
  */
 public interface SymbolTableEntryInternal extends SymbolTableEntry {
+
+	/**
+	 * Returns the value of the '<em><b>Import Specifier</b></em>' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * In case a namespace import is added programmatically by a transformation, then we do not have a
+	 * {@link ModuleNamespaceVirtualType} we can use as original target, so we use a {@code SymbolTableEntryInternal}.
+	 * In such a case, this references points to the corresponding {@link NamespaceImportSpecifier}.
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Import Specifier</em>' reference.
+	 * @see #setImportSpecifier(NamespaceImportSpecifier)
+	 * @see org.eclipse.n4js.transpiler.im.ImPackage#getSymbolTableEntryInternal_ImportSpecifier()
+	 * @model
+	 * @generated
+	 */
+	NamespaceImportSpecifier getImportSpecifier();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal#getImportSpecifier <em>Import Specifier</em>}' reference.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Import Specifier</em>' reference.
+	 * @see #getImportSpecifier()
+	 * @generated
+	 */
+	void setImportSpecifier(NamespaceImportSpecifier value);
 } // SymbolTableEntryInternal
