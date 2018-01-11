@@ -199,7 +199,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 					Assumption ass = assIter.next();
 
 					if (ass.isActive()) {
-						boolean callPerformed = callHoldOnDataflowOnAliases(ass, ae, lhs, lSymbol, rSymbol);
+						boolean callPerformed = callHoldOnDataflowOnAliases(ass, ae, lSymbol, rSymbol);
 						if (!callPerformed) {
 							callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, lSymbol, rSymbol);
 						}
@@ -217,10 +217,10 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			return false;
 		}
 
-		private boolean callHoldOnDataflowOnAliases(Assumption ass, AssignmentExpression ae, Expression lhs,
-				Symbol lSymbol, Symbol rSymbol) {
+		private boolean callHoldOnDataflowOnAliases(Assumption ass, AssignmentExpression ae, Symbol lSymbol,
+				Symbol rSymbol) {
 
-			if (ass.aliases.contains(lhs)) {
+			if (ass.aliases.contains(lSymbol)) {
 				ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
 				return true;
 			}

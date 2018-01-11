@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,7 +42,8 @@ public class FlowEdge implements Comparable<FlowEdge> {
 
 	/** Constructor */
 	public FlowEdge(ControlFlowElement start, ControlFlowElement end, Set<ControlFlowType> cfTypes) {
-		assert start != null && end != null;
+		checkState(start != null && end != null);
+
 		this.start = start;
 		this.end = end;
 		this.cfTypes = Collections.unmodifiableSortedSet(Sets.newTreeSet(cfTypes));

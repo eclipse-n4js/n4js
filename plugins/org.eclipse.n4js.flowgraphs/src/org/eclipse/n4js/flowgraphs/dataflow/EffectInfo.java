@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
@@ -35,10 +37,8 @@ public class EffectInfo {
 
 	/** Constructor */
 	public EffectInfo(EffectType type, ControlFlowElement location, Symbol symbol) {
-		if (symbol == null) {
-			System.out.println(location);
-		}
-		assert symbol != null;
+		checkState(symbol != null);
+
 		this.type = type;
 		this.location = location;
 		this.symbol = symbol;

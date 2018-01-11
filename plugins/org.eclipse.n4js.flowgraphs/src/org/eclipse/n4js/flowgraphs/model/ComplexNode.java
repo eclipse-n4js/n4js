@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -90,7 +92,7 @@ public class ComplexNode implements ControlFlowable {
 
 		Node nNext = iter.next();
 		while (iter.hasNext()) {
-			assert nodeMap.values().contains(nNext) : "FlowGraph malformed: Node not child of complex node";
+			checkState(nodeMap.values().contains(nNext), "FlowGraph malformed: Node not child of complex node");
 
 			Node nLast = nNext;
 			nNext = iter.next();
@@ -98,7 +100,7 @@ public class ComplexNode implements ControlFlowable {
 			nNext.addInternalPredecessor(nLast, cfType);
 		}
 
-		assert nodeMap.values().contains(nNext) : "FlowGraph malformed: Node not child of complex node";
+		checkState(nodeMap.values().contains(nNext), "FlowGraph malformed: Node not child of complex node");
 	}
 
 	/** Adds a node to this {@link ComplexNode}. */
@@ -107,7 +109,8 @@ public class ComplexNode implements ControlFlowable {
 			return;
 		}
 		if (node instanceof RepresentingNode) {
-			assert represent == null : "FlowGraph malformed: Only one RepresentingNode can be added";
+			checkState(represent == null, "FlowGraph malformed: Only one RepresentingNode can be added");
+
 			represent = (RepresentingNode) node;
 		}
 		nodeMap.put(node.name, node);
@@ -121,28 +124,30 @@ public class ComplexNode implements ControlFlowable {
 
 	/** Checks invoked before a node from this instance is removed */
 	public void removeNodeChecks(Node node) {
-		// TODO in GH-235: change/consider to use if/throw instead
-		assert entry != node : "FlowGraph malformed: Node not child of complex node";
-		assert exit != node : "FlowGraph malformed: Node not child of complex node";
-		assert represent != node : "FlowGraph malformed: Node not child of complex node";
+		checkState(entry != node, "FlowGraph malformed: Node not child of complex node");
+		checkState(exit != node, "FlowGraph malformed: Node not child of complex node");
+		checkState(represent != node, "FlowGraph malformed: Node not child of complex node");
 	}
 
 	/** Sets the entry node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */
 	public void setEntryNode(Node entryNode) {
-		assert nodeMap.values().contains(entryNode) : "FlowGraph malformed: Node not child of complex node";
+		checkState(nodeMap.values().contains(entryNode), "FlowGraph malformed: Node not child of complex node");
+
 		this.entry = entryNode;
 	}
 
 	/** Sets the exit node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */
 	public void setExitNode(Node exitNode) {
-		assert nodeMap.values().contains(exitNode) : "FlowGraph malformed: Node not child of complex node";
+		checkState(nodeMap.values().contains(exitNode), "FlowGraph malformed: Node not child of complex node");
+
 		this.exit = exitNode;
 	}
 
 	/** Sets the jump node of this {@link ComplexNode}. Must have been added to this {@link ComplexNode} before. */
 	public void setJumpNode(Node jumpNode) {
-		assert nodeMap.values().contains(jumpNode) : "FlowGraph malformed: Node not child of complex node";
-		assert !jumpNode.jumpToken.isEmpty() : "Jump nodes must provide jump tokens";
+		checkState(nodeMap.values().contains(jumpNode), "FlowGraph malformed: Node not child of complex node");
+		checkState(!jumpNode.jumpToken.isEmpty(), "Jump nodes must provide jump tokens");
+
 		this.jump = jumpNode;
 	}
 

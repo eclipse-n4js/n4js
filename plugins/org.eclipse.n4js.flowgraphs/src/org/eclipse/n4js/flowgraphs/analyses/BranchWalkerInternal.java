@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -98,7 +100,7 @@ abstract public class BranchWalkerInternal {
 	}
 
 	private void initializeRest(GraphExplorerInternal explorer) {
-		assert (this.branchNumber == -1) : "Cannot initialize twice";
+		checkState(this.branchNumber == -1, "Cannot initialize twice");
 
 		this.branchNumber = explorer.getAndIncrementBranchCounter();
 		this.pathExplorer = explorer;

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -53,8 +55,9 @@ abstract public class Assumption {
 
 	/** Constructor */
 	public Assumption(ControlFlowElement cfe, Symbol symbol) {
-		assert cfe != null;
-		assert symbol != null;
+		checkState(cfe != null);
+		checkState(symbol != null);
+
 		this.key = getKey(cfe, symbol);
 		this.creationSite = cfe;
 		this.symbol = symbol;
@@ -89,7 +92,8 @@ abstract public class Assumption {
 	 *            the {@link Assumption} this {@link Assumption} will be merged with
 	 */
 	public void mergeWith(Assumption assumption) {
-		assert this.symbol == assumption.symbol;
+		checkState(this.symbol == assumption.symbol);
+
 		this.aliases.addAll(assumption.aliases);
 		this.failingStructuralAliases.addAll(assumption.failingStructuralAliases);
 		this.symbolForDeclaration.putAll(assumption.symbolForDeclaration);

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,8 +64,9 @@ public class AllNodesAndEdgesPrintVisitor extends GraphVisitor {
 
 	@Override
 	protected void terminateMode(TraverseDirection curMode, ControlFlowElement curContainer) {
-		assert allDeadNodesGV.size() == allDeadNodesBW.size();
-		assert allDeadNodesGV.containsAll(allDeadNodesBW);
+		checkState(allDeadNodesGV.size() == allDeadNodesBW.size());
+		checkState(allDeadNodesGV.containsAll(allDeadNodesBW));
+
 		allDeadNodesGV.clear();
 		allDeadNodesBW.clear();
 	}

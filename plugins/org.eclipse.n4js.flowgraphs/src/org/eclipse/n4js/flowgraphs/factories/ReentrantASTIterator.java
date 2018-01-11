@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.factories;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -58,7 +60,7 @@ public class ReentrantASTIterator {
 				if (mappedCFE != null && !cnMap.containsKey(mappedCFE)) {
 					ComplexNode cn = CFEFactoryDispatcher.build(this, mappedCFE);
 					if (cn != null) {
-						assert astPositionCounter - 1 == cn.getExit().astPosition : ASSERTION_MSG_AST_ORDER;
+						checkState(astPositionCounter - 1 == cn.getExit().astPosition, ASSERTION_MSG_AST_ORDER);
 
 						cfContainers.add(cn.getControlFlowContainer());
 						cnMap.put(mappedCFE, cn);
@@ -71,7 +73,8 @@ public class ReentrantASTIterator {
 				}
 			}
 		}
-		assert termNode == null : ASSERTION_MSG_AST_ORDER;
+
+		checkState(termNode == null, ASSERTION_MSG_AST_ORDER);
 	}
 
 	/** @return the current container */

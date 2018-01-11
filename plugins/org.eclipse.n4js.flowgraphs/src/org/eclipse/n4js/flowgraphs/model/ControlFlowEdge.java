@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.n4JS.FinallyBlock;
 
@@ -36,7 +38,8 @@ public class ControlFlowEdge extends AbstractEdge implements Comparable<ControlF
 	 */
 	public ControlFlowEdge(Node start, Node end, ControlFlowType cfType) {
 		super(start, end);
-		assert cfType.isBackwards() == (start.astPosition > end.astPosition) : "Edge has wrong direction";
+		checkState(cfType.isBackwards() == (start.astPosition > end.astPosition), "Edge has wrong direction");
+
 		this.finallyPathContext = null;
 		this.cfType = cfType;
 	}

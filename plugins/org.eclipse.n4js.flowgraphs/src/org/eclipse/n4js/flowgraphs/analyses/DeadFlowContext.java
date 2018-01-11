@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -125,7 +127,8 @@ abstract class DeadFlowContext {
 		}
 
 		private void setDeadCode(Node node) {
-			assert node.isVisited();
+			checkState(node.isVisited());
+
 			isDeadCode = node.isUnreachable();
 		}
 	}

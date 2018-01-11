@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Objects;
 
 /** Represents any kind of edges between two {@link Node}s. */
@@ -23,9 +25,10 @@ abstract public class AbstractEdge {
 
 	/** Constructor */
 	public AbstractEdge(Node start, Node end) {
-		assert (start != null) : "Start node must not be null";
-		assert (end != null) : "End node must not be null";
-		assert (start != end) : "Edge must not have same Start/End nodes";
+		checkState(start != null, "Start node must not be null");
+		checkState(end != null, "End node must not be null");
+		checkState(start != end, "Edge must not have same Start/End nodes");
+
 		this.start = start;
 		this.end = end;
 		this.cachedHash = Objects.hash(start, end);

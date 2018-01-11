@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.model;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -113,7 +115,8 @@ abstract public class Node implements ControlFlowable {
 	 * Adds an internal successor with the given edge type to this node. It used when the control flow graph is created.
 	 */
 	public void addInternalSuccessor(Node node, ControlFlowType cfType) {
-		assert node != this : "Self loops are not allowed";
+		checkState(node != this, "Self loops are not allowed");
+
 		EdgeDescription sed = new EdgeDescription(node, cfType);
 		internalSucc.put(sed.node, sed);
 	}
@@ -126,13 +129,13 @@ abstract public class Node implements ControlFlowable {
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addSuccessor(ControlFlowEdge cfEdge) {
 		boolean addSucceeded = succ.add(cfEdge);
-		assert addSucceeded : "Adding an edge should always be successful";
+		checkState(addSucceeded, "Adding an edge should always be successful");
 	}
 
 	/** Only called from {@link EdgeUtils}. Adds a successor edge. */
 	void addPredecessor(ControlFlowEdge cfEdge) {
 		boolean addSucceeded = pred.add(cfEdge);
-		assert addSucceeded : "Adding an edge should always be successful";
+		checkState(addSucceeded, "Adding an edge should always be successful");
 	}
 
 	/** @return set of all internal predecessors. */

@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analyses;
 
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -90,7 +92,7 @@ public class EdgeGuideWorklist {
 	 * @return the {@link EdgeGuideMerged} that is the merge result of the given {@link EdgeGuide}s
 	 */
 	EdgeGuideMerged mergeJoinGroup(List<EdgeGuide> joinGuideGroup) {
-		assert !joinGuideGroup.isEmpty();
+		checkState(!joinGuideGroup.isEmpty());
 
 		EdgeGuideMerged remainingEdgeGuide = new EdgeGuideMerged(joinGuideGroup);
 		for (EdgeGuide eg : joinGuideGroup) {
