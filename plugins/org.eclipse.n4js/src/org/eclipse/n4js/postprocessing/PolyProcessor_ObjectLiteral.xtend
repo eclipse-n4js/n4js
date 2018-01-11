@@ -79,6 +79,7 @@ package class PolyProcessor_ObjectLiteral extends AbstractPolyProcessor {
 		val haveUsableExpectedType = expectedTypeRef !== null
 				&& (expectedTypeRef.useSiteStructuralTyping || expectedTypeRef.defSiteStructuralTyping); // FIXME reconsider
 		val quickMode = !haveUsableExpectedType && !TypeUtils.isInferenceVariable(expectedTypeRef);
+		//val quickMode = false;
 
 		val List<TStructMember> tMembers = newArrayList;
 		// in standard mode: the following list will contain pairs from property assignments to inference variables

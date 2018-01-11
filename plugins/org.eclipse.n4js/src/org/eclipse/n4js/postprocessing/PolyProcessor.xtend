@@ -20,6 +20,7 @@ import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.ForStatement
 import org.eclipse.n4js.n4JS.FormalParameter
 import org.eclipse.n4js.n4JS.FunctionExpression
 import org.eclipse.n4js.n4JS.ObjectLiteral
@@ -31,7 +32,10 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.ts.typeRefs.TypeArgument
 import org.eclipse.n4js.ts.typeRefs.TypeRef
+import org.eclipse.n4js.ts.types.TStructMember
 import org.eclipse.n4js.ts.types.TypableElement
+import org.eclipse.n4js.ts.types.TypesFactory
+import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
@@ -43,7 +47,6 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.ForStatement
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -74,7 +77,6 @@ package class PolyProcessor extends AbstractPolyProcessor {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
-
 
 	// ################################################################################################################
 
@@ -165,10 +167,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		var expectedTypeRef = if (!rootPoly.isProblematicCaseOfExpectedType) {
 				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
 			};
-
-		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
-		val typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
-		
+		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
 		var rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
 			DestructNode.unify(rootPoly.eContainer as VariableBinding)
 		} else if (rootPoly.eContainer instanceof AssignmentExpression) {
@@ -180,10 +179,14 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			null
 		};
 
-		// In case of destructure pattern, add constraint type <: expected type
 		if (rootDestructNode !== null) {
 			expectedTypeRef = calculateExpectedTypeDestructurePattern(rootDestructNode, G)
 		}
+
+		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
+		val typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
+
+
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {
@@ -200,52 +203,127 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	}
 
 	/** Calculate expected type of a destructure pattern based on its structure */
-	def TypeRef calculateExpectedTypeDestructurePattern(DestructNode destructNode, RuleEnvironment G) {
-		var typeArgs = new ArrayList<TypeArgument>();
+	def TypeRef calculateExpectedTypeDestructurePattern2(DestructNode destructNode, RuleEnvironment G) {
+		val typeArgs = new ArrayList<TypeArgument>();
+		val members = new ArrayList<TStructMember>();
 		val elemCount = destructNode.nestedNodes.size
+		val isDestructNodeObjectLiteral = destructNode.isDestructureNodeObjectLiteral
 		for (nestedNode : destructNode.nestedNodes) {
-			val varDecl = nestedNode.varDecl
-			val varRef = nestedNode.varRef
-			if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
+			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
 				// Recursively calculate the expected type of the nested child
-				val elemExpectedType =  calculateExpectedTypeDestructurePattern(nestedNode, G)
-				typeArgs.add(elemExpectedType)
+				calculateExpectedTypeDestructurePattern2(nestedNode, G)
 			} else {
-				// If it is a variable declaration, simply retrieve the declared type
-				if (varDecl !== null) {
-					var declaredTypeRef = varDecl.declaredTypeRef;
-					if (declaredTypeRef !== null) {
-						typeArgs.add(declaredTypeRef);
-					} else {
-						typeArgs.add(G.topTypeRef)
-					}
-				} else if (varRef !== null) {
-					// It is a variable reference, retrieve the declared type of the variable
-					val varTypeRef = if (varRef.id instanceof VariableDeclaration) {
-						(varRef.id as VariableDeclaration).declaredTypeRef
-					} else {
-						null
-					}
-					if (varTypeRef !== null) {
-						typeArgs.add(varTypeRef);
-					} else {
-						typeArgs.add(G.topTypeRef)
-					}
-				}
+				// Extract type of leaf node
+				nestedNode.createTypeFromLeafDestructNode(G)
+			}
+
+			if (nestedNode.propName !== null) {
+				// We are dealing with object literals
+				val field = TypesFactory.eINSTANCE.createTStructField
+				field.name = nestedNode.propName;
+				field.typeRef = elemExpectedType
+				members.add(field)
+			} else {
+				// We are dealing with array literals
+				typeArgs.add(elemExpectedType)
 			}
 		}
-		var retTypeRef = if (elemCount == 1) {
-			 G.arrayTypeRef(typeArgs.get(0))
-		} else if (elemCount > 1){
-			G.iterableNTypeRef(elemCount, typeArgs);
+
+		var retTypeRef = if (isDestructNodeObjectLiteral) {
+			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, members)
 		} else {
-			null
+			if (elemCount == 1) {
+				 G.arrayTypeRef(typeArgs.get(0))
+			} else if (elemCount > 1){
+				G.iterableNTypeRef(elemCount, typeArgs);
+			} else {
+				null
+			}
 		}
-		// Wrap the expected type in an Array in case of ForStatement
-		if (destructNode.astElement.eContainer instanceof ForStatement) {
+
+		// Wrap the expected type in an Array type in case of ForStatement
+		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
 			retTypeRef = G.arrayTypeRef(retTypeRef)
 		}
 		return retTypeRef;
+	}
+
+	/** Calculate expected type of a destructure pattern based on its structure */
+	def TypeRef calculateExpectedTypeDestructurePattern(DestructNode destructNode, RuleEnvironment G) {
+		val typeArgs = new ArrayList<TypeArgument>();
+		val members = new ArrayList<TStructMember>();
+		val elemCount = destructNode.nestedNodes.size
+		val isDestructNodeObjectLiteral = destructNode.isDestructureNodeObjectLiteral
+		for (nestedNode : destructNode.nestedNodes) {
+			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
+				// Recursively calculate the expected type of the nested child
+				calculateExpectedTypeDestructurePattern(nestedNode, G)
+			} else {
+				// Extract type of leaf node
+				nestedNode.createTypeFromLeafDestructNode(G)
+			}
+
+			if (nestedNode.propName !== null) {
+				// We are dealing with object literals
+				val field = TypesFactory.eINSTANCE.createTStructField
+				field.name = nestedNode.propName;
+				field.typeRef = elemExpectedType
+				members.add(field)
+			} else {
+				// We are dealing with array literals
+				typeArgs.add(elemExpectedType)
+			}
+		}
+
+		var retTypeRef = if (isDestructNodeObjectLiteral) {
+			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, members)
+		} else {
+			if (elemCount == 1) {
+				 G.arrayTypeRef(typeArgs.get(0))
+			} else if (elemCount > 1){
+				G.iterableNTypeRef(elemCount, typeArgs);
+			} else {
+				null
+			}
+		}
+
+		// Wrap the expected type in an Array type in case of ForStatement
+		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
+			retTypeRef = G.arrayTypeRef(retTypeRef)
+		}
+		return retTypeRef;
+	}
+
+	private def isDestructureNodeObjectLiteral(DestructNode destructNode) {
+		return (destructNode.astElement instanceof ObjectLiteral) || (destructNode.propName !== null)
+	}
+
+	/** Create expected type for a leaf DestructNode */
+	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
+		val varDecl = leafNode.varDecl
+		val varRef = leafNode.varRef
+		var TypeRef type = null
+		if (varDecl !== null) {
+			// If it is a variable declaration, simply retrieve the declared type
+			var declaredTypeRef = varDecl.declaredTypeRef;
+			type = if (declaredTypeRef !== null) {
+				declaredTypeRef
+			} else {
+				G.topTypeRef
+			}
+		} else if (varRef !== null) {
+			// It is a variable reference, retrieve the declared type of the variable
+			val varTypeRef = if (varRef.id instanceof VariableDeclaration) {
+				(varRef.id as VariableDeclaration).declaredTypeRef
+			} else {
+				null
+			}
+			type = if (varTypeRef !== null) {
+				varTypeRef;
+			} else {
+				G.topTypeRef
+			}
+		}
 	}
 
 	/**
