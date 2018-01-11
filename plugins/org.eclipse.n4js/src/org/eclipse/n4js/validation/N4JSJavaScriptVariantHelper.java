@@ -38,6 +38,7 @@ public class N4JSJavaScriptVariantHelper extends BaseJavaScriptVariantHelper {
 		this.addEntry(EXT_N4JSD, VARIANT_NAME, "N4JS Definition Files (n4jsd)");
 		this.addEntry(EXT_N4JSX, VARIANT_NAME, "N4JSX");
 		this.addEntry(EXT_JSX, VARIANT_NAME, "JSX");
+		this.addEntry(EXT_JS, VARIANT_NAME, "JavaScript");
 		this.addEntry(EXT_N4IDL, VARIANT_NAME, "N4JS Interface Definition Language Files (n4idl)");
 		this.addEntry(EXT_IDL, VARIANT_NAME, "Interface Definition Language Files (idl)");
 

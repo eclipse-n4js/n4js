@@ -205,7 +205,7 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	/**
 	 * Variant allows for top-level statements in modules.
 	 */
-	public static final ValidationFeature<Boolean> TOP_LEVEL_STATEMENTS = new ValidationFeature<>(false);
+	public static final ValidationFeature<Boolean> TOP_LEVEL_STATEMENTS = new ValidationFeature<>(true);
 
 	/**
 	 * This class encapsulates a pair of file extension and validation feature and should serve as keys for
