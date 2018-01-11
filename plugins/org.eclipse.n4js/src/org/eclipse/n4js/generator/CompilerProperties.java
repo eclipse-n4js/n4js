@@ -35,21 +35,6 @@ public enum CompilerProperties implements IComponentProperties<CompilerDescripto
 		}
 	},
 
-	/** true, if the compiler, represented by this properties, should run */
-	IS_ABORTING_ON_MF_ERRORS("abortOnMfErrors", "Abort build on errors in manifest", Boolean.class, true, true) {
-
-		@Override
-		public void setValueInCompilerDescriptor(CompilerDescriptor compilerDescriptor, String outputName,
-				Object value) {
-			compilerDescriptor.setActive((Boolean) value);
-		}
-
-		@Override
-		public Object getValueInCompilerDescriptor(CompilerDescriptor compilerDescriptor, String outputName) {
-			return compilerDescriptor.isActive();
-		}
-	},
-
 	/** the file extension to use for the compiled file */
 	COMPILED_FILE_EXTENSION("compiledFileExtension", "Extension to use for compiled file", String.class, true, false) {
 		@Override

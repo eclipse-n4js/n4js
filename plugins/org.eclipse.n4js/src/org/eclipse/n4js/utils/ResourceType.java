@@ -71,7 +71,6 @@ public enum ResourceType {
 		return getResourceType(resource.getURI());
 	}
 
-	// todo
 	/**
 	 */
 	public static ResourceType getResourceType(IResource resource) {
@@ -125,7 +124,6 @@ public enum ResourceType {
 		return naiveGetResourceType(uri.fileExtension());
 	}
 
-	// todo
 	/**
 	 * Tries to determine file resource type based on {@code URI} file extension. Does not check if data is valid. Does
 	 * not handle nested extension. Internal use only.

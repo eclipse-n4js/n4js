@@ -12,23 +12,14 @@ package org.eclipse.n4js.ui.building;
 
 import static org.eclipse.n4js.ui.internal.N4JSActivator.ORG_ECLIPSE_N4JS_N4JS;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IMarker;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.SubMonitor;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.ui.building.BuilderStateLogger.BuilderState;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.ui.internal.ProjectDescriptionLoadListener;
-import org.eclipse.n4js.ui.preferences.N4JSBuilderPreferenceAccess;
-import org.eclipse.n4js.utils.ResourceType;
 import org.eclipse.xtext.builder.IXtextBuilderParticipant.BuildType;
 import org.eclipse.xtext.builder.debug.IBuildLogger;
 import org.eclipse.xtext.builder.impl.ToBeBuilt;
@@ -82,25 +73,7 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 		try {
 			updateProjectReferencesIfNecessary();
 			N4JSBuildTypeTracker.setBuildType(getProject(), type);
-
-			SubMonitor sm = SubMonitor.convert(monitor, 100);
-			SubMonitor monitorMF = sm.newChild(1);
-			SubMonitor monitorPJ = sm.newChild(99);
-			super.doBuild(getManifestTBB(toBeBuilt), monitorMF, type);
-			List<String> errMsgsInManifest = getErrorMsgsInManifest();
-			if (errMsgsInManifest.isEmpty() || !isAbortBuildOnMfErrors()) {
-				// Only build the project if the manifest file is error free OR if setting is disabled
-				super.doBuild(toBeBuilt, monitorPJ, type);
-			} else {
-				String completeLogMsg = "\n";
-				completeLogMsg += "Errors in Manifest. Project is not built.\n";
-				completeLogMsg += "Manifest errors:\n";
-				for (String errMsg : errMsgsInManifest) {
-					completeLogMsg += errMsg + "\n";
-				}
-				LOGGER.warn(completeLogMsg);
-			}
-
+			super.doBuild(toBeBuilt, monitor, type);
 			getProject().touch(monitor);
 		} catch (OperationCanceledException e) {
 			throw e;
@@ -117,44 +90,5 @@ public class N4JSBuildTypeTrackingBuilder extends XtextBuilder {
 				.getInjector(ORG_ECLIPSE_N4JS_N4JS)
 				.getInstance(ProjectDescriptionLoadListener.class);
 		loadListener.updateProjectReferencesIfNecessary(getProject());
-	}
-
-	// question to reviewer: could we use for this and similar methods some extra class somewhere?
-	private boolean isAbortBuildOnMfErrors() {
-		final N4JSBuilderPreferenceAccess prefAcc = N4JSActivator.getInstance()
-				.getInjector(ORG_ECLIPSE_N4JS_N4JS)
-				.getInstance(N4JSBuilderPreferenceAccess.class);
-		return prefAcc.isAbortBuildOnMfErrors(getProject());
-	}
-
-	private ToBeBuilt getManifestTBB(ToBeBuilt toBeBuilt) {
-		ToBeBuilt manifestTBB = new ToBeBuilt();
-		for (URI uri : toBeBuilt.getToBeDeleted()) {
-			ResourceType rType = ResourceType.getResourceType(uri);
-			if (rType == ResourceType.N4MF) {
-				manifestTBB.getToBeDeleted().add(uri);
-			}
-		}
-		for (URI uri : toBeBuilt.getToBeUpdated()) {
-			ResourceType rType = ResourceType.getResourceType(uri);
-			if (rType == ResourceType.N4MF) {
-				manifestTBB.getToBeUpdated().add(uri);
-			}
-		}
-		return manifestTBB;
-	}
-
-	private List<String> getErrorMsgsInManifest() throws CoreException {
-		List<String> errMsgs = new LinkedList<>();
-		IMarker[] markersInManifests = getProject().findMarkers(null, true, IResource.DEPTH_ONE);
-		for (IMarker marker : markersInManifests) {
-			Integer severityType = (Integer) marker.getAttribute(IMarker.SEVERITY);
-			ResourceType rType = ResourceType.getResourceType(marker.getResource());
-			if (rType == ResourceType.N4MF && severityType.intValue() == IMarker.SEVERITY_ERROR) {
-				String msg = (String) marker.getAttribute(IMarker.MESSAGE);
-				errMsgs.add(msg);
-			}
-		}
-		return errMsgs;
 	}
 }
