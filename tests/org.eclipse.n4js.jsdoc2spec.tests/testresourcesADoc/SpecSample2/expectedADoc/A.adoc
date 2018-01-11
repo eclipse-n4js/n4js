@@ -25,6 +25,7 @@ include::{find}config.adoc[]
 === ++Method bar++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:src/A:A#bar++[``++public bar(n: number): string++``]
 
 ==== Description
@@ -33,12 +34,9 @@ spec for method A.bar from source code
 
 ==== Semantics
 
-++Bar basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testBarBasics++[Test]
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testBarBasics++[Test]#)
 
-
-
-++Only in a++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testOnlyInA++[Test]
-
+. *++Only in a++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testOnlyInA++[Test]#)
 
 == Class B
 
@@ -52,4 +50,5 @@ Inherited from
 
 ==== Semantics
 
-++Bar basics++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testBarBasics++[Test]
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testBarBasics++[Test]#)
+
