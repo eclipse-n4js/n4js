@@ -203,57 +203,10 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	}
 
 	/** Calculate expected type of a destructure pattern based on its structure */
-	def TypeRef calculateExpectedTypeDestructurePattern2(DestructNode destructNode, RuleEnvironment G) {
-		val typeArgs = new ArrayList<TypeArgument>();
-		val members = new ArrayList<TStructMember>();
-		val elemCount = destructNode.nestedNodes.size
-		val isDestructNodeObjectLiteral = destructNode.isDestructureNodeObjectLiteral
-		for (nestedNode : destructNode.nestedNodes) {
-			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
-				// Recursively calculate the expected type of the nested child
-				calculateExpectedTypeDestructurePattern2(nestedNode, G)
-			} else {
-				// Extract type of leaf node
-				nestedNode.createTypeFromLeafDestructNode(G)
-			}
-
-			if (nestedNode.propName !== null) {
-				// We are dealing with object literals
-				val field = TypesFactory.eINSTANCE.createTStructField
-				field.name = nestedNode.propName;
-				field.typeRef = elemExpectedType
-				members.add(field)
-			} else {
-				// We are dealing with array literals
-				typeArgs.add(elemExpectedType)
-			}
-		}
-
-		var retTypeRef = if (isDestructNodeObjectLiteral) {
-			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, members)
-		} else {
-			if (elemCount == 1) {
-				 G.arrayTypeRef(typeArgs.get(0))
-			} else if (elemCount > 1){
-				G.iterableNTypeRef(elemCount, typeArgs);
-			} else {
-				null
-			}
-		}
-
-		// Wrap the expected type in an Array type in case of ForStatement
-		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
-			retTypeRef = G.arrayTypeRef(retTypeRef)
-		}
-		return retTypeRef;
-	}
-
-	/** Calculate expected type of a destructure pattern based on its structure */
 	def TypeRef calculateExpectedTypeDestructurePattern(DestructNode destructNode, RuleEnvironment G) {
 		val typeArgs = new ArrayList<TypeArgument>();
 		val members = new ArrayList<TStructMember>();
 		val elemCount = destructNode.nestedNodes.size
-		val isDestructNodeObjectLiteral = destructNode.isDestructureNodeObjectLiteral
 		for (nestedNode : destructNode.nestedNodes) {
 			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
 				// Recursively calculate the expected type of the nested child
@@ -275,9 +228,9 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			}
 		}
 
-		var retTypeRef = if (isDestructNodeObjectLiteral) {
+		var retTypeRef = if (members.size > 0) {
 			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, members)
-		} else {
+		} else if (typeArgs.size > 0) {
 			if (elemCount == 1) {
 				 G.arrayTypeRef(typeArgs.get(0))
 			} else if (elemCount > 1){
@@ -285,6 +238,8 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			} else {
 				null
 			}
+		} else {
+			throw new IllegalStateException("members and typeArgs can not both contain elements at the same time.")
 		}
 
 		// Wrap the expected type in an Array type in case of ForStatement
@@ -294,36 +249,28 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		return retTypeRef;
 	}
 
-	private def isDestructureNodeObjectLiteral(DestructNode destructNode) {
-		return (destructNode.astElement instanceof ObjectLiteral) || (destructNode.propName !== null)
-	}
-
 	/** Create expected type for a leaf DestructNode */
 	private def createTypeFromLeafDestructNode(DestructNode leafNode, RuleEnvironment G) {
 		val varDecl = leafNode.varDecl
 		val varRef = leafNode.varRef
-		var TypeRef type = null
 		if (varDecl !== null) {
 			// If it is a variable declaration, simply retrieve the declared type
 			var declaredTypeRef = varDecl.declaredTypeRef;
-			type = if (declaredTypeRef !== null) {
-				declaredTypeRef
+			if (declaredTypeRef !== null) {
+				return declaredTypeRef
 			} else {
-				G.topTypeRef
+				return G.topTypeRef
 			}
 		} else if (varRef !== null) {
 			// It is a variable reference, retrieve the declared type of the variable
-			val varTypeRef = if (varRef.id instanceof VariableDeclaration) {
-				(varRef.id as VariableDeclaration).declaredTypeRef
-			} else {
-				null
-			}
-			type = if (varTypeRef !== null) {
-				varTypeRef;
+			if (varRef.id instanceof VariableDeclaration) {
+				return (varRef.id as VariableDeclaration).declaredTypeRef
 			} else {
 				G.topTypeRef
 			}
 		}
+
+		return G.topTypeRef
 	}
 
 	/**

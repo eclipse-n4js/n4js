@@ -72,3 +72,11 @@ let x11 : int, y11: int;
 // XPECT noerrors
 let x12 : int, y12: int;
 ({prop1: {prop3: x12},  prop2: y12} = {prop1: {prop3: undefined}, prop2: 1});
+
+// Case 13: ObjectLiteral nested in ArrayLiteral
+// XPECT noerrors
+var [,{v21 : u21: int,v22,v23},] = [,{v21:undefined,v22:0,v23:2},];
+
+// Case 14: ArrayLiteral nested in ObjectLiteral
+// XPECT noerrors
+var {v3:[v31 : int,v32,v33]} = {v3:[undefined,0,2]};
