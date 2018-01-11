@@ -105,14 +105,19 @@ public class MigrationTransformation extends Transformation {
 			throw new IllegalStateException("Encountered non-IM TypeRef instance during transpilation.");
 		}
 
-		return TranspilerBuilderBlocks
-				._ExprStmnt(TranspilerBuilderBlocks
-						._AssignmentExpr(
-								TranspilerBuilderBlocks._PropertyAccessExpr(
-										TranspilerBuilderBlocks._IdentRef(
-												((ParameterizedTypeRef_IM) migratedType).getDeclaredType_IM()),
-										getSymbolTableEntryInternal("$migrate" + (isUpgrade ? "Up" : "Down"), true)),
-								migrationFunction));
+		return TranspilerBuilderBlocks._ExprStmnt(
+				TranspilerBuilderBlocks._CallExpr(TranspilerBuilderBlocks._PropertyAccessExpr(
+						TranspilerBuilderBlocks._IdentRef(getSymbolTableEntryInternal("Object", true)),
+						getSymbolTableEntryInternal("defineProperty", true)),
+						// constructor STE
+						TranspilerBuilderBlocks._IdentRef(
+								((ParameterizedTypeRef_IM) migratedType).getDeclaredType_IM()),
+						// property name
+						TranspilerBuilderBlocks._StringLiteral("$migrate" + (isUpgrade ? "Up" : "Down")),
+						TranspilerBuilderBlocks
+								._ObjLit(TranspilerBuilderBlocks._PropertyNameValuePair("value", migrationFunction),
+										TranspilerBuilderBlocks._PropertyNameValuePair("writable",
+												TranspilerBuilderBlocks._BooleanLiteral(false)))));
 	}
 
 	private FunctionExpression createMigrationFunctionDeclaration(MigrationDeclaration migrationDeclaration) {

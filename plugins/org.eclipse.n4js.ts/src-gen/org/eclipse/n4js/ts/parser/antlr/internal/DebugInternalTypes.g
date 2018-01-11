@@ -1286,6 +1286,8 @@ ruleN4Keyword:
 		'public'
 		    |
 		'out'
+		    |
+		'migration'
 	)
 ;
 

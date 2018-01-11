@@ -3153,7 +3153,9 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'implements' | 'interface'
 	//	| 'private' | 'protected' | 'public' // package not used in N4JS
 	//	// definition-site variance
-	//	| 'out';
+	//	| 'out'
+	//	// N4IDL specific keywords
+	//	| 'migration';
 	public TypeExpressionsGrammarAccess.N4KeywordElements getN4KeywordAccess() {
 		return gaTypeExpressions.getN4KeywordAccess();
 	}

@@ -82,7 +82,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cImportDeclarationParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
 		private final RuleCall cExportDeclarationParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
 		private final RuleCall cRootStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cMigrationDeclarationParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
 		
 		///*
 		// * The top level elements in a script are type declarations, exports, imports or statements
@@ -91,12 +90,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//	| N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> | N4EnumDeclaration<Yield=false> |
 		//	ImportDeclaration
 		//	| ExportDeclaration
-		//	| RootStatement<Yield=false> | MigrationDeclaration;
+		//	| RootStatement<Yield=false>;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//AnnotatedScriptElement | N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> |
-		//N4EnumDeclaration<Yield=false> | ImportDeclaration | ExportDeclaration | RootStatement<Yield=false> |
-		//MigrationDeclaration
+		//N4EnumDeclaration<Yield=false> | ImportDeclaration | ExportDeclaration | RootStatement<Yield=false>
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//AnnotatedScriptElement
@@ -119,9 +117,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//RootStatement<Yield=false>
 		public RuleCall getRootStatementParserRuleCall_6() { return cRootStatementParserRuleCall_6; }
-		
-		//MigrationDeclaration
-		public RuleCall getMigrationDeclarationParserRuleCall_7() { return cMigrationDeclarationParserRuleCall_7; }
 	}
 	public class AnnotatedScriptElementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.AnnotatedScriptElement");
@@ -2160,35 +2155,37 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cBlockParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cFunctionDeclarationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cVariableStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cEmptyStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cLabelledStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cExpressionStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cIfStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cIterationStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cContinueStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cBreakStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cReturnStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cWithStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cSwitchStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		private final RuleCall cThrowStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
-		private final RuleCall cTryStatementParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
-		private final RuleCall cDebuggerStatementParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
+		private final RuleCall cMigrationDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cVariableStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cEmptyStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cLabelledStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cExpressionStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cIfStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cIterationStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cContinueStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cBreakStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cReturnStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cWithStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cSwitchStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cThrowStatementParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cTryStatementParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
+		private final RuleCall cDebuggerStatementParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.4 Statements (p. 222)
 		//// ****************************************************************************************************
 		//RootStatement <Yield Statement:
-		//	Block<Yield> | FunctionDeclaration<Yield> | VariableStatement<In=true,Yield> | EmptyStatement
+		//	Block<Yield> | FunctionDeclaration<Yield> | -> MigrationDeclaration
+		//	| VariableStatement<In=true,Yield> | EmptyStatement
 		//	| LabelledStatement<Yield> | ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> |
 		//	ContinueStatement<Yield> | BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> |
 		//	SwitchStatement<Yield> | ThrowStatement<Yield> | TryStatement<Yield> | DebuggerStatement;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//Block<Yield> | FunctionDeclaration<Yield> | VariableStatement<In=true,Yield> | EmptyStatement | LabelledStatement<Yield>
-		//| ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> | ContinueStatement<Yield> |
-		//BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> | SwitchStatement<Yield> | ThrowStatement<Yield>
-		//| TryStatement<Yield> | DebuggerStatement
+		//Block<Yield> | FunctionDeclaration<Yield> | -> MigrationDeclaration | VariableStatement<In=true,Yield> | EmptyStatement
+		//| LabelledStatement<Yield> | ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> |
+		//ContinueStatement<Yield> | BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> |
+		//SwitchStatement<Yield> | ThrowStatement<Yield> | TryStatement<Yield> | DebuggerStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//Block<Yield>
@@ -2197,47 +2194,50 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//FunctionDeclaration<Yield>
 		public RuleCall getFunctionDeclarationParserRuleCall_1() { return cFunctionDeclarationParserRuleCall_1; }
 		
+		//-> MigrationDeclaration
+		public RuleCall getMigrationDeclarationParserRuleCall_2() { return cMigrationDeclarationParserRuleCall_2; }
+		
 		//VariableStatement<In=true,Yield>
-		public RuleCall getVariableStatementParserRuleCall_2() { return cVariableStatementParserRuleCall_2; }
+		public RuleCall getVariableStatementParserRuleCall_3() { return cVariableStatementParserRuleCall_3; }
 		
 		//EmptyStatement
-		public RuleCall getEmptyStatementParserRuleCall_3() { return cEmptyStatementParserRuleCall_3; }
+		public RuleCall getEmptyStatementParserRuleCall_4() { return cEmptyStatementParserRuleCall_4; }
 		
 		//LabelledStatement<Yield>
-		public RuleCall getLabelledStatementParserRuleCall_4() { return cLabelledStatementParserRuleCall_4; }
+		public RuleCall getLabelledStatementParserRuleCall_5() { return cLabelledStatementParserRuleCall_5; }
 		
 		//ExpressionStatement<Yield>
-		public RuleCall getExpressionStatementParserRuleCall_5() { return cExpressionStatementParserRuleCall_5; }
+		public RuleCall getExpressionStatementParserRuleCall_6() { return cExpressionStatementParserRuleCall_6; }
 		
 		//IfStatement<Yield>
-		public RuleCall getIfStatementParserRuleCall_6() { return cIfStatementParserRuleCall_6; }
+		public RuleCall getIfStatementParserRuleCall_7() { return cIfStatementParserRuleCall_7; }
 		
 		//IterationStatement<Yield>
-		public RuleCall getIterationStatementParserRuleCall_7() { return cIterationStatementParserRuleCall_7; }
+		public RuleCall getIterationStatementParserRuleCall_8() { return cIterationStatementParserRuleCall_8; }
 		
 		//ContinueStatement<Yield>
-		public RuleCall getContinueStatementParserRuleCall_8() { return cContinueStatementParserRuleCall_8; }
+		public RuleCall getContinueStatementParserRuleCall_9() { return cContinueStatementParserRuleCall_9; }
 		
 		//BreakStatement<Yield>
-		public RuleCall getBreakStatementParserRuleCall_9() { return cBreakStatementParserRuleCall_9; }
+		public RuleCall getBreakStatementParserRuleCall_10() { return cBreakStatementParserRuleCall_10; }
 		
 		//ReturnStatement<Yield>
-		public RuleCall getReturnStatementParserRuleCall_10() { return cReturnStatementParserRuleCall_10; }
+		public RuleCall getReturnStatementParserRuleCall_11() { return cReturnStatementParserRuleCall_11; }
 		
 		//WithStatement<Yield>
-		public RuleCall getWithStatementParserRuleCall_11() { return cWithStatementParserRuleCall_11; }
+		public RuleCall getWithStatementParserRuleCall_12() { return cWithStatementParserRuleCall_12; }
 		
 		//SwitchStatement<Yield>
-		public RuleCall getSwitchStatementParserRuleCall_12() { return cSwitchStatementParserRuleCall_12; }
+		public RuleCall getSwitchStatementParserRuleCall_13() { return cSwitchStatementParserRuleCall_13; }
 		
 		//ThrowStatement<Yield>
-		public RuleCall getThrowStatementParserRuleCall_13() { return cThrowStatementParserRuleCall_13; }
+		public RuleCall getThrowStatementParserRuleCall_14() { return cThrowStatementParserRuleCall_14; }
 		
 		//TryStatement<Yield>
-		public RuleCall getTryStatementParserRuleCall_14() { return cTryStatementParserRuleCall_14; }
+		public RuleCall getTryStatementParserRuleCall_15() { return cTryStatementParserRuleCall_15; }
 		
 		//DebuggerStatement
-		public RuleCall getDebuggerStatementParserRuleCall_15() { return cDebuggerStatementParserRuleCall_15; }
+		public RuleCall getDebuggerStatementParserRuleCall_16() { return cDebuggerStatementParserRuleCall_16; }
 	}
 	public class StatementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Statement");
@@ -4029,11 +4029,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//IdentifierRef <Yield>:
 		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
-		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest;
+		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest;
 		@Override public ParserRule getRule() { return rule; }
 		
 		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
-		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
+		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//id=[types::IdentifiableElement|BindingIdentifier<Yield>]
@@ -4045,7 +4045,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield>
 		public RuleCall getIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1() { return cIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1; }
 		
-		//{VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
+		//{VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//{VersionedIdentifierRef}
@@ -4060,7 +4060,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield>
 		public RuleCall getIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1() { return cIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1; }
 		
-		//VersionRequest
+		//-> VersionRequest
 		public RuleCall getVersionRequestParserRuleCall_1_2() { return cVersionRequestParserRuleCall_1_2; }
 	}
 	public class SuperLiteralElements extends AbstractParserRuleElementFinder {
@@ -10726,7 +10726,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| N4ClassDeclaration<Yield=false> | N4InterfaceDeclaration<Yield=false> | N4EnumDeclaration<Yield=false> |
 	//	ImportDeclaration
 	//	| ExportDeclaration
-	//	| RootStatement<Yield=false> | MigrationDeclaration;
+	//	| RootStatement<Yield=false>;
 	public ScriptElementElements getScriptElementAccess() {
 		return pScriptElement;
 	}
@@ -11186,7 +11186,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//// [ECM11] A.4 Statements (p. 222)
 	//// ****************************************************************************************************
 	//RootStatement <Yield Statement:
-	//	Block<Yield> | FunctionDeclaration<Yield> | VariableStatement<In=true,Yield> | EmptyStatement
+	//	Block<Yield> | FunctionDeclaration<Yield> | -> MigrationDeclaration
+	//	| VariableStatement<In=true,Yield> | EmptyStatement
 	//	| LabelledStatement<Yield> | ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> |
 	//	ContinueStatement<Yield> | BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> |
 	//	SwitchStatement<Yield> | ThrowStatement<Yield> | TryStatement<Yield> | DebuggerStatement;
@@ -11632,7 +11633,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	//IdentifierRef <Yield>:
 	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
-	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest;
+	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest;
 	public IdentifierRefElements getIdentifierRefAccess() {
 		return pIdentifierRef;
 	}
@@ -14009,7 +14010,9 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'implements' | 'interface'
 	//	| 'private' | 'protected' | 'public' // package not used in N4JS
 	//	// definition-site variance
-	//	| 'out';
+	//	| 'out'
+	//	// N4IDL specific keywords
+	//	| 'migration';
 	public TypeExpressionsGrammarAccess.N4KeywordElements getN4KeywordAccess() {
 		return gaTypeExpressions.getN4KeywordAccess();
 	}

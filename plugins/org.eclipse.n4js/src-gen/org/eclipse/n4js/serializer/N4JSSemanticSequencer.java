@@ -10516,6 +10516,10 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	/**
 	 * Contexts:
 	 *     ScriptElement returns MigrationDeclaration
+	 *     RootStatement<Yield> returns MigrationDeclaration
+	 *     RootStatement returns MigrationDeclaration
+	 *     Statement<Yield> returns MigrationDeclaration
+	 *     Statement returns MigrationDeclaration
 	 *     MigrationDeclaration returns MigrationDeclaration
 	 *
 	 * Constraint:

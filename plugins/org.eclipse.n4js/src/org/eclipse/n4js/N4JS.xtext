@@ -59,7 +59,6 @@ ScriptElement:
 	| ImportDeclaration
 	| ExportDeclaration
 	| RootStatement<Yield=false>
-	| MigrationDeclaration
 ;
 
 
@@ -352,6 +351,7 @@ RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
+	| -> MigrationDeclaration
 	| VariableStatement<In=true,Yield>
 	| EmptyStatement
 	| LabelledStatement<Yield>
@@ -588,7 +588,7 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
-	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
+	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';

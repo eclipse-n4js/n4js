@@ -2055,6 +2055,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		private final Keyword cProtectedKeyword_22 = (Keyword)cAlternatives.eContents().get(22);
 		private final Keyword cPublicKeyword_23 = (Keyword)cAlternatives.eContents().get(23);
 		private final Keyword cOutKeyword_24 = (Keyword)cAlternatives.eContents().get(24);
+		private final Keyword cMigrationKeyword_25 = (Keyword)cAlternatives.eContents().get(25);
 		
 		//N4Keyword:
 		//	'get' | 'set'
@@ -2072,7 +2073,9 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//	| 'implements' | 'interface'
 		//	| 'private' | 'protected' | 'public' // package not used in N4JS
 		//	// definition-site variance
-		//	| 'out';
+		//	| 'out'
+		//	// N4IDL specific keywords
+		//	| 'migration';
 		@Override public ParserRule getRule() { return rule; }
 		
 		//'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target'
@@ -2081,7 +2084,8 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		//| 'async' // future reserved keywords in [ECM15], restricted via static semantic in [ECM15]
 		//| 'implements' | 'interface' | 'private' | 'protected' | 'public' // package not used in N4JS
 		//// definition-site variance
-		//| 'out'
+		//| 'out' // N4IDL specific keywords
+		//| 'migration'
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//'get'
@@ -2158,6 +2162,9 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		
 		//'out'
 		public Keyword getOutKeyword_24() { return cOutKeyword_24; }
+		
+		//'migration'
+		public Keyword getMigrationKeyword_25() { return cMigrationKeyword_25; }
 	}
 	
 	
@@ -2888,7 +2895,9 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'implements' | 'interface'
 	//	| 'private' | 'protected' | 'public' // package not used in N4JS
 	//	// definition-site variance
-	//	| 'out';
+	//	| 'out'
+	//	// N4IDL specific keywords
+	//	| 'migration';
 	public N4KeywordElements getN4KeywordAccess() {
 		return pN4Keyword;
 	}

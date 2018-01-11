@@ -183,8 +183,6 @@ ruleScriptElement
 	ExportDeclarationParserRuleCall_5=ruleExportDeclaration{ announce($ExportDeclarationParserRuleCall_5.start, $ExportDeclarationParserRuleCall_5.stop, grammarAccess.getScriptElementAccess().getExportDeclarationParserRuleCall_5()); }
 	    |
 	RootStatementParserRuleCall_6=ruleRootStatement{ announce($RootStatementParserRuleCall_6.start, $RootStatementParserRuleCall_6.stop, grammarAccess.getScriptElementAccess().getRootStatementParserRuleCall_6()); }
-	    |
-	MigrationDeclarationParserRuleCall_7=ruleMigrationDeclaration{ announce($MigrationDeclarationParserRuleCall_7.start, $MigrationDeclarationParserRuleCall_7.stop, grammarAccess.getScriptElementAccess().getMigrationDeclarationParserRuleCall_7()); }
 )
 ;
 
@@ -2850,6 +2848,12 @@ ruleRootStatement
 	)
 	    |
 	(
+		(Migration
+		)=>
+		MigrationDeclarationParserRuleCall_2=ruleMigrationDeclaration{ announce($MigrationDeclarationParserRuleCall_2.start, $MigrationDeclarationParserRuleCall_2.stop, grammarAccess.getRootStatementAccess().getMigrationDeclarationParserRuleCall_2()); }
+	)
+	    |
+	(
 		((
 			(
 				(
@@ -2858,10 +2862,10 @@ ruleRootStatement
 			)
 		)
 		)=>
-		VariableStatementParserRuleCall_2=norm1_VariableStatement{ announce($VariableStatementParserRuleCall_2.start, $VariableStatementParserRuleCall_2.stop, grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_2()); }
+		VariableStatementParserRuleCall_3=norm1_VariableStatement{ announce($VariableStatementParserRuleCall_3.start, $VariableStatementParserRuleCall_3.stop, grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_3()); }
 	)
 	    |
-	EmptyStatementParserRuleCall_3=ruleEmptyStatement{ announce($EmptyStatementParserRuleCall_3.start, $EmptyStatementParserRuleCall_3.stop, grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_3()); }
+	EmptyStatementParserRuleCall_4=ruleEmptyStatement{ announce($EmptyStatementParserRuleCall_4.start, $EmptyStatementParserRuleCall_4.stop, grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_4()); }
 	    |
 	(
 		((
@@ -2873,30 +2877,30 @@ ruleRootStatement
 			Colon
 		)
 		)=>
-		LabelledStatementParserRuleCall_4=ruleLabelledStatement{ announce($LabelledStatementParserRuleCall_4.start, $LabelledStatementParserRuleCall_4.stop, grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_4()); }
+		LabelledStatementParserRuleCall_5=ruleLabelledStatement{ announce($LabelledStatementParserRuleCall_5.start, $LabelledStatementParserRuleCall_5.stop, grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_5()); }
 	)
 	    |
-	ExpressionStatementParserRuleCall_5=ruleExpressionStatement{ announce($ExpressionStatementParserRuleCall_5.start, $ExpressionStatementParserRuleCall_5.stop, grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_5()); }
+	ExpressionStatementParserRuleCall_6=ruleExpressionStatement{ announce($ExpressionStatementParserRuleCall_6.start, $ExpressionStatementParserRuleCall_6.stop, grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_6()); }
 	    |
-	IfStatementParserRuleCall_6=ruleIfStatement{ announce($IfStatementParserRuleCall_6.start, $IfStatementParserRuleCall_6.stop, grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_6()); }
+	IfStatementParserRuleCall_7=ruleIfStatement{ announce($IfStatementParserRuleCall_7.start, $IfStatementParserRuleCall_7.stop, grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_7()); }
 	    |
-	IterationStatementParserRuleCall_7=ruleIterationStatement{ announce($IterationStatementParserRuleCall_7.start, $IterationStatementParserRuleCall_7.stop, grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_7()); }
+	IterationStatementParserRuleCall_8=ruleIterationStatement{ announce($IterationStatementParserRuleCall_8.start, $IterationStatementParserRuleCall_8.stop, grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_8()); }
 	    |
-	ContinueStatementParserRuleCall_8=ruleContinueStatement{ announce($ContinueStatementParserRuleCall_8.start, $ContinueStatementParserRuleCall_8.stop, grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_8()); }
+	ContinueStatementParserRuleCall_9=ruleContinueStatement{ announce($ContinueStatementParserRuleCall_9.start, $ContinueStatementParserRuleCall_9.stop, grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_9()); }
 	    |
-	BreakStatementParserRuleCall_9=ruleBreakStatement{ announce($BreakStatementParserRuleCall_9.start, $BreakStatementParserRuleCall_9.stop, grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_9()); }
+	BreakStatementParserRuleCall_10=ruleBreakStatement{ announce($BreakStatementParserRuleCall_10.start, $BreakStatementParserRuleCall_10.stop, grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_10()); }
 	    |
-	ReturnStatementParserRuleCall_10=ruleReturnStatement{ announce($ReturnStatementParserRuleCall_10.start, $ReturnStatementParserRuleCall_10.stop, grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_10()); }
+	ReturnStatementParserRuleCall_11=ruleReturnStatement{ announce($ReturnStatementParserRuleCall_11.start, $ReturnStatementParserRuleCall_11.stop, grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_11()); }
 	    |
-	WithStatementParserRuleCall_11=ruleWithStatement{ announce($WithStatementParserRuleCall_11.start, $WithStatementParserRuleCall_11.stop, grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_11()); }
+	WithStatementParserRuleCall_12=ruleWithStatement{ announce($WithStatementParserRuleCall_12.start, $WithStatementParserRuleCall_12.stop, grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_12()); }
 	    |
-	SwitchStatementParserRuleCall_12=ruleSwitchStatement{ announce($SwitchStatementParserRuleCall_12.start, $SwitchStatementParserRuleCall_12.stop, grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_12()); }
+	SwitchStatementParserRuleCall_13=ruleSwitchStatement{ announce($SwitchStatementParserRuleCall_13.start, $SwitchStatementParserRuleCall_13.stop, grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_13()); }
 	    |
-	ThrowStatementParserRuleCall_13=ruleThrowStatement{ announce($ThrowStatementParserRuleCall_13.start, $ThrowStatementParserRuleCall_13.stop, grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_13()); }
+	ThrowStatementParserRuleCall_14=ruleThrowStatement{ announce($ThrowStatementParserRuleCall_14.start, $ThrowStatementParserRuleCall_14.stop, grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_14()); }
 	    |
-	TryStatementParserRuleCall_14=ruleTryStatement{ announce($TryStatementParserRuleCall_14.start, $TryStatementParserRuleCall_14.stop, grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_14()); }
+	TryStatementParserRuleCall_15=ruleTryStatement{ announce($TryStatementParserRuleCall_15.start, $TryStatementParserRuleCall_15.stop, grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_15()); }
 	    |
-	DebuggerStatementParserRuleCall_15=ruleDebuggerStatement{ announce($DebuggerStatementParserRuleCall_15.start, $DebuggerStatementParserRuleCall_15.stop, grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_15()); }
+	DebuggerStatementParserRuleCall_16=ruleDebuggerStatement{ announce($DebuggerStatementParserRuleCall_16.start, $DebuggerStatementParserRuleCall_16.stop, grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_16()); }
 )
 ;
 
@@ -2929,6 +2933,12 @@ norm1_RootStatement
 	)
 	    |
 	(
+		(Migration
+		)=>
+		MigrationDeclarationParserRuleCall_2=ruleMigrationDeclaration{ announce($MigrationDeclarationParserRuleCall_2.start, $MigrationDeclarationParserRuleCall_2.stop, grammarAccess.getRootStatementAccess().getMigrationDeclarationParserRuleCall_2()); }
+	)
+	    |
+	(
 		((
 			(
 				(
@@ -2937,10 +2947,10 @@ norm1_RootStatement
 			)
 		)
 		)=>
-		VariableStatementParserRuleCall_2=norm3_VariableStatement{ announce($VariableStatementParserRuleCall_2.start, $VariableStatementParserRuleCall_2.stop, grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_2()); }
+		VariableStatementParserRuleCall_3=norm3_VariableStatement{ announce($VariableStatementParserRuleCall_3.start, $VariableStatementParserRuleCall_3.stop, grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_3()); }
 	)
 	    |
-	EmptyStatementParserRuleCall_3=ruleEmptyStatement{ announce($EmptyStatementParserRuleCall_3.start, $EmptyStatementParserRuleCall_3.stop, grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_3()); }
+	EmptyStatementParserRuleCall_4=ruleEmptyStatement{ announce($EmptyStatementParserRuleCall_4.start, $EmptyStatementParserRuleCall_4.stop, grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_4()); }
 	    |
 	(
 		((
@@ -2952,30 +2962,30 @@ norm1_RootStatement
 			Colon
 		)
 		)=>
-		LabelledStatementParserRuleCall_4=norm1_LabelledStatement{ announce($LabelledStatementParserRuleCall_4.start, $LabelledStatementParserRuleCall_4.stop, grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_4()); }
+		LabelledStatementParserRuleCall_5=norm1_LabelledStatement{ announce($LabelledStatementParserRuleCall_5.start, $LabelledStatementParserRuleCall_5.stop, grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_5()); }
 	)
 	    |
-	ExpressionStatementParserRuleCall_5=norm1_ExpressionStatement{ announce($ExpressionStatementParserRuleCall_5.start, $ExpressionStatementParserRuleCall_5.stop, grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_5()); }
+	ExpressionStatementParserRuleCall_6=norm1_ExpressionStatement{ announce($ExpressionStatementParserRuleCall_6.start, $ExpressionStatementParserRuleCall_6.stop, grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_6()); }
 	    |
-	IfStatementParserRuleCall_6=norm1_IfStatement{ announce($IfStatementParserRuleCall_6.start, $IfStatementParserRuleCall_6.stop, grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_6()); }
+	IfStatementParserRuleCall_7=norm1_IfStatement{ announce($IfStatementParserRuleCall_7.start, $IfStatementParserRuleCall_7.stop, grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_7()); }
 	    |
-	IterationStatementParserRuleCall_7=norm1_IterationStatement{ announce($IterationStatementParserRuleCall_7.start, $IterationStatementParserRuleCall_7.stop, grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_7()); }
+	IterationStatementParserRuleCall_8=norm1_IterationStatement{ announce($IterationStatementParserRuleCall_8.start, $IterationStatementParserRuleCall_8.stop, grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_8()); }
 	    |
-	ContinueStatementParserRuleCall_8=norm1_ContinueStatement{ announce($ContinueStatementParserRuleCall_8.start, $ContinueStatementParserRuleCall_8.stop, grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_8()); }
+	ContinueStatementParserRuleCall_9=norm1_ContinueStatement{ announce($ContinueStatementParserRuleCall_9.start, $ContinueStatementParserRuleCall_9.stop, grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_9()); }
 	    |
-	BreakStatementParserRuleCall_9=norm1_BreakStatement{ announce($BreakStatementParserRuleCall_9.start, $BreakStatementParserRuleCall_9.stop, grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_9()); }
+	BreakStatementParserRuleCall_10=norm1_BreakStatement{ announce($BreakStatementParserRuleCall_10.start, $BreakStatementParserRuleCall_10.stop, grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_10()); }
 	    |
-	ReturnStatementParserRuleCall_10=norm1_ReturnStatement{ announce($ReturnStatementParserRuleCall_10.start, $ReturnStatementParserRuleCall_10.stop, grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_10()); }
+	ReturnStatementParserRuleCall_11=norm1_ReturnStatement{ announce($ReturnStatementParserRuleCall_11.start, $ReturnStatementParserRuleCall_11.stop, grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_11()); }
 	    |
-	WithStatementParserRuleCall_11=norm1_WithStatement{ announce($WithStatementParserRuleCall_11.start, $WithStatementParserRuleCall_11.stop, grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_11()); }
+	WithStatementParserRuleCall_12=norm1_WithStatement{ announce($WithStatementParserRuleCall_12.start, $WithStatementParserRuleCall_12.stop, grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_12()); }
 	    |
-	SwitchStatementParserRuleCall_12=norm1_SwitchStatement{ announce($SwitchStatementParserRuleCall_12.start, $SwitchStatementParserRuleCall_12.stop, grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_12()); }
+	SwitchStatementParserRuleCall_13=norm1_SwitchStatement{ announce($SwitchStatementParserRuleCall_13.start, $SwitchStatementParserRuleCall_13.stop, grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_13()); }
 	    |
-	ThrowStatementParserRuleCall_13=norm1_ThrowStatement{ announce($ThrowStatementParserRuleCall_13.start, $ThrowStatementParserRuleCall_13.stop, grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_13()); }
+	ThrowStatementParserRuleCall_14=norm1_ThrowStatement{ announce($ThrowStatementParserRuleCall_14.start, $ThrowStatementParserRuleCall_14.stop, grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_14()); }
 	    |
-	TryStatementParserRuleCall_14=norm1_TryStatement{ announce($TryStatementParserRuleCall_14.start, $TryStatementParserRuleCall_14.stop, grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_14()); }
+	TryStatementParserRuleCall_15=norm1_TryStatement{ announce($TryStatementParserRuleCall_15.start, $TryStatementParserRuleCall_15.stop, grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_15()); }
 	    |
-	DebuggerStatementParserRuleCall_15=ruleDebuggerStatement{ announce($DebuggerStatementParserRuleCall_15.start, $DebuggerStatementParserRuleCall_15.stop, grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_15()); }
+	DebuggerStatementParserRuleCall_16=ruleDebuggerStatement{ announce($DebuggerStatementParserRuleCall_16.start, $DebuggerStatementParserRuleCall_16.stop, grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_16()); }
 )
 ;
 
@@ -4681,6 +4691,8 @@ ruleForStatement
 									    |
 									Out
 									    |
+									Migration
+									    |
 									New
 									    |
 									This_1
@@ -4805,6 +4817,7 @@ ruleForStatement
 									Protected | 
 									Public | 
 									Out | 
+									Migration | 
 									New | 
 									This_1 | 
 									Super | 
@@ -5190,6 +5203,8 @@ norm1_ForStatement
 									    |
 									Out
 									    |
+									Migration
+									    |
 									Yield
 									    |
 									New
@@ -5315,6 +5330,7 @@ norm1_ForStatement
 									Protected | 
 									Public | 
 									Out | 
+									Migration | 
 									Yield | 
 									New | 
 									This_1 | 
@@ -6779,7 +6795,11 @@ ruleIdentifierRef
 				}
 			)
 		)
-		VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
+		(
+			(NumberSign
+			)=>
+			VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
+		)
 	)
 )
 ;
@@ -6806,7 +6826,11 @@ norm1_IdentifierRef
 				}
 			)
 		)
-		VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
+		(
+			(NumberSign
+			)=>
+			VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
+		)
 	)
 )
 ;
@@ -7330,6 +7354,8 @@ rulePropertyAssignment
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -7560,6 +7586,8 @@ norm1_PropertyAssignment
 				Public
 				    |
 				Out
+				    |
+				Migration
 				    |
 				LeftSquareBracket
 				    |
@@ -7836,6 +7864,8 @@ ruleAnnotatedPropertyAssignment
 						    |
 						Out
 						    |
+						Migration
+						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -7922,6 +7952,7 @@ ruleAnnotatedPropertyAssignment
 						Protected | 
 						Public | 
 						Out | 
+						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -8304,6 +8335,8 @@ norm1_AnnotatedPropertyAssignment
 						    |
 						Out
 						    |
+						Migration
+						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -8390,6 +8423,7 @@ norm1_AnnotatedPropertyAssignment
 						Protected | 
 						Public | 
 						Out | 
+						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -9191,6 +9225,8 @@ rulePropertySetterDeclaration
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -9277,6 +9313,7 @@ rulePropertySetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -9458,6 +9495,8 @@ norm1_PropertySetterDeclaration
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -9544,6 +9583,7 @@ norm1_PropertySetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -10790,6 +10830,8 @@ ruleRelationalExpression
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LessThanSign
 				    |
 				True
@@ -10894,6 +10936,7 @@ ruleRelationalExpression
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -11000,6 +11043,8 @@ norm1_RelationalExpression
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LessThanSign
 				    |
 				True
@@ -11104,6 +11149,7 @@ norm1_RelationalExpression
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -11208,6 +11254,8 @@ norm2_RelationalExpression
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LessThanSign
 				    |
 				True
@@ -11311,6 +11359,7 @@ norm2_RelationalExpression
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -11415,6 +11464,8 @@ norm3_RelationalExpression
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LessThanSign
 				    |
 				True
@@ -11518,6 +11569,7 @@ norm3_RelationalExpression
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -13309,6 +13361,7 @@ ruleYieldExpression
 		Protected | 
 		Public | 
 		Out | 
+		Migration | 
 		Yield | 
 		New | 
 		This_1 | 
@@ -13392,6 +13445,7 @@ norm1_YieldExpression
 		Protected | 
 		Public | 
 		Out | 
+		Migration | 
 		Yield | 
 		New | 
 		This_1 | 
@@ -15660,6 +15714,8 @@ ruleN4MemberDeclaration
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -15883,6 +15939,8 @@ norm1_N4MemberDeclaration
 				Public
 				    |
 				Out
+				    |
+				Migration
 				    |
 				LeftSquareBracket
 				    |
@@ -16140,6 +16198,8 @@ ruleAnnotatedN4MemberDeclaration
 						    |
 						Out
 						    |
+						Migration
+						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -16231,6 +16291,7 @@ ruleAnnotatedN4MemberDeclaration
 						Protected | 
 						Public | 
 						Out | 
+						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -16574,6 +16635,8 @@ norm1_AnnotatedN4MemberDeclaration
 						    |
 						Out
 						    |
+						Migration
+						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -16665,6 +16728,7 @@ norm1_AnnotatedN4MemberDeclaration
 						Protected | 
 						Public | 
 						Out | 
+						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -17471,6 +17535,7 @@ ruleGetterHeader
 		Protected | 
 		Public | 
 		Out | 
+		Migration | 
 		LeftSquareBracket | 
 		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 		(
@@ -17577,6 +17642,7 @@ norm1_GetterHeader
 		Protected | 
 		Public | 
 		Out | 
+		Migration | 
 		LeftSquareBracket | 
 		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 		(
@@ -17751,6 +17817,8 @@ ruleN4SetterDeclaration
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -17842,6 +17910,7 @@ ruleN4SetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -18034,6 +18103,8 @@ norm1_N4SetterDeclaration
 				    |
 				Out
 				    |
+				Migration
+				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -18125,6 +18196,7 @@ norm1_N4SetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
+				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -21078,6 +21150,10 @@ ruleN4Keyword
 	    |
 	OutKeyword_24=Out {
 		announce($OutKeyword_24, grammarAccess.getN4KeywordAccess().getOutKeyword_24());
+	}
+	    |
+	MigrationKeyword_25=Migration {
+		announce($MigrationKeyword_25, grammarAccess.getN4KeywordAccess().getMigrationKeyword_25());
 	}
 )
 ;

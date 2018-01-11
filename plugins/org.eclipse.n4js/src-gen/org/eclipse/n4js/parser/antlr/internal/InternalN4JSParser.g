@@ -296,15 +296,6 @@ ruleScriptElement returns [EObject current=null]
 			$current = $this_RootStatement_6.current;
 			afterParserOrEnumRuleCall();
 		}
-		    |
-		{
-			newCompositeNode(grammarAccess.getScriptElementAccess().getMigrationDeclarationParserRuleCall_7());
-		}
-		this_MigrationDeclaration_7=ruleMigrationDeclaration
-		{
-			$current = $this_MigrationDeclaration_7.current;
-			afterParserOrEnumRuleCall();
-		}
 	)
 ;
 
@@ -5834,6 +5825,18 @@ ruleRootStatement returns [EObject current=null]
 		)
 		    |
 		(
+			(Migration)=>
+			{
+				newCompositeNode(grammarAccess.getRootStatementAccess().getMigrationDeclarationParserRuleCall_2());
+			}
+			this_MigrationDeclaration_2=ruleMigrationDeclaration
+			{
+				$current = $this_MigrationDeclaration_2.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
+		    |
+		(
 			((
 				(
 				)
@@ -5845,21 +5848,21 @@ ruleRootStatement returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_2());
+				newCompositeNode(grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_3());
 			}
-			this_VariableStatement_2=norm1_VariableStatement
+			this_VariableStatement_3=norm1_VariableStatement
 			{
-				$current = $this_VariableStatement_2.current;
+				$current = $this_VariableStatement_3.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_3());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_4());
 		}
-		this_EmptyStatement_3=ruleEmptyStatement
+		this_EmptyStatement_4=ruleEmptyStatement
 		{
-			$current = $this_EmptyStatement_3.current;
+			$current = $this_EmptyStatement_4.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -5874,111 +5877,111 @@ ruleRootStatement returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_4());
+				newCompositeNode(grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_5());
 			}
-			this_LabelledStatement_4=ruleLabelledStatement
+			this_LabelledStatement_5=ruleLabelledStatement
 			{
-				$current = $this_LabelledStatement_4.current;
+				$current = $this_LabelledStatement_5.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_5());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_6());
 		}
-		this_ExpressionStatement_5=ruleExpressionStatement
+		this_ExpressionStatement_6=ruleExpressionStatement
 		{
-			$current = $this_ExpressionStatement_5.current;
+			$current = $this_ExpressionStatement_6.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_6());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_7());
 		}
-		this_IfStatement_6=ruleIfStatement
+		this_IfStatement_7=ruleIfStatement
 		{
-			$current = $this_IfStatement_6.current;
+			$current = $this_IfStatement_7.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_7());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_8());
 		}
-		this_IterationStatement_7=ruleIterationStatement
+		this_IterationStatement_8=ruleIterationStatement
 		{
-			$current = $this_IterationStatement_7.current;
+			$current = $this_IterationStatement_8.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_8());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_9());
 		}
-		this_ContinueStatement_8=ruleContinueStatement
+		this_ContinueStatement_9=ruleContinueStatement
 		{
-			$current = $this_ContinueStatement_8.current;
+			$current = $this_ContinueStatement_9.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_9());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_10());
 		}
-		this_BreakStatement_9=ruleBreakStatement
+		this_BreakStatement_10=ruleBreakStatement
 		{
-			$current = $this_BreakStatement_9.current;
+			$current = $this_BreakStatement_10.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_10());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_11());
 		}
-		this_ReturnStatement_10=ruleReturnStatement
+		this_ReturnStatement_11=ruleReturnStatement
 		{
-			$current = $this_ReturnStatement_10.current;
+			$current = $this_ReturnStatement_11.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_11());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_12());
 		}
-		this_WithStatement_11=ruleWithStatement
+		this_WithStatement_12=ruleWithStatement
 		{
-			$current = $this_WithStatement_11.current;
+			$current = $this_WithStatement_12.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_12());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_13());
 		}
-		this_SwitchStatement_12=ruleSwitchStatement
+		this_SwitchStatement_13=ruleSwitchStatement
 		{
-			$current = $this_SwitchStatement_12.current;
+			$current = $this_SwitchStatement_13.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_13());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_14());
 		}
-		this_ThrowStatement_13=ruleThrowStatement
+		this_ThrowStatement_14=ruleThrowStatement
 		{
-			$current = $this_ThrowStatement_13.current;
+			$current = $this_ThrowStatement_14.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_14());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_15());
 		}
-		this_TryStatement_14=ruleTryStatement
+		this_TryStatement_15=ruleTryStatement
 		{
-			$current = $this_TryStatement_14.current;
+			$current = $this_TryStatement_15.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_15());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_16());
 		}
-		this_DebuggerStatement_15=ruleDebuggerStatement
+		this_DebuggerStatement_16=ruleDebuggerStatement
 		{
-			$current = $this_DebuggerStatement_15.current;
+			$current = $this_DebuggerStatement_16.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -6035,6 +6038,18 @@ norm1_RootStatement returns [EObject current=null]
 		)
 		    |
 		(
+			(Migration)=>
+			{
+				newCompositeNode(grammarAccess.getRootStatementAccess().getMigrationDeclarationParserRuleCall_2());
+			}
+			this_MigrationDeclaration_2=ruleMigrationDeclaration
+			{
+				$current = $this_MigrationDeclaration_2.current;
+				afterParserOrEnumRuleCall();
+			}
+		)
+		    |
+		(
 			((
 				(
 				)
@@ -6046,21 +6061,21 @@ norm1_RootStatement returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_2());
+				newCompositeNode(grammarAccess.getRootStatementAccess().getVariableStatementParserRuleCall_3());
 			}
-			this_VariableStatement_2=norm3_VariableStatement
+			this_VariableStatement_3=norm3_VariableStatement
 			{
-				$current = $this_VariableStatement_2.current;
+				$current = $this_VariableStatement_3.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_3());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getEmptyStatementParserRuleCall_4());
 		}
-		this_EmptyStatement_3=ruleEmptyStatement
+		this_EmptyStatement_4=ruleEmptyStatement
 		{
-			$current = $this_EmptyStatement_3.current;
+			$current = $this_EmptyStatement_4.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
@@ -6075,111 +6090,111 @@ norm1_RootStatement returns [EObject current=null]
 			)
 			)=>
 			{
-				newCompositeNode(grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_4());
+				newCompositeNode(grammarAccess.getRootStatementAccess().getLabelledStatementParserRuleCall_5());
 			}
-			this_LabelledStatement_4=norm1_LabelledStatement
+			this_LabelledStatement_5=norm1_LabelledStatement
 			{
-				$current = $this_LabelledStatement_4.current;
+				$current = $this_LabelledStatement_5.current;
 				afterParserOrEnumRuleCall();
 			}
 		)
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_5());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getExpressionStatementParserRuleCall_6());
 		}
-		this_ExpressionStatement_5=norm1_ExpressionStatement
+		this_ExpressionStatement_6=norm1_ExpressionStatement
 		{
-			$current = $this_ExpressionStatement_5.current;
+			$current = $this_ExpressionStatement_6.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_6());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getIfStatementParserRuleCall_7());
 		}
-		this_IfStatement_6=norm1_IfStatement
+		this_IfStatement_7=norm1_IfStatement
 		{
-			$current = $this_IfStatement_6.current;
+			$current = $this_IfStatement_7.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_7());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getIterationStatementParserRuleCall_8());
 		}
-		this_IterationStatement_7=norm1_IterationStatement
+		this_IterationStatement_8=norm1_IterationStatement
 		{
-			$current = $this_IterationStatement_7.current;
+			$current = $this_IterationStatement_8.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_8());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getContinueStatementParserRuleCall_9());
 		}
-		this_ContinueStatement_8=norm1_ContinueStatement
+		this_ContinueStatement_9=norm1_ContinueStatement
 		{
-			$current = $this_ContinueStatement_8.current;
+			$current = $this_ContinueStatement_9.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_9());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getBreakStatementParserRuleCall_10());
 		}
-		this_BreakStatement_9=norm1_BreakStatement
+		this_BreakStatement_10=norm1_BreakStatement
 		{
-			$current = $this_BreakStatement_9.current;
+			$current = $this_BreakStatement_10.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_10());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getReturnStatementParserRuleCall_11());
 		}
-		this_ReturnStatement_10=norm1_ReturnStatement
+		this_ReturnStatement_11=norm1_ReturnStatement
 		{
-			$current = $this_ReturnStatement_10.current;
+			$current = $this_ReturnStatement_11.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_11());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getWithStatementParserRuleCall_12());
 		}
-		this_WithStatement_11=norm1_WithStatement
+		this_WithStatement_12=norm1_WithStatement
 		{
-			$current = $this_WithStatement_11.current;
+			$current = $this_WithStatement_12.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_12());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getSwitchStatementParserRuleCall_13());
 		}
-		this_SwitchStatement_12=norm1_SwitchStatement
+		this_SwitchStatement_13=norm1_SwitchStatement
 		{
-			$current = $this_SwitchStatement_12.current;
+			$current = $this_SwitchStatement_13.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_13());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getThrowStatementParserRuleCall_14());
 		}
-		this_ThrowStatement_13=norm1_ThrowStatement
+		this_ThrowStatement_14=norm1_ThrowStatement
 		{
-			$current = $this_ThrowStatement_13.current;
+			$current = $this_ThrowStatement_14.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_14());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getTryStatementParserRuleCall_15());
 		}
-		this_TryStatement_14=norm1_TryStatement
+		this_TryStatement_15=norm1_TryStatement
 		{
-			$current = $this_TryStatement_14.current;
+			$current = $this_TryStatement_15.current;
 			afterParserOrEnumRuleCall();
 		}
 		    |
 		{
-			newCompositeNode(grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_15());
+			newCompositeNode(grammarAccess.getRootStatementAccess().getDebuggerStatementParserRuleCall_16());
 		}
-		this_DebuggerStatement_15=ruleDebuggerStatement
+		this_DebuggerStatement_16=ruleDebuggerStatement
 		{
-			$current = $this_DebuggerStatement_15.current;
+			$current = $this_DebuggerStatement_16.current;
 			afterParserOrEnumRuleCall();
 		}
 	)
@@ -9435,6 +9450,8 @@ ruleForStatement returns [EObject current=null]
 										    |
 										Out
 										    |
+										Migration
+										    |
 										New
 										    |
 										This_1
@@ -9555,7 +9572,7 @@ ruleForStatement returns [EObject current=null]
 										)
 									)
 									(
-										(Await | CommercialAt | LeftParenthesis | Async | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+										(Await | CommercialAt | LeftParenthesis | Async | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Migration | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 										(
 											{
 												newCompositeNode(grammarAccess.getForStatementAccess().getExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_0_0_2_0());
@@ -10174,6 +10191,8 @@ norm1_ForStatement returns [EObject current=null]
 										    |
 										Out
 										    |
+										Migration
+										    |
 										Yield
 										    |
 										New
@@ -10296,7 +10315,7 @@ norm1_ForStatement returns [EObject current=null]
 										)
 									)
 									(
-										(Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+										(Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Migration | Yield | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 										(
 											{
 												newCompositeNode(grammarAccess.getForStatementAccess().getExpressionAssignmentExpressionParserRuleCall_3_1_0_0_1_0_0_2_0());
@@ -13159,17 +13178,20 @@ ruleIdentifierRef returns [EObject current=null]
 					}
 				)
 			)
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getIdentifierRefRule());
+			(
+				(NumberSign)=>
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getIdentifierRefRule());
+					}
+					newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
 				}
-				newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
-			}
-			this_VersionRequest_3=ruleVersionRequest[$current]
-			{
-				$current = $this_VersionRequest_3.current;
-				afterParserOrEnumRuleCall();
-			}
+				this_VersionRequest_3=ruleVersionRequest[$current]
+				{
+					$current = $this_VersionRequest_3.current;
+					afterParserOrEnumRuleCall();
+				}
+			)
 		)
 	)
 ;
@@ -13225,17 +13247,20 @@ norm1_IdentifierRef returns [EObject current=null]
 					}
 				)
 			)
-			{
-				if ($current==null) {
-					$current = createModelElement(grammarAccess.getIdentifierRefRule());
+			(
+				(NumberSign)=>
+				{
+					if ($current==null) {
+						$current = createModelElement(grammarAccess.getIdentifierRefRule());
+					}
+					newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
 				}
-				newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
-			}
-			this_VersionRequest_3=ruleVersionRequest[$current]
-			{
-				$current = $this_VersionRequest_3.current;
-				afterParserOrEnumRuleCall();
-			}
+				this_VersionRequest_3=ruleVersionRequest[$current]
+				{
+					$current = $this_VersionRequest_3.current;
+					afterParserOrEnumRuleCall();
+				}
+			)
 		)
 	)
 ;
@@ -14112,6 +14137,8 @@ rulePropertyAssignment returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LeftSquareBracket
 					    |
 					RULE_IDENTIFIER
@@ -14396,6 +14423,8 @@ norm1_PropertyAssignment returns [EObject current=null]
 					Public
 					    |
 					Out
+					    |
+					Migration
 					    |
 					LeftSquareBracket
 					    |
@@ -14787,6 +14816,8 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 							    |
 							Out
 							    |
+							Migration
+							    |
 							LeftSquareBracket
 							    |
 							RULE_IDENTIFIER
@@ -14818,7 +14849,7 @@ ruleAnnotatedPropertyAssignment returns [EObject current=null]
 							newLeafNode(otherlv_10, grammarAccess.getAnnotatedPropertyAssignmentAccess().getSetKeyword_1_2_0_0_1());
 						}
 						(
-							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 							(
 								{
 									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0());
@@ -15456,6 +15487,8 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 							    |
 							Out
 							    |
+							Migration
+							    |
 							LeftSquareBracket
 							    |
 							RULE_IDENTIFIER
@@ -15487,7 +15520,7 @@ norm1_AnnotatedPropertyAssignment returns [EObject current=null]
 							newLeafNode(otherlv_10, grammarAccess.getAnnotatedPropertyAssignmentAccess().getSetKeyword_1_2_0_0_1());
 						}
 						(
-							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 							(
 								{
 									newCompositeNode(grammarAccess.getAnnotatedPropertyAssignmentAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_2_0_0_2_0());
@@ -16894,6 +16927,8 @@ rulePropertySetterDeclaration returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LeftSquareBracket
 					    |
 					RULE_IDENTIFIER
@@ -16925,7 +16960,7 @@ rulePropertySetterDeclaration returns [EObject current=null]
 					newLeafNode(otherlv_1, grammarAccess.getPropertySetterDeclarationAccess().getSetKeyword_0_0_1());
 				}
 				(
-					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getPropertySetterDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0());
@@ -17155,6 +17190,8 @@ norm1_PropertySetterDeclaration returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LeftSquareBracket
 					    |
 					RULE_IDENTIFIER
@@ -17186,7 +17223,7 @@ norm1_PropertySetterDeclaration returns [EObject current=null]
 					newLeafNode(otherlv_1, grammarAccess.getPropertySetterDeclarationAccess().getSetKeyword_0_0_1());
 				}
 				(
-					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getPropertySetterDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_2_0());
@@ -19837,6 +19874,8 @@ ruleRelationalExpression returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LessThanSign
 					    |
 					True
@@ -19931,7 +19970,7 @@ ruleRelationalExpression returns [EObject current=null]
 					)
 				)
 				(
-					(New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+					(New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getRhsShiftExpressionParserRuleCall_1_0_2_0());
@@ -20041,6 +20080,8 @@ norm1_RelationalExpression returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LessThanSign
 					    |
 					True
@@ -20135,7 +20176,7 @@ norm1_RelationalExpression returns [EObject current=null]
 					)
 				)
 				(
-					(New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+					(New | This_1 | Super | Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getRhsShiftExpressionParserRuleCall_1_0_2_0());
@@ -20243,6 +20284,8 @@ norm2_RelationalExpression returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LessThanSign
 					    |
 					True
@@ -20337,7 +20380,7 @@ norm2_RelationalExpression returns [EObject current=null]
 					)
 				)
 				(
-					(New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+					(New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getRhsShiftExpressionParserRuleCall_1_0_2_0());
@@ -20445,6 +20488,8 @@ norm3_RelationalExpression returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LessThanSign
 					    |
 					True
@@ -20539,7 +20584,7 @@ norm3_RelationalExpression returns [EObject current=null]
 					)
 				)
 				(
-					(New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+					(New | This_1 | Super | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | LeftParenthesis | CommercialAt | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getRelationalExpressionAccess().getRhsShiftExpressionParserRuleCall_1_0_2_0());
@@ -23905,7 +23950,7 @@ ruleYieldExpression returns [EObject current=null]
 			)
 		)?
 		(
-			(Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			(Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Migration | Yield | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 			(
 				{
 					newCompositeNode(grammarAccess.getYieldExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_3_0());
@@ -23967,7 +24012,7 @@ norm1_YieldExpression returns [EObject current=null]
 			)
 		)?
 		(
-			(Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Yield | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
+			(Await | CommercialAt | LeftParenthesis | Async | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Implements | Interface | Private | Protected | Public | Out | Migration | Yield | New | This_1 | Super | LessThanSign | True | False | Null | Solidus | SolidusEqualsSign | LeftSquareBracket | LeftCurlyBracket | Function | Class | Delete | Void | Typeof | PlusSignPlusSign | HyphenMinusHyphenMinus | PlusSign | HyphenMinus | Tilde | ExclamationMark | RULE_IDENTIFIER | RULE_DOUBLE | RULE_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_HEAD)=>
 			(
 				{
 					newCompositeNode(grammarAccess.getYieldExpressionAccess().getExpressionAssignmentExpressionParserRuleCall_3_0());
@@ -28195,6 +28240,8 @@ ruleN4MemberDeclaration returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LeftSquareBracket
 					    |
 					RULE_IDENTIFIER
@@ -28470,6 +28517,8 @@ norm1_N4MemberDeclaration returns [EObject current=null]
 					Public
 					    |
 					Out
+					    |
+					Migration
 					    |
 					LeftSquareBracket
 					    |
@@ -28818,6 +28867,8 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 							    |
 							Out
 							    |
+							Migration
+							    |
 							LeftSquareBracket
 							    |
 							RULE_IDENTIFIER
@@ -28868,7 +28919,7 @@ ruleAnnotatedN4MemberDeclaration returns [EObject current=null]
 							newLeafNode(otherlv_8, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSetKeyword_1_1_0_0_2());
 						}
 						(
-							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 							(
 								{
 									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0());
@@ -29432,6 +29483,8 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 							    |
 							Out
 							    |
+							Migration
+							    |
 							LeftSquareBracket
 							    |
 							RULE_IDENTIFIER
@@ -29482,7 +29535,7 @@ norm1_AnnotatedN4MemberDeclaration returns [EObject current=null]
 							newLeafNode(otherlv_8, grammarAccess.getAnnotatedN4MemberDeclarationAccess().getSetKeyword_1_1_0_0_2());
 						}
 						(
-							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+							(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 							(
 								{
 									newCompositeNode(grammarAccess.getAnnotatedN4MemberDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_1_1_0_0_3_0());
@@ -31067,7 +31120,7 @@ ruleGetterHeader[EObject in_current]  returns [EObject current=in_current]
 			newLeafNode(otherlv_1, grammarAccess.getGetterHeaderAccess().getGetKeyword_1());
 		}
 		(
-			(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+			(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 			(
 				{
 					newCompositeNode(grammarAccess.getGetterHeaderAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0());
@@ -31152,7 +31205,7 @@ norm1_GetterHeader[EObject in_current]  returns [EObject current=in_current]
 			newLeafNode(otherlv_1, grammarAccess.getGetterHeaderAccess().getGetKeyword_1());
 		}
 		(
-			(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+			(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 			(
 				{
 					newCompositeNode(grammarAccess.getGetterHeaderAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_2_0());
@@ -31360,6 +31413,8 @@ ruleN4SetterDeclaration returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LeftSquareBracket
 					    |
 					RULE_IDENTIFIER
@@ -31410,7 +31465,7 @@ ruleN4SetterDeclaration returns [EObject current=null]
 					newLeafNode(otherlv_2, grammarAccess.getN4SetterDeclarationAccess().getSetKeyword_0_0_2());
 				}
 				(
-					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getN4SetterDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0());
@@ -31651,6 +31706,8 @@ norm1_N4SetterDeclaration returns [EObject current=null]
 					    |
 					Out
 					    |
+					Migration
+					    |
 					LeftSquareBracket
 					    |
 					RULE_IDENTIFIER
@@ -31701,7 +31758,7 @@ norm1_N4SetterDeclaration returns [EObject current=null]
 					newLeafNode(otherlv_2, grammarAccess.getN4SetterDeclarationAccess().getSetKeyword_0_0_2());
 				}
 				(
-					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
+					(Break | Case | Catch | Class | Const | Continue | Debugger | Default | Delete | Do | Else | Export | Extends | Finally | For | Function | If | Import | In | Instanceof | New | Return | Super | Switch | This_1 | Throw | Try | Typeof | Var | Void | While | With | Yield | Null | True | False | Enum | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | LeftSquareBracket | RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 					(
 						{
 							newCompositeNode(grammarAccess.getN4SetterDeclarationAccess().getDeclaredNameLiteralOrComputedPropertyNameParserRuleCall_0_0_3_0());
@@ -37194,6 +37251,12 @@ ruleN4Keyword returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 		{
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getN4KeywordAccess().getOutKeyword_24());
+		}
+		    |
+		kw=Migration
+		{
+			$current.merge(kw);
+			newLeafNode(kw, grammarAccess.getN4KeywordAccess().getMigrationKeyword_25());
 		}
 	)
 ;
