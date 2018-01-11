@@ -75,7 +75,6 @@ import org.eclipse.n4js.n4JS.LabelledStatement;
 import org.eclipse.n4js.n4JS.LegacyOctalIntLiteral;
 import org.eclipse.n4js.n4JS.LiteralAnnotationArgument;
 import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
-import org.eclipse.n4js.n4JS.MigrationDeclaration;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.N4ClassDeclaration;
 import org.eclipse.n4js.n4JS.N4ClassExpression;
@@ -657,9 +656,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 				return; 
 			case N4JSPackage.LITERAL_OR_COMPUTED_PROPERTY_NAME:
 				sequence_LiteralOrComputedPropertyName(context, (LiteralOrComputedPropertyName) semanticObject); 
-				return; 
-			case N4JSPackage.MIGRATION_DECLARATION:
-				sequence_FunctionBody_MigrationDeclaration(context, (MigrationDeclaration) semanticObject); 
 				return; 
 			case N4JSPackage.MULTIPLICATIVE_EXPRESSION:
 				sequence_MultiplicativeExpression(context, (MultiplicativeExpression) semanticObject); 
@@ -10509,23 +10505,6 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     )
 	 */
 	protected void sequence_ForStatement(ISerializationContext context, ForStatement semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Contexts:
-	 *     ScriptElement returns MigrationDeclaration
-	 *     RootStatement<Yield> returns MigrationDeclaration
-	 *     RootStatement returns MigrationDeclaration
-	 *     Statement<Yield> returns MigrationDeclaration
-	 *     Statement returns MigrationDeclaration
-	 *     MigrationDeclaration returns MigrationDeclaration
-	 *
-	 * Constraint:
-	 *     (fpars+=FormalParameter fpars+=FormalParameter* frets+=FormalParameter frets+=FormalParameter* body=Block?)
-	 */
-	protected void sequence_FunctionBody_MigrationDeclaration(ISerializationContext context, MigrationDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	

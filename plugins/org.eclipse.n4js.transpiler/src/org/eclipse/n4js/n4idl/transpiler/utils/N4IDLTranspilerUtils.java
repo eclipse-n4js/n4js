@@ -17,7 +17,7 @@ public class N4IDLTranspilerUtils {
 	 * Returns the plain name if the given identifiable isn't versioned.
 	 */
 	public static String getVersionedInternalName(NamedElement element) {
-		if (VersionUtils.isVersionable(element)) {
+		if (VersionUtils.isTVersionable(element)) {
 			return element.getName() + "$" + ((Versionable) element).getVersion();
 		} else if (VersionUtils.isVersioned(element)) {
 			return element.getName() + "$" + ((VersionedElement) element).getDeclaredVersion();
@@ -32,7 +32,7 @@ public class N4IDLTranspilerUtils {
 	 * Returns the plain name if the given identifiable isn't versioned.
 	 */
 	public static String getVersionedInternalName(IdentifiableElement element) {
-		if (VersionUtils.isVersionable(element)) {
+		if (VersionUtils.isTVersionable(element)) {
 			return element.getName() + "$" + ((Versionable) element).getVersion();
 		} else {
 			return element.getName();

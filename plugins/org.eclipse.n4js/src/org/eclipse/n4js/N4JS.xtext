@@ -351,7 +351,6 @@ RootStatement <Yield> returns Statement:
 	Block<Yield>
 	// Function declarations are modeled as statements to support legacy JS parsing
 	| FunctionDeclaration<Yield> // this is disambiguated by the predicate in FunctionDeclaration
-	| -> MigrationDeclaration
 	| VariableStatement<In=true,Yield>
 	| EmptyStatement
 	| LabelledStatement<Yield>
@@ -1545,15 +1544,6 @@ JSXPropertyAttribute:
  * Version declaration, used in type declarations and types refs of migration parameters and returns.
  */
 fragment VersionDeclaration*: '#' declaredVersion=INT;
-
-
-MigrationDeclaration:
-	'migration'
-	'(' fpars+=FormalParameter<false> (',' fpars+=FormalParameter<false>)* ')'
-	'->'
-	'(' frets+=FormalParameter<false> (',' frets+=FormalParameter<false>)* ')'
-	FunctionBody<false,false>
-;
 
 
 VersionedImportIdentifier returns VersionedNamedImportSpecifier:

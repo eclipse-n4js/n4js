@@ -53,7 +53,7 @@ public class N4JSEObjectDescription extends EObjectDescription {
 	 */
 	public static IEObjectDescription create(QualifiedName qualifiedName, EObject element,
 			Map<String, String> userData) {
-		if (VersionUtils.isVersionable(element)) {
+		if (VersionUtils.isTVersionable(element)) {
 			return new N4JSEObjectDescription(qualifiedName, (TVersionable) element, userData);
 		} else {
 			return EObjectDescription.create(qualifiedName, element, userData);

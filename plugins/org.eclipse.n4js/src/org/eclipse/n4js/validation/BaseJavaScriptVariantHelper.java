@@ -198,7 +198,8 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	public static final ValidationFeature<Boolean> MULTI_QN_SCOPE = new ValidationFeature<>(false);
 
 	/**
-	 * Variant allows for the declaration and reference of versioned types.
+	 * Variant allows for the declaration and reference of versioned types and the corresponding declaration of
+	 * migrations.
 	 */
 	public static final ValidationFeature<Boolean> VERSIONED_TYPES = new ValidationFeature<>(false);
 
@@ -644,7 +645,8 @@ public class BaseJavaScriptVariantHelper implements JavaScriptVariantHelper {
 	}
 
 	/**
-	 * Returns {@code true} if the script allows for the declaration and reference of versioned types.
+	 * Returns {@code true} if the script allows for the declaration and reference of versioned types as well as
+	 * corresponding migrations.
 	 */
 	@Override
 	public boolean allowVersionedTypes(EObject eobj) {

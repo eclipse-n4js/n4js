@@ -254,7 +254,7 @@ class ModuleWrappingTransformation extends Transformation {
 		val IdentifiableElement originalTarget = importedElementEntry.getOriginalTarget();
 
 		// if applicable use versioned internal name for internal STE
-		if (VersionUtils.isVersionable(originalTarget)) {
+		if (VersionUtils.isTVersionable(originalTarget)) {
 			return getSymbolTableEntryInternal(N4IDLTranspilerUtils.getVersionedInternalName(originalTarget), true);
 		}
 		return getSymbolTableEntryInternal(importedElementEntry.exportedName, true);
@@ -784,7 +784,7 @@ class ModuleWrappingTransformation extends Transformation {
 		if (entry instanceof SymbolTableEntryOriginal) {
 			val IdentifiableElement originalTarget = entry.originalTarget;
 
-			if (VersionUtils.isVersionable(originalTarget)) {
+			if (VersionUtils.isTVersionable(originalTarget)) {
 				return createVersionedExportExpression(originalTarget, expression);
 			}
 		}
@@ -800,7 +800,7 @@ class ModuleWrappingTransformation extends Transformation {
 	 * @param expression The expression to export.
 	 */
 	protected def ParameterizedCallExpression createVersionedExportExpression(IdentifiableElement element, Expression expression) {
-		if (!VersionUtils.isVersionable(element)) {
+		if (!VersionUtils.isTVersionable(element)) {
 			throw new IllegalArgumentException("Cannot export non-versionable element " + element + " as versionable.");
 		}
 

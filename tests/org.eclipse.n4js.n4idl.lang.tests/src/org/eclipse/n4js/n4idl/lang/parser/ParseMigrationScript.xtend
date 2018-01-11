@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.n4idl.lang.parser
 
-import org.eclipse.n4js.n4JS.MigrationDeclaration
+import org.eclipse.n4js.n4JS.FunctionDeclaration
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4idl.lang.AbstractN4IDLParserTest
 import org.junit.Test
@@ -22,13 +22,14 @@ public class ParseMigrationScript extends AbstractN4IDLParserTest {
 		val Script script = '''
 			class C # 1 {}
 			// TODO: add after scoping is implemented: class C # 2 {}
-			migration (c1: C#1) -> (c2: C#2) {
-			
+			@Migration
+			function (c1: C#1) : C#2 {
+				return null;
 			}
 		'''.parseSuccessfully
-		val mig = script.scriptElements.get(1) as MigrationDeclaration
+		val mig = script.scriptElements.get(1) as FunctionDeclaration
 		assertEquals(1, mig.fpars.head.declaredTypeRef.version)
-		assertEquals(2, mig.frets.head.declaredTypeRef.version)
+		assertEquals(2, mig.returnTypeRef.version)
 	}
 
 

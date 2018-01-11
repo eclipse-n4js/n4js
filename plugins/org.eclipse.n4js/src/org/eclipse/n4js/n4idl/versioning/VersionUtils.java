@@ -12,6 +12,7 @@ package org.eclipse.n4js.n4idl.versioning;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.n4JS.VersionedElement;
+import org.eclipse.n4js.ts.typeRefs.Versionable;
 import org.eclipse.n4js.ts.types.TVersionable;
 
 /**
@@ -33,10 +34,23 @@ public class VersionUtils {
 	/**
 	 * Returns {@code true} if the given {@link TVersionable} is considered to be versioned.
 	 *
+	 * An element is considered to be versioned, if it has a non-zero version.
+	 *
+	 * A return value of {@code true} indicates a non-zero value for {@link TVersionable#getVersion()}.
+	 */
+	public static boolean isTVersionable(EObject element) {
+		return (element instanceof TVersionable) && ((TVersionable) element).getVersion() != 0;
+	}
+
+	/**
+	 * Returns {@code true} if the given element implements {@link Versionable} and is considered to be versioned.
+	 *
+	 * An element is considered to be versioned, if it has a non-zero version.
+	 *
 	 * A return value of {@code true} indicates a non-zero value for {@link TVersionable#getVersion()}.
 	 */
 	public static boolean isVersionable(EObject element) {
-		return (element instanceof TVersionable) && ((TVersionable) element).getVersion() != 0;
+		return (element instanceof Versionable) && ((Versionable) element).getVersion() != 0;
 	}
 
 	private VersionUtils() {

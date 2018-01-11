@@ -1111,11 +1111,6 @@ ruleRootStatement:
 		)
 		    |
 		(
-			('migration')=>
-			ruleMigrationDeclaration
-		)
-		    |
-		(
 			(ruleVariableStatementKeyword
 			)=>
 			norm1_VariableStatement
@@ -1170,11 +1165,6 @@ norm1_RootStatement:
 			'function'
 			)=>
 			norm1_FunctionDeclaration
-		)
-		    |
-		(
-			('migration')=>
-			ruleMigrationDeclaration
 		)
 		    |
 		(
@@ -8262,27 +8252,6 @@ ruleJSXPropertyAttribute:
 ruleVersionDeclaration:
 	'#'
 	RULE_INT
-;
-
-// Rule MigrationDeclaration
-ruleMigrationDeclaration:
-	'migration'
-	'('
-	ruleFormalParameter
-	(
-		','
-		ruleFormalParameter
-	)*
-	')'
-	'->'
-	'('
-	ruleFormalParameter
-	(
-		','
-		ruleFormalParameter
-	)*
-	')'
-	ruleFunctionBody
 ;
 
 // Rule VersionedImportIdentifier

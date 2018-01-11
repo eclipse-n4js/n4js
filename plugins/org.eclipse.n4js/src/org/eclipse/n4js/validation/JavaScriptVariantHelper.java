@@ -291,7 +291,8 @@ public interface JavaScriptVariantHelper {
 	public boolean isMultiQNScope(EObject eobj);
 
 	/**
-	 * Returns {@code true} if the script allows for the declaration and reference of versioned types.
+	 * Returns {@code true} if the script allows for the declaration and reference of versioned types as well as
+	 * corresponding migrations.
 	 */
 	public boolean allowVersionedTypes(EObject eobj);
 

@@ -2155,37 +2155,35 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
 		private final RuleCall cBlockParserRuleCall_0 = (RuleCall)cAlternatives.eContents().get(0);
 		private final RuleCall cFunctionDeclarationParserRuleCall_1 = (RuleCall)cAlternatives.eContents().get(1);
-		private final RuleCall cMigrationDeclarationParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
-		private final RuleCall cVariableStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
-		private final RuleCall cEmptyStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
-		private final RuleCall cLabelledStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
-		private final RuleCall cExpressionStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
-		private final RuleCall cIfStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
-		private final RuleCall cIterationStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
-		private final RuleCall cContinueStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
-		private final RuleCall cBreakStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
-		private final RuleCall cReturnStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
-		private final RuleCall cWithStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
-		private final RuleCall cSwitchStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
-		private final RuleCall cThrowStatementParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
-		private final RuleCall cTryStatementParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
-		private final RuleCall cDebuggerStatementParserRuleCall_16 = (RuleCall)cAlternatives.eContents().get(16);
+		private final RuleCall cVariableStatementParserRuleCall_2 = (RuleCall)cAlternatives.eContents().get(2);
+		private final RuleCall cEmptyStatementParserRuleCall_3 = (RuleCall)cAlternatives.eContents().get(3);
+		private final RuleCall cLabelledStatementParserRuleCall_4 = (RuleCall)cAlternatives.eContents().get(4);
+		private final RuleCall cExpressionStatementParserRuleCall_5 = (RuleCall)cAlternatives.eContents().get(5);
+		private final RuleCall cIfStatementParserRuleCall_6 = (RuleCall)cAlternatives.eContents().get(6);
+		private final RuleCall cIterationStatementParserRuleCall_7 = (RuleCall)cAlternatives.eContents().get(7);
+		private final RuleCall cContinueStatementParserRuleCall_8 = (RuleCall)cAlternatives.eContents().get(8);
+		private final RuleCall cBreakStatementParserRuleCall_9 = (RuleCall)cAlternatives.eContents().get(9);
+		private final RuleCall cReturnStatementParserRuleCall_10 = (RuleCall)cAlternatives.eContents().get(10);
+		private final RuleCall cWithStatementParserRuleCall_11 = (RuleCall)cAlternatives.eContents().get(11);
+		private final RuleCall cSwitchStatementParserRuleCall_12 = (RuleCall)cAlternatives.eContents().get(12);
+		private final RuleCall cThrowStatementParserRuleCall_13 = (RuleCall)cAlternatives.eContents().get(13);
+		private final RuleCall cTryStatementParserRuleCall_14 = (RuleCall)cAlternatives.eContents().get(14);
+		private final RuleCall cDebuggerStatementParserRuleCall_15 = (RuleCall)cAlternatives.eContents().get(15);
 		
 		//// ****************************************************************************************************
 		//// [ECM11] A.4 Statements (p. 222)
 		//// ****************************************************************************************************
 		//RootStatement <Yield Statement:
-		//	Block<Yield> | FunctionDeclaration<Yield> | -> MigrationDeclaration
-		//	| VariableStatement<In=true,Yield> | EmptyStatement
+		//	Block<Yield> | FunctionDeclaration<Yield> | VariableStatement<In=true,Yield> | EmptyStatement
 		//	| LabelledStatement<Yield> | ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> |
 		//	ContinueStatement<Yield> | BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> |
 		//	SwitchStatement<Yield> | ThrowStatement<Yield> | TryStatement<Yield> | DebuggerStatement;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//Block<Yield> | FunctionDeclaration<Yield> | -> MigrationDeclaration | VariableStatement<In=true,Yield> | EmptyStatement
-		//| LabelledStatement<Yield> | ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> |
-		//ContinueStatement<Yield> | BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> |
-		//SwitchStatement<Yield> | ThrowStatement<Yield> | TryStatement<Yield> | DebuggerStatement
+		//Block<Yield> | FunctionDeclaration<Yield> | VariableStatement<In=true,Yield> | EmptyStatement | LabelledStatement<Yield>
+		//| ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> | ContinueStatement<Yield> |
+		//BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> | SwitchStatement<Yield> | ThrowStatement<Yield>
+		//| TryStatement<Yield> | DebuggerStatement
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//Block<Yield>
@@ -2194,50 +2192,47 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//FunctionDeclaration<Yield>
 		public RuleCall getFunctionDeclarationParserRuleCall_1() { return cFunctionDeclarationParserRuleCall_1; }
 		
-		//-> MigrationDeclaration
-		public RuleCall getMigrationDeclarationParserRuleCall_2() { return cMigrationDeclarationParserRuleCall_2; }
-		
 		//VariableStatement<In=true,Yield>
-		public RuleCall getVariableStatementParserRuleCall_3() { return cVariableStatementParserRuleCall_3; }
+		public RuleCall getVariableStatementParserRuleCall_2() { return cVariableStatementParserRuleCall_2; }
 		
 		//EmptyStatement
-		public RuleCall getEmptyStatementParserRuleCall_4() { return cEmptyStatementParserRuleCall_4; }
+		public RuleCall getEmptyStatementParserRuleCall_3() { return cEmptyStatementParserRuleCall_3; }
 		
 		//LabelledStatement<Yield>
-		public RuleCall getLabelledStatementParserRuleCall_5() { return cLabelledStatementParserRuleCall_5; }
+		public RuleCall getLabelledStatementParserRuleCall_4() { return cLabelledStatementParserRuleCall_4; }
 		
 		//ExpressionStatement<Yield>
-		public RuleCall getExpressionStatementParserRuleCall_6() { return cExpressionStatementParserRuleCall_6; }
+		public RuleCall getExpressionStatementParserRuleCall_5() { return cExpressionStatementParserRuleCall_5; }
 		
 		//IfStatement<Yield>
-		public RuleCall getIfStatementParserRuleCall_7() { return cIfStatementParserRuleCall_7; }
+		public RuleCall getIfStatementParserRuleCall_6() { return cIfStatementParserRuleCall_6; }
 		
 		//IterationStatement<Yield>
-		public RuleCall getIterationStatementParserRuleCall_8() { return cIterationStatementParserRuleCall_8; }
+		public RuleCall getIterationStatementParserRuleCall_7() { return cIterationStatementParserRuleCall_7; }
 		
 		//ContinueStatement<Yield>
-		public RuleCall getContinueStatementParserRuleCall_9() { return cContinueStatementParserRuleCall_9; }
+		public RuleCall getContinueStatementParserRuleCall_8() { return cContinueStatementParserRuleCall_8; }
 		
 		//BreakStatement<Yield>
-		public RuleCall getBreakStatementParserRuleCall_10() { return cBreakStatementParserRuleCall_10; }
+		public RuleCall getBreakStatementParserRuleCall_9() { return cBreakStatementParserRuleCall_9; }
 		
 		//ReturnStatement<Yield>
-		public RuleCall getReturnStatementParserRuleCall_11() { return cReturnStatementParserRuleCall_11; }
+		public RuleCall getReturnStatementParserRuleCall_10() { return cReturnStatementParserRuleCall_10; }
 		
 		//WithStatement<Yield>
-		public RuleCall getWithStatementParserRuleCall_12() { return cWithStatementParserRuleCall_12; }
+		public RuleCall getWithStatementParserRuleCall_11() { return cWithStatementParserRuleCall_11; }
 		
 		//SwitchStatement<Yield>
-		public RuleCall getSwitchStatementParserRuleCall_13() { return cSwitchStatementParserRuleCall_13; }
+		public RuleCall getSwitchStatementParserRuleCall_12() { return cSwitchStatementParserRuleCall_12; }
 		
 		//ThrowStatement<Yield>
-		public RuleCall getThrowStatementParserRuleCall_14() { return cThrowStatementParserRuleCall_14; }
+		public RuleCall getThrowStatementParserRuleCall_13() { return cThrowStatementParserRuleCall_13; }
 		
 		//TryStatement<Yield>
-		public RuleCall getTryStatementParserRuleCall_15() { return cTryStatementParserRuleCall_15; }
+		public RuleCall getTryStatementParserRuleCall_14() { return cTryStatementParserRuleCall_14; }
 		
 		//DebuggerStatement
-		public RuleCall getDebuggerStatementParserRuleCall_16() { return cDebuggerStatementParserRuleCall_16; }
+		public RuleCall getDebuggerStatementParserRuleCall_15() { return cDebuggerStatementParserRuleCall_15; }
 	}
 	public class StatementElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.Statement");
@@ -9688,98 +9683,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//INT
 		public RuleCall getDeclaredVersionINTTerminalRuleCall_1_0() { return cDeclaredVersionINTTerminalRuleCall_1_0; }
 	}
-	public class MigrationDeclarationElements extends AbstractParserRuleElementFinder {
-		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.MigrationDeclaration");
-		private final Group cGroup = (Group)rule.eContents().get(1);
-		private final Keyword cMigrationKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Keyword cLeftParenthesisKeyword_1 = (Keyword)cGroup.eContents().get(1);
-		private final Assignment cFparsAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cFparsFormalParameterParserRuleCall_2_0 = (RuleCall)cFparsAssignment_2.eContents().get(0);
-		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
-		private final Keyword cCommaKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
-		private final Assignment cFparsAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
-		private final RuleCall cFparsFormalParameterParserRuleCall_3_1_0 = (RuleCall)cFparsAssignment_3_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_4 = (Keyword)cGroup.eContents().get(4);
-		private final Keyword cHyphenMinusGreaterThanSignKeyword_5 = (Keyword)cGroup.eContents().get(5);
-		private final Keyword cLeftParenthesisKeyword_6 = (Keyword)cGroup.eContents().get(6);
-		private final Assignment cFretsAssignment_7 = (Assignment)cGroup.eContents().get(7);
-		private final RuleCall cFretsFormalParameterParserRuleCall_7_0 = (RuleCall)cFretsAssignment_7.eContents().get(0);
-		private final Group cGroup_8 = (Group)cGroup.eContents().get(8);
-		private final Keyword cCommaKeyword_8_0 = (Keyword)cGroup_8.eContents().get(0);
-		private final Assignment cFretsAssignment_8_1 = (Assignment)cGroup_8.eContents().get(1);
-		private final RuleCall cFretsFormalParameterParserRuleCall_8_1_0 = (RuleCall)cFretsAssignment_8_1.eContents().get(0);
-		private final Keyword cRightParenthesisKeyword_9 = (Keyword)cGroup.eContents().get(9);
-		private final RuleCall cFunctionBodyParserRuleCall_10 = (RuleCall)cGroup.eContents().get(10);
-		
-		//MigrationDeclaration:
-		//	'migration'
-		//	'(' fpars+=FormalParameter<false> (',' fpars+=FormalParameter<false>)* ')'
-		//	'->'
-		//	'(' frets+=FormalParameter<false> (',' frets+=FormalParameter<false>)* ')'
-		//	FunctionBody<false,false>;
-		@Override public ParserRule getRule() { return rule; }
-		
-		//'migration' '(' fpars+=FormalParameter<false> (',' fpars+=FormalParameter<false>)* ')' '->' '('
-		//frets+=FormalParameter<false> (',' frets+=FormalParameter<false>)* ')' FunctionBody<false,false>
-		public Group getGroup() { return cGroup; }
-		
-		//'migration'
-		public Keyword getMigrationKeyword_0() { return cMigrationKeyword_0; }
-		
-		//'('
-		public Keyword getLeftParenthesisKeyword_1() { return cLeftParenthesisKeyword_1; }
-		
-		//fpars+=FormalParameter<false>
-		public Assignment getFparsAssignment_2() { return cFparsAssignment_2; }
-		
-		//FormalParameter<false>
-		public RuleCall getFparsFormalParameterParserRuleCall_2_0() { return cFparsFormalParameterParserRuleCall_2_0; }
-		
-		//(',' fpars+=FormalParameter<false>)*
-		public Group getGroup_3() { return cGroup_3; }
-		
-		//','
-		public Keyword getCommaKeyword_3_0() { return cCommaKeyword_3_0; }
-		
-		//fpars+=FormalParameter<false>
-		public Assignment getFparsAssignment_3_1() { return cFparsAssignment_3_1; }
-		
-		//FormalParameter<false>
-		public RuleCall getFparsFormalParameterParserRuleCall_3_1_0() { return cFparsFormalParameterParserRuleCall_3_1_0; }
-		
-		//')'
-		public Keyword getRightParenthesisKeyword_4() { return cRightParenthesisKeyword_4; }
-		
-		//'->'
-		public Keyword getHyphenMinusGreaterThanSignKeyword_5() { return cHyphenMinusGreaterThanSignKeyword_5; }
-		
-		//'('
-		public Keyword getLeftParenthesisKeyword_6() { return cLeftParenthesisKeyword_6; }
-		
-		//frets+=FormalParameter<false>
-		public Assignment getFretsAssignment_7() { return cFretsAssignment_7; }
-		
-		//FormalParameter<false>
-		public RuleCall getFretsFormalParameterParserRuleCall_7_0() { return cFretsFormalParameterParserRuleCall_7_0; }
-		
-		//(',' frets+=FormalParameter<false>)*
-		public Group getGroup_8() { return cGroup_8; }
-		
-		//','
-		public Keyword getCommaKeyword_8_0() { return cCommaKeyword_8_0; }
-		
-		//frets+=FormalParameter<false>
-		public Assignment getFretsAssignment_8_1() { return cFretsAssignment_8_1; }
-		
-		//FormalParameter<false>
-		public RuleCall getFretsFormalParameterParserRuleCall_8_1_0() { return cFretsFormalParameterParserRuleCall_8_1_0; }
-		
-		//')'
-		public Keyword getRightParenthesisKeyword_9() { return cRightParenthesisKeyword_9; }
-		
-		//FunctionBody<false,false>
-		public RuleCall getFunctionBodyParserRuleCall_10() { return cFunctionBodyParserRuleCall_10; }
-	}
 	public class VersionedImportIdentifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionedImportIdentifier");
 		private final Alternatives cAlternatives = (Alternatives)rule.eContents().get(1);
@@ -10412,7 +10315,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	private final JSXSpreadAttributeElements pJSXSpreadAttribute;
 	private final JSXPropertyAttributeElements pJSXPropertyAttribute;
 	private final VersionDeclarationElements pVersionDeclaration;
-	private final MigrationDeclarationElements pMigrationDeclaration;
 	private final VersionedImportIdentifierElements pVersionedImportIdentifier;
 	
 	private final Grammar grammar;
@@ -10668,7 +10570,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		this.pJSXSpreadAttribute = new JSXSpreadAttributeElements();
 		this.pJSXPropertyAttribute = new JSXPropertyAttributeElements();
 		this.pVersionDeclaration = new VersionDeclarationElements();
-		this.pMigrationDeclaration = new MigrationDeclarationElements();
 		this.pVersionedImportIdentifier = new VersionedImportIdentifierElements();
 	}
 	
@@ -11186,8 +11087,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//// [ECM11] A.4 Statements (p. 222)
 	//// ****************************************************************************************************
 	//RootStatement <Yield Statement:
-	//	Block<Yield> | FunctionDeclaration<Yield> | -> MigrationDeclaration
-	//	| VariableStatement<In=true,Yield> | EmptyStatement
+	//	Block<Yield> | FunctionDeclaration<Yield> | VariableStatement<In=true,Yield> | EmptyStatement
 	//	| LabelledStatement<Yield> | ExpressionStatement<Yield> | IfStatement<Yield> | IterationStatement<Yield> |
 	//	ContinueStatement<Yield> | BreakStatement<Yield> | ReturnStatement<Yield> | WithStatement<Yield> |
 	//	SwitchStatement<Yield> | ThrowStatement<Yield> | TryStatement<Yield> | DebuggerStatement;
@@ -13432,20 +13332,6 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	
 	public ParserRule getVersionDeclarationRule() {
 		return getVersionDeclarationAccess().getRule();
-	}
-	
-	//MigrationDeclaration:
-	//	'migration'
-	//	'(' fpars+=FormalParameter<false> (',' fpars+=FormalParameter<false>)* ')'
-	//	'->'
-	//	'(' frets+=FormalParameter<false> (',' frets+=FormalParameter<false>)* ')'
-	//	FunctionBody<false,false>;
-	public MigrationDeclarationElements getMigrationDeclarationAccess() {
-		return pMigrationDeclaration;
-	}
-	
-	public ParserRule getMigrationDeclarationRule() {
-		return getMigrationDeclarationAccess().getRule();
 	}
 	
 	//VersionedImportIdentifier VersionedNamedImportSpecifier:

@@ -496,8 +496,6 @@ HyphenMinusHyphenMinus : '--';
 
 HyphenMinusEqualsSign : '-=';
 
-HyphenMinusGreaterThanSign : '->';
-
 SolidusEqualsSign : '/=';
 
 LessThanSignLessThanSign : '<<';

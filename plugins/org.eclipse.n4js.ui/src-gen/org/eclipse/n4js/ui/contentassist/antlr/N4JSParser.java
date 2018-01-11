@@ -536,9 +536,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1(), "rule__JSXPropertyAttribute__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_1(), "rule__JSXPropertyAttribute__Group_1_1_1__0");
 			nameMappingsBuilder.put(grammarAccess.getVersionDeclarationAccess().getGroup(), "rule__VersionDeclaration__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getGroup(), "rule__MigrationDeclaration__Group__0");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getGroup_3(), "rule__MigrationDeclaration__Group_3__0");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getGroup_8(), "rule__MigrationDeclaration__Group_8__0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getGroup_0(), "rule__VersionedImportIdentifier__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getGroup_1(), "rule__VersionedImportIdentifier__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
@@ -969,10 +966,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_0(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1_1(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_1_1");
 			nameMappingsBuilder.put(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment_1(), "rule__VersionDeclaration__DeclaredVersionAssignment_1");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getFparsAssignment_2(), "rule__MigrationDeclaration__FparsAssignment_2");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getFparsAssignment_3_1(), "rule__MigrationDeclaration__FparsAssignment_3_1");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getFretsAssignment_7(), "rule__MigrationDeclaration__FretsAssignment_7");
-			nameMappingsBuilder.put(grammarAccess.getMigrationDeclarationAccess().getFretsAssignment_8_1(), "rule__MigrationDeclaration__FretsAssignment_8_1");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_0_0(), "rule__VersionedImportIdentifier__ImportedElementAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_1_0(), "rule__VersionedImportIdentifier__ImportedElementAssignment_1_0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getAliasAssignment_1_3(), "rule__VersionedImportIdentifier__AliasAssignment_1_3");
