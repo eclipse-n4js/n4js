@@ -58,7 +58,7 @@ public class HeadlessRunner {
 	 * @param locationToRun
 	 *            location of the code to be executed
 	 * @param targetPlatformInstallLocation
-	 *            location for node_modules
+	 *            location for externally installed node_modules
 	 * @throws ExitCodeException
 	 *             in cases of errors
 	 */
@@ -73,7 +73,7 @@ public class HeadlessRunner {
 		try {
 			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
 					systemLoader, locationToRun,
-					targetPlatformInstallLocation.getAbsolutePath().toString() + "/node_modules");
+					targetPlatformInstallLocation.toPath().resolve("node_modules").toAbsolutePath().toString());
 		} catch (java.lang.IllegalStateException e2) {
 			logger.error(Throwables.getStackTraceAsString(e2));
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,

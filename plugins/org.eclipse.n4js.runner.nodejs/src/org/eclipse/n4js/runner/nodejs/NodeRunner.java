@@ -122,23 +122,20 @@ public class NodeRunner implements IRunner {
 			runOptions.setExecutionData(runConfig.getExecutionDataAsJSON());
 			runOptions.setSystemLoader(SystemLoaderInfo.fromString(runConfig.getSystemLoader()));
 
-			final Collection<String> paths = newLinkedHashSet();
-			// Add custom node paths
-			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
-					.split(runConfig.getCustomEnginePath())));
-
 			Path workingDirectory = Files.createTempDirectory("N4JSNodeRun");
 
 			NodeEngineCommandBuilder cb = commandBuilderProvider.get();
 			cmds = cb.createCmds(runOptions, workingDirectory);
 
+			final Collection<String> paths = newLinkedHashSet();
+			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
+					.split(runConfig.getCustomEnginePath())));
 			if (!USE_NEW_BOOTSTRAP) {
 				paths.addAll(runConfig.getCoreProjectPaths());
 			}
 			if (runConfig.getAdditionalPath() != null && !runConfig.getAdditionalPath().isEmpty())
 				paths.add(runConfig.getAdditionalPath());
 
-			// TODO GH-394
 			paths.add(workingDirectory.resolve("node_modules").toAbsolutePath().toString());
 
 			String nodePaths = on(NODE_PATH_SEP).join(paths);
