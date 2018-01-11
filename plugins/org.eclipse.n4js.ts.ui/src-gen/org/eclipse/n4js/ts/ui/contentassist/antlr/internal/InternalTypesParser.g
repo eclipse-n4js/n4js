@@ -39,7 +39,6 @@ import org.eclipse.n4js.ts.services.TypesGrammarAccess;
 	private final Map<String, String> tokenNameToValue = new HashMap<String, String>();
 	
 	{
-		tokenNameToValue.put("NumberSign", "'#'");
 		tokenNameToValue.put("Ampersand", "'&'");
 		tokenNameToValue.put("LeftParenthesis", "'('");
 		tokenNameToValue.put("RightParenthesis", "')'");
@@ -1557,9 +1556,9 @@ ruleVersionRequest
 	}
 	:
 	(
-		{ before(grammarAccess.getVersionRequestAccess().getGroup()); }
-		(rule__VersionRequest__Group__0)
-		{ after(grammarAccess.getVersionRequestAccess().getGroup()); }
+		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment()); }
+		(rule__VersionRequest__RequestedVersionAssignment)
+		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment()); }
 	)
 ;
 finally {
@@ -11420,60 +11419,6 @@ finally {
 }
 
 
-rule__VersionRequest__Group__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionRequest__Group__0__Impl
-	rule__VersionRequest__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionRequest__Group__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0()); }
-	NumberSign
-	{ after(grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionRequest__Group__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionRequest__Group__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionRequest__Group__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1()); }
-	(rule__VersionRequest__RequestedVersionAssignment_1)
-	{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 rule__TypeArguments__Group__0
 	@init {
 		int stackSize = keepStackSize();
@@ -15468,15 +15413,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRequest__RequestedVersionAssignment_1
+rule__VersionRequest__RequestedVersionAssignment
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0()); }
-		RULE_INT
-		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0()); }
+		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
+		RULE_VERSION_REQUEST
+		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
 	)
 ;
 finally {

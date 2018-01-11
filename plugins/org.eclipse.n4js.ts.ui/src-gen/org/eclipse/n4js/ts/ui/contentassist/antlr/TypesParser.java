@@ -169,7 +169,6 @@ public class TypesParser extends AbstractContentAssistParser {
 					put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_2(), "rule__ParameterizedTypeRefStructural__Group_2__0");
 					put(grammarAccess.getTypeAndTypeArgumentsAccess().getGroup(), "rule__TypeAndTypeArguments__Group__0");
 					put(grammarAccess.getTypeAndTypeArgumentsAccess().getGroup_0_1(), "rule__TypeAndTypeArguments__Group_0_1__0");
-					put(grammarAccess.getVersionRequestAccess().getGroup(), "rule__VersionRequest__Group__0");
 					put(grammarAccess.getTypeArgumentsAccess().getGroup(), "rule__TypeArguments__Group__0");
 					put(grammarAccess.getTypeArgumentsAccess().getGroup_2(), "rule__TypeArguments__Group_2__0");
 					put(grammarAccess.getTStructMemberListAccess().getGroup(), "rule__TStructMemberList__Group__0");
@@ -318,7 +317,7 @@ public class TypesParser extends AbstractContentAssistParser {
 					put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeAssignment_0_1_2(), "rule__ParameterizedTypeRefStructural__DeclaredTypeAssignment_0_1_2");
 					put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_0(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0_0");
 					put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_1_1(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0_1_1");
-					put(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1(), "rule__VersionRequest__RequestedVersionAssignment_1");
+					put(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment(), "rule__VersionRequest__RequestedVersionAssignment");
 					put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__TypeArguments__TypeArgsAssignment_1");
 					put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__TypeArguments__TypeArgsAssignment_2_1");
 					put(grammarAccess.getTStructMemberListAccess().getAstStructuralMembersAssignment_1_0(), "rule__TStructMemberList__AstStructuralMembersAssignment_1_0");

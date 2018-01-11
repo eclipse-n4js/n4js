@@ -735,7 +735,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=INT 
+	 *         requestedVersion=VERSION_REQUEST 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
 	 *         dynamic?='+'? 
@@ -776,7 +776,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=INT 
+	 *         requestedVersion=VERSION_REQUEST 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
 	 *         dynamic?='+'? 
@@ -1053,7 +1053,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=INT 
+	 *         requestedVersion=VERSION_REQUEST 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'? 
 	 *         (followedByQuestionMark?='?' | followedByQuestionMark?='?')?
@@ -1085,7 +1085,7 @@ public class TypesSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=INT 
+	 *         requestedVersion=VERSION_REQUEST 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'? 
 	 *         followedByQuestionMark?='?'?

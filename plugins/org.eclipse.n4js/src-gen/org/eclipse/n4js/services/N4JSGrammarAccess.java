@@ -4023,12 +4023,12 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cVersionRequestParserRuleCall_1_2 = (RuleCall)cGroup_1.eContents().get(2);
 		
 		//IdentifierRef <Yield>:
-		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
-		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest;
+		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef} ->
+		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
-		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest
+		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef} ->
+		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
 		//id=[types::IdentifiableElement|BindingIdentifier<Yield>]
@@ -4040,13 +4040,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield>
 		public RuleCall getIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1() { return cIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1; }
 		
-		//{VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest
+		//{VersionedIdentifierRef} -> id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//{VersionedIdentifierRef}
 		public Action getVersionedIdentifierRefAction_1_0() { return cVersionedIdentifierRefAction_1_0; }
 		
-		//id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+		//-> id=[types::IdentifiableElement|BindingIdentifier<Yield>]
 		public Assignment getIdAssignment_1_1() { return cIdAssignment_1_1; }
 		
 		//[types::IdentifiableElement|BindingIdentifier<Yield>]
@@ -4055,7 +4055,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield>
 		public RuleCall getIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1() { return cIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1; }
 		
-		//-> VersionRequest
+		//VersionRequest
 		public RuleCall getVersionRequestParserRuleCall_1_2() { return cVersionRequestParserRuleCall_1_2; }
 	}
 	public class SuperLiteralElements extends AbstractParserRuleElementFinder {
@@ -9657,10 +9657,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class VersionDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionDeclaration");
-		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cNumberSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cDeclaredVersionAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cDeclaredVersionINTTerminalRuleCall_1_0 = (RuleCall)cDeclaredVersionAssignment_1.eContents().get(0);
+		private final Assignment cDeclaredVersionAssignment = (Assignment)rule.eContents().get(0);
+		private final RuleCall cDeclaredVersionVERSION_REQUESTTerminalRuleCall_0 = (RuleCall)cDeclaredVersionAssignment.eContents().get(0);
 		
 		//// ****************************************************************************************************
 		//// N4IDL related rules
@@ -9668,20 +9666,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		///* Version related rules */ /*
 		// * Version declaration, used in type declarations and types refs of migration parameters and returns.
 		// */ fragment VersionDeclaration *:
-		//	'#' declaredVersion=INT;
+		//	declaredVersion=VERSION_REQUEST;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'#' declaredVersion=INT
-		public Group getGroup() { return cGroup; }
+		//declaredVersion=VERSION_REQUEST
+		public Assignment getDeclaredVersionAssignment() { return cDeclaredVersionAssignment; }
 		
-		//'#'
-		public Keyword getNumberSignKeyword_0() { return cNumberSignKeyword_0; }
-		
-		//declaredVersion=INT
-		public Assignment getDeclaredVersionAssignment_1() { return cDeclaredVersionAssignment_1; }
-		
-		//INT
-		public RuleCall getDeclaredVersionINTTerminalRuleCall_1_0() { return cDeclaredVersionINTTerminalRuleCall_1_0; }
+		//VERSION_REQUEST
+		public RuleCall getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0() { return cDeclaredVersionVERSION_REQUESTTerminalRuleCall_0; }
 	}
 	public class VersionedImportIdentifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionedImportIdentifier");
@@ -11532,8 +11524,8 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//IdentifierRef <Yield>:
-	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
-	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest;
+	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef} ->
+	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest;
 	public IdentifierRefElements getIdentifierRefAccess() {
 		return pIdentifierRef;
 	}
@@ -13325,7 +13317,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	///* Version related rules */ /*
 	// * Version declaration, used in type declarations and types refs of migration parameters and returns.
 	// */ fragment VersionDeclaration *:
-	//	'#' declaredVersion=INT;
+	//	declaredVersion=VERSION_REQUEST;
 	public VersionDeclarationElements getVersionDeclarationAccess() {
 		return pVersionDeclaration;
 	}
@@ -13634,13 +13626,19 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment VersionRequest *:
-	//	'#' requestedVersion=INT;
+	//	requestedVersion=VERSION_REQUEST;
 	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
 		return gaTypeExpressions.getVersionRequestAccess();
 	}
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
+	}
+	
+	//terminal VERSION_REQUEST returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSION_REQUESTRule() {
+		return gaTypeExpressions.getVERSION_REQUESTRule();
 	}
 	
 	//fragment TypeArguments *:

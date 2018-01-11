@@ -12,6 +12,7 @@ package org.eclipse.n4js.conversion;
 
 import java.math.BigDecimal;
 
+import org.eclipse.n4js.ts.conversions.IdentifierDelegateValueConverter;
 import org.eclipse.xtext.conversion.IValueConverter;
 import org.eclipse.xtext.conversion.ValueConverter;
 import org.eclipse.xtext.conversion.impl.AbstractDeclarativeValueConverterService;
@@ -20,8 +21,6 @@ import org.eclipse.xtext.conversion.impl.STRINGValueConverter;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import org.eclipse.n4js.ts.conversions.IdentifierDelegateValueConverter;
 
 /**
  * Registers special value converters for N4JS.
@@ -81,6 +80,9 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 
 	@Inject
 	private ModuleSpecifierValueConverter moduleSpecifierValueConverter;
+
+	@Inject
+	private VersionRequestValueConverter versionRequestValueConverter;
 
 	/**
 	 * @return the registered value converter for the rule {@code NO_SUBSTITUTION_TEMPLATE_LITERAL}
@@ -240,5 +242,13 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	@ValueConverter(rule = "ModuleSpecifier")
 	public IValueConverter<String> ModuleSpecifier() {
 		return moduleSpecifierValueConverter;
+	}
+
+	/**
+	 * @return the registered value converter for the rule {@code VERSION_REQUEST}
+	 */
+	@ValueConverter(rule = "VERSION_REQUEST")
+	public IValueConverter<BigDecimal> VERSION_REQUEST() {
+		return versionRequestValueConverter;
 	}
 }

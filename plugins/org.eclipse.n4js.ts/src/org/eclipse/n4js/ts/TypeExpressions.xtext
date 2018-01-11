@@ -164,7 +164,11 @@ TypeAndTypeArguments returns ParameterizedTypeRef:
 	(->TypeArguments)?
 ;
 
-fragment VersionRequest*: '#' requestedVersion=INT;
+fragment VersionRequest*: requestedVersion=VERSION_REQUEST;
+
+terminal VERSION_REQUEST returns ecore::EBigDecimal:
+	'#' WS* INT
+;
 
 fragment TypeArguments *:
 	'<' typeArgs+=TypeArgument (',' typeArgs+=TypeArgument)* '>'

@@ -6777,17 +6777,41 @@ ruleIdentifierRef
 	    |
 	(
 		(
+			(Yield | 
+			Get | 
+			Set | 
+			Let | 
+			Project | 
+			External | 
+			Abstract | 
+			Static | 
+			As | 
+			From | 
+			Constructor | 
+			Of | 
+			Target | 
+			Type | 
+			Union | 
+			Intersection | 
+			This | 
+			Promisify | 
+			Await | 
+			Async | 
+			Implements | 
+			Interface | 
+			Private | 
+			Protected | 
+			Public | 
+			Out | 
+			Migration | 
+			RULE_IDENTIFIER)=>
 			(
 				IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1=ruleBindingIdentifier{
 					announce($IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.start, $IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.stop, grammarAccess.getIdentifierRefAccess().getIdAssignment_1_1());
 				}
 			)
 		)
-		(
-			(NumberSign
-			)=>
-			VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
-		)
+		VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
 	)
 )
 ;
@@ -6808,17 +6832,40 @@ norm1_IdentifierRef
 	    |
 	(
 		(
+			(Get | 
+			Set | 
+			Let | 
+			Project | 
+			External | 
+			Abstract | 
+			Static | 
+			As | 
+			From | 
+			Constructor | 
+			Of | 
+			Target | 
+			Type | 
+			Union | 
+			Intersection | 
+			This | 
+			Promisify | 
+			Await | 
+			Async | 
+			Implements | 
+			Interface | 
+			Private | 
+			Protected | 
+			Public | 
+			Out | 
+			Migration | 
+			RULE_IDENTIFIER)=>
 			(
 				IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1=norm1_BindingIdentifier{
 					announce($IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.start, $IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.stop, grammarAccess.getIdentifierRefAccess().getIdAssignment_1_1());
 				}
 			)
 		)
-		(
-			(NumberSign
-			)=>
-			VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
-		)
+		VersionRequestParserRuleCall_1_2=ruleVersionRequest{ announce($VersionRequestParserRuleCall_1_2.start, $VersionRequestParserRuleCall_1_2.stop, grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
 	)
 )
 ;
@@ -19220,16 +19267,10 @@ ruleVersionDeclaration
 @init {
 }:
 (
-	NumberSignKeyword_0=NumberSign
-	 {
-		announce($NumberSignKeyword_0, grammarAccess.getVersionDeclarationAccess().getNumberSignKeyword_0());
-	}
 	(
-		(
-			DeclaredVersionINTTerminalRuleCall_1_0=RULE_INT{
-				announce($DeclaredVersionINTTerminalRuleCall_1_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment_1());
-			}
-		)
+		DeclaredVersionVERSION_REQUESTTerminalRuleCall_0=RULE_VERSION_REQUEST{
+			announce($DeclaredVersionVERSION_REQUESTTerminalRuleCall_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment());
+		}
 	)
 )
 ;
@@ -20074,16 +20115,10 @@ ruleVersionRequest
 @init {
 }:
 (
-	NumberSignKeyword_0=NumberSign
-	 {
-		announce($NumberSignKeyword_0, grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0());
-	}
 	(
-		(
-			RequestedVersionINTTerminalRuleCall_1_0=RULE_INT{
-				announce($RequestedVersionINTTerminalRuleCall_1_0, grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1());
-			}
-		)
+		RequestedVersionVERSION_REQUESTTerminalRuleCall_0=RULE_VERSION_REQUEST{
+			announce($RequestedVersionVERSION_REQUESTTerminalRuleCall_0, grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment());
+		}
 	)
 )
 ;

@@ -2879,13 +2879,19 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment VersionRequest *:
-	//	'#' requestedVersion=INT;
+	//	requestedVersion=VERSION_REQUEST;
 	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
 		return gaTypeExpressions.getVersionRequestAccess();
 	}
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
+	}
+	
+	//terminal VERSION_REQUEST returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSION_REQUESTRule() {
+		return gaTypeExpressions.getVERSION_REQUESTRule();
 	}
 	
 	//fragment TypeArguments *:

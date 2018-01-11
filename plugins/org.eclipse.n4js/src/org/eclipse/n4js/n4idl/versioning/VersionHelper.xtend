@@ -88,7 +88,7 @@ class VersionHelper {
 			Expression:                  					   	return computeMaximumVersion(ts.tau(object))
 			N4ClassDeclaration case isVersioned(object):	  	return computeMaximumVersion(object.definedType as TClass)
 			N4InterfaceDeclaration case isVersioned(object):	return computeMaximumVersion(object.definedType as TInterface)
-			N4EnumDeclaration case isVersioned(object):		return computeMaximumVersion(object.definedType as TEnum)
+			N4EnumDeclaration case isVersioned(object):			return computeMaximumVersion(object.definedType as TEnum)
 			TClassifier:                 					   	return computeMaximumVersion(object)
 			default:                    					    return computeMaximumVersion(object.eContainer)
 		}

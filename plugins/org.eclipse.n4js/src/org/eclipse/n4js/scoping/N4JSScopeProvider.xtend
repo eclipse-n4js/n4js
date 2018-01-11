@@ -66,6 +66,7 @@ import org.eclipse.n4js.ts.typeRefs.TypeTypeRef
 import org.eclipse.n4js.ts.types.ModuleNamespaceVirtualType
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TStructMethod
+import org.eclipse.n4js.ts.types.TypeDefs
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.ResourceType
@@ -85,6 +86,7 @@ import org.eclipse.xtext.util.IResourceScopeCache
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
 import static extension org.eclipse.n4js.utils.N4JSLanguageUtils.*
+import org.eclipse.n4js.ts.scoping.builtin.BuiltInTypeScope
 
 /**
  * This class contains custom scoping description.
@@ -472,7 +474,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 	}
 
 	/**
-	 * Is entered (and later recursively called) to initially bind "T" in <pre>var T x;</pre> or other parameterized type references.
+	 * Is entered (and later recursively called) to initially bind "T" in <pre>var x : T;</pre> or other parameterized type references.
 	 */
 	def public IScope getTypeScope(EObject context, EReference reference, boolean fromStaticContext) {
 		switch context {
@@ -511,6 +513,11 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 				val parent = getTypeScope(context.eContainer, reference, fromStaticContext);
 				return scopeWithTypeVarsOfFunctionTypeExpression(parent, context);
 			}
+			TypeDefs: {
+				// This case applies when a scope for the built-in type definition
+				// files (builtin_n4.n4ts) is requested. This can simply be handled by a BuiltInTypeScope.
+				return BuiltInTypeScope.get(context.eResource.resourceSet);
+			}
 			default: {
 				val container = context.eContainer;
 
@@ -525,6 +532,7 @@ class N4JSScopeProvider extends AbstractScopeProvider implements IDelegatingScop
 						return parent;
 					}
 				}
+
 				return getTypeScope(container, reference, fromStaticContext);
 			}
 		}

@@ -2663,11 +2663,11 @@ ruleIdentifierRef:
 	(
 		ruleBindingIdentifier
 		    |
-		ruleBindingIdentifier
 		(
-			('#')=>
-			ruleVersionRequest
+			('yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'migration' | RULE_IDENTIFIER)=>
+			ruleBindingIdentifier
 		)
+		ruleVersionRequest
 	)
 ;
 
@@ -2676,11 +2676,11 @@ norm1_IdentifierRef:
 	(
 		norm1_BindingIdentifier
 		    |
-		norm1_BindingIdentifier
 		(
-			('#')=>
-			ruleVersionRequest
+			('get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'migration' | RULE_IDENTIFIER)=>
+			norm1_BindingIdentifier
 		)
+		ruleVersionRequest
 	)
 ;
 
@@ -8250,8 +8250,7 @@ ruleJSXPropertyAttribute:
 
 // Rule VersionDeclaration
 ruleVersionDeclaration:
-	'#'
-	RULE_INT
+	RULE_VERSION_REQUEST
 ;
 
 // Rule VersionedImportIdentifier
@@ -8564,8 +8563,7 @@ ruleTypeAndTypeArguments:
 
 // Rule VersionRequest
 ruleVersionRequest:
-	'#'
-	RULE_INT
+	RULE_VERSION_REQUEST
 ;
 
 // Rule TypeArguments
@@ -9093,6 +9091,8 @@ fragment RULE_TEMPLATE_CONTINUATION : '//4';
 RULE_NO_LINE_TERMINATOR : '//5';
 
 RULE_INCOMPLETE_ASYNC_ARROW : '@=';
+
+RULE_VERSION_REQUEST : '#' RULE_WS* RULE_INT;
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w') '~';
 

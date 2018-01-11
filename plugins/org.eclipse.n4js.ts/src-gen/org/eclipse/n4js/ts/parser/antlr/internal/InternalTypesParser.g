@@ -4948,27 +4948,21 @@ ruleVersionRequest[EObject in_current]  returns [EObject current=in_current]
 	leaveRule();
 }:
 	(
-		otherlv_0=NumberSign
-		{
-			newLeafNode(otherlv_0, grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0());
-		}
 		(
-			(
-				lv_requestedVersion_1_0=RULE_INT
-				{
-					newLeafNode(lv_requestedVersion_1_0, grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0());
+			lv_requestedVersion_0_0=RULE_VERSION_REQUEST
+			{
+				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getVersionRequestRule());
 				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getVersionRequestRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"requestedVersion",
-						lv_requestedVersion_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.INT");
-				}
-			)
+				setWithLastConsumed(
+					$current,
+					"requestedVersion",
+					lv_requestedVersion_0_0,
+					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+			}
 		)
 	)
 ;

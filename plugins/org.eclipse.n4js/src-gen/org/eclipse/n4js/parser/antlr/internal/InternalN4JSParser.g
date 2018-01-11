@@ -13139,6 +13139,7 @@ ruleIdentifierRef returns [EObject current=null]
 				}
 			)
 			(
+				(Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | RULE_IDENTIFIER)=>
 				(
 					{
 						if ($current==null) {
@@ -13154,20 +13155,17 @@ ruleIdentifierRef returns [EObject current=null]
 					}
 				)
 			)
-			(
-				(NumberSign)=>
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getIdentifierRefRule());
-					}
-					newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getIdentifierRefRule());
 				}
-				this_VersionRequest_3=ruleVersionRequest[$current]
-				{
-					$current = $this_VersionRequest_3.current;
-					afterParserOrEnumRuleCall();
-				}
-			)
+				newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
+			}
+			this_VersionRequest_3=ruleVersionRequest[$current]
+			{
+				$current = $this_VersionRequest_3.current;
+				afterParserOrEnumRuleCall();
+			}
 		)
 	)
 ;
@@ -13208,6 +13206,7 @@ norm1_IdentifierRef returns [EObject current=null]
 				}
 			)
 			(
+				(Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | RULE_IDENTIFIER)=>
 				(
 					{
 						if ($current==null) {
@@ -13223,20 +13222,17 @@ norm1_IdentifierRef returns [EObject current=null]
 					}
 				)
 			)
-			(
-				(NumberSign)=>
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getIdentifierRefRule());
-					}
-					newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getIdentifierRefRule());
 				}
-				this_VersionRequest_3=ruleVersionRequest[$current]
-				{
-					$current = $this_VersionRequest_3.current;
-					afterParserOrEnumRuleCall();
-				}
-			)
+				newCompositeNode(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2());
+			}
+			this_VersionRequest_3=ruleVersionRequest[$current]
+			{
+				$current = $this_VersionRequest_3.current;
+				afterParserOrEnumRuleCall();
+			}
 		)
 	)
 ;
@@ -33715,27 +33711,21 @@ ruleVersionDeclaration[EObject in_current]  returns [EObject current=in_current]
 	leaveRule();
 }:
 	(
-		otherlv_0=NumberSign
-		{
-			newLeafNode(otherlv_0, grammarAccess.getVersionDeclarationAccess().getNumberSignKeyword_0());
-		}
 		(
-			(
-				lv_declaredVersion_1_0=RULE_INT
-				{
-					newLeafNode(lv_declaredVersion_1_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionINTTerminalRuleCall_1_0());
+			lv_declaredVersion_0_0=RULE_VERSION_REQUEST
+			{
+				newLeafNode(lv_declaredVersion_0_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getVersionDeclarationRule());
 				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getVersionDeclarationRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"declaredVersion",
-						lv_declaredVersion_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.INT");
-				}
-			)
+				setWithLastConsumed(
+					$current,
+					"declaredVersion",
+					lv_declaredVersion_0_0,
+					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+			}
 		)
 	)
 ;
@@ -35399,27 +35389,21 @@ ruleVersionRequest[EObject in_current]  returns [EObject current=in_current]
 	leaveRule();
 }:
 	(
-		otherlv_0=NumberSign
-		{
-			newLeafNode(otherlv_0, grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0());
-		}
 		(
-			(
-				lv_requestedVersion_1_0=RULE_INT
-				{
-					newLeafNode(lv_requestedVersion_1_0, grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0());
+			lv_requestedVersion_0_0=RULE_VERSION_REQUEST
+			{
+				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0());
+			}
+			{
+				if ($current==null) {
+					$current = createModelElement(grammarAccess.getVersionRequestRule());
 				}
-				{
-					if ($current==null) {
-						$current = createModelElement(grammarAccess.getVersionRequestRule());
-					}
-					setWithLastConsumed(
-						$current,
-						"requestedVersion",
-						lv_requestedVersion_1_0,
-						"org.eclipse.n4js.ts.TypeExpressions.INT");
-				}
-			)
+				setWithLastConsumed(
+					$current,
+					"requestedVersion",
+					lv_requestedVersion_0_0,
+					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+			}
 		)
 	)
 ;

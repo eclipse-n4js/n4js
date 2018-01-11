@@ -535,7 +535,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup(), "rule__JSXPropertyAttribute__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1(), "rule__JSXPropertyAttribute__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getGroup_1_1_1(), "rule__JSXPropertyAttribute__Group_1_1_1__0");
-			nameMappingsBuilder.put(grammarAccess.getVersionDeclarationAccess().getGroup(), "rule__VersionDeclaration__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getGroup_0(), "rule__VersionedImportIdentifier__Group_0__0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getGroup_1(), "rule__VersionedImportIdentifier__Group_1__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeRefAccess().getGroup(), "rule__TypeRef__Group__0");
@@ -574,7 +573,6 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getGroup_2(), "rule__ParameterizedTypeRefStructural__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeAndTypeArgumentsAccess().getGroup(), "rule__TypeAndTypeArguments__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeAndTypeArgumentsAccess().getGroup_0_1(), "rule__TypeAndTypeArguments__Group_0_1__0");
-			nameMappingsBuilder.put(grammarAccess.getVersionRequestAccess().getGroup(), "rule__VersionRequest__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getGroup(), "rule__TypeArguments__Group__0");
 			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getGroup_2(), "rule__TypeArguments__Group_2__0");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberListAccess().getGroup(), "rule__TStructMemberList__Group__0");
@@ -965,7 +963,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getPropertyAssignment_0(), "rule__JSXPropertyAttribute__PropertyAssignment_0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_0(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_0");
 			nameMappingsBuilder.put(grammarAccess.getJSXPropertyAttributeAccess().getJsxAttributeValueAssignment_1_1_1_1(), "rule__JSXPropertyAttribute__JsxAttributeValueAssignment_1_1_1_1");
-			nameMappingsBuilder.put(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment_1(), "rule__VersionDeclaration__DeclaredVersionAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment(), "rule__VersionDeclaration__DeclaredVersionAssignment");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_0_0(), "rule__VersionedImportIdentifier__ImportedElementAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getImportedElementAssignment_1_0(), "rule__VersionedImportIdentifier__ImportedElementAssignment_1_0");
 			nameMappingsBuilder.put(grammarAccess.getVersionedImportIdentifierAccess().getAliasAssignment_1_3(), "rule__VersionedImportIdentifier__AliasAssignment_1_3");
@@ -997,7 +995,7 @@ public class N4JSParser extends AbstractContentAssistParser {
 			nameMappingsBuilder.put(grammarAccess.getParameterizedTypeRefStructuralAccess().getDeclaredTypeAssignment_0_1_2(), "rule__ParameterizedTypeRefStructural__DeclaredTypeAssignment_0_1_2");
 			nameMappingsBuilder.put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_0(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0_0");
 			nameMappingsBuilder.put(grammarAccess.getTypeAndTypeArgumentsAccess().getDeclaredTypeAssignment_0_1_1(), "rule__TypeAndTypeArguments__DeclaredTypeAssignment_0_1_1");
-			nameMappingsBuilder.put(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1(), "rule__VersionRequest__RequestedVersionAssignment_1");
+			nameMappingsBuilder.put(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment(), "rule__VersionRequest__RequestedVersionAssignment");
 			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_1(), "rule__TypeArguments__TypeArgsAssignment_1");
 			nameMappingsBuilder.put(grammarAccess.getTypeArgumentsAccess().getTypeArgsAssignment_2_1(), "rule__TypeArguments__TypeArgsAssignment_2_1");
 			nameMappingsBuilder.put(grammarAccess.getTStructMemberListAccess().getAstStructuralMembersAssignment_1_0(), "rule__TStructMemberList__AstStructuralMembersAssignment_1_0");

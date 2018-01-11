@@ -545,8 +545,6 @@ VerticalLineVerticalLine : '||';
 
 ExclamationMark : '!';
 
-NumberSign : '#';
-
 PercentSign : '%';
 
 Ampersand : '&';
@@ -648,6 +646,8 @@ fragment RULE_TEMPLATE_CONTINUATION : '//4';
 RULE_NO_LINE_TERMINATOR : { false }?=> '//5';
 
 RULE_INCOMPLETE_ASYNC_ARROW : '@=';
+
+RULE_VERSION_REQUEST : '#' RULE_WS* RULE_INT;
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w') '~';
 

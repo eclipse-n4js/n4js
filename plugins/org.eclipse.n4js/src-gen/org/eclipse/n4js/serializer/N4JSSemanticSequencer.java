@@ -1951,7 +1951,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typingStrategy=TypingStrategyDefSiteOperator? 
 	 *                 name=BindingIdentifier
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=INT?)
+	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION_REQUEST?)
 	 *         ) 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (
@@ -2054,7 +2054,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typingStrategy=TypingStrategyDefSiteOperator? 
 	 *                 name=BindingIdentifier
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=INT?)
+	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION_REQUEST?)
 	 *         ) 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
@@ -2119,7 +2119,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             literals+=N4EnumLiteral 
 	 *             literals+=N4EnumLiteral*
 	 *         ) | 
-	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=INT? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
+	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=VERSION_REQUEST? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
 	 *     )
 	 */
 	protected void sequence_AnnotatedExportableElement_N4EnumDeclaration_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
@@ -3436,13 +3436,13 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 bogusTypeRef=TypeRefWithModifiers? 
 	 *                 (declaredName=LiteralOrComputedPropertyName | declaredName=LiteralOrComputedPropertyName)
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName) | 
-	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
 	 *             (
 	 *                 (declaredModifiers+=N4Modifier+ | (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers?)) 
 	 *                 generator?='*' 
 	 *                 declaredName=LiteralOrComputedPropertyName
-	 *             )
+	 *             ) | 
+	 *             (declaredModifiers+=N4Modifier+ declaredName=LiteralOrComputedPropertyName) | 
+	 *             (declaredModifiers+=N4Modifier+ bogusTypeRef=TypeRefWithModifiers? generator?='*' declaredName=LiteralOrComputedPropertyName)
 	 *         )? 
 	 *         (fpars+=FormalParameter fpars+=FormalParameter*)? 
 	 *         returnTypeRef=TypeRef? 
@@ -3868,7 +3868,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typingStrategy=TypingStrategyDefSiteOperator? 
 	 *                 name=BindingIdentifier
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=INT?)
+	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION_REQUEST?)
 	 *         ) 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (
@@ -4005,7 +4005,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *                 typingStrategy=TypingStrategyDefSiteOperator? 
 	 *                 name=BindingIdentifier
 	 *             ) | 
-	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=INT?)
+	 *             (declaredModifiers+=N4Modifier* typingStrategy=TypingStrategyDefSiteOperator? name=BindingIdentifier? declaredVersion=VERSION_REQUEST?)
 	 *         ) 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
@@ -4068,7 +4068,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *             literals+=N4EnumLiteral 
 	 *             literals+=N4EnumLiteral*
 	 *         ) | 
-	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=INT? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
+	 *         (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=VERSION_REQUEST? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
 	 *     )
 	 */
 	protected void sequence_AnnotatedScriptElement_N4EnumDeclaration_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
@@ -8244,7 +8244,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         typingStrategy=TypingStrategyDefSiteOperator? 
 	 *         name=BindingIdentifier? 
-	 *         declaredVersion=INT? 
+	 *         declaredVersion=VERSION_REQUEST? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (
 	 *             (
@@ -12238,7 +12238,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     JSXElementNameExpression.ParameterizedPropertyAccessExpression_1_0 returns VersionedIdentifierRef
 	 *
 	 * Constraint:
-	 *     (id=[IdentifiableElement|BindingIdentifier] requestedVersion=INT)
+	 *     (id=[IdentifiableElement|BindingIdentifier] requestedVersion=VERSION_REQUEST)
 	 */
 	protected void sequence_IdentifierRef_VersionRequest(ISerializationContext context, VersionedIdentifierRef semanticObject) {
 		if (errorAcceptor != null) {
@@ -12249,7 +12249,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 		}
 		SequenceFeeder feeder = createSequencerFeeder(context, semanticObject);
 		feeder.accept(grammarAccess.getIdentifierRefAccess().getIdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1(), semanticObject.eGet(N4JSPackage.Literals.IDENTIFIER_REF__ID, false));
-		feeder.accept(grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0(), semanticObject.getRequestedVersion());
+		feeder.accept(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0(), semanticObject.getRequestedVersion());
 		feeder.finish();
 	}
 	
@@ -13797,7 +13797,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *         declaredModifiers+=N4Modifier* 
 	 *         typingStrategy=TypingStrategyDefSiteOperator? 
 	 *         name=BindingIdentifier? 
-	 *         declaredVersion=INT? 
+	 *         declaredVersion=VERSION_REQUEST? 
 	 *         (typeVars+=TypeVariable typeVars+=TypeVariable*)? 
 	 *         (superInterfaceRefs+=ParameterizedTypeRefNominal superInterfaceRefs+=ParameterizedTypeRefNominal*)? 
 	 *         ownedMembersRaw+=N4MemberDeclaration*
@@ -16950,7 +16950,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 *     N4EnumDeclaration returns N4EnumDeclaration
 	 *
 	 * Constraint:
-	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=INT? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
+	 *     (declaredModifiers+=N4Modifier* name=BindingIdentifier? declaredVersion=VERSION_REQUEST? (literals+=N4EnumLiteral literals+=N4EnumLiteral*)?)
 	 */
 	protected void sequence_N4EnumDeclaration_VersionDeclaration(ISerializationContext context, N4EnumDeclaration semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -24445,7 +24445,7 @@ public class N4JSSemanticSequencer extends TypeExpressionsSemanticSequencer {
 	 * Constraint:
 	 *     (
 	 *         (importedElement=[TExportableElement|BindingIdentifier] | importedElement=[TExportableElement|IdentifierName]) 
-	 *         requestedVersion=INT 
+	 *         requestedVersion=VERSION_REQUEST 
 	 *         alias=BindingIdentifier?
 	 *     )
 	 */

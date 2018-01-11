@@ -35,7 +35,16 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 	private QualifiedNameComputer qualifiedNameComputer;
 
 	override getVersionScope(TClassifier classifier) {
-		return getN4JSScope(classifier.containingModule,
+		var EObject context = classifier;
+
+		// If present, use containing module as scoping context.
+		// For built-in types however, there is no containing module and thus the
+		// classifier itself is used.
+		if (null !== classifier.containingModule) {
+			context = classifier.containingModule;
+		}
+
+		return getN4JSScope(context,
 			TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE);
 	}
 

@@ -366,7 +366,7 @@ public class N4JSSyntacticSequencer extends AbstractSyntacticSequencer {
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
 	 *     declaredModifiers+=N4Modifier 'interface' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
-	 *     declaredVersion=INT (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
+	 *     declaredVersion=VERSION_REQUEST (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
 	 *     name=BindingIdentifier (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
 	 *     typeVars+=TypeVariable '>' (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal
 	 *     typingStrategy=TypingStrategyDefSiteOperator (ambiguity) superInterfaceRefs+=ParameterizedTypeRefNominal

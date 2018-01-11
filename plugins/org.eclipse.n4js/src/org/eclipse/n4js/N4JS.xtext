@@ -587,7 +587,7 @@ ParenExpression <Yield>: '(' expression=Expression<In=true,Yield> ')';
 
 IdentifierRef <Yield>:
 	id=[types::IdentifiableElement|BindingIdentifier<Yield>]
-	| {VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] -> VersionRequest
+	| {VersionedIdentifierRef} -> id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 ;
 
 SuperLiteral: {SuperLiteral} 'super';
@@ -1543,7 +1543,7 @@ JSXPropertyAttribute:
 /*
  * Version declaration, used in type declarations and types refs of migration parameters and returns.
  */
-fragment VersionDeclaration*: '#' declaredVersion=INT;
+fragment VersionDeclaration*: declaredVersion=VERSION_REQUEST;
 
 
 VersionedImportIdentifier returns VersionedNamedImportSpecifier:

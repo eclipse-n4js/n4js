@@ -1031,26 +1031,18 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	public class VersionRequestElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.VersionRequest");
-		private final Group cGroup = (Group)rule.eContents().get(0);
-		private final Keyword cNumberSignKeyword_0 = (Keyword)cGroup.eContents().get(0);
-		private final Assignment cRequestedVersionAssignment_1 = (Assignment)cGroup.eContents().get(1);
-		private final RuleCall cRequestedVersionINTTerminalRuleCall_1_0 = (RuleCall)cRequestedVersionAssignment_1.eContents().get(0);
+		private final Assignment cRequestedVersionAssignment = (Assignment)rule.eContents().get(0);
+		private final RuleCall cRequestedVersionVERSION_REQUESTTerminalRuleCall_0 = (RuleCall)cRequestedVersionAssignment.eContents().get(0);
 		
 		//fragment VersionRequest *:
-		//	'#' requestedVersion=INT;
+		//	requestedVersion=VERSION_REQUEST;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//'#' requestedVersion=INT
-		public Group getGroup() { return cGroup; }
+		//requestedVersion=VERSION_REQUEST
+		public Assignment getRequestedVersionAssignment() { return cRequestedVersionAssignment; }
 		
-		//'#'
-		public Keyword getNumberSignKeyword_0() { return cNumberSignKeyword_0; }
-		
-		//requestedVersion=INT
-		public Assignment getRequestedVersionAssignment_1() { return cRequestedVersionAssignment_1; }
-		
-		//INT
-		public RuleCall getRequestedVersionINTTerminalRuleCall_1_0() { return cRequestedVersionINTTerminalRuleCall_1_0; }
+		//VERSION_REQUEST
+		public RuleCall getRequestedVersionVERSION_REQUESTTerminalRuleCall_0() { return cRequestedVersionVERSION_REQUESTTerminalRuleCall_0; }
 	}
 	public class TypeArgumentsElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.TypeArguments");
@@ -2192,6 +2184,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	private final ParameterizedTypeRefStructuralElements pParameterizedTypeRefStructural;
 	private final TypeAndTypeArgumentsElements pTypeAndTypeArguments;
 	private final VersionRequestElements pVersionRequest;
+	private final TerminalRule tVERSION_REQUEST;
 	private final TypeArgumentsElements pTypeArguments;
 	private final TStructMemberListElements pTStructMemberList;
 	private final TStructMemberElements pTStructMember;
@@ -2260,6 +2253,7 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 		this.pParameterizedTypeRefStructural = new ParameterizedTypeRefStructuralElements();
 		this.pTypeAndTypeArguments = new TypeAndTypeArgumentsElements();
 		this.pVersionRequest = new VersionRequestElements();
+		this.tVERSION_REQUEST = (TerminalRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
 		this.pTypeArguments = new TypeArgumentsElements();
 		this.pTStructMemberList = new TStructMemberListElements();
 		this.pTStructMember = new TStructMemberElements();
@@ -2612,13 +2606,19 @@ public class TypeExpressionsGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment VersionRequest *:
-	//	'#' requestedVersion=INT;
+	//	requestedVersion=VERSION_REQUEST;
 	public VersionRequestElements getVersionRequestAccess() {
 		return pVersionRequest;
 	}
 	
 	public ParserRule getVersionRequestRule() {
 		return getVersionRequestAccess().getRule();
+	}
+	
+	//terminal VERSION_REQUEST returns ecore::EBigDecimal:
+	//	'#' WS* INT;
+	public TerminalRule getVERSION_REQUESTRule() {
+		return tVERSION_REQUEST;
 	}
 	
 	//fragment TypeArguments *:

@@ -40,7 +40,6 @@ import org.eclipse.n4js.services.N4JSGrammarAccess;
 	
 	{
 		tokenNameToValue.put("ExclamationMark", "'!'");
-		tokenNameToValue.put("NumberSign", "'#'");
 		tokenNameToValue.put("PercentSign", "'\%'");
 		tokenNameToValue.put("Ampersand", "'&'");
 		tokenNameToValue.put("LeftParenthesis", "'('");
@@ -8365,9 +8364,9 @@ ruleVersionDeclaration
 	}
 	:
 	(
-		{ before(grammarAccess.getVersionDeclarationAccess().getGroup()); }
-		(rule__VersionDeclaration__Group__0)
-		{ after(grammarAccess.getVersionDeclarationAccess().getGroup()); }
+		{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment()); }
+		(rule__VersionDeclaration__DeclaredVersionAssignment)
+		{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment()); }
 	)
 ;
 finally {
@@ -8941,9 +8940,9 @@ ruleVersionRequest
 	}
 	:
 	(
-		{ before(grammarAccess.getVersionRequestAccess().getGroup()); }
-		(rule__VersionRequest__Group__0)
-		{ after(grammarAccess.getVersionRequestAccess().getGroup()); }
+		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment()); }
+		(rule__VersionRequest__RequestedVersionAssignment)
+		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment()); }
 	)
 ;
 finally {
@@ -35216,7 +35215,7 @@ rule__IdentifierRef__Group_1__2__Impl
 :
 (
 	{ before(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
-	(ruleVersionRequest)
+	ruleVersionRequest
 	{ after(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
 )
 ;
@@ -35297,7 +35296,7 @@ norm1_IdentifierRef__Group_1__2__Impl
 :
 (
 	{ before(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
-	(ruleVersionRequest)
+	ruleVersionRequest
 	{ after(grammarAccess.getIdentifierRefAccess().getVersionRequestParserRuleCall_1_2()); }
 )
 ;
@@ -67862,60 +67861,6 @@ finally {
 }
 
 
-rule__VersionDeclaration__Group__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionDeclaration__Group__0__Impl
-	rule__VersionDeclaration__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionDeclaration__Group__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionDeclarationAccess().getNumberSignKeyword_0()); }
-	NumberSign
-	{ after(grammarAccess.getVersionDeclarationAccess().getNumberSignKeyword_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionDeclaration__Group__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionDeclaration__Group__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionDeclaration__Group__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment_1()); }
-	(rule__VersionDeclaration__DeclaredVersionAssignment_1)
-	{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment_1()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
 rule__VersionedImportIdentifier__Group_0__0
 	@init {
 		int stackSize = keepStackSize();
@@ -70839,60 +70784,6 @@ rule__TypeAndTypeArguments__Group_0_1__2__Impl
 	{ before(grammarAccess.getTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_0_1_2()); }
 	ruleVersionRequest
 	{ after(grammarAccess.getTypeAndTypeArgumentsAccess().getVersionRequestParserRuleCall_0_1_2()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-
-rule__VersionRequest__Group__0
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionRequest__Group__0__Impl
-	rule__VersionRequest__Group__1
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionRequest__Group__0__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0()); }
-	NumberSign
-	{ after(grammarAccess.getVersionRequestAccess().getNumberSignKeyword_0()); }
-)
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionRequest__Group__1
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-	rule__VersionRequest__Group__1__Impl
-;
-finally {
-	restoreStackSize(stackSize);
-}
-
-rule__VersionRequest__Group__1__Impl
-	@init {
-		int stackSize = keepStackSize();
-	}
-:
-(
-	{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1()); }
-	(rule__VersionRequest__RequestedVersionAssignment_1)
-	{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment_1()); }
 )
 ;
 finally {
@@ -83622,15 +83513,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionDeclaration__DeclaredVersionAssignment_1
+rule__VersionDeclaration__DeclaredVersionAssignment
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionINTTerminalRuleCall_1_0()); }
-		RULE_INT
-		{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionINTTerminalRuleCall_1_0()); }
+		{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0()); }
+		RULE_VERSION_REQUEST
+		{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0()); }
 	)
 ;
 finally {
@@ -84146,15 +84037,15 @@ finally {
 	restoreStackSize(stackSize);
 }
 
-rule__VersionRequest__RequestedVersionAssignment_1
+rule__VersionRequest__RequestedVersionAssignment
 	@init {
 		int stackSize = keepStackSize();
 	}
 :
 	(
-		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0()); }
-		RULE_INT
-		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionINTTerminalRuleCall_1_0()); }
+		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
+		RULE_VERSION_REQUEST
+		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
 	)
 ;
 finally {
