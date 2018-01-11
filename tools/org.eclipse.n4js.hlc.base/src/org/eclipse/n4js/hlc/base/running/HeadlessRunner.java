@@ -71,9 +71,14 @@ public class HeadlessRunner {
 
 		RunConfiguration runConfiguration = null;
 		try {
-			runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
-					systemLoader, locationToRun,
-					targetPlatformInstallLocation.toPath().resolve("node_modules").toAbsolutePath().toString());
+			if (targetPlatformInstallLocation != null) {
+				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
+						systemLoader, locationToRun,
+						targetPlatformInstallLocation.toPath().resolve("node_modules").toAbsolutePath().toString());
+			} else {
+				runConfiguration = runnerFrontEnd.createConfiguration(runnerDescriptor.getId(), implementationId,
+						systemLoader, locationToRun);
+			}
 		} catch (java.lang.IllegalStateException e2) {
 			logger.error(Throwables.getStackTraceAsString(e2));
 			throw new ExitCodeException(EXITCODE_RUNNER_STOPPED_WITH_ERROR,
