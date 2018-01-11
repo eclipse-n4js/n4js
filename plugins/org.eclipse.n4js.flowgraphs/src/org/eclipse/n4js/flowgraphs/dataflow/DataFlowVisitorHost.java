@@ -20,10 +20,10 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitorInternal;
-import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorerInternal;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorInternal;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;

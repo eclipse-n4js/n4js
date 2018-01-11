@@ -12,10 +12,10 @@ package org.eclipse.n4js.flowgraphs.analysers;
 
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**

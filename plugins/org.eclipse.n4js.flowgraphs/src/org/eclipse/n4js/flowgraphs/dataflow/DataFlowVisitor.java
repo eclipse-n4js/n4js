@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
-import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**

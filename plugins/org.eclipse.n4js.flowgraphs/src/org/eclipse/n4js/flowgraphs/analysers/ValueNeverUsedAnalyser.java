@@ -10,7 +10,7 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;

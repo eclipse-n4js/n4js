@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.analysis;
 
 import java.util.HashSet;
 import java.util.LinkedList;

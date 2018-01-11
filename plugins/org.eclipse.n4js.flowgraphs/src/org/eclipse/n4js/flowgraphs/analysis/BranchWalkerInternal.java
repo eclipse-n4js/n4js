@@ -8,14 +8,14 @@
  * Contributors:
  *   Marcus Mews - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.analysis;
 
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorerInternal.Quantor;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorerInternal.Quantor;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 

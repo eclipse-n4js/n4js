@@ -8,7 +8,7 @@
  * Contributors:
  *   Marcus Mews - Initial API and implementation
  */
-package org.eclipse.n4js.flowgraphs.analyses;
+package org.eclipse.n4js.flowgraphs.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;

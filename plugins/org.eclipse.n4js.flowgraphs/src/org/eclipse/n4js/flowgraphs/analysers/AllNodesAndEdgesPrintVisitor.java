@@ -19,11 +19,11 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalker;
-import org.eclipse.n4js.flowgraphs.analyses.BranchWalkerInternal;
-import org.eclipse.n4js.flowgraphs.analyses.GraphExplorer;
-import org.eclipse.n4js.flowgraphs.analyses.GraphVisitor;
-import org.eclipse.n4js.flowgraphs.analyses.TraverseDirection;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
+import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
+import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
+import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Script;
