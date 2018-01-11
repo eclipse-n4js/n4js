@@ -154,9 +154,9 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		assertMarkers("file should have a single error", c1, 1);
 		assertMarkers("file should have a single error", c2, 1);
 		removeSrc2FromSource
-		// all errors removed again (only iff CompilerProperties.IS_ABORTING_ON_MF_ERRORS==true)
 		assertMarkers("file should have no errors", c1, 0);
-		assertMarkers("file should have one error", c2, 0);
+		// since src2 is no longer a source folder, it is not validated - markers remain
+		assertMarkers("file should have one error", c2, 1);
 	}
 
 	@Test
