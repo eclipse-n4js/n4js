@@ -10,7 +10,7 @@
  */
 
 /**
-  * This test verifies that versioned types and migrations are disabled in N4JS.
+  * This test verifies that versioned types and migrations are disabled in N4JSD.
  */
 
 /* XPECT_SETUP org.eclipse.n4js.n4idl.spec.tests.N4IDLModelVersionTest END_SETUP */

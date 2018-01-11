@@ -24,11 +24,13 @@ public class ParseVersionedClassTest extends AbstractN4IDLParserTest {
 		assertEquals("C", decl.name)
 		assertEquals(1, decl.declaredVersion.intValue)
 	}
-
+	
+	
 	@Test
 	def void testUnVersionedClass_01() {
-		'class C {}'.parseWithError
+		// The grammar allows for unversioned types in N4IDL.
+		// The validator may have different constraints, but at this point (after parsing)
+		// this should be valid code.
+		'class C {}'.parseSuccessfully
 	}
-
-
 }
