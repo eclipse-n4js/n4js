@@ -19,7 +19,21 @@ public class ReqTest {
 	basics___Case(): string {}
 
 	/**
-	 * @spec Ext Description
+	 * @spec
+	 * This is some Description in a paragraph.
+	 *
+	 *
+	 *
+	 * Now, this is a new paragraph, separated by three empty lines.
+	 * +
+	 * And this sentence is separated by a plus from the preceding.
+	 *
+	 * Now, this is some code:
+	 * <code>
+	 * function f(i : int):any {
+	 *     return null;
+	 * }
+	 * </code>
 	 * @reqid 1001_b
 	 */
 	@Test

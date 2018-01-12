@@ -14,7 +14,7 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			A.n4jsd
 				A::15::21::21
-				A#foo::17::22::40
+				A#foo::17::22::41
 	SpecSample3_RedundantLines#test
 		NO_PACKAGE
 			ATests.n4js

@@ -488,9 +488,10 @@ class ADocSerializer {
 			strbTmp.appendSpecDescriptions(doclets);
 			if (strbTmp.length > 0) {
 				strb.append("+\n");
-				strb.append("--\n\n");
+				strb.append("[.requirementConstraint]\n");
+				strb.append("====\n\n");
 				strb.append(strbTmp);
-				strb.append("\n--\n");
+				strb.append("\n====\n");
 			}
 		}
 		return strb
