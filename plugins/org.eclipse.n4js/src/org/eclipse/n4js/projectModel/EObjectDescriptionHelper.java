@@ -53,8 +53,7 @@ public final class EObjectDescriptionHelper {
 		}
 
 		// if not a main module we assume true
-		final String mainModuelUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
-		if (mainModuelUserData == null || !Boolean.valueOf(mainModuelUserData)) {
+		if (!isMainModule(eoDescription)) {
 			return true;
 		}
 
@@ -63,6 +62,34 @@ public final class EObjectDescriptionHelper {
 		final IN4JSProject currentProject = n4jsCore.findProject(eObject.eResource().getURI()).orNull();
 
 		return targetProject == currentProject;
+	}
+
+	/**
+	 * Determines whether the given object description represents a main module.
+	 *
+	 * Try to determine the main module status from the contained eObject if it is resolved and a module. This is
+	 * necessary because the headless compiler doesn't serialize the modules for performance reasons, so the
+	 * N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY user data entry is not there to check.
+	 */
+	private boolean isMainModule(IEObjectDescription eoDescription) {
+		return isMainModuleFromObject(eoDescription) || isMainModuleFromUserData(eoDescription);
+	}
+
+	/**
+	 * Accesses the object referenced by the given object description to determine whether it represents a main module.
+	 */
+	private boolean isMainModuleFromObject(IEObjectDescription eoDescription) {
+		TModule moduleOrProxy = (TModule) eoDescription.getEObjectOrProxy();
+		return !moduleOrProxy.eIsProxy() && moduleOrProxy.isMainModule();
+	}
+
+	/**
+	 * Accesses the serialized main module status value in the user data of the given object description to determine
+	 * whether it represents a main module.
+	 */
+	private boolean isMainModuleFromUserData(IEObjectDescription eoDescription) {
+		String mainModuleUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
+		return mainModuleUserData != null && Boolean.valueOf(mainModuleUserData);
 	}
 
 }

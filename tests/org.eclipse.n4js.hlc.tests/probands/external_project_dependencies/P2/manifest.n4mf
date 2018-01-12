@@ -9,27 +9,18 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-public class ReqTest {
+ProjectId: P2
+VendorId: org.eclipse.n4js
+VendorName: "Eclipse N4JS Project"
+ProjectType: library
+ProjectVersion: 0.0.1-SNAPSHOT
+Output: "src-gen"
+Sources {
+	source {
+		"src"
+	}
+}
 
-	/**
-	 * @spec Basic Description
-	 * @reqid 1000_a
-	 */
-	@Test
-	_02_basics___1_Case(): string {}
-
-	/**
-	 * @spec Ext Description
-	 * @reqid 1001_b
-	 */
-	@Test
-	ext___Case(): string {}
-
-	/**
-	 * @spec Foo Test Description
-	 * @reqid 1000_b
-	 * @testee A.A.foo
-	 */
-	@Test
-	testFoo(): string {}
+ProjectDependencies {
+	react
 }
