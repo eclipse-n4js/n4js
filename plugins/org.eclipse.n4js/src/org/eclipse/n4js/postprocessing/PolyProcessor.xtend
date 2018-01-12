@@ -201,7 +201,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	}
 
 	/** Calculate expected type of a destructure pattern based on its structure */
-	def TypeRef calculateExpectedType(DestructNode destructNode, RuleEnvironment G) {
+	private def TypeRef calculateExpectedType(DestructNode destructNode, RuleEnvironment G) {
 		val elementTypes = new ArrayList<TypeArgument>();
 		val elementMembers = new ArrayList<TStructMember>();
 		val elemCount = destructNode.nestedNodes.size
@@ -256,18 +256,14 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			var declaredTypeRef = varDecl.declaredTypeRef;
 			if (declaredTypeRef !== null) {
 				return declaredTypeRef
-			} else {
-				return G.topTypeRef
 			}
 		} else if (varRef !== null) {
 			// It is a variable reference, retrieve the declared type of the variable
 			if (varRef.id instanceof VariableDeclaration) {
 				return (varRef.id as VariableDeclaration).declaredTypeRef
-			} else {
-				G.topTypeRef
 			}
 		}
-
+		// In case the expected type does not exist, simply return 'any' type (top type)
 		return G.topTypeRef
 	}
 
