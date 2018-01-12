@@ -12,7 +12,7 @@ package org.eclipse.n4js.flowgraphs.analysis;
 
 import java.util.Collection;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -36,8 +36,8 @@ public class GraphVisitorAnalysis {
 		this.cfg = cfg;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#accept(GraphVisitor...)} */
-	public void analyseScript(N4JSFlowAnalyzer flowAnalyzer, Collection<? extends GraphVisitorInternal> graphWalkers) {
+	/** see {@link N4JSFlowAnalyser#accept(GraphVisitor...)} */
+	public void analyseScript(N4JSFlowAnalyser flowAnalyzer, Collection<? extends GraphVisitorInternal> graphWalkers) {
 		GraphVisitorGuideInternal guide = new GraphVisitorGuideInternal(flowAnalyzer, graphWalkers);
 		guide.init();
 

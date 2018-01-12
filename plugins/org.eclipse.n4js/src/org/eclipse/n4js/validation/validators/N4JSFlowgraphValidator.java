@@ -10,21 +10,30 @@
  */
 package org.eclipse.n4js.validation.validators;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
-import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitorHost;
+import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.FunctionDeclaration;
+import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.Script;
+import org.eclipse.n4js.projectModel.IN4JSCore;
+import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueCodes;
+import org.eclipse.xtext.EcoreUtil2;
 import org.eclipse.xtext.service.OperationCanceledManager;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.validation.CancelableDiagnostician;
@@ -41,6 +50,12 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
+
+	@Inject
+	private FindReferenceHelper findReferenceHelper;
+
+	@Inject
+	private IN4JSCore n4jsCore;
 
 	/**
 	 * NEEEDED
@@ -66,16 +81,14 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	public void checkFlowGraphs(Script script) {
 		// Note: The Flow Graph is NOT stored in the meta info cache. Hence, it is created here at use site.
 		// In case the its creation is moved to the N4JSPostProcessor, care about an increase in memory consumption.
-		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer(this::checkCancelled);
+		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser(this::checkCancelled);
 
 		DeadCodeAnalyser dcv = new DeadCodeAnalyser();
 		UsedBeforeDeclaredAnalyser cvgv1 = new UsedBeforeDeclaredAnalyser();
-
 		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
-		DataFlowVisitorHost dfvh = new DataFlowVisitorHost(nda);
 
 		flowAnalyzer.createGraphs(script);
-		flowAnalyzer.accept(dcv, dfvh, cvgv1);
+		flowAnalyzer.accept(dcv, nda, cvgv1);
 
 		internalCheckDeadCode(dcv);
 		internalCheckUsedBeforeDeclared(cvgv1);
@@ -125,13 +138,20 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		List<NullDereferenceResult> nullDerefs = nda.getNullDereferences();
 		for (NullDereferenceResult ndr : nullDerefs) {
 			String varName = ndr.checkedSymbol.getName();
-			String isOrMaybe = ndr.must ? "is" : "may be";
+
+			boolean isLeakingToClosure = isLeakingToClosure(ndr.checkedSymbol);
+			boolean isInTestFolder = isInTestFolder(ndr.checkedSymbol.getASTLocation());
+			if (isInTestFolder && isLeakingToClosure) {
+				continue; // ignore these warnings in test related source
+			}
+
+			String isOrMaybe = ndr.must && !isLeakingToClosure ? "is" : "may be";
 			String nullOrUndefined = "null or undefined";
 			nullOrUndefined = ndr.nullOrUndefinedSymbol.isNullLiteral() ? "null" : nullOrUndefined;
 			nullOrUndefined = ndr.nullOrUndefinedSymbol.isUndefinedLiteral() ? "undefined" : nullOrUndefined;
 			String reason = getReason(ndr);
 			String msg = IssueCodes.getMessageForDFG_NULL_DEREFERENCE(varName, isOrMaybe, nullOrUndefined, reason);
-			addIssue(msg, ndr.cfe, IssueCodes.DFG_NULL_DEREFERENCE);
+			addIssue(msg, ndr.cfe, IssueCodes.DFG_NULL_DEREFERENCE); // deactivated during tests
 		}
 	}
 
@@ -140,6 +160,44 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 			return "due to previous variable " + ndr.causingSymbol.getName();
 		}
 		return "";
+	}
+
+	private boolean isLeakingToClosure(Symbol s) {
+		EObject decl = s.getDeclaration();
+		Iterator<EObject> refs = findReferenceHelper.findReferences(decl).iterator();
+		if (!refs.hasNext()) {
+			return false;
+		}
+
+		EObject ref = refs.next();
+		EObject parentScope = getParentScope(ref);
+		while (refs.hasNext()) {
+			ref = refs.next();
+			if (parentScope != getParentScope(ref)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private EObject getParentScope(EObject eobj) {
+		Iterable<EObject> containers = EcoreUtil2.getAllContainers(eobj);
+		for (EObject container : containers) {
+			boolean isScopeParent = false;
+			isScopeParent |= container instanceof FunctionDeclaration;
+			isScopeParent |= container instanceof FunctionExpression;
+			if (isScopeParent) {
+				return container;
+			}
+		}
+		return null;
+	}
+
+	private boolean isInTestFolder(EObject eobj) {
+		URI location = eobj.eResource().getURI();
+		final IN4JSSourceContainer c = n4jsCore.findN4JSSourceContainer(location).orNull();
+		return c != null && c.isTest();
 	}
 
 }

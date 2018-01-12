@@ -19,10 +19,10 @@ import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
- * When enabled, the {@link N4JSFlowAnalyzerDataRecorder} class records data during creating and traversing the flow
+ * When enabled, the {@link N4JSFlowAnalyserDataRecorder} class records data during creating and traversing the flow
  * graphs. This recording is disabled by default for performance reasons.
  */
-public class N4JSFlowAnalyzerDataRecorder {
+public class N4JSFlowAnalyserDataRecorder {
 	static private boolean enabled = false;
 	static private List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class N4JSFlowAnalyzerDataRecorder {
 
 	/** @return the merged edges map */
 	static public List<Pair<Node, List<ControlFlowEdge>>> getMergedEdges() {
-		Collections.sort(mergedEdges, N4JSFlowAnalyzerDataRecorder::compareNodes);
+		Collections.sort(mergedEdges, N4JSFlowAnalyserDataRecorder::compareNodes);
 		return mergedEdges;
 	}
 

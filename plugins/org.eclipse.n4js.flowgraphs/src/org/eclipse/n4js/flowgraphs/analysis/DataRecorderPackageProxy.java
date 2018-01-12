@@ -13,18 +13,18 @@ package org.eclipse.n4js.flowgraphs.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerDataRecorder;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyserDataRecorder;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 
 /**
- * This is a proxy that delegates calls to {@link N4JSFlowAnalyzerDataRecorder}. The reason to have this proxy is the
+ * This is a proxy that delegates calls to {@link N4JSFlowAnalyserDataRecorder}. The reason to have this proxy is the
  * restricted accessibility of some recorded data.
  */
 public class DataRecorderPackageProxy {
 
 	static void addMergedEdges(List<EdgeGuide> edgeGuides) {
-		if (!N4JSFlowAnalyzerDataRecorder.isEnabled()) {
+		if (!N4JSFlowAnalyserDataRecorder.isEnabled()) {
 			return;
 		}
 
@@ -34,7 +34,7 @@ public class DataRecorderPackageProxy {
 		}
 		Node startNode = edgeGuides.get(0).getNextNode();
 
-		N4JSFlowAnalyzerDataRecorder.addMergedEdges(startNode, edges);
+		N4JSFlowAnalyserDataRecorder.addMergedEdges(startNode, edges);
 	}
 
 }

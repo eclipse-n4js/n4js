@@ -95,7 +95,11 @@ public class FindReferenceHelper {
 		};
 
 		SimpleResourceAccess resourceAccess = new SimpleResourceAccess(eResource.getResourceSet());
-		referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
+		try {
+			referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
+		} catch (Throwable t) {
+			// bug
+		}
 
 		return result;
 	}

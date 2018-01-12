@@ -18,7 +18,7 @@ import java.util.Set;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -37,7 +37,7 @@ public class SuccessorPredecessorAnalysis {
 		this.cfg = cfg;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getPredecessors(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyser#getPredecessors(ControlFlowElement)} */
 	public Set<ControlFlowElement> getPredecessors(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
 		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
@@ -45,7 +45,7 @@ public class SuccessorPredecessorAnalysis {
 		return predecessors;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getPredecessorsSkipInternal(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyser#getPredecessorsSkipInternal(ControlFlowElement)} */
 	public Set<ControlFlowElement> getPredecessorsSkipInternal(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Backward();
 		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);
@@ -53,7 +53,7 @@ public class SuccessorPredecessorAnalysis {
 		return predecessors;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getSuccessors(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyser#getSuccessors(ControlFlowElement)} */
 	public Set<ControlFlowElement> getSuccessors(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
 		Node nextNode = getNextNode(cfe, false, nextEdgesProvider);
@@ -61,7 +61,7 @@ public class SuccessorPredecessorAnalysis {
 		return successors;
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getSuccessorsSkipInternal(ControlFlowElement)} */
+	/** see {@link N4JSFlowAnalyser#getSuccessorsSkipInternal(ControlFlowElement)} */
 	public Set<ControlFlowElement> getSuccessorsSkipInternal(ControlFlowElement cfe) {
 		NextEdgesProvider nextEdgesProvider = new NextEdgesProvider.Forward();
 		Node nextNode = getNextNode(cfe, true, nextEdgesProvider);

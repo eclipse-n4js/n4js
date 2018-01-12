@@ -23,7 +23,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.n4js.flowgraphs.FGUtils;
 import org.eclipse.n4js.flowgraphs.FlowEdge;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.BranchWalker;
 import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
 import org.eclipse.n4js.flowgraphs.analysis.GraphExplorer;
@@ -40,10 +40,10 @@ import org.eclipse.xtext.EcoreUtil2;
 
 /**
  * The graph provider creates {@link Node}s and {@link CFEdge}s for a given {@link Script}. Moreover, it provides some
- * calls to the {@link N4JSFlowAnalyzer} API by delegating to it.
+ * calls to the {@link N4JSFlowAnalyser} API by delegating to it.
  */
 public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement> {
-	N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+	N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
 	Map<ControlFlowElement, CFNode> nodeMap = new HashMap<>();
 	Map<ControlFlowElement, List<Edge>> edgesMap = new HashMap<>();
 	final NodesEdgesCollector nodesEdgesCollector = new NodesEdgesCollector();
@@ -70,8 +70,8 @@ public class CFGraphProvider implements GraphProvider<Object, ControlFlowElement
 		return succs;
 	}
 
-	/** @return a reference to {@link N4JSFlowAnalyzer} of the current {@link Script} */
-	public N4JSFlowAnalyzer getFlowAnalyses() {
+	/** @return a reference to {@link N4JSFlowAnalyser} of the current {@link Script} */
+	public N4JSFlowAnalyser getFlowAnalyses() {
 		return flowAnalyzer;
 	}
 

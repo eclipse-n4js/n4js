@@ -13,7 +13,8 @@ package org.eclipse.n4js.flowgraphs.analysis;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.FlowAnalyser;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -21,9 +22,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 /**
  * This class is the counterpart of {@link GraphVisitorGuideInternal} and the basis for the {@link GraphVisitor}.
  */
-abstract public class GraphVisitorInternal {
-	/** Reference to {@link N4JSFlowAnalyzer}. Set before performing the analyses. */
-	protected N4JSFlowAnalyzer flowAnalyzer;
+abstract public class GraphVisitorInternal implements FlowAnalyser {
+	/** Reference to {@link N4JSFlowAnalyser}. Set before performing the analyses. */
+	protected N4JSFlowAnalyser flowAnalyzer;
 	/** Container, specified in constructor */
 	protected final ControlFlowElement container;
 	/** Modes, specified in constructor */
@@ -133,8 +134,8 @@ abstract public class GraphVisitorInternal {
 
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
-	/** Only called from {@link GraphVisitorGuideInternal}. Sets the reference to {@link N4JSFlowAnalyzer} singleton. */
-	final void setFlowAnalyses(N4JSFlowAnalyzer flowAnalyzer) {
+	/** Only called from {@link GraphVisitorGuideInternal}. Sets the reference to {@link N4JSFlowAnalyser} singleton. */
+	final void setFlowAnalyses(N4JSFlowAnalyser flowAnalyzer) {
 		this.flowAnalyzer = flowAnalyzer;
 	}
 

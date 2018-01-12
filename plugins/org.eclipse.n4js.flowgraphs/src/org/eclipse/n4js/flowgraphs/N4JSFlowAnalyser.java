@@ -11,6 +11,7 @@
 package org.eclipse.n4js.flowgraphs;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -21,10 +22,11 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analysis.DirectPathAnalyses;
-import org.eclipse.n4js.flowgraphs.analysis.GraphVisitor;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorAnalysis;
 import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analysis.SuccessorPredecessorAnalysis;
+import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
+import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitorHost;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -33,13 +35,11 @@ import org.eclipse.n4js.smith.DataCollector;
 import org.eclipse.n4js.smith.DataCollectors;
 import org.eclipse.n4js.smith.Measurement;
 
-import com.google.common.collect.Lists;
-
 /**
  * Facade for all control and data flow related methods.
  */
-public class N4JSFlowAnalyzer {
-	static private final Logger LOGGER = Logger.getLogger(N4JSFlowAnalyzer.class);
+public class N4JSFlowAnalyser {
+	static private final Logger LOGGER = Logger.getLogger(N4JSFlowAnalyser.class);
 	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
 			.getOrCreateDataCollector("Flow Graphs");
 	static private final DataCollector dcCreateGraph = DataCollectors.INSTANCE
@@ -54,7 +54,7 @@ public class N4JSFlowAnalyzer {
 	private SuccessorPredecessorAnalysis spa;
 
 	/** Constructor */
-	public N4JSFlowAnalyzer() {
+	public N4JSFlowAnalyser() {
 		this(null);
 	}
 
@@ -64,7 +64,7 @@ public class N4JSFlowAnalyzer {
 	 * @param cancelledChecker
 	 *            is called in the main loop to react on cancel events. Can be null.
 	 */
-	public N4JSFlowAnalyzer(Callable<Void> cancelledChecker) {
+	public N4JSFlowAnalyser(Callable<Void> cancelledChecker) {
 		this.cancelledChecker = cancelledChecker;
 	}
 
@@ -173,16 +173,28 @@ public class N4JSFlowAnalyzer {
 	}
 
 	/**
-	 * Performs all given {@link GraphVisitor}s in a single run. The single run will traverse the control flow graph in
+	 * Performs all given {@link FlowAnalyser}s in a single run. The single run will traverse the control flow graph in
 	 * the following manner. First forward beginning from the entries of every source container, then backward beginning
 	 * from the exit of every source container. Finally, all remaining code elements are traversed first forward and
 	 * then backward beginning from an arbitrary element.
 	 */
-	public void accept(GraphVisitorInternal... graphVisitors) {
-		List<GraphVisitorInternal> graphVisitorList = Lists.newArrayList(graphVisitors);
+	public void accept(FlowAnalyser... flowAnalysers) {
+		List<GraphVisitorInternal> controlflowVisitorList = new LinkedList<>();
+		List<DataFlowVisitor> dataflowVisitorList = new LinkedList<>();
+		for (FlowAnalyser flowAnalyser : flowAnalysers) {
+			if (flowAnalyser instanceof GraphVisitorInternal) {
+				controlflowVisitorList.add((GraphVisitorInternal) flowAnalyser);
+			}
+			if (flowAnalyser instanceof DataFlowVisitor) {
+				dataflowVisitorList.add((DataFlowVisitor) flowAnalyser);
+			}
+		}
+		DataFlowVisitorHost dfvh = new DataFlowVisitorHost(dataflowVisitorList);
+		controlflowVisitorList.add(dfvh);
+
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
 		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("createGraph_" + cfg.getScriptName());
-		gva.analyseScript(this, graphVisitorList);
+		gva.analyseScript(this, controlflowVisitorList);
 		msmnt2.end();
 		msmnt1.end();
 	}

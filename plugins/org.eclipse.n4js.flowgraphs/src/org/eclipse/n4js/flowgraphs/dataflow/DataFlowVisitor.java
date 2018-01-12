@@ -14,13 +14,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import org.eclipse.n4js.flowgraphs.FlowAnalyser;
 import org.eclipse.n4js.flowgraphs.analysis.TraverseDirection;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 
 /**
  *
  */
-abstract public class DataFlowVisitor {
+abstract public class DataFlowVisitor implements FlowAnalyser {
 	/** {@link TraverseDirection} of this visitor */
 	protected final TraverseDirection direction;
 	Collection<Assumption> newAssumptions = new LinkedList<>();

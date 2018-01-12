@@ -23,8 +23,8 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.ASTIterator;
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
 import org.eclipse.n4js.flowgraphs.FGUtils;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzerDataRecorder;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyserDataRecorder;
 import org.eclipse.n4js.flowgraphs.analysers.AllBranchPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.AllNodesAndEdgesPrintVisitor;
 import org.eclipse.n4js.flowgraphs.analysers.DummyForwardBackwardVisitor;
@@ -52,9 +52,9 @@ import org.eclipse.xtext.xbase.lib.Pair;
 @XpectImport(N4JSOffsetAdapter.class)
 public class FlowgraphsXpectMethod {
 
-	N4JSFlowAnalyzer getFlowAnalyzer(EObject eo) {
+	N4JSFlowAnalyser getFlowAnalyzer(EObject eo) {
 		Script script = EcoreUtil2.getContainerOfType(eo, Script.class);
-		N4JSFlowAnalyzer flowAnalyzer = new N4JSFlowAnalyzer();
+		N4JSFlowAnalyser flowAnalyzer = new N4JSFlowAnalyser();
 		flowAnalyzer.createGraphs(script);
 		return flowAnalyzer;
 	}
@@ -152,7 +152,7 @@ public class FlowgraphsXpectMethod {
 			return;
 
 		for (Iterator<ControlFlowElement> succIt = succList.iterator(); succIt.hasNext();) {
-			N4JSFlowAnalyzer flowAnalyzer = getFlowAnalyzer(start);
+			N4JSFlowAnalyser flowAnalyzer = getFlowAnalyzer(start);
 			Set<ControlFlowType> currCFTypes = flowAnalyzer.getControlFlowTypeToSuccessors(start, succIt.next());
 			if (!currCFTypes.contains(cfType)) {
 				succIt.remove();
@@ -221,16 +221,16 @@ public class FlowgraphsXpectMethod {
 	public void allMergeBranches(@N4JSCommaSeparatedValuesExpectation IN4JSCommaSeparatedValuesExpectation expectation,
 			IEObjectCoveringRegion referenceOffset) {
 
-		N4JSFlowAnalyzerDataRecorder.setEnabled(true);
+		N4JSFlowAnalyserDataRecorder.setEnabled(true);
 		GraphVisitor gv = new DummyForwardBackwardVisitor();
 		ControlFlowElement referenceCFE = getCFE(referenceOffset);
 		getFlowAnalyzer(referenceCFE).accept(gv);
-		N4JSFlowAnalyzerDataRecorder.setEnabled(false);
+		N4JSFlowAnalyserDataRecorder.setEnabled(false);
 		performBranchAnalysis(referenceOffset, null, referenceOffset);
 		List<String> edgeStrings = new LinkedList<>();
 
 		int groupIdx = 0;
-		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyzerDataRecorder.getMergedEdges();
+		List<Pair<Node, List<ControlFlowEdge>>> mergedEdges = N4JSFlowAnalyserDataRecorder.getMergedEdges();
 
 		for (Pair<Node, List<ControlFlowEdge>> pair : mergedEdges) {
 			Node startNode = pair.getKey();

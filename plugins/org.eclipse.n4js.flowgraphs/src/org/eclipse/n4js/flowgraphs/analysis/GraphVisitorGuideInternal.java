@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
@@ -37,13 +37,13 @@ import org.eclipse.n4js.flowgraphs.model.Node;
  * {@link GraphVisitorInternal}.
  */
 public class GraphVisitorGuideInternal {
-	private final N4JSFlowAnalyzer flowAnalyzer;
+	private final N4JSFlowAnalyser flowAnalyzer;
 	private final Collection<? extends GraphVisitorInternal> visitors;
 	private final Set<Node> walkerVisitedNodes = new HashSet<>();
 	private final EdgeGuideWorklist guideWorklist = new EdgeGuideWorklist();
 
 	/** Constructor */
-	GraphVisitorGuideInternal(N4JSFlowAnalyzer flowAnalyzer, Collection<? extends GraphVisitorInternal> visitors) {
+	GraphVisitorGuideInternal(N4JSFlowAnalyser flowAnalyzer, Collection<? extends GraphVisitorInternal> visitors) {
 		this.flowAnalyzer = flowAnalyzer;
 		this.visitors = visitors;
 	}

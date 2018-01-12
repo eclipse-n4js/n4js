@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.n4js.flowgraphs.ControlFlowType;
-import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyzer;
+import org.eclipse.n4js.flowgraphs.N4JSFlowAnalyser;
 import org.eclipse.n4js.flowgraphs.model.ComplexNode;
 import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
@@ -41,7 +41,7 @@ public class DirectPathAnalyses {
 		this.spa = new SuccessorPredecessorAnalysis(cfg);
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getControlFlowTypeToSuccessors(ControlFlowElement , ControlFlowElement)}. */
+	/** see {@link N4JSFlowAnalyser#getControlFlowTypeToSuccessors(ControlFlowElement , ControlFlowElement)}. */
 	public TreeSet<ControlFlowType> getControlFlowTypeToSuccessors(ControlFlowElement cfe, ControlFlowElement cfeSucc) {
 		Path path = getPath(cfe, cfeSucc);
 		if (path.isConnecting()) {
@@ -52,7 +52,7 @@ public class DirectPathAnalyses {
 	}
 
 	/**
-	 * see {@link N4JSFlowAnalyzer#isTransitiveSuccessor(ControlFlowElement, ControlFlowElement, ControlFlowElement)}.
+	 * see {@link N4JSFlowAnalyser#isTransitiveSuccessor(ControlFlowElement, ControlFlowElement, ControlFlowElement)}.
 	 */
 	public boolean isTransitiveSuccessor(ControlFlowElement cfeFrom, ControlFlowElement cfeTo,
 			ControlFlowElement cfeNotVia) {
@@ -64,7 +64,7 @@ public class DirectPathAnalyses {
 		return path.isConnecting();
 	}
 
-	/** see {@link N4JSFlowAnalyzer#getCommonPredecessors(ControlFlowElement , ControlFlowElement)}. */
+	/** see {@link N4JSFlowAnalyser#getCommonPredecessors(ControlFlowElement , ControlFlowElement)}. */
 	public Set<ControlFlowElement> getCommonPredecessors(ControlFlowElement cfeA, ControlFlowElement cfeB) {
 		Objects.requireNonNull(cfeA);
 		Objects.requireNonNull(cfeB);
