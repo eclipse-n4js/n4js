@@ -180,13 +180,11 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		};
 
 		if (rootDestructNode !== null) {
-			expectedTypeRef = calculateExpectedTypeDestructurePattern(rootDestructNode, G)
+			expectedTypeRef = calculateExpectedType(rootDestructNode, G)
 		}
 
 		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
 		val typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
-
-
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {
@@ -203,14 +201,14 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	}
 
 	/** Calculate expected type of a destructure pattern based on its structure */
-	def TypeRef calculateExpectedTypeDestructurePattern(DestructNode destructNode, RuleEnvironment G) {
-		val typeArgs = new ArrayList<TypeArgument>();
-		val members = new ArrayList<TStructMember>();
+	def TypeRef calculateExpectedType(DestructNode destructNode, RuleEnvironment G) {
+		val elementTypes = new ArrayList<TypeArgument>();
+		val elementMembers = new ArrayList<TStructMember>();
 		val elemCount = destructNode.nestedNodes.size
 		for (nestedNode : destructNode.nestedNodes) {
 			val elemExpectedType = if (nestedNode.nestedNodes !== null && nestedNode.nestedNodes.size > 0) {
 				// Recursively calculate the expected type of the nested child
-				calculateExpectedTypeDestructurePattern(nestedNode, G)
+				calculateExpectedType(nestedNode, G)
 			} else {
 				// Extract type of leaf node
 				nestedNode.createTypeFromLeafDestructNode(G)
@@ -221,25 +219,25 @@ package class PolyProcessor extends AbstractPolyProcessor {
 				val field = TypesFactory.eINSTANCE.createTStructField
 				field.name = nestedNode.propName;
 				field.typeRef = elemExpectedType
-				members.add(field)
+				elementMembers.add(field)
 			} else {
 				// We are dealing with array literals
-				typeArgs.add(elemExpectedType)
+				elementTypes.add(elemExpectedType)
 			}
 		}
 
-		var retTypeRef = if (members.size > 0) {
-			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, members)
-		} else if (typeArgs.size > 0) {
+		var retTypeRef = if (elementMembers.size > 0) {
+			TypeUtils.createParameterizedTypeRefStructural(G.objectType, TypingStrategy.STRUCTURAL, elementMembers)
+		} else if (elementTypes.size > 0) {
 			if (elemCount == 1) {
-				 G.arrayTypeRef(typeArgs.get(0))
+				 G.arrayTypeRef(elementTypes.get(0))
 			} else if (elemCount > 1){
-				G.iterableNTypeRef(elemCount, typeArgs);
+				G.iterableNTypeRef(elemCount, elementTypes);
 			} else {
 				null
 			}
 		} else {
-			throw new IllegalStateException("members and typeArgs can not both contain elements at the same time.")
+			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
 		}
 
 		// Wrap the expected type in an Array type in case of ForStatement
