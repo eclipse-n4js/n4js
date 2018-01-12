@@ -146,6 +146,9 @@ abstract public class Assumption {
 	void callHoldsOnDataflow(Symbol lhs, Symbol rhs, ControlFlowElement cfe) {
 		if (failingStructuralAliases.contains(rhs)) {
 			handleHolds(rhs, false);
+		} else if (failingStructuralAliases.contains(lhs)) {
+			failingStructuralAliases.remove(lhs);
+			failingStructuralAliases.add(rhs);
 		} else {
 			boolean holds = holdsOnDataflow(lhs, rhs, cfe);
 			handleHolds(rhs, holds);

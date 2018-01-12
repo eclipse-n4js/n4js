@@ -237,6 +237,14 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, ae);
 				return true;
 			}
+
+			cSymbols = SymbolContextUtils.getContextChangedSymbol(ass.failingStructuralAliases, lSymbol, rhs);
+			newLSymbol = cSymbols.getKey();
+			newRSymbol = cSymbols.getValue();
+			if (newRSymbol != null) {
+				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, ae);
+				return true;
+			}
 			return false;
 		}
 
