@@ -76,30 +76,36 @@ public class GeneratedJsFileLocator {
 		if (fileUri.isPlatform()) {
 			final Optional<? extends IN4JSProject> project = core.findProject(fileUri);
 			if (project.isPresent()) {
-				final String targetFileName = resourceNameComputer.generateFileDescriptor(fileUri, JS_FILE_EXTENSION);
-				// TODO replace hard coded ES5 sub-generator ID once it is clear how to use various
-				// sub-generators for runners (IDE-1487)
-				final String targetFileRelativeLocation = AbstractSubGenerator
-						.calculateOutputDirectory(project.get()) + "/" + targetFileName;
-				// file.getProject().
-				final IFile targetFile = file.getProject().getFile(targetFileRelativeLocation);
-				if (targetFile.exists()) {
-					return targetFile;
-				}
-				final IFile targetFile2 = ResourcesPlugin.getWorkspace().getRoot()
-						.getFile(new Path(targetFileRelativeLocation));
-				if (targetFile2.exists()) {
-					return targetFile2;
-				}
-
-				final String projectNameSegment = file.getProject().getName() + "/";
-				if (targetFileRelativeLocation.startsWith(projectNameSegment)) {
-					String targetFileRelativeLocation3 = targetFileRelativeLocation
-							.substring(projectNameSegment.length() - 1);
-					final IFile targetFile3 = file.getProject().getFile(targetFileRelativeLocation3);
-					if (targetFile3.exists()) {
-						return targetFile3;
+				try {
+					final String targetFileName = resourceNameComputer.generateFileDescriptor(fileUri,
+							JS_FILE_EXTENSION);
+					// TODO replace hard coded ES5 sub-generator ID once it is clear how to use various
+					// sub-generators for runners (IDE-1487)
+					final String targetFileRelativeLocation = AbstractSubGenerator
+							.calculateOutputDirectory(project.get()) + "/" + targetFileName;
+					// file.getProject().
+					final IFile targetFile = file.getProject().getFile(targetFileRelativeLocation);
+					if (targetFile.exists()) {
+						return targetFile;
 					}
+					final IFile targetFile2 = ResourcesPlugin.getWorkspace().getRoot()
+							.getFile(new Path(targetFileRelativeLocation));
+					if (targetFile2.exists()) {
+						return targetFile2;
+					}
+
+					final String projectNameSegment = file.getProject().getName() + "/";
+					if (targetFileRelativeLocation.startsWith(projectNameSegment)) {
+						String targetFileRelativeLocation3 = targetFileRelativeLocation
+								.substring(projectNameSegment.length() - 1);
+						final IFile targetFile3 = file.getProject().getFile(targetFileRelativeLocation3);
+						if (targetFile3.exists()) {
+							return targetFile3;
+						}
+					}
+				} catch (RuntimeException re) {
+					// file is not contained in a source container.
+					return null;
 				}
 			}
 		}
