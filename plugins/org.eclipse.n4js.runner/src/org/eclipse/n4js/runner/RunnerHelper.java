@@ -97,6 +97,8 @@ public class RunnerHelper {
 
 	/** get path to the project itself */
 	private String getProjectPath(IN4JSProject project) {
+		if (!project.exists())
+			return null;
 		final String pp = project.getLocationPath().normalize().toAbsolutePath().toString();
 		return pp;
 	}
