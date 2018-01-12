@@ -28,7 +28,9 @@ class NodeBootScriptTemplate {
 		const fs = require('fs')
 		const os = require("os");
 		
-		«FOR path2name : path2names SEPARATOR "\n"»fs.symlinkSync('«path2name.key»', '«pathNodeModules»/«path2name.value»', 'dir');«ENDFOR»
+		«FOR path2name : path2names SEPARATOR "\n"»
+		if(!fs.existsSync('«pathNodeModules»/«path2name.value»'))
+			fs.symlinkSync('«path2name.key»', '«pathNodeModules»/«path2name.value»', 'dir');«ENDFOR»
 		
 		require('./«fileToInvoke»')
 	'''
