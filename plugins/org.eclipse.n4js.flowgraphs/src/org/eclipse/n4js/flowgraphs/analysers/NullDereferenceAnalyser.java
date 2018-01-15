@@ -10,8 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.analysers;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
@@ -81,8 +81,8 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	}
 
 	/** @return a list of all AST locations where a null pointer dereference can happen */
-	public List<NullDereferenceResult> getNullDereferences() {
-		List<NullDereferenceResult> nullDerefs = new LinkedList<>();
+	public Iterable<NullDereferenceResult> getNullDereferences() {
+		Set<NullDereferenceResult> nullDerefs = new HashSet<>();
 		for (Assumption ass : failedAssumptions) {
 			IsNotNull inn = (IsNotNull) ass;
 			ControlFlowElement astLocation = inn.creationSite;

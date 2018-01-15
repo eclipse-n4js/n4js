@@ -30,6 +30,9 @@ import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
+import org.eclipse.n4js.smith.DataCollector;
+import org.eclipse.n4js.smith.DataCollectors;
+import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.utils.FindReferenceHelper;
 import org.eclipse.n4js.validation.AbstractN4JSDeclarativeValidator;
 import org.eclipse.n4js.validation.IssueCodes;
@@ -47,6 +50,10 @@ import com.google.inject.Inject;
  * This validator validates all control and data flow related issues.
  */
 public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
+	static private final DataCollector dcFlowGraphs = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Flow Graphs");
+	static private final DataCollector dcPostprocessing = DataCollectors.INSTANCE
+			.getOrCreateDataCollector("Postprocessing", "Flow Graphs");
 
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
@@ -90,9 +97,14 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		flowAnalyzer.createGraphs(script);
 		flowAnalyzer.accept(dcv, nda, cvgv1);
 
+		String uriString = script.eResource().getURI().toString();
+		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
+		Measurement msmnt2 = dcPostprocessing.getMeasurement("createGraph_" + uriString);
 		internalCheckDeadCode(dcv);
 		internalCheckUsedBeforeDeclared(cvgv1);
 		internalCheckNullDereference(nda);
+		msmnt2.end();
+		msmnt1.end();
 	}
 
 	// Req.107
@@ -135,11 +147,11 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	private void internalCheckNullDereference(NullDereferenceAnalyser nda) {
-		List<NullDereferenceResult> nullDerefs = nda.getNullDereferences();
+		Iterable<NullDereferenceResult> nullDerefs = nda.getNullDereferences();
 		for (NullDereferenceResult ndr : nullDerefs) {
 			String varName = ndr.checkedSymbol.getName();
 
-			boolean isLeakingToClosure = isLeakingToClosure(ndr.checkedSymbol);
+			boolean isLeakingToClosure = false;// isLeakingToClosure(ndr.checkedSymbol);
 			boolean isInTestFolder = isInTestFolder(ndr.checkedSymbol.getASTLocation());
 			if (isInTestFolder && isLeakingToClosure) {
 				continue; // ignore these warnings in test related source
@@ -157,7 +169,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 
 	private String getReason(NullDereferenceResult ndr) {
 		if (!ndr.checkedSymbol.is(ndr.causingSymbol)) {
-			return "due to previous variable " + ndr.causingSymbol.getName();
+			return " due to previous variable " + ndr.causingSymbol.getName();
 		}
 		return "";
 	}

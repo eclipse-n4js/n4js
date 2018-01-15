@@ -34,4 +34,18 @@ public class NullDereferenceResult {
 		this.nullOrUndefinedSymbol = inn.nullOrUndefinedSymbol;
 		this.must = inn.allFailed();
 	}
+
+	@Override
+	public int hashCode() {
+		return checkedSymbol.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof NullDereferenceResult)) {
+			return false;
+		}
+		NullDereferenceResult ndr = (NullDereferenceResult) o;
+		return checkedSymbol.equals(ndr.checkedSymbol);
+	}
 }
