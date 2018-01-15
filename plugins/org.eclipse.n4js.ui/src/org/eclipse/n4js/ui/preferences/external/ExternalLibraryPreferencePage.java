@@ -55,7 +55,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.external.ExternalLibraryWorkspace;
 import org.eclipse.n4js.external.GitCloneSupplier;
 import org.eclipse.n4js.external.NpmManager;
@@ -630,15 +629,11 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus intallAndUpdate(final Map<String, String> versionedPackages, final IProgressMonitor monitor) {
-		try {
-			IStatus status = npmManager.installDependencies(versionedPackages, monitor);
-			if (status.isOK())
-				updateInput(viewer, store.getLocations());
+		IStatus status = npmManager.installDependencies(versionedPackages, monitor);
+		if (status.isOK())
+			updateInput(viewer, store.getLocations());
 
-			return status;
-		} catch (final IllegalBinaryStateException ibse) {
-			return statusHelper.createError("Illegal state of the binary when installing npm packages.", ibse);
-		}
+		return status;
 	}
 
 	/**
@@ -647,15 +642,11 @@ public class ExternalLibraryPreferencePage extends PreferencePage implements IWo
 	 * @return status of the operation.
 	 */
 	private IStatus unintallAndUpdate(final Collection<String> packageNames, final IProgressMonitor monitor) {
-		try {
-			IStatus status = npmManager.uninstallDependencies(packageNames, monitor);
-			if (status.isOK())
-				updateInput(viewer, store.getLocations());
+		IStatus status = npmManager.uninstallDependencies(packageNames, monitor);
+		if (status.isOK())
+			updateInput(viewer, store.getLocations());
 
-			return status;
-		} catch (final IllegalBinaryStateException ibse) {
-			return statusHelper.createError("Illegal state of the binary when uninstalling npm packages.", ibse);
-		}
+		return status;
 	}
 
 	private String getSelectedNpm() {
