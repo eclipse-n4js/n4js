@@ -13,10 +13,8 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.ArrayList
-import java.util.HashMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.misc.DestructNode
-import org.eclipse.n4js.misc.DestructureHelper
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -49,9 +47,6 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
-import org.eclipse.n4js.ts.types.TObjectPrototype
-import org.eclipse.n4js.ts.utils.TypeCompareHelper
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -81,13 +76,8 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
-	private DestructureHelper destructureHelper;
-
-	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 
-	@Inject
-	private TypeCompareHelper typeCompareHelper;
 	// ################################################################################################################
 
 
