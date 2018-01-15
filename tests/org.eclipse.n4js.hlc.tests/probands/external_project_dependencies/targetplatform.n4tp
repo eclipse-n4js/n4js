@@ -1,0 +1,13 @@
+{
+ "location" : [
+   {
+     "config" : {
+     },
+     "projects" : {
+       "nuka-carousel" : {},
+       "react" : {}
+     },
+     "repoType" : "npm"
+   }
+ ]
+}

@@ -25,10 +25,17 @@ include::{find}config.adoc[]
 === ++Method foo++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample3_RedundantLines:src/A:A#foo++[``++public foo(): string++``]
 
 ==== Semantics
 
-++Foo++:: srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample3_RedundantLines:test/ATests:BaseTests#testFoo++[Test]
+. *++Foo++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample3_RedundantLines:test/ATests:BaseTests#testFoo++[Test]#)
++
+[.requirementConstraint]
+====
 
 Text.
+
+====
+

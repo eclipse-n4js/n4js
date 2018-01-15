@@ -12,7 +12,7 @@
 /* XPECT_SETUP org.eclipse.n4js.xpect.ui.tests.N4JSXpectPluginTest
 
     Workspace {
-   	 Project "P_USERTL_B01" {
+   	 Project "P_USERTL_B00" {
    	 	Folder "src" {
 	   	 	Folder "n4js" {
 	   	 		File "A.n4js" { from="IDEBUG_657_wrong_binding_filling-A.n4js.xt"}

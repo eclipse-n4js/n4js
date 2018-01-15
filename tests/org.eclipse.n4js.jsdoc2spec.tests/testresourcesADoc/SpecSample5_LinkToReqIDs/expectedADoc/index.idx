@@ -13,12 +13,12 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 	SpecSample5_LinkToReqIDs#src
 		NO_PACKAGE
 			A.n4jsd
-				A::12::22::23
-				A#foo::13::24::38
+				A::12::21::21
+				A#foo::13::22::41
 	SpecSample5_LinkToReqIDs#test
 		NO_PACKAGE
 			ReqTest.n4js
-				ReqTest::12::22::23
-				ReqTest#basics___Case::18::24::37
-				ReqTest#ext___Case::25::38::51
-				ReqTest#testFoo::33::52::65
+				ReqTest::12::21::21
+				ReqTest#_02_basics___1_Case::18::22::35
+				ReqTest#ext___Case::25::36::49
+				ReqTest#testFoo::33::50::63

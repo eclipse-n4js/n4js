@@ -10,15 +10,14 @@
  */
 package org.eclipse.n4js.ui.preferences;
 
+import org.eclipse.n4js.generator.CompilerDescriptor;
+import org.eclipse.n4js.generator.CompilerProperties;
 import org.eclipse.xtext.ui.editor.preferences.PreferenceStoreAccessImpl;
 
 import com.google.inject.Inject;
 
-import org.eclipse.n4js.generator.CompilerDescriptor;
-import org.eclipse.n4js.generator.CompilerProperties;
-
 /**
- * Inpired by org.eclipse.xtext.ui.editor.syntaxcoloring.PreferenceStoreAccessor.
+ * Inspired by org.eclipse.xtext.ui.editor.syntaxcoloring.PreferenceStoreAccessor.
  */
 public class N4JSPreferenceStoreAccessor extends AbstractN4JSPreferenceStoreAccessor<CompilerDescriptor> {
 	/**

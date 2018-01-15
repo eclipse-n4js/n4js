@@ -430,9 +430,7 @@ public class ProjectUtils {
 			return false;
 		}
 
-		val mainModuelUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
-		val isMainModule = mainModuelUserData !== null && Boolean.valueOf(mainModuelUserData);
-		if (isMainModule) {
+		if (isMainModule(eoDescription)) {
 			// for main modules we check containing project
 			val targetProject = n4jsCore.findProject(eoDescription.EObjectURI).orNull;
 			val currentProject = n4jsCore.findProject(eObject.eResource.URI).orNull;
@@ -440,5 +438,32 @@ public class ProjectUtils {
 		}
 
 		return true;
+	}
+	
+	/**
+	 * Determines whether the given object description represents a main module.
+	 */
+	def private boolean isMainModule(IEObjectDescription eoDescription) {
+		// GH-448: Try to determine the main module status from the contained eObject if it is resolved and a module.
+		// This is necessary because the headless compiler doesn't serialize the modules for performance reasons, so
+		// the N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY user data entry is not there to check.
+		return isMainModuleFromObject(eoDescription) || isMainModuleFromUserData(eoDescription);
+	}
+	
+	/**
+	 * Accesses the object referenced by the given object description to determine whether it represents a main module.
+	 */
+	def private boolean isMainModuleFromObject(IEObjectDescription eoDescription) {
+		val moduleOrProxy = eoDescription.EObjectOrProxy as TModule;
+		return !moduleOrProxy.eIsProxy && moduleOrProxy.mainModule
+	}
+	
+	/**
+	 * Accesses the serialized main module status value in the user data of the given object description to determine
+	 * whether it represents a main module.
+	 */
+	def private boolean isMainModuleFromUserData(IEObjectDescription eoDescription) {
+		val mainModuleUserData = eoDescription.getUserData(N4JSResourceDescriptionStrategy.MAIN_MODULE_KEY);
+		return mainModuleUserData !== null && Boolean.valueOf(mainModuleUserData);
 	}
 }

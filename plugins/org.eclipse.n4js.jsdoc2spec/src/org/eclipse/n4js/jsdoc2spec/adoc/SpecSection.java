@@ -76,8 +76,8 @@ abstract public class SpecSection implements Comparable<SpecSection> {
 	 */
 	public String generateADocText(ADocFactory adocFactory, Map<String, SpecSection> specsByKey) {
 		if (adocText == null) {
-			adocText = computeADocText(adocFactory, specsByKey);
-			changeLineCount = StringCountUtils.countLines(adocText);
+			adocText = computeADocText(adocFactory, specsByKey) + "\n";
+			changeLineCount = StringCountUtils.countNewLines(adocText);
 		}
 		return adocText;
 	}
