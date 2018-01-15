@@ -18,7 +18,7 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 				A#baz::27::39::58
 				B::30::61::61
 				B#foo::31::62::77
-				D::36::80::108
+				D::36::80::109
 	SpecSample1#test
 		NO_PACKAGE
 			ATests.n4js
