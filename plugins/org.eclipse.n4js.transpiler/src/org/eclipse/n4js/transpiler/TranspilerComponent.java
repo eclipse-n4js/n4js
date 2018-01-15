@@ -675,15 +675,9 @@ public abstract class TranspilerComponent {
 	// ################################################################################################################
 	// JSX RELATED THINGS
 
-	/** "React" - retrieve the internal symbol table entry for the symbol "React" */
-	public SymbolTableEntryInternal steFor_React() {
-
-		return getSymbolTableEntryInternal("$jsxBackend", true);
-	}
-
 	/** "createElement" - retrieve the internal symbol table entry for the symbol "createElement" */
 	public SymbolTableEntryInternal steFor_createElement() {
 
-		return getSymbolTableEntryInternal(jsx.getBackendElementFactoryMethodName(), true);
+		return getSymbolTableEntryInternal(jsx.getBackendElementFactoryFunctionName(), true);
 	}
 }
