@@ -29,6 +29,8 @@ import com.google.inject.Singleton;
 public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 
 	private IPreferenceStoreAccess preferenceStoreAccess;
+
+	@Inject
 	private ICompositeGenerator compositeGenerator;
 
 	/**
@@ -86,4 +88,5 @@ public class N4JSBuilderPreferenceAccess extends BuilderPreferenceAccess {
 			preferenceStore.setValue(key, enabled);
 		}
 	}
+
 }

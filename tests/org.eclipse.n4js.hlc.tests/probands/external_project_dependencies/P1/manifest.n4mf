@@ -9,15 +9,19 @@
  *   NumberFour AG - Initial API and implementation
  */
 
-ProjectId: P2
+ProjectId: P1
 VendorId: org.eclipse.n4js
 VendorName: "Eclipse N4JS Project"
 ProjectType: library
 ProjectVersion: 0.0.1-SNAPSHOT
-ProjectDependencies { P1 }
 Output: "src-gen"
 Sources {
 	source {
 		"src"
 	}
+}
+
+ProjectDependencies {
+	nuka-carousel,
+	react
 }

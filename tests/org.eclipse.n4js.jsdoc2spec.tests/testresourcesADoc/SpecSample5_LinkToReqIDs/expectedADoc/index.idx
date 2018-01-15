@@ -14,7 +14,7 @@ n4js#tests.org.eclipse.n4js.jsdoc2spec.tests.testresourcesADoc
 		NO_PACKAGE
 			A.n4jsd
 				A::12::21::21
-				A#foo::13::22::40
+				A#foo::13::22::41
 	SpecSample5_LinkToReqIDs#test
 		NO_PACKAGE
 			ReqTest.n4js
