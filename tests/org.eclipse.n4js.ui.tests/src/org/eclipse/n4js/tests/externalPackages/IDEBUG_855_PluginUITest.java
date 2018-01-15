@@ -102,9 +102,9 @@ public class IDEBUG_855_PluginUITest extends AbstractBuilderParticipantTest {
 	 */
 	@Test
 	public void testAllIndexElementsCanBeAddedToAResource() throws InvocationTargetException, CoreException {
-
 		final IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(PROJECT);
 		assertTrue(PROJECT + " project is not accessible.", project.isAccessible());
+
 		final IFile clientModule = project.getFile(getResourceName(SRC_FOLDER, MODULE + "." + N4JS_FILE_EXTENSION));
 		assertTrue(clientModule + " client module is not accessible.", clientModule.isAccessible());
 
