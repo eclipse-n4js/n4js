@@ -13,8 +13,10 @@ package org.eclipse.n4js.postprocessing
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import java.util.ArrayList
+import java.util.HashMap
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.misc.DestructNode
+import org.eclipse.n4js.misc.DestructureHelper
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
 import org.eclipse.n4js.n4JS.ArrayLiteral
@@ -47,6 +49,9 @@ import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
+import org.eclipse.n4js.ts.typeRefs.ParameterizedTypeRef
+import org.eclipse.n4js.ts.types.TObjectPrototype
+import org.eclipse.n4js.ts.utils.TypeCompareHelper
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -76,8 +81,13 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	private OperationCanceledManager operationCanceledManager;
 
 	@Inject
+	private DestructureHelper destructureHelper;
+
+	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
 
+	@Inject
+	private TypeCompareHelper typeCompareHelper;
 	// ################################################################################################################
 
 
@@ -148,7 +158,6 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	 * </ol>
 	 */
 	def package void inferType(RuleEnvironment G, Expression rootPoly, ASTMetaInfoCache cache) {
-
 		// create a new constraint system
 		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G);
 
@@ -167,6 +176,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		var expectedTypeRef = if (!rootPoly.isProblematicCaseOfExpectedType) {
 				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
 			};
+
 		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
 		var rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
 			DestructNode.unify(rootPoly.eContainer as VariableBinding)
@@ -215,13 +225,12 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			}
 
 			if (nestedNode.propName !== null) {
-				// We are dealing with object literals
+				// We are dealing with object literals, hence create TStructMembers to construct a ParameterizedTypeRefStructural
 				val field = TypesFactory.eINSTANCE.createTStructField
 				field.name = nestedNode.propName;
 				field.typeRef = elemExpectedType
 				elementMembers.add(field)
 			} else {
-				// We are dealing with array literals
 				elementTypes.add(elemExpectedType)
 			}
 		}

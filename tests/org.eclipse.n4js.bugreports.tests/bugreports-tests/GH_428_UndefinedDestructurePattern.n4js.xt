@@ -89,3 +89,7 @@ for(var [v41,v42,v43] = [undefined,1,2];false;) {}
 // XPECT noerrors
 for(var {v51: u51: int,v52,v53} =
 	{v51:undefined,v52:1,v53:2};false;) {}
+
+// Array <: IterableN
+// XPECT noerrors
+const [a: int, b: int, c: int] = "1".split("\n").map((s: string): int => 1);

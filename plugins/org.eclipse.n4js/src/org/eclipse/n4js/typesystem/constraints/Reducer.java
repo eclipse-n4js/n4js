@@ -554,7 +554,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			final TypeArgument singleTypeArgOfArray = !typeArgsOfArray.isEmpty() ? typeArgsOfArray.get(0) : null;
 			boolean wasAdded = false;
 			for (TypeArgument currTypeArgOfIterableN : typeArgsOfIterableN) {
-				wasAdded |= addConstraintForTypeArgumentPair(singleTypeArgOfArray, currTypeArgOfIterableN, variance);
+				wasAdded |= addConstraintForTypeArgumentPair(singleTypeArgOfArray, currTypeArgOfIterableN, variance,
+						true);
 			}
 			return wasAdded;
 		}
@@ -622,13 +623,14 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
 						.getValue();
-				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParamSubst, variance);
+				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParamSubst, variance, false);
 			}
 		}
 		return wasAdded;
 	}
 
-	private boolean addConstraintForTypeArgumentPair(TypeArgument leftArg, TypeArgument rightArg, Variance variance) {
+	private boolean addConstraintForTypeArgumentPair(TypeArgument leftArg, TypeArgument rightArg, Variance variance,
+			boolean isSpecialCaseOfArraySubtypeIterableN) {
 		boolean wasAdded = false;
 		if (leftArg instanceof Wildcard) {
 			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
@@ -658,7 +660,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
 						+ leftArg.getClass().getName());
 			}
-			wasAdded |= reduce(leftArg, rightArg, variance.mult(INV));
+			if (isSpecialCaseOfArraySubtypeIterableN) {
+				wasAdded |= reduce(leftArg, rightArg, variance);
+			} else {
+				wasAdded |= reduce(leftArg, rightArg, variance.mult(INV));
+			}
 		}
 		return wasAdded;
 	}
