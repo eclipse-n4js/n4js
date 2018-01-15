@@ -352,7 +352,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		} else if (left instanceof FunctionTypeExprOrRef && right instanceof FunctionTypeExprOrRef) {
 			return reduceFunctionTypeExprOrRef((FunctionTypeExprOrRef) left, (FunctionTypeExprOrRef) right, variance);
 		} else if (left instanceof ParameterizedTypeRef && right instanceof ParameterizedTypeRef) {
-			return reduceParameterizedTypeRef((ParameterizedTypeRef) left, (ParameterizedTypeRef) right, variance);
+			return reduceParameterizedTypeRefNominal((ParameterizedTypeRef) left, (ParameterizedTypeRef) right,
+					variance);
 		} else {
 			// different subtypes of TypeRef on left and right side
 			// --> this looks an awful lot like an inconsistency, we're almost ready to give up on the entire constraint
@@ -534,8 +535,30 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		return wasAdded;
 	}
 
-	private boolean reduceParameterizedTypeRef(ParameterizedTypeRef left, ParameterizedTypeRef right,
+	/**
+	 * Reduction for parameterized type references according to nominal subtyping rules.
+	 * <p>
+	 * NOTE: 'left' might be a structural type reference iff variance == CO / 'right' might be structural (iff variance
+	 * == CONTRA) but that is irrelevant and the reduction must still follow nominal subtyping rules (because the RHS of
+	 * the subtype relation determines whether to use nominal or structural rules).
+	 */
+	private boolean reduceParameterizedTypeRefNominal(ParameterizedTypeRef left, ParameterizedTypeRef right,
 			Variance variance) {
+		// special case: handling of IterableN
+		// (required because Array does not explicitly inherit from IterableN and the IterableN are not structural)
+		// e.g., ⟨ Array<α> <: Iterable3<int,string,int> ⟩ should be reduced to ⟨ α <: int ⟩ and ⟨ α <: string ⟩
+		if ((variance == CO && isSpecialCaseOfArraySubtypeIterableN(left, right))
+				|| (variance == CONTRA && isSpecialCaseOfArraySubtypeIterableN(right, left))) {
+			final List<TypeArgument> typeArgsOfArray = variance == CO ? left.getTypeArgs() : right.getTypeArgs();
+			final List<TypeArgument> typeArgsOfIterableN = variance == CO ? right.getTypeArgs() : left.getTypeArgs();
+			final TypeArgument singleTypeArgOfArray = !typeArgsOfArray.isEmpty() ? typeArgsOfArray.get(0) : null;
+			boolean wasAdded = false;
+			for (TypeArgument currTypeArgOfIterableN : typeArgsOfIterableN) {
+				wasAdded |= addConstraintForTypeArgumentPair(singleTypeArgOfArray, currTypeArgOfIterableN, variance);
+			}
+			return wasAdded;
+		}
+		// standard cases:
 		final TypeRef leftRaw = TypeUtils.createTypeRef(left.getDeclaredType());
 		final TypeRef rightRaw = TypeUtils.createTypeRef(right.getDeclaredType()); // note: enforcing nominal here!
 		if ((variance == CO && !ts.subtypeSucceeded(G, leftRaw, rightRaw))
@@ -599,39 +622,55 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
 						.getValue();
-				if (leftArg instanceof Wildcard) {
-					final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
-					if (ub != null) {
-						wasAdded |= reduce(ub, ts.upperBound(G, leftParamSubst).getValue(), CONTRA);
-					}
-					final TypeRef lb = ((Wildcard) leftArg).getDeclaredLowerBound();
-					if (lb != null) {
-						wasAdded |= reduce(lb, ts.lowerBound(G, leftParamSubst).getValue(), CO);
-					}
-				} else if (leftParamSubst instanceof ExistentialTypeRef) {
-					// TODO IDE-1653 reconsider this entire case
-					// re-open the existential type, because we assume it was closed only while adding substitutions
-					// UPDATE: this is wrong if right.typeArgs already contained an ExistentialTypeRef! (but might be
-					// an non-harmful over approximation)
-					final Wildcard w = ((ExistentialTypeRef) leftParamSubst).getWildcard();
-					final TypeRef ub = w.getDeclaredUpperBound();
-					if (ub != null) {
-						wasAdded |= reduce(ub, ts.upperBound(G, leftArg).getValue(), CONTRA);
-					}
-					final TypeRef lb = w.getDeclaredLowerBound();
-					if (lb != null) {
-						wasAdded |= reduce(lb, ts.lowerBound(G, leftArg).getValue(), CO);
-					}
-				} else {
-					if (!(leftArg instanceof TypeRef)) {
-						throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
-								+ leftArg.getClass().getName());
-					}
-					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(INV));
-				}
+				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParamSubst, variance);
 			}
 		}
 		return wasAdded;
+	}
+
+	private boolean addConstraintForTypeArgumentPair(TypeArgument leftArg, TypeArgument rightArg, Variance variance) {
+		boolean wasAdded = false;
+		if (leftArg instanceof Wildcard) {
+			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
+			if (ub != null) {
+				wasAdded |= reduce(ub, ts.upperBound(G, rightArg).getValue(), CONTRA);
+			}
+			final TypeRef lb = ((Wildcard) leftArg).getDeclaredLowerBound();
+			if (lb != null) {
+				wasAdded |= reduce(lb, ts.lowerBound(G, rightArg).getValue(), CO);
+			}
+		} else if (rightArg instanceof ExistentialTypeRef) {
+			// TODO IDE-1653 reconsider this entire case
+			// re-open the existential type, because we assume it was closed only while adding substitutions
+			// UPDATE: this is wrong if right.typeArgs already contained an ExistentialTypeRef! (but might be
+			// an non-harmful over approximation)
+			final Wildcard w = ((ExistentialTypeRef) rightArg).getWildcard();
+			final TypeRef ub = w.getDeclaredUpperBound();
+			if (ub != null) {
+				wasAdded |= reduce(ub, ts.upperBound(G, leftArg).getValue(), CONTRA);
+			}
+			final TypeRef lb = w.getDeclaredLowerBound();
+			if (lb != null) {
+				wasAdded |= reduce(lb, ts.lowerBound(G, leftArg).getValue(), CO);
+			}
+		} else {
+			if (!(leftArg instanceof TypeRef)) {
+				throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
+						+ leftArg.getClass().getName());
+			}
+			wasAdded |= reduce(leftArg, rightArg, variance.mult(INV));
+		}
+		return wasAdded;
+	}
+
+	/**
+	 * Returns true iff left has declared type <code>Array</code> and right has an <code>IterableN</code> as declared
+	 * type.
+	 */
+	private boolean isSpecialCaseOfArraySubtypeIterableN(ParameterizedTypeRef left, ParameterizedTypeRef right) {
+		final boolean leftIsArray = left.getDeclaredType() == RuleEnvironmentExtensions.arrayType(G);
+		final boolean rightIsIterableN = RuleEnvironmentExtensions.isIterableN(G, right);
+		return leftIsArray && rightIsIterableN;
 	}
 
 	private boolean reduceStructuralTypeRef(TypeRef left, TypeRef right, Variance variance) {
