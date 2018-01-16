@@ -61,15 +61,6 @@ import com.google.inject.Inject;
  */
 public class XpectN4JSES5TranspilerHelper {
 
-	/**
-	 * https://github.com/eclipse/n4js/issues/394
-	 *
-	 * for simplifying node js compilation target we want to skip compiler id in the compiled code segments Hide this
-	 * behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators, or we
-	 * might make this configurable in the manifest.
-	 */
-	public static final boolean USE_COMPILED_OUTPUT = true;
-
 	@Inject
 	private IN4JSCore core;
 
@@ -308,12 +299,12 @@ public class XpectN4JSES5TranspilerHelper {
 
 	private String getCompiledFileBasePath(final Script script) {
 		String path = script.getModule().getProjectId() + "/src-gen/";
-		if (USE_COMPILED_OUTPUT) {
-			IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
-			if (project != null) {
-				path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
-			}
+
+		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
+		if (project != null) {
+			path = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
 		}
+
 		return path;
 	}
 

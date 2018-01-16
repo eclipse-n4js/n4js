@@ -29,7 +29,6 @@ import java.util.stream.Collectors;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.N4JSGlobals;
 import org.eclipse.n4js.compare.ApiImplMapping;
-import org.eclipse.n4js.external.TargetPlatformInstallLocationProvider;
 import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.n4mf.BootstrapModule;
 import org.eclipse.n4js.n4mf.ProjectType;
@@ -55,8 +54,6 @@ import com.google.inject.Inject;
  * UI- or CLI-Interfaces should use this as a shared code-base.
  */
 public class RunnerHelper {
-	/** GH-394 we use different module wrapping (different imports), we need to calculate paths differently. */
-	public static boolean GH_394_USE_PROJECT_ROOT = true;
 
 	@Inject
 	private IN4JSCore n4jsCore;
@@ -69,9 +66,6 @@ public class RunnerHelper {
 
 	@Inject
 	private RunnerRegistry runnerRegistry;
-
-	@Inject
-	private TargetPlatformInstallLocationProvider installLocationProvider;
 
 	/**
 	 * Returns list of absolute paths to each of the given projects' output folder in the local files system.
@@ -86,12 +80,7 @@ public class RunnerHelper {
 
 	private Collection<String> getProjectPaths(IN4JSProject project) {
 		Set<String> projectPaths = new HashSet<>();
-		if (GH_394_USE_PROJECT_ROOT) {
-			projectPaths.add(getProjectPath(project));
-		} else {
-			projectPaths.addAll(getProjectResourcePaths(project));
-			projectPaths.add(getProjectOutputPath(project));
-		}
+		projectPaths.add(getProjectPath(project));
 		return projectPaths;
 	}
 
@@ -104,35 +93,13 @@ public class RunnerHelper {
 	}
 
 	/**
-	 * Returns absolute path to output folder of the given project containing compiled JavaScript files.
+	 * Returns absolute path to the resources defined in the projects manifest.
+	 *
+	 * This method was used before GH-394 to provide basic support for project resources at runtime. After GH-394 it is
+	 * not used, but its future should be decided in GH-70
 	 */
-	private String getProjectOutputPath(IN4JSProject project) {
-		final String relativeOutputPathStr = project.getOutputPath();
-		if (relativeOutputPathStr == null || relativeOutputPathStr.trim().isEmpty()) {
-			return null;
-		}
-
-		final String projectRelativePath = AbstractSubGenerator.calculateOutputDirectory(project);
-		final String outPath = toAbsolutePath(project, projectRelativePath);
-
-		// TODO no one should apply null check on the target platform location except the HLC
-		if (null != installLocationProvider.getTargetPlatformInstallLocation()) {
-			java.net.URI nodeModulesLocation = installLocationProvider.getTargetPlatformNodeModulesLocation();
-			if (null != nodeModulesLocation) {
-				final File targetPlatformInstallLocationRoot = new File(nodeModulesLocation);
-				final File extFolder = new File(outPath);
-				if (extFolder.toPath().startsWith(targetPlatformInstallLocationRoot.toPath())) {
-					return targetPlatformInstallLocationRoot.getAbsolutePath();
-				}
-			}
-		}
-
-		return outPath;
-	}
-
-	/**
-	 * Returns absolute path to output folder of the given project containing compiled JavaScript files.
-	 */
+	// TODO GH-70 handle projects resources
+	@SuppressWarnings("unused")
 	private List<String> getProjectResourcePaths(IN4JSProject project) {
 		final List<String> relativeResourcePathStr = new ArrayList<>(project.getResourcePaths());
 		if (relativeResourcePathStr.isEmpty()) {
@@ -194,9 +161,7 @@ public class RunnerHelper {
 	}
 
 	private String getProjectRelativePath(IN4JSProject project, String subPath) {
-		if (GH_394_USE_PROJECT_ROOT)
-			return AbstractSubGenerator.calculateProjectBasedOutputDirectory(project) + "/" + subPath;
-		return subPath;
+		return AbstractSubGenerator.calculateProjectBasedOutputDirectory(project) + "/" + subPath;
 	}
 
 	/**

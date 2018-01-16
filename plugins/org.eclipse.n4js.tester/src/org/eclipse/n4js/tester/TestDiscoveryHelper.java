@@ -73,15 +73,6 @@ import com.google.inject.Inject;
  */
 public class TestDiscoveryHelper {
 
-	/**
-	 * https://github.com/eclipse/n4js/issues/394
-	 *
-	 * for simplifying node js compilation target we want to skip compiler id in the compiled code segments Hide this
-	 * behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators, or we
-	 * might make this configurable in the manifest.
-	 */
-	public static final boolean USE_COMPILED_OUTPUT = true;
-
 	@Inject
 	private FileExtensionsRegistry fileExtensionRegistry;
 
@@ -367,11 +358,9 @@ public class TestDiscoveryHelper {
 
 	private TestCase createTestCase(final TMethod method, final TModule module, final String clazzFqnStr) {
 		String origin = module.getProjectId();
-		if (USE_COMPILED_OUTPUT) {
-			IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
-			if (project != null) {
-				origin = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
-			}
+		IN4JSProject project = n4jsCore.findProject(module.eResource().getURI()).orNull();
+		if (project != null) {
+			origin = AbstractSubGenerator.calculateProjectBasedOutputDirectory(project);
 		}
 		final TestCase testCase = new TestCase(createTestCaseId(clazzFqnStr, method), clazzFqnStr,
 				origin, method.getName(), method.getName(), EcoreUtil.getURI(method));

@@ -45,8 +45,6 @@ import com.google.inject.Provider;
  * Concrete runner, i.e. runner implementation for node.js engine.
  */
 public class NodeRunner implements IRunner {
-	/** GH-394, with new compilation we generate different boot code. */
-	private static final boolean USE_NEW_BOOTSTRAP = true;
 	private final static String NODE_PATH_SEP = File.pathSeparator;
 
 	/** Environment key */
@@ -130,9 +128,7 @@ public class NodeRunner implements IRunner {
 			final Collection<String> paths = newLinkedHashSet();
 			paths.addAll(newArrayList(Splitter.on(NODE_PATH_SEP).omitEmptyStrings().trimResults()
 					.split(runConfig.getCustomEnginePath())));
-			if (!USE_NEW_BOOTSTRAP) {
-				paths.addAll(runConfig.getCoreProjectPaths());
-			}
+
 			if (runConfig.getAdditionalPath() != null && !runConfig.getAdditionalPath().isEmpty())
 				paths.add(runConfig.getAdditionalPath());
 

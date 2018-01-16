@@ -66,26 +66,15 @@ import org.eclipse.n4js.projectModel.ResourceNameComputer
  */
 @ExcludesAfter(/* if present, must come before: */ DestructuringTransformation)
 class ModuleWrappingTransformation extends Transformation {
-	
-	/** 
-	 * https://github.com/eclipse/n4js/issues/394
-	 * 
-	 * for simplifying node js compilation target we want use imports relative to project root
-	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
-	 * or we might make this configurable in the manifest.
-	 */
-	private static final boolean USE_PROJECT_RELATIVE_IMPORT = true;
-	
-	@Inject
-	JSXBackendHelper jsx;
 
 	@Inject
-	ResourceNameComputer qnameComputer
+	private JSXBackendHelper jsx;
+	@Inject
+	private ResourceNameComputer resourceNameComputer
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-	
 	@Inject
 	private JSXBackendHelper JSXBackendHelper;
 
@@ -276,16 +265,16 @@ class ModuleWrappingTransformation extends Transformation {
 					if (isJSXBackendImport) {
 						jsx.jsxBackendModuleSpecifier(module, state.resource)
 					} else {
-						qnameComputer.getCompleteModuleSpecifier(module)
+						resourceNameComputer.getCompleteModuleSpecifier(module)
 					}
 
 				val fparName = if (isJSXBackendImport) {
 						jsx.getJsxBackendCompleteModuleSpecifierAsIdentifier(module)
 					} else {
-						"$_import_" + qnameComputer.getCompleteModuleSpecifierAsIdentifier(module)
+						"$_import_" + resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(module)
 					}
 
-				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier, USE_PROJECT_RELATIVE_IMPORT)
+				var actualModuleSpecifier = computeActualModuleSpecifier(module, completeModuleSpecifier)
 
 				var moduleEntry = map.get( completeModuleSpecifier )
 				if( moduleEntry === null ) {
@@ -335,30 +324,28 @@ class ModuleWrappingTransformation extends Transformation {
 		return map;
 	}
 
-	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier,
-		boolean useProjectRelativePath) {
+	private def String computeActualModuleSpecifier(TModule module, String completeModuleSpecifier) {
 		val moduleSpecifierAdjustment = getModuleSpecifierAdjustment(module);
 
-		if(moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
+		if (moduleSpecifierAdjustment !== null && moduleSpecifierAdjustment.usePlainModuleSpecifier)
 			return moduleSpecifierAdjustment.prefix + '/' + module.moduleSpecifier
 
-	
 		var specifier = completeModuleSpecifier
-		if(useProjectRelativePath){
-			val depProject = n4jsCore.findProject(module.eResource.URI).orNull
-			if(depProject !== null){
-				val projectRelativeSegment = AbstractSubGenerator.calculateOutputDirectory(n4jsCore.getOutputPath(module.eResource.URI))
-				val depLocation = depProject.locationPath
-				if(depLocation !== null){
-					val depLocationString = depLocation.toString
-					val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
-					val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length - depProject.projectId.length)
-					specifier =  depRelativeSpecifier + '/' + completeModuleSpecifier
-				}
+		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
+		if (depProject !== null) {
+			val projectRelativeSegment = AbstractSubGenerator.calculateOutputDirectory(
+				n4jsCore.getOutputPath(module.eResource.URI))
+			val depLocation = depProject.locationPath
+			if (depLocation !== null) {
+				val depLocationString = depLocation.toString
+				val depProjecOutputPath = depProject.locationPath.resolve(projectRelativeSegment).normalize.toString
+				val depRelativeSpecifier = depProjecOutputPath.substring(depLocationString.length -
+					depProject.projectId.length)
+				specifier = depRelativeSpecifier + '/' + completeModuleSpecifier
 			}
 		}
-		if (moduleSpecifierAdjustment !== null) 
-			return  moduleSpecifierAdjustment.prefix + '/' + specifier
+		if (moduleSpecifierAdjustment !== null)
+			return moduleSpecifierAdjustment.prefix + '/' + specifier
 
 		return specifier
 	}
