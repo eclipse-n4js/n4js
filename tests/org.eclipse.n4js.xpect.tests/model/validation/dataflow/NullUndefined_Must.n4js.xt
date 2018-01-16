@@ -36,17 +36,55 @@ function f3() {
 	a.toString();
 }
 
-function f4() {
-	let a : int;
-	let b = a;
-	// XPECT warnings --> "Variable b is null" at "b"
+function f4a() {
+	let a : int, b : int;
+	a = null;
+	b = a;
+	// XPECT warnings --> "Variable b is null due to previous variable a" at "b"
 	b.toString();
 }
 
-function f5() {
+function f4b() {
+	let a : int;
+	let b = a;
+	// XPECT warnings --> "Variable b is undefined due to previous variable a" at "b"
+	b.toString();
+}
+
+function f4c() {
 	let a : int = null;
 	let b = a;
-	// XPECT warnings --> "Variable b is null" at "b"
+	// XPECT warnings --> "Variable b is null due to previous variable a" at "b"
+	b.toString();
+}
+
+function f5a() {
+	let a : int, b : int;
+	a = null;
+	[b] = [a];
+	// XPECT warnings --> "Variable b is null due to previous variable a" at "b"
+	b.toString();
+}
+
+function f5b() {
+	let a : int = null;
+	let [b] = [a];
+	// XPECT warnings --> "Variable b is null due to previous variable a" at "b"
+	b.toString();
+}
+
+function f6a() {
+	let a : int, b : int;
+	a = null;
+	({b} = {b:a});
+	// XPECT warnings --> "Variable b is null due to previous variable a" at "b"
+	b.toString();
+}
+
+function f6b() {
+	let a : int = null;
+	let {b} = {b:a};
+	// XPECT warnings --> "Variable b is null due to previous variable a" at "b"
 	b.toString();
 }
 
@@ -104,7 +142,7 @@ function f16() {
 function f20() {
 	let a : any+ = 0;
 	({a} = {a:1});
-	// XPECT warnings --> "Variable a is undefined" at "a"
+	// XPECT nowarnings -->
 	a.toString();
 }
 
