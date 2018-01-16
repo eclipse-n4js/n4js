@@ -60,7 +60,13 @@ public class SymbolFactory {
 		if (expr instanceof IdentifierRef) {
 			newSymbol = new SymbolOfIdentifierRef((IdentifierRef) expr);
 		} else if (expr instanceof ParameterizedPropertyAccessExpression) {
-			newSymbol = new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) expr);
+			// Deactivated.
+			// Not necessary at the moment. Causes serious performance issues in
+			// n4js-n4/tests/com.enfore.n4js.tests.libraryparsing/src/com/enfore/n4js/tests/libraryparsing/SmokeTestSuite
+
+			// newSymbol = new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression)
+			// expr);
+
 		} else if (expr instanceof IndexedAccessExpression) {
 			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
 		} else if (expr instanceof NullLiteral) {
