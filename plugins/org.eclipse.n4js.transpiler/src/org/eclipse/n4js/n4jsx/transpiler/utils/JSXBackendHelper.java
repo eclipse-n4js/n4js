@@ -48,7 +48,7 @@ public final class JSXBackendHelper {
 	@Inject
 	private IN4JSCore n4jsCore;
 	@Inject
-	private ResourceNameComputer projectUtils;
+	private ResourceNameComputer resourceNameComputer;
 	@Inject
 	private ProjectResolveHelper projectResolver;
 
@@ -93,7 +93,7 @@ public final class JSXBackendHelper {
 			throw new RuntimeException(
 					"Cannot handle resource without containing project. Resource URI was: " + uri);
 		}
-		return projectUtils.getCompleteModuleSpecifier(optionalProject.get(), module);
+		return resourceNameComputer.getCompleteModuleSpecifier(optionalProject.get(), module);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public final class JSXBackendHelper {
 	public String getJsxBackendCompleteModuleSpecifierAsIdentifier(TModule module) {
 		URI uri = getOrFindJSXBackend(module.eResource(), module.getQualifiedName());
 		IN4JSProject resolveProject = projectResolver.resolveProject(uri);
-		return projectUtils.getCompleteModuleSpecifierAsIdentifier(resolveProject, module);
+		return resourceNameComputer.getCompleteModuleSpecifierAsIdentifier(resolveProject, module);
 	}
 
 	/**

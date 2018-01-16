@@ -86,7 +86,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 
 	@Inject private DelegationAssistant delegationAssistant;
 	@Inject private TypeAssistant typeAssistant;
-	@Inject private ResourceNameComputer projectUtils;
+	@Inject private ResourceNameComputer resourceNameComputer;
 	@Inject private JavaScriptVariantHelper jsVariantHelper;
 
 	/**
@@ -413,8 +413,8 @@ class BootstrapCallAssistant extends TransformationAssistant {
 		};
 
 
-		val origin = projectUtils.generateProjectDescriptor(state.resource.URI);
-		val fqn = projectUtils.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(type);
+		val origin = resourceNameComputer.generateProjectDescriptor(state.resource.URI);
+		val fqn = resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(type);
 
 		return _VariableDeclaration("metaClass")=>[
 			expression = _NewExpr(_IdentRef(metaClassSTE), _ObjLit(
@@ -423,7 +423,7 @@ class BootstrapCallAssistant extends TransformationAssistant {
 				"fqn" -> _StringLiteral(fqn),
 				"n4superType" -> n4superType,
 				"allImplementedInterfaces" -> _ArrLit(
-					allImplementedInterfaces.map[projectUtils.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(it)].map[_StringLiteral(it)]
+					allImplementedInterfaces.map[resourceNameComputer.getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(it)].map[_StringLiteral(it)]
 				),
 				"ownedMembers" -> _ArrLit(
 					ownedMembers.map[createMemberDescriptor]

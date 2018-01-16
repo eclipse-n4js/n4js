@@ -40,7 +40,7 @@ import org.eclipse.emf.ecore.resource.Resource
  * Callers interested in full project relative path need to call concrete compiler for more information.
  */
 @Singleton
-public class ResourceNameComputer {
+public final class ResourceNameComputer {
 	/** 
 	 * https://github.com/eclipse/n4js/issues/394
 	 * 
@@ -49,8 +49,8 @@ public class ResourceNameComputer {
 	 * Hide this behind the flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
 	 * or we might make this configurable in the manifest.
 	 */
-	public static final boolean USE_NODE_DESCRIPTOR = true;
-	
+	private static final boolean MAKE_SIMPLE_DESCRIPTOR = true;
+
 	/** 
 	 * (pre-eclipse ticket)
 	 * IDE-2069
@@ -59,153 +59,17 @@ public class ResourceNameComputer {
 	 * Hidden behind feature flag, as we anticipate that this needs to be configurable for other (than node.js) generators,
 	 * or we might make this configurable in the manifest.
 	 */
-	public static final boolean USE_VERSIONS = false
-	
+	private static final boolean USE_PROJECT_VERSION = true
+
+	/** 
+	 * Default value for descriptors to be generated in a way that is safe to be used as identifiers in JS.
+	 */
+	private static final boolean AS_JS_IDENTIFIER = true
+
 	@Inject private N4JSQualifiedNameProvider qualifiedNameProvider;
 	@Inject private IQualifiedNameConverter converter;
 	@Inject private SpecifierConverter specifierConverter;
 	@Inject private ProjectResolveHelper projectResolver;
-
-	/**
-	 * Based on provided URI generates project in form of Project-0.0.1
-	 * Convenience method, delegates to {@link ResourceNameComputer#generateProjectDescriptor(IN4JSProject project)} with project
-	 * derived from the URI.
-	 * 
-	 * @n4jsSourceURI URI from file resource
-	 */
-	def generateProjectDescriptor(URI n4jsSourceURI) {
-		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI), "", "-", ".", "", USE_VERSIONS, false, false);
-	}
-
-	/**
-	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project-0.0.1
-	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
-	 * For delegation project is calculated from provided URI.
-	 * 
-	 * @n4jsSourceURI URI from file resource
-	 */
-	def generateProjectDescriptor(IN4JSProject project) {
-		formatDescriptor(project, "", "-", ".", "", USE_VERSIONS, false, false);
-	}
-
-	/**
-	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
-	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
-	 * For delegation both project and unitPath are calculated from provided URI.
-	 * 
-	 * @n4jsSourceURI URI from file resource
-	 * @fileExtension String containing desired extensions, should include dot
-	 */
-	def generateFileDescriptor(Resource resource, String fileExtension) {
-		formatDescriptor(projectResolver.resolveProject(resource),
-			projectResolver.resolvePackageAndFileName(resource), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + normalizeFileExtension(fileExtension);
-	}
-	
-	/**
-	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
-	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
-	 * For delegation both project and unitPath are calculated from provided URI.
-	 * 
-	 * @n4jsSourceURI URI from file resource
-	 * @fileExtension String containing desired extensions, should include dot
-	 */
-	def generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
-		formatDescriptor(projectResolver.resolveProject(n4jsSourceURI),
-			projectResolver.resolvePackageAndFileName(n4jsSourceURI), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + normalizeFileExtension(fileExtension);
-	}
-
-	/**
-	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
-	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
-	 * For delegation both project and unitPath are calculated from provided URI.
-	 * 
-	 * @n4jsSourceURI URI from file resource
-	 * @fileExtension String containing desired extensions, should include dot
-	 */
-	def generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
-		formatDescriptor(project, projectResolver.resolvePackageAndFileName(n4jsSourceURI, project), "-", ".", "/",
-			USE_VERSIONS, false, USE_NODE_DESCRIPTOR) + normalizeFileExtension(fileExtension);
-	}
-	private def String normalizeFileExtension(String fileExtension){
-		if(Strings.isNullOrEmpty(fileExtension))
-			return ""
-		
-		if(fileExtension.startsWith("."))
-			return fileExtension
-
-		return "." + fileExtension;
-	}
-
-	/**
-	 * Formats descriptor in form of
-	 * <pre>
-	 * projectId
-	 *  + sep1 + Project.declaredVersion.getMajor
-	 *  + sep2 + Project.declaredVersion.getMinor
-	 *  + sep2 + Project.declaredVersion.getMinor
-	 *  + sep3 + unitPath
-	 * </pre>
-	 * 
-	 * @param project  used to resolve declared version and project name.
-	 * @param unitPath  a path like string, can be derived from file Path, module specifier, or constructed manually.
-	 * @param includeProjectVersion  tells if project version should be included or not. If false, then sep1 and sep2
-	 *                               will be ignored.
-	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
-	 * @param makeSimpleDescriptor  tells if simple form of descriptor is to be used.
-	 */
-	private def final static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
-		String sep3, boolean includeProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
-
-		var projectID = project.projectId
-		var path = unitPath
-		if (asJsIdentifier) {
-			projectID = getValidJavascriptIdentifierName(project.projectId)
-			path = getValidUnitPath(unitPath)
-		}
-
-		if (makeSimpleDescriptor) {
-			return path;
-		}
-
-		if (includeProjectVersion) {
-			return projectID + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
-		}
-
-		return projectID + sep3 + path;
-	}
-
-	private static def final String getValidUnitPath(String unitPath) {
-		return unitPath.split('/').map[getValidJavascriptIdentifierName].join('/');
-	}
-
-	private static def String getValidJavascriptIdentifierName(String moduleSpecifier) {
-		if (moduleSpecifier === null || moduleSpecifier.length === 0) {
-			return moduleSpecifier;
-		}
-		val sb = new StringBuilder();
-		for (var int i = 0; i < moduleSpecifier.length; i++) {
-			val ch = moduleSpecifier.charAt(i);
-			val isValid = if (i === 0) Character.isJavaIdentifierStart(ch) else Character.isJavaIdentifierPart(ch);
-			if (isValid) {
-				sb.append(ch);
-			} else {
-				sb.append(toUnicode(ch));
-			}
-		}
-		return sb.toString();
-	}
-
-	def static private toUnicode(char charAtPos) {
-		return "_u" + Integer.toHexString(charAtPos.bitwiseOr(0x10000)).substring(1);
-	}
-
-	/**
-	 * Transforms the version into a string used for variable, parameter, and file names.
-	 */
-	def private static projectVersionToStringWithoutQualifier(DeclaredVersion declaredVersion, String separatorChar) {
-		return declaredVersion.getMajor + separatorChar + declaredVersion.getMinor + separatorChar +
-			declaredVersion.getMicro;
-	}
 
 	/**
 	 * The qualified name of a declared type is its simple name, prefixed by the fully qualified module name it is
@@ -214,7 +78,7 @@ public class ResourceNameComputer {
 	 * Example: <code>p.C</code> for class C in file/module C in package p of project with version 1.0.0.
 	 * </p>
 	 */
-	def public String getQualifiedModuleName(Script script) {
+	def String getQualifiedModuleName(Script script) {
 		return converter.toString(qualifiedNameProvider.getFullyQualifiedName(script));
 	}
 
@@ -225,7 +89,7 @@ public class ResourceNameComputer {
 	 * Example: <code>p.C</code> for class C in file/module C in package p of project with version 1.0.0.
 	 * </p>
 	 */
-	def public String getQualifiedModuleName(TModule module) {
+	def String getQualifiedModuleName(TModule module) {
 		return converter.toString(qualifiedNameProvider.getFullyQualifiedName(module));
 	}
 
@@ -236,7 +100,7 @@ public class ResourceNameComputer {
 	 * Example: <code>C</code> for class C in file/module C in package p of project with version 1.0.0.
 	 * </p>
 	 */
-	def public String getSimpleTypeName(Type type) {
+	def String getSimpleTypeName(Type type) {
 		var String name = type.getName();
 		if (name === null || name.isEmpty()) {
 			name = "__Anonymous_" + type.hashCode();
@@ -251,7 +115,7 @@ public class ResourceNameComputer {
 	 * Example: <code>p/C/C</code> for class C in file/module C in package p of project with version 1.0.0.
 	 * </p>
 	 */
-	def public String getFullyQualifiedTypeName(Type type) {
+	def String getFullyQualifiedTypeName(Type type) {
 		val EObject rootContainer = getRootContainer(type);
 		if (rootContainer instanceof TypeDefs) {
 			// 'type' is a built-in type
@@ -273,7 +137,7 @@ public class ResourceNameComputer {
 	 * <p>
 	 * TODO IDE-2227 remove legacy support for old FQNs
 	 */
-	def public String getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(Type type) {
+	def String getFullyQualifiedTypeName_WITH_LEGACY_SUPPORT(Type type) {
 		return getFullyQualifiedTypeName(type).replace(N4JSQualifiedNameConverter.DELIMITER, ".");
 	}
 
@@ -284,7 +148,7 @@ public class ResourceNameComputer {
 	 * Example: <code>p/C</code> for class C in file/module C in package p of project with version 1.0.0.
 	 * </p>
 	 */
-	def public String getModuleSpecifier(Script script) {
+	def String getModuleSpecifier(Script script) {
 		return specifierConverter.toString(qualifiedNameProvider.getFullyQualifiedName(script));
 	}
 
@@ -295,7 +159,7 @@ public class ResourceNameComputer {
 	 * Example: <code>p/C</code> for class C in file/module C in package p of project with version 1.0.0.
 	 * </p>
 	 */
-	def public String getModuleSpecifier(TModule module) {
+	def String getModuleSpecifier(TModule module) {
 		return specifierConverter.toString(qualifiedNameProvider.getFullyQualifiedName(module));
 	}
 
@@ -312,8 +176,9 @@ public class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
-	def public String getCompleteModuleSpecifier(IN4JSProject project, TModule module) {
-		return formatDescriptor(resolveProject(module), module.getModuleSpecifier(), "-", ".", "/", USE_VERSIONS, false, USE_NODE_DESCRIPTOR);
+	def String getCompleteModuleSpecifier(IN4JSProject project, TModule module) {
+		val unitPath = module.getModuleSpecifier()
+		return formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR);
 	}
 
 	/**
@@ -329,8 +194,10 @@ public class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
-	def public String getCompleteModuleSpecifier(TModule module) {
-		return getCompleteModuleSpecifier(resolveProject(module), module);
+	def String getCompleteModuleSpecifier(TModule module) {
+		val project = resolveProject(module)
+		val unitPath = module.getModuleSpecifier()
+		return formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR);
 	}
 
 	/**
@@ -346,9 +213,10 @@ public class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
-	def public String getCompleteModuleSpecifierAsIdentifier(IN4JSProject project, TModule module) {
+	def String getCompleteModuleSpecifierAsIdentifier(IN4JSProject project, TModule module) {
+		val unitPath = module.getModuleSpecifier()
 		return getValidJavascriptIdentifierName(
-			formatDescriptor(project, module.getModuleSpecifier(), "_", "_", "_", USE_VERSIONS, true, USE_NODE_DESCRIPTOR));
+			formatDescriptor(project, unitPath, "_", "_", "_", !USE_PROJECT_VERSION, AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR));
 	}
 
 	/**
@@ -364,12 +232,11 @@ public class ResourceNameComputer {
 	 * 
 	 * @module {@link TModule} for which we generate descriptor
 	 */
-	def public String getCompleteModuleSpecifierAsIdentifier(TModule module) {
-		return getCompleteModuleSpecifierAsIdentifier(resolveProject(module), module);
-	}
-
-	def private IN4JSProject resolveProject(TModule module) {
-		return projectResolver.resolveProject(module.eResource().getURI());
+	def String getCompleteModuleSpecifierAsIdentifier(TModule module) {
+		val project = resolveProject(module)
+		val unitPath = module.getModuleSpecifier()
+		return getValidJavascriptIdentifierName(
+			formatDescriptor(project, unitPath, "_", "_", "_", !USE_PROJECT_VERSION, AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR));
 	}
 
 	/**
@@ -381,9 +248,167 @@ public class ResourceNameComputer {
 	 * 1.0.0.
 	 * </p>
 	 */
-	def public String getCompleteTypeSpecifier(Type type) {
+	def String getCompleteTypeSpecifier(Type type) {
 		val TModule module = EcoreUtil2.getContainerOfType(type, TModule);
 		return getCompleteModuleSpecifier(module) + "/" + getSimpleTypeName(type);
+	}
+
+	/**
+	 * Based on provided URI generates project in form of Project-0.0.1
+	 * Convenience method, delegates to {@link ResourceNameComputer#generateProjectDescriptor(IN4JSProject project)} with project
+	 * derived from the URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 */
+	def generateProjectDescriptor(URI n4jsSourceURI) {
+		val project = projectResolver.resolveProject(n4jsSourceURI)
+		val unitPath = ""
+		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
+	}
+
+	/**
+	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project-0.0.1
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
+	 * For delegation project is calculated from provided URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 */
+	def generateProjectDescriptor(IN4JSProject project) {
+		val unitPath = ""
+		formatDescriptor(project, unitPath, "-", ".", "", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, !MAKE_SIMPLE_DESCRIPTOR);
+	}
+
+	/**
+	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
+	 * For delegation both project and unitPath are calculated from provided URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 * @fileExtension String containing desired extensions, should include dot
+	 */
+	def generateFileDescriptor(Resource resource, String fileExtension) {
+		val project = projectResolver.resolveProject(resource)
+		val unitPath = projectResolver.resolvePackageAndFileName(resource)
+		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
+			normalizeFileExtension(fileExtension);
+	}
+
+	/**
+	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
+	 * For delegation both project and unitPath are calculated from provided URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 * @fileExtension String containing desired extensions, should include dot
+	 */
+	def generateFileDescriptor(URI n4jsSourceURI, String fileExtension) {
+		val project = projectResolver.resolveProject(n4jsSourceURI)
+		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI)
+		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
+			normalizeFileExtension(fileExtension);
+	}
+
+	/**
+	 * Based on provided file resource URI and extension (must include dot!) will generate descriptor in form of Project/file/path/File.js
+	 * Convenience method. Delegates to {@link ResourceNameComputer#formatDescriptor}
+	 * For delegation both project and unitPath are calculated from provided URI.
+	 * 
+	 * @n4jsSourceURI URI from file resource
+	 * @fileExtension String containing desired extensions, should include dot
+	 */
+	def generateFileDescriptor(IN4JSProject project, URI n4jsSourceURI, String fileExtension) {
+		val unitPath = projectResolver.resolvePackageAndFileName(n4jsSourceURI, project)
+		formatDescriptor(project, unitPath, "-", ".", "/", !USE_PROJECT_VERSION, !AS_JS_IDENTIFIER, MAKE_SIMPLE_DESCRIPTOR) +
+			normalizeFileExtension(fileExtension);
+	}
+
+	def private IN4JSProject resolveProject(TModule module) {
+		return projectResolver.resolveProject(module.eResource().getURI());
+	}
+
+	/** Simple normalization of provided file extension to form {@code .abc} or empty string. */
+	def private static String normalizeFileExtension(String fileExtension) {
+		if (Strings.isNullOrEmpty(fileExtension))
+			return ""
+
+		if (fileExtension.startsWith("."))
+			return fileExtension
+
+		return "." + fileExtension;
+	}
+
+	/**
+	 * Formats descriptor in form of
+	 * <pre>
+	 * projectId
+	 *  + sep1 + Project.declaredVersion.getMajor
+	 *  + sep2 + Project.declaredVersion.getMinor
+	 *  + sep2 + Project.declaredVersion.getMinor
+	 *  + sep3 + unitPath
+	 * </pre>
+	 * 
+	 * @param project  used to resolve declared version and project name.
+	 * @param unitPath  a path like string, can be derived from file Path, module specifier, or constructed manually.
+	 * @param useProjectVersion  tells if project version should be included or not. If false, then sep1 and sep2
+	 *                               will be ignored.
+	 * @param asJsIdentifier  tells if segments must be in form of a valid JS identifier.
+	 * @param makeSimpleDescriptor  tells if simple form of descriptor is to be used.
+	 */
+	def private static String formatDescriptor(IN4JSProject project, String unitPath, String sep1, String sep2,
+		String sep3, boolean useProjectVersion, boolean asJsIdentifier, boolean makeSimpleDescriptor) {
+
+		var projectID = project.projectId
+		var path = unitPath
+		if (asJsIdentifier) {
+			projectID = getValidJavascriptIdentifierName(project.projectId)
+			path = getValidUnitPath(unitPath)
+		}
+
+		if (makeSimpleDescriptor) {
+			return path;
+		}
+
+		if (useProjectVersion) {
+			return projectID + sep1 + projectVersionToStringWithoutQualifier(project.version, sep2) + sep3 + path;
+		}
+
+		return projectID + sep3 + path;
+	}
+
+	/** Ensures that all parts of the unit path are valid JS identifiers */
+	def private static String getValidUnitPath(String unitPath) {
+		return unitPath.split('/').map[getValidJavascriptIdentifierName].join('/');
+	}
+
+	/** Transforms given input string to form that can be used as JS identifier. Assumes that Java identifiers are valid JavaScript
+	 * identifiers, hence it actually just checks Java identifier validity and does not dive into JS specifics. Uses {@link Character#isJavaIdentifierStart}
+	 * and {@link Character#isJavaIdentifierPart} for heavy validity checks. Invalid characters are transformed to Unicode equivalents, see {@link #toUnicode}.
+	 * Valid inputs are returned unchanged.*/
+	def private static String getValidJavascriptIdentifierName(String input) {
+		if (input === null || input.length === 0) {
+			return input;
+		}
+		val sb = new StringBuilder();
+		for (var int i = 0; i < input.length; i++) {
+			val ch = input.charAt(i);
+			val isValid = if (i === 0) Character.isJavaIdentifierStart(ch) else Character.isJavaIdentifierPart(ch);
+			if (isValid) {
+				sb.append(ch);
+			} else {
+				sb.append(toUnicode(ch));
+			}
+		}
+		return sb.toString();
+	}
+
+	def private static toUnicode(char character) {
+		return "_u" + Integer.toHexString(character.bitwiseOr(0x10000)).substring(1);
+	}
+
+	/** Transforms the version into a string used for variable, parameter, and file names. */
+	def private static projectVersionToStringWithoutQualifier(DeclaredVersion declaredVersion, String separatorChar) {
+		return declaredVersion.getMajor + separatorChar + declaredVersion.getMinor + separatorChar +
+			declaredVersion.getMicro;
 	}
 
 }
