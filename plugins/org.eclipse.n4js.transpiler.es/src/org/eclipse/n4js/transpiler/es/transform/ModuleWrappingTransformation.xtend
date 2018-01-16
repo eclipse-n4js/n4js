@@ -731,9 +731,9 @@ class ModuleWrappingTransformation extends Transformation {
 		val importDecl = _ImportDecl(null, importSpec);
 		// 2) create a fake original target (dirty, because not contained in a ResourceSet)
 		val typeForNamespace = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType();
+		typeForNamespace.name = ReactHelper.REACT_NAMESPACE_NAME;
 		// 3) create a symbol table entry
 		val ste_reactNamespace = getSymbolTableEntryOriginal(typeForNamespace, true);
-		ste_reactNamespace.name = ReactHelper.REACT_NAMESPACE_NAME;
 		ste_reactNamespace.importSpecifier = importSpec;
 		// 3) add import to intermediate model
 		insertBefore(state.im.scriptElements.get(0), importDecl);
