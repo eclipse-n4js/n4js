@@ -12,7 +12,7 @@ Contributors:
 
 . *++ext++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample8_NoTodoForReqIDs:test/ReqTest:ReqTest#ext___Case++[++Case++]#)
 +
-[.requirementConstraint]
+[.generatedApiConstraint]
 ====
 
 This is some Description in a paragraph.

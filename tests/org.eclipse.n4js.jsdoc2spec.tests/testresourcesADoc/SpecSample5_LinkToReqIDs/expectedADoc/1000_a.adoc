@@ -12,7 +12,7 @@ Contributors:
 
 . *++basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample5_LinkToReqIDs:test/ReqTest:ReqTest#_02_basics___1_Case++[++Case++]#)
 +
-[.requirementConstraint]
+[.generatedApiConstraint]
 ====
 
 Basic Description

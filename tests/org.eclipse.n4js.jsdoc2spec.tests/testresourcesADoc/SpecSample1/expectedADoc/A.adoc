@@ -100,7 +100,7 @@ Inherited from
 
 . *++Baz again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]#)
 +
-[.requirementConstraint]
+[.generatedApiConstraint]
 ====
 
 Baz is supposed to do nothing.
