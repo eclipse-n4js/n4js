@@ -98,7 +98,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		NullDereferenceAnalyser nda = new NullDereferenceAnalyser();
 
 		flowAnalyzer.createGraphs(script);
-		flowAnalyzer.accept(dcv, cvgv1);
+		flowAnalyzer.accept(dcv, nda, cvgv1);
 
 		String uriString = script.eResource().getURI().toString();
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);

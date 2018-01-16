@@ -61,9 +61,6 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 	public DataFlowVisitorHost(Collection<DataFlowVisitor> dfVisitors) {
 		super(getDirections(dfVisitors));
 		this.dfVisitors = dfVisitors;
-		for (DataFlowVisitor dfVisitor : dfVisitors) {
-			dfVisitor.setSymbolFactory(getSymbolFactory());
-		}
 	}
 
 	/** @return reference to the {@link SymbolFactory} */
@@ -73,6 +70,9 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 
 	@Override
 	protected void initializeModeInternal(TraverseDirection curDirection, ControlFlowElement curContainer) {
+		for (DataFlowVisitor dfVisitor : dfVisitors) {
+			dfVisitor.setSymbolFactory(getSymbolFactory());
+		}
 		dfExplorer = new DataFlowExplorer();
 		requestActivation(dfExplorer);
 	}
