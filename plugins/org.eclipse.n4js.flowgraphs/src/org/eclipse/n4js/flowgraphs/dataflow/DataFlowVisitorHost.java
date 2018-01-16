@@ -125,7 +125,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		@Override
 		protected void visit(Node node) {
 			ControlFlowElement cfe = node.getControlFlowElement();
-			for (EffectInfo effect : node.effectInfos) { // TODO: optimize: remove loop by passed all infos
+			for (EffectInfo effect : node.effectInfos) {
 				boolean handledDataFlow = false;
 				if (cfe instanceof AssignmentExpression) {
 					handledDataFlow |= handleDataFlow((AssignmentExpression) cfe);
@@ -137,6 +137,11 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 					handleVisitEffect(cfe, effect);
 				}
 			}
+		}
+
+		@Override
+		protected void switchedToDeadBranch() {
+			assumptions.clear();
 		}
 
 		private boolean handleDataFlow(AssignmentExpression ae) {

@@ -75,6 +75,11 @@ abstract public class BranchWalkerInternal {
 		// overwrite me
 	}
 
+	/** Called when this branch turns out to be dead. */
+	protected void switchedToDeadBranch() {
+		// overwrite me
+	}
+
 	/////////////////////// Methods called from {@link GraphWalkerGuideInternal} ///////////////////////
 
 	/**
@@ -114,7 +119,7 @@ abstract public class BranchWalkerInternal {
 	 */
 	final void callVisit(Node node) {
 		isDeadCodeNode = node.isUnreachable();
-		isDeadCodeBranch |= isDeadCodeNode;
+		setDeadCode(isDeadCodeBranch || isDeadCodeNode);
 		visit(node);
 	}
 
@@ -124,12 +129,15 @@ abstract public class BranchWalkerInternal {
 	 */
 	final void callVisit(Node lastVisitNode, Node end, ControlFlowEdge edge) {
 		isDeadCodeNode = end.isUnreachable();
-		isDeadCodeBranch |= isDeadCodeNode;
+		setDeadCode(isDeadCodeBranch || isDeadCodeNode);
 		visit(lastVisitNode, end, edge);
 	}
 
 	final void setDeadCode(boolean isDead) {
 		this.isDeadCodeBranch = isDead;
+		if (isDeadCodeBranch) {
+			switchedToDeadBranch();
+		}
 	}
 
 	/** Only called from {@link GraphVisitorGuideInternal}. Delegates to {@link #fork()}. */
