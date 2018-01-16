@@ -44,11 +44,10 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
-		Expression dereferencer = getDereferencer(cfe);
-		if (dereferencer != null) {
-			Symbol tgtSymbol = SymbolFactory.create(dereferencer);
+		if (isDereferencing(cfe)) {
+			Symbol tgtSymbol = SymbolFactory.create(cfe);
 			if (tgtSymbol != null) {
-				IsNotNull symbolNotNull = new IsNotNull(dereferencer, tgtSymbol);
+				IsNotNull symbolNotNull = new IsNotNull(cfe, tgtSymbol);
 				assume(symbolNotNull);
 			}
 		}
@@ -57,27 +56,21 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-		Expression dereferencer = getDereferencer(cfe);
-		if (must && dereferencer != null) {
-			Symbol tgtSymbol = SymbolFactory.create(dereferencer);
-			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(dereferencer, tgtSymbol);
+		if (must && isDereferencing(cfe)) {
+			Symbol tgtSymbol = SymbolFactory.create(cfe);
+			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(cfe, tgtSymbol);
 			assume(isReasonableNullGuard);
 		}
 	}
 
-	private Expression getDereferencer(ControlFlowElement cfe) {
-		Expression dereferencer = null;
-		if (cfe instanceof ParameterizedPropertyAccessExpression) {
-			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) cfe;
+	private boolean isDereferencing(ControlFlowElement cfe) {
+		EObject parent = cfe.eContainer();
+		if (parent instanceof ParameterizedPropertyAccessExpression) {
+			ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) parent;
 			Expression target = ppae.getTarget();
-			dereferencer = target;
+			return cfe == target;
 		}
-		if (cfe instanceof AssignmentExpression) {
-			AssignmentExpression ae = (AssignmentExpression) cfe;
-			Expression target = getDereferencer(ae.getLhs());
-			dereferencer = target;
-		}
-		return dereferencer;
+		return false;
 	}
 
 	/** @return a list of all AST locations where a null pointer dereference can happen */

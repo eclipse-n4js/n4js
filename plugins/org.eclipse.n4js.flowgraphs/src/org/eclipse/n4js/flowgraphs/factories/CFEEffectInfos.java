@@ -55,11 +55,8 @@ class CFEEffectInfos {
 			Node entryNode = cNode.getNode(NodeNames.ENTRY);
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 
-			EffectInfo eiDecl = new EffectInfo(EffectType.Declaration, feature);
-			entryNode.addEffectInfo(eiDecl);
-
-			eiDecl = new EffectInfo(EffectType.Write, feature);
-			exitNode.addEffectInfo(eiDecl);
+			addEffect(EffectType.Declaration, feature, entryNode);
+			addEffect(EffectType.Write, feature, exitNode);
 
 			return null;
 		}
@@ -81,8 +78,7 @@ class CFEEffectInfos {
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			for (Expression assignedVar : idRefs) {
 				clearEffectsOfExitNode(assignedVar);
-				EffectInfo eiDecl = new EffectInfo(EffectType.Write, assignedVar);
-				exitNode.addEffectInfo(eiDecl);
+				addEffect(EffectType.Write, assignedVar, exitNode);
 			}
 			return null;
 		}
@@ -97,11 +93,8 @@ class CFEEffectInfos {
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
-			EffectInfo eiDecl = new EffectInfo(EffectType.Read, feature.getExpression());
-			expressionNode.addEffectInfo(eiDecl);
-
-			eiDecl = new EffectInfo(EffectType.Write, feature.getExpression());
-			exitNode.addEffectInfo(eiDecl);
+			addEffect(EffectType.Read, feature.getExpression(), expressionNode);
+			addEffect(EffectType.Write, feature.getExpression(), exitNode);
 
 			return null;
 		}
@@ -123,11 +116,8 @@ class CFEEffectInfos {
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
 			Node expressionNode = cNode.getNode(NodeNames.EXPRESSION);
 
-			EffectInfo eiDecl = new EffectInfo(EffectType.Write, feature.getExpression());
-			expressionNode.addEffectInfo(eiDecl);
-
-			eiDecl = new EffectInfo(EffectType.Read, feature.getExpression());
-			exitNode.addEffectInfo(eiDecl);
+			addEffect(EffectType.Write, feature.getExpression(), expressionNode);
+			addEffect(EffectType.Read, feature.getExpression(), exitNode);
 
 			return null;
 		}
@@ -140,12 +130,7 @@ class CFEEffectInfos {
 			}
 
 			Node exitNode = cNode.getNode(NodeNames.EXIT);
-
-			Symbol symbol = SymbolFactory.create(targetExpr);
-			if (symbol != null) {
-				EffectInfo eiDecl = new EffectInfo(EffectType.MethodCall, targetExpr, symbol);
-				exitNode.addEffectInfo(eiDecl);
-			}
+			addEffect(EffectType.MethodCall, targetExpr, exitNode);
 
 			return null;
 		}
@@ -170,8 +155,7 @@ class CFEEffectInfos {
 
 		private void setRead(Expression feature) {
 			Node exitNode = cNode.getExit();
-			EffectInfo eiDecl = new EffectInfo(EffectType.Read, feature);
-			exitNode.addEffectInfo(eiDecl);
+			addEffect(EffectType.Read, feature, exitNode);
 		}
 
 		private void clearEffectsOfExitNode(Expression feature) {
@@ -179,6 +163,14 @@ class CFEEffectInfos {
 			if (cn != null) {
 				Node exitNode = cn.getExit();
 				exitNode.effectInfos.clear();
+			}
+		}
+
+		private void addEffect(EffectType effectType, ControlFlowElement expr, Node node) {
+			Symbol symbol = SymbolFactory.create(expr);
+			if (symbol != null) {
+				EffectInfo eiDecl = new EffectInfo(effectType, expr, symbol);
+				node.addEffectInfo(eiDecl);
 			}
 		}
 	}

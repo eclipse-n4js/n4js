@@ -13,8 +13,6 @@ package org.eclipse.n4js.flowgraphs.dataflow;
 import static com.google.common.base.Preconditions.checkState;
 
 import org.eclipse.n4js.n4JS.ControlFlowElement;
-import org.eclipse.n4js.n4JS.Expression;
-import org.eclipse.n4js.n4JS.VariableDeclaration;
 
 /** Holds information of one effect to a single variable */
 public class EffectInfo {
@@ -24,16 +22,6 @@ public class EffectInfo {
 	public final ControlFlowElement location;
 	/** The symbol that is affected */
 	public final Symbol symbol;
-
-	/** Constructor */
-	public EffectInfo(EffectType type, Expression location) {
-		this(type, location, SymbolFactory.create(location));
-	}
-
-	/** Constructor */
-	public EffectInfo(EffectType type, VariableDeclaration location) {
-		this(type, location, SymbolFactory.create(location));
-	}
 
 	/** Constructor */
 	public EffectInfo(EffectType type, ControlFlowElement location, Symbol symbol) {
