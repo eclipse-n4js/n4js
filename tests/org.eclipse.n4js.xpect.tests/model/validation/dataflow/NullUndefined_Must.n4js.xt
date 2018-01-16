@@ -180,3 +180,77 @@ function f26() {
 	// XPECT nowarnings -->
 	a.toString();
 }
+
+function f30(p:int) {
+	let a : int = 1;
+	switch (p) {
+		case 1: a = null;
+		default: a = null;
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+
+function f31(p:int) {
+	let a : int = 1;
+	switch (p) {
+		default: a = null;
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+
+function f35() {
+	let a : int = 1;
+	try {
+		console.log(a);
+	} finally {
+		a = null;
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+
+function f36() {
+	let a : int = 1;
+	try {
+		a = null;
+	} catch (e) {
+		a = null;
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+
+function f37() {
+	let a : int = 1;
+	try {
+		a = null;
+	} catch (e) {
+		return;
+	}
+	// XPECT warnings --> "Variable a is null" at "a"
+	a.toString();
+}
+
+function f40() {
+	let a : int;
+	if (0) {
+		a = 1;
+		return;
+	}
+	// XPECT warnings --> "Variable a is undefined" at "a"
+	a.toString();
+}
+
+function f50() {
+	let a : int;
+	while (0) {
+		if (1) {
+			a = 1;
+			break;
+		}
+		// XPECT warnings --> "Variable a is undefined" at "a"
+		a.toString();
+	}
+}
