@@ -34,7 +34,6 @@ import org.eclipse.n4js.n4JS.Statement;
 import org.eclipse.n4js.n4JS.VariableBinding;
 import org.eclipse.n4js.n4JS.VariableDeclaration;
 import org.eclipse.n4js.n4JS.VariableStatement;
-import org.eclipse.n4js.n4jsx.transpiler.utils.JSXBackendHelper;
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM;
 import org.eclipse.n4js.transpiler.im.ParameterizedPropertyAccessExpression_IM;
 import org.eclipse.n4js.transpiler.im.ReferencingElementExpression_IM;
@@ -71,8 +70,6 @@ public abstract class TranspilerComponent {
 	private TranspilerState state;
 	@Inject
 	private PreparationStep preparationStep;
-	@Inject
-	private JSXBackendHelper jsx;
 
 	/**
 	 * Default constructor.
@@ -670,14 +667,5 @@ public abstract class TranspilerComponent {
 	public SymbolTableEntryInternal steFor_assign() {
 
 		return getSymbolTableEntryInternal("assign", true);
-	}
-
-	// ################################################################################################################
-	// JSX RELATED THINGS
-
-	/** "createElement" - retrieve the internal symbol table entry for the symbol "createElement" */
-	public SymbolTableEntryInternal steFor_createElement() {
-
-		return getSymbolTableEntryInternal(jsx.getBackendElementFactoryFunctionName(), true);
 	}
 }
