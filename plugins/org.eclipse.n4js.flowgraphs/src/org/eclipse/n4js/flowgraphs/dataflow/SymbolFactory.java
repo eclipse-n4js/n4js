@@ -33,11 +33,11 @@ import org.eclipse.n4js.ts.types.TypesFactory;
  * Creates {@link Symbol}s depending on the given AST element
  */
 public class SymbolFactory {
-	static private Symbol undefined;
-	static private Map<Symbol, Symbol> symbols = new HashMap<>();
+	private Symbol undefined;
+	private final Map<Symbol, Symbol> symbols = new HashMap<>();
 
 	/** @return a {@link Symbol} based on the given {@link ControlFlowElement} */
-	public static Symbol create(ControlFlowElement cfe) {
+	public Symbol create(ControlFlowElement cfe) {
 		if (cfe instanceof Expression) {
 			return create((Expression) cfe);
 		} else if (cfe instanceof VariableDeclaration) {
@@ -47,7 +47,7 @@ public class SymbolFactory {
 	}
 
 	/** @return a {@link Symbol} based on the given {@link VariableDeclaration} */
-	public static Symbol create(VariableDeclaration vd) {
+	public Symbol create(VariableDeclaration vd) {
 		Symbol newSymbol = new SymbolOfVariableDeclaration(vd);
 		symbols.putIfAbsent(newSymbol, newSymbol);
 		Symbol symbol = symbols.get(newSymbol);
@@ -55,7 +55,7 @@ public class SymbolFactory {
 	}
 
 	/** @return a {@link Symbol} based on the given {@link Expression}, or null */
-	public static Symbol create(Expression expr) {
+	public Symbol create(Expression expr) {
 		Symbol newSymbol = null;
 		if (expr instanceof IdentifierRef) {
 			newSymbol = new SymbolOfIdentifierRef((IdentifierRef) expr);
@@ -64,8 +64,8 @@ public class SymbolFactory {
 			// Not necessary at the moment. Causes serious performance issues in
 			// n4js-n4/tests/com.enfore.n4js.tests.libraryparsing/src/com/enfore/n4js/tests/libraryparsing/SmokeTestSuite
 
-			// newSymbol = new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression)
-			// expr);
+			// ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) expr;
+			// newSymbol = new SymbolOfParameterizedPropertyAccessExpression(this, ppae);
 
 		} else if (expr instanceof IndexedAccessExpression) {
 			newSymbol = new SymbolOfIndexedAccessExpression((IndexedAccessExpression) expr);
@@ -100,9 +100,9 @@ public class SymbolFactory {
 	 * @return a symbol created from the given base expression and list of contexts, or {@code null} iff contexts is
 	 *         empty.
 	 */
-	public static Symbol create(Expression baseExpression, List<Symbol> wrappers) {
+	public Symbol create(Expression baseExpression, List<Symbol> wrappers) {
 		if (wrappers.isEmpty()) {
-			return SymbolFactory.create(baseExpression);
+			return create(baseExpression);
 		}
 
 		Expression lastTarget = EcoreUtil.copy(baseExpression);
@@ -116,23 +116,24 @@ public class SymbolFactory {
 			lastTarget = copy;
 		}
 
-		return new SymbolOfParameterizedPropertyAccessExpression((ParameterizedPropertyAccessExpression) lastTarget);
+		ParameterizedPropertyAccessExpression ppae = (ParameterizedPropertyAccessExpression) lastTarget;
+		return new SymbolOfParameterizedPropertyAccessExpression(this, ppae);
 	}
 
 	/** @return true iff the given {@link Expression} */
-	public static boolean isUndefined(Expression expr) {
-		Symbol undef = SymbolFactory.create(expr);
+	public boolean isUndefined(Expression expr) {
+		Symbol undef = create(expr);
 		return undef != null && undef.isUndefinedLiteral();
 	}
 
 	/** @return a {@link Symbol} that represents {@code undefined} */
-	public static Symbol getUndefined() {
+	public Symbol getUndefined() {
 		if (undefined == null) {
 			IdentifiableElement ieUndefined = TypesFactory.eINSTANCE.createIdentifiableElement();
 			IdentifierRef irUndefined = N4JSFactory.eINSTANCE.createIdentifierRef();
 			irUndefined.setId(ieUndefined);
 			ieUndefined.setName("undefined");
-			undefined = SymbolFactory.create(irUndefined);
+			undefined = create(irUndefined);
 		}
 		return undefined;
 	}

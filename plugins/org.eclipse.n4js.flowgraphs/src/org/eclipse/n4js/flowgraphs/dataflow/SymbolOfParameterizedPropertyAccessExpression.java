@@ -22,10 +22,14 @@ import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression;
  * Creates {@link Symbol}s depending on the given AST element
  */
 public class SymbolOfParameterizedPropertyAccessExpression extends Symbol {
+	private final SymbolFactory symbolFactory;
 	final ParameterizedPropertyAccessExpression ppae;
 	final Symbol contextSymbol;
 
-	SymbolOfParameterizedPropertyAccessExpression(ParameterizedPropertyAccessExpression ppae) {
+	SymbolOfParameterizedPropertyAccessExpression(SymbolFactory symbolFactory,
+			ParameterizedPropertyAccessExpression ppae) {
+
+		this.symbolFactory = symbolFactory;
 		this.ppae = ppae;
 		this.contextSymbol = getContextSymbol();
 	}
@@ -39,7 +43,7 @@ public class SymbolOfParameterizedPropertyAccessExpression extends Symbol {
 	public String getName() {
 		String name = ppae.getProperty().getName();
 		Expression tgtExpr = ppae.getTarget();
-		Symbol tgtSymbol = SymbolFactory.create(tgtExpr);
+		Symbol tgtSymbol = symbolFactory.create(tgtExpr);
 		if (tgtSymbol != null) {
 			name = tgtSymbol.getName() + "." + name;
 		}
@@ -62,7 +66,7 @@ public class SymbolOfParameterizedPropertyAccessExpression extends Symbol {
 		if (contextSymbol != null) {
 			return contextSymbol;
 		}
-		return SymbolFactory.create(getContext());
+		return symbolFactory.create(getContext());
 	}
 
 	@Override

@@ -94,8 +94,8 @@ public class SymbolContextUtils {
 	 *            base expression that will be the base context of the synthesized symbol
 	 * @return a pair where the key is the matched alias {@link Symbol} and the value is the synthesized {@link Symbol}
 	 */
-	static public Pair<Symbol, Symbol> getContextChangedSymbol(Iterable<Symbol> symbolsWithContexts, Symbol alias,
-			Expression baseExpression) {
+	static public Pair<Symbol, Symbol> getContextChangedSymbol(SymbolFactory symbolFactory,
+			Iterable<Symbol> symbolsWithContexts, Symbol alias, Expression baseExpression) {
 
 		Pair<Symbol, List<Symbol>> symbolAndContexts = getSymbolAndContextsToAlias(symbolsWithContexts, alias);
 		Symbol matchedAlias = symbolAndContexts.getKey();
@@ -103,7 +103,7 @@ public class SymbolContextUtils {
 		Symbol synthSymbol = null;
 
 		if (!contextList.isEmpty()) {
-			synthSymbol = SymbolFactory.create(baseExpression, contextList);
+			synthSymbol = symbolFactory.create(baseExpression, contextList);
 		}
 
 		Pair<Symbol, Symbol> cSymbols = Pair.of(matchedAlias, synthSymbol);

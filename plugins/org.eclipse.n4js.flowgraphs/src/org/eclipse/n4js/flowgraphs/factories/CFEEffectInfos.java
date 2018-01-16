@@ -37,15 +37,21 @@ import org.eclipse.n4js.n4JS.util.N4JSSwitch;
 
 class CFEEffectInfos {
 
-	static void set(Map<ControlFlowElement, ComplexNode> cnMap, ComplexNode cNode, ControlFlowElement cfe) {
-		new InternalEffectInfos(cnMap, cNode).doSwitch(cfe);
+	static void set(SymbolFactory symbolFactory, Map<ControlFlowElement, ComplexNode> cnMap, ComplexNode cNode,
+			ControlFlowElement cfe) {
+
+		new InternalEffectInfos(symbolFactory, cnMap, cNode).doSwitch(cfe);
 	}
 
 	static private class InternalEffectInfos extends N4JSSwitch<Void> {
+		final private SymbolFactory symbolFactory;
 		final Map<ControlFlowElement, ComplexNode> cnMap;
 		final ComplexNode cNode;
 
-		InternalEffectInfos(Map<ControlFlowElement, ComplexNode> cnMap, ComplexNode cNode) {
+		InternalEffectInfos(SymbolFactory symbolFactory, Map<ControlFlowElement, ComplexNode> cnMap,
+				ComplexNode cNode) {
+
+			this.symbolFactory = symbolFactory;
 			this.cnMap = cnMap;
 			this.cNode = cNode;
 		}
@@ -167,7 +173,7 @@ class CFEEffectInfos {
 		}
 
 		private void addEffect(EffectType effectType, ControlFlowElement expr, Node node) {
-			Symbol symbol = SymbolFactory.create(expr);
+			Symbol symbol = symbolFactory.create(expr);
 			if (symbol != null) {
 				EffectInfo eiDecl = new EffectInfo(effectType, expr, symbol);
 				node.addEffectInfo(eiDecl);

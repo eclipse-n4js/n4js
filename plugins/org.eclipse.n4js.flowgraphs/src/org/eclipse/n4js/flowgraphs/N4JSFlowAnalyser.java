@@ -27,6 +27,7 @@ import org.eclipse.n4js.flowgraphs.analysis.GraphVisitorInternal;
 import org.eclipse.n4js.flowgraphs.analysis.SuccessorPredecessorAnalysis;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitorHost;
+import org.eclipse.n4js.flowgraphs.dataflow.SymbolFactory;
 import org.eclipse.n4js.flowgraphs.factories.ControlFlowGraphFactory;
 import org.eclipse.n4js.flowgraphs.model.FlowGraph;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -49,6 +50,7 @@ public class N4JSFlowAnalyser {
 
 	private final Callable<Void> cancelledChecker;
 	private FlowGraph cfg;
+	private SymbolFactory symbolFactory;
 	private DirectPathAnalyses dpa;
 	private GraphVisitorAnalysis gva;
 	private SuccessorPredecessorAnalysis spa;
@@ -78,7 +80,8 @@ public class N4JSFlowAnalyser {
 		String uriString = script.eResource().getURI().toString();
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + uriString);
 		Measurement msmnt2 = dcCreateGraph.getMeasurement("createGraph_" + uriString);
-		cfg = ControlFlowGraphFactory.build(script);
+		symbolFactory = new SymbolFactory();
+		cfg = ControlFlowGraphFactory.build(symbolFactory, script);
 		dpa = new DirectPathAnalyses(cfg);
 		gva = new GraphVisitorAnalysis(cfg);
 		spa = new SuccessorPredecessorAnalysis(cfg);
@@ -103,6 +106,11 @@ public class N4JSFlowAnalyser {
 	/** @return the underlying control flow graph */
 	public FlowGraph getControlFlowGraph() {
 		return cfg;
+	}
+
+	/** @return the {@link SymbolFactory} */
+	public SymbolFactory getSymbolFactory() {
+		return symbolFactory;
 	}
 
 	/** @return a list of all direct internal predecessors of cfe */
@@ -189,8 +197,10 @@ public class N4JSFlowAnalyser {
 				dataflowVisitorList.add((DataFlowVisitor) flowAnalyser);
 			}
 		}
-		DataFlowVisitorHost dfvh = new DataFlowVisitorHost(dataflowVisitorList);
-		controlflowVisitorList.add(dfvh);
+		if (!dataflowVisitorList.isEmpty()) {
+			DataFlowVisitorHost dfvh = new DataFlowVisitorHost(dataflowVisitorList);
+			controlflowVisitorList.add(dfvh);
+		}
 
 		Measurement msmnt1 = dcFlowGraphs.getMeasurement("flowGraphs_" + cfg.getScriptName());
 		Measurement msmnt2 = dcPerformAnalyses.getMeasurement("createGraph_" + cfg.getScriptName());

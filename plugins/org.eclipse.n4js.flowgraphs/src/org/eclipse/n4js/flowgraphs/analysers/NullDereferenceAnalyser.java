@@ -20,7 +20,6 @@ import org.eclipse.n4js.flowgraphs.dataflow.DestructUtils;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
-import org.eclipse.n4js.flowgraphs.dataflow.SymbolFactory;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DoStatement;
@@ -45,7 +44,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitEffect(EffectInfo effect, ControlFlowElement cfe) {
 		if (isDereferencing(cfe)) {
-			Symbol tgtSymbol = SymbolFactory.create(cfe);
+			Symbol tgtSymbol = getSymbolFactory().create(cfe);
 			if (tgtSymbol != null) {
 				IsNotNull symbolNotNull = new IsNotNull(cfe, tgtSymbol);
 				assume(symbolNotNull);
@@ -57,7 +56,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 	@Override
 	public void visitGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
 		if (must && isDereferencing(cfe)) {
-			Symbol tgtSymbol = SymbolFactory.create(cfe);
+			Symbol tgtSymbol = getSymbolFactory().create(cfe);
 			IsReasonableNullGuard isReasonableNullGuard = new IsReasonableNullGuard(cfe, tgtSymbol);
 			assume(isReasonableNullGuard);
 		}
@@ -99,7 +98,16 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		return null;
 	}
 
-	static class IsNotNull extends Assumption {
+	private Symbol getSymbolForExpression(EObject value) {
+		if (value == null) {
+			return getSymbolFactory().getUndefined();
+		} else {
+			Expression canCrash = (Expression) value;
+			return getSymbolFactory().create(canCrash);
+		}
+	}
+
+	class IsNotNull extends Assumption {
 		Symbol nullOrUndefinedSymbol;
 
 		IsNotNull(ControlFlowElement cfe, Symbol symbol) {
@@ -141,7 +149,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				EObject value = null;
 
 				if (N4JSASTUtils.isDestructuringAssignment(ae)) {
-					value = DestructUtils.getValueFromDestructuring(effect.location);
+					value = DestructUtils.getValueFromDestructuring(getSymbolFactory(), effect.location);
 				} else {
 					value = ae.getRhs();
 				}
@@ -158,7 +166,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				if (!parentIsLoop) {
 					EObject value = null;
 					if (N4JSASTUtils.isInDestructuringPattern(vd)) {
-						value = DestructUtils.getValueFromDestructuring(effect.location);
+						value = DestructUtils.getValueFromDestructuring(getSymbolFactory(), effect.location);
 					} else {
 						value = vd.getExpression();
 					}
@@ -167,15 +175,6 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			}
 
 			return nullOrUndefined;
-		}
-
-		private Symbol getSymbolForExpression(EObject value) {
-			if (value == null) {
-				return SymbolFactory.getUndefined();
-			} else {
-				Expression canCrash = (Expression) value;
-				return SymbolFactory.create(canCrash);
-			}
 		}
 
 		@SuppressWarnings("deprecation")

@@ -29,6 +29,8 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	protected Collection<Assumption> allAssumptions = new LinkedList<>();
 	/** All {@link Assumption}s that failed */
 	protected Collection<Assumption> failedAssumptions = new LinkedList<>();
+	/** Reference to the {@link SymbolFactory} */
+	protected SymbolFactory symbolFactory;
 
 	/** Constructor. Default {@link TraverseDirection} is {@link TraverseDirection#Backward} */
 	public DataFlowVisitor() {
@@ -38,6 +40,11 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	/** Constructor. */
 	public DataFlowVisitor(TraverseDirection mode) {
 		this.direction = mode;
+	}
+
+	/** Called from {@link DataFlowVisitorHost} only */
+	final void setSymbolFactory(SymbolFactory symbolFactory) {
+		this.symbolFactory = symbolFactory;
 	}
 
 	/**
@@ -70,9 +77,14 @@ abstract public class DataFlowVisitor implements FlowAnalyser {
 	}
 
 	/** Adds an assumption to the data flow engine */
-	protected void assume(Assumption assumption) {
+	final protected void assume(Assumption assumption) {
 		assumption.setDataFlowVisitor(this);
 		newAssumptions.add(assumption);
+	}
+
+	/** @return the {@link SymbolFactory} */
+	final protected SymbolFactory getSymbolFactory() {
+		return symbolFactory;
 	}
 
 	/**

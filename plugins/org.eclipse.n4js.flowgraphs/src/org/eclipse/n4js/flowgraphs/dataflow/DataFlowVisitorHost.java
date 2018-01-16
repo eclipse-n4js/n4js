@@ -10,6 +10,8 @@
  */
 package org.eclipse.n4js.flowgraphs.dataflow;
 
+import static org.eclipse.n4js.flowgraphs.dataflow.SymbolContextUtils.getContextChangedSymbol;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -59,6 +61,14 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 	public DataFlowVisitorHost(Collection<DataFlowVisitor> dfVisitors) {
 		super(getDirections(dfVisitors));
 		this.dfVisitors = dfVisitors;
+		for (DataFlowVisitor dfVisitor : dfVisitors) {
+			dfVisitor.setSymbolFactory(getSymbolFactory());
+		}
+	}
+
+	/** @return reference to the {@link SymbolFactory} */
+	final protected SymbolFactory getSymbolFactory() {
+		return flowAnalyzer.getSymbolFactory();
 	}
 
 	@Override
@@ -189,7 +199,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
 				DestructNode dnChild = dnIter.next();
 				ControlFlowElement lhs = dnChild.getVarRef() != null ? dnChild.getVarRef() : dnChild.getVarDecl();
-				EObject rhs = DestructUtils.getValueFromDestructuring(dnChild);
+				EObject rhs = DestructUtils.getValueFromDestructuring(getSymbolFactory(), dnChild);
 				if (rhs instanceof Expression) {
 					dataFlow |= callHoldOnDataflow(cfe, lhs, (Expression) rhs);
 				}
@@ -232,8 +242,8 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		}
 
 		private boolean callHoldOnDataflow(ControlFlowElement cfe, ControlFlowElement lhs, Expression rhs) {
-			Symbol lSymbol = SymbolFactory.create(lhs);
-			Symbol rSymbol = SymbolFactory.create(rhs);
+			Symbol lSymbol = getSymbolFactory().create(lhs);
+			Symbol rSymbol = getSymbolFactory().create(rhs);
 
 			if (lSymbol != null && rSymbol != null && rSymbol.isVariableSymbol()) {
 				for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
@@ -271,7 +281,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, ControlFlowElement cfe,
 				Expression rhs, Symbol lSymbol) {
 
-			Pair<Symbol, Symbol> cSymbols = SymbolContextUtils.getContextChangedSymbol(ass.aliases, lSymbol, rhs);
+			Pair<Symbol, Symbol> cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.aliases, lSymbol, rhs);
 			Symbol newLSymbol = cSymbols.getKey();
 			Symbol newRSymbol = cSymbols.getValue();
 			if (newRSymbol != null) {
@@ -279,7 +289,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 				return true;
 			}
 
-			cSymbols = SymbolContextUtils.getContextChangedSymbol(ass.failingStructuralAliases, lSymbol, rhs);
+			cSymbols = getContextChangedSymbol(getSymbolFactory(), ass.failingStructuralAliases, lSymbol, rhs);
 			newLSymbol = cSymbols.getKey();
 			newRSymbol = cSymbols.getValue();
 			if (newRSymbol != null) {

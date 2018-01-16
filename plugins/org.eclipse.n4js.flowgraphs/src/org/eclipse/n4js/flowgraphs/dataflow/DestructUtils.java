@@ -21,7 +21,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 public class DestructUtils {
 
 	/** @return the {@link EObject} that is assigned to the given lhs element in the pattern. Defaults are respected. */
-	public static EObject getValueFromDestructuring(EObject nodeElem) {
+	public static EObject getValueFromDestructuring(SymbolFactory symbolFactory, EObject nodeElem) {
 		Pair<EObject, EObject> values = DestructNode.getValueFromDestructuring(nodeElem);
 		if (values == null) {
 			return null;
@@ -30,14 +30,14 @@ public class DestructUtils {
 		EObject assignedValue = values.getKey();
 		EObject defaultValue = values.getValue();
 
-		return respectDefaultValue(assignedValue, defaultValue);
+		return respectDefaultValue(symbolFactory, assignedValue, defaultValue);
 	}
 
 	/**
 	 * @return the {@link EObject} that is assigned to the given {@link DestructNode} in the pattern. Defaults are
 	 *         respected.
 	 */
-	public static EObject getValueFromDestructuring(DestructNode dNode) {
+	public static EObject getValueFromDestructuring(SymbolFactory symbolFactory, DestructNode dNode) {
 		if (dNode == null) {
 			return null;
 		}
@@ -45,12 +45,14 @@ public class DestructUtils {
 		EObject assignedValue = dNode.getAssignedElem();
 		EObject defaultValue = dNode.getDefaultExpr();
 
-		return respectDefaultValue(assignedValue, defaultValue);
+		return respectDefaultValue(symbolFactory, assignedValue, defaultValue);
 	}
 
-	private static EObject respectDefaultValue(EObject assignedValue, EObject defaultValue) {
+	private static EObject respectDefaultValue(SymbolFactory symbolFactory, EObject assignedValue,
+			EObject defaultValue) {
+
 		if (assignedValue == null
-				|| (assignedValue instanceof Expression && SymbolFactory.isUndefined((Expression) assignedValue))) {
+				|| (assignedValue instanceof Expression && symbolFactory.isUndefined((Expression) assignedValue))) {
 			return defaultValue;
 		}
 		return assignedValue;
