@@ -11,18 +11,33 @@
 package org.eclipse.n4js.transpiler.es.transform.internal
 
 import org.eclipse.n4js.n4JS.ImportSpecifier
+import org.eclipse.n4js.n4JS.NamedImportSpecifier
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.xtend.lib.annotations.Data
 
 /**
  * Immutable ValueObject for transforming imports.
  */
 @Data
-class ImportAssignment {
-	/* imported thing (symbol for exported thing from other file) */
-	SymbolTableEntry ste;
-	/* will be null iff we have a namespace import */
+abstract class ImportAssignment {
+
+	def abstract SymbolTableEntry getSte();
+	def abstract ImportSpecifier getToBeReplacedImportSpecifier();
+}
+
+@Data
+class NamedImportAssignment extends ImportAssignment {
+
+	SymbolTableEntryOriginal ste;
 	String actualName;
-	ImportSpecifier tobeReplacedIM;
-	boolean isNameSpace;
+	NamedImportSpecifier toBeReplacedImportSpecifier;
+}
+
+@Data
+class NamespaceImportAssignment extends ImportAssignment {
+
+	SymbolTableEntry ste;
+	NamespaceImportSpecifier toBeReplacedImportSpecifier;
 }

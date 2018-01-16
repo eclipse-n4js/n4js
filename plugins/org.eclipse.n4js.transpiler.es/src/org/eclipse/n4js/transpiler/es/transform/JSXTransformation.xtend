@@ -85,7 +85,7 @@ class JSXTransformation extends Transformation {
 			return;
 		}
 		// we have at least one JSXElement
-		
+
 		prepareImportOfJSXBackend();
 		jsxElements.forEach[transformJSXElement];
 	}
@@ -114,7 +114,7 @@ class JSXTransformation extends Transformation {
 		// create new namespace import for JSX backend
 		val jsxBackendModule = jsxBackendHelper.getJsxBackendModule(state.resource); // FIXME consider moving this to transpiler state operations
 		if(jsxBackendModule === null) {
-			throw new RuntimeException("cannot locate JSX backend for resource " + state.resource.URI);
+			throw new RuntimeException("cannot locate JSX backend module for resource " + state.resource.URI);
 		}
 		val jsxBackendNamespaceName = "$jsxBackend";
 

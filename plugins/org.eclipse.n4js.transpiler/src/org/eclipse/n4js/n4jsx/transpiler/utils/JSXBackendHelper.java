@@ -36,7 +36,8 @@ public final class JSXBackendHelper {
 	}
 
 	/**
-	 * Returns the module of the active JSX backend (currently only React).
+	 * Returns the module of the active JSX backend (currently only React). May return <code>null</code> in case of
+	 * error, e.g. a missing dependency in the manifest of the N4JS project containing the given resource.
 	 */
 	public TModule getJsxBackendModule(Resource resource) {
 		return reactHelper.lookUpReactTModule(resource);

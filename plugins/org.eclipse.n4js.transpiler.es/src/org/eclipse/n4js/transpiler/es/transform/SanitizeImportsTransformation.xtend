@@ -154,9 +154,6 @@ class SanitizeImportsTransformation extends Transformation {
 			} else if(importSpec instanceof NamespaceImportSpecifier) {
 				findSymbolTableEntryForNamespaceImport(importSpec)
 			};
-//if(ste===null) {
-//	return true;
-//}
 
 			// note: here it is not enough to return !ste.referencingElements.empty, because for performance reasons
 			// transformations are not required to remove obsolete entries from that list
@@ -165,13 +162,14 @@ class SanitizeImportsTransformation extends Transformation {
 				// we have an actual reference to the imported element
 				if(ste instanceof SymbolTableEntryOriginal) {
 					// an original target is available
-					// -> now the import is used iff that original target actually requires an import (will be false in
-					// case of elements globally provided by runtime, etc.)
+					// -> whether the import is deemed "used" depends on whether that original target actually requires
+					// an import (will be false in case of elements globally provided by runtime, etc.)
 					val target = ste.originalTarget;
 					return target!==null && ScriptDependencyResolver.shouldBeImported(state.resource.module, target);
 				} else {
-					// no original target available (import was programmatically created by a transpiler transformation)
-					// -> always assume the import is used
+					// no original target available (should happen only for namespace imports that were created
+					// programmatically by a transpiler transformation)
+					// -> always assume the import is actually required and thus "used"
 					return true;
 				}
 			}

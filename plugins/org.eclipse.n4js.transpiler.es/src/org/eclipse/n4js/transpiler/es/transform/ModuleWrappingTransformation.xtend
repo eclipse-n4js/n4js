@@ -47,9 +47,10 @@ import org.eclipse.n4js.transpiler.TransformationDependency.ExcludesAfter
 import org.eclipse.n4js.transpiler.es.assistants.DestructuringAssistant
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportAssignment
 import org.eclipse.n4js.transpiler.es.transform.internal.ImportEntry
+import org.eclipse.n4js.transpiler.es.transform.internal.NamedImportAssignment
+import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignment
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
-import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
@@ -143,7 +144,7 @@ class ModuleWrappingTransformation extends Transformation {
 				// list of imported modules: the order of the elements must correspond to the order in the setters-property down.
 				it.elements += importSetterMap.values.map[itx| _ArrayElement(_StringLiteral(itx.actualModuleSpecifier))=>[
 					//tracing
-					state.tracer.copyTrace(itx.tobeReplacedImportSpecifier,it)
+					state.tracer.copyTrace(itx.tobeReplacedImportDeclaration,it)
 				] ]
 			]); // fpar0
 			arguments += _Argument(_FunExpr(false) => [  // fpar1
@@ -211,27 +212,24 @@ class ModuleWrappingTransformation extends Transformation {
 				for (val iter = entry.variableSTE_actualName.iterator; iter.hasNext;) {
 					val ImportAssignment current = iter.next;
 					val refToFPar = _IdentRef(getSymbolTableEntryInternal(entry.fparName, true));
-					val Expression rhs = if (current.isNameSpace) {
-							refToFPar;
-						} else {
+					val Expression rhs = if (current instanceof NamespaceImportAssignment) {
+							refToFPar
+						} else if(current instanceof NamedImportAssignment) {
 							// NamedImportSpecifiers require property access.
-							val steCasted = current.ste as SymbolTableEntryOriginal; // FIXME improve!!!!
 							_PropertyAccessExpr => [
-								property_IM = getSymbolTableEntryInternal(steCasted.exportedName, true) // ref to what we import.
+								property_IM = getSymbolTableEntryInternal(current.ste.exportedName, true); // ref to what we import.
 								target = refToFPar;
-							];
+							]
+						} else {
+							throw new IllegalStateException("unsupported subclass of ImportAssignment: " + current.class.simpleName)
 						};
-//					if (current.ste === null) {
-//						statements += _ExprStmnt(_AssignmentExpr(_IdentRef(steFor_React), rhs)) // FIXME !!!!!!
-//					} else {
-						statements += _ExprStmnt(_AssignmentExpr(_IdentRef(current.ste), rhs)) => [
-							state.tracer.copyTrace(current.tobeReplacedIM, it)
-						];
-//					}
+					statements += _ExprStmnt(_AssignmentExpr(_IdentRef(current.ste), rhs)) => [
+						state.tracer.copyTrace(current.toBeReplacedImportSpecifier, it)
+					];
 				}
 			]
 			// tracing
-			state.tracer.copyTrace(entry.tobeReplacedImportSpecifier, it)
+			state.tracer.copyTrace(entry.tobeReplacedImportDeclaration, it)
 		]
 	}
 
@@ -284,12 +282,12 @@ class ModuleWrappingTransformation extends Transformation {
 					switch(it) {
 						NamespaceImportSpecifier: { // For NamespaceImports there is only one importSpecifier
 							val nisSTE = findSymbolTableEntryForNamespaceImport(it);
-							finalModuleEntry.variableSTE_actualName += new ImportAssignment( nisSTE , null , it, true  );
+							finalModuleEntry.variableSTE_actualName += new NamespaceImportAssignment(nisSTE, it);
 						}
 						NamedImportSpecifier: {
-							val ste = findSymbolTableEntryForNamedImport( it );
+							val ste = findSymbolTableEntryForNamedImport(it);
 							if (ste !== null) {
-								finalModuleEntry.variableSTE_actualName += new ImportAssignment( ste , it.alias, it , false ) ;
+								finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
 							}
 						}
 					}
