@@ -25,6 +25,7 @@ import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
+import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -46,7 +47,7 @@ public class FindReferenceHelper {
 	private TargetURICollector collector;
 
 	@Inject
-	private IResourceDescriptions indexData;
+	private ResourceDescriptionsProvider resourceDescriptionsProvider;
 
 	/** @return all references to the given declaration. Respect editor states. */
 	public List<EObject> findReferences(EObject declaration) {
@@ -54,9 +55,10 @@ public class FindReferenceHelper {
 		TargetURIs targets = getTargets(declaration);
 		Resource eResource = declaration.eResource();
 		SimpleResourceAccess resourceAccess = new SimpleResourceAccess(eResource.getResourceSet());
+		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(eResource);
 		ReferenceAcceptor acceptor = new ReferenceAcceptor();
 
-		referenceFinder.findAllReferences(targets, resourceAccess, indexData, acceptor, null);
+		referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
 
 		return acceptor.results;
 	}
