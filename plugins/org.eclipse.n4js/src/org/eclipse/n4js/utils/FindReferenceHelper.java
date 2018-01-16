@@ -25,14 +25,13 @@ import org.eclipse.xtext.findReferences.TargetURICollector;
 import org.eclipse.xtext.findReferences.TargetURIs;
 import org.eclipse.xtext.resource.IReferenceDescription;
 import org.eclipse.xtext.resource.IResourceDescriptions;
-import org.eclipse.xtext.resource.impl.ResourceDescriptionsProvider;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 /**
- *
+ * Helper class to find references.
  */
 @SuppressWarnings("restriction")
 public class FindReferenceHelper {
@@ -47,15 +46,40 @@ public class FindReferenceHelper {
 	private TargetURICollector collector;
 
 	@Inject
-	private ResourceDescriptionsProvider resourceDescriptionsProvider;
+	private IResourceDescriptions indexData;
 
-	/**
-	 */
+	/** @return all references to the given declaration. Respect editor states. */
 	public List<EObject> findReferences(EObject declaration) {
+		declaration = getDeclaration(declaration);
+		TargetURIs targets = getTargets(declaration);
+		Resource eResource = declaration.eResource();
+		SimpleResourceAccess resourceAccess = new SimpleResourceAccess(eResource.getResourceSet());
+		ReferenceAcceptor acceptor = new ReferenceAcceptor();
+
+		referenceFinder.findAllReferences(targets, resourceAccess, indexData, acceptor, null);
+
+		return acceptor.results;
+	}
+
+	/** @return all references to the given declaration in the given {@link Resource} */
+	public List<EObject> findReferencesInResource(EObject declaration, Resource resource) {
+		declaration = getDeclaration(declaration);
+		TargetURIs targets = getTargets(declaration);
+		ReferenceAcceptor acceptor = new ReferenceAcceptor();
+
+		referenceFinder.findReferences(targets, resource, acceptor, null);
+
+		return acceptor.results;
+	}
+
+	private EObject getDeclaration(EObject declaration) {
 		if (declaration instanceof ParameterizedTypeRef) {
 			declaration = ((ParameterizedTypeRef) declaration).getDeclaredType();
 		}
+		return declaration;
+	}
 
+	private TargetURIs getTargets(EObject declaration) {
 		// Special handling for composed members
 		List<EObject> realTargets = new ArrayList<>();
 		if ((declaration instanceof TMember) && ((TMember) declaration).isComposed()) {
@@ -69,38 +93,29 @@ public class FindReferenceHelper {
 			realTargets.add(declaration);
 		}
 
-		Resource eResource = declaration.eResource();
 		TargetURIs targets = targetURISetProvider.get();
 
 		for (EObject realTarget : realTargets) {
 			collector.add(realTarget, targets);
 		}
+		return targets;
+	}
 
-		IResourceDescriptions index = resourceDescriptionsProvider.getResourceDescriptions(eResource);
-		ArrayList<EObject> result = Lists.newArrayList();
+	static class ReferenceAcceptor implements IReferenceFinder.Acceptor {
+		final ArrayList<EObject> results = Lists.newArrayList();
 
-		IReferenceFinder.Acceptor acceptor = new IReferenceFinder.Acceptor() {
-			@Override
-			public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
-				result.add(src);
-			}
-
-			@Override
-			public void accept(IReferenceDescription description) {
-				// This method is only called in case of finding refs for primitives.
-				// For instance, the method is called when a reference to a primitive type (e.g. string)
-				// is found in primitive_ts.n4ts
-				// We don't care about those in Xpect test.
-			}
-		};
-
-		SimpleResourceAccess resourceAccess = new SimpleResourceAccess(eResource.getResourceSet());
-		try {
-			referenceFinder.findAllReferences(targets, resourceAccess, index, acceptor, null);
-		} catch (Throwable t) {
-			// bug
+		@Override
+		public void accept(EObject src, URI srcURI, EReference eRef, int idx, EObject tgtOrProxy, URI tgtURI) {
+			results.add(src);
 		}
 
-		return result;
+		@Override
+		public void accept(IReferenceDescription description) {
+			// This method is only called in case of finding refs for primitives.
+			// For instance, the method is called when a reference to a primitive type (e.g. string)
+			// is found in primitive_ts.n4ts
+			// We don't care about those in Xpect test.
+		}
 	}
+
 }

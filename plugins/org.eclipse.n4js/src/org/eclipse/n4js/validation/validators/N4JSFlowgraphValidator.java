@@ -11,6 +11,7 @@
 package org.eclipse.n4js.validation.validators;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,11 +23,13 @@ import org.eclipse.n4js.flowgraphs.analysers.DeadCodeAnalyser.DeadCodeRegion;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceAnalyser;
 import org.eclipse.n4js.flowgraphs.analysers.NullDereferenceResult;
 import org.eclipse.n4js.flowgraphs.analysers.UsedBeforeDeclaredAnalyser;
-import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
+import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
+import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.FunctionDeclaration;
 import org.eclipse.n4js.n4JS.FunctionExpression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
+import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4JS.Script;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSSourceContainer;
@@ -151,7 +154,7 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		for (NullDereferenceResult ndr : nullDerefs) {
 			String varName = ndr.checkedSymbol.getName();
 
-			boolean isLeakingToClosure = false;// isLeakingToClosure(ndr.checkedSymbol);
+			boolean isLeakingToClosure = isLeakingToClosure(ndr);
 			boolean isInTestFolder = isInTestFolder(ndr.checkedSymbol.getASTLocation());
 			if (isInTestFolder && isLeakingToClosure) {
 				continue; // ignore these warnings in test related source
@@ -174,19 +177,52 @@ public class N4JSFlowgraphValidator extends AbstractN4JSDeclarativeValidator {
 		return "";
 	}
 
-	private boolean isLeakingToClosure(Symbol s) {
-		EObject decl = s.getDeclaration();
-		Iterator<EObject> refs = findReferenceHelper.findReferences(decl).iterator();
-		if (!refs.hasNext()) {
+	private boolean isLeakingToClosure(NullDereferenceResult ndr) {
+		EObject decl = ndr.checkedSymbol.getDeclaration();
+		List<EObject> refs = findReferenceHelper.findReferencesInResource(decl, decl.eResource());
+		List<EObject> writeRefs = new LinkedList<>();
+		writeRefs.add(ndr.cfe);
+
+		for (EObject ref : refs) {
+			if (isWriteAccess(ref)) {
+				writeRefs.add(ref);
+			}
+		}
+
+		Iterator<EObject> writeRefsIter = writeRefs.iterator();
+		if (!writeRefsIter.hasNext()) {
 			return false;
 		}
 
-		EObject ref = refs.next();
+		EObject ref = writeRefsIter.next();
 		EObject parentScope = getParentScope(ref);
-		while (refs.hasNext()) {
-			ref = refs.next();
+		while (writeRefsIter.hasNext()) {
+			ref = writeRefsIter.next();
 			if (parentScope != getParentScope(ref)) {
 				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isWriteAccess(EObject reference) {
+		EObject parent = reference.eContainer();
+		if (parent == null) {
+			return false;
+		}
+
+		if (parent instanceof AssignmentExpression) {
+			AssignmentExpression ae = (AssignmentExpression) parent;
+			return ae.getLhs() == reference;
+		}
+
+		AssignmentExpression ae = EcoreUtil2.getContainerOfType(reference, AssignmentExpression.class);
+		if (N4JSASTUtils.isDestructuringAssignment(ae)) {
+			DestructNode dNode = DestructNode.unify(ae);
+			if (dNode != null) {
+				dNode = dNode.findNodeForElement(parent);
+				return dNode != null;
 			}
 		}
 

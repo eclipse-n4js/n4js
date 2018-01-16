@@ -147,6 +147,15 @@ public class DestructNode {
 		}
 	}
 
+	public static def DestructNode unify(EObject eobj) {
+		return switch (eobj) {
+			VariableBinding: unify(eobj)
+			AssignmentExpression: unify(eobj)
+			ForStatement: unify(eobj)
+			default: null
+		}
+	}
+
 	/**
 	 * Returns a unified copy of the given destructuring pattern or <code>null</code> if it is invalid.
 	 * This is helpful because these patterns can appear in very different forms and locations within the AST.
@@ -461,7 +470,6 @@ public class DestructNode {
 			oldTopNode;
 		}
 	}
-
 
 	public static def List<Expression> getAllDeclaredIdRefs(EObject eobj) {
 		val DestructNode dnode = switch (eobj) {

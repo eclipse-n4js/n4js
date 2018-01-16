@@ -37,7 +37,7 @@ public class NullDereferenceResult {
 
 	@Override
 	public int hashCode() {
-		return checkedSymbol.hashCode();
+		return cfe.hashCode();
 	}
 
 	@Override
@@ -46,6 +46,6 @@ public class NullDereferenceResult {
 			return false;
 		}
 		NullDereferenceResult ndr = (NullDereferenceResult) o;
-		return checkedSymbol.equals(ndr.checkedSymbol);
+		return cfe.equals(ndr.cfe);
 	}
 }

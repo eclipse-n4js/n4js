@@ -107,6 +107,24 @@ public abstract class N4JSASTUtils {
 		return null;
 	}
 
+	/** @return the {@link DestructNode} for the given {@link VariableDeclaration} even when nested */
+	public static DestructNode getCorrespondingDestructNode(VariableDeclaration vd) {
+		EObject parent = vd.eContainer();
+		EObject varDeclContainer = N4JSASTUtils.getRootOfDestructuringPattern(vd);
+		DestructNode dNode = null;
+		if (varDeclContainer != null) {
+			dNode = DestructNode.unify(varDeclContainer.eContainer());
+		}
+		if (dNode != null) {
+			EObject idElem = parent;
+			if (varDeclContainer instanceof ObjectBindingPattern) {
+				idElem = parent.eContainer();
+			}
+			dNode = dNode.findNodeForElement(idElem);
+		}
+		return dNode;
+	}
+
 	/**
 	 * Tells if the given AST node contains a variable declaration in form of a destructuring pattern.
 	 */
@@ -138,7 +156,7 @@ public abstract class N4JSASTUtils {
 	 * ASTStructureValidator.
 	 */
 	public static boolean isDestructuringAssignment(AssignmentExpression expr) {
-		return isLeftHandSideDestructuringPattern(expr.getLhs());
+		return expr != null && isLeftHandSideDestructuringPattern(expr.getLhs());
 	}
 
 	/**

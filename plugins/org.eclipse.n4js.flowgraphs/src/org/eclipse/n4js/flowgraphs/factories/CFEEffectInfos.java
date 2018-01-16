@@ -176,8 +176,10 @@ class CFEEffectInfos {
 
 		private void clearEffectsOfExitNode(Expression feature) {
 			ComplexNode cn = cnMap.get(feature);
-			Node exitNode = cn.getExit();
-			exitNode.effectInfos.clear();
+			if (cn != null) {
+				Node exitNode = cn.getExit();
+				exitNode.effectInfos.clear();
+			}
 		}
 	}
 

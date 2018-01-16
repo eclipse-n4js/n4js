@@ -30,6 +30,9 @@ import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.DestructNode;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
+import org.eclipse.n4js.n4JS.VariableDeclaration;
+import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding;
+import org.eclipse.n4js.n4JS.VariableStatement;
 import org.eclipse.xtext.xbase.lib.Pair;
 
 /**
@@ -123,36 +126,69 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 		protected void visit(Node node) {
 			ControlFlowElement cfe = node.getControlFlowElement();
 			for (EffectInfo effect : node.effectInfos) { // TODO: optimize: remove loop by passed all infos
-				boolean handledDataFlow = handleDataFlow(cfe);
+				boolean handledDataFlow = false;
+				if (cfe instanceof AssignmentExpression) {
+					handledDataFlow |= handleDataFlow((AssignmentExpression) cfe);
+				}
+				if (cfe instanceof VariableDeclaration) {
+					handledDataFlow |= handleDataFlow((VariableDeclaration) cfe);
+				}
 				if (!handledDataFlow) {
 					handleVisitEffect(cfe, effect);
 				}
 			}
 		}
 
-		private boolean handleDataFlow(ControlFlowElement cfe) {
+		private boolean handleDataFlow(AssignmentExpression ae) {
 			boolean dataFlow = false;
 
-			if (cfe instanceof AssignmentExpression) {
-				AssignmentExpression ae = (AssignmentExpression) cfe;
+			if (N4JSASTUtils.isDestructuringAssignment(ae)) {
+				DestructNode dNode = DestructNode.unify(ae);
+				dataFlow = callHoldOnDataflowForDestructuring(dataFlow, ae, dNode);
+			} else {
+				Expression lhs = ae.getLhs();
+				Expression rhs = ae.getRhs();
+				dataFlow = callHoldOnDataflow(ae, lhs, rhs);
+			}
 
-				if (N4JSASTUtils.isDestructuringAssignment(ae)) {
-					DestructNode dNode = DestructNode.unify(ae);
-					for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
-						DestructNode dnChild = dnIter.next();
-						Expression lhs = dnChild.getVarRef();
-						EObject rhs = DestructUtils.getValueFromDestructuring(dnChild);
-						if (rhs instanceof Expression) {
-							dataFlow |= callHoldOnDataflow(ae, lhs, (Expression) rhs);
-						}
+			return dataFlow;
+		}
+
+		private boolean handleDataFlow(VariableDeclaration vd) {
+			boolean dataFlow = false;
+			EObject parent = vd.eContainer();
+
+			if (N4JSASTUtils.isInDestructuringPattern(vd)) {
+				DestructNode dNode = N4JSASTUtils.getCorrespondingDestructNode(vd);
+				if (dNode != null) {
+					dataFlow = callHoldOnDataflowForDestructuring(dataFlow, vd, dNode);
+				}
+
+			} else if (parent instanceof VariableStatement) {
+				VariableStatement vs = (VariableStatement) parent;
+				for (VariableDeclarationOrBinding varDeclOrBind : vs.getVarDeclsOrBindings()) {
+					if (varDeclOrBind instanceof VariableDeclaration) {
+						VariableDeclaration varDecl = (VariableDeclaration) varDeclOrBind;
+						Expression rhs = varDecl.getExpression();
+						dataFlow = callHoldOnDataflow(varDecl, varDecl, rhs);
 					}
-				} else {
-					Expression lhs = ae.getLhs();
-					Expression rhs = ae.getRhs();
-					dataFlow = callHoldOnDataflow(ae, lhs, rhs);
 				}
 			}
 
+			return dataFlow;
+		}
+
+		private boolean callHoldOnDataflowForDestructuring(boolean dataFlow, ControlFlowElement cfe,
+				DestructNode dNode) {
+
+			for (Iterator<DestructNode> dnIter = dNode.stream().iterator(); dnIter.hasNext();) {
+				DestructNode dnChild = dnIter.next();
+				ControlFlowElement lhs = dnChild.getVarRef() != null ? dnChild.getVarRef() : dnChild.getVarDecl();
+				EObject rhs = DestructUtils.getValueFromDestructuring(dnChild);
+				if (rhs instanceof Expression) {
+					dataFlow |= callHoldOnDataflow(cfe, lhs, (Expression) rhs);
+				}
+			}
 			return dataFlow;
 		}
 
@@ -190,7 +226,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			}
 		}
 
-		private boolean callHoldOnDataflow(AssignmentExpression ae, Expression lhs, Expression rhs) {
+		private boolean callHoldOnDataflow(ControlFlowElement cfe, ControlFlowElement lhs, Expression rhs) {
 			Symbol lSymbol = SymbolFactory.create(lhs);
 			Symbol rSymbol = SymbolFactory.create(rhs);
 
@@ -199,12 +235,12 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 					Assumption ass = assIter.next();
 
 					if (ass.isActive()) {
-						boolean callPerformed = callHoldOnDataflowOnAliases(ass, ae, lSymbol, rSymbol);
+						boolean callPerformed = callHoldOnDataflowOnAliases(ass, cfe, lSymbol, rSymbol);
 						if (!callPerformed) {
 							callPerformed = callHoldOnDataflowOnFailedStructuralAliases(ass, lSymbol, rSymbol);
 						}
 						if (!callPerformed) {
-							callPerformed = callHoldOnDataflowOnStructuralAliases(ass, ae, rhs, lSymbol);
+							callPerformed = callHoldOnDataflowOnStructuralAliases(ass, cfe, rhs, lSymbol);
 						}
 						// if still (!callPerformed): not important
 					}
@@ -217,24 +253,24 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			return false;
 		}
 
-		private boolean callHoldOnDataflowOnAliases(Assumption ass, AssignmentExpression ae, Symbol lSymbol,
+		private boolean callHoldOnDataflowOnAliases(Assumption ass, ControlFlowElement cfe, Symbol lSymbol,
 				Symbol rSymbol) {
 
 			if (ass.aliases.contains(lSymbol)) {
-				ass.callHoldsOnDataflow(lSymbol, rSymbol, ae);
+				ass.callHoldsOnDataflow(lSymbol, rSymbol, cfe);
 				return true;
 			}
 			return false;
 		}
 
-		private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, AssignmentExpression ae,
+		private boolean callHoldOnDataflowOnStructuralAliases(Assumption ass, ControlFlowElement cfe,
 				Expression rhs, Symbol lSymbol) {
 
 			Pair<Symbol, Symbol> cSymbols = SymbolContextUtils.getContextChangedSymbol(ass.aliases, lSymbol, rhs);
 			Symbol newLSymbol = cSymbols.getKey();
 			Symbol newRSymbol = cSymbols.getValue();
 			if (newRSymbol != null) {
-				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, ae);
+				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, cfe);
 				return true;
 			}
 
@@ -242,7 +278,7 @@ public class DataFlowVisitorHost extends GraphVisitorInternal {
 			newLSymbol = cSymbols.getKey();
 			newRSymbol = cSymbols.getValue();
 			if (newRSymbol != null) {
-				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, ae);
+				ass.callHoldsOnDataflow(newLSymbol, newRSymbol, cfe);
 				return true;
 			}
 			return false;

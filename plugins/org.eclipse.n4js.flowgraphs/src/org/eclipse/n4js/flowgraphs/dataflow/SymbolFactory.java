@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.Expression;
 import org.eclipse.n4js.n4JS.IdentifierRef;
 import org.eclipse.n4js.n4JS.IndexedAccessExpression;
@@ -34,6 +35,16 @@ import org.eclipse.n4js.ts.types.TypesFactory;
 public class SymbolFactory {
 	static private Symbol undefined;
 	static private Map<Symbol, Symbol> symbols = new HashMap<>();
+
+	/** @return a {@link Symbol} based on the given {@link ControlFlowElement} */
+	public static Symbol create(ControlFlowElement cfe) {
+		if (cfe instanceof Expression) {
+			return create((Expression) cfe);
+		} else if (cfe instanceof VariableDeclaration) {
+			return create((VariableDeclaration) cfe);
+		}
+		return null;
+	}
 
 	/** @return a {@link Symbol} based on the given {@link VariableDeclaration} */
 	public static Symbol create(VariableDeclaration vd) {
