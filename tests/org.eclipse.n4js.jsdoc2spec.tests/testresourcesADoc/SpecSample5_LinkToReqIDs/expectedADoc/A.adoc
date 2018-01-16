@@ -32,7 +32,7 @@ srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSamp
 
 . *++Foo++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample5_LinkToReqIDs:test/ReqTest:ReqTest#testFoo++[Test]#)
 +
-[.requirementConstraint]
+[.generatedApiConstraint]
 ====
 
 Foo Test Description
