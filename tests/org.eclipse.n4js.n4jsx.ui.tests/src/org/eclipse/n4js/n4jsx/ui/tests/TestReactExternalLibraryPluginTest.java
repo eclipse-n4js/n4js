@@ -139,7 +139,7 @@ public class TestReactExternalLibraryPluginTest extends AbstractBuilderParticipa
 		waitForAutoBuild();
 
 		assertMarkers("Expected exactly zero errors in manifest.", manifest, 0);
-		assertMarkers("Expected exactly zero errors in B module.", clientModule, 0);
+		assertMarkers("Expected exactly 1 error in B module.", clientModule, 1);
 	}
 
 	/**

@@ -254,7 +254,7 @@ public abstract class TranspilerComponent {
 	}
 
 	@SuppressWarnings("javadoc")
-	protected SymbolTableEntry findSymbolTableEntryForNamespaceImport(NamespaceImportSpecifier importspec) {
+	protected SymbolTableEntryOriginal findSymbolTableEntryForNamespaceImport(NamespaceImportSpecifier importspec) {
 		return SymbolTableManagement.findSymbolTableEntryForNamespaceImport(state, importspec);
 	}
 

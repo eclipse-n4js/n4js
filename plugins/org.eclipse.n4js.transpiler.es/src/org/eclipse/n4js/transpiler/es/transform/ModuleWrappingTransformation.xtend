@@ -292,7 +292,7 @@ class ModuleWrappingTransformation extends Transformation {
 							finalModuleEntry.variableSTE_actualName += new NamespaceImportAssignment(nisSTE, it);
 						}
 						NamedImportSpecifier: {
-							val ste = findSymbolTableEntryForNamedImport(it);
+							val ste = findSymbolTableEntryForNamedImport( it );
 							if (ste !== null) {
 								finalModuleEntry.variableSTE_actualName += new NamedImportAssignment(ste, it.alias, it);
 							}

@@ -160,18 +160,10 @@ class SanitizeImportsTransformation extends Transformation {
 			val hasReference = ste.referencingElements.exists[TranspilerUtils.isIntermediateModelElement(it)];
 			if(hasReference) {
 				// we have an actual reference to the imported element
-				if(ste instanceof SymbolTableEntryOriginal) {
-					// an original target is available
-					// -> whether the import is deemed "used" depends on whether that original target actually requires
-					// an import (will be false in case of elements globally provided by runtime, etc.)
-					val target = ste.originalTarget;
-					return target!==null && ScriptDependencyResolver.shouldBeImported(state.resource.module, target);
-				} else {
-					// no original target available (should happen only for namespace imports that were created
-					// programmatically by a transpiler transformation)
-					// -> always assume the import is actually required and thus "used"
-					return true;
-				}
+				// -> whether the import is deemed "used" depends on whether that original target actually requires
+				// an import (will be false in case of elements globally provided by runtime, etc.)
+				val target = ste.originalTarget;
+				return target!==null && ScriptDependencyResolver.shouldBeImported(state.resource.module, target);
 			}
 			return false;
 		}

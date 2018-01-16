@@ -31,7 +31,6 @@ import org.eclipse.n4js.n4JS.N4MemberDeclaration
 import org.eclipse.n4js.n4JS.N4MethodDeclaration
 import org.eclipse.n4js.n4JS.N4SetterDeclaration
 import org.eclipse.n4js.n4JS.NamedElement
-import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.n4JS.StringLiteral
@@ -187,13 +186,7 @@ class SymbolTableEntryIMOnly extends SymbolTableEntry {
  * primarily identified by name. So when creating one or searching for them you only have to provide a name.
  */
 class SymbolTableEntryInternal extends SymbolTableEntry {
-
-	/*
-	 * In case a namespace import is added programmatically by a transformation, then we do not have a
-	 * {@link ModuleNamespaceVirtualType} we can use as original target, so we use a {@code SymbolTableEntryInternal}.
-	 * In such a case, this references points to the corresponding {@link NamespaceImportSpecifier}.
-	 */
-	refers NamespaceImportSpecifier[0..1] importSpecifier
+	// no additional properties
 }
 
 

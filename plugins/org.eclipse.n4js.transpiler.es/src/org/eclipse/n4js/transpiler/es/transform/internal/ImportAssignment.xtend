@@ -13,7 +13,6 @@ package org.eclipse.n4js.transpiler.es.transform.internal
 import org.eclipse.n4js.n4JS.ImportSpecifier
 import org.eclipse.n4js.n4JS.NamedImportSpecifier
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
-import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
 import org.eclipse.xtend.lib.annotations.Data
 
@@ -23,14 +22,15 @@ import org.eclipse.xtend.lib.annotations.Data
 @Data
 abstract class ImportAssignment {
 
-	def abstract SymbolTableEntry getSte();
+	/** Symbol table entry for the imported element. */
+	SymbolTableEntryOriginal ste;
+
 	def abstract ImportSpecifier getToBeReplacedImportSpecifier();
 }
 
 @Data
 class NamedImportAssignment extends ImportAssignment {
 
-	SymbolTableEntryOriginal ste;
 	String actualName;
 	NamedImportSpecifier toBeReplacedImportSpecifier;
 }
@@ -38,6 +38,5 @@ class NamedImportAssignment extends ImportAssignment {
 @Data
 class NamespaceImportAssignment extends ImportAssignment {
 
-	SymbolTableEntry ste;
 	NamespaceImportSpecifier toBeReplacedImportSpecifier;
 }

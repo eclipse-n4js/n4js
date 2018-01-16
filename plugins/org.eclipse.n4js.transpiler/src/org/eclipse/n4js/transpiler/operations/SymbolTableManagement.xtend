@@ -207,7 +207,7 @@ class SymbolTableManagement {
 	/**
 	 * Search STE for the given name space import.
 	 */
-	def public static SymbolTableEntry findSymbolTableEntryForNamespaceImport(TranspilerState state, NamespaceImportSpecifier importspec) {
+	def public static SymbolTableEntryOriginal findSymbolTableEntryForNamespaceImport(TranspilerState state, NamespaceImportSpecifier importspec) {
 		// 1. linear version:
 		//		state.im.symbolTable.entries.filter(SymbolTableEntryOriginal)
 		//			.filter[it.importSpecifier === importspec]
@@ -223,20 +223,10 @@ class SymbolTableManagement {
 
 		// 3. only the originals:
 		// Should be safe to use the cache.
-val result = state.steCache.mapOriginal.values.parallelStream()
-	.filter[it.importSpecifier === importspec]
-	.filter[it.originalTarget instanceof ModuleNamespaceVirtualType]
-	.findAny().orElse(null);
-if(result!==null) {
-	return result;
-}
-return state.im.symbolTable.entries.filter(SymbolTableEntryInternal)
-	.filter[it.importSpecifier === importspec]
-	.head;
-//		return state.steCache.mapOriginal.values.parallelStream()
-//			.filter[it.importSpecifier === importspec]
-//			.filter[it.originalTarget instanceof ModuleNamespaceVirtualType]
-//			.findAny().orElse(null);
+		return state.steCache.mapOriginal.values.parallelStream()
+			.filter[it.importSpecifier === importspec]
+			.filter[it.originalTarget instanceof ModuleNamespaceVirtualType]
+			.findAny().orElse(null);
 	}
 
 

@@ -447,22 +447,13 @@ public interface ImPackage extends EPackage {
 	int SYMBOL_TABLE_ENTRY_INTERNAL__REFERENCING_ELEMENTS = SYMBOL_TABLE_ENTRY__REFERENCING_ELEMENTS;
 
 	/**
-	 * The feature id for the '<em><b>Import Specifier</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int SYMBOL_TABLE_ENTRY_INTERNAL__IMPORT_SPECIFIER = SYMBOL_TABLE_ENTRY_FEATURE_COUNT + 0;
-
-	/**
 	 * The number of structural features of the '<em>Symbol Table Entry Internal</em>' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated
 	 * @ordered
 	 */
-	int SYMBOL_TABLE_ENTRY_INTERNAL_FEATURE_COUNT = SYMBOL_TABLE_ENTRY_FEATURE_COUNT + 1;
+	int SYMBOL_TABLE_ENTRY_INTERNAL_FEATURE_COUNT = SYMBOL_TABLE_ENTRY_FEATURE_COUNT + 0;
 
 	/**
 	 * The number of operations of the '<em>Symbol Table Entry Internal</em>' class.
@@ -3145,17 +3136,6 @@ public interface ImPackage extends EPackage {
 	EClass getSymbolTableEntryInternal();
 
 	/**
-	 * Returns the meta object for the reference '{@link org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal#getImportSpecifier <em>Import Specifier</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the reference '<em>Import Specifier</em>'.
-	 * @see org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal#getImportSpecifier()
-	 * @see #getSymbolTableEntryInternal()
-	 * @generated
-	 */
-	EReference getSymbolTableEntryInternal_ImportSpecifier();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.transpiler.im.ReferencingElement_IM <em>Referencing Element IM</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -3721,14 +3701,6 @@ public interface ImPackage extends EPackage {
 		 * @generated
 		 */
 		EClass SYMBOL_TABLE_ENTRY_INTERNAL = eINSTANCE.getSymbolTableEntryInternal();
-
-		/**
-		 * The meta object literal for the '<em><b>Import Specifier</b></em>' reference feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference SYMBOL_TABLE_ENTRY_INTERNAL__IMPORT_SPECIFIER = eINSTANCE.getSymbolTableEntryInternal_ImportSpecifier();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.transpiler.im.impl.ReferencingElement_IMImpl <em>Referencing Element IM</em>}' class.

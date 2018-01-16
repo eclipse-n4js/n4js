@@ -75,10 +75,10 @@ class JSXTransformation extends Transformation {
 	 * let elem4 = &lt;div prop={&lt;a>&lt;/a>}>&lt;/div>;
 	 * </pre>
 	 */
-	override transform() {
+	override void transform() {
+		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
 		collectNodes(state.im, JSXElement, true).forEach[transformJSXElement];
 	}
-
 
 	def private void transformJSXElement(JSXElement elem) {
 		// IMPORTANT: 'elem' might be a direct or indirect child, but if it is a direct child, it was already
@@ -89,6 +89,7 @@ class JSXTransformation extends Transformation {
 		}
 		replace(elem, convertJSXElement(elem));
 	}
+
 	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
 		// because we align to Babel (i.e. enforce react to be imported via a namespace import with a namespace called
 		// "React"), we can simply hard-code the reference to the element factory function as "React.createElement"
