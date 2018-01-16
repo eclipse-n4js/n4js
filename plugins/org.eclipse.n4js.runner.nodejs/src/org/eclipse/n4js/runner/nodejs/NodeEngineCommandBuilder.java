@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.n4js.N4JSGlobals;
@@ -37,8 +38,6 @@ import com.google.inject.Provider;
  * configure runtime environment on their own.
  */
 public class NodeEngineCommandBuilder {
-	/** GH-394, with new compilation we generate different boot code. */
-	private static final boolean USE_NEW_BOOTSTRAP = true;
 
 	/** Command line option to signal COMMON_JS */
 	private static final String CJS_COMMAND = "cjs";
@@ -86,91 +85,42 @@ public class NodeEngineCommandBuilder {
 	 *             for IO operations
 	 */
 	private String generateBootCode(NodeRunOptions nodeRunOptions, Path workDir) throws IOException {
-		// TODO GH-394 merge exec files
-		if (USE_NEW_BOOTSTRAP) {
-			// 1 generate fake node project / folder
-			Path projectRootPath = workDir;
-			// Path projectRootPath = Files.createTempDirectory("N4JSNodeBoot");
-			// 2 generate ELF code in #1
-			final Path elf = Files.createTempFile(projectRootPath, "n4jsnodeELF", "." + N4JSGlobals.JS_FILE_EXTENSION);
-			final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
-					nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
-			writeContentToFile(elfData.toString(), elf.toFile());
-
-			// 3 create 'node_modules' to the #1
-			final File node_modules = new File(projectRootPath.toFile(), "node_modules");
-			node_modules.mkdirs();
-			// 4 generate boot script in #1
-			final Path boot = Files.createTempFile(projectRootPath, "n4jsnodeBOOT",
-					"." + N4JSGlobals.JS_FILE_EXTENSION);
-			String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
-			List<Pair<String, String>> path2name = new ArrayList<>();
-			for (int i = 0; i < paths.length; i++) {
-				String string = paths[i];
-				Path p = Paths.get(string);
-				path2name.add(new Pair<>(string, p.getFileName().toString()));
-			}
-			// - script has to configure symlinks to the 'node_modules' (#3)
-			// - script has to call elf code
-			writeContentToFile(NodeBootScriptTemplate.getRunScriptCore(node_modules.getCanonicalPath(),
-					elf.getFileName().toString(), path2name), boot.toFile());
-
-			return boot.toAbsolutePath().toString();
-		} else {
-			// generate ELF code in temp location
-			final Path elf = Files.createTempFile("n4jsnodeELF", "." + N4JSGlobals.JS_FILE_EXTENSION);
-			final StringBuilder elfData = getELFCode(nodeRunOptions.getInitModules(),
-					nodeRunOptions.getExecModule(), nodeRunOptions.getExecutionData());
-			writeContentToFile(elfData.toString(), elf.toFile());
-			return elf.toAbsolutePath().toString();
+		// 1 generate fake node project / folder
+		Path projectRootPath = workDir;
+		// 3 create 'node_modules' to the #1
+		final File node_modules = new File(projectRootPath.toFile(), "node_modules");
+		node_modules.mkdirs();
+		// 4 generate elf script in #1
+		final Path elf = Files.createTempFile(projectRootPath, "N4JSNodeELF",
+				"." + N4JSGlobals.JS_FILE_EXTENSION);
+		String[] paths = nodeRunOptions.getCoreProjectPaths().split(NODE_PATH_SEP);
+		List<Pair<String, String>> path2name = new ArrayList<>();
+		for (int i = 0; i < paths.length; i++) {
+			String string = paths[i];
+			Path p = Paths.get(string);
+			path2name.add(new Pair<>(string, p.getFileName().toString()));
 		}
-	}
-
-	/**
-	 * generates ELF code, according to N4JSDesign document, chap. 17 : Execution, section 17.2 N4JS Execution And
-	 * Linking File
-	 *
-	 * @param list
-	 *            of runtime modules to be bootstrapped
-	 * @param entryPoint
-	 *            of the code to be executed
-	 * @param executionData
-	 *            that is expected by execution module
-	 * @return elf data in format for used JS engine
-	 */
-	private StringBuilder getELFCode(List<String> list, String entryPoint, String executionData) {
-		final StringBuilder elfCode = new StringBuilder();
-		elfCode.append(generateExecutionData(executionData)).append("\n");
-		elfCode.append(generateNativeLoad(entryPoint)).append("\n");
-		return elfCode;
-	}
-
-	/**
-	 * This is contract between concrete execution environment and run/test environment.
-	 */
-	private String generateExecutionData(String data) {
-		/*
-		 * In this form execution module needs to read prop '_executionData' from global scope (also would be good idea
-		 * to remove it). It would be possible that execution module exports function that takes this data as parameter
-		 * but then we need to change order of things in ELF file, that is execution module has to be loaded, its export
-		 * function assigned to variable and called with this data below.
-		 *
-		 * keep it in sync
-		 */
-		return "global.$executionData = " + data + ";";
-	}
-
-	/**
-	 * Sets native load for execution module (e.g. entry point to the bootstrap code).
-	 *
-	 * @param moduleName
-	 *            value for native load pointing to the bootstrap code entry point
-	 * @return native code
-	 */
-	private String generateNativeLoad(String moduleName) {
-		if (Strings.isNullOrEmpty(moduleName))
+		// early throw, to prevent debugging runtime processes
+		String execModule = nodeRunOptions.getExecModule();
+		if (Strings.isNullOrEmpty(execModule))
 			throw new RuntimeException("Execution module not provided.");
-		return "require('" + moduleName + "');";
+		List<String> initModules = nodeRunOptions.getInitModules();
+		// TODO-1932 redesign of the runners and testers pending
+		// some runtime environments (the N4JS projects) bootstrap execution
+		// is against Runners/Testers design. We want those to fix those runtime
+		// projects, but also there was redesign of the whole concept pending.
+		// For the time being we just patch data generated by the IDE to work
+		// with the user projects.
+		initModules = Arrays.asList();
+		String eflCode = NodeBootScriptTemplate.getRunScriptCore(
+				node_modules.getCanonicalPath(),
+				nodeRunOptions.getExecutionData(),
+				initModules,
+				execModule,
+				path2name);
+		writeContentToFile(eflCode, elf.toFile());
+
+		return elf.toAbsolutePath().toString();
 	}
 
 	/** Writes given content to a given file. */
