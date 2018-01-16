@@ -276,7 +276,9 @@ public class DestructNode {
 					toEntry(patElem, litElem)
 			}
 
-			nestedDNs.add(nestedNode);
+			if (nestedNode !== null) {
+				nestedDNs.add(nestedNode);
+			}
 		}
 		return nestedDNs;
 	}
