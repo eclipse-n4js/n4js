@@ -74,7 +74,7 @@ class N4JSVariableValidator extends AbstractN4JSDeclarativeValidator {
 
 		if (ASTMetaInfoUtils.getLocalVariableReferences(varDecl).empty) {
 			val message = IssueCodes.getMessageForCFG_LOCAL_VAR_UNUSED(varDecl.name);
-			addIssue(message, varDecl, findNameFeature(varDecl).value, IssueCodes.CFG_LOCAL_VAR_UNUSED);
+			addIssue(message, varDecl, findNameFeature(varDecl).value, IssueCodes.CFG_LOCAL_VAR_UNUSED); // deactivated during tests
 		}
 	}
 

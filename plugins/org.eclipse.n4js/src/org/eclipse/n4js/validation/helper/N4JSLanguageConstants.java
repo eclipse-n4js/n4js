@@ -20,13 +20,13 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.N4JSASTUtils;
 import org.eclipse.n4js.n4mf.ModuleLoader;
 import org.eclipse.n4js.validation.IssueCodes;
+
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 
 /**
  * Contains constants for the N4JS language.
@@ -54,7 +54,8 @@ public abstract class N4JSLanguageConstants {
 	 * or {@code SuppressIssuesSetup} to configure Xpect tests for issue suppression.
 	 */
 	public static final Collection<String> DEFAULT_SUPPRESSED_ISSUE_CODES_FOR_TESTS = unmodifiableCollection(newHashSet(
-			IssueCodes.CFG_LOCAL_VAR_UNUSED
+			IssueCodes.CFG_LOCAL_VAR_UNUSED,
+			IssueCodes.DFG_NULL_DEREFERENCE
 	));
 
 	//@formatter:on
