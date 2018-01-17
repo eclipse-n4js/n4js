@@ -44,7 +44,7 @@ class PerformancePropertyAccessTest extends AbstractTypesystemForPerformanceTest
 		 * obj.p.p.p.p  ...  .p.p.p;
 		 */
 		'''
-			var obj: any+;
+			var obj: any+ = new Object();
 			obj«FOR i : 1..n».p«ENDFOR»;
 		'''.assertValidate(0)
 	}
