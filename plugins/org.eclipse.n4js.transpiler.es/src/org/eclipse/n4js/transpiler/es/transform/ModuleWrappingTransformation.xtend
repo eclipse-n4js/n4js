@@ -333,8 +333,7 @@ class ModuleWrappingTransformation extends Transformation {
 		var specifier = completeModuleSpecifier
 		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
 		if (depProject !== null) {
-			val projectRelativeSegment = AbstractSubGenerator.calculateOutputDirectory(
-				n4jsCore.getOutputPath(module.eResource.URI))
+			val projectRelativeSegment = AbstractSubGenerator.calculateOutputDirectory(depProject)
 			val depLocation = depProject.locationPath
 			if (depLocation !== null) {
 				val depLocationString = depLocation.toString

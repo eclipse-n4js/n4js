@@ -241,7 +241,9 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 	/** Adjust output-path of the generator to match the N4JS projects-settings. */
 	def void updateOutputPath(IFileSystemAccess fsa, String compilerID, Resource input) {
-		val outputPath = n4jsCore.getOutputPath(input.URI)
+		var outputPath = n4jsCore.getOutputPath(input.URI)
+		if(outputPath === null)
+			outputPath = "src-gen"
 		if (fsa instanceof AbstractFileSystemAccess) {
 			val conf = fsa.outputConfigurations.get(compilerID)
 			if (conf !== null) {
@@ -264,7 +266,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 
 		// --- output locations ---
 		// src-gen
-		val outputPath = n4jsCore.getOutputPath(input.URI)
+		val outputPath = project.outputPath
 		// src-gen/es5
 		val outputDirectory = calculateOutputDirectory(outputPath, compilerID)
 		// Project/a/b/c
