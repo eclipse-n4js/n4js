@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2016 NumberFour AG.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *   NumberFour AG - Initial API and implementation
+ */
+ 
+/* XPECT_SETUP org.eclipse.n4js.bugreports.tests.N4JSBugreportTest END_SETUP  */
+
+class A {}
+class B extends A {}
+class C extends B {}
+class GR<out T> {}
+class GW<in T> {}
+class H<T> {}
+
+function <T> foo(p:H<T>):GR<T> {
+	return null;
+}
+
+function <T> bar(p:H<T>):GW<T> {
+	return null;
+}
+
+let a: A;
+let b: B;
+let c: C;
+
+let ha: H<A>;
+let hb: H<B>;
+
+// XPECT noerrors
+let gr1: GR<A> = foo(hb);
+
+// The expected type should be Iterable2<B,B> and NOT Iterable2<A,A> because of definition site covariance Iterable2<out , out>
+// XPECT type of '[b,b]' --> Iterable2<B,B>
+let e1: Iterable2<A,A> = [b,b];
+
+// XPECT noerrors
+let gw1: GW<B> = bar(ha);
