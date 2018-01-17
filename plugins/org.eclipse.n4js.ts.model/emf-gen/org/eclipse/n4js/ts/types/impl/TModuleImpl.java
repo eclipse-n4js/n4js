@@ -58,6 +58,7 @@ import org.eclipse.n4js.ts.types.TypesPackage;
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getTemporaryTypes <em>Temporary Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.impl.TModuleImpl#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
@@ -343,6 +344,16 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * @ordered
 	 */
 	protected EList<ComposedMemberCache> composedMemberCaches;
+
+	/**
+	 * The cached value of the '{@link #getTemporaryTypes() <em>Temporary Types</em>}' containment reference list.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @see #getTemporaryTypes()
+	 * @generated
+	 * @ordered
+	 */
+	protected EList<Type> temporaryTypes;
 
 	/**
 	 * The default value of the '{@link #getModuleSpecifier() <em>Module Specifier</em>}' attribute.
@@ -681,6 +692,18 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
+	public EList<Type> getTemporaryTypes() {
+		if (temporaryTypes == null) {
+			temporaryTypes = new EObjectContainmentEList<Type>(Type.class, this, TypesPackage.TMODULE__TEMPORARY_TYPES);
+		}
+		return temporaryTypes;
+	}
+
+	/**
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @generated
+	 */
 	public String getModuleSpecifier() {
 		return this.getQualifiedName();
 	}
@@ -705,6 +728,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return ((InternalEList<?>)getExposedInternalTypes()).basicRemove(otherEnd, msgs);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return ((InternalEList<?>)getComposedMemberCaches()).basicRemove(otherEnd, msgs);
+			case TypesPackage.TMODULE__TEMPORARY_TYPES:
+				return ((InternalEList<?>)getTemporaryTypes()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
@@ -751,6 +776,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return getAstMD5();
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return getComposedMemberCaches();
+			case TypesPackage.TMODULE__TEMPORARY_TYPES:
+				return getTemporaryTypes();
 			case TypesPackage.TMODULE__MODULE_SPECIFIER:
 				return getModuleSpecifier();
 		}
@@ -823,6 +850,10 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				getComposedMemberCaches().clear();
 				getComposedMemberCaches().addAll((Collection<? extends ComposedMemberCache>)newValue);
 				return;
+			case TypesPackage.TMODULE__TEMPORARY_TYPES:
+				getTemporaryTypes().clear();
+				getTemporaryTypes().addAll((Collection<? extends Type>)newValue);
+				return;
 		}
 		super.eSet(featureID, newValue);
 	}
@@ -886,6 +917,9 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				getComposedMemberCaches().clear();
 				return;
+			case TypesPackage.TMODULE__TEMPORARY_TYPES:
+				getTemporaryTypes().clear();
+				return;
 		}
 		super.eUnset(featureID);
 	}
@@ -932,6 +966,8 @@ public class TModuleImpl extends SyntaxRelatedTElementImpl implements TModule {
 				return AST_MD5_EDEFAULT == null ? astMD5 != null : !AST_MD5_EDEFAULT.equals(astMD5);
 			case TypesPackage.TMODULE__COMPOSED_MEMBER_CACHES:
 				return composedMemberCaches != null && !composedMemberCaches.isEmpty();
+			case TypesPackage.TMODULE__TEMPORARY_TYPES:
+				return temporaryTypes != null && !temporaryTypes.isEmpty();
 			case TypesPackage.TMODULE__MODULE_SPECIFIER:
 				return MODULE_SPECIFIER_EDEFAULT == null ? getModuleSpecifier() != null : !MODULE_SPECIFIER_EDEFAULT.equals(getModuleSpecifier());
 		}

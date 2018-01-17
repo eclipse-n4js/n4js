@@ -24,8 +24,6 @@ import org.eclipse.n4js.transpiler.utils.TranspilerUtils
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.xtext.EcoreUtil2
 
-import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
-
 /**
  * Transformation to clean up imports:
  * <ul>
@@ -99,16 +97,7 @@ class SanitizeImportsTransformation extends Transformation {
 					if(N4JSLanguageUtils.isExported(orig)) {
 						val module = orig.containingModule;
 						if(AnnotationDefinition.GLOBAL.hasAnnotation(module)) {
-							val iSpec = _NamedImportSpecifier(null, null, true);
-							val iDecl = _ImportDecl(null, iSpec);
-							insertBefore( state.im.scriptElements.get(0), iDecl );
-							// store the import specifier
-							ste.importSpecifier = iSpec;
-							// mark to not remove.
-							ste.importSpecifier.flaggedUsedInCode = true;
-							// store the imported module in information registry
-							// (required my ModuleWrappingTransformation)
-							state.info.setImportedModule(iDecl, module);
+							addNamedImport(ste,null);
 						}
 					}
 				}

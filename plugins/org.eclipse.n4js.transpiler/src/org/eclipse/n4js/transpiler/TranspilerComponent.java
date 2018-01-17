@@ -47,6 +47,7 @@ import org.eclipse.n4js.transpiler.utils.TranspilerDebugUtils;
 import org.eclipse.n4js.transpiler.utils.TranspilerUtils;
 import org.eclipse.n4js.ts.types.IdentifiableElement;
 import org.eclipse.n4js.ts.types.TClassifier;
+import org.eclipse.n4js.ts.types.TModule;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
 import org.eclipse.xtext.xbase.lib.Procedures.Procedure1;
 
@@ -91,6 +92,21 @@ public abstract class TranspilerComponent {
 
 	// ###############################################################################################################
 	// DELEGATION METHODS TO TRANSPILER STATE OPERATIONS
+
+	/** See {@link TranspilerStateOperations#addNamespaceImport(TranspilerState, TModule, String)}. */
+	protected SymbolTableEntryOriginal addNamespaceImport(TModule moduleToImport, String namespaceName) {
+		return TranspilerStateOperations.addNamespaceImport(state, moduleToImport, namespaceName);
+	}
+
+	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, IdentifiableElement, String)}. */
+	public SymbolTableEntryOriginal addNamedImport(IdentifiableElement elementToImport, String aliasOrNull) {
+		return TranspilerStateOperations.addNamedImport(state, elementToImport, aliasOrNull);
+	}
+
+	/** See {@link TranspilerStateOperations#addNamedImport(TranspilerState, SymbolTableEntryOriginal, String)}. */
+	public void addNamedImport(SymbolTableEntryOriginal steOfElementToImport, String aliasOrNull) {
+		TranspilerStateOperations.addNamedImport(state, steOfElementToImport, aliasOrNull);
+	}
 
 	@SuppressWarnings("javadoc")
 	protected void setTarget(ParameterizedCallExpression callExpr, Expression newTarget) {

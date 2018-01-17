@@ -40,7 +40,6 @@ import org.eclipse.n4js.n4JS.VariableBinding
 import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4JS.VariableDeclarationOrBinding
 import org.eclipse.n4js.n4JS.VariableStatement
-import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.naming.QualifiedNameComputer
 import org.eclipse.n4js.projectModel.IN4JSCore
 import org.eclipse.n4js.transpiler.Transformation
@@ -53,8 +52,6 @@ import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignme
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.ts.types.TypesFactory
-import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
 import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
 
@@ -76,8 +73,6 @@ class ModuleWrappingTransformation extends Transformation {
 	private IN4JSCore n4jsCore;
 	@Inject
 	private DestructuringAssistant destructuringAssistant;
-	@Inject
-	private ReactHelper reactHelper;
 
 	private final Set<SymbolTableEntry> exportedSTEs = newLinkedHashSet;
 
@@ -110,8 +105,6 @@ class ModuleWrappingTransformation extends Transformation {
 				    };
 				});
 	*/
-
-		addImplicitReactImportIfRequired();
 
 		val script_im = state.im;
 		val List<ScriptElement> content_im = script_im.scriptElements;
@@ -703,44 +696,6 @@ class ModuleWrappingTransformation extends Transformation {
 			) // Conditional
 		));
 		return ret;
-	}
-
-
-	/**
-	 * Adds an import of react if no such import is already in place.
-	 */
-	def private void addImplicitReactImportIfRequired() {
-		val inN4JSX = ResourceType.getResourceType(state.resource) === ResourceType.N4JSX;
-		if(!inN4JSX) {
-			return; // not required
-		}
-		if(state.im.scriptElements.empty) {
-			return; // not required (empty script)
-		}
-		val reactModule = reactHelper.lookUpReactTModule(state.resource);
-		if(reactModule===null) {
-			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + state.resource.URI);
-		}
-		val haveExplicitNamespaceImportOfReact = state.im.scriptElements.filter(ImportDeclaration).exists[
-			state.info.getImportedModule(it)===reactModule
-			&& it.importSpecifiers.exists[it instanceof NamespaceImportSpecifier]
-		];
-		if(haveExplicitNamespaceImportOfReact) {
-			return; // not required
-		}
-		// create namespace import of react
-		// 1) create import declaration & specifier
-		val importSpec = _NamespaceImportSpecifier(ReactHelper.REACT_NAMESPACE_NAME, true);
-		val importDecl = _ImportDecl(null, importSpec);
-		// 2) create a fake original target (dirty, because not contained in a ResourceSet)
-		val typeForNamespace = TypesFactory.eINSTANCE.createModuleNamespaceVirtualType();
-		typeForNamespace.name = ReactHelper.REACT_NAMESPACE_NAME;
-		// 3) create a symbol table entry
-		val ste_reactNamespace = getSymbolTableEntryOriginal(typeForNamespace, true);
-		ste_reactNamespace.importSpecifier = importSpec;
-		// 3) add import to intermediate model
-		insertBefore(state.im.scriptElements.get(0), importDecl);
-		state.info.setImportedModule_internal(importDecl, reactModule);
 	}
 
 

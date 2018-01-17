@@ -10,22 +10,28 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.List
 import java.util.stream.IntStream
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.JSXAttribute
 import org.eclipse.n4js.n4JS.JSXChild
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXExpression
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.es.util.JSXBackendHelper
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.Script_IM
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
@@ -44,6 +50,13 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  */
 class JSXTransformation extends Transformation {
 
+	private SymbolTableEntryOriginal steForReactNamespace;
+	private SymbolTableEntryOriginal steForReactElementFactoryFunction;
+
+	@Inject
+	private ReactHelper reactHelper;
+	@Inject
+	private JSXBackendHelper jsxBackendHelper;
 
 	override assertPreConditions() {
 	}
@@ -76,8 +89,49 @@ class JSXTransformation extends Transformation {
 	 * </pre>
 	 */
 	override void transform() {
+		val inN4JSX = ResourceType.getResourceType(state.resource) === ResourceType.N4JSX;
+		if(!inN4JSX) {
+			return; // this transformation is not applicable
+		}
+		val jsxElements = collectNodes(state.im, JSXElement, true);
+		if(jsxElements.empty) {
+			return; // nothing to transform
+		}
+
+		steForReactNamespace = prepareImportOfReact();
+		steForReactElementFactoryFunction = prepareElementFactoryFunction();
+
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
-		collectNodes(state.im, JSXElement, true).forEach[transformJSXElement];
+		jsxElements.forEach[transformJSXElement];
+	}
+
+	def private SymbolTableEntryOriginal prepareImportOfReact() {
+		val reactModule = reactHelper.lookUpReactTModule(state.resource);
+		if(reactModule===null) {
+			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + state.resource.URI);
+		}
+		val existingNamespaceImportOfReactIM = state.im.scriptElements.filter(ImportDeclaration)
+			.filter[impDeclIM | state.info.getImportedModule(impDeclIM)===reactModule]
+			.map[importSpecifiers].flatten
+			.filter(NamespaceImportSpecifier)
+			.head;
+		if(existingNamespaceImportOfReactIM!==null) {
+			// we already have a namespace import of react, no need to create a new one:
+			existingNamespaceImportOfReactIM.flaggedUsedInCode = true;
+			return findSymbolTableEntryForNamespaceImport(existingNamespaceImportOfReactIM);
+		}
+		// create namespace import for react
+		// (note: we do not have to care for name clashes regarding name of the namespace, because validations ensure
+		// that "React" is never used as a name in N4JSX files, except as the namespace name of a react import)
+		return addNamespaceImport(reactModule, ReactHelper.REACT_NAMESPACE_NAME);
+	}
+
+	def private SymbolTableEntryOriginal prepareElementFactoryFunction() {
+		val elementFactoryFunction = jsxBackendHelper.getJsxBackendElementFactoryFunction(state.resource);
+		if(elementFactoryFunction===null) {
+			throw new RuntimeException("cannot locate element factory function of JSX backend for N4JSX resource " + state.resource.URI);
+		}
+		return getSymbolTableEntryOriginal(elementFactoryFunction, true);
 	}
 
 	def private void transformJSXElement(JSXElement elem) {
@@ -91,13 +145,8 @@ class JSXTransformation extends Transformation {
 	}
 
 	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
-		// because we align to Babel (i.e. enforce react to be imported via a namespace import with a namespace called
-		// "React"), we can simply hard-code the reference to the element factory function as "React.createElement"
-		val refToElementFactoryFunction = _Snippet(ReactHelper.REACT_NAMESPACE_NAME + "."
-			+ ReactHelper.REACT_ELEMENT_FACTORY_FUNCTION_NAME);
-
 		return _CallExpr(
-			refToElementFactoryFunction,
+			_PropertyAccessExpr(steForReactNamespace, steForReactElementFactoryFunction),
 			(
 				#[
 					elem.tagNameFromElement,
