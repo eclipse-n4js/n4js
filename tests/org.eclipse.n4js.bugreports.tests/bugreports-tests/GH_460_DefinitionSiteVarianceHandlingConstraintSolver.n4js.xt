@@ -42,6 +42,3 @@ let e1: Iterable2<A,A> = [b,b];
 
 // XPECT noerrors
 let gw1: GW<B> = bar(ha);
-
-// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Iterable3<B,B,B>
-var v : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
