@@ -634,25 +634,12 @@ import org.eclipse.xtext.xbase.lib.Pair;
 							&& right.getDeclaredType().getTypeVars().size() >= idx)
 									? right.getDeclaredType().getTypeVars().get(idx) : null;
 
-					boolean caseConvered = false;
-					if (variance == CO) {
-						if (rightTypeVar != null && rightTypeVar.isDeclaredCovariant()) {
-							wasAdded |= reduce(leftArg, leftParamSubst, CO);
-							caseConvered = true;
-						} else if (rightTypeVar != null && rightTypeVar.isDeclaredContravariant()) {
-							wasAdded |= reduce(leftArg, leftParamSubst, CONTRA);
-							caseConvered = true;
-						}
-					} else if (variance == Variance.CONTRA) {
-						if (leftTypeVar != null && leftTypeVar.isDeclaredCovariant()) {
-							wasAdded |= reduce(leftArg, leftParamSubst, CONTRA);
-							caseConvered = true;
-						} else if (rightTypeVar != null && rightTypeVar.isDeclaredContravariant()) {
-							wasAdded |= reduce(leftArg, leftParamSubst, CO);
-							caseConvered = true;
-						}
-					}
-					if (!caseConvered) {
+					// Due to normalization above, we always have: leftArg >: leftParamSubst
+					if (leftTypeVar != null && leftTypeVar.isDeclaredCovariant()) {
+						wasAdded |= reduce(leftArg, leftParamSubst, CONTRA);
+					} else if (rightTypeVar != null && rightTypeVar.isDeclaredContravariant()) {
+						wasAdded |= reduce(leftArg, leftParamSubst, CO);
+					} else {
 						wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(INV));
 					}
 				}
