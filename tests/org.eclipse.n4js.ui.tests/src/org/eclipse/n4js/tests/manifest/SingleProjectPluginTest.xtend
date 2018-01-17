@@ -173,7 +173,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 		addSrc2ToSources
 		val c1 = doCreateTestFile(src,  "C.js", "var c = {}")
 		val c2 = doCreateTestFile(src2, "C.n4jsd", "export external public class C {}");
-		assertMarkers("file should have no errors but one unused variable warning", c1, 1);
+		assertMarkers("file should have no errors", c1, 0);
 		assertMarkers("file should have no errors", c2, 0);
 	}
 
@@ -181,7 +181,7 @@ class SingleProjectPluginTest extends AbstractBuilderParticipantTest {
 	def void testJSIsNoDuplicate_02() throws Exception {
 		val c1 = doCreateTestFile(src,  "C.js", "var c = {}")
 		val c2 = doCreateTestFile(src, "C.n4js", "export public class C {}");
-		assertMarkers("file should have no errors but one unused variable warning", c1, 1);
+		assertMarkers("file should have no errors", c1, 0);
 		assertMarkers("file should have no errors", c2, 0);
 	}
 

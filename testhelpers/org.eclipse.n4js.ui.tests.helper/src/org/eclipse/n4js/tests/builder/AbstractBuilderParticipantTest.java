@@ -48,6 +48,7 @@ import org.eclipse.n4js.tests.util.ProjectUtils;
 import org.eclipse.n4js.tests.util.ShippedCodeInitializeTestHelper;
 import org.eclipse.n4js.ui.internal.N4JSActivator;
 import org.eclipse.n4js.utils.io.FileDeleter;
+import org.eclipse.n4js.validation.IssueCodes;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
@@ -57,6 +58,7 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.ui.editor.IDirtyStateManager;
 import org.eclipse.xtext.ui.editor.XtextEditor;
 import org.eclipse.xtext.ui.resource.IResourceSetProvider;
+import org.eclipse.xtext.ui.util.IssueUtil;
 import org.eclipse.xtext.util.CancelIndicator;
 import org.eclipse.xtext.util.StringInputStream;
 import org.eclipse.xtext.util.concurrent.IUnitOfWork;
@@ -86,6 +88,19 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	@Inject
 	private ShippedCodeInitializeTestHelper shippedCodeInitializeTestHelper;
+
+	@Inject
+	private IssueUtil issueUtil;
+
+	Predicate<IMarker> ignoreSomeWarnings = (IMarker marker) -> {
+		String code = issueUtil.getCode(marker);
+		switch (code) {
+		case IssueCodes.CFG_LOCAL_VAR_UNUSED:
+		case IssueCodes.DFG_NULL_DEREFERENCE:
+			return false;
+		}
+		return true;
+	};
 
 	/***/
 	protected Injector getInjector() {
@@ -304,31 +319,31 @@ public abstract class AbstractBuilderParticipantTest extends AbstractBuilderTest
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IProject project, int count) throws CoreException {
-		return ProjectUtils.assertMarkers(assertMessage, project, count);
+		return ProjectUtils.assertMarkers(assertMessage, project, count, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count) throws CoreException {
-		return ProjectUtils.assertMarkers(assertMessage, resource, count);
+		return ProjectUtils.assertMarkers(assertMessage, resource, count, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, int count,
 			final Predicate<IMarker> markerPredicate) throws CoreException {
 
-		return ProjectUtils.assertMarkers(assertMessage, resource, count, markerPredicate);
+		return ProjectUtils.assertMarkers(assertMessage, resource, count, markerPredicate, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IProject project, String markerType, int count)
 			throws CoreException {
-		return ProjectUtils.assertMarkers(assertMessage, project, markerType, count);
+		return ProjectUtils.assertMarkers(assertMessage, project, markerType, count, ignoreSomeWarnings);
 	}
 
 	/***/
 	protected IMarker[] assertMarkers(String assertMessage, final IResource resource, String markerType, int count)
 			throws CoreException {
-		return ProjectUtils.assertMarkers(assertMessage, resource, markerType, count);
+		return ProjectUtils.assertMarkers(assertMessage, resource, markerType, count, ignoreSomeWarnings);
 	}
 
 	/***/
