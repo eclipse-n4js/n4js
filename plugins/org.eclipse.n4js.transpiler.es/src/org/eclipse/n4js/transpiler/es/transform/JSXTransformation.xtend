@@ -25,7 +25,6 @@ import org.eclipse.n4js.n4JS.JSXSpreadAttribute
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
-import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.transpiler.Transformation
 import org.eclipse.n4js.transpiler.es.util.JSXBackendHelper
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
@@ -50,11 +49,9 @@ import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
  */
 class JSXTransformation extends Transformation {
 
-	private SymbolTableEntryOriginal steForReactNamespace;
-	private SymbolTableEntryOriginal steForReactElementFactoryFunction;
+	private SymbolTableEntryOriginal steForJsxBackendNamespace;
+	private SymbolTableEntryOriginal steForJsxBackendElementFactoryFunction;
 
-	@Inject
-	private ReactHelper reactHelper;
 	@Inject
 	private JSXBackendHelper jsxBackendHelper;
 
@@ -98,32 +95,32 @@ class JSXTransformation extends Transformation {
 			return; // nothing to transform
 		}
 
-		steForReactNamespace = prepareImportOfReact();
-		steForReactElementFactoryFunction = prepareElementFactoryFunction();
+		steForJsxBackendNamespace = prepareImportOfJsxBackend();
+		steForJsxBackendElementFactoryFunction = prepareElementFactoryFunction();
 
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
 		jsxElements.forEach[transformJSXElement];
 	}
 
-	def private SymbolTableEntryOriginal prepareImportOfReact() {
-		val reactModule = reactHelper.lookUpReactTModule(state.resource);
-		if(reactModule===null) {
+	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
+		val jsxBackendModule = jsxBackendHelper.getJsxBackendModule(state.resource);
+		if(jsxBackendModule===null) {
 			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + state.resource.URI);
 		}
 		val existingNamespaceImportOfReactIM = state.im.scriptElements.filter(ImportDeclaration)
-			.filter[impDeclIM | state.info.getImportedModule(impDeclIM)===reactModule]
+			.filter[impDeclIM | state.info.getImportedModule(impDeclIM)===jsxBackendModule]
 			.map[importSpecifiers].flatten
 			.filter(NamespaceImportSpecifier)
 			.head;
 		if(existingNamespaceImportOfReactIM!==null) {
-			// we already have a namespace import of react, no need to create a new one:
+			// we already have a namespace import of the JSX backend, no need to create a new one:
 			existingNamespaceImportOfReactIM.flaggedUsedInCode = true;
 			return findSymbolTableEntryForNamespaceImport(existingNamespaceImportOfReactIM);
 		}
-		// create namespace import for react
+		// create namespace import for the JSX backend
 		// (note: we do not have to care for name clashes regarding name of the namespace, because validations ensure
 		// that "React" is never used as a name in N4JSX files, except as the namespace name of a react import)
-		return addNamespaceImport(reactModule, ReactHelper.REACT_NAMESPACE_NAME);
+		return addNamespaceImport(jsxBackendModule, jsxBackendHelper.getJsxBackendNamespaceName());
 	}
 
 	def private SymbolTableEntryOriginal prepareElementFactoryFunction() {
@@ -146,7 +143,7 @@ class JSXTransformation extends Transformation {
 
 	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
 		return _CallExpr(
-			_PropertyAccessExpr(steForReactNamespace, steForReactElementFactoryFunction),
+			_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
 			(
 				#[
 					elem.tagNameFromElement,

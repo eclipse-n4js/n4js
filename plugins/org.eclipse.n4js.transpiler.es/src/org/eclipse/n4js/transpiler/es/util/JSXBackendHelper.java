@@ -31,10 +31,11 @@ public final class JSXBackendHelper {
 	private ReactHelper reactHelper;
 
 	/**
-	 * Checks if given module is the module of the active JSX backend (currently only React).
+	 * Returns the preferred name of the namespace used to import the JSX backend. Currently, this method always returns
+	 * the name of React's namespace, i.e. "React".
 	 */
-	public boolean isJsxBackendModule(TModule module) {
-		return reactHelper.isReactModule(module);
+	public String getJsxBackendNamespaceName() {
+		return ReactHelper.REACT_NAMESPACE_NAME;
 	}
 
 	/**
