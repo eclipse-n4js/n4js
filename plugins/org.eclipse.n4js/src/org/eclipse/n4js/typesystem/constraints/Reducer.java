@@ -627,21 +627,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 						throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
 								+ leftArg.getClass().getName());
 					}
-					final TypeVariable leftTypeVar = (left.getDeclaredType() != null
-							&& left.getDeclaredType().getTypeVars().size() > 0)
-									? left.getDeclaredType().getTypeVars().get(0) : null;
-					final TypeVariable rightTypeVar = (right.getDeclaredType() != null
-							&& right.getDeclaredType().getTypeVars().size() >= idx)
-									? right.getDeclaredType().getTypeVars().get(idx) : null;
-
 					// Due to normalization above, we always have: leftArg >: leftParamSubst
-					if (leftTypeVar != null && leftTypeVar.isDeclaredCovariant()) {
-						wasAdded |= reduce(leftArg, leftParamSubst, CONTRA);
-					} else if (rightTypeVar != null && rightTypeVar.isDeclaredContravariant()) {
-						wasAdded |= reduce(leftArg, leftParamSubst, CO);
-					} else {
-						wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(INV));
-					}
+					// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
+					final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
+					final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null ? leftDefSiteVarianceRaw : INV;
+					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(leftDefSiteVariance));
 				}
 			}
 		}
