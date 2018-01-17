@@ -223,4 +223,8 @@ abstract public class GraphExplorerInternal {
 		return lastBranch;
 	}
 
+	/** @return parent {@link #getGraphVisitorInternal()}. Is null before {@link #firstBranchWalker()} is called. */
+	final public GraphVisitorInternal getGraphVisitorInternal() {
+		return parentGraphVisitor;
+	}
 }
