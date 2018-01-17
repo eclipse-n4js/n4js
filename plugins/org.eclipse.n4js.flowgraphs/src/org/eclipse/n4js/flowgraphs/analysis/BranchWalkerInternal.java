@@ -168,6 +168,11 @@ abstract public class BranchWalkerInternal {
 		return pathExplorer;
 	}
 
+	/** @return the current {@link TraverseDirection} */
+	final public TraverseDirection getDirection() {
+		return getExplorer().getGraphVisitorInternal().getCurrentDirection();
+	}
+
 	/** @return the number of this {@link BranchWalkerInternal}. */
 	final public int getNumber() {
 		return branchNumber;
