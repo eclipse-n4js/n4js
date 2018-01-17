@@ -23,6 +23,7 @@ export public class RequireBabelES5ModuleTest extends RequireModuleTest {
         const env = options["env"];
         // add src-gen/origin-version, because babel leaves import paths as is:
         const basePath = resolve(this.getThisModulePath(), "..", "..");
+        console.log("GH-349 RequireBabelES5ModuleTest basePath", basePath)
         env.NODE_PATH = (env.NODE_PATH as string) + delimiter + basePath;
         
         return options;
