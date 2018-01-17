@@ -718,6 +718,9 @@ class ModuleWrappingTransformation extends Transformation {
 			return; // not required (empty script)
 		}
 		val reactModule = reactHelper.lookUpReactTModule(state.resource);
+		if(reactModule===null) {
+			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + state.resource.URI);
+		}
 		val haveExplicitNamespaceImportOfReact = state.im.scriptElements.filter(ImportDeclaration).exists[
 			state.info.getImportedModule(it)===reactModule
 			&& it.importSpecifiers.exists[it instanceof NamespaceImportSpecifier]
