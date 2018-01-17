@@ -137,9 +137,6 @@ public abstract class AbstractN4JSCore implements IN4JSCore {
 		if (container.isPresent()) {
 			outputPath = container.get().getProject().getOutputPath();
 		}
-		if (outputPath == null) {
-			outputPath = "src-gen";
-		}
 		return outputPath;
 	}
 
