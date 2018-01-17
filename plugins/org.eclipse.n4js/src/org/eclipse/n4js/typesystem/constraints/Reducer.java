@@ -655,7 +655,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					if (!caseConvered) {
 						wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(INV));
 					}
-					// wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(INV));
 				}
 			}
 		}
