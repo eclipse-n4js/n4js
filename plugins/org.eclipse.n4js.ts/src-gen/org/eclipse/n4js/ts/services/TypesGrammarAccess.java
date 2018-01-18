@@ -2879,7 +2879,7 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment VersionRequest *:
-	//	requestedVersion=VERSION_REQUEST;
+	//	requestedVersion=VERSION;
 	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
 		return gaTypeExpressions.getVersionRequestAccess();
 	}
@@ -2888,10 +2888,10 @@ public class TypesGrammarAccess extends AbstractGrammarElementFinder {
 		return getVersionRequestAccess().getRule();
 	}
 	
-	//terminal VERSION_REQUEST returns ecore::EBigDecimal:
+	//terminal VERSION returns ecore::EBigDecimal:
 	//	'#' WS* INT;
-	public TerminalRule getVERSION_REQUESTRule() {
-		return gaTypeExpressions.getVERSION_REQUESTRule();
+	public TerminalRule getVERSIONRule() {
+		return gaTypeExpressions.getVERSIONRule();
 	}
 	
 	//fragment TypeArguments *:

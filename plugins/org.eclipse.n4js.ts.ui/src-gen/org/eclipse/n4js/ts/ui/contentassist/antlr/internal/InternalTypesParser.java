@@ -35,7 +35,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AssignmnentCompatible", "ProtectedInternal", "ProvidedByRuntime", "PublicInternal", "AutoboxedType", "Intersection", "Constructor", "VirtualBase", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Primitive", "Protected", "Undefined", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Indexed", "Private", "Project", "Delete", "Export", "Import", "Object", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Final", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "FullStopFullStopFullStop", "Any", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "EqualsSignGreaterThanSign", "As", "Do", "If", "In", "Of", "Ampersand", "LeftParenthesis", "RightParenthesis", "PlusSign", "Comma", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "LeftCurlyBracket", "RightCurlyBracket", "Tilde", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_WS", "RULE_INT", "RULE_VERSION_REQUEST", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_IDENTIFIER_PART", "RULE_IDENTIFIER", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AssignmnentCompatible", "ProtectedInternal", "ProvidedByRuntime", "PublicInternal", "AutoboxedType", "Intersection", "Constructor", "VirtualBase", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Primitive", "Protected", "Undefined", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Indexed", "Private", "Project", "Delete", "Export", "Import", "Object", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Final", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "FullStopFullStopFullStop", "Any", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "EqualsSignGreaterThanSign", "As", "Do", "If", "In", "Of", "Ampersand", "LeftParenthesis", "RightParenthesis", "PlusSign", "Comma", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "LeftCurlyBracket", "RightCurlyBracket", "Tilde", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_WS", "RULE_INT", "RULE_VERSION", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_IDENTIFIER_PART", "RULE_IDENTIFIER", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
     };
     public static final int Delete=31;
     public static final int Enum=57;
@@ -47,6 +47,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int False=47;
     public static final int LessThanSign=90;
     public static final int LeftParenthesis=82;
+    public static final int RULE_VERSION=106;
     public static final int Throw=50;
     public static final int VirtualBase=11;
     public static final int Private=29;
@@ -126,7 +127,6 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
     public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=120;
     public static final int Public=35;
     public static final int Do=77;
-    public static final int RULE_VERSION_REQUEST=106;
     public static final int This_1=60;
     public static final int RULE_DOT_DOT=125;
     public static final int External=23;
@@ -9859,7 +9859,7 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
                 {
                 int LA27_1 = input.LA(2);
 
-                if ( (LA27_1==EOF||(LA27_1>=RightParenthesis && LA27_1<=Comma)||LA27_1==Solidus||(LA27_1>=LessThanSign && LA27_1<=EqualsSign)||LA27_1==QuestionMark||LA27_1==RULE_VERSION_REQUEST) ) {
+                if ( (LA27_1==EOF||(LA27_1>=RightParenthesis && LA27_1<=Comma)||LA27_1==Solidus||(LA27_1>=LessThanSign && LA27_1<=EqualsSign)||LA27_1==QuestionMark||LA27_1==RULE_VERSION) ) {
                     alt27=2;
                 }
                 else if ( (LA27_1==Colon) ) {
@@ -50808,24 +50808,24 @@ public class InternalTypesParser extends AbstractInternalContentAssistParser {
 
 
     // $ANTLR start "rule__VersionRequest__RequestedVersionAssignment"
-    // InternalTypesParser.g:15416:1: rule__VersionRequest__RequestedVersionAssignment : ( RULE_VERSION_REQUEST ) ;
+    // InternalTypesParser.g:15416:1: rule__VersionRequest__RequestedVersionAssignment : ( RULE_VERSION ) ;
     public final void rule__VersionRequest__RequestedVersionAssignment() throws RecognitionException {
 
         		int stackSize = keepStackSize();
         	
         try {
-            // InternalTypesParser.g:15420:1: ( ( RULE_VERSION_REQUEST ) )
-            // InternalTypesParser.g:15421:2: ( RULE_VERSION_REQUEST )
+            // InternalTypesParser.g:15420:1: ( ( RULE_VERSION ) )
+            // InternalTypesParser.g:15421:2: ( RULE_VERSION )
             {
-            // InternalTypesParser.g:15421:2: ( RULE_VERSION_REQUEST )
-            // InternalTypesParser.g:15422:3: RULE_VERSION_REQUEST
+            // InternalTypesParser.g:15421:2: ( RULE_VERSION )
+            // InternalTypesParser.g:15422:3: RULE_VERSION
             {
             if ( state.backtracking==0 ) {
-               before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); 
+               before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0()); 
             }
-            match(input,RULE_VERSION_REQUEST,FOLLOW_2); if (state.failed) return ;
+            match(input,RULE_VERSION,FOLLOW_2); if (state.failed) return ;
             if ( state.backtracking==0 ) {
-               after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); 
+               after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0()); 
             }
 
             }

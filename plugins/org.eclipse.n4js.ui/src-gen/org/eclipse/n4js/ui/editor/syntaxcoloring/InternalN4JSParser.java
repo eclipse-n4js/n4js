@@ -27,7 +27,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Intersection", "Constructor", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Protected", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Private", "Project", "Delete", "Export", "Import", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "ExclamationMarkEqualsSignEqualsSign", "FullStopFullStopFullStop", "LessThanSignLessThanSignEqualsSign", "EqualsSignEqualsSignEqualsSign", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "ExclamationMarkEqualsSign", "PercentSignEqualsSign", "AmpersandAmpersand", "AmpersandEqualsSign", "AsteriskEqualsSign", "PlusSignPlusSign", "PlusSignEqualsSign", "HyphenMinusHyphenMinus", "HyphenMinusEqualsSign", "SolidusEqualsSign", "LessThanSignLessThanSign", "LessThanSignEqualsSign", "EqualsSignEqualsSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "CommercialAtCommercialAt", "CircumflexAccentEqualsSign", "As", "Do", "If", "In", "Of", "VerticalLineEqualsSign", "VerticalLineVerticalLine", "ExclamationMark", "PercentSign", "Ampersand", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "Tilde", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DOUBLE", "RULE_INT_SUFFIX", "RULE_HEX_INT", "RULE_BINARY_INT", "RULE_OCTAL_INT", "RULE_LEGACY_OCTAL_INT", "RULE_IDENTIFIER_PART", "RULE_SCIENTIFIC_INT", "RULE_SIGNED_INT", "RULE_IDENTIFIER", "RULE_DOUBLE_STRING_CHAR", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_BACKSLASH_SEQUENCE", "RULE_REGEX_CHAR_OR_BRACKET", "RULE_REGEX_CHAR", "RULE_ACTUAL_REGEX_TAIL", "RULE_REGEX_START", "RULE_REGEX_TAIL", "RULE_TEMPLATE_LITERAL_CHAR", "RULE_TEMPLATE_HEAD", "RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL", "RULE_ACTUAL_TEMPLATE_END", "RULE_TEMPLATE_MIDDLE", "RULE_TEMPLATE_END", "RULE_TEMPLATE_CONTINUATION", "RULE_NO_LINE_TERMINATOR", "RULE_INCOMPLETE_ASYNC_ARROW", "RULE_WS", "RULE_INT", "RULE_VERSION_REQUEST", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Intersection", "Constructor", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Protected", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Private", "Project", "Delete", "Export", "Import", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "ExclamationMarkEqualsSignEqualsSign", "FullStopFullStopFullStop", "LessThanSignLessThanSignEqualsSign", "EqualsSignEqualsSignEqualsSign", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "ExclamationMarkEqualsSign", "PercentSignEqualsSign", "AmpersandAmpersand", "AmpersandEqualsSign", "AsteriskEqualsSign", "PlusSignPlusSign", "PlusSignEqualsSign", "HyphenMinusHyphenMinus", "HyphenMinusEqualsSign", "SolidusEqualsSign", "LessThanSignLessThanSign", "LessThanSignEqualsSign", "EqualsSignEqualsSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "CommercialAtCommercialAt", "CircumflexAccentEqualsSign", "As", "Do", "If", "In", "Of", "VerticalLineEqualsSign", "VerticalLineVerticalLine", "ExclamationMark", "PercentSign", "Ampersand", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "Tilde", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DOUBLE", "RULE_INT_SUFFIX", "RULE_HEX_INT", "RULE_BINARY_INT", "RULE_OCTAL_INT", "RULE_LEGACY_OCTAL_INT", "RULE_IDENTIFIER_PART", "RULE_SCIENTIFIC_INT", "RULE_SIGNED_INT", "RULE_IDENTIFIER", "RULE_DOUBLE_STRING_CHAR", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_BACKSLASH_SEQUENCE", "RULE_REGEX_CHAR_OR_BRACKET", "RULE_REGEX_CHAR", "RULE_ACTUAL_REGEX_TAIL", "RULE_REGEX_START", "RULE_REGEX_TAIL", "RULE_TEMPLATE_LITERAL_CHAR", "RULE_TEMPLATE_HEAD", "RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL", "RULE_ACTUAL_TEMPLATE_END", "RULE_TEMPLATE_MIDDLE", "RULE_TEMPLATE_END", "RULE_TEMPLATE_CONTINUATION", "RULE_NO_LINE_TERMINATOR", "RULE_INCOMPLETE_ASYNC_ARROW", "RULE_WS", "RULE_INT", "RULE_VERSION", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
     };
     public static final int Delete=22;
     public static final int Enum=46;
@@ -41,6 +41,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public static final int False=37;
     public static final int LessThanSign=103;
     public static final int LeftParenthesis=93;
+    public static final int RULE_VERSION=150;
     public static final int RULE_TEMPLATE_LITERAL_CHAR=139;
     public static final int Throw=39;
     public static final int Private=20;
@@ -150,7 +151,6 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
     public static final int RULE_DOUBLE_STRING_CHAR=128;
     public static final int RULE_LEGACY_OCTAL_INT=123;
     public static final int EqualsSignEqualsSignEqualsSign=57;
-    public static final int RULE_VERSION_REQUEST=150;
     public static final int RULE_TEMPLATE_END=144;
     public static final int This_1=49;
     public static final int RULE_DOT_DOT=166;
@@ -38982,7 +38982,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             else if ( (LA414_0==Implements) ) {
                 int LA414_2 = input.LA(2);
 
-                if ( (LA414_2==Implements||LA414_2==Extends||LA414_2==LessThanSign||LA414_2==LeftCurlyBracket||LA414_2==RULE_VERSION_REQUEST) ) {
+                if ( (LA414_2==Implements||LA414_2==Extends||LA414_2==LessThanSign||LA414_2==LeftCurlyBracket||LA414_2==RULE_VERSION) ) {
                     alt414=1;
                 }
             }
@@ -39011,7 +39011,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             int alt415=2;
             int LA415_0 = input.LA(1);
 
-            if ( (LA415_0==RULE_VERSION_REQUEST) ) {
+            if ( (LA415_0==RULE_VERSION) ) {
                 alt415=1;
             }
             switch (alt415) {
@@ -40417,7 +40417,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             else if ( (LA436_0==Implements) ) {
                 int LA436_2 = input.LA(2);
 
-                if ( (LA436_2==Implements||LA436_2==Extends||LA436_2==LessThanSign||LA436_2==LeftCurlyBracket||LA436_2==RULE_VERSION_REQUEST) ) {
+                if ( (LA436_2==Implements||LA436_2==Extends||LA436_2==LessThanSign||LA436_2==LeftCurlyBracket||LA436_2==RULE_VERSION) ) {
                     alt436=1;
                 }
             }
@@ -40446,7 +40446,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             int alt437=2;
             int LA437_0 = input.LA(1);
 
-            if ( (LA437_0==RULE_VERSION_REQUEST) ) {
+            if ( (LA437_0==RULE_VERSION) ) {
                 alt437=1;
             }
             switch (alt437) {
@@ -40855,7 +40855,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             int alt445=2;
             int LA445_0 = input.LA(1);
 
-            if ( (LA445_0==RULE_VERSION_REQUEST) ) {
+            if ( (LA445_0==RULE_VERSION) ) {
                 alt445=1;
             }
             switch (alt445) {
@@ -48643,7 +48643,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleVersionDeclaration_return retval = new InternalN4JSParser.ruleVersionDeclaration_return();
         retval.start = input.LT(1);
 
-        Token DeclaredVersionVERSION_REQUESTTerminalRuleCall_0=null;
+        Token DeclaredVersionVERSIONTerminalRuleCall_0=null;
 
 
 
@@ -48651,10 +48651,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            DeclaredVersionVERSION_REQUESTTerminalRuleCall_0=(Token)match(input,RULE_VERSION_REQUEST,FOLLOW_2); if (state.failed) return retval;
+            DeclaredVersionVERSIONTerminalRuleCall_0=(Token)match(input,RULE_VERSION,FOLLOW_2); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              			announce(DeclaredVersionVERSION_REQUESTTerminalRuleCall_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment());
+              			announce(DeclaredVersionVERSIONTerminalRuleCall_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment());
               		
             }
 
@@ -51820,7 +51820,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         InternalN4JSParser.ruleVersionRequest_return retval = new InternalN4JSParser.ruleVersionRequest_return();
         retval.start = input.LT(1);
 
-        Token RequestedVersionVERSION_REQUESTTerminalRuleCall_0=null;
+        Token RequestedVersionVERSIONTerminalRuleCall_0=null;
 
 
 
@@ -51828,10 +51828,10 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
             {
             {
             {
-            RequestedVersionVERSION_REQUESTTerminalRuleCall_0=(Token)match(input,RULE_VERSION_REQUEST,FOLLOW_2); if (state.failed) return retval;
+            RequestedVersionVERSIONTerminalRuleCall_0=(Token)match(input,RULE_VERSION,FOLLOW_2); if (state.failed) return retval;
             if ( state.backtracking==0 ) {
 
-              			announce(RequestedVersionVERSION_REQUESTTerminalRuleCall_0, grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment());
+              			announce(RequestedVersionVERSIONTerminalRuleCall_0, grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment());
               		
             }
 
@@ -56251,7 +56251,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         int alt625=2;
         int LA625_0 = input.LA(1);
 
-        if ( (LA625_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA625_0==RULE_VERSION) ) {
             alt625=1;
         }
         switch (alt625) {
@@ -56358,7 +56358,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         int alt629=2;
         int LA629_0 = input.LA(1);
 
-        if ( (LA629_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA629_0==RULE_VERSION) ) {
             alt629=1;
         }
         switch (alt629) {
@@ -56442,7 +56442,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         int alt632=2;
         int LA632_0 = input.LA(1);
 
-        if ( (LA632_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA632_0==RULE_VERSION) ) {
             alt632=1;
         }
         switch (alt632) {
@@ -56636,7 +56636,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         int alt637=2;
         int LA637_0 = input.LA(1);
 
-        if ( (LA637_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA637_0==RULE_VERSION) ) {
             alt637=1;
         }
         switch (alt637) {
@@ -56743,7 +56743,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         int alt641=2;
         int LA641_0 = input.LA(1);
 
-        if ( (LA641_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA641_0==RULE_VERSION) ) {
             alt641=1;
         }
         switch (alt641) {
@@ -56827,7 +56827,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
         int alt644=2;
         int LA644_0 = input.LA(1);
 
-        if ( (LA644_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA644_0==RULE_VERSION) ) {
             alt644=1;
         }
         switch (alt644) {
@@ -72706,7 +72706,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                         else if ( (LA225_4==Function) && (synpred125_InternalN4JSParser())) {s = 15;}
 
-                        else if ( (LA225_4==EOF||LA225_4==Instanceof||LA225_4==ExclamationMarkEqualsSignEqualsSign||(LA225_4>=LessThanSignLessThanSignEqualsSign && LA225_4<=EqualsSignEqualsSignEqualsSign)||(LA225_4>=ExclamationMarkEqualsSign && LA225_4<=EqualsSignEqualsSign)||LA225_4==GreaterThanSignEqualsSign||(LA225_4>=CircumflexAccentEqualsSign && LA225_4<=As)||(LA225_4>=In && LA225_4<=VerticalLineVerticalLine)||(LA225_4>=PercentSign && LA225_4<=QuestionMark)||(LA225_4>=LeftSquareBracket && LA225_4<=RightCurlyBracket)||(LA225_4>=RULE_TEMPLATE_HEAD && LA225_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA225_4==RULE_VERSION_REQUEST||LA225_4==RULE_ML_COMMENT||LA225_4==RULE_EOL) ) {s = 3;}
+                        else if ( (LA225_4==EOF||LA225_4==Instanceof||LA225_4==ExclamationMarkEqualsSignEqualsSign||(LA225_4>=LessThanSignLessThanSignEqualsSign && LA225_4<=EqualsSignEqualsSignEqualsSign)||(LA225_4>=ExclamationMarkEqualsSign && LA225_4<=EqualsSignEqualsSign)||LA225_4==GreaterThanSignEqualsSign||(LA225_4>=CircumflexAccentEqualsSign && LA225_4<=As)||(LA225_4>=In && LA225_4<=VerticalLineVerticalLine)||(LA225_4>=PercentSign && LA225_4<=QuestionMark)||(LA225_4>=LeftSquareBracket && LA225_4<=RightCurlyBracket)||(LA225_4>=RULE_TEMPLATE_HEAD && LA225_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA225_4==RULE_VERSION||LA225_4==RULE_ML_COMMENT||LA225_4==RULE_EOL) ) {s = 3;}
 
                          
                         input.seek(index225_4);
@@ -72790,7 +72790,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
 
                         else if ( (LA226_4==Function) && (synpred126_InternalN4JSParser())) {s = 15;}
 
-                        else if ( (LA226_4==EOF||LA226_4==Instanceof||LA226_4==ExclamationMarkEqualsSignEqualsSign||(LA226_4>=LessThanSignLessThanSignEqualsSign && LA226_4<=EqualsSignEqualsSignEqualsSign)||(LA226_4>=ExclamationMarkEqualsSign && LA226_4<=EqualsSignEqualsSign)||LA226_4==GreaterThanSignEqualsSign||(LA226_4>=CircumflexAccentEqualsSign && LA226_4<=As)||(LA226_4>=In && LA226_4<=VerticalLineVerticalLine)||(LA226_4>=PercentSign && LA226_4<=QuestionMark)||(LA226_4>=LeftSquareBracket && LA226_4<=RightCurlyBracket)||(LA226_4>=RULE_TEMPLATE_HEAD && LA226_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA226_4==RULE_VERSION_REQUEST||LA226_4==RULE_ML_COMMENT||LA226_4==RULE_EOL) ) {s = 3;}
+                        else if ( (LA226_4==EOF||LA226_4==Instanceof||LA226_4==ExclamationMarkEqualsSignEqualsSign||(LA226_4>=LessThanSignLessThanSignEqualsSign && LA226_4<=EqualsSignEqualsSignEqualsSign)||(LA226_4>=ExclamationMarkEqualsSign && LA226_4<=EqualsSignEqualsSign)||LA226_4==GreaterThanSignEqualsSign||(LA226_4>=CircumflexAccentEqualsSign && LA226_4<=As)||(LA226_4>=In && LA226_4<=VerticalLineVerticalLine)||(LA226_4>=PercentSign && LA226_4<=QuestionMark)||(LA226_4>=LeftSquareBracket && LA226_4<=RightCurlyBracket)||(LA226_4>=RULE_TEMPLATE_HEAD && LA226_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA226_4==RULE_VERSION||LA226_4==RULE_ML_COMMENT||LA226_4==RULE_EOL) ) {s = 3;}
 
                          
                         input.seek(index226_4);
@@ -72881,7 +72881,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_6==EOF||(LA227_6>=Intersection && LA227_6<=ExclamationMarkEqualsSignEqualsSign)||(LA227_6>=LessThanSignLessThanSignEqualsSign && LA227_6<=EqualsSignEqualsSign)||LA227_6==GreaterThanSignEqualsSign||(LA227_6>=CircumflexAccentEqualsSign && LA227_6<=VerticalLineVerticalLine)||(LA227_6>=PercentSign && LA227_6<=QuestionMark)||(LA227_6>=LeftSquareBracket && LA227_6<=RightCurlyBracket)||LA227_6==RULE_IDENTIFIER||(LA227_6>=RULE_TEMPLATE_HEAD && LA227_6<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_6==RULE_ML_COMMENT||LA227_6==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_6==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_6==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_6);
@@ -72896,7 +72896,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_10==EOF||(LA227_10>=Intersection && LA227_10<=ExclamationMarkEqualsSignEqualsSign)||(LA227_10>=LessThanSignLessThanSignEqualsSign && LA227_10<=EqualsSignEqualsSign)||LA227_10==GreaterThanSignEqualsSign||(LA227_10>=CircumflexAccentEqualsSign && LA227_10<=VerticalLineVerticalLine)||(LA227_10>=PercentSign && LA227_10<=QuestionMark)||(LA227_10>=LeftSquareBracket && LA227_10<=RightCurlyBracket)||LA227_10==RULE_IDENTIFIER||(LA227_10>=RULE_TEMPLATE_HEAD && LA227_10<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_10==RULE_ML_COMMENT||LA227_10==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_10==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_10==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_10);
@@ -72911,7 +72911,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_14==EOF||(LA227_14>=Intersection && LA227_14<=ExclamationMarkEqualsSignEqualsSign)||(LA227_14>=LessThanSignLessThanSignEqualsSign && LA227_14<=EqualsSignEqualsSign)||LA227_14==GreaterThanSignEqualsSign||(LA227_14>=CircumflexAccentEqualsSign && LA227_14<=VerticalLineVerticalLine)||(LA227_14>=PercentSign && LA227_14<=QuestionMark)||(LA227_14>=LeftSquareBracket && LA227_14<=RightCurlyBracket)||LA227_14==RULE_IDENTIFIER||(LA227_14>=RULE_TEMPLATE_HEAD && LA227_14<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_14==RULE_ML_COMMENT||LA227_14==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_14==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_14==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_14);
@@ -72926,7 +72926,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_18==EOF||(LA227_18>=Intersection && LA227_18<=ExclamationMarkEqualsSignEqualsSign)||(LA227_18>=LessThanSignLessThanSignEqualsSign && LA227_18<=EqualsSignEqualsSign)||LA227_18==GreaterThanSignEqualsSign||(LA227_18>=CircumflexAccentEqualsSign && LA227_18<=VerticalLineVerticalLine)||(LA227_18>=PercentSign && LA227_18<=QuestionMark)||(LA227_18>=LeftSquareBracket && LA227_18<=RightCurlyBracket)||LA227_18==RULE_IDENTIFIER||(LA227_18>=RULE_TEMPLATE_HEAD && LA227_18<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_18==RULE_ML_COMMENT||LA227_18==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_18==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_18==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_18);
@@ -72941,7 +72941,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_22==EOF||(LA227_22>=Intersection && LA227_22<=ExclamationMarkEqualsSignEqualsSign)||(LA227_22>=LessThanSignLessThanSignEqualsSign && LA227_22<=EqualsSignEqualsSign)||LA227_22==GreaterThanSignEqualsSign||(LA227_22>=CircumflexAccentEqualsSign && LA227_22<=VerticalLineVerticalLine)||(LA227_22>=PercentSign && LA227_22<=QuestionMark)||(LA227_22>=LeftSquareBracket && LA227_22<=RightCurlyBracket)||LA227_22==RULE_IDENTIFIER||(LA227_22>=RULE_TEMPLATE_HEAD && LA227_22<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_22==RULE_ML_COMMENT||LA227_22==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_22==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_22==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_22);
@@ -72956,7 +72956,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_26==EOF||(LA227_26>=Intersection && LA227_26<=ExclamationMarkEqualsSignEqualsSign)||(LA227_26>=LessThanSignLessThanSignEqualsSign && LA227_26<=EqualsSignEqualsSign)||LA227_26==GreaterThanSignEqualsSign||(LA227_26>=CircumflexAccentEqualsSign && LA227_26<=VerticalLineVerticalLine)||(LA227_26>=PercentSign && LA227_26<=QuestionMark)||(LA227_26>=LeftSquareBracket && LA227_26<=RightCurlyBracket)||LA227_26==RULE_IDENTIFIER||(LA227_26>=RULE_TEMPLATE_HEAD && LA227_26<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_26==RULE_ML_COMMENT||LA227_26==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_26==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_26==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_26);
@@ -72969,7 +72969,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_3 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_3==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_3==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_3==EOF||(LA227_3>=Intersection && LA227_3<=ExclamationMarkEqualsSignEqualsSign)||(LA227_3>=LessThanSignLessThanSignEqualsSign && LA227_3<=EqualsSignEqualsSign)||LA227_3==GreaterThanSignEqualsSign||(LA227_3>=CircumflexAccentEqualsSign && LA227_3<=VerticalLineVerticalLine)||(LA227_3>=PercentSign && LA227_3<=QuestionMark)||(LA227_3>=LeftSquareBracket && LA227_3<=RightCurlyBracket)||LA227_3==RULE_IDENTIFIER||(LA227_3>=RULE_TEMPLATE_HEAD && LA227_3<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_3==RULE_ML_COMMENT||LA227_3==RULE_EOL) ) {s = 29;}
 
@@ -72984,7 +72984,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_7 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_7==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_7==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_7==EOF||(LA227_7>=Intersection && LA227_7<=ExclamationMarkEqualsSignEqualsSign)||(LA227_7>=LessThanSignLessThanSignEqualsSign && LA227_7<=EqualsSignEqualsSign)||LA227_7==GreaterThanSignEqualsSign||(LA227_7>=CircumflexAccentEqualsSign && LA227_7<=VerticalLineVerticalLine)||(LA227_7>=PercentSign && LA227_7<=QuestionMark)||(LA227_7>=LeftSquareBracket && LA227_7<=RightCurlyBracket)||LA227_7==RULE_IDENTIFIER||(LA227_7>=RULE_TEMPLATE_HEAD && LA227_7<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_7==RULE_ML_COMMENT||LA227_7==RULE_EOL) ) {s = 29;}
 
@@ -72999,7 +72999,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_11 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_11==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_11==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_11==EOF||(LA227_11>=Intersection && LA227_11<=ExclamationMarkEqualsSignEqualsSign)||(LA227_11>=LessThanSignLessThanSignEqualsSign && LA227_11<=EqualsSignEqualsSign)||LA227_11==GreaterThanSignEqualsSign||(LA227_11>=CircumflexAccentEqualsSign && LA227_11<=VerticalLineVerticalLine)||(LA227_11>=PercentSign && LA227_11<=QuestionMark)||(LA227_11>=LeftSquareBracket && LA227_11<=RightCurlyBracket)||LA227_11==RULE_IDENTIFIER||(LA227_11>=RULE_TEMPLATE_HEAD && LA227_11<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_11==RULE_ML_COMMENT||LA227_11==RULE_EOL) ) {s = 29;}
 
@@ -73014,7 +73014,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_15 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_15==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_15==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_15==EOF||(LA227_15>=Intersection && LA227_15<=ExclamationMarkEqualsSignEqualsSign)||(LA227_15>=LessThanSignLessThanSignEqualsSign && LA227_15<=EqualsSignEqualsSign)||LA227_15==GreaterThanSignEqualsSign||(LA227_15>=CircumflexAccentEqualsSign && LA227_15<=VerticalLineVerticalLine)||(LA227_15>=PercentSign && LA227_15<=QuestionMark)||(LA227_15>=LeftSquareBracket && LA227_15<=RightCurlyBracket)||LA227_15==RULE_IDENTIFIER||(LA227_15>=RULE_TEMPLATE_HEAD && LA227_15<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_15==RULE_ML_COMMENT||LA227_15==RULE_EOL) ) {s = 29;}
 
@@ -73029,7 +73029,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_19==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_19==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_19==EOF||(LA227_19>=Intersection && LA227_19<=ExclamationMarkEqualsSignEqualsSign)||(LA227_19>=LessThanSignLessThanSignEqualsSign && LA227_19<=EqualsSignEqualsSign)||LA227_19==GreaterThanSignEqualsSign||(LA227_19>=CircumflexAccentEqualsSign && LA227_19<=VerticalLineVerticalLine)||(LA227_19>=PercentSign && LA227_19<=QuestionMark)||(LA227_19>=LeftSquareBracket && LA227_19<=RightCurlyBracket)||LA227_19==RULE_IDENTIFIER||(LA227_19>=RULE_TEMPLATE_HEAD && LA227_19<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_19==RULE_ML_COMMENT||LA227_19==RULE_EOL) ) {s = 29;}
 
@@ -73044,7 +73044,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_23 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_23==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_23==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_23==EOF||(LA227_23>=Intersection && LA227_23<=ExclamationMarkEqualsSignEqualsSign)||(LA227_23>=LessThanSignLessThanSignEqualsSign && LA227_23<=EqualsSignEqualsSign)||LA227_23==GreaterThanSignEqualsSign||(LA227_23>=CircumflexAccentEqualsSign && LA227_23<=VerticalLineVerticalLine)||(LA227_23>=PercentSign && LA227_23<=QuestionMark)||(LA227_23>=LeftSquareBracket && LA227_23<=RightCurlyBracket)||LA227_23==RULE_IDENTIFIER||(LA227_23>=RULE_TEMPLATE_HEAD && LA227_23<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_23==RULE_ML_COMMENT||LA227_23==RULE_EOL) ) {s = 29;}
 
@@ -73059,7 +73059,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_27 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_27==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_27==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_27==EOF||(LA227_27>=Intersection && LA227_27<=ExclamationMarkEqualsSignEqualsSign)||(LA227_27>=LessThanSignLessThanSignEqualsSign && LA227_27<=EqualsSignEqualsSign)||LA227_27==GreaterThanSignEqualsSign||(LA227_27>=CircumflexAccentEqualsSign && LA227_27<=VerticalLineVerticalLine)||(LA227_27>=PercentSign && LA227_27<=QuestionMark)||(LA227_27>=LeftSquareBracket && LA227_27<=RightCurlyBracket)||LA227_27==RULE_IDENTIFIER||(LA227_27>=RULE_TEMPLATE_HEAD && LA227_27<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_27==RULE_ML_COMMENT||LA227_27==RULE_EOL) ) {s = 29;}
 
@@ -73076,7 +73076,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_4==EOF||(LA227_4>=Intersection && LA227_4<=ExclamationMarkEqualsSignEqualsSign)||(LA227_4>=LessThanSignLessThanSignEqualsSign && LA227_4<=EqualsSignEqualsSign)||LA227_4==GreaterThanSignEqualsSign||(LA227_4>=CircumflexAccentEqualsSign && LA227_4<=VerticalLineVerticalLine)||(LA227_4>=PercentSign && LA227_4<=QuestionMark)||(LA227_4>=LeftSquareBracket && LA227_4<=RightCurlyBracket)||LA227_4==RULE_IDENTIFIER||(LA227_4>=RULE_TEMPLATE_HEAD && LA227_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_4==RULE_ML_COMMENT||LA227_4==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_4==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_4==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_4);
@@ -73091,7 +73091,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_8==EOF||(LA227_8>=Intersection && LA227_8<=ExclamationMarkEqualsSignEqualsSign)||(LA227_8>=LessThanSignLessThanSignEqualsSign && LA227_8<=EqualsSignEqualsSign)||LA227_8==GreaterThanSignEqualsSign||(LA227_8>=CircumflexAccentEqualsSign && LA227_8<=VerticalLineVerticalLine)||(LA227_8>=PercentSign && LA227_8<=QuestionMark)||(LA227_8>=LeftSquareBracket && LA227_8<=RightCurlyBracket)||LA227_8==RULE_IDENTIFIER||(LA227_8>=RULE_TEMPLATE_HEAD && LA227_8<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_8==RULE_ML_COMMENT||LA227_8==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_8==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_8==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_8);
@@ -73106,7 +73106,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_12==EOF||(LA227_12>=Intersection && LA227_12<=ExclamationMarkEqualsSignEqualsSign)||(LA227_12>=LessThanSignLessThanSignEqualsSign && LA227_12<=EqualsSignEqualsSign)||LA227_12==GreaterThanSignEqualsSign||(LA227_12>=CircumflexAccentEqualsSign && LA227_12<=VerticalLineVerticalLine)||(LA227_12>=PercentSign && LA227_12<=QuestionMark)||(LA227_12>=LeftSquareBracket && LA227_12<=RightCurlyBracket)||LA227_12==RULE_IDENTIFIER||(LA227_12>=RULE_TEMPLATE_HEAD && LA227_12<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_12==RULE_ML_COMMENT||LA227_12==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_12==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_12==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_12);
@@ -73121,7 +73121,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_16==EOF||(LA227_16>=Intersection && LA227_16<=ExclamationMarkEqualsSignEqualsSign)||(LA227_16>=LessThanSignLessThanSignEqualsSign && LA227_16<=EqualsSignEqualsSign)||LA227_16==GreaterThanSignEqualsSign||(LA227_16>=CircumflexAccentEqualsSign && LA227_16<=VerticalLineVerticalLine)||(LA227_16>=PercentSign && LA227_16<=QuestionMark)||(LA227_16>=LeftSquareBracket && LA227_16<=RightCurlyBracket)||LA227_16==RULE_IDENTIFIER||(LA227_16>=RULE_TEMPLATE_HEAD && LA227_16<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_16==RULE_ML_COMMENT||LA227_16==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_16==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_16==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_16);
@@ -73136,7 +73136,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_20==EOF||(LA227_20>=Intersection && LA227_20<=ExclamationMarkEqualsSignEqualsSign)||(LA227_20>=LessThanSignLessThanSignEqualsSign && LA227_20<=EqualsSignEqualsSign)||LA227_20==GreaterThanSignEqualsSign||(LA227_20>=CircumflexAccentEqualsSign && LA227_20<=VerticalLineVerticalLine)||(LA227_20>=PercentSign && LA227_20<=QuestionMark)||(LA227_20>=LeftSquareBracket && LA227_20<=RightCurlyBracket)||LA227_20==RULE_IDENTIFIER||(LA227_20>=RULE_TEMPLATE_HEAD && LA227_20<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_20==RULE_ML_COMMENT||LA227_20==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_20==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_20==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_20);
@@ -73151,7 +73151,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_24==EOF||(LA227_24>=Intersection && LA227_24<=ExclamationMarkEqualsSignEqualsSign)||(LA227_24>=LessThanSignLessThanSignEqualsSign && LA227_24<=EqualsSignEqualsSign)||LA227_24==GreaterThanSignEqualsSign||(LA227_24>=CircumflexAccentEqualsSign && LA227_24<=VerticalLineVerticalLine)||(LA227_24>=PercentSign && LA227_24<=QuestionMark)||(LA227_24>=LeftSquareBracket && LA227_24<=RightCurlyBracket)||LA227_24==RULE_IDENTIFIER||(LA227_24>=RULE_TEMPLATE_HEAD && LA227_24<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_24==RULE_ML_COMMENT||LA227_24==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_24==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_24==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_24);
@@ -73166,7 +73166,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_28==EOF||(LA227_28>=Intersection && LA227_28<=ExclamationMarkEqualsSignEqualsSign)||(LA227_28>=LessThanSignLessThanSignEqualsSign && LA227_28<=EqualsSignEqualsSign)||LA227_28==GreaterThanSignEqualsSign||(LA227_28>=CircumflexAccentEqualsSign && LA227_28<=VerticalLineVerticalLine)||(LA227_28>=PercentSign && LA227_28<=QuestionMark)||(LA227_28>=LeftSquareBracket && LA227_28<=RightCurlyBracket)||LA227_28==RULE_IDENTIFIER||(LA227_28>=RULE_TEMPLATE_HEAD && LA227_28<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_28==RULE_ML_COMMENT||LA227_28==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_28==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_28==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_28);
@@ -73179,7 +73179,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index227_2 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA227_2==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        if ( (LA227_2==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                         else if ( (LA227_2==EOF||(LA227_2>=Intersection && LA227_2<=ExclamationMarkEqualsSignEqualsSign)||(LA227_2>=LessThanSignLessThanSignEqualsSign && LA227_2<=EqualsSignEqualsSign)||LA227_2==GreaterThanSignEqualsSign||(LA227_2>=CircumflexAccentEqualsSign && LA227_2<=VerticalLineVerticalLine)||(LA227_2>=PercentSign && LA227_2<=QuestionMark)||(LA227_2>=LeftSquareBracket && LA227_2<=RightCurlyBracket)||LA227_2==RULE_IDENTIFIER||(LA227_2>=RULE_TEMPLATE_HEAD && LA227_2<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_2==RULE_ML_COMMENT||LA227_2==RULE_EOL) ) {s = 29;}
 
@@ -73196,7 +73196,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_5==EOF||(LA227_5>=Intersection && LA227_5<=ExclamationMarkEqualsSignEqualsSign)||(LA227_5>=LessThanSignLessThanSignEqualsSign && LA227_5<=EqualsSignEqualsSign)||LA227_5==GreaterThanSignEqualsSign||(LA227_5>=CircumflexAccentEqualsSign && LA227_5<=VerticalLineVerticalLine)||(LA227_5>=PercentSign && LA227_5<=QuestionMark)||(LA227_5>=LeftSquareBracket && LA227_5<=RightCurlyBracket)||LA227_5==RULE_IDENTIFIER||(LA227_5>=RULE_TEMPLATE_HEAD && LA227_5<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_5==RULE_ML_COMMENT||LA227_5==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_5==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_5==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_5);
@@ -73211,7 +73211,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_9==EOF||(LA227_9>=Intersection && LA227_9<=ExclamationMarkEqualsSignEqualsSign)||(LA227_9>=LessThanSignLessThanSignEqualsSign && LA227_9<=EqualsSignEqualsSign)||LA227_9==GreaterThanSignEqualsSign||(LA227_9>=CircumflexAccentEqualsSign && LA227_9<=VerticalLineVerticalLine)||(LA227_9>=PercentSign && LA227_9<=QuestionMark)||(LA227_9>=LeftSquareBracket && LA227_9<=RightCurlyBracket)||LA227_9==RULE_IDENTIFIER||(LA227_9>=RULE_TEMPLATE_HEAD && LA227_9<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_9==RULE_ML_COMMENT||LA227_9==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_9==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_9==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_9);
@@ -73226,7 +73226,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_13==EOF||(LA227_13>=Intersection && LA227_13<=ExclamationMarkEqualsSignEqualsSign)||(LA227_13>=LessThanSignLessThanSignEqualsSign && LA227_13<=EqualsSignEqualsSign)||LA227_13==GreaterThanSignEqualsSign||(LA227_13>=CircumflexAccentEqualsSign && LA227_13<=VerticalLineVerticalLine)||(LA227_13>=PercentSign && LA227_13<=QuestionMark)||(LA227_13>=LeftSquareBracket && LA227_13<=RightCurlyBracket)||LA227_13==RULE_IDENTIFIER||(LA227_13>=RULE_TEMPLATE_HEAD && LA227_13<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_13==RULE_ML_COMMENT||LA227_13==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_13==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_13==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_13);
@@ -73241,7 +73241,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_17==EOF||(LA227_17>=Intersection && LA227_17<=ExclamationMarkEqualsSignEqualsSign)||(LA227_17>=LessThanSignLessThanSignEqualsSign && LA227_17<=EqualsSignEqualsSign)||LA227_17==GreaterThanSignEqualsSign||(LA227_17>=CircumflexAccentEqualsSign && LA227_17<=VerticalLineVerticalLine)||(LA227_17>=PercentSign && LA227_17<=QuestionMark)||(LA227_17>=LeftSquareBracket && LA227_17<=RightCurlyBracket)||LA227_17==RULE_IDENTIFIER||(LA227_17>=RULE_TEMPLATE_HEAD && LA227_17<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_17==RULE_ML_COMMENT||LA227_17==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_17==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_17==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_17);
@@ -73256,7 +73256,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_21==EOF||(LA227_21>=Intersection && LA227_21<=ExclamationMarkEqualsSignEqualsSign)||(LA227_21>=LessThanSignLessThanSignEqualsSign && LA227_21<=EqualsSignEqualsSign)||LA227_21==GreaterThanSignEqualsSign||(LA227_21>=CircumflexAccentEqualsSign && LA227_21<=VerticalLineVerticalLine)||(LA227_21>=PercentSign && LA227_21<=QuestionMark)||(LA227_21>=LeftSquareBracket && LA227_21<=RightCurlyBracket)||LA227_21==RULE_IDENTIFIER||(LA227_21>=RULE_TEMPLATE_HEAD && LA227_21<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_21==RULE_ML_COMMENT||LA227_21==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_21==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_21==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_21);
@@ -73271,7 +73271,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_25==EOF||(LA227_25>=Intersection && LA227_25<=ExclamationMarkEqualsSignEqualsSign)||(LA227_25>=LessThanSignLessThanSignEqualsSign && LA227_25<=EqualsSignEqualsSign)||LA227_25==GreaterThanSignEqualsSign||(LA227_25>=CircumflexAccentEqualsSign && LA227_25<=VerticalLineVerticalLine)||(LA227_25>=PercentSign && LA227_25<=QuestionMark)||(LA227_25>=LeftSquareBracket && LA227_25<=RightCurlyBracket)||LA227_25==RULE_IDENTIFIER||(LA227_25>=RULE_TEMPLATE_HEAD && LA227_25<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_25==RULE_ML_COMMENT||LA227_25==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_25==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_25==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_25);
@@ -73286,7 +73286,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA227_1==EOF||(LA227_1>=Intersection && LA227_1<=ExclamationMarkEqualsSignEqualsSign)||(LA227_1>=LessThanSignLessThanSignEqualsSign && LA227_1<=EqualsSignEqualsSign)||LA227_1==GreaterThanSignEqualsSign||(LA227_1>=CircumflexAccentEqualsSign && LA227_1<=VerticalLineVerticalLine)||(LA227_1>=PercentSign && LA227_1<=QuestionMark)||(LA227_1>=LeftSquareBracket && LA227_1<=RightCurlyBracket)||LA227_1==RULE_IDENTIFIER||(LA227_1>=RULE_TEMPLATE_HEAD && LA227_1<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA227_1==RULE_ML_COMMENT||LA227_1==RULE_EOL) ) {s = 29;}
 
-                        else if ( (LA227_1==RULE_VERSION_REQUEST) && (synpred127_InternalN4JSParser())) {s = 30;}
+                        else if ( (LA227_1==RULE_VERSION) && (synpred127_InternalN4JSParser())) {s = 30;}
 
                          
                         input.seek(index227_1);
@@ -73373,7 +73373,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_1==EOF||LA228_1==Instanceof||LA228_1==ExclamationMarkEqualsSignEqualsSign||(LA228_1>=LessThanSignLessThanSignEqualsSign && LA228_1<=EqualsSignEqualsSignEqualsSign)||(LA228_1>=ExclamationMarkEqualsSign && LA228_1<=EqualsSignEqualsSign)||LA228_1==GreaterThanSignEqualsSign||(LA228_1>=CircumflexAccentEqualsSign && LA228_1<=As)||(LA228_1>=In && LA228_1<=VerticalLineVerticalLine)||(LA228_1>=PercentSign && LA228_1<=QuestionMark)||(LA228_1>=LeftSquareBracket && LA228_1<=RightCurlyBracket)||(LA228_1>=RULE_TEMPLATE_HEAD && LA228_1<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_1==RULE_ML_COMMENT||LA228_1==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_1==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_1==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_1);
@@ -73386,7 +73386,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index228_5 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA228_5==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        if ( (LA228_5==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                         else if ( (LA228_5==EOF||LA228_5==Instanceof||LA228_5==ExclamationMarkEqualsSignEqualsSign||(LA228_5>=LessThanSignLessThanSignEqualsSign && LA228_5<=EqualsSignEqualsSignEqualsSign)||(LA228_5>=ExclamationMarkEqualsSign && LA228_5<=EqualsSignEqualsSign)||LA228_5==GreaterThanSignEqualsSign||(LA228_5>=CircumflexAccentEqualsSign && LA228_5<=As)||(LA228_5>=In && LA228_5<=VerticalLineVerticalLine)||(LA228_5>=PercentSign && LA228_5<=QuestionMark)||(LA228_5>=LeftSquareBracket && LA228_5<=RightCurlyBracket)||(LA228_5>=RULE_TEMPLATE_HEAD && LA228_5<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_5==RULE_ML_COMMENT||LA228_5==RULE_EOL) ) {s = 28;}
 
@@ -73401,7 +73401,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index228_9 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA228_9==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        if ( (LA228_9==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                         else if ( (LA228_9==EOF||LA228_9==Instanceof||LA228_9==ExclamationMarkEqualsSignEqualsSign||(LA228_9>=LessThanSignLessThanSignEqualsSign && LA228_9<=EqualsSignEqualsSignEqualsSign)||(LA228_9>=ExclamationMarkEqualsSign && LA228_9<=EqualsSignEqualsSign)||LA228_9==GreaterThanSignEqualsSign||(LA228_9>=CircumflexAccentEqualsSign && LA228_9<=As)||(LA228_9>=In && LA228_9<=VerticalLineVerticalLine)||(LA228_9>=PercentSign && LA228_9<=QuestionMark)||(LA228_9>=LeftSquareBracket && LA228_9<=RightCurlyBracket)||(LA228_9>=RULE_TEMPLATE_HEAD && LA228_9<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_9==RULE_ML_COMMENT||LA228_9==RULE_EOL) ) {s = 28;}
 
@@ -73416,7 +73416,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index228_13 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA228_13==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        if ( (LA228_13==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                         else if ( (LA228_13==EOF||LA228_13==Instanceof||LA228_13==ExclamationMarkEqualsSignEqualsSign||(LA228_13>=LessThanSignLessThanSignEqualsSign && LA228_13<=EqualsSignEqualsSignEqualsSign)||(LA228_13>=ExclamationMarkEqualsSign && LA228_13<=EqualsSignEqualsSign)||LA228_13==GreaterThanSignEqualsSign||(LA228_13>=CircumflexAccentEqualsSign && LA228_13<=As)||(LA228_13>=In && LA228_13<=VerticalLineVerticalLine)||(LA228_13>=PercentSign && LA228_13<=QuestionMark)||(LA228_13>=LeftSquareBracket && LA228_13<=RightCurlyBracket)||(LA228_13>=RULE_TEMPLATE_HEAD && LA228_13<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_13==RULE_ML_COMMENT||LA228_13==RULE_EOL) ) {s = 28;}
 
@@ -73431,7 +73431,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index228_17 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA228_17==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        if ( (LA228_17==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                         else if ( (LA228_17==EOF||LA228_17==Instanceof||LA228_17==ExclamationMarkEqualsSignEqualsSign||(LA228_17>=LessThanSignLessThanSignEqualsSign && LA228_17<=EqualsSignEqualsSignEqualsSign)||(LA228_17>=ExclamationMarkEqualsSign && LA228_17<=EqualsSignEqualsSign)||LA228_17==GreaterThanSignEqualsSign||(LA228_17>=CircumflexAccentEqualsSign && LA228_17<=As)||(LA228_17>=In && LA228_17<=VerticalLineVerticalLine)||(LA228_17>=PercentSign && LA228_17<=QuestionMark)||(LA228_17>=LeftSquareBracket && LA228_17<=RightCurlyBracket)||(LA228_17>=RULE_TEMPLATE_HEAD && LA228_17<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_17==RULE_ML_COMMENT||LA228_17==RULE_EOL) ) {s = 28;}
 
@@ -73446,7 +73446,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index228_21 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA228_21==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        if ( (LA228_21==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                         else if ( (LA228_21==EOF||LA228_21==Instanceof||LA228_21==ExclamationMarkEqualsSignEqualsSign||(LA228_21>=LessThanSignLessThanSignEqualsSign && LA228_21<=EqualsSignEqualsSignEqualsSign)||(LA228_21>=ExclamationMarkEqualsSign && LA228_21<=EqualsSignEqualsSign)||LA228_21==GreaterThanSignEqualsSign||(LA228_21>=CircumflexAccentEqualsSign && LA228_21<=As)||(LA228_21>=In && LA228_21<=VerticalLineVerticalLine)||(LA228_21>=PercentSign && LA228_21<=QuestionMark)||(LA228_21>=LeftSquareBracket && LA228_21<=RightCurlyBracket)||(LA228_21>=RULE_TEMPLATE_HEAD && LA228_21<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_21==RULE_ML_COMMENT||LA228_21==RULE_EOL) ) {s = 28;}
 
@@ -73461,7 +73461,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index228_25 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA228_25==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        if ( (LA228_25==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                         else if ( (LA228_25==EOF||LA228_25==Instanceof||LA228_25==ExclamationMarkEqualsSignEqualsSign||(LA228_25>=LessThanSignLessThanSignEqualsSign && LA228_25<=EqualsSignEqualsSignEqualsSign)||(LA228_25>=ExclamationMarkEqualsSign && LA228_25<=EqualsSignEqualsSign)||LA228_25==GreaterThanSignEqualsSign||(LA228_25>=CircumflexAccentEqualsSign && LA228_25<=As)||(LA228_25>=In && LA228_25<=VerticalLineVerticalLine)||(LA228_25>=PercentSign && LA228_25<=QuestionMark)||(LA228_25>=LeftSquareBracket && LA228_25<=RightCurlyBracket)||(LA228_25>=RULE_TEMPLATE_HEAD && LA228_25<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_25==RULE_ML_COMMENT||LA228_25==RULE_EOL) ) {s = 28;}
 
@@ -73478,7 +73478,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_4==EOF||LA228_4==Instanceof||LA228_4==ExclamationMarkEqualsSignEqualsSign||(LA228_4>=LessThanSignLessThanSignEqualsSign && LA228_4<=EqualsSignEqualsSignEqualsSign)||(LA228_4>=ExclamationMarkEqualsSign && LA228_4<=EqualsSignEqualsSign)||LA228_4==GreaterThanSignEqualsSign||(LA228_4>=CircumflexAccentEqualsSign && LA228_4<=As)||(LA228_4>=In && LA228_4<=VerticalLineVerticalLine)||(LA228_4>=PercentSign && LA228_4<=QuestionMark)||(LA228_4>=LeftSquareBracket && LA228_4<=RightCurlyBracket)||(LA228_4>=RULE_TEMPLATE_HEAD && LA228_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_4==RULE_ML_COMMENT||LA228_4==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_4==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_4==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_4);
@@ -73493,7 +73493,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_8==EOF||LA228_8==Instanceof||LA228_8==ExclamationMarkEqualsSignEqualsSign||(LA228_8>=LessThanSignLessThanSignEqualsSign && LA228_8<=EqualsSignEqualsSignEqualsSign)||(LA228_8>=ExclamationMarkEqualsSign && LA228_8<=EqualsSignEqualsSign)||LA228_8==GreaterThanSignEqualsSign||(LA228_8>=CircumflexAccentEqualsSign && LA228_8<=As)||(LA228_8>=In && LA228_8<=VerticalLineVerticalLine)||(LA228_8>=PercentSign && LA228_8<=QuestionMark)||(LA228_8>=LeftSquareBracket && LA228_8<=RightCurlyBracket)||(LA228_8>=RULE_TEMPLATE_HEAD && LA228_8<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_8==RULE_ML_COMMENT||LA228_8==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_8==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_8==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_8);
@@ -73508,7 +73508,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_12==EOF||LA228_12==Instanceof||LA228_12==ExclamationMarkEqualsSignEqualsSign||(LA228_12>=LessThanSignLessThanSignEqualsSign && LA228_12<=EqualsSignEqualsSignEqualsSign)||(LA228_12>=ExclamationMarkEqualsSign && LA228_12<=EqualsSignEqualsSign)||LA228_12==GreaterThanSignEqualsSign||(LA228_12>=CircumflexAccentEqualsSign && LA228_12<=As)||(LA228_12>=In && LA228_12<=VerticalLineVerticalLine)||(LA228_12>=PercentSign && LA228_12<=QuestionMark)||(LA228_12>=LeftSquareBracket && LA228_12<=RightCurlyBracket)||(LA228_12>=RULE_TEMPLATE_HEAD && LA228_12<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_12==RULE_ML_COMMENT||LA228_12==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_12==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_12==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_12);
@@ -73523,7 +73523,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_16==EOF||LA228_16==Instanceof||LA228_16==ExclamationMarkEqualsSignEqualsSign||(LA228_16>=LessThanSignLessThanSignEqualsSign && LA228_16<=EqualsSignEqualsSignEqualsSign)||(LA228_16>=ExclamationMarkEqualsSign && LA228_16<=EqualsSignEqualsSign)||LA228_16==GreaterThanSignEqualsSign||(LA228_16>=CircumflexAccentEqualsSign && LA228_16<=As)||(LA228_16>=In && LA228_16<=VerticalLineVerticalLine)||(LA228_16>=PercentSign && LA228_16<=QuestionMark)||(LA228_16>=LeftSquareBracket && LA228_16<=RightCurlyBracket)||(LA228_16>=RULE_TEMPLATE_HEAD && LA228_16<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_16==RULE_ML_COMMENT||LA228_16==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_16==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_16==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_16);
@@ -73538,7 +73538,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_20==EOF||LA228_20==Instanceof||LA228_20==ExclamationMarkEqualsSignEqualsSign||(LA228_20>=LessThanSignLessThanSignEqualsSign && LA228_20<=EqualsSignEqualsSignEqualsSign)||(LA228_20>=ExclamationMarkEqualsSign && LA228_20<=EqualsSignEqualsSign)||LA228_20==GreaterThanSignEqualsSign||(LA228_20>=CircumflexAccentEqualsSign && LA228_20<=As)||(LA228_20>=In && LA228_20<=VerticalLineVerticalLine)||(LA228_20>=PercentSign && LA228_20<=QuestionMark)||(LA228_20>=LeftSquareBracket && LA228_20<=RightCurlyBracket)||(LA228_20>=RULE_TEMPLATE_HEAD && LA228_20<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_20==RULE_ML_COMMENT||LA228_20==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_20==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_20==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_20);
@@ -73553,7 +73553,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_24==EOF||LA228_24==Instanceof||LA228_24==ExclamationMarkEqualsSignEqualsSign||(LA228_24>=LessThanSignLessThanSignEqualsSign && LA228_24<=EqualsSignEqualsSignEqualsSign)||(LA228_24>=ExclamationMarkEqualsSign && LA228_24<=EqualsSignEqualsSign)||LA228_24==GreaterThanSignEqualsSign||(LA228_24>=CircumflexAccentEqualsSign && LA228_24<=As)||(LA228_24>=In && LA228_24<=VerticalLineVerticalLine)||(LA228_24>=PercentSign && LA228_24<=QuestionMark)||(LA228_24>=LeftSquareBracket && LA228_24<=RightCurlyBracket)||(LA228_24>=RULE_TEMPLATE_HEAD && LA228_24<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_24==RULE_ML_COMMENT||LA228_24==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_24==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_24==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_24);
@@ -73568,7 +73568,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_3==EOF||LA228_3==Instanceof||LA228_3==ExclamationMarkEqualsSignEqualsSign||(LA228_3>=LessThanSignLessThanSignEqualsSign && LA228_3<=EqualsSignEqualsSignEqualsSign)||(LA228_3>=ExclamationMarkEqualsSign && LA228_3<=EqualsSignEqualsSign)||LA228_3==GreaterThanSignEqualsSign||(LA228_3>=CircumflexAccentEqualsSign && LA228_3<=As)||(LA228_3>=In && LA228_3<=VerticalLineVerticalLine)||(LA228_3>=PercentSign && LA228_3<=QuestionMark)||(LA228_3>=LeftSquareBracket && LA228_3<=RightCurlyBracket)||(LA228_3>=RULE_TEMPLATE_HEAD && LA228_3<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_3==RULE_ML_COMMENT||LA228_3==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_3==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_3==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_3);
@@ -73583,7 +73583,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_7==EOF||LA228_7==Instanceof||LA228_7==ExclamationMarkEqualsSignEqualsSign||(LA228_7>=LessThanSignLessThanSignEqualsSign && LA228_7<=EqualsSignEqualsSignEqualsSign)||(LA228_7>=ExclamationMarkEqualsSign && LA228_7<=EqualsSignEqualsSign)||LA228_7==GreaterThanSignEqualsSign||(LA228_7>=CircumflexAccentEqualsSign && LA228_7<=As)||(LA228_7>=In && LA228_7<=VerticalLineVerticalLine)||(LA228_7>=PercentSign && LA228_7<=QuestionMark)||(LA228_7>=LeftSquareBracket && LA228_7<=RightCurlyBracket)||(LA228_7>=RULE_TEMPLATE_HEAD && LA228_7<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_7==RULE_ML_COMMENT||LA228_7==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_7==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_7==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_7);
@@ -73598,7 +73598,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_11==EOF||LA228_11==Instanceof||LA228_11==ExclamationMarkEqualsSignEqualsSign||(LA228_11>=LessThanSignLessThanSignEqualsSign && LA228_11<=EqualsSignEqualsSignEqualsSign)||(LA228_11>=ExclamationMarkEqualsSign && LA228_11<=EqualsSignEqualsSign)||LA228_11==GreaterThanSignEqualsSign||(LA228_11>=CircumflexAccentEqualsSign && LA228_11<=As)||(LA228_11>=In && LA228_11<=VerticalLineVerticalLine)||(LA228_11>=PercentSign && LA228_11<=QuestionMark)||(LA228_11>=LeftSquareBracket && LA228_11<=RightCurlyBracket)||(LA228_11>=RULE_TEMPLATE_HEAD && LA228_11<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_11==RULE_ML_COMMENT||LA228_11==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_11==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_11==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_11);
@@ -73613,7 +73613,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_15==EOF||LA228_15==Instanceof||LA228_15==ExclamationMarkEqualsSignEqualsSign||(LA228_15>=LessThanSignLessThanSignEqualsSign && LA228_15<=EqualsSignEqualsSignEqualsSign)||(LA228_15>=ExclamationMarkEqualsSign && LA228_15<=EqualsSignEqualsSign)||LA228_15==GreaterThanSignEqualsSign||(LA228_15>=CircumflexAccentEqualsSign && LA228_15<=As)||(LA228_15>=In && LA228_15<=VerticalLineVerticalLine)||(LA228_15>=PercentSign && LA228_15<=QuestionMark)||(LA228_15>=LeftSquareBracket && LA228_15<=RightCurlyBracket)||(LA228_15>=RULE_TEMPLATE_HEAD && LA228_15<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_15==RULE_ML_COMMENT||LA228_15==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_15==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_15==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_15);
@@ -73628,7 +73628,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_19==EOF||LA228_19==Instanceof||LA228_19==ExclamationMarkEqualsSignEqualsSign||(LA228_19>=LessThanSignLessThanSignEqualsSign && LA228_19<=EqualsSignEqualsSignEqualsSign)||(LA228_19>=ExclamationMarkEqualsSign && LA228_19<=EqualsSignEqualsSign)||LA228_19==GreaterThanSignEqualsSign||(LA228_19>=CircumflexAccentEqualsSign && LA228_19<=As)||(LA228_19>=In && LA228_19<=VerticalLineVerticalLine)||(LA228_19>=PercentSign && LA228_19<=QuestionMark)||(LA228_19>=LeftSquareBracket && LA228_19<=RightCurlyBracket)||(LA228_19>=RULE_TEMPLATE_HEAD && LA228_19<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_19==RULE_ML_COMMENT||LA228_19==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_19==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_19==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_19);
@@ -73643,7 +73643,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_23==EOF||LA228_23==Instanceof||LA228_23==ExclamationMarkEqualsSignEqualsSign||(LA228_23>=LessThanSignLessThanSignEqualsSign && LA228_23<=EqualsSignEqualsSignEqualsSign)||(LA228_23>=ExclamationMarkEqualsSign && LA228_23<=EqualsSignEqualsSign)||LA228_23==GreaterThanSignEqualsSign||(LA228_23>=CircumflexAccentEqualsSign && LA228_23<=As)||(LA228_23>=In && LA228_23<=VerticalLineVerticalLine)||(LA228_23>=PercentSign && LA228_23<=QuestionMark)||(LA228_23>=LeftSquareBracket && LA228_23<=RightCurlyBracket)||(LA228_23>=RULE_TEMPLATE_HEAD && LA228_23<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_23==RULE_ML_COMMENT||LA228_23==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_23==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_23==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_23);
@@ -73658,7 +73658,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_27==EOF||LA228_27==Instanceof||LA228_27==ExclamationMarkEqualsSignEqualsSign||(LA228_27>=LessThanSignLessThanSignEqualsSign && LA228_27<=EqualsSignEqualsSignEqualsSign)||(LA228_27>=ExclamationMarkEqualsSign && LA228_27<=EqualsSignEqualsSign)||LA228_27==GreaterThanSignEqualsSign||(LA228_27>=CircumflexAccentEqualsSign && LA228_27<=As)||(LA228_27>=In && LA228_27<=VerticalLineVerticalLine)||(LA228_27>=PercentSign && LA228_27<=QuestionMark)||(LA228_27>=LeftSquareBracket && LA228_27<=RightCurlyBracket)||(LA228_27>=RULE_TEMPLATE_HEAD && LA228_27<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_27==RULE_ML_COMMENT||LA228_27==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_27==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_27==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_27);
@@ -73673,7 +73673,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_2==EOF||LA228_2==Instanceof||LA228_2==ExclamationMarkEqualsSignEqualsSign||(LA228_2>=LessThanSignLessThanSignEqualsSign && LA228_2<=EqualsSignEqualsSignEqualsSign)||(LA228_2>=ExclamationMarkEqualsSign && LA228_2<=EqualsSignEqualsSign)||LA228_2==GreaterThanSignEqualsSign||(LA228_2>=CircumflexAccentEqualsSign && LA228_2<=As)||(LA228_2>=In && LA228_2<=VerticalLineVerticalLine)||(LA228_2>=PercentSign && LA228_2<=QuestionMark)||(LA228_2>=LeftSquareBracket && LA228_2<=RightCurlyBracket)||(LA228_2>=RULE_TEMPLATE_HEAD && LA228_2<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_2==RULE_ML_COMMENT||LA228_2==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_2==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_2==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_2);
@@ -73688,7 +73688,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_6==EOF||LA228_6==Instanceof||LA228_6==ExclamationMarkEqualsSignEqualsSign||(LA228_6>=LessThanSignLessThanSignEqualsSign && LA228_6<=EqualsSignEqualsSignEqualsSign)||(LA228_6>=ExclamationMarkEqualsSign && LA228_6<=EqualsSignEqualsSign)||LA228_6==GreaterThanSignEqualsSign||(LA228_6>=CircumflexAccentEqualsSign && LA228_6<=As)||(LA228_6>=In && LA228_6<=VerticalLineVerticalLine)||(LA228_6>=PercentSign && LA228_6<=QuestionMark)||(LA228_6>=LeftSquareBracket && LA228_6<=RightCurlyBracket)||(LA228_6>=RULE_TEMPLATE_HEAD && LA228_6<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_6==RULE_ML_COMMENT||LA228_6==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_6==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_6==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_6);
@@ -73703,7 +73703,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_10==EOF||LA228_10==Instanceof||LA228_10==ExclamationMarkEqualsSignEqualsSign||(LA228_10>=LessThanSignLessThanSignEqualsSign && LA228_10<=EqualsSignEqualsSignEqualsSign)||(LA228_10>=ExclamationMarkEqualsSign && LA228_10<=EqualsSignEqualsSign)||LA228_10==GreaterThanSignEqualsSign||(LA228_10>=CircumflexAccentEqualsSign && LA228_10<=As)||(LA228_10>=In && LA228_10<=VerticalLineVerticalLine)||(LA228_10>=PercentSign && LA228_10<=QuestionMark)||(LA228_10>=LeftSquareBracket && LA228_10<=RightCurlyBracket)||(LA228_10>=RULE_TEMPLATE_HEAD && LA228_10<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_10==RULE_ML_COMMENT||LA228_10==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_10==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_10==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_10);
@@ -73718,7 +73718,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_14==EOF||LA228_14==Instanceof||LA228_14==ExclamationMarkEqualsSignEqualsSign||(LA228_14>=LessThanSignLessThanSignEqualsSign && LA228_14<=EqualsSignEqualsSignEqualsSign)||(LA228_14>=ExclamationMarkEqualsSign && LA228_14<=EqualsSignEqualsSign)||LA228_14==GreaterThanSignEqualsSign||(LA228_14>=CircumflexAccentEqualsSign && LA228_14<=As)||(LA228_14>=In && LA228_14<=VerticalLineVerticalLine)||(LA228_14>=PercentSign && LA228_14<=QuestionMark)||(LA228_14>=LeftSquareBracket && LA228_14<=RightCurlyBracket)||(LA228_14>=RULE_TEMPLATE_HEAD && LA228_14<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_14==RULE_ML_COMMENT||LA228_14==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_14==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_14==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_14);
@@ -73733,7 +73733,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_18==EOF||LA228_18==Instanceof||LA228_18==ExclamationMarkEqualsSignEqualsSign||(LA228_18>=LessThanSignLessThanSignEqualsSign && LA228_18<=EqualsSignEqualsSignEqualsSign)||(LA228_18>=ExclamationMarkEqualsSign && LA228_18<=EqualsSignEqualsSign)||LA228_18==GreaterThanSignEqualsSign||(LA228_18>=CircumflexAccentEqualsSign && LA228_18<=As)||(LA228_18>=In && LA228_18<=VerticalLineVerticalLine)||(LA228_18>=PercentSign && LA228_18<=QuestionMark)||(LA228_18>=LeftSquareBracket && LA228_18<=RightCurlyBracket)||(LA228_18>=RULE_TEMPLATE_HEAD && LA228_18<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_18==RULE_ML_COMMENT||LA228_18==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_18==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_18==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_18);
@@ -73748,7 +73748,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_22==EOF||LA228_22==Instanceof||LA228_22==ExclamationMarkEqualsSignEqualsSign||(LA228_22>=LessThanSignLessThanSignEqualsSign && LA228_22<=EqualsSignEqualsSignEqualsSign)||(LA228_22>=ExclamationMarkEqualsSign && LA228_22<=EqualsSignEqualsSign)||LA228_22==GreaterThanSignEqualsSign||(LA228_22>=CircumflexAccentEqualsSign && LA228_22<=As)||(LA228_22>=In && LA228_22<=VerticalLineVerticalLine)||(LA228_22>=PercentSign && LA228_22<=QuestionMark)||(LA228_22>=LeftSquareBracket && LA228_22<=RightCurlyBracket)||(LA228_22>=RULE_TEMPLATE_HEAD && LA228_22<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_22==RULE_ML_COMMENT||LA228_22==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_22==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_22==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_22);
@@ -73763,7 +73763,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         s = -1;
                         if ( (LA228_26==EOF||LA228_26==Instanceof||LA228_26==ExclamationMarkEqualsSignEqualsSign||(LA228_26>=LessThanSignLessThanSignEqualsSign && LA228_26<=EqualsSignEqualsSignEqualsSign)||(LA228_26>=ExclamationMarkEqualsSign && LA228_26<=EqualsSignEqualsSign)||LA228_26==GreaterThanSignEqualsSign||(LA228_26>=CircumflexAccentEqualsSign && LA228_26<=As)||(LA228_26>=In && LA228_26<=VerticalLineVerticalLine)||(LA228_26>=PercentSign && LA228_26<=QuestionMark)||(LA228_26>=LeftSquareBracket && LA228_26<=RightCurlyBracket)||(LA228_26>=RULE_TEMPLATE_HEAD && LA228_26<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA228_26==RULE_ML_COMMENT||LA228_26==RULE_EOL) ) {s = 28;}
 
-                        else if ( (LA228_26==RULE_VERSION_REQUEST) && (synpred128_InternalN4JSParser())) {s = 29;}
+                        else if ( (LA228_26==RULE_VERSION) && (synpred128_InternalN4JSParser())) {s = 29;}
 
                          
                         input.seek(index228_26);
@@ -91291,7 +91291,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index582_20 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA582_20==EOF||LA582_20==Ampersand||LA582_20==RightParenthesis||(LA582_20>=PlusSign && LA582_20<=Comma)||(LA582_20>=LessThanSign && LA582_20<=EqualsSign)||LA582_20==QuestionMark||LA582_20==VerticalLine||LA582_20==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA582_20==EOF||LA582_20==Ampersand||LA582_20==RightParenthesis||(LA582_20>=PlusSign && LA582_20<=Comma)||(LA582_20>=LessThanSign && LA582_20<=EqualsSign)||LA582_20==QuestionMark||LA582_20==VerticalLine||LA582_20==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA582_20==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
@@ -91357,7 +91357,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index582_14 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA582_14==EOF||LA582_14==Ampersand||LA582_14==RightParenthesis||(LA582_14>=PlusSign && LA582_14<=Comma)||(LA582_14>=LessThanSign && LA582_14<=EqualsSign)||LA582_14==QuestionMark||LA582_14==VerticalLine||LA582_14==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA582_14==EOF||LA582_14==Ampersand||LA582_14==RightParenthesis||(LA582_14>=PlusSign && LA582_14<=Comma)||(LA582_14>=LessThanSign && LA582_14<=EqualsSign)||LA582_14==QuestionMark||LA582_14==VerticalLine||LA582_14==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA582_14==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
@@ -91372,7 +91372,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index582_1 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA582_1==EOF||LA582_1==Ampersand||LA582_1==RightParenthesis||(LA582_1>=PlusSign && LA582_1<=Comma)||LA582_1==FullStop||(LA582_1>=LessThanSign && LA582_1<=EqualsSign)||LA582_1==QuestionMark||LA582_1==VerticalLine||LA582_1==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA582_1==EOF||LA582_1==Ampersand||LA582_1==RightParenthesis||(LA582_1>=PlusSign && LA582_1<=Comma)||LA582_1==FullStop||(LA582_1>=LessThanSign && LA582_1<=EqualsSign)||LA582_1==QuestionMark||LA582_1==VerticalLine||LA582_1==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA582_1==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
@@ -91387,7 +91387,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index582_18 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA582_18==EOF||LA582_18==Ampersand||LA582_18==RightParenthesis||(LA582_18>=PlusSign && LA582_18<=Comma)||(LA582_18>=LessThanSign && LA582_18<=EqualsSign)||LA582_18==QuestionMark||LA582_18==VerticalLine||LA582_18==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA582_18==EOF||LA582_18==Ampersand||LA582_18==RightParenthesis||(LA582_18>=PlusSign && LA582_18<=Comma)||(LA582_18>=LessThanSign && LA582_18<=EqualsSign)||LA582_18==QuestionMark||LA582_18==VerticalLine||LA582_18==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA582_18==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
@@ -91447,7 +91447,7 @@ public class InternalN4JSParser extends AbstractInternalHighlightingAntlrParser 
                         int index582_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA582_19==EOF||LA582_19==Ampersand||LA582_19==RightParenthesis||(LA582_19>=PlusSign && LA582_19<=Comma)||(LA582_19>=LessThanSign && LA582_19<=EqualsSign)||LA582_19==QuestionMark||LA582_19==VerticalLine||LA582_19==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA582_19==EOF||LA582_19==Ampersand||LA582_19==RightParenthesis||(LA582_19>=PlusSign && LA582_19<=Comma)||(LA582_19>=LessThanSign && LA582_19<=EqualsSign)||LA582_19==QuestionMark||LA582_19==VerticalLine||LA582_19==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA582_19==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 

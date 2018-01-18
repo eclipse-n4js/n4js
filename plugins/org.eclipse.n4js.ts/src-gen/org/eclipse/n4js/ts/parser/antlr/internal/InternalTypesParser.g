@@ -4949,9 +4949,9 @@ ruleVersionRequest[EObject in_current]  returns [EObject current=in_current]
 }:
 	(
 		(
-			lv_requestedVersion_0_0=RULE_VERSION_REQUEST
+			lv_requestedVersion_0_0=RULE_VERSION
 			{
-				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0());
+				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0());
 			}
 			{
 				if ($current==null) {
@@ -4961,7 +4961,7 @@ ruleVersionRequest[EObject in_current]  returns [EObject current=in_current]
 					$current,
 					"requestedVersion",
 					lv_requestedVersion_0_0,
-					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
 			}
 		)
 	)

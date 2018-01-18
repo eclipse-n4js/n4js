@@ -247,8 +247,8 @@ public class ValueConverters extends AbstractDeclarativeValueConverterService {
 	/**
 	 * @return the registered value converter for the rule {@code VERSION_REQUEST}
 	 */
-	@ValueConverter(rule = "VERSION_REQUEST")
-	public IValueConverter<BigDecimal> VERSION_REQUEST() {
+	@ValueConverter(rule = "VERSION")
+	public IValueConverter<BigDecimal> VERSION() {
 		return versionRequestValueConverter;
 	}
 }

@@ -22,7 +22,7 @@ import org.eclipse.xtext.nodemodel.INode;
 import com.google.inject.Inject;
 
 /**
- * Converts Version Request '#INT' to an integer value (requested version).
+ * Converts a VERSION request '#INT' to the corresponding integer value.
  */
 public class VersionRequestValueConverter implements IValueConverter<BigDecimal> {
 

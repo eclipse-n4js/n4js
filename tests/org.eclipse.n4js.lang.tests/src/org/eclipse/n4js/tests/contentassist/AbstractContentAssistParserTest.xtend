@@ -300,7 +300,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			  req.'''.toNode
 		val followElements = getFollowElements(node, false)
 		val grammarElements = followElements.map [ grammarElement ].toSet
-		assertEquals(grammarElements.prettyPrint, 4, grammarElements.size)
+		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getRootStatementAccess().getAlternatives))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().getScriptElementsAssignment_2))
@@ -315,7 +315,7 @@ abstract class AbstractContentAssistParserTest extends Assert {
 			  req.'''.toNode
 		val followElements = getFollowElements(node, false)
 		val grammarElements = followElements.map [ grammarElement ].toSet
-		assertEquals(grammarElements.prettyPrint, 4, grammarElements.size)
+		assertEquals(grammarElements.prettyPrint, 3, grammarElements.size)
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getFunctionBodyAccess().getBodyAssignment_1_0))
 		assertTrue(grammarElements.prettyPrint, grammarElements.contains(grammarAccess.getScriptAccess().getScriptElementsAssignment_2))
 	}

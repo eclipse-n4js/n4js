@@ -19268,8 +19268,8 @@ ruleVersionDeclaration
 }:
 (
 	(
-		DeclaredVersionVERSION_REQUESTTerminalRuleCall_0=RULE_VERSION_REQUEST{
-			announce($DeclaredVersionVERSION_REQUESTTerminalRuleCall_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment());
+		DeclaredVersionVERSIONTerminalRuleCall_0=RULE_VERSION{
+			announce($DeclaredVersionVERSIONTerminalRuleCall_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionAssignment());
 		}
 	)
 )
@@ -20116,8 +20116,8 @@ ruleVersionRequest
 }:
 (
 	(
-		RequestedVersionVERSION_REQUESTTerminalRuleCall_0=RULE_VERSION_REQUEST{
-			announce($RequestedVersionVERSION_REQUESTTerminalRuleCall_0, grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment());
+		RequestedVersionVERSIONTerminalRuleCall_0=RULE_VERSION{
+			announce($RequestedVersionVERSIONTerminalRuleCall_0, grammarAccess.getVersionRequestAccess().getRequestedVersionAssignment());
 		}
 	)
 )

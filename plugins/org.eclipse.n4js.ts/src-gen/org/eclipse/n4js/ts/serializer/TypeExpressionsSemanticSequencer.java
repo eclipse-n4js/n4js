@@ -627,7 +627,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION_REQUEST 
+	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
 	 *         dynamic?='+'? 
@@ -665,7 +665,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION_REQUEST 
+	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember* 
 	 *         dynamic?='+'?
@@ -686,7 +686,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     (
 	 *         definedTypingStrategy=TypingStrategyUseSiteOperator 
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION_REQUEST 
+	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         astStructuralMembers+=TStructMember*
 	 *     )
@@ -836,7 +836,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 * Constraint:
 	 *     (
 	 *         declaredType=[Type|TypeReferenceName] 
-	 *         requestedVersion=VERSION_REQUEST 
+	 *         requestedVersion=VERSION 
 	 *         (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? 
 	 *         dynamic?='+'? 
 	 *         followedByQuestionMark?='?'?
@@ -864,7 +864,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeRefWithoutModifiers returns VersionedParameterizedTypeRef
 	 *
 	 * Constraint:
-	 *     (declaredType=[Type|TypeReferenceName] requestedVersion=VERSION_REQUEST (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? dynamic?='+'?)
+	 *     (declaredType=[Type|TypeReferenceName] requestedVersion=VERSION (typeArgs+=TypeArgument typeArgs+=TypeArgument*)? dynamic?='+'?)
 	 */
 	protected void sequence_TypeAndTypeArguments_TypeArguments_TypeRefWithoutModifiers_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -880,7 +880,7 @@ public class TypeExpressionsSemanticSequencer extends AbstractDelegatingSemantic
 	 *     TypeAndTypeArguments returns VersionedParameterizedTypeRef
 	 *
 	 * Constraint:
-	 *     (declaredType=[Type|TypeReferenceName] requestedVersion=VERSION_REQUEST (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?)
+	 *     (declaredType=[Type|TypeReferenceName] requestedVersion=VERSION (typeArgs+=TypeArgument typeArgs+=TypeArgument*)?)
 	 */
 	protected void sequence_TypeAndTypeArguments_TypeArguments_VersionRequest(ISerializationContext context, VersionedParameterizedTypeRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

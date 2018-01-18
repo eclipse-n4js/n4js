@@ -31,6 +31,7 @@ public class InternalN4JSLexer extends Lexer {
     public static final int False=37;
     public static final int LessThanSign=103;
     public static final int LeftParenthesis=93;
+    public static final int RULE_VERSION=150;
     public static final int RULE_TEMPLATE_LITERAL_CHAR=139;
     public static final int Throw=39;
     public static final int Private=20;
@@ -140,7 +141,6 @@ public class InternalN4JSLexer extends Lexer {
     public static final int RULE_LEGACY_OCTAL_INT=123;
     public static final int RULE_DOUBLE_STRING_CHAR=128;
     public static final int EqualsSignEqualsSignEqualsSign=57;
-    public static final int RULE_VERSION_REQUEST=150;
     public static final int RULE_TEMPLATE_END=144;
     public static final int This_1=49;
     public static final int RULE_NO_LINE_TERMINATOR=146;
@@ -16083,9 +16083,9 @@ public class InternalN4JSLexer extends Lexer {
         finally {
         }
     }
-    public final void mRULE_VERSION_REQUEST() throws RecognitionException {
+    public final void mRULE_VERSION() throws RecognitionException {
         try {
-            int _type = RULE_VERSION_REQUEST;
+            int _type = RULE_VERSION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
             {
             match('#'); 
@@ -17826,7 +17826,7 @@ public class InternalN4JSLexer extends Lexer {
                 break;
             case 126 :
                 {
-                mRULE_VERSION_REQUEST(); 
+                mRULE_VERSION(); 
 
                 }
                 break;
@@ -20094,7 +20094,7 @@ public class InternalN4JSLexer extends Lexer {
             this.transition = DFA409_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( Intersection | Constructor | Implements | Instanceof | Promisify | Interface | Migration | Protected | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Private | Project | Delete | Export | Import | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | ExclamationMarkEqualsSignEqualsSign | FullStopFullStopFullStop | LessThanSignLessThanSignEqualsSign | EqualsSignEqualsSignEqualsSign | For | Get | Let | New | Out | Set | Try | Var | ExclamationMarkEqualsSign | PercentSignEqualsSign | AmpersandAmpersand | AmpersandEqualsSign | AsteriskEqualsSign | PlusSignPlusSign | PlusSignEqualsSign | HyphenMinusHyphenMinus | HyphenMinusEqualsSign | SolidusEqualsSign | LessThanSignLessThanSign | LessThanSignEqualsSign | EqualsSignEqualsSign | EqualsSignGreaterThanSign | GreaterThanSignEqualsSign | CommercialAtCommercialAt | CircumflexAccentEqualsSign | As | Do | If | In | Of | VerticalLineEqualsSign | VerticalLineVerticalLine | ExclamationMark | PercentSign | Ampersand | LeftParenthesis | RightParenthesis | Asterisk | PlusSign | Comma | HyphenMinus | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | CircumflexAccent | LeftCurlyBracket | VerticalLine | RightCurlyBracket | Tilde | RULE_DOUBLE | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_REGEX_TAIL | RULE_TEMPLATE_HEAD | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_MIDDLE | RULE_TEMPLATE_END | RULE_NO_LINE_TERMINATOR | RULE_INCOMPLETE_ASYNC_ARROW | RULE_VERSION_REQUEST | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT );";
+            return "1:1: Tokens : ( Intersection | Constructor | Implements | Instanceof | Promisify | Interface | Migration | Protected | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Private | Project | Delete | Export | Import | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | ExclamationMarkEqualsSignEqualsSign | FullStopFullStopFullStop | LessThanSignLessThanSignEqualsSign | EqualsSignEqualsSignEqualsSign | For | Get | Let | New | Out | Set | Try | Var | ExclamationMarkEqualsSign | PercentSignEqualsSign | AmpersandAmpersand | AmpersandEqualsSign | AsteriskEqualsSign | PlusSignPlusSign | PlusSignEqualsSign | HyphenMinusHyphenMinus | HyphenMinusEqualsSign | SolidusEqualsSign | LessThanSignLessThanSign | LessThanSignEqualsSign | EqualsSignEqualsSign | EqualsSignGreaterThanSign | GreaterThanSignEqualsSign | CommercialAtCommercialAt | CircumflexAccentEqualsSign | As | Do | If | In | Of | VerticalLineEqualsSign | VerticalLineVerticalLine | ExclamationMark | PercentSign | Ampersand | LeftParenthesis | RightParenthesis | Asterisk | PlusSign | Comma | HyphenMinus | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | CircumflexAccent | LeftCurlyBracket | VerticalLine | RightCurlyBracket | Tilde | RULE_DOUBLE | RULE_HEX_INT | RULE_BINARY_INT | RULE_OCTAL_INT | RULE_LEGACY_OCTAL_INT | RULE_SCIENTIFIC_INT | RULE_STRING | RULE_REGEX_TAIL | RULE_TEMPLATE_HEAD | RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL | RULE_TEMPLATE_MIDDLE | RULE_TEMPLATE_END | RULE_NO_LINE_TERMINATOR | RULE_INCOMPLETE_ASYNC_ARROW | RULE_VERSION | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_INT | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT );";
         }
         public int specialStateTransition(int s, IntStream _input) throws NoViableAltException {
             IntStream input = _input;

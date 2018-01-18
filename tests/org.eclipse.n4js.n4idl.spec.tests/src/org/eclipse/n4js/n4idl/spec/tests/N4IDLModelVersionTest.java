@@ -31,7 +31,7 @@ import org.eclipse.xpect.xtext.lib.tests.ValidationTest;
 	ModelVersionXpectMethod.class,
 	ValidationTest.class,
 	OutputXpectMethod.class,
-	TypeXpectMethod.class
+	TypeXpectMethod.class,
 })
 
 @RunWith(XpectRunner.class)

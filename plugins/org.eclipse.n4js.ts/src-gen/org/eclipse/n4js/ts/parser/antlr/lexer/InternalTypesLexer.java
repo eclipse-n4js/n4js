@@ -32,6 +32,7 @@ public class InternalTypesLexer extends Lexer {
     public static final int False=47;
     public static final int LessThanSign=90;
     public static final int LeftParenthesis=82;
+    public static final int RULE_VERSION=106;
     public static final int Throw=50;
     public static final int VirtualBase=11;
     public static final int Private=29;
@@ -111,7 +112,6 @@ public class InternalTypesLexer extends Lexer {
     public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=120;
     public static final int Public=35;
     public static final int Do=77;
-    public static final int RULE_VERSION_REQUEST=106;
     public static final int This_1=60;
     public static final int RULE_DOT_DOT=125;
     public static final int External=23;
@@ -2306,16 +2306,16 @@ public class InternalTypesLexer extends Lexer {
     }
     // $ANTLR end "RULE_SINGLE_STRING_CHAR"
 
-    // $ANTLR start "RULE_VERSION_REQUEST"
-    public final void mRULE_VERSION_REQUEST() throws RecognitionException {
+    // $ANTLR start "RULE_VERSION"
+    public final void mRULE_VERSION() throws RecognitionException {
         try {
-            int _type = RULE_VERSION_REQUEST;
+            int _type = RULE_VERSION;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // InternalTypesLexer.g:217:22: ( '#' ( RULE_WS )* RULE_INT )
-            // InternalTypesLexer.g:217:24: '#' ( RULE_WS )* RULE_INT
+            // InternalTypesLexer.g:217:14: ( '#' ( RULE_WS )* RULE_INT )
+            // InternalTypesLexer.g:217:16: '#' ( RULE_WS )* RULE_INT
             {
             match('#'); 
-            // InternalTypesLexer.g:217:28: ( RULE_WS )*
+            // InternalTypesLexer.g:217:20: ( RULE_WS )*
             loop4:
             do {
                 int alt4=2;
@@ -2328,7 +2328,7 @@ public class InternalTypesLexer extends Lexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // InternalTypesLexer.g:217:28: RULE_WS
+            	    // InternalTypesLexer.g:217:20: RULE_WS
             	    {
             	    mRULE_WS(); 
 
@@ -2350,7 +2350,7 @@ public class InternalTypesLexer extends Lexer {
         finally {
         }
     }
-    // $ANTLR end "RULE_VERSION_REQUEST"
+    // $ANTLR end "RULE_VERSION"
 
     // $ANTLR start "RULE_STRUCTMODSUFFIX"
     public final void mRULE_STRUCTMODSUFFIX() throws RecognitionException {
@@ -3491,7 +3491,7 @@ public class InternalTypesLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // InternalTypesLexer.g:1:8: ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Migration | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_VERSION_REQUEST | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT )
+        // InternalTypesLexer.g:1:8: ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Migration | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_VERSION | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT )
         int alt23=105;
         alt23 = dfa23.predict(input);
         switch (alt23) {
@@ -4175,56 +4175,56 @@ public class InternalTypesLexer extends Lexer {
                 }
                 break;
             case 98 :
-                // InternalTypesLexer.g:1:863: RULE_VERSION_REQUEST
+                // InternalTypesLexer.g:1:863: RULE_VERSION
                 {
-                mRULE_VERSION_REQUEST(); 
+                mRULE_VERSION(); 
 
                 }
                 break;
             case 99 :
-                // InternalTypesLexer.g:1:884: RULE_STRUCTMODSUFFIX
+                // InternalTypesLexer.g:1:876: RULE_STRUCTMODSUFFIX
                 {
                 mRULE_STRUCTMODSUFFIX(); 
 
                 }
                 break;
             case 100 :
-                // InternalTypesLexer.g:1:905: RULE_IDENTIFIER
+                // InternalTypesLexer.g:1:897: RULE_IDENTIFIER
                 {
                 mRULE_IDENTIFIER(); 
 
                 }
                 break;
             case 101 :
-                // InternalTypesLexer.g:1:921: RULE_ML_COMMENT
+                // InternalTypesLexer.g:1:913: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
             case 102 :
-                // InternalTypesLexer.g:1:937: RULE_SL_COMMENT
+                // InternalTypesLexer.g:1:929: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
             case 103 :
-                // InternalTypesLexer.g:1:953: RULE_EOL
+                // InternalTypesLexer.g:1:945: RULE_EOL
                 {
                 mRULE_EOL(); 
 
                 }
                 break;
             case 104 :
-                // InternalTypesLexer.g:1:962: RULE_WS
+                // InternalTypesLexer.g:1:954: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
             case 105 :
-                // InternalTypesLexer.g:1:970: RULE_DOT_DOT
+                // InternalTypesLexer.g:1:962: RULE_DOT_DOT
                 {
                 mRULE_DOT_DOT(); 
 
@@ -4763,7 +4763,7 @@ public class InternalTypesLexer extends Lexer {
             this.transition = DFA23_transition;
         }
         public String getDescription() {
-            return "1:1: Tokens : ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Migration | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_VERSION_REQUEST | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT );";
+            return "1:1: Tokens : ( AssignmnentCompatible | ProtectedInternal | ProvidedByRuntime | PublicInternal | AutoboxedType | Intersection | Constructor | VirtualBase | Implements | Instanceof | Promisify | Interface | Migration | Primitive | Protected | Undefined | Abstract | Continue | Debugger | External | Function | Default | Extends | Finally | Indexed | Private | Project | Delete | Export | Import | Object | Public | Return | Static | Switch | Target | Typeof | Async | Await | Break | Catch | Class | Const | False | Final | Super | Throw | Union | While | Yield | This | Case | Else | Enum | From | Null | This_1 | True | Type | Void | With | FullStopFullStopFullStop | Any | For | Get | Let | New | Out | Set | Try | Var | EqualsSignGreaterThanSign | As | Do | If | In | Of | Ampersand | LeftParenthesis | RightParenthesis | PlusSign | Comma | FullStop | Solidus | Colon | Semicolon | LessThanSign | EqualsSign | GreaterThanSign | QuestionMark | CommercialAt | LeftSquareBracket | RightSquareBracket | LeftCurlyBracket | RightCurlyBracket | Tilde | RULE_STRING | RULE_VERSION | RULE_STRUCTMODSUFFIX | RULE_IDENTIFIER | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_EOL | RULE_WS | RULE_DOT_DOT );";
         }
     }
  

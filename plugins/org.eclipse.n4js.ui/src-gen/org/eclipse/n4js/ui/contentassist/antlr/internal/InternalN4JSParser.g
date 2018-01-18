@@ -83519,9 +83519,9 @@ rule__VersionDeclaration__DeclaredVersionAssignment
 	}
 :
 	(
-		{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0()); }
-		RULE_VERSION_REQUEST
-		{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0()); }
+		{ before(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSIONTerminalRuleCall_0()); }
+		RULE_VERSION
+		{ after(grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSIONTerminalRuleCall_0()); }
 	)
 ;
 finally {
@@ -84043,9 +84043,9 @@ rule__VersionRequest__RequestedVersionAssignment
 	}
 :
 	(
-		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
-		RULE_VERSION_REQUEST
-		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
+		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0()); }
+		RULE_VERSION
+		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0()); }
 	)
 ;
 finally {

@@ -8250,7 +8250,7 @@ ruleJSXPropertyAttribute:
 
 // Rule VersionDeclaration
 ruleVersionDeclaration:
-	RULE_VERSION_REQUEST
+	RULE_VERSION
 ;
 
 // Rule VersionedImportIdentifier
@@ -8563,7 +8563,7 @@ ruleTypeAndTypeArguments:
 
 // Rule VersionRequest
 ruleVersionRequest:
-	RULE_VERSION_REQUEST
+	RULE_VERSION
 ;
 
 // Rule TypeArguments
@@ -9092,7 +9092,7 @@ RULE_NO_LINE_TERMINATOR : '//5';
 
 RULE_INCOMPLETE_ASYNC_ARROW : '@=';
 
-RULE_VERSION_REQUEST : '#' RULE_WS* RULE_INT;
+RULE_VERSION : '#' RULE_WS* RULE_INT;
 
 RULE_STRUCTMODSUFFIX : ('r'|'i'|'w') '~';
 

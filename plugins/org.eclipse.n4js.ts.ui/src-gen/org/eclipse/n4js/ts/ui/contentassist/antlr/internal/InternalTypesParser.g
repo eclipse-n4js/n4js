@@ -15419,9 +15419,9 @@ rule__VersionRequest__RequestedVersionAssignment
 	}
 :
 	(
-		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
-		RULE_VERSION_REQUEST
-		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0()); }
+		{ before(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0()); }
+		RULE_VERSION
+		{ after(grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0()); }
 	)
 ;
 finally {

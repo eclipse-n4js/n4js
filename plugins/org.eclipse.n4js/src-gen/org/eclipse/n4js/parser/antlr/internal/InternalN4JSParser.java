@@ -33,7 +33,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Intersection", "Constructor", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Protected", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Private", "Project", "Delete", "Export", "Import", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "ExclamationMarkEqualsSignEqualsSign", "FullStopFullStopFullStop", "LessThanSignLessThanSignEqualsSign", "EqualsSignEqualsSignEqualsSign", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "ExclamationMarkEqualsSign", "PercentSignEqualsSign", "AmpersandAmpersand", "AmpersandEqualsSign", "AsteriskEqualsSign", "PlusSignPlusSign", "PlusSignEqualsSign", "HyphenMinusHyphenMinus", "HyphenMinusEqualsSign", "SolidusEqualsSign", "LessThanSignLessThanSign", "LessThanSignEqualsSign", "EqualsSignEqualsSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "CommercialAtCommercialAt", "CircumflexAccentEqualsSign", "As", "Do", "If", "In", "Of", "VerticalLineEqualsSign", "VerticalLineVerticalLine", "ExclamationMark", "PercentSign", "Ampersand", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "Tilde", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DOUBLE", "RULE_INT_SUFFIX", "RULE_HEX_INT", "RULE_BINARY_INT", "RULE_OCTAL_INT", "RULE_LEGACY_OCTAL_INT", "RULE_IDENTIFIER_PART", "RULE_SCIENTIFIC_INT", "RULE_SIGNED_INT", "RULE_IDENTIFIER", "RULE_DOUBLE_STRING_CHAR", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_BACKSLASH_SEQUENCE", "RULE_REGEX_CHAR_OR_BRACKET", "RULE_REGEX_CHAR", "RULE_ACTUAL_REGEX_TAIL", "RULE_REGEX_START", "RULE_REGEX_TAIL", "RULE_TEMPLATE_LITERAL_CHAR", "RULE_TEMPLATE_HEAD", "RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL", "RULE_ACTUAL_TEMPLATE_END", "RULE_TEMPLATE_MIDDLE", "RULE_TEMPLATE_END", "RULE_TEMPLATE_CONTINUATION", "RULE_NO_LINE_TERMINATOR", "RULE_INCOMPLETE_ASYNC_ARROW", "RULE_WS", "RULE_INT", "RULE_VERSION_REQUEST", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "Intersection", "Constructor", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Protected", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Private", "Project", "Delete", "Export", "Import", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "ExclamationMarkEqualsSignEqualsSign", "FullStopFullStopFullStop", "LessThanSignLessThanSignEqualsSign", "EqualsSignEqualsSignEqualsSign", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "ExclamationMarkEqualsSign", "PercentSignEqualsSign", "AmpersandAmpersand", "AmpersandEqualsSign", "AsteriskEqualsSign", "PlusSignPlusSign", "PlusSignEqualsSign", "HyphenMinusHyphenMinus", "HyphenMinusEqualsSign", "SolidusEqualsSign", "LessThanSignLessThanSign", "LessThanSignEqualsSign", "EqualsSignEqualsSign", "EqualsSignGreaterThanSign", "GreaterThanSignEqualsSign", "CommercialAtCommercialAt", "CircumflexAccentEqualsSign", "As", "Do", "If", "In", "Of", "VerticalLineEqualsSign", "VerticalLineVerticalLine", "ExclamationMark", "PercentSign", "Ampersand", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "CircumflexAccent", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "Tilde", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_EXPONENT_PART", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_DOUBLE", "RULE_INT_SUFFIX", "RULE_HEX_INT", "RULE_BINARY_INT", "RULE_OCTAL_INT", "RULE_LEGACY_OCTAL_INT", "RULE_IDENTIFIER_PART", "RULE_SCIENTIFIC_INT", "RULE_SIGNED_INT", "RULE_IDENTIFIER", "RULE_DOUBLE_STRING_CHAR", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_BACKSLASH_SEQUENCE", "RULE_REGEX_CHAR_OR_BRACKET", "RULE_REGEX_CHAR", "RULE_ACTUAL_REGEX_TAIL", "RULE_REGEX_START", "RULE_REGEX_TAIL", "RULE_TEMPLATE_LITERAL_CHAR", "RULE_TEMPLATE_HEAD", "RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL", "RULE_ACTUAL_TEMPLATE_END", "RULE_TEMPLATE_MIDDLE", "RULE_TEMPLATE_END", "RULE_TEMPLATE_CONTINUATION", "RULE_NO_LINE_TERMINATOR", "RULE_INCOMPLETE_ASYNC_ARROW", "RULE_WS", "RULE_INT", "RULE_VERSION", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
     };
     public static final int Delete=22;
     public static final int Enum=46;
@@ -47,6 +47,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final int False=37;
     public static final int LessThanSign=103;
     public static final int LeftParenthesis=93;
+    public static final int RULE_VERSION=150;
     public static final int RULE_TEMPLATE_LITERAL_CHAR=139;
     public static final int Throw=39;
     public static final int Private=20;
@@ -156,7 +157,6 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
     public static final int RULE_LEGACY_OCTAL_INT=123;
     public static final int RULE_DOUBLE_STRING_CHAR=128;
     public static final int EqualsSignEqualsSignEqualsSign=57;
-    public static final int RULE_VERSION_REQUEST=150;
     public static final int RULE_TEMPLATE_END=144;
     public static final int This_1=49;
     public static final int RULE_NO_LINE_TERMINATOR=146;
@@ -53977,7 +53977,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             else if ( (LA415_0==Implements) ) {
                 int LA415_2 = input.LA(2);
 
-                if ( (LA415_2==Implements||LA415_2==Extends||LA415_2==LessThanSign||LA415_2==LeftCurlyBracket||LA415_2==RULE_VERSION_REQUEST) ) {
+                if ( (LA415_2==Implements||LA415_2==Extends||LA415_2==LessThanSign||LA415_2==LeftCurlyBracket||LA415_2==RULE_VERSION) ) {
                     alt415=1;
                 }
             }
@@ -54019,7 +54019,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             int alt416=2;
             int LA416_0 = input.LA(1);
 
-            if ( (LA416_0==RULE_VERSION_REQUEST) ) {
+            if ( (LA416_0==RULE_VERSION) ) {
                 alt416=1;
             }
             switch (alt416) {
@@ -55774,7 +55774,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             else if ( (LA437_0==Implements) ) {
                 int LA437_2 = input.LA(2);
 
-                if ( (LA437_2==Implements||LA437_2==Extends||LA437_2==LessThanSign||LA437_2==LeftCurlyBracket||LA437_2==RULE_VERSION_REQUEST) ) {
+                if ( (LA437_2==Implements||LA437_2==Extends||LA437_2==LessThanSign||LA437_2==LeftCurlyBracket||LA437_2==RULE_VERSION) ) {
                     alt437=1;
                 }
             }
@@ -55816,7 +55816,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             int alt438=2;
             int LA438_0 = input.LA(1);
 
-            if ( (LA438_0==RULE_VERSION_REQUEST) ) {
+            if ( (LA438_0==RULE_VERSION) ) {
                 alt438=1;
             }
             switch (alt438) {
@@ -56352,7 +56352,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             int alt446=2;
             int LA446_0 = input.LA(1);
 
-            if ( (LA446_0==RULE_VERSION_REQUEST) ) {
+            if ( (LA446_0==RULE_VERSION) ) {
                 alt446=1;
             }
             switch (alt446) {
@@ -67019,10 +67019,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             {
-            lv_declaredVersion_0_0=(Token)match(input,RULE_VERSION_REQUEST,FOLLOW_2); if (state.failed) return current;
+            lv_declaredVersion_0_0=(Token)match(input,RULE_VERSION,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              				newLeafNode(lv_declaredVersion_0_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0());
+              				newLeafNode(lv_declaredVersion_0_0, grammarAccess.getVersionDeclarationAccess().getDeclaredVersionVERSIONTerminalRuleCall_0());
               			
             }
             if ( state.backtracking==0 ) {
@@ -67034,7 +67034,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"declaredVersion",
               					lv_declaredVersion_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+              					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
               			
             }
 
@@ -71290,10 +71290,10 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
             {
             {
             {
-            lv_requestedVersion_0_0=(Token)match(input,RULE_VERSION_REQUEST,FOLLOW_2); if (state.failed) return current;
+            lv_requestedVersion_0_0=(Token)match(input,RULE_VERSION,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0());
+              				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0());
               			
             }
             if ( state.backtracking==0 ) {
@@ -71305,7 +71305,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
               					current,
               					"requestedVersion",
               					lv_requestedVersion_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+              					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
               			
             }
 
@@ -76623,7 +76623,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         int alt626=2;
         int LA626_0 = input.LA(1);
 
-        if ( (LA626_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA626_0==RULE_VERSION) ) {
             alt626=1;
         }
         switch (alt626) {
@@ -76730,7 +76730,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         int alt630=2;
         int LA630_0 = input.LA(1);
 
-        if ( (LA630_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA630_0==RULE_VERSION) ) {
             alt630=1;
         }
         switch (alt630) {
@@ -76816,7 +76816,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         int alt633=2;
         int LA633_0 = input.LA(1);
 
-        if ( (LA633_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA633_0==RULE_VERSION) ) {
             alt633=1;
         }
         switch (alt633) {
@@ -76967,7 +76967,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         int alt638=2;
         int LA638_0 = input.LA(1);
 
-        if ( (LA638_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA638_0==RULE_VERSION) ) {
             alt638=1;
         }
         switch (alt638) {
@@ -77074,7 +77074,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         int alt642=2;
         int LA642_0 = input.LA(1);
 
-        if ( (LA642_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA642_0==RULE_VERSION) ) {
             alt642=1;
         }
         switch (alt642) {
@@ -77160,7 +77160,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
         int alt645=2;
         int LA645_0 = input.LA(1);
 
-        if ( (LA645_0==RULE_VERSION_REQUEST) ) {
+        if ( (LA645_0==RULE_VERSION) ) {
             alt645=1;
         }
         switch (alt645) {
@@ -92942,7 +92942,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index225_4 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA225_4==EOF||LA225_4==Instanceof||LA225_4==ExclamationMarkEqualsSignEqualsSign||(LA225_4>=LessThanSignLessThanSignEqualsSign && LA225_4<=EqualsSignEqualsSignEqualsSign)||(LA225_4>=ExclamationMarkEqualsSign && LA225_4<=EqualsSignEqualsSign)||LA225_4==GreaterThanSignEqualsSign||(LA225_4>=CircumflexAccentEqualsSign && LA225_4<=As)||(LA225_4>=In && LA225_4<=VerticalLineVerticalLine)||(LA225_4>=PercentSign && LA225_4<=QuestionMark)||(LA225_4>=LeftSquareBracket && LA225_4<=RightCurlyBracket)||(LA225_4>=RULE_TEMPLATE_HEAD && LA225_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA225_4==RULE_VERSION_REQUEST||LA225_4==RULE_ML_COMMENT||LA225_4==RULE_EOL) ) {s = 3;}
+                        if ( (LA225_4==EOF||LA225_4==Instanceof||LA225_4==ExclamationMarkEqualsSignEqualsSign||(LA225_4>=LessThanSignLessThanSignEqualsSign && LA225_4<=EqualsSignEqualsSignEqualsSign)||(LA225_4>=ExclamationMarkEqualsSign && LA225_4<=EqualsSignEqualsSign)||LA225_4==GreaterThanSignEqualsSign||(LA225_4>=CircumflexAccentEqualsSign && LA225_4<=As)||(LA225_4>=In && LA225_4<=VerticalLineVerticalLine)||(LA225_4>=PercentSign && LA225_4<=QuestionMark)||(LA225_4>=LeftSquareBracket && LA225_4<=RightCurlyBracket)||(LA225_4>=RULE_TEMPLATE_HEAD && LA225_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA225_4==RULE_VERSION||LA225_4==RULE_ML_COMMENT||LA225_4==RULE_EOL) ) {s = 3;}
 
                         else if ( (LA225_4==RULE_NO_LINE_TERMINATOR) && (synpred125_InternalN4JSParser())) {s = 14;}
 
@@ -93036,7 +93036,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA226_4==Function) && (synpred126_InternalN4JSParser())) {s = 15;}
 
-                        else if ( (LA226_4==EOF||LA226_4==Instanceof||LA226_4==ExclamationMarkEqualsSignEqualsSign||(LA226_4>=LessThanSignLessThanSignEqualsSign && LA226_4<=EqualsSignEqualsSignEqualsSign)||(LA226_4>=ExclamationMarkEqualsSign && LA226_4<=EqualsSignEqualsSign)||LA226_4==GreaterThanSignEqualsSign||(LA226_4>=CircumflexAccentEqualsSign && LA226_4<=As)||(LA226_4>=In && LA226_4<=VerticalLineVerticalLine)||(LA226_4>=PercentSign && LA226_4<=QuestionMark)||(LA226_4>=LeftSquareBracket && LA226_4<=RightCurlyBracket)||(LA226_4>=RULE_TEMPLATE_HEAD && LA226_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA226_4==RULE_VERSION_REQUEST||LA226_4==RULE_ML_COMMENT||LA226_4==RULE_EOL) ) {s = 3;}
+                        else if ( (LA226_4==EOF||LA226_4==Instanceof||LA226_4==ExclamationMarkEqualsSignEqualsSign||(LA226_4>=LessThanSignLessThanSignEqualsSign && LA226_4<=EqualsSignEqualsSignEqualsSign)||(LA226_4>=ExclamationMarkEqualsSign && LA226_4<=EqualsSignEqualsSign)||LA226_4==GreaterThanSignEqualsSign||(LA226_4>=CircumflexAccentEqualsSign && LA226_4<=As)||(LA226_4>=In && LA226_4<=VerticalLineVerticalLine)||(LA226_4>=PercentSign && LA226_4<=QuestionMark)||(LA226_4>=LeftSquareBracket && LA226_4<=RightCurlyBracket)||(LA226_4>=RULE_TEMPLATE_HEAD && LA226_4<=RULE_NO_SUBSTITUTION_TEMPLATE_LITERAL)||LA226_4==RULE_VERSION||LA226_4==RULE_ML_COMMENT||LA226_4==RULE_EOL) ) {s = 3;}
 
                          
                         input.seek(index226_4);
@@ -111278,7 +111278,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         s = -1;
                         if ( (LA583_14==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
-                        else if ( (LA583_14==EOF||LA583_14==Ampersand||LA583_14==RightParenthesis||(LA583_14>=PlusSign && LA583_14<=Comma)||(LA583_14>=LessThanSign && LA583_14<=EqualsSign)||LA583_14==QuestionMark||LA583_14==VerticalLine||LA583_14==RULE_VERSION_REQUEST) ) {s = 29;}
+                        else if ( (LA583_14==EOF||LA583_14==Ampersand||LA583_14==RightParenthesis||(LA583_14>=PlusSign && LA583_14<=Comma)||(LA583_14>=LessThanSign && LA583_14<=EqualsSign)||LA583_14==QuestionMark||LA583_14==VerticalLine||LA583_14==RULE_VERSION) ) {s = 29;}
 
                          
                         input.seek(index583_14);
@@ -111344,7 +111344,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         s = -1;
                         if ( (LA583_20==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
-                        else if ( (LA583_20==EOF||LA583_20==Ampersand||LA583_20==RightParenthesis||(LA583_20>=PlusSign && LA583_20<=Comma)||(LA583_20>=LessThanSign && LA583_20<=EqualsSign)||LA583_20==QuestionMark||LA583_20==VerticalLine||LA583_20==RULE_VERSION_REQUEST) ) {s = 29;}
+                        else if ( (LA583_20==EOF||LA583_20==Ampersand||LA583_20==RightParenthesis||(LA583_20>=PlusSign && LA583_20<=Comma)||(LA583_20>=LessThanSign && LA583_20<=EqualsSign)||LA583_20==QuestionMark||LA583_20==VerticalLine||LA583_20==RULE_VERSION) ) {s = 29;}
 
                          
                         input.seek(index583_20);
@@ -111357,7 +111357,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index583_19 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA583_19==EOF||LA583_19==Ampersand||LA583_19==RightParenthesis||(LA583_19>=PlusSign && LA583_19<=Comma)||(LA583_19>=LessThanSign && LA583_19<=EqualsSign)||LA583_19==QuestionMark||LA583_19==VerticalLine||LA583_19==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA583_19==EOF||LA583_19==Ampersand||LA583_19==RightParenthesis||(LA583_19>=PlusSign && LA583_19<=Comma)||(LA583_19>=LessThanSign && LA583_19<=EqualsSign)||LA583_19==QuestionMark||LA583_19==VerticalLine||LA583_19==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA583_19==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
@@ -111387,7 +111387,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index583_1 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA583_1==EOF||LA583_1==Ampersand||LA583_1==RightParenthesis||(LA583_1>=PlusSign && LA583_1<=Comma)||LA583_1==FullStop||(LA583_1>=LessThanSign && LA583_1<=EqualsSign)||LA583_1==QuestionMark||LA583_1==VerticalLine||LA583_1==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA583_1==EOF||LA583_1==Ampersand||LA583_1==RightParenthesis||(LA583_1>=PlusSign && LA583_1<=Comma)||LA583_1==FullStop||(LA583_1>=LessThanSign && LA583_1<=EqualsSign)||LA583_1==QuestionMark||LA583_1==VerticalLine||LA583_1==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA583_1==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 
@@ -111432,7 +111432,7 @@ public class InternalN4JSParser extends AbstractInternalAntlrParser {
                         int index583_18 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA583_18==EOF||LA583_18==Ampersand||LA583_18==RightParenthesis||(LA583_18>=PlusSign && LA583_18<=Comma)||(LA583_18>=LessThanSign && LA583_18<=EqualsSign)||LA583_18==QuestionMark||LA583_18==VerticalLine||LA583_18==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA583_18==EOF||LA583_18==Ampersand||LA583_18==RightParenthesis||(LA583_18>=PlusSign && LA583_18<=Comma)||(LA583_18>=LessThanSign && LA583_18<=EqualsSign)||LA583_18==QuestionMark||LA583_18==VerticalLine||LA583_18==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA583_18==Colon) && (synpred327_InternalN4JSParser())) {s = 30;}
 

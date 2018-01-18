@@ -9658,7 +9658,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	public class VersionDeclarationElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionDeclaration");
 		private final Assignment cDeclaredVersionAssignment = (Assignment)rule.eContents().get(0);
-		private final RuleCall cDeclaredVersionVERSION_REQUESTTerminalRuleCall_0 = (RuleCall)cDeclaredVersionAssignment.eContents().get(0);
+		private final RuleCall cDeclaredVersionVERSIONTerminalRuleCall_0 = (RuleCall)cDeclaredVersionAssignment.eContents().get(0);
 		
 		//// ****************************************************************************************************
 		//// N4IDL related rules
@@ -9666,14 +9666,14 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		///* Version related rules */ /*
 		// * Version declaration, used in type declarations and types refs of migration parameters and returns.
 		// */ fragment VersionDeclaration *:
-		//	declaredVersion=VERSION_REQUEST;
+		//	declaredVersion=VERSION;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//declaredVersion=VERSION_REQUEST
+		//declaredVersion=VERSION
 		public Assignment getDeclaredVersionAssignment() { return cDeclaredVersionAssignment; }
 		
-		//VERSION_REQUEST
-		public RuleCall getDeclaredVersionVERSION_REQUESTTerminalRuleCall_0() { return cDeclaredVersionVERSION_REQUESTTerminalRuleCall_0; }
+		//VERSION
+		public RuleCall getDeclaredVersionVERSIONTerminalRuleCall_0() { return cDeclaredVersionVERSIONTerminalRuleCall_0; }
 	}
 	public class VersionedImportIdentifierElements extends AbstractParserRuleElementFinder {
 		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "org.eclipse.n4js.N4JS.VersionedImportIdentifier");
@@ -13317,7 +13317,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	///* Version related rules */ /*
 	// * Version declaration, used in type declarations and types refs of migration parameters and returns.
 	// */ fragment VersionDeclaration *:
-	//	declaredVersion=VERSION_REQUEST;
+	//	declaredVersion=VERSION;
 	public VersionDeclarationElements getVersionDeclarationAccess() {
 		return pVersionDeclaration;
 	}
@@ -13626,7 +13626,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//fragment VersionRequest *:
-	//	requestedVersion=VERSION_REQUEST;
+	//	requestedVersion=VERSION;
 	public TypeExpressionsGrammarAccess.VersionRequestElements getVersionRequestAccess() {
 		return gaTypeExpressions.getVersionRequestAccess();
 	}
@@ -13635,10 +13635,10 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		return getVersionRequestAccess().getRule();
 	}
 	
-	//terminal VERSION_REQUEST returns ecore::EBigDecimal:
+	//terminal VERSION returns ecore::EBigDecimal:
 	//	'#' WS* INT;
-	public TerminalRule getVERSION_REQUESTRule() {
-		return gaTypeExpressions.getVERSION_REQUESTRule();
+	public TerminalRule getVERSIONRule() {
+		return gaTypeExpressions.getVERSIONRule();
 	}
 	
 	//fragment TypeArguments *:

@@ -33,7 +33,7 @@ import java.util.HashMap;
 @SuppressWarnings("all")
 public class InternalTypesParser extends AbstractInternalAntlrParser {
     public static final String[] tokenNames = new String[] {
-        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AssignmnentCompatible", "ProtectedInternal", "ProvidedByRuntime", "PublicInternal", "AutoboxedType", "Intersection", "Constructor", "VirtualBase", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Primitive", "Protected", "Undefined", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Indexed", "Private", "Project", "Delete", "Export", "Import", "Object", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Final", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "FullStopFullStopFullStop", "Any", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "EqualsSignGreaterThanSign", "As", "Do", "If", "In", "Of", "Ampersand", "LeftParenthesis", "RightParenthesis", "PlusSign", "Comma", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "LeftCurlyBracket", "RightCurlyBracket", "Tilde", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_WS", "RULE_INT", "RULE_VERSION_REQUEST", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_IDENTIFIER_PART", "RULE_IDENTIFIER", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
+        "<invalid>", "<EOR>", "<DOWN>", "<UP>", "AssignmnentCompatible", "ProtectedInternal", "ProvidedByRuntime", "PublicInternal", "AutoboxedType", "Intersection", "Constructor", "VirtualBase", "Implements", "Instanceof", "Promisify", "Interface", "Migration", "Primitive", "Protected", "Undefined", "Abstract", "Continue", "Debugger", "External", "Function", "Default", "Extends", "Finally", "Indexed", "Private", "Project", "Delete", "Export", "Import", "Object", "Public", "Return", "Static", "Switch", "Target", "Typeof", "Async", "Await", "Break", "Catch", "Class", "Const", "False", "Final", "Super", "Throw", "Union", "While", "Yield", "This", "Case", "Else", "Enum", "From", "Null", "This_1", "True", "Type", "Void", "With", "FullStopFullStopFullStop", "Any", "For", "Get", "Let", "New", "Out", "Set", "Try", "Var", "EqualsSignGreaterThanSign", "As", "Do", "If", "In", "Of", "Ampersand", "LeftParenthesis", "RightParenthesis", "PlusSign", "Comma", "FullStop", "Solidus", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "LeftSquareBracket", "RightSquareBracket", "LeftCurlyBracket", "RightCurlyBracket", "Tilde", "RULE_SINGLE_STRING_CHAR", "RULE_STRING", "RULE_LINE_TERMINATOR_FRAGMENT", "RULE_LINE_TERMINATOR_SEQUENCE_FRAGMENT", "RULE_WS", "RULE_INT", "RULE_VERSION", "RULE_STRUCTMODSUFFIX", "RULE_IDENTIFIER_START", "RULE_IDENTIFIER_PART", "RULE_IDENTIFIER", "RULE_DECIMAL_INTEGER_LITERAL_FRAGMENT", "RULE_ML_COMMENT_FRAGMENT", "RULE_ML_COMMENT", "RULE_SL_COMMENT", "RULE_EOL", "RULE_WHITESPACE_FRAGMENT", "RULE_HEX_DIGIT", "RULE_UNICODE_ESCAPE_FRAGMENT", "RULE_UNICODE_LETTER_FRAGMENT", "RULE_UNICODE_COMBINING_MARK_FRAGMENT", "RULE_UNICODE_DIGIT_FRAGMENT", "RULE_UNICODE_CONNECTOR_PUNCTUATION_FRAGMENT", "RULE_ZWNJ", "RULE_ZWJ", "RULE_DOT_DOT", "RULE_DECIMAL_DIGIT_FRAGMENT", "RULE_BOM", "RULE_UNICODE_SPACE_SEPARATOR_FRAGMENT", "RULE_SL_COMMENT_FRAGMENT", "RULE_ANY_OTHER"
     };
     public static final int Delete=31;
     public static final int Enum=57;
@@ -45,6 +45,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
     public static final int False=47;
     public static final int LessThanSign=90;
     public static final int LeftParenthesis=82;
+    public static final int RULE_VERSION=106;
     public static final int Throw=50;
     public static final int VirtualBase=11;
     public static final int Private=29;
@@ -124,7 +125,6 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
     public static final int RULE_UNICODE_COMBINING_MARK_FRAGMENT=120;
     public static final int Public=35;
     public static final int Do=77;
-    public static final int RULE_VERSION_REQUEST=106;
     public static final int This_1=60;
     public static final int RULE_DOT_DOT=125;
     public static final int External=23;
@@ -13437,7 +13437,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
 
     // $ANTLR start "ruleVersionRequest"
-    // InternalTypesParser.g:4943:1: ruleVersionRequest[EObject in_current] returns [EObject current=in_current] : ( (lv_requestedVersion_0_0= RULE_VERSION_REQUEST ) ) ;
+    // InternalTypesParser.g:4943:1: ruleVersionRequest[EObject in_current] returns [EObject current=in_current] : ( (lv_requestedVersion_0_0= RULE_VERSION ) ) ;
     public final EObject ruleVersionRequest(EObject in_current) throws RecognitionException {
         EObject current = in_current;
 
@@ -13447,19 +13447,19 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
         	enterRule();
 
         try {
-            // InternalTypesParser.g:4949:2: ( ( (lv_requestedVersion_0_0= RULE_VERSION_REQUEST ) ) )
-            // InternalTypesParser.g:4950:2: ( (lv_requestedVersion_0_0= RULE_VERSION_REQUEST ) )
+            // InternalTypesParser.g:4949:2: ( ( (lv_requestedVersion_0_0= RULE_VERSION ) ) )
+            // InternalTypesParser.g:4950:2: ( (lv_requestedVersion_0_0= RULE_VERSION ) )
             {
-            // InternalTypesParser.g:4950:2: ( (lv_requestedVersion_0_0= RULE_VERSION_REQUEST ) )
-            // InternalTypesParser.g:4951:3: (lv_requestedVersion_0_0= RULE_VERSION_REQUEST )
+            // InternalTypesParser.g:4950:2: ( (lv_requestedVersion_0_0= RULE_VERSION ) )
+            // InternalTypesParser.g:4951:3: (lv_requestedVersion_0_0= RULE_VERSION )
             {
-            // InternalTypesParser.g:4951:3: (lv_requestedVersion_0_0= RULE_VERSION_REQUEST )
-            // InternalTypesParser.g:4952:4: lv_requestedVersion_0_0= RULE_VERSION_REQUEST
+            // InternalTypesParser.g:4951:3: (lv_requestedVersion_0_0= RULE_VERSION )
+            // InternalTypesParser.g:4952:4: lv_requestedVersion_0_0= RULE_VERSION
             {
-            lv_requestedVersion_0_0=(Token)match(input,RULE_VERSION_REQUEST,FOLLOW_2); if (state.failed) return current;
+            lv_requestedVersion_0_0=(Token)match(input,RULE_VERSION,FOLLOW_2); if (state.failed) return current;
             if ( state.backtracking==0 ) {
 
-              				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSION_REQUESTTerminalRuleCall_0());
+              				newLeafNode(lv_requestedVersion_0_0, grammarAccess.getVersionRequestAccess().getRequestedVersionVERSIONTerminalRuleCall_0());
               			
             }
             if ( state.backtracking==0 ) {
@@ -13471,7 +13471,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
               					current,
               					"requestedVersion",
               					lv_requestedVersion_0_0,
-              					"org.eclipse.n4js.ts.TypeExpressions.VERSION_REQUEST");
+              					"org.eclipse.n4js.ts.TypeExpressions.VERSION");
               			
             }
 
@@ -23579,7 +23579,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
                         int index88_1 = input.index();
                         input.rewind();
                         s = -1;
-                        if ( (LA88_1==EOF||(LA88_1>=RightParenthesis && LA88_1<=Comma)||LA88_1==Solidus||(LA88_1>=LessThanSign && LA88_1<=EqualsSign)||LA88_1==QuestionMark||LA88_1==RULE_VERSION_REQUEST) ) {s = 29;}
+                        if ( (LA88_1==EOF||(LA88_1>=RightParenthesis && LA88_1<=Comma)||LA88_1==Solidus||(LA88_1>=LessThanSign && LA88_1<=EqualsSign)||LA88_1==QuestionMark||LA88_1==RULE_VERSION) ) {s = 29;}
 
                         else if ( (LA88_1==Colon) && (synpred18_InternalTypesParser())) {s = 30;}
 
@@ -23862,7 +23862,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA96_3==Extends) ) {s = 2;}
 
-                        else if ( (LA96_3==RULE_VERSION_REQUEST) && (synpred20_InternalTypesParser())) {s = 25;}
+                        else if ( (LA96_3==RULE_VERSION) && (synpred20_InternalTypesParser())) {s = 25;}
 
                          
                         input.seek(index96_3);
@@ -23941,7 +23941,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA96_34==Solidus) && (synpred20_InternalTypesParser())) {s = 42;}
 
-                        else if ( (LA96_34==RULE_VERSION_REQUEST) && (synpred20_InternalTypesParser())) {s = 43;}
+                        else if ( (LA96_34==RULE_VERSION) && (synpred20_InternalTypesParser())) {s = 43;}
 
                         else if ( (LA96_34==LessThanSign) && (synpred20_InternalTypesParser())) {s = 44;}
 
@@ -24143,7 +24143,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA99_3==Solidus) && (synpred21_InternalTypesParser())) {s = 21;}
 
-                        else if ( (LA99_3==RULE_VERSION_REQUEST) && (synpred21_InternalTypesParser())) {s = 22;}
+                        else if ( (LA99_3==RULE_VERSION) && (synpred21_InternalTypesParser())) {s = 22;}
 
                         else if ( (LA99_3==LessThanSign) && (synpred21_InternalTypesParser())) {s = 23;}
 
@@ -24213,7 +24213,7 @@ public class InternalTypesParser extends AbstractInternalAntlrParser {
 
                         else if ( (LA99_34==Solidus) && (synpred21_InternalTypesParser())) {s = 42;}
 
-                        else if ( (LA99_34==RULE_VERSION_REQUEST) && (synpred21_InternalTypesParser())) {s = 43;}
+                        else if ( (LA99_34==RULE_VERSION) && (synpred21_InternalTypesParser())) {s = 43;}
 
                         else if ( (LA99_34==LessThanSign) && (synpred21_InternalTypesParser())) {s = 44;}
 

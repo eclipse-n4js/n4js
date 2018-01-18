@@ -35,8 +35,6 @@ import org.eclipse.xtext.resource.IEObjectDescription
 import org.eclipse.xtext.scoping.IScope
 
 import static org.eclipse.n4js.n4idl.versioning.VersionUtils.isVersioned
-import org.eclipse.n4js.n4JS.CastExpression
-import org.eclipse.n4js.n4JS.NewExpression
 
 /**
  * Contains helper methods to determine version related information of objects as well as to find a specific version
@@ -82,9 +80,6 @@ class VersionHelper {
 		switch (object) {
 			VersionedReference case object.hasRequestedVersion:	return object.requestedVersionOrZero
 			IdentifierRef:										return computeMaximumVersion(object.id)
-			// TODO remove workaround
-			CastExpression:										return Integer.MAX_VALUE
-			NewExpression: 										return Integer.MAX_VALUE
 			Expression:                  					   	return computeMaximumVersion(ts.tau(object))
 			N4ClassDeclaration case isVersioned(object):	  	return computeMaximumVersion(object.definedType as TClass)
 			N4InterfaceDeclaration case isVersioned(object):	return computeMaximumVersion(object.definedType as TInterface)
