@@ -27,6 +27,7 @@ include::{find}config.adoc[]
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:bar2var++[``++bar2var: string++``]
 
+
 ==== Description
 
 Spec for Var bar2var
@@ -40,6 +41,7 @@ Spec for Var bar2var
 ==== Signature
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:barvar++[``++barvar: string++``]
+
 
 ==== Description
 
@@ -59,6 +61,7 @@ Spec for Var barvar
 ==== Signature
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:foofunc++[``++function foofunc(): void++``]
+
 
 ==== Description
 

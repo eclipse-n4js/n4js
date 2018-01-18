@@ -20,6 +20,7 @@ include::{find}config.adoc[]
 
 
 
+
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
@@ -27,6 +28,7 @@ include::{find}config.adoc[]
 ==== Signature
 
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:src/A:A#bar++[``++public bar(n: number): string++``]
+
 
 ==== Description
 
@@ -39,6 +41,7 @@ spec for method A.bar from source code
 . *++Only in a++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample2:test/ATests:ATest#testOnlyInA++[Test]#)
 
 == Class B
+
 
 
 [[gsec:spec_B.A.bar]]
