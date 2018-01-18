@@ -6777,34 +6777,6 @@ ruleIdentifierRef
 	    |
 	(
 		(
-			(Yield | 
-			Get | 
-			Set | 
-			Let | 
-			Project | 
-			External | 
-			Abstract | 
-			Static | 
-			As | 
-			From | 
-			Constructor | 
-			Of | 
-			Target | 
-			Type | 
-			Union | 
-			Intersection | 
-			This | 
-			Promisify | 
-			Await | 
-			Async | 
-			Implements | 
-			Interface | 
-			Private | 
-			Protected | 
-			Public | 
-			Out | 
-			Migration | 
-			RULE_IDENTIFIER)=>
 			(
 				IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1=ruleBindingIdentifier{
 					announce($IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.start, $IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.stop, grammarAccess.getIdentifierRefAccess().getIdAssignment_1_1());
@@ -6832,33 +6804,6 @@ norm1_IdentifierRef
 	    |
 	(
 		(
-			(Get | 
-			Set | 
-			Let | 
-			Project | 
-			External | 
-			Abstract | 
-			Static | 
-			As | 
-			From | 
-			Constructor | 
-			Of | 
-			Target | 
-			Type | 
-			Union | 
-			Intersection | 
-			This | 
-			Promisify | 
-			Await | 
-			Async | 
-			Implements | 
-			Interface | 
-			Private | 
-			Protected | 
-			Public | 
-			Out | 
-			Migration | 
-			RULE_IDENTIFIER)=>
 			(
 				IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1=norm1_BindingIdentifier{
 					announce($IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.start, $IdIdentifiableElementBindingIdentifierParserRuleCall_1_1_0_1.stop, grammarAccess.getIdentifierRefAccess().getIdAssignment_1_1());

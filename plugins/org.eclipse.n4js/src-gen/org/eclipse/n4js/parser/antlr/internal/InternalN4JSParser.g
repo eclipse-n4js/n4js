@@ -13139,7 +13139,6 @@ ruleIdentifierRef returns [EObject current=null]
 				}
 			)
 			(
-				(Yield | Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | RULE_IDENTIFIER)=>
 				(
 					{
 						if ($current==null) {
@@ -13206,7 +13205,6 @@ norm1_IdentifierRef returns [EObject current=null]
 				}
 			)
 			(
-				(Get | Set | Let | Project | External | Abstract | Static | As | From | Constructor | Of | Target | Type | Union | Intersection | This | Promisify | Await | Async | Implements | Interface | Private | Protected | Public | Out | Migration | RULE_IDENTIFIER)=>
 				(
 					{
 						if ($current==null) {

@@ -4023,11 +4023,11 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cVersionRequestParserRuleCall_1_2 = (RuleCall)cGroup_1.eContents().get(2);
 		
 		//IdentifierRef <Yield>:
-		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef} ->
+		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
 		//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest;
 		@Override public ParserRule getRule() { return rule; }
 		
-		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef} ->
+		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
 		//id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 		public Alternatives getAlternatives() { return cAlternatives; }
 		
@@ -4040,13 +4040,13 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//BindingIdentifier<Yield>
 		public RuleCall getIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1() { return cIdIdentifiableElementBindingIdentifierParserRuleCall_0_0_1; }
 		
-		//{VersionedIdentifierRef} -> id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
+		//{VersionedIdentifierRef} id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest
 		public Group getGroup_1() { return cGroup_1; }
 		
 		//{VersionedIdentifierRef}
 		public Action getVersionedIdentifierRefAction_1_0() { return cVersionedIdentifierRefAction_1_0; }
 		
-		//-> id=[types::IdentifiableElement|BindingIdentifier<Yield>]
+		//id=[types::IdentifiableElement|BindingIdentifier<Yield>]
 		public Assignment getIdAssignment_1_1() { return cIdAssignment_1_1; }
 		
 		//[types::IdentifiableElement|BindingIdentifier<Yield>]
@@ -11524,7 +11524,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	}
 	
 	//IdentifierRef <Yield>:
-	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef} ->
+	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] | {VersionedIdentifierRef}
 	//	id=[types::IdentifiableElement|BindingIdentifier<Yield>] VersionRequest;
 	public IdentifierRefElements getIdentifierRefAccess() {
 		return pIdentifierRef;

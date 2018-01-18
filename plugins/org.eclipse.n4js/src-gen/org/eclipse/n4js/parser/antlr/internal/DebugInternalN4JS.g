@@ -2663,10 +2663,7 @@ ruleIdentifierRef:
 	(
 		ruleBindingIdentifier
 		    |
-		(
-			('yield' | 'get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'migration' | RULE_IDENTIFIER)=>
-			ruleBindingIdentifier
-		)
+		ruleBindingIdentifier
 		ruleVersionRequest
 	)
 ;
@@ -2676,10 +2673,7 @@ norm1_IdentifierRef:
 	(
 		norm1_BindingIdentifier
 		    |
-		(
-			('get' | 'set' | 'let' | 'project' | 'external' | 'abstract' | 'static' | 'as' | 'from' | 'constructor' | 'of' | 'target' | 'type' | 'union' | 'intersection' | 'This' | 'Promisify' | 'await' | 'async' | 'implements' | 'interface' | 'private' | 'protected' | 'public' | 'out' | 'migration' | RULE_IDENTIFIER)=>
-			norm1_BindingIdentifier
-		)
+		norm1_BindingIdentifier
 		ruleVersionRequest
 	)
 ;
