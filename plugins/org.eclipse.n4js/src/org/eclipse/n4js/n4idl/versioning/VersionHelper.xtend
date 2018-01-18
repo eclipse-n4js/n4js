@@ -12,8 +12,6 @@ package org.eclipse.n4js.n4idl.versioning
 
 import com.google.inject.Inject
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.n4JS.Expression
-import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.N4ClassDeclaration
 import org.eclipse.n4js.n4JS.N4EnumDeclaration
 import org.eclipse.n4js.n4JS.N4InterfaceDeclaration
@@ -26,7 +24,6 @@ import org.eclipse.n4js.ts.types.TEnum
 import org.eclipse.n4js.ts.types.TInterface
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TObjectPrototype
-import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.utils.ContainerTypesHelper
 import org.eclipse.n4js.utils.ContainerTypesHelper.MemberCollector
 import org.eclipse.xtext.naming.IQualifiedNameConverter
@@ -47,9 +44,6 @@ class VersionHelper {
 
 	@Inject
 	IQualifiedNameConverter nameConverter;
-
-	@Inject
-	N4JSTypeSystem ts;
 
 	@Inject
 	ContainerTypesHelper containerTypesHelper;
@@ -79,8 +73,6 @@ class VersionHelper {
 
 		switch (object) {
 			VersionedReference case object.hasRequestedVersion:	return object.requestedVersionOrZero
-			IdentifierRef:										return computeMaximumVersion(object.id)
-			Expression:                  					   	return computeMaximumVersion(ts.tau(object))
 			N4ClassDeclaration case isVersioned(object):	  	return computeMaximumVersion(object.definedType as TClass)
 			N4InterfaceDeclaration case isVersioned(object):	return computeMaximumVersion(object.definedType as TInterface)
 			N4EnumDeclaration case isVersioned(object):			return computeMaximumVersion(object.definedType as TEnum)

@@ -15083,268 +15083,6 @@ public interface N4JSPackage extends EPackage {
 	int VERSIONED_ELEMENT_OPERATION_COUNT = 2;
 
 	/**
-	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.MigrationDeclarationImpl <em>Migration Declaration</em>}' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @see org.eclipse.n4js.n4JS.impl.MigrationDeclarationImpl
-	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMigrationDeclaration()
-	 * @generated
-	 */
-	int MIGRATION_DECLARATION = 170;
-
-	/**
-	 * The feature id for the '<em><b>Annotation List</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__ANNOTATION_LIST = FUNCTION_DECLARATION__ANNOTATION_LIST;
-
-	/**
-	 * The feature id for the '<em><b>Declared Modifiers</b></em>' attribute list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__DECLARED_MODIFIERS = FUNCTION_DECLARATION__DECLARED_MODIFIERS;
-
-	/**
-	 * The feature id for the '<em><b>Body</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__BODY = FUNCTION_DECLARATION__BODY;
-
-	/**
-	 * The feature id for the '<em><b>lok</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__LOK = FUNCTION_DECLARATION__LOK;
-
-	/**
-	 * The feature id for the '<em><b>Defined Type</b></em>' reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__DEFINED_TYPE = FUNCTION_DECLARATION__DEFINED_TYPE;
-
-	/**
-	 * The feature id for the '<em><b>Fpars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__FPARS = FUNCTION_DECLARATION__FPARS;
-
-	/**
-	 * The feature id for the '<em><b>Return Type Ref</b></em>' containment reference.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__RETURN_TYPE_REF = FUNCTION_DECLARATION__RETURN_TYPE_REF;
-
-	/**
-	 * The feature id for the '<em><b>Generator</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__GENERATOR = FUNCTION_DECLARATION__GENERATOR;
-
-	/**
-	 * The feature id for the '<em><b>Declared Async</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__DECLARED_ASYNC = FUNCTION_DECLARATION__DECLARED_ASYNC;
-
-	/**
-	 * The feature id for the '<em><b>Type Vars</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__TYPE_VARS = FUNCTION_DECLARATION__TYPE_VARS;
-
-	/**
-	 * The feature id for the '<em><b>Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__NAME = FUNCTION_DECLARATION__NAME;
-
-	/**
-	 * The feature id for the '<em><b>Frets</b></em>' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION__FRETS = FUNCTION_DECLARATION_FEATURE_COUNT + 0;
-
-	/**
-	 * The number of structural features of the '<em>Migration Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION_FEATURE_COUNT = FUNCTION_DECLARATION_FEATURE_COUNT + 1;
-
-	/**
-	 * The operation id for the '<em>Get All Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_ALL_ANNOTATIONS = FUNCTION_DECLARATION___GET_ALL_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Get Annotations</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_ANNOTATIONS = FUNCTION_DECLARATION___GET_ANNOTATIONS;
-
-	/**
-	 * The operation id for the '<em>Applies Only To Block Scoped Elements</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS = FUNCTION_DECLARATION___APPLIES_ONLY_TO_BLOCK_SCOPED_ELEMENTS;
-
-	/**
-	 * The operation id for the '<em>Get Local Arguments Variable</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE = FUNCTION_DECLARATION___GET_LOCAL_ARGUMENTS_VARIABLE;
-
-	/**
-	 * The operation id for the '<em>Get Defined Function Or Accessor</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR = FUNCTION_DECLARATION___GET_DEFINED_FUNCTION_OR_ACCESSOR;
-
-	/**
-	 * The operation id for the '<em>Is Return Value Optional</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___IS_RETURN_VALUE_OPTIONAL = FUNCTION_DECLARATION___IS_RETURN_VALUE_OPTIONAL;
-
-	/**
-	 * The operation id for the '<em>Is Async</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___IS_ASYNC = FUNCTION_DECLARATION___IS_ASYNC;
-
-	/**
-	 * The operation id for the '<em>Get Defined Function</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_DEFINED_FUNCTION = FUNCTION_DECLARATION___GET_DEFINED_FUNCTION;
-
-	/**
-	 * The operation id for the '<em>Is Exported</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___IS_EXPORTED = FUNCTION_DECLARATION___IS_EXPORTED;
-
-	/**
-	 * The operation id for the '<em>Is Exported As Default</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___IS_EXPORTED_AS_DEFAULT = FUNCTION_DECLARATION___IS_EXPORTED_AS_DEFAULT;
-
-	/**
-	 * The operation id for the '<em>Get Exported Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_EXPORTED_NAME = FUNCTION_DECLARATION___GET_EXPORTED_NAME;
-
-	/**
-	 * The operation id for the '<em>Is Toplevel</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___IS_TOPLEVEL = FUNCTION_DECLARATION___IS_TOPLEVEL;
-
-	/**
-	 * The operation id for the '<em>Get Name</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___GET_NAME = FUNCTION_DECLARATION___GET_NAME;
-
-	/**
-	 * The operation id for the '<em>Is External</em>' operation.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION___IS_EXTERNAL = FUNCTION_DECLARATION___IS_EXTERNAL;
-
-	/**
-	 * The number of operations of the '<em>Migration Declaration</em>' class.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
-	int MIGRATION_DECLARATION_OPERATION_COUNT = FUNCTION_DECLARATION_OPERATION_COUNT + 0;
-
-	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.impl.VersionedIdentifierRefImpl <em>Versioned Identifier Ref</em>}' class.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -15352,7 +15090,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVersionedIdentifierRef()
 	 * @generated
 	 */
-	int VERSIONED_IDENTIFIER_REF = 171;
+	int VERSIONED_IDENTIFIER_REF = 170;
 
 	/**
 	 * The feature id for the '<em><b>Strict Mode</b></em>' attribute.
@@ -15452,7 +15190,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVersionedNamedImportSpecifier()
 	 * @generated
 	 */
-	int VERSIONED_NAMED_IMPORT_SPECIFIER = 172;
+	int VERSIONED_NAMED_IMPORT_SPECIFIER = 171;
 
 	/**
 	 * The feature id for the '<em><b>Flagged Used In Code</b></em>' attribute.
@@ -15552,7 +15290,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getVariableStatementKeyword()
 	 * @generated
 	 */
-	int VARIABLE_STATEMENT_KEYWORD = 173;
+	int VARIABLE_STATEMENT_KEYWORD = 172;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PropertyNameKind <em>Property Name Kind</em>}' enum.
@@ -15562,7 +15300,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPropertyNameKind()
 	 * @generated
 	 */
-	int PROPERTY_NAME_KIND = 174;
+	int PROPERTY_NAME_KIND = 173;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.PostfixOperator <em>Postfix Operator</em>}' enum.
@@ -15572,7 +15310,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getPostfixOperator()
 	 * @generated
 	 */
-	int POSTFIX_OPERATOR = 175;
+	int POSTFIX_OPERATOR = 174;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.UnaryOperator <em>Unary Operator</em>}' enum.
@@ -15582,7 +15320,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getUnaryOperator()
 	 * @generated
 	 */
-	int UNARY_OPERATOR = 176;
+	int UNARY_OPERATOR = 175;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.MultiplicativeOperator <em>Multiplicative Operator</em>}' enum.
@@ -15592,7 +15330,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMultiplicativeOperator()
 	 * @generated
 	 */
-	int MULTIPLICATIVE_OPERATOR = 177;
+	int MULTIPLICATIVE_OPERATOR = 176;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AdditiveOperator <em>Additive Operator</em>}' enum.
@@ -15602,7 +15340,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAdditiveOperator()
 	 * @generated
 	 */
-	int ADDITIVE_OPERATOR = 178;
+	int ADDITIVE_OPERATOR = 177;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.RelationalOperator <em>Relational Operator</em>}' enum.
@@ -15612,7 +15350,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getRelationalOperator()
 	 * @generated
 	 */
-	int RELATIONAL_OPERATOR = 179;
+	int RELATIONAL_OPERATOR = 178;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.EqualityOperator <em>Equality Operator</em>}' enum.
@@ -15622,7 +15360,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getEqualityOperator()
 	 * @generated
 	 */
-	int EQUALITY_OPERATOR = 180;
+	int EQUALITY_OPERATOR = 179;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryBitwiseOperator <em>Binary Bitwise Operator</em>}' enum.
@@ -15632,7 +15370,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryBitwiseOperator()
 	 * @generated
 	 */
-	int BINARY_BITWISE_OPERATOR = 181;
+	int BINARY_BITWISE_OPERATOR = 180;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.BinaryLogicalOperator <em>Binary Logical Operator</em>}' enum.
@@ -15642,7 +15380,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getBinaryLogicalOperator()
 	 * @generated
 	 */
-	int BINARY_LOGICAL_OPERATOR = 182;
+	int BINARY_LOGICAL_OPERATOR = 181;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.ShiftOperator <em>Shift Operator</em>}' enum.
@@ -15652,7 +15390,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getShiftOperator()
 	 * @generated
 	 */
-	int SHIFT_OPERATOR = 183;
+	int SHIFT_OPERATOR = 182;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.AssignmentOperator <em>Assignment Operator</em>}' enum.
@@ -15662,7 +15400,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getAssignmentOperator()
 	 * @generated
 	 */
-	int ASSIGNMENT_OPERATOR = 184;
+	int ASSIGNMENT_OPERATOR = 183;
 
 	/**
 	 * The meta object id for the '{@link org.eclipse.n4js.n4JS.N4Modifier <em>N4 Modifier</em>}' enum.
@@ -15672,7 +15410,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getN4Modifier()
 	 * @generated
 	 */
-	int N4_MODIFIER = 185;
+	int N4_MODIFIER = 184;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Expression</em>' data type.
@@ -15682,7 +15420,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_EXPRESSION = 186;
+	int ITERATOR_OF_EXPRESSION = 185;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Yield Expression</em>' data type.
@@ -15692,7 +15430,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfYieldExpression()
 	 * @generated
 	 */
-	int ITERATOR_OF_YIELD_EXPRESSION = 187;
+	int ITERATOR_OF_YIELD_EXPRESSION = 186;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Statement</em>' data type.
@@ -15702,7 +15440,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_STATEMENT = 188;
+	int ITERATOR_OF_STATEMENT = 187;
 
 	/**
 	 * The meta object id for the '<em>Iterator Of Return Statement</em>' data type.
@@ -15712,7 +15450,7 @@ public interface N4JSPackage extends EPackage {
 	 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getIteratorOfReturnStatement()
 	 * @generated
 	 */
-	int ITERATOR_OF_RETURN_STATEMENT = 189;
+	int ITERATOR_OF_RETURN_STATEMENT = 188;
 
 
 	/**
@@ -21250,27 +20988,6 @@ public interface N4JSPackage extends EPackage {
 	EOperation getVersionedElement__GetDeclaredVersionOrZero();
 
 	/**
-	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.MigrationDeclaration <em>Migration Declaration</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for class '<em>Migration Declaration</em>'.
-	 * @see org.eclipse.n4js.n4JS.MigrationDeclaration
-	 * @generated
-	 */
-	EClass getMigrationDeclaration();
-
-	/**
-	 * Returns the meta object for the containment reference list '{@link org.eclipse.n4js.n4JS.MigrationDeclaration#getFrets <em>Frets</em>}'.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @return the meta object for the containment reference list '<em>Frets</em>'.
-	 * @see org.eclipse.n4js.n4JS.MigrationDeclaration#getFrets()
-	 * @see #getMigrationDeclaration()
-	 * @generated
-	 */
-	EReference getMigrationDeclaration_Frets();
-
-	/**
 	 * Returns the meta object for class '{@link org.eclipse.n4js.n4JS.VersionedIdentifierRef <em>Versioned Identifier Ref</em>}'.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -26100,24 +25817,6 @@ public interface N4JSPackage extends EPackage {
 		 * @generated
 		 */
 		EOperation VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO = eINSTANCE.getVersionedElement__GetDeclaredVersionOrZero();
-
-		/**
-		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.MigrationDeclarationImpl <em>Migration Declaration</em>}' class.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @see org.eclipse.n4js.n4JS.impl.MigrationDeclarationImpl
-		 * @see org.eclipse.n4js.n4JS.impl.N4JSPackageImpl#getMigrationDeclaration()
-		 * @generated
-		 */
-		EClass MIGRATION_DECLARATION = eINSTANCE.getMigrationDeclaration();
-
-		/**
-		 * The meta object literal for the '<em><b>Frets</b></em>' containment reference list feature.
-		 * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
-		 * @generated
-		 */
-		EReference MIGRATION_DECLARATION__FRETS = eINSTANCE.getMigrationDeclaration_Frets();
 
 		/**
 		 * The meta object literal for the '{@link org.eclipse.n4js.n4JS.impl.VersionedIdentifierRefImpl <em>Versioned Identifier Ref</em>}' class.

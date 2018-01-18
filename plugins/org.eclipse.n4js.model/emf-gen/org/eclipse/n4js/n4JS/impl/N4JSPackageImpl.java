@@ -117,7 +117,6 @@ import org.eclipse.n4js.n4JS.LiteralOrComputedPropertyName;
 import org.eclipse.n4js.n4JS.LocalArgumentsVariable;
 import org.eclipse.n4js.n4JS.MemberAccess;
 import org.eclipse.n4js.n4JS.MethodDeclaration;
-import org.eclipse.n4js.n4JS.MigrationDeclaration;
 import org.eclipse.n4js.n4JS.ModifiableElement;
 import org.eclipse.n4js.n4JS.MultiplicativeExpression;
 import org.eclipse.n4js.n4JS.MultiplicativeOperator;
@@ -1412,13 +1411,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * @generated
 	 */
 	private EClass versionedElementEClass = null;
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	private EClass migrationDeclarationEClass = null;
 
 	/**
 	 * <!-- begin-user-doc -->
@@ -6416,24 +6408,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	public EClass getMigrationDeclaration() {
-		return migrationDeclarationEClass;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public EReference getMigrationDeclaration_Frets() {
-		return (EReference)migrationDeclarationEClass.getEStructuralFeatures().get(0);
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
 	public EClass getVersionedIdentifierRef() {
 		return versionedIdentifierRefEClass;
 	}
@@ -7340,9 +7314,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		createEOperation(versionedElementEClass, VERSIONED_ELEMENT___HAS_DECLARED_VERSION);
 		createEOperation(versionedElementEClass, VERSIONED_ELEMENT___GET_DECLARED_VERSION_OR_ZERO);
 
-		migrationDeclarationEClass = createEClass(MIGRATION_DECLARATION);
-		createEReference(migrationDeclarationEClass, MIGRATION_DECLARATION__FRETS);
-
 		versionedIdentifierRefEClass = createEClass(VERSIONED_IDENTIFIER_REF);
 		createEOperation(versionedIdentifierRefEClass, VERSIONED_IDENTIFIER_REF___GET_VERSION);
 
@@ -7651,7 +7622,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		jsxSpreadAttributeEClass.getESuperTypes().add(this.getJSXAttribute());
 		jsxElementEClass.getESuperTypes().add(this.getExpression());
 		jsxElementEClass.getESuperTypes().add(this.getJSXChild());
-		migrationDeclarationEClass.getESuperTypes().add(this.getFunctionDeclaration());
 		versionedIdentifierRefEClass.getESuperTypes().add(this.getIdentifierRef());
 		versionedIdentifierRefEClass.getESuperTypes().add(theTypeRefsPackage.getVersionedReference());
 		versionedNamedImportSpecifierEClass.getESuperTypes().add(this.getNamedImportSpecifier());
@@ -8519,9 +8489,6 @@ public class N4JSPackageImpl extends EPackageImpl implements N4JSPackage {
 		initEOperation(getVersionedElement__HasDeclaredVersion(), theEcorePackage.getEBoolean(), "hasDeclaredVersion", 0, 1, !IS_UNIQUE, IS_ORDERED);
 
 		initEOperation(getVersionedElement__GetDeclaredVersionOrZero(), theEcorePackage.getEInt(), "getDeclaredVersionOrZero", 0, 1, !IS_UNIQUE, IS_ORDERED);
-
-		initEClass(migrationDeclarationEClass, MigrationDeclaration.class, "MigrationDeclaration", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-		initEReference(getMigrationDeclaration_Frets(), this.getFormalParameter(), null, "frets", null, 0, -1, MigrationDeclaration.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
 		initEClass(versionedIdentifierRefEClass, VersionedIdentifierRef.class, "VersionedIdentifierRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

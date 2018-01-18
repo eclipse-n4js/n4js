@@ -188,7 +188,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 			case N4JSPackage.JSX_PROPERTY_ATTRIBUTE: return createJSXPropertyAttribute();
 			case N4JSPackage.JSX_SPREAD_ATTRIBUTE: return createJSXSpreadAttribute();
 			case N4JSPackage.JSX_ELEMENT: return createJSXElement();
-			case N4JSPackage.MIGRATION_DECLARATION: return createMigrationDeclaration();
 			case N4JSPackage.VERSIONED_IDENTIFIER_REF: return createVersionedIdentifierRef();
 			case N4JSPackage.VERSIONED_NAMED_IMPORT_SPECIFIER: return createVersionedNamedImportSpecifier();
 			default:
@@ -1498,16 +1497,6 @@ public class N4JSFactoryImpl extends EFactoryImpl implements N4JSFactory {
 	public JSXElement createJSXElement() {
 		JSXElementImpl jsxElement = new JSXElementImpl();
 		return jsxElement;
-	}
-
-	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @generated
-	 */
-	public MigrationDeclaration createMigrationDeclaration() {
-		MigrationDeclarationImpl migrationDeclaration = new MigrationDeclarationImpl();
-		return migrationDeclaration;
 	}
 
 	/**

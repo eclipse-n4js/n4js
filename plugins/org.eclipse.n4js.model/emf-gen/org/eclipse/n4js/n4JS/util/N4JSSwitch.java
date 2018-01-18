@@ -1838,28 +1838,6 @@ public class N4JSSwitch<T> extends Switch<T> {
 				if (result == null) result = defaultCase(theEObject);
 				return result;
 			}
-			case N4JSPackage.MIGRATION_DECLARATION: {
-				MigrationDeclaration migrationDeclaration = (MigrationDeclaration)theEObject;
-				T result = caseMigrationDeclaration(migrationDeclaration);
-				if (result == null) result = caseFunctionDeclaration(migrationDeclaration);
-				if (result == null) result = caseAnnotableScriptElement(migrationDeclaration);
-				if (result == null) result = caseModifiableElement(migrationDeclaration);
-				if (result == null) result = caseStatement(migrationDeclaration);
-				if (result == null) result = caseFunctionDefinition(migrationDeclaration);
-				if (result == null) result = caseGenericDeclaration(migrationDeclaration);
-				if (result == null) result = caseExportableElement(migrationDeclaration);
-				if (result == null) result = caseNamedElement(migrationDeclaration);
-				if (result == null) result = caseScriptElement(migrationDeclaration);
-				if (result == null) result = caseControlFlowElement(migrationDeclaration);
-				if (result == null) result = caseFunctionOrFieldAccessor(migrationDeclaration);
-				if (result == null) result = caseTypeDefiningElement(migrationDeclaration);
-				if (result == null) result = caseAnnotableElement(migrationDeclaration);
-				if (result == null) result = caseVariableEnvironmentElement(migrationDeclaration);
-				if (result == null) result = caseThisArgProvider(migrationDeclaration);
-				if (result == null) result = caseTypableElement(migrationDeclaration);
-				if (result == null) result = defaultCase(theEObject);
-				return result;
-			}
 			case N4JSPackage.VERSIONED_IDENTIFIER_REF: {
 				VersionedIdentifierRef versionedIdentifierRef = (VersionedIdentifierRef)theEObject;
 				T result = caseVersionedIdentifierRef(versionedIdentifierRef);
@@ -4434,21 +4412,6 @@ public class N4JSSwitch<T> extends Switch<T> {
 	 * @generated
 	 */
 	public T caseVersionedElement(VersionedElement object) {
-		return null;
-	}
-
-	/**
-	 * Returns the result of interpreting the object as an instance of '<em>Migration Declaration</em>'.
-	 * <!-- begin-user-doc -->
-	 * This implementation returns null;
-	 * returning a non-null result will terminate the switch.
-	 * <!-- end-user-doc -->
-	 * @param object the target of the switch.
-	 * @return the result of interpreting the object as an instance of '<em>Migration Declaration</em>'.
-	 * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-	 * @generated
-	 */
-	public T caseMigrationDeclaration(MigrationDeclaration object) {
 		return null;
 	}
 

@@ -2270,13 +2270,6 @@ abstract class VersionedElement {
 	}
 }
 
-/*
- * Migrations are like functions, except that they allow for multiple return values.
- */
-class MigrationDeclaration extends FunctionDeclaration {
-	contains FormalParameter[] frets
-}
-
 class VersionedIdentifierRef extends IdentifierRef, VersionedReference {
 	/*
 	 * Override VersionedElement#getVersion() to return the declared version.
