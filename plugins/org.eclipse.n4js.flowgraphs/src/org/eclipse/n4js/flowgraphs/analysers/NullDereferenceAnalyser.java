@@ -19,6 +19,9 @@ import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.DestructUtils;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -179,25 +182,22 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-			if (must) {
-				EqualityOperator equalityOperator = getNullCheckOperator(effect.symbol, cfe);
-				if (equalityOperator != null) {
-					if (!inverse && equalityOperator == EqualityOperator.EQ) {
-						return false;
-					}
-					if (inverse && equalityOperator == EqualityOperator.NEQ) {
-						return false;
-					}
-				}
+		public boolean holdsOnGuard(Guard guard) {
+			if (guard.type.IsNullOrUndefined() && guard.asserts.canHold()) {
+				return false;
 			}
+			if (guard.type == GuardType.IsTruthy && guard.asserts == GuardAssertion.AlwaysHolds) {
+				this.deactivateAlias(guard.symbol);
+			}
+
 			return true;
 		}
 	}
 
+	// TODO: revisit and specify Null|Undefined|Truthy better
 	static class IsReasonableNullGuard extends Assumption {
 		private boolean alwaysNullBefore = false;
-		private boolean alwaysNotNullBefore = false;
+		private boolean neverNullBefore = false;
 
 		IsReasonableNullGuard(ControlFlowElement cfe, Symbol symbol) {
 			this(cfe, symbol, false, false);
@@ -208,13 +208,13 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 			super(cfe, symbol);
 			this.alwaysNullBefore = alwaysNullBefore;
-			this.alwaysNotNullBefore = alwaysNotNullBefore;
+			this.neverNullBefore = alwaysNotNullBefore;
 		}
 
 		IsReasonableNullGuard(IsReasonableNullGuard copy) {
 			super(copy);
 			this.alwaysNullBefore = copy.alwaysNullBefore;
-			this.alwaysNotNullBefore = copy.alwaysNotNullBefore;
+			this.neverNullBefore = copy.neverNullBefore;
 		}
 
 		@Override
@@ -227,7 +227,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 			super.mergeWith(assumption);
 			IsReasonableNullGuard irng = (IsReasonableNullGuard) assumption;
 			alwaysNullBefore |= irng.alwaysNullBefore;
-			alwaysNotNullBefore |= irng.alwaysNotNullBefore;
+			neverNullBefore |= irng.neverNullBefore;
 		}
 
 		@Override
@@ -237,7 +237,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 				if (ae.getRhs() instanceof NullLiteral) {
 					alwaysNullBefore = true;
 				} else {
-					alwaysNotNullBefore = true;
+					neverNullBefore = true;
 				}
 				deactivate();
 			}
@@ -246,18 +246,18 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-			if (must) {
-				EqualityOperator equalityOperator = getNullCheckOperator(effect.symbol, cfe);
-				if (equalityOperator != null) {
-					if (inverse == (equalityOperator == EqualityOperator.NEQ)) {
-						alwaysNullBefore = true;
-					} else {
-						alwaysNotNullBefore = true;
-					}
-					deactivate();
+		public boolean holdsOnGuard(Guard guard) {
+			if (guard.type == GuardType.IsTruthy) {
+				if (guard.asserts == GuardAssertion.AlwaysHolds) {
+					neverNullBefore = true;
+					this.deactivateAlias(guard.symbol);
+				}
+				if (guard.asserts == GuardAssertion.NeverHolds) {
+					alwaysNullBefore = true;
+					this.deactivateAlias(guard.symbol);
 				}
 			}
+
 			return true;
 		}
 
@@ -265,7 +265,7 @@ public class NullDereferenceAnalyser extends DataFlowVisitor {
 		public boolean holdsAfterall() {
 			boolean isReasonableNullGuard = true;
 			isReasonableNullGuard &= !alwaysNullBefore;
-			isReasonableNullGuard &= !alwaysNotNullBefore;
+			isReasonableNullGuard &= !neverNullBefore;
 			return isReasonableNullGuard;
 		}
 	}

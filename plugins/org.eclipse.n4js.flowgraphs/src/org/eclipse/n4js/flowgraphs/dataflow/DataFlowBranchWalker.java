@@ -20,6 +20,7 @@ import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.n4js.flowgraphs.analysis.BranchWalkerInternal;
+import org.eclipse.n4js.flowgraphs.model.ControlFlowEdge;
 import org.eclipse.n4js.flowgraphs.model.Node;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -66,6 +67,27 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 			}
 			if (!handledDataFlow) {
 				handleVisitEffect(cfe, effect);
+			}
+		}
+	}
+
+	@Override
+	protected void visit(Node lastVisitNodes, Node end, ControlFlowEdge edge) {
+		GuardStructure guardStructure = new GuardStructureFactory(getSymbolFactory()).create(edge);
+		if (guardStructure != null) {
+			for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
+				Assumption ass = assIter.next();
+				if (ass.isActive()) {
+					for (Symbol alias : ass.aliases) {
+						if (guardStructure.guards.entrySet().contains(alias)) {
+							List<Guard> conditions = guardStructure.guards.get(alias);
+							ass.callHoldsOnGuard(null);
+						}
+					}
+				}
+				if (ass.isFailed()) {
+					assIter.remove();
+				}
 			}
 		}
 	}
@@ -153,14 +175,16 @@ class DataFlowBranchWalker extends BranchWalkerInternal {
 	private void callHoldsOnEffect(ControlFlowElement cfe, EffectInfo effect) {
 		for (Iterator<Assumption> assIter = assumptions.values().iterator(); assIter.hasNext();) {
 			Assumption ass = assIter.next();
-			if (ass.isActive() && ass.aliases.contains(effect.symbol)) {
-				ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
+			if (ass.isActive()) {
+				if (ass.aliases.contains(effect.symbol)) {
+					ass.callHoldsOnEffect(effect, cfe); // call for plain aliases
 
-			} else {
-				for (Symbol alias : ass.aliases) {
-					if (effect.symbol.isStrucuralAlias(alias)) {
-						ass.callHoldsOnEffect(effect, cfe); // also called for structural aliases
-						break;
+				} else {
+					for (Symbol alias : ass.aliases) {
+						if (effect.symbol.isStrucuralAlias(alias)) {
+							ass.callHoldsOnEffect(effect, cfe); // also called for structural aliases
+							break;
+						}
 					}
 				}
 			}

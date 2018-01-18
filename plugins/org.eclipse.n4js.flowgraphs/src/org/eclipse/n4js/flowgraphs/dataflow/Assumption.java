@@ -191,29 +191,22 @@ abstract public class Assumption {
 		return true;
 	}
 
-	void callHoldsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-		boolean holds = holdsOnGuard(effect, cfe, must, inverse);
-		handleHolds(effect.symbol, holds);
+	void callHoldsOnGuard(Guard guard) {
+		boolean holds = holdsOnGuard(guard);
+		handleHolds(guard.symbol, holds);
 	}
 
 	/**
 	 * This method gets called on {@link Expression}s that guard branches such as in {@link IfStatement},
 	 * {@link ConditionalExpression} and loops.
 	 *
-	 * @param effect
-	 *            the {@link EffectInfo} that is performed on the aliased symbol due to the container
-	 * @param cfe
-	 *            the {@link ControlFlowElement} that contains the given alias. The {@code container} is always an
-	 *            {@link Expression} with a boolean return type.
-	 * @param must
-	 *            true iff the container must be true, false iff the container can be true
-	 * @param inverse
-	 *            true iff the semantics of the container has to be inverted (i.e. in 'else' branch of 'if' statements),
-	 *            otherwise false
+	 * @param guard
+	 *            the {@link Guard} that holds on one of the aliases of this {@link Assumption}
+	 *
 	 * @return true iff the assumption holds
 	 */
 	@Deprecated // not implemented yet
-	public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
+	public boolean holdsOnGuard(Guard guard) {
 		return true;
 	}
 

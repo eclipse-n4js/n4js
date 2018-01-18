@@ -16,6 +16,8 @@ import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.AssignmentExpression;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
@@ -98,11 +100,10 @@ public class DivisionByZeroAnalyser extends DataFlowVisitor {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-			EqualityOperator equalityOperator = getZeroCheckOperator(effect.symbol, cfe);
-			if (equalityOperator != null) {
-				boolean mustBeZero = inverse == (equalityOperator == EqualityOperator.NEQ);
-				return !mustBeZero;
+		public boolean holdsOnGuard(Guard guard) {
+			if (guard.type == GuardType.IsZero && guard.asserts.canHold()) {
+				this.deactivateAlias(guard.symbol);
+				return false;
 			}
 			return true;
 		}

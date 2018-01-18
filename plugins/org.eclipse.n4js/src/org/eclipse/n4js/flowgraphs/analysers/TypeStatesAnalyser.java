@@ -18,6 +18,9 @@ import org.eclipse.n4js.flowgraphs.dataflow.Assumption;
 import org.eclipse.n4js.flowgraphs.dataflow.DataFlowVisitor;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectInfo;
 import org.eclipse.n4js.flowgraphs.dataflow.EffectType;
+import org.eclipse.n4js.flowgraphs.dataflow.Guard;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardAssertion;
+import org.eclipse.n4js.flowgraphs.dataflow.GuardType;
 import org.eclipse.n4js.flowgraphs.dataflow.Symbol;
 import org.eclipse.n4js.n4JS.ControlFlowElement;
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression;
@@ -121,14 +124,14 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-
-			if (must && effect.type == EffectType.MethodCall) {
-				Collection<String> inStates = getDeclaredStates(cfe, ANNOTATION_INSTATE);
+		public boolean holdsOnGuard(Guard guard) {
+			if (guard.type == GuardType.InState) {
+				Collection<String> inStates = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
 				if (!inStates.isEmpty()) {
-					if (inverse) {
+					if (guard.asserts == GuardAssertion.AlwaysHolds) {
 						preStates.addAll(inStates);
-					} else {
+					}
+					if (guard.asserts == GuardAssertion.NeverHolds) {
 						preStates.clear();
 						preStates.addAll(inStates);
 					}
@@ -184,10 +187,9 @@ public class TypeStatesAnalyser extends DataFlowVisitor {
 
 		@SuppressWarnings("deprecation")
 		@Override
-		public boolean holdsOnGuard(EffectInfo effect, ControlFlowElement cfe, boolean must, boolean inverse) {
-
-			if (must && !inverse && effect.type == EffectType.MethodCall) {
-				Collection<String> inStatesAfterGuard = getDeclaredStates(cfe, ANNOTATION_INSTATE);
+		public boolean holdsOnGuard(Guard guard) {
+			if (guard.type == GuardType.InState && guard.asserts == GuardAssertion.AlwaysHolds) {
+				Collection<String> inStatesAfterGuard = getDeclaredStates(guard.condition, ANNOTATION_INSTATE);
 				if (!inStatesAfterGuard.isEmpty()) {
 					postStates.addAll(inStatesAfterGuard);
 					deactivate();
