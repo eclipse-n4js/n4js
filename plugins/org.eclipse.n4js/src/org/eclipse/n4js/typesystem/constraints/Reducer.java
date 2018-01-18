@@ -41,7 +41,6 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
-import org.eclipse.n4js.ts.utils.TypeCompareHelper;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
@@ -69,7 +68,6 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	private final RuleEnvironment G;
 	private final N4JSTypeSystem ts;
 	private final TypeSystemHelper tsh;
-	private final TypeCompareHelper tch;
 
 	enum BooleanOp {
 		CONJUNCTION, DISJUNCTION
@@ -78,13 +76,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	/**
 	 * Creates an instance.
 	 */
-	public Reducer(InferenceContext ic, RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh,
-			TypeCompareHelper tch) {
+	public Reducer(InferenceContext ic, RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh) {
 		this.ic = ic;
 		this.G = G;
 		this.ts = ts;
 		this.tsh = tsh;
-		this.tch = tch;
 	}
 
 	/**

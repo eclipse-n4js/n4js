@@ -11,7 +11,6 @@
 package org.eclipse.n4js.typesystem
 
 import com.google.inject.Inject
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import java.util.Map
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.N4JSInjectorProvider
@@ -33,6 +32,7 @@ import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.validation.JavaScriptVariant
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner
@@ -42,7 +42,6 @@ import org.junit.Before
 import org.junit.runner.RunWith
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.utils.TypeCompareHelper
 
 /**
  */
@@ -52,7 +51,6 @@ public abstract class AbstractInferenceContextTest extends AbstractTypeSystemHel
 
 	@Inject private N4JSTypeSystem ts;
 	@Inject private TypeSystemHelper tsh;
-	@Inject private TypeCompareHelper tch;
 	@Inject private OperationCanceledManager operationCanceledManager;
 
 	protected static val DEFAULT_CODE = '''
@@ -235,7 +233,7 @@ public abstract class AbstractInferenceContextTest extends AbstractTypeSystemHel
 		Script script, TypeConstraint[] constraints, Pair<InferenceVariable,TypeRef>... expectedInstantiations) {
 		val G = RuleEnvironmentExtensions.newRuleEnvironment(script)
 		val infVars = expectedInstantiations.map[key].toSet
-		val InferenceContext infCtx = new InferenceContext(ts,tsh,tch,operationCanceledManager,CancelIndicator.NullImpl,G,infVars)
+		val InferenceContext infCtx = new InferenceContext(ts,tsh,operationCanceledManager,CancelIndicator.NullImpl,G,infVars)
 		constraints.forEach[infCtx.addConstraint(left,right,variance)]
 
 		val solution = infCtx.solve

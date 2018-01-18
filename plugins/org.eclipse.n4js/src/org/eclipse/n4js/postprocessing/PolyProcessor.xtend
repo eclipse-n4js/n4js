@@ -12,7 +12,6 @@ package org.eclipse.n4js.postprocessing
 
 import com.google.inject.Inject
 import com.google.inject.Singleton
-import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.emf.ecore.EObject
 import org.eclipse.n4js.n4JS.Argument
 import org.eclipse.n4js.n4JS.ArrayElement
@@ -34,10 +33,10 @@ import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
+import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
 
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.ts.utils.TypeCompareHelper
 
 /**
  * The main poly processor responsible for typing poly expressions using a constraint-based approach.
@@ -68,9 +67,6 @@ package class PolyProcessor extends AbstractPolyProcessor {
 
 	@Inject
 	private JavaScriptVariantHelper jsVariantHelper;
-
-	@Inject
-	private TypeCompareHelper tch;
 
 	// ################################################################################################################
 
@@ -144,7 +140,7 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	def package void inferType(RuleEnvironment G, Expression rootPoly, ASTMetaInfoCache cache) {
 
 		// create a new constraint system
-		val InferenceContext infCtx = new InferenceContext(ts, tsh, tch, operationCanceledManager, G.cancelIndicator, G);
+		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G);
 
 		// in plain JS files, we want to avoid searching for a solution (to avoid performance problems in some JS files
 		// with extremely large array/object literals) but to avoid having to deal with this case with additional code,
