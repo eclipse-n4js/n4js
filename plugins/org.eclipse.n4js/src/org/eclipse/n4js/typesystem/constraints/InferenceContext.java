@@ -39,6 +39,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.TypesFactory;
 import org.eclipse.n4js.ts.types.util.Variance;
+import org.eclipse.n4js.ts.utils.TypeCompareHelper;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
@@ -159,7 +160,8 @@ public final class InferenceContext {
 	 * @param inferenceVariables
 	 *            the meta variables to be inferred.
 	 */
-	public InferenceContext(N4JSTypeSystem ts, TypeSystemHelper tsh, OperationCanceledManager operationCanceledManager,
+	public InferenceContext(N4JSTypeSystem ts, TypeSystemHelper tsh, TypeCompareHelper tch,
+			OperationCanceledManager operationCanceledManager,
 			CancelIndicator cancelIndicator, RuleEnvironment G, InferenceVariable... inferenceVariables) {
 		Objects.requireNonNull(ts);
 		Objects.requireNonNull(tsh);
@@ -170,7 +172,7 @@ public final class InferenceContext {
 		this.cancelIndicator = cancelIndicator;
 		this.G = G;
 		addInferenceVariables(false, inferenceVariables);
-		this.reducer = new Reducer(this, G, ts, tsh);
+		this.reducer = new Reducer(this, G, ts, tsh, tch);
 		this.currentBounds = new BoundSet(this, G, ts);
 	}
 

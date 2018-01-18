@@ -41,6 +41,7 @@ import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypeVariable;
 import org.eclipse.n4js.ts.types.util.AllSuperTypesCollector;
 import org.eclipse.n4js.ts.types.util.Variance;
+import org.eclipse.n4js.ts.utils.TypeCompareHelper;
 import org.eclipse.n4js.ts.utils.TypeUtils;
 import org.eclipse.n4js.typesystem.N4JSTypeSystem;
 import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions;
@@ -68,6 +69,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	private final RuleEnvironment G;
 	private final N4JSTypeSystem ts;
 	private final TypeSystemHelper tsh;
+	private final TypeCompareHelper tch;
 
 	enum BooleanOp {
 		CONJUNCTION, DISJUNCTION
@@ -76,11 +78,13 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	/**
 	 * Creates an instance.
 	 */
-	public Reducer(InferenceContext ic, RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh) {
+	public Reducer(InferenceContext ic, RuleEnvironment G, N4JSTypeSystem ts, TypeSystemHelper tsh,
+			TypeCompareHelper tch) {
 		this.ic = ic;
 		this.G = G;
 		this.ts = ts;
 		this.tsh = tsh;
+		this.tch = tch;
 	}
 
 	/**
@@ -586,6 +590,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			right = tmp;
 			variance = CONTRA;
 		}
+		boolean leftRightRawIdentical = tch.compare(leftRaw, rightRaw) == 0;
 		boolean wasAdded = false;
 		final RuleEnvironment Gx = RuleEnvironmentExtensions.newRuleEnvironment(G);
 		tsh.addSubstitutions(Gx, right);
@@ -630,7 +635,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					// Due to normalization above, we always have: leftArg >: leftParamSubst
 					// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
 					final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
-					final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null ? leftDefSiteVarianceRaw : INV;
+					// Note: we reduce G<out A> >: G<IV> to A >: IV as well as G<in A> >: G<IV> to A :< IV only if the
+					// left and the right raw type are identical (hence the use of 'leftRightRawIdentical' flag).
+					final Variance leftDefSiteVariance = leftRightRawIdentical && leftDefSiteVarianceRaw != null
+							? leftDefSiteVarianceRaw : INV;
 					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(leftDefSiteVariance));
 				}
 			}
