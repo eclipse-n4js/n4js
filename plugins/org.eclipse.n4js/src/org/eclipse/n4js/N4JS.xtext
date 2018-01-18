@@ -1540,11 +1540,7 @@ JSXPropertyAttribute:
 /* Version related rules */
 
 
-/*
- * Version declaration, used in type declarations and types refs of migration parameters and returns.
- */
 fragment VersionDeclaration*: declaredVersion=VERSION;
-
 
 VersionedImportIdentifier returns VersionedNamedImportSpecifier:
 		importedElement=[types::TExportableElement|BindingIdentifier<Yield=false>] VersionRequest

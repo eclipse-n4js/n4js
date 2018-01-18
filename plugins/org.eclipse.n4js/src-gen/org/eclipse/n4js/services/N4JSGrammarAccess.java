@@ -9663,9 +9663,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 		//// ****************************************************************************************************
 		//// N4IDL related rules
 		//// ****************************************************************************************************
-		///* Version related rules */ /*
-		// * Version declaration, used in type declarations and types refs of migration parameters and returns.
-		// */ fragment VersionDeclaration *:
+		///* Version related rules */ fragment VersionDeclaration *:
 		//	declaredVersion=VERSION;
 		@Override public ParserRule getRule() { return rule; }
 		
@@ -13314,9 +13312,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//// ****************************************************************************************************
 	//// N4IDL related rules
 	//// ****************************************************************************************************
-	///* Version related rules */ /*
-	// * Version declaration, used in type declarations and types refs of migration parameters and returns.
-	// */ fragment VersionDeclaration *:
+	///* Version related rules */ fragment VersionDeclaration *:
 	//	declaredVersion=VERSION;
 	public VersionDeclarationElements getVersionDeclarationAccess() {
 		return pVersionDeclaration;
@@ -13894,9 +13890,7 @@ public class N4JSGrammarAccess extends AbstractGrammarElementFinder {
 	//	| 'implements' | 'interface'
 	//	| 'private' | 'protected' | 'public' // package not used in N4JS
 	//	// definition-site variance
-	//	| 'out'
-	//	// N4IDL specific keywords
-	//	| 'migration';
+	//	| 'out';
 	public TypeExpressionsGrammarAccess.N4KeywordElements getN4KeywordAccess() {
 		return gaTypeExpressions.getN4KeywordAccess();
 	}

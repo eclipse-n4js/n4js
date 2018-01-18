@@ -6691,12 +6691,6 @@ ruleN4Keyword returns [AntlrDatatypeRuleToken current=new AntlrDatatypeRuleToken
 			$current.merge(kw);
 			newLeafNode(kw, grammarAccess.getN4KeywordAccess().getOutKeyword_24());
 		}
-		    |
-		kw=Migration
-		{
-			$current.merge(kw);
-			newLeafNode(kw, grammarAccess.getN4KeywordAccess().getMigrationKeyword_25());
-		}
 	)
 ;
 

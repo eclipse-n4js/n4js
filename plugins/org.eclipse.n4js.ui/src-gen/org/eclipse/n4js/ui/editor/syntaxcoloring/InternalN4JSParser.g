@@ -4679,8 +4679,6 @@ ruleForStatement
 									    |
 									Out
 									    |
-									Migration
-									    |
 									New
 									    |
 									This_1
@@ -4805,7 +4803,6 @@ ruleForStatement
 									Protected | 
 									Public | 
 									Out | 
-									Migration | 
 									New | 
 									This_1 | 
 									Super | 
@@ -5191,8 +5188,6 @@ norm1_ForStatement
 									    |
 									Out
 									    |
-									Migration
-									    |
 									Yield
 									    |
 									New
@@ -5318,7 +5313,6 @@ norm1_ForStatement
 									Protected | 
 									Public | 
 									Out | 
-									Migration | 
 									Yield | 
 									New | 
 									This_1 | 
@@ -7334,8 +7328,6 @@ rulePropertyAssignment
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -7566,8 +7558,6 @@ norm1_PropertyAssignment
 				Public
 				    |
 				Out
-				    |
-				Migration
 				    |
 				LeftSquareBracket
 				    |
@@ -7844,8 +7834,6 @@ ruleAnnotatedPropertyAssignment
 						    |
 						Out
 						    |
-						Migration
-						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -7932,7 +7920,6 @@ ruleAnnotatedPropertyAssignment
 						Protected | 
 						Public | 
 						Out | 
-						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -8315,8 +8302,6 @@ norm1_AnnotatedPropertyAssignment
 						    |
 						Out
 						    |
-						Migration
-						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -8403,7 +8388,6 @@ norm1_AnnotatedPropertyAssignment
 						Protected | 
 						Public | 
 						Out | 
-						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -9205,8 +9189,6 @@ rulePropertySetterDeclaration
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -9293,7 +9275,6 @@ rulePropertySetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -9475,8 +9456,6 @@ norm1_PropertySetterDeclaration
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -9563,7 +9542,6 @@ norm1_PropertySetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -10810,8 +10788,6 @@ ruleRelationalExpression
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LessThanSign
 				    |
 				True
@@ -10916,7 +10892,6 @@ ruleRelationalExpression
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -11023,8 +10998,6 @@ norm1_RelationalExpression
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LessThanSign
 				    |
 				True
@@ -11129,7 +11102,6 @@ norm1_RelationalExpression
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -11234,8 +11206,6 @@ norm2_RelationalExpression
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LessThanSign
 				    |
 				True
@@ -11339,7 +11309,6 @@ norm2_RelationalExpression
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -11444,8 +11413,6 @@ norm3_RelationalExpression
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LessThanSign
 				    |
 				True
@@ -11549,7 +11516,6 @@ norm3_RelationalExpression
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LessThanSign | 
 				True | 
 				False | 
@@ -13341,7 +13307,6 @@ ruleYieldExpression
 		Protected | 
 		Public | 
 		Out | 
-		Migration | 
 		Yield | 
 		New | 
 		This_1 | 
@@ -13425,7 +13390,6 @@ norm1_YieldExpression
 		Protected | 
 		Public | 
 		Out | 
-		Migration | 
 		Yield | 
 		New | 
 		This_1 | 
@@ -15694,8 +15658,6 @@ ruleN4MemberDeclaration
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -15919,8 +15881,6 @@ norm1_N4MemberDeclaration
 				Public
 				    |
 				Out
-				    |
-				Migration
 				    |
 				LeftSquareBracket
 				    |
@@ -16178,8 +16138,6 @@ ruleAnnotatedN4MemberDeclaration
 						    |
 						Out
 						    |
-						Migration
-						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -16271,7 +16229,6 @@ ruleAnnotatedN4MemberDeclaration
 						Protected | 
 						Public | 
 						Out | 
-						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -16615,8 +16572,6 @@ norm1_AnnotatedN4MemberDeclaration
 						    |
 						Out
 						    |
-						Migration
-						    |
 						LeftSquareBracket
 						    |
 						RULE_IDENTIFIER
@@ -16708,7 +16663,6 @@ norm1_AnnotatedN4MemberDeclaration
 						Protected | 
 						Public | 
 						Out | 
-						Migration | 
 						LeftSquareBracket | 
 						RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 						(
@@ -17515,7 +17469,6 @@ ruleGetterHeader
 		Protected | 
 		Public | 
 		Out | 
-		Migration | 
 		LeftSquareBracket | 
 		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 		(
@@ -17622,7 +17575,6 @@ norm1_GetterHeader
 		Protected | 
 		Public | 
 		Out | 
-		Migration | 
 		LeftSquareBracket | 
 		RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 		(
@@ -17797,8 +17749,6 @@ ruleN4SetterDeclaration
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -17890,7 +17840,6 @@ ruleN4SetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -18083,8 +18032,6 @@ norm1_N4SetterDeclaration
 				    |
 				Out
 				    |
-				Migration
-				    |
 				LeftSquareBracket
 				    |
 				RULE_IDENTIFIER
@@ -18176,7 +18123,6 @@ norm1_N4SetterDeclaration
 				Protected | 
 				Public | 
 				Out | 
-				Migration | 
 				LeftSquareBracket | 
 				RULE_IDENTIFIER | RULE_STRING | RULE_DOUBLE | RULE_INT | RULE_OCTAL_INT | RULE_HEX_INT | RULE_SCIENTIFIC_INT)=>
 				(
@@ -21039,10 +20985,6 @@ ruleN4Keyword
 	    |
 	OutKeyword_24=Out {
 		announce($OutKeyword_24, grammarAccess.getN4KeywordAccess().getOutKeyword_24());
-	}
-	    |
-	MigrationKeyword_25=Migration {
-		announce($MigrationKeyword_25, grammarAccess.getN4KeywordAccess().getMigrationKeyword_25());
 	}
 )
 ;

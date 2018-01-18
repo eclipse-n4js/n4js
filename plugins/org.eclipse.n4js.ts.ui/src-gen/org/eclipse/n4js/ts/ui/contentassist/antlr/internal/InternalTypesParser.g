@@ -121,7 +121,6 @@ import org.eclipse.n4js.ts.services.TypesGrammarAccess;
 		tokenNameToValue.put("Function", "'function'");
 		tokenNameToValue.put("Promisify", "'Promisify'");
 		tokenNameToValue.put("Interface", "'interface'");
-		tokenNameToValue.put("Migration", "'migration'");
 		tokenNameToValue.put("Primitive", "'primitive'");
 		tokenNameToValue.put("Protected", "'protected'");
 		tokenNameToValue.put("Undefined", "'undefined'");
@@ -3478,12 +3477,6 @@ rule__N4Keyword__Alternatives
 		{ before(grammarAccess.getN4KeywordAccess().getOutKeyword_24()); }
 		Out
 		{ after(grammarAccess.getN4KeywordAccess().getOutKeyword_24()); }
-	)
-	|
-	(
-		{ before(grammarAccess.getN4KeywordAccess().getMigrationKeyword_25()); }
-		Migration
-		{ after(grammarAccess.getN4KeywordAccess().getMigrationKeyword_25()); }
 	)
 ;
 finally {

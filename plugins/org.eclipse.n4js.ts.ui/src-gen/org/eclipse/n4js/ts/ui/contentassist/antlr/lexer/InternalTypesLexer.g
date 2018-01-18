@@ -42,8 +42,6 @@ Promisify : 'Promisify';
 
 Interface : 'interface';
 
-Migration : 'migration';
-
 Primitive : 'primitive';
 
 Protected : 'protected';
