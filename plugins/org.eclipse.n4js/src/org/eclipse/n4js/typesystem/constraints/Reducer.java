@@ -590,7 +590,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			right = tmp;
 			variance = CONTRA;
 		}
-		boolean leftRightRawIdentical = tch.compare(leftRaw, rightRaw) == 0;
+
 		boolean wasAdded = false;
 		final RuleEnvironment Gx = RuleEnvironmentExtensions.newRuleEnvironment(G);
 		tsh.addSubstitutions(Gx, right);
@@ -601,6 +601,9 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		for (int idx = 0; idx < len; ++idx) {
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
+			// Retrieve the right type argument in 'right' corresponding to 'leftArg'
+			final TypeArgument correspondingRightTypeArg = right.getTypeArgs().size() > idx
+					? right.getTypeArgs().get(idx) : null;
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
 						.getValue();
@@ -636,9 +639,10 @@ import org.eclipse.xtext.xbase.lib.Pair;
 					// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
 					final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
 					// Note: we reduce G<out A> >: G<IV> to A >: IV as well as G<in A> >: G<IV> to A :< IV only if the
-					// left and the right raw type are identical (hence the use of 'leftRightRawIdentical' flag).
-					final Variance leftDefSiteVariance = leftRightRawIdentical && leftDefSiteVarianceRaw != null
-							? leftDefSiteVarianceRaw : INV;
+					// the right raw type has a corresponding type argument.
+
+					final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null
+							&& correspondingRightTypeArg != null ? leftDefSiteVarianceRaw : INV;
 					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(leftDefSiteVariance));
 				}
 			}

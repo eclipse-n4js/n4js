@@ -134,3 +134,29 @@ let test31: H<B> = fooReverse(gra);
 let test32: H<B> = fooReverse(grb);
 // XPECT noerrors
 let test33: H<B> = fooReverse(grc);
+
+// ======================================================================================================
+// Use invariance in case the right type does not have corresponding type variable, e.g. GR<out IV> :> B
+
+
+class X {}
+class Y extends X {}
+class Z extends X {}
+interface GR2<out T extends X> {}
+
+
+interface I<out T1 extends Y> extends GR2<T1> {}
+interface J<out T2 extends Z> extends GR2<T2> {}
+
+class K implements I<Y>, J<Z> {};
+
+async function <T extends X> foo2(p:GR2<T>): T {
+	return null;
+}
+
+async function test() {
+	let y: Y;
+	let k: K;
+	// XPECT noerrors
+	y = (await foo2(k));
+}
