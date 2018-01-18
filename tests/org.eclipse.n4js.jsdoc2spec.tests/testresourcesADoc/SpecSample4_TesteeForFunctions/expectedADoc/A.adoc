@@ -24,7 +24,9 @@ include::{find}config.adoc[]
 === ++Variable bar2var++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:bar2var++[``++bar2var: string++``]
+
 
 ==== Description
 
@@ -37,14 +39,17 @@ Spec for Var bar2var
 === ++Variable barvar++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:barvar++[``++barvar: string++``]
+
 
 ==== Description
 
 Spec for Var barvar
 
 ==== Semantics
-. *++Bar basics++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testBarBasics++[[.small]#Test#])
+
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testBarBasics++[Test]#)
 
 == Functions
 
@@ -54,11 +59,15 @@ Spec for Var barvar
 === ++Function foofunc++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:src/A:foofunc++[``++function foofunc(): void++``]
+
 
 ==== Description
 
 Spec for Function foofunc
 
 ==== Semantics
-. *++Func basics++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testFuncBasics++[[.small]#Test#])
+
+. *++Func basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample4_TesteeForFunctions:test/ATests:ATest#testFuncBasics++[Test]#)
+

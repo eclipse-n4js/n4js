@@ -19,20 +19,26 @@ include::{find}config.adoc[]
 == Class A
 
 
+spec for class A from source code
+
+
 
 [[gsec:spec_A.A.bar]]
 [role=memberdoc]
 === ++Method bar++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#bar++[``++project bar(n: number): string++``]
+
 
 ==== Description
 
 spec for method A.bar from source code
 
 ==== Semantics
-. *++Bar basics++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[[.small]#Test#])
+
+. *++Bar basics++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:ATest#testBarBasics++[Test]#)
 
 
 [[gsec:spec_A.A.baz]]
@@ -40,7 +46,9 @@ spec for method A.bar from source code
 === ++Method baz++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:A#baz++[``++project baz(): string++``]
+
 
 ==== Description
 
@@ -57,12 +65,15 @@ Add tests specifying semantics for ``++baz(): string++``
 
 
 
+
 [[gsec:spec_A.B.foo]]
 [role=memberdoc]
 === ++Method foo++
 
 ==== Signature
+
 srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:src/A:B#foo++[``++project foo(s: string): void++``]
+
 
 
 ==== Semantics
@@ -74,6 +85,7 @@ Add tests specifying semantics for ``++foo(s: string): void++``
 == Class D
 
 
+
 [[gsec:spec_D.A.bar]]
 [role=memberdoc]
 === ++Method bar++
@@ -82,7 +94,8 @@ Inherited from
 ++class A++
 
 ==== Semantics
-. *++Bar again++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[[.small]#Test#])
+
+. *++Bar again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBarAgain++[Test]#)
 
 [[gsec:spec_D.A.baz]]
 [role=memberdoc]
@@ -92,9 +105,13 @@ Inherited from
 ++class A++
 
 ==== Semantics
-. *++Baz again++* (srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[[.small]#Test#])
+
+. *++Baz again++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample1:test/ATests:DTest#testBazAgain++[Test]#)
 +
-======
+[.generatedApiConstraint]
+====
+
 Baz is supposed to do nothing.
 
-======
+====
+

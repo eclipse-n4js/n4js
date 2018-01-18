@@ -19,6 +19,14 @@
 				File "DeclarationSameProject.n4js" { from="../../calling.project/src/DeclarationSameProject.n4js" }
 			}
 		}
+		Project "other.project.same.vendor" {
+			File "manifest.n4mf" { from="../../other.project.same.vendor/manifest.n4mf" }
+			Folder "src" { }
+		}
+		Project "other.project.other.vendor" {
+			File "manifest.n4mf" { from="../../other.project.other.vendor/manifest.n4mf" }
+			Folder "src" { }
+		}
 	}
 
    END_SETUP

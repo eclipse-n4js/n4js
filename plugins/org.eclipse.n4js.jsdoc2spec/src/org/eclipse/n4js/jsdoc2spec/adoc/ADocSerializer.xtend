@@ -83,6 +83,8 @@ class ADocSerializer {
 	}
 
 	private def StringBuilder appendSpec(StringBuilder strb, SpecIdentifiableElementSection spec, Map<String, SpecSection> specsByKey) {
+		strb.append("\n");
+
 		var addedTaskLinks = false;
 		val taskTags = spec.getDoclet.lineTags(TAG_TASK.title);
 		for (tag : taskTags) {
@@ -117,7 +119,7 @@ class ADocSerializer {
 			strb.append("==== Description\n\n");
 
 		if (!reqID.isEmpty) {
-			strb.append("See req:"+reqID +"[].");
+			strb.append("See req:"+reqID +"[].\n");
 		}
 
 		strb.appendContents(doclet);
@@ -248,6 +250,7 @@ class ADocSerializer {
 		«ENDIF»
 
 		==== Signature
+
 		«codeLink(element)»
 		«IF element instanceof TMember && ((element as TMember).isPolyfilled())»
 		footnote:[Polyfilled from «trueSrcFolder»]
@@ -389,7 +392,7 @@ class ADocSerializer {
 
 		if (! specRegion.getTestInfosForType.isNullOrEmpty) {
 			val Map<String, List<SpecTestInfo>> groupdTests = specRegion.getTestInfosForType.groupBy[testTitle];
-			strb.append("==== Semantics");
+			strb.append("==== Semantics\n");
 			strb.appendApiConstraints(groupdTests);
 		} else {
 
@@ -415,7 +418,7 @@ class ADocSerializer {
 	private def dispatch StringBuilder appendElementPost(StringBuilder strb, TVariable element, SpecSection specRegion, Map<String, SpecSection> specsByKey) {
 		if (! specRegion.getTestInfosForType.isNullOrEmpty) {
 			val Map<String, List<SpecTestInfo>> groupdTests = specRegion.getTestInfosForType.groupBy[testTitle];
-			strb.append("==== Semantics");
+			strb.append("==== Semantics\n");
 			strb.appendApiConstraints(groupdTests)
 		}
 		return strb; // test are optional for variables.
@@ -425,7 +428,7 @@ class ADocSerializer {
 	private def StringBuilder appendConstraints(StringBuilder strb, TMember element, SpecIdentifiableElementSection specRegion, Set<SpecTestInfo> specTestInfos, boolean addTodo) {
 		if (! specTestInfos.isNullOrEmpty) {
 			val Map<String, List<SpecTestInfo>> groupdTests = specTestInfos.groupBy[testTitle];
-			strb.append("==== Semantics");
+			strb.append("==== Semantics\n");
 			strb.appendApiConstraints(groupdTests);
 
 		} else if (addTodo) {
@@ -487,9 +490,10 @@ class ADocSerializer {
 			strbTmp.appendSpecDescriptions(doclets);
 			if (strbTmp.length > 0) {
 				strb.append("+\n");
-				strb.append("======\n");
+				strb.append("[.generatedApiConstraint]\n");
+				strb.append("====\n\n");
 				strb.append(strbTmp);
-				strb.append("\n======\n");
+				strb.append("\n====\n");
 			}
 		}
 		return strb
@@ -503,7 +507,9 @@ class ADocSerializer {
 		} else {
 			val pc = SourceEntryFactory.create(testInfo);
 			val strCase = if (testInfo.testCase === null) "Test" else pass(removePrecedingNumber(testInfo.testCase));
-			strb.appendSourceLink(pc, small(strCase));
+			val strbTmp = new StringBuilder();
+			strbTmp.appendSourceLink(pc, strCase);
+			strb.append(small(strbTmp));
 		}
 		return strb.toString();
 	}
@@ -585,7 +591,8 @@ class ADocSerializer {
 	}
 
 	private def String small(CharSequence smallString) {
-		return '''[.small]#«smallString»#''';
+		return '''[.small]#«smallString»#'''; // continue here!
+//		return smallString.toString;
 	}
 
 	private def String removePrecedingNumber(String key) {
