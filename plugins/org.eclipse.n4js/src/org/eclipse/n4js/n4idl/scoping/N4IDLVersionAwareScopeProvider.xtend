@@ -51,6 +51,12 @@ class N4IDLVersionAwareScopeProvider extends N4JSScopeProvider implements Versio
 	override getScope(EObject context, EReference reference) {
 		val IScope scope = getN4JSScope(context, reference);
 
+		// If the N4JS scope is a NULLSCOPE there
+		// is nothing to filter for a context version.
+		if (scope == IScope.NULLSCOPE) {
+			return scope;
+		}
+
 		if (reference === TypeRefsPackage.Literals.PARAMETERIZED_TYPE_REF__DECLARED_TYPE ||
 			reference === N4JSPackage.Literals.IDENTIFIER_REF__ID
 		) {

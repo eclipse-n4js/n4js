@@ -73,6 +73,10 @@ class VersionHelper {
 
 		switch (object) {
 			VersionedReference case object.hasRequestedVersion:	return object.requestedVersionOrZero
+			// These cases are invalid assumptions as neither cross-references nor typing is possible
+			// at linking-time. The completeness of these context-version criteria needs to be re-evaluated.
+//			IdentifierRef:										return computeMaximumVersion(object.id)
+//			Expression:                  					   	return computeMaximumVersion(ts.tau(object))
 			N4ClassDeclaration case isVersioned(object):	  	return computeMaximumVersion(object.definedType as TClass)
 			N4InterfaceDeclaration case isVersioned(object):	return computeMaximumVersion(object.definedType as TInterface)
 			N4EnumDeclaration case isVersioned(object):			return computeMaximumVersion(object.definedType as TEnum)
