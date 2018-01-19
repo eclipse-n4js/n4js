@@ -257,10 +257,6 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
 		}
 
-		// Wrap the expected type in an Array type in case of ForStatement
-//		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
-//			retTypeRef = G.arrayTypeRef(retTypeRef)
-//		}
 		return retTypeRef;
 	}
 
