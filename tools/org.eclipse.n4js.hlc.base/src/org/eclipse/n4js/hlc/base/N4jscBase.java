@@ -46,7 +46,6 @@ import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.n4js.N4JSRuntimeModule;
 import org.eclipse.n4js.N4JSStandaloneSetup;
 import org.eclipse.n4js.binaries.BinariesPreferenceStore;
-import org.eclipse.n4js.binaries.IllegalBinaryStateException;
 import org.eclipse.n4js.binaries.nodejs.NodeJsBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmBinary;
 import org.eclipse.n4js.binaries.nodejs.NpmrcBinary;
@@ -633,21 +632,14 @@ public class N4jscBase implements IApplication {
 					if (null != versionedPackages) {
 						final Iterable<Entry<String, String>> packageData = versionedPackages.entrySet();
 						for (final Entry<String, String> name2version : packageData) {
-							try {
-								final IStatus status = npmManager.installDependency(name2version.getKey(),
-										name2version.getValue(), new NullProgressMonitor());
-								if (!status.isOK()) {
-									throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
-											status.getException());
-								}
-							} catch (final IllegalBinaryStateException e) {
-								final IStatus status = e.getStatus();
+							final IStatus status = npmManager.installDependency(name2version.getKey(),
+									name2version.getValue(), new NullProgressMonitor());
+							if (!status.isOK()) {
 								throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR, status.getMessage(),
 										status.getException());
 							}
 						}
 					}
-
 				}
 			} catch (IOException e) {
 				throw new ExitCodeException(EXITCODE_CONFIGURATION_ERROR,
