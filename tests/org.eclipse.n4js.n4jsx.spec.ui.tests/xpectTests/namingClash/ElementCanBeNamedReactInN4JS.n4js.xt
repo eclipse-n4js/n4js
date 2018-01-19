@@ -26,8 +26,12 @@
 
 	END_SETUP
 */
-// XPECT warnings --> "Parameter names should start with lower case letter." at "React"
-// XPECT errors --> "Function parameter can not be named React in N4JSX file." at "React"
+// XPECT warnings --> "Variable names should start with lower case letter." at "React"
+let React = 0;
+
+// XPECT errors --> "Element cannot be named React in N4JSX file." at "React"
 function f(React: int) {
-	console.log(<div></div>);
+	console.log("Hi");
 }
+// XPECT errors --> "Class React duplicates variable React (line 30)." at "React"
+class React {}

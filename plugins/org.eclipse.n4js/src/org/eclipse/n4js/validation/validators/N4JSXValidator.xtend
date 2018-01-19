@@ -19,10 +19,10 @@ import org.eclipse.n4js.n4JS.IdentifierRef
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
+import org.eclipse.n4js.n4JS.NamedElement
 import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedPropertyAccessExpression
 import org.eclipse.n4js.n4JS.Script
-import org.eclipse.n4js.n4JS.VariableDeclaration
 import org.eclipse.n4js.n4jsx.ReactHelper
 import org.eclipse.n4js.ts.typeRefs.FunctionTypeExprOrRef
 import org.eclipse.n4js.ts.typeRefs.TypeRef
@@ -49,7 +49,6 @@ import static org.eclipse.n4js.validation.IssueCodes.*
 
 import static extension org.eclipse.n4js.organize.imports.ImportSpecifiersUtil.*
 import static extension org.eclipse.n4js.typesystem.RuleEnvironmentExtensions.*
-import org.eclipse.n4js.n4JS.FormalParameter
 
 /**
  * Validation of React bindings including naming convention (components in upper case and HTML tags in lower case)
@@ -357,43 +356,22 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	}
 
 	/**
-	 * Check that variable or constant declaration is not named React in N4JSX file to avoid naming clash.
+	 * Check that a named element is not named React in N4JSX file to avoid naming clash.
 	 */
 	@Check
-	def void checVarDeclNotNamedReact(VariableDeclaration varDecl) {
-		val resourceType = ResourceType.getResourceType(varDecl)
+	def void checkNamedElementNotNamedReact(NamedElement elem) {
+		val resourceType = ResourceType.getResourceType(elem)
 		// This check is only applicable to N4JSX/JSX file
 		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
 			return;
 
- 		if (varDecl.name == ReactHelper.REACT_NAMESPACE) {
-			val message = IssueCodes.getMessageForJSX_VAR_DECL_NOT_REACT();
+ 		if (elem.name == ReactHelper.REACT_NAMESPACE) {
+			val message = IssueCodes.getMessageForJSX_NAME_CANNOT_BE_REACT();
 					addIssue(
 						message,
-						varDecl,
-						findNameFeature(varDecl).value,
-						IssueCodes.JSX_VAR_DECL_NOT_REACT
-					);
-		}
-	}
-
-	/**
-	 * Check that function parameter is not named React in N4JSX file to avoid naming clash.
-	 */
-	@Check
-	def void checFormalParameterNotNamedReact(FormalParameter formalParam) {
-		val resourceType = ResourceType.getResourceType(formalParam)
-		// This check is only applicable to N4JSX/JSX file
-		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
-			return;
-
-		if (formalParam.name == ReactHelper.REACT_NAMESPACE) {
-			val message = IssueCodes.getMessageForJSX_FORMAL_PARAM_NOT_REACT();
-					addIssue(
-						message,
-						formalParam,
-						findNameFeature(formalParam).value,
-						IssueCodes.JSX_FORMAL_PARAM_NOT_REACT
+						elem,
+						findNameFeature(elem).value,
+						IssueCodes.JSX_NAME_CANNOT_BE_REACT
 					);
 		}
 	}
