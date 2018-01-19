@@ -610,6 +610,7 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			right = tmp;
 			variance = CONTRA;
 		}
+
 		boolean wasAdded = false;
 		final RuleEnvironment Gx = RuleEnvironmentExtensions.newRuleEnvironment(G);
 		tsh.addSubstitutions(Gx, right);
@@ -620,13 +621,55 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		for (int idx = 0; idx < len; ++idx) {
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
+			// Retrieve the right type argument in 'right' corresponding to 'leftArg'
+			final TypeArgument correspondingRightTypeArg = right.getTypeArgs().size() > idx
+					? right.getTypeArgs().get(idx) : null;
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
 						.getValue();
 				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParamSubst, variance, false);
+				if (leftArg instanceof Wildcard) {
+					final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
+					if (ub != null) {
+						wasAdded |= reduce(ub, ts.upperBound(G, leftParamSubst).getValue(), CONTRA);
+					}
+					final TypeRef lb = ((Wildcard) leftArg).getDeclaredLowerBound();
+					if (lb != null) {
+						wasAdded |= reduce(lb, ts.lowerBound(G, leftParamSubst).getValue(), CO);
+					}
+				} else if (leftParamSubst instanceof ExistentialTypeRef) {
+					// TODO IDE-1653 reconsider this entire case
+					// re-open the existential type, because we assume it was closed only while adding substitutions
+					// UPDATE: this is wrong if right.typeArgs already contained an ExistentialTypeRef! (but might be
+					// an non-harmful over approximation)
+					final Wildcard w = ((ExistentialTypeRef) leftParamSubst).getWildcard();
+					final TypeRef ub = w.getDeclaredUpperBound();
+					if (ub != null) {
+						wasAdded |= reduce(ub, ts.upperBound(G, leftArg).getValue(), CONTRA);
+					}
+					final TypeRef lb = w.getDeclaredLowerBound();
+					if (lb != null) {
+						wasAdded |= reduce(lb, ts.lowerBound(G, leftArg).getValue(), CO);
+					}
+				} else {
+					if (!(leftArg instanceof TypeRef)) {
+						throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
+								+ leftArg.getClass().getName());
+					}
+					// Due to normalization above, we always have: leftArg >: leftParamSubst
+					// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
+					final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
+					// Note: we reduce G<out A> >: G<IV> to A >: IV as well as G<in A> >: G<IV> to A :< IV only if the
+					// the right raw type has a corresponding type argument.
+
+					final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null
+							&& correspondingRightTypeArg != null ? leftDefSiteVarianceRaw : INV;
+					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(leftDefSiteVariance));
+				}
 			}
 		}
 		return wasAdded;
+
 	}
 
 	private boolean addConstraintForTypeArgumentPair(TypeArgument leftArg, TypeArgument rightArg, Variance variance,

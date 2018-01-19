@@ -46,7 +46,7 @@ var v04 : X = [b,c,b];
 
 // same length:
 
-// XPECT type of '[b,c,b]' --> Iterable3<B,B,B>
+// XPECT type of '[b,c,b]' --> Iterable3<B,C,B>
 var v11 : Iterable3<B,B,B> = [b,c,b];
 
 // XPECT errors --> "Iterable3<B,X,B> is not a subtype of Iterable3<B,B,B>." at "[b,x,b]"
@@ -55,7 +55,7 @@ var v12 : Iterable3<B,B,B> = [b,x,b];
 
 // literal is longer:
 
-// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Iterable3<B,B,B>
+// case all remaining match XPECT type of '[b,c,b,b,b,c,b]' --> Iterable3<B,C,union{B,C}>
 var v13 : Iterable3<B,B,B> = [b,c,b,b,b,c,b];
 
 // found during IDE-1852: XPECT FIXME noerrors
@@ -74,7 +74,7 @@ var v16 : Iterable4<B,B,B,B> = [b,x,b];
 
 // literal is longer than BuiltInTypeScope#ITERABLE_N__MAX_LEN (i.e. longer than 9)
 
-// XPECT type of '[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]' --> Iterable9<B,B,B,B,B,B,B,B,B>
+// XPECT type of '[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b]' --> Iterable9<B,C,B,B,B,B,B,B,B>
 var v17 : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b];
 
 // XPECT errors --> "Iterable9<B,B,B,B,B,B,B,B,union{B,X}> is not a subtype of Iterable9<B,B,B,B,B,B,B,B,B>." at "[b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,x,b,b]"
@@ -83,10 +83,10 @@ var v18 : Iterable9<B,B,B,B,B,B,B,B,B> = [b,c,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,b,
 
 // expectation is a union of iterable types
 
-// XPECT type of '[a,b]' --> Iterable2<A,A>
+// XPECT type of '[a,b]' --> Iterable2<A,B>
 var v19 : union{Iterable2<A,A>,Iterable2<A,B>} = [a,b];
 
-// XPECT type of '[a,b]' --> Iterable2<A,A>
+// XPECT type of '[a,b]' --> Iterable2<A,B>
 var v20 : union{Iterable2<A,A>,Iterable2<A,X>} = [a,b];
 
 // found during IDE-1852: XPECT FIXME noerrors
