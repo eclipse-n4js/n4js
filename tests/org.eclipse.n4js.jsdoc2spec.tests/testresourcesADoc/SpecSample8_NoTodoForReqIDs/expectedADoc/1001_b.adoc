@@ -12,9 +12,27 @@ Contributors:
 
 . *++ext++* ([.small]#srclnk:++n4js:tests/org.eclipse.n4js.jsdoc2spec.tests/testresourcesADoc:SpecSample8_NoTodoForReqIDs:test/ReqTest:ReqTest#ext___Case++[++Case++]#)
 +
+[.generatedApiConstraint]
+====
+
+This is some Description in a paragraph.
+
+
+
+Now, this is a new paragraph, separated by three empty lines.
++
+And this sentence is separated by a plus from the preceding.
+
+Now, this is some code:
+
+[source,n4js]
+--
+function f(i : int):any {
+    return null;
+}
+
 --
 
-Ext Description
 
---
+====
 

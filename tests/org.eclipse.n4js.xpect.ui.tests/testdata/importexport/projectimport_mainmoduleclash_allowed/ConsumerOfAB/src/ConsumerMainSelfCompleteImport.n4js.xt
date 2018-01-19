@@ -19,6 +19,18 @@
 			}
 			File "manifest.n4mf" { from="../manifest.n4mf"}
 		}
+		Project "A" {
+			Folder "src" {
+					File "Main.n4js" { from="../../A/src/Main.n4js" }
+				}
+			File "manifest.n4mf" { from="../../A/manifest.n4mf"}
+			}
+		Project "B" {
+			Folder "src" {
+					File "Main.n4js" { from="../../B/src/Main.n4js" }
+				}
+			File "manifest.n4mf" { from="../../B/manifest.n4mf"}
+		}
 	}
 
 	END_SETUP
