@@ -11,7 +11,6 @@
 package org.eclipse.n4js.transpiler.im.impl;
 
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.n4js.transpiler.im.ImPackage;
 import org.eclipse.n4js.transpiler.im.SymbolTableEntryInternal;
 

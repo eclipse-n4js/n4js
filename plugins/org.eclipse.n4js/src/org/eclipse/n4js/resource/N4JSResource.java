@@ -59,6 +59,7 @@ import org.eclipse.n4js.smith.Measurement;
 import org.eclipse.n4js.ts.scoping.builtin.BuiltInSchemeRegistrar;
 import org.eclipse.n4js.ts.types.SyntaxRelatedTElement;
 import org.eclipse.n4js.ts.types.TModule;
+import org.eclipse.n4js.ts.types.Type;
 import org.eclipse.n4js.ts.types.TypesPackage;
 import org.eclipse.n4js.utils.EcoreUtilN4;
 import org.eclipse.n4js.utils.emf.ProxyResolvingEObjectImpl;
@@ -1267,6 +1268,44 @@ public class N4JSResource extends PostProcessingAwareResource implements ProxyRe
 		} else {
 			// if not, use default generic scoping message
 			super.createAndAddDiagnostic(triple);
+		}
+	}
+
+	/**
+	 * Adds given type as a temporary type to the receiving resource's TModule. For details, see
+	 * {@link TModule#getTemporaryTypes()}.
+	 *
+	 * @throws IllegalStateException
+	 *             iff receiving resource does not have a module or it is a proxy.
+	 */
+	public void addTemporaryType(Type type) {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			throw new IllegalStateException("trying to add temporary type but module is null or a proxy");
+		}
+		if (!module.getTemporaryTypes().contains(type)) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.getTemporaryTypes().add(type);
+			}, module);
+		}
+	}
+
+	/**
+	 * Clears all temporary types in the receiving resource's TModule. For details, see
+	 * {@link TModule#getTemporaryTypes()}.
+	 *
+	 * @throws IllegalStateException
+	 *             iff receiving resource does not have a module or it is a proxy.
+	 */
+	public void clearTemporaryTypes() {
+		TModule module = getModule();
+		if (module == null || module.eIsProxy()) {
+			throw new IllegalStateException("trying to clear temporary types but module is null or a proxy");
+		}
+		if (!module.getTemporaryTypes().isEmpty()) {
+			EcoreUtilN4.doWithDeliver(false, () -> {
+				module.getTemporaryTypes().clear();
+			}, module);
 		}
 	}
 }
