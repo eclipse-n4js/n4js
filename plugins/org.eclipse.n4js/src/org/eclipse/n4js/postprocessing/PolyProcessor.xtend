@@ -238,7 +238,8 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
 		}
 		// Wrap the expected type in an Iterable type in case of ForStatement
-		// Note that we wrap the type into an Iterable type so that 
+		// Note that we wrap the type into an Iterable type so that when a constraint G<out IV> <: Iterable<...> is created,
+		// we would like to reduce it to IV <:..
 		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
 			retTypeRef = G.iterableTypeRef(retTypeRef)
 		}
