@@ -29,7 +29,6 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest;
 import org.eclipse.n4js.utils.io.FileUtils;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil;
 import org.junit.Before;
 
@@ -44,13 +43,6 @@ public abstract class AbstractIDEBUG_Test extends AbstractBuilderParticipantTest
 
 	/** Shared logger instance. */
 	protected static final Logger LOGGER = getLogger(AbstractIDEBUG_Test.class);
-
-	/**
-	 * The prefix of the generation folder. <br>
-	 * <! TODO replace hard coded ES5 sub-generator ID once it is clear how to use various sub-generators for runners //
-	 * (IDE-1487)>
-	 */
-	protected static final String ES5_SUB_GENERATOR_ID = N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS;
 
 	private final Supplier<WorkspaceInitializer> initializerSupplier = memoize(
 			() -> createInitializer(getProjectImporter()));

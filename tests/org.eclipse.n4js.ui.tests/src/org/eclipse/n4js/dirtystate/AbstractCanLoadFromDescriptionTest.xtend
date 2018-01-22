@@ -32,10 +32,7 @@ abstract class AbstractCanLoadFromDescriptionTest extends AbstractBuilderPartici
 		val baseName = if(idx>=0) name.substring(0, idx) else name;
 		val project = file.project;
 		return project.getFile(
-			"src-gen/"
-			+ N4JSLanguageConstants.TRANSPILER_SUBFOLDER_FOR_TESTS
-			+ "/"
-			+ project.name
+			N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 			+ "/m/"
 			+ baseName + ".js"
 		);

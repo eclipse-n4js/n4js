@@ -146,19 +146,11 @@ public abstract class N4JSLanguageConstants {
 			ModuleLoader.COMMONJS, new ModuleSpecifierAdjustment("@@cjs", false),
 			ModuleLoader.NODE_BUILTIN, new ModuleSpecifierAdjustment("@node", true));
 
-	/**
-	 * The sub-folder in a project's output folder that contains the generated output files of the transpiler that is to
-	 * be used during all testing. At some point we will have multiple transpilers, we will somehow decide/check which
-	 * one is used and get proper segment from it.
-	 *
-	 * For now, just use the same transpiler that we use during testing.
-	 *
-	 * TODO IDE-1487 handle multiple sub generators
-	 */
-	public static final String TRANSPILER_SUBFOLDER_FOR_TESTS = "es";
-
 	/** The default project output folder that contains the generated output files of the transpiler. */
 	public static final String DEFAULT_PROJECT_OUTPUT = "src-gen";
+
+	/** The default project output folder that contains the generated output files of the transpiler. */
+	public static final String DEFAULT_PROJECT_SRC = "src";
 
 	private N4JSLanguageConstants() {
 	}
