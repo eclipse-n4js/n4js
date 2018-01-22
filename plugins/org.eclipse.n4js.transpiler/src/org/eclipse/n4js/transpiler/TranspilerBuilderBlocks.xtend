@@ -86,12 +86,10 @@ import org.eclipse.n4js.transpiler.im.ParameterizedTypeRef_IM
 import org.eclipse.n4js.transpiler.im.Snippet
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.typeRefs.TypeRef
-import org.eclipse.n4js.ts.types.TExportableElement
 import org.eclipse.n4js.ts.types.TField
 import org.eclipse.n4js.ts.types.TGetter
 import org.eclipse.n4js.ts.types.TMember
 import org.eclipse.n4js.ts.types.TMethod
-import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.ts.types.TSetter
 import org.eclipse.n4js.ts.utils.TypeUtils
 
@@ -104,16 +102,16 @@ public class TranspilerBuilderBlocks
 	// ############################################################################################
 	// n4js.xcore
 
-	public static def ImportDeclaration _ImportDecl(TModule importedModule, ImportSpecifier... importSpecifiers) {
+	public static def ImportDeclaration _ImportDecl(ImportSpecifier... importSpecifiers) {
 		val result = N4JSFactory.eINSTANCE.createImportDeclaration;
-		result.module = importedModule;
+		result.module = null; // must always be null, because we are in the intermediate model
 		result.importSpecifiers += importSpecifiers.filterNull;
 		return result;
 	}
 
-	public static def NamedImportSpecifier _NamedImportSpecifier(TExportableElement importedElement, String alias, boolean usedInCode) {
+	public static def NamedImportSpecifier _NamedImportSpecifier(String alias, boolean usedInCode) {
 		val result = N4JSFactory.eINSTANCE.createNamedImportSpecifier;
-		result.importedElement = importedElement;
+		result.importedElement = null; // must always be null, because we are in the intermediate model
 		result.alias = alias;
 		result.flaggedUsedInCode = usedInCode;
 		return result;

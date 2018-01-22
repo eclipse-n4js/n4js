@@ -468,6 +468,9 @@ public class N4HeadlessCompiler {
 		// Register all projects with the file based workspace.
 		for (URI projectURI : projectURIs) {
 			try {
+				if (logger.isCreateDebugOutput()) {
+					logger.debug("Registering project '" + projectURI + "'");
+				}
 				n4jsFileBasedWorkspace.registerProject(projectURI);
 			} catch (N4JSBrokenProjectException e) {
 				throw new N4JSCompileException("Unable to register project '" + projectURI + "'", e);

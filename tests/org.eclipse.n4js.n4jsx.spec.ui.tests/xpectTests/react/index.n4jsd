@@ -11,6 +11,10 @@
 
 export external public abstract class Element {
     private constructor();
+    public get type(): union{string, constructor{Component}};
+    public get props(): PropsT;
+    public get key(): string;
+    public get ref(): string;
 };
 
 export external public interface ~ComponentProps {
