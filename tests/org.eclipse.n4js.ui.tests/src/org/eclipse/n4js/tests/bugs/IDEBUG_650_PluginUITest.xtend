@@ -18,7 +18,7 @@ import org.eclipse.core.runtime.CoreException
 import org.eclipse.xtext.util.Files
 import org.junit.Test
 
-import static org.eclipse.n4js.validation.helper.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
+import static org.eclipse.n4js.N4JSLanguageConstants.METHOD_STACKTRACE_SUFFIX
 import static org.eclipse.core.resources.ResourcesPlugin.getWorkspace
 import static org.eclipse.xtext.ui.testing.util.IResourcesSetupUtil.fullBuild
 

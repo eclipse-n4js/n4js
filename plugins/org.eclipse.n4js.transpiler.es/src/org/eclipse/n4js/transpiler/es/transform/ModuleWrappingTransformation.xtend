@@ -16,6 +16,8 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
+import org.eclipse.n4js.ModuleSpecifierAdjustment
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -52,8 +54,6 @@ import org.eclipse.n4js.transpiler.es.transform.internal.NamespaceImportAssignme
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.SymbolTableEntry
 import org.eclipse.n4js.ts.types.TModule
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants.ModuleSpecifierAdjustment
 
 import static org.eclipse.n4js.n4JS.BinaryLogicalOperator.*
 import static org.eclipse.n4js.n4JS.EqualityOperator.*

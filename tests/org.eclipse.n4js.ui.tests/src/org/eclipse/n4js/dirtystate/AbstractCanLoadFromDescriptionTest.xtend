@@ -16,7 +16,7 @@ import org.eclipse.emf.common.util.URI
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.scoping.utils.CanLoadFromDescriptionHelper
 import org.eclipse.n4js.tests.builder.AbstractBuilderParticipantTest
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.ui.editor.XtextEditor
 import org.eclipse.xtext.util.concurrent.IUnitOfWork

@@ -27,6 +27,7 @@ import org.eclipse.n4js.resource.N4JSCache
 import org.eclipse.n4js.resource.N4JSResource
 import org.eclipse.n4js.ts.types.TModule
 import org.eclipse.n4js.utils.Log
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtend.lib.annotations.Accessors
 import org.eclipse.xtext.generator.AbstractFileSystemAccess
 import org.eclipse.xtext.generator.IFileSystemAccess
@@ -233,7 +234,7 @@ abstract class AbstractSubGenerator implements ISubGenerator {
 	def void updateOutputPath(IFileSystemAccess fsa, String compilerID, Resource input) {
 		var outputPath = n4jsCore.getOutputPath(input.URI)
 		if(outputPath === null)
-			outputPath = "src-gen"
+			outputPath = N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT
 		if (fsa instanceof AbstractFileSystemAccess) {
 			val conf = fsa.outputConfigurations.get(compilerID)
 			if (conf !== null) {

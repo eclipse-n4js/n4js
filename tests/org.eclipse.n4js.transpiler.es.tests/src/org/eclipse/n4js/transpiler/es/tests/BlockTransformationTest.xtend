@@ -18,7 +18,7 @@ import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.ReturnStatement
 import org.eclipse.n4js.n4JS.Script
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.emf.common.util.URI
 import org.eclipse.xtext.testing.InjectWith
 import org.eclipse.xtext.testing.XtextRunner

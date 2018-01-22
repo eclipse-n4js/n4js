@@ -8,7 +8,7 @@
  * Contributors:
  *   NumberFour AG - Initial API and implementation
  */
-package org.eclipse.n4js.validation.helper;
+package org.eclipse.n4js;
 
 import static com.google.common.collect.Sets.newHashSet;
 import static java.lang.Boolean.FALSE;
@@ -149,34 +149,13 @@ public abstract class N4JSLanguageConstants {
 	/** The default project output folder that contains the generated output files of the transpiler. */
 	public static final String DEFAULT_PROJECT_OUTPUT = "src-gen";
 
-	/** The default project output folder that contains the generated output files of the transpiler. */
+	/** The default project output folder that contains the sources. */
 	public static final String DEFAULT_PROJECT_SRC = "src";
 
+	/** The default project output folder that contains the tests. */
+	public static final String DEFAULT_PROJECT_TEST = "test";
+
 	private N4JSLanguageConstants() {
-	}
-
-	/**
-	 * Data class for defining how the transpiler should adjust module specifiers depending on module loader supported
-	 * by the target module (i.e. the module imported from).
-	 */
-	public static final class ModuleSpecifierAdjustment {
-		/** Prefix to be added to the module specifier, e.g. "@node". */
-		public final String prefix;
-		/**
-		 * Normally the output code contains complete module specifiers for imported modules; if this is set to
-		 * <code>true</code> the transpiler will emit a plain module specifier (without project name) instead.
-		 */
-		public final boolean usePlainModuleSpecifier;
-
-		/**
-		 * See {@link ModuleSpecifierAdjustment} for details.
-		 */
-		public ModuleSpecifierAdjustment(String prefix, boolean usePlainModuleSpecifier) {
-			if (prefix == null)
-				throw new IllegalArgumentException("prefix may not be null (but you may use an empty string)");
-			this.prefix = prefix;
-			this.usePlainModuleSpecifier = usePlainModuleSpecifier;
-		}
 	}
 
 	/** Elements exported by 'export default' syntax are visible under this name from outside. */

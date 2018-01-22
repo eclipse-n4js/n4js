@@ -22,8 +22,8 @@ import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
 import com.google.inject.Inject;
 
+import org.eclipse.n4js.N4JSLanguageConstants;
 import org.eclipse.n4js.services.N4JSGrammarAccess;
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 
 /**
  * This helper class offers access to ECMAScript as well as N4JS keywords. Its implementation directly accesses the

@@ -63,7 +63,7 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.SuperInterfacesIterable
 import org.eclipse.n4js.utils.N4JSLanguageUtils
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
-import org.eclipse.n4js.validation.helper.N4JSLanguageConstants
+import org.eclipse.n4js.N4JSLanguageConstants
 import org.eclipse.xtext.util.Strings
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
