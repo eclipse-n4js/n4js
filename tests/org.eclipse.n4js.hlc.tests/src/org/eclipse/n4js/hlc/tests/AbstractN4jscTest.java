@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.n4js.N4JSGlobals;
-import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.hlc.base.ErrorExitCode;
 import org.eclipse.n4js.hlc.base.ExitCodeException;
 import org.eclipse.n4js.hlc.base.N4jscBase;
@@ -229,16 +228,8 @@ public abstract class AbstractN4jscTest {
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 					if (file.getFileName().toString().endsWith(".js")) {
-						for (int j = 0; j < file.getNameCount() - 1; j++) {
-							if (SUBGENERATOR_PATH.equals(file.getName(j).toString())) {
-								counter.incrementAndGet();
-								return FileVisitResult.CONTINUE;
-							}
-							if (!AbstractSubGenerator.USE_COMPILER_ID) {
-								counter.incrementAndGet();
-								return FileVisitResult.CONTINUE;
-							}
-						}
+						counter.incrementAndGet();
+						return FileVisitResult.CONTINUE;
 					}
 					return FileVisitResult.CONTINUE;
 				}

@@ -157,6 +157,9 @@ public abstract class N4JSLanguageConstants {
 	 */
 	public static final String TRANSPILER_SUBFOLDER_FOR_TESTS = "es";
 
+	/** The default project output folder that contains the generated output files of the transpiler. */
+	public static final String DEFAULT_PROJECT_OUTPUT = "src-gen";
+
 	private N4JSLanguageConstants() {
 	}
 

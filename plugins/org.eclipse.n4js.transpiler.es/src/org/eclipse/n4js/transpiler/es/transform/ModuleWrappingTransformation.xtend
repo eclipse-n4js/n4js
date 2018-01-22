@@ -16,7 +16,6 @@ import java.util.List
 import java.util.Map
 import java.util.Set
 import org.eclipse.emf.ecore.EObject
-import org.eclipse.n4js.generator.AbstractSubGenerator
 import org.eclipse.n4js.n4JS.AdditiveOperator
 import org.eclipse.n4js.n4JS.AssignmentExpression
 import org.eclipse.n4js.n4JS.CommaExpression
@@ -317,7 +316,7 @@ class ModuleWrappingTransformation extends Transformation {
 		var specifier = completeModuleSpecifier
 		val depProject = n4jsCore.findProject(module.eResource.URI).orNull
 		if (depProject !== null) {
-			val projectRelativeSegment = AbstractSubGenerator.calculateOutputDirectory(depProject)
+			val projectRelativeSegment = depProject.outputPath
 			val depLocation = depProject.locationPath
 			if (depLocation !== null) {
 				val depLocationString = depLocation.toString

@@ -32,7 +32,6 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry
 import org.apache.commons.compress.compressors.CompressorException
 import org.apache.commons.compress.compressors.CompressorStreamFactory
-import org.eclipse.n4js.generator.AbstractSubGenerator
 import org.eclipse.n4js.npmexporter.validation.IssueConsumer
 import org.eclipse.n4js.projectModel.IN4JSProject
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator
@@ -102,7 +101,7 @@ class NpmExporter {
 		}
 
 		// copy files from original output folder to targetFolder
-		val String project_transpiledContent = AbstractSubGenerator.calculateOutputDirectory(project)
+		val String project_transpiledContent = project.outputPath
 		val Path transpiledContentFolder = project_loc.resolve(project_transpiledContent);
 
 		val transpiledContentFolderAsFile = transpiledContentFolder.toFile;

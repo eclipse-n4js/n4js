@@ -46,6 +46,7 @@ import org.eclipse.n4js.runner.nodejs.NodeRunner;
 import org.eclipse.n4js.runner.nodejs.NodeRunner.NodeRunnerDescriptorProvider;
 import org.eclipse.n4js.runner.ui.ChooseImplementationHelper;
 import org.eclipse.n4js.transpiler.es.EcmaScriptSubGenerator;
+import org.eclipse.n4js.validation.helper.N4JSLanguageConstants;
 import org.eclipse.n4js.xpect.common.ResourceTweaker;
 import org.eclipse.xpect.xtext.lib.setup.FileSetupContext;
 import org.eclipse.xtext.resource.FileExtensionProvider;
@@ -298,7 +299,7 @@ public class XpectN4JSES5TranspilerHelper {
 	}
 
 	private String getCompiledFileBasePath(final Script script) {
-		String path = script.getModule().getProjectId() + "/src-gen/";
+		String path = script.getModule().getProjectId() + N4JSLanguageConstants.DEFAULT_PROJECT_OUTPUT;
 
 		IN4JSProject project = core.findProject(script.eResource().getURI()).orNull();
 		if (project != null) {

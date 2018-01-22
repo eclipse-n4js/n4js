@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.n4js.fileextensions.FileExtensionType;
 import org.eclipse.n4js.fileextensions.FileExtensionsRegistry;
-import org.eclipse.n4js.generator.AbstractSubGenerator;
 import org.eclipse.n4js.projectModel.IN4JSCore;
 import org.eclipse.n4js.projectModel.IN4JSProject;
 import org.eclipse.n4js.projectModel.ResourceNameComputer;
@@ -81,8 +80,7 @@ public class GeneratedJsFileLocator {
 							JS_FILE_EXTENSION);
 					// TODO replace hard coded ES5 sub-generator ID once it is clear how to use various
 					// sub-generators for runners (IDE-1487)
-					final String targetFileRelativeLocation = AbstractSubGenerator
-							.calculateOutputDirectory(project.get()) + "/" + targetFileName;
+					final String targetFileRelativeLocation = project.get().getOutputPath() + "/" + targetFileName;
 					// file.getProject().
 					final IFile targetFile = file.getProject().getFile(targetFileRelativeLocation);
 					if (targetFile.exists()) {
