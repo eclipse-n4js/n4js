@@ -80,7 +80,7 @@ class SymbolTableManagement {
 
 	/**
 	 * Create a symbol table entry for an element in the intermediate model. This should only be used if the element
-	 * in the IM does <b>not</b> have a corresponding original target (either a TModule element or am element
+	 * in the IM does <b>not</b> have a corresponding original target (either a TModule element or an element
 	 * in the original AST, in case of non-exported variables), for example because it was newly created by an AST
 	 * transformation.
 	 */

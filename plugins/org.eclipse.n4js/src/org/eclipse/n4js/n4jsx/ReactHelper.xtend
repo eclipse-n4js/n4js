@@ -48,15 +48,10 @@ class ReactHelper {
 	public final static String REACT_COMPONENT = "Component"
 	public final static String REACT_ELEMENT = "Element"
 
-	public final static String REACT_NAMESPACE = REACT_PROJECT_ID.toFirstUpper;
-	public final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
+	public final static String REACT_NAMESPACE_NAME = REACT_PROJECT_ID.toFirstUpper;
+	public final static String REACT_ELEMENT_FACTORY_FUNCTION_NAME = "createElement";
 
-	/**
-	 * Check if a module is a React module.
-	 */
-	def public boolean isReactModule(TModule module) {
-		return (module !== null && module.isMainModule && REACT_PROJECT_ID.equals(module.projectId))
-	}
+	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
 
 	/**
 	 * Look up React.Element in the index.

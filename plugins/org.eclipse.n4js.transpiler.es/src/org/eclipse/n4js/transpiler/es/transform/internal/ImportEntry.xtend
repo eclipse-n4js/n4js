@@ -28,5 +28,5 @@ class ImportEntry {
 	// Mappings of things to import. the actualName can be null, which means NamespaceImport
 	List<ImportAssignment> variableSTE_actualName
 	// for Tracing: IM-element which will be replaced:
-	ImportDeclaration tobeReplacedImportSpecifier
+	ImportDeclaration toBeReplacedImportDeclaration
 }

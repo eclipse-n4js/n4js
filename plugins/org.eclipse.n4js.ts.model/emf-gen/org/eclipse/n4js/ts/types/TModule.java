@@ -42,6 +42,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getExposedInternalTypes <em>Exposed Internal Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getAstMD5 <em>Ast MD5</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getComposedMemberCaches <em>Composed Member Caches</em>}</li>
+ *   <li>{@link org.eclipse.n4js.ts.types.TModule#getTemporaryTypes <em>Temporary Types</em>}</li>
  *   <li>{@link org.eclipse.n4js.ts.types.TModule#getModuleSpecifier <em>Module Specifier</em>}</li>
  * </ul>
  *
@@ -447,6 +448,37 @@ public interface TModule extends SyntaxRelatedTElement, TAnnotableElement {
 	 * @generated
 	 */
 	EList<ComposedMemberCache> getComposedMemberCaches();
+
+	/**
+	 * Returns the value of the '<em><b>Temporary Types</b></em>' containment reference list.
+	 * The list contents are of type {@link org.eclipse.n4js.ts.types.Type}.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * <!-- begin-model-doc -->
+	 * *
+	 * As a rule, types must always be contained in a resource and resource set (as opposed to type references which
+	 * need not be contained). Therefore, when types are required to be created for a temporary purpose, they need to be
+	 * added somewhere, temporarily. This transient containment reference is used for that purpose.
+	 * <p>
+	 * IMPORTANT: code using this reference should
+	 * <ol>
+	 * <li>turn off notifications whenever adding/removing a type to this reference or when changing properties of an
+	 * already added type (to avoid unnecessary cache clear),
+	 * <li>remove the temporary type when it is no longer required,<br>
+	 * For convenience, the transpiler infrastructure will <b>clear this reference after transpilation</b> has
+	 * completed, so transpiler transformations do not have to handle removal of temporary types themselves.
+	 * <li>make sure no ordinary types ever refer to a temporary type contained here (references in the other direction
+	 * are ok, though),
+	 * <li>use the convenience methods for dealing with this reference provided in {@code N4JSResource}:
+	 * {@code addTemporaryType} and {@code clearTemporaryTypes}.
+	 * </ol>
+	 * <!-- end-model-doc -->
+	 * @return the value of the '<em>Temporary Types</em>' containment reference list.
+	 * @see org.eclipse.n4js.ts.types.TypesPackage#getTModule_TemporaryTypes()
+	 * @model containment="true" transient="true"
+	 * @generated
+	 */
+	EList<Type> getTemporaryTypes();
 
 	/**
 	 * Returns the value of the '<em><b>Module Specifier</b></em>' attribute.
