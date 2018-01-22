@@ -159,31 +159,29 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			infCtx.addConstraint(TypeConstraint.FALSE);
 		}
 
+		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
+		val rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
+				DestructNode.unify(rootPoly.eContainer as VariableBinding)
+			} else if (rootPoly.eContainer instanceof AssignmentExpression) {
+				DestructNode.unify(rootPoly.eContainer as AssignmentExpression)
+			} else if (rootPoly.eContainer instanceof ForStatement) {
+				DestructNode.unify(rootPoly.eContainer as ForStatement)
+			} else {
+				null
+			};
+
 		// we have to pass the expected type to the #getType() method, so retrieve it first
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)
 		// TODO integrate expectedType judgment into AST traversal and remove #isProblematicCaseOfExpectedType()
-		var expectedTypeRef = if (!rootPoly.isProblematicCaseOfExpectedType) {
+		val expectedTypeRef = if (rootDestructNode !== null) {
+				calculateExpectedType(rootDestructNode, G)
+			} else if (!rootPoly.isProblematicCaseOfExpectedType) {
 				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
 			};
 
-		// In case of destructure pattern, we can calculate the expected type based on the structure of the destructure pattern.
-		var rootDestructNode = if (rootPoly.eContainer instanceof VariableBinding) {
-			DestructNode.unify(rootPoly.eContainer as VariableBinding)
-		} else if (rootPoly.eContainer instanceof AssignmentExpression) {
-			DestructNode.unify(rootPoly.eContainer as AssignmentExpression)
-		} else if (rootPoly.eContainer instanceof ForStatement) {
-			DestructNode.unify(rootPoly.eContainer as ForStatement)
-		}
-		else {
-			null
-		};
-
-		if (rootDestructNode !== null) {
-			expectedTypeRef = calculateExpectedType(rootDestructNode, G)
-		}
 		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
-		var typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
+		val typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {

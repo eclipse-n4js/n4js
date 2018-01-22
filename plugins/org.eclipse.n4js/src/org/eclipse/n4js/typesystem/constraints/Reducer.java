@@ -559,9 +559,8 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			for (int idx = 0; idx < len; idx++) {
 				TypeArgument currTypeArgOfIterableN = typeArgsOfIterableN.get(idx);
 				TypeVariable curTypeParamOfIterableN = typeParamsOfIterableN.get(idx);
-				wasAdded |= addConstraintForTypeArgumentPair(currTypeArgOfIterableN, curTypeParamOfIterableN,
-						singleTypeArgOfArray,
-						true);
+				wasAdded |= reduceConstraintForTypeArgumentPair(currTypeArgOfIterableN, curTypeParamOfIterableN,
+						singleTypeArgOfArray);
 			}
 			return wasAdded;
 		}
@@ -624,23 +623,25 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		final List<TypeArgument> leftArgs = left.getTypeArgs();
 		final List<TypeVariable> leftParams = leftType.getTypeVars();
 		final int len = Math.min(leftArgs.size(), leftParams.size());
-
 		for (int idx = 0; idx < len; ++idx) {
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
 						.getValue();
-				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst, false);
+				wasAdded |= reduceConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst);
 			}
 		}
 		return wasAdded;
 
 	}
 
-	/** leftArg :> rightArg */
-	private boolean addConstraintForTypeArgumentPair(TypeArgument leftArg, TypeVariable leftParam,
-			TypeArgument rightArg, boolean isSpecialCaseOfArraySubtypeIterableN) {
+	/**
+	 * Will add a constraint ⟨ leftArg :> rightArg ⟩, taking into account wildcards, closed existential types, and
+	 * definition site variance.
+	 */
+	private boolean reduceConstraintForTypeArgumentPair(TypeArgument leftArg, TypeVariable leftParam,
+			TypeArgument rightArg) {
 		boolean wasAdded = false;
 		if (leftArg instanceof Wildcard) {
 			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
@@ -670,15 +671,11 @@ import org.eclipse.xtext.xbase.lib.Pair;
 				throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
 						+ leftArg.getClass().getName());
 			}
-
-			if (isSpecialCaseOfArraySubtypeIterableN) {
-				wasAdded |= reduce(leftArg, rightArg, CONTRA);
-			} else {
-				final Variance superTypeDefSiteVarianceRaw = leftParam.getVariance();
-				final Variance superTypeDefSiteVariance = superTypeDefSiteVarianceRaw != null
-						? superTypeDefSiteVarianceRaw : INV;
-				wasAdded |= reduce(leftArg, rightArg, CONTRA.mult(superTypeDefSiteVariance));
-			}
+			// due to the assumption of the method, we always have: leftArg >: rightArg
+			// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
+			final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
+			final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null ? leftDefSiteVarianceRaw : INV;
+			wasAdded |= reduce(leftArg, rightArg, CONTRA.mult(leftDefSiteVariance));
 		}
 		return wasAdded;
 	}
