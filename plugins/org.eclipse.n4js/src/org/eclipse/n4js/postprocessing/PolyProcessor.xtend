@@ -39,7 +39,6 @@ import org.eclipse.n4js.ts.types.TypingStrategy
 import org.eclipse.n4js.ts.types.util.Variance
 import org.eclipse.n4js.ts.utils.TypeUtils
 import org.eclipse.n4js.typesystem.N4JSTypeSystem
-import org.eclipse.n4js.typesystem.RuleEnvironmentExtensions
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
@@ -180,28 +179,11 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			null
 		};
 
-		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
-		var typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
-
 		if (rootDestructNode !== null) {
 			expectedTypeRef = calculateExpectedType(rootDestructNode, G)
 		}
-		if (rootDestructNode !== null) {
-			// We need to adjust 'typeRef' in case of ForStatement
-			// In the example: for(var [a4,b4: number] of [["Hi",42],["Ho",42]])
-			// 		expectedTypeRef = Iterable2<any,number>
-			//		typeRef			= Array<α>
-			// Hence, we need to adjust typeRef to α
-			if (expectedTypeRef !== null && rootDestructNode.astElement.eContainer instanceof ForStatement) {
-				// Extract the type argument of the Array type
-				if (typeRef.declaredType == RuleEnvironmentExtensions.arrayType(G)) {
-					val singleTypeArgOfArray =  typeRef.typeArgs.get(0);
-					if (singleTypeArgOfArray instanceof TypeRef) {
-						typeRef = singleTypeArgOfArray
-					}
-				}
-			}
-		}
+		// call #processExpr() (this will recursively call #processExpr() on nested expressions, even if non-poly)
+		var typeRef = processExpr(G, rootPoly, expectedTypeRef, infCtx, cache);
 
 		// add constraint to ensure that type of 'rootPoly' is subtype of its expected type
 		if (!TypeUtils.isVoid(typeRef)) {
@@ -249,14 +231,17 @@ package class PolyProcessor extends AbstractPolyProcessor {
 				 G.arrayTypeRef(elementTypes.get(0))
 			} else if (elemCount > 1){
 				G.iterableNTypeRef(elemCount, elementTypes);
-//				G.iterableNTypeRef(elemCount, elementTypes.map[TypeRefsFactory.eINSTANCE.createWildcard]);
 			} else {
 				null
 			}
 		} else {
 			throw new IllegalStateException("elementTypes and elementMembers can not both contain elements at the same time.")
 		}
-
+		// Wrap the expected type in an Iterable type in case of ForStatement
+		// Note that we wrap the type into an Iterable type so that 
+		if (retTypeRef !== null && destructNode.astElement.eContainer instanceof ForStatement) {
+			retTypeRef = G.iterableTypeRef(retTypeRef)
+		}
 		return retTypeRef;
 	}
 

@@ -544,35 +544,28 @@ import org.eclipse.xtext.xbase.lib.Pair;
 	 */
 	private boolean reduceParameterizedTypeRefNominal(ParameterizedTypeRef left, ParameterizedTypeRef right,
 			Variance variance) {
-
 		// special case: handling of IterableN
 		// (required because Array does not explicitly inherit from IterableN and the IterableN are not structural)
-		// e.g., ⟨ Array<α> <: Iterable3<int,string,int> ⟩ should be reduced to ⟨ α <: int ⟩ and ⟨ α <: string ⟩
+		// e.g., ⟨ Iterable3<int,string,int> :> Array<α> ⟩ should be reduced to ⟨ int >: α ⟩ and ⟨ string >: α ⟩
 		if ((variance == CO && isSpecialCaseOfArraySubtypeIterableN(left, right))
 				|| (variance == CONTRA && isSpecialCaseOfArraySubtypeIterableN(right, left))) {
+			final List<TypeArgument> typeArgsOfArray = variance == CO ? left.getTypeArgs() : right.getTypeArgs();
 			final List<TypeArgument> typeArgsOfIterableN = variance == CO ? right.getTypeArgs() : left.getTypeArgs();
 			final List<TypeVariable> typeParamsOfIterableN = variance == CO ? right.getDeclaredType().getTypeVars()
 					: left.getDeclaredType().getTypeVars();
-
-			final List<TypeArgument> typeArgsOfArray = variance == CO ? left.getTypeArgs() : right.getTypeArgs();
 			final TypeArgument singleTypeArgOfArray = !typeArgsOfArray.isEmpty() ? typeArgsOfArray.get(0) : null;
-
-			final List<TypeVariable> typeParamsOfArray = variance == CO ? left.getDeclaredType().getTypeVars()
-					: right.getDeclaredType().getTypeVars();
-			final TypeVariable singleTypeParamOfArray = !typeParamsOfArray.isEmpty() ? typeParamsOfArray.get(0) : null;
-
-			final int lenIterableN = Math.min(typeArgsOfIterableN.size(), typeParamsOfIterableN.size());
 			boolean wasAdded = false;
-			for (int idx = 0; idx < lenIterableN; idx++) {
+			final int len = Math.min(typeArgsOfIterableN.size(), typeParamsOfIterableN.size());
+			for (int idx = 0; idx < len; idx++) {
 				TypeArgument currTypeArgOfIterableN = typeArgsOfIterableN.get(idx);
-				TypeVariable currTypeParamOfIterableN = typeParamsOfIterableN.get(idx);
-
-				wasAdded |= addConstraintForTypeArgumentPair(singleTypeArgOfArray, singleTypeParamOfArray,
-						currTypeArgOfIterableN, currTypeParamOfIterableN, variance,
+				TypeVariable curTypeParamOfIterableN = typeParamsOfIterableN.get(idx);
+				wasAdded |= addConstraintForTypeArgumentPair(currTypeArgOfIterableN, curTypeParamOfIterableN,
+						singleTypeArgOfArray,
 						true);
 			}
 			return wasAdded;
 		}
+
 		// standard cases:
 		final TypeRef leftRaw = TypeUtils.createTypeRef(left.getDeclaredType());
 		final TypeRef rightRaw = TypeUtils.createTypeRef(right.getDeclaredType()); // note: enforcing nominal here!
@@ -632,28 +625,22 @@ import org.eclipse.xtext.xbase.lib.Pair;
 		final List<TypeVariable> leftParams = leftType.getTypeVars();
 		final int len = Math.min(leftArgs.size(), leftParams.size());
 
-		final Type rightType = right.getDeclaredType();
-		final List<TypeVariable> rightParams = rightType.getTypeVars();
-
 		for (int idx = 0; idx < len; ++idx) {
 			final TypeArgument leftArg = leftArgs.get(idx);
 			final TypeVariable leftParam = leftParams.get(idx);
-			final TypeVariable rightParam = rightParams.size() > idx ? rightParams.get(idx) : null;
 			if (RuleEnvironmentExtensions.hasSubstitutionFor(Gx, leftParam)) {
 				final TypeArgument leftParamSubst = ts.substTypeVariables(Gx, TypeUtils.createTypeRef(leftParam))
 						.getValue();
-				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst, rightParam, variance,
-						false);
+				wasAdded |= addConstraintForTypeArgumentPair(leftArg, leftParam, leftParamSubst, false);
 			}
 		}
 		return wasAdded;
 
 	}
 
+	/** leftArg :> rightArg */
 	private boolean addConstraintForTypeArgumentPair(TypeArgument leftArg, TypeVariable leftParam,
-			TypeArgument rightArg, TypeVariable rightParam,
-			Variance variance,
-			boolean isSpecialCaseOfArraySubtypeIterableN) {
+			TypeArgument rightArg, boolean isSpecialCaseOfArraySubtypeIterableN) {
 		boolean wasAdded = false;
 		if (leftArg instanceof Wildcard) {
 			final TypeRef ub = ((Wildcard) leftArg).getDeclaredUpperBound();
@@ -685,17 +672,12 @@ import org.eclipse.xtext.xbase.lib.Pair;
 			}
 
 			if (isSpecialCaseOfArraySubtypeIterableN) {
-				wasAdded |= reduce(leftArg, rightArg, variance);
+				wasAdded |= reduce(leftArg, rightArg, CONTRA);
 			} else {
-				final Variance superTypeDefSiteVarianceRaw = (variance == CO) ? rightParam.getVariance()
-						: leftParam.getVariance();
-
-				// Note: we reduce supertype >: subtype. e.g. G<out A> >: G<IV> to A >: IV as well as G<in A> >: G<IV>
-				// to A :< IV only if the subtype has a corresponding type argument.
+				final Variance superTypeDefSiteVarianceRaw = leftParam.getVariance();
 				final Variance superTypeDefSiteVariance = superTypeDefSiteVarianceRaw != null
-						&& (variance == CO && leftParam != null || variance == CONTRA && rightParam != null)
-								? superTypeDefSiteVarianceRaw : INV;
-				wasAdded |= reduce(leftArg, rightArg, variance.mult(superTypeDefSiteVariance));
+						? superTypeDefSiteVarianceRaw : INV;
+				wasAdded |= reduce(leftArg, rightArg, CONTRA.mult(superTypeDefSiteVariance));
 			}
 		}
 		return wasAdded;
