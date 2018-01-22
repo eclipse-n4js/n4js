@@ -246,7 +246,8 @@ public abstract class WorkingSetManagerImpl implements WorkingSetManager, Reseta
 	/**
 	 * Discards the state of caches used by the current manager.
 	 */
-	protected void discardWorkingSetCaches() {
+	@Override
+	public void discardWorkingSetCaches() {
 		allWorkingSets = null;
 		visibleWorkingSets = null;
 	}

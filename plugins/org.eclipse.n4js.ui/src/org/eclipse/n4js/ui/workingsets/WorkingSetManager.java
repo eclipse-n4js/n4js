@@ -14,15 +14,14 @@ import java.util.Comparator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.n4js.ui.internal.N4JSActivator;
+import org.eclipse.n4js.utils.Diff;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.xtext.util.Strings;
 import org.osgi.service.prefs.Preferences;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
-
-import org.eclipse.n4js.ui.internal.N4JSActivator;
-import org.eclipse.n4js.utils.Diff;
 
 /**
  * Representation of a working set manager.
@@ -166,4 +165,5 @@ public interface WorkingSetManager extends Comparator<WorkingSet>, MementoAware 
 	 */
 	WorkingSetManagerBroker getWorkingSetManagerBroker();
 
+	public void discardWorkingSetCaches();
 }
