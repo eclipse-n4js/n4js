@@ -365,7 +365,7 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
 			return;
 
- 		if (elem.name == ReactHelper.REACT_NAMESPACE) {
+ 		if (elem.name == ReactHelper.REACT_NAMESPACE_NAME) {
 			val message = IssueCodes.getMessageForJSX_NAME_CANNOT_BE_REACT();
 					addIssue(
 						message,
