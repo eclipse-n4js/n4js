@@ -10,30 +10,50 @@
  */
 package org.eclipse.n4js.transpiler.es.transform
 
+import com.google.inject.Inject
 import java.util.ArrayList
 import java.util.List
 import java.util.stream.IntStream
 import org.eclipse.n4js.n4JS.Expression
+import org.eclipse.n4js.n4JS.ImportDeclaration
 import org.eclipse.n4js.n4JS.JSXAttribute
 import org.eclipse.n4js.n4JS.JSXChild
 import org.eclipse.n4js.n4JS.JSXElement
 import org.eclipse.n4js.n4JS.JSXExpression
 import org.eclipse.n4js.n4JS.JSXPropertyAttribute
 import org.eclipse.n4js.n4JS.JSXSpreadAttribute
+import org.eclipse.n4js.n4JS.NamespaceImportSpecifier
 import org.eclipse.n4js.n4JS.ParameterizedCallExpression
 import org.eclipse.n4js.n4JS.PropertyNameValuePair
 import org.eclipse.n4js.transpiler.Transformation
+import org.eclipse.n4js.transpiler.es.util.JSXBackendHelper
 import org.eclipse.n4js.transpiler.im.IdentifierRef_IM
 import org.eclipse.n4js.transpiler.im.Script_IM
+import org.eclipse.n4js.transpiler.im.SymbolTableEntryOriginal
+import org.eclipse.n4js.utils.ResourceType
 import org.eclipse.xtext.EcoreUtil2
 
 import static org.eclipse.n4js.transpiler.TranspilerBuilderBlocks.*
 
 /**
- *
+ * Transforms JSX tags to output code according to JSX/React conventions.
+ * <p>
+ * For example:
+ * <pre>
+ * &lt;div attr="value">&lt;/div>
+ * </pre>
+ * will be transformed to
+ * <pre>
+ * React.createElement('div', Object.assign({attr: "value"}));
+ * </pre>
  */
 class JSXTransformation extends Transformation {
 
+	private SymbolTableEntryOriginal steForJsxBackendNamespace;
+	private SymbolTableEntryOriginal steForJsxBackendElementFactoryFunction;
+
+	@Inject
+	private JSXBackendHelper jsxBackendHelper;
 
 	override assertPreConditions() {
 	}
@@ -64,11 +84,52 @@ class JSXTransformation extends Transformation {
 	 * let elem3 = &lt;div>{&lt;a>&lt;/a>}&lt;/div>;
 	 * let elem4 = &lt;div prop={&lt;a>&lt;/a>}>&lt;/div>;
 	 * </pre>
-	 *
 	 */
-	override transform() {
+	override void transform() {
+		val resourceType = ResourceType.getResourceType(state.resource);
+		val inJSX = resourceType === ResourceType.JSX || resourceType === ResourceType.N4JSX;
+		if(!inJSX) {
+			return; // this transformation is not applicable
+		}
+		val jsxElements = collectNodes(state.im, JSXElement, true);
+		if(jsxElements.empty) {
+			return; // nothing to transform
+		}
+
+		steForJsxBackendNamespace = prepareImportOfJsxBackend();
+		steForJsxBackendElementFactoryFunction = prepareElementFactoryFunction();
+
 		// note: we are passing 'true' to #collectNodes(), i.e. we are searching for nested elements
-		collectNodes(state.im, JSXElement, true).forEach[transformJSXElement];
+		jsxElements.forEach[transformJSXElement];
+	}
+
+	def private SymbolTableEntryOriginal prepareImportOfJsxBackend() {
+		val jsxBackendModule = jsxBackendHelper.getJsxBackendModule(state.resource);
+		if(jsxBackendModule===null) {
+			throw new RuntimeException("cannot locate JSX backend for N4JSX resource " + state.resource.URI);
+		}
+		val existingNamespaceImportOfReactIM = state.im.scriptElements.filter(ImportDeclaration)
+			.filter[impDeclIM | state.info.getImportedModule(impDeclIM)===jsxBackendModule]
+			.map[importSpecifiers].flatten
+			.filter(NamespaceImportSpecifier)
+			.head;
+		if(existingNamespaceImportOfReactIM!==null) {
+			// we already have a namespace import of the JSX backend, no need to create a new one:
+			existingNamespaceImportOfReactIM.flaggedUsedInCode = true;
+			return findSymbolTableEntryForNamespaceImport(existingNamespaceImportOfReactIM);
+		}
+		// create namespace import for the JSX backend
+		// (note: we do not have to care for name clashes regarding name of the namespace, because validations ensure
+		// that "React" is never used as a name in N4JSX files, except as the namespace name of a react import)
+		return addNamespaceImport(jsxBackendModule, jsxBackendHelper.getJsxBackendNamespaceName());
+	}
+
+	def private SymbolTableEntryOriginal prepareElementFactoryFunction() {
+		val elementFactoryFunction = jsxBackendHelper.getJsxBackendElementFactoryFunction(state.resource);
+		if(elementFactoryFunction===null) {
+			throw new RuntimeException("cannot locate element factory function of JSX backend for N4JSX resource " + state.resource.URI);
+		}
+		return getSymbolTableEntryOriginal(elementFactoryFunction, true);
 	}
 
 	def private void transformJSXElement(JSXElement elem) {
@@ -80,9 +141,10 @@ class JSXTransformation extends Transformation {
 		}
 		replace(elem, convertJSXElement(elem));
 	}
+
 	def private ParameterizedCallExpression convertJSXElement(JSXElement elem) {
 		return _CallExpr(
-			_PropertyAccessExpr(steFor_React, steFor_createElement),
+			_PropertyAccessExpr(steForJsxBackendNamespace, steForJsxBackendElementFactoryFunction),
 			(
 				#[
 					elem.tagNameFromElement,

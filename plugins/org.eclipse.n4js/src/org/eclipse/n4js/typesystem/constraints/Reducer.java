@@ -627,11 +627,16 @@ import org.eclipse.xtext.xbase.lib.Pair;
 						throw new UnsupportedOperationException("unsupported subtype of TypeArgument: "
 								+ leftArg.getClass().getName());
 					}
-					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(INV));
+					// Due to normalization above, we always have: leftArg >: leftParamSubst
+					// (so for def-site variance we just look at the left side in this case, i.e. leftParam)
+					final Variance leftDefSiteVarianceRaw = leftParam.getVariance();
+					final Variance leftDefSiteVariance = leftDefSiteVarianceRaw != null ? leftDefSiteVarianceRaw : INV;
+					wasAdded |= reduce(leftArg, leftParamSubst, variance.mult(leftDefSiteVariance));
 				}
 			}
 		}
 		return wasAdded;
+
 	}
 
 	private boolean reduceStructuralTypeRef(TypeRef left, TypeRef right, Variance variance) {
