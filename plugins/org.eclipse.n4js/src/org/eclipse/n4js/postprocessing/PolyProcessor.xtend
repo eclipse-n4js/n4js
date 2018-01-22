@@ -32,6 +32,7 @@ import org.eclipse.n4js.typesystem.N4JSTypeSystem
 import org.eclipse.n4js.typesystem.TypeSystemHelper
 import org.eclipse.n4js.typesystem.constraints.InferenceContext
 import org.eclipse.n4js.typesystem.constraints.TypeConstraint
+import org.eclipse.n4js.utils.DestructureHelper
 import org.eclipse.n4js.validation.JavaScriptVariantHelper
 import org.eclipse.xsemantics.runtime.RuleEnvironment
 import org.eclipse.xtext.service.OperationCanceledManager
@@ -62,6 +63,10 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	private N4JSTypeSystem ts;
 	@Inject
 	private TypeSystemHelper tsh;
+
+	@Inject
+	private DestructureHelper destructureHelper;
+
 	@Inject
 	private OperationCanceledManager operationCanceledManager;
 
@@ -138,7 +143,6 @@ package class PolyProcessor extends AbstractPolyProcessor {
 	 * </ol>
 	 */
 	def package void inferType(RuleEnvironment G, Expression rootPoly, ASTMetaInfoCache cache) {
-
 		// create a new constraint system
 		val InferenceContext infCtx = new InferenceContext(ts, tsh, operationCanceledManager, G.cancelIndicator, G);
 
@@ -150,11 +154,14 @@ package class PolyProcessor extends AbstractPolyProcessor {
 			infCtx.addConstraint(TypeConstraint.FALSE);
 		}
 
+		val expectedTypeOfPoly = destructureHelper.calculateExpectedType(rootPoly, G);
 		// we have to pass the expected type to the #getType() method, so retrieve it first
 		// (until the expectedType judgment is integrated into AST traversal, we have to invoke this judgment here;
 		// in case of not-well-behaving expectedType rules, we use 'null' as expected type, i.e. no expectation)
 		// TODO integrate expectedType judgment into AST traversal and remove #isProblematicCaseOfExpectedType()
-		val expectedTypeRef = if (!rootPoly.isProblematicCaseOfExpectedType) {
+		val expectedTypeRef = if (expectedTypeOfPoly !== null) {
+				expectedTypeOfPoly
+			} else if (!rootPoly.isProblematicCaseOfExpectedType) {
 				ts.expectedTypeIn(G, rootPoly.eContainer(), rootPoly).getValue();
 			};
 
@@ -174,6 +181,8 @@ package class PolyProcessor extends AbstractPolyProcessor {
 		// #processExpr(RuleEnvironment, Expression, TypeRef, InferenceContext, ASTMetaInfoCache)
 		infCtx.solve;
 	}
+
+
 
 	/**
 	 * Key method for handling poly expressions.
