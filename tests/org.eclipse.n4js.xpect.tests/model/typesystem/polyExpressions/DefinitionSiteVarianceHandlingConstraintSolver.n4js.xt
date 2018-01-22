@@ -135,9 +135,11 @@ let test32: H<B> = fooReverse(grb);
 // XPECT noerrors
 let test33: H<B> = fooReverse(grc);
 
+
+
 // ======================================================================================================
 // Use invariance in case the right type does not have corresponding type variable, e.g. GR<out IV> :> B
-
+// (this test case was derived from existing N4JS code)
 
 class X {}
 class Y extends X {}
