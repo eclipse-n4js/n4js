@@ -116,9 +116,9 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	 */
 	@Check
 	def checkProjectDependsOnReact(Script script) {
-		val resourceType = ResourceType.getResourceType(script)
+		val resourceType = ResourceType.getResourceType(script);
 		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
-			return
+			return;
 
 		val firstJSXElement = script.eAllContents.findFirst[it instanceof JSXElement]
 		if (firstJSXElement !== null && reactHelper.lookUpReactTModule(script.eResource) === null)
@@ -128,8 +128,14 @@ class N4JSXValidator extends AbstractN4JSDeclarativeValidator {
 	/** Make sure the namespace to react module is React. */
 	@Check
 	def checkReactImport(NamespaceImportSpecifier importSpecifier) {
-		val module = importSpecifier.importedModule
-		if (reactHelper.isReactModule(module)) {
+		val resource = importSpecifier.eResource;
+		val resourceType = ResourceType.getResourceType(resource);
+		if (!(ResourceType.N4JSX === resourceType || ResourceType.JSX === resourceType))
+			return;
+
+		val reactModule = reactHelper.lookUpReactTModule(resource);
+		val importedModule = importSpecifier.importedModule;
+		if (reactModule !== null && importedModule === reactModule) {
 			if (importSpecifier.alias != ReactHelper.REACT_NAMESPACE_NAME) {
 						addIssue(
 							getMessageForJSX_REACT_NAMESPACE_NOT_ALLOWED(),

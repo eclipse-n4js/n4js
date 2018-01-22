@@ -54,13 +54,6 @@ class ReactHelper {
 	private final static String REACT_KEY = "KEY__" + REACT_PROJECT_ID
 
 	/**
-	 * Check if a module is a React module.
-	 */
-	def public boolean isReactModule(TModule module) {
-		return (module !== null && module.isMainModule && REACT_PROJECT_ID.equals(module.projectId))
-	}
-
-	/**
 	 * Look up React.Element in the index.
 	 * 
 	 * @param context the EObject serving the context to look for React.Element.
